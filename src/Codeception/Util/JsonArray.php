@@ -146,7 +146,7 @@ class JsonArray
                 if ($return !== false && $return == $value1) {
                     $ret[$key1] = $return;
                     $matchedKeys[$key2] = true;
-                    continue;
+                    break;
                 }
 
                 if ($this->isEqualValue($value1, $value2)) {
@@ -211,7 +211,7 @@ class JsonArray
             if (is_array($value)) {
                 $this->arrayToXml($doc, $subNode, $value);
             } else {
-                $subNode->nodeValue = (string)$value;
+                $subNode->nodeValue = htmlspecialchars((string)$value);
             }
         }
     }

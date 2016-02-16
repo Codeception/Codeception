@@ -7,6 +7,7 @@ use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
+use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\PageSourceSaver;
@@ -18,10 +19,12 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
-use Codeception\TestCase;
+use Codeception\Test\Descriptor;
+use Codeception\TestInterface;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
+use Facebook\WebDriver\Exception\InvalidElementStateException;
 use Facebook\WebDriver\Exception\InvalidSelectorException;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\UnknownServerException;
@@ -29,6 +32,7 @@ use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\UselessFileDetector;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
@@ -42,28 +46,101 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * New generation Selenium WebDriver module.
  *
- * ## Selenium Installation
+ * ## Local Testing
+ *
+ * ### Selenium
  *
  * 1. Download [Selenium Server](http://docs.seleniumhq.org/download/)
  * 2. Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
+ * 3. Configure this module (in acceptance.suite.yml) by setting url and browser:
  *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: 'http://localhost/'
+ *              browser: firefox
+ * ```
  *
- * ## PhantomJS Installation
+ * ### PhantomJS
  *
  * PhantomJS is a headless alternative to Selenium Server that implements [the WebDriver protocol](https://code.google.com/p/selenium/wiki/JsonWireProtocol).
  * It allows you to run Selenium tests on a server without a GUI installed.
  *
  * 1. Download [PhantomJS](http://phantomjs.org/download.html)
  * 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
+ * 3. Configure this module (in acceptance.suite.yml) by setting url and `phantomjs` as browser:
  *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: 'http://localhost/'
+ *              browser: phantomjs
+ * ```
  *
- * ## Status
+ * ## Cloud Testing
  *
- * * Maintainer: **davert**
- * * Stability: **stable**
- * * Contact: davert.codecept@mailican.com
- * * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
+ * Cloud Testing services can run your WebDriver tests in the cloud.
+ * In case you want to test a local site or site behind a firewall you should use a tunnel application provided by a service.
  *
+ * ### SauceLabs
+ *
+ * 1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
+ * 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+ * 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+ * 4. run a tunnel app if your site can't be accessed from Internet
+ *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: http://mysite.com
+ *              host: '<username>:<access key>@ondemand.saucelabs.com'
+ *              port: 80
+ *              browser: chrome
+ *              capabilities:
+ *                  platform: 'Windows 10'
+ * ```
+ *
+ * ### BrowserStack
+ *
+ * 1. Create an account at [BrowserStack](https://www.browserstack.com/) to get your username and access key
+ * 2. In the module configuration use the format `username`:`access_key`@hub.browserstack.com' for `host`
+ * 3. Configure `os` and `os_version` under `capabilities` to define the operating System
+ * 4. If your site is available only locally or via VPN you should use a tunnel app. In this case add `browserstack.local` capability and set it to true.
+ *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: http://mysite.com
+ *              host: '<username>:<access key>@hub.browserstack.com'
+ *              port: 80
+ *              browser: chrome
+ *              capabilities:
+ *                  os: Windows
+ *                  os_version: 10
+ *                  browserstack.local: true # for local testing
+ * ```
+ * ### TestingBot
+ *
+ * 1. Create an account at [TestingBot](https://testingbot.com/) to get your key and secret
+ * 2. In the module configuration use the format `key`:`secret`@hub.testingbot.com' for `host`
+ * 3. Configure `platform` under `capabilities` to define the [Operating System](https://testingbot.com/support/getting-started/browsers.html)
+ * 4. Run [TestingBot Tunnel](https://testingbot.com/support/other/tunnel) if your site can't be accessed from Internet
+ *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: http://mysite.com
+ *              host: '<key>:<secret>@hub.testingbot.com'
+ *              port: 80
+ *              browser: chrome
+ *              capabilities:
+ *                  platform: Windows 10
+ * ```
  *
  * ## Configuration
  *
@@ -82,34 +159,28 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `http_proxy_port` - sets http proxy server port
  * * `debug_log_entries` - how many selenium entries to print with `debugWebDriverLogs` or on fail (15 by default).
  *
- * ### Example (`acceptance.suite.yml`)
+ * Example (`acceptance.suite.yml`)
  *
+ * ```yaml
  *     modules:
  *        enabled:
  *           - WebDriver:
  *              url: 'http://localhost/'
  *              browser: firefox
  *              window_size: 1024x768
- *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
- *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
+ *                  firefox_profile: '~/firefox-profiles/codeception-profile.zip.b64'
+ * ```
  *
+ * ### Status
  *
+ * Stability: **stable**
+ * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
  *
- * ## SauceLabs.com Integration
+ * ## Usage
  *
- * SauceLabs can run your WebDriver tests in the cloud, you can also create a tunnel
- * enabling you to test locally hosted sites from their servers.
- *
- * 1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
- * 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
- * 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
- *
- * [CodeCeption and SauceLabs example](https://github.com/Codeception/Codeception/issues/657#issuecomment-28122164)
- *
- *
- * ## Locating Elements
+ * ### Locating Elements
  *
  * Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
  *
@@ -151,7 +222,8 @@ class WebDriver extends CodeceptionModule implements
     SessionSnapshot,
     ScreenshotSaver,
     PageSourceSaver,
-    ElementLocator
+    ElementLocator,
+    ConflictsWithModule
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
@@ -219,7 +291,7 @@ class WebDriver extends CodeceptionModule implements
         return 'Codeception\Lib\Interfaces\Web';
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         if (!isset($this->webDriver)) {
             $this->_initialize();
@@ -252,7 +324,7 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         if ($this->config['restart'] && isset($this->webDriver)) {
             $this->webDriver->quit();
@@ -260,16 +332,17 @@ class WebDriver extends CodeceptionModule implements
             // but RemoteWebDriver doesn't provide public access to check on executor
             // so we need to unset $this->webDriver here to shut it down completely
             $this->webDriver = null;
+            return;
         }
         if ($this->config['clear_cookies'] && isset($this->webDriver)) {
             $this->webDriver->manage()->deleteAllCookies();
         }
     }
 
-    public function _failed(TestCase $test, $fail)
+    public function _failed(TestInterface $test, $fail)
     {
         $this->debugWebDriverLogs();
-        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($test)) . '.fail';
+        $filename = str_replace([':', '\\', '/'], ['.', '', ''], Descriptor::getTestSignature($test)) . '.fail';
         $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
         $this->_savePageSource(codecept_output_dir() . $filename . '.html');
         $this->debug("Screenshot and page source were saved into '_output' dir");
@@ -354,7 +427,7 @@ class WebDriver extends CodeceptionModule implements
         }
         return $this->config['url'];
     }
-    
+
     protected function getProxy()
     {
         $proxyConfig = [];
@@ -487,6 +560,12 @@ class WebDriver extends CodeceptionModule implements
         $params['value'] = $value;
         if (isset($params['expires'])) { // PhpBrowser compatibility
             $params['expiry'] = $params['expires'];
+        }
+        if (!isset($params['domain'])) {
+            $urlParts = parse_url($this->config['url']);
+            if (isset($urlParts['host'])) {
+                $params['domain'] = $urlParts['host'];
+            }
         }
         $this->webDriver->manage()->addCookie($params);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
@@ -1127,7 +1206,12 @@ class WebDriver extends CodeceptionModule implements
             throw new \InvalidArgumentException("file not found or not readable: $filePath");
         }
         // in order for remote upload to be enabled
-        $el->setFileDetector(new LocalFileDetector);
+        $el->setFileDetector(new LocalFileDetector());
+
+        // skip file detector for phantomjs
+        if ($this->isPhantom()) {
+            $el->setFileDetector(new UselessFileDetector());
+        }
         $el->sendKeys($filePath);
     }
 
@@ -1343,6 +1427,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function acceptPopup()
     {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
         $this->webDriver->switchTo()->alert()->accept();
     }
 
@@ -1351,6 +1438,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function cancelPopup()
     {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
         $this->webDriver->switchTo()->alert()->dismiss();
     }
 
@@ -1361,6 +1451,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function seeInPopup($text)
     {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
         $this->assertContains($text, $this->webDriver->switchTo()->alert()->getText());
     }
 
@@ -1371,6 +1464,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function typeInPopup($keys)
     {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
         $this->webDriver->switchTo()->alert()->sendKeys($keys);
     }
 
@@ -1989,6 +2085,10 @@ class WebDriver extends CodeceptionModule implements
                 return $page->findElements($this->getStrictLocator($selector));
             } catch (InvalidSelectorException $e) {
                 throw new MalformedLocatorException(key($selector) . ' => ' . reset($selector), "Strict locator");
+            } catch (InvalidElementStateException $e) {
+                if ($this->isPhantom() and $e->getResults()['status'] == 12) {
+                    throw new MalformedLocatorException(key($selector) . ' => ' . reset($selector), "Strict locator ".$e->getCode());
+                }
             }
         }
         if ($selector instanceof WebDriverBy) {
@@ -2338,5 +2438,13 @@ class WebDriver extends CodeceptionModule implements
         $setCookie->setDomain($cookie['domain']);
 
         return $setCookie->matchesDomain(parse_url($this->config['url'], PHP_URL_HOST));
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isPhantom()
+    {
+        return strpos($this->config['browser'], 'phantom') === 0;
     }
 }

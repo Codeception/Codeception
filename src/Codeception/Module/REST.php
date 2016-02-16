@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
@@ -90,7 +90,7 @@ EOF;
     public $params = [];
     public $response = "";
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = &$this->connectionModule->client;
         $this->resetVariables();
@@ -586,7 +586,7 @@ EOF;
         $jsonResponseArray = new JsonArray($this->connectionModule->_getResponseContent());
         \PHPUnit_Framework_Assert::assertTrue(
             $jsonResponseArray->containsArray($json),
-            "Response JSON contains provided\n"
+            "Response JSON does not contain the provided JSON\n"
             . "- <info>" . var_export($json, true) . "</info>\n"
             . "+ " . var_export($jsonResponseArray->toArray(), true)
         );
@@ -769,7 +769,7 @@ EOF;
         $jsonResponseArray = new JsonArray($this->connectionModule->_getResponseContent());
         $this->assertFalse(
             $jsonResponseArray->containsArray($json),
-            "Response JSON does not contain JSON provided\n"
+            "Response JSON contains provided JSON\n"
             . "- <info>" . var_export($json, true) . "</info>\n"
             . "+ " . var_export($jsonResponseArray->toArray(), true)
         );
@@ -1000,7 +1000,7 @@ EOF;
      * @return string
      * @part xml
      */
-    public function grabAttributeFrom($cssOrXPath, $attribute)
+    public function grabAttributeFromXmlElement($cssOrXPath, $attribute)
     {
         $el = (new XmlStructure($this->connectionModule->_getResponseContent()))->matchElement($cssOrXPath);
         if (!$el->hasAttribute($attribute)) {
@@ -1083,4 +1083,21 @@ EOF;
     {
         throw new ModuleException($this, "This action was deprecated in Codeception 2.0.9 and removed in 2.1. Please use `grabDataFromResponseByJsonPath` instead");
     }
+
+    /**
+     * Prevents automatic redirects to be followed by the client
+     */
+    public function stopFollowingRedirects()
+    {
+        $this->client->followRedirects(false);
+    }
+
+    /**
+     * Enables automatic redirects to be followed by the client
+     */
+    public function startFollowingRedirects()
+    {
+        $this->client->followRedirects(true);
+    }
+
 }

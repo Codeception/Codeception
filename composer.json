@@ -18,7 +18,7 @@
         "php": ">=5.4.0",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "phpunit/phpunit": "~4.8.0",
+        "phpunit/phpunit": ">4.8.20 <6.0",
         "facebook/webdriver": ">=1.0.1",
         "guzzlehttp/guzzle": ">=4.1.4 <7.0",
         "guzzlehttp/psr7": "~1.0",
@@ -31,6 +31,7 @@
         "symfony/dom-crawler": ">=2.4|<3.1"
     },
     "require-dev": {
+        "behat/gherkin": "~4.4.0",
         "monolog/monolog": "~1.8",
         "league/factory-muffin": "~3.0",
         "league/factory-muffin-faker": "~1.0",
@@ -41,11 +42,11 @@
         "flow/jsonpath": "~0.2"
     },
     "suggest": {
-        "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
-        "monolog/monolog": "Log test steps",
-        "phpseclib/phpseclib": "Extension required to use the SFTP option in the FTP Module."
+        "flow/jsonpath": "For using JSONPath in REST module",
+        "phpseclib/phpseclib": "for SFTP option in FTP Module",
+        "behat/gherkin": "for BDD Gherkin feature syntax support"
     },
 
     "autoload":{
@@ -58,5 +59,8 @@
         "branch-alias": {
         }
     },
-    "bin":["codecept"]
+    "bin":["codecept"],
+    "config": {
+        "platform": {}
+    }
 }

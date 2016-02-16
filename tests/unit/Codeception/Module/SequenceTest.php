@@ -1,6 +1,6 @@
 <?php
 
-class SequenceTest extends Codeception\TestCase\Test
+class SequenceTest extends \Codeception\Test\Unit
 {
     // tests
     public function testSequences()
@@ -14,4 +14,16 @@ class SequenceTest extends Codeception\TestCase\Test
         $this->assertNotEquals($old, sq(1));
     }
 
+    public function testSuiteSequences()
+    {
+        $module = new \Codeception\Module\Sequence(make_container());
+        $this->assertNotEquals(sqs(), sqs());
+        $this->assertNotEquals(sqs(1), sqs(2));
+        $this->assertEquals(sqs(1), sqs(1));
+        $old = sqs(1);
+        $module->_after($this);
+        $this->assertEquals($old, sqs(1));
+        $module->_afterSuite();
+        $this->assertNotEquals($old, sqs(1));
+    }
 }

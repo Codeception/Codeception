@@ -24,7 +24,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module = Stub::make('\Codeception\Module\REST');
         $this->module->_inject($connectionModule);
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
         $this->module->client->setServerParameters([
             'SCRIPT_FILENAME' => 'index.php',
             'SCRIPT_NAME' => 'index',
@@ -38,7 +38,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $connectionModule = Stub::make('\Codeception\Module\UniversalFramework', ['_getResponseContent' => $response]);
         $this->module->_inject($connectionModule);
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
     }
 
     public function testBeforeHookResetsVariables()
@@ -50,7 +50,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
             $this->module->client->getServerParameter('HTTP_ORIGIN')
         );
 
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
         $this->assertNull($this->module->client->getServerParameter('HTTP_ORIGIN', null));
     }
 
@@ -239,6 +239,16 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseJsonMatchesJsonPath('$[*].user');
         $this->module->seeResponseJsonMatchesJsonPath('$[1].tags');
         $this->module->dontSeeResponseJsonMatchesJsonPath('$[*].profile');
+    }
+
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/2775
+     */
+    public function testSeeResponseJsonMatchesXPathWorksWithAmpersand()
+    {
+        $this->setStubResponse('{ "product":[ { "category":[ { "comment":"something & something" } ] } ] }');
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseJsonMatchesXpath('//comment');
     }
 
     

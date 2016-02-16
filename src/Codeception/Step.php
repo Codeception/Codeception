@@ -2,7 +2,7 @@
 namespace Codeception;
 
 use Codeception\Lib\ModuleContainer;
-use Codeception\Step\Meta;
+use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
 
 abstract class Step
@@ -24,28 +24,26 @@ abstract class Step
 
     protected $line = null;
     protected $file = null;
-    protected $actor = 'I';
+    protected $prefix = 'I';
 
     /**
-     * @var Meta
+     * @var MetaStep
      */
     protected $metaStep = null;
 
     protected $failed = false;
 
-    public function __construct($action, array $arguments)
+    public function __construct($action, array $arguments = [])
     {
         $this->action = $action;
         $this->arguments = $arguments;
-        $this->storeCallerInfo();
     }
 
-    protected function storeCallerInfo()
+    public function saveTrace()
     {
         if (!function_exists('xdebug_get_function_stack')) {
             return;
         }
-
         ini_set('xdebug.collect_params', '1');
         $stack = xdebug_get_function_stack();
         ini_set('xdebug.collect_params', 0);
@@ -93,15 +91,15 @@ abstract class Step
 
     public function getArguments($asString = false)
     {
-        return ($asString) ? $this->getArgumentsAsString($this->arguments) : $this->arguments;
+        return $asString ? $this->getArgumentsAsString($this->arguments) : $this->arguments;
     }
 
     protected function getArgumentsAsString(array $arguments)
     {
+        $argumentsAsJson = [];
         foreach ($arguments as $key => $argument) {
-            $arguments[$key] = (is_string($argument)) ? trim($argument,"''") : $this->parseArgumentAsString($argument);
+            $argumentsAsJson []= stripcslashes(json_encode($this->parseArgumentAsString($argument), JSON_UNESCAPED_UNICODE));
         }
-
         return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE), '[]'));
     }
 
@@ -114,18 +112,35 @@ abstract class Step
             if (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
                 return Locator::humanReadableString($argument);
             }
+            return $this->getClassName($argument);
         }
-        if ($argument instanceof \Closure) {
-            return 'lambda function';
-        }
-        if (is_callable($argument)) {
-            return 'callable function';
-        }
-        if (!is_object($argument)) {
+
+        if (is_array($argument)) {
+            foreach ($argument as $key => $value) {
+                if (is_object($value)) {
+                    $argument[$key] = $this->getClassName($value);
+                }
+            }
             return $argument;
         }
 
-        return (isset($argument->__mocked)) ? $this->formatClassName($argument->__mocked) : $this->formatClassName(get_class($argument));
+        if (is_resource($argument)) {
+            return (string)$argument;
+        }
+
+        return $argument;
+    }
+
+
+    protected function getClassName($argument)
+    {
+        if ($argument instanceof \Closure) {
+            return 'Closure';
+        } elseif ((isset($argument->__mocked))) {
+            return $this->formatClassName($argument->__mocked);
+        } else {
+            return $this->formatClassName(get_class($argument));
+        }
     }
 
     protected function formatClassName($classname)
@@ -135,7 +150,7 @@ abstract class Step
 
     public function getPhpCode()
     {
-        return "\${$this->actor}->" . $this->getAction() . '(' . $this->getHumanizedArguments() .')';
+        return "\${$this->prefix}->" . $this->getAction() . '(' . $this->getHumanizedArguments() .')';
     }
 
     /**
@@ -144,21 +159,20 @@ abstract class Step
     public function getMetaStep()
     {
         return $this->metaStep;
-
     }
 
     public function __toString()
     {
-        return $this->actor . ' ' . $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
+        return $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
     }
 
     public function getHtml($highlightColor = '#732E81')
     {
         if (empty($this->arguments)) {
-            return sprintf('%s %s', ucfirst($this->actor), $this->humanize($this->getAction()));
+            return sprintf('%s %s', ucfirst($this->prefix), $this->humanize($this->getAction()));
         }
 
-        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->actor), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
+        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->prefix), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
     }
 
     public function getHumanizedActionWithoutArguments()
@@ -232,14 +246,30 @@ abstract class Step
                 continue;
             }
 
-            $this->metaStep = new Meta($step['function'], array_values($step['params']));
+            $this->metaStep = new Step\Meta($step['function'], array_values($step['params']));
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // pageobjects or other classes should not be included with "I"
-            if (!(new \ReflectionClass($step['class']))->isSubclassOf('Codeception\Actor')) {
-                $this->metaStep->setActor($step['class'] . ':');
+            if (!in_array('Codeception\Actor', class_parents($step['class']))) {
+                $this->metaStep->setPrefix($step['class'] . ':');
             }
             return;
         }
+    }
+
+    /**
+     * @param MetaStep $metaStep
+     */
+    public function setMetaStep($metaStep)
+    {
+        $this->metaStep = $metaStep;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix . ' ';
     }
 }

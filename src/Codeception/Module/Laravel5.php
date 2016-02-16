@@ -132,9 +132,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * Before hook.
      *
-     * @param \Codeception\TestCase $test
+     * @param \Codeception\TestInterface $test
      */
-    public function _before(\Codeception\TestCase $test)
+    public function _before(\Codeception\TestInterface $test)
     {
         $this->client = new LaravelConnector($this);
 
@@ -146,9 +146,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * After hook.
      *
-     * @param \Codeception\TestCase $test
+     * @param \Codeception\TestInterface $test
      */
-    public function _after(\Codeception\TestCase $test)
+    public function _after(\Codeception\TestInterface $test)
     {
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->rollback();
@@ -616,7 +616,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * $I->amLoggedAs(['username' => 'jane@example.com', 'password' => 'password']);
      *
      * // provide User object
-     * $I->amLoggesAs( new User );
+     * $I->amLoggedAs( new User );
      *
      * // can be verified with $I->seeAuthentication();
      * ?>
@@ -638,7 +638,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if ($user instanceof Authenticatable) {
-            $guard->setUser($user);
+            $guard->login($user);
             return;
         }
 

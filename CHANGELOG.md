@@ -1,8 +1,34 @@
 # Changelog
 
+#### 2.2.0
+
+* **Conflicts API implemented** Frameworks + PhpBrowser + WebDriver can't be used together unless only non-conflicting part is used.
+* [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
+* [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
+
 #### 2.1.6
+
+* Starting from 2.1.6 you can **download PHP 5.4 compatible phar build** at http://codeception.com/php54/codecept.phar by @Naktibalda. See [installation guide](http://codeception.com/install).
+* [WebDriver] Fixed uploading files with **PhantomJS** #1823 by @DavertMik and @Naktibalda. Please specify your browser name as `phantom` in WebDriver config in order to use PhantomJS-specific hooks.
+* Fixed parsing PHP files with spaces in name on PHP<7 by @acuthbert. Fixes #2647
+* [WebDriver] Fixed proxy error when using with Chrome #2651 by @vaikla
 * [Laravel5] Allow Laravel5 application URL to be set through config. By @gmhenderson. See #2676
-* [HHVM] Asserts module works on HHVM
+* [Laravel5] Mocked events should also return an array. Fix by @devinfd
+* Fixed using codecoverage with environments #2634
+* Various HHVM improvements by @Naktibalda, for instance, Asserts module issues has been fixed.
+* [REST] Fixes #2775 `seeResponseJsonMatchesXpath` when JSON contains ampersand. By @Naktibalda.
+* [Filesystem] Added `seeNumberNewLines` method to check the number of new lines in opened file. By @sergeyklay
+* [Symfony2] Added `seeCurrentRouteMatches` action by @laszlo-karpati See #2665
+* [Sequence] Added `sqs` function to generate unique sequences per suite. #2766 by @johnatannvmd
+* [FTP] Fixed various bugs by @k-serenade. See #2755
+* [Frameworks][PhpBrowser] Fixed #2733: `seeOptionIsSelected` sees first option as selected if none is selected by @Naktibalda
+* [Symfony2] Removed 'localhost' from getInternalDomains by @Naktibalda. Fixed #2717
+* Bugfix for using groups by directory on Windows by @tortuetorche See #2550 and #2551
+* [REST] Fixed failed message for `seeHttpHeader` and `dontSeeHttpHeader` from null to expected value #2697 by @zondor
+* [REST] Added methods to control redirect: `stopFollowingRedirects` and `startFollowingRedirects` by @brutuscat
+* [Recorder Extension] Added `animate_slides` config to disable left-right sliding animation between screenshots by @vml-rmott
+
+
 
 #### 2.1.5
 

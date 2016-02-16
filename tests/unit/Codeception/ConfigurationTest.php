@@ -49,4 +49,16 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('EmulateModuleHelper', $modules);
     }
 
+    /**
+     * @group core
+     */
+    public function testDefaultCustomCommandConfig()
+    {
+        $defaultConfig = \Codeception\Configuration::$defaultConfig;
+
+        $this->assertArrayHasKey('extensions', $defaultConfig);
+
+        $commandsConfig = $defaultConfig['extensions'];
+        $this->assertArrayHasKey('commands', $commandsConfig);
+    }
 }

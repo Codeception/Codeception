@@ -4,7 +4,7 @@ namespace Codeception\Module;
 use Codeception\Util\FileSystem as Util;
 use Symfony\Component\Finder\Finder;
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Configuration;
 
 /**
@@ -26,7 +26,7 @@ class Filesystem extends CodeceptionModule
 
     protected $path = '';
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->path = Configuration::projectDir();
     }
@@ -148,6 +148,38 @@ class Filesystem extends CodeceptionModule
         $this->assertContains($text, $this->file, "No text '$text' in currently opened file");
     }
 
+    /**
+     * Checks If opened file has the `number` of new lines.
+     *
+     * Usage:
+     *
+     * ``` php
+     * <?php
+     * $I->openFile('composer.json');
+     * $I->seeNumberNewLines(5);
+     * ?>
+     * ```
+     *
+     * @param int $number New lines
+     */
+    public function seeNumberNewLines($number)
+    {
+        $lines = preg_split('/\n|\r/', $this->file);
+
+        $this->assertTrue(
+            (int) $number === count($lines),
+            "The number of new lines does not match with $number"
+        );
+    }
+    /**
+     * Checks that contents of currently opened file matches $regex
+     *
+     * @param $regex
+     */
+    public function seeThisFileMatches($regex)
+    {
+        $this->assertRegExp($regex, $this->file, "Contents of currently opened file does not match '$regex'");
+    }
 
     /**
      * Checks the strict matching of file contents.

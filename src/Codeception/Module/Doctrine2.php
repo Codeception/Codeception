@@ -6,7 +6,7 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Doctrine\ORM\EntityManager;
 use Codeception\Util\Stub;
 
@@ -118,7 +118,7 @@ EOF;
         $this->retrieveEntityManager();
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->retrieveEntityManager();
         if ($this->config['cleanup']) {
@@ -159,7 +159,7 @@ EOF;
         $this->em->getConnection()->connect();
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
             return;
@@ -425,7 +425,7 @@ EOF;
             if ($val === null) {
                 $qb->andWhere("s.$key IS NULL");
             } else {
-                $paramname = "s__$key";
+                $paramname = str_replace(".", "", "s_$key");
                 $qb->andWhere("s.$key = :$paramname");
                 $qb->setParameter($paramname, $val);
             }

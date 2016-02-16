@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleException;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 
 /**
  * Sequence solves data cleanup issue in alternative way.
@@ -11,7 +11,8 @@ use Codeception\TestCase;
  * you can use generated unique names, that should not conflict.
  * When you create article on a site, for instance, you can assign it a unique name and then check it.
  *
- * This module has no actions, but introduces a function `sq` for generating unique sequences.
+ * This module has no actions, but introduces a function `sq` for generating unique sequences within test and
+ * `sqs` for generating unique sequences across suite.
  *
  * ### Usage
  *
@@ -50,19 +51,49 @@ use Codeception\TestCase;
  * ?>
  * ```
  *
+ * Cest Suite tests:
+ *
+ * ``` php
+ * <?php
+ * class UserTest
+ * {
+ *     public function createUser(AcceptanceTester $I)
+ *     {
+ *         $I->createUser('email' . sqs('user') . '@mailserver.com', sqs('login'), sqs('pwd'));
+ *     }
+ *
+ *     public function checkEmail(AcceptanceTester $I)
+ *     {
+ *         $I->seeInEmailTo('email' . sqs('user') . '@mailserver.com', sqs('login'));
+ *     }
+ *
+ *     public function removeUser(AcceptanceTester $I)
+ *     {
+ *         $I->removeUser('email' . sqs('user') . '@mailserver.com');
+ *     }
+ * }
+ * ?>
+ * ```
  */
 class Sequence extends CodeceptionModule
 {
-    public static $hash = array();
+    public static $hash = [];
+    public static $suiteHash = [];
 
-    public function _after(TestCase $t)
+    public function _after(TestInterface $t)
     {
         self::$hash = [];
     }
+
+    public function _afterSuite()
+    {
+        self::$suiteHash = [];
+    }
 }
 
-if (!function_exists('sq')) {
+if (!function_exists('sq') && !function_exists('sqs')) {
     require_once __DIR__ . '/../Util/sq.php';
+    require_once __DIR__ . '/../Util/sqs.php';
 } else {
-    throw new ModuleException('Codeception\Module\Sequence', "function 'sq' already defined");
+    throw new ModuleException('Codeception\Module\Sequence', "function 'sq' and 'sqs' already defined");
 }

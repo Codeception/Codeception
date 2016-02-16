@@ -30,4 +30,9 @@ class Comment extends CodeceptionStep
     {
         // don't do anything, let's rest
     }
+
+    public function getPrefix()
+    {
+        return '';
+    }
 }

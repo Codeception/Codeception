@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Configuration;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
@@ -147,7 +147,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         $this->container = $this->kernel->getContainer();
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(\Codeception\TestInterface $test)
     {
         $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);
@@ -281,6 +281,36 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     }
 
     /**
+     * Checks that current url matches route.
+     * Unlike seeCurrentRouteIs, this can matches without exact route parameters
+     *
+     * ``` php
+     * <?php
+     * $I->seeCurrentRouteMatches('my_blog_pages');
+     * ?>
+     * ```
+     *
+     * @param $routeName
+     */
+    public function seeInCurrentRoute($routeName)
+    {
+        $router = $this->grabServiceFromContainer('router');
+        
+        $route = $router->getRouteCollection()->get($routeName);
+        if (!$route) {
+            $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
+        }
+        
+        try {
+            $matchedRouteName = $router->match($this->grabFromCurrentUrl())['_route'];
+        } catch (\Exception\ResourceNotFoundException $e) {
+            $this->fail(sprintf('The "%s" url does not match with any route', $routeName));
+        }
+        
+        $this->assertEquals($matchedRouteName, $routeName);
+    }
+
+    /**
      * Checks if any email were sent by last request
      *
      * @throws \LogicException
@@ -370,9 +400,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     protected function getInternalDomains()
     {
-        $internalDomains = [
-            'localhost',
-        ];
+        $internalDomains = [];
 
         /* @var \Symfony\Component\Routing\Route $route */
         foreach ($this->getRouter()->getRouteCollection() as $route) {

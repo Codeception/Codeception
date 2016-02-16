@@ -18,7 +18,7 @@ class Beanstalkd_Test extends \PHPUnit_Framework_TestCase
     {
         $this->module = new \Codeception\Module\Queue(make_container());
             $this->module->_setConfig($this->config);
-            $this->module->_before(Stub::make('\Codeception\TestCase'));
+            $this->module->_before(Stub::makeEmpty('\Codeception\TestCase'));
         try {
             $this->module->clearQueue('default');
         } catch (\Pheanstalk_Exception_ConnectionException $e) {

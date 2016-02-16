@@ -25,7 +25,6 @@ class GenerateEnvironment extends Command
     {
         $this->setDefinition([
             new InputArgument('env', InputArgument::REQUIRED, 'Environment name'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ]);
     }
 

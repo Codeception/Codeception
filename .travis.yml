@@ -52,7 +52,7 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ -z "$SYMFONY" ]] || composer update'
+  - '[[ -z "$SYMFONY" ]] || composer update --prefer-dist'
   - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer require guzzlehttp/guzzle=~5.0 --no-update ; fi' # install old guzzle
   - composer install --prefer-dist
   # Yii2
@@ -60,7 +60,7 @@ install:
   # Phalcon
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || (cd cphalcon/ext; export CFLAGS="-g0 -O0 -std=gnu90"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || git clone -q --depth=1 -b 2.2 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || composer install -d frameworks-phalcon --no-dev  --prefer-dist'
   # Laravel 4
   - git clone -q  -b codeception-2.1 https://github.com/Codeception/sample-l4-app.git frameworks-laravel
