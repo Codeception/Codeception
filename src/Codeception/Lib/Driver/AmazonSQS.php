@@ -97,13 +97,11 @@ class AmazonSQS implements Queue
                 return;
             }
             foreach ($res->getPath('Messages') as $msg) {
-                $this->debug("  - delete message: " . $msg['MessageId']);
+                $this->queue->deleteMessage([
+                    'QueueUrl'      => $queueURL,
+                    'ReceiptHandle' => $msg['ReceiptHandle']
+                ]);
             }
-            // Do something useful with $msg['Body'] here
-            $this->queue->deleteMessage([
-                'QueueUrl'      => $queueURL,
-                'ReceiptHandle' => $msg['ReceiptHandle']
-            ]);
         }
     }
 
