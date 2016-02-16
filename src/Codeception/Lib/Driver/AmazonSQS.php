@@ -20,7 +20,7 @@ class AmazonSQS implements Queue
         $params = [
             'region' => $config['region']
         ];
-        if (!empty ($config['profile'])) {
+        if (!empty($config['profile'])) {
             $params['profile'] = $config['profile'];
         }
 
