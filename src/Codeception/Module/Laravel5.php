@@ -638,7 +638,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if ($user instanceof Authenticatable) {
-            $guard->setUser($user);
+            $guard->login($user);
             return;
         }
 
