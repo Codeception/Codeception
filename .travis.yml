@@ -78,7 +78,7 @@ install:
   - git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
   - composer install -d frameworks-zf2 --no-dev  --prefer-dist
   # Zend Expressive
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b master --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer install -d frameworks-zend-expressive --no-dev  --prefer-dist'
 
 before_script:
