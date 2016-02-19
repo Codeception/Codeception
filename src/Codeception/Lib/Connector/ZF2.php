@@ -56,7 +56,7 @@ class ZF2 extends Client
             parse_str($queryString, $query);
         }
         
-        if ($content === null && $method != HttpRequest::METHOD_GET) {
+        if ($method !== HttpRequest::METHOD_GET) {
             $post = $request->getParameters();
         }
 
