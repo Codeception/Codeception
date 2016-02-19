@@ -48,10 +48,10 @@ install:
   - git clone -q https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
   - composer install -d frameworks-symfony --no-dev  --prefer-dist
   # ZF1
-  - git clone -q --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
+  - git clone -q -b 2.0 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
   - composer install -d frameworks-zf1 --no-dev  --prefer-dist
   # ZF2
-  - git clone -q --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
+  - git clone -q -b 2.0 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
   - composer install -d frameworks-zf2 --no-dev  --prefer-dist
 
 before_script:
