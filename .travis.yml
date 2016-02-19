@@ -25,7 +25,7 @@ cache:
 
 install:
   - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
-  - composer global require "fxp/composer-asset-plugin:1.0.0"
+  - composer global require "fxp/composer-asset-plugin:~1.1.1"
   - composer self-update
   - composer install --prefer-dist
   - ulimit -c unlimited || true
