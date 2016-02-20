@@ -240,6 +240,10 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
      */
     public function testHostHeader()
     {
+        if (getenv('dependencies') === 'lowest') {
+            $this->markTestSkipped('This test can\'t pass with the lowest versions of dependencies');
+        }
+
         $this->module->sendGET('/rest/http-host/');
         $this->module->seeResponseContains('host: "localhost:8010"');
 
