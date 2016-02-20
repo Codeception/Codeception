@@ -4,6 +4,7 @@ namespace Codeception;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
+use Codeception\Lib\Console\Message;
 
 abstract class Step
 {
@@ -89,40 +90,87 @@ abstract class Step
         return $this->failed;
     }
 
-    public function getArguments($asString = false)
+    public function getArgumentsAsString($maxLength = 200)
     {
-        return $asString ? $this->getArgumentsAsString($this->arguments) : $this->arguments;
-    }
+        $arguments = $this->arguments;
 
-    protected function getArgumentsAsString(array $arguments)
-    {
+        $argumentCount = count($arguments);
+        $totalLength = $argumentCount - 1; // count separators before adding length of individual arguments
+
         foreach ($arguments as $key => $argument) {
-            $arguments[$key] = (is_string($argument)) ? trim($argument,"''") : $this->parseArgumentAsString($argument);
+            $stringifiedArgument = $this->stringifyArgument($argument);
+            $arguments[$key] = $stringifiedArgument;
+            $totalLength += strlen($stringifiedArgument);
         }
-        return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE), '[]'));
+
+        if ($totalLength > $maxLength) {
+            //sort arguments from shortest to longest
+            uasort($arguments, function($arg1, $arg2) {
+                $length1 = strlen($arg1);
+                $length2 = strlen($arg2);
+                if ($length1 === $length2) {
+                    return 0;
+                }
+                return ($length1 < $length2) ? -1 : 1;
+            });
+
+            $allowedLength = floor(($maxLength - $argumentCount + 1) / $argumentCount);
+
+            $lengthRemaining = $maxLength;
+            $argumentsRemaining = $argumentCount;
+            foreach ($arguments as $key => $argument) {
+                $argumentsRemaining--;
+                if (mb_strlen($argument) > $allowedLength) {
+                    $arguments[$key] = mb_substr($argument, 0, $allowedLength - 4) . '...' . mb_substr($argument, -1, 1);
+                    $lengthRemaining -= ($allowedLength + 1);
+                } else {
+                    $lengthRemaining -= (mb_strlen($arguments[$key]) + 1);
+                    //recalculate allowed length because this argument was short
+                    if ($argumentsRemaining > 0) {
+                        $allowedLength = floor(($lengthRemaining - $argumentsRemaining + 1) / $argumentsRemaining);
+                    }
+                }
+            }
+
+            //restore original order of arguments
+            ksort($arguments);
+        }
+
+        return implode(',', $arguments);
     }
 
-    protected function parseArgumentAsString($argument)
+    protected function stringifyArgument($argument)
     {
-        if (is_object($argument)) {
+        if (is_resource($argument)) {
+            $argument = (string)$argument;
+        } elseif (is_array($argument)) {
+            foreach ($argument as $key => $value) {
+                if (is_object($value)) {
+                    $argument[$key] = $this->getClassName($value);
+                }
+            }
+        } elseif (is_object($argument)) {
             if (method_exists($argument, '__toString')) {
-                return (string)$argument;
+                $argument = (string)$argument;
+            } elseif (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
+                $argument = Locator::humanReadableString($argument);
+            } else {
+                $argument = $this->getClassName($argument);
             }
-            if (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
-                return Locator::humanReadableString($argument);
-            }
-        }
-        if ($argument instanceof \Closure) {
-            return 'lambda function';
-        }
-        if (is_callable($argument)) {
-            return 'callable function';
-        }
-        if (!is_object($argument)) {
-            return $argument;
         }
 
-        return (isset($argument->__mocked)) ? $this->formatClassName($argument->__mocked) : $this->formatClassName(get_class($argument));
+        return json_encode($argument, JSON_UNESCAPED_UNICODE);
+    }
+
+    protected function getClassName($argument)
+    {
+        if ($argument instanceof \Closure) {
+            return 'Closure';
+        } elseif ((isset($argument->__mocked))) {
+            return $this->formatClassName($argument->__mocked);
+        } else {
+            return $this->formatClassName(get_class($argument));
+        }
     }
 
     protected function formatClassName($classname)
@@ -130,13 +178,17 @@ abstract class Step
         return trim($classname, "\\");
     }
 
-    public function getPhpCode()
+    public function getPhpCode($maxLength)
     {
-        return "\${$this->prefix}->" . $this->getAction() . '(' . $this->getHumanizedArguments() .')';
+        $result = "\${$this->prefix}->" . $this->getAction() . '(';
+        $maxLength = $maxLength - mb_strlen($result) - 1;
+
+        $result .= $this->getHumanizedArguments($maxLength) .')';
+        return $result;
     }
 
     /**
-     * @return Meta
+     * @return MetaStep
      */
     public function getMetaStep()
     {
@@ -145,7 +197,16 @@ abstract class Step
 
     public function __toString()
     {
-        return $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
+        $humanizedAction = $this->humanize($this->getAction());
+        return $humanizedAction . ' ' . $this->getHumanizedArguments();
+    }
+
+
+    public function toString($maxLength)
+    {
+        $humanizedAction = $this->humanize($this->getAction());
+        $maxLength = $maxLength - mb_strlen($humanizedAction) - 1;
+        return $humanizedAction . ' ' . $this->getHumanizedArguments($maxLength);
     }
 
     public function getHtml($highlightColor = '#732E81')
@@ -162,9 +223,9 @@ abstract class Step
         return $this->humanize($this->getAction());
     }
 
-    public function getHumanizedArguments()
+    public function getHumanizedArguments($maxLength = 200)
     {
-        return $this->clean($this->getArguments(true));
+        return $this->getArgumentsAsString($maxLength);
     }
 
     protected function clean($text)

@@ -31,7 +31,7 @@ class Message
 
     public function width($length, $char = ' ')
     {
-        $message_length = strlen(strip_tags($this->message));
+        $message_length = mb_strlen(strip_tags($this->message));
         if ($message_length < $length) {
             $this->message .= str_repeat($char, $length - $message_length);
         }
@@ -40,7 +40,7 @@ class Message
 
     public function cut($length)
     {
-        $this->message = substr($this->message, 0, $length);
+        $this->message = mb_substr($this->message, 0, $length);
         return $this;
     }
 
@@ -108,10 +108,7 @@ class Message
 
     public function getLength()
     {
-        if (function_exists('mb_strlen')) {
-            return mb_strlen($this->message);
-        }
-        return strlen($this->message);
+        return mb_strlen($this->message);
     }
 
     public function __toString()
