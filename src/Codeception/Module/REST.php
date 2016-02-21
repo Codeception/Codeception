@@ -974,7 +974,7 @@ EOF;
     public function dontSeeXmlResponseMatchesXpath($xpath)
     {
         $structure = new XmlStructure($this->connectionModule->_getResponseContent());
-        $this->assertTrue($structure->matchesXpath($xpath), 'accidentally matched xpath');
+        $this->assertFalse($structure->matchesXpath($xpath), 'accidentally matched xpath');
     }
 
     /**
