@@ -1,21 +1,20 @@
 language: php
 
 php:
-  - 5.5
-  - 5.6
   - 7.0
   - hhvm
 
 matrix:
   allow_failures:
-    - php: hhvm
+    - php: 5.4 # because failing with lowest versions of all dependencies is not critical
+    - php: hhvm # because we haven't fixed all issues yet
   include:
-    - php: 5.4 # lowest PHP & Symfony
-      env: SYMFONY=2.7.0
-    - php: 5.5 # lowest symfony version with Guzzle 6
-      env: SYMFONY=2.7.0
-    - php: 5.6 # Symfony 2.8
-      env: SYMFONY=2.8.0
+    - php: 5.4 # lowest versions of all dependencies
+      env: dependencies=lowest
+    - php: 5.5
+      env: SYMFONY=2.7.0 # latest version of 2.7.*
+    - php: 5.6
+      env: SYMFONY=2.8.0 # latest version of 2.8.*
 
 addons:
   postgresql: "9.2"
@@ -43,7 +42,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || export PATH="$GOPATH/bin:$PATH"'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || go get github.com/Naktibalda/hhvm-serve'
   - composer self-update && composer --version
-  - if [ -n "$CI_USER_TOKEN" ]; then composer config github-oauth.github.com ${$CI_USER_TOKEN}; fi;
+  - if [ -n "$CI_USER_TOKEN" ]; then composer config github-oauth.github.com ${CI_USER_TOKEN}; echo "Configured Github token"; fi;
   - composer global require "fxp/composer-asset-plugin:~1.1.1"
   - '[[ -z "$SYMFONY" ]] || composer require symfony/finder=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/yaml=~$SYMFONY --no-update --ignore-platform-reqs'
@@ -52,9 +51,8 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ -z "$SYMFONY" ]] || composer update --prefer-dist'
-  - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer require guzzlehttp/guzzle=~5.0 --no-update ; fi' # install old guzzle
-  - composer install --prefer-dist
+  - '[[ "$dependencies" != "" ]] || composer update --prefer-dist'
+  - '[[ "$dependencies" != "lowest" ]] || composer update --prefer-lowest --prefer-dist -n'
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
   # Phalcon
