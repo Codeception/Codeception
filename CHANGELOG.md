@@ -6,11 +6,18 @@
 * [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
 
+#### 2.1.7
+
+* `Util\Locator` added `contains` method to easily locate any element containing a text.
+* [Laravel5] Added functionality to disable/enable Laravel's exception handling. By @janhenkgerritsen. See #2763
+* [Laravel5] Authentication now persists between requests when calling `amLoggedAs` with an instance of `Authenticable`. See #2795
+* [REST] Fixed dontSeeXmlResponseMatchesXpath method #2825 by @mangust404
+* [ZF2] Fixed POST parameters #2814 by @Naktibalda
+
 #### 2.1.6
 
-* [WebDriver] Fixed uploading files with **PhantomJS** #1823 by @DavertMik and @Naktibalda.
-Please specify your browser name as `phantom` in WebDriver config in order to handle PhantomJS-specific hooks.
-
+* Starting from 2.1.6 you can **download PHP 5.4 compatible phar build** at http://codeception.com/php54/codecept.phar by @Naktibalda. See [installation guide](http://codeception.com/install).
+* [WebDriver] Fixed uploading files with **PhantomJS** #1823 by @DavertMik and @Naktibalda. Please specify your browser name as `phantom` in WebDriver config in order to use PhantomJS-specific hooks.
 * Fixed parsing PHP files with spaces in name on PHP<7 by @acuthbert. Fixes #2647
 * [WebDriver] Fixed proxy error when using with Chrome #2651 by @vaikla
 * [Laravel5] Allow Laravel5 application URL to be set through config. By @gmhenderson. See #2676
@@ -26,6 +33,7 @@ Please specify your browser name as `phantom` in WebDriver config in order to ha
 * [Symfony2] Removed 'localhost' from getInternalDomains by @Naktibalda. Fixed #2717
 * Bugfix for using groups by directory on Windows by @tortuetorche See #2550 and #2551
 * [REST] Fixed failed message for `seeHttpHeader` and `dontSeeHttpHeader` from null to expected value #2697 by @zondor
+* [REST] Added methods to control redirect: `stopFollowingRedirects` and `startFollowingRedirects` by @brutuscat
 * [Recorder Extension] Added `animate_slides` config to disable left-right sliding animation between screenshots by @vml-rmott
 
 

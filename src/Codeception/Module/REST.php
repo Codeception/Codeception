@@ -974,7 +974,7 @@ EOF;
     public function dontSeeXmlResponseMatchesXpath($xpath)
     {
         $structure = new XmlStructure($this->connectionModule->_getResponseContent());
-        $this->assertTrue($structure->matchesXpath($xpath), 'accidentally matched xpath');
+        $this->assertFalse($structure->matchesXpath($xpath), 'accidentally matched xpath');
     }
 
     /**
@@ -1083,4 +1083,21 @@ EOF;
     {
         throw new ModuleException($this, "This action was deprecated in Codeception 2.0.9 and removed in 2.1. Please use `grabDataFromResponseByJsonPath` instead");
     }
+
+    /**
+     * Prevents automatic redirects to be followed by the client
+     */
+    public function stopFollowingRedirects()
+    {
+        $this->client->followRedirects(false);
+    }
+
+    /**
+     * Enables automatic redirects to be followed by the client
+     */
+    public function startFollowingRedirects()
+    {
+        $this->client->followRedirects(true);
+    }
+
 }

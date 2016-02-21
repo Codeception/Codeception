@@ -31,7 +31,6 @@ class StepTest extends \PHPUnit_Framework_TestCase
 
         $step = $this->getStep([null, [['PDO', 'getAvailableDrivers']]]);
         $this->assertEquals('["PDO","getAvailableDrivers"]', $step->getArgumentsAsString());
-
     }
 
     public function testGetHtml()
