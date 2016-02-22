@@ -50,6 +50,22 @@ use Codeception\Lib\Driver\Iron;
  * * project - Iron.io project ID.
  * * key - AWS access key ID.
  * * secret - AWS secret access key.
+ *      Warning:
+ *          Hard-coding your credentials can be dangerous, because it is easy to accidentally commit your credentials
+ *          into an SCM repository, potentially exposing your credentials to more people than intended.
+ *          It can also make it difficult to rotate credentials in the future.
+ * * profile - AWS credential profile
+ *           - it should be located in ~/.aws/credentials file
+ *           - eg:  [default]
+ *                  aws_access_key_id = YOUR_AWS_ACCESS_KEY_ID
+ *                  aws_secret_access_key = YOUR_AWS_SECRET_ACCESS_KEY
+ *                  [project1]
+ *                  aws_access_key_id = YOUR_AWS_ACCESS_KEY_ID
+ *                  aws_secret_access_key = YOUR_AWS_SECRET_ACCESS_KEY
+ *          - Note: Using IAM roles is the preferred technique for providing credentials
+ *                  to applications running on Amazon EC2
+ *                  http://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html?highlight=credentials
+ *
  * * region - A region parameter is also required for AWS, refer to the AWS documentation for possible values list.
  *
  * ### Example
@@ -84,6 +100,25 @@ use Codeception\Lib\Driver\Iron;
  *              'type' => 'aws',
  *              'key' => 'your-public-key',
  *              'secret' => 'your-secret-key',
+ *              'region' => 'us-west-2'
+ *
+ * #### Example AWS SQS using profile credentials
+ *
+ *     modules:
+ *        enabled: [Queue]
+ *        config:
+ *           Queue:
+ *              'type' => 'aws',
+ *              'profile' => 'project1', //see documentation
+ *              'region' => 'us-west-2'
+ *
+ * #### Example AWS SQS running on Anazon EC2 instance
+ *
+ *     modules:
+ *        enabled: [Queue]
+ *        config:
+ *           Queue:
+ *              'type' => 'aws',
  *              'region' => 'us-west-2'
  *
  */
