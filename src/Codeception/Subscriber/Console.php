@@ -514,7 +514,7 @@ class Console implements EventSubscriberInterface
 
         if (!$test instanceof Descriptive) {
             $title = $this->message(str_replace('::', ':', $test->toString()))->apply($stripDataSet);
-            $atMessage->cut($this->width - 4 - mb_strlen($title))->style('info');
+            $atMessage->cut($this->width - 4 - mb_strlen($title, 'utf-8'))->style('info');
             $this
                 ->message($title)
                 ->append($atMessage)
@@ -528,7 +528,7 @@ class Console implements EventSubscriberInterface
             $feature = $test->getMetadata()->getFeature();
         }
         $title = $this->message(ucfirst($feature))->apply($stripDataSet);
-        $atMessage->cut($this->width - 4 - mb_strlen($title))->style('info');
+        $atMessage->cut($this->width - 4 - mb_strlen($title, 'utf-8'))->style('info');
 
         $this->message($title)
             ->prepend($prefix)

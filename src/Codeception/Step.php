@@ -120,11 +120,11 @@ abstract class Step
             $argumentsRemaining = $argumentCount;
             foreach ($arguments as $key => $argument) {
                 $argumentsRemaining--;
-                if (mb_strlen($argument) > $allowedLength) {
-                    $arguments[$key] = mb_substr($argument, 0, $allowedLength - 4) . '...' . mb_substr($argument, -1, 1);
+                if (mb_strlen($argument, 'utf-8') > $allowedLength) {
+                    $arguments[$key] = mb_substr($argument, 0, $allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
                     $lengthRemaining -= ($allowedLength + 1);
                 } else {
-                    $lengthRemaining -= (mb_strlen($arguments[$key]) + 1);
+                    $lengthRemaining -= (mb_strlen($arguments[$key], 'utf-8') + 1);
                     //recalculate allowed length because this argument was short
                     if ($argumentsRemaining > 0) {
                         $allowedLength = floor(($lengthRemaining - $argumentsRemaining + 1) / $argumentsRemaining);
@@ -181,7 +181,7 @@ abstract class Step
     public function getPhpCode($maxLength)
     {
         $result = "\${$this->prefix}->" . $this->getAction() . '(';
-        $maxLength = $maxLength - mb_strlen($result) - 1;
+        $maxLength = $maxLength - mb_strlen($result, 'utf-8') - 1;
 
         $result .= $this->getHumanizedArguments($maxLength) .')';
         return $result;
@@ -205,7 +205,7 @@ abstract class Step
     public function toString($maxLength)
     {
         $humanizedAction = $this->humanize($this->getAction());
-        $maxLength = $maxLength - mb_strlen($humanizedAction) - 1;
+        $maxLength = $maxLength - mb_strlen($humanizedAction, 'utf-8') - 1;
         return $humanizedAction . ' ' . $this->getHumanizedArguments($maxLength);
     }
 
