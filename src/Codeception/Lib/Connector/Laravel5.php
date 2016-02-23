@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Lib\Connector\Laravel5\ExceptionHandlerDecorator;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -32,12 +33,17 @@ class Laravel5 extends Client
     /**
      * @var bool
      */
-    private $middlewareDisabled = false;
+    private $exceptionHandlingDisabled;
 
     /**
      * @var bool
      */
-    private $eventsDisabled = false;
+    private $middlewareDisabled;
+
+    /**
+     * @var bool
+     */
+    private $eventsDisabled;
 
     /**
      * @var object
@@ -52,9 +58,17 @@ class Laravel5 extends Client
     public function __construct($module)
     {
         $this->module = $module;
+
+        $this->exceptionHandlingDisabled = $this->module->config['disable_exception_handling'];
+        $this->middlewareDisabled = $this->module->config['disable_middleware'];
+        $this->eventsDisabled = $this->module->config['disable_events'];
+
         $this->initialize();
 
-        $components = array_key_exists('url', $this->module->config) ? parse_url($this->module->config['url']) : parse_url($this->app['config']->get('app.url', 'http://localhost'));
+        $components = parse_url($this->app['config']->get('app.url', 'http://localhost'));
+        if (array_key_exists('url', $this->module->config)) {
+            $components = parse_url($this->module->config['url']);
+        }
         $host = isset($components['host']) ? $components['host'] : 'localhost';
 
         parent::__construct($this->app, ['HTTP_HOST' => $host]);
@@ -124,6 +138,12 @@ class Laravel5 extends Client
             $this->triggeredEvents[] = $this->normalizeEvent($this->app['events']->firing());
         });
 
+        // Replace the Laravel exception handler with our decorated exception handler,
+        // so exceptions can be intercepted for the disable_exception_handling functionality.
+        $decorator = new ExceptionHandlerDecorator($this->app['Illuminate\Contracts\Debug\ExceptionHandler']);
+        $decorator->exceptionHandlingDisabled($this->exceptionHandlingDisabled);
+        $this->app->instance('Illuminate\Contracts\Debug\ExceptionHandler', $decorator);
+
         if ($this->module->config['disable_middleware'] || $this->middlewareDisabled) {
             $this->app->instance('middleware.disable', true);
         }
@@ -162,6 +182,7 @@ class Laravel5 extends Client
         // So to record the triggered events we have to catch the calls to the fire method of the event dispatcher mock.
         $callback = function ($event) {
             $this->triggeredEvents[] = $this->normalizeEvent($event);
+
             return [];
         };
         $mock->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
@@ -214,6 +235,24 @@ class Laravel5 extends Client
         }
 
         return false;
+    }
+
+    /**
+     * Disable Laravel exception handling.
+     */
+    public function disableExceptionHandling()
+    {
+        $this->exceptionHandlingDisabled = true;
+        $this->app['Illuminate\Contracts\Debug\ExceptionHandler']->exceptionHandlingDisabled(true);
+    }
+
+    /**
+     * Enable Laravel exception handling.
+     */
+    public function enableExceptionHandling()
+    {
+        $this->exceptionHandlingDisabled = false;
+        $this->app['Illuminate\Contracts\Debug\ExceptionHandler']->exceptionHandlingDisabled(false);
     }
 
     /**

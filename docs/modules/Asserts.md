@@ -4,7 +4,6 @@
 Special module for using asserts in your tests.
 
 
-
 ### assertContains
  
 Checks that haystack contains needle
@@ -31,7 +30,6 @@ Checks that two variables are equal.
  * `param string` $message
 
 
-
 ### assertFalse
  
 Checks that condition is negative.
@@ -43,7 +41,7 @@ Checks that condition is negative.
 ### assertFileExists
  
 Checks if file exists
- 
+
  * `param string` $filename
  * `param string` $message
 
@@ -51,7 +49,7 @@ Checks if file exists
 ### assertFileNotExists
  
 Checks if file doesn't exist
- 
+
  * `param string` $filename
  * `param string` $message
 
@@ -178,7 +176,6 @@ Checks that two variables are same
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
-
 
 
 ### assertTrue

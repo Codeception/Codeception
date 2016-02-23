@@ -6,7 +6,8 @@ Instead cleaning up the database between tests,
 you can use generated unique names, that should not conflict.
 When you create article on a site, for instance, you can assign it a unique name and then check it.
 
-This module has no actions, but introduces a function `sq` for generating unique sequences.
+This module has no actions, but introduces a function `sq` for generating unique sequences within test and
+`sqs` for generating unique sequences across suite.
 
 ### Usage
 
@@ -45,6 +46,29 @@ for ($i = 0; $i<10; $i++) {
 ?>
 ```
 
+Cest Suite tests:
+
+``` php
+<?php
+class UserTest
+{
+    public function createUser(AcceptanceTester $I)
+    {
+        $I->createUser('email' . sqs('user') . '@mailserver.com', sqs('login'), sqs('pwd'));
+    }
+
+    public function checkEmail(AcceptanceTester $I)
+    {
+        $I->seeInEmailTo('email' . sqs('user') . '@mailserver.com', sqs('login'));
+    }
+
+    public function removeUser(AcceptanceTester $I)
+    {
+        $I->removeUser('email' . sqs('user') . '@mailserver.com');
+    }
+}
+?>
+```
 
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Sequence.php">Help us to improve documentation. Edit module reference</a></div>

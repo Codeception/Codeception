@@ -386,6 +386,22 @@ $I->seeInThisFile('codeception/codeception');
  * `param` $text
 
 
+### seeNumberNewLines
+ 
+Checks If opened file has the `number` of new lines.
+
+Usage:
+
+``` php
+<?php
+$I->openFile('composer.json');
+$I->seeNumberNewLines(5);
+?>
+```
+
+ * `param int` $number New lines
+
+
 ### writeToFile
  
 Saves contents to tmp file and uploads the FTP/SFTP system.
