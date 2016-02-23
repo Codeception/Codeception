@@ -157,7 +157,6 @@ abstract class Step
             } else {
                 $argument = $this->getClassName($argument);
             }
-            return $this->getClassName($argument);
         }
 
         return json_encode($argument, JSON_UNESCAPED_UNICODE);
