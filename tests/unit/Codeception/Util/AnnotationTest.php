@@ -39,5 +39,16 @@ class AnnotationTest extends PHPUnit_Framework_TestCase {
         );
     }
 
+    public function testValueToSupportJson()
+    {
+        $values = Annotation::arrayValue('{ "code": "200", "user": "davert", "email": "davert@gmail.com" }');
+        $this->assertEquals(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
+    }
+
+    public function testValueToSupportAnnotationStyle()
+    {
+        $values = Annotation::arrayValue('( code="200", user="davert", email = "davert@gmail.com")');
+        $this->assertEquals(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
+    }
 
 }

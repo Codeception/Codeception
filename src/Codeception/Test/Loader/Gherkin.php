@@ -4,6 +4,9 @@ namespace Codeception\Test\Loader;
 use Behat\Gherkin\Filter\RoleFilter;
 use Behat\Gherkin\Keywords\ArrayKeywords as GherkinKeywords;
 use Behat\Gherkin\Lexer as GherkinLexer;
+use Behat\Gherkin\Node\ExampleNode;
+use Behat\Gherkin\Node\OutlineNode;
+use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Parser as GherkinParser;
 use Codeception\Configuration;
@@ -128,8 +131,12 @@ class Gherkin implements LoaderInterface
     {
         $featureNode = $this->parser->parse(file_get_contents($filename), $filename);
 
+        if (!$featureNode) {
+            return;
+        }
+
         foreach ($featureNode->getScenarios() as $scenarioNode) {
-            /** @var $scenarioNode ScenarioNode  **/
+            /** @var $scenarioNode ScenarioInterface  **/
             $steps = $this->steps['default']; // load default context
 
             foreach (array_merge($scenarioNode->getTags(), $featureNode->getTags()) as $tag) { // load tag contexts
@@ -147,8 +154,16 @@ class Gherkin implements LoaderInterface
                 }
             }
 
+            if ($scenarioNode instanceof OutlineNode) {
+                foreach ($scenarioNode->getExamples() as $example) {
+                    /** @var $example ExampleNode  **/
+                    $params = implode(', ', $example->getTokens());
+                    $exampleNode = new ScenarioNode($scenarioNode->getTitle() . " | $params", $scenarioNode->getTags(), $example->getSteps(), $example->getKeyword(), $example->getLine());
+                    $this->tests[] = new GherkinFormat($featureNode, $exampleNode, $steps);
+                }
+                continue;
+            }
             $this->tests[] = new GherkinFormat($featureNode, $scenarioNode, $steps);
-
         }
     }
 

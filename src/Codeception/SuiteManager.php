@@ -111,9 +111,6 @@ class SuiteManager
                 $this->configureTest($t);
             }
         }
-        if ($test instanceof ScenarioDriven) {
-            $test->preload();
-        }
         if ($test instanceof TestInterface) {
             $this->checkEnvironmentExists($test);
             if (!$this->isExecutedInCurrentEnvironment($test)) {
@@ -227,5 +224,8 @@ class SuiteManager
             'env' => $this->env,
             'modules' => $this->moduleContainer->all()
         ]);
+        if ($t instanceof ScenarioDriven) {
+            $t->preload();
+        }
     }
 }

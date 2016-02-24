@@ -2,7 +2,7 @@
 namespace Codeception\Test;
 
 use Behat\Gherkin\Node\FeatureNode;
-use Behat\Gherkin\Node\ScenarioNode;
+use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
 use Codeception\Lib\Di;
@@ -30,7 +30,7 @@ class Gherkin extends Test implements ScenarioDriven
      */
     protected $scenario;
 
-    public function __construct(FeatureNode $featureNode, ScenarioNode $scenarioNode, $steps = [])
+    public function __construct(FeatureNode $featureNode, ScenarioInterface $scenarioNode, $steps = [])
     {
         $this->featureNode = $featureNode;
         $this->scenarioNode = $scenarioNode;

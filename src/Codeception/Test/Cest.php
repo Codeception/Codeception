@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Test;
 
+use Codeception\Example;
 use Codeception\Lib\Parser;
 use Codeception\Util\Annotation;
 
@@ -38,6 +39,12 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
         $this->parser->parseFeature($code);
         $this->parser->attachMetadata(Annotation::forMethod($this->testClassInstance, $this->testMethod)->raw());
         $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance);
+
+        // add example params to feature
+        if ($this->getMetadata()->getCurrent('example')) {
+            $params = implode(', ', array_values($this->getMetadata()->getCurrent('example')));
+            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | '.$params);
+        }
     }
 
     public function getSourceCode()
@@ -61,7 +68,8 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
 
     public function test()
     {
-        $I = $this->makeIObject();
+        $actorClass = $this->getMetadata()->getCurrent('actor');
+        $I = new $actorClass($this->getScenario());
         try {
             $this->executeHook($I, 'before');
             $this->executeBeforeMethods($this->testMethod, $I);
@@ -112,16 +120,7 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
             "Method $context defined in annotation but does not exist in " . get_class($this->testClassInstance)
         );
     }
-    protected function makeIObject()
-    {
-        $className = '\\' . $this->getMetadata()->getCurrent('actor');
-        $I = new $className($this->getScenario());
-        $spec = $this->getSpecFromMethod();
-        if ($spec) {
-            $I->wantTo($spec);
-        }
-        return $I;
-    }
+
     protected function invoke($methodName, array $context)
     {
         foreach ($context as $class) {
@@ -133,6 +132,11 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
     {
         if (!method_exists($this->testClassInstance,  $this->testMethod)) {
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
+        }
+
+        if ($this->getMetadata()->getCurrent('example')) {
+            $this->invoke($this->testMethod, [$I, $this->scenario, new Example($this->getMetadata()->getCurrent('example'))]);
+            return;
         }
         $this->invoke($this->testMethod, [$I, $this->scenario]);
     }
