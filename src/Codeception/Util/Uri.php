@@ -42,16 +42,17 @@ class Uri
                 }
             }
             $base = $base->withPath($path);
-        }
-        if (isset($parts['scheme'])) {
-            $base = $base->withScheme($parts['scheme']);
+            $base = $base->withQuery('');
+            $base = $base->withFragment('');
         }
         if (isset($parts['query'])) {
             $base = $base->withQuery($parts['query']);
+            $base = $base->withFragment('');
         }
         if (isset($parts['fragment'])) {
             $base = $base->withFragment($parts['fragment']);
         }
+
         return (string) $base;
 
     }
