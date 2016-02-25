@@ -2444,4 +2444,26 @@ class WebDriver extends CodeceptionModule implements
     {
         return strpos($this->config['browser'], 'phantom') === 0;
     }
+
+    /**
+     * Move to the middle of the given element matched by the given locator.
+     * Extra shift, calculated from the top-left corner of the element, can be set by passing $offsetX and $offsetY parameters.
+     *
+     * ``` php
+     * <?php
+     * $I->scrollTo(['css' => '.checkout'], 20, 50);
+     * ?>
+     * ```
+     *
+     * @param $selector
+     * @param int $offsetX
+     * @param int $offsetY
+     */
+    public function scrollTo($selector, $offsetX = null, $offsetY = null)
+    {
+        $el = $this->findField($selector);
+
+        $action = new WebDriverActions($this->webDriver);
+        $action->moveToElement($el, $offsetX, $offsetY)->perform();
+    }
 }
