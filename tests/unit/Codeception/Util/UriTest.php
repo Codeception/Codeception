@@ -36,6 +36,17 @@ class UriTest extends \Codeception\TestCase\Test
     }
 
     /**
+     * @Issue https://github.com/Codeception/Codeception/pull/2841
+     */
+    public function testMergingPath()
+    {
+        $this->assertEquals('/form/?param=1#anchor', Uri::mergeUrls('/form/?param=1', '#anchor'));
+        $this->assertEquals('/form/?param=1#anchor2', Uri::mergeUrls('/form/?param=1#anchor1', '#anchor2'));
+        $this->assertEquals('/form/?param=2', Uri::mergeUrls('/form/?param=1#anchor', '?param=2'));
+        $this->assertEquals('/page/', Uri::mergeUrls('/form/?param=1#anchor', '/page/'));
+    }
+
+    /**
      * @Issue https://github.com/Codeception/Codeception/pull/2499
      */
     public function testAppendAnchor()
