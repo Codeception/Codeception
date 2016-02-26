@@ -33,6 +33,8 @@ class UriTest extends \Codeception\TestCase\Test
     public function testMergingScheme()
     {
         $this->assertEquals('https://google.com/account/', Uri::mergeUrls('http://google.com/', 'https://google.com/account/'));
+        $this->assertEquals('https://facebook.com/', Uri::mergeUrls('https://google.com/test/', '//facebook.com/'));
+        $this->assertEquals('https://facebook.com/#anchor2', Uri::mergeUrls('https://google.com/?param=1#anchor', '//facebook.com/#anchor2'));
     }
 
     /**

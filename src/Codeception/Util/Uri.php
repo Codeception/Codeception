@@ -29,6 +29,12 @@ class Uri
             return $uri;
         }
 
+        if (isset($parts['host'])) {
+            $base = $base->withHost($parts['host']);
+            $base = $base->withPath('');
+            $base = $base->withQuery('');
+            $base = $base->withFragment('');
+        }
         if (isset($parts['path'])) {
             $path = $parts['path'];
             if ($base->getPath() && (strpos($path, '/') !== 0) && !empty($path)) {
