@@ -17,10 +17,19 @@ class AmazonSQS implements Queue
      */
     public function openConnection($config)
     {
-        $this->queue = SqsClient::factory([
-            'credentials' => new Credentials($config['key'], $config['secret']),
+        $params = [
             'region' => $config['region']
-        ]);
+        ];
+
+        if (! empty($config['key']) && ! empty($config['secret'])) {
+            $params['credentials'] = new Credentials($config['key'], $config['secret']);
+        }
+
+        if (! empty($config['profile'])) {
+            $params['profile'] = $config['profile'];
+        }
+
+        $this->queue = SqsClient::factory($params);
         if (!$this->queue) {
             throw new TestRuntime('connection failed or timed-out.');
         }
@@ -97,13 +106,11 @@ class AmazonSQS implements Queue
                 return;
             }
             foreach ($res->getPath('Messages') as $msg) {
-                $this->debug("  - delete message: " . $msg['MessageId']);
+                $this->queue->deleteMessage([
+                    'QueueUrl' => $queueURL,
+                    'ReceiptHandle' => $msg['ReceiptHandle']
+                ]);
             }
-            // Do something useful with $msg['Body'] here
-            $this->queue->deleteMessage([
-                'QueueUrl'      => $queueURL,
-                'ReceiptHandle' => $msg['ReceiptHandle']
-            ]);
         }
     }
 
@@ -128,7 +135,7 @@ class AmazonSQS implements Queue
 
     public function getRequiredConfig()
     {
-        return ['key', 'secret', 'region'];
+        return ['region'];
     }
 
     public function getDefaultConfig()
