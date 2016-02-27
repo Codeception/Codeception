@@ -523,4 +523,15 @@ class PhpBrowserTest extends TestsForBrowsers
             "'Sign In!' is invalid CSS and XPath selector and Link or Button element with 'name=Sign In!' was not found");
         $this->module->click('Sign In!');
     }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2841
+     */
+    public function testSubmitFormDoesNotKeepGetParameters()
+    {
+        $this->module->amOnPage('/form/bug2841?stuff=other');
+        $this->module->fillField('#texty', 'thingshjere');
+        $this->module->click('#submit-registration');
+        $this->assertEmpty(data::get('query'), 'Query string is not empty');
+    }
 }
