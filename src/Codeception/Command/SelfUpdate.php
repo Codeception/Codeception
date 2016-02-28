@@ -21,6 +21,7 @@ class SelfUpdate extends Command
     const NAME = 'Codeception';
     const GITHUB = 'Codeception/Codeception';
     const SOURCE = 'http://codeception.com/codecept.phar';
+    const SOURCE_PHP54 = 'http://codeception.com/php54/codecept.phar';
 
     /**
      * Holds the current script filename.
@@ -186,7 +187,12 @@ class SelfUpdate extends Command
         $temp = basename($this->filename, '.phar') . '-temp.phar';
 
         try {
-            if (@copy(self::SOURCE, $temp)) {
+            $source = self::SOURCE;
+            if (version_compare(PHP_VERSION, '5.6.0', '<') ) {
+                $source = self::SOURCE_PHP54;
+            }
+
+            if (@copy($source, $temp)) {
                 chmod($temp, 0777 & ~umask());
 
                 // test the phar validity
