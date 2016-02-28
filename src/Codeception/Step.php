@@ -100,14 +100,14 @@ abstract class Step
         foreach ($arguments as $key => $argument) {
             $stringifiedArgument = $this->stringifyArgument($argument);
             $arguments[$key] = $stringifiedArgument;
-            $totalLength += strlen($stringifiedArgument);
+            $totalLength += mb_strlen($stringifiedArgument, 'utf-8');
         }
 
         if ($totalLength > $maxLength) {
             //sort arguments from shortest to longest
             uasort($arguments, function($arg1, $arg2) {
-                $length1 = strlen($arg1);
-                $length2 = strlen($arg2);
+                $length1 = mb_strlen($arg1, 'utf-8');
+                $length2 = mb_strlen($arg2, 'utf-8');
                 if ($length1 === $length2) {
                     return 0;
                 }
