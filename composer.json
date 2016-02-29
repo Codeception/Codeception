@@ -29,10 +29,10 @@
         "symfony/yaml": ">=2.7 <3.1",
         "symfony/browser-kit": ">=2.7 <3.1",
         "symfony/css-selector": ">=2.7 <3.1",
-        "symfony/dom-crawler": ">=2.7 <3.1"
+        "symfony/dom-crawler": ">=2.7 <3.1",
+        "behat/gherkin": "~4.4.0"
     },
     "require-dev": {
-        "behat/gherkin": "~4.4.0",
         "monolog/monolog": "~1.8",
         "facebook/php-sdk-v4": "~4.0.22",
         "videlalvaro/php-amqplib": "~2.4",
@@ -47,7 +47,6 @@
         "codeception/verify": "BDD-style assertions",
         "flow/jsonpath": "For using JSONPath in REST module",
         "phpseclib/phpseclib": "for SFTP option in FTP Module",
-        "behat/gherkin": "for BDD Gherkin feature syntax support",
         "league/factory-muffin": "For DataFactory module",
         "league/factory-muffin-faker": "For Faker support in DataFactory module"
     },
