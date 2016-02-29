@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-class Symfony2 extends \Symfony\Component\HttpKernel\Client
+class Symfony extends \Symfony\Component\HttpKernel\Client
 {
     
     /**

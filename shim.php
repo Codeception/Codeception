@@ -22,4 +22,11 @@ namespace Codeception\TestCase {
     class Test extends \Codeception\Test\Unit {
     }
 }
+
+namespace Codeception\Module {
+
+    class Symfony2 extends Symfony {
+    }
+}
+
 // @codingStandardsIgnoreEnd

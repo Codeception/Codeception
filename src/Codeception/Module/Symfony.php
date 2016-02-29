@@ -2,16 +2,15 @@
 namespace Codeception\Module;
 
 use Codeception\Configuration;
-use Codeception\TestInterface;
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
-use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
+use Codeception\Lib\Connector\Symfony as SymfonyConnector;
 use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\Lib\Interfaces\PartedModule;
 use Symfony\Component\Finder\Finder;
 
 /**
- * This module uses Symfony2 Crawler and HttpKernel to emulate requests and test response.
+ * This module uses Symfony Crawler and HttpKernel to emulate requests and test response.
  *
  * ## Demo Project
  *
@@ -36,7 +35,7 @@ use Symfony\Component\Finder\Finder;
  *
  * ```
  *    modules:
- *        - Symfony2:
+ *        - Symfony:
  *            app_path: 'app/front'
  *            environment: 'local_test'
  * ```
@@ -54,7 +53,7 @@ use Symfony\Component\Finder\Finder;
  *
  *     modules:
  *        enabled:
- *           - Symfony2:
+ *           - Symfony:
  *               app_path: 'app/front'
  *               var_path: 'var'
  *               environment: 'local_test'
@@ -68,7 +67,7 @@ use Symfony\Component\Finder\Finder;
  *
  * ## Parts
  * 
- * * services - allows to use Symfony2 DIC only with WebDriver or PhpBrowser modules. 
+ * * services - allows to use Symfony DIC only with WebDriver or PhpBrowser modules.
  * 
  * Usage example:
  * 
@@ -76,16 +75,16 @@ use Symfony\Component\Finder\Finder;
  * class_name: AcceptanceTester
  * modules:
  *     enabled:
- *         - Symfony2:
+ *         - Symfony:
  *             part: SERVICES
  *         - Doctrine2:
- *             depends: Symfony2
+ *             depends: Symfony
  *         - WebDriver:
  *             url: http://your-url.com
  *             browser: phantomjs
  * ```
  */
-class Symfony2 extends Framework implements DoctrineProvider, PartedModule
+class Symfony extends Framework implements DoctrineProvider, PartedModule
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
@@ -126,11 +125,11 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
             throw new ModuleRequireException(__CLASS__,
-                "Symfony2 bootstrap file not found in $cache\n \n" .
+                "Symfony bootstrap file not found in $cache\n \n" .
                 "Please specify path to bootstrap file using `var_path` config option\n \n" .
                 "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
                 "modules:\n    enabled:\n" .
-                "    - Symfony2:\n" .
+                "    - Symfony:\n" .
                 "        var_path: '../../app'\n" .
                 "        app_path: '../../app'");
 
@@ -149,7 +148,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
 
     public function _before(\Codeception\TestInterface $test)
     {
-        $this->client = new Symfony2Connector($this->kernel);
+        $this->client = new SymfonyConnector($this->kernel);
         $this->client->followRedirects(true);
     }
 

@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Lib\Interfaces;
 
-interface DataMapper extends ORM
+interface DataMapper extends ORM, DoctrineProvider
 {
     public function haveInRepository($entity, array $data);
 
@@ -10,6 +10,4 @@ interface DataMapper extends ORM
     public function dontSeeInRepository($entity, $params = []);
 
     public function grabFromRepository($entity, $field, $params = []);
-
-    public function _getEntityManager();
 }
