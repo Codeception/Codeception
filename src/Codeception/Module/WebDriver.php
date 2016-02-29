@@ -296,6 +296,10 @@ class WebDriver extends CodeceptionModule implements
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
+        $test->getMetadata()->setCurrent([
+            'browser' => $this->config['browser'],
+            'capabilities' => $this->config['capabilities']
+        ]);
     }
 
     protected function loadFirefoxProfile()
