@@ -82,4 +82,11 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $output = $step->toString(200);
         $this->assertEquals('see "UPPER CASE"', $output);
     }
+
+    public function testMultiByteTextLengthIsMeasuredCorrectly()
+    {
+        $step = $this->getStep(['see', ['ŽŽŽŽŽŽŽŽŽŽ', 'AAAAAAAAAAA']]);
+        $output = $step->toString(30);
+        $this->assertEquals('see "ŽŽŽŽŽŽŽŽŽŽ","AAAAAAAAAAA"', $output);
+    }
 }
