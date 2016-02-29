@@ -38,14 +38,18 @@
         "videlalvaro/php-amqplib": "~2.4",
         "codeception/specify": "~0.3",
         "pda/pheanstalk": "~2.0",
-        "flow/jsonpath": "~0.2"
+        "flow/jsonpath": "~0.2",
+        "league/factory-muffin": "^3.0",
+        "league/factory-muffin-faker": "^1.0"
     },
     "suggest": {
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
         "flow/jsonpath": "For using JSONPath in REST module",
         "phpseclib/phpseclib": "for SFTP option in FTP Module",
-        "behat/gherkin": "for BDD Gherkin feature syntax support"
+        "behat/gherkin": "for BDD Gherkin feature syntax support",
+        "league/factory-muffin": "For DataFactory module",
+        "league/factory-muffin-faker": "For Faker support in DataFactory module"
     },
 
     "autoload":{
