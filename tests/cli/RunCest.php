@@ -337,5 +337,47 @@ EOF
         $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
     }
 
+    public function runGherkinScenarioOutline(CliGuy $I)
+    {
+        $I->executeCommand('run scenario FileExamples.feature -v');
+        $I->seeInShellOutput('OK (3 tests');
+    }
+
+
+    /**
+     * @param CliGuy $I
+     * @after checkExampleFiles
+     */
+    public function runTestWithAnnotationExamples(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ExamplesCest:filesExistsAnnotation --steps');
+    }
+
+    /**
+     * @param CliGuy $I
+     * @after checkExampleFiles
+     */
+    public function runTestWithJsonExamples(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ExamplesCest:filesExistsByJson --steps');
+    }
+
+    /**
+     * @param CliGuy $I
+     * @after checkExampleFiles
+     */
+    public function runTestWithArrayExamples(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ExamplesCest:filesExistsByArray --steps');
+    }
+
+    protected function checkExampleFiles(CliGuy $I)
+    {
+        $I->seeInShellOutput('OK (3 tests');
+        $I->seeInShellOutput('I see file found "scenario.suite.yml"');
+        $I->seeInShellOutput('I see file found "dummy.suite.yml"');
+        $I->seeInShellOutput('I see file found "unit.suite.yml"');
+    }
+
 
 }

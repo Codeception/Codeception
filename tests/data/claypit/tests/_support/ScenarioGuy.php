@@ -44,6 +44,14 @@ class ScenarioGuy extends \Codeception\Actor
     }
 
     /**
+     * @Given I am inside :dir
+     */
+    public function openDir($path)
+    {
+        $this->amInPath($path);
+    }
+
+    /**
      * @Then there is a file :name
      */
     public function matchFile($name)
