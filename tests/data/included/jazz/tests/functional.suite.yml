@@ -8,4 +8,4 @@
 
 class_name: TestGuy
 modules:
-    enabled: [Filesystem, \Jazz\Codeception\Module\TestHelper]
+    enabled: [Filesystem, \Jazz\TestHelper]

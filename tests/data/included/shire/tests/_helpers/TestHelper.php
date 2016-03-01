@@ -1,5 +1,5 @@
 <?php
-namespace Shire\Codeception\Module;
+namespace Shire;
 
 // here you can define custom functions for TestGuy 
 

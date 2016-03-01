@@ -2,8 +2,9 @@
 
 namespace Codeception;
 
-use Codeception\Exception\ConfigurationException as ConfigurationException;
+use Codeception\Exception\ConfigurationException;
 use Codeception\Util\Autoload;
+use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
@@ -62,7 +63,7 @@ class Configuration
      * @var array Default config
      */
     public static $defaultConfig = [
-        'actor'      => 'Guy', ## codeception 1.x compatility
+        'actor'      => 'Guy', // codeception 1.x compatility
         'namespace'  => '',
         'include'    => [],
         'paths'      => [
@@ -83,11 +84,11 @@ class Configuration
         'groups'     => [],
         'settings'   => [
             'colors'     => false,
-            'log'        => false, // deprecated
             'bootstrap'  => false,
             'strict_xml' => false
         ],
-        'coverage'   => []
+        'coverage'   => [],
+        'params' => []
     ];
 
     public static $defaultSuiteSettings = [
@@ -103,6 +104,8 @@ class Configuration
         'shuffle'     => false,
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     ];
+
+    protected static $params;
 
     /**
      * Loads global config file which is `codeception.yml` by default.
@@ -138,8 +141,8 @@ class Configuration
             throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
         }
 
-        $config = self::loadConfigFile($configDistFile, self::$defaultConfig);
-        $config = self::loadConfigFile($configFile, $config);
+        $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromFile($configDistFile));
+        $config = self::mergeConfigs($config, self::getConfFromFile($configFile));
 
         if ($config == self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
@@ -187,8 +190,9 @@ class Configuration
             self::$envsDir = $config['paths']['envs'];
         }
 
+        Autoload::addNamespace(self::$config['namespace'], self::supportDir());
+        self::prepareParams($config);
         self::loadBootstrap($config['settings']['bootstrap']);
-        self::autoloadHelpers();
         self::loadSuites();
 
         return $config;
@@ -203,21 +207,6 @@ class Configuration
         if (file_exists($bootstrap)) {
             include_once $bootstrap;
         }
-    }
-
-    protected static function loadConfigFile($file, $parentConfig)
-    {
-        $config = file_exists($file) ? Yaml::parse(file_get_contents($file)) : [];
-        return self::mergeConfigs($parentConfig, $config);
-    }
-
-    protected static function autoloadHelpers()
-    {
-        $namespace = self::$config['namespace'];
-        Autoload::addNamespace($namespace, self::supportDir());
-
-        // deprecated
-        Autoload::addNamespace($namespace . '\Codeception\Module', self::supportDir());
     }
 
     protected static function loadSuites()
@@ -328,7 +317,13 @@ class Configuration
     protected static function getConfFromFile($filename, $nonExistentValue = [])
     {
         if (file_exists($filename)) {
-            return Yaml::parse(file_get_contents($filename));
+            $yaml = file_get_contents($filename);
+            if (self::$params) {
+                $template = new Template($yaml, '%', '%');
+                $template->setVars(self::$params);
+                $yaml = $template->produce();
+            }
+            return Yaml::parse($yaml);
         }
         return $nonExistentValue;
     }
@@ -594,5 +589,46 @@ class Configuration
         }
 
         return $paths;
+    }
+
+    private static function prepareParams($settings)
+    {
+        self::$params = [];
+
+        foreach ($settings['params'] as $paramStorage) {
+            if (is_array($paramStorage)) {
+                static::$params = array_merge(self::$params, $paramStorage);
+                continue;
+            }
+
+            // environment
+            if ($paramStorage === 'env' || $paramStorage === 'environment') {
+                static::$params = array_merge(self::$params, $_SERVER);
+                continue;
+            }
+
+            $paramsFile = realpath(self::$dir . '/' . $paramStorage);
+            if (!file_exists($paramsFile)) {
+                throw new ConfigurationException("Params file $paramsFile not found");
+            }
+
+            // yaml parameters
+            if (preg_match('~\.yml$~', $paramStorage)) {
+                $params = Yaml::parse(file_get_contents($paramsFile));
+                if (isset($params['parameters'])) { // Symfony style
+                    $params = $params['parameters'];
+                }
+                static::$params = array_merge(self::$params, $params);
+                continue;
+            }
+
+            // .env and ini files
+            if (preg_match('~(\.ini|\.env)$~', $paramStorage)) {
+                $params = parse_ini_file($paramsFile);
+                static::$params = array_merge(self::$params, $params);
+                continue;
+            }
+            throw new ConfigurationException("Params can't be loaded from `$paramStorage`.");
+        }
     }
 }

@@ -8,15 +8,19 @@ class Template
 {
     protected $template;
     protected $vars = [];
+    protected $placehodlerStart;
+    protected $placeholderEnd;
 
     /**
      * Takes a template string
      *
      * @param $template
      */
-    public function __construct($template)
+    public function __construct($template, $placeholderStart = '{{', $placeholderEnd = '}}')
     {
         $this->template = $template;
+        $this->placehodlerStart = $placeholderStart;
+        $this->placeholderEnd = $placeholderEnd;
     }
 
     /**
@@ -33,6 +37,16 @@ class Template
     }
 
     /**
+     * Sets all template vars
+     *
+     * @param array $vars
+     */
+    public function setVars(array $vars)
+    {
+        $this->vars = $vars;
+    }
+
+    /**
      * Fills up template string with placed variables.
      *
      * @return mixed
@@ -40,8 +54,19 @@ class Template
     public function produce()
     {
         $result = $this->template;
-        foreach ($this->vars as $var => $value) {
-            $result = str_replace('{{' . $var . '}}', $value, $result);
+        $regex = sprintf('~%s([\w\.]+)%s~m', $this->placehodlerStart, $this->placeholderEnd);
+
+        $matched = preg_match_all($regex, $result, $matches, PREG_SET_ORDER);
+        if (!$matched) {
+            return $result;
+        }
+
+        foreach ($matches as $match) { // fill in placeholders
+            $placeholder = $match[1];
+            if (!isset($this->vars[$placeholder])) {
+                continue;
+            }
+            $result = str_replace($this->placehodlerStart . $placeholder . $this->placeholderEnd, $this->vars[$placeholder], $result);
         }
         return $result;
     }

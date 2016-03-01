@@ -1,0 +1,6 @@
+class_name: DummyTester
+modules:
+    enabled:
+        - \Helper\Dummy:
+            vars: [%KEY1%, %KEY2%]
+            path: %PATH%

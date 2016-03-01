@@ -1,5 +1,5 @@
 <?php
-namespace Jazz\Codeception\Module;
+namespace Jazz;
 
 // here you can define custom functions for TestGuy 
 
