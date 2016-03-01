@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib;
 
+use Codeception\Configuration;
 use Codeception\Exception\TestParseException;
 use Codeception\Scenario;
 use Codeception\Step;
@@ -126,6 +127,10 @@ class Parser
 
     public static function validate($file)
     {
+        $config = Configuration::config();
+        if (!$config['settings']['lint']) { // lint disabled in config
+            return;
+        }
         exec("php -l ".escapeshellarg($file)." 2>&1", $output, $code);
         if ($code !== 0) {
             throw new TestParseException($file, implode("\n", $output));
