@@ -162,7 +162,7 @@ EOF;
      */
     public function testCeptValidation()
     {
-        $this->expectException('Codeception\Exception\TestParseException');
+        $this->setExpectedException('Codeception\Exception\TestParseException');
         Parser::validate(codecept_data_dir('Invalid.php'));
     }
 
