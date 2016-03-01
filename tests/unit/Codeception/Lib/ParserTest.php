@@ -21,6 +21,12 @@ class ParserTest extends \Codeception\TestCase\Test
     {
         $this->scenario = new \Codeception\Scenario(Stub::make('Codeception\TestCase\Cept'));
         $this->parser = new Parser($this->scenario);
+        Codeception\Configuration::append(['settings' => ['lint' => true]]);
+    }
+
+    protected function _after()
+    {
+        Codeception\Configuration::append(['settings' => ['lint' => false]]);
     }
 
     public function testParsingFeature()
@@ -156,7 +162,7 @@ EOF;
      */
     public function testCeptValidation()
     {
-        $this->setExpectedException('Codeception\Exception\TestParseException');
+        $this->expectException('Codeception\Exception\TestParseException');
         Parser::validate(codecept_data_dir('Invalid.php'));
     }
 
