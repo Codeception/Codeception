@@ -440,7 +440,7 @@ EOF;
         $this->execute('UNLINK', $url);
     }
 
-    protected function execute($method = 'GET', $url, $parameters = [], $files = [])
+    protected function execute($method, $url, $parameters = [], $files = [])
     {
         $this->debugSection("Request headers", $this->headers);
 
