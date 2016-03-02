@@ -496,7 +496,9 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $testValues,
             sprintf(
                 'Failed asserting that `%s` is in %s\'s value: %s',
-                $value, $fields->getNode(0)->nodeName, var_export($testValues, true)
+                $value,
+                $fields->getNode(0)->nodeName,
+                var_export($testValues, true)
             )
         ];
     }
