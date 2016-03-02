@@ -2,18 +2,13 @@
 
 #### 2.1.7
 
-* Added option to skip PHP files validation in `codeception.yml`
-
-```yaml
-settings:
-    lint: false
-```
-
+* Added option to skip PHP files validation in `codeception.yml` settings: lint: false
 * `Util\Locator` added `contains` method to easily locate any element containing a text.
 * [Laravel5] Added functionality to disable/enable Laravel's exception handling. By @janhenkgerritsen. See #2763
 * [Laravel5] Authentication now persists between requests when calling `amLoggedAs` with an instance of `Authenticable`. See #2795
 * [REST] Fixed dontSeeXmlResponseMatchesXpath method #2825 by @mangust404
 * [ZF2] Fixed POST parameters #2814 by @Naktibalda
+* [ZF1] Call Zend_Registry::_unsetInstance in _after #2863 by @Naktibalda
 
 #### 2.1.6
 
@@ -36,8 +31,6 @@ settings:
 * [REST] Fixed failed message for `seeHttpHeader` and `dontSeeHttpHeader` from null to expected value #2697 by @zondor
 * [REST] Added methods to control redirect: `stopFollowingRedirects` and `startFollowingRedirects` by @brutuscat
 * [Recorder Extension] Added `animate_slides` config to disable left-right sliding animation between screenshots by @vml-rmott
-
-
 
 #### 2.1.5
 
@@ -68,7 +61,6 @@ settings:
 * [Laravel5] Fix bug for `seeCurrentRouteIs` when routes don't match. See #2593. By @maddhatter
 * [PhpBrowser] Set curl options for Guzzle6 correctly. See #2533. By @Naktibalda
 * Fixed usage of GroupObject by unit tests. GroupObjects can skip tests by @davetmik. See #2617
-
 
 #### 2.1.4
 
