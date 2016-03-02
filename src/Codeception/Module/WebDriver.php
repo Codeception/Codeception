@@ -202,7 +202,13 @@ use Symfony\Component\DomCrawler\Crawler;
  * 3. If nothing found, check if locator looks like an XPath expression. If so, run it.
  * 4. Throw an `ElementNotFound` exception.
  *
- * Be warned that fuzzy locators can be significantly slower than strict locators. If speed is a concern, it's recommended you stick with explicitly specifying the locator type via the array syntax.
+ * Be warned that fuzzy locators can be significantly slower than strict locators.
+ * Especially if you use Selenium WebDriver with `wait` (aka implicit wait) option.
+ * In the example above if you set `wait` to 5 seconds and use XPath string as fuzzy locator,
+ * `submitForm` method will wait for 5 seconds at each step.
+ * That means 5 seconds finding the form by ID, another 5 seconds finding by CSS
+ * until it finally tries to find the form by XPath).
+ * If speed is a concern, it's recommended you stick with explicitly specifying the locator type via the array syntax.
  *
  * ## Public Properties
  *
