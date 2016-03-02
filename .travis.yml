@@ -66,6 +66,9 @@ install:
   # Laravel 5
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer install -d frameworks-l5 --no-dev  --prefer-dist'
+  # Lumen
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-lumen-sample.git frameworks-lumen'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer install -d frameworks-lumen --no-dev  --prefer-dist'
   # Symfony
   - git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony
   - composer install -d frameworks-symfony --no-dev --prefer-dist
@@ -109,6 +112,10 @@ before_script:
   # Laravel 5
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || touch frameworks-l5/storage/testing.sqlite'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php frameworks-l5/artisan migrate --database=sqlite_testing --force'
+  # Lumen
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || cp frameworks-lumen/.env.testing frameworks-lumen/.env'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || touch frameworks-lumen/storage/testing.sqlite'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php frameworks-lumen/artisan migrate --database=testing --force'
   # Symfony
   - '[[ -z "$SYMFONY" ]] || php frameworks-symfony/app/console doctrine:schema:create -n --env test'
   - '[[ -z "$SYMFONY" ]] || php frameworks-symfony/app/console doctrine:fixtures:load -n --env test'
@@ -118,6 +125,7 @@ before_script:
   - php codecept build -c frameworks-laravel
   - '[[ -z "$SYMFONY" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-l5'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-lumen'
   - php codecept build -c frameworks-zf1
   - php codecept build -c frameworks-zf2
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-zend-expressive'
@@ -132,6 +140,7 @@ script:
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
   - '[[ -z "$SYMFONY" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle '# Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
