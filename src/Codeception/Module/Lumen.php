@@ -13,6 +13,7 @@ use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  *
@@ -362,96 +363,163 @@ class Lumen extends Framework implements ActiveRecord
 
     /**
      * Inserts record into the database.
+     * If you pass the name of a database table as the first argument, this method returns an integer ID.
+     * You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
      *
      * ``` php
      * <?php
-     * $user_id = $I->haveRecord('users', array('name' => 'Davert'));
+     * $user_id = $I->haveRecord('users', array('name' => 'Davert')); // returns integer
+     * $user = $I->haveRecord('App\User', array('name' => 'Davert')); // returns Eloquent model
      * ?>
      * ```
      *
-     * @param $tableName
+     * @param string $table
      * @param array $attributes
-     * @return mixed
+     * @return integer|EloquentModel
+     * @part orm
      */
-    public function haveRecord($tableName, $attributes = array())
+    public function haveRecord($table, $attributes = [])
     {
-        $id = $this->app['db']->table($tableName)->insertGetId($attributes);
-        if (!$id) {
-            $this->fail("Couldn't insert record into table $tableName");
+        if (class_exists($table)) {
+            $model = new $table;
+
+            if (! $model instanceof EloquentModel) {
+                throw new \RuntimeException("Class $table is not an Eloquent model");
+            }
+
+            $model->fill($attributes)->save();
+
+            return $model;
         }
-        return $id;
+
+        try {
+            return $this->app['db']->table($table)->insertGetId($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Could not insert record into table '$table':\n\n" . $e->getMessage());
+        }
     }
 
     /**
      * Checks that record exists in database.
+     * You can pass the name of a database table or the class name of an Eloquent model as the first argument.
      *
      * ``` php
+     * <?php
      * $I->seeRecord('users', array('name' => 'davert'));
+     * $I->seeRecord('App\User', array('name' => 'davert'));
+     * ?>
      * ```
      *
-     * @param $tableName
+     * @param string $table
      * @param array $attributes
+     * @part orm
      */
-    public function seeRecord($tableName, $attributes = array())
+    public function seeRecord($table, $attributes = [])
     {
-        $record = $this->findRecord($tableName, $attributes);
-        if (!$record) {
-            $this->fail("Couldn't find $tableName with " . json_encode($attributes));
+        if (class_exists($table)) {
+            if (! $this->findModel($table, $attributes)) {
+                $this->fail("Could not find $table with " . json_encode($attributes));
+            }
+        } else if (! $this->findRecord($table, $attributes)) {
+            $this->fail("Could not find matching record in table '$table'");
         }
-        $this->debugSection($tableName, json_encode($record));
     }
 
     /**
      * Checks that record does not exist in database.
+     * You can pass the name of a database table or the class name of an Eloquent model as the first argument.
      *
      * ``` php
      * <?php
      * $I->dontSeeRecord('users', array('name' => 'davert'));
+     * $I->dontSeeRecord('App\User', array('name' => 'davert'));
      * ?>
      * ```
      *
-     * @param $tableName
+     * @param string $table
      * @param array $attributes
+     * @part orm
      */
-    public function dontSeeRecord($tableName, $attributes = array())
+    public function dontSeeRecord($table, $attributes = [])
     {
-        $record = $this->findRecord($tableName, $attributes);
-        $this->debugSection($tableName, json_encode($record));
-        if ($record) {
-            $this->fail("Unexpectedly managed to find $tableName with " . json_encode($attributes));
+        if (class_exists($table)) {
+            if ($this->findModel($table, $attributes)) {
+                $this->fail("Unexpectedly found matching $table with " . json_encode($attributes));
+            }
+        } else if ($this->findRecord($table, $attributes)) {
+            $this->fail("Unexpectedly found matching record in table '$table'");
         }
     }
 
     /**
      * Retrieves record from database
+     * If you pass the name of a database table as the first argument, this method returns an array.
+     * You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
      *
      * ``` php
      * <?php
-     * $category = $I->grabRecord('users', array('name' => 'davert'));
+     * $record = $I->grabRecord('users', array('name' => 'davert')); // returns array
+     * $record = $I->grabRecord('App\User', array('name' => 'davert')); // returns Eloquent model
      * ?>
      * ```
      *
-     * @param $tableName
+     * @param string $table
      * @param array $attributes
-     * @return mixed
+     * @return array|EloquentModel
+     * @part orm
      */
-    public function grabRecord($tableName, $attributes = array())
+    public function grabRecord($table, $attributes = [])
     {
-        return $this->findRecord($tableName, $attributes);
+        if (class_exists($table)) {
+            if (! $model = $this->findModel($table, $attributes)) {
+                $this->fail("Could not find $table with " . json_encode($attributes));
+            }
+
+            return $model;
+        }
+
+        if (! $record = $this->findRecord($table, $attributes)) {
+            $this->fail("Could not find matching record in table '$table'");
+        }
+
+        return $record;
     }
 
     /**
-     * @param $tableName
+     * @param string $modelClass
      * @param array $attributes
-     * @return mixed
+     *
+     * @return EloquentModel
      */
-    protected function findRecord($tableName, $attributes = array())
+    protected function findModel($modelClass, $attributes = [])
     {
-        $query = $this->app['db']->table($tableName);
+        $model = new $modelClass;
+
+        if (!$model instanceof EloquentModel) {
+            throw new \RuntimeException("Class $modelClass is not an Eloquent model");
+        }
+
+        $query = $model->newQuery();
         foreach ($attributes as $key => $value) {
             $query->where($key, $value);
         }
+
         return $query->first();
+    }
+
+    /**
+     * @param string $table
+     * @param array $attributes
+     * @return mixed
+     */
+    protected function findRecord($table, $attributes = [])
+    {
+        $query = $this->app['db']->table($table);
+        foreach ($attributes as $key => $value) {
+            $query->where($key, $value);
+        }
+
+        return (array) $query->first();
     }
 
 }
