@@ -51,9 +51,10 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
-  - composer_parameters="-n --no-dev  --prefer-dist" # this parameter will be used in all composer install commands
+  - composer_parameters="-n --prefer-dist" # this variable will be used in all composer install commands
   - '[[ "$dependencies" != "lowest" ]] || composer_parameters="$composer_parameters --prefer-lowest"'
   - composer update $composer_parameters
+  - composer_parameters="$composer_parameters --no-dev"' # Codeception needs dev dependencies, but frameworks don't
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
   # Phalcon
