@@ -6,13 +6,12 @@ php:
 
 matrix:
   allow_failures:
-    - php: 5.4 # because failing with lowest versions of all dependencies is not critical
     - php: hhvm # because we haven't fixed all issues yet
   include:
     - php: 5.4 # lowest versions of all dependencies
-      env: dependencies=lowest
-    - php: 5.5
       env: SYMFONY=2.7.0 # latest version of 2.7.*
+    - php: 5.5
+      env: dependencies=lowest
     - php: 5.6
       env: SYMFONY=2.8.0 # latest version of 2.8.*
 
