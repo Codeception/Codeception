@@ -910,6 +910,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * @param array $attributes
      * @param string $name
      * @return mixed
+     * @part orm
      */
     public function have($model, $attributes = [], $name = 'default')
     {
@@ -938,6 +939,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * @param array $attributes
      * @param string $name
      * @return mixed
+     * @part orm
      */
     public function haveMultiple($model, $times, $attributes = [], $name = 'default')
     {
