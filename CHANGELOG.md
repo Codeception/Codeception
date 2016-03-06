@@ -4,6 +4,7 @@
 
 * Added option to skip PHP files validation in `codeception.yml` settings: lint: false
 * `Util\Locator` added `contains` method to easily locate any element containing a text.
+* [Laravel5] Added `guard` parameters to `seeAuthentication` and `dontSeeAuthentication` methods. By @janhenkgerritsen. See #2876
 * [Laravel5] Added functionality to disable/enable Laravel's exception handling. By @janhenkgerritsen. See #2763
 * [Laravel5] Authentication now persists between requests when calling `amLoggedAs` with an instance of `Authenticable`. See #2795
 * [REST] Fixed dontSeeXmlResponseMatchesXpath method #2825 by @mangust404

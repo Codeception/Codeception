@@ -686,22 +686,38 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Checks that a user is authenticated
+     * Checks that a user is authenticated.
+     * You can specify the guard that should be use for Laravel >= 5.2.
+     * @param string|null $guard
      */
-    public function seeAuthentication()
+    public function seeAuthentication($guard = null)
     {
-        if (! $this->app['auth']->check()) {
+        $auth = $this->app['auth'];
+
+        if (method_exists($auth, 'guard')) {
+            $auth = $auth->guard($guard);
+        }
+
+        if (! $auth->check()) {
             $this->fail("There is no authenticated user");
         }
     }
 
     /**
-     * Check that user is not authenticated
+     * Check that user is not authenticated.
+     * You can specify the guard that should be use for Laravel >= 5.2.
+     * @param string|null $guard
      */
-    public function dontSeeAuthentication()
+    public function dontSeeAuthentication($guard = null)
     {
-        if ($this->app['auth']->check()) {
-            $this->fail("There is an authenticated user");
+        $auth = $this->app['auth'];
+
+        if (method_exists($auth, 'guard')) {
+            $auth = $auth->guard($guard);
+        }
+
+        if ($auth->check()) {
+            $this->fail("There is no authenticated user");
         }
     }
 
