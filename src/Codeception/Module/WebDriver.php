@@ -2461,9 +2461,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function scrollTo($selector, $offsetX = null, $offsetY = null)
     {
-        $el = $this->findField($selector);
-
-        $action = new WebDriverActions($this->webDriver);
-        $action->moveToElement($el, $offsetX, $offsetY)->perform();
+        $el = $this->matchFirstOrFail($this->webDriver, $selector);
+        $x = $el->getLocation()->getX() + $offsetX;
+        $y = $el->getLocation()->getY() + $offsetY;
+        $this->webDriver->executeScript("window.scrollTo($x, $y)");
     }
 }
