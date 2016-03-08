@@ -950,7 +950,7 @@ class WebDriver extends CodeceptionModule implements
         foreach ($elements as $el) {
             switch ($el->getTagName()) {
                 case 'input':
-                    if ( $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
+                    if ($el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
                         if ($el->getAttribute('checked')) {
                             if (is_bool($value)) {
                                 $currentValues = [true];
