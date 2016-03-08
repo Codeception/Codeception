@@ -948,19 +948,26 @@ class WebDriver extends CodeceptionModule implements
             $currentValues = [false];
         }
         foreach ($elements as $el) {
-            if ($el->getTagName() === 'textarea') {
-                $currentValues[] = $el->getAttribute('value');
-            } elseif ($el->getTagName() === 'input' && $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
-                if ($el->getAttribute('checked')) {
-                    if (is_bool($value)) {
-                        $currentValues = [true];
-                        break;
+            switch ($el->getTagName()) {
+                case 'input':
+                    if ( $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
+                        if ($el->getAttribute('checked')) {
+                            if (is_bool($value)) {
+                                $currentValues = [true];
+                                break;
+                            } else {
+                                $currentValues[] = $el->getAttribute('value');
+                            }
+                        }
                     } else {
                         $currentValues[] = $el->getAttribute('value');
                     }
-                }
-            } else {
-                $currentValues[] = $el->getAttribute('value');
+                    break;
+
+                case 'textarea':
+                default:
+                    $currentValues[] = $el->getAttribute('value');
+                    break;
             }
         }
 
