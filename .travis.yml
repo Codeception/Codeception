@@ -69,7 +69,8 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-l5 $composer_parameters'
   # Symfony
   - git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony
-  - composer update -d frameworks-symfony $composer_parameters
+  - '[[ -z "$SYMFONY" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
+  - '[[ -z "$SYMFONY" ]] || composer update -d frameworks-symfony $composer_parameters'
   # ZF1
   - git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
   - composer update -d frameworks-zf1 $composer_parameters
