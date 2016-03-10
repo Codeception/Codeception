@@ -21,3 +21,4 @@ tests/data/claypit/tests/_output/*
 tests/data/claypit/c3tmp
 
 .DS_Store
+robo.phar

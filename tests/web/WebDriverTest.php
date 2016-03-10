@@ -615,4 +615,12 @@ class WebDriverTest extends TestsForBrowsers
         }
     }
 
+    public function testScrollTo()
+    {
+        $this->module->amOnPage('/form/example18');
+        $this->module->scrollTo('#clickme');
+        $this->module->click('Submit');
+        $this->module->see('Welcome to test app!');
+
+    }
 }
