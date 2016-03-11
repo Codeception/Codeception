@@ -347,8 +347,12 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->see('Unauthorized');
         $this->module->amHttpAuthenticated('davert', 'password');
         $this->module->amOnPage('/auth');
+        $this->module->seeResponseCodeIs(200);
         $this->module->dontSee('Unauthorized');
         $this->module->see("Welcome, davert");
+        $this->module->amHttpAuthenticated(null, null);
+        $this->module->amOnPage('/auth');
+        $this->module->seeResponseCodeIs(401);
         $this->module->amHttpAuthenticated('davert', '123456');
         $this->module->amOnPage('/auth');
         $this->module->see('Forbidden');

@@ -4,6 +4,7 @@
 
 * Global Bootstrap, Suite Bootstrap, Module Initialization happens before test loading. Fixes issues of autoloading TestCase classes introduced in 2.1.5, see #2872
 * Added option to skip PHP files validation in `codeception.yml` settings: lint: false
+* [PhpBrowser] `amHttpAuthenticated` allows null, null as parameters to unset authentication. #2896
 * `Util\Locator` added `contains` method to easily locate any element containing a text.
 * [Laravel5] Added `guard` parameters to `seeAuthentication` and `dontSeeAuthentication` methods. By @janhenkgerritsen. See #2876
 * [Laravel5] Added functionality to disable/enable Laravel's exception handling. By @janhenkgerritsen. See #2763
