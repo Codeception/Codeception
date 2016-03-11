@@ -16,6 +16,9 @@ class FilterTest extends \Codeception\TestCase\Test
     // tests
     public function testBacklistFiltersApplied()
     {
+        if (!method_exists($this->filter->getFilter(), 'addFileToBlacklist')) {
+            $this->markTestSkipped('The blacklist functionality has been removed from PHPUnit 5');
+        }
         $config = ['coverage' =>
             ['blacklist' => [
                 'include' => [
