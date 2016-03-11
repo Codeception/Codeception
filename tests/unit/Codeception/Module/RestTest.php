@@ -45,13 +45,12 @@ class RestTest extends \PHPUnit_Framework_TestCase
     {
         $this->module->haveHttpHeader('Origin','http://www.example.com');
         $this->module->sendGET('/rest/user/');
-        $this->assertEquals(
-            'http://www.example.com',
-            $this->module->client->getServerParameter('HTTP_ORIGIN')
-        );
-
+        $server = $this->module->client->getInternalRequest()->getServer();
+        $this->assertArrayHasKey('HTTP_ORIGIN', $server);
         $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
-        $this->assertNull($this->module->client->getServerParameter('HTTP_ORIGIN', null));
+        $this->module->sendGET('/rest/user/');
+        $server = $this->module->client->getInternalRequest()->getServer();
+        $this->assertArrayNotHasKey('HTTP_ORIGIN', $server);
     }
 
     public function testGet()
