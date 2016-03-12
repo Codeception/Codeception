@@ -2,8 +2,14 @@
 
 #### 2.1.7
 
+* **PHPUnit 5.x support**
 * Global Bootstrap, Suite Bootstrap, Module Initialization happens before test loading. Fixes issues of autoloading TestCase classes introduced in 2.1.5, see #2872
-* Added option to skip PHP files validation in `codeception.yml` settings: lint: false
+* Added option to skip PHP files validation in `codeception.yml` - `settings: lint: false`
+* [Facebook] Updated to  facebook/php-sdk-v4 version 5 by @orhan-swe and @tigerseo #2828 #2415
+* [WebDriver] Added `scrollTo` action by @javigomez and @davertmik #2844
+* Fix encoding problems in PHP prior to 5.6 by @pejaycz. See #2831
+* [Queue] Fixed `clearQueue` for AmazonSQS by @mikitu #2805
+* [Db] Fixed loading files in Sqlite @mcustiel See #2812
 * [PhpBrowser] `amHttpAuthenticated` allows null, null as parameters to unset authentication. #2896
 * `Util\Locator` added `contains` method to easily locate any element containing a text.
 * [Laravel5] Added `guard` parameters to `seeAuthentication` and `dontSeeAuthentication` methods. By @janhenkgerritsen. See #2876
