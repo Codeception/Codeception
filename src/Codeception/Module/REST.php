@@ -138,7 +138,7 @@ EOF;
         }
     }
 
-    private function getRunningClient()
+    protected function getRunningClient()
     {
         if ($this->client->getInternalRequest() === null) {
             throw new ModuleException($this, "Response is empty. Use `\$I->sendXXX()` methods to send HTTP request");
