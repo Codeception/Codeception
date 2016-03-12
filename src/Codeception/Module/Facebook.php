@@ -200,16 +200,10 @@ EOF;
 
         $callbackUrl = $this->browserModule->_getUrl();
         $this->browserModule->amOnUrl('https://facebook.com/login');
-        $this->browserModule->fillField('#email', $this->grabFacebookTestUserEmail());
-        $this->browserModule->fillField('#pass', $this->grabFacebookTestUserPassword());
-
-        try {
-            $this->browserModule->click('login', 'input');
-        } catch (\Codeception\Exception\ElementNotFound $e) {
-            $x = $this->browserModule->_getResponseContent();
-            mail('tiger.seo@gmail.com', 'facebook html as it is seen from travis', $x);
-            throw $e;
-        }
+        $this->browserModule->submitForm('#login_form', [
+            'email' => $this->grabFacebookTestUserEmail(),
+            'pass' => $this->grabFacebookTestUserPassword()
+        ]);
         $this->browserModule->see($this->grabFacebookTestUserName());
         $this->browserModule->amOnUrl($callbackUrl);
     }
