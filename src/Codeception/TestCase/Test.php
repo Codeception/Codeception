@@ -34,7 +34,7 @@ class Test extends CodeceptionTestCase implements
     }
 
     /**
-     * @Override
+     * Executed before each test
      */
     protected function _before()
     {
@@ -46,7 +46,7 @@ class Test extends CodeceptionTestCase implements
     }
 
     /**
-     * @Override
+     * Executed after each test
      */
     protected function _after()
     {
