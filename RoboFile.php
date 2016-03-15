@@ -16,7 +16,7 @@ class RoboFile extends \Robo\Tasks
         $this->publishDocs();
         $this->installDependenciesForPhp54();
         $this->buildPhar54();
-        $this->installDependenciesForPhp55();
+        $this->installDependenciesForPhp56();
         $this->buildPhar();
         $this->revertComposerJsonChanges();
         $this->publishPhar();
@@ -156,11 +156,11 @@ class RoboFile extends \Robo\Tasks
         $this->taskComposerUpdate()->run();
     }
 
-    private function installDependenciesForPhp55()
+    private function installDependenciesForPhp56()
     {
         $this->taskReplaceInFile('composer.json')
             ->regex('/"platform": \{.*?\}/')
-            ->to('"platform": {"php": "5.5.10"}')
+            ->to('"platform": {"php": "5.6.0"}')
             ->run();
 
         $this->taskComposerUpdate()->run();
@@ -449,7 +449,7 @@ class RoboFile extends \Robo\Tasks
             }
             $versionLine = "* [$releaseName](http://codeception.com/releases/$releaseName/codecept.phar)";
             if (file_exists("releases/$releaseName/php54/codecept.phar")) {
-                $versionLine .= ", [for PHP 5.4](http://codeception.com/releases/$releaseName/php54/codecept.phar)";
+                $versionLine .= ", [for PHP 5.4 or 5.5](http://codeception.com/releases/$releaseName/php54/codecept.phar)";
             }
             $releaseFile->line($versionLine);
         }
