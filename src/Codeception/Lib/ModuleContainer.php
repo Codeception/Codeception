@@ -206,8 +206,8 @@ class ModuleContainer
      */
     public function getCurrentEnvironment()
     {
-        if (empty($this->config['current_environment'])) {
-            return '';
+        if (!array_key_exists($this->config, 'current_environment')) {
+            throw new \RuntimeException('There is no current environment defined');
         }
 
         return $this->config['current_environment'];
