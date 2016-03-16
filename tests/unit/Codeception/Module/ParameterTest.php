@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\tests\unit\Codeception\Module;
+
 use Codeception\Module\Parameter;
 
 /**
