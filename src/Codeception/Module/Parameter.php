@@ -6,8 +6,6 @@ use Codeception\Module as CodeceptionModule;
 
 /**
  * Class Parameter
- *
- * @copyright 2016 PB Web Media B.V.
  */
 class Parameter extends CodeceptionModule
 {
