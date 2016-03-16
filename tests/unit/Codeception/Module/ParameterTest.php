@@ -1,11 +1,8 @@
 <?php
 use Codeception\Module\Parameter;
 
-
 /**
  * Class ParameterTest
- *
- * @copyright 2016 PB Web Media B.V.
  */
 class ParameterTest extends \PHPUnit_Framework_TestCase
 {
