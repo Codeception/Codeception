@@ -3,6 +3,7 @@ namespace Codeception\Lib;
 
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
+use Codeception\Subscriber\Module;
 use Codeception\Util\Stub;
 
 class ModuleContainerTest extends \PHPUnit_Framework_TestCase
@@ -292,6 +293,67 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('Codeception\Lib\HelperModule');
         $this->moduleContainer->hasModule('Codeception\Lib\HelperModule');
+    }
+
+    public function testGetParameter()
+    {
+        $config = [
+            'parameters' => [
+                'foo' => 'bar'
+            ]
+        ];
+
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+
+        $this->assertEquals('bar', $this->moduleContainer->getParameter('foo'));
+    }
+
+    public function testGetParametersDoNotExist()
+    {
+        $config = [];
+
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+
+        $this->setExpectedException(\RuntimeException::class);
+
+        $this->moduleContainer->getParameter('foo');
+    }
+
+    public function testGetParameterByKeyDoesNotExist()
+    {
+        $config = [
+            'parameters' => [
+                'test' => 'some-val'
+            ]
+        ];
+
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+
+        $this->setExpectedException(\RuntimeException::class);
+
+        $this->moduleContainer->getParameter('foo');
+    }
+
+    public function testGetCurrentEnvironment()
+    {
+        $config = [
+            'current_environment' => 'test'
+        ];
+
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+
+        $this->assertEquals('test', $this->moduleContainer->getCurrentEnvironment());
+    }
+
+    public function testGetCurrentEnvironmentDoesNotExist()
+    {
+        $config = [];
+
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+
+        $this->setExpectedException(\RuntimeException::class);
+
+        $this->moduleContainer->getCurrentEnvironment();
     }
 
 }

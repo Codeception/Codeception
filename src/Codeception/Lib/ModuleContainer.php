@@ -206,7 +206,7 @@ class ModuleContainer
      */
     public function getCurrentEnvironment()
     {
-        if (!array_key_exists($this->config, 'current_environment')) {
+        if (!isset($this->config['current_environment'])) {
             throw new \RuntimeException('There is no current environment defined');
         }
 
@@ -220,11 +220,11 @@ class ModuleContainer
      */
     public function getParameter($key)
     {
-        if (!array_key_exists($this->config, 'parameters')) {
+        if (!isset($this->config['parameters'])) {
             throw new \RuntimeException('Parameters are not set.');
         }
 
-        if (!array_key_exists($this->config['parameters'], $key)) {
+        if (!isset($this->config['parameters'][$key])) {
             throw new \RuntimeException(
                 sprintf(
                     'Could not find the parameter with key: %s. Available keys: [%s]',
