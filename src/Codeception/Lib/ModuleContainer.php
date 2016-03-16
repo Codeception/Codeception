@@ -220,11 +220,11 @@ class ModuleContainer
      */
     public function getEnvironmentParameter($key)
     {
-        if ( ! array_key_exists($this->config, 'parameters')) {
+        if (!array_key_exists($this->config, 'parameters')) {
             throw new \RuntimeException('Parameters are not set.');
         }
 
-        if ( ! array_key_exists($this->config['parameters'], $key)) {
+        if (!array_key_exists($this->config['parameters'], $key)) {
             throw new \RuntimeException(
                 sprintf(
                     'Could not find the parameter with key: %s. Available keys: [%s]',
