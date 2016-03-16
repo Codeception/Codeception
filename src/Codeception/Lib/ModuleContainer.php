@@ -218,7 +218,7 @@ class ModuleContainer
      *
      * @return string|array
      */
-    public function getEnvironmentParameter($key)
+    public function getParameter($key)
     {
         if (!array_key_exists($this->config, 'parameters')) {
             throw new \RuntimeException('Parameters are not set.');

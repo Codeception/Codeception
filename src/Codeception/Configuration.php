@@ -253,7 +253,7 @@ class Configuration
 
         // load global config
         $globalConf = $config['settings'];
-        foreach (['modules', 'coverage', 'namespace', 'groups', 'env'] as $key) {
+        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'parameters'] as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }
