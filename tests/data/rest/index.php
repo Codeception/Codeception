@@ -28,7 +28,11 @@ $GLOBALS['RESTmap']['GET'] = [
                 0
             ],
         ];
+    },
+    'http-host' => function() {
+        return 'host: "' . $_SERVER['HTTP_HOST'] . '"';
     }
+
 ];
 
 $GLOBALS['RESTmap']['POST'] = [
