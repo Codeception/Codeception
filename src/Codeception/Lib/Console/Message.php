@@ -31,7 +31,14 @@ class Message
 
     public function width($length, $char = ' ')
     {
-        $message_length = strlen(strip_tags($this->message));
+        $message = strip_tags($this->message);
+
+        if (function_exists('mb_strlen')) {
+            $message_length = mb_strlen($message);
+        } else {
+            $message_length = strlen($message);
+        }
+
         if ($message_length < $length) {
             $this->message .= str_repeat($char, $length - $message_length);
         }
@@ -40,7 +47,13 @@ class Message
 
     public function cut($length)
     {
-        $this->message = substr($this->message, 0, $length);
+        if (function_exists("mb_substr")) {
+            $this->message = mb_substr($this->message, 0, $length);
+        } else {
+            $this->message = substr($this->message, 0, $length);
+        }
+
+
         return $this;
     }
 
