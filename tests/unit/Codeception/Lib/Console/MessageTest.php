@@ -29,10 +29,7 @@ class MessageTest extends \Codeception\TestCase\Test
     {
         if (function_exists('mb_strlen')) {
             $message = new Message('пример текста');
-            $this->assertEquals(
-                'пример текста                 ',
-                $message->width(30)->getMessage())
-            ;
+            $this->assertEquals('пример текста                 ', $message->width(30)->getMessage());
         }
     }
 }
