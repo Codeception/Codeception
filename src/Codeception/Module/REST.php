@@ -86,7 +86,6 @@ EOF;
      */
     protected $connectionModule;
 
-    public $headers = [];
     public $params = [];
     public $response = "";
 
@@ -107,9 +106,9 @@ EOF;
 
     protected function resetVariables()
     {
-        $this->headers = [];
         $this->params = [];
         $this->response = "";
+        $this->connectionModule->headers = [];
         if ($this->client) {
             $this->client->setServerParameters([]);
         }
@@ -147,7 +146,14 @@ EOF;
     }
 
     /**
-     * Sets HTTP header
+     * Sets HTTP header valid for all next requests. Use `deleteHeader` to unset it
+     *
+     * ```php
+     * <?php
+     * $I->haveHttpHeader('Content-Type', 'application/json');
+     * // all next requests will contain this header
+     * ?>
+     * ```
      *
      * @param $name
      * @param $value
@@ -156,7 +162,7 @@ EOF;
      */
     public function haveHttpHeader($name, $value)
     {
-        $this->headers[$name] = $value;
+        $this->connectionModule->haveHttpHeader($name, $value);
     }
 
     /**
@@ -403,7 +409,7 @@ EOF;
             $values[] = $linkEntry['uri'] . '; ' . $linkEntry['link-param'];
         }
 
-        $this->headers['Link'] = join(', ', $values);
+        $this->haveHttpHeader('Link', implode(', ', $values));
     }
 
     /**
@@ -442,18 +448,6 @@ EOF;
 
     protected function execute($method = 'GET', $url, $parameters = [], $files = [])
     {
-        $this->debugSection("Request headers", $this->headers);
-
-        foreach ($this->headers as $header => $val) {
-            $header = str_replace('-', '_', strtoupper($header));
-            $this->client->setServerParameter("HTTP_$header", $val);
-
-            // Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
-            if ($this->isFunctional && $header === 'CONTENT_TYPE') {
-                $this->client->setServerParameter($header, $val);
-            }
-        }
-
         // allow full url to be requested
         if (strpos($url, '://') === false) {
             $url = $this->config['url'] . $url;
@@ -472,7 +466,7 @@ EOF;
             } else {
                 $this->debugSection("Request", "$method $url " . json_encode($parameters));
             }
-            $this->client->request($method, $url, $parameters, $files);
+            $this->response = (string)$this->connectionModule->_request($method, $url, $parameters, $files);
         } else {
             $requestData = $parameters;
             if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
@@ -481,23 +475,16 @@ EOF;
                 $requestData = '[binary-data length:'.strlen($requestData).' md5:'.md5($requestData).']';
             }
             $this->debugSection("Request", "$method $url " . $requestData);
-            $this->client->request($method, $url, [], $files, [], $parameters);
+            $this->response = (string) $this->connectionModule->_request($method, $url, [], $files, [], $parameters);
         }
-        $this->response = (string)$this->connectionModule->_getResponseContent();
         $this->debugSection("Response", $this->response);
-
-        if (count($this->client->getInternalRequest()->getCookies())) {
-            $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
-        }
-        $this->debugSection("Headers", $this->client->getInternalResponse()->getHeaders());
-        $this->debugSection("Status", $this->client->getInternalResponse()->getStatus());
     }
 
     protected function encodeApplicationJson($method, $parameters)
     {
-        if ($method !== 'GET' && array_key_exists('Content-Type', $this->headers)
-            && ($this->headers['Content-Type'] === 'application/json'
-                || preg_match('!^application/.+\+json$!', $this->headers['Content-Type'])
+        if ($method !== 'GET' && array_key_exists('Content-Type', $this->connectionModule->headers)
+            && ($this->connectionModule->headers['Content-Type'] === 'application/json'
+                || preg_match('!^application/.+\+json$!', $this->connectionModule->headers['Content-Type'])
             )
         ) {
             if ($parameters instanceof \JsonSerializable) {

@@ -51,7 +51,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     {
         $this->module->sendGET('http://127.0.0.1:8010/rest/user/');
         $this->module->seeResponseCodeIs(200);
-        $this->assertEquals('http://127.0.0.1:8010/rest/user/', $this->module->client->getHistory()->current()->getUri());
     }
 
     public function testPost()
