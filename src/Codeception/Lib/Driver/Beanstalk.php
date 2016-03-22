@@ -43,9 +43,9 @@ class Beanstalk implements Queue
         }
     }
 
-    public function clearQueue($queue)
+    public function clearQueue($queue = 'default')
     {
-        while ($job = $this->queue->reserve(0)) {
+        while ($job = $this->queue->reserveFromTube($queue, 0)) {
             $this->queue->delete($job);
         }
     }
