@@ -8,11 +8,22 @@
 
 #### 2.1.7
 
+* **PHPUnit 5.x support**
+* Global Bootstrap, Suite Bootstrap, Module Initialization happens before test loading. Fixes issues of autoloading TestCase classes introduced in 2.1.5, see #2872
+* Added option to skip PHP files validation in `codeception.yml` - `settings: lint: false`
+* [Facebook] Updated to  facebook/php-sdk-v4 version 5 by @orhan-swe and @tigerseo #2828 #2415
+* [WebDriver] Added `scrollTo` action by @javigomez and @davertmik #2844
+* Fix encoding problems in PHP prior to 5.6 by @pejaycz. See #2831
+* [Queue] Fixed `clearQueue` for AmazonSQS by @mikitu #2805
+* [Db] Fixed loading files in Sqlite @mcustiel See #2812
+* [PhpBrowser] `amHttpAuthenticated` allows null, null as parameters to unset authentication. #2896
 * `Util\Locator` added `contains` method to easily locate any element containing a text.
+* [Laravel5] Added `guard` parameters to `seeAuthentication` and `dontSeeAuthentication` methods. By @janhenkgerritsen. See #2876
 * [Laravel5] Added functionality to disable/enable Laravel's exception handling. By @janhenkgerritsen. See #2763
 * [Laravel5] Authentication now persists between requests when calling `amLoggedAs` with an instance of `Authenticable`. See #2795
 * [REST] Fixed dontSeeXmlResponseMatchesXpath method #2825 by @mangust404
 * [ZF2] Fixed POST parameters #2814 by @Naktibalda
+* [ZF1] Call Zend_Registry::_unsetInstance in _after #2863 by @Naktibalda
 
 #### 2.1.6
 
@@ -35,8 +46,6 @@
 * [REST] Fixed failed message for `seeHttpHeader` and `dontSeeHttpHeader` from null to expected value #2697 by @zondor
 * [REST] Added methods to control redirect: `stopFollowingRedirects` and `startFollowingRedirects` by @brutuscat
 * [Recorder Extension] Added `animate_slides` config to disable left-right sliding animation between screenshots by @vml-rmott
-
-
 
 #### 2.1.5
 
@@ -67,7 +76,6 @@
 * [Laravel5] Fix bug for `seeCurrentRouteIs` when routes don't match. See #2593. By @maddhatter
 * [PhpBrowser] Set curl options for Guzzle6 correctly. See #2533. By @Naktibalda
 * Fixed usage of GroupObject by unit tests. GroupObjects can skip tests by @davetmik. See #2617
-
 
 #### 2.1.4
 

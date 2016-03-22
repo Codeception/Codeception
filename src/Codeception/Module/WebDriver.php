@@ -152,7 +152,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
  * * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * `wait` - Implicit wait (default 0 seconds).
- * * `capabilities` - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+ * * `capabilities` - Sets Selenium2 [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  * * `connection_timeout` - timeout for opening a connection to remote selenium server (30 seconds by default).
  * * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
  * * `http_proxy` - sets http proxy server url for testing a remote server.
@@ -961,19 +961,26 @@ class WebDriver extends CodeceptionModule implements
             $currentValues = [false];
         }
         foreach ($elements as $el) {
-            if ($el->getTagName() === 'textarea') {
-                $currentValues[] = $el->getAttribute('value');
-            } elseif ($el->getTagName() === 'input' && $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
-                if ($el->getAttribute('checked')) {
-                    if (is_bool($value)) {
-                        $currentValues = [true];
-                        break;
+            switch ($el->getTagName()) {
+                case 'input':
+                    if ($el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
+                        if ($el->getAttribute('checked')) {
+                            if (is_bool($value)) {
+                                $currentValues = [true];
+                                break;
+                            } else {
+                                $currentValues[] = $el->getAttribute('value');
+                            }
+                        }
                     } else {
                         $currentValues[] = $el->getAttribute('value');
                     }
-                }
-            } else {
-                $currentValues[] = $el->getAttribute('value');
+                    break;
+
+                case 'textarea':
+                default:
+                    $currentValues[] = $el->getAttribute('value');
+                    break;
             }
         }
 
@@ -2456,5 +2463,27 @@ class WebDriver extends CodeceptionModule implements
     protected function isPhantom()
     {
         return strpos($this->config['browser'], 'phantom') === 0;
+    }
+
+    /**
+     * Move to the middle of the given element matched by the given locator.
+     * Extra shift, calculated from the top-left corner of the element, can be set by passing $offsetX and $offsetY parameters.
+     *
+     * ``` php
+     * <?php
+     * $I->scrollTo(['css' => '.checkout'], 20, 50);
+     * ?>
+     * ```
+     *
+     * @param $selector
+     * @param int $offsetX
+     * @param int $offsetY
+     */
+    public function scrollTo($selector, $offsetX = null, $offsetY = null)
+    {
+        $el = $this->matchFirstOrFail($this->webDriver, $selector);
+        $x = $el->getLocation()->getX() + $offsetX;
+        $y = $el->getLocation()->getY() + $offsetY;
+        $this->webDriver->executeScript("window.scrollTo($x, $y)");
     }
 }

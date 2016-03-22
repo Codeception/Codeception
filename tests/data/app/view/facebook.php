@@ -15,37 +15,51 @@
  * under the License.
  */
 
+use Facebook\Exceptions\FacebookSDKException;
 
-// Create our Application instance (replace this with your appId and secret).
-$facebook = new Facebook(array(
-  'appId'  => '460287924057084',
-  'secret' => 'e27a5a07f9f07f52682d61dd69b716b5',
+/**
+ * Facebook gives cross-site-request-forgery-validation-failed without
+ * initializing session data and without having the
+ * 'persistent_data_handler' => 'session' property below
+ */
+session_start();
+
+/**
+ * you should update these values when debugging,
+ * NOTE website URL for the app must be be set to http://localhost:8000/
+ */
+$fb = new Facebook\Facebook(array(
+    'app_id' => '460287924057084',
+    'app_secret' => 'e27a5a07f9f07f52682d61dd69b716b5',
+    'default_graph_version' => 'v2.5',
+    'persistent_data_handler' => 'session'
 ));
 
-// Get User ID
-$user = $facebook->getUser();
+$helper = $fb->getRedirectLoginHelper();
 
-// We may or may not have this data based on whether the user is logged in.
-//
-// If we have a $user id here, it means we know the user is logged into
-// Facebook, but we don't know if the access token is valid. An access
-// token is invalid if the user logged out of Facebook.
+$permissions = [];
 
-if ($user) {
-  try {
-    // Proceed knowing you have a logged in user who's authenticated.
-    $user_profile = $facebook->api('/me', 'GET');
-  } catch (FacebookApiException $e) {
-    error_log($e);
+//after logging in facebook will redirect us to this callback page
+$callback = 'http://localhost:8000/facebook';
+
+try {
+    $accessToken = $helper->getAccessToken();
+    if ($accessToken) {
+        //if everything is ok we have accessToken from the callback
+        $response = $fb->get('/me', $accessToken);
+        $user = $response->getGraphUser()->asArray();
+        $logoutUrl = $helper->getLogoutUrl($accessToken, $callback);
+        $errorCode = 0;
+    } else {
+        //the first time we come to this page access token will be null
+        $loginUrl = $helper->getLoginUrl($callback);
+        $errorCode = 1;
+        $user = null;
+    }
+} catch (FacebookSDKException $e) {
+    //the second time we come to this we might get this if something is wrong with login
+    $errorCode = " 3 " . $e->getMessage();
     $user = null;
-  }
-}
-
-// Login or logout url will be needed depending on current user state.
-if ($user) {
-  $logoutUrl = $facebook->getLogoutUrl();
-} else {
-  $loginUrl = $facebook->getLoginUrl();
 }
 
 ?>
@@ -69,6 +83,8 @@ if ($user) {
   <body>
     <h1>php-sdk</h1>
 
+    <pre><?php print_r("\n errorCode: $errorCode\n"); ?></pre>
+
     <?php if ($user): ?>
       <a href="<?php echo $logoutUrl; ?>">Logout</a>
     <?php else: ?>
@@ -83,10 +99,10 @@ if ($user) {
 
     <?php if ($user): ?>
       <h3>You</h3>
-      <img src="https://graph.facebook.com/<?php echo $user; ?>/picture">
+      <img src="https://graph.facebook.com/<?php echo $user['id']; ?>/picture">
 
       <h3>Your User Object (/me)</h3>
-      <pre><?php print_r($user_profile); ?></pre>
+      <pre><?php print_r($user); ?></pre>
     <?php else: ?>
       <strong><em>You are not Connected.</em></strong>
     <?php endif ?>

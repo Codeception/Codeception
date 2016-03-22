@@ -2,9 +2,9 @@
 
 require_once 'tests/data/app/data.php';
 
+use Codeception\Module;
 use Codeception\Module\Facebook;
 use Codeception\Module\PhpBrowser;
-use Codeception\SuiteManager;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Util\Stub;
 
@@ -14,7 +14,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         'app_id' => '460287924057084',
         'secret' => 'e27a5a07f9f07f52682d61dd69b716b5',
         'test_user' => array(
-            'permissions' => [],
+            'permissions' => ['publish_actions', 'user_posts'],
             'name' => 'Codeception Testuser'
         )
     );
@@ -78,15 +78,24 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ucwords($this->config['test_user']['name']), $this->module->grabFacebookTestUserName());
     }
 
+    public function testSeePostOnFacebookWithMessage()
+    {
+        $this->checkPublishPermissions();
+        // precondition #1: I have facebook user
+        $this->module->haveFacebookTestUserAccount();
+
+        // precondition #2: I have published the post with place attached
+        $params = array('message' => 'I feel great!');
+        $this->module->postToFacebookAsTestUser($params);
+
+        // assert that post was published in the facebook and place is the same
+        $this->module->seePostOnFacebookWithMessage($params['message']);
+    }
+
     public function testSeePostOnFacebookWithAttachedPlace()
     {
-        if (!in_array('publish_actions', $this->config['test_user']['permissions']) || !in_array(
-                'user_posts',
-                $this->config['test_user']['permissions']
-            )
-        ) {
-            $this->markTestSkipped("You need both publish_actions and user_posts permissions for this test");
-        }
+        $this->checkPublishPermissions();
+
         // precondition #1: I have facebook user
         $this->module->haveFacebookTestUserAccount();
 
@@ -100,27 +109,31 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginToFacebook()
     {
-        $this->markTestSkipped();
-        // preconditions: #1 php web server being run
+        // precondition: you need to have a server running for this test
+        // you can start a php server with: php -S 127.0.0.1:8000 -t tests/data/app
         $browserModule = new PhpBrowser(make_container());
-        $browserModule->_setConfig(array('url' => 'http://localhost:8000'));
-        $browserModule->_initialize();
-        $browserModule->_cleanup();
-        $browserModule->_before($this->makeTest());
+        $this->initModule($browserModule, ['url' => 'http://localhost:8000']);
+        $this->module->_inject($browserModule);
 
-        SuiteManager::$modules['PhpBrowser'] = $browserModule;
+        $this->loginToFacebook($browserModule);
 
-        // preconditions: #2 facebook test user was created
+        // cleanup
+        $browserModule->_after($this->makeTest());
+        data::clean();
+    }
+
+    private function loginToFacebook(PhpBrowser $browserModule)
+    {
+        // preconditions: #1 facebook test user is created
         $this->module->haveFacebookTestUserAccount();
         $testUserName = $this->module->grabFacebookTestUserName();
 
-        // preconditions: #3 test user logged in on facebook
+        // preconditions: #2 test user is logged in on facebook
         $this->module->haveTestUserLoggedInOnFacebook();
 
         // go to our page with facebook login button
         $browserModule->amOnPage('/facebook');
-
-        // check that yet we are not logged in with facebook
+        // check that yet we are not logged in on facebook
         $browserModule->see('You are not Connected.');
 
         // click on "Login with Facebook" button to start login with facebook
@@ -129,10 +142,22 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         // check that we are logged in with facebook
         $browserModule->see('Your User Object (/me)');
         $browserModule->see($testUserName);
+    }
 
-        // cleanup
-        unset(SuiteManager::$modules['PhpBrowser']);
-        $browserModule->_after($this->makeTest());
-        data::clean();
+    private function checkPublishPermissions()
+    {
+        if (!in_array('publish_actions', $this->config['test_user']['permissions']) ||
+            !in_array('user_posts', $this->config['test_user']['permissions'])
+        ) {
+            $this->markTestSkipped("You need both publish_actions and user_posts permissions for this test");
+        }
+    }
+
+    private function initModule(PhpBrowser $browserModule, array $params)
+    {
+        $browserModule->_setConfig($params);
+        $browserModule->_initialize();
+        $browserModule->_cleanup();
+        $browserModule->_before($this->makeTest());
     }
 }

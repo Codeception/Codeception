@@ -12,7 +12,7 @@ use Codeception\Module as BaseModule;
  * Relies on Facebook's tool Test User API.
  *
  * <div class="alert alert-info">
- * To use this module with Composer you need <em>"facebook/php-sdk": "3.*"</em> package.
+ * To use this module with Composer you need <em>"facebook/php-sdk4": "5.*"</em> package.
  * </div>
  *
  * ## Status
@@ -94,16 +94,31 @@ class Facebook extends BaseModule implements DependsOnModule
     /**
      * @var PhpBrowser
      */
-    protected $phpBrowser;
+    protected $browserModule;
+
+    protected $dependencyMessage = <<<EOF
+Example configuring PhpBrowser
+--
+modules
+    enabled:
+        - Facebook:
+            depends: PhpBrowser
+            app_id: 412345678901234
+            secret: ccb79c1b0fdff54e4f7c928bf233aea5
+            test_user:
+                name: FacebookGuy
+                locale: uk_UA
+                permissions: [email, publish_stream]
+EOF;
 
     public function _depends()
     {
-        return 'Codeception\Module\PhpBrowser';
+        return ['Codeception\Module\PhpBrowser' => $this->dependencyMessage];
     }
 
-    public function _inject(PhpBrowser $browser)
+    public function _inject(PhpBrowser $browserModule)
     {
-        $this->phpBrowser = $browser;
+        $this->browserModule = $browserModule;
     }
 
     protected function deleteTestUser()
@@ -170,6 +185,7 @@ class Facebook extends BaseModule implements DependsOnModule
 
     /**
      * Get facebook test user be logged in on facebook.
+     * This is done by going to facebook.com
      *
      * @throws ModuleConfigException
      */
@@ -181,16 +197,15 @@ class Facebook extends BaseModule implements DependsOnModule
                 'Facebook test user was not found. Did you forget to create one?'
             );
         }
-        // go to facebook and make login; it work only if you visit facebook.com first
-        $this->phpBrowser->amOnPage('https://www.facebook.com/');
-        $this->phpBrowser->sendAjaxPostRequest(
-            'login.php',
-            [
-                'email' => $this->grabFacebookTestUserEmail(),
-                'pass' => $this->testUser['password']
-            ]
-        );
-        $this->phpBrowser->see($this->grabFacebookTestUserName());
+
+        $callbackUrl = $this->browserModule->_getUrl();
+        $this->browserModule->amOnUrl('https://facebook.com/login');
+        $this->browserModule->submitForm('#login_form', [
+            'email' => $this->grabFacebookTestUserEmail(),
+            'pass' => $this->grabFacebookTestUserPassword()
+        ]);
+        $this->browserModule->see($this->grabFacebookTestUserName());
+        $this->browserModule->amOnUrl($callbackUrl);
     }
 
     /**
@@ -248,6 +263,7 @@ class Facebook extends BaseModule implements DependsOnModule
         if (!array_key_exists('profile', $this->testUser)) {
             $this->testUser['profile'] = $this->facebook->getTestUserInfo($this->grabFacebookTestUserAccessToken());
         }
+
         return $this->testUser['profile']['name'];
     }
 
@@ -269,15 +285,28 @@ class Facebook extends BaseModule implements DependsOnModule
      */
     public function seePostOnFacebookWithAttachedPlace($placeId)
     {
+        $place = $this->facebook->getVisitedPlaceTagForTestUser($placeId, $this->grabFacebookTestUserAccessToken());
+        $this->assertEquals($placeId, $place['id'], "The place was not found on facebook page");
+    }
+
+    /**
+     *
+     * Please, note that you must have publish_actions permission to be able to publish to user's feed.
+     *
+     * @param string $message published post to be verified against the actual post on facebook
+     */
+    public function seePostOnFacebookWithMessage($message)
+    {
         $posts = $this->facebook->getLastPostsForTestUser($this->grabFacebookTestUserAccessToken());
+        $facebook_post_message = '';
+        $this->assertNotEquals($message, $facebook_post_message, "You can not test for an empty message post");
         if ($posts['data']) {
             foreach ($posts['data'] as $post) {
-                if (array_key_exists('place', $post) && ($post['place']['id'] == $placeId)) {
-                    return; // success
+                if (array_key_exists('message', $post) && ($post['message'] == $message)) {
+                    $facebook_post_message = $post['message'];
                 }
             }
         }
-
-        $this->fail('Failed to see post on Facebook with attached place with id ' . $placeId);
+        $this->assertEquals($message, $facebook_post_message, "The post message was not found on facebook page");
     }
 }

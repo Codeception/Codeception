@@ -164,9 +164,12 @@ class form {
     }
 
     function POST() {
+        data::set('query', $_GET);
         data::set('form', $_POST);
         data::set('files', $_FILES);
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) data::set('ajax','post');
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+            data::set('ajax','post');
+        }
 
         $notice = 'Thank you!';
         include __DIR__.'/view/index.php';

@@ -80,6 +80,10 @@ class Guzzle6 extends Client
 
     public function setAuth($username, $password)
     {
+        if (!$username) {
+            unset($this->requestOptions['auth']);
+            return;
+        }
         $this->requestOptions['auth'] = [$username, $password];
     }
 
