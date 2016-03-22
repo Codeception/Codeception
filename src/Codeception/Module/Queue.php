@@ -23,7 +23,7 @@ use Codeception\Lib\Driver\Iron;
  *
  * The following dependencies are needed for the listed queue servers:
  *
- * * Beanstalkd: pda/pheanstalk ~2.0
+ * * Beanstalkd: pda/pheanstalk ~3.0
  * * Amazon SQS: aws/aws-sdk-php
  * * IronMQ: iron-io/iron_mq
  *
