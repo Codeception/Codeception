@@ -32,7 +32,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
     protected function makeTest()
     {
         return Stub::makeEmpty(
-            '\Codeception\TestCase\Cept',
+            '\Codeception\Test\Cept',
             array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher'))
         );
     }
