@@ -340,9 +340,10 @@ class WebDriver extends CodeceptionModule implements
     {
         $this->debugWebDriverLogs();
         $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($test)) . '.fail';
-        $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
-        $this->_savePageSource(codecept_output_dir() . $filename . '.html');
-        $this->debug("Screenshot and page source were saved into '_output' dir");
+        $outputDir = codecept_output_dir();
+        $this->_saveScreenshot($outputDir . $filename . '.png');
+        $this->_savePageSource($outputDir . $filename . '.html');
+        $this->debug("Screenshot and page source were saved into '$outputDir' dir");
     }
 
     /**
