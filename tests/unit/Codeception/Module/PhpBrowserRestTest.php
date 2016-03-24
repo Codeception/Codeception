@@ -235,6 +235,23 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsJson();
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/1650
+     */
+    public function testHostHeader()
+    {
+        if (getenv('dependencies') === 'lowest') {
+            $this->markTestSkipped('This test can\'t pass with the lowest versions of dependencies');
+        }
+
+        $this->module->sendGET('/rest/http-host/');
+        $this->module->seeResponseContains('host: "localhost:8010"');
+
+        $this->module->haveHttpHeader('Host','www.example.com');
+        $this->module->sendGET('/rest/http-host/');
+        $this->module->seeResponseContains('host: "www.example.com"');
+    }
+
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');

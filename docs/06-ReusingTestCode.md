@@ -190,7 +190,7 @@ If you have complex interaction scenario you may use several step objects in one
 ## PageObjects
 
 For acceptance and functional testing we will need not only to have common actions to be reused across different tests, we should have buttons, links, and form fields to be reused as well. For those cases we need to implement
-[PageObject pattern](http://code.google.com/p/selenium/wiki/PageObjects), which is widely used by test automation engineers. The PageObject pattern represents a web page as a class and the DOM elements on that page as its properties, and some basic interactions as its methods.
+[PageObject pattern](http://docs.seleniumhq.org/docs/06_test_design_considerations.jsp#page-object-design-pattern), which is widely used by test automation engineers. The PageObject pattern represents a web page as a class and the DOM elements on that page as its properties, and some basic interactions as its methods.
 PageObjects are very important when you are developing a flexible architecture of your tests. Please do not hardcode complex CSS or XPath locators in your tests but rather move them into PageObject classes.
 
 Codeception can generate a PageObject class for you with command:
