@@ -113,7 +113,7 @@ class ModuleContainer
             // if module is not active, its actions should not be included into actor class
             return $module;
         }
-        
+
         if ($module instanceof DependsOnModule) {
             $this->injectDependentModule($name, $module);
         }
@@ -199,6 +199,42 @@ class ModuleContainer
                 }
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentEnvironment()
+    {
+        if (!isset($this->config['current_environment'])) {
+            throw new \RuntimeException('There is no current environment defined');
+        }
+
+        return $this->config['current_environment'];
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string|array
+     */
+    public function getParameter($key)
+    {
+        if (!isset($this->config['parameters'])) {
+            throw new \RuntimeException('Parameters are not set.');
+        }
+
+        if (!isset($this->config['parameters'][$key])) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Could not find the parameter with key: %s. Available keys: [%s]',
+                    $key,
+                    implode(', ', array_keys($this->config['parameters']))
+                )
+            );
+        }
+
+        return $this->config['parameters'][$key];
     }
 
     protected function moduleActionBelongsToPart($module, $action, $part)

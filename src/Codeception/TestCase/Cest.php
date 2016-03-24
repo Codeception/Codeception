@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\TestCase;
 
+use Codeception\Lib\ModuleContainer;
 use Codeception\TestCase as CodeceptionTestCase;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
@@ -212,4 +213,16 @@ class Cest extends CodeceptionTestCase implements
         }
     }
 
+    /**
+     * @param string $key
+     * @return array|string
+     */
+    public function getParameter($key)
+    {
+        if (!$this->moduleContainer || ! $this->moduleContainer instanceof ModuleContainer) {
+            throw new \RuntimeException('Module container is not available');
+        }
+
+        return $this->moduleContainer->getParameter($key);
+    }
 }

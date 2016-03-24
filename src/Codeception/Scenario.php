@@ -187,4 +187,12 @@ class Scenario
         return true;
     }
 
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function getParameter($key)
+    {
+        return $this->test->getParameter($key);
+    }
 }
