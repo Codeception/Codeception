@@ -102,7 +102,7 @@ However, implementing all actions for a reuse in one actor class may lead to bre
 ## StepObjects
 
 If `login` method defined in Actor class may be used in 90% of your tests,
-StepObjects are great if you need some common functionality for a group of tests. Let's say you are going to test and admin area of a site. Probably you won't need the same actions from admin area while testing the frontend, so it's a good idea to move those admin-specific into their own class. We will call such class a StepObject.
+StepObjects are great if you need some common functionality for a group of tests. Let's say you are going to test an admin area of a site. Probably, you won't need the same actions from admin area while testing the frontend, so it's a good idea to move those admin-specific into their own class. We will call such class a StepObject.
 
 Lets create an Admin StepObject with generator, by specifying test suite, and passing method expected names on prompt.
 
