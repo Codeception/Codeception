@@ -80,7 +80,6 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer install -d frameworks-zend-expressive --no-dev  --prefer-dist'
 
 before_script:
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || echo "mbstring.internal_encoding = UTF-8" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # create config file for hhvm daemon
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "pid = /tmp/hhvm.pid" >>/tmp/hhvm.ini'
