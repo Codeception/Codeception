@@ -204,7 +204,8 @@ EOF;
             'email' => $this->grabFacebookTestUserEmail(),
             'pass' => $this->grabFacebookTestUserPassword()
         ]);
-        $this->browserModule->see($this->grabFacebookTestUserName());
+        // if login in successful we are back on login screen:
+        $this->browserModule->dontSeeInCurrentUrl('/login');
         $this->browserModule->amOnUrl($callbackUrl);
     }
 
