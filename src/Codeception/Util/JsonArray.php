@@ -205,7 +205,11 @@ class JsonArray
                 $subNode = $doc->createElement($node->nodeName);
                 $node->parentNode->appendChild($subNode);
             } else {
-                $subNode = $doc->createElement($key);
+                try {
+                    $subNode = $doc->createElement($key);
+                } catch (\Exception $e) {
+                    throw new \UnexpectedValueException('Key "' . $key . '" can\'t be converted to XML tag', 0, $e);
+                }
                 $node->appendChild($subNode);
             }
             if (is_array($value)) {
