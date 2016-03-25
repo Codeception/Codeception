@@ -477,11 +477,11 @@ All hooks are defined in `\Codeception\Module` and are listed here. You are free
     }
 
     // HOOK: before test
-    public function _before(\Codeception\TestCase $test) {
+    public function _before(\Codeception\TestInterface $test) {
     }
 
     // HOOK: after test
-    public function _after(\Codeception\TestCase $test) {
+    public function _after(\Codeception\TestInterface $test) {
     }
 
     // HOOK: on fail
