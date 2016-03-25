@@ -11,7 +11,7 @@ class Bootstrap implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     static $events = [
-        Events::SUITE_BEFORE => 'loadBootstrap',
+        Events::SUITE_INIT => 'loadBootstrap',
     ];
 
     public function loadBootstrap(SuiteEvent $e)

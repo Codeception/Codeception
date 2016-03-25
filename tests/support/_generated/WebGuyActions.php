@@ -2661,4 +2661,26 @@ trait WebGuyActions
     public function loadSessionSnapshot($name) {
         return $this->getScenario()->runStep(new \Codeception\Step\Action('loadSessionSnapshot', func_get_args()));
     }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     * Move to the middle of the given element matched by the given locator.
+     * Extra shift, calculated from the top-left corner of the element, can be set by passing $offsetX and $offsetY parameters.
+     *
+     * ``` php
+     * <?php
+     * $I->scrollTo(['css' => '.checkout'], 20, 50);
+     * ?>
+     * ```
+     *
+     * @param $selector
+     * @param int $offsetX
+     * @param int $offsetY
+     * @see \Codeception\Module\WebDriver::scrollTo()
+     */
+    public function scrollTo($selector, $offsetX = null, $offsetY = null) {
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('scrollTo', func_get_args()));
+    }
 }

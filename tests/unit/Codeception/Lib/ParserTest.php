@@ -16,14 +16,16 @@ class ParserTest extends \Codeception\Test\Unit
      * @var \Codeception\Scenario
      */
     protected $scenario;
+    
+    protected $testMetadata;
 
     protected function _before()
     {
         $cept = new \Codeception\Test\Cept('demo','DemoCept.php');
 
-        $this->metadata = $cept->getMetadata();
+        $this->testMetadata = $cept->getMetadata();
         $this->scenario = new Codeception\Scenario($cept);
-        $this->parser = new Parser($this->scenario, $this->metadata);
+        $this->parser = new Parser($this->scenario, $this->testMetadata);
     }
 
     public function testParsingFeature()
@@ -55,8 +57,8 @@ class ParserTest extends \Codeception\Test\Unit
 EOF;
 
         $this->parser->parseScenarioOptions($code);
-        $this->assertContains('davert', $this->metadata->getGroups());
-        $this->assertContains('windows', $this->metadata->getEnv());
+        $this->assertContains('davert', $this->testMetadata->getGroups());
+        $this->assertContains('windows', $this->testMetadata->getEnv());
 
     }
 
@@ -69,7 +71,7 @@ EOF;
  */
 EOF;
         $this->parser->parseScenarioOptions($code);
-        $this->assertTrue($this->metadata->isBlocked());
+        $this->assertTrue($this->testMetadata->isBlocked());
     }
 
     public function testFeatureCommented()
@@ -88,14 +90,14 @@ EOF;
     {
         $code = "<?php\n // @skip pass along";
         $this->parser->parseScenarioOptions($code);
-        $this->assertTrue($this->metadata->isBlocked());
+        $this->assertTrue($this->testMetadata->isBlocked());
     }
 
     public function testScenarioIncompleteOptionHandled()
     {
         $code = "<?php\n // @incomplete not ready yet";
         $this->parser->parseScenarioOptions($code);
-        $this->assertTrue($this->metadata->isBlocked());
+        $this->assertTrue($this->testMetadata->isBlocked());
     }
 
     public function testSteps()
