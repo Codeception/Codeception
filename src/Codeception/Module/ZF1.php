@@ -155,6 +155,7 @@ class ZF1 extends Framework
         \Zend_Layout::resetMvcInstance();
         \Zend_Controller_Action_HelperBroker::resetHelpers();
         \Zend_Session::$_unitTestEnabled = true;
+        \Zend_Registry::_unsetInstance();
         $this->queries = 0;
         $this->time = 0;
 

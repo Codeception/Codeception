@@ -347,8 +347,12 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->see('Unauthorized');
         $this->module->amHttpAuthenticated('davert', 'password');
         $this->module->amOnPage('/auth');
+        $this->module->seeResponseCodeIs(200);
         $this->module->dontSee('Unauthorized');
         $this->module->see("Welcome, davert");
+        $this->module->amHttpAuthenticated(null, null);
+        $this->module->amOnPage('/auth');
+        $this->module->seeResponseCodeIs(401);
         $this->module->amHttpAuthenticated('davert', '123456');
         $this->module->amOnPage('/auth');
         $this->module->see('Forbidden');
@@ -522,5 +526,16 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->setExpectedException('Codeception\Exception\ElementNotFound',
             "'Sign In!' is invalid CSS and XPath selector and Link or Button element with 'name=Sign In!' was not found");
         $this->module->click('Sign In!');
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2841
+     */
+    public function testSubmitFormDoesNotKeepGetParameters()
+    {
+        $this->module->amOnPage('/form/bug2841?stuff=other');
+        $this->module->fillField('#texty', 'thingshjere');
+        $this->module->click('#submit-registration');
+        $this->assertEmpty(data::get('query'), 'Query string is not empty');
     }
 }

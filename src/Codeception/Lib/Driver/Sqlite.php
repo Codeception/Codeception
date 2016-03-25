@@ -11,9 +11,9 @@ class Sqlite extends Db
 
     public function __construct($dsn, $user, $password)
     {
-        parent::__construct($dsn, $user, $password);
-        $this->filename = Configuration::projectDir() . substr($this->dsn, 7);
+        $this->filename = Configuration::projectDir() . substr($dsn, 7);
         $this->dsn = 'sqlite:' . $this->filename;
+        parent::__construct($this->dsn, $user, $password);
     }
 
     public function cleanup()
