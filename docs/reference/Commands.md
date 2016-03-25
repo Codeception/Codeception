@@ -12,6 +12,10 @@ Create new test suite. Requires suite name and actor name
 
 
 
+## GherkinSnippets
+
+
+
 ## Console
 
 Try to execute test commands in run-time. You may try commands before writing the test.
@@ -147,6 +151,17 @@ Required to have `envs` path to be specifed in `codeception.yml`
 
 
 
+## GenerateFeature
+
+Generates Feature file (in Gherkin):
+
+* `codecept generate:feature suite Login`
+* `codecept g:feature suite subdir/subdir/login.feature`
+* `codecept g:feature suite login.feature -c path/to/project`
+
+
+
+
 ## GeneratePhpUnit
 
 Generates skeleton for unit test as in classical PHPUnit.
@@ -185,6 +200,10 @@ Cleans `output` directory
 * `codecept clean`
 * `codecept clean -c path/to/project`
 
+
+
+
+## GherkinSteps
 
 
 

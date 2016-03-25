@@ -28,6 +28,7 @@ See the Acceptance tests section below for more details.
 * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
 * root: `string`, default `` - Root path of our application.
 * packages: `string`, default `workbench` - Root path of application packages (if any).
+* disable_exception_handling: `boolean`, default `true` - disable Laravel exception handling
 * disable_middleware: `boolean`, default `false` - disable all middleware.
 * disable_events: `boolean`, default `false` - disable all events.
 * url: `string`, default `` - The application URL.
@@ -307,25 +308,23 @@ $I->click(['link' => 'Login']);
  * `param` $context
 
 
-### createModel
+### deleteHeader
  
-Use Laravel's model factory to create a model.
-Can only be used with Laravel 5.1 and later.
+Deletes the header with the passed name.  Subsequent requests
+will not have the deleted header in its request.
 
-``` php
+Example:
+```php
 <?php
-$I->createModel('App\User');
-$I->createModel('App\User', ['name' => 'John Doe']);
-$I->createModel('App\User', [], 'admin');
-$I->createModel('App\User', [], 'admin', 3);
+$I->haveHttpHeader('X-Requested-With', 'Codeception');
+$I->amOnPage('test-headers.php');
+// ...
+$I->deleteHeader('X-Requested-With');
+$I->amOnPage('some-other-page.php');
 ?>
 ```
 
- * `see`  http://laravel.com/docs/5.1/testing#model-factories
- * `param string` $model
- * `param array` $attributes
- * `param string` $name
- * `param int` $times
+ * `param string` $name the name of the header to delete.
 
 
 ### disableEvents
@@ -335,6 +334,17 @@ Disable events for the next requests.
 ``` php
 <?php
 $I->disableEvents();
+?>
+```
+
+
+### disableExceptionHandling
+ 
+Disable Laravel exception handling.
+
+``` php
+<?php
+$I->disableExceptionHandling();
 ?>
 ```
 
@@ -382,7 +392,9 @@ For checking the raw source code, use `seeInSource()`.
 
 ### dontSeeAuthentication
  
-Check that user is not authenticated
+Check that user is not authenticated.
+You can specify the guard that should be use for Laravel >= 5.2.
+ * `param string|null` $guard
 
 
 ### dontSeeCheckboxIsChecked
@@ -615,16 +627,29 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 ### dontSeeRecord
  
 Checks that record does not exist in database.
+You can pass the name of a database table or the class name of an Eloquent model as the first argument.
 
 ``` php
 <?php
 $I->dontSeeRecord('users', array('name' => 'davert'));
+$I->dontSeeRecord('App\User', array('name' => 'davert'));
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
  * `[Part]` orm
+
+
+### enableExceptionHandling
+ 
+Enable Laravel exception handling.
+
+``` php
+<?php
+$I->enableExceptionHandling();
+?>
+```
 
 
 ### fillField
@@ -721,15 +746,19 @@ $aLinks = $I->grabMultiple('a', 'href');
 ### grabRecord
  
 Retrieves record from database
+If you pass the name of a database table as the first argument, this method returns an array.
+You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
 
 ``` php
 <?php
-$category = $I->grabRecord('users', array('name' => 'davert'));
+$record = $I->grabRecord('users', array('name' => 'davert')); // returns array
+$record = $I->grabRecord('App\User', array('name' => 'davert')); // returns Eloquent model
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
+ * `return` array|EloquentModel
  * `[Part]` orm
 
 
@@ -780,49 +809,54 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  * `return` array|mixed|null|string
 
 
-### haveModel
+### have
+__not documented__
+
+
+### haveHttpHeader
+ 
+Sets the HTTP header to the passed value - which is used on
+subsequent HTTP requests through PhpBrowser.
+
+Example:
+```php
+<?php
+$I->setHeader('X-Requested-With', 'Codeception');
+$I->amOnPage('test-headers.php');
+?>
+```
+
+ * `param string` $name the name of the request header
+ * `param string` $value the value to set it to for subsequent
+       requests
+
+
+### haveMultiple
 __not documented__
 
 
 ### haveRecord
  
 Inserts record into the database.
+If you pass the name of a database table as the first argument, this method returns an integer ID.
+You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
 
 ``` php
 <?php
-$user_id = $I->haveRecord('users', array('name' => 'Davert'));
+$user_id = $I->haveRecord('users', array('name' => 'Davert')); // returns integer
+$user = $I->haveRecord('App\User', array('name' => 'Davert')); // returns Eloquent model
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
+ * `return` integer|EloquentModel
  * `[Part]` orm
 
 
 ### logout
  
 Logout user.
-
-
-### makeModel
- 
-Use Laravel's model factory to make a model.
-Can only be used with Laravel 5.1 and later.
-
-``` php
-<?php
-$I->makeModel('App\User');
-$I->makeModel('App\User', ['name' => 'John Doe']);
-$I->makeModel('App\User', [], 'admin');
-$I->makeModel('App\User', [], 'admin', 3);
-?>
-```
-
- * `see`  http://laravel.com/docs/5.1/testing#model-factories
- * `param string` $model
- * `param array` $attributes
- * `param string` $name
- * `param int` $times
 
 
 ### moveBack
@@ -876,7 +910,9 @@ For checking the raw source code, use `seeInSource()`.
 
 ### seeAuthentication
  
-Checks that a user is authenticated
+Checks that a user is authenticated.
+You can specify the guard that should be use for Laravel >= 5.2.
+ * `param string|null` $guard
 
 
 ### seeCheckboxIsChecked
@@ -1247,14 +1283,16 @@ Asserts that current page has 404 response status code.
 ### seeRecord
  
 Checks that record exists in database.
+You can pass the name of a database table or the class name of an Eloquent model as the first argument.
 
 ``` php
 <?php
 $I->seeRecord('users', array('name' => 'davert'));
+$I->seeRecord('App\User', array('name' => 'davert'));
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
  * `[Part]` orm
 

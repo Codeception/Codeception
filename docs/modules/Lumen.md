@@ -254,6 +254,25 @@ $I->click(['link' => 'Login']);
  * `param` $context
 
 
+### deleteHeader
+ 
+Deletes the header with the passed name.  Subsequent requests
+will not have the deleted header in its request.
+
+Example:
+```php
+<?php
+$I->haveHttpHeader('X-Requested-With', 'Codeception');
+$I->amOnPage('test-headers.php');
+// ...
+$I->deleteHeader('X-Requested-With');
+$I->amOnPage('some-other-page.php');
+?>
+```
+
+ * `param string` $name the name of the header to delete.
+
+
 ### dontSee
  
 Checks that the current page doesn't contain the text specified (case insensitive).
@@ -491,15 +510,18 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 ### dontSeeRecord
  
 Checks that record does not exist in database.
+You can pass the name of a database table or the class name of an Eloquent model as the first argument.
 
 ``` php
 <?php
 $I->dontSeeRecord('users', array('name' => 'davert'));
+$I->dontSeeRecord('App\User', array('name' => 'davert'));
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
+ * `[Part]` orm
 
 
 ### fillField
@@ -596,15 +618,20 @@ $aLinks = $I->grabMultiple('a', 'href');
 ### grabRecord
  
 Retrieves record from database
+If you pass the name of a database table as the first argument, this method returns an array.
+You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
 
 ``` php
 <?php
-$category = $I->grabRecord('users', array('name' => 'davert'));
+$record = $I->grabRecord('users', array('name' => 'davert')); // returns array
+$record = $I->grabRecord('App\User', array('name' => 'davert')); // returns Eloquent model
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
+ * `return` array|EloquentModel
+ * `[Part]` orm
 
 
 ### grabService
@@ -654,18 +681,41 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  * `return` array|mixed|null|string
 
 
-### haveRecord
+### haveHttpHeader
  
-Inserts record into the database.
+Sets the HTTP header to the passed value - which is used on
+subsequent HTTP requests through PhpBrowser.
 
-``` php
+Example:
+```php
 <?php
-$user_id = $I->haveRecord('users', array('name' => 'Davert'));
+$I->setHeader('X-Requested-With', 'Codeception');
+$I->amOnPage('test-headers.php');
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $name the name of the request header
+ * `param string` $value the value to set it to for subsequent
+       requests
+
+
+### haveRecord
+ 
+Inserts record into the database.
+If you pass the name of a database table as the first argument, this method returns an integer ID.
+You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
+
+``` php
+<?php
+$user_id = $I->haveRecord('users', array('name' => 'Davert')); // returns integer
+$user = $I->haveRecord('App\User', array('name' => 'Davert')); // returns Eloquent model
+?>
+```
+
+ * `param string` $table
  * `param array` $attributes
+ * `return` integer|EloquentModel
+ * `[Part]` orm
 
 
 ### logout
@@ -998,13 +1048,18 @@ Asserts that current page has 404 response status code.
 ### seeRecord
  
 Checks that record exists in database.
+You can pass the name of a database table or the class name of an Eloquent model as the first argument.
 
 ``` php
+<?php
 $I->seeRecord('users', array('name' => 'davert'));
+$I->seeRecord('App\User', array('name' => 'davert'));
+?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
+ * `[Part]` orm
 
 
 ### seeResponseCodeIs

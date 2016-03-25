@@ -1,7 +1,7 @@
 
 
 
-This module uses Symfony2 Crawler and HttpKernel to emulate requests and test response.
+This module uses Symfony Crawler and HttpKernel to emulate requests and test response.
 
 ## Demo Project
 
@@ -26,7 +26,7 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
 
 ```
    modules:
-       - Symfony2:
+       - Symfony:
            app_path: 'app/front'
            environment: 'local_test'
 ```
@@ -44,7 +44,7 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
 
     modules:
        enabled:
-          - Symfony2:
+          - Symfony:
               app_path: 'app/front'
               var_path: 'var'
               environment: 'local_test'
@@ -58,7 +58,7 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
 
 ## Parts
 
-* services - allows to use Symfony2 DIC only with WebDriver or PhpBrowser modules. 
+* services - allows to use Symfony DIC only with WebDriver or PhpBrowser modules.
 
 Usage example:
 
@@ -66,10 +66,10 @@ Usage example:
 class_name: AcceptanceTester
 modules:
     enabled:
-        - Symfony2:
+        - Symfony:
             part: SERVICES
         - Doctrine2:
-            depends: Symfony2
+            depends: Symfony
         - WebDriver:
             url: http://your-url.com
             browser: phantomjs
@@ -90,10 +90,10 @@ Use it in Helpers or GroupObject or Extension classes:
 
 ```php
 <?php
-$els = $this->getModule('Symfony2')->_findElements('.items');
-$els = $this->getModule('Symfony2')->_findElements(['name' => 'username']);
+$els = $this->getModule('Symfony')->_findElements('.items');
+$els = $this->getModule('Symfony')->_findElements(['name' => 'username']);
 
-$editLinks = $this->getModule('Symfony2')->_findElements(['link' => 'Edit']);
+$editLinks = $this->getModule('Symfony')->_findElements(['link' => 'Edit']);
 // now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
@@ -116,7 +116,7 @@ Use it in Helpers when you want to retrieve response of request performed by ano
 // in Helper class
 public function seeResponseContains($text)
 {
-   $this->assertContains($text, $this->getModule('Symfony2')->_getResponseContent(), "response contains");
+   $this->assertContains($text, $this->getModule('Symfony')->_getResponseContent(), "response contains");
 }
 ?>
 ```
@@ -136,7 +136,7 @@ Useful for testing multi-step forms on a specific step.
 <?php
 // in Helper class
 public function openCheckoutFormStep2($orderId) {
-    $this->getModule('Symfony2')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
+    $this->getModule('Symfony')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
 }
 ?>
 ```
@@ -161,7 +161,7 @@ Returns a string with response body.
 <?php
 // in Helper class
 public function createUserByApi($name) {
-    $userData = $this->getModule('Symfony2')->_request('POST', '/api/v1/users', ['name' => $name]);
+    $userData = $this->getModule('Symfony')->_request('POST', '/api/v1/users', ['name' => $name]);
     $user = json_decode($userData);
     return $user->id;
 }
@@ -188,7 +188,7 @@ To load arbitrary page for interaction, use `_loadPage` method.
 Saves page source of to a file
 
 ```php
-$this->getModule('Symfony2')->_savePageSource(codecept_output_dir().'page.html');
+$this->getModule('Symfony')->_savePageSource(codecept_output_dir().'page.html');
 ```
  * `param` $filename
 
@@ -290,6 +290,25 @@ $I->click(['link' => 'Login']);
 
  * `param` $link
  * `param` $context
+
+
+### deleteHeader
+ 
+Deletes the header with the passed name.  Subsequent requests
+will not have the deleted header in its request.
+
+Example:
+```php
+<?php
+$I->haveHttpHeader('X-Requested-With', 'Codeception');
+$I->amOnPage('test-headers.php');
+// ...
+$I->deleteHeader('X-Requested-With');
+$I->amOnPage('some-other-page.php');
+?>
+```
+
+ * `param string` $name the name of the header to delete.
 
 
 ### dontSee
@@ -642,6 +661,24 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  * `param` $field
 
  * `return` array|mixed|null|string
+
+
+### haveHttpHeader
+ 
+Sets the HTTP header to the passed value - which is used on
+subsequent HTTP requests through PhpBrowser.
+
+Example:
+```php
+<?php
+$I->setHeader('X-Requested-With', 'Codeception');
+$I->amOnPage('test-headers.php');
+?>
+```
+
+ * `param string` $name the name of the request header
+ * `param string` $value the value to set it to for subsequent
+       requests
 
 
 ### invalidateCachedRouter
@@ -1298,4 +1335,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Symfony2.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Symfony.php">Help us to improve documentation. Edit module reference</a></div>

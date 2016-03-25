@@ -1,44 +1,37 @@
 
 
 
+Module for AngularJS testing, based on [WebDriver module](http://codeception.com/docs/modules/WebDriver) and [Protractor](http://angular.github.io/protractor/).
 
-This module allows you to run functional tests for Laravel 4.
-It should **not** be used for acceptance tests.
+Performs **synchronization to ensure that page content is fully rendered**.
+Uses Angular's and Protractor internals methods to synchronize with the page.
 
-## Demo Project
+## Configurarion
 
-<https://github.com/Codeception/sample-l4-app>
+The same as for [WebDriver](http://codeception.com/docs/modules/WebDriver#Configuration), but few new options added:
 
-## Example
+* `el` - element where Angular application is defined (default: `body`)
+* `script_timeout` - for how long in seconds to wait for angular operations to finish (default: 5)
+
+### Example (`acceptance.suite.yml`)
 
     modules:
-        enabled:
-            - Laravel4
-
-## Status
-
-* Maintainer: **Jan-Henk Gerritsen**
-* Stability: **stable**
-
-## Config
-
-* cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
-* unit: `boolean`, default `true` - Laravel will run in unit testing mode.
-* environment: `string`, default `testing` - When running in unit testing mode, we will set a different environment.
-* start: `string`, default `bootstrap/start.php` - Relative path to start.php config file.
-* root: `string`, default ` ` - Root path of our application.
-* filters: `boolean`, default: `false` - enable or disable filters for testing.
-
-## API
-
-* app - `Illuminate\Foundation\Application` instance
-* client - `\Symfony\Component\BrowserKit\Client` instance
-
-## Parts
-
-* ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+       enabled:
+          - AngularJS:
+             url: 'http://localhost/'
+             browser: firefox
+             script_timeout: 10
 
 
+### Additional Features
+
+Can perform matching elements by model. In this case you should provide a strict locator with `model` set.
+
+Example:
+
+```php
+$I->selectOption(['model' => 'customerId'], '3');
+```
 
 
 ### _findElements
@@ -55,10 +48,10 @@ Use it in Helpers or GroupObject or Extension classes:
 
 ```php
 <?php
-$els = $this->getModule('Laravel4')->_findElements('.items');
-$els = $this->getModule('Laravel4')->_findElements(['name' => 'username']);
+$els = $this->getModule('AngularJS')->_findElements('.items');
+$els = $this->getModule('AngularJS')->_findElements(['name' => 'username']);
 
-$editLinks = $this->getModule('Laravel4')->_findElements(['link' => 'Edit']);
+$editLinks = $this->getModule('AngularJS')->_findElements(['link' => 'Edit']);
 // now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
@@ -69,126 +62,53 @@ PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` i
  * `return` array of interactive elements
 
 
-### _getResponseContent
+### _getCurrentUri
 
 *hidden API method, expected to be used from Helper classes*
  
-Returns content of the last response
-Use it in Helpers when you want to retrieve response of request performed by another module.
-
-```php
-<?php
-// in Helper class
-public function seeResponseContains($text)
-{
-   $this->assertContains($text, $this->getModule('Laravel4')->_getResponseContent(), "response contains");
-}
-?>
-```
-
+Uri of currently opened page.
  * `return` string
  * `throws`  ModuleException
 
 
-### _loadPage
+### _getUrl
 
 *hidden API method, expected to be used from Helper classes*
  
-Opens a page with arbitrary request parameters.
-Useful for testing multi-step forms on a specific step.
-
-```php
-<?php
-// in Helper class
-public function openCheckoutFormStep2($orderId) {
-    $this->getModule('Laravel4')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
-}
-?>
-```
-
- * `param` $method
- * `param` $uri
- * `param array` $parameters
- * `param array` $files
- * `param array` $server
- * `param null` $content
-
-
-### _request
-
-*hidden API method, expected to be used from Helper classes*
- 
-Send custom request to a backend using method, uri, parameters, etc.
-Use it in Helpers to create special request actions, like accessing API
-Returns a string with response body.
-
-```php
-<?php
-// in Helper class
-public function createUserByApi($name) {
-    $userData = $this->getModule('Laravel4')->_request('POST', '/api/v1/users', ['name' => $name]);
-    $user = json_decode($userData);
-    return $user->id;
-}
-?>
-```
-Does not load the response into the module so you can't interact with response page (click, fill forms).
-To load arbitrary page for interaction, use `_loadPage` method.
-
- * `param` $method
- * `param` $uri
- * `param array` $parameters
- * `param array` $files
- * `param array` $server
- * `param null` $content
- * `return` mixed|Crawler
- * `throws`  ExternalUrlException
- * `see`  `_loadPage`
+Returns URL of a host.
+ * `throws`  ModuleConfigException
 
 
 ### _savePageSource
 
 *hidden API method, expected to be used from Helper classes*
  
-Saves page source of to a file
+Saves HTML source of a page to a file
+ * `param` $filename
+
+
+### _saveScreenshot
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Saves screenshot of current page to a file
 
 ```php
-$this->getModule('Laravel4')->_savePageSource(codecept_output_dir().'page.html');
+$this->getModule('AngularJS')->_saveScreenshot(codecept_output_dir().'screenshot_1.png');
 ```
  * `param` $filename
 
 
-### amHttpAuthenticated
+### acceptPopup
  
-Authenticates user for HTTP_AUTH
-
- * `param` $username
- * `param` $password
+Accepts the active JavaScript native popup window, as created by `window.alert`|`window.confirm`|`window.prompt`.
+Don't confuse popups with modal windows, as created by [various libraries](http://jster.net/category/windows-modals-popups).
 
 
-### amLoggedAs
+### amInsideAngularApp
  
-Set the currently logged in user for the application.
-Takes either `UserInterface` instance or array of credentials.
-
- * `param`  \Illuminate\Auth\UserInterface|array $user
- * `param`  string $driver
- * `return` void
- * `[Part]` framework
-
-
-### amOnAction
- 
-Opens web page by action name
-
-``` php
-<?php
-$I->amOnAction('PostsController * `index');` 
-?>
-```
-
- * `param` $action
- * `param array` $params
+Enables Angular mode (enabled by default).
+Waits for Angular to finish rendering after each action.
 
 
 ### amOnPage
@@ -206,18 +126,61 @@ $I->amOnPage('/register');
  * `param` $page
 
 
-### amOnRoute
+### amOnSubdomain
  
-Opens web page using route name and parameters.
+Changes the subdomain for the 'url' configuration parameter.
+Does not open a page; use `amOnPage` for that.
 
 ``` php
 <?php
-$I->amOnRoute('posts.create');
+// If config is: 'http://mysite.com'
+// or config is: 'http://www.mysite.com'
+// or config is: 'http://company.mysite.com'
+
+$I->amOnSubdomain('user');
+$I->amOnPage('/');
+// moves to http://user.mysite.com/
 ?>
 ```
 
- * `param` $route
- * `param array` $params
+ * `param` $subdomain
+
+
+
+### amOnUrl
+ 
+Open web page at the given absolute URL and sets its hostname as the base host.
+
+``` php
+<?php
+$I->amOnUrl('http://codeception.com');
+$I->amOnPage('/quickstart'); // moves to http://codeception.com/quickstart
+?>
+```
+
+
+### amOutsideAngularApp
+ 
+Disabled Angular mode.
+
+Falls back to original WebDriver, in case web page does not contain Angular app.
+
+
+### appendField
+ 
+Append the given text to the given element.
+Can also add a selection to a select box.
+
+``` php
+<?php
+$I->appendField('#mySelectbox', 'SelectValue');
+$I->appendField('#myTextField', 'appended');
+?>
+```
+
+ * `param string` $field
+ * `param string` $value
+ * `throws`  \Codeception\Exception\ElementNotFound
 
 
 ### attachFile
@@ -235,14 +198,9 @@ $I->attachFile('input[ * `type="file"]',`  'prices.xls');
  * `param` $filename
 
 
-### callArtisan
+### cancelPopup
  
-Calls an Artisan command and returns output as a string
-
- * `param string` $command The name of the command as displayed in the artisan command list
- * `param array` $parameters An associative array of command arguments
-
- * `return` string
+Dismisses the active JavaScript popup, as created by `window.alert`|`window.confirm`|`window.prompt`.
 
 
 ### checkOption
@@ -291,6 +249,19 @@ $I->click(['link' => 'Login']);
  * `param` $context
 
 
+### clickWithRightButton
+ 
+Performs contextual click with the right mouse button on an element.
+
+ * `param` $cssOrXPath
+ * `throws`  \Codeception\Exception\ElementNotFound
+
+
+### debugWebDriverLogs
+ 
+Print out latest Selenium Logs in debug mode
+
+
 ### dontSee
  
 Checks that the current page doesn't contain the text specified (case insensitive).
@@ -319,11 +290,6 @@ For checking the raw source code, use `seeInSource()`.
 
  * `param`      $text
  * `param null` $selector
-
-
-### dontSeeAuthentication
- 
-Check that user is not authenticated
 
 
 ### dontSeeCheckboxIsChecked
@@ -395,6 +361,13 @@ $I->dontSeeElement('input', ['value' => '123456']);
 
  * `param` $selector
  * `param array` $attributes
+
+
+### dontSeeElementInDOM
+ 
+Opposite of `seeElementInDOM`.
+
+ * `param` $selector
 
 
 ### dontSeeInCurrentUrl
@@ -473,6 +446,13 @@ $I->dontSeeInFormFields('#form-id', [
  * `param` $params
 
 
+### dontSeeInPageSource
+ 
+Checks that the page source doesn't contain the given string.
+
+ * `param` $text
+
+
 ### dontSeeInSource
  
 Checks that the current page contains the given string in its
@@ -525,20 +505,59 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 
 
 
-### dontSeeRecord
+### doubleClick
  
-Checks that record does not exist in database.
+Performs a double-click on an element matched by CSS or XPath.
+
+ * `param` $cssOrXPath
+ * `throws`  \Codeception\Exception\ElementNotFound
+
+
+### dragAndDrop
+ 
+Performs a simple mouse drag-and-drop operation.
 
 ``` php
 <?php
-$I->dontSeeRecord('users', array('name' => 'davert'));
+$I->dragAndDrop('#drag', '#drop');
 ?>
 ```
 
- * `param` $tableName
- * `param array` $attributes
- * `[Part]` orm
- * `[Part]` framework
+ * `param string` $source (CSS ID or XPath)
+ * `param string` $target (CSS ID or XPath)
+
+
+### executeInSelenium
+ 
+Low-level API method.
+If Codeception commands are not enough, this allows you to use Selenium WebDriver methods directly:
+
+``` php
+$I->executeInSelenium(function(\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
+  $webdriver->get('http://google.com');
+});
+```
+
+This runs in the context of the [RemoteWebDriver class](https://github.com/facebook/php-webdriver/blob/master/lib/remote/RemoteWebDriver.php).
+Try not to use this command on a regular basis.
+If Codeception lacks a feature you need, please implement it and submit a patch.
+
+ * `param callable` $function
+
+
+### executeJS
+ 
+Executes custom JavaScript.
+
+This example uses jQuery to get a value and assigns that value to a PHP variable:
+
+```php
+<?php
+$myVar = $I->executeJS('return $("#myField").val()');
+?>
+```
+
+ * `param` $script
 
 
 ### fillField
@@ -556,11 +575,11 @@ $I->fillField(['name' => 'email'], 'jon * `mail.com');`
  * `param` $value
 
 
-### getApplication
+### getVisibleText
  
-Provides access the Laravel application object.
+Grabs all visible text from the current page.
 
- * `return` \Illuminate\Foundation\Application
+ * `return` string
 
 
 ### grabAttributeFrom
@@ -632,47 +651,6 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `return` string[]
 
 
-### grabRecord
- 
-Retrieves record from database
-
-``` php
-<?php
-$category = $I->grabRecord('users', array('name' => 'davert'));
-?>
-```
-
- * `param` $tableName
- * `param array` $attributes
- * `[Part]` ORM
- * `[Part]` framework
-
-
-### grabService
- 
-Return an instance of a class from the IoC Container.
-(http://laravel.com/docs/ioc)
-
-Example
-``` php
-<?php
-// In Laravel
-App::bind('foo', function($app)
-{
-    return new FooBar;
-});
-
-// Then in test
-$service = $I->grabService('foo');
-
-// Will return an instance of FooBar, also works for singletons.
-?>
-```
-
- * `param`  string $class
- * `[Part]` framework
-
-
 ### grabTextFrom
  
 Finds and returns the text contents of the given element.
@@ -692,48 +670,111 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
 
 ### grabValueFrom
  
- * `param` $field
-
- * `return` array|mixed|null|string
-
-
-### haveDisabledFilters
- 
-Disable Laravel filters for next requests.
-
-
-### haveEnabledFilters
- 
-Enable Laravel filters for next requests.
-
-
-### haveRecord
- 
-Inserts record into the database.
+Finds the value for the given form field.
+If a fuzzy locator is used, the field is found by field name, CSS, and XPath.
 
 ``` php
 <?php
-$user_id = $I->haveRecord('users', array('name' => 'Davert'));
+$name = $I->grabValueFrom('Name');
+$name = $I->grabValueFrom('input[name=username]');
+$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = 'username']');
+$name = $I->grabValueFrom(['name' => 'username']);
 ?>
 ```
 
- * `param` $tableName
- * `param array` $attributes
- * `[Part]` orm
- * `[Part]` framework
+ * `param` $field
 
 
-### logout
+
+### loadSessionSnapshot
  
-Logs user out
- * `[Part]` framework
+ * `param string` $name
+ * `return` bool
+
+
+### makeScreenshot
+ 
+Takes a screenshot of the current window and saves it to `tests/_output/debug`.
+
+``` php
+<?php
+$I->amOnPage('/user/edit');
+$I->makeScreenshot('edit_page');
+// saved to: tests/_output/debug/edit_page.png
+?>
+```
+
+ * `param` $name
+
+
+### maximizeWindow
+ 
+Maximizes the current window.
 
 
 ### moveBack
  
 Moves back in history.
 
- * `param int` $numberOfSteps (default value 1)
+
+### moveForward
+ 
+Moves forward in history.
+
+
+### moveMouseOver
+ 
+Move mouse over the first element matched by the given locator.
+If the second and third parameters are given, then the mouse is moved to an offset of the element's top-left corner.
+Otherwise, the mouse is moved to the center of the element.
+
+``` php
+<?php
+$I->moveMouseOver(['css' => '.checkout'], 20, 50);
+?>
+```
+
+ * `param string` $cssOrXPath css or xpath of the web element
+ * `param int` $offsetX
+ * `param int` $offsetY
+
+ * `throws`  \Codeception\Exception\ElementNotFound
+
+
+### pauseExecution
+ 
+Pauses test execution in debug mode.
+To proceed test press "ENTER" in console.
+
+This method is useful while writing tests, since it allows you to inspect the current page in the middle of a test case.
+
+
+### pressKey
+ 
+Presses the given key on the given element.
+To specify a character and modifier (e.g. ctrl, alt, shift, meta), pass an array for $char with
+the modifier as the first element and the character as the second.
+For special keys use key constants from WebDriverKeys class.
+
+``` php
+<?php
+// <input id="page" value="old" />
+$I->pressKey('#page','a'); // => olda
+$I->pressKey('#page',array('ctrl','a'),'new'); //=> new
+$I->pressKey('#page',array('shift','111'),'1','x'); //=> old!!!1x
+$I->pressKey('descendant-or-self::*[ * `id='page']','u');`  //=> oldu
+$I->pressKey('#name', array('ctrl', 'a'), \Facebook\WebDriver\WebDriverKeys::DELETE); //=>''
+?>
+```
+
+ * `param` $element
+ * `param` $char Can be char or array with modifier. You can provide several chars.
+ * `throws`  \Codeception\Exception\ElementNotFound
+
+
+### reloadPage
+ 
+Reloads the current page.
 
 
 ### resetCookie
@@ -744,6 +785,41 @@ You can set additional cookie params like `domain`, `path` in array passed as la
  * `param` $cookie
 
  * `param array` $params
+
+
+### resizeWindow
+ 
+Resize the current window.
+
+``` php
+<?php
+$I->resizeWindow(800, 600);
+
+```
+
+ * `param int` $width
+ * `param int` $height
+
+
+### saveSessionSnapshot
+ 
+ * `param string` $name
+
+
+### scrollTo
+ 
+Move to the middle of the given element matched by the given locator.
+Extra shift, calculated from the top-left corner of the element, can be set by passing $offsetX and $offsetY parameters.
+
+``` php
+<?php
+$I->scrollTo(['css' => '.checkout'], 20, 50);
+?>
+```
+
+ * `param` $selector
+ * `param int` $offsetX
+ * `param int` $offsetY
 
 
 ### see
@@ -778,12 +854,6 @@ For checking the raw source code, use `seeInSource()`.
  * `param null` $selector
 
 
-### seeAuthentication
- 
-Checks that user is authenticated
- * `[Part]` framework
-
-
 ### seeCheckboxIsChecked
  
 Checks that the specified checkbox is checked.
@@ -811,33 +881,6 @@ $I->seeCookie('PHPSESSID');
 ```
 
  * `param` $cookie
- * `param array` $params
-
-
-### seeCurrentActionIs
- 
-Checks that current url matches action
-
-``` php
-<?php
-$I->seeCurrentActionIs('PostsController * `index');` 
-?>
-```
-
- * `param` $action
- * `param array` $params
-
-
-### seeCurrentRouteIs
- 
-Checks that current url matches route
-
-``` php
-<?php
-$I->seeCurrentRouteIs('posts.index');
-?>
-```
- * `param` $route
  * `param array` $params
 
 
@@ -892,54 +935,17 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
  * `return` 
 
 
-### seeFormErrorMessage
+### seeElementInDOM
  
-Assert that specific form error message is set in the view.
-
-Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
-
-Example of Usage
+Checks that the given element exists on the page, even it is invisible.
 
 ``` php
 <?php
-$I->seeFormErrorMessage('username', 'Invalid Username');
-?>
-```
- * `param string` $key
- * `param string` $errorMessage
-
-
-### seeFormErrorMessages
- 
-Assert that specific form error messages are set in the view.
-
-Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
-
-Example of Usage
-
-``` php
-<?php
-$I->seeFormErrorMessages(array('username'=>'Invalid Username'));
-?>
-```
- * `param array` $bindings
-
-
-### seeFormHasErrors
- 
-Assert that form errors are bound to the View.
-
-``` php
-<?php
-$I->seeFormHasErrors();
+$I->seeElementInDOM('//form/input[type=hidden]');
 ?>
 ```
 
- * `return` bool
+ * `param` $selector
 
 
 ### seeInCurrentUrl
@@ -1041,20 +1047,23 @@ $I->seeInFormFields('//form[ * `id=my-form]',`  $form);
  * `param` $params
 
 
-### seeInSession
+### seeInPageSource
  
-Assert that a session variable exists.
+Checks that the page source contains the given string.
 
-``` php
+```php
 <?php
-$I->seeInSession('key');
-$I->seeInSession('key', 'value');
-?>
+$I->seeInPageSource('<link rel="apple-touch-icon"');
 ```
 
- * `param`  string|array $key
- * `param`  mixed $value
- * `return` void
+ * `param` $text
+
+
+### seeInPopup
+ 
+Checks that the active JavaScript popup, as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
+
+ * `param` $text
 
 
 ### seeInSource
@@ -1116,6 +1125,10 @@ $I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
 - array: range of numbers [0,10]
 
 
+### seeNumberOfElementsInDOM
+__not documented__
+
+
 ### seeOptionIsSelected
  
 Checks that the given option is selected.
@@ -1129,84 +1142,6 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-
-
-### seePageNotFound
- 
-Asserts that current page has 404 response status code.
-
-
-### seeRecord
- 
-Checks that record exists in database.
-
-``` php
-<?php
-$I->seeRecord('users', array('name' => 'davert'));
-?>
-```
-
- * `param` $tableName
- * `param array` $attributes
- * `[Part]` orm
- * `[Part]` framework
-
-
-### seeResponseCodeIs
- 
-Checks that response code is equal to value provided.
-
- * `param` $code
-
-
-
-### seeSessionErrorMessage
- 
-Assert that Session has error messages
-The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
-
-Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
-
-Example of Usage
-
-``` php
-<?php
-$I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
-?>
-```
- * `param array` $bindings
- * `deprecated` 
-
-
-### seeSessionHasErrors
- 
-Assert that the session has errors bound.
-
-``` php
-<?php
-$I->seeSessionHasErrors();
-?>
-```
-
- * `return` bool
- * `deprecated` 
-
-
-### seeSessionHasValues
- 
-Assert that the session has a given list of values.
-
-``` php
-<?php
-$I->seeSessionHasValues(['key1', 'key2']);
-$I->seeSessionHasValues(['key1' => 'value1', 'key2' => 'value2']);
-?>
-```
-
- * `param`  array $bindings
- * `return` void
 
 
 ### selectOption
@@ -1233,64 +1168,6 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
  * `param` $option
 
 
-### sendAjaxGetRequest
- 
-If your page triggers an ajax request, you can perform it manually.
-This action sends a GET ajax request with specified params.
-
-See ->sendAjaxPostRequest for examples.
-
- * `param` $uri
- * `param` $params
-
-
-### sendAjaxPostRequest
- 
-If your page triggers an ajax request, you can perform it manually.
-This action sends a POST ajax request with specified params.
-Additional params can be passed as array.
-
-Example:
-
-Imagine that by clicking checkbox you trigger ajax request which updates user settings.
-We emulate that click by running this ajax request manually.
-
-``` php
-<?php
-$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true)); // POST
-$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GET
-
-```
-
- * `param` $uri
- * `param` $params
-
-
-### sendAjaxRequest
- 
-If your page triggers an ajax request, you can perform it manually.
-This action sends an ajax request with specified method and params.
-
-Example:
-
-You need to perform an ajax request specifying the HTTP method.
-
-``` php
-<?php
-$I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
-
-```
-
- * `param` $method
- * `param` $uri
- * `param` $params
-
-
-### setApplication
- 
- * `param` $app
-
-
 ### setCookie
  
 Sets a cookie with the given name and value.
@@ -1311,28 +1188,16 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
 ### submitForm
  
 Submits the given form on the page, optionally with the given form
-values.  Pass the form field's values as an array in the second
-parameter.
+values.  Give the form fields values as an array. Note that hidden fields
+can't be accessed.
 
-Although this function can be used as a short-hand version of 
-`fillField()`, `selectOption()`, `click()` etc. it has some important 
-differences:
-
- * Only field *names* may be used, not CSS/XPath selectors nor field labels
- * If a field is sent to this function that does *not* exist on the page,
-   it will silently be added to the HTTP request.  This is helpful for testing
-   some types of forms, but be aware that you will *not* get an exception
-   like you would if you called `fillField()` or `selectOption()` with
-   a missing field.
-
-Fields that are not provided will be filled by their values from the page, 
-or from any previous calls to `fillField()`, `selectOption()` etc.
+Skipped fields will be filled by their values from the page.
 You don't need to click the 'Submit' button afterwards.
 This command itself triggers the request to form's action.
 
-You can optionally specify which button's value to include
-in the request with the last parameter (as an alternative to
-explicitly setting its value in the second parameter), as
+You can optionally specify what button's value to include
+in the request with the last parameter as an alternative to
+explicitly setting its value in the second parameter, as
 button values are not otherwise included in the request.
 
 Examples:
@@ -1377,11 +1242,9 @@ You could write the following to submit it:
 $I->submitForm(
     '#userForm',
     [
-        'user' => [
-            'login' => 'Davert',
-            'password' => '123456',
-            'agree' => true
-        ]
+        'user[login]' => 'Davert',
+        'user[password]' => '123456',
+        'user[agree]' => true
     ],
     'submitButton'
 );
@@ -1389,25 +1252,11 @@ $I->submitForm(
 Note that "2" will be the submitted value for the "plan" field, as it is
 the selected option.
 
-You can also emulate a JavaScript submission by not specifying any
-buttons in the third parameter to submitForm.
+Also note that this differs from PhpBrowser, in that
+```'user' => [ 'login' => 'Davert' ]``` is not supported at the moment.
+Named array keys *must* be included in the name as above.
 
-```php
-<?php
-$I->submitForm(
-    '#userForm',
-    [
-        'user' => [
-            'login' => 'Davert',
-            'password' => '123456',
-            'agree' => true
-        ]
-    ]
-);
-```
-
-This function works well when paired with `seeInFormFields()` 
-for quickly testing CRUD interfaces and form validation logic.
+Pair this with seeInFormFields for quick testing magic.
 
 ``` php
 <?php
@@ -1417,14 +1266,15 @@ $form = [
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('#my-form', $form, 'submitButton');
+$I->submitForm('//form[ * `id=my-form]',`  $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('#my-form', $form);
+$I->seeInFormFields('//form[ * `id=my-form]',`  $form);
+?>
 ```
 
-Parameter values can be set to arrays for multiple input fields
+Parameter values must be set to arrays for multiple input fields
 of the same name, or multi-select combo boxes.  For checkboxes,
-you can use either the string value or boolean `true`/`false` which will
+either the string value can be used, or boolean values which will
 be replaced by the checkbox's value in the DOM.
 
 ``` php
@@ -1433,7 +1283,7 @@ $I->submitForm('#my-form', [
      'field1' => 'value',
      'checkbox' => [
          'value of first checkbox',
-         'value of second checkbox',
+         'value of second checkbox,
      ],
      'otherCheckboxes' => [
          true,
@@ -1445,29 +1295,27 @@ $I->submitForm('#my-form', [
          'second option value'
      ]
 ]);
+?>
 ```
 
 Mixing string and boolean values for a checkbox's value is not supported
 and may produce unexpected results.
 
-Field names ending in `[]` must be passed without the trailing square 
+Field names ending in "[]" must be passed without the trailing square
 bracket characters, and must contain an array for its value.  This allows
 submitting multiple values with the same name, consider:
 
 ```php
-<?php
-// This will NOT work correctly
 $I->submitForm('#my-form', [
     'field[]' => 'value',
-    'field[]' => 'another value',  // 'field[]' is already a defined key
+    'field[]' => 'another value', // 'field[]' is already a defined key
 ]);
 ```
 
 The solution is to pass an array value:
 
 ```php
-<?php
-// This way both values are submitted
+// this way both values are submitted
 $I->submitForm('#my-form', [
     'field' => [
         'value',
@@ -1475,28 +1323,74 @@ $I->submitForm('#my-form', [
     ]
 ]);
 ```
-
  * `param` $selector
  * `param` $params
  * `param` $button
 
 
-### switchToIframe
+### switchToIFrame
  
-Switch to iframe or frame on the page.
+Switch to another frame on the page.
 
 Example:
 ``` html
 <iframe name="another_frame" src="http://example.com">
+
 ```
 
 ``` php
 <?php
 # switch to iframe
-$I->switchToIframe("another_frame");
+$I->switchToIFrame("another_frame");
+# switch to parent page
+$I->switchToIFrame();
+
 ```
 
- * `param string` $name
+ * `param string|null` $name
+
+
+### switchToWindow
+ 
+Switch to another window identified by name.
+
+The window can only be identified by name. If the $name parameter is blank, the parent window will be used.
+
+Example:
+``` html
+<input type="button" value="Open window" onclick="window.open('http://example.com', 'another_window')">
+```
+
+``` php
+<?php
+$I->click("Open window");
+# switch to another window
+$I->switchToWindow("another_window");
+# switch to parent window
+$I->switchToWindow();
+?>
+```
+
+If the window has no name, the only way to access it is via the `executeInSelenium()` method, like so:
+
+``` php
+<?php
+$I->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
+     $handles=$webdriver->getWindowHandles();
+     $last_window = end($handles);
+     $webdriver->switchTo()->window($last_window);
+});
+?>
+```
+
+ * `param string|null` $name
+
+
+### typeInPopup
+ 
+Enters text into a native JavaScript prompt popup, as created by `window.prompt`.
+
+ * `param` $keys
 
 
 ### uncheckOption
@@ -1511,4 +1405,121 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Laravel4.php">Help us to improve documentation. Edit module reference</a></div>
+
+### unselectOption
+__not documented__
+
+
+### wait
+ 
+Wait for $timeout seconds.
+
+ * `param int` $timeout secs
+ * `throws`  \Codeception\Exception\TestRuntimeException
+
+
+### waitForElement
+ 
+Waits up to $timeout seconds for an element to appear on the page.
+If the element doesn't appear, a timeout exception is thrown.
+
+``` php
+<?php
+$I->waitForElement('#agree_button', 30); // secs
+$I->click('#agree_button');
+?>
+```
+
+ * `param` $element
+ * `param int` $timeout seconds
+ * `throws`  \Exception
+
+
+### waitForElementChange
+ 
+Waits up to $timeout seconds for the given element to change.
+Element "change" is determined by a callback function which is called repeatedly until the return value evaluates to true.
+
+``` php
+<?php
+use \Facebook\WebDriver\WebDriverElement
+$I->waitForElementChange('#menu', function(WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
+?>
+```
+
+ * `param` $element
+ * `param \Closure` $callback
+ * `param int` $timeout seconds
+ * `throws`  \Codeception\Exception\ElementNotFound
+
+
+### waitForElementNotVisible
+ 
+Waits up to $timeout seconds for the given element to become invisible.
+If element stays visible, a timeout exception is thrown.
+
+``` php
+<?php
+$I->waitForElementNotVisible('#agree_button', 30); // secs
+?>
+```
+
+ * `param` $element
+ * `param int` $timeout seconds
+ * `throws`  \Exception
+
+
+### waitForElementVisible
+ 
+Waits up to $timeout seconds for the given element to be visible on the page.
+If element doesn't appear, a timeout exception is thrown.
+
+``` php
+<?php
+$I->waitForElementVisible('#agree_button', 30); // secs
+$I->click('#agree_button');
+?>
+```
+
+ * `param` $element
+ * `param int` $timeout seconds
+ * `throws`  \Exception
+
+
+### waitForJS
+ 
+Executes JavaScript and waits up to $timeout seconds for it to return true.
+
+In this example we will wait up to 60 seconds for all jQuery AJAX requests to finish.
+
+``` php
+<?php
+$I->waitForJS("return $.active == 0;", 60);
+?>
+```
+
+ * `param string` $script
+ * `param int` $timeout seconds
+
+
+### waitForText
+ 
+Waits up to $timeout seconds for the given string to appear on the page.
+Can also be passed a selector to search in.
+If the given text doesn't appear, a timeout exception is thrown.
+
+``` php
+<?php
+$I->waitForText('foo', 30); // secs
+$I->waitForText('foo', 30, '.title'); // secs
+?>
+```
+
+ * `param string` $text
+ * `param int` $timeout seconds
+ * `param null` $selector
+ * `throws`  \Exception
+
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/AngularJS.php">Help us to improve documentation. Edit module reference</a></div>

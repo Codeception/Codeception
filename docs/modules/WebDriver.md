@@ -109,7 +109,7 @@ In case you want to test a local site or site behind a firewall you should use a
 * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
 * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
 * `wait` - Implicit wait (default 0 seconds).
-* `capabilities` - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+* `capabilities` - Sets Selenium2 [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 * `connection_timeout` - timeout for opening a connection to remote selenium server (30 seconds by default).
 * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
 * `http_proxy` - sets http proxy server url for testing a remote server.
@@ -159,7 +159,13 @@ If you prefer, you may also pass a string for the locator. This is called a "fuz
 3. If nothing found, check if locator looks like an XPath expression. If so, run it.
 4. Throw an `ElementNotFound` exception.
 
-Be warned that fuzzy locators can be significantly slower than strict locators. If speed is a concern, it's recommended you stick with explicitly specifying the locator type via the array syntax.
+Be warned that fuzzy locators can be significantly slower than strict locators.
+Especially if you use Selenium WebDriver with `wait` (aka implicit wait) option.
+In the example above if you set `wait` to 5 seconds and use XPath string as fuzzy locator,
+`submitForm` method will wait for 5 seconds at each step.
+That means 5 seconds finding the form by ID, another 5 seconds finding by CSS
+until it finally tries to find the form by XPath).
+If speed is a concern, it's recommended you stick with explicitly specifying the locator type via the array syntax.
 
 ## Public Properties
 

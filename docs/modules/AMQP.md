@@ -40,7 +40,7 @@ To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em
 
 ## Public Properties
 
-* connection - AMQPConnection - current connection
+* connection - AMQPStreamConnection - current connection
 
 @since 1.1.2
 @author tiger.seo@gmail.com

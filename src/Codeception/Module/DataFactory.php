@@ -145,7 +145,7 @@ EOF;
 
     protected $config = ['factories' => null];
 
-    public function _beforeSuite()
+    public function _beforeSuite($settings = [])
     {
         if (!class_exists('League\FactoryMuffin\FactoryMuffin')) {
             throw new \Exception('FactoryMuffin not installed. Please add `"league/factory-muffin": "^3.0"` to composer.json');

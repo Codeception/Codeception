@@ -307,7 +307,7 @@ will not have the deleted header in its request.
 Example:
 ```php
 <?php
-$I->setHeader('X-Requested-With', 'Codeception');
+$I->haveHttpHeader('X-Requested-With', 'Codeception');
 $I->amOnPage('test-headers.php');
 // ...
 $I->deleteHeader('X-Requested-With');
@@ -674,6 +674,24 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  * `param` $field
 
  * `return` array|mixed|null|string
+
+
+### haveHttpHeader
+ 
+Sets the HTTP header to the passed value - which is used on
+subsequent HTTP requests through PhpBrowser.
+
+Example:
+```php
+<?php
+$I->setHeader('X-Requested-With', 'Codeception');
+$I->amOnPage('test-headers.php');
+?>
+```
+
+ * `param string` $name the name of the request header
+ * `param string` $value the value to set it to for subsequent
+       requests
 
 
 ### moveBack
@@ -1088,20 +1106,10 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
 
 ### setHeader
  
-Sets the HTTP header to the passed value - which is used on
-subsequent HTTP requests through PhpBrowser.
+Alias to `haveHttpHeader`
 
-Example:
-```php
-<?php
-$I->setHeader('X-Requested-With', 'Codeception');
-$I->amOnPage('test-headers.php');
-?>
-```
-
- * `param string` $name the name of the request header
- * `param string` $value the value to set it to for subsequent
-       requests
+ * `param` $name
+ * `param` $value
 
 
 ### submitForm

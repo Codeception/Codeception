@@ -135,7 +135,7 @@ class FTP extends Filesystem
     /**
      * Close the FTP connection & Clear up
      */
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         $this->_closeConnection();
 

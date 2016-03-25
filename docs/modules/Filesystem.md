@@ -181,6 +181,13 @@ $I->seeNumberNewLines(5);
  * `param int` $number New lines
 
 
+### seeThisFileMatches
+ 
+Checks that contents of currently opened file matches $regex
+
+ * `param` $regex
+
+
 ### writeToFile
  
 Saves contents to file
