@@ -13,7 +13,7 @@ if (!class_exists('Symfony\Component\CssSelector\CssSelectorConverter')) {
 // prefering old names
 namespace Codeception {
 
-    interface TestCase extends \Codeception\TestInterface {
+    interface TestCase {
     }
 }
 
