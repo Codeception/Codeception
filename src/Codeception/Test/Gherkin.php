@@ -63,7 +63,7 @@ class Gherkin extends Test implements ScenarioDriven
 
     public function getSignature()
     {
-        return codecept_relative_path($this->getFileName());
+        return basename($this->getFileName(), '.feature') . ":" . $this->getFeature();
     }
 
     public function test()
