@@ -27,6 +27,12 @@ namespace Codeception\Module {
 
     class Symfony2 extends Symfony {
     }
+
+    class Phalcon1 extends Phalcon {
+    }
+
+    class Phalcon2 extends Phalcon {
+    }
 }
 
 // @codingStandardsIgnoreEnd

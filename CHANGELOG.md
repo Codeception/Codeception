@@ -17,6 +17,7 @@
 * [Symfony] module Symfony2 renamed to Symfony
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
 * <Breaking Change> [Dbh] module removed
+* <Breaking Change> [Laravel4] module removed
 
 
 #### 2.1.7
