@@ -3,11 +3,11 @@
 #### 2.2.0
 
 * Long-not-awaited **Gherkin format support**. [Announcement](https://github.com/Codeception/Codeception/pull/2750#issue-129899745)
-* <Breaking Change> `Codeception\TestCase` replaced with `Codeception\TestInterface` in code and in module signatures.
-* <Breaking Change> Cept/Cest classes are no longer extending `PHPUnit_Framework_TestCase`, so they don't have `expectException`, `getMock`, etc.
 * **Core Test Format Refactorings** Codeception becomes true multiformat testing platform. Format requires a [Loader](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Test/Loader/LoaderInterface.php) and class extending [Test](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Test/Test.php) class, implementing [TestInterface](https://github.com/Codeception/Codeception/blob/master/src/Codeception/TestInterface.php).
-* Reduced stack trace for scenario-driven test formats. Codeception tests implement `PHPUnit_Framework_Test` instead of extending heavy `PHPUnit_Framework_TestCase` class.
-* <Breaking Change> **Conflicts API implemented** Frameworks + PhpBrowser + WebDriver can't be used together unless only non-conflicting part is used. [Announcement](http://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#conflicts)
+    * *Breaking* `Codeception\TestCase` replaced with `Codeception\TestInterface` in code and in module signatures.
+    * *Breaking* Cept/Cest classes are no longer extending `PHPUnit_Framework_TestCase`, so they don't have `expectException`, `getMock`, etc.
+    * Reduced stack trace for scenario-driven test formats. Codeception tests implement `PHPUnit_Framework_Test` instead of extending heavy `PHPUnit_Framework_TestCase` class.
+* *Breaking* **Conflicts API implemented** Frameworks + PhpBrowser + WebDriver can't be used together unless only non-conflicting part is used. [Announcement](http://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#conflicts)
 * **Examples** as an alternative to Data Providers. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#examples)
 * **Params** loading from yml, env files or environment. [Announcement](http://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#params)
 * **Test dependencies** with `@depends` annotation. [Announcement](http://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#test-dependencies)
@@ -15,11 +15,11 @@
 * [WebDriver] allows getting current browser and capabilities in test. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#Getting-current-browser-and-capabilities-in-tests)
 * [AngularJS] module added. Extends WebDriver module for AngularJS testing. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#angularjs)
 * [DataFactory] module added. Performs data generation using FactoryMuffin library [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#datafactory)
-* <Breaking Change> [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
+* *Breaking* [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
 * [Symfony] module Symfony2 renamed to Symfony
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
-* <Breaking Change> [Dbh] module removed
-* <Breaking Change> [Laravel4] module removed
+* *Breaking* [Dbh] module removed
+* *Breaking* [Laravel4] module removed
 
 
 #### 2.1.7
