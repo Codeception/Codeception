@@ -208,7 +208,8 @@ class JsonArray
                 try {
                     $subNode = $doc->createElement($key);
                 } catch (\Exception $e) {
-                    throw new \UnexpectedValueException('Key "' . $key . '" can\'t be converted to XML tag', 0, $e);
+                    $key = $this->getValidTagNameForInvalidKey($key);
+                    $subNode = $doc->createElement($key);
                 }
                 $node->appendChild($subNode);
             }
@@ -231,5 +232,16 @@ class JsonArray
         }
 
         return $val1 === $val2;
+    }
+
+    private function getValidTagNameForInvalidKey($key)
+    {
+        static $map = [];
+        if (!isset($map[$key])) {
+            $tagName = 'invalidTag' . (count($map) + 1);
+            $map[$key] = $tagName;
+            codecept_debug($tagName . ' is "' . $key . '"');
+        }
+        return $map[$key];
     }
 }

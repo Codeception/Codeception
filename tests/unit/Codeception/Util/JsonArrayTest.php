@@ -304,12 +304,11 @@ class JsonArrayTest extends \Codeception\TestCase\Test
 
     /**
      * @Issue https://github.com/Codeception/Codeception/issues/2899
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage Key "foo/bar" can't be converted to XML tag
      */
     public function testInvalidXmlTag()
     {
-        $jsonArray = new JsonArray('{"foo/bar":1, "baz": 2}');
-        $jsonArray->toXml();
+        $jsonArray = new JsonArray('{"a":{"foo/bar":1,"":2},"b":{"foo/bar":1,"":2},"baz":2}');
+        $expectedXml = '<a><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></a><b><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></b><baz>2</baz>';
+        $this->assertContains($expectedXml, $jsonArray->toXml()->saveXML());
     }
 }
