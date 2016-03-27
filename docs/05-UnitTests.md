@@ -336,7 +336,7 @@ modules:
 <div class="alert alert-info">
 It may look like Cest format is too simple for writing tests. It doesn't provide assertion methods,
 methods to create mocks and stubs or even accessing the module with `getModule`, as we did in example above.
-However Cest format is better at separating concerns. Test code does not interfere with support code, provided by `UnitTester` object. All additional actions you may need in your unit/integration tests you can implement in `Helper\Unit` class. This is the recommended approach, and allows keeping tests verbose and clean.
+However Cest format is better at separating concerns. Test code does not interfere with support code, provided by `UnitTester` object. All additional actions you may need in your unit/integration tests you can implement in `Helper\Unit` class.
 </div>
 
 
