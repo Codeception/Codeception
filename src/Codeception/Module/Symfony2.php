@@ -29,8 +29,9 @@ use Symfony\Component\Finder\Finder;
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  * * environment: 'local' - environment used for load kernel
  * * debug: true - turn on/off debug mode
- * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
+ * * em_service: 'doctrine.orm.default_entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire) 
+ * * rebootable_client: 'true' - reboot client's kernel before each request
  * 
  * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
  *
@@ -46,9 +47,10 @@ use Symfony\Component\Finder\Finder;
  * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
  * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
  * * environment: 'local' - environment used for load kernel
- * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
+ * * em_service: 'doctrine.orm.default_entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * debug: true - turn on/off debug mode
  * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire) 
+ * * rebootable_client: 'true' - reboot client's kernel before each request
  *
  * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
  *
@@ -93,6 +95,11 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     public $kernel;
 
     /**
+     * @var \Symfony\Component\HttpKernel\Kernel
+     */
+    protected $clientKernel;
+
+    /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     public $container;
@@ -103,7 +110,8 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         'environment' => 'test',
         'debug' => true,
         'cache_router' => false,
-        'em_service' => 'doctrine.orm.entity_manager'
+        'em_service' => 'doctrine.orm.default_entity_manager',
+        'rebootable_client' => true,
     ];
 
     /**
@@ -119,7 +127,10 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     protected $kernelClass;
 
-    public $permanentServices = [];
+    /**
+     * @var array
+     */
+    protected $persistentServices = [];
 
     public function _initialize()
     {
@@ -143,41 +154,44 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
             ini_set($xdebugMaxLevelKey, $maxNestingLevel);
         }
 
-        $this->bootKernel();
+        $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
+        $this->kernel->boot();
         $this->container = $this->kernel->getContainer();
+
+        if ($this->config['cache_router'] === true) {
+            $this->persistService('router');
+        }
+
+        $this->clientKernel = clone $this->kernel;
+        $this->clientKernel->boot();
     }
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->client = new Symfony2Connector($this->kernel);
-        $this->client->followRedirects(true);
+        $this->client = new Symfony2Connector($this->clientKernel, $this->persistentServices, $this->config['rebootable_client']);
     }
 
+    /**
+     * Retrieve Entity Manager
+     *
+     * @return \Doctrine\ORM\EntityManager
+     */
     public function _getEntityManager()
     {
-        $this->bootKernel();
-        if (!$this->kernel->getContainer()->has($this->config['em_service'])) {
-            return null;
+        if ($this->kernel === null) {
+            $this->fail('Symfony2 platform module is not loaded');
         }
-        $this->client->persistentServices[] = $this->config['em_service'];
-        $this->client->persistentServices[] = 'doctrine.orm.default_entity_manager';
-        return $this->kernel->getContainer()->get($this->config['em_service']);
-    }
-
-    protected function bootKernel()
-    {
-        if ($this->kernel) {
-            return;
-        }
-        $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
-        $this->kernel->boot();
-        if ($this->config['cache_router'] === true) {
-            if (isset($this->permanentServices['router'])) {
-                $this->kernel->getContainer()->set('router', $this->permanentServices['router']);
-            } else {
-                $this->permanentServices['router'] = $this->getRouter();
+        if (isset($this->persistentServices[$this->config['em_service']])) {
+            $em = $this->persistentServices[$this->config['em_service']];
+            if ($em instanceof \Doctrine\ORM\EntityManager) {
+                return $em;
             }
         }
+        $em = $this->grabServiceFromContainer($this->config['em_service']);
+        if ($em instanceof \Doctrine\ORM\EntityManager) {
+            $this->persistService($this->config['em_service']);
+        }
+        return $em;
     }
 
     /**
@@ -210,25 +224,39 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     }
 
     /**
-     * Get router from container.
-     *
-     * @return object
+     * Get service $serviceName and add it to the list of persistent services.
+     * 
+     * @param string $serviceName
      */
-    private function getRouter()
+    public function persistService($serviceName)
     {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
+        $this->persistentServices[$serviceName] = $this->grabServiceFromContainer($serviceName);
+        if ($this->client) {
+            $this->client->persistentServices[$serviceName] = $this->persistentServices[$serviceName];
         }
-
-        return $this->kernel->getContainer()->get('router');
     }
-
+            
+    /**
+     * Remove service $serviceName from the list of persistent services.
+     * 
+     * @param string $serviceName
+     */
+    public function unpersistService($serviceName)
+    {
+        if (isset($this->persistentServices[$serviceName])) {
+            unset($this->persistentServices[$serviceName]);
+        }
+        if ($this->client && isset($this->client->persistentServices[$serviceName])) {
+            unset($this->client->persistentServices[$serviceName]);
+        }
+    }
+            
     /**
      * Invalidate previously cached routes.
      */
     public function invalidateCachedRouter()
     {
-        $this->permanentServices['router'] = null;
+        $this->unpersistService('router');
     }
 
     /**
@@ -246,12 +274,10 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     public function amOnRoute($routeName, array $params = [])
     {
-        $router = $this->getRouter();
-        $route = $router->getRouteCollection()->get($routeName);
-        if (!$route) {
+        $router = $this->grabServiceFromContainer('router');
+        if (!$router->getRouteCollection()->get($routeName)) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
         }
-
         $url = $router->generate($routeName, $params);
         $this->amOnPage($url);
     }
@@ -271,13 +297,12 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     public function seeCurrentRouteIs($routeName, array $params = [])
     {
-        $router = $this->getRouter();
-        $route = $router->getRouteCollection()->get($routeName);
-        if (!$route) {
+        $router = $this->grabServiceFromContainer('router');
+        if (!$router->getRouteCollection()->get($routeName)) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
         }
-
-        $this->seeCurrentUrlEquals($router->generate($routeName, $params));
+        $url = $router->generate($routeName, $params);
+        $this->seeCurrentUrlEquals($url);
     }
 
     /**
@@ -295,12 +320,10 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     public function seeInCurrentRoute($routeName)
     {
         $router = $this->grabServiceFromContainer('router');
-        
-        $route = $router->getRouteCollection()->get($routeName);
-        if (!$route) {
+        if (!$router->getRouteCollection()->get($routeName)) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
         }
-        
+
         try {
             $matchedRouteName = $router->match($this->grabFromCurrentUrl())['_route'];
         } catch (\Exception\ResourceNotFoundException $e) {
@@ -317,7 +340,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     public function seeEmailIsSent()
     {
-        $profile = $this->getProfiler();
+        $profile = $this->getProfile();
         if (!$profile) {
             $this->fail('Emails can\'t be tested without Profiler');
         }
@@ -344,21 +367,19 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     public function grabServiceFromContainer($service)
     {
-        if (!$this->kernel->getContainer()->has($service)) {
+        $container = $this->client ? $this->client->getContainer() : $this->kernel->getContainer();
+        if (!$container->has($service)) {
             $this->fail("Service $service is not available in container");
         }
-        return $this->kernel->getContainer()->get($service);
+        return $container->get($service);
     }
 
     /**
      * @return \Symfony\Component\HttpKernel\Profiler\Profile
      */
-    protected function getProfiler()
+    protected function getProfile()
     {
-        if (!$this->kernel->getContainer()->has('profiler')) {
-            return null;
-        }
-        $profiler = $this->kernel->getContainer()->get('profiler');
+        $profiler = $this->grabServiceFromContainer('profiler');
         $response = $this->client->getResponse();
         if (null === $response) {
             $this->fail("You must perform a request before using this method.");
@@ -373,7 +394,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     {
         parent::debugResponse($url);
 
-        if ($profile = $this->getProfiler()) {
+        if ($profile = $this->getProfile()) {
             if ($profile->hasCollector('security')) {
                 if ($profile->getCollector('security')->isAuthenticated()) {
                     $this->debugSection('User', $profile->getCollector('security')->getUser() . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']');
@@ -402,8 +423,9 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     {
         $internalDomains = [];
 
+        $routes = $this->grabServiceFromContainer('router')->getRouteCollection();
         /* @var \Symfony\Component\Routing\Route $route */
-        foreach ($this->getRouter()->getRouteCollection() as $route) {
+        foreach ($routes as $route) {
             if (!is_null($route->getHost())) {
                 $compiled = $route->compile();
                 if (!is_null($compiled->getHostRegex())) {

@@ -3,11 +3,15 @@ namespace Codeception\Lib\Connector;
 
 class Symfony2 extends \Symfony\Component\HttpKernel\Client
 {
-    
     /**
      * @var boolean
      */
-    private static $hasPerformedRequest;
+    private $rebootable = true;
+
+    /**
+     * @var boolean
+     */
+    private $hasPerformedRequest = false;
 
     /**
      * @var array
@@ -15,51 +19,71 @@ class Symfony2 extends \Symfony\Component\HttpKernel\Client
     public $persistentServices = [];
 
     /**
-     * @param Request $request
+     *  Get container.
+     *
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    public function getContainer()
+    {
+        return $this->kernel->getContainer();
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param \Symfony\Component\HttpKernel\Kernel  $kernel     A booted HttpKernel instance
+     * @param array                                 $services   An injected services
+     * @param boolean                               $rebootable
+     */
+    public function __construct(\Symfony\Component\HttpKernel\Kernel $kernel, array $services = [], $rebootable = true)
+    {
+        parent::__construct($kernel);
+        $this->followRedirects(true);
+        $this->persistentServices = $services;
+        $this->rebootable = (boolean) $rebootable;
+        $this->injectPersistentServices();
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
      */
     protected function doRequest($request)
     {
-        $services = [];
-        if (self::$hasPerformedRequest) {
-            $services = $this->persistServices();
-            $this->kernel = clone $this->kernel;
+        if ($this->hasPerformedRequest && $this->rebootable) {
+            $this->retrievePersistentServices();
+            $this->kernel->shutdown();
+            $this->kernel->boot();
+            $this->injectPersistentServices();
         } else {
-            self::$hasPerformedRequest = true;
+            $this->hasPerformedRequest = true;
         }
-        $this->kernel->boot();
-
-        $container = $this->kernel->getContainer();
-        if ($this->kernel->getContainer()->has('profiler')) {
-            $container->get('profiler')->enable();
-        }
-
-        $this->injectPersistedServices($services);
-
         return parent::doRequest($request);
     }
 
     /**
-     * @return array
+     *  Retrieve and update persistent services.
      */
-    protected function persistServices()
+    protected function retrievePersistentServices()
     {
-        $services = [];
-        foreach ($this->persistentServices as $serviceName) {
-            if (!$this->kernel->getContainer()->has($serviceName)) {
-                continue;
+        $container = $this->kernel->getContainer();
+        foreach ($this->persistentServices as $serviceName => $service) {
+            if ($container->has($serviceName)) {
+                $this->persistentServices[$serviceName] = $container->get($serviceName);
             }
-            $services[$serviceName] = $this->kernel->getContainer()->get($serviceName);
         }
-        return $services;
     }
 
     /**
-     * @param array $services
+     *  Enable the profiler and inject persistent services.
      */
-    protected function injectPersistedServices($services)
+    protected function injectPersistentServices()
     {
-        foreach ($services as $serviceName => $service) {
-            $this->kernel->getContainer()->set($serviceName, $service);
+        $container = $this->kernel->getContainer();
+        if ($container->has('profiler')) {
+            $container->get('profiler')->enable();
+        }
+        foreach ($this->persistentServices as $serviceName => $service) {
+            $container->set($serviceName, $service);
         }
     }
 }
