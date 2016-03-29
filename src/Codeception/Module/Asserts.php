@@ -41,6 +41,7 @@ class Asserts extends CodeceptionModule
      * @param        $expected
      * @param        $actual
      * @param string $message
+     * @return mixed|void
      */
     public function assertSame($expected, $actual, $message = '')
     {
@@ -262,6 +263,85 @@ class Asserts extends CodeceptionModule
     }
 
     /**
+     * @param $expected
+     * @param $actual
+     * @param $description
+     */
+    public function assertGreaterOrEquals($expected, $actual, $description = null)
+    {
+        parent::assertGreaterThanOrEqual($expected, $actual, $description);
+    }
+
+    /**
+     * @param $expected
+     * @param $actual
+     * @param $description
+     */
+    public function assertLessOrEquals($expected, $actual, $description = null)
+    {
+        parent::assertLessThanOrEqual($expected, $actual, $description);
+    }
+
+    /**
+     * @param $actual
+     * @param $description
+     */
+    public function assertIsEmpty($actual, $description = null)
+    {
+        parent::assertEmpty($actual, $description);
+    }
+
+    /**
+     * @param $key
+     * @param $actual
+     * @param $description
+     */
+    public function assertArrayHasKey($key, $actual, $description = null)
+    {
+        parent::assertArrayHasKey($key, $actual, $description);
+    }
+
+    /**
+     * @param $key
+     * @param $actual
+     * @param $description
+     */
+    public function assertArrayNotHasKey($key, $actual, $description = null)
+    {
+        parent::assertArrayNotHasKey($key, $actual, $description);
+    }
+
+    /**
+     * @param $class
+     * @param $actual
+     * @param $description
+     */
+    public function assertInstanceOf($class, $actual, $description = null)
+    {
+        parent::assertInstanceOf($class, $actual, $description);
+    }
+
+    /**
+     * @param $class
+     * @param $actual
+     * @param $description
+     */
+    public function assertNotInstanceOf($class, $actual, $description = null)
+    {
+        parent::assertNotInstanceOf($class, $actual, $description);
+    }
+
+    /**
+     * @param $type
+     * @param $actual
+     * @param $description
+     */
+    public function assertInternalType($type, $actual, $description = null)
+    {
+        parent::assertInternalType($type, $actual, $description);
+    }
+
+    /**
      * Fails the test with message.
      *
      * @param $message
@@ -270,4 +350,60 @@ class Asserts extends CodeceptionModule
     {
         parent::fail($message);
     }
+
+    /**
+     * Handles and checks exception called inside callback function.
+     * Either exception class name or exception instance should be provided.
+     *
+     * ```php
+     * <?php
+     * $I->expectException(MyException::class, function() {
+     *     $this->doSomethingBad();
+     * });
+     *
+     * $I->expectException(new MyException(), function() {
+     *     $this->doSomethingBad();
+     * });
+     * ```
+     * If you want to check message or exception code, you can pass them with exception instance:
+     * ```php
+     * <?php
+     * // will check that exception MyException is thrown with "Don't do bad things" message
+     * $I->expectException(new MyException("Don't do bad things"), function() {
+     *     $this->doSomethingBad();
+     * });
+     * ```
+     *
+     * @param $exception string or \Exception
+     * @param $callback
+     */
+    public function expectException($exception, $callback)
+     {
+         $code = null;
+         $msg = null;
+         if (is_object($exception)) {
+             /** @var $exception \Exception  **/
+             $class = get_class($exception);
+             $msg = $exception->getMessage();
+             $code = $exception->getCode();
+         } else {
+             $class = $exception;
+         }
+         try {
+             $callback();
+         } catch (\Exception $e) {
+             if (!$e instanceof $class) {
+                 $this->fail(sprintf("Exception of class $class expected to be thrown, but %s caught", get_class($e)));
+             }
+             if (null !== $msg and $e->getMessage() !== $msg) {
+                 $this->fail(sprintf("Exception of $class expected to be '$msg', but actual message was '%s'", $e->getMessage()));
+             }
+             if (null !== $code and $e->getCode() !== $code) {
+                 $this->fail(sprintf("Exception of $class expected to have code $code, but actual code was %s", $e->getCode()));
+             }
+             $this->assertTrue(true); // increment assertion counter
+             return;
+         }
+         $this->fail("Expected exception to be thrown, but nothing was caught");
+     }
 }

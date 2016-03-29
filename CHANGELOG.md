@@ -1,6 +1,10 @@
 # Changelog
 
+#### 2.1.8
+
 * [Symfony] Deprecated `grabServiceFromContainer` use `grabService` instead. For consistency with other frameworks.
+* [Asserts] More `assert*` methods from PHPUnit added
+* [Asserts] Added `expectException` method
 
 #### 2.1.7
 

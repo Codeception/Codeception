@@ -303,7 +303,85 @@ trait Asserts
     {
         \PHPUnit_Framework_Assert::assertFileNotExists($filename, $message);
     }
-    
+
+    /**
+     * @param $expected
+     * @param $actual
+     * @param $description
+     */
+    protected function assertGreaterOrEquals($expected, $actual, $description)
+    {
+        \PHPUnit_Framework_Assert::assertGreaterThanOrEqual($expected, $actual, $description);
+    }
+
+    /**
+     * @param $expected
+     * @param $actual
+     * @param $description
+     */
+    protected function assertLessOrEquals($expected, $actual, $description)
+    {
+        \PHPUnit_Framework_Assert::assertLessThanOrEqual($expected, $actual, $description);
+    }
+
+    /**
+     * @param $actual
+     * @param $description
+     */
+    protected function assertIsEmpty($actual, $description)
+    {
+        \PHPUnit_Framework_Assert::assertEmpty($actual, $description);
+    }
+
+    /**
+     * @param $key
+     * @param $actual
+     * @param $description
+     */
+    protected function assertArrayHasKey($key, $actual, $description)
+    {
+        \PHPUnit_Framework_Assert::assertArrayHasKey($key, $actual, $description);
+    }
+
+    /**
+     * @param $key
+     * @param $actual
+     * @param $description
+     */
+    protected function assertArrayNotHasKey($key, $actual, $description)
+    {
+        \PHPUnit_Framework_Assert::assertArrayNotHasKey($key, $actual, $description);
+    }
+
+    /**
+     * @param $class
+     * @param $actual
+     * @param $description
+     */
+    protected function assertInstanceOf($class, $actual, $description)
+    {
+        \PHPUnit_Framework_Assert::assertInstanceOf($class, $actual, $description);
+    }
+
+    /**
+     * @param $class
+     * @param $actual
+     * @param $description
+     */
+    protected function assertNotInstanceOf($class, $actual, $description)
+    {
+        \PHPUnit_Framework_Assert::assertNotInstanceOf($class, $actual, $description);
+    }
+
+    /**
+     * @param $type
+     * @param $actual
+     * @param $description
+     */
+    protected function assertInternalType($type, $actual, $description)
+    {
+        \PHPUnit_Framework_Assert::assertInternalType($type, $actual, $description);
+    }
     
     /**
      * Fails the test with message.
