@@ -141,7 +141,9 @@ abstract class Step
 
     protected function stringifyArgument($argument)
     {
-        if (is_resource($argument)) {
+        if (is_string($argument)) {
+            return '"' . strtr($argument, ["\n" => '\n', "\r" => '\r', "\t" => ' ']) . '"';
+        } elseif (is_resource($argument)) {
             $argument = (string)$argument;
         } elseif (is_array($argument)) {
             foreach ($argument as $key => $value) {
