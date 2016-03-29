@@ -18,6 +18,8 @@
 * *Breaking* [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
 * [Symfony] module Symfony2 renamed to Symfony
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
+* [Asserts] More `assert*` methods from PHPUnit added
+* [Asserts] Added `expectException` method
 * *Breaking* [Dbh] module removed
 * *Breaking* [Laravel4] module removed
 
