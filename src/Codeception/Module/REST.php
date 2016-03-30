@@ -1095,7 +1095,7 @@ EOF;
      */
     public function switchRedirect($on)
     {
-        $this->client->followRedirects($on);   
+        $this->client->followRedirects($on);
     }
 
     /**
