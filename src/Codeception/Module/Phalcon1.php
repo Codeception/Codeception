@@ -463,8 +463,14 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
         /** @var Url $url */
         $url = $this->di->getShared('url');
 
+        $urlParams = ['for' => $routeName];
+
+        if ($params) {
+            $urlParams += $params;
+        }
+
         try {
-            $this->amOnPage($url->get(['for' => $routeName], null, true));
+            $this->amOnPage($url->get($urlParams, null, true));
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
