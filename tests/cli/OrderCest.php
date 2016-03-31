@@ -93,6 +93,14 @@ class OrderCest
         $I->seeInThisFile('BIB({[1][2])}');
     }
 
+    public function checkAfterBeforeClassInTestWithDataProvider(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run order BeforeAfterClassWithDataProviderTest.php');
+        $I->seeFileFound('order.txt', 'tests/_output');
+        $I->seeInThisFile('BIB({[A][B][C])}');
+    }
+
     public function checkBootstrapIsLoadedBeforeTests(CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
