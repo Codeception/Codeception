@@ -114,7 +114,7 @@ class HTML extends CodeceptionResultPrinter
             $failTemplate = new \Text_Template(
                 $this->templatePath . 'fail.html'
             );
-            $failTemplate->setVar(['fail' => nl2br($this->failures[$name])]);
+            $failTemplate->setVar(['fail' => nl2br(htmlentities($this->failures[$name]))]);
             $failure = $failTemplate->render();
         }
 
