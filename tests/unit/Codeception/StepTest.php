@@ -89,4 +89,18 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $output = $step->toString(30);
         $this->assertEquals('see "ŽŽŽŽŽŽŽŽŽŽ","AAAAAAAAAAA"', $output);
     }
+
+    public function testAmOnUrl()
+    {
+        $step = $this->getStep(['amOnUrl', ['http://www.example.org/test']]);
+        $output = $step->toString(200);
+        $this->assertEquals('am on url "http://www.example.org/test"', $output);
+    }
+
+    public function testSeeMultiLineStringInSingleLine()
+    {
+        $step = $this->getStep(['see', ["aaaa\nbbbb\nc"]]);
+        $output = $step->toString(200);
+        $this->assertEquals('see "aaaa\nbbbb\nc"', $output);
+    }
 }
