@@ -37,8 +37,8 @@ use Codeception\Util\XmlStructure;
  *
  * ## Public Properties
  *
- * * xmlRequest - last soap request (DOMDocument)
- * * xmlResponse - last soap response (DOMDocument)
+ * * xmlRequest - last SOAP request (DOMDocument)
+ * * xmlResponse - last SOAP response (DOMDocument)
  *
  */
 class SOAP extends CodeceptionModule implements DependsOnModule
