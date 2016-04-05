@@ -20,6 +20,7 @@
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
 * *Breaking* [Dbh] module removed
 * *Breaking* [Laravel4] module removed
+* *Breaking* [Symfony] Removed public property `container` you can use new `_getContainer` method
 
 
 #### 2.1.7
