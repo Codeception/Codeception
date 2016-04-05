@@ -126,9 +126,7 @@ EOF;
     
     private function getXmlStructure()
     {
-        if (!$this->xmlStructure) {
-            $this->xmlStructure = new XmlStructure($this->getXmlResponse());
-        }
+        $this->xmlStructure = new XmlStructure($this->getXmlResponse());
         return $this->xmlStructure;
     }
     
