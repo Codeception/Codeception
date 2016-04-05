@@ -126,7 +126,9 @@ EOF;
     
     private function getXmlStructure()
     {
-        $this->xmlStructure = new XmlStructure($this->getXmlResponse());
+        if (!$this->xmlStructure) {
+            $this->xmlStructure = new XmlStructure($this->getXmlResponse());
+        }
         return $this->xmlStructure;
     }
     
@@ -219,6 +221,7 @@ EOF;
 
         $this->debugSection("Response", $response);
         $this->xmlResponse = SoapUtils::toXml($response);
+        $this->xmlStructure = null;
     }
 
     /**
