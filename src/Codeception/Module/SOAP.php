@@ -177,8 +177,8 @@ EOF;
      * Example:
      *
      * ``` php
-     * $I->sendRequest('UpdateUser', '<user><id>1</id><name>notdavert</name></user>');
-     * $I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
+     * $I->sendSoapRequest('UpdateUser', '<user><id>1</id><name>notdavert</name></user>');
+     * $I->sendSoapRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
      *   ->id->val(1)->parent()
      *   ->name->val('notdavert');
      * ```
