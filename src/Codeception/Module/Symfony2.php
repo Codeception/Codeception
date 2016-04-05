@@ -161,7 +161,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         }
         $this->client->persistentServices[] = $this->config['em_service'];
         $this->client->persistentServices[] = 'doctrine.orm.default_entity_manager';
-        return $this->kernel->getContainer()->get($this->config['em_service']);
+        return $this->grabService($this->config['em_service']);
     }
 
     protected function bootKernel()
@@ -175,7 +175,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
             if (isset($this->permanentServices['router'])) {
                 $this->kernel->getContainer()->set('router', $this->permanentServices['router']);
             } else {
-                $this->permanentServices['router'] = $this->getRouter();
+                $this->permanentServices['router'] = $this->grabService('router');
             }
         }
     }
@@ -210,20 +210,6 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     }
 
     /**
-     * Get router from container.
-     *
-     * @return object
-     */
-    private function getRouter()
-    {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-
-        return $this->kernel->getContainer()->get('router');
-    }
-
-    /**
      * Invalidate previously cached routes.
      */
     public function invalidateCachedRouter()
@@ -246,7 +232,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     public function amOnRoute($routeName, array $params = [])
     {
-        $router = $this->getRouter();
+        $router = $this->grabService('router');
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -271,7 +257,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     public function seeCurrentRouteIs($routeName, array $params = [])
     {
-        $router = $this->getRouter();
+        $router = $this->grabService('router');
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -294,8 +280,8 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     public function seeInCurrentRoute($routeName)
     {
-        $router = $this->grabServiceFromContainer('router');
-        
+        $router = $this->grabService('router');
+
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -341,8 +327,28 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      * @param $service
      * @return mixed
      * @part services
+     * @deprecated Use grabService instead
      */
     public function grabServiceFromContainer($service)
+    {
+        return $this->grabService($service);
+    }
+
+    /**
+     * Grabs a service from Symfony DIC container.
+     * Recommended to use for unit testing.
+     *
+     * ``` php
+     * <?php
+     * $em = $I->grabService('doctrine');
+     * ?>
+     * ```
+     *
+     * @param $service
+     * @return mixed
+     * @part services
+     */
+    public function grabService($service)
     {
         if (!$this->kernel->getContainer()->has($service)) {
             $this->fail("Service $service is not available in container");
@@ -355,10 +361,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     protected function getProfiler()
     {
-        if (!$this->kernel->getContainer()->has('profiler')) {
-            return null;
-        }
-        $profiler = $this->kernel->getContainer()->get('profiler');
+        $profiler = $this->grabService('profiler');
         $response = $this->client->getResponse();
         if (null === $response) {
             $this->fail("You must perform a request before using this method.");
@@ -403,7 +406,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         $internalDomains = [];
 
         /* @var \Symfony\Component\Routing\Route $route */
-        foreach ($this->getRouter()->getRouteCollection() as $route) {
+        foreach ($this->grabService('router')->getRouteCollection() as $route) {
             if (!is_null($route->getHost())) {
                 $compiled = $route->compile();
                 if (!is_null($compiled->getHostRegex())) {
