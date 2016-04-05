@@ -128,7 +128,7 @@ class Parser
     public static function validate($file)
     {
         $config = Configuration::config();
-        if (!$config['settings']['lint']) { // lint disabled in config
+        if (empty($config['settings']['lint'])) { // lint disabled in config
             return;
         }
         exec("php -l ".escapeshellarg($file)." 2>&1", $output, $code);
