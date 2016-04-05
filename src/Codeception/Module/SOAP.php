@@ -37,8 +37,8 @@ use Codeception\Util\XmlStructure;
  *
  * ## Public Properties
  *
- * * request - last soap request (DOMDocument)
- * * response - last soap response (DOMDocument)
+ * * xmlRequest - last soap request (DOMDocument)
+ * * xmlResponse - last soap response (DOMDocument)
  *
  */
 class SOAP extends CodeceptionModule implements DependsOnModule
@@ -315,7 +315,6 @@ EOF;
      * ``` php
      * <?php
      *
-     * $I->seeResponseContains("<user><query>CreateUser<name>Davert</davert></user>");
      * $I->seeSoapResponseContainsStructure("<query><name></name></query>");
      * ?>
      * ```
