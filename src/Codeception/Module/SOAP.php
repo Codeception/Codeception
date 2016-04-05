@@ -37,8 +37,8 @@ use Codeception\Util\XmlStructure;
  *
  * ## Public Properties
  *
- * * request - last soap request (DOMDocument)
- * * response - last soap response (DOMDocument)
+ * * xmlRequest - last SOAP request (DOMDocument)
+ * * xmlResponse - last SOAP response (DOMDocument)
  *
  */
 class SOAP extends CodeceptionModule implements DependsOnModule
@@ -179,8 +179,8 @@ EOF;
      * Example:
      *
      * ``` php
-     * $I->sendRequest('UpdateUser', '<user><id>1</id><name>notdavert</name></user>');
-     * $I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
+     * $I->sendSoapRequest('UpdateUser', '<user><id>1</id><name>notdavert</name></user>');
+     * $I->sendSoapRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
      *   ->id->val(1)->parent()
      *   ->name->val('notdavert');
      * ```
@@ -221,6 +221,7 @@ EOF;
 
         $this->debugSection("Response", $response);
         $this->xmlResponse = SoapUtils::toXml($response);
+        $this->xmlStructure = null;
     }
 
     /**
@@ -314,7 +315,6 @@ EOF;
      * ``` php
      * <?php
      *
-     * $I->seeResponseContains("<user><query>CreateUser<name>Davert</davert></user>");
      * $I->seeSoapResponseContainsStructure("<query><name></name></query>");
      * ?>
      * ```
