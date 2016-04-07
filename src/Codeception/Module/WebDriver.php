@@ -707,9 +707,13 @@ class WebDriver extends CodeceptionModule implements
         }
 
         // try to match by CSS or XPath
-        $els = $this->match($page, $link, false);
-        if (!empty($els)) {
-            return reset($els);
+        try {
+            $els = $this->match($page, $link, false);
+            if (!empty($els)) {
+                return reset($els);
+            }
+        } catch (MalformedLocatorException $e) {
+            //ignore exception, link could still match on of the things below
         }
 
         $locator = Crawler::xpathLiteral(trim($link));
