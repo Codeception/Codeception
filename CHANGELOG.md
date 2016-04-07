@@ -1,5 +1,7 @@
 # Changelog
 
+* [Symfony] Deprecated `grabServiceFromContainer` use `grabService` instead. For consistency with other frameworks.
+
 #### 2.1.7
 
 * **PHPUnit 5.x support**
