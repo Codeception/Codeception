@@ -59,11 +59,10 @@ class Gherkin extends Test implements ScenarioDriven
             $this->validateStep($step);
         }
     }
-
-
+    
     public function getSignature()
     {
-        return basename($this->getFileName(), '.feature') . ":" . $this->getFeature();
+        return basename($this->getFileName(), '.feature') . ':' . $this->getFeature();
     }
 
     public function test()
@@ -141,7 +140,7 @@ class Gherkin extends Test implements ScenarioDriven
 
     public function toString()
     {
-        return $this->getFeature() . ' ' . $this->getFileName();
+        return $this->featureNode->getTitle() . ": " . $this->getFeature();
     }
 
     public function getFeature()

@@ -74,6 +74,7 @@ class Run extends Command
 
     /**
      * Sets Run arguments
+     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      */
     protected function configure()
     {
@@ -116,6 +117,7 @@ class Run extends Command
      *
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return int|null|void
      * @throws \RuntimeException
      */
     public function execute(InputInterface $input, OutputInterface $output)
@@ -140,8 +142,9 @@ class Run extends Command
         $userOptions = array_merge($userOptions, $this->booleanOptions($input, ['xml', 'html', 'json', 'tap', 'coverage', 'coverage-xml', 'coverage-html']));
         $userOptions['verbosity'] = $this->output->getVerbosity();
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
+        $userOptions['ansi'] = (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi'));
 
-        if ($this->options['no-colors']) {
+        if ($this->options['no-colors'] || !$userOptions['ansi']) {
             $userOptions['colors'] = false;
         }
         if ($this->options['group']) {
@@ -156,7 +159,9 @@ class Run extends Command
         if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text']) {
             $this->options['coverage'] = true;
         }
-
+        if (!$userOptions['ansi'] && $input->getOption('colors')) {
+            $userOptions['colors'] = true; // turn on colors even in non-ansi mode if strictly passed
+        }
 
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');

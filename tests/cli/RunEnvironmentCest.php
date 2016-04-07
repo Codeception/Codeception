@@ -43,9 +43,9 @@ class RunEnvironmentCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run powers MageGuildCest.php  --env whisky');
-        $I->seeInShellOutput('Red label at MageGuildCest');
-        $I->seeInShellOutput('Black label at MageGuildCest');
-        $I->seeInShellOutput('Power of the universe at MageGuildCest');
+        $I->seeInShellOutput('MageGuildCest: Red label');
+        $I->seeInShellOutput('MageGuildCest: Black label');
+        $I->seeInShellOutput('MageGuildCest: Power of the universe');
         $I->seeInShellOutput('OK (3 tests, 3 assertions)');
     }
 
@@ -53,7 +53,7 @@ class RunEnvironmentCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run powers MageGuildCest.php  --env dev');
-        $I->seeInShellOutput('Power of the universe at MageGuildCest');
+        $I->seeInShellOutput('MageGuildCest: Power of the universe');
         $I->seeInShellOutput('OK (1 test, 1 assertion)');
     }
 
