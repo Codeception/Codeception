@@ -66,7 +66,8 @@ class Descriptor
             return self::getTestFileName($testCase);
         }
         if ($testCase instanceof Descriptive) {
-            return self::getTestFileName($testCase) . ':' . $testCase->getName();
+            $signature = $testCase->getSignature(); // cut everything before ":" from signature
+            return self::getTestFileName($testCase) . ':' . preg_replace('~^(.*?):~', '', $signature);
         }
         if ($testCase instanceof \PHPUnit_Framework_TestCase) {
             return self::getTestFileName($testCase) . ':' . $testCase->getName(false);
