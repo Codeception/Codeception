@@ -280,7 +280,7 @@ EOF
             $scenario->skip("Xdebug not loaded");
         }
 
-        $file = "codeception\\".DIRECTORY_SEPARATOR."c3";
+        $file = "codeception".DIRECTORY_SEPARATOR."c3";
         $I->executeCommand('run scenario SubStepsCept --steps');
         $I->seeInShellOutput(<<<EOF
 Scenario --
