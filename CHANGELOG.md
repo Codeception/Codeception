@@ -22,6 +22,7 @@
 * [Asserts] Added `expectException` method
 * *Breaking* [Dbh] module removed
 * *Breaking* [Laravel4] module removed
+* *Breaking* [Symfony] Removed public property `container` you can use new `_getContainer` method
 
 
 #### 2.1.7

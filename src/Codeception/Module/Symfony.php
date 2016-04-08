@@ -63,7 +63,6 @@ use Symfony\Component\Finder\Finder;
  *
  * * kernel - HttpKernel instance
  * * client - current Crawler instance
- * * container - dependency injection container instance
  *
  * ## Parts
  * 
@@ -91,11 +90,6 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     public $kernel;
 
-    /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    public $container;
-
     public $config = [
         'app_path' => 'app',
         'var_path' => 'app',
@@ -120,6 +114,9 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
     public $permanentServices = [];
 
+    /**
+     * {@inheritdoc}
+     */
     public function _initialize()
     {
         $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
@@ -143,7 +140,6 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         }
 
         $this->bootKernel();
-        $this->container = $this->kernel->getContainer();
     }
 
     public function _before(\Codeception\TestInterface $test)
@@ -347,6 +343,14 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             $this->fail("Service $service is not available in container");
         }
         return $this->kernel->getContainer()->get($service);
+    }
+
+    /**
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    public function _getContainer()
+    {
+        return $this->kernel->getContainer();
     }
 
     /**
