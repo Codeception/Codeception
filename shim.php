@@ -11,11 +11,6 @@ if (!class_exists('Symfony\Component\CssSelector\CssSelectorConverter')) {
 }
 
 // prefering old names
-namespace Codeception {
-
-    interface TestCase {
-    }
-}
 
 namespace Codeception\TestCase {
 
@@ -33,6 +28,18 @@ namespace Codeception\Module {
 
     class Phalcon2 extends Phalcon {
     }
+}
+
+namespace Codeception\Platform {
+    abstract class Group extends \Codeception\GroupObject
+    {
+    }
+    abstract class Extension extends \Codeception\Extension
+    {
+    }
+}
+namespace {
+    class_alias('Codeception\TestInterface', 'Codeception\TestCase');
 }
 
 // @codingStandardsIgnoreEnd
