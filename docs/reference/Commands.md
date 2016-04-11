@@ -67,7 +67,7 @@ Options:
  --no-exit             Don't finish with exit code
  --group (-g)          Groups of tests to be executed (multiple values allowed)
  --skip (-s)           Skip selected suites (multiple values allowed)
- --skip-group (-sg)    Skip selected groups (multiple values allowed)
+ --skip-group (-x)     Skip selected groups (multiple values allowed)
  --env                 Run tests in selected environments. (multiple values allowed, environments can be merged with ',')
  --fail-fast (-f)      Stop after first failure
  --help (-h)           Display this help message.
