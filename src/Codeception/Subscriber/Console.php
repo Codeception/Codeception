@@ -14,9 +14,7 @@ use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Suite;
 use Codeception\Test\Descriptor;
-use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\ScenarioDriven;
-use Codeception\TestInterface;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,18 +24,18 @@ class Console implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     public static $events = [
-        Events::SUITE_BEFORE    => 'beforeSuite',
-        Events::SUITE_AFTER     => 'afterSuite',
-        Events::TEST_START      => 'startTest',
-        Events::TEST_END        => 'endTest',
-        Events::STEP_BEFORE     => 'beforeStep',
-        Events::STEP_AFTER      => 'afterStep',
-        Events::TEST_SUCCESS    => 'testSuccess',
-        Events::TEST_FAIL       => 'testFail',
-        Events::TEST_ERROR      => 'testError',
-        Events::TEST_INCOMPLETE => 'testIncomplete',
-        Events::TEST_SKIPPED    => 'testSkipped',
-        Events::TEST_FAIL_PRINT => 'printFail',
+        Events::SUITE_BEFORE       => 'beforeSuite',
+        Events::SUITE_AFTER        => 'afterSuite',
+        Events::TEST_START         => 'startTest',
+        Events::TEST_END           => 'endTest',
+        Events::STEP_BEFORE        => 'beforeStep',
+        Events::STEP_AFTER         => 'afterStep',
+        Events::TEST_SUCCESS       => 'testSuccess',
+        Events::TEST_FAIL          => 'testFail',
+        Events::TEST_ERROR         => 'testError',
+        Events::TEST_INCOMPLETE    => 'testIncomplete',
+        Events::TEST_SKIPPED       => 'testSkipped',
+        Events::TEST_FAIL_PRINT    => 'printFail',
         Events::RESULT_PRINT_AFTER => 'afterResult'
     ];
 
@@ -305,7 +303,7 @@ class Console implements EventSubscriberInterface
     {
         $failedTest = $e->getTest();
         $fail = $e->getFail();
-        
+
         $this->output->write($e->getCount() . ") ");
         $this->writeCurrentTest($failedTest, false);
         $this->output->writeln('');
@@ -348,12 +346,12 @@ class Console implements EventSubscriberInterface
                 $message = $this->message("<error> Fail </error> ")->append($comp->getMessage())->append(" ( <comment>-Expected</comment> | <info>+Actual</info> ) \n");
                 $message->append("+ <info>" . str_replace("\n", "\n+ ", $comp->getActualAsString()))->append("</info>\n");
                 $message->append("- <comment>" . str_replace("\n", "\n- ", $comp->getExpectedAsString()))->append("</comment>\n");
-          }
+            }
         }
 
         $isFailure = $e instanceof \PHPUnit_Framework_AssertionFailedError
-            || $class == 'PHPUnit_Framework_ExpectationFailedException'
-            || $class == 'PHPUnit_Framework_AssertionFailedError';
+            || $class === 'PHPUnit_Framework_ExpectationFailedException'
+            || $class === 'PHPUnit_Framework_AssertionFailedError';
 
         if (!$isFailure) {
             $message->prepend("[$class] ")->block("error");
@@ -378,7 +376,7 @@ class Console implements EventSubscriberInterface
                 break;
             }
         }
-        $this->printException($fail,$failedStep);
+        $this->printException($fail, $failedStep);
         $this->printScenarioTrace($failedTest, $failToString);
         if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
             $this->printExceptionTrace($fail);
@@ -434,6 +432,10 @@ class Console implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @param string $text
+     * @return Message
+     */
     protected function message($text = '')
     {
         return new Message($text, $this->output);
@@ -485,7 +487,7 @@ class Console implements EventSubscriberInterface
                 ->message($stepNumber)
                 ->prepend(' ')
                 ->width(strlen($length))
-                ->append(". " );
+                ->append(". ");
             $message->append($step->getPhpCode($this->width - $message->getLength()));
 
             if ($step->hasFailed()) {
@@ -514,7 +516,7 @@ class Console implements EventSubscriberInterface
             && (getenv('TERM'))
             && (getenv('TERM') != 'unknown')
         ) {
-            $this->width = (int)(`command -v tput >> /dev/null 2>&1 && tput cols`)-2;
+            $this->width = (int)(`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
         }
         return $this->width;
     }
@@ -555,7 +557,7 @@ class Console implements EventSubscriberInterface
         $this->writeCurrentTest($test, false);
 
         $conditionalFails = "";
-        $numFails  = count($this->fails);
+        $numFails = count($this->fails);
         if ($numFails == 1) {
             $conditionalFails = "[F]";
         } elseif ($numFails) {
