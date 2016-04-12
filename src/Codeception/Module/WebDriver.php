@@ -970,8 +970,10 @@ class WebDriver extends CodeceptionModule implements
                     break;
 
                 case 'textarea':
+                    // we include trimmed and real value of textarea for check
+                    $currentValues[] = $el->getText(); // trimmed value
                 default:
-                    $currentValues[] = $el->getAttribute('value');
+                    $currentValues[] = $el->getAttribute('value'); // raw value
                     break;
             }
         }

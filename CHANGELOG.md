@@ -2,6 +2,7 @@
 
 #### 2.1.8
 
+* [WebDriver] fixed `seeInField` for textarea with whitespaces before and after string. Closes #2921
 * [Symfony] Deprecated `grabServiceFromContainer` use `grabService` instead. For consistency with other frameworks.
 * [Asserts] More `assert*` methods from PHPUnit added
 * [Asserts] Added `expectException` method
