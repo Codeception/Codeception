@@ -4,6 +4,7 @@ namespace Codeception\Test;
 use Codeception\Example;
 use Codeception\Lib\Parser;
 use Codeception\Util\Annotation;
+use Codeception\Util\ReflectionHelper;
 
 /**
  * Executes tests delivered in Cest format.
@@ -64,7 +65,6 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
         $text = strtolower($text);
         return $text;
     }
-
 
     public function test()
     {
@@ -143,9 +143,9 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
 
     public function toString()
     {
-        return $this->getFeature() .' (' . $this->getSignature() . ' )';
+        return sprintf('%s: %s', ReflectionHelper::getClassShortName($this->getTestClass()), ucfirst($this->getFeature()));
     }
-
+    
     public function getSignature()
     {
         return get_class($this->getTestClass()) . ":" . $this->getTestMethod();

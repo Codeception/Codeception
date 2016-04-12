@@ -10,7 +10,6 @@ use Codeception\TestInterface;
  * Represents tests from PHPUnit compatible format.
  */
 class Unit extends \PHPUnit_Framework_TestCase implements
-    Interfaces\Descriptive,
     Interfaces\Reported,
     Interfaces\Dependent,
     TestInterface
@@ -70,16 +69,6 @@ class Unit extends \PHPUnit_Framework_TestCase implements
     {
     }
 
-    public function getSignature()
-    {
-        return get_class($this) . ':' . $this->getName(false);
-    }
-
-    public function getFileName()
-    {
-        return (new \ReflectionClass($this))->getFileName();
-    }
-
     /**
      * @param $module
      * @return \Codeception\Module
@@ -110,7 +99,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
         return [
             'name'    => $this->getName(),
             'class'   => get_class($this),
-            'file'    => $this->getFileName()
+            'file'    => $this->getMetadata()->getFilename()
         ];
     }
 

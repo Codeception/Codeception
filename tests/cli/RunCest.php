@@ -106,7 +106,7 @@ class RunCest
     {
         $I->wantTo('try the reporting mode');
         $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
-        $I->seeInShellOutput('✔ check config exists (FileExistsCept)');
+        $I->seeInShellOutput('FileExistsCept: Check config exists');
         $I->dontSeeInShellOutput('Ok');
     }
 
@@ -155,9 +155,9 @@ class RunCest
     public function runOneTestFromUnit(\CliGuy $I)
     {
         $I->executeCommand('run tests/dummy/AnotherTest.php:testFirst');
-        $I->seeInShellOutput("AnotherTest:testFirst");
+        $I->seeInShellOutput("AnotherTest: First");
         $I->seeInShellOutput('OK');
-        $I->dontSeeInShellOutput('AnotherTest:testSecond');
+        $I->dontSeeInShellOutput('AnotherTest: Second');
     }
 
     public function runOneTestFromCest(\CliGuy $I)
@@ -170,21 +170,21 @@ class RunCest
     public function runTestWithDataProviders(\CliGuy $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
-        $I->seeInShellOutput('Test is triangle | "real triangle"');
-        $I->seeInShellOutput('Test is triangle | #0');
-        $I->seeInShellOutput('Test is triangle | #1');
-        $I->seeInShellOutput('DataProvidersTest.php');
+        $I->seeInShellOutput('Is triangle | "real triangle"');
+        $I->seeInShellOutput('Is triangle | #0');
+        $I->seeInShellOutput('Is triangle | #1');
+        $I->seeInShellOutput('DataProvidersTest');
         $I->seeInShellOutput("OK");
     }
 
     public function runTestWithFailFast(\CliGuy $I)
     {
         $I->executeCommand('run unit --skip-group error --no-exit');
-        $I->seeInShellOutput('FailingTest:testMe');
-        $I->seeInShellOutput("Test me at PassingTest");
+        $I->seeInShellOutput('FailingTest: Me');
+        $I->seeInShellOutput("PassingTest: Me");
         $I->executeCommand('run unit --fail-fast --skip-group error --no-exit');
         $I->seeInShellOutput('There was 1 failure');
-        $I->dontSeeInShellOutput("PassingTest:testMe");
+        $I->dontSeeInShellOutput("PassingTest: Me");
     }
 
     public function runWithCustomOuptutPath(\CliGuy $I)
@@ -202,10 +202,10 @@ class RunCest
     public function runTestsWithDependencyInjections(\CliGuy $I)
     {
         $I->executeCommand('run math');
-        $I->seeInShellOutput('Test addition at MathCest');
-        $I->seeInShellOutput('Test subtraction at MathCest');
-        $I->seeInShellOutput('Test square at MathCest');
-        $I->seeInShellOutput('Test all at MathTest');
+        $I->seeInShellOutput('MathCest: Test addition');
+        $I->seeInShellOutput('MathCest: Test subtraction');
+        $I->seeInShellOutput('MathCest: Test square');
+        $I->seeInShellOutput('MathTest: All');
         $I->seeInShellOutput('OK (');
         $I->dontSeeInShellOutput('fail');
         $I->dontSeeInShellOutput('error');
@@ -251,7 +251,9 @@ EOF
         }
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
         $I->seeInShellOutput(<<<EOF
-Fail when file is not found at FailedCept.php
+FailedCept: Fail when file is not found
+Signature: FailedCept
+Test: tests/scenario/FailedCept.php
 Scenario --
  I am in path "."
  I see file found "games.zip"

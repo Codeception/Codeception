@@ -4,6 +4,7 @@ namespace Codeception\Extension;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Extension;
+use Codeception\Test\Descriptor;
 
 /**
  * This extension demonstrates how you can implement console output of your own.
@@ -54,7 +55,7 @@ class SimpleOutput extends Extension
         $seconds = (int)($milliseconds = (int)($seconds_input * 1000)) / 1000;
         $time = ($seconds % 60) . (($milliseconds === 0) ? '' : '.' . $milliseconds);
 
-        $this->write($e->getTest()->toString());
+        $this->write(Descriptor::getTestSignature($e->getTest()));
         $this->writeln(' (' . $time . 's)');
     }
 }

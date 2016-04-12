@@ -79,7 +79,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
         if ($arguments['filter']) {
             $filterFactory->addFilter(
-                new \ReflectionClass('PHPUnit_Runner_Filter_Test'),
+                new \ReflectionClass('Codeception\PHPUnit\FilterTest'),
                 $arguments['filter']
             );
         }

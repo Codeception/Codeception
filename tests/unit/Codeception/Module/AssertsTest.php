@@ -33,10 +33,12 @@ class AssertsTest extends PHPUnit_Framework_TestCase
         $module->expectException(new Exception('here', 200), function() { throw new Exception('here', 200); });
     }
 
+    /**
+     * @expectedException PHPUnit_Framework_AssertionFailedError
+     */
     public function testExceptionFails()
     {
         $module = new \Codeception\Module\Asserts(make_container());
-        $this->expectException('PHPUnit_Framework_AssertionFailedError');
         $module->expectException(new Exception('here', 200), function() { throw new Exception('here', 2); });
     }
 

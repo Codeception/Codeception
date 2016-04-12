@@ -46,5 +46,19 @@ class ReflectionHelper
 
         return $method->invokeArgs($object, $args);
     }
+
+    /**
+     * Returns class name without namesoace
+     *
+     * (does not use reflection actually)
+     *
+     * @param $object
+     * @return mixed
+     */
+    public static function getClassShortName($object)
+    {
+        $path = explode('\\', get_class($object));
+        return array_pop($path);
+    }
 }
 

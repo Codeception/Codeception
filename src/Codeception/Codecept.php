@@ -50,6 +50,7 @@ class Codecept
         'filter'        => null,
         'env'           => null,
         'fail-fast'     => false,
+        'ansi'          => true,
         'verbosity'     => 1,
         'interactive'   => true,
         'no-rebuild'    => false

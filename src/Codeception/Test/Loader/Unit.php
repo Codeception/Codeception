@@ -2,6 +2,7 @@
 namespace Codeception\Test\Loader;
 
 use Codeception\Lib\Parser;
+use Codeception\Test\Descriptor;
 use Codeception\Test\Unit as UnitFormat;
 use Codeception\Util\Annotation;
 
@@ -21,7 +22,6 @@ class Unit implements LoaderInterface
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
-
             if (!$reflected->isInstantiable()) {
                 continue;
             }
@@ -66,10 +66,7 @@ class Unit implements LoaderInterface
         $dependencies = \PHPUnit_Util_Test::getDependencies($className, $methodName);
         $test->setDependencies($dependencies);
         if ($test instanceof UnitFormat) {
-            $feature = $test->getName();
-            $feature = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $feature);
-            $feature = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $feature);
-            $test->getMetadata()->setFeature(strtolower($feature));
+            $test->getMetadata()->setFilename(Descriptor::getTestFileName($test));
             $test->getMetadata()->setDependencies($dependencies);
             $test->getMetadata()->setEnv(Annotation::forMethod($test, $methodName)->fetchAll('env'));
         }
