@@ -49,7 +49,6 @@ class Cest implements LoaderInterface
                         }, $rawExamples
                     );
                     $dataProvider = new \PHPUnit_Framework_TestSuite_DataProvider();
-                    $baseTest = new CestFormat($unit, $method, $file);
                     foreach ($examples as $k => $example) {
                         if ($example === null) {
                             throw new TestParseException(
@@ -58,7 +57,7 @@ class Cest implements LoaderInterface
                                 "Make sure this is a valid JSON (Hint: \"-char for strings) or a single-line annotation in Doctrine-style"
                             );
                         }
-                        $test = clone $baseTest;
+                        $test = new CestFormat($unit, $method, $file);
                         $test->getMetadata()->setCurrent(['example' => $example]);
                         $dataProvider->addTest($test);
                     }
