@@ -124,7 +124,6 @@ class Asserts extends CodeceptionModule
         parent::assertLessThanOrEqual($expected, $actual, $message);
     }
 
-
     /**
      * Checks that haystack contains needle
      *
@@ -260,35 +259,6 @@ class Asserts extends CodeceptionModule
     public function assertFileNotExists($filename, $message = '')
     {
         parent::assertFileNotExists($filename, $message);
-    }
-
-    /**
-     * @param $expected
-     * @param $actual
-     * @param $description
-     */
-    public function assertGreaterOrEquals($expected, $actual, $description = null)
-    {
-        parent::assertGreaterThanOrEqual($expected, $actual, $description);
-    }
-
-    /**
-     * @param $expected
-     * @param $actual
-     * @param $description
-     */
-    public function assertLessOrEquals($expected, $actual, $description = null)
-    {
-        parent::assertLessThanOrEqual($expected, $actual, $description);
-    }
-
-    /**
-     * @param $actual
-     * @param $description
-     */
-    public function assertIsEmpty($actual, $description = null)
-    {
-        parent::assertEmpty($actual, $description);
     }
 
     /**
