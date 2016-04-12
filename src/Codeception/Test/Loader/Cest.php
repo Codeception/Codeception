@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Test\Loader;
 
+use Codeception\Exception\TestParseException;
 use Codeception\Lib\ExampleSuite;
 use Codeception\Lib\Parser;
 use Codeception\Test\Cest as CestFormat;
@@ -40,16 +41,24 @@ class Cest implements LoaderInterface
                     continue;
                 }
 
-                $examples = Annotation::forMethod($unit, $method)->fetchAll('example');
-                if (count($examples)) {
+                $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
+                if (count($rawExamples)) {
                     $examples = array_map(
                         function ($v) {
                             return Annotation::arrayValue($v);
-                        }, $examples
+                        }, $rawExamples
                     );
                     $dataProvider = new \PHPUnit_Framework_TestSuite_DataProvider();
-                    foreach ($examples as $example) {
-                        $test = new CestFormat($unit, $method, $file);
+                    $baseTest = new CestFormat($unit, $method, $file);
+                    foreach ($examples as $k => $example) {
+                        if ($example === null) {
+                            throw new TestParseException(
+                                $file, "Example for $testClass->$method contains invalid data:\n" .
+                                $rawExamples[$k] . "\n" .
+                                "Make sure this is a valid JSON (Hint: \"-char for strings) or a single-line annotation in Doctrine-style"
+                            );
+                        }
+                        $test = clone $baseTest;
                         $test->getMetadata()->setCurrent(['example' => $example]);
                         $dataProvider->addTest($test);
                     }
