@@ -190,7 +190,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     /**
      * Initialize new client instance before each test
      */
-    public function _before(\Codeception\TestCase $test)
+    public function _before(\Codeception\TestInterface $test)
     {
         $this->persistentServices = array_merge($this->persistentServices, $this->permanentServices);
         $this->client = new Symfony2Connector($this->kernel, $this->persistentServices, $this->config['rebootable_client']);
@@ -199,7 +199,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     /**
      * Update permanent services after each test
      */
-    public function _after(\Codeception\TestCase $test)
+    public function _after(\Codeception\TestInterface $test)
     {
         foreach ($this->permanentServices as $serviceName => $service) {
             $this->permanentServices[$serviceName] = $this->grabService($serviceName);
