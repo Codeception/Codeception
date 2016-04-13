@@ -301,4 +301,14 @@ class JsonArrayTest extends \Codeception\Test\Unit
             "- <info>" . var_export($expectedArray, true) . "</info>\n"
             . "+ " . var_export($jsonArray->toArray(), true));
     }
+
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/2899
+     */
+    public function testInvalidXmlTag()
+    {
+        $jsonArray = new JsonArray('{"a":{"foo/bar":1,"":2},"b":{"foo/bar":1,"":2},"baz":2}');
+        $expectedXml = '<a><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></a><b><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></b><baz>2</baz>';
+        $this->assertContains($expectedXml, $jsonArray->toXml()->saveXML());
+    }
 }

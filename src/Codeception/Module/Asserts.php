@@ -73,14 +73,6 @@ class Asserts extends CodeceptionModule
     }
 
     /**
-     * @deprecated
-     */
-    public function assertGreaterThen($expected, $actual, $message = '')
-    {
-        parent::assertGreaterThan($expected, $actual, $message);
-    }
-
-    /**
      * Checks that actual is greater or equal than expected
      *
      * @param        $expected
@@ -88,14 +80,6 @@ class Asserts extends CodeceptionModule
      * @param string $message
      */
     public function assertGreaterThanOrEqual($expected, $actual, $message = '')
-    {
-        parent::assertGreaterThanOrEqual($expected, $actual, $message);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function assertGreaterThenOrEqual($expected, $actual, $message = '')
     {
         parent::assertGreaterThanOrEqual($expected, $actual, $message);
     }
@@ -123,7 +107,6 @@ class Asserts extends CodeceptionModule
     {
         parent::assertLessThanOrEqual($expected, $actual, $message);
     }
-
 
     /**
      * Checks that haystack contains needle
@@ -269,7 +252,7 @@ class Asserts extends CodeceptionModule
      */
     public function assertGreaterOrEquals($expected, $actual, $description = null)
     {
-        parent::assertGreaterThanOrEqual($expected, $actual, $description);
+        $this->assertGreaterThanOrEqual($expected, $actual, $description);
     }
 
     /**
@@ -279,7 +262,7 @@ class Asserts extends CodeceptionModule
      */
     public function assertLessOrEquals($expected, $actual, $description = null)
     {
-        parent::assertLessThanOrEqual($expected, $actual, $description);
+        $this->assertLessThanOrEqual($expected, $actual, $description);
     }
 
     /**
@@ -288,7 +271,7 @@ class Asserts extends CodeceptionModule
      */
     public function assertIsEmpty($actual, $description = null)
     {
-        parent::assertEmpty($actual, $description);
+        $this->assertEmpty($actual, $description);
     }
 
     /**

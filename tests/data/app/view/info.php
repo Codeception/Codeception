@@ -26,6 +26,7 @@
 
 <p>Текст на русском</p>
 <a href="/">Ссылочка</a>
+<a href="/">Franšízy - pobočky</a>
 
 <a href="/login" class="sign">Sign in!</a>
 

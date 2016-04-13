@@ -720,9 +720,13 @@ class WebDriver extends CodeceptionModule implements
         }
 
         // try to match by CSS or XPath
-        $els = $this->match($page, $link, false);
-        if (!empty($els)) {
-            return reset($els);
+        try {
+            $els = $this->match($page, $link, false);
+            if (!empty($els)) {
+                return reset($els);
+            }
+        } catch (MalformedLocatorException $e) {
+            //ignore exception, link could still match on of the things below
         }
 
         $locator = Crawler::xpathLiteral(trim($link));
@@ -979,8 +983,10 @@ class WebDriver extends CodeceptionModule implements
                     break;
 
                 case 'textarea':
+                    // we include trimmed and real value of textarea for check
+                    $currentValues[] = $el->getText(); // trimmed value
                 default:
-                    $currentValues[] = $el->getAttribute('value');
+                    $currentValues[] = $el->getAttribute('value'); // raw value
                     break;
             }
         }
