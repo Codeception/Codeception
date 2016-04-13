@@ -43,7 +43,7 @@ class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
         $I->seeFileFound('order.txt','tests/_output');
-        $I->seeFileContentsEqual("BIBP({{{[ST][STFFT][STF][ST])}}}");
+        $I->seeFileContentsEqual("BIBP({{{{[ST][STFFT][STF][ST])}}}}");
     }
 
     public function checkCestOrder(CliGuy $I)
@@ -91,6 +91,14 @@ class OrderCest
         $I->executeCommand('run order BeforeAfterClassTest.php');
         $I->seeFileFound('order.txt', 'tests/_output');
         $I->seeInThisFile('BIB({[1][2])}');
+    }
+
+    public function checkAfterBeforeClassInTestWithDataProvider(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run order BeforeAfterClassWithDataProviderTest.php');
+        $I->seeFileFound('order.txt', 'tests/_output');
+        $I->seeInThisFile('BIB({[A][B][C])}');
     }
 
     public function checkBootstrapIsLoadedBeforeTests(CliGuy $I)
