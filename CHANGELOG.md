@@ -24,6 +24,14 @@
 * *Breaking* [Laravel4] module removed
 
 
+#### 2.1.8
+* [Symfony] Refactor to unify service retrieval, avoid memleaks and reduce memory footprint. Closes #2938 and #2954.
+* [Symfony] New optoin `rebootable_client` that reboots client's kernel before each request.
+* [WebDriver] fixed `seeInField` for textarea with whitespaces before and after string. Closes #2921
+* [Symfony] Deprecated `grabServiceFromContainer` use `grabService` instead. For consistency with other frameworks.
+* [Asserts] More `assert*` methods from PHPUnit added
+* [Asserts] Added `expectException` method
+
 #### 2.1.7
 
 * **PHPUnit 5.x support**

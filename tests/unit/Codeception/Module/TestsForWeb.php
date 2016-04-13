@@ -1349,4 +1349,14 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('second-link', $arr[1]);
         $this->assertEquals('third-link', $arr[2]);
     }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2960
+     */
+    public function testClickMultiByteLink()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->click('Franšízy - pobočky');
+        $this->module->seeCurrentUrlEquals('/');
+    }
 }
