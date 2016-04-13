@@ -262,6 +262,35 @@ class Asserts extends CodeceptionModule
     }
 
     /**
+     * @param $expected
+     * @param $actual
+     * @param $description
+     */
+    public function assertGreaterOrEquals($expected, $actual, $description = null)
+    {
+        $this->assertGreaterThanOrEqual($expected, $actual, $description);
+    }
+
+    /**
+     * @param $expected
+     * @param $actual
+     * @param $description
+     */
+    public function assertLessOrEquals($expected, $actual, $description = null)
+    {
+        $this->assertLessThanOrEqual($expected, $actual, $description);
+    }
+
+    /**
+     * @param $actual
+     * @param $description
+     */
+    public function assertIsEmpty($actual, $description = null)
+    {
+        $this->assertEmpty($actual, $description);
+    }
+
+    /**
      * @param $key
      * @param $actual
      * @param $description
