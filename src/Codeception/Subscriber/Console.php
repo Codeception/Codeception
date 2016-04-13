@@ -343,9 +343,11 @@ class Console implements EventSubscriberInterface
         if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
             if ($e->getComparisonFailure()) {
                 $comp = $e->getComparisonFailure();
-                $message = $this->message("<error> Fail </error> ")->append($comp->getMessage())->append(" ( <comment>-Expected</comment> | <info>+Actual</info> ) \n");
-                $message->append("+ <info>" . str_replace("\n", "\n+ ", $comp->getActualAsString()))->append("</info>\n");
-                $message->append("- <comment>" . str_replace("\n", "\n- ", $comp->getExpectedAsString()))->append("</comment>\n");
+                if ($comp->getDiff()) {
+                    $message = $this->message($comp->getMessage())->append(" ( <comment>-Expected</comment> | <info>+Actual</info> ) \n");
+                    $message->append("+ <info>" . str_replace("\n", "\n+ ", $comp->getActualAsString()))->append("</info>\n");
+                    $message->append("- <comment>" . str_replace("\n", "\n- ", $comp->getExpectedAsString()))->append("</comment>\n");
+                }
             }
         }
 

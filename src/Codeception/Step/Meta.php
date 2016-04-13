@@ -34,4 +34,9 @@ class Meta extends CodeceptionStep
         $this->arguments = $argumentBackup;
         return $result;
     }
+
+    public function setFailed($failed)
+    {
+        $this->failed = $failed;
+    }
 }

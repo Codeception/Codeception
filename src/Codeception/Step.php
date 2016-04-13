@@ -259,6 +259,9 @@ abstract class Step
             $res = call_user_func_array([$activeModule, $this->action], $this->arguments);
         } catch (\Exception $e) {
             $this->failed = true;
+            if ($this->getMetaStep()) {
+                $this->getMetaStep()->setFailed(true);
+            }
             throw $e;
         }
         return $res;

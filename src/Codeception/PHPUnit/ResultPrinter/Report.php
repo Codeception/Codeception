@@ -3,19 +3,22 @@ namespace Codeception\PHPUnit\ResultPrinter;
 
 use Codeception\PHPUnit\ConsolePrinter;
 use Codeception\PHPUnit\ResultPrinter;
+use Codeception\Test\Descriptor;
 
 class Report extends ResultPrinter implements ConsolePrinter
 {
-
     /**
-     * Handler for 'on test' event.
-     *
-     * @param  string $name
-     * @param  boolean $success
-     * @param  array $steps
+     * @param \PHPUnit_Framework_Test $test
+     * @param float $time
      */
-    protected function onTest($name, $success = true, array $steps = [], $time = 0)
+    public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
+        $name = Descriptor::getTestAsString($test);
+        $success = ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_PASSED);
+        if ($success) {
+            $this->successful++;
+        }
+
         if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE) {
             $status = "\033[41;37mFAIL\033[0m";
         } elseif ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
@@ -45,6 +48,5 @@ class Report extends ResultPrinter implements ConsolePrinter
 
     public function printResult(\PHPUnit_Framework_TestResult $result)
     {
-
     }
 }

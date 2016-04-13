@@ -63,7 +63,7 @@ class Configuration
      * @var array Default config
      */
     public static $defaultConfig = [
-        'actor'      => 'Guy', // codeception 1.x compatility
+        'actor'      => 'Guy', // codeception 1.x compatibility
         'namespace'  => '',
         'include'    => [],
         'paths'      => [
