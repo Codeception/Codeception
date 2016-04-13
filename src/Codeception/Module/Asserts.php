@@ -73,14 +73,6 @@ class Asserts extends CodeceptionModule
     }
 
     /**
-     * @deprecated
-     */
-    public function assertGreaterThen($expected, $actual, $message = '')
-    {
-        parent::assertGreaterThan($expected, $actual, $message);
-    }
-
-    /**
      * Checks that actual is greater or equal than expected
      *
      * @param        $expected
@@ -88,14 +80,6 @@ class Asserts extends CodeceptionModule
      * @param string $message
      */
     public function assertGreaterThanOrEqual($expected, $actual, $message = '')
-    {
-        parent::assertGreaterThanOrEqual($expected, $actual, $message);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function assertGreaterThenOrEqual($expected, $actual, $message = '')
     {
         parent::assertGreaterThanOrEqual($expected, $actual, $message);
     }
@@ -259,6 +243,35 @@ class Asserts extends CodeceptionModule
     public function assertFileNotExists($filename, $message = '')
     {
         parent::assertFileNotExists($filename, $message);
+    }
+
+    /**
+     * @param $expected
+     * @param $actual
+     * @param $description
+     */
+    public function assertGreaterOrEquals($expected, $actual, $description = null)
+    {
+        $this->assertGreaterThanOrEqual($expected, $actual, $description);
+    }
+
+    /**
+     * @param $expected
+     * @param $actual
+     * @param $description
+     */
+    public function assertLessOrEquals($expected, $actual, $description = null)
+    {
+        $this->assertLessThanOrEqual($expected, $actual, $description);
+    }
+
+    /**
+     * @param $actual
+     * @param $description
+     */
+    public function assertIsEmpty($actual, $description = null)
+    {
+        $this->assertEmpty($actual, $description);
     }
 
     /**

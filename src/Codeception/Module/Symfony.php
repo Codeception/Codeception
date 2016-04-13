@@ -86,8 +86,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *             browser: phantomjs
  * ```
  *
- * @property-read ContainerInterface $container
- *
  */
 class Symfony extends Framework implements DoctrineProvider, PartedModule
 {
@@ -95,12 +93,6 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      * @var \Symfony\Component\HttpKernel\Kernel
      */
     public $kernel;
-
-    /**
-     * @var ContainerInterface
-     * @deprecated Use _getContainer() instead
-     */
-    private $container;
 
     public $config = [
         'app_path' => 'app',
@@ -139,24 +131,6 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     protected $persistentServices = [];
 
-    public function __get($property)
-    {
-        $result = null;
-        if (property_exists($this, $property)) {
-            switch ($property) {
-                case 'container':
-                    $result = $this->_getContainer();
-                    break;
-                default:
-                    $this->fail(sprintf('Property "%s" can not be accessed.', $property));
-                    break;
-            }
-        } else {
-            $this->fail(sprintf('Property "%s" does not exist.', $property));
-        }
-        return $result;
-    }
-
     public function _initialize()
     {
         $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
@@ -193,7 +167,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     public function _before(\Codeception\TestInterface $test)
     {
         $this->persistentServices = array_merge($this->persistentServices, $this->permanentServices);
-        $this->client = new Symfony2Connector($this->kernel, $this->persistentServices, $this->config['rebootable_client']);
+        $this->client = new SymfonyConnector($this->kernel, $this->persistentServices, $this->config['rebootable_client']);
     }
 
     /**

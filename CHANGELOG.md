@@ -22,6 +22,8 @@
 * [Asserts] Added `expectException` method
 * *Breaking* [Dbh] module removed
 * *Breaking* [Laravel4] module removed
+* *Breaking* [Symfony] public property `container` removed
+* *Breaking* [Asserts] removed deprecated `assertLessThen` and `assertGreaterThen`
 
 
 #### 2.1.8
