@@ -36,7 +36,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --no-exit             Don't finish with exit code
  *  --group (-g)          Groups of tests to be executed (multiple values allowed)
  *  --skip (-s)           Skip selected suites (multiple values allowed)
- *  --skip-group (-sg)    Skip selected groups (multiple values allowed)
+ *  --skip-group (-x)     Skip selected groups (multiple values allowed)
  *  --env                 Run tests in selected environments. (multiple values allowed, environments can be merged with ',')
  *  --fail-fast (-f)      Stop after first failure
  *  --help (-h)           Display this help message.
@@ -98,7 +98,7 @@ class Run extends Command
             new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
             new InputOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Groups of tests to be executed'),
             new InputOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites'),
-            new InputOption('skip-group', 'sg', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups'),
+            new InputOption('skip-group', 'x', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups'),
             new InputOption('env', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run tests in selected environments.'),
             new InputOption('fail-fast', 'f', InputOption::VALUE_NONE, 'Stop after first failure'),
             new InputOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start'),
