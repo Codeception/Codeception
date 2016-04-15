@@ -72,8 +72,8 @@ class ZF2 extends Framework implements DoctrineProvider
         require Configuration::projectDir() . 'init_autoloader.php';
 
         $this->applicationConfig = require Configuration::projectDir() . $this->config['config'];
-        if (isset($applicationConfig['module_listener_options']['config_cache_enabled'])) {
-            $applicationConfig['module_listener_options']['config_cache_enabled'] = false;
+        if (isset($this->applicationConfig['module_listener_options']['config_cache_enabled'])) {
+            $this->applicationConfig['module_listener_options']['config_cache_enabled'] = false;
         }
         Console::overrideIsConsole(false);
     }
