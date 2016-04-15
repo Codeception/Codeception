@@ -153,16 +153,8 @@ class SelfUpdate extends Command
      */
     private function retrieveContentFromUrl($url)
     {
-        $opts = [
-            'http' => [
-                'follow_location' => 1,
-                'max_redirects'   => 20,
-                'timeout'         => 60,
-                'user_agent'      => self::NAME
-            ]
-        ];
+        $ctx = $this->prepareContext($url);
 
-        $ctx = stream_context_create($opts);
         $body = file_get_contents($url, 0, $ctx);
 
         if (isset($http_response_header)) {
@@ -175,6 +167,49 @@ class SelfUpdate extends Command
         }
 
         return $body;
+    }
+
+    /**
+     * Add proxy support to context if environment variable was set up
+     *
+     * @param array  $opt context options
+     * @param string $url
+     */
+    private function prepareProxy(&$opt, $url)
+    {
+        $scheme = parse_url($url)['scheme'];
+        if ($scheme === 'http' && (!empty($_SERVER['HTTP_PROXY']) || !empty($_SERVER['http_proxy']))) {
+            $proxy = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
+        }
+
+        if ($scheme === 'https' && !empty($_SERVER['HTTPS_PROXY']) || !empty($_SERVER['https_proxy'])) {
+            $proxy = !empty($_SERVER['https_proxy']) ? $_SERVER['https_proxy'] : $_SERVER['HTTPS_PROXY'];
+        }
+
+        if(!empty($proxy)){
+            $proxy = str_replace(array('http://', 'https://'), array('tcp://', 'ssl://'), $proxy);
+            $opt['http']['proxy'] = $proxy;
+        }
+
+    }
+
+    /**
+     * Preparing context for request
+     * @param $url
+     *
+     * @return resource
+     */
+    private function prepareContext($url){
+        $opts = [
+            'http' => [
+                'follow_location' => 1,
+                'max_redirects'   => 20,
+                'timeout'         => 10,
+                'user_agent'      => self::NAME
+            ]
+        ];
+        $this->prepareProxy($opts, $url);
+        return stream_context_create($opts);
     }
 
     /**
