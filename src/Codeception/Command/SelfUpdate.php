@@ -2,9 +2,9 @@
 namespace Codeception\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
@@ -44,10 +44,12 @@ class SelfUpdate extends Command
 
         $this
             // ->setAliases(array('selfupdate'))
-            ->setDescription(sprintf(
-                'Upgrade <comment>%s</comment> to the latest version',
-                $this->filename
-            ));
+            ->setDescription(
+                sprintf(
+                    'Upgrade <comment>%s</comment> to the latest version',
+                    $this->filename
+                )
+            );
 
         parent::configure();
     }
@@ -172,7 +174,7 @@ class SelfUpdate extends Command
     /**
      * Add proxy support to context if environment variable was set up
      *
-     * @param array  $opt context options
+     * @param array $opt context options
      * @param string $url
      */
     private function prepareProxy(&$opt, $url)
@@ -182,12 +184,12 @@ class SelfUpdate extends Command
             $proxy = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
         }
 
-        if ($scheme === 'https' && !empty($_SERVER['HTTPS_PROXY']) || !empty($_SERVER['https_proxy'])) {
+        if ($scheme === 'https' && (!empty($_SERVER['HTTPS_PROXY']) || !empty($_SERVER['https_proxy']))) {
             $proxy = !empty($_SERVER['https_proxy']) ? $_SERVER['https_proxy'] : $_SERVER['HTTPS_PROXY'];
         }
 
-        if(!empty($proxy)){
-            $proxy = str_replace(array('http://', 'https://'), array('tcp://', 'ssl://'), $proxy);
+        if (!empty($proxy)) {
+            $proxy = str_replace(['http://', 'https://'], ['tcp://', 'ssl://'], $proxy);
             $opt['http']['proxy'] = $proxy;
         }
 
@@ -199,7 +201,8 @@ class SelfUpdate extends Command
      *
      * @return resource
      */
-    private function prepareContext($url){
+    private function prepareContext($url)
+    {
         $opts = [
             'http' => [
                 'follow_location' => 1,
@@ -223,7 +226,7 @@ class SelfUpdate extends Command
 
         try {
             $source = self::SOURCE;
-            if (version_compare(PHP_VERSION, '5.6.0', '<') ) {
+            if (version_compare(PHP_VERSION, '5.6.0', '<')) {
                 $source = self::SOURCE_PHP54;
             }
 

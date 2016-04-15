@@ -9,6 +9,7 @@
 * [Symfony] Deprecated `grabServiceFromContainer` use `grabService` instead. For consistency with other frameworks.
 * [Asserts] More `assert*` methods from PHPUnit added
 * [Asserts] Added `expectException` method
+* `codecept self-update` works with proxy by @gr1ev0us
 
 #### 2.1.7
 
