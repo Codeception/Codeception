@@ -1,6 +1,8 @@
 # Changelog
 
 #### 2.1.8
+
+* `Util\Locator` added methods to create locators to match element at their position: `elementAt`, `firstElement`, `lastElement`
 * [Symfony] Refactor to unify service retrieval, avoid memleaks and reduce memory footprint. Closes #2938 and #2954.
 * [Symfony] New optoin `rebootable_client` that reboots client's kernel before each request.
 * [WebDriver] fixed `seeInField` for textarea with whitespaces before and after string. Closes #2921
