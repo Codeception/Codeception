@@ -10,6 +10,7 @@
 * [Asserts] More `assert*` methods from PHPUnit added
 * [Asserts] Added `expectException` method
 * `codecept self-update` works with proxy by @gr1ev0us
+* [Phalcon1 add params support for method amOnRoute by @MelnykDmitro
 
 #### 2.1.7
 
