@@ -47,7 +47,7 @@ class Bootstrap extends Command
 
     public function getDescription()
     {
-        return "Creates default test suites and generates all requires files";
+        return "Creates default test suites and generates all required files";
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
