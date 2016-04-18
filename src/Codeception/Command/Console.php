@@ -73,12 +73,11 @@ class Console extends Command
 
         $this->actions = array_keys($moduleContainer->getActions());
 
-        $this->test = (new Cept())
-            ->configDispatcher($dispatcher)
-            ->configModules($moduleContainer)
-            ->configName('')
-            ->config('file', '')
-            ->initConfig();
+        $this->test = new Cept(null, null);
+        $this->test->getMetadata()->setServices([
+           'dispatcher' => $dispatcher,
+           'modules' =>  $moduleContainer
+        ]);
 
         $scenario = new Scenario($this->test);
         if (isset($config["namespace"])) {
