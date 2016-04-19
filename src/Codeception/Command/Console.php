@@ -100,7 +100,6 @@ class Console extends Command
         $dispatcher->dispatch(Events::TEST_BEFORE, new TestEvent($this->test));
 
         $output->writeln("\n\n<comment>\$I</comment> = new {$settings['class_name']}(\$scenario);");
-        $scenario->stopIfBlocked();
         $this->executeCommands($input, $output, $I, $settings['bootstrap']);
 
         $dispatcher->dispatch(Events::TEST_AFTER, new TestEvent($this->test));
