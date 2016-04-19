@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.1.9
+
+[WebDriver] fixed using `saveSessionSnapshot` with codecoverage. Closes #2923
+
 #### 2.1.8
 
 * `Util\Locator` added methods to create locators to match element at their position: `elementAt`, `firstElement`, `lastElement`
