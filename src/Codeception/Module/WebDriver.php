@@ -1028,23 +1028,30 @@ class WebDriver extends CodeceptionModule implements
 
         $matched = false;
 
-        foreach ($option as $opt) {
-            try {
-                $wdSelect->selectByVisibleText($opt);
-                $matched = true;
-            } catch (NoSuchElementException $e) {
+        if (key($option) !== 'value') {
+            foreach ($option as $opt) {
+                try {
+                    $wdSelect->selectByVisibleText($opt);
+                    $matched = true;
+                } catch (NoSuchElementException $e) {
+                }
             }
         }
+
         if ($matched) {
             return;
         }
-        foreach ($option as $opt) {
-            try {
-                $wdSelect->selectByValue($opt);
-                $matched = true;
-            } catch (NoSuchElementException $e) {
+
+        if (key($option) !== 'text') {
+            foreach ($option as $opt) {
+                try {
+                    $wdSelect->selectByValue($opt);
+                    $matched = true;
+                } catch (NoSuchElementException $e) {
+                }
             }
         }
+
         if ($matched) {
             return;
         }
