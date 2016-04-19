@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Coverage\Subscriber\LocalServer;
 use Codeception\Exception\ConnectionException;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocatorException;
@@ -2422,6 +2423,10 @@ class WebDriver extends CodeceptionModule implements
         $this->sessionSnapshots[$name] = [];
 
         foreach ($this->webDriver->manage()->getCookies() as $cookie) {
+            if (in_array(trim($cookie['name']), [LocalServer::COVERAGE_COOKIE, LocalServer::COVERAGE_COOKIE])) {
+                continue;
+            }
+
             if ($this->cookieDomainMatchesConfigUrl($cookie)) {
                 $this->sessionSnapshots[$name][] = $cookie;
             }

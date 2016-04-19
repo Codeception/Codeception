@@ -73,4 +73,14 @@ class LocatorTest extends PHPUnit_Framework_TestCase
           $this->fail("Expected exception when calling humanReadableString() with invalid selector");
        } catch (\InvalidArgumentException $e) {}
     }
+
+    public function testLocatingElementPosition()
+    {
+        $this->assertEquals('(descendant-or-self::p)[position()=1]', Locator::firstElement('p'));
+        $this->assertEquals('(descendant-or-self::p)[position()=last()]', Locator::lastElement('p'));
+        $this->assertEquals('(descendant-or-self::p)[position()=1]', Locator::elementAt('p', 1));
+        $this->assertEquals('(descendant-or-self::p)[position()=last()-0]', Locator::elementAt('p', -1));
+        $this->assertEquals('(descendant-or-self::p)[position()=last()-1]', Locator::elementAt('p', -2));
+
+    }
 }

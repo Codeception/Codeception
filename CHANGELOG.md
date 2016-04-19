@@ -26,13 +26,21 @@
 * *Breaking* [Asserts] removed deprecated `assertLessThen` and `assertGreaterThen`
 
 
+#### 2.1.9
+
+[WebDriver] fixed using `saveSessionSnapshot` with codecoverage. Closes #2923
+
 #### 2.1.8
+
+* `Util\Locator` added methods to create locators to match element at their position: `elementAt`, `firstElement`, `lastElement`
 * [Symfony] Refactor to unify service retrieval, avoid memleaks and reduce memory footprint. Closes #2938 and #2954.
 * [Symfony] New optoin `rebootable_client` that reboots client's kernel before each request.
 * [WebDriver] fixed `seeInField` for textarea with whitespaces before and after string. Closes #2921
 * [Symfony] Deprecated `grabServiceFromContainer` use `grabService` instead. For consistency with other frameworks.
 * [Asserts] More `assert*` methods from PHPUnit added
 * [Asserts] Added `expectException` method
+* `codecept self-update` works with proxy by @gr1ev0us
+* [Phalcon1 add params support for method amOnRoute by @MelnykDmitro
 
 #### 2.1.7
 
