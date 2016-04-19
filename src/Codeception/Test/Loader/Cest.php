@@ -5,6 +5,7 @@ use Codeception\Exception\TestParseException;
 use Codeception\Lib\ExampleSuite;
 use Codeception\Lib\Parser;
 use Codeception\Test\Cest as CestFormat;
+use Codeception\Test\Descriptor;
 use Codeception\Util\Annotation;
 
 class Cest implements LoaderInterface
@@ -59,7 +60,9 @@ class Cest implements LoaderInterface
                         }
                         $test = new CestFormat($unit, $method, $file);
                         $test->getMetadata()->setCurrent(['example' => $example]);
-                        $dataProvider->addTest($test);
+
+                        $groups = Annotation::forMethod($unit, $method)->fetchAll('group');
+                        $dataProvider->addTest($test, $groups);
                     }
                     $this->tests[] = $dataProvider;
                     continue;
