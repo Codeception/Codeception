@@ -89,7 +89,7 @@ class Configuration
             'lint'       => true
         ],
         'coverage'   => [],
-        'params' => []
+        'params'     => []
     ];
 
     public static $defaultSuiteSettings = [
@@ -360,17 +360,24 @@ class Configuration
     }
 
     /**
-     * Return instances of enabled modules according suite config.
+     * Return list of enabled modules according suite config.
      *
      * @param array $settings suite settings
-     * @return array|\Codeception\Module[]
+     * @return array
      */
     public static function modules($settings)
     {
-        return array_map(
-            function ($m) {
-                return is_array($m) ? key($m) : $m;
-            }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled'])
+        return array_filter(
+            array_map(
+                function ($m) {
+                    return is_array($m) ? key($m) : $m;
+                }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled']))
+            , function ($m) use ($settings) {
+                if (!isset($settings['modules']['disabled'])) {
+                    return true;
+                }
+                return !in_array($m, $settings['modules']['disabled']);
+            }
         );
     }
 

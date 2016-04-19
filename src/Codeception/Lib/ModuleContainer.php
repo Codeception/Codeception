@@ -2,9 +2,9 @@
 namespace Codeception\Lib;
 
 use Codeception\Configuration;
-use Codeception\Exception\ConfigurationException as ConfigurationException;
-use Codeception\Exception\ModuleException as ModuleException;
-use Codeception\Exception\ModuleConflictException as ModuleConflictException;
+use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ModuleException;
+use Codeception\Exception\ModuleConflictException;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;

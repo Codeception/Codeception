@@ -47,6 +47,12 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $settings = array('modules' => array('enabled' => array('EmulateModuleHelper')));
         $modules = \Codeception\Configuration::modules($settings);
         $this->assertContains('EmulateModuleHelper', $modules);
+        $settings = array('modules' => array(
+            'enabled' => array('EmulateModuleHelper'),
+            'disabled' => array('EmulateModuleHelper'),
+        ));
+        $modules = \Codeception\Configuration::modules($settings);
+        $this->assertNotContains('EmulateModuleHelper', $modules);
     }
 
     /**

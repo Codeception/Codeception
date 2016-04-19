@@ -20,6 +20,7 @@
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
 * [Asserts] More `assert*` methods from PHPUnit added
 * [Asserts] Added `expectException` method
+* Added config option to disable modules using `modules: disabled:`.
 * *Breaking* [Dbh] module removed
 * *Breaking* [Laravel4] module removed
 * *Breaking* [Symfony] public property `container` removed
