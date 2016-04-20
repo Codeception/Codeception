@@ -109,6 +109,9 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginToFacebook()
     {
+        if (PHP_MAJOR_VERSION < 7 && getenv('TRAVIS')) {
+            $this->markTestSkipped('run only one thread on Travis');
+        }
         // precondition: you need to have a server running for this test
         // you can start a php server with: php -S 127.0.0.1:8000 -t tests/data/app
         $browserModule = new PhpBrowser(make_container());
