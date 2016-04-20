@@ -26,6 +26,7 @@
 * *Breaking* [Laravel4] module removed
 * *Breaking* [Symfony] public property `container` removed
 * *Breaking* [Asserts] removed deprecated `assertLessThen` and `assertGreaterThen`
+* *Breaking* mocks created with `Codeception\Util\Stub` are not verified in Cests. See #3005
 
 
 #### 2.1.9
