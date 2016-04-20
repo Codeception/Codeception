@@ -7,6 +7,8 @@ use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Headers as HttpHeaders;
+use Zend\Mvc\Application;
+use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
 use Zend\Uri\Http as HttpUri;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
@@ -19,16 +21,27 @@ class ZF2 extends Client
     protected $application;
 
     /**
+     * @var array
+     */
+    protected $applicationConfig;
+
+    /**
      * @var  \Zend\Http\PhpEnvironment\Request
      */
     protected $zendRequest;
 
     /**
-     * @param \Zend\Mvc\ApplicationInterface $application
+     * @var ServiceManager
      */
-    public function setApplication($application)
+    private $mainServiceManager;
+
+    /**
+     * @param array $applicationConfig
+     */
+    public function setApplicationConfig($applicationConfig)
     {
-        $this->application = $application;
+        $this->applicationConfig = $applicationConfig;
+        $this->createApplication();
     }
 
     /**
@@ -39,11 +52,12 @@ class ZF2 extends Client
      */
     public function doRequest($request)
     {
+        $this->createApplication();
         $zendRequest = $this->application->getRequest();
         $zendResponse = $this->application->getResponse();
-        
+
         $zendResponse->setStatusCode(200);
-        $uri         = new HttpUri($request->getUri());
+        $uri = new HttpUri($request->getUri());
         $queryString = $uri->getQuery();
         $method = strtoupper($request->getMethod());
 
@@ -117,5 +131,37 @@ class ZF2 extends Client
         $zendHeaders = new HttpHeaders();
         $zendHeaders->addHeaders($headers);
         return $zendHeaders;
+    }
+
+    public function grabServiceFromContainer($service)
+    {
+        $serviceLocator = $this->application->getServiceManager();
+
+        if (!$serviceLocator->has($service)) {
+            $this->fail("Service $service is not available in container");
+        }
+
+        $result = $serviceLocator->get($service);
+        return $result;
+    }
+
+    private function createApplication()
+    {
+        $this->application = Application::init($this->applicationConfig);
+        $serviceManager = $this->application->getServiceManager();
+
+        if (!isset($this->mainServiceManager)) {
+            $this->mainServiceManager = $serviceManager;
+        } else {
+            $this->mainServiceManager->setAllowOverride(true);
+            $this->mainServiceManager->setService('Request', $serviceManager->get('Request'));
+            $this->mainServiceManager->setService('Response', $serviceManager->get('Response'));
+            $this->mainServiceManager->setAllowOverride(false);
+            $serviceManager->addPeeringServiceManager($this->mainServiceManager);
+            $serviceManager->setRetrieveFromPeeringManagerFirst(true);
+        }
+
+        $events = $this->application->getEventManager();
+        $events->detach($serviceManager->get('SendResponseListener'));
     }
 }

@@ -2,7 +2,8 @@
 
 #### 2.1.9
 
-[WebDriver] fixed using `saveSessionSnapshot` with codecoverage. Closes #2923
+* [WebDriver] fixed using `saveSessionSnapshot` with codecoverage. Closes #2923
+* [ZF2] create new Application for each request, reuse all services except Request and Response
 
 #### 2.1.8
 

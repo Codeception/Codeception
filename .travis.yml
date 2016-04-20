@@ -75,7 +75,7 @@ install:
   - git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
   - composer update -d frameworks-zf1 $composer_parameters
   # ZF2
-  - git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
+  - git clone -q -b 2.1-doctrine2 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
   - composer update -d frameworks-zf2 $composer_parameters
   # Zend Expressive
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
@@ -114,6 +114,9 @@ before_script:
   # Symfony
   - '[[ -z "$SYMFONY" ]] || php frameworks-symfony/app/console doctrine:schema:create -n --env test'
   - '[[ -z "$SYMFONY" ]] || php frameworks-symfony/app/console doctrine:fixtures:load -n --env test'
+  # ZF2
+  - "mysql -e 'create database zf2_test;'"
+  - php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create
   # Build
   - php codecept build -c frameworks-yii-basic/tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept build -c frameworks-phalcon'
@@ -137,5 +140,5 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
   - '[[ -z "$SYMFONY" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle '# Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
-  - php codecept run functional -c frameworks-zf2 # ZF2 Tests
+  - php codecept run -c frameworks-zf2 functional,doctrine # ZF2 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-zend-expressive' # Zend Expressive Tests
