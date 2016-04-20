@@ -629,4 +629,26 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/bug2921');
         $this->module->seeInField('foo', 'bar baz');
     }
+
+    public function testSelectOptionValueSelector()
+    {
+        $this->module->amOnPage('/form/select_selectors');
+
+        $this->module->selectOption('age', ['value' => '20']);
+        $this->module->seeOptionIsSelected('age', '21');
+
+        $this->module->selectOption('age', ['value' => '21']);
+        $this->module->seeOptionIsSelected('age', '20');
+    }
+
+    public function testSelectOptionTextSelector()
+    {
+        $this->module->amOnPage('/form/select_selectors');
+
+        $this->module->selectOption('age', ['text' => '20']);
+        $this->module->seeOptionIsSelected('age', '20');
+
+        $this->module->selectOption('age', ['text' => '21']);
+        $this->module->seeOptionIsSelected('age', '21');
+    }
 }
