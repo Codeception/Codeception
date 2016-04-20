@@ -874,6 +874,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $fieldName = $this->getSubmissionFormFieldName($field->attr('name'));
 
         if (is_array($option)) {
+            if (!isset($option[0])) { // strict option locator
+                $form[$fieldName]->select($this->matchOption($field, $option));
+                codecept_debug($option);
+                return;
+            }
             $options = [];
             foreach ($option as $opt) {
                 $options[] = $this->matchOption($field, $opt);
@@ -904,6 +909,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected function matchOption(Crawler $field, $option)
     {
+        if (isset($option['value'])) {
+            return $option['value'];
+        }
+        if (isset($option['text'])) {
+            $option = $option['text'];
+        }
         $options = $field->filterXPath(sprintf('//option[text()=normalize-space("%s")]|//input[@type="radio" and @value=normalize-space("%s")]', $option, $option));
         if ($options->count()) {
             if ($options->getNode(0)->tagName === 'option') {

@@ -345,8 +345,8 @@ class Console implements EventSubscriberInterface
                 $comp = $e->getComparisonFailure();
                 if ($comp->getDiff()) {
                     $message = $this->message($comp->getMessage())->append(" ( <comment>-Expected</comment> | <info>+Actual</info> ) \n");
-                    $message->append("+ <info>" . str_replace("\n", "\n+ ", $comp->getActualAsString()))->append("</info>\n");
                     $message->append("- <comment>" . str_replace("\n", "\n- ", $comp->getExpectedAsString()))->append("</comment>\n");
+                    $message->append("+ <info>" . str_replace("\n", "\n+ ", $comp->getActualAsString()))->append("</info>\n");
                 }
             }
         }

@@ -1359,4 +1359,25 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->click('Franšízy - pobočky');
         $this->module->seeCurrentUrlEquals('/');
     }
+
+    public function testSelectOptionValueSelector()
+    {
+        $this->module->amOnPage('/form/select_selectors');
+        $this->module->selectOption('age', ['value' => '20']);
+        $this->module->click('Submit');
+        $data = data::get('form');
+        $this->assertEquals('20', $data['age']);
+    }
+
+    public function testSelectOptionTextSelector()
+    {
+        $this->module->amOnPage('/form/select_selectors');
+
+        $this->module->selectOption('age', ['text' => '20']);
+        $this->module->seeOptionIsSelected('age', '20');
+
+        $this->module->selectOption('age', ['text' => '21']);
+        $this->module->seeOptionIsSelected('age', '21');
+    }
+
 }
