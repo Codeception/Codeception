@@ -1296,6 +1296,15 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 ?>
 ```
 
+Or provide an associative array for the second argument to specifically define which selection method should be used:
+
+``` php
+<?php
+$I->selectOption('Which OS do you use?', array('text' => 'Windows')); // Only search by text 'Windows'
+$I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only search by value 'windows'
+?>
+```
+
  * `param` $select
  * `param` $option
 
