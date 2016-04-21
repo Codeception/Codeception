@@ -178,6 +178,9 @@ class Parser
                     $classes[] = $namespace . $tokens[$i + 2][1];
                     continue;
                 }
+                if ($tokens[$i - 2][0] === T_NEW) {
+                    continue;
+                }
                 if ($tokens[$i - 1][0] === T_WHITESPACE and $tokens[$i - 2][0] === T_DOUBLE_COLON) {
                     continue;
                 }

@@ -147,6 +147,15 @@ EOF;
         $classes = Parser::getClassesFromFile(codecept_data_dir('php55Test'));
         $this->assertEquals(['php55Test'], $classes);
     }
+
+    public function testParseFileWithAnonymousClass()
+    {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $this->markTestSkipped('only for php 7');
+        }
+        $classes = Parser::getClassesFromFile(codecept_data_dir('php70Test'));
+        $this->assertEquals(['php70Test'], $classes);
+    }
     
     /*
      * https://github.com/Codeception/Codeception/issues/1779
