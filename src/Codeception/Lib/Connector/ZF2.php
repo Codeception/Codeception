@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Lib\Connector\ZF2\DoctrineServiceManager;
 use GuzzleHttp\Psr7\Uri;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
@@ -8,7 +9,6 @@ use Symfony\Component\BrowserKit\Response;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Headers as HttpHeaders;
 use Zend\Mvc\Application;
-use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
 use Zend\Uri\Http as HttpUri;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
@@ -31,9 +31,9 @@ class ZF2 extends Client
     protected $zendRequest;
 
     /**
-     * @var ServiceManager
+     * @var DoctrineServiceManager
      */
-    private $mainServiceManager;
+    private $doctrineServiceManager;
 
     /**
      * @param array $applicationConfig
@@ -135,14 +135,17 @@ class ZF2 extends Client
 
     public function grabServiceFromContainer($service)
     {
-        $serviceLocator = $this->application->getServiceManager();
+        $serviceManager = $this->application->getServiceManager();
 
-        if (!$serviceLocator->has($service)) {
+        if (!$serviceManager->has($service)) {
             $this->fail("Service $service is not available in container");
         }
 
-        $result = $serviceLocator->get($service);
-        return $result;
+        if ($service === 'Doctrine\ORM\EntityManager') {
+            $this->doctrineServiceManager = new DoctrineServiceManager($serviceManager);
+        }
+
+        return  $serviceManager->get($service);
     }
 
     private function createApplication()
@@ -150,14 +153,8 @@ class ZF2 extends Client
         $this->application = Application::init($this->applicationConfig);
         $serviceManager = $this->application->getServiceManager();
 
-        if (!isset($this->mainServiceManager)) {
-            $this->mainServiceManager = $serviceManager;
-        } else {
-            $this->mainServiceManager->setAllowOverride(true);
-            $this->mainServiceManager->setService('Request', $serviceManager->get('Request'));
-            $this->mainServiceManager->setService('Response', $serviceManager->get('Response'));
-            $this->mainServiceManager->setAllowOverride(false);
-            $serviceManager->addPeeringServiceManager($this->mainServiceManager);
+        if (isset($this->doctrineServiceManager)) {
+            $serviceManager->addPeeringServiceManager($this->doctrineServiceManager);
             $serviceManager->setRetrieveFromPeeringManagerFirst(true);
         }
 
