@@ -31,7 +31,8 @@
 
 #### 2.1.9
 
-[WebDriver] fixed using `saveSessionSnapshot` with codecoverage. Closes #2923
+* [WebDriver] fixed using `saveSessionSnapshot` with codecoverage. Closes #2923
+* [ZF2] create new instance of Application for each request
 
 #### 2.1.8
 

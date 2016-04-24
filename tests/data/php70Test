@@ -1,0 +1,15 @@
+<?php
+
+class php70Test extends PHPUnit_Framework_TestCase
+{
+    public function testOfTest() {
+        $a = new class('foo') {};
+        $this->assertContains('class@anonymous', get_class($a));
+        $b = new class () {};
+        $this->assertContains('class@anonymous', get_class($b));
+    }
+
+    function justTest() {}
+
+
+}
