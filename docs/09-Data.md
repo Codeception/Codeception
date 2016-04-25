@@ -47,7 +47,7 @@ modules:
         - Db:
           cleanup: false      
         - Doctrine2:
-            depends: Symfony2
+            depends: Symfony
         - \Helper\Functional
 ```
 

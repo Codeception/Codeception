@@ -4,7 +4,7 @@ In this chapter we will explain how you can extend and customize file structure 
 
 ## One Runner for Multiple Applications
 
-In case your project consists of several applications (frontend, admin, api) or you use Symfony2 framework with its bundles, you may be interested in having all tests for all applications (bundles) to be executed in one runner.
+In case your project consists of several applications (frontend, admin, api) or you use Symfony framework with its bundles, you may be interested in having all tests for all applications (bundles) to be executed in one runner.
 In this case you will get one report that covers the whole project.
 
 Place `codeception.yml` file into root folder of your project and specify paths to other `codeception.yml` configs you want to include.

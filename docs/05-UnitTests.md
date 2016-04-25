@@ -226,7 +226,7 @@ function testUserNameCanBeChanged()
 The very similar approach can be used to all frameworks that have ORM implementing ActiveRecord pattern.
 These are Yii2 and Phalcon, they have methods `haveRecord`, `seeRecord`, `dontSeeRecord` working in the same manner. They also should be included with specifying `part: ORM` in order to not use functional testing actions.
 
-In case you are using Symfony2 with Doctrine you may not enable Symfony2 itself but use only Doctrine2 only:
+In case you are using Symfony with Doctrine you may not enable Symfony itself but use only Doctrine2 only:
 
 ```yaml
 class_name: UnitTester
@@ -234,11 +234,11 @@ modules:
     enabled:
         - Asserts
         - Doctrine2:
-            depends: Symfony2
+            depends: Symfony
         - \Helper\Unit
 ```
 
-In this case you can use methods from Doctrine2 module, while Doctrine itself uses Symfony2 module to establish connection to database. In this case a test may look like:
+In this case you can use methods from Doctrine2 module, while Doctrine itself uses Symfony module to establish connection to database. In this case a test may look like:
 
 ```php
 <?php
@@ -278,12 +278,12 @@ $em = $this->getModule('Doctrine2')->em;
 ?>
 ```
 
-If you use `Symfony2` module, here is the way you can access Symfony container:
+If you use `Symfony` module, here is the way you can access Symfony container:
 
 ```php
 <?php
 /** @var Symfony\Component\DependencyInjection\Container */
-$container = $this->getModule('Symfony2')->container;
+$container = $this->getModule('Symfony')->container;
 ?>
 ```
 

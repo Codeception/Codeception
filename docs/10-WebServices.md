@@ -12,7 +12,7 @@ We will put all the api tests there.
 
 ## REST
 
-The REST web service is accessed via HTTP with standard methods: `GET`, `POST`, `PUT`, `DELETE`. They allow users to receive and manipulate entities from the service. Accessing a WebService requires an HTTP client, so for using it you need the module `PhpBrowser` or one of framework modules set up. For example, we can use the `Symfony2` module for Symfony2 applications in order to ignore web server and test web service internally.
+The REST web service is accessed via HTTP with standard methods: `GET`, `POST`, `PUT`, `DELETE`. They allow users to receive and manipulate entities from the service. Accessing a WebService requires an HTTP client, so for using it you need the module `PhpBrowser` or one of framework modules set up. For example, we can use the `Symfony` module for Symfony2 applications in order to ignore web server and test web service internally.
 
 Configure modules in `api.suite.yml`:
 
@@ -37,7 +37,7 @@ modules:
 			part: Json
 ```
 
-API tests can be functional and be executed using Symfony2, Laravel4, Laravel5, Zend, or any other framework module. You will need slightly update configuration for it: 
+API tests can be functional and be executed using Symfony, Laravel5, Zend, or any other framework module. You will need slightly update configuration for it:
 
 
 ``` yaml
