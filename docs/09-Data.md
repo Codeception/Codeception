@@ -53,24 +53,6 @@ modules:
 
 Still, the `Db` module will perform database population from a dump before each test. Use `populate: false` to disable it.
 
-### Dbh module
-
-If you use PostgreSQL, or any other database which supports nested transactions, you can use the `Dbh` module. It takes a PDO instance from your application, starts a transaction at the beginning of the tests, and rolls it back at the end.
-A PDO connection can be set in the bootstrap file. This module also overrides the `seeInDatabase` and `dontSeeInDatabase` actions of the `Db` module.
-
-To use the `Db` module for population and `Dbh` for cleanups, use this config:
-
-```yaml
-modules:
-  	enabled: 
-        - Db:
-            cleanup: false
-        - Dbh
-        - \Helper\Functional
-```
-
-Please, note that `Dbh` module should go after the `Db`. That allows the `Dbh` module to override actions.
-
 ## Fixtures
 
 Fixtures are sample data that we can use in tests. This data can be either generated, or taken from a sample database. Fixtures can be defined in separate PHP file and loaded in tests.
