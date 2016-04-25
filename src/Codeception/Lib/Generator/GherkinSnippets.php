@@ -14,7 +14,9 @@ class GherkinSnippets
      */
      public function {{methodName}}({{params}})
      {
+        throw new \Codeception\Exception\Incomplete("Step `{{text}}` is not defined");
      }
+     
 EOF;
 
     protected $snippets = [];
@@ -70,7 +72,15 @@ EOF;
             }
         }
 
-        $methodName = preg_replace('~(\s+?|\'|\")~', '', ucwords(preg_replace('~"(.*?)"~', '', $step->getText())));
+        if (preg_match_all('~(\d+)~', $pattern, $matches)) {
+            foreach ($matches[1] as $num => $param) {
+                $num++;
+                $args[] = '$num' . $num;
+                $pattern = str_replace($param, ":num$num", $pattern);
+            }
+        }
+
+        $methodName = preg_replace('~(\s+?|\'|\"|\W)~', '', ucwords(preg_replace('~"(.*?)"|\d+~', '', $step->getText())));
 
         $this->snippets[] = (new Template($this->template))
             ->place('type', $step->getKeywordType())
