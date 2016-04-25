@@ -93,7 +93,8 @@ class Gherkin extends Test implements ScenarioDriven
             }
             return;
         }
-        $this->getMetadata()->setIncomplete("Step definition for `$stepText` not found in contexts");
+        $incomplete = $this->getMetadata()->getIncomplete();
+        $this->getMetadata()->setIncomplete("$incomplete\nStep definition for `$stepText` not found in contexts");
     }
 
     protected function runStep(StepNode $stepNode)

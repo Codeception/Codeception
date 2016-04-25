@@ -146,7 +146,6 @@ class SuiteManager
         $this->dispatcher->dispatch(Events::SUITE_AFTER, new Event\SuiteEvent($this->suite, $result, $this->settings));
     }
 
-
     /**
      * @return \Codeception\Suite
      */

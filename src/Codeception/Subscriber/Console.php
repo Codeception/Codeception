@@ -50,7 +50,6 @@ class Console implements EventSubscriberInterface
     protected $message = null;
     protected $steps = true;
     protected $debug = false;
-    protected $color = true;
     protected $ansi = true;
     protected $silent = false;
     protected $lastTestFailed = false;
@@ -59,25 +58,35 @@ class Console implements EventSubscriberInterface
     protected $traceLength = 5;
     protected $width;
     protected $output;
-    protected $options;
     protected $fails = [];
     protected $reports = [];
     protected $namespace = '';
     protected $chars = ['success' => '+', 'fail' => 'x', 'of' => ':'];
 
+    protected $options = [
+        'debug'     => false,
+        'ansi'      => false,
+        'steps'     => true,
+        'verbosity' => 0,
+        'xml'       => null,
+        'html'      => null,
+        'tap'       => null,
+        'json'      => null,
+    ];
+
     public function __construct($options)
     {
-        $this->options = $options;
-        $this->debug = $options['debug'] || $options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
-        $this->steps = $this->debug || $options['steps'];
-        $this->rawStackTrace = ($options['verbosity'] === OutputInterface::VERBOSITY_DEBUG);
+        $this->options = array_merge($this->options, $options);
+        $this->debug = $this->options['debug'] || $this->options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
+        $this->steps = $this->debug || $this->options['steps'];
+        $this->rawStackTrace = ($this->options['verbosity'] === OutputInterface::VERBOSITY_DEBUG);
         $this->output = new Output($options);
         if ($this->debug) {
             Debug::setOutput($this->output);
         }
         $this->detectWidth();
 
-        if ($options['ansi'] && !$this->isWin()) {
+        if ($this->options['ansi'] && !$this->isWin()) {
             $this->chars['success'] = '✔';
             $this->chars['fail'] = '✖';
         }
@@ -246,7 +255,7 @@ class Console implements EventSubscriberInterface
     protected function isDetailed($test)
     {
         if ($test instanceof ScenarioDriven && $this->steps) {
-            return !$test->getMetadata()->isBlocked();
+            return true;
         }
         return false;
     }
