@@ -58,6 +58,9 @@ class Gherkin extends Test implements ScenarioDriven
         foreach ($this->scenarioNode->getSteps() as $step) {
             $this->validateStep($step);
         }
+        if ($this->getMetadata()->getIncomplete()) {
+            $this->getMetadata()->setIncomplete($this->getMetadata()->getIncomplete() . "\nRun gherkin:snippets to define missing steps");
+        }
     }
     
     public function getSignature()

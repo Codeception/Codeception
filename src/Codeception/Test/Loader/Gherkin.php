@@ -118,10 +118,11 @@ class Gherkin implements LoaderInterface
             $pattern = preg_quote($pattern);
 
             $pattern = preg_replace('~(\w+)\/(\w+)~', '(?:$1|$2)', $pattern); // or
-            $pattern = preg_replace('~\\\\\((\w)\\\\\)~', '$1?', $pattern); // (s)codecept_debug($pattern);
+            $pattern = preg_replace('~\\\\\((\w)\\\\\)~', '$1?', $pattern); // (s)
 
             // params
-            $pattern = preg_replace('~"?\\\:(\w+)"?~', '"(.*?)"', $pattern);
+            $pattern = preg_replace('~"?\\\:(\w+)"?~', '(?|\"(.*?)\"|(\d+))', $pattern);
+
             $pattern = "/$pattern/";
         }
         return $pattern;
