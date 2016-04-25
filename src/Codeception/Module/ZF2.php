@@ -72,21 +72,20 @@ class ZF2 extends Framework implements DoctrineProvider
         require Configuration::projectDir() . 'init_autoloader.php';
 
         $this->applicationConfig = require Configuration::projectDir() . $this->config['config'];
-        if (isset($applicationConfig['module_listener_options']['config_cache_enabled'])) {
-            $applicationConfig['module_listener_options']['config_cache_enabled'] = false;
+        if (isset($this->applicationConfig['module_listener_options']['config_cache_enabled'])) {
+            $this->applicationConfig['module_listener_options']['config_cache_enabled'] = false;
         }
         Console::overrideIsConsole(false);
+
+        //grabServiceFromContainer may need client in beforeClass hooks of modules or helpers
+        $this->client = new ZF2Connector();
+        $this->client->setApplicationConfig($this->applicationConfig);
     }
 
     public function _before(TestInterface $test)
     {
         $this->client = new ZF2Connector();
-
-        $this->application = Application::init($this->applicationConfig);
-        $events = $this->application->getEventManager();
-        $events->detach($this->application->getServiceManager()->get('SendResponseListener'));
-
-        $this->client->setApplication($this->application);
+        $this->client->setApplicationConfig($this->applicationConfig);
         $_SERVER['REQUEST_URI'] = '';
     }
 
@@ -114,6 +113,11 @@ class ZF2 extends Framework implements DoctrineProvider
         parent::_after($test);
     }
 
+    public function _afterSuite()
+    {
+        unset($this->client);
+    }
+
     public function _getEntityManager()
     {
         return $this->grabServiceFromContainer('Doctrine\ORM\EntityManager');
@@ -134,13 +138,7 @@ class ZF2 extends Framework implements DoctrineProvider
      */
     public function grabServiceFromContainer($service)
     {
-        $serviceLocator = $this->application
-            ? $this->application->getServiceManager()
-            : Application::init($this->applicationConfig)->getServiceManager();
-        if (!$serviceLocator->has($service)) {
-            $this->fail("Service $service is not available in container");
-        }
-        return $serviceLocator->get($service);
+        return $this->client->grabServiceFromContainer($service);
     }
 
     /**
@@ -158,7 +156,7 @@ class ZF2 extends Framework implements DoctrineProvider
      */
     public function amOnRoute($routeName, array $params = [])
     {
-        $router = $this->application->getServiceManager()->get('router');
+        $router = $this->client->grabServiceFromContainer('router');
         $url = $router->assemble($params, ['name' => $routeName]);
         $this->amOnPage($url);
     }
@@ -178,7 +176,7 @@ class ZF2 extends Framework implements DoctrineProvider
      */
     public function seeCurrentRouteIs($routeName, array $params = [])
     {
-        $router = $this->application->getServiceManager()->get('router');
+        $router = $this->client->grabServiceFromContainer('router');
         $url = $router->assemble($params, ['name' => $routeName]);
         $this->seeCurrentUrlEquals($url);
     }
@@ -188,7 +186,7 @@ class ZF2 extends Framework implements DoctrineProvider
         /**
          * @var Zend\Mvc\Router\Http\TreeRouteStack
          */
-        $router = $this->application->getServiceManager()->get('router');
+        $router = $this->client->grabServiceFromContainer('router');
         $this->domainCollector = [];
         $this->addInternalDomainsFromRoutes($router->getRoutes());
         return array_unique($this->domainCollector);

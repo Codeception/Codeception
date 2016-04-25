@@ -101,4 +101,4 @@ See Documentation for more information.
 MIT
 
 (c) Michael Bodnarchuk "Davert"
-2011-2015
+2011-2016
