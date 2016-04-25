@@ -1,9 +1,6 @@
 <?php
 namespace Codeception\PHPUnit;
 
-use Codeception\Test\Descriptor;
-use Codeception\Test\Interfaces\ScenarioDriven;
-use Exception;
 use PHPUnit_Framework_AssertionFailedError;
 use PHPUnit_Framework_Test;
 use PHPUnit_Runner_BaseTestRunner;
@@ -14,10 +11,10 @@ class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
      * An error occurred.
      *
      * @param PHPUnit_Framework_Test $test
-     * @param Exception $e
+     * @param \Exception $e
      * @param float $time
      */
-    public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addError(PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
         $this->testStatus = PHPUnit_Runner_BaseTestRunner::STATUS_ERROR;
         $this->failed++;
@@ -40,10 +37,10 @@ class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
      * Incomplete test.
      *
      * @param PHPUnit_Framework_Test $test
-     * @param Exception $e
+     * @param \Exception $e
      * @param float $time
      */
-    public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addIncompleteTest(PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
         $this->testStatus = PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE;
         $this->incomplete++;
@@ -53,12 +50,12 @@ class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
      * Risky test.
      *
      * @param PHPUnit_Framework_Test $test
-     * @param Exception $e
+     * @param \Exception $e
      * @param float $time
      *
      * @since  Method available since Release 4.0.0
      */
-    public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addRiskyTest(PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
         $this->testStatus = PHPUnit_Runner_BaseTestRunner::STATUS_RISKY;
         $this->risky++;
@@ -68,12 +65,12 @@ class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
      * Skipped test.
      *
      * @param PHPUnit_Framework_Test $test
-     * @param Exception $e
+     * @param \Exception $e
      * @param float $time
      *
      * @since  Method available since Release 3.0.0
      */
-    public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addSkippedTest(PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
         $this->testStatus = PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED;
         $this->skipped++;

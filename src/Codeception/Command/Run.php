@@ -12,6 +12,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Executes tests.
  *
+ * Usage:
+ *
+ * * `codecept run acceptance` - run all acceptance tests
+ * * `codecept run tests/acceptance/MyCept.php` - run only MyCept
+ * * `codecept run acceptance MyCept` - same as above
+ * * `codecept run acceptance MyCest:myTestInIt` - run one test from a Cest
+ * * `codecept run acceptance checkout.feature` - run feature-file
+ *
+ * Full reference:
  * ```
  * Arguments:
  *  suite                 suite to be tested

@@ -108,6 +108,7 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
             }
         }
     }
+    
     protected function executeContextMethod($context, $I)
     {
         if (method_exists($this->testClassInstance, $context)) {

@@ -23,7 +23,7 @@ class Output extends ConsoleOutput
 
     protected $isInteractive = false;
 
-    function __construct($config)
+    public function __construct($config)
     {
         $this->config = array_merge($this->config, $config);
 
@@ -72,7 +72,7 @@ class Output extends ConsoleOutput
         $this->writeln("<debug>  $message</debug>");
     }
 
-    function message($message)
+    public function message($message)
     {
         $message = call_user_func_array('sprintf', func_get_args());
         return new Message($message, $this);

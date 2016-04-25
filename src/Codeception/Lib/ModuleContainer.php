@@ -96,6 +96,11 @@ class ModuleContainer
         return $this->modules;
     }
 
+    public function mock($moduleName, $mock)
+    {
+        $this->modules[$moduleName] = $mock;
+    }
+
     private function instantiate($name, $class, $config)
     {
         $module = $this->di->instantiate($class, [$this, $config], false);
