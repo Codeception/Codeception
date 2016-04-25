@@ -1,12 +1,14 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Lib\Connector\ZF2\DoctrineServiceManager;
 use GuzzleHttp\Psr7\Uri;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Headers as HttpHeaders;
+use Zend\Mvc\Application;
 use Zend\Stdlib\Parameters;
 use Zend\Uri\Http as HttpUri;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
@@ -19,16 +21,27 @@ class ZF2 extends Client
     protected $application;
 
     /**
+     * @var array
+     */
+    protected $applicationConfig;
+
+    /**
      * @var  \Zend\Http\PhpEnvironment\Request
      */
     protected $zendRequest;
 
     /**
-     * @param \Zend\Mvc\ApplicationInterface $application
+     * @var DoctrineServiceManager
      */
-    public function setApplication($application)
+    private $doctrineServiceManager;
+
+    /**
+     * @param array $applicationConfig
+     */
+    public function setApplicationConfig($applicationConfig)
     {
-        $this->application = $application;
+        $this->applicationConfig = $applicationConfig;
+        $this->createApplication();
     }
 
     /**
@@ -39,11 +52,12 @@ class ZF2 extends Client
      */
     public function doRequest($request)
     {
+        $this->createApplication();
         $zendRequest = $this->application->getRequest();
         $zendResponse = $this->application->getResponse();
-        
+
         $zendResponse->setStatusCode(200);
-        $uri         = new HttpUri($request->getUri());
+        $uri = new HttpUri($request->getUri());
         $queryString = $uri->getQuery();
         $method = strtoupper($request->getMethod());
 
@@ -117,5 +131,34 @@ class ZF2 extends Client
         $zendHeaders = new HttpHeaders();
         $zendHeaders->addHeaders($headers);
         return $zendHeaders;
+    }
+
+    public function grabServiceFromContainer($service)
+    {
+        $serviceManager = $this->application->getServiceManager();
+
+        if (!$serviceManager->has($service)) {
+            $this->fail("Service $service is not available in container");
+        }
+
+        if ($service === 'Doctrine\ORM\EntityManager') {
+            $this->doctrineServiceManager = new DoctrineServiceManager($serviceManager);
+        }
+
+        return  $serviceManager->get($service);
+    }
+
+    private function createApplication()
+    {
+        $this->application = Application::init($this->applicationConfig);
+        $serviceManager = $this->application->getServiceManager();
+
+        if (isset($this->doctrineServiceManager)) {
+            $serviceManager->addPeeringServiceManager($this->doctrineServiceManager);
+            $serviceManager->setRetrieveFromPeeringManagerFirst(true);
+        }
+
+        $events = $this->application->getEventManager();
+        $events->detach($serviceManager->get('SendResponseListener'));
     }
 }
