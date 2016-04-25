@@ -69,10 +69,10 @@ The module uses the Symfony Profiler to provide additional information and asser
 
 [See the full reference](http://codeception.com/docs/modules/Symfony)
 
-### Laravel
+### Laravel5
 
-[Laravel4](http://codeception.com/docs/modules/Laravel4) and [Laravel5](http://codeception.com/docs/modules/Laravel5)
-modules included, and require no configuration.
+[Laravel5](http://codeception.com/docs/modules/Laravel5)
+module is included and requires no configuration.
 
 
 ```yaml
@@ -200,8 +200,7 @@ $I->seeCurrentUrlEquals('/profile/john');
 ?>
 ```
 
-Framework modules also contain additional methods to access framework internals. For instance, `Laravel4`, `Phalcon`, and `Yii2` modules have `seeRecord` method which uses ActiveRecord layer to check that record exists in database.
-`Laravel4` module also contains methods to do additional session checks. You may find `seeSessionHasErrors` useful when you test form validations.
+Framework modules also contain additional methods to access framework internals. For instance, `Laravel5`, `Phalcon`, and `Yii2` modules have `seeRecord` method which uses ActiveRecord layer to check that record exists in database.
 
 Take a look at the complete reference for module you are using. Most of its methods are common for all modules but some of them are unique.
 

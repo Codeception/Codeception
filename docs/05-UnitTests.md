@@ -262,7 +262,7 @@ function testUserNameCanBeChanged()
 ```
 
 In both examples you should not be worried about the data persistence between tests.
-Doctrine2 module as well as Laravel4 module will clean up created data at the end of a test. 
+Doctrine2 module as well as Laravel5 module will clean up created data at the end of a test.
 This is done by wrapping a test in a transaction and rolling it back afterwards. 
 
 ### Accessing Module
