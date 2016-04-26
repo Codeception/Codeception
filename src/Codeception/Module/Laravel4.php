@@ -128,7 +128,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
     {
         $this->client = new LaravelConnector($this);
 
-        if ($this->app['db'] && $this->cleanupDatabase()) {
+        if (isset($this->app['db']) && $this->cleanupDatabase()) {
             $this->app['db']->beginTransaction();
         }
 
@@ -144,7 +144,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
      */
     public function _after(TestCase $test)
     {
-        if ($this->app['db'] && $this->cleanupDatabase()) {
+        if (isset($this->app['db']) && $this->cleanupDatabase()) {
             $this->app['db']->rollback();
         }
 
@@ -161,7 +161,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
         }
 
         // disconnect from DB to prevent "Too many connections" issue
-        if ($this->app['db']) {
+        if (isset($this->app['db'])) {
             $this->app['db']->disconnect();
         }
     }
