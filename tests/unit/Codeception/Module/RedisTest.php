@@ -8,9 +8,9 @@ class RedisTest extends \PHPUnit_Framework_TestCase
     /**
      * @var array
      */
-    protected static $config = array(
+    protected static $config = [
         'database' => 15
-    );
+    ];
 
     /**
      * @var Redis
@@ -22,28 +22,28 @@ class RedisTest extends \PHPUnit_Framework_TestCase
      *
      * @var array
      */
-    protected static $keys = array(
-        'string' => array(
+    protected static $keys = [
+        'string' => [
             'name' => 'test:string',
             'value' => 'hello'
-        ),
-        'list' => array(
+        ],
+        'list' => [
             'name' => 'test:list',
-            'value' => array('riri', 'fifi', 'loulou')
-        ),
-        'set' => array(
+            'value' => ['riri', 'fifi', 'loulou']
+        ],
+        'set' => [
             'name' => 'test:set',
-            'value' => array('huey', 'dewey', 'louie')
-        ),
-        'zset' => array(
+            'value' => ['huey', 'dewey', 'louie']
+        ],
+        'zset' => [
             'name' => 'test:zset',
-            'value' => array('juanito' => 1, 'jorgito' => 2, 'jaimito' => 3)
-        ),
-        'hash' => array(
+            'value' => ['juanito' => 1, 'jorgito' => 2, 'jaimito' => 3]
+        ],
+        'hash' => [
             'name' => 'test:hash',
-            'value' => array('Tick' => true, 'Trick' => 'dewey', 'Track' => 42)
-        )
-    );
+            'value' => ['Tick' => true, 'Trick' => 'dewey', 'Track' => 42]
+        ]
+    ];
 
 
     /**
@@ -68,28 +68,17 @@ class RedisTest extends \PHPUnit_Framework_TestCase
     {
         self::$module->driver->flushDb();
 
-        $addMethods = array(
+        $addMethods = [
             'string' => 'set',
             'list' => 'rPush',
             'set' => 'sAdd',
             'zset' => 'zAdd',
             'hash' => 'hMSet'
-        );
+        ];
         foreach (self::$keys as $type => $key) {
-            $value = $key['value'];
-
-            // Remove this when CRedis implements zAdd() with associative arrays
-            if ($type === 'zset') {
-                $value = array();
-                foreach ($key['value'] as $member => $score) {
-                    $value[] = $score;
-                    $value[] = $member;
-                }
-            }
-
             self::$module->driver->{$addMethods[$type]}(
                 $key['name'],
-                $value
+                $key['value']
             );
         }
     }
@@ -199,28 +188,35 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testGrabFromRedisZSetAll()
     {
-        $reference = $this->scoresToFloat(self::$keys['zset']['value']);
+        $expected = self::$keys['zset']['value'];
         $result = self::$module->grabFromRedis(self::$keys['zset']['name']);
 
-        $this->assertSame($reference, $result);
+        $this->assertSame(
+            $this->scoresToFloat($expected),
+            $this->scoresToFloat($result)
+        );
     }
 
     public function testGrabFromRedisZSetRange()
     {
         $rangeFrom = 1;
         $rangeTo = 2;
+
+        $expected = array_slice(
+            self::$keys['zset']['value'],
+            $rangeFrom,
+            ($rangeTo - $rangeFrom + 1)
+        );
+
         $result = self::$module->grabFromRedis(
             self::$keys['zset']['name'],
             $rangeFrom,
             $rangeTo
         );
+
         $this->assertSame(
-            $this->scoresToFloat(array_slice(
-                self::$keys['zset']['value'],
-                $rangeFrom,
-                ($rangeTo - $rangeFrom + 1)
-            )),
-            $result
+            $this->scoresToFloat($expected),
+            $this->scoresToFloat($result)
         );
     }
 
@@ -261,10 +257,10 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveInRedisNonExistingString()
     {
-        $newKey = array(
+        $newKey = [
             'name' => 'test:string-create',
             'value' => 'testing string creation'
-        );
+        ];
         self::$module->haveInRedis(
             'string',
             $newKey['name'],
@@ -296,10 +292,10 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveInRedisNonExistingListArrayArg()
     {
-        $newKey = array(
+        $newKey = [
             'name' => 'test:list-create-array',
-            'value' => array('testing', 'list', 'creation')
-        );
+            'value' => ['testing', 'list', 'creation']
+        ];
         self::$module->haveInRedis(
             'list',
             $newKey['name'],
@@ -313,24 +309,24 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveInRedisNonExistingListScalarArg()
     {
-        $newKey = array(
+        $newKey = [
             'name' => 'test:list-create-scalar',
             'value' => 'testing list creation'
-        );
+        ];
         self::$module->haveInRedis(
             'list',
             $newKey['name'],
             $newKey['value']
         );
         $this->assertSame(
-            array($newKey['value']),
+            [$newKey['value']],
             self::$module->driver->lrange($newKey['name'], 0, -1)
         );
     }
 
     public function testHaveInRedisExistingListArrayArg()
     {
-        $newValue = array('testing', 'list', 'creation');
+        $newValue = ['testing', 'list', 'creation'];
 
         self::$module->haveInRedis(
             'list',
@@ -358,7 +354,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             array_merge(
                 self::$keys['list']['value'],
-                array($newValue)
+                [$newValue]
             ),
             self::$module->driver->lrange(self::$keys['list']['name'], 0, -1)
         );
@@ -370,10 +366,10 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveInRedisNonExistingSetArrayArg()
     {
-        $newKey = array(
+        $newKey = [
             'name' => 'test:set-create-array',
-            'value' => array('testing', 'set', 'creation')
-        );
+            'value' => ['testing', 'set', 'creation']
+        ];
         self::$module->haveInRedis(
             'set',
             $newKey['name'],
@@ -391,24 +387,24 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveInRedisNonExistingSetScalarArg()
     {
-        $newKey = array(
+        $newKey = [
             'name' => 'test:set-create-scalar',
             'value' => 'testing set creation'
-        );
+        ];
         self::$module->haveInRedis(
             'set',
             $newKey['name'],
             $newKey['value']
         );
         $this->assertSame(
-            array($newKey['value']),
+            [$newKey['value']],
             self::$module->driver->sMembers($newKey['name'])
         );
     }
 
     public function testHaveInRedisExistingSetArrayArg()
     {
-        $newValue = array('testing', 'set', 'creation');
+        $newValue = ['testing', 'set', 'creation'];
 
         self::$module->haveInRedis(
             'set',
@@ -439,7 +435,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
         $expectedResult = array_merge(
             self::$keys['set']['value'],
-            array($newValue)
+            [$newValue]
         );
         sort($expectedResult);
 
@@ -465,34 +461,37 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveInRedisNonExistingZSetArrayArg()
     {
-        $newKey = array(
+        $newKey = [
             'name' => 'test:zset-create-array',
-            'value' => array(
+            'value' => [
                 'testing' => 2,
                 'zset' => 1,
                 'creation' => 2,
                 'foo' => 3
-            )
-        );
+            ]
+        ];
         self::$module->haveInRedis(
             'zset',
             $newKey['name'],
             $newKey['value']
         );
+
+        $result = self::$module->driver->zrange($newKey['name'], 0, -1, 'WITHSCORES');
+
         $this->assertSame(
-            array('zset' => 1.0, 'creation' => 2.0, 'testing' => 2.0, 'foo' => 3.0),
-            self::$module->driver->zrange($newKey['name'], 0, -1, true)
+            ['zset' => 1.0, 'creation' => 2.0, 'testing' => 2.0, 'foo' => 3.0],
+            $this->scoresToFloat($result)
         );
     }
 
     public function testHaveInRedisExistingZSetArrayArg()
     {
-        $newValue = array(
+        $newValue = [
             'testing' => 2,
             'zset' => 1,
             'creation' => 2,
             'foo' => 3
-        );
+        ];
 
         self::$module->haveInRedis(
             'zset',
@@ -511,11 +510,17 @@ class RedisTest extends \PHPUnit_Framework_TestCase
             SORT_ASC,
             $expected
         );
-        $expected = $this->scoresToFloat($expected);
+
+        $result = self::$module->driver->zRange(
+            self::$keys['zset']['name'],
+            0,
+            -1,
+            'WITHSCORES'
+        );
 
         $this->assertSame(
-            $expected,
-            self::$module->driver->zRange(self::$keys['zset']['name'], 0, -1, true)
+            $this->scoresToFloat($expected),
+            $this->scoresToFloat($result)
         );
     }
 
@@ -535,14 +540,14 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveInRedisNonExistingHashArrayArg()
     {
-        $newKey = array(
+        $newKey = [
             'name' => 'test:hash-create-array',
-            'value' => array(
+            'value' => [
                 'obladi' => 'oblada',
                 'nope' => false,
                 'zero' => 0
-            )
-        );
+            ]
+        ];
         self::$module->haveInRedis(
             'hash',
             $newKey['name'],
@@ -556,11 +561,11 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveInRedisExistingHashArrayArg()
     {
-        $newValue = array(
+        $newValue = [
             'obladi' => 'oblada',
             'nope' => false,
             'zero' => 0
-        );
+        ];
         self::$module->haveInRedis(
             'hash',
             self::$keys['hash']['name'],
@@ -650,7 +655,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
     {
         self::$module->dontSeeInRedis(
             self::$keys['list']['name'],
-            array('incorrect', 'value')
+            ['incorrect', 'value']
         );
     }
 
@@ -680,7 +685,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
     {
         self::$module->dontSeeInRedis(
             self::$keys['set']['name'],
-            array('incorrect', 'value')
+            ['incorrect', 'value']
         );
     }
 
@@ -717,7 +722,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
     {
         self::$module->dontSeeInRedis(
             self::$keys['zset']['name'],
-            array('incorrect' => 1, 'value' => 2)
+            ['incorrect' => 1, 'value' => 2]
         );
     }
 
@@ -747,7 +752,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
     {
         self::$module->dontSeeInRedis(
             self::$keys['hash']['name'],
-            array('incorrect' => 'value')
+            ['incorrect' => 'value']
         );
     }
 
@@ -1022,7 +1027,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
         $this->shouldFail();
         self::$module->seeInRedis(
             self::$keys['list']['name'],
-            array('incorrect', 'value')
+            ['incorrect', 'value']
         );
     }
 
@@ -1051,7 +1056,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
         $this->shouldFail();
         self::$module->seeInRedis(
             self::$keys['set']['name'],
-            array('incorrect', 'value')
+            ['incorrect', 'value']
         );
     }
 
@@ -1059,7 +1064,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
     // Test seeInRedis() with Sorted Sets
     // *******************************
 
-    public function testSeeInRedisExistingZSetWithCorrectValue()
+    public function testSeeInRedisExistingZSetWithCorrectValueWithScores()
     {
         self::$module->seeInRedis(
             self::$keys['zset']['name'],
@@ -1090,7 +1095,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
         $this->shouldFail();
         self::$module->seeInRedis(
             self::$keys['zset']['name'],
-            array('incorrect' => 1, 'value' => 2)
+            ['incorrect' => 1, 'value' => 2]
         );
     }
 
@@ -1119,7 +1124,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
         $this->shouldFail();
         self::$module->seeInRedis(
             self::$keys['hash']['name'],
-            array('incorrect' => 'value')
+            ['incorrect' => 'value']
         );
     }
 
@@ -1325,25 +1330,14 @@ class RedisTest extends \PHPUnit_Framework_TestCase
 
     public function testSendCommandToRedis()
     {
-        self::$module->sendCommandToRedis(
-            'hmset', 'myhash', array('field1' => 4, 'field2' => 'foobar')
-        );
-        self::$module->sendCommandToRedis(
-            'hIncrBy',
-            array('myhash', 'field1', 8)
-        );
-        self::$module->sendCommandToRedis(
-            'hDel',
-            array('myhash', 'field2')
-        );
+        self::$module->sendCommandToRedis('hmset', 'myhash', 'f1', 4, 'f2', 'foo');
+        self::$module->sendCommandToRedis('hincrby', 'myhash', 'f1', 8);
+        self::$module->sendCommandToRedis('hDel', 'myhash', 'f2');
 
-        $result = self::$module->sendCommandToRedis(
-            'hGetAll',
-            array('myhash')
-        );
+        $result = self::$module->sendCommandToRedis('hGetAll', 'myhash');
 
         $this->assertEquals(
-            array('field1' => 12),
+            ['f1' => 12],
             $result
         );
     }
@@ -1377,7 +1371,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase
      */
     private function boolToString($var)
     {
-        $copy = is_array($var) ? $var : array($var);
+        $copy = is_array($var) ? $var : [$var];
 
         foreach ($copy as $key => $value) {
             if (is_bool($value)) {

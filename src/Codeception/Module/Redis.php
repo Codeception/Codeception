@@ -6,10 +6,10 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\TestCase;
 use Codeception\Exception\ModuleException;
 use Codeception\TestInterface;
-use Credis_Client as RedisDriver;
+use Predis\Client as RedisDriver;
 
 /**
- * This module uses the [Credis](https://github.com/colinmollenhour/credis) client
+ * This module uses the [Predis](https://github.com/nrk/predis) library
  * to interact with a Redis server.
  *
  * ## Status
@@ -27,7 +27,7 @@ use Credis_Client as RedisDriver;
  *     * Any other value: never
  *
  * ## Public Properties
- * * **driver** - Contains the Credis client/driver
+ * * **driver** - Contains the Predis client/driver
  *
  * @author Marc Verney <marc@marcverney.net>
  */
@@ -39,18 +39,18 @@ class Redis extends CodeceptionModule
      * No default value is set for the database, as this module will delete
      * every data in it. The user is required to explicitely set this parameter.
      */
-    protected $config = array(
+    protected $config = [
         'host'          => '127.0.0.1',
         'port'          => 6379,
         'cleanupBefore' => 'suite'
-    );
+    ];
 
     /**
      * {@inheritdoc}
      */
-    protected $requiredFields = array(
+    protected $requiredFields = [
         'database'
-    );
+    ];
 
     /**
      * The Redis driver
@@ -67,13 +67,11 @@ class Redis extends CodeceptionModule
     public function _initialize()
     {
         try {
-            $this->driver = new RedisDriver(
-                $this->config['host'],
-                $this->config['port'],
-                null,
-                '',
-                $this->config['database']
-            );
+            $this->driver = new RedisDriver([
+                'host'     => $this->config['host'],
+                'port'     => $this->config['port'],
+                'database' => $this->config['database']
+            ]);
         } catch (\Exception $e) {
             throw new ModuleException(
                 __CLASS__,
@@ -87,7 +85,7 @@ class Redis extends CodeceptionModule
      *
      * @param array $settings
      */
-    public function _beforeSuite($settings = array())
+    public function _beforeSuite($settings = [])
     {
         if ($this->config['cleanupBefore'] === 'suite') {
             $this->cleanup();
@@ -114,7 +112,7 @@ class Redis extends CodeceptionModule
     public function cleanup()
     {
         try {
-            $this->driver->flushDb();
+            $this->driver->flushdb();
         } catch (\Exception $e) {
             throw new ModuleException(
                 __CLASS__,
@@ -160,22 +158,22 @@ class Redis extends CodeceptionModule
         $args = func_get_args();
 
         switch ($this->driver->type($key)) {
-            case RedisDriver::TYPE_NONE:
+            case 'none':
                 throw new ModuleException(
                     $this,
                     "Cannot grab key \"$key\" as it does not exist"
                 );
                 break;
 
-            case RedisDriver::TYPE_STRING:
+            case 'string':
                 $reply = $this->driver->get($key);
                 break;
 
-            case RedisDriver::TYPE_LIST:
+            case 'list':
                 if (count($args) === 2) {
-                    $reply = $this->driver->lIndex($key, $args[1]);
+                    $reply = $this->driver->lindex($key, $args[1]);
                 } else {
-                    $reply = $this->driver->lRange(
+                    $reply = $this->driver->lrange(
                         $key,
                         isset($args[1]) ? $args[1] : 0,
                         isset($args[2]) ? $args[2] : -1
@@ -183,11 +181,11 @@ class Redis extends CodeceptionModule
                 }
                 break;
 
-            case RedisDriver::TYPE_SET:
-                $reply = $this->driver->sMembers($key);
+            case 'set':
+                $reply = $this->driver->smembers($key);
                 break;
 
-            case RedisDriver::TYPE_ZSET:
+            case 'zset':
                 if (count($args) === 2) {
                     throw new ModuleException(
                         $this,
@@ -195,18 +193,18 @@ class Redis extends CodeceptionModule
                         . "sets, expects either one argument or three"
                     );
                 }
-                $reply = $this->driver->zRange(
+                $reply = $this->driver->zrange(
                     $key,
                     isset($args[2]) ? $args[1] : 0,
                     isset($args[2]) ? $args[2] : -1,
-                    true
+                    'WITHSCORES'
                 );
                 break;
 
-            case RedisDriver::TYPE_HASH:
+            case 'hash':
                 $reply = isset($args[1])
-                    ? $this->driver->hGet($key, $args[1])
-                    : $this->driver->hGetAll($key);
+                    ? $this->driver->hget($key, $args[1])
+                    : $this->driver->hgetall($key);
                 break;
 
             default:
@@ -248,59 +246,52 @@ class Redis extends CodeceptionModule
     public function haveInRedis($type, $key, $value)
     {
         switch (strtolower($type)) {
-            case RedisDriver::TYPE_STRING:
+            case 'string':
                 if (!is_scalar($value)) {
                     throw new ModuleException(
                         $this,
-                        "If second argument of haveInRedis() method is "
-                        . "\"" . RedisDriver::TYPE_STRING . "\", third argument "
-                        . "must be a scalar"
+                        'If second argument of haveInRedis() method is "string", '
+                        . 'third argument must be a scalar'
                     );
                 }
                 $this->driver->set($key, $value);
                 break;
 
-            case RedisDriver::TYPE_LIST:
-                $this->driver->rPush($key, $value);
+            case 'list':
+                $this->driver->rpush($key, $value);
                 break;
 
-            case RedisDriver::TYPE_SET:
-                $this->driver->sAdd($key, $value);
+            case 'set':
+                $this->driver->sadd($key, $value);
                 break;
 
-            case RedisDriver::TYPE_ZSET:
+            case 'zset':
                 if (!is_array($value)) {
                     throw new ModuleException(
                         $this,
-                        "If second argument of haveInRedis() method is "
-                        . "\"" . RedisDriver::TYPE_ZSET . "\", third argument "
-                        . "must be an (associative) array"
+                        'If second argument of haveInRedis() method is "zset", '
+                        . 'third argument must be an (associative) array'
                     );
                 }
-                $this->driver->zAdd($key, $this->zsetAssocToSimple($value));
+                $this->driver->zadd($key, $value);
                 break;
 
-            case RedisDriver::TYPE_HASH:
+            case 'hash':
                 if (!is_array($value)) {
                     throw new ModuleException(
                         $this,
-                        "If second argument of haveInRedis() method is "
-                        . "\"" . RedisDriver::TYPE_HASH . "\", third argument "
-                        . "must be an array"
+                        'If second argument of haveInRedis() method is "hash", '
+                        . 'third argument must be an array'
                     );
                 }
-                $this->driver->hMSet($key, $value);
+                $this->driver->hmset($key, $value);
                 break;
 
             default:
                 throw new ModuleException(
                     $this,
                     "Unknown type \"$type\" for key \"$key\". Allowed types are "
-                    . RedisDriver::TYPE_STRING . ', '
-                    . RedisDriver::TYPE_LIST   . ', '
-                    . RedisDriver::TYPE_SET    . ', '
-                    . RedisDriver::TYPE_ZSET   . ', '
-                    . RedisDriver::TYPE_HASH
+                    . '"string", "list", "set", "zset", "hash"'
                 );
         }
     }
@@ -407,8 +398,8 @@ class Redis extends CodeceptionModule
 
     /**
      * Sends a command directly to the Redis driver. See documentation at
-     * https://github.com/colinmollenhour/credis
-     * Every argument that follows the $command name will be passed to it
+     * https://github.com/nrk/predis
+     * Every argument that follows the $command name will be passed to it.
      *
      * Examples:
      *
@@ -427,7 +418,7 @@ class Redis extends CodeceptionModule
     public function sendCommandToRedis($command)
     {
         return call_user_func_array(
-            array($this->driver, $command),
+            [$this->driver, $command],
             array_slice(func_get_args(), 1)
         );
     }
@@ -478,7 +469,7 @@ class Redis extends CodeceptionModule
      */
     private function boolToString($var)
     {
-        $copy = is_array($var) ? $var : array($var);
+        $copy = is_array($var) ? $var : [$var];
 
         foreach ($copy as $key => $value) {
             if (is_bool($value)) {
@@ -513,39 +504,41 @@ class Redis extends CodeceptionModule
         }
 
         switch ($this->driver->type($key)) {
-            case RedisDriver::TYPE_STRING:
+            case 'string':
                 $reply = $this->driver->get($key);
                 $result = strpos($reply, $item) !== false;
                 break;
 
-            case RedisDriver::TYPE_LIST:
-                $reply = $this->driver->lRange($key, 0, -1);
+            case 'list':
+                $reply = $this->driver->lrange($key, 0, -1);
                 $result = in_array($item, $reply);
                 break;
 
-            case RedisDriver::TYPE_SET:
-                $result = $this->driver->sIsMember($key, $item);
+            case 'set':
+                $result = $this->driver->sismember($key, $item);
                 break;
 
-            case RedisDriver::TYPE_ZSET:
-                $reply = $this->driver->zScore($key, $item);
-                if ($reply === false) {
+            case 'zset':
+                $reply = $this->driver->zscore($key, $item);
+
+                if (is_null($reply)) {
                     $result = false;
                 } elseif (!is_null($itemValue)) {
-                    $result = (int) $reply === (int) $itemValue;
+                    $result = (float) $reply === (float) $itemValue;
                 } else {
                     $result = true;
                 }
                 break;
 
-            case RedisDriver::TYPE_HASH:
-                $reply = $this->driver->hGet($key, $item);
+            case 'hash':
+                $reply = $this->driver->hget($key, $item);
+
                 $result = is_null($itemValue)
-                    ? $reply !== false
+                    ? !is_null($reply)
                     : (string) $reply === (string) $itemValue;
                 break;
 
-            case RedisDriver::TYPE_NONE:
+            case 'none':
                 throw new ModuleException(
                     $this,
                     "Key \"$key\" does not exist"
@@ -570,41 +563,42 @@ class Redis extends CodeceptionModule
         $type = $this->driver->type($key);
 
         if (is_null($value)) {
-            return $type != RedisDriver::TYPE_NONE;
+            return $type != 'none';
         }
 
         $value = $this->boolToString($value);
 
         switch ($type) {
-            case RedisDriver::TYPE_STRING:
+            case 'string':
                 $reply = $this->driver->get($key);
                 // Allow non strict equality (2 equals '2')
                 $result = $reply == $value;
                 break;
 
-            case RedisDriver::TYPE_LIST:
-                $reply = $this->driver->lRange($key, 0, -1);
+            case 'list':
+                $reply = $this->driver->lrange($key, 0, -1);
                 // Check both arrays have the same key/value pairs + same order
                 $result = $reply === $value;
                 break;
 
-            case RedisDriver::TYPE_SET:
-                $reply = $this->driver->sMembers($key);
+            case 'set':
+                $reply = $this->driver->smembers($key);
                 // Only check both arrays have the same values
                 sort($reply);
                 sort($value);
                 $result = $reply === $value;
                 break;
 
-            case RedisDriver::TYPE_ZSET:
-                $reply = $this->driver->zRange($key, 0, -1, true);
+            case 'zset':
+                $reply = $this->driver->zrange($key, 0, -1, 'WITHSCORES');
                 // Check both arrays have the same key/value pairs + same order
+                $reply = $this->scoresToFloat($reply);
                 $value = $this->scoresToFloat($value);
                 $result = $reply === $value;
                 break;
 
-            case RedisDriver::TYPE_HASH:
-                $reply = $this->driver->hGetAll($key);
+            case 'hash':
+                $reply = $this->driver->hgetall($key);
                 // Only check both arrays have the same key/value pairs (==)
                 $result = $reply == $value;
                 break;
@@ -630,26 +624,5 @@ class Redis extends CodeceptionModule
         }
 
         return $arr;
-    }
-
-    /**
-     * Converts an associative array respresenting a zset to a format that the
-     * Redis driver will accept as input for zAdd()
-     *
-     * @param array $arr The associative array
-     *
-     * @return array
-     */
-    private function zsetAssocToSimple(array $arr)
-    {
-        $result = array();
-
-        foreach ($arr as $key => $value) {
-            $result[] = $value;
-            $result[] = $key;
-        }
-
-        return $result;
-
     }
 }
