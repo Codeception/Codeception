@@ -85,16 +85,17 @@ class GherkinTest extends PHPUnit_Framework_TestCase
     {
         $pattern = 'hello :name, are you from :place?';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertEquals('/hello "(.*?)", are you from "(.*?)"\?/', $regex);
+        $this->assertEquals('/hello (?|\"(.*?)\"|(\d+)), are you from (?|\"(.*?)\"|(\d+))\?/', $regex);
 
         $pattern = 'hello ":name", how are you';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertEquals('/hello "(.*?)", how are you/', $regex);
+        $this->assertEquals('/hello (?|\"(.*?)\"|(\d+)), how are you/', $regex);
 
         $pattern = 'there should be :num cow(s)';
         $regex = $this->loader->makePlaceholderPattern($pattern);
         $this->assertRegExp($regex, 'there should be "1" cow');
         $this->assertRegExp($regex, 'there should be "5" cows');
+        $this->assertRegExp($regex, 'there should be 1000 cows');
     }
 }
 
