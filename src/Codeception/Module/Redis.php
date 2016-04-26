@@ -5,8 +5,8 @@ namespace Codeception\Module;
 use Codeception\Module as CodeceptionModule;
 use Codeception\TestCase;
 use Codeception\Exception\ModuleException;
-use Codeception\Lib\Driver\Credis_Client as RedisDriver;
 use Codeception\TestInterface;
+use Credis_Client as RedisDriver;
 
 /**
  * This module uses the [Credis](https://github.com/colinmollenhour/credis) client
