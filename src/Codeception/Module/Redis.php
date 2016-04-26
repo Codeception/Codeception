@@ -75,7 +75,10 @@ class Redis extends CodeceptionModule
                 $this->config['database']
             );
         } catch (\Exception $e) {
-            throw new ModuleException(__CLASS__, $e->getMessage());
+            throw new ModuleException(
+                __CLASS__,
+                $e->getMessage()
+            );
         }
     }
 
@@ -113,7 +116,10 @@ class Redis extends CodeceptionModule
         try {
             $this->driver->flushDb();
         } catch (\Exception $e) {
-            throw new ModuleException(__CLASS__, $e->getMessage());
+            throw new ModuleException(
+                __CLASS__,
+                $e->getMessage()
+            );
         }
     }
 
@@ -244,10 +250,12 @@ class Redis extends CodeceptionModule
         switch (strtolower($type)) {
             case RedisDriver::TYPE_STRING:
                 if (!is_scalar($value)) {
-                    throw new ModuleException($this,
+                    throw new ModuleException(
+                        $this,
                         "If second argument of haveInRedis() method is "
                         . "\"" . RedisDriver::TYPE_STRING . "\", third argument "
-                        . "must be a scalar");
+                        . "must be a scalar"
+                    );
                 }
                 $this->driver->set($key, $value);
                 break;
@@ -262,27 +270,32 @@ class Redis extends CodeceptionModule
 
             case RedisDriver::TYPE_ZSET:
                 if (!is_array($value)) {
-                    throw new ModuleException($this,
+                    throw new ModuleException(
+                        $this,
                         "If second argument of haveInRedis() method is "
                         . "\"" . RedisDriver::TYPE_ZSET . "\", third argument "
-                        . "must be an (associative) array");
+                        . "must be an (associative) array"
+                    );
                 }
                 $this->driver->zAdd($key, $this->zsetAssocToSimple($value));
                 break;
 
             case RedisDriver::TYPE_HASH:
                 if (!is_array($value)) {
-                    throw new ModuleException($this,
+                    throw new ModuleException(
+                        $this,
                         "If second argument of haveInRedis() method is "
                         . "\"" . RedisDriver::TYPE_HASH . "\", third argument "
-                        . "must be an array");
+                        . "must be an array"
+                    );
                 }
                 $this->driver->hMSet($key, $value);
                 break;
 
             default:
-                throw new ModuleException($this, "Unknown type \"$type\" for key "
-                    . "\"$key\". Allowed types are "
+                throw new ModuleException(
+                    $this,
+                    "Unknown type \"$type\" for key \"$key\". Allowed types are "
                     . RedisDriver::TYPE_STRING . ', '
                     . RedisDriver::TYPE_LIST   . ', '
                     . RedisDriver::TYPE_SET    . ', '
@@ -493,7 +506,8 @@ class Redis extends CodeceptionModule
         $result = null;
 
         if (!is_scalar($item)) {
-            throw new ModuleException($this,
+            throw new ModuleException(
+                $this,
                 "All arguments of [dont]seeRedisKeyContains() must be scalars"
             );
         }
@@ -532,7 +546,10 @@ class Redis extends CodeceptionModule
                 break;
 
             case RedisDriver::TYPE_NONE:
-                throw new ModuleException($this, "Key \"$key\" does not exist");
+                throw new ModuleException(
+                    $this,
+                    "Key \"$key\" does not exist"
+                );
                 break;
         }
 
