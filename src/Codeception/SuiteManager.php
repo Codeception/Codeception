@@ -142,6 +142,9 @@ class SuiteManager
             $name = $this->settings['namespace'] . ".$name";
         }
         $suite->setName($name);
+        if (isset($this->settings['backup_globals'])) {
+            $suite->setBackupGlobals(boolval($this->settings['backup_globals']));
+        }
         $suite->setModules($this->moduleContainer->all());
         return $suite;
     }
