@@ -465,7 +465,12 @@ EOF;
 
         if (is_array($parameters) || $method === 'GET') {
             if (!empty($parameters) && $method === 'GET') {
-                $url .= '?' . http_build_query($parameters);
+                if (strpos($url, '?') !== false) {
+                    $url .= '&';
+                } else {
+                    $url .= '?';
+                }
+                $url .= http_build_query($parameters);
             }
             if ($method == 'GET') {
                 $this->debugSection("Request", "$method $url");
