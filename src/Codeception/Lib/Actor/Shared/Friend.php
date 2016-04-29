@@ -26,4 +26,12 @@ trait Friend
         }
         return $this->friends[$name];
     }
+
+    public function leaveFriends()
+    {
+        foreach ($this->friends as $friend) {
+            $friend->leave();
+        }
+        $this->friends = [];
+    }
 }
