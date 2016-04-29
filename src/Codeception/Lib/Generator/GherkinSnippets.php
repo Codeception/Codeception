@@ -20,6 +20,7 @@ class GherkinSnippets
 EOF;
 
     protected $snippets = [];
+    protected $processed = [];
 
     public function __construct($settings)
     {
@@ -64,6 +65,17 @@ EOF;
     {
         $args = [];
         $pattern = $step->getText();
+
+        // match numbers (not in quotes)
+        if (preg_match_all('~([\d\.])(?=([^"]*"[^"]*")*[^"]*$)~', $pattern, $matches)) {
+            foreach ($matches[1] as $num => $param) {
+                $num++;
+                $args[] = '$num' . $num;
+                $pattern = str_replace($param, ":num$num", $pattern);
+            }
+        }
+
+        // match quoted string
         if (preg_match_all('~"(.*?)"~', $pattern, $matches)) {
             foreach ($matches[1] as $num => $param) {
                 $num++;
@@ -71,13 +83,8 @@ EOF;
                 $pattern = str_replace('"'.$param.'"', ":arg$num", $pattern);
             }
         }
-
-        if (preg_match_all('~(\d+)~', $pattern, $matches)) {
-            foreach ($matches[1] as $num => $param) {
-                $num++;
-                $args[] = '$num' . $num;
-                $pattern = str_replace($param, ":num$num", $pattern);
-            }
+        if (in_array($pattern, $this->processed))  {
+            return;
         }
 
         $methodName = preg_replace('~(\s+?|\'|\"|\W)~', '', ucwords(preg_replace('~"(.*?)"|\d+~', '', $step->getText())));
@@ -88,6 +95,8 @@ EOF;
             ->place('methodName', lcfirst($methodName))
             ->place('params', implode(', ', $args))
             ->produce();
+
+        $this->processed[] = $pattern;
     }
 
     public function getSnippets()

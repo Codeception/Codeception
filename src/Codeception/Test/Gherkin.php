@@ -114,7 +114,7 @@ class Gherkin extends Test implements ScenarioDriven
         $meta->setPrefix($stepNode->getKeyword());
         $this->scenario->setMetaStep($meta); // enable metastep
         $stepText = $stepNode->getText();
-        $this->getScenario()->comment(null); // make metastep to be printed even if no steps
+        $this->getScenario()->comment(null); // make metastep to be printed even if no steps in it
         foreach ($this->steps as $pattern => $context) {
             $matches = [];
             if (!preg_match($pattern, $stepText, $matches)) {
@@ -134,7 +134,12 @@ class Gherkin extends Test implements ScenarioDriven
     {
         /** @var $di Di  **/
         $di = $this->getMetadata()->getService('di');
-        $di->set($this->scenario);
+        $di->set($this->getScenario());
+
+        $actorClass = $this->getMetadata()->getCurrent('actor');
+        if ($actorClass) {
+            $di->set(new $actorClass($this->getScenario()));
+        }
 
         foreach ($this->steps as $pattern => $step) {
             $di->instantiate($step[0]);

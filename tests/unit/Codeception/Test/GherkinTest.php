@@ -1,6 +1,6 @@
 <?php
 
-class GherkinTest extends PHPUnit_Framework_TestCase
+class GherkinTest extends \Codeception\Test\Unit
 {
 
     protected $feature;
@@ -11,7 +11,7 @@ class GherkinTest extends PHPUnit_Framework_TestCase
      */
     protected $loader;
 
-    protected function setUp()
+    protected function _before()
     {
         $this->loader = new \Codeception\Test\Loader\Gherkin(
             [
@@ -80,6 +80,29 @@ class GherkinTest extends PHPUnit_Framework_TestCase
         $test->test();
         $this->assertEquals('aXc', self::$calls);
     }
+
+    public function testRoles()
+    {
+        $this->loader = new \Codeception\Test\Loader\Gherkin(
+            [
+                'gherkin' => [
+                    'contexts' => [
+                        'default' => ['GherkinTestContext'],
+                        'role'     => [
+                            'customer' => ['TagGherkinContext']
+                        ]
+                    ]
+                ]
+            ]
+        );
+        $this->loader->loadTests(codecept_data_dir('refund.feature'));
+        $test = $this->loader->getTests()[0];
+        /** @var $test \Codeception\Test\Gherkin  * */
+        $test->getMetadata()->setServices($this->getServices());
+        $test->test();
+        $this->assertEquals('aXc', self::$calls);
+    }
+
 
     public function testMatchingPatterns()
     {
