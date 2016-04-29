@@ -322,14 +322,24 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
-    public function _after(TestCase $test)
+    public function cleanWebDriver()
     {
-        if ($this->config['restart'] && isset($this->webDriver)) {
+        if (isset($this->webDriver)) {
             $this->webDriver->quit();
             // RemoteWebDriver consists of four parts, executor, mouse, keyboard and touch, quit only set executor to null,
             // but RemoteWebDriver doesn't provide public access to check on executor
             // so we need to unset $this->webDriver here to shut it down completely
-            $this->webDriver = null;
+            unset($this->webDriver);
+        }
+    }
+
+    public function _after(TestCase $test)
+    {
+        if ($this->config['restart'] && isset($this->webDriver)) {
+            foreach ($test->getScenario()->friends as $friend) {
+                $friend->leave();
+            }
+            $this->cleanWebDriver();
             return;
         }
         if ($this->config['clear_cookies'] && isset($this->webDriver)) {
@@ -396,10 +406,7 @@ class WebDriver extends CodeceptionModule implements
     public function _afterSuite()
     {
         // this is just to make sure webDriver is cleared after suite
-        if (isset($this->webDriver)) {
-            $this->webDriver->quit();
-            unset($this->webDriver);
-        }
+        $this->cleanWebDriver();
     }
 
     public function amOnSubdomain($subdomain)
