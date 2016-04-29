@@ -42,7 +42,7 @@ class Redis extends CodeceptionModule
     protected $config = [
         'host'          => '127.0.0.1',
         'port'          => 6379,
-        'cleanupBefore' => 'suite'
+        'cleanupBefore' => 'test'
     ];
 
     /**
@@ -324,7 +324,8 @@ class Redis extends CodeceptionModule
     public function dontSeeInRedis($key, $value = null)
     {
         $this->assertFalse(
-            $this->checkKeyExists($key, $value)
+            $this->checkKeyExists($key, $value),
+            "The key \"$key\" exists" . ($value ? ' and its value matches the one provided' : '')
         );
     }
 
@@ -359,9 +360,13 @@ class Redis extends CodeceptionModule
      */
     public function dontSeeRedisKeyContains($key, $item, $itemValue = null)
     {
-        $this->assertSame(
-            false,
-            $this->checkKeyContains($key, $item, $itemValue)
+        $this->assertFalse(
+            $this->checkKeyContains($key, $item, $itemValue),
+            "The key \"$key\" contains " . (
+                is_null($itemValue)
+                ? "\"$item\""
+                : "[\"$item\" => \"$itemValue\"]"
+            )
         );
     }
 
@@ -392,7 +397,8 @@ class Redis extends CodeceptionModule
     public function seeInRedis($key, $value = null)
     {
         $this->assertTrue(
-            $this->checkKeyExists($key, $value)
+            $this->checkKeyExists($key, $value),
+            "Cannot find key \"$key\"" . ($value ? ' with the provided value' : '')
         );
     }
 
@@ -454,9 +460,13 @@ class Redis extends CodeceptionModule
      */
     public function seeRedisKeyContains($key, $item, $itemValue = null)
     {
-        $this->assertSame(
-            true,
-            $this->checkKeyContains($key, $item, $itemValue)
+        $this->assertTrue(
+            $this->checkKeyContains($key, $item, $itemValue),
+            "The key \"$key\" does not contain " . (
+            is_null($itemValue)
+                ? "\"$item\""
+                : "[\"$item\" => \"$itemValue\"]"
+            )
         );
     }
 
