@@ -134,7 +134,6 @@ class Cest extends CodeceptionTestCase implements
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
         }
         $this->invoke($this->testMethod, [$I, $this->scenario]);
-        $I->leaveFriends();
     }
 
     public function getTestClass()
