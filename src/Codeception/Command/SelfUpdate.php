@@ -19,9 +19,9 @@ class SelfUpdate extends Command
      * Class constants
      */
     const NAME = 'Codeception';
-    const GITHUB = 'Codeception/Codeception';
-    const SOURCE = 'http://codeception.com/codecept.phar';
-    const SOURCE_PHP54 = 'http://codeception.com/php54/codecept.phar';
+    const GITHUB_REPO = 'Codeception/Codeception';
+    const PHAR_URL = 'http://codeception.com/codecept.phar';
+    const PHAR_URL_PHP54 = 'http://codeception.com/php54/codecept.phar';
 
     /**
      * Holds the current script filename.
@@ -64,17 +64,19 @@ class SelfUpdate extends Command
         $output->writeln(
             sprintf(
                 '<info>%s</info> version <comment>%s</comment>',
-                self::NAME, $version
+                self::NAME,
+                $version
             )
         );
 
         $output->writeln("\n<info>Checking for a new version...</info>\n");
         try {
-            if ($this->isOutOfDate($version)) {
+            $latestVersion = $this->getLatestStableVersion();
+            if ($this->isOutOfDate($version, $latestVersion)) {
                 $output->writeln(
                     sprintf(
                         'A newer version is available: <comment>%s</comment>',
-                        $this->liveVersion
+                        $latestVersion
                     )
                 );
                 if (!$input->getOption('no-interaction')) {
@@ -109,21 +111,41 @@ class SelfUpdate extends Command
     /**
      * Checks whether the provided version is current.
      *
-     * @param  string $version The version number to check.
+     * @param string $version The version number to check.
+     * @param string $latestVersion Latest stable version
      * @return boolean Returns True if a new version is available.
      */
-    private function isOutOfDate($version)
+    private function isOutOfDate($version, $latestVersion)
     {
-        $tags = $this->getGithubTags(self::GITHUB);
+        return -1 != version_compare($version, $latestVersion, '>=');
+    }
 
-        $this->liveVersion = array_reduce(
-            $tags,
+    /**
+     * @return string
+     */
+    private function getLatestStableVersion()
+    {
+        $stableVersions = $this->filterStableVersions(
+            $this->getGithubTags(self::GITHUB_REPO)
+        );
+
+        return array_reduce(
+            $stableVersions,
             function ($a, $b) {
                 return version_compare($a, $b, '>') ? $a : $b;
             }
         );
+    }
 
-        return -1 != version_compare($version, $this->liveVersion, '>=');
+    /**
+     * @param array $tags
+     * @return array
+     */
+    private function filterStableVersions($tags)
+    {
+        return array_filter($tags, function ($tag) {
+            return preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $tag);
+        });
     }
 
     /**
@@ -151,7 +173,7 @@ class SelfUpdate extends Command
      *
      * @param  string $url
      * @return string
-     * @throw Exception if status code is above 300
+     * @throws \Exception if status code is above 300
      */
     private function retrieveContentFromUrl($url)
     {
@@ -219,15 +241,16 @@ class SelfUpdate extends Command
      * Retrieves the latest phar file.
      *
      * @param OutputInterface $output
+     * @throws \Exception
      */
     protected function retrieveLatestPharFile(OutputInterface $output)
     {
         $temp = basename($this->filename, '.phar') . '-temp.phar';
 
         try {
-            $source = self::SOURCE;
+            $source = self::PHAR_URL;
             if (version_compare(PHP_VERSION, '5.6.0', '<')) {
-                $source = self::SOURCE_PHP54;
+                $source = self::PHAR_URL_PHP54;
             }
 
             if (@copy($source, $temp)) {
@@ -242,8 +265,7 @@ class SelfUpdate extends Command
                 throw new \Exception('Request failed.');
             }
         } catch (\Exception $e) {
-            if (
-                !$e instanceof \UnexpectedValueException
+            if (!$e instanceof \UnexpectedValueException
                 && !$e instanceof \PharException
             ) {
                 throw $e;
@@ -265,5 +287,4 @@ class SelfUpdate extends Command
             )
         );
     }
-
 }
