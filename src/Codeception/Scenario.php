@@ -25,6 +25,7 @@ class Scenario
     protected $env = [];
 
     protected $currents = [];
+    public $friends = [];
 
     /**
      * Constructor.
