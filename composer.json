@@ -44,7 +44,8 @@
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
         "monolog/monolog": "Log test steps",
-        "phpseclib/phpseclib": "Extension required to use the SFTP option in the FTP Module."
+        "phpseclib/phpseclib": "Extension required to use the SFTP option in the FTP Module.",
+        "symfony/phpunit-bridge": "For phpunit-bridge support"
     },
 
     "autoload":{
