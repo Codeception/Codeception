@@ -140,7 +140,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         $this->client = new LaravelConnector($this);
 
-        if ($this->app['db'] && $this->config['cleanup']) {
+        if (isset($this->app['db']) && $this->config['cleanup']) {
             $this->app['db']->beginTransaction();
         }
     }
@@ -152,24 +152,24 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function _after(\Codeception\TestCase $test)
     {
-        if ($this->app['db'] && $this->config['cleanup']) {
+        if (isset($this->app['db']) && $this->config['cleanup']) {
             $this->app['db']->rollback();
         }
 
-        if ($this->app['auth']) {
+        if (isset($this->app['auth'])) {
             $this->app['auth']->logout();
         }
 
-        if ($this->app['session']) {
+        if (isset($this->app['session'])) {
             $this->app['session']->flush();
         }
 
-        if ($this->app['cache']) {
+        if (isset($this->app['cache'])) {
             $this->app['cache']->flush();
         }
 
         // disconnect from DB to prevent "Too many connections" issue
-        if ($this->app['db']) {
+        if (isset($this->app['db'])) {
             $this->app['db']->disconnect();
         }
     }
