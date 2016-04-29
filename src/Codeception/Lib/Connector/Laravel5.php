@@ -107,7 +107,7 @@ class Laravel5 extends Client
         // Store a reference to the database object
         // so the database connection can be reused during tests
         $this->oldDb = null;
-        if ($this->app['db'] && $this->app['db']->connection()) {
+        if (isset($this->app['db']) && $this->app['db']->connection()) {
             $this->oldDb = $this->app['db'];
         }
 
