@@ -23,15 +23,8 @@ trait Friend
         if (!isset($this->friends[$name])) {
             $actor = $actorClass === null ? $this : new $actorClass($this->getScenario());
             $this->friends[$name] = new LibFriend($name, $actor, $this->getScenario()->current('modules'));
+            $this->getScenario()->friends[$name] = $this->friends[$name];
         }
         return $this->friends[$name];
-    }
-
-    public function leaveFriends()
-    {
-        foreach ($this->friends as $friend) {
-            $friend->leave();
-        }
-        $this->friends = [];
     }
 }
