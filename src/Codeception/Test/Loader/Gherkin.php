@@ -147,7 +147,7 @@ class Gherkin implements LoaderInterface
             }
 
             $roles = $this->settings['gherkin']['contexts']['role']; // load role contexts
-            foreach ($roles as $role) {
+            foreach ($roles as $role => $context) {
                 $filter = new RoleFilter($role);
                 if ($filter->isFeatureMatch($featureNode)) {
                     $steps = array_merge($steps, $this->steps["role:$role"]);
