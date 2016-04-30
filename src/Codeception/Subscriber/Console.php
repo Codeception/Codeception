@@ -97,7 +97,7 @@ class Console implements EventSubscriberInterface
         $this->buildResultsTable($e);
 
         $this->message("%s Tests (%d) ")
-            ->with(ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
+            ->with(ucfirst($e->getSuite()->getName()), $e->getSuite()->count())
             ->style('bold')
             ->width(array_sum($this->columns), '-')
             ->prepend("\n")
