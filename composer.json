@@ -30,7 +30,8 @@
         "symfony/browser-kit": ">=2.7 <3.1",
         "symfony/css-selector": ">=2.7 <3.1",
         "symfony/dom-crawler": ">=2.7 <3.1",
-        "behat/gherkin": "~4.4.0"
+        "behat/gherkin": "~4.4.0",
+        "mongodb/mongodb": "^1.0"
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
