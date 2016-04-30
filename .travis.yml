@@ -31,6 +31,7 @@ services:
   - mongodb
   - rabbitmq
   - postgresql
+  - redis
 
 sudo: false
 
