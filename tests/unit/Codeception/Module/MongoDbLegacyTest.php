@@ -2,7 +2,7 @@
 
 use Codeception\Module\MongoDb;
 
-class MongoDbTest extends \PHPUnit_Framework_TestCase
+class MongoDbLegacyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var array
@@ -17,29 +17,29 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
     protected $module;
 
     /**
-     * @var \MongoDB\Database
+     * @var \MongoDb
      */
     protected $db;
 
     /**
-     * @var \MongoDB\Collection
+     * @var \MongoCollection
      */
     private $userCollection;
 
     protected function setUp()
     {
-        if (!class_exists('\MongoDB\Client')) {
-            $this->markTestSkipped('MongoDB is not installed');
+        if (!class_exists('Mongo')) {
+            $this->markTestSkipped('Mongo is not installed');
         }
 
-        $mongo = new \MongoDB\Client();
+        $mongo = new \MongoClient();
 
         $this->module = new MongoDb(make_container());
         $this->module->_setConfig($this->mongoConfig);
         $this->module->_initialize();
 
-        $this->db = $mongo->selectDatabase('test');
-        $this->userCollection = $this->db->users;
+        $this->db = $mongo->selectDB('test');
+        $this->userCollection = $this->db->createCollection('users');
         $this->userCollection->insert(array('id' => 1, 'email' => 'miles@davis.com'));
     }
 
