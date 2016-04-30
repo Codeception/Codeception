@@ -123,8 +123,9 @@ class PhpBrowserTest extends TestsForBrowsers
     
     public function testMetaRefresh()
     {
-        $this->module->amOnPage('/redirect_self');
-        $this->module->see('Redirecting to myself');
+        $this->module->amOnPage('/redirect_meta_refresh');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
     }
     
     public function testRefreshRedirect()
