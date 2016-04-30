@@ -128,7 +128,7 @@ class Guzzle6 extends Client
             if (!$matchesMeta && isset($headers['Refresh'])) {
                 // match by header
                 preg_match(
-                    '~(\d*);?url=(.*)~',
+                    '~(\d*); ?url=(.*)~',
                     (string) reset($headers['Refresh']),
                     $matches
                 );
