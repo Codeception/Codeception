@@ -1,12 +1,16 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\Handler\StreamHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Response as Psr7Response;
 use GuzzleHttp\Psr7\Uri as Psr7Uri;
@@ -313,5 +317,22 @@ class Guzzle6 extends Client
             $jar[] = $setCookie;
         }
         return new CookieJar(false, $jar);
+    }
+    
+    public static function createHandler($handler)
+    {
+        if ($handler === 'curl') {
+            return HandlerStack::create(new CurlHandler());
+        }
+        if ($handler === 'stream') {
+            return HandlerStack::create(new StreamHandler());
+        }
+        if (class_exists($handler)) {
+            return HandlerStack::create(new $handler);
+        }
+        if (is_callable($handler)) {
+            return HandlerStack::create($handler);
+        }
+        return HandlerStack::create();
     }
 }
