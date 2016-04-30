@@ -40,7 +40,8 @@
         "pda/pheanstalk": "~3.0",
         "flow/jsonpath": "~0.2",
         "league/factory-muffin": "^3.0",
-        "league/factory-muffin-faker": "^1.0"
+        "league/factory-muffin-faker": "^1.0",
+        "mongodb/mongodb": "^1.0"
     },
     "suggest": {
         "codeception/specify": "BDD-style code blocks",
@@ -48,8 +49,7 @@
         "flow/jsonpath": "For using JSONPath in REST module",
         "phpseclib/phpseclib": "for SFTP option in FTP Module",
         "league/factory-muffin": "For DataFactory module",
-        "league/factory-muffin-faker": "For Faker support in DataFactory module",
-        "mongodb/mongodb": "For the MongoDB extension and the MongoDb module"
+        "league/factory-muffin-faker": "For Faker support in DataFactory module"
     },
 
     "autoload":{
