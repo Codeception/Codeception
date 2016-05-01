@@ -53,16 +53,9 @@ class MongoDb
     protected function cleanupMongoDB()
     {
         try {
-            $list = $this->dbh->listCollections();
+            $this->dbh->drop();
         } catch (\MongoDB\Driver\Exception $e) {
-            throw new \Exception(sprintf('Failed to list collections of the DB: %s', $e->getMessage()));
-        }
-        foreach ($list as $collection) {
-            try {
-                $collection->drop();
-            } catch (\MongoDB\Driver\Exception $e) {
-                throw new \Exception(sprintf('Failed to drop collection: %s', $e->getMessage()));
-            }
+            throw new \Exception(sprintf('Failed to drop the DB: %s', $e->getMessage()));
         }
     }
 
@@ -182,5 +175,15 @@ class MongoDb
     public function setDatabase($dbName)
     {
         $this->dbh = $this->client->{$this->legacy ? 'selectDB' : 'selectDatabase'}($dbName);
+    }
+
+    /**
+     * Determine if this driver is using the legacy extension or not.
+     *
+     * @return bool
+     */
+    public function isLegacy()
+    {
+        return $this->legacy;
     }
 }
