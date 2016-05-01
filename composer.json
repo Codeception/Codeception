@@ -41,6 +41,7 @@
         "flow/jsonpath": "~0.2",
         "league/factory-muffin": "^3.0",
         "league/factory-muffin-faker": "^1.0",
+        "ext-mongodb": "*",
         "mongodb/mongodb": "^1.0"
     },
     "suggest": {
