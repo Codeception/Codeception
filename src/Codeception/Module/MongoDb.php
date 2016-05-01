@@ -189,8 +189,7 @@ class MongoDb extends CodeceptionModule
         if ($this->driver->isLegacy()) {
             $collection->insert($data);
             return $data['_id'];
-        }
-        else {
+        } else {
             $response = $collection->insertOne($data);
             return $response->getInsertedId()->__toString();
         }
