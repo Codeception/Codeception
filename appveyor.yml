@@ -8,6 +8,7 @@ branches:
 services:
   - mysql56
   - postgresql93
+  - mongodb
 
 install:
   # databases setup
@@ -32,6 +33,8 @@ install:
   - echo extension=php_pdo_pgsql.dll >> php.ini
   - echo extension=php_pdo_sqlite.dll >> php.ini
   - echo extension=php_pgsql.dll >> php.ini
+  - pecl install mongodb
+  - echo extension=php_mongo.dll >> php.ini
   - SET PATH=C:\tools\php;%PATH%
   - cd %APPVEYOR_BUILD_FOLDER%
   - php -r "readfile('http://getcomposer.org/installer');" | php
