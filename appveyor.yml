@@ -24,8 +24,8 @@ install:
   - cinst -y php
   - cd c:\tools\php
   - cd ext
-  - appveyor DownloadFile http://windows.php.net/downloads/pecl/releases/mongodb/1.1.6/php_mongodb-1.1.6-5.6-nts-vc11-x86.zip
-  - 7z x php_mongodb-1.1.6-5.6-nts-vc11-x86.zip -y >nul
+  - appveyor DownloadFile http://windows.php.net/downloads/pecl/releases/mongodb/1.1.6/php_mongodb-1.1.6-7.0-nts-vc14-x86.zip
+  - 7z x php_mongodb-1.1.6-7.0-nts-vc14-x86.zip -y >nul
   - cd ..
   - copy php.ini-production php.ini
   - echo extension_dir=ext >> php.ini
