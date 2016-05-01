@@ -2,7 +2,7 @@
 
 use Codeception\Module\MongoDb;
 
-class MongoDbTest extends \PHPUnit_Framework_TestCase
+class MongoDbLegacyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var array
@@ -17,30 +17,30 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
     protected $module;
 
     /**
-     * @var \MongoDB\Database
+     * @var \MongoDb
      */
     protected $db;
 
     /**
-     * @var \MongoDB\Collection
+     * @var \MongoCollection
      */
     private $userCollection;
 
     protected function setUp()
     {
-        if (!class_exists('\MongoDB\Client')) {
-            $this->markTestSkipped('MongoDB is not installed');
+        if (!class_exists('Mongo')) {
+            $this->markTestSkipped('Mongo is not installed');
         }
 
-        $mongo = new \MongoDB\Client();
+        $mongo = new \MongoClient();
 
         $this->module = new MongoDb(make_container());
         $this->module->_setConfig($this->mongoConfig);
         $this->module->_initialize();
 
-        $this->db = $mongo->selectDatabase('test');
-        $this->userCollection = $this->db->users;
-        $this->userCollection->insertOne(array('id' => 1, 'email' => 'miles@davis.com'));
+        $this->db = $mongo->selectDB('test');
+        $this->userCollection = $this->db->createCollection('users');
+        $this->userCollection->insert(array('id' => 1, 'email' => 'miles@davis.com'));
     }
 
     protected function tearDown()
@@ -82,8 +82,8 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
 
     public function testGrabCollectionCount()
     {
-        $this->userCollection->insertOne(array('id' => 2, 'email' => 'louis@armstrong.com'));
-        $this->userCollection->insertOne(array('id' => 3, 'email' => 'dizzy@gillespie.com'));
+        $this->userCollection->insert(array('id' => 2, 'email' => 'louis@armstrong.com'));
+        $this->userCollection->insert(array('id' => 3, 'email' => 'dizzy@gillespie.com'));
 
         $this->assertEquals(1, $this->module->grabCollectionCount('users', array('id' => 3)));
         $this->assertEquals(3, $this->module->grabCollectionCount('users'));
@@ -91,7 +91,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeElementIsArray()
     {
-        $this->userCollection->insertOne(array('id' => 4, 'trumpets' => array('piccolo', 'bass', 'slide')));
+        $this->userCollection->insert(array('id' => 4, 'trumpets' => array('piccolo', 'bass', 'slide')));
 
         $this->module->seeElementIsArray('users', array('id' => 4), 'trumpets');
     }
@@ -101,8 +101,8 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
 
-        $this->userCollection->insertOne(array('id' => 5, 'trumpets' => array('piccolo', 'bass', 'slide')));
-        $this->userCollection->insertOne(array('id' => 6, 'trumpets' => array('piccolo', 'bass', 'slide')));
+        $this->userCollection->insert(array('id' => 5, 'trumpets' => array('piccolo', 'bass', 'slide')));
+        $this->userCollection->insert(array('id' => 6, 'trumpets' => array('piccolo', 'bass', 'slide')));
         $this->module->seeElementIsArray('users', array(), 'trumpets');
     }
 
@@ -114,7 +114,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $trumpet->pitch = 'B♭';
         $trumpet->price = array('min' => 458, 'max' => 891);
 
-        $this->userCollection->insertOne(array('id' => 6, 'trumpet' => $trumpet));
+        $this->userCollection->insert(array('id' => 6, 'trumpet' => $trumpet));
 
         $this->module->seeElementIsObject('users', array('id' => 6), 'trumpet');
     }
@@ -129,8 +129,8 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
 
-        $this->userCollection->insertOne(array('id' => 5, 'trumpet' => $trumpet));
-        $this->userCollection->insertOne(array('id' => 6, 'trumpet' => $trumpet));
+        $this->userCollection->insert(array('id' => 5, 'trumpet' => $trumpet));
+        $this->userCollection->insert(array('id' => 6, 'trumpet' => $trumpet));
 
         $this->module->seeElementIsObject('users', array(), 'trumpet');
     }
