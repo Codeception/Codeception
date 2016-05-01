@@ -120,11 +120,23 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCurrentUrlEquals('/search?one=1&two=2'); 
     }
-    
+
     public function testMetaRefresh()
     {
-        $this->module->amOnPage('/redirect_self');
-        $this->module->see('Redirecting to myself');
+        $this->module->amOnPage('/redirect_meta_refresh');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testMetaRefreshIsIgnoredIfIntervalIsLongerThanMaxInterval()
+    {
+        // prepare config
+        $config = $this->module->_getConfig();
+        $config['refresh_max_interval'] = 3; // less than 9
+        $this->module->_reconfigure($config);
+        $this->module->amOnPage('/redirect_meta_refresh');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/redirect_meta_refresh');
     }
     
     public function testRefreshRedirect()
