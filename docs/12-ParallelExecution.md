@@ -19,6 +19,22 @@ Docker works really well for isolating testing environments.
 By the time of writing this chapter, we didn't have an awesome tool like it. This chapter demonstrates how to manage parallel execution manually. As you will see we spend too much effort trying to isolate tests which Docker does for free. Today we **recommend using Docker** for parallel testing.
 </div>
 
+### Docker
+
+> Section is under construction
+
+Build the `codeception/codeception` image
+
+    docker-compose build
+    
+By default the image has `codecept` as its entrypoint, to run the tests simply supply the `run` command    
+
+    docker-compose run codeception run
+    
+Running custom tests
+    
+    docker run -v ${PWD}/tests:/var/www/tests codeception/codeception run
+
 ## What to do
 
 Parallel Test Execution consists of 3 steps:
