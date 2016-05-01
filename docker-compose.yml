@@ -1,0 +1,11 @@
+version: '2'
+services:
+  codeception:
+    image: codeception/codeception
+    build: .
+    volumes:
+      - ./_log:/var/www/tests/log
+  firefox:
+    image: selenium/standalone-firefox-debug:2.52.0
+  chrome:
+    image: selenium/standalone-chrome-debug:2.52.0
