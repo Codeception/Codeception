@@ -23,5 +23,4 @@ class ConfigParamsCest
         $I->seeInShellOutput('FAILURES');
         $I->seeInShellOutput("Failed asserting that an array contains 'val1'");
     }
-
 }

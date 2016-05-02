@@ -66,5 +66,4 @@ class AngularCest
         $I->submit();
         $I->seeInFormResult(["speaker1" => "iron_man"]);
     }
-
 }

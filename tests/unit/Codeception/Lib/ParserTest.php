@@ -16,12 +16,12 @@ class ParserTest extends \Codeception\Test\Unit
      * @var \Codeception\Scenario
      */
     protected $scenario;
-    
+
     protected $testMetadata;
 
     protected function _before()
     {
-        $cept = new \Codeception\Test\Cept('demo','DemoCept.php');
+        $cept = new \Codeception\Test\Cept('demo', 'DemoCept.php');
 
         $this->testMetadata = $cept->getMetadata();
         $this->scenario = new Codeception\Scenario($cept);
@@ -144,7 +144,7 @@ EOF;
         $classes = Parser::getClassesFromFile(codecept_data_dir('php70Test'));
         $this->assertEquals(['php70Test'], $classes);
     }
-    
+
     /*
      * https://github.com/Codeception/Codeception/issues/1779
      */

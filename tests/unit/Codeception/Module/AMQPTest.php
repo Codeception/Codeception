@@ -11,7 +11,7 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
         'port' => '5672',
         'vhost'    => '/',
         'cleanup' => false,
-        'queues' => array('queue1') 
+        'queues' => array('queue1')
     );
 
     /**
@@ -24,7 +24,9 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
         $this->module = new \Codeception\Module\AMQP(make_container());
         $this->module->_setConfig($this->config);
         $res = stream_socket_client('tcp://localhost:5672');
-        if ($res === false) $this->markTestSkipped('AMQP is not running');
+        if ($res === false) {
+            $this->markTestSkipped('AMQP is not running');
+        }
 
         $this->module->_initialize();
         $connection = $this->module->connection;
@@ -34,8 +36,6 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
     public function testQueueUsage()
     {
         $this->module->pushToQueue('queue1', 'hello');
-        $this->module->seeMessageInQueueContainsText('queue1','hello');
+        $this->module->seeMessageInQueueContainsText('queue1', 'hello');
     }
-
-
 }

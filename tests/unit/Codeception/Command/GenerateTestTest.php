@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
-class GenerateTestTest extends BaseCommandRunner {
-
+class GenerateTestTest extends BaseCommandRunner
+{
     protected function setUp()
     {
         $this->makeCommand('\Codeception\Command\GenerateTest');
@@ -53,6 +53,4 @@ class GenerateTestTest extends BaseCommandRunner {
         $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHill'));
         $this->assertIsValidPhp($this->content);
     }
-
-
 }

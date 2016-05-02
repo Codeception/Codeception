@@ -62,7 +62,7 @@ class JsonTypeTest extends \Codeception\Test\Unit
         $this->assertTrue($jsonType->matches(['numbers' => 'string:regex(~1-2-3~)']));
         $this->assertTrue($jsonType->matches(['numbers' => 'string:regex(~\d-\d-\d~)']));
         $this->assertNotTrue($jsonType->matches(['numbers' => 'string:regex(~^\d-\d$~)']));
-        
+
         $jsonType = new JsonType(['published' => 1]);
         $this->assertTrue($jsonType->matches(['published' => 'integer:regex(~1~)']));
         $this->assertTrue($jsonType->matches(['published' => 'integer:regex(~1|2~)']));
@@ -73,7 +73,9 @@ class JsonTypeTest extends \Codeception\Test\Unit
 
         $jsonType = new JsonType(['date' => '2011-11-30T04:06:44Z']);
         $this->assertTrue($jsonType->matches(['date' => 'string:regex(~2011-11-30T04:06:44Z|2011-11-30T05:07:00Z~)']));
-        $this->assertNotTrue($jsonType->matches(['date' => 'string:regex(~2015-11-30T04:06:44Z|2016-11-30T05:07:00Z~)']));
+        $this->assertNotTrue(
+            $jsonType->matches(['date' => 'string:regex(~2015-11-30T04:06:44Z|2016-11-30T05:07:00Z~)'])
+        );
     }
 
     public function testDateTimeFilter()
@@ -106,7 +108,7 @@ class JsonTypeTest extends \Codeception\Test\Unit
 
     public function testCustomFilters()
     {
-        JsonType::addCustomFilter('slug', function($value) {
+        JsonType::addCustomFilter('slug', function ($value) {
             return strpos($value, ' ') === false;
         });
         $jsonType = new JsonType(['title' => 'have a test', 'slug' => 'have-a-test']);
@@ -117,7 +119,7 @@ class JsonTypeTest extends \Codeception\Test\Unit
             'title' => 'string:slug'
         ]));
 
-        JsonType::addCustomFilter('/len\((.*?)\)/', function($value, $len) {
+        JsonType::addCustomFilter('/len\((.*?)\)/', function ($value, $len) {
             return strlen($value) == $len;
         });
         $this->assertTrue($jsonType->matches([
@@ -181,7 +183,7 @@ class JsonTypeTest extends \Codeception\Test\Unit
         $this->assertNotTrue($res = $jsonType->matches([
             'id' => 'integer:<3'
         ]));
-        
+
         $this->assertContains('3` is of type `integer:<3', $res);
         $this->assertContains('5` is of type `integer:<3', $res);
     }

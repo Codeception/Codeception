@@ -49,7 +49,10 @@ class GenerateScenarioTest extends BaseCommandRunner
     {
         $this->execute(['suite' => 'dummy']);
         $this->assertArrayHasKey(codecept_root_dir().'tests/data/scenarios/dummy/Another.optimistic.txt', $this->saved);
-        $this->assertArrayHasKey(codecept_root_dir().'tests/data/scenarios/dummy/Another.pessimistic.txt', $this->saved);
+        $this->assertArrayHasKey(
+            codecept_root_dir().'tests/data/scenarios/dummy/Another.pessimistic.txt',
+            $this->saved
+        );
         $file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt';
         $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
@@ -66,7 +69,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $content = $this->saved[$file];
         $this->assertContains('<html><body><h3>I WANT TO CHECK CONFIG EXISTS</h3>', $content);
         $this->assertContains('I see file found "$codeception"', strip_tags($content));
-        $this->assertContains('* File_Exists generated', $this->output);        
+        $this->assertContains('* File_Exists generated', $this->output);
     }
 
     public function testOneFile()
@@ -94,7 +97,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertContains('<body><h3>', $this->content);
         $this->assertContains('</body></html>', $this->content);
         $this->assertContains('* Skip_Me rendered', $this->output);
-        $this->assertContains('* Incomplete_Me rendered', $this->output);        
+        $this->assertContains('* Incomplete_Me rendered', $this->output);
     }
 
     public function testDifferentPath()
@@ -103,7 +106,5 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertEquals('docs/dummy.txt', $this->filename);
         $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $this->content);
         $this->assertContains('* File_Exists rendered', $this->output);
-
     }
-
 }

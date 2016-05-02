@@ -11,7 +11,7 @@ require_once 'TestsForWeb.php';
 
 abstract class TestsForBrowsers extends TestsForWeb
 {
-   
+
     public function testAmOnSubdomain()
     {
         $this->module->_reconfigure(array('url' => 'http://google.com'));
@@ -35,7 +35,7 @@ abstract class TestsForBrowsers extends TestsForWeb
 
     }
 
-    function testHeadersRedirect()
+    public function testHeadersRedirect()
     {
         $this->module->amOnPage('/redirect');
         $this->module->seeInCurrentUrl('info');

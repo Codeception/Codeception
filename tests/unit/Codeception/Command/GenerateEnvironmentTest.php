@@ -29,5 +29,4 @@ class GenerateEnvironmentTest extends BaseCommandRunner
         $this->execute(['env' => 'firefox']);
         $this->assertContains('File tests/_envs/firefox.yml already exists', $this->output);
     }
-
 }

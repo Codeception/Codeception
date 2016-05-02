@@ -11,8 +11,10 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testCanBeCreatedForModuleObject()
     {
-        $exception = new \Codeception\Exception\ModuleConfigException(new \Codeception\Module\CodeHelper(make_container()), "Hello world");
+        $exception = new \Codeception\Exception\ModuleConfigException(
+            new \Codeception\Module\CodeHelper(make_container()),
+            "Hello world"
+        );
         $this->assertEquals("CodeHelper module is not configured!\n \nHello world", $exception->getMessage());
     }
-
 }

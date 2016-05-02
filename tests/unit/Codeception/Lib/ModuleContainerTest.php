@@ -389,7 +389,7 @@ class StubModule extends \Codeception\Module
 
 class HelperModule extends \Codeception\Module
 {
-    function _inject(ConflictedModule $module)
+    public function _inject(ConflictedModule $module)
     {
         $this->module = $module;
     }
