@@ -246,6 +246,7 @@ class WebDriver extends CodeceptionModule implements
     protected $requestTimeoutInMs;
     protected $test;
     protected $sessionSnapshots = [];
+    protected $friends = [];
     protected $httpProxy;
     protected $httpProxyPort;
     protected $sslProxy;
@@ -323,12 +324,11 @@ class WebDriver extends CodeceptionModule implements
 
     public function _after(TestCase $test)
     {
-        if ($this->config['restart'] && isset($this->webDriver)) {
-            $this->webDriver->quit();
-            // RemoteWebDriver consists of four parts, executor, mouse, keyboard and touch, quit only set executor to null,
-            // but RemoteWebDriver doesn't provide public access to check on executor
-            // so we need to unset $this->webDriver here to shut it down completely
-            $this->webDriver = null;
+        if ($this->config['restart']) {
+            foreach ($this->friends as $friend) {
+                $friend->leave();
+            }
+            $this->cleanWebDriver();
             return;
         }
         if ($this->config['clear_cookies'] && isset($this->webDriver)) {
@@ -392,6 +392,11 @@ class WebDriver extends CodeceptionModule implements
     }
 
     public function _afterSuite()
+    {
+        $this->cleanWebDriver();
+    }
+
+    public function cleanWebDriver()
     {
         // this is just to make sure webDriver is cleared after suite
         if (isset($this->webDriver)) {
@@ -2472,5 +2477,21 @@ class WebDriver extends CodeceptionModule implements
         $x = $el->getLocation()->getX() + $offsetX;
         $y = $el->getLocation()->getY() + $offsetY;
         $this->webDriver->executeScript("window.scrollTo($x, $y)");
+    }
+
+    /**
+     * @param Friend $friend
+     */
+    public function _addFriend($friend)
+    {
+        $this->friends[$friend->getName()] = $friend;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function _deleteFriend($name)
+    {
+        unset($this->friends[$name]);
     }
 }
