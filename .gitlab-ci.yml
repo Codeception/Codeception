@@ -1,0 +1,13 @@
+before_script:
+  - export ISOLATION=buildref${CI_BUILD_REF}$(echo ${CI_BUILD_REF_NAME} | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
+  - export COMPOSE_PROJECT_NAME=${ISOLATION}
+
+build:
+  stage: build
+  script:
+    - docker-compose build --pull
+
+test:
+  stage: test
+  script:
+    - docker-compose run codeception run
