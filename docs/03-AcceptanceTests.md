@@ -451,6 +451,18 @@ $I->see('Hello all!', '.message');
 ```
 
 In this case we did some actions in second window with `does` command on a friend object.
+Sometimes you may want to close a web page before the end of the test. For such cases you may use : $nick->leave();
+You can also specify roles for friend : 
+```php
+<?php
+
+$nickAdmin = $I->haveFriend('nickAdmin', adminStep::class);
+$nickAdmin->does(function(adminStep $I) {
+    // Admin does ...
+});
+?>
+```
+
 
 ### Cleaning Things Up
 
