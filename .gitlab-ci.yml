@@ -17,11 +17,15 @@ test:
   stage: test
   script:
     - docker-compose up -d
-    - docker-compose run codeception run
+    - set -e
+    - docker-compose run codeception run || EXIT_CODE=$?
+    - set +e
     - cp -r _logs - cp -r /tmp/${ISOLATION}
+    - exit EXIT_CODE
 
 report:
   stage: report
+  when: always
   script:
     - cp -r /tmp/${ISOLATION} _logs
   artifacts:
@@ -30,8 +34,8 @@ report:
 
 cleanup:
   stage: cleanup
+  when: always
   script:
     - docker-compose kill
     - docker-compose rm -fv --all
     - docker-compose down
-  when: always
