@@ -2,6 +2,12 @@ before_script:
   - export ISOLATION=buildref${CI_BUILD_REF}$(echo ${CI_BUILD_REF_NAME} | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
   - export COMPOSE_PROJECT_NAME=${ISOLATION}
 
+stages:
+  - build
+  - test
+  - report
+  - cleanup
+
 build:
   stage: build
   script:
@@ -10,4 +16,22 @@ build:
 test:
   stage: test
   script:
+    - docker-compose up -d
     - docker-compose run codeception run
+    - cp -r _logs - cp -r /tmp/${ISOLATION}
+
+report:
+  stage: report
+  script:
+    - cp -r /tmp/${ISOLATION} _logs
+  artifacts:
+    paths:
+      - _logs
+
+cleanup:
+  stage: cleanup
+  script:
+    - docker-compose kill
+    - docker-compose rm -fv --all
+    - docker-compose down
+  when: always
