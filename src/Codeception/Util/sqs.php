@@ -13,5 +13,4 @@ if (!function_exists('sqs')) {
         }
         return $sequence;
     }
-
 }

@@ -77,11 +77,20 @@ class HTML extends CodeceptionResultPrinter
         $this->timeTaken += $time;
 
         switch ($this->testStatus) {
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE: $scenarioStatus = 'scenarioFailed'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED: $scenarioStatus = 'scenarioSkipped'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE: $scenarioStatus = 'scenarioIncomplete'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR: $scenarioStatus = 'scenarioFailed'; break;
-            default: $scenarioStatus = 'scenarioSuccess';
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE:
+                $scenarioStatus = 'scenarioFailed';
+                break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED:
+                $scenarioStatus = 'scenarioSkipped';
+                break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE:
+                $scenarioStatus = 'scenarioIncomplete';
+                break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR:
+                $scenarioStatus = 'scenarioFailed';
+                break;
+            default:
+                $scenarioStatus = 'scenarioSuccess';
         }
 
         $stepsBuffer = '';
@@ -164,8 +173,9 @@ class HTML extends CodeceptionResultPrinter
             $this->templatePath . 'scenario_header.html'
         );
 
-        $status = !$this->failed ? '<span style="color: green">OK</span>' : '<span style="color: #e74c3c">FAILED</span>';
-
+        $status = !$this->failed
+            ? '<span style="color: green">OK</span>'
+            : '<span style="color: #e74c3c">FAILED</span>';
 
         $scenarioHeaderTemplate->setVar(
             [
@@ -241,7 +251,11 @@ class HTML extends CodeceptionResultPrinter
     protected function renderSubsteps(Meta $metaStep, $substepsBuffer)
     {
         $metaTemplate = new \Text_Template($this->templatePath . 'substeps.html');
-        $metaTemplate->setVar(['metaStep' => $metaStep, 'error' => $metaStep->hasFailed() ? 'failedStep' : '', 'steps' => $substepsBuffer, 'id' => uniqid()]);
+        $metaTemplate->setVar([
+            'metaStep' => $metaStep,
+            'error' => $metaStep->hasFailed() ? 'failedStep' : '',
+            'steps' => $substepsBuffer, 'id' => uniqid()
+        ]);
         return $metaTemplate->render();
     }
 

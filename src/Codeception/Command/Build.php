@@ -6,7 +6,6 @@ use Codeception\Lib\Generator\Actions as ActionsGenerator;
 use Codeception\Lib\Generator\Actor as ActorGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -54,11 +53,8 @@ class Build extends Command
         
         $content = $actorGenerator->produce();
 
-        $file = $this->buildPath(
-            Configuration::supportDir(),
-            $settings['class_name']) . $this->getClassName($settings['class_name']
-        );
-        $file .=  '.php';
+        $path = $this->buildPath(Configuration::supportDir(), $settings['class_name']);
+        $file = $path . $this->getClassName($settings['class_name']) . '.php';
         return $this->save($file, $content);
     }
     

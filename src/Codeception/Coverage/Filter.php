@@ -22,7 +22,7 @@ class Filter
      */
     protected $filter = null;
 
-    function __construct(\PHP_CodeCoverage $phpCoverage)
+    public function __construct(\PHP_CodeCoverage $phpCoverage)
     {
         $this->phpCodeCoverage = $phpCoverage
             ? $phpCoverage

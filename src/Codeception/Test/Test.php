@@ -7,8 +7,10 @@ use Codeception\TestInterface;
  * The most simple testcase (with only one test in it) which can be executed by PHPUnit/Codeception.
  * It can be extended with included traits. Turning on/off a trait should not break class functionality.
  *
- * Class has exactly one method to be executed for testing, wrapped with before/after callbacks delivered from included traits.
- * A trait providing before/after callback should contain corresponding protected methods: `{traitName}Start` and `{traitName}End`,
+ * Class has exactly one method to be executed for testing,
+ * wrapped with before/after callbacks delivered from included traits.
+ * A trait providing before/after callback should contain corresponding protected methods:
+ * `{traitName}Start` and `{traitName}End`,
  * then this trait should be enabled in `hooks` property.
  *
  * Inherited class must implement `test` method.
@@ -128,5 +130,4 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     {
         $this->ignored = $ignored;
     }
-
 }

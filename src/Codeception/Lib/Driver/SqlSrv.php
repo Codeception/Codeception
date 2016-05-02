@@ -56,7 +56,8 @@ class SqlSrv extends Db
 
         $params = [];
         foreach ($criteria as $k => $v) {
-            $params[] = $this->getQuotedName($k) . " = ? ";        }
+            $params[] = $this->getQuotedName($k) . " = ? ";
+        }
 
         return 'WHERE ' . implode('AND ', $params);
     }

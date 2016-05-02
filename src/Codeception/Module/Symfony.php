@@ -30,7 +30,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * * environment: 'local' - environment used for load kernel
  * * debug: true - turn on/off debug mode
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
- * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
+ * * cache_router: 'false' - enable router caching between tests
+ *     in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
  * * rebootable_client: 'true' - reboot client's kernel before each request
  *
  * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
@@ -49,7 +50,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * * environment: 'local' - environment used for load kernel
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * debug: true - turn on/off debug mode
- * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
+ * * cache_router: 'false' - enable router caching between tests
+ *     in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
  * * rebootable_client: 'true' - reboot client's kernel before each request
  *
  * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
@@ -68,9 +70,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * * client - current Crawler instance
  *
  * ## Parts
- * 
+ *
  * * services - allows to use Symfony DIC only with WebDriver or PhpBrowser modules.
- * 
+ *
  * Usage example:
  *
  * ```yaml
@@ -135,14 +137,16 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     {
         $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
-            throw new ModuleRequireException(__CLASS__,
+            throw new ModuleRequireException(
+                __CLASS__,
                 "Symfony bootstrap file not found in $cache\n \n" .
                 "Please specify path to bootstrap file using `var_path` config option\n \n" .
                 "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
                 "modules:\n    enabled:\n" .
                 "    - Symfony:\n" .
                 "        var_path: '../../app'\n" .
-                "        app_path: '../../app'");
+                "        app_path: '../../app'"
+            );
 
         }
         require_once $cache;
@@ -167,7 +171,11 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     public function _before(\Codeception\TestInterface $test)
     {
         $this->persistentServices = array_merge($this->persistentServices, $this->permanentServices);
-        $this->client = new SymfonyConnector($this->kernel, $this->persistentServices, $this->config['rebootable_client']);
+        $this->client = new SymfonyConnector(
+            $this->kernel,
+            $this->persistentServices,
+            $this->config['rebootable_client']
+        );
     }
 
     /**
@@ -226,14 +234,22 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     {
         $path = \Codeception\Configuration::projectDir() . $this->config['app_path'];
         if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['app_path'])) {
-            throw new ModuleRequireException(__CLASS__, "Can't load Kernel from $path.\nDirectory does not exists. Use `app_path` parameter to provide valid application path");
+            throw new ModuleRequireException(
+                __CLASS__,
+                "Can't load Kernel from $path.\n" .
+                "Directory does not exists. Use `app_path` parameter to provide valid application path"
+            );
         }
 
         $finder = new Finder();
         $finder->name('*Kernel.php')->depth('0')->in($path);
         $results = iterator_to_array($finder);
         if (!count($results)) {
-            throw new ModuleRequireException(__CLASS__, "AppKernel was not found at $path. Specify directory where Kernel class for your application is located with `app_path` parameter.");
+            throw new ModuleRequireException(
+                __CLASS__,
+                "AppKernel was not found at $path. " .
+                "Specify directory where Kernel class for your application is located with `app_path` parameter."
+            );
         }
 
         $file = current($results);
@@ -446,8 +462,12 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
         if ($profile = $this->getProfile()) {
             if ($profile->hasCollector('security')) {
-                if ($profile->getCollector('security')->isAuthenticated()) {
-                    $this->debugSection('User', $profile->getCollector('security')->getUser() . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']');
+                $security = $profile->getCollector('security');
+                if ($security->isAuthenticated()) {
+                    $this->debugSection(
+                        'User',
+                        $security->getUser() . ' [' . implode(',', $security->getRoles()) . ']'
+                    );
                 } else {
                     $this->debugSection('User', 'Anonymous');
                 }

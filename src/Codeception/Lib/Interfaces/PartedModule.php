@@ -19,7 +19,7 @@ namespace Codeception\Lib\Interfaces;
  *
  * @package Codeception\Lib\Interfaces
  */
-interface PartedModule 
+interface PartedModule
 {
     public function _parts();
 }

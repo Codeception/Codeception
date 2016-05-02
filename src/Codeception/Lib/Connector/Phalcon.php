@@ -8,7 +8,7 @@ use Symfony\Component\BrowserKit\Client;
 use Codeception\Util\Stub;
 use Phalcon\Di;
 use Phalcon\Mvc\Application;
-use Phalcon\Mvc\Micro As MicroApplication;
+use Phalcon\Mvc\Micro as MicroApplication;
 use Phalcon\Http\Request;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Session\AdapterInterface as SessionInterface;

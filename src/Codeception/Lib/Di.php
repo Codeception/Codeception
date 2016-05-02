@@ -36,8 +36,11 @@ class Di
      * @throws InjectionException
      * @return null|object
      */
-    public function instantiate($className, $constructorArgs = null, $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME)
-    {
+    public function instantiate(
+        $className,
+        $constructorArgs = null,
+        $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME
+    ) {
         // get class from container
         if (isset($this->container[$className])) {
             if ($this->container[$className] instanceof $className) {
@@ -103,7 +106,9 @@ class Di
         try {
             $args = $this->prepareArgs($reflectedMethod, $defaults);
         } catch (\Exception $e) {
-            throw new InjectionException("Failed to inject dependencies in instance of '{$reflectedObject->name}'. " . $e->getMessage());
+            throw new InjectionException(
+                "Failed to inject dependencies in instance of '{$reflectedObject->name}'. " . $e->getMessage()
+            );
         }
 
         if (!$reflectedMethod->isPublic()) {

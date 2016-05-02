@@ -2,6 +2,7 @@
 namespace Codeception\PHPUnit\Constraint;
 
 use SebastianBergmann\Comparator\ComparisonFailure;
+use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class CrawlerNot extends Crawler
 {
@@ -13,7 +14,10 @@ class CrawlerNot extends Crawler
     protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null)
     {
         if (!$this->string) {
-            throw new \PHPUnit_Framework_ExpectationFailedException("Element '$selector' was found", $comparisonFailure);
+            throw new \PHPUnit_Framework_ExpectationFailedException(
+                "Element '$selector' was found",
+                $comparisonFailure
+            );
         }
         /** @var $nodes DomCrawler  * */
 

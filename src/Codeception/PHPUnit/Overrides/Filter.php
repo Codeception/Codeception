@@ -73,7 +73,8 @@ class PHPUnit_Util_Filter
             return true;
         }
 
-        if (strpos($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR . 'Module') !== false) {
+        $moduleDir = 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR . 'Module';
+        if (strpos($step['file'], $moduleDir) !== false) {
             return false; // don`t filter modules
         }
 

@@ -139,7 +139,10 @@ class Configuration
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 
         if (!(file_exists($configDistFile) || file_exists($configFile))) {
-            throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
+            throw new ConfigurationException(
+                "Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.",
+                404
+            );
         }
 
         $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromFile($configDistFile));
@@ -167,7 +170,9 @@ class Configuration
         }
 
         if (!isset($config['paths']['tests'])) {
-            throw new ConfigurationException('Tests directory is not defined in Codeception config by key "paths: tests:"');
+            throw new ConfigurationException(
+                'Tests directory is not defined in Codeception config by key "paths: tests:"'
+            );
         }
 
         if (!isset($config['paths']['data'])) {
@@ -212,7 +217,11 @@ class Configuration
 
     protected static function loadSuites()
     {
-        $suites = Finder::create()->files()->name('*.{suite,suite.dist}.yml')->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)->depth('< 1');
+        $suites = Finder::create()
+            ->files()
+            ->name('*.{suite,suite.dist}.yml')
+            ->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)
+            ->depth('< 1');
         self::$suites = [];
 
         /** @var SplFileInfo $suite */
@@ -259,7 +268,8 @@ class Configuration
             $settings = self::mergeConfigs($settings, $envConf);
         }
 
-        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR .
+            $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
 
         return $settings;
     }
@@ -371,8 +381,11 @@ class Configuration
             array_map(
                 function ($m) {
                     return is_array($m) ? key($m) : $m;
-                }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled']))
-            , function ($m) use ($settings) {
+                },
+                $settings['modules']['enabled'],
+                array_keys($settings['modules']['enabled'])
+            ),
+            function ($m) use ($settings) {
                 if (!isset($settings['modules']['disabled'])) {
                     return true;
                 }
@@ -434,7 +447,9 @@ class Configuration
         }
 
         if (!is_writable($dir)) {
-            throw new ConfigurationException("Path for output is not writable. Please, set appropriate access mode for output path.");
+            throw new ConfigurationException(
+                "Path for output is not writable. Please, set appropriate access mode for output path."
+            );
         }
 
         return $dir;
@@ -542,8 +557,12 @@ class Configuration
      */
     protected static function loadSuiteConfig($suite, $path, $settings)
     {
-        $suiteDistConf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
-        $suiteConf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml");
+        $suiteDistConf = self::getConfFromFile(
+            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml"
+        );
+        $suiteConf = self::getConfFromFile(
+            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml"
+        );
         $settings = self::mergeConfigs($settings, $suiteDistConf);
         $settings = self::mergeConfigs($settings, $suiteConf);
         return $settings;

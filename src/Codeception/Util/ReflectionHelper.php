@@ -61,4 +61,3 @@ class ReflectionHelper
         return array_pop($path);
     }
 }
-

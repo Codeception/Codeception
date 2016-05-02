@@ -8,19 +8,19 @@ class Oci extends Db
     {
         $this->dbh->exec(
             "BEGIN
-                            FOR i IN (SELECT trigger_name FROM user_triggers)
-                              LOOP
-                                EXECUTE IMMEDIATE('DROP TRIGGER ' || user || '.' || i.trigger_name);
-                              END LOOP;
-                          END;"
+                        FOR i IN (SELECT trigger_name FROM user_triggers)
+                          LOOP
+                            EXECUTE IMMEDIATE('DROP TRIGGER ' || user || '.' || i.trigger_name);
+                          END LOOP;
+                      END;"
         );
         $this->dbh->exec(
             "BEGIN
-                            FOR i IN (SELECT table_name FROM user_tables)
-                              LOOP
-                                EXECUTE IMMEDIATE('DROP TABLE ' || user || '.' || i.table_name || ' CASCADE CONSTRAINTS');
-                              END LOOP;
-                          END;"
+                        FOR i IN (SELECT table_name FROM user_tables)
+                          LOOP
+                            EXECUTE IMMEDIATE('DROP TABLE ' || user || '.' || i.table_name || ' CASCADE CONSTRAINTS');
+                          END LOOP;
+                      END;"
         );
         $this->dbh->exec(
             "BEGIN

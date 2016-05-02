@@ -215,4 +215,4 @@ EOF;
     {
         return $this->numMethods;
     }
-} 
+}

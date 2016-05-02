@@ -77,7 +77,8 @@ class Console implements EventSubscriberInterface
     public function __construct($options)
     {
         $this->options = array_merge($this->options, $options);
-        $this->debug = $this->options['debug'] || $this->options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
+        $this->debug = $this->options['debug']
+            || $this->options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
         $this->steps = $this->debug || $this->options['steps'];
         $this->rawStackTrace = ($this->options['verbosity'] === OutputInterface::VERBOSITY_DEBUG);
         $this->output = new Output($options);
@@ -122,10 +123,12 @@ class Console implements EventSubscriberInterface
         if ($e->getSuite() instanceof Suite) {
             $message = $this->message(
                 implode(
-                    ', ', array_map(
+                    ', ',
+                    array_map(
                         function ($module) {
                             return $module->_getName();
-                        }, $e->getSuite()->getModules()
+                        },
+                        $e->getSuite()->getModules()
                     )
                 )
             );
@@ -183,7 +186,9 @@ class Console implements EventSubscriberInterface
     public function afterResult(PrintResultEvent $event)
     {
         $result = $event->getResult();
-        if ($result->skippedCount() + $result->notImplementedCount() > 0 and $this->options['verbosity'] < OutputInterface::VERBOSITY_VERBOSE) {
+        if ($result->skippedCount() + $result->notImplementedCount() > 0
+            and $this->options['verbosity'] < OutputInterface::VERBOSITY_VERBOSE
+        ) {
             $this->output->writeln("run with `-v` to get more info about skipped or incomplete tests");
         }
         foreach ($this->reports as $message) {
@@ -353,9 +358,15 @@ class Console implements EventSubscriberInterface
             if ($e->getComparisonFailure()) {
                 $comp = $e->getComparisonFailure();
                 if ($comp->getDiff()) {
-                    $message = $this->message($comp->getMessage())->append(" ( <comment>-Expected</comment> | <info>+Actual</info> ) \n");
-                    $message->append("- <comment>" . str_replace("\n", "\n- ", $comp->getExpectedAsString()))->append("</comment>\n");
-                    $message->append("+ <info>" . str_replace("\n", "\n+ ", $comp->getActualAsString()))->append("</info>\n");
+                    $message = $this
+                        ->message($comp->getMessage())
+                        ->append(" ( <comment>-Expected</comment> | <info>+Actual</info> ) \n");
+                    $message
+                        ->append("- <comment>" . str_replace("\n", "\n- ", $comp->getExpectedAsString()))
+                        ->append("</comment>\n");
+                    $message
+                        ->append("+ <info>" . str_replace("\n", "\n+ ", $comp->getActualAsString()))
+                        ->append("</info>\n");
                 }
             }
         }

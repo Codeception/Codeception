@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;

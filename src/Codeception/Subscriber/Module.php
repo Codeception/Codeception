@@ -14,7 +14,7 @@ class Module implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
-    static $events = [
+    public static $events = [
         Events::TEST_BEFORE  => 'before',
         Events::TEST_AFTER   => 'after',
         Events::STEP_BEFORE  => 'beforeStep',

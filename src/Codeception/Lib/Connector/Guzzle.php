@@ -231,7 +231,7 @@ class Guzzle extends Client
         } else {
             return $request->getParameters();
         }
-}
+    }
 
     protected function extractFiles(BrowserKitRequest $request)
     {

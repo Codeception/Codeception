@@ -77,6 +77,4 @@ class WebDriver extends Page
         return $output;
 
     }
-
-
 }
