@@ -1069,7 +1069,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function _closeSession($webdriver)
     {
-        $webdriver->close();
+        $webdriver->quit();
     }
 
     /*
