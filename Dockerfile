@@ -18,6 +18,8 @@ RUN docker-php-ext-install \
 RUN pecl install mongodb && \
     docker-php-ext-enable mongodb
 
+RUN echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
+
 # Install composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -34,7 +36,5 @@ RUN composer install --prefer-dist --optimize-autoloader
 
 # Add source-code
 COPY . /var/www
-
-RUN echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
 
 ENTRYPOINT ["./codecept"]

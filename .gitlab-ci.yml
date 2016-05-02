@@ -13,15 +13,61 @@ build:
   script:
     - docker-compose build --pull
 
-test:
+test-cli:
   stage: test
   script:
-    - docker-compose up -d
-    - set -e
-    - docker-compose run codeception run || EXIT_CODE=$?
     - set +e
+    - docker-compose run codeception run cli || EXIT_CODE=$?
+    - set -e
     - cp -r _logs - cp -r /tmp/${ISOLATION}
     - exit EXIT_CODE
+
+test-unit:
+  stage: test
+  script:
+    - set +e
+    - docker-compose run codeception run unit || EXIT_CODE=$?
+    - set -e
+    - cp -r _logs - cp -r /tmp/${ISOLATION}
+    - exit EXIT_CODE
+
+test-coverage:
+  stage: test
+  script:
+    - set +e
+    - docker-compose run codeception run coverage || EXIT_CODE=$?
+    - set -e
+    - cp -r _logs - cp -r /tmp/${ISOLATION}
+    - exit EXIT_CODE
+
+test-web:
+  stage: test
+  script:
+    - export COMPOSE_PROJECT_NAME=${ISOLATION}${CI_BUILD_NAME}
+    - docker-compose up -d
+    - set +e
+    - docker-compose run codeception run web || EXIT_CODE=$?
+    - docker-compose kill
+    - docker-compose rm -fv --all
+    - docker-compose down
+    - set -e
+    - cp -r _logs - cp -r /tmp/${ISOLATION}
+    - exit EXIT_CODE
+
+test-angular:
+  stage: test
+  script:
+    - export COMPOSE_PROJECT_NAME=${ISOLATION}${CI_BUILD_NAME}
+    - docker-compose up -d
+    - set +e
+    - docker-compose run codeception run web || EXIT_CODE=$?
+    - docker-compose kill
+    - docker-compose rm -fv --all
+    - docker-compose down
+    - set -e
+    - cp -r _logs - cp -r /tmp/${ISOLATION}
+    - exit EXIT_CODE
+
 
 report:
   stage: report
