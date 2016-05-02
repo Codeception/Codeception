@@ -12,4 +12,8 @@ interface MultiSession
     public function _closeSession($session);
 
     public function _getName();
+
+    public function _addFriend($friend);
+
+    public function _deleteFriend($name);
 }
