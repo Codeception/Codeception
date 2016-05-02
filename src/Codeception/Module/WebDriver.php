@@ -1024,7 +1024,7 @@ class WebDriver extends CodeceptionModule implements
                 $wdSelect->selectByVisibleText($opt);
                 $matched = true;
             } catch (NoSuchElementException $e) {
-                // exception treated at the end 
+                // exception treated at the end
             }
         }
         if ($matched) {
@@ -1035,7 +1035,7 @@ class WebDriver extends CodeceptionModule implements
                 $wdSelect->selectByValue($opt);
                 $matched = true;
             } catch (NoSuchElementException $e) {
-                // exception treated at the end 
+                // exception treated at the end
             }
         }
         if ($matched) {
@@ -1051,7 +1051,7 @@ class WebDriver extends CodeceptionModule implements
                     $optElement->click();
                 }
             } catch (NoSuchElementException $e) {
-                // exception treated at the end 
+                // exception treated at the end
             }
         }
         if ($matched) {
@@ -1104,14 +1104,14 @@ class WebDriver extends CodeceptionModule implements
                 $wdSelect->deselectByVisibleText($opt);
                 $matched = true;
             } catch (NoSuchElementException $e) {
-                // exception treated at the end 
+                // exception treated at the end
             }
 
             try {
                 $wdSelect->deselectByValue($opt);
                 $matched = true;
             } catch (NoSuchElementException $e) {
-                // exception treated at the end 
+                // exception treated at the end
             }
 
         }
@@ -2318,14 +2318,14 @@ class WebDriver extends CodeceptionModule implements
                     $wdSelect->selectByVisibleText($value);
                     $matched = true;
                 } catch (NoSuchElementException $e) {
-                // exception treated at the end 
+                // exception treated at the end
                 }
 
                 try {
                     $wdSelect->selectByValue($value);
                     $matched = true;
                 } catch (NoSuchElementException $e) {
-                // exception treated at the end 
+                // exception treated at the end
                 }
                 if ($matched) {
                     return;
