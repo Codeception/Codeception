@@ -325,9 +325,7 @@ class WebDriver extends CodeceptionModule implements
     public function _after(TestCase $test)
     {
         if ($this->config['restart']) {
-            foreach ($this->friends as $friend) {
-                $friend->leave();
-            }
+            $this->cleanFriendsWebDriver();
             $this->cleanWebDriver();
             return;
         }
@@ -393,7 +391,15 @@ class WebDriver extends CodeceptionModule implements
 
     public function _afterSuite()
     {
+        $this->cleanFriendsWebDriver();
         $this->cleanWebDriver();
+    }
+
+    public function cleanFriendsWebDriver()
+    {
+        foreach ($this->friends as $friend) {
+            $friend->leave();
+        }
     }
 
     public function cleanWebDriver()
