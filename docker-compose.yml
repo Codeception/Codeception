@@ -11,7 +11,7 @@ services:
     volumes:
       - ./tests/data:/data
     ports:
-      - '8000:80'
+      - '80'
   firefox:
     image: selenium/standalone-firefox-debug:2.52.0
   chrome:
