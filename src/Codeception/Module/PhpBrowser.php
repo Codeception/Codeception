@@ -78,6 +78,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     private $isGuzzlePsr7;
     protected $requiredFields = ['url'];
+    protected $friends = [];
 
     protected $config = [
         'verify' => false,
@@ -295,5 +296,15 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     public function _closeSession($session)
     {
         unset($session);
+    }
+
+    public function _addFriend($friend)
+    {
+        $this->friends[$friend->getName()] = $friend;
+    }
+
+    public function _deleteFriend($name)
+    {
+        unset($this->friends[$name]);
     }
 }
