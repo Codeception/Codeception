@@ -70,7 +70,7 @@ class Friend
 
     public function getName()
     {
-        $this->name;
+        return $this->name;
     }
 
     public function leave()
