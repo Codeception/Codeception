@@ -9,6 +9,7 @@ use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Response as ZendResponse;
 use Zend\Expressive\Application;
+use Zend\Diactoros\UploadedFile;
 
 class ZendExpressive extends Client
 {
@@ -72,7 +73,7 @@ class ZendExpressive extends Client
 
         $zendRequest = new ServerRequest(
             $serverParams,
-            $request->getFiles(),
+            $this->convertFiles($request->getFiles()),
             $request->getUri(),
             $request->getMethod(),
             $inputStream,
@@ -98,6 +99,19 @@ class ZendExpressive extends Client
             $response->getStatusCode(),
             $response->getHeaders()
         );
+    }
+
+    private function convertFiles(array $files)
+    {
+        $fileObjects = [];
+        foreach ($files as $fieldName => $file) {
+            if (!isset($file['tmp_name']) && !isset($file['name'])) {
+                $fileObjects[$fieldName] = $this->convertFiles($file);
+            } else {
+                $fileObjects[$fieldName] = new UploadedFile($file['tmp_name'], $file['size'], $file['error'], $file['name'], $file['type']);
+            }
+        }
+        return $fileObjects;
     }
 
     private function extractHeaders(BrowserKitRequest $request)

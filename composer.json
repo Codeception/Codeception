@@ -51,7 +51,8 @@
         "flow/jsonpath": "For using JSONPath in REST module",
         "phpseclib/phpseclib": "for SFTP option in FTP Module",
         "league/factory-muffin": "For DataFactory module",
-        "league/factory-muffin-faker": "For Faker support in DataFactory module"
+        "league/factory-muffin-faker": "For Faker support in DataFactory module",
+        "symfony/phpunit-bridge": "For phpunit-bridge support"
     },
 
     "autoload":{

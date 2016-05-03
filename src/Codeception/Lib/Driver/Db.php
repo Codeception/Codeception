@@ -149,7 +149,7 @@ class Db
     {
         $where = $this->generateWhereClause($criteria);
 
-        $query = "select %s from %s %s";
+        $query = "SELECT %s FROM %s %s";
         return sprintf($query, $column, $this->getQuotedName($table), $where);
     }
 

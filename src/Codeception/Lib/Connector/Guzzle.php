@@ -117,7 +117,7 @@ class Guzzle extends Client
             $matches = [];
 
             $matchesMeta = preg_match(
-                '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',
+                '/\<meta[^\>]+http-equiv="refresh" content="\s*(\d*)\s*;\s*url=(.*?)"/i',
                 $response->getBody(true),
                 $matches
             );
@@ -125,7 +125,7 @@ class Guzzle extends Client
             if (!$matchesMeta) {
                 // match by header
                 preg_match(
-                    '~(\d*);?url=(.*)~',
+                    '/^\s*(\d*)\s*;\s*url=(.*)/i',
                     (string)$response->getHeader('Refresh'),
                     $matches
                 );
