@@ -1,7 +1,9 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
+use Codeception\Lib\Connector\Guzzle6;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Remote;
@@ -29,6 +31,8 @@ use GuzzleHttp\Client as GuzzleClient;
  * ## Configuration
  *
  * * url *required* - start url of your app
+ * * handler (default: curl) -  Guzzle handler to use. By default curl is used, also possible to pass `stream`, or any valid class name as [Handler](http://docs.guzzlephp.org/en/latest/handlers-and-middleware.html#handlers).
+ * * middleware - Guzzle middlewares to add. An array of valid callables is required.
  * * curl - curl options
  * * headers - ...
  * * cookies - ...
@@ -85,11 +89,13 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         'timeout' => 30,
         'curl' => [],
         'refresh_max_interval' => 10,
+        'handler' => 'curl',
+        'middleware' => null,
 
         // required defaults (not recommended to change)
         'allow_redirects' => false,
         'http_errors' => false,
-        'cookies' => true
+        'cookies' => true,
     ];
 
     protected $guzzleConfigFields = [
@@ -233,6 +239,13 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         if ($this->isGuzzlePsr7) {
             $defaults['base_uri'] = $this->config['url'];
             $defaults['curl'] = $curlOptions;
+            $handler = Guzzle6::createHandler($this->config['handler']);
+            if ($handler && is_array($this->config['middleware'])) {
+                foreach ($this->config['middleware'] as $middleware) {
+                    $handler->push($middleware);
+                }
+            }
+            $defaults['handler'] = $handler;
             $this->guzzle = new GuzzleClient($defaults);
         } else {
             $defaults['config']['curl'] = $curlOptions;
