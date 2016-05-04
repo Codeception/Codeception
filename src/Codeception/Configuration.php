@@ -81,11 +81,12 @@ class Configuration
         ],
         'groups'     => [],
         'settings'   => [
-            'colors'     => false,
-            'log'        => false, // deprecated
-            'bootstrap'  => false,
-            'strict_xml' => false,
-            'lint'       => true
+            'colors'         => false,
+            'log'            => false, // deprecated
+            'bootstrap'      => false,
+            'strict_xml'     => false,
+            'lint'           => true,
+            'backup_globals' => true
         ],
         'coverage'   => []
     ];
