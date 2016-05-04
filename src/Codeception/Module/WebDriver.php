@@ -1077,7 +1077,8 @@ class WebDriver extends CodeceptionModule implements
 
     public function _closeSession($webDriver)
     {
-        $key = array_shift(array_keys($this->sessions, $webDriver, true));
+        $keys = array_keys($this->sessions, $webDriver, true);
+        $key = array_shift($keys);
         try {
             $webDriver->quit();
         } catch (UnknownServerException $e) {
