@@ -41,6 +41,10 @@ settings:
     # We set a high limit for them by default.
     memory_limit: 1024M
     
+    # This value controls whether PHPUnit attempts to backup global variables
+    # See https://phpunit.de/manual/current/en/appendixes.annotations.html#appendixes.annotations.backupGlobals
+    backup_globals: true
+    
 
 # Global modules configuration.    
 modules:
