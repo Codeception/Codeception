@@ -401,8 +401,7 @@ class WebDriver extends CodeceptionModule implements
             $this->_loadSession($session);
             try {
                 $this->webDriver->quit();
-            }
-            catch (UnknownServerException $e) {
+            } catch (UnknownServerException $e) {
                 // Session already closed so nothing to do
             }
             unset($this->webDriver);
@@ -1081,8 +1080,7 @@ class WebDriver extends CodeceptionModule implements
         $key = array_shift(array_keys($this->sessions, $webDriver, true));
         try {
             $webDriver->quit();
-        }
-        catch (UnknownServerException $e) {
+        } catch (UnknownServerException $e) {
             // Session already closed so nothing to do
         }
         unset($this->sessions[$key]);
