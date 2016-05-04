@@ -399,7 +399,12 @@ class WebDriver extends CodeceptionModule implements
     {
         foreach ($this->sessions as $session) {
             $this->_loadSession($session);
-            $this->webDriver->quit();
+            try {
+                $this->webDriver->quit();
+            }
+            catch (UnknownServerException $e) {
+                // Session already closed so nothing to do
+            }
             unset($this->webDriver);
         }
         $this->sessions = [];
@@ -1074,7 +1079,12 @@ class WebDriver extends CodeceptionModule implements
     public function _closeSession($webDriver)
     {
         $key = array_shift(array_keys($this->sessions, $webDriver, true));
-        $webDriver->quit();
+        try {
+            $webDriver->quit();
+        }
+        catch (UnknownServerException $e) {
+            // Session already closed so nothing to do
+        }
         unset($this->sessions[$key]);
     }
 
