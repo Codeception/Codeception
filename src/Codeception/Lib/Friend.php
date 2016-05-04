@@ -35,7 +35,6 @@ class Friend
             if (empty($this->data[$name])) {
                 $module->_initializeSession();
                 $this->data[$name] = $module->_backupSession();
-                $module->_addFriend($this);
                 continue;
             }
             $module->_loadSession($this->data[$name]);
@@ -68,19 +67,12 @@ class Friend
         $this->actor->expectTo($prediction);
     }
 
-    public function getName()
-    {
-        return $this->name;
-    }
-
     public function leave()
     {
         foreach ($this->multiSessionModules as $module) {
             if (isset($this->data[$module->_getName()])) {
                 $module->_closeSession($this->data[$module->_getName()]);
-                $module->_deleteFriend($this->getName());
             }
         }
     }
 }
- 
