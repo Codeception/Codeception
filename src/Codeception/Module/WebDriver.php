@@ -246,7 +246,7 @@ class WebDriver extends CodeceptionModule implements
     protected $requestTimeoutInMs;
     protected $test;
     protected $sessionSnapshots = [];
-    protected $friends = [];
+    protected $sessions = [];
     protected $httpProxy;
     protected $httpProxyPort;
     protected $sslProxy;
@@ -277,6 +277,7 @@ class WebDriver extends CodeceptionModule implements
                 $this->httpProxy,
                 $this->httpProxyPort
             );
+            $this->sessions[] = $this->_backupSession();
         } catch (WebDriverCurlException $e) {
             throw new ConnectionException($e->getMessage() . "\n \nPlease make sure that Selenium Server or PhantomJS is running.");
         }
@@ -325,7 +326,6 @@ class WebDriver extends CodeceptionModule implements
     public function _after(TestCase $test)
     {
         if ($this->config['restart']) {
-            $this->cleanFriendsWebDriver();
             $this->cleanWebDriver();
             return;
         }
@@ -391,24 +391,18 @@ class WebDriver extends CodeceptionModule implements
 
     public function _afterSuite()
     {
-        $this->cleanFriendsWebDriver();
+        // this is just to make sure webDriver is cleared after suite
         $this->cleanWebDriver();
-    }
-
-    public function cleanFriendsWebDriver()
-    {
-        foreach ($this->friends as $friend) {
-            $friend->leave();
-        }
     }
 
     public function cleanWebDriver()
     {
-        // this is just to make sure webDriver is cleared after suite
-        if (isset($this->webDriver)) {
+        foreach ($this->sessions as $session) {
+            $this->_loadSession($session);
             $this->webDriver->quit();
             unset($this->webDriver);
         }
+        $this->sessions = [];
     }
 
     public function amOnSubdomain($subdomain)
@@ -1063,6 +1057,7 @@ class WebDriver extends CodeceptionModule implements
     public function _initializeSession()
     {
         $this->webDriver = RemoteWebDriver::create($this->wd_host, $this->capabilities);
+        $this->sessions[] = $this->_backupSession();
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
     }
 
@@ -1078,7 +1073,9 @@ class WebDriver extends CodeceptionModule implements
 
     public function _closeSession($webdriver)
     {
+        $key = array_shift(array_keys($this->sessions, $webDriver, true));
         $webdriver->quit();
+        unset($this->sessions[$key]);
     }
 
     /*
@@ -2485,21 +2482,5 @@ class WebDriver extends CodeceptionModule implements
         $x = $el->getLocation()->getX() + $offsetX;
         $y = $el->getLocation()->getY() + $offsetY;
         $this->webDriver->executeScript("window.scrollTo($x, $y)");
-    }
-
-    /**
-     * @param Friend $friend
-     */
-    public function _addFriend($friend)
-    {
-        $this->friends[$friend->getName()] = $friend;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function _deleteFriend($name)
-    {
-        unset($this->friends[$name]);
     }
 }
