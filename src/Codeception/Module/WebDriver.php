@@ -1071,10 +1071,10 @@ class WebDriver extends CodeceptionModule implements
         return $this->webDriver;
     }
 
-    public function _closeSession($webdriver)
+    public function _closeSession($webDriver)
     {
         $key = array_shift(array_keys($this->sessions, $webDriver, true));
-        $webdriver->quit();
+        $webDriver->quit();
         unset($this->sessions[$key]);
     }
 
