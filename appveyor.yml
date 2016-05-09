@@ -6,7 +6,7 @@ branches:
     - gh-pages
 
 services:
-  - mysql56
+  - mysql
   - postgresql93
 
 install:
