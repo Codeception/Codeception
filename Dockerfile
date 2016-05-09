@@ -41,4 +41,5 @@ RUN composer install --prefer-dist --optimize-autoloader
 # Add source-code
 COPY . /repo
 
-ENTRYPOINT ["./codecept"]
+ENV PATH /repo:${PATH}
+ENTRYPOINT ["codecept"]
