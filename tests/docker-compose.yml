@@ -4,7 +4,8 @@ services:
     image: testing/codeception/codeception
     build: ..
     volumes:
-      - ./_log:/repo/tests/log
+      - ../tests:/repo/tests
+      - ../codeception.yml:/repo/codeception.yml
       - ../src:/repo/src
       - ../shim.php:/repo/shim.php
     ports:

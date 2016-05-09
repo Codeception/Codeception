@@ -38,7 +38,11 @@ Start
 By default the image has `codecept` as its entrypoint, to run the tests simply supply the `run` command    
 
     docker-compose run --rm codecept help
-    
+
+Run suite
+
+    docker-compose run --rm codecept run cli
+
 Run single test
     
     docker-compose run --rm codecept run cli ExtensionsCest
