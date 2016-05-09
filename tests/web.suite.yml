@@ -3,7 +3,6 @@ modules:
   enabled: [WebDriver, WebHelper]
   config:
     WebDriver:
-      host: firefox
       url: http://localhost:8000
       browser: firefox
       window_size: 1200x768
@@ -24,5 +23,4 @@ env:
     modules:
       config:
         WebDriver:
-          host: chrome
           browser: chrome
