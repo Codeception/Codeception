@@ -46,7 +46,7 @@ EOF;
             /** @var $test \Codeception\Test\Gherkin  **/
             $steps = $test->getScenarioNode()->getSteps();
             if ($test->getFeatureNode()->hasBackground()) {
-//                $steps = array_merge($steps, $test->getFeatureNode()->getBackground()->getSteps());
+                $steps = array_merge($steps, $test->getFeatureNode()->getBackground()->getSteps());
             }
             foreach ($steps as $step) {
                 $matched = false;
