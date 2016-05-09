@@ -19,3 +19,4 @@ tests/data/claypit/c3tmp
 
 .DS_Store
 robo.phar
+.env
