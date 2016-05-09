@@ -10,9 +10,9 @@ In this case you should include either **Symfony2** or **ZF2** module and specif
 ```
 modules:
     enabled:
-        - Symfony2
+        - Symfony
         - Doctrine2:
-            depends: Symfony2
+            depends: Symfony
 ```
 
 If you don't use any of frameworks above, you should specify a callback function to receive entity manager:

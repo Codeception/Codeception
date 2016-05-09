@@ -41,26 +41,9 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         return $this->printer;
     }
 
-    public function doEnhancedRun(
-        \PHPUnit_Framework_Test $suite,
-        \PHPUnit_Framework_TestResult $result,
-        array $arguments = []
-    ) {
-        unset($GLOBALS['app']); // hook for not to serialize globals
-
+    public function prepareSuite(\PHPUnit_Framework_Test $suite, array &$arguments)
+    {
         $this->handleConfiguration($arguments);
-        $result->convertErrorsToExceptions(false);
-
-        if (empty(self::$persistentListeners)) {
-            $this->applyReporters($result, $arguments);
-        }
-
-        $arguments['listeners'][] = $this->printer;
-
-        // clean up listeners between suites
-        foreach ($arguments['listeners'] as $listener) {
-            $result->addListener($listener);
-        }
 
         $filterFactory = new \PHPUnit_Runner_Filter_Factory();
         if ($arguments['groups']) {
@@ -85,6 +68,27 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         }
 
         $suite->injectFilter($filterFactory);
+    }
+
+    public function doEnhancedRun(
+        \PHPUnit_Framework_Test $suite,
+        \PHPUnit_Framework_TestResult $result,
+        array $arguments = []
+    ) {
+        unset($GLOBALS['app']); // hook for not to serialize globals
+
+        $result->convertErrorsToExceptions(false);
+
+        if (empty(self::$persistentListeners)) {
+            $this->applyReporters($result, $arguments);
+        }
+
+        $arguments['listeners'][] = $this->printer;
+
+        // clean up listeners between suites
+        foreach ($arguments['listeners'] as $listener) {
+            $result->addListener($listener);
+        }
 
         $suite->run($result);
         unset($suite);

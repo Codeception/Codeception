@@ -186,8 +186,13 @@ class MongoDb extends CodeceptionModule
     public function haveInCollection($collection, array $data)
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
-        $collection->insert($data);
-        return $data['_id'];
+        if ($this->driver->isLegacy()) {
+            $collection->insert($data);
+            return $data['_id'];
+        } else {
+            $response = $collection->insertOne($data);
+            return $response->getInsertedId()->__toString();
+        }
     }
 
     /**
