@@ -1,5 +1,6 @@
 FROM php:5.6-cli
 
+# Install required system packages
 RUN apt-get update && \
     apt-get -y install \
             git \
@@ -19,6 +20,7 @@ RUN pecl install mongodb xdebug && \
     docker-php-ext-enable mongodb && \
     docker-php-ext-enable xdebug
 
+# Configure php
 RUN echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
 
 # Install composer
@@ -29,6 +31,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 RUN composer global require --optimize-autoloader \
         "hirak/prestissimo"
 
+# Prepare application
 WORKDIR /repo
 
 # Install vendor

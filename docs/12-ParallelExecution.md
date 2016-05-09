@@ -53,8 +53,8 @@ Cleanup
 
 In parallel
     
-    docker-compose -p test1 run --rm codecept run cli & \
-    docker-compose -p test2 run --rm codecept run unit
+    docker-compose --project-name test-cli run -d --rm codecept run --html report-cli.html cli & \
+    docker-compose --project-name test-unit run -d --rm codecept run --html report-unit.html unit
     
 Running custom tests
     
