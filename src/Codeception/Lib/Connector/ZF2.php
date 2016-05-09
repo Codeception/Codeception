@@ -76,6 +76,7 @@ class ZF2 extends Client
 
         $zendRequest->setQuery(new Parameters($query));
         $zendRequest->setPost(new Parameters($post));
+        $zendRequest->setFiles(new Parameters($request->getFiles()));
         $zendRequest->setContent($content);
         $zendRequest->setMethod($method);
         $zendRequest->setUri($uri);

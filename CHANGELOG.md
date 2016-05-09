@@ -33,6 +33,9 @@
 
 #### 2.1.9
 
+* [PhpBrowser] added `handler` and `middleware` config options to customize Guzzle handlers and middleware
+* Added full support of phpunit-bridge features.
+* [Laravel] Fixed issue where non-existing services were called in _before and _after methods. See #3028.
 * [WebDriver] fixed using `saveSessionSnapshot` with codecoverage. Closes #2923
 * [ZF2] create new instance of Application for each request
 
