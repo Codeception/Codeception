@@ -1,0 +1,21 @@
+version: '2'
+services:
+  codecept:
+    image: testing/codeception/codeception
+    build: ..
+    volumes:
+      - ./_log:/repo/tests/log
+      - ../src:/repo/src
+      - ../shim.php:/repo/shim.php
+    ports:
+      - '80'
+  test1:
+    extends:
+      service: codecept
+
+  firefox:
+    image: selenium/standalone-firefox-debug:2.52.0
+  chrome:
+    image: selenium/standalone-chrome-debug:2.52.0
+  redis:
+    image: redis:3

@@ -23,13 +23,34 @@ By the time of writing this chapter, we didn't have an awesome tool like it. Thi
 
 > Section is under construction
 
+Requirements:
+
+ - `docker` or [Docker Toolbox](https://www.docker.com/products/docker-toolbox)
+
 Build the `codeception/codeception` image
 
     docker-compose build
     
+Start 
+
+    docker-compose up -d    
+    
 By default the image has `codecept` as its entrypoint, to run the tests simply supply the `run` command    
 
-    docker-compose run codeception run
+    docker-compose run --rm codecept help
+    
+Run single test
+    
+    docker-compose run --rm codecept run cli ExtensionsCest
+    
+Cleanup
+
+    docker-compose run --rm codecept clean
+
+In parallel
+    
+    docker-compose -p test1 run --rm codecept run cli & \
+    docker-compose -p test2 run --rm codecept run unit
     
 Running custom tests
     

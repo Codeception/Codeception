@@ -15,8 +15,9 @@ RUN docker-php-ext-install \
     zip
 
 # Install pecl extensions
-RUN pecl install mongodb && \
-    docker-php-ext-enable mongodb
+RUN pecl install mongodb xdebug && \
+    docker-php-ext-enable mongodb && \
+    docker-php-ext-enable xdebug
 
 RUN echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
 
@@ -28,13 +29,13 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 RUN composer global require --optimize-autoloader \
         "hirak/prestissimo"
 
-WORKDIR /var/www
+WORKDIR /repo
 
 # Install vendor
-COPY ./composer.json /var/www/composer.json
+COPY ./composer.json /repo/composer.json
 RUN composer install --prefer-dist --optimize-autoloader
 
 # Add source-code
-COPY . /var/www
+COPY . /repo
 
 ENTRYPOINT ["./codecept"]
