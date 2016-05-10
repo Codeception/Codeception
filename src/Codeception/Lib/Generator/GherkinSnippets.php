@@ -46,13 +46,14 @@ EOF;
             /** @var $test \Codeception\Test\Gherkin  **/
             $steps = $test->getScenarioNode()->getSteps();
             if ($test->getFeatureNode()->hasBackground()) {
-//                $steps = array_merge($steps, $test->getFeatureNode()->getBackground()->getSteps());
+                $steps = array_merge($steps, $test->getFeatureNode()->getBackground()->getSteps());
             }
             foreach ($steps as $step) {
                 $matched = false;
                 $text = $step->getText();
                 foreach (array_keys($allSteps) as $pattern) {
                     if (preg_match($pattern, $text)) {
+                        echo "$pattern -> $text \n";
                         $matched = true;
                         break;
                     }
