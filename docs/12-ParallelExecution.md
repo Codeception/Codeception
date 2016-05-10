@@ -33,7 +33,7 @@ By the time of writing this chapter, we didn't have an awesome tool like it. Thi
 
 Running custom tests
     
-    docker run -v ${PWD}/tests:/var/www/tests codeception/codeception help
+    docker run -v ${PWD}:/project codeception/codeception help
 
 
 ### Local testing and development with `docker-compose`

@@ -3,6 +3,7 @@ services:
   codecept:
     image: testing/codeception/codeception
     build: ..
+    working_dir: /repo
     volumes:
       - ../tests:/repo/tests
       - ../codeception.yml:/repo/codeception.yml

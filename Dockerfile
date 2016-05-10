@@ -45,3 +45,7 @@ COPY . /repo
 
 ENV PATH /repo:${PATH}
 ENTRYPOINT ["codecept"]
+
+# Prepare host-volume working directory
+RUN mkdir /project
+WORKDIR /project
