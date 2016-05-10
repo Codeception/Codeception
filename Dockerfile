@@ -1,5 +1,7 @@
 FROM php:7.0-cli
 
+MAINTAINER Tobias Munk tobias@diemeisterei.de
+
 # Install required system packages
 RUN apt-get update && \
     apt-get -y install \
