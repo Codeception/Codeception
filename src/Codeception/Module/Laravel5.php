@@ -717,7 +717,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if ($auth->check()) {
-            $this->fail("There is no authenticated user");
+            $this->fail("There is an authenticated user");
         }
     }
 
