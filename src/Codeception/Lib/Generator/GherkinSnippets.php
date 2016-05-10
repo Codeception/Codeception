@@ -53,6 +53,7 @@ EOF;
                 $text = $step->getText();
                 foreach (array_keys($allSteps) as $pattern) {
                     if (preg_match($pattern, $text)) {
+                        echo "$pattern -> $text \n";
                         $matched = true;
                         break;
                     }

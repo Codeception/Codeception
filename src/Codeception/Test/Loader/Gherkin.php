@@ -121,9 +121,8 @@ class Gherkin implements LoaderInterface
             $pattern = preg_replace('~\\\\\((\w)\\\\\)~', '$1?', $pattern); // (s)
 
             // params
-            $pattern = preg_replace('~"?\\\:(\w+)"?~', '(?|\"(.*?)\"|(\d+))', $pattern);
-
-            $pattern = "/$pattern/";
+            $pattern = preg_replace('~"?\\\:(\w+)"?~', '(?|\"([^"]*?)\"|(\d+))', $pattern);
+            $pattern = "/^$pattern$/";
         }
         return $pattern;
     }
@@ -154,6 +153,7 @@ class Gherkin implements LoaderInterface
                     break;
                 }
             }
+            codecept_debug($steps);
 
             if ($scenarioNode instanceof OutlineNode) {
                 foreach ($scenarioNode->getExamples() as $example) {
