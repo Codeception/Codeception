@@ -232,4 +232,4 @@ Further Examples
       chrome:
         image: selenium/standalone-chrome-debug:2.52.0
       mongo:
-        image: mongodb
+        image: mongo
