@@ -38,7 +38,7 @@ Run Docker image
 Running tests from a project, by mounting the current path as a host-volume into the container.
 The default working directory in the container is `/project`.
     
-    docker run -v ${PWD}:/project codeception/codeception help
+    docker run -v ${PWD}:/project codeception/codeception run
 
 For local testing of the Codeception repository with Docker and `docker-copmose`, please refer to the [testing documentation](../tests/README.md). 
 
