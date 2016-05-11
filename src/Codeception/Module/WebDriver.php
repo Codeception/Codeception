@@ -397,7 +397,7 @@ class WebDriver extends CodeceptionModule implements
         $this->cleanWebDriver();
     }
 
-    public function cleanWebDriver()
+    protected function cleanWebDriver()
     {
         foreach ($this->sessions as $session) {
             $this->_loadSession($session);

@@ -2,6 +2,7 @@
 
 #### 2.1.9
 
+* [WebDriver] multi session testing with friends improved by @eXorus. Webdriver sessions are finished correctly; `leave()` method added to Friend class. See #3068
 * [PhpBrowser] added `handler` and `middleware` config options to customize Guzzle handlers and middleware
 * Added full support of phpunit-bridge features.
 * [Laravel] Fixed issue where non-existing services were called in _before and _after methods. See #3028.
