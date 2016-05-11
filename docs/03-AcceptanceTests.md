@@ -452,6 +452,19 @@ $I->see('Hello all!', '.message');
 
 In this case we did some actions in second window with `does` command on a friend object.
 
+Sometimes you may want to close a web page before the end of the test. For such cases you may use leave(). You can also specify roles for friend : 
+```php
+<?php
+
+$nickAdmin = $I->haveFriend('nickAdmin', adminStep::class);
+$nickAdmin->does(function(adminStep $I) {
+    // Admin does ...
+});
+$nickAdmin->leave();
+?>
+```
+
+
 ### Cleaning Things Up
 
 While testing, your actions may change the data on the site. Tests will fail if trying to create or update the same data twice. To avoid this problem, your database should be repopulated for each test. Codeception provides a `Db` module for that purpose. It will load a database dump after each passed test. To make repopulation work, create an sql dump of your database and put it into the __/tests/_data__ directory. Set the database connection and path to the dump in the global Codeception config.

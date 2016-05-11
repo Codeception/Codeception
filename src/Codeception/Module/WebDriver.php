@@ -247,6 +247,7 @@ class WebDriver extends CodeceptionModule implements
     protected $requestTimeoutInMs;
     protected $test;
     protected $sessionSnapshots = [];
+    protected $sessions = [];
     protected $httpProxy;
     protected $httpProxyPort;
     protected $sslProxy;
@@ -277,6 +278,7 @@ class WebDriver extends CodeceptionModule implements
                 $this->httpProxy,
                 $this->httpProxyPort
             );
+            $this->sessions[] = $this->_backupSession();
         } catch (WebDriverCurlException $e) {
             throw new ConnectionException($e->getMessage() . "\n \nPlease make sure that Selenium Server or PhantomJS is running.");
         }
@@ -324,12 +326,8 @@ class WebDriver extends CodeceptionModule implements
 
     public function _after(TestCase $test)
     {
-        if ($this->config['restart'] && isset($this->webDriver)) {
-            $this->webDriver->quit();
-            // RemoteWebDriver consists of four parts, executor, mouse, keyboard and touch, quit only set executor to null,
-            // but RemoteWebDriver doesn't provide public access to check on executor
-            // so we need to unset $this->webDriver here to shut it down completely
-            $this->webDriver = null;
+        if ($this->config['restart']) {
+            $this->cleanWebDriver();
             return;
         }
         if ($this->config['clear_cookies'] && isset($this->webDriver)) {
@@ -396,10 +394,21 @@ class WebDriver extends CodeceptionModule implements
     public function _afterSuite()
     {
         // this is just to make sure webDriver is cleared after suite
-        if (isset($this->webDriver)) {
-            $this->webDriver->quit();
+        $this->cleanWebDriver();
+    }
+
+    public function cleanWebDriver()
+    {
+        foreach ($this->sessions as $session) {
+            $this->_loadSession($session);
+            try {
+                $this->webDriver->quit();
+            } catch (UnknownServerException $e) {
+                // Session already closed so nothing to do
+            }
             unset($this->webDriver);
         }
+        $this->sessions = [];
     }
 
     public function amOnSubdomain($subdomain)
@@ -1021,6 +1030,7 @@ class WebDriver extends CodeceptionModule implements
                 $wdSelect->selectByVisibleText($opt);
                 $matched = true;
             } catch (NoSuchElementException $e) {
+                // exception treated at the end
             }
         }
         if ($matched) {
@@ -1031,6 +1041,7 @@ class WebDriver extends CodeceptionModule implements
                 $wdSelect->selectByValue($opt);
                 $matched = true;
             } catch (NoSuchElementException $e) {
+                // exception treated at the end
             }
         }
         if ($matched) {
@@ -1046,6 +1057,7 @@ class WebDriver extends CodeceptionModule implements
                     $optElement->click();
                 }
             } catch (NoSuchElementException $e) {
+                // exception treated at the end
             }
         }
         if ($matched) {
@@ -1057,6 +1069,7 @@ class WebDriver extends CodeceptionModule implements
     public function _initializeSession()
     {
         $this->webDriver = RemoteWebDriver::create($this->wd_host, $this->capabilities);
+        $this->sessions[] = $this->_backupSession();
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
     }
 
@@ -1070,9 +1083,16 @@ class WebDriver extends CodeceptionModule implements
         return $this->webDriver;
     }
 
-    public function _closeSession($webdriver)
+    public function _closeSession($webDriver)
     {
-        $webdriver->close();
+        $keys = array_keys($this->sessions, $webDriver, true);
+        $key = array_shift($keys);
+        try {
+            $webDriver->quit();
+        } catch (UnknownServerException $e) {
+            // Session already closed so nothing to do
+        }
+        unset($this->sessions[$key]);
     }
 
     /*
@@ -1098,12 +1118,14 @@ class WebDriver extends CodeceptionModule implements
                 $wdSelect->deselectByVisibleText($opt);
                 $matched = true;
             } catch (NoSuchElementException $e) {
+                // exception treated at the end
             }
 
             try {
                 $wdSelect->deselectByValue($opt);
                 $matched = true;
             } catch (NoSuchElementException $e) {
+                // exception treated at the end
             }
 
         }
@@ -2310,28 +2332,27 @@ class WebDriver extends CodeceptionModule implements
                     $wdSelect->selectByVisibleText($value);
                     $matched = true;
                 } catch (NoSuchElementException $e) {
+                // exception treated at the end
                 }
 
                 try {
                     $wdSelect->selectByValue($value);
                     $matched = true;
                 } catch (NoSuchElementException $e) {
+                // exception treated at the end
                 }
                 if ($matched) {
                     return;
                 }
 
                 throw new ElementNotFound(json_encode($value), "Option inside $field matched by name or value");
-                break;
             case "textarea":
                 $el->sendKeys($value);
                 return;
-                break;
             case "div": //allows for content editable divs
                 $el->sendKeys(WebDriverKeys::END);
                 $el->sendKeys($value);
                 return;
-                break;
             //Text, Checkbox, Radio
             case "input":
                 $type = $el->getAttribute('type');
@@ -2354,8 +2375,6 @@ class WebDriver extends CodeceptionModule implements
                     $el->sendKeys($value);
                     return;
                 }
-                break;
-            default:
         }
 
         throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
