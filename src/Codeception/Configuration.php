@@ -89,7 +89,8 @@ class Configuration
             'lint'       => true
         ],
         'coverage'   => [],
-        'params'     => []
+        'params'     => [],
+        'gherkin'    => []
     ];
 
     public static $defaultSuiteSettings = [
@@ -243,7 +244,7 @@ class Configuration
 
         // load global config
         $globalConf = $config['settings'];
-        foreach (['modules', 'coverage', 'namespace', 'groups', 'env'] as $key) {
+        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'gherkin'] as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }
