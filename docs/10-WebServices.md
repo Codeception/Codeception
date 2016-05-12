@@ -20,9 +20,9 @@ Configure modules in `api.suite.yml`:
 class_name: ApiTester
 modules:
     enabled:
-		- REST:
-			url: http://serviceapp/api/v1/
-			depends: PhpBrowser
+        - REST:
+            url: http://serviceapp/api/v1/
+            depends: PhpBrowser
 ```
 
 The REST module will connect to `PhpBrowser` according to this configuration. Depending on the web service we may deal with XML or JSON responses. Codeception handles both data formats well, however If you don't need one of them, you can explicitly specify that the JSON or XML parts of the module will be used:
@@ -31,10 +31,10 @@ The REST module will connect to `PhpBrowser` according to this configuration. De
 class_name: ApiTester
 modules:
     enabled:
-		- REST:
-			url: http://serviceapp/api/v1/
-			depends: PhpBrowser
-			part: Json
+        - REST:
+            url: http://serviceapp/api/v1/
+            depends: PhpBrowser
+            part: Json
 ```
 
 API tests can be functional and be executed using Symfony2, Laravel4, Laravel5, Zend, or any other framework module. You will need slightly update configuration for it: 
@@ -44,9 +44,9 @@ API tests can be functional and be executed using Symfony2, Laravel4, Laravel5, 
 class_name: ApiTester
 modules:
     enabled:
-		- REST:
-			url: /api/v1/
-			depends: Laravel5
+        - REST:
+            url: /api/v1/
+            depends: Laravel5
 ```
 
 Once we have configured our new testing suite, we can create the first sample test:
@@ -80,11 +80,11 @@ The last line of the previous example verified that the response contained the p
 $I->seeResponseContainsJson(['result' => 'ok']);
 // it can match tree-like structures as well
 $I->seeResponseContainsJson([
-	'user' => [
-			'name' => 'davert',
-			'email' => 'davert@codeception.com',
-			'status' => 'inactive'
-	]
+  'user' => [
+      'name' => 'davert',
+      'email' => 'davert@codeception.com',
+      'status' => 'inactive'
+  ]
 ]);
 ?>
 ```
@@ -96,11 +96,11 @@ You may want to perform even more complex assertions on a response. This can be 
 namespace Helper;
 class Api extends \Codeception\Module
 {
-	public function seeResponseIsHtml()
-	{
-		$response = $this->getModule('REST')->response;
-        \PHPUnit_Framework_Assert::assertRegex('~^<!DOCTYPE HTML(.*?)<html>.*?<\/html>~m', $response);
-	}
+  public function seeResponseIsHtml()
+  {
+    $response = $this->getModule('REST')->response;
+    $this->assertRegExp('~^<!DOCTYPE HTML(.*?)<html>.*?<\/html>~m', $response);
+  }
 }
 ?>
 ```
@@ -159,11 +159,11 @@ $I->sendGET('/users.xml');
 $I->seeResponseIsXml();
 $I->seeXmlResponseMatchesXpath('//user/login');
 $I->seeXmlResponseIncludes(XmlUtils::toXml(
-		'user' => [
-			'name' => 'davert',
-			'email' => 'davert@codeception.com',
-			'status' => 'inactive'
-	]
+    'user' => [
+      'name' => 'davert',
+      'email' => 'davert@codeception.com',
+      'status' => 'inactive'
+  ]
 ));
 ?>
 ```
@@ -185,9 +185,9 @@ Let's configure `SOAP` module to be used with `PhpBrowser`:
 class_name: ApiTester
 modules:
     enabled:
-		- SOAP:
-			depends: PhpBrowser
-			endpoint: http://serviceapp/api/v1/
+    - SOAP:
+      depends: PhpBrowser
+      endpoint: http://serviceapp/api/v1/
 ```
 
 SOAP request may contain application specific information, like authentication or payment. This information is provided with SOAP header inside the `<soap:Header>` element of XML request. In case you need to submit such header, you can use `haveSoapHeader` action. For example, next line of code
@@ -202,8 +202,8 @@ will produce this XML header
 ```xml
 <soap:Header>
 <Auth>
-	<username>Miles</username>
-	<password>123456</password>
+  <username>Miles</username>
+  <password>123456</password>
 </Auth>
 </soap:Header>
 ```
@@ -221,8 +221,8 @@ This call will be translated to XML:
 ```xml
 <soap:Body>
 <ns:CreateUser>
-	<name>Miles Davis</name>
-	<email>miles@davis.com</email>
+  <name>Miles Davis</name>
+  <email>miles@davis.com</email>
 </ns:CreateUser>
 </soap:Body>
 ```
@@ -249,10 +249,10 @@ $I = new ApiTester($scenario);
 $I->wantTo('create user');
 $I->haveSoapHeader('Session', array('token' => '123456'));
 $I->sendSoapRequest('CreateUser', Xml::build()
-	->user->email->val('miles@davis.com'));
+  ->user->email->val('miles@davis.com'));
 $I->seeSoapResponseIncludes(Xml::build()
-	->result->val('Ok')
-		->user->attr('id', 1)
+  ->result->val('Ok')
+    ->user->attr('id', 1)
 );
 ?>
 ```
@@ -266,11 +266,11 @@ You may extend current functionality by using `SOAP` module in your helper class
 namespace Helper;
 class Api extends \Codeception\Module {
 
-	public function seeResponseIsValidOnSchema($schema)
-	{
-		$response = $this->getModule('SOAP')->response;
-		$this->assertTrue($response->schemaValidate($schema));
-	}
+  public function seeResponseIsValidOnSchema($schema)
+  {
+    $response = $this->getModule('SOAP')->response;
+    $this->assertTrue($response->schemaValidate($schema));
+  }
 }
 ?>
 ```

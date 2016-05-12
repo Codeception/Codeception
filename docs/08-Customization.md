@@ -260,6 +260,25 @@ extensions:
 
 Now Admin group class will listen to all events of tests that belong to the `admin` group.
 
+## Custom Reporters
+
+In order to customize output you can use Extensions, as it is done in [SimpleOutput Extension](https://github.com/Codeception/Codeception/blob/master/ext%2FSimpleOutput.php).
+But what if you need to change output format of XML or JSON results triggered with `--xml` or `--json` options?
+Codeception uses printers from PHPUnit and overrides some of them. If you need to customize one of standard reporters you can override them too.
+If you are thinking on implementing your own reporter you should add `reporters` section to `codeception.yml` and override one of standard printer classes to your own:
+
+```yaml
+reporters: 
+    xml: Codeception\PHPUnit\Log\JUnit
+    html: Codeception\PHPUnit\ResultPrinter\HTML
+    tap: PHPUnit_Util_Log_TAP
+    json: PHPUnit_Util_Log_JSON
+    report: Codeception\PHPUnit\ResultPrinter\Report
+```
+
+All reporters implement [PHPUnit_Framework_TestListener](https://phpunit.de/manual/current/en/extending-phpunit.html#extending-phpunit.PHPUnit_Framework_TestListener) interface.
+It is recommended to read the code of original reporter before overriding it.
+
 ## Conclusion
 
 Each feature mentioned above may dramatically help when using Codeception to automate testing of large projects, although some features may require advanced knowledge of PHP. There is no "best practice" or "use cases" when we talk about groups, extensions, or other powerful features of Codeception. If you see you have a problem that can be solved using these extensions, then give them a try.
