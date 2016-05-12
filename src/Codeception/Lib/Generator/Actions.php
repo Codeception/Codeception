@@ -159,13 +159,11 @@ EOF;
     {
         $params = [];
         foreach ($refMethod->getParameters() as $param) {
-
             if ($param->isOptional()) {
                 $params[] = '$' . $param->name . ' = null';
             } else {
                 $params[] = '$' . $param->name;
             };
-
         }
         return implode(', ', $params);
     }
@@ -215,4 +213,4 @@ EOF;
     {
         return $this->numMethods;
     }
-} 
+}

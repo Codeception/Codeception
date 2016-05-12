@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Util\Shared;
 
 trait Namespaces

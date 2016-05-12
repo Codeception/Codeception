@@ -1,7 +1,9 @@
 <?php
 
+// @codingStandardsIgnoreStart
 class PHPUnit_Util_Filter
 {
+// @codingStandardsIgnoreEnd
     protected static $filteredClassesPattern = [
         'Symfony\Component\Console',
         'Codeception\Command\\',

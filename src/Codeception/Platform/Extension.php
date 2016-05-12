@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Platform;
 
 use Codeception\Extension as BaseExtension;
