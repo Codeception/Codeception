@@ -24,7 +24,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     protected $val = null;
     protected $assocArray = null;
 
-    function __construct($val = null)
+    public function __construct($val = null)
     {
         $this->val = $val;
         if (is_array($this->val)) {
@@ -38,7 +38,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
-    function __toString()
+    public function __toString()
     {
         if ($this->val === null) {
             return "?";
@@ -54,7 +54,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         return $this->val;
     }
 
-    function __get($key)
+    public function __get($key)
     {
         if ($this->val === null) {
             return new Maybe();
@@ -69,7 +69,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         return $this->val->key;
     }
 
-    function __set($key, $val)
+    public function __set($key, $val)
     {
         if ($this->val === null) {
             return;
@@ -83,7 +83,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         $this->val->key = $val;
     }
 
-    function __call($method, $args)
+    public function __call($method, $args)
     {
         if ($this->val === null) {
             return new Maybe();
@@ -91,7 +91,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         return call_user_func_array([$this->val, $method], $args);
     }
 
-    function __clone()
+    public function __clone()
     {
         if (is_object($this->val)) {
             $this->val = clone $this->val;

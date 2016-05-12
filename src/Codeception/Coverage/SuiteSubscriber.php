@@ -28,11 +28,11 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     protected $coverage;
     protected $logDir;
     protected $options;
-    static $events = [];
+    public static $events = [];
 
     abstract protected function isEnabled();
 
-    function __construct($options = [])
+    public function __construct($options = [])
     {
         $this->options = $options;
         $this->logDir = Configuration::outputDir();

@@ -691,7 +691,8 @@ EOF;
     {
         $response = $this->connectionModule->_getResponseContent();
         $this->assertGreaterThan(
-            0, (new JsonArray($response))->filterByXPath($xpath)->length,
+            0,
+            (new JsonArray($response))->filterByXPath($xpath)->length,
             "Received JSON did not match the XPath `$xpath`.\nJson Response: \n" . $response
         );
     }
@@ -1105,5 +1106,4 @@ EOF;
     {
         $this->client->followRedirects(true);
     }
-
 }

@@ -68,7 +68,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $this->client = new Yii2Connector();
         $this->client->configFile = Configuration::projectDir().$this->config['configFile'];
         $mainConfig = Configuration::config();
-        if (isset($mainConfig['config']) && isset($mainConfig['config']['test_entry_url'])){
+        if (isset($mainConfig['config']) && isset($mainConfig['config']['test_entry_url'])) {
             $this->client->setServerParameter(
                 'HTTPS',
                 parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME) === 'https'
@@ -280,4 +280,3 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         return array_unique($domains);
     }
 }
-

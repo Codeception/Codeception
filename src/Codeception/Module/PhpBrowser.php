@@ -190,7 +190,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
      * $I->amOnPage('some-other-page.php');
      * ?>
      * ```
-     * 
+     *
      * @param string $name the name of the header to delete.
      */
     public function deleteHeader($name)

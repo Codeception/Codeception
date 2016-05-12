@@ -154,7 +154,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             throw new ConfigurationException("Reporter $name not defined");
         }
         return (new \ReflectionClass($this->config['reporters'][$name]))->newInstanceArgs($args);
-
     }
 
     private function absolutePath($path)

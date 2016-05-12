@@ -138,16 +138,14 @@ class Scenario
         $text = str_replace(['"\'', '\'"'], ["'", "'"], $text);
         $text = "<h3>" . strtoupper('I want to ' . $this->getFeature()) . "</h3>" . $text;
         return $text;
-
     }
 
     public function getText()
     {
         $text = implode("\r\n", $this->getSteps());
-        $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
+        $text = str_replace(array('"\'', '\'"'), array("'", "'"), $text);
         $text = strtoupper('I want to ' . $this->getFeature()) . str_repeat("\r\n", 2) . $text . str_repeat("\r\n", 2);
         return $text;
-
     }
 
     public function comment($comment)
@@ -186,5 +184,4 @@ class Scenario
         \Codeception\Lib\Notification::deprecate("Scenario is always running. Please remove \$scenario->running() call.", $this->getFeature());
         return true;
     }
-
 }

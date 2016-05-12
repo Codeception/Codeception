@@ -374,7 +374,9 @@ class Configuration
         return array_map(
             function ($m) {
                 return is_array($m) ? key($m) : $m;
-            }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled'])
+            },
+            $settings['modules']['enabled'],
+            array_keys($settings['modules']['enabled'])
         );
     }
 

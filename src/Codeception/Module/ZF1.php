@@ -108,7 +108,8 @@ class ZF1 extends Framework
         // Ensure library/ is on include_path
         set_include_path(
             implode(
-                PATH_SEPARATOR, [
+                PATH_SEPARATOR,
+                [
                     LIBRARY_PATH,
                     get_include_path(),
                 ]

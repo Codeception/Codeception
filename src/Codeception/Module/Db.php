@@ -73,21 +73,21 @@ use Codeception\TestCase;
  *              reconnect: true
  *
  * ### SQL data dump
- * 
+ *
  *  * Comments are permitted.
  *  * The `dump.sql` may contain multiline statements.
  *  * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
- *  
+ *
  * ```sql
  * -- Add a few contacts to the table.
  * REPLACE INTO `Contacts` (`created`, `modified`, `status`, `contact`, `first`, `last`) VALUES
  * (NOW(), NOW(), 1, 'Bob Ross', 'Bob', 'Ross'),
  * (NOW(), NOW(), 1, 'Fred Flintstone', 'Fred', 'Flintstone');
- * 
+ *
  * -- Remove existing orders for testing.
  * DELETE FROM `Order`;
  * ```
- * 
+ *
  * ## Public Properties
  * * dbh - contains the PDO connection
  * * driver - contains the Connection Driver
@@ -139,7 +139,6 @@ class Db extends CodeceptionModule implements DbInterface
     public function _initialize()
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
-
             if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
                 throw new ModuleConfigException(
                     __CLASS__,
@@ -174,7 +173,7 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
-                list ($missingDriver,) = explode(':', $this->config['dsn'], 2);
+                list ($missingDriver, ) = explode(':', $this->config['dsn'], 2);
                 $message = "could not find $missingDriver driver";
             }
 

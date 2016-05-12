@@ -22,7 +22,7 @@ class Console implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
-    static $events = [
+    public static $events = [
         Events::SUITE_BEFORE    => 'beforeSuite',
         Events::SUITE_AFTER     => 'afterSuite',
         Events::TEST_START      => 'startTest',
@@ -106,10 +106,12 @@ class Console implements EventSubscriberInterface
         if ($e->getSuite() instanceof Suite) {
             $message = $this->message(
                 implode(
-                    ', ', array_map(
+                    ', ',
+                    array_map(
                         function ($module) {
                             return $module->_getName();
-                        }, $e->getSuite()->getModules()
+                        },
+                        $e->getSuite()->getModules()
                     )
                 )
             );
@@ -298,7 +300,6 @@ class Console implements EventSubscriberInterface
             }
         }
         $message->writeln();
-
     }
 
     protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
@@ -330,7 +331,7 @@ class Console implements EventSubscriberInterface
                 break;
             }
         }
-        $this->printException($fail,$failedStep);
+        $this->printException($fail, $failedStep);
 
         $this->printScenarioTrace($failedTest, $failToString);
         if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
@@ -424,12 +425,13 @@ class Console implements EventSubscriberInterface
         $trace = array_reverse($failedTest->getScenario()->getSteps());
         $length = $i = count($trace);
 
-        if (!$length) return;
+        if (!$length) {
+            return;
+        }
 
         $this->message("\nScenario Steps:\n")->style('comment')->writeln();
 
         foreach ($trace as $step) {
-
             $message = $this
                 ->message($i)
                 ->prepend(' ')
@@ -506,7 +508,9 @@ class Console implements EventSubscriberInterface
             $this->message = $this
                 ->message('%s::%s')
                 ->with($this->cutNamespace(get_class($test)), $test->getName(true))
-                ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
+                ->apply(function ($str) {
+                    return str_replace('with data set', "|", $str);
+                })
                 ->cut($inProgress ? $this->columns[0] + $this->columns[1] - 16 : $this->columns[0] - 2)
                 ->style('focus')
                 ->prepend($inProgress ? 'Running ' : '');
@@ -518,7 +522,9 @@ class Console implements EventSubscriberInterface
         if ($feature) {
             $this->message = $this
                 ->message($inProgress ? $feature : (mb_strtoupper(mb_substr($feature, 0, 1, 'utf-8'), 'utf-8') . mb_substr($feature, 1, null, 'utf-8')))
-                ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
+                ->apply(function ($str) {
+                    return str_replace('with data set', "|", $str);
+                })
                 ->cut($inProgress ? $this->columns[0] + $this->columns[1] - 18 - strlen($filename) : $this->columns[0] - 5 - strlen($filename))
                 ->style('focus')
                 ->prepend($inProgress ? 'Trying to ' : '')

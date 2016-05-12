@@ -45,6 +45,5 @@ class Report extends ResultPrinter implements ConsolePrinter
 
     public function printResult(\PHPUnit_Framework_TestResult $result)
     {
-
     }
 }

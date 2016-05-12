@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
-
 /**
  * Create new test suite. Requires suite name and actor name
  *
@@ -86,10 +85,12 @@ modules:
         - {{helper}}
 EOF;
 
-        $this->save($dir . $suite . '.suite.yml', (new Template($conf))
-            ->place('actor', $actorName . $config['actor'])
-            ->place('helper', $gen->getHelperName())
-            ->produce()
+        $this->save(
+            $dir . $suite . '.suite.yml',
+            (new Template($conf))
+                ->place('actor', $actorName . $config['actor'])
+                ->place('helper', $gen->getHelperName())
+                ->produce()
         );
 
         $output->writeln("<info>Suite $suite generated</info>");

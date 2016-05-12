@@ -138,5 +138,4 @@ class GenerateScenarios extends Command
         $name = preg_replace('/_Cest$/', '', $name);
         return $name;
     }
-
 }

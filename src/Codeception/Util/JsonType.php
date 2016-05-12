@@ -160,7 +160,7 @@ class JsonType
     protected function matchFilter($filter, $value)
     {
         $filter = trim($filter);
-        if (strpos($filter,'!') === 0) {
+        if (strpos($filter, '!') === 0) {
             return !$this->matchFilter(substr($filter, 1), $value);
         }
 
@@ -202,5 +202,4 @@ class JsonType
             return (float)$value < (float)$matches[1];
         }
     }
-
 }

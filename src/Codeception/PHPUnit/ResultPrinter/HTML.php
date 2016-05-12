@@ -46,7 +46,6 @@ class HTML extends CodeceptionResultPrinter
 
         $this->templatePath = sprintf(
             '%s%stemplate%s',
-
             dirname(__FILE__),
             DIRECTORY_SEPARATOR,
             DIRECTORY_SEPARATOR
@@ -74,11 +73,20 @@ class HTML extends CodeceptionResultPrinter
         $this->timeTaken += $time;
 
         switch ($this->testStatus) {
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE: $scenarioStatus = 'scenarioFailed'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED: $scenarioStatus = 'scenarioSkipped'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE: $scenarioStatus = 'scenarioIncomplete'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR: $scenarioStatus = 'scenarioFailed'; break;
-            default: $scenarioStatus = 'scenarioSuccess';
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE:
+                $scenarioStatus = 'scenarioFailed';
+                break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED:
+                $scenarioStatus = 'scenarioSkipped';
+                break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE:
+                $scenarioStatus = 'scenarioIncomplete';
+                break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR:
+                $scenarioStatus = 'scenarioFailed';
+                break;
+            default:
+                $scenarioStatus = 'scenarioSuccess';
         }
 
         $stepsBuffer = '';
@@ -141,7 +149,6 @@ class HTML extends CodeceptionResultPrinter
         $suiteTemplate->setVar(['suite' => ucfirst($suite->getName())]);
 
         $this->scenarios .= $suiteTemplate->render();
-
     }
 
     /**
@@ -150,7 +157,6 @@ class HTML extends CodeceptionResultPrinter
      */
     protected function endRun()
     {
-
         $scenarioHeaderTemplate = new \Text_Template(
             $this->templatePath . 'scenario_header.html'
         );

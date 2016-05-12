@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Lib\Interfaces;
 
-interface ConflictsWithModule 
+interface ConflictsWithModule
 {
     /**
      * Returns class name or interface of module which can conflict with current.

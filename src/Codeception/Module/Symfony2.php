@@ -162,15 +162,16 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     {
         $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
-            throw new ModuleRequireException(__CLASS__,
+            throw new ModuleRequireException(
+                __CLASS__,
                 "Symfony2 bootstrap file not found in $cache\n \n" .
                 "Please specify path to bootstrap file using `var_path` config option\n \n" .
                 "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
                 "modules:\n    enabled:\n" .
                 "    - Symfony2:\n" .
                 "        var_path: '../../app'\n" .
-                "        app_path: '../../app'");
-
+                "        app_path: '../../app'"
+            );
         }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();

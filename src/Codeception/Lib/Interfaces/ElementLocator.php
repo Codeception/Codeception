@@ -29,5 +29,4 @@ interface ElementLocator
      * @return array of interactive elements
      */
     public function _findElements($locator);
-
 }

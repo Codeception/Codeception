@@ -366,7 +366,6 @@ class WebDriver extends CodeceptionModule implements
             // https://github.com/SeleniumHQ/selenium/issues/468
             $this->debug("Unable to retrieve Selenium logs");
         }
-
     }
 
     /**
@@ -544,7 +543,8 @@ class WebDriver extends CodeceptionModule implements
         $cookies = array_map(
             function ($c) {
                 return $c['name'];
-            }, $cookies
+            },
+            $cookies
         );
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertContains($cookie, $cookies);
@@ -556,7 +556,8 @@ class WebDriver extends CodeceptionModule implements
         $cookies = array_map(
             function ($c) {
                 return $c['name'];
-            }, $cookies
+            },
+            $cookies
         );
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertNotContains($cookie, $cookies);
@@ -1127,7 +1128,6 @@ class WebDriver extends CodeceptionModule implements
             } catch (NoSuchElementException $e) {
                 // exception treated at the end
             }
-
         }
 
         if ($matched) {
@@ -1302,7 +1302,8 @@ class WebDriver extends CodeceptionModule implements
                     return $e->getAttribute($attribute);
                 }
                 return $e->getText();
-            }, $els
+            },
+            $els
         );
     }
 
@@ -1997,7 +1998,6 @@ class WebDriver extends CodeceptionModule implements
             return $wd->executeScript($script);
         };
         $this->webDriver->wait($timeout)->until($condition);
-
     }
 
     /**
@@ -2323,7 +2323,6 @@ class WebDriver extends CodeceptionModule implements
         $el = $this->findField($field);
 
         switch ($el->getTagName()) {
-
             //Multiple select
             case "select":
                 $matched = false;
@@ -2332,14 +2331,14 @@ class WebDriver extends CodeceptionModule implements
                     $wdSelect->selectByVisibleText($value);
                     $matched = true;
                 } catch (NoSuchElementException $e) {
-                // exception treated at the end
+                    // exception treated at the end
                 }
 
                 try {
                     $wdSelect->selectByValue($value);
                     $matched = true;
                 } catch (NoSuchElementException $e) {
-                // exception treated at the end
+                    // exception treated at the end
                 }
                 if ($matched) {
                     return;

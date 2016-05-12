@@ -313,7 +313,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
     {
         $record = $this->getModelRecord($model);
         $res = $record->save($attributes);
-        $field = function($field) {
+        $field = function ($field) {
             if (is_array($field)) {
                 return implode(', ', $field);
             }

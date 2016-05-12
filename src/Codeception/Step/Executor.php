@@ -23,5 +23,4 @@ class Executor extends CodeceptionStep
 
         return $callable();
     }
-
 }

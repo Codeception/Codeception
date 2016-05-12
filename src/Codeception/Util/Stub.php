@@ -500,7 +500,7 @@ class Stub
         $reflectionClass = new \ReflectionClass($mock);
         if ($mock instanceof \PHPUnit_Framework_MockObject_MockObject) {
             $parentClass = $reflectionClass->getParentClass();
-            if ($parentClass !== FALSE) {
+            if ($parentClass !== false) {
                 $reflectionClass = $reflectionClass->getParentClass();
             }
         }

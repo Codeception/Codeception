@@ -11,5 +11,4 @@ use Codeception\Extension as BaseExtension;
  */
 abstract class Extension extends BaseExtension
 {
-
 }

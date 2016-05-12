@@ -135,7 +135,6 @@ EOF;
                 ->place('action', str_replace('dont', 'cant', $refMethod->name))
                 ->place('step', 'ConditionalAssertion')
                 ->produce();
-
         } elseif (0 === strpos($refMethod->name, 'am')) {
             $type = 'Condition';
         } else {

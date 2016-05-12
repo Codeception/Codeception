@@ -254,7 +254,7 @@ class Locator
      * ```php
      * Locator::lastElement('//table/tr');
      * ```
-     * 
+     *
      * @param $element
      * @return mixed
      */
@@ -271,21 +271,21 @@ class Locator
      */
     public static function humanReadableString($selector)
     {
-       if (is_string($selector)) {
-          return "'$selector'";
-       }
-       if (is_array($selector)) {
-          $type = strtolower(key($selector));
-          $locator = $selector[$type];
-          return "$type '$locator'";
-       }
-       if (class_exists('\Facebook\WebDriver\WebDriverBy')) {
-          if ($selector instanceof \Facebook\WebDriver\WebDriverBy) {
-             $type = $selector->getMechanism();
-             $locator = $selector->getValue();
-             return "$type '$locator'";
-          }
-       }
-       throw new \InvalidArgumentException("Unrecognized selector");
+        if (is_string($selector)) {
+            return "'$selector'";
+        }
+        if (is_array($selector)) {
+            $type = strtolower(key($selector));
+            $locator = $selector[$type];
+            return "$type '$locator'";
+        }
+        if (class_exists('\Facebook\WebDriver\WebDriverBy')) {
+            if ($selector instanceof \Facebook\WebDriver\WebDriverBy) {
+                $type = $selector->getMechanism();
+                $locator = $selector->getValue();
+                return "$type '$locator'";
+            }
+        }
+        throw new \InvalidArgumentException("Unrecognized selector");
     }
 }

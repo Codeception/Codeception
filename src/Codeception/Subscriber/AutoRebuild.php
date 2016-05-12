@@ -11,7 +11,7 @@ class AutoRebuild implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
-    static $events = [
+    public static $events = [
         Events::SUITE_INIT => 'updateActor'
     ];
 

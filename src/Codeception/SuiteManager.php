@@ -231,7 +231,4 @@ class SuiteManager
         $t->initConfig();
         $this->di->injectDependencies($t);
     }
-
-
 }
-

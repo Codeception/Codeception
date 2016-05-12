@@ -211,5 +211,4 @@ class Cest extends CodeceptionTestCase implements
             $this->invoke("_$hook", [$I, $this->scenario]);
         }
     }
-
 }

@@ -176,7 +176,7 @@ EOF;
 
     protected function createAcceptanceSuite($actor = 'Acceptance')
     {
-            $suiteConfig = <<<EOF
+        $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
 #
 # Suite for acceptance tests.
@@ -244,5 +244,4 @@ EOF;
             '/* Replace this file with actual dump of your database */'
         );
     }
-
 }

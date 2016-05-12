@@ -162,7 +162,6 @@ abstract class Step
     public function getMetaStep()
     {
         return $this->metaStep;
-
     }
 
     public function __toString()

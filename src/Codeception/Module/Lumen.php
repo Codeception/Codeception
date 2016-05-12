@@ -245,7 +245,7 @@ class Lumen extends Framework implements ActiveRecord
     {
         $url = $route['uri'];
 
-        while(count($params) > 0) {
+        while (count($params) > 0) {
             $param = array_shift($params);
             $url = preg_replace('/{.+?}/', $param, $url, 1);
         }
@@ -453,5 +453,4 @@ class Lumen extends Framework implements ActiveRecord
         }
         return $query->first();
     }
-
 }

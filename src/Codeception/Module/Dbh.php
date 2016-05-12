@@ -77,7 +77,6 @@ class Dbh extends CodeceptionModule implements DbInterface
 
     public function _after(TestCase $test)
     {
-
         if (!self::$dbh) {
             throw new ModuleConfigException(
                 __CLASS__,

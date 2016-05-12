@@ -103,8 +103,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * @throws ExternalUrlException
      * @see `_loadPage`
      */
-    public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
-    {
+    public function _request(
+        $method,
+        $uri,
+        array $parameters = [],
+        array $files = [],
+        array $server = [],
+        $content = null
+    ) {
         $this->clientRequest($method, $uri, $parameters, $files, $server, $content, false);
         return $this->_getResponseContent();
     }
@@ -196,8 +202,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * @param array $server
      * @param null $content
      */
-    public function _loadPage($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
-    {
+    public function _loadPage(
+        $method,
+        $uri,
+        array $parameters = [],
+        array $files = [],
+        array $server = [],
+        $content = null
+    ) {
         $this->crawler = $this->clientRequest($method, $uri, $parameters, $files, $server, $content);
         $this->forms = [];
     }
@@ -1043,7 +1055,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             );
         }
         return $nodes;
-
     }
 
     public function grabTextFrom($cssOrXPathOrRegex)
@@ -1226,7 +1237,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             );
         } else {
             $this->assertEquals(
-                $expected, $counted,
+                $expected,
+                $counted,
                 'Number of elements counted differs from expected number'
             );
         }
@@ -1487,7 +1499,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     /**
      * Moves back in history.
-     * 
+     *
      * @param int $numberOfSteps (default value 1)
      */
     public function moveBack($numberOfSteps = 1)
@@ -1503,7 +1515,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         } catch (\LogicException $e) {
             throw new \InvalidArgumentException('numberOfSteps is set to ' . $numberOfSteps . ', but there are only ' . ($numberOfSteps - $i) . ' previous steps in the history');
         }
-        $this->_loadPage($request->getMethod(),$request->getUri(), $request->getParameters(), $request->getFiles(), $request->getServer(), $request->getContent());
+        $this->_loadPage($request->getMethod(), $request->getUri(), $request->getParameters(), $request->getFiles(), $request->getServer(), $request->getContent());
     }
 
     protected function debugCookieJar()
@@ -1516,7 +1528,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected function setCookiesFromOptions()
     {
         if (isset($this->config['cookies']) && is_array($this->config['cookies']) && !empty($this->config['cookies'])) {
-
             $domain = parse_url($this->config['url'], PHP_URL_HOST);
             $cookieJar = $this->client->getCookieJar();
             foreach ($this->config['cookies'] as &$cookie) {
@@ -1538,8 +1549,15 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 if (!isset($cookie['HttpOnly'])) {
                     $cookie['HttpOnly'] = false;
                 }
-                $cookieJar->set(new \Symfony\Component\BrowserKit\Cookie($cookie['Name'], $cookie['Value'],
-                    $cookie['Expires'], $cookie['Path'], $cookie['Domain'], $cookie['Secure'], $cookie['HttpOnly']));
+                $cookieJar->set(new \Symfony\Component\BrowserKit\Cookie(
+                    $cookie['Name'],
+                    $cookie['Value'],
+                    $cookie['Expires'],
+                    $cookie['Path'],
+                    $cookie['Domain'],
+                    $cookie['Secure'],
+                    $cookie['HttpOnly']
+                ));
             }
         }
     }

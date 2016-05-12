@@ -898,7 +898,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         try {
             return $this->modelFactory($model, $name, $times)->create($attributes);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
         }
     }
@@ -927,7 +927,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         try {
             return $this->modelFactory($model, $name, $times)->make($attributes);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->fail("Could not make model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
         }
     }

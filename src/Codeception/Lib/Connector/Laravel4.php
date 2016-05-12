@@ -30,7 +30,7 @@ class Laravel4 extends Client
      *
      * @param \Codeception\Module\Laravel4 $module
      */
-    public function  __construct($module)
+    public function __construct($module)
     {
         $this->module = $module;
         $this->initialize();

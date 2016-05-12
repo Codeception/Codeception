@@ -3,7 +3,7 @@
 // @codingStandardsIgnoreStart
 class PHPUnit_Util_Filter
 {
-// @codingStandardsIgnoreEnd
+    // @codingStandardsIgnoreEnd
     protected static $filteredClassesPattern = [
         'Symfony\Component\Console',
         'Codeception\Command\\',
@@ -20,7 +20,6 @@ class PHPUnit_Util_Filter
         }
 
         foreach ($trace as $step) {
-
             if (self::classIsFiltered($step) and $filter) {
                 continue;
             }

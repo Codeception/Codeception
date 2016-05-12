@@ -26,5 +26,4 @@ class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
 
         $this->onTest($test->toString(), $success, $steps, $time);
     }
-
 }

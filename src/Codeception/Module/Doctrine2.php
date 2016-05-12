@@ -212,7 +212,6 @@ EOF;
      */
     public function persistEntity($obj, $values = [])
     {
-
         if ($values) {
             $reflectedObj = new \ReflectionClass($obj);
             foreach ($values as $key => $val) {
@@ -258,7 +257,8 @@ EOF;
         }
 
         $mock = Stub::make(
-            $customRepositoryClassName, array_merge(
+            $customRepositoryClassName,
+            array_merge(
                 [
                     '_entityName' => $metadata->name,
                     '_em' => $em,

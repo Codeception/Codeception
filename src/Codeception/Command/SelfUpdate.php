@@ -89,7 +89,6 @@ class SelfUpdate extends Command
                     )
                 );
                 if (!$input->getOption('no-interaction')) {
-
                     $dialog = $this->getHelperSet()->get('question');
                     $question = new ConfirmationQuestion("\n<question>Do you want to update?</question> ", false);
                     if (!$dialog->ask($input, $output, $question)) {
@@ -101,11 +100,9 @@ class SelfUpdate extends Command
                 $output->writeln("\n<info>Updating...</info>");
 
                 $this->retrievePharFile($latestVersion, $output);
-
             } else {
                 $output->writeln('You are already using the latest version.');
             }
-
         } catch (\Exception $e) {
             $output->writeln(
                 sprintf(
@@ -114,7 +111,6 @@ class SelfUpdate extends Command
                 )
             );
         }
-
     }
 
     /**
@@ -223,7 +219,6 @@ class SelfUpdate extends Command
             $proxy = str_replace(['http://', 'https://'], ['tcp://', 'ssl://'], $proxy);
             $opt['http']['proxy'] = $proxy;
         }
-
     }
 
     /**
