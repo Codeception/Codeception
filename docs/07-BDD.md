@@ -17,7 +17,13 @@ The idea of story BDD can be narrowed to:
 * implement each step of a scenario for testing
 * write actual code implementing the feature
 
-By making every feature to be formally written (in User Story format) and test automated, we ensure that business, developers, QAs, managers are in the same boat. That everyone in a team knows what is developed, what is not, what is tested and what is not. By making tests to be a part of user story BDD allows that non-technical personnel to write (or edit) acceptance tests. BDD also encourages exploration and discussions. To formalize the requirements and write user story in a way everyone can understand them, business and developers should talk, ask questions, and play the scenarios of features to implement.
+By writing every feature in User Story format that is automatically executable as a test we ensure that: business, developers, QAs and managers are in the same boat.
+
+BDD encourages exploration and debate in order to formalize the requirements and the features that needs to be implemented by requesting to write the User Stories in a way that everyone can understand.
+
+By making tests to be a part of User Story, BDD allows non-technical personnel to write (or edit) Acceptance tests.
+
+With this procedure we also ensure that everyone in a team knows what has been developed, what has not, what has been tested and what has not.
 
 ### Ubiquitous Language
 
@@ -36,11 +42,11 @@ Such talks should produce written stories. There should be an actor that doing s
 We can try to write such simple story:
 
 ```
-As a customer i want to buy several products
+As a customer I want to buy several products
 I put first product with 600 $ price to my cart
 And then another one with 1000 $ price
-When i go to checkout process
-I should see that total number of products i want to by is 2
+When I go to checkout process
+I should see that total number of products I want to buy is 2
 And my order amount is 1600 $
 ```
 
@@ -52,15 +58,15 @@ Feature: checkout process
   As a customer
   I want to be able to buy several products 
 
-Scenario:
-  Given I have product with 600 $ price in my cart 
-  And I have product with 1000 $ price
-  When I go to checkout process 
-  Then I should see that total number of products is 2
-  And my order amount is 1600 $
+  Scenario:
+    Given I have product with 600 $ price in my cart 
+    And I have product with 1000 $ price
+    When I go to checkout process 
+    Then I should see that total number of products is 2
+    And my order amount is 1600 $
 ```
 
-Cucucmber, Behat, and sure, **Codeception** can execute this scenario step by step as an automated test. 
+Cucumber, Behat, and sure, **Codeception** can execute this scenario step by step as an automated test. 
 Every step in this scenario requires a code which defines .
 
 ## Gherkin
@@ -190,7 +196,7 @@ Steps can also be matched with regex expressions. This way we can make more flex
 /** @Given /I am (logged|authorized) as admin/  */
 ```
 
-Please not that regular expressions should start and end with `/` char. Regex is also used to match parameters and pass them as arguments into methods.
+Please note that regular expressions should start and end with `/` char. Regex is also used to match parameters and pass them as arguments into methods.
 
 ```php
 <?php
@@ -273,7 +279,7 @@ class AcceptanceTester extends \Codeception\Actor
 }
 ```
 
-By default they throw Incomplete exceptions to ensure test with missing steps won't be accidentally marked as successful. We will need to implement those steps. As we are in acceptance suite we are probably using [PHPBrowser](http://codeception.com/docs/modules/PhpBrowser) or [WebDriver](http://codeception.com/docs/modules/WebDriver) modules. This means that we can use their methods inside Tester file, as we do with writing tests using `$I->`. You can use `amOnPage`, `click`, `see` methods inside a step definitions, so each Gherkin scenairo step to be extended with basic Codeception steps. Let's show how it can be implemented in our case:
+By default they throw Incomplete exceptions to ensure test with missing steps won't be accidentally marked as successful. We will need to implement those steps. As we are in acceptance suite we are probably using [PHPBrowser](http://codeception.com/docs/modules/PhpBrowser) or [WebDriver](http://codeception.com/docs/modules/WebDriver) modules. This means that we can use their methods inside Tester file, as we do with writing tests using `$I->`. You can use `amOnPage`, `click`, `see` methods inside a step definitions, so each Gherkin scenario step to be extended with basic Codeception steps. Let's show how it can be implemented in our case:
 
 ```php
 <?php
@@ -357,9 +363,9 @@ Feature: Dashboard
   As an owner
   I need to be able to see reports on dashboard
 
-Background:
-  Given I am logged in as administrator
-  And I open dashboard page
+  Background:
+    Given I am logged in as administrator
+    And I open dashboard page
 ```
 
 Steps in background are defined the same way as in scenarios.
@@ -533,7 +539,7 @@ By default it is recommended to place step definitions into actor class (Tester)
 
 ## Tests vs Features
 
-It is common to thing that BDD scenario is equal to test. But it's actually not. Not every test should be described as a feature. Not every test is written to test real business value. For instance, regression tests or negative scenario tests are not bringing any value to business. Business analysts don't care about scenario reproducing bug #13, or what error message is displayed when user tries to enter wrong password on login screen. Writing all the tests inside a feature files creates informational overflow.
+It is common to think that BDD scenario is equal to test. But it's actually not. Not every test should be described as a feature. Not every test is written to test real business value. For instance, regression tests or negative scenario tests are not bringing any value to business. Business analysts don't care about scenario reproducing bug #13, or what error message is displayed when user tries to enter wrong password on login screen. Writing all the tests inside a feature files creates informational overflow.
 
 In Codeception you can combine tests written in Gherkin format with tests written in Cept/Cest/Test formats. This way you can keep your feature files compact with minimal set of scenarios, and write regular tests to cover all cases. 
 
