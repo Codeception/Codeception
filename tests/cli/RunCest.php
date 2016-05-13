@@ -148,7 +148,7 @@ class RunCest
     public function skipSuites(\CliGuy $I)
     {
         $I->executeCommand(
-          'run dummy --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers --skip math --skip messages'
+            'run dummy --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers --skip math --skip messages'
         );
         $I->seeInShellOutput("Dummy Tests");
         $I->dontSeeInShellOutput("Remote Tests");
@@ -174,7 +174,7 @@ class RunCest
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
         $I->seeInShellOutput(
-          'Test is triangle | "real triangle" (DataProvidersTest::testIsTriangle)'
+            'Test is triangle | "real triangle" (DataProvidersTest::testIsTriangle)'
         );
         $I->seeInShellOutput('Test is triangle | #0 (DataProvidersTest::testIsTriangle)');
         $I->seeInShellOutput('Test is triangle | #1 (DataProvidersTest::testIsTriangle)');
@@ -199,8 +199,8 @@ class RunCest
         $I->seeInThisFile('<testsuite name="dummy"');
         $I->seeInThisFile('<testcase name="FileExists"');
         $I->seeFileFound('myownhtmlreport.html', 'tests/_output');
-        $I->dontSeeFileFound('report.xml','tests/_output');
-        $I->dontSeeFileFound('report.html','tests/_output');
+        $I->dontSeeFileFound('report.xml', 'tests/_output');
+        $I->dontSeeFileFound('report.html', 'tests/_output');
     }
 
     public function runTestsWithDependencyInjections(\CliGuy $I)
@@ -242,7 +242,7 @@ Scenario:
 * I see file found "scenario.suite.yml"
  PASSED
 EOF
-);
+        );
     }
 
     /**
@@ -289,14 +289,13 @@ Scenario:
 * I am in path "."
 * I see code coverage files are present
 EOF
-);
+        );
         // I split this assertion into two, because extra space is printed after "present" on HHVM
         $I->seeInShellOutput(<<<EOF
   I see file found "c3.php"
   I see file found "composer.json"
   I see in this file "$file"
 EOF
-);
-
+        );
     }
 }

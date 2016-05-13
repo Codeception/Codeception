@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Lib;
 
 class DiTest extends \Codeception\TestCase\Test
@@ -45,4 +45,4 @@ class DiTest extends \Codeception\TestCase\Test
         $this->injectionShouldFail('Parameter \'required\' must have default value');
         $this->di->instantiate('FailDependenciesPrimitiveParam\IncorrectDependenciesClass');
     }
-} 
+}

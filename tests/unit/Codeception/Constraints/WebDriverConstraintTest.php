@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__.'/mocked_webelement.php';
 
-class WebDriverConstraintTest extends PHPUnit_Framework_TestCase {
+class WebDriverConstraintTest extends PHPUnit_Framework_TestCase
+{
 
     /**
      * @var Codeception\PHPUnit\Constraint\WebDriver
@@ -10,7 +11,7 @@ class WebDriverConstraintTest extends PHPUnit_Framework_TestCase {
 
     public function setUp()
     {
-        $this->constraint = new Codeception\PHPUnit\Constraint\WebDriver('hello','/user');
+        $this->constraint = new Codeception\PHPUnit\Constraint\WebDriver('hello', '/user');
     }
 
     public function testEvaluation()
@@ -26,8 +27,8 @@ class WebDriverConstraintTest extends PHPUnit_Framework_TestCase {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (PHPUnit_Framework_AssertionFailedError $fail) {
             $this->assertContains("Failed asserting that any element by 'selector' on page <bold>/user</bold>", $fail->getMessage());
-            $this->assertContains('+ <info><p> Bye world</info>',$fail->getMessage());
-            $this->assertContains('+ <info><p> Bye warcraft</info>',$fail->getMessage());
+            $this->assertContains('+ <info><p> Bye world</info>', $fail->getMessage());
+            $this->assertContains('+ <info><p> Bye warcraft</info>', $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
@@ -40,7 +41,7 @@ class WebDriverConstraintTest extends PHPUnit_Framework_TestCase {
             $this->constraint->evaluate($nodes, ['css' => 'p.mocked']);
         } catch (PHPUnit_Framework_AssertionFailedError $fail) {
             $this->assertContains("Failed asserting that any element by css 'p.mocked' on page <bold>/user</bold>", $fail->getMessage());
-            $this->assertContains('+ <info><p> Bye warcraft</info>',$fail->getMessage());
+            $this->assertContains('+ <info><p> Bye warcraft</info>', $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
@@ -56,8 +57,8 @@ class WebDriverConstraintTest extends PHPUnit_Framework_TestCase {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (PHPUnit_Framework_AssertionFailedError $fail) {
             $this->assertContains("Failed asserting that any element by 'selector' on page <bold>/user</bold>", $fail->getMessage());
-            $this->assertNotContains('+ <info><p> item 0</info>',$fail->getMessage());
-            $this->assertNotContains('+ <info><p> item 14</info>',$fail->getMessage());
+            $this->assertNotContains('+ <info><p> item 0</info>', $fail->getMessage());
+            $this->assertNotContains('+ <info><p> item 14</info>', $fail->getMessage());
             $this->assertContains('<debug>[total 15 elements]</debug>', $fail->getMessage());
             return;
         }

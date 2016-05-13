@@ -21,7 +21,7 @@ class CestTest extends Codeception\TestCase\Test
     {
         $cept = new \Codeception\TestCase\Cest();
         $klass = new stdClass();
-        $cept->config('testClassInstance',$klass)
+        $cept->config('testClassInstance', $klass)
             ->config('testMethod', 'user')
             ->config('testFile', 'tests/acceptance/LoginCest.php');
 
@@ -38,5 +38,4 @@ class CestTest extends Codeception\TestCase\Test
             \Codeception\TestCase::getTestSignature($cept)
         );
     }
-
 }

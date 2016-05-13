@@ -23,7 +23,6 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
             self::$sqlite->cleanup();
         } catch (\Exception $e) {
         }
-        
     }
 
     public function setUp()

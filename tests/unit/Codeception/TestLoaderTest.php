@@ -14,7 +14,8 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @group core
      */
-    public function testAddCept() {
+    public function testAddCept()
+    {
         $this->testLoader->loadTest('SimpleCept.php');
         $this->assertEquals(1, count($this->testLoader->getTests()));
     }
@@ -23,7 +24,6 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->testLoader->loadTest('SimpleTest.php');
         $this->assertEquals(1, count($this->testLoader->getTests()));
-
     }
 
     public function testAddCeptAbsolutePath()
@@ -82,5 +82,4 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertNotSame(false, array_search($name, $testNames), "$name not found in tests");
     }
-
 }

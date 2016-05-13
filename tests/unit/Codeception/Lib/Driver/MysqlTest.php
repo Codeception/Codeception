@@ -29,7 +29,6 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             $mysql->cleanup();
         } catch (\Exception $e) {
         }
-        
     }
 
     public function setUp()

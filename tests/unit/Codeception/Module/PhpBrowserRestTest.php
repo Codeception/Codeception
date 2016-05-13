@@ -26,7 +26,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
         $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
-
     }
 
     private function setStubResponse($response)
@@ -155,7 +154,8 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
      * @Issue https://github.com/Codeception/Codeception/issues/2075
      * Client is undefined for the second test
      */
-    public function testTwoTests() {
+    public function testTwoTests()
+    {
         $cest1 = Stub::makeEmpty('\Codeception\TestCase\Cest');
         $cest2 = Stub::makeEmpty('\Codeception\TestCase\Cest');
 
@@ -177,7 +177,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseContainsJson(array('name' => 'davert'));
         $this->module->seeResponseCodeIs(200);
         $this->module->dontSeeResponseCodeIs(404);
-        
     }
     
     /**
@@ -247,7 +246,7 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->sendGET('/rest/http-host/');
         $this->module->seeResponseContains('host: "localhost:8010"');
 
-        $this->module->haveHttpHeader('Host','www.example.com');
+        $this->module->haveHttpHeader('Host', 'www.example.com');
         $this->module->sendGET('/rest/http-host/');
         $this->module->seeResponseContains('host: "www.example.com"');
     }
@@ -256,5 +255,4 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
-
 }

@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Util;
 
-
 class JsonArrayTest extends \Codeception\TestCase\Test
 {
 
@@ -27,8 +26,10 @@ class JsonArrayTest extends \Codeception\TestCase\Test
 
     public function testXmlConversion()
     {
-        $this->assertContains('<ticket><title>Bug should be fixed</title><user><name>Davert</name></user><labels></labels></ticket>',
-            $this->jsonArray->toXml()->saveXML());
+        $this->assertContains(
+            '<ticket><title>Bug should be fixed</title><user><name>Davert</name></user><labels></labels></ticket>',
+            $this->jsonArray->toXml()->saveXML()
+        );
     }
 
     public function testXmlArrayConversion2()
@@ -285,9 +286,11 @@ class JsonArrayTest extends \Codeception\TestCase\Test
             ]
         ];
 
-        $this->assertTrue($jsonArray->containsArray($expectedArray),
+        $this->assertTrue(
+            $jsonArray->containsArray($expectedArray),
             "- <info>" . var_export($expectedArray, true) . "</info>\n"
-            . "+ " . var_export($jsonArray->toArray(), true));
+            . "+ " . var_export($jsonArray->toArray(), true)
+        );
     }
 
     /**
@@ -297,9 +300,11 @@ class JsonArrayTest extends \Codeception\TestCase\Test
     {
         $jsonArray = new JsonArray('[[1],[1]]');
         $expectedArray = [[1],[1]];
-        $this->assertTrue($jsonArray->containsArray($expectedArray),
+        $this->assertTrue(
+            $jsonArray->containsArray($expectedArray),
             "- <info>" . var_export($expectedArray, true) . "</info>\n"
-            . "+ " . var_export($jsonArray->toArray(), true));
+            . "+ " . var_export($jsonArray->toArray(), true)
+        );
     }
 
     /**

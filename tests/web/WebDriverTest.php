@@ -38,9 +38,9 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->module->amOnPage('/form/checkbox');
         $this->module->uncheckOption('#checkin');
-        $this->module->dontSee('ticked','#notice');
+        $this->module->dontSee('ticked', '#notice');
         $this->module->checkOption('#checkin');
-        $this->module->see('ticked','#notice');
+        $this->module->see('ticked', '#notice');
     }
 
     public function testAcceptPopup()
@@ -77,7 +77,6 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->click('Alert');
         $this->module->seeInPopup('Really?');
         $this->module->cancelPopup();
-
     }
 
     public function testScreenshot()
@@ -95,7 +94,8 @@ class WebDriverTest extends TestsForBrowsers
         @unlink(\Codeception\Configuration::outputDir().'testshot.png');
     }
 
-    public function testSubmitForm() {
+    public function testSubmitForm()
+    {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', [
                 'name' => 'Davert',
@@ -107,10 +107,11 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertEquals('Davert', $form['name']);
         $this->assertEquals('kill_all', $form['action']);
         $this->assertEquals('My Bio', $form['description']);
-        $this->assertEquals('agree',$form['terms']);
-        $this->assertEquals('child',$form['age']);
+        $this->assertEquals('agree', $form['terms']);
+        $this->assertEquals('child', $form['age']);
     }
-    public function testSubmitFormWithNumbers() {
+    public function testSubmitFormWithNumbers()
+    {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', [
             'name' => 'Davert',
@@ -122,14 +123,14 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertEquals('Davert', $form['name']);
         $this->assertEquals('kill_all', $form['action']);
         $this->assertEquals('10', $form['description']);
-        $this->assertEquals('agree',$form['terms']);
-        $this->assertEquals('child',$form['age']);
+        $this->assertEquals('agree', $form['terms']);
+        $this->assertEquals('child', $form['age']);
     }
 
     public function testRadioButtonByValue()
     {
         $this->module->amOnPage('/form/radio');
-        $this->module->selectOption('form','disagree');
+        $this->module->selectOption('form', 'disagree');
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('disagree', $form['terms']);
@@ -138,9 +139,9 @@ class WebDriverTest extends TestsForBrowsers
     public function testRadioButtonByLabelOnContext()
     {
         $this->module->amOnPage('/form/radio');
-        $this->module->selectOption('form input','Get Off');
+        $this->module->selectOption('form input', 'Get Off');
         $this->module->seeOptionIsSelected('form input', 'disagree');
-        $this->module->dontSeeOptionIsSelected('form input','agree');
+        $this->module->dontSeeOptionIsSelected('form input', 'agree');
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('disagree', $form['terms']);
@@ -187,7 +188,7 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->shouldFail();
         $this->module->amOnPage('/form/select');
-        $this->module->selectOption('#age','13-22');
+        $this->module->selectOption('#age', '13-22');
     }
 
     public function testAppendFieldSelect()
@@ -275,7 +276,7 @@ class WebDriverTest extends TestsForBrowsers
     public function testAppendFieldRadioButtonByValue()
     {
         $this->module->amOnPage('/form/radio');
-        $this->module->appendField('form input[name=terms]','disagree');
+        $this->module->appendField('form input[name=terms]', 'disagree');
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('disagree', $form['terms']);
@@ -285,7 +286,7 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->shouldFail();
         $this->module->amOnPage('/form/radio');
-        $this->module->appendField('form input[name=terms]','disagree123');
+        $this->module->appendField('form input[name=terms]', 'disagree123');
     }
 
     public function testAppendFieldRadioButtonByLabel()
@@ -375,17 +376,24 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/unchecked');
         $this->module->seeCheckboxIsChecked('#checkbox');
         $this->module->uncheckOption('#checkbox');
-        $this->module->click('#submit');;
-        $this->module->see('0','#notice');
+        $this->module->click('#submit');
+        ;
+        $this->module->see('0', '#notice');
     }
 
     public function testCreateCeptScreenshotFail()
     {
         $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
-            'takeScreenshot' => Stub::once(function() {}),
-            'getPageSource' => Stub::once(function() {}),
+            'takeScreenshot' => Stub::once(function () {
+
+            }),
+            'getPageSource' => Stub::once(function () {
+
+            }),
             'manage' => Stub::make('\Facebook\WebDriver\WebDriverOptions', [
-                'getAvailableLogTypes' => Stub::atLeastOnce(function() { return []; }),
+                'getAvailableLogTypes' => Stub::atLeastOnce(function () {
+                    return [];
+                }),
             ]),
         ]);
         $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
@@ -396,18 +404,22 @@ class WebDriverTest extends TestsForBrowsers
     public function testCreateCestScreenshotOnFail()
     {
         $fakeWd = Stub::make(self::WEBDRIVER_CLASS, [
-            'takeScreenshot' => Stub::once(function($filename) {
+            'takeScreenshot' => Stub::once(function ($filename) {
                 PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $filename);
             }),
-            'getPageSource' => Stub::once(function() {}),
+            'getPageSource' => Stub::once(function () {
+
+            }),
             'manage' => Stub::make('\Facebook\WebDriver\WebDriverOptions', [
-                'getAvailableLogTypes' => Stub::atLeastOnce(function() { return []; }),
+                'getAvailableLogTypes' => Stub::atLeastOnce(function () {
+                    return [];
+                }),
             ]),
         ]);
         $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
         $cest = (new \Codeception\TestCase\Cest())
             ->config('testClassInstance', new stdClass())
-            ->config('testMethod','login');
+            ->config('testMethod', 'login');
         $module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
     }
 
@@ -415,12 +427,16 @@ class WebDriverTest extends TestsForBrowsers
     {
         $test = Stub::make('\Codeception\TestCase\Test', ['getName' => 'testLogin']);
         $fakeWd = Stub::make(self::WEBDRIVER_CLASS, [
-            'takeScreenshot' => Stub::once(function($filename) use ($test) {
+            'takeScreenshot' => Stub::once(function ($filename) use ($test) {
                 PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $filename);
             }),
-            'getPageSource' => Stub::once(function() {}),
+            'getPageSource' => Stub::once(function () {
+
+            }),
             'manage' => Stub::make('\Facebook\WebDriver\WebDriverOptions', [
-                'getAvailableLogTypes' => Stub::atLeastOnce(function() { return []; }),
+                'getAvailableLogTypes' => Stub::atLeastOnce(function () {
+                    return [];
+                }),
             ]),
         ]);
         $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
@@ -514,7 +530,7 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->notForPhantomJS();
         $fakeWdOptions = Stub::make('\Facebook\WebDriver\WebDriverOptions', [
-            'getCookies' => Stub::atLeastOnce(function() {
+            'getCookies' => Stub::atLeastOnce(function () {
                 return [
                     [
                         'name' => 'PHPSESSID',
@@ -532,7 +548,7 @@ class WebDriverTest extends TestsForBrowsers
         ]);
 
         $fakeWd = Stub::make(self::WEBDRIVER_CLASS, [
-            'manage' => Stub::atLeastOnce(function() use ($fakeWdOptions) {
+            'manage' => Stub::atLeastOnce(function () use ($fakeWdOptions) {
                 return $fakeWdOptions;
             }),
         ]);

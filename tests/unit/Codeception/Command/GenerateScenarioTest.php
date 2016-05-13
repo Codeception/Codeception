@@ -46,7 +46,9 @@ class GenerateScenarioTest extends BaseCommandRunner
     public function testMultipleTestsGeneration()
     {
         $this->execute(['suite' => 'dummy']);
-        $fileNames = array_map(function ($f) { return $f['filename']; }, $this->log);
+        $fileNames = array_map(function ($f) {
+            return $f['filename'];
+        }, $this->log);
         $this->assertContains(codecept_root_dir().'tests/data/scenarios/dummy/Another.optimistic.txt', $fileNames);
         $this->assertContains(codecept_root_dir().'tests/data/scenarios/dummy/Another.pessimistic.txt', $fileNames);
         $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $this->content);
@@ -60,7 +62,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertEquals(codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.html', $this->filename);
         $this->assertContains('<html><body><h3>I WANT TO CHECK CONFIG EXISTS</h3>', $this->content);
         $this->assertContains('I see file found "$codeception"', strip_tags($this->content));
-        $this->assertContains('* File_Exists generated', $this->output);        
+        $this->assertContains('* File_Exists generated', $this->output);
     }
 
     public function testOneFile()
@@ -88,7 +90,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertContains('<body><h3>', $this->content);
         $this->assertContains('</body></html>', $this->content);
         $this->assertContains('* Skip_Me rendered', $this->output);
-        $this->assertContains('* Incomplete_Me rendered', $this->output);        
+        $this->assertContains('* Incomplete_Me rendered', $this->output);
     }
 
     public function testDifferentPath()
@@ -97,7 +99,5 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertEquals('docs/dummy.txt', $this->filename);
         $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $this->content);
         $this->assertContains('* File_Exists rendered', $this->output);
-
     }
-
 }

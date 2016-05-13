@@ -79,19 +79,31 @@ class GroupManagerTest extends \Codeception\TestCase\Test
 
     protected function makeTestCase($file, $name = '')
     {
-        return Stub::make('\Codeception\Lib\DescriptiveTestCase', [
+        return Stub::make(
+            '\Codeception\Lib\DescriptiveTestCase',
+            [
                 'getReportFields' => ['file' => codecept_root_dir() . $file],
-                'getName' => $name]
+                'getName' => $name
+            ]
         );
     }
-
 }
 
 class DescriptiveTestCase extends \Codeception\TestCase implements Reported
 {
-    public function getEnvironment() {}
-    public function getScenario() {}
-    public function getReportFields() {}
-    public function _startTest() {}
-    public function _finishTest() {}
+    public function getEnvironment()
+    {
+    }
+    public function getScenario()
+    {
+    }
+    public function getReportFields()
+    {
+    }
+    public function _startTest()
+    {
+    }
+    public function _finishTest()
+    {
+    }
 }

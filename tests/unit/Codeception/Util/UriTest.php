@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Util;
 
-
 class UriTest extends \Codeception\TestCase\Test
 {
     // tests
@@ -24,7 +23,6 @@ class UriTest extends \Codeception\TestCase\Test
             Uri::mergeUrls('http://codeception.com/hello/world', 'https://github.com/codeception/codeception'),
             'merge absolute urls'
         );
-
     }
 
     /**
@@ -53,33 +51,43 @@ class UriTest extends \Codeception\TestCase\Test
      */
     public function testAppendAnchor()
     {
-        $this->assertEquals('http://codeception.com/quickstart#anchor',
-            Uri::appendPath('http://codeception.com/quickstart', '#anchor'));
+        $this->assertEquals(
+            'http://codeception.com/quickstart#anchor',
+            Uri::appendPath('http://codeception.com/quickstart', '#anchor')
+        );
 
-        $this->assertEquals('http://codeception.com/quickstart#anchor',
-            Uri::appendPath('http://codeception.com/quickstart#first', '#anchor'));
+        $this->assertEquals(
+            'http://codeception.com/quickstart#anchor',
+            Uri::appendPath('http://codeception.com/quickstart#first', '#anchor')
+        );
     }
 
     public function testAppendPath()
     {
-        $this->assertEquals('http://codeception.com/quickstart/path',
-            Uri::appendPath('http://codeception.com/quickstart', 'path'));
+        $this->assertEquals(
+            'http://codeception.com/quickstart/path',
+            Uri::appendPath('http://codeception.com/quickstart', 'path')
+        );
 
-        $this->assertEquals('http://codeception.com/quickstart/path',
-            Uri::appendPath('http://codeception.com/quickstart', '/path'));
+        $this->assertEquals(
+            'http://codeception.com/quickstart/path',
+            Uri::appendPath('http://codeception.com/quickstart', '/path')
+        );
     }
 
     public function testAppendEmptyPath()
     {
-        $this->assertEquals('http://codeception.com/quickstart',
-            Uri::appendPath('http://codeception.com/quickstart', ''));
+        $this->assertEquals(
+            'http://codeception.com/quickstart',
+            Uri::appendPath('http://codeception.com/quickstart', '')
+        );
     }
 
     public function testAppendPathRemovesQueryStringAndAnchor()
     {
-        $this->assertEquals('http://codeception.com/quickstart',
-            Uri::appendPath('http://codeception.com/quickstart?a=b#c', ''));
+        $this->assertEquals(
+            'http://codeception.com/quickstart',
+            Uri::appendPath('http://codeception.com/quickstart?a=b#c', '')
+        );
     }
-
-
 }

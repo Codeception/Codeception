@@ -2,7 +2,7 @@
 
 use Codeception\Configuration;
 
-class c3Test extends PHPUnit_Framework_TestCase
+class C3Test extends PHPUnit_Framework_TestCase
 {
     /**
      * @var string

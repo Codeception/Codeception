@@ -23,5 +23,4 @@ class WebGuy extends \Codeception\Actor
    /**
     * Define custom actions here
     */
-
 }

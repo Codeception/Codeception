@@ -31,7 +31,6 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
             $postgres->cleanup();
         } catch (\Exception $e) {
         }
-        
     }
 
     public function setUp()
@@ -91,10 +90,10 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
 
     public function testSelectWithEmptyCriteria()
     {
-      $emptyCriteria = [];
-      $generatedSql = $this->postgres->select('test_column', 'test_table', $emptyCriteria);
+        $emptyCriteria = [];
+        $generatedSql = $this->postgres->select('test_column', 'test_table', $emptyCriteria);
 
-      $this->assertNotContains('where', $generatedSql);
+        $this->assertNotContains('where', $generatedSql);
     }
 
     public function testGetSingleColumnPrimaryKey()
@@ -125,5 +124,4 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
     {
         $this->postgres->getPrimaryColumn('composite_pk');
     }
-
 }

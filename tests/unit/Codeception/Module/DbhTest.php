@@ -18,24 +18,25 @@ class DbhTest extends \PHPUnit_Framework_TestCase
      */
     protected $module = null;
 
-    public function setUp() {
-      $this->testCase = Stub::make('\Codeception\TestCase');
+    public function setUp()
+    {
+        $this->testCase = Stub::make('\Codeception\TestCase');
 
-      $module = new \Codeception\Module\Dbh(make_container());
+        $module = new \Codeception\Module\Dbh(make_container());
 
-      try {
-        $driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
-        $module::$dbh = $driver->getDbh();
-      } catch (\PDOException $e) {
-          $this->markTestSkipped('Coudn\'t establish connection to database');
-          return;
-      }
+        try {
+            $driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
+            $module::$dbh = $driver->getDbh();
+        } catch (\PDOException $e) {
+            $this->markTestSkipped('Coudn\'t establish connection to database');
+            return;
+        }
 
-      $this->module = $module;
+        $this->module = $module;
     }
 
-    public function testDontRollbackOutsideATransaction() {
-      $this->module->_after($this->testCase);
+    public function testDontRollbackOutsideATransaction()
+    {
+        $this->module->_after($this->testCase);
     }
-
 }

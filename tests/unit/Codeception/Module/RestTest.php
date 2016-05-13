@@ -43,7 +43,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testBeforeHookResetsVariables()
     {
-        $this->module->haveHttpHeader('Origin','http://www.example.com');
+        $this->module->haveHttpHeader('Origin', 'http://www.example.com');
         $this->module->sendGET('/rest/user/');
         $this->assertEquals(
             'http://www.example.com',
@@ -197,7 +197,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->sendGET('/api/v1/users');
         /** @var $request \Symfony\Component\BrowserKit\Request  **/
         $request = $this->module->client->getRequest();
-        $this->assertEquals('http://localhost/api/v1/users',$request->getUri());
+        $this->assertEquals('http://localhost/api/v1/users', $request->getUri());
     }
 
     public function testSeeHeaders()
@@ -209,15 +209,14 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->client->mockResponse($response);
         $this->module->sendGET('/');
         $this->module->seeHttpHeader('Cache-Control');
-        $this->module->seeHttpHeader('content_language','en-US');
-        $this->module->seeHttpHeader('Content-Language','en-US');
-        $this->module->dontSeeHttpHeader('Content-Language','en-RU');
+        $this->module->seeHttpHeader('content_language', 'en-US');
+        $this->module->seeHttpHeader('Content-Language', 'en-US');
+        $this->module->dontSeeHttpHeader('Content-Language', 'en-RU');
         $this->module->dontSeeHttpHeader('Content-Language1');
         $this->module->seeHttpHeaderOnce('Content-Language');
         $this->assertEquals('en-US', $this->module->grabHttpHeader('Content-Language'));
         $this->assertEquals('no-cache', $this->module->grabHttpHeader('Cache-Control'));
         $this->assertEquals(['no-cache', 'no-store'], $this->module->grabHttpHeader('Cache-Control', false));
-
     }
 
     public function testSeeHeadersOnce()
@@ -302,7 +301,6 @@ class RestTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
-
 }
 
 class JsonSerializedItem implements JsonSerializable

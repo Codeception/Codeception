@@ -18,7 +18,8 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
      */
     protected $moduleContainer;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
         $di = new \Codeception\Lib\Di();
         $this->moduleContainer = new \Codeception\Lib\ModuleContainer($di, []);
@@ -44,9 +45,13 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
     {
         $events = array();
         codecept_debug($this->moduleContainer->getActions());
-        $this->dispatcher->addListener('step.before', function () use (&$events) { $events[] = 'step.before'; });
-        $this->dispatcher->addListener('step.after', function () use (&$events) { $events[] = 'step.after'; });
-        $step = new \Codeception\Step\Action('seeEquals', array(5,5));
+        $this->dispatcher->addListener('step.before', function () use (&$events) {
+            $events[] = 'step.before';
+        });
+        $this->dispatcher->addListener('step.after', function () use (&$events) {
+            $events[] = 'step.after';
+        });
+        $step = new \Codeception\Step\Action('seeEquals', array(5, 5));
         $this->testcase->runStep($step);
         $this->assertEquals($events, array('step.before', 'step.after'));
     }
@@ -54,12 +59,13 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
     /**
      * @group core
      */
-    public function testRunStep() {
+    public function testRunStep()
+    {
         $assertions = &$this->moduleContainer->getModule('EmulateModuleHelper')->assertions;
-        $step = new \Codeception\Step\Action('seeEquals', array(5,5));
+        $step = new \Codeception\Step\Action('seeEquals', array(5, 5));
         $this->testcase->runStep($step);
         $this->assertEquals(1, $assertions);
-        $step = new \Codeception\Step\Action('seeEquals', array(5,6));
+        $step = new \Codeception\Step\Action('seeEquals', array(5, 6));
         try {
             $this->testcase->runStep($step);
         } catch (Exception $e) {
@@ -67,5 +73,4 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertEquals(1, $assertions);
     }
-
 }

@@ -26,7 +26,7 @@ class CoverGuy extends \Codeception\Actor
     public function seeCoverageStatsNotEmpty()
     {
         $this->seeInShellOutput(
-<<<EOF
+            <<<EOF
 index
   Methods:  50.00% ( 1/ 2)   Lines:  50.00% (  2/  4)
 EOF

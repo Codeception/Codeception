@@ -8,7 +8,6 @@ class RunEnvironmentCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --env=dev');
         $I->seeInShellOutput("OK (");
-
     }
 
     public function testProdEnvironment(CliGuy $I)
@@ -125,6 +124,5 @@ class RunEnvironmentCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run messages MessageCest.php:allMessages -vv --env env3');
         $I->seeInShellOutput('MESSAGE2 FROM ENV3');
-
     }
 }
