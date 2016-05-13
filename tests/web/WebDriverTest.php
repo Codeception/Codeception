@@ -428,7 +428,10 @@ class WebDriverTest extends TestsForBrowsers
         $test = Stub::make('\Codeception\TestCase\Test', ['getName' => 'testLogin']);
         $fakeWd = Stub::make(self::WEBDRIVER_CLASS, [
             'takeScreenshot' => Stub::once(function ($filename) use ($test) {
-                PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $filename);
+                PHPUnit_Framework_Assert::assertEquals(
+                    codecept_log_dir(get_class($test).'.testLogin.fail.png'),
+                    $filename
+                );
             }),
             'getPageSource' => Stub::once(function () {
 

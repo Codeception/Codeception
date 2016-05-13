@@ -11,7 +11,9 @@ class JsonArrayTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        $this->jsonArray = new JsonArray('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}');
+        $this->jsonArray = new JsonArray(
+            '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}'
+        );
     }
 
     // tests
@@ -34,7 +36,10 @@ class JsonArrayTest extends \Codeception\TestCase\Test
 
     public function testXmlArrayConversion2()
     {
-        $jsonArray = new JsonArray('[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
+        $jsonArray = new JsonArray(
+            '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
         $this->assertContains('<tags>wed-dev</tags>', $jsonArray->toXml()->saveXML());
         $this->assertEquals(2, $jsonArray->filterByXPath('//user')->length);
     }
@@ -139,9 +144,11 @@ class JsonArrayTest extends \Codeception\TestCase\Test
 
     /**
      * @issue https://github.com/Codeception/Codeception/issues/2630
+     * @codingStandardsIgnoreStart
      */
     public function testContainsArrayComparesNestedSequentialArraysCorrectlyWhenSecondValueIsTheSameButOrderOfItemsIsDifferent()
     {
+        // @codingStandardsIgnoreEnd
         $jsonArray = new JsonArray('[
             [
                 "2015-09-10",
@@ -313,7 +320,8 @@ class JsonArrayTest extends \Codeception\TestCase\Test
     public function testInvalidXmlTag()
     {
         $jsonArray = new JsonArray('{"a":{"foo/bar":1,"":2},"b":{"foo/bar":1,"":2},"baz":2}');
-        $expectedXml = '<a><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></a><b><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></b><baz>2</baz>';
+        $expectedXml = '<a><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></a>'
+            . '<b><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></b><baz>2</baz>';
         $this->assertContains($expectedXml, $jsonArray->toXml()->saveXML());
     }
 }

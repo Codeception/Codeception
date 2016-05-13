@@ -359,7 +359,13 @@ class StubTest extends \PHPUnit_Framework_TestCase
      */
     public function testMethodMatcherWithConstructEmptyExcept($count, $matcher)
     {
-        $dummy = Stub::constructEmptyExcept('DummyClass', 'getCheckMe', array(), array('goodByeWorld' => $matcher), $this);
+        $dummy = Stub::constructEmptyExcept(
+            'DummyClass',
+            'getCheckMe',
+            array(),
+            array('goodByeWorld' => $matcher),
+            $this
+        );
 
         $this->repeatCall($count, array($dummy, 'goodByeWorld'));
     }

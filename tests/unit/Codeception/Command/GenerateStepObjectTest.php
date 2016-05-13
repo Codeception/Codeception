@@ -43,7 +43,10 @@ class GenerateStepObjectTest extends BaseCommandRunner
     {
         $this->execute(array('suite' => 'shire', 'step' => 'User/Login', '--silent' => true));
         $generated = $this->log[0];
-        $this->assertEquals(\Codeception\Configuration::supportDir().'Step/Shire/User/Login.php', $generated['filename']);
+        $this->assertEquals(
+            \Codeception\Configuration::supportDir().'Step/Shire/User/Login.php',
+            $generated['filename']
+        );
         $this->assertIsValidPhp($this->content);
     }
 }

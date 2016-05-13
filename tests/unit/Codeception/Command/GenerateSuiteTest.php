@@ -24,7 +24,10 @@ class GenerateSuiteTest extends BaseCommandRunner
         $this->assertContains('class Hobbit extends \Codeception\Module', $helper['content']);
 
         $bootstrap = $this->log[0];
-        $this->assertEquals(\Codeception\Configuration::projectDir().'tests/shire/_bootstrap.php', $bootstrap['filename']);
+        $this->assertEquals(
+            \Codeception\Configuration::projectDir().'tests/shire/_bootstrap.php',
+            $bootstrap['filename']
+        );
     }
 
     public function testGuyWithSuffix()

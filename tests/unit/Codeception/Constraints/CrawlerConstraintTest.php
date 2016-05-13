@@ -24,7 +24,10 @@ class CrawlerConstraintTest extends PHPUnit_Framework_TestCase
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
         } catch (PHPUnit_Framework_AssertionFailedError $fail) {
-            $this->assertContains("Failed asserting that any element by 'selector' on page <bold>/user</bold>", $fail->getMessage());
+            $this->assertContains(
+                "Failed asserting that any element by 'selector' on page <bold>/user</bold>",
+                $fail->getMessage()
+            );
             $this->assertContains('+ <info><p>Bye world</p></info>', $fail->getMessage());
             $this->assertContains('+ <info><p>Bye warcraft</p></info>', $fail->getMessage());
             return;
@@ -42,7 +45,10 @@ class CrawlerConstraintTest extends PHPUnit_Framework_TestCase
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
         } catch (PHPUnit_Framework_AssertionFailedError $fail) {
-            $this->assertContains("Failed asserting that any element by 'selector' on page <bold>/user</bold>", $fail->getMessage());
+            $this->assertContains(
+                "Failed asserting that any element by 'selector' on page <bold>/user</bold>",
+                $fail->getMessage()
+            );
             $this->assertNotContains('+ <info><p>item 0</p></info>', $fail->getMessage());
             $this->assertNotContains('+ <info><p>item 14</p></info>', $fail->getMessage());
             $this->assertContains('<debug>[total 15 elements]</debug>', $fail->getMessage());

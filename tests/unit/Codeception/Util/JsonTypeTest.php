@@ -73,7 +73,9 @@ class JsonTypeTest extends \Codeception\TestCase\Test
 
         $jsonType = new JsonType(['date' => '2011-11-30T04:06:44Z']);
         $this->assertTrue($jsonType->matches(['date' => 'string:regex(~2011-11-30T04:06:44Z|2011-11-30T05:07:00Z~)']));
-        $this->assertNotTrue($jsonType->matches(['date' => 'string:regex(~2015-11-30T04:06:44Z|2016-11-30T05:07:00Z~)']));
+        $this->assertNotTrue(
+            $jsonType->matches(['date' => 'string:regex(~2015-11-30T04:06:44Z|2016-11-30T05:07:00Z~)'])
+        );
     }
 
     public function testDateTimeFilter()

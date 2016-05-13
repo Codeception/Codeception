@@ -50,7 +50,10 @@ class PhpBrowserTest extends TestsForBrowsers
 
     protected function makeTest()
     {
-        return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
+        return Stub::makeEmpty(
+            '\Codeception\TestCase\Cept',
+            array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher'))
+        );
     }
 
     public function testAjax()
@@ -226,7 +229,11 @@ class PhpBrowserTest extends TestsForBrowsers
             $this->module->amOnPage('/redirect_twice');
             $this->assertTrue(false, 'redirect limit is not respected');
         } catch (\LogicException $e) {
-            $this->assertEquals('The maximum number (1) of redirections was reached.', $e->getMessage(), 'redirect limit is respected');
+            $this->assertEquals(
+                'The maximum number (1) of redirections was reached.',
+                $e->getMessage(),
+                'redirect limit is respected'
+            );
         }
     }
 

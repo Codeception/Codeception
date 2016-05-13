@@ -39,7 +39,10 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Codeception\Module\EmulateModuleHelper', $module);
 
         $this->assertTrue($this->moduleContainer->hasModule('EmulateModuleHelper'));
-        $this->assertInstanceOf('Codeception\Module\EmulateModuleHelper', $this->moduleContainer->getModule('EmulateModuleHelper'));
+        $this->assertInstanceOf(
+            'Codeception\Module\EmulateModuleHelper',
+            $this->moduleContainer->getModule('EmulateModuleHelper')
+        );
     }
 
     /**

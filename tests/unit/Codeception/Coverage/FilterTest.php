@@ -37,7 +37,9 @@ class FilterTest extends \Codeception\TestCase\Test
         $fileFilter = $this->filter->getFilter();
         $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('tests/unit/C3Test.php')));
         $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('src/Codeception/Codecept.php')));
-        $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('vendor/phpunit/phpunit/tests/Framework/AssertTest.php')));
+        $this->assertTrue(
+            $fileFilter->isFiltered(codecept_root_dir('vendor/phpunit/phpunit/tests/Framework/AssertTest.php'))
+        );
         $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
         $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('tests/support/CodeGuy.php')));
     }
@@ -62,7 +64,9 @@ class FilterTest extends \Codeception\TestCase\Test
         $fileFilter = $this->filter->getFilter();
         $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('tests/unit/C3Test.php')));
         $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('src/Codeception/Codecept.php')));
-        $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('vendor/phpunit/phpunit/tests/Framework/AssertTest.php')));
+        $this->assertFalse(
+            $fileFilter->isFiltered(codecept_root_dir('vendor/phpunit/phpunit/tests/Framework/AssertTest.php'))
+        );
         $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
         $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('tests/unit/CodeGuy.php')));
     }

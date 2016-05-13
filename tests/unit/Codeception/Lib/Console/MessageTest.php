@@ -15,8 +15,10 @@ class MessageTest extends \Codeception\TestCase\Test
     }
     
     //test message cutting
+    // @codingStandardsIgnoreStart
     public function testVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestName()
     {
+        // @codingStandardsIgnoreEnd
     }
 
     // test multibyte message width

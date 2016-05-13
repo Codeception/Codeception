@@ -148,7 +148,8 @@ class RunCest
     public function skipSuites(\CliGuy $I)
     {
         $I->executeCommand(
-            'run dummy --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers --skip math --skip messages'
+            'run dummy --skip skipped --skip remote --skip remote_server --skip order --skip unit '
+            . '--skip powers --skip math --skip messages'
         );
         $I->seeInShellOutput("Dummy Tests");
         $I->dontSeeInShellOutput("Remote Tests");

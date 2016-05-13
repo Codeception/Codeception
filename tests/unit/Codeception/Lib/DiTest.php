@@ -21,7 +21,9 @@ class DiTest extends \Codeception\TestCase\Test
     public function testFailDependenciesCyclic()
     {
         require_once codecept_data_dir().'FailDependenciesCyclic.php';
-        $this->injectionShouldFail('Failed to resolve cyclic dependencies for class \'FailDependenciesCyclic\IncorrectDependenciesClass\'');
+        $this->injectionShouldFail(
+            'Failed to resolve cyclic dependencies for class \'FailDependenciesCyclic\IncorrectDependenciesClass\''
+        );
         $this->di->instantiate('FailDependenciesCyclic\IncorrectDependenciesClass');
     }
 

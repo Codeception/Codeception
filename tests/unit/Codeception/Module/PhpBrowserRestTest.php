@@ -50,7 +50,10 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     {
         $this->module->sendGET('http://127.0.0.1:8010/rest/user/');
         $this->module->seeResponseCodeIs(200);
-        $this->assertEquals('http://127.0.0.1:8010/rest/user/', $this->module->client->getHistory()->current()->getUri());
+        $this->assertEquals(
+            'http://127.0.0.1:8010/rest/user/',
+            $this->module->client->getHistory()->current()->getUri()
+        );
     }
 
     public function testPost()
@@ -94,7 +97,9 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInJson()
     {
-        $this->setStubResponse('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}');
+        $this->setStubResponse(
+            '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}'
+        );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('name' => 'Davert'));
         $this->module->seeResponseContainsJson(array('user' => array('name' => 'Davert')));
@@ -105,7 +110,10 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInJsonCollection()
     {
-        $this->setStubResponse('[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
+        $this->setStubResponse(
+            '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('tags' => array('web-dev', 'java')));
         $this->module->seeResponseContainsJson(array('user' => 'John Doe', 'age' => 27));
@@ -114,7 +122,9 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayJson()
     {
-        $this->setStubResponse('[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]');
+        $this->setStubResponse(
+            '[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]'
+        );
         $this->module->seeResponseContainsJson(array('id' => 1));
     }
 
