@@ -480,7 +480,7 @@ $I->wantToTest('admin area');
 ?>
 ```
 
-For feature-files (Gherkin) us tags:
+For feature-files (Gherkin) use tags:
 
 ```gherkin
 @admin @editor
