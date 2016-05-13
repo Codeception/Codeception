@@ -705,7 +705,8 @@ interface Web
 
     /**
      * Finds and returns the text contents of the given element.
-     * If a fuzzy locator is used, the element is found using CSS, XPath, and by matching the full page source by regular expression.
+     * If a fuzzy locator is used, the element is found using CSS, XPath,
+     * and by matching the full page source by regular expression.
      *
      * ``` php
      * <?php

@@ -28,7 +28,10 @@ class Output extends ConsoleOutput
         $this->config = array_merge($this->config, $config);
 
         // enable interactive output mode for CLI
-        $this->isInteractive = $this->config['interactive'] && isset($_SERVER['TERM']) && php_sapi_name() == 'cli' && $_SERVER['TERM'] != 'linux';
+        $this->isInteractive = $this->config['interactive']
+            && isset($_SERVER['TERM'])
+            && php_sapi_name() == 'cli'
+            && $_SERVER['TERM'] != 'linux';
 
         $formatter = new OutputFormatter($this->config['colors']);
         $formatter->setStyle('bold', new OutputFormatterStyle(null, null, ['bold']));

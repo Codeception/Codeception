@@ -124,6 +124,9 @@ class Printer implements EventSubscriberInterface
             $this->settings['show_uncovered'],
             false
         );
-        file_put_contents($this->absolutePath($this->options['coverage-text']), $writer->process(self::$coverage, false));
+        file_put_contents(
+            $this->absolutePath($this->options['coverage-text']),
+            $writer->process(self::$coverage, false)
+        );
     }
 }

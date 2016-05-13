@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\Client;
  *
  * ### Bootstrap File
  *
- * Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs.org/doc/testing.html#webtestcase) should be.
+ * Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs.org/doc/testing.html#webtestcase).
  *
  * ``` php
  * <?

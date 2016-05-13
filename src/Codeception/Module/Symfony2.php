@@ -195,7 +195,11 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     public function _before(\Codeception\TestCase $test)
     {
         $this->persistentServices = array_merge($this->persistentServices, $this->permanentServices);
-        $this->client = new Symfony2Connector($this->kernel, $this->persistentServices, $this->config['rebootable_client']);
+        $this->client = new Symfony2Connector(
+            $this->kernel,
+            $this->persistentServices,
+            $this->config['rebootable_client']
+        );
     }
 
     /**
@@ -254,14 +258,22 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     {
         $path = \Codeception\Configuration::projectDir() . $this->config['app_path'];
         if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['app_path'])) {
-            throw new ModuleRequireException(__CLASS__, "Can't load Kernel from $path.\nDirectory does not exists. Use `app_path` parameter to provide valid application path");
+            throw new ModuleRequireException(
+                __CLASS__,
+                "Can't load Kernel from $path.\n"
+                . "Directory does not exists. Use `app_path` parameter to provide valid application path"
+            );
         }
 
         $finder = new Finder();
         $finder->name('*Kernel.php')->depth('0')->in($path);
         $results = iterator_to_array($finder);
         if (!count($results)) {
-            throw new ModuleRequireException(__CLASS__, "AppKernel was not found at $path. Specify directory where Kernel class for your application is located with `app_path` parameter.");
+            throw new ModuleRequireException(
+                __CLASS__,
+                "AppKernel was not found at $path. "
+                . "Specify directory where Kernel class for your application is located with `app_path` parameter."
+            );
         }
 
         $file = current($results);
@@ -475,7 +487,11 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         if ($profile = $this->getProfile()) {
             if ($profile->hasCollector('security')) {
                 if ($profile->getCollector('security')->isAuthenticated()) {
-                    $this->debugSection('User', $profile->getCollector('security')->getUser() . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']');
+                    $this->debugSection(
+                        'User',
+                        $profile->getCollector('security')->getUser()
+                        . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']'
+                    );
                 } else {
                     $this->debugSection('User', 'Anonymous');
                 }

@@ -452,7 +452,9 @@ class Stub
     private static function doGenerateMock($args, $isAbstract = false)
     {
         $testCase = self::extractTestCaseFromArgs($args);
-        $class = $testCase instanceof \PHPUnit_Framework_TestCase ? $testCase : new \PHPUnit_Framework_MockObject_Generator;
+        $class = $testCase instanceof \PHPUnit_Framework_TestCase
+            ? $testCase
+            : new \PHPUnit_Framework_MockObject_Generator;
         $methodName = $isAbstract ? 'getMockForAbstractClass' : 'getMock';
 
         $mock = call_user_func_array([$class, $methodName], $args);
@@ -544,7 +546,8 @@ class Stub
                     } catch (\Exception $e) {
                         throw new \PHPUnit_Framework_Exception(
                             sprintf(
-                                'Could not add property %1$s, class %2$s implements __set method, and no %1$s property exists',
+                                'Could not add property %1$s, class %2$s implements __set method, '
+                                . 'and no %1$s property exists',
                                 $param,
                                 $reflectionClass->getName()
                             ),

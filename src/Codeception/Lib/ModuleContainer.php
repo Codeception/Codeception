@@ -195,7 +195,10 @@ class ModuleContainer
             }
             for ($j = $i; $j < count($this->modules); $j++) {
                 $inspectedModule = $this->modules[$moduleNames[$j]];
-                $nameAndInterfaces = array_merge([get_class($inspectedModule), $inspectedModule->_getName()], class_implements($inspectedModule));
+                $nameAndInterfaces = array_merge(
+                    [get_class($inspectedModule), $inspectedModule->_getName()],
+                    class_implements($inspectedModule)
+                );
                 if (in_array(ltrim($currentModule->_conflicts(), '\\'), $nameAndInterfaces)) {
                     throw new ModuleConflictException($currentModule, $inspectedModule);
                 }

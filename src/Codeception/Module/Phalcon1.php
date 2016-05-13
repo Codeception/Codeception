@@ -325,7 +325,12 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
             $messages = $record->getMessages();
             $errors = [];
             foreach ($messages as $message) {
-                $errors[] = sprintf('[%s] %s: %s', $message->getType(), $field($message->getField()), $message->getMessage());
+                $errors[] = sprintf(
+                    '[%s] %s: %s',
+                    $message->getType(),
+                    $field($message->getField()),
+                    $message->getMessage()
+                );
             }
 
             $this->fail(sprintf("Record %s was not saved. Messages: \n%s", $model, implode(PHP_EOL, $errors)));

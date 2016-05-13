@@ -40,12 +40,15 @@ use Zend_Controller_Router_Route_Chain;
  *
  * ## Cleaning up
  *
- * For Doctrine1 and Doctrine2 all queries are put inside rollback transaction. If you are using one of this ORMs connect their modules to speed up testing.
+ * For Doctrine1 and Doctrine2 all queries are put inside rollback transaction.
+ * If you are using one of this ORMs connect their modules to speed up testing.
  *
- * Unfortunately Zend_Db doesn't support nested transactions, thus, for cleaning your database you should either use standard Db module or
+ * Unfortunately Zend_Db doesn't support nested transactions,
+ * thus, for cleaning your database you should either use standard Db module or
  * [implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
  *
- * If your database supports nested transactions (MySQL doesn't) or you implemented them you can put all your code inside a transaction.
+ * If your database supports nested transactions (MySQL doesn't)
+ * or you implemented them you can put all your code inside a transaction.
  * Use a generated helper TestHelper. Use this code inside of it.
  *
  * ``` php
@@ -102,7 +105,10 @@ class ZF1 extends Framework
     public function _initialize()
     {
         defined('APPLICATION_ENV') || define('APPLICATION_ENV', $this->config['env']);
-        defined('APPLICATION_PATH') || define('APPLICATION_PATH', Configuration::projectDir() . $this->config['app_path']);
+        defined('APPLICATION_PATH') || define(
+            'APPLICATION_PATH',
+            Configuration::projectDir() . $this->config['app_path']
+        );
         defined('LIBRARY_PATH') || define('LIBRARY_PATH', Configuration::projectDir() . $this->config['lib_path']);
 
         // Ensure library/ is on include_path
@@ -126,7 +132,10 @@ class ZF1 extends Framework
 
         \Zend_Session::$_unitTestEnabled = true;
         try {
-            $this->bootstrap = new \Zend_Application($this->config['env'], Configuration::projectDir() . $this->config['config']);
+            $this->bootstrap = new \Zend_Application(
+                $this->config['env'],
+                Configuration::projectDir() . $this->config['config']
+            );
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }

@@ -521,11 +521,19 @@ class Console implements EventSubscriberInterface
 
         if ($feature) {
             $this->message = $this
-                ->message($inProgress ? $feature : (mb_strtoupper(mb_substr($feature, 0, 1, 'utf-8'), 'utf-8') . mb_substr($feature, 1, null, 'utf-8')))
+                ->message(
+                    $inProgress
+                    ? $feature
+                    : mb_strtoupper(mb_substr($feature, 0, 1, 'utf-8'), 'utf-8') . mb_substr($feature, 1, null, 'utf-8')
+                )
                 ->apply(function ($str) {
                     return str_replace('with data set', "|", $str);
                 })
-                ->cut($inProgress ? $this->columns[0] + $this->columns[1] - 18 - strlen($filename) : $this->columns[0] - 5 - strlen($filename))
+                ->cut(
+                    $inProgress
+                    ? $this->columns[0] + $this->columns[1] - 18 - strlen($filename)
+                    : $this->columns[0] - 5 - strlen($filename)
+                )
                 ->style('focus')
                 ->prepend($inProgress ? 'Trying to ' : '')
                 ->append(" ($filename)");

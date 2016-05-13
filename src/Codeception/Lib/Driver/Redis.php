@@ -111,14 +111,18 @@ class Redis
     private $pipeline = false;
     private $pipeline_commands = 0;
 
+    // @codingStandardsIgnoreStart
     public function pipeline_begin()
     {
+        // @codingStandardsIgnoreEnd
         $this->pipeline = true;
         $this->pipeline_commands = 0;
     }
 
+    // @codingStandardsIgnoreStart
     public function pipeline_responses()
     {
+        // @codingStandardsIgnoreEnd
         $response = [];
         for ($i = 0; $i < $this->pipeline_commands; $i++) {
             $response[] = $this->cmdResponse();
@@ -431,10 +435,12 @@ class Redis
     }
 
     /**
-     * rename the old key in the new one, destroying the newname key if it already exists if if $preserve - if the dst does not already exist
+     * Rename the old key in the new one,
+     * destroying the newname key if it already exists if if $preserve - if the dst does not already exist
      *
      * Time complexity: O(1)
-     * Atomically renames the key oldkey to newkey. If the source and destination name are the same an error is returned. If newkey already exists it is overwritten.
+     * Atomically renames the key oldkey to newkey.
+     * If the source and destination name are the same an error is returned. If newkey already exists it is overwritten.
      *
      * @param $src
      * @param $dst
@@ -784,7 +790,8 @@ class Redis
     }
 
     /**
-     * Compute the difference between the Set key1 and all the Sets key2, ..., keyN, and store the resulting Set at dstkey
+     * Compute the difference between the Set key1 and all the Sets key2, ..., keyN,
+     * and store the resulting Set at dstkey
      *
      * @param $dstkey
      * @param $key1
@@ -826,9 +833,11 @@ class Redis
      * @param $key
      *
      * @return string Status code reply
+     * @codingStandardsIgnoreStart
      */
     public function select_db($key)
     {
+        // @codingStandardsIgnoreEnd
         return $this->cmd(["SELECT", $key]);
     }
 
@@ -912,7 +921,8 @@ class Redis
 
     /**
      * Synchronously save the DB on disk, then shutdown the server
-     * @return string Status code reply on error. On success nothing is returned since the server quits and the connection is closed.
+     * @return string Status code reply on error.
+     *                On success nothing is returned since the server quits and the connection is closed.
      */
     public function shutdown()
     {
@@ -972,8 +982,10 @@ class Redis
         return $this->cmd("PING");
     }
 
+    // @codingStandardsIgnoreStart
     public function do_echo($s)
     {
+        // @codingStandardsIgnoreEnd
         return $this->cmd(["ECHO", $s]);
     }
 

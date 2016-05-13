@@ -161,7 +161,9 @@ class HTML extends CodeceptionResultPrinter
             $this->templatePath . 'scenario_header.html'
         );
 
-        $status = !$this->failed ? '<span style="color: green">OK</span>' : '<span style="color: #e74c3c">FAILED</span>';
+        $status = !$this->failed
+            ? '<span style="color: green">OK</span>'
+            : '<span style="color: #e74c3c">FAILED</span>';
 
         $scenarioHeaderTemplate->setVar(
             [

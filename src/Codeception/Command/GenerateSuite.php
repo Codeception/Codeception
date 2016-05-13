@@ -69,7 +69,10 @@ class GenerateSuite extends Command
         );
         $actorName = $this->removeSuffix($actor, $config['actor']);
 
-        $file = $this->buildPath(\Codeception\Configuration::supportDir() . "Helper", "$actorName.php") . "$actorName.php";
+        $file = $this->buildPath(
+            \Codeception\Configuration::supportDir() . "Helper",
+            "$actorName.php"
+        ) . "$actorName.php";
 
         $gen = new Helper($actorName, $config['namespace']);
         // generate helper

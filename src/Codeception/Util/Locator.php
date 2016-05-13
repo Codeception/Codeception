@@ -24,7 +24,8 @@ class Locator
      * ?>
      * ```
      *
-     * This will search for `Title` text in either `h1`, `h2`, or `h3` tag. You can also combine CSS selector with XPath locator:
+     * This will search for `Title` text in either `h1`, `h2`, or `h3` tag.
+     * You can also combine CSS selector with XPath locator:
      *
      * ```php
      * <?php
@@ -224,7 +225,9 @@ class Locator
             $position = 'last()-'.abs($position);
         }
         if ($position === 0) {
-            throw new \InvalidArgumentException('0 is not valid element position. XPath expects first element to have index 1');
+            throw new \InvalidArgumentException(
+                '0 is not valid element position. XPath expects first element to have index 1'
+            );
         }
         return sprintf('(%s)[position()=%s]', self::toXPath($element), $position);
     }

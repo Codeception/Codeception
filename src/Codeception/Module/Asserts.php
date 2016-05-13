@@ -395,10 +395,16 @@ class Asserts extends CodeceptionModule
                 $this->fail(sprintf("Exception of class $class expected to be thrown, but %s caught", get_class($e)));
             }
             if (null !== $msg and $e->getMessage() !== $msg) {
-                $this->fail(sprintf("Exception of $class expected to be '$msg', but actual message was '%s'", $e->getMessage()));
+                $this->fail(sprintf(
+                    "Exception of $class expected to be '$msg', but actual message was '%s'",
+                    $e->getMessage()
+                ));
             }
             if (null !== $code and $e->getCode() !== $code) {
-                $this->fail(sprintf("Exception of $class expected to have code $code, but actual code was %s", $e->getCode()));
+                $this->fail(sprintf(
+                    "Exception of $class expected to have code $code, but actual code was %s",
+                    $e->getCode()
+                ));
             }
             $this->assertTrue(true); // increment assertion counter
              return;
