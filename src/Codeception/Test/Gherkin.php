@@ -2,6 +2,7 @@
 namespace Codeception\Test;
 
 use Behat\Gherkin\Node\FeatureNode;
+use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
@@ -180,5 +181,13 @@ class Gherkin extends Test implements ScenarioDriven
     public function getScenarioNode()
     {
         return $this->scenarioNode;
+    }
+
+    /**
+     * @return FeatureNode
+     */
+    public function getFeatureNode()
+    {
+        return $this->featureNode;
     }
 }

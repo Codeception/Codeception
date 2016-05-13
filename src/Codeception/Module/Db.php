@@ -276,9 +276,10 @@ class Db extends CodeceptionModule implements DbInterface
     public function haveInDatabase($table, array $data)
     {
         $query = $this->driver->insert($table, $data);
+        $parameters = array_values($data);
         $this->debugSection('Query', $query);
-
-        $this->driver->executeQuery($query, array_values($data));
+        $this->debugSection('Parameters', $parameters);
+        $this->driver->executeQuery($query, $parameters);
 
         try {
             $lastInsertId = (int)$this->driver->lastInsertId($table);
@@ -366,9 +367,12 @@ class Db extends CodeceptionModule implements DbInterface
     protected function proceedSeeInDatabase($table, $column, $criteria)
     {
         $query = $this->driver->select($column, $table, $criteria);
-        $this->debugSection('Query', $query, json_encode($criteria));
-
-        $sth = $this->driver->executeQuery($query, array_values($criteria));
+        $parameters = array_values($criteria);
+        $this->debugSection('Query', $query);
+        if (!empty($parameters)) {
+            $this->debugSection('Parameters', $parameters);
+        }
+        $sth = $this->driver->executeQuery($query, $parameters);
 
         return $sth->fetchColumn();
     }

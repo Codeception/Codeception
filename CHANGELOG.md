@@ -2,6 +2,7 @@
 
 #### 2.2.0
 
+* [Laravel5] Fixed issue where non-existing services were called in _before and _after methods. See #3028.
 * Long-not-awaited **Gherkin format support**. [Announcement](https://github.com/Codeception/Codeception/pull/2750#issue-129899745)
 * **Core Test Format Refactorings** Codeception becomes true multiformat testing platform. Format requires a [Loader](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Test/Loader/LoaderInterface.php) and class extending [Test](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Test/Test.php) class, implementing [TestInterface](https://github.com/Codeception/Codeception/blob/master/src/Codeception/TestInterface.php).
     * *Breaking* `Codeception\TestCase` replaced with `Codeception\TestInterface` in code and in module signatures.
@@ -32,6 +33,9 @@
 
 #### 2.1.9
 
+* [PhpBrowser] added `handler` and `middleware` config options to customize Guzzle handlers and middleware
+* Added full support of phpunit-bridge features.
+* [Laravel] Fixed issue where non-existing services were called in _before and _after methods. See #3028.
 * [WebDriver] fixed using `saveSessionSnapshot` with codecoverage. Closes #2923
 * [ZF2] create new instance of Application for each request
 

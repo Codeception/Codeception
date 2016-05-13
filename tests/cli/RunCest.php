@@ -113,6 +113,7 @@ class RunCest
     public function runOneGroup(\CliGuy $I)
     {
         $I->executeCommand('run skipped -g notorun');
+        $I->seeInShellOutput('Skipped Tests (1)');
         $I->seeInShellOutput("IncompleteMeCept");
         $I->dontSeeInShellOutput("SkipMeCept");
     }
@@ -120,6 +121,7 @@ class RunCest
     public function skipRunOneGroup(\CliGuy $I)
     {
         $I->executeCommand('run skipped --skip-group notorun');
+        $I->seeInShellOutput('Skipped Tests (2)');
         $I->seeInShellOutput("SkipMeCept");
         $I->dontSeeInShellOutput("IncompleteMeCept");
     }
@@ -128,16 +130,18 @@ class RunCest
     {
         $I->executeCommand('run dummy');
         $I->seeInShellOutput('Optimistic');
+        $I->seeInShellOutput('Dummy Tests (5)');
         $I->executeCommand('run dummy --skip-group ok');
         $I->seeInShellOutput('Pessimistic');
+        $I->seeInShellOutput('Dummy Tests (4)');
         $I->dontSeeInShellOutput('Optimistic');
     }
 
     public function runTwoSuites(\CliGuy $I)
     {
         $I->executeCommand('run skipped,dummy --no-exit');
-        $I->seeInShellOutput("Skipped Tests");
-        $I->seeInShellOutput("Dummy Tests");
+        $I->seeInShellOutput("Skipped Tests (3)");
+        $I->seeInShellOutput("Dummy Tests (5)");
         $I->dontSeeInShellOutput("Remote Tests");
     }
 

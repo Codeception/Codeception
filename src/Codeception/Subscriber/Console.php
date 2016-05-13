@@ -113,7 +113,7 @@ class Console implements EventSubscriberInterface
             $this->namespace = $settings['namespace'];
         }
         $this->message("%s Tests (%d) ")
-            ->with(ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
+            ->with(ucfirst($e->getSuite()->getName()), $e->getSuite()->count())
             ->style('bold')
             ->width($this->width, '-')
             ->prepend("\n")

@@ -8,6 +8,7 @@ branches:
 services:
   - mysql56
   - postgresql93
+  - mongodb
 
 install:
   # databases setup
@@ -22,6 +23,10 @@ install:
   - SET PATH=C:\Program Files\curl;%PATH%
   - cinst -y php
   - cd c:\tools\php
+  - cd ext
+  - appveyor DownloadFile http://windows.php.net/downloads/pecl/releases/mongodb/1.1.6/php_mongodb-1.1.6-7.0-nts-vc14-x64.zip
+  - 7z x php_mongodb-1.1.6-7.0-nts-vc14-x64.zip -y >nul
+  - cd ..
   - copy php.ini-production php.ini
   - echo extension_dir=ext >> php.ini
   - echo extension=php_openssl.dll >> php.ini
@@ -32,6 +37,7 @@ install:
   - echo extension=php_pdo_pgsql.dll >> php.ini
   - echo extension=php_pdo_sqlite.dll >> php.ini
   - echo extension=php_pgsql.dll >> php.ini
+  - echo extension=php_mongodb.dll >> php.ini
   - SET PATH=C:\tools\php;%PATH%
   - cd %APPVEYOR_BUILD_FOLDER%
   - php -r "readfile('http://getcomposer.org/installer');" | php

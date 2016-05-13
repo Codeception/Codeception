@@ -53,7 +53,7 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  *             depends: Yii2
  * ```
  *
- * (you can also use Laravel4, Laravel5, Phalcon).
+ * (you can also use Laravel5 and Phalcon).
  *
  * In this example factories are loaded from `tests/_support/factories` directory.
 gst * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).

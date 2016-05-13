@@ -141,6 +141,7 @@ class SuiteManager
 
     public function run(PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options)
     {
+        $runner->prepareSuite($this->suite, $options);
         $this->dispatcher->dispatch(Events::SUITE_BEFORE, new Event\SuiteEvent($this->suite, $result, $this->settings));
         $runner->doEnhancedRun($this->suite, $result, $options);
         $this->dispatcher->dispatch(Events::SUITE_AFTER, new Event\SuiteEvent($this->suite, $result, $this->settings));
