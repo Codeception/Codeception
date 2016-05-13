@@ -34,7 +34,7 @@ A test created by `generate:test` command will look like this:
 <?php
 use Codeception\Util\Stub;
 
-class ExampleTest extends \Codeception\TestCase\Test
+class ExampleTest extends \Codeception\Test\Unit
 {
    /**
     * @var UnitTester
@@ -78,7 +78,7 @@ Unit tests in Codeception are written in absolutely the same way as it is done i
 
 ```php
 <?php
-class UserTest extends \Codeception\TestCase\Test
+class UserTest extends \Codeception\Test\Unit
 {
     public function testValidation()
     {
@@ -107,7 +107,7 @@ For this case we have a stand-alone project [Specify](https://github.com/Codecep
 
 ```php
 <?php
-class UserTest extends \Codeception\TestCase\Test
+class UserTest extends \Codeception\Test\Unit
 {
     use \Codeception\Specify;
 
