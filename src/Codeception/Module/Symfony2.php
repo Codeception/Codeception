@@ -359,10 +359,11 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
         }
 
+        $uri = explode('?', $this->grabFromCurrentUrl())[0];
         try {
-            $match = $router->match(explode('?', $this->grabFromCurrentUrl())[0]);
+            $match = $router->match($uri);
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
-            $this->fail(sprintf('The "%s" url does not match with any route', $routeName));
+            $this->fail(sprintf('The "%s" url does not match with any route', $uri));
         }
         $expected = array_merge(array('_route' => $routeName), $params);
         $intersection = array_intersect_assoc($expected, $match);
@@ -390,10 +391,11 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
         }
 
+        $uri = explode('?', $this->grabFromCurrentUrl())[0];
         try {
-            $matchedRouteName = $router->match(explode('?', $this->grabFromCurrentUrl())[0])['_route'];
-        } catch (\Exception\ResourceNotFoundException $e) {
-            $this->fail(sprintf('The "%s" url does not match with any route', $routeName));
+            $matchedRouteName = $router->match($uri)['_route'];
+        } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
+            $this->fail(sprintf('The "%s" url does not match with any route', $uri));
         }
 
         $this->assertEquals($matchedRouteName, $routeName);
