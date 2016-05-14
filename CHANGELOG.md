@@ -2,6 +2,8 @@
 
 #### 2.1.9
 
+* [Symfony] Improve fail messages on seeInCurrentRoute and seeCurrentRouteIs
+* [Symfony] Improve route comparison on seeInCurrentRoute and seeCurrentRouteIs
 * [WebDriver] multi session testing with friends improved by @eXorus. Webdriver sessions are finished correctly; `leave()` method added to Friend class. See #3068
 * [PhpBrowser] added `handler` and `middleware` config options to customize Guzzle handlers and middleware
 * Added full support of phpunit-bridge features.
