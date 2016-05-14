@@ -80,10 +80,10 @@ Popular frameworks like Laravel, Yii, and Phalcon include ActiveRecord data laye
 
 Corresponding framework modules provide similar methods for ORM access:
 
-* haveRecord
-* seeRecord
-* dontSeeRecord
-* grabRecord
+* `haveRecord`
+* `seeRecord`
+* `dontSeeRecord`
+* `grabRecord`
 
 They allow to create and check data by model name and field names in model. Here is the example in Laravel
 

@@ -65,10 +65,6 @@ As you see, Cest class have no parents like `\Codeception\Test\Unit` or `PHPUnit
 
 Also you can define `_failed` method in Cest class which will be called if test finishes with `error` or fails.
 
-## Examples
-
-
-
 ## Dependency Injection
 
 Codeception supports simple dependency injection for Cest and \Codeception\TestCase\Test classes. It means that you can specify which classes you need as parameters of the special `_inject()` method, and Codeception will automatically create the respective objects and invoke this method, passing all dependencies as arguments. This may be useful when working with Helpers, for example:
@@ -163,6 +159,64 @@ class UserCest
 ```
 
 Moreover, Codeception can resolve dependencies recursively (when `A` depends on `B`, and `B` depends on `C` etc.) and handle parameters of primitive types with default values (like `$param = 'default'`). Of course, you are not allowed to have *cyclic dependencies*.
+
+### Examples
+
+What If you want to execute one test scenario but with different data? In this case you can use examples to provide different data for test and inject as `\Codeception\Example` instance. Data is defined via `@example` annotation, using with JSON or Doctrine-style notation (limited to a single line).
+
+```php
+<?php
+ /**
+  * @example ["/api/", 200]
+  * @example ["/api/protected", 401]
+  * @example ["/api/not-found-url", 404]
+  * @example ["/api/faulty", 500]
+  */
+  public function checkEndpoints(ApiTester $I, \Codeception\Example $example)
+  {
+    $I->sendGET($example[0]);
+    $I->seeResponseCodeIs($example[1]);
+  }
+```
+
+<div class="alert alert-notice">
+If you use JSON notation please keep in mind that all string keys and values should be enclosed in doble quotes " according to JSON standard.
+</div>
+
+You can pass key-value data as example and use it in tests as well
+
+```php
+ /**
+  * @example { "url": "/", "title": "Welcome" }
+  * @example { "url": "/info", "title": "Info" }
+  * @example { "url": "/about", "title": "About Us" }
+  * @example { "url": "/contact", "title": "Contact Us" }
+  */
+  public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+  {
+    $I->amOnPage($example['url']);
+    $I->see($example['title'], 'h1');
+    $I->seeInTitle($example['title']);
+  }
+```
+
+These examples can be written using Doctrine-style annotation syntax as well:
+
+```php
+ /**
+  * @example(url="/", title="Welcome")
+  * @example(url="/info", title="Info")
+  * @example(url="/about", title="About Us")
+  * @example(url="/contact", title="Contact Us")
+  */
+  public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+  {
+    $I->amOnPage($example['url']);
+    $I->see($example['title'], 'h1');
+    $I->seeInTitle($example['title']);
+  }
+```
+
 
 ### Before/After Annotations
 

@@ -65,6 +65,8 @@ class AcceptanceTester extends \Codeception\Actor
 
 The most important part is `_generated\AcceptanceTesterActions` trait, which is used as a proxy for enabled modules. It knows which module executes which action and passes parameters into it. This trait was created by running `codecept build` and is regenerated each time module or configuration changes.
 
+### Authorization
+
 It is recommended to put widely used actions inside an Actor class. A good example of such case may be `login` action which probably be actively involved in acceptance or functional testing.
 
 ``` php
@@ -99,6 +101,39 @@ $I->login('miles', '123456');
 
 However, implementing all actions for a reuse in one actor class may lead to breaking the [Single Responsibility Principle](http://en.wikipedia.org/wiki/Single_responsibility_principle). 
 
+### Session Snapshot
+
+If you need to authorize user for each test you can do so by filling Login form in the beginning of each test. 
+Running those steps take time, and in case of Selenium tests (which are slow by themselves) can be this time can be significant.
+
+Codeception allows you to share cookies between tests, so once logged in user could stay authorized for other tests.
+
+Let's improve code of our `login` method by making it executed only once for the first login and then restore the session from cookies.  
+
+``` php
+<?php
+    public function login($name, $password)
+    {
+        $I = $this;
+        // if snapshot exists - skipping login
+        if ($I->loadSessionSnapshot('login')) {
+            return;
+        }
+        // logging in
+        $I->amOnPage('/login');
+        $I->submitForm('#loginForm', [
+            'login' => $name, 
+            'password' => $password
+        ]);
+        $I->see($name, '.navbar');
+         // saving snapshot
+        $I->saveSessionSnapshot('login');
+    }
+?>
+```
+
+Please note that session restoration only works for `WebDriver` and `PhpBrowser` modules (modules implementing `Codeception\Lib\Interfaces\SessionSnapshot`) 
+
 ## StepObjects
 
 If `login` method defined in Actor class may be used in 90% of your tests,
@@ -107,13 +142,13 @@ StepObjects are great if you need some common functionality for a group of tests
 Lets create an Admin StepObject with generator, by specifying test suite, and passing method expected names on prompt.
 
 ```bash
-$ php codecept.phar generate:stepobject acceptance Admin
+php codecept generate:stepobject acceptance Admin
 ```
 
 You will be asked to enter action names, but it's optional. Enter one at a time, and press Enter. After specifying all needed actions, leave empty line to go on to StepObject creation.
 
 ```bash
-$ php codecept.phar generate:stepobject acceptance Admin
+php codecept generate:stepobject acceptance Admin
 Add action to StepObject class (ENTER to exit): loginAsAdmin
 Add action to StepObject class (ENTER to exit):
 StepObject was created in /tests/acceptance/_support/Step/Acceptance/Admin.php
@@ -196,7 +231,7 @@ PageObjects are very important when you are developing a flexible architecture o
 Codeception can generate a PageObject class for you with command:
 
 ```bash
-$ php codecept.phar generate:pageobject Login
+php codecept generate:pageobject Login
 ```
 
 This will create a `Login` class in `tests/_support/Page`. The basic PageObject is nothing more than an empty class with a few stubs.
