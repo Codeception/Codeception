@@ -85,7 +85,7 @@ class Configuration
         'settings'   => [
             'colors'     => false,
             'bootstrap'  => false,
-            'strict_xml' => false,
+            'strict_xml' => true,
             'lint'       => true
         ],
         'coverage'   => [],
