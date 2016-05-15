@@ -41,7 +41,7 @@ use Codeception\Lib\Interfaces\API;
  *
  * * xmlRequest - last SOAP request (DOMDocument)
  * * xmlResponse - last SOAP response (DOMDocument)
- * 
+ *
  * ## Conflicts
  *
  * Conflicts with REST module
