@@ -8,7 +8,11 @@ use Codeception\Lib\Parser;
  * Executes tests delivered in Cept format.
  * Prepares metadata, parses test body on preload, and executes a test in `test` method.
  */
-class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, Interfaces\Reported, Interfaces\Dependent
+class Cept extends Test implements
+    Interfaces\Plain,
+    Interfaces\ScenarioDriven,
+    Interfaces\Reported,
+    Interfaces\Dependent
 {
     use Feature\ScenarioLoader;
 

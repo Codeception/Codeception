@@ -10,7 +10,7 @@ class BeforeAfterTest implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
-    static $events = [
+    public static $events = [
         Events::SUITE_BEFORE => 'beforeClass',
         Events::SUITE_AFTER  => ['afterClass', 100]
     ];

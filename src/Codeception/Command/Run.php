@@ -96,19 +96,68 @@ class Run extends Command
             new InputOption('tap', '', InputOption::VALUE_OPTIONAL, 'Generate Tap Log', 'report.tap.log'),
             new InputOption('json', '', InputOption::VALUE_OPTIONAL, 'Generate Json Log', 'report.json'),
             new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
-            new InputOption('no-colors', '', InputOption::VALUE_NONE, 'Force no colors in output (useful to override config file)'),
+            new InputOption(
+                'no-colors',
+                '',
+                InputOption::VALUE_NONE,
+                'Force no colors in output (useful to override config file)'
+            ),
             new InputOption('silent', '', InputOption::VALUE_NONE, 'Only outputs suite names and final results'),
             new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
             new InputOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output'),
-            new InputOption('coverage', '', InputOption::VALUE_OPTIONAL, 'Run with code coverage', 'coverage.serialized'),
-            new InputOption('coverage-html', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage HTML report in path', 'coverage'),
-            new InputOption('coverage-xml', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage XML report in file', 'coverage.xml'),
-            new InputOption('coverage-text', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage text report in file', 'coverage.txt'),
+            new InputOption(
+                'coverage',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Run with code coverage',
+                'coverage.serialized'
+            ),
+            new InputOption(
+                'coverage-html',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Generate CodeCoverage HTML report in path',
+                'coverage'
+            ),
+            new InputOption(
+                'coverage-xml',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Generate CodeCoverage XML report in file',
+                'coverage.xml'
+            ),
+            new InputOption(
+                'coverage-text',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Generate CodeCoverage text report in file',
+                'coverage.txt'
+            ),
             new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
-            new InputOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Groups of tests to be executed'),
-            new InputOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites'),
-            new InputOption('skip-group', 'x', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups'),
-            new InputOption('env', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run tests in selected environments.'),
+            new InputOption(
+                'group',
+                'g',
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+                'Groups of tests to be executed'
+            ),
+            new InputOption(
+                'skip',
+                's',
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+                'Skip selected suites'
+            ),
+            new InputOption(
+                'skip-group',
+                'x',
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+                'Skip selected groups'
+            ),
+            new InputOption(
+                'env',
+                '',
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+                'Run tests in selected environments.'
+            ),
             new InputOption('fail-fast', 'f', InputOption::VALUE_NONE, 'Stop after first failure'),
             new InputOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start'),
         ]);
@@ -141,14 +190,19 @@ class Run extends Command
             $this->options['colors'] = $config['settings']['colors'];
         }
         if (!$this->options['silent']) {
-            $this->output->writeln(Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
+            $this->output->writeln(
+                Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString()
+            );
         }
         if ($this->options['debug']) {
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
 
         $userOptions = array_intersect_key($this->options, array_flip($this->passedOptionKeys($input)));
-        $userOptions = array_merge($userOptions, $this->booleanOptions($input, ['xml', 'html', 'json', 'tap', 'coverage', 'coverage-xml', 'coverage-html']));
+        $userOptions = array_merge(
+            $userOptions,
+            $this->booleanOptions($input, ['xml', 'html', 'json', 'tap', 'coverage', 'coverage-xml', 'coverage-html'])
+        );
         $userOptions['verbosity'] = $this->output->getVerbosity();
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
         $userOptions['ansi'] = (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi'));

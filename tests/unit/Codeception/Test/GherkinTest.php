@@ -168,8 +168,6 @@ class GherkinTestContext
 
 class TagGherkinContext
 {
-
-
     /**
      * @When he returns the microwave
      */
@@ -177,5 +175,4 @@ class TagGherkinContext
     {
         GherkinTest::$calls .= 'X';
     }
-
 }

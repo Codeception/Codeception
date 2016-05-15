@@ -20,8 +20,8 @@ interface Web
 
     /**
      * Checks that the current page contains the given string (case insensitive).
-     * 
-     * You can specify a specific HTML element (via CSS or XPath) as the second 
+     *
+     * You can specify a specific HTML element (via CSS or XPath) as the second
      * parameter to only search within that element.
      *
      * ``` php
@@ -30,19 +30,19 @@ interface Web
      * $I->see('Sign Up', 'h1');          // I can suppose it's a signup page
      * $I->see('Sign Up', '//body/h1');   // with XPath
      * ```
-     * 
+     *
      * Note that the search is done after stripping all HTML tags from the body,
      * so `$I->see('strong')` will return true for strings like:
-     * 
+     *
      *   - `<p>I am Stronger than thou</p>`
      *   - `<script>document.createElement('strong');</script>`
-     * 
+     *
      * But will *not* be true for strings like:
-     * 
+     *
      *   - `<strong>Home</strong>`
      *   - `<div class="strong">Home</strong>`
      *   - `<!-- strong -->`
-     * 
+     *
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
@@ -60,19 +60,19 @@ interface Web
      * $I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
      * $I->dontSee('Sign Up','//body/h1');      // with XPath
      * ```
-     * 
+     *
      * Note that the search is done after stripping all HTML tags from the body,
      * so `$I->dontSee('strong')` will fail on strings like:
-     * 
+     *
      *   - `<p>I am Stronger than thou</p>`
      *   - `<script>document.createElement('strong');</script>`
-     * 
+     *
      * But will ignore strings like:
-     * 
+     *
      *   - `<strong>Home</strong>`
      *   - `<div class="strong">Home</strong>`
      *   - `<!-- strong -->`
-     * 
+     *
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
@@ -111,18 +111,18 @@ interface Web
      * values.  Pass the form field's values as an array in the second
      * parameter.
      *
-     * Although this function can be used as a short-hand version of 
-     * `fillField()`, `selectOption()`, `click()` etc. it has some important 
+     * Although this function can be used as a short-hand version of
+     * `fillField()`, `selectOption()`, `click()` etc. it has some important
      * differences:
-     * 
+     *
      *  * Only field *names* may be used, not CSS/XPath selectors nor field labels
      *  * If a field is sent to this function that does *not* exist on the page,
      *    it will silently be added to the HTTP request.  This is helpful for testing
      *    some types of forms, but be aware that you will *not* get an exception
      *    like you would if you called `fillField()` or `selectOption()` with
      *    a missing field.
-     * 
-     * Fields that are not provided will be filled by their values from the page, 
+     *
+     * Fields that are not provided will be filled by their values from the page,
      * or from any previous calls to `fillField()`, `selectOption()` etc.
      * You don't need to click the 'Submit' button afterwards.
      * This command itself triggers the request to form's action.
@@ -185,10 +185,10 @@ interface Web
      * ```
      * Note that "2" will be the submitted value for the "plan" field, as it is
      * the selected option.
-     * 
+     *
      * You can also emulate a JavaScript submission by not specifying any
      * buttons in the third parameter to submitForm.
-     * 
+     *
      * ```php
      * <?php
      * $I->submitForm(
@@ -202,10 +202,10 @@ interface Web
      *     ]
      * );
      * ```
-     * 
-     * This function works well when paired with `seeInFormFields()` 
+     *
+     * This function works well when paired with `seeInFormFields()`
      * for quickly testing CRUD interfaces and form validation logic.
-     * 
+     *
      * ``` php
      * <?php
      * $form = [
@@ -246,11 +246,11 @@ interface Web
      *
      * Mixing string and boolean values for a checkbox's value is not supported
      * and may produce unexpected results.
-     * 
-     * Field names ending in `[]` must be passed without the trailing square 
+     *
+     * Field names ending in `[]` must be passed without the trailing square
      * bracket characters, and must contain an array for its value.  This allows
      * submitting multiple values with the same name, consider:
-     * 
+     *
      * ```php
      * <?php
      * // This will NOT work correctly
@@ -259,9 +259,9 @@ interface Web
      *     'field[]' => 'another value',  // 'field[]' is already a defined key
      * ]);
      * ```
-     * 
+     *
      * The solution is to pass an array value:
-     * 
+     *
      * ```php
      * <?php
      * // This way both values are submitted
@@ -272,7 +272,7 @@ interface Web
      *     ]
      * ]);
      * ```
-     * 
+     *
      * @param $selector
      * @param $params
      * @param $button
@@ -454,7 +454,8 @@ interface Web
      * ``` php
      * <?php
      * $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
-     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
+     * // I suppose user agreed to terms, If there is only one checkbox in form.
+     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]');
      * $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
      * ?>
      * ```
@@ -468,8 +469,11 @@ interface Web
      *
      * ``` php
      * <?php
-     * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
-     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
+     * // I suppose user didn't agree to terms
+     * $I->dontSeeCheckboxIsChecked('#agree');
+     *
+     * // I suppose user didn't check the first checkbox in form.
+     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]');
      * ?>
      * ```
      *
@@ -520,7 +524,7 @@ interface Web
     /**
      * Checks if the array of form parameters (name => value) are set on the form matched with the
      * passed selector.
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeInFormFields('form[name=myform]', [
@@ -529,10 +533,10 @@ interface Web
      * ]);
      * ?>
      * ```
-     * 
+     *
      * For multi-select elements, or to check values of multiple elements with the same name, an
      * array may be passed:
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeInFormFields('.form-class', [
@@ -549,7 +553,7 @@ interface Web
      * ```
      *
      * Additionally, checkbox values can be checked with a boolean.
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeInFormFields('#form-id', [
@@ -558,9 +562,9 @@ interface Web
      * ]);
      * ?>
      * ```
-     * 
+     *
      * Pair this with submitForm for quick testing magic.
-     * 
+     *
      * ``` php
      * <?php
      * $form = [
@@ -574,7 +578,7 @@ interface Web
      * $I->seeInFormFields('//form[@id=my-form]', $form);
      * ?>
      * ```
-     * 
+     *
      * @param $formSelector
      * @param $params
      */
@@ -583,7 +587,7 @@ interface Web
     /**
      * Checks if the array of form parameters (name => value) are not set on the form matched with
      * the passed selector.
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeInFormFields('form[name=myform]', [
@@ -592,10 +596,10 @@ interface Web
      * ]);
      * ?>
      * ```
-     * 
+     *
      * To check that an element hasn't been assigned any one of many values, an array can be passed
      * as the value:
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeInFormFields('.form-class', [
@@ -608,7 +612,7 @@ interface Web
      * ```
      *
      * Additionally, checkbox values can be checked with a boolean.
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeInFormFields('#form-id', [
@@ -617,7 +621,7 @@ interface Web
      * ]);
      * ?>
      * ```
-     * 
+     *
      * @param $formSelector
      * @param $params
      */
@@ -642,7 +646,8 @@ interface Web
      * ?>
      * ```
      *
-     * Or provide an associative array for the second argument to specifically define which selection method should be used:
+     * Or provide an associative array for the second argument
+     * to specifically define which selection method should be used:
      *
      * ``` php
      * <?php
@@ -714,7 +719,8 @@ interface Web
 
     /**
      * Finds and returns the text contents of the given element.
-     * If a fuzzy locator is used, the element is found using CSS, XPath, and by matching the full page source by regular expression.
+     * If a fuzzy locator is used, the element is found using CSS, XPath,
+     * and by matching the full page source by regular expression.
      *
      * ``` php
      * <?php
@@ -771,23 +777,23 @@ interface Web
     /**
      * Grabs either the text content, or attribute values, of nodes
      * matched by $cssOrXpath and returns them as an array.
-     * 
+     *
      * ```html
      * <a href="#first">First</a>
      * <a href="#second">Second</a>
      * <a href="#third">Third</a>
      * ```
-     * 
+     *
      * ```php
      * <?php
      * // would return ['First', 'Second', 'Third']
      * $aLinkText = $I->grabMultiple('a');
-     * 
+     *
      * // would return ['#first', '#second', '#third']
      * $aLinks = $I->grabMultiple('a', 'href');
      * ?>
      * ```
-     * 
+     *
      * @param $cssOrXpath
      * @param $attribute
      * @return string[]

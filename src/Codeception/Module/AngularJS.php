@@ -5,7 +5,9 @@ use Codeception\Step;
 use Facebook\WebDriver\WebDriverBy;
 
 /**
- * Module for AngularJS testing, based on [WebDriver module](http://codeception.com/docs/modules/WebDriver) and [Protractor](http://angular.github.io/protractor/).
+ * Module for AngularJS testing,
+ * based on [WebDriver module](http://codeception.com/docs/modules/WebDriver)
+ * and [Protractor](http://angular.github.io/protractor/).
  *
  * Performs **synchronization to ensure that page content is fully rendered**.
  * Uses Angular's and Protractor internals methods to synchronize with the page.

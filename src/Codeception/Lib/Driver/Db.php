@@ -238,7 +238,9 @@ class Db
         if (empty($primaryKey)) {
             return null;
         } elseif (count($primaryKey) > 1) {
-            throw new \Exception('getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead');
+            throw new \Exception(
+                'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
+            );
         }
 
         return $primaryKey[0];

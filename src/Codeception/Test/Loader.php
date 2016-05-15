@@ -114,7 +114,9 @@ class Loader
             $this->path = $currentPath;
             return;
         }
-        throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
+        throw new \Exception(
+            'Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test'
+        );
     }
 
     public function loadTests($fileName = null)
@@ -136,5 +138,4 @@ class Loader
             $this->tests = array_merge($this->tests, $format->getTests());
         }
     }
-
 }

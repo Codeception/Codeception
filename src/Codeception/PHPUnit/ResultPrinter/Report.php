@@ -43,7 +43,15 @@ class Report extends ResultPrinter implements ConsolePrinter
     protected function endRun()
     {
         $this->write("\nCodeception Results\n");
-        $this->write(sprintf("Successful: %s. Failed: %s. Incomplete: %s. Skipped: %s", $this->successful, $this->failed, $this->skipped, $this->incomplete) . "\n");
+        $this->write(
+            sprintf(
+                "Successful: %s. Failed: %s. Incomplete: %s. Skipped: %s",
+                $this->successful,
+                $this->failed,
+                $this->skipped,
+                $this->incomplete
+            ) . "\n"
+        );
     }
 
     public function printResult(\PHPUnit_Framework_TestResult $result)

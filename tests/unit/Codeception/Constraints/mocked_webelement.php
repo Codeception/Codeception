@@ -1,6 +1,6 @@
 <?php
-class TestedWebElement extends RemoteWebElement {
-
+class TestedWebElement extends RemoteWebElement
+{
     protected $value;
 
     public function __construct($value)

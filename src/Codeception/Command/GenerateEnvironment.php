@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -57,5 +57,4 @@ class GenerateEnvironment extends Command
         }
 
     }
-
 }

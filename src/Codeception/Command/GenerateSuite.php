@@ -6,10 +6,8 @@ use Codeception\Util\Template;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
-
+use Codeception\Configuration;
 
 /**
  * Create new test suite. Requires suite name and actor name
@@ -48,13 +46,13 @@ class GenerateSuite extends Command
             return;
         }
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
+        $config = Configuration::config($input->getOption('config'));
         if (!$actor) {
             $actor = ucfirst($suite) . $config['actor'];
         }
         $config['class_name'] = $actor;
 
-        $dir = \Codeception\Configuration::testsDir();
+        $dir = Configuration::testsDir();
         if (file_exists($dir . $suite . '.suite.yml')) {
             throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
@@ -69,7 +67,7 @@ class GenerateSuite extends Command
         );
         $actorName = $this->removeSuffix($actor, $config['actor']);
 
-        $file = $this->buildPath(\Codeception\Configuration::supportDir() . "Helper", "$actorName.php") . "$actorName.php";
+        $file = $this->buildPath(Configuration::supportDir() . "Helper", "$actorName.php") . "$actorName.php";
 
         $gen = new Helper($actorName, $config['namespace']);
         // generate helper
@@ -85,10 +83,12 @@ modules:
         - {{helper}}
 EOF;
 
-        $this->save($dir . $suite . '.suite.yml', (new Template($conf))
-            ->place('actor', $actorName . $config['actor'])
-            ->place('helper', $gen->getHelperName())
-            ->produce()
+        $this->save(
+            $dir . $suite . '.suite.yml',
+            (new Template($conf))
+                ->place('actor', $actorName . $config['actor'])
+                ->place('helper', $gen->getHelperName())
+                ->produce()
         );
 
         $output->writeln("<info>Suite $suite generated</info>");

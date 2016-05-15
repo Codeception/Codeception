@@ -73,7 +73,9 @@ class GroupManager
                         // if the current line is blank then we need to move to the next line
                         // otherwise the current codeception directory becomes part of the group
                         // which causes every single test to run
-                        if (trim($test) === '') continue;
+                        if (trim($test) === '') {
+                            continue;
+                        }
 
                         $file = trim(Configuration::projectDir() . $test);
                         $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $file);

@@ -42,7 +42,7 @@ class LocalServer extends SuiteSubscriber
      */
     protected $module;
 
-    static $events = [
+    public static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_BEFORE  => 'beforeTest',
         Events::STEP_AFTER   => 'afterStep',

@@ -56,7 +56,10 @@ class Gherkin implements LoaderInterface
     {
         $this->settings = Configuration::mergeConfigs(self::$defaultSettings, $settings);
         if (!class_exists('Behat\Gherkin\Keywords\ArrayKeywords')) {
-            throw new TestParseException('Feature file can only be parsed with Behat\Gherkin library. Please install `behat/gherkin` with Composer');
+            throw new TestParseException(
+                'Feature file can only be parsed with Behat\Gherkin library. ' .
+                'Please install `behat/gherkin` with Composer'
+            );
         }
         $keywords = new GherkinKeywords(['en' => static::$defaultKeywords]);
         $lexer = new GherkinLexer($keywords);
@@ -158,7 +161,13 @@ class Gherkin implements LoaderInterface
                 foreach ($scenarioNode->getExamples() as $example) {
                     /** @var $example ExampleNode  **/
                     $params = implode(', ', $example->getTokens());
-                    $exampleNode = new ScenarioNode($scenarioNode->getTitle() . " | $params", $scenarioNode->getTags(), $example->getSteps(), $example->getKeyword(), $example->getLine());
+                    $exampleNode = new ScenarioNode(
+                        $scenarioNode->getTitle() . " | $params",
+                        $scenarioNode->getTags(),
+                        $example->getSteps(),
+                        $example->getKeyword(),
+                        $example->getLine()
+                    );
                     $this->tests[] = new GherkinFormat($featureNode, $exampleNode, $steps);
                 }
                 continue;

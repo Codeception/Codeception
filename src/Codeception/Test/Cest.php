@@ -9,7 +9,8 @@ use Codeception\Util\ReflectionHelper;
 /**
  * Executes tests delivered in Cest format.
  *
- * Handles loading of Cest cases, executing specific methods, following the order from `@before` and `@after` annotations.
+ * Handles loading of Cest cases, executing specific methods,
+ * following the order from `@before` and `@after` annotations.
  */
 class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reported, Interfaces\Dependent
 {
@@ -131,12 +132,15 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
     }
     protected function executeTestMethod($I)
     {
-        if (!method_exists($this->testClassInstance,  $this->testMethod)) {
+        if (!method_exists($this->testClassInstance, $this->testMethod)) {
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
         }
 
         if ($this->getMetadata()->getCurrent('example')) {
-            $this->invoke($this->testMethod, [$I, $this->scenario, new Example($this->getMetadata()->getCurrent('example'))]);
+            $this->invoke(
+                $this->testMethod,
+                [$I, $this->scenario, new Example($this->getMetadata()->getCurrent('example'))]
+            );
             return;
         }
         $this->invoke($this->testMethod, [$I, $this->scenario]);
@@ -144,7 +148,11 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
 
     public function toString()
     {
-        return sprintf('%s: %s', ReflectionHelper::getClassShortName($this->getTestClass()), ucfirst($this->getFeature()));
+        return sprintf(
+            '%s: %s',
+            ReflectionHelper::getClassShortName($this->getTestClass()),
+            ucfirst($this->getFeature())
+        );
     }
     
     public function getSignature()

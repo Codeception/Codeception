@@ -105,7 +105,7 @@ abstract class Step
 
         if ($totalLength > $maxLength) {
             //sort arguments from shortest to longest
-            uasort($arguments, function($arg1, $arg2) {
+            uasort($arguments, function ($arg1, $arg2) {
                 $length1 = mb_strlen($arg1, 'utf-8');
                 $length2 = mb_strlen($arg2, 'utf-8');
                 if ($length1 === $length2) {
@@ -121,7 +121,12 @@ abstract class Step
             foreach ($arguments as $key => $argument) {
                 $argumentsRemaining--;
                 if (mb_strlen($argument, 'utf-8') > $allowedLength) {
-                    $arguments[$key] = mb_substr($argument, 0, $allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
+                    $arguments[$key] = mb_substr(
+                        $argument,
+                        0,
+                        $allowedLength - 4,
+                        'utf-8'
+                    ) . '...' . mb_substr($argument, -1, 1, 'utf-8');
                     $lengthRemaining -= ($allowedLength + 1);
                 } else {
                     $lengthRemaining -= (mb_strlen($arguments[$key], 'utf-8') + 1);
@@ -217,7 +222,13 @@ abstract class Step
             return sprintf('%s %s', ucfirst($this->prefix), $this->humanize($this->getAction()));
         }
 
-        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->prefix), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
+        return sprintf(
+            '%s %s <span style="color: %s">%s</span>',
+            ucfirst($this->prefix),
+            $this->humanize($this->getAction()),
+            $highlightColor,
+            $this->getHumanizedArguments()
+        );
     }
 
     public function getHumanizedActionWithoutArguments()

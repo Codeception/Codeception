@@ -9,8 +9,10 @@ use League\FactoryMuffin\FactoryMuffin;
 use League\FactoryMuffin\Stores\RepositoryStore;
 
 /**
- * DataFactory allows you to easily generate and create test data using [**FactoryMuffin**](https://github.com/thephpleague/factory-muffin).
- * DataFactory uses an ORM of your application to define, save and cleanup data. Thus, should be used with ORM or Framework modules.
+ * DataFactory allows you to easily generate and
+ * create test data using [**FactoryMuffin**](https://github.com/thephpleague/factory-muffin).
+ * DataFactory uses an ORM of your application to define, save and cleanup data.
+ * Thus, should be used with ORM or Framework modules.
  *
  * This module requires packages installed:
  *
@@ -21,7 +23,8 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  * }
  * ```
  *
- * Generation rules can be defined in a factories file. You will need to create `factories.php` (it is recommended to store it in `_support` dir)
+ * Generation rules can be defined in a factories file.
+ * You will need to create `factories.php` (it is recommended to store it in `_support` dir)
  * Follow [FactoryMuffin documentation](https://github.com/thephpleague/factory-muffin) to set valid rules.
  * Random data provided by [Faker](https://github.com/fzaninotto/Faker) library.
  *
@@ -56,7 +59,8 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  * (you can also use Laravel5 and Phalcon).
  *
  * In this example factories are loaded from `tests/_support/factories` directory.
-gst * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
+ * You should create this directory manually and create PHP files in it
+ * with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
  *
  * In cases you want to use data from database inside your factory definitions you can define them in Helper.
  * For instance, if you use Doctrine, this allows you to access `EntityManager` inside a definition.
@@ -99,7 +103,8 @@ gst * You should create this directory manually and create PHP files in it with 
  * }
  * ```
  *
- * Factory Definitions are described in official [Factory Muffin Documentation](https://github.com/thephpleague/factory-muffin)
+ * Factory Definitions are described in
+ * official [Factory Muffin Documentation](https://github.com/thephpleague/factory-muffin)
  *
  * ### Related Models Generators
  *
@@ -148,10 +153,15 @@ EOF;
     public function _beforeSuite($settings = [])
     {
         if (!class_exists('League\FactoryMuffin\FactoryMuffin')) {
-            throw new \Exception('FactoryMuffin not installed. Please add `"league/factory-muffin": "^3.0"` to composer.json');
+            throw new \Exception(
+                'FactoryMuffin not installed. Please add `"league/factory-muffin": "^3.0"` to composer.json'
+            );
         }
         if (!class_exists('League\FactoryMuffin\Faker\Facade')) {
-            throw new \Exception('FactoryMuffin requires Faker integration. Please add `"league/factory-muffin-faker": "^1.0"` to composer.json');
+            throw new \Exception(
+                'FactoryMuffin requires Faker integration. ' .
+                'Please add `"league/factory-muffin-faker": "^1.0"` to composer.json'
+            );
         }
 
         $store = null;

@@ -2,13 +2,15 @@
 namespace Codeception\Util;
 
 /**
- * Autoloader, which is fully compatible with PSR-4, and can be used to autoload your `Helper`, `Page`, and `Step` classes.
+ * Autoloader, which is fully compatible with PSR-4,
+ * and can be used to autoload your `Helper`, `Page`, and `Step` classes.
  */
 class Autoload
 {
     protected static $registered = false;
     /**
-     * An associative array where the key is a namespace prefix and the value is an array of base directories for classes in that namespace.
+     * An associative array where the key is a namespace prefix
+     * and the value is an array of base directories for classes in that namespace.
      * @var array
      */
     protected static $map = [];

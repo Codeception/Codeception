@@ -28,9 +28,20 @@ class GenerateScenarios extends Command
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite from which texts should be generated'),
-            new InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
+            new InputOption(
+                'path',
+                'p',
+                InputOption::VALUE_REQUIRED,
+                'Use specified path as destination instead of default'
+            ),
             new InputOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file'),
-            new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Specify output format: html or text (default)', 'text'),
+            new InputOption(
+                'format',
+                'f',
+                InputOption::VALUE_REQUIRED,
+                'Specify output format: html or text (default)',
+                'text'
+            ),
         ]);
         parent::configure();
     }
@@ -55,7 +66,9 @@ class GenerateScenarios extends Command
         @mkdir($path);
 
         if (!is_writable($path)) {
-            throw new ConfigurationException("Path $path is not writable. Please, set valid permissions for folder to store scenarios.");
+            throw new ConfigurationException(
+                "Path $path is not writable. Please, set valid permissions for folder to store scenarios."
+            );
         }
 
         $path = $path . DIRECTORY_SEPARATOR . $suite;
@@ -137,5 +150,4 @@ class GenerateScenarios extends Command
         $name = preg_replace('/_Cest$/', '', $name);
         return $name;
     }
-
 }

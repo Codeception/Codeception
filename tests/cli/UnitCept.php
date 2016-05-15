@@ -5,7 +5,7 @@ $I = new CliGuy($scenario);
 $I->wantTo('generate xml reports for unit tests');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('run unit --xml --no-exit');
-$I->seeFileFound('report.xml','tests/_output');
+$I->seeFileFound('report.xml', 'tests/_output');
 $I->seeInThisFile('<?xml');
 $I->seeInThisFile('<testsuite name="unit"');
 $I->seeInThisFile('<testcase name="testMe" class="PassingTest"');

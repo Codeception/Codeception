@@ -9,7 +9,7 @@ class ErrorHandler implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
-    static $events = [
+    public static $events = [
         Events::SUITE_BEFORE => 'handle'
     ];
 

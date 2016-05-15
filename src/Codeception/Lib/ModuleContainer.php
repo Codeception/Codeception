@@ -167,9 +167,11 @@ class ModuleContainer
         }
         $config = $this->getModuleConfig($name);
         if (!isset($config['depends'])) {
-            throw new ModuleRequireException($module,
+            throw new ModuleRequireException(
+                $module,
                 "\nThis module depends on $dependency\n" .
-                "\n \n$message");
+                "\n \n$message"
+            );
         }
         $dependentModule = $this->create($config['depends'], false);
         if (!method_exists($module, '_inject')) {
@@ -213,7 +215,11 @@ class ModuleContainer
                     continue; // if action is from current module then ok
                 }
                 // if action from a conflicted interface is not in current module - throw an exception
-                throw new ModuleConflictException($currentModule, $inspectedModule, "Conflicts with method: $interfaceMethod");
+                throw new ModuleConflictException(
+                    $currentModule,
+                    $inspectedModule,
+                    "Conflicts with method: $interfaceMethod"
+                );
             }
         }
     }

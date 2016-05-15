@@ -66,8 +66,12 @@ class Template
             if (!isset($this->vars[$placeholder])) {
                 continue;
             }
-            $result = str_replace($this->placehodlerStart . $placeholder . $this->placeholderEnd, $this->vars[$placeholder], $result);
+            $result = str_replace(
+                $this->placehodlerStart . $placeholder . $this->placeholderEnd,
+                $this->vars[$placeholder],
+                $result
+            );
         }
         return $result;
     }
-} 
+}

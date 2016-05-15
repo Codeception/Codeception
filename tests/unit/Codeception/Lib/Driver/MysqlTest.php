@@ -15,7 +15,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     protected static $sql;
     protected $mysql;
-    
+
     public static function setUpBeforeClass()
     {
         if (getenv('APPVEYOR')) {
@@ -29,7 +29,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             $mysql->cleanup();
         } catch (\Exception $e) {
         }
-        
+
     }
 
     public function setUp()
@@ -41,7 +41,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         }
         $this->mysql->load(self::$sql);
     }
-    
+
     public function tearDown()
     {
         if (isset($this->mysql)) {

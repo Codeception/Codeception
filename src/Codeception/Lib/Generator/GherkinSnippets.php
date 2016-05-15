@@ -87,11 +87,15 @@ EOF;
                 $pattern = str_replace('"'.$param.'"', ":arg$num", $pattern);
             }
         }
-        if (in_array($pattern, $this->processed))  {
+        if (in_array($pattern, $this->processed)) {
             return;
         }
 
-        $methodName = preg_replace('~(\s+?|\'|\"|\W)~', '', ucwords(preg_replace('~"(.*?)"|\d+~', '', $step->getText())));
+        $methodName = preg_replace(
+            '~(\s+?|\'|\"|\W)~',
+            '',
+            ucwords(preg_replace('~"(.*?)"|\d+~', '', $step->getText()))
+        );
 
         $this->snippets[] = (new Template($this->template))
             ->place('type', $step->getKeywordType())

@@ -2,6 +2,7 @@
 .roboci
 Dockerfile
 composer.phar
+composer.lock
 vendor
 package/codecept.phar
 tests/data/app/db

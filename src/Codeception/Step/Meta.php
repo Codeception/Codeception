@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Step;
 
 use Codeception\Lib\ModuleContainer;

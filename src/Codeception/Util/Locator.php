@@ -24,7 +24,8 @@ class Locator
      * ?>
      * ```
      *
-     * This will search for `Title` text in either `h1`, `h2`, or `h3` tag. You can also combine CSS selector with XPath locator:
+     * This will search for `Title` text in either `h1`, `h2`, or `h3` tag.
+     * You can also combine CSS selector with XPath locator:
      *
      * ```php
      * <?php
@@ -224,7 +225,9 @@ class Locator
             $position = 'last()-'.abs($position);
         }
         if ($position === 0) {
-            throw new \InvalidArgumentException('0 is not valid element position. XPath expects first element to have index 1');
+            throw new \InvalidArgumentException(
+                '0 is not valid element position. XPath expects first element to have index 1'
+            );
         }
         return sprintf('(%s)[position()=%s]', self::toXPath($element), $position);
     }
@@ -254,7 +257,7 @@ class Locator
      * ```php
      * Locator::lastElement('//table/tr');
      * ```
-     * 
+     *
      * @param $element
      * @return mixed
      */
@@ -271,21 +274,21 @@ class Locator
      */
     public static function humanReadableString($selector)
     {
-       if (is_string($selector)) {
-          return "'$selector'";
-       }
-       if (is_array($selector)) {
-          $type = strtolower(key($selector));
-          $locator = $selector[$type];
-          return "$type '$locator'";
-       }
-       if (class_exists('\Facebook\WebDriver\WebDriverBy')) {
-          if ($selector instanceof \Facebook\WebDriver\WebDriverBy) {
-             $type = $selector->getMechanism();
-             $locator = $selector->getValue();
-             return "$type '$locator'";
-          }
-       }
-       throw new \InvalidArgumentException("Unrecognized selector");
+        if (is_string($selector)) {
+            return "'$selector'";
+        }
+        if (is_array($selector)) {
+            $type = strtolower(key($selector));
+            $locator = $selector[$type];
+            return "$type '$locator'";
+        }
+        if (class_exists('\Facebook\WebDriver\WebDriverBy')) {
+            if ($selector instanceof \Facebook\WebDriver\WebDriverBy) {
+                $type = $selector->getMechanism();
+                $locator = $selector->getValue();
+                return "$type '$locator'";
+            }
+        }
+        throw new \InvalidArgumentException("Unrecognized selector");
     }
 }

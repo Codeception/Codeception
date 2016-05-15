@@ -14,7 +14,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
 
     protected static $sql;
     protected $postgres;
-    
+
     public static function setUpBeforeClass()
     {
         if (!function_exists('pg_connect')) {
@@ -31,7 +31,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
             $postgres->cleanup();
         } catch (\Exception $e) {
         }
-        
+
     }
 
     public function setUp()
@@ -43,7 +43,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         }
         $this->postgres->load(self::$sql);
     }
-    
+
     public function tearDown()
     {
         if (isset($this->postgres)) {
@@ -54,20 +54,36 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
 
     public function testCleanupDatabase()
     {
-        $this->assertNotEmpty($this->postgres->getDbh()->query("SELECT * FROM pg_tables where schemaname = 'public'")->fetchAll());
+        $this->assertNotEmpty(
+            $this->postgres->getDbh()
+                ->query("SELECT * FROM pg_tables where schemaname = 'public'")
+                ->fetchAll()
+        );
         $this->postgres->cleanup();
-        $this->assertEmpty($this->postgres->getDbh()->query("SELECT * FROM pg_tables where schemaname = 'public'")->fetchAll());
+        $this->assertEmpty(
+            $this->postgres->getDbh()
+                ->query("SELECT * FROM pg_tables where schemaname = 'public'")
+                ->fetchAll()
+        );
     }
 
     public function testCleanupDatabaseDeletesTypes()
     {
         $customTypes = ['composite_type', 'enum_type', 'range_type', 'base_type'];
         foreach ($customTypes as $customType) {
-            $this->assertNotEmpty($this->postgres->getDbh()->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")->fetchAll());
+            $this->assertNotEmpty(
+                $this->postgres->getDbh()
+                    ->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")
+                    ->fetchAll()
+            );
         }
         $this->postgres->cleanup();
         foreach ($customTypes as $customType) {
-            $this->assertEmpty($this->postgres->getDbh()->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")->fetchAll());
+            $this->assertEmpty(
+                $this->postgres->getDbh()
+                    ->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")
+                    ->fetchAll()
+            );
         }
     }
 
@@ -85,16 +101,18 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals(false, $res);
         $this->assertGreaterThan(0, $res->rowCount());
 
-        $res = $this->postgres->getDbh()->query("select * from anotherschema.users where email = 'schemauser@example.org'");
+        $res = $this->postgres->getDbh()->query(
+            "select * from anotherschema.users where email = 'schemauser@example.org'"
+        );
         $this->assertEquals(1, $res->rowCount());
     }
 
     public function testSelectWithEmptyCriteria()
     {
-      $emptyCriteria = [];
-      $generatedSql = $this->postgres->select('test_column', 'test_table', $emptyCriteria);
+        $emptyCriteria = [];
+        $generatedSql = $this->postgres->select('test_column', 'test_table', $emptyCriteria);
 
-      $this->assertNotContains('where', $generatedSql);
+        $this->assertNotContains('where', $generatedSql);
     }
 
     public function testGetSingleColumnPrimaryKey()
@@ -125,5 +143,4 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
     {
         $this->postgres->getPrimaryColumn('composite_pk');
     }
-
 }

@@ -132,7 +132,10 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     protected function guessGuzzleConnector()
     {
         if (!class_exists('GuzzleHttp\Client')) {
-            throw new ModuleException($this, "Guzzle is not installed. Please install `guzzlehttp/guzzle` with composer");
+            throw new ModuleException(
+                $this,
+                "Guzzle is not installed. Please install `guzzlehttp/guzzle` with composer"
+            );
         }
         if (class_exists('GuzzleHttp\Url')) {
             $this->isGuzzlePsr7 = false;

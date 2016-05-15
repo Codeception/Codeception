@@ -13,8 +13,8 @@ $I->seeInThisFile('class_name: HouseGuy');
 $I->seeInThisFile('- \FooBar\Helper\HouseGuy');
 $I->seeFileFound('HouseGuy.php', 'src/FooBar/tests/_support/Helper');
 $I->seeInThisFile('namespace FooBar\Helper;');
-$I->seeFileFound('_bootstrap.php','src/FooBar/tests/house');
+$I->seeFileFound('_bootstrap.php', 'src/FooBar/tests/house');
 
-$I->expect ('suite is not created due to dashes');
+$I->expect('suite is not created due to dashes');
 $I->executeCommand('generate:suite invalid-dash-suite');
 $I->seeInShellOutput('contains invalid characters');

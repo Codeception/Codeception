@@ -71,5 +71,4 @@ class Unit implements LoaderInterface
             $test->getMetadata()->setEnv(Annotation::forMethod($test, $methodName)->fetchAll('env'));
         }
     }
-
 }

@@ -23,7 +23,9 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $step = $this->getStep([null, [['just', 'array']]]);
         $this->assertEquals('["just","array"]', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [function(){}]]);
+        $step = $this->getStep([null, [function () {
+            
+        }]]);
         $this->assertEquals('"Closure"', $step->getArgumentsAsString());
 
         $step = $this->getStep([null, [[$this, 'testGetArguments']]]);

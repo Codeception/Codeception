@@ -81,7 +81,10 @@ class SuiteManager
             $module->_initialize();
         }
         if (!file_exists(Configuration::supportDir() . $this->settings['class_name'] . '.php')) {
-            throw new Exception\ConfigurationException($this->settings['class_name'] . " class doesn't exist in suite folder.\nRun the 'build' command to generate it");
+            throw new Exception\ConfigurationException(
+                $this->settings['class_name'] .
+                " class doesn't exist in suite folder.\nRun the 'build' command to generate it"
+            );
         }
         $this->dispatcher->dispatch(Events::SUITE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
         ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
@@ -184,7 +187,10 @@ class SuiteManager
         $listedEnvironments = explode(',', implode(',', $envs));
         foreach ($listedEnvironments as $env) {
             if (!in_array($env, $availableEnvironments)) {
-                Notification::warning("Environment $env was not configured but used in test", Descriptor::getTestFullName($test));
+                Notification::warning(
+                    "Environment $env was not configured but used in test",
+                    Descriptor::getTestFullName($test)
+                );
             }
         }
     }

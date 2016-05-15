@@ -311,7 +311,8 @@ class Redis extends CodeceptionModule
      * $I->dontSeeInRedis('example:list', ['riri', 'fifi', 'loulou'])
      * // Checks a Set does not exist or its value is not the one provided (order of members is ignored).
      * $I->dontSeeInRedis('example:set', ['riri', 'fifi', 'loulou'])
-     * // Checks a ZSet does not exist or its value is not the one provided (scores are required, order of members is compared)
+     * // Checks a ZSet does not exist or its value is not the one provided
+     * // (scores are required, order of members is compared)
      * $I->dontSeeInRedis('example:zset', ['riri' => 1, 'fifi' => 2, 'loulou' => 3])
      * // Checks a Hash does not exist or its value is not the one provided (order of members is ignored).
      * $I->dontSeeInRedis('example:hash', ['riri' => true, 'fifi' => 'Dewey', 'loulou' => 2])
@@ -413,7 +414,13 @@ class Redis extends CodeceptionModule
      * $I->sendCommandToRedis('incr', 'example:string');
      * $I->sendCommandToRedis('strLen', 'example:string');
      * $I->sendCommandToRedis('lPop', 'example:list');
-     * $I->sendCommandToRedis('zRangeByScore', 'example:set', '-inf', '+inf', ['withscores' => true, 'limit' => [1, 2]]);
+     * $I->sendCommandToRedis(
+     *     'zRangeByScore',
+     *     'example:set',
+     *     '-inf',
+     *     '+inf',
+     *     ['withscores' => true, 'limit' => [1, 2]]
+     * );
      * $I->sendCommandToRedis('flushdb');
      * ```
      *
