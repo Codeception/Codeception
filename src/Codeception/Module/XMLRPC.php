@@ -2,6 +2,7 @@
 
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\API;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfigException;
@@ -40,7 +41,7 @@ use Codeception\TestInterface;
  * @since 1.1.5
  * @author tiger.seo@gmail.com
  */
-class XMLRPC extends CodeceptionModule
+class XMLRPC extends CodeceptionModule implements API
 {
     protected $config = ['url' => ""];
 
