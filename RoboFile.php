@@ -763,4 +763,21 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
-} 
+    /**
+     * Checks Codeception code style
+     * Most useful values for `report` option: `full`, `summary`, `diff`
+     *
+     * @param array $opt
+     */
+    public function checkCodeStyle($opt = ['report|r' => 'summary'])
+    {
+        $this->say("Checking code style");
+
+        $this->taskExec('php vendor/bin/phpcs')
+            ->arg('.')
+            ->arg('--standard=ruleset.xml')
+            ->arg('--report=' . $opt['report'])
+            ->arg('--ignore=tests/data,vendor')
+            ->run();
+    }
+}
