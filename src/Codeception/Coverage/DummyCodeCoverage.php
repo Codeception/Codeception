@@ -5,11 +5,9 @@ class DummyCodeCoverage extends \PHP_CodeCoverage
 {
     public function start($id, $clear = false)
     {
-
     }
 
-    function stop($append = true, $linesToBeCovered = [], array $linesToBeUsed = [])
+    public function stop($append = true, $linesToBeCovered = [], array $linesToBeUsed = [])
     {
-
     }
 }

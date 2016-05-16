@@ -72,7 +72,6 @@ class Annotation
             return $matched[1];
         }
         return [];
-
     }
 
     public function __construct(\ReflectionClass $class)

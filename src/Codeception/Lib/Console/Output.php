@@ -23,12 +23,15 @@ class Output extends ConsoleOutput
 
     protected $isInteractive = false;
 
-    function __construct($config)
+    public function __construct($config)
     {
         $this->config = array_merge($this->config, $config);
 
         // enable interactive output mode for CLI
-        $this->isInteractive = $this->config['interactive'] && isset($_SERVER['TERM']) && php_sapi_name() == 'cli' && $_SERVER['TERM'] != 'linux';
+        $this->isInteractive = $this->config['interactive']
+            && isset($_SERVER['TERM'])
+            && php_sapi_name() == 'cli'
+            && $_SERVER['TERM'] != 'linux';
 
         $formatter = new OutputFormatter($this->config['colors']);
         $formatter->setStyle('bold', new OutputFormatterStyle(null, null, ['bold']));
@@ -69,7 +72,7 @@ class Output extends ConsoleOutput
         $this->writeln("<debug>  $message</debug>");
     }
 
-    function message($message)
+    public function message($message)
     {
         $message = call_user_func_array('sprintf', func_get_args());
         return new Message($message, $this);

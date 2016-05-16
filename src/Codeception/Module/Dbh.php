@@ -33,7 +33,8 @@ use Codeception\TestCase;
  * * Stability: **stable**
  * * Contact: codecept@davert.mail.ua
  *
- * This module despite of it's stability may act unstable because of transactions issue. If test fails with fatal error and transaction is not finished, it may affect other transactions.
+ * This module despite of it's stability may act unstable because of transactions issue.
+ * If test fails with fatal error and transaction is not finished, it may affect other transactions.
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*
  *
@@ -77,7 +78,6 @@ class Dbh extends CodeceptionModule implements DbInterface
 
     public function _after(TestCase $test)
     {
-
         if (!self::$dbh) {
             throw new ModuleConfigException(
                 __CLASS__,

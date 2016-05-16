@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Lib\Interfaces;
 
 interface ElementLocator
@@ -29,5 +29,4 @@ interface ElementLocator
      * @return array of interactive elements
      */
     public function _findElements($locator);
-
 }

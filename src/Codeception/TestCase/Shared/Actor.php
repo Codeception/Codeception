@@ -55,11 +55,12 @@ trait Actor
     public function initConfig()
     {
         $this->scenario = new Scenario(
-            $this, [
-            'env'     => $this->env,
-            'modules' => $this->moduleContainer->all(),
-            'name'    => $this->testName
-        ]
+            $this,
+            [
+                'env'     => $this->env,
+                'modules' => $this->moduleContainer->all(),
+                'name'    => $this->testName
+            ]
         );
         $this->parser = new Parser($this->scenario);
         return $this;
@@ -163,5 +164,4 @@ trait Actor
         $this->$property = $value;
         return $this;
     }
-
 }

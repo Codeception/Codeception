@@ -124,11 +124,17 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
         if ($arguments['html']) {
             codecept_debug('Printing HTML report into ' . $arguments['html']);
-            self::$persistentListeners[] = $this->instantiateReporter('html', [$this->absolutePath($arguments['html'])]);
+            self::$persistentListeners[] = $this->instantiateReporter(
+                'html',
+                [$this->absolutePath($arguments['html'])]
+            );
         }
         if ($arguments['xml']) {
             codecept_debug('Printing JUNIT report into ' . $arguments['xml']);
-            self::$persistentListeners[] = $this->instantiateReporter('xml', [$this->absolutePath($arguments['xml']), false]);
+            self::$persistentListeners[] = $this->instantiateReporter(
+                'xml',
+                [$this->absolutePath($arguments['xml']), false]
+            );
         }
         if ($arguments['tap']) {
             codecept_debug('Printing TAP report into ' . $arguments['tap']);
@@ -136,7 +142,10 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         }
         if ($arguments['json']) {
             codecept_debug('Printing JSON report into ' . $arguments['json']);
-            self::$persistentListeners[] = $this->instantiateReporter('json', [$this->absolutePath($arguments['json'])]);
+            self::$persistentListeners[] = $this->instantiateReporter(
+                'json',
+                [$this->absolutePath($arguments['json'])]
+            );
         }
         
         foreach (self::$persistentListeners as $listener) {
@@ -154,7 +163,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             throw new ConfigurationException("Reporter $name not defined");
         }
         return (new \ReflectionClass($this->config['reporters'][$name]))->newInstanceArgs($args);
-
     }
 
     private function absolutePath($path)

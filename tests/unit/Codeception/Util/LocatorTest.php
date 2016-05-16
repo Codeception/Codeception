@@ -6,7 +6,8 @@ use Facebook\WebDriver\WebDriverBy;
 class LocatorTest extends PHPUnit_Framework_TestCase
 {
 
-    public function testCombine() {
+    public function testCombine()
+    {
         $result = Locator::combine('//button[@value="Click Me"]', '//a[.="Click Me"]');
         $this->assertEquals('//button[@value="Click Me"] | //a[.="Click Me"]', $result);
 
@@ -20,17 +21,20 @@ class LocatorTest extends PHPUnit_Framework_TestCase
         $this->assertNotEmpty($xml->xpath($result));
     }
 
-    public function testHref() {
+    public function testHref()
+    {
         $xml = new SimpleXMLElement("<root><a href='/logout'>Click Me</a></root>");
         $this->assertNotEmpty($xml->xpath(Locator::href('/logout')));
     }
 
-    public function testTabIndex() {
+    public function testTabIndex()
+    {
         $xml = new SimpleXMLElement("<root><a href='#' tabindex='2'>Click Me</a></root>");
         $this->assertNotEmpty($xml->xpath(Locator::tabIndex(2)));
     }
 
-    public function testFind() {
+    public function testFind()
+    {
         $xml = new SimpleXMLElement("<root><a href='#' tabindex='2'>Click Me</a></root>");
         $this->assertNotEmpty($xml->xpath(Locator::find('a', array('href' => '#'))));
         $this->assertNotEmpty($xml->xpath(Locator::find('a', array('href', 'tabindex' => '2'))));
@@ -55,23 +59,34 @@ class LocatorTest extends PHPUnit_Framework_TestCase
 
     public function testContains()
     {
-        $this->assertEquals('descendant-or-self::label[contains(., \'enter a name\')]', Locator::contains('label', 'enter a name'));
-        $this->assertEquals('descendant-or-self::label[@id = \'user\'][contains(., \'enter a name\')]', Locator::contains('label#user', 'enter a name'));
-        $this->assertEquals('//label[@for="name"][contains(., \'enter a name\')]', Locator::contains('//label[@for="name"]', 'enter a name'));
-
-
+        $this->assertEquals(
+            'descendant-or-self::label[contains(., \'enter a name\')]',
+            Locator::contains('label', 'enter a name')
+        );
+        $this->assertEquals(
+            'descendant-or-self::label[@id = \'user\'][contains(., \'enter a name\')]',
+            Locator::contains('label#user', 'enter a name')
+        );
+        $this->assertEquals(
+            '//label[@for="name"][contains(., \'enter a name\')]',
+            Locator::contains('//label[@for="name"]', 'enter a name')
+        );
     }
 
     public function testHumanReadableString()
     {
-       $this->assertEquals("'string selector'", Locator::humanReadableString("string selector"));
-       $this->assertEquals("css '.something'", Locator::humanReadableString(['css' => '.something']));
-       $this->assertEquals("css selector '.something'", Locator::humanReadableString(WebDriverBy::cssSelector('.something')));
+        $this->assertEquals("'string selector'", Locator::humanReadableString("string selector"));
+        $this->assertEquals("css '.something'", Locator::humanReadableString(['css' => '.something']));
+        $this->assertEquals(
+            "css selector '.something'",
+            Locator::humanReadableString(WebDriverBy::cssSelector('.something'))
+        );
 
-       try {
-          Locator::humanReadableString(null);
-          $this->fail("Expected exception when calling humanReadableString() with invalid selector");
-       } catch (\InvalidArgumentException $e) {}
+        try {
+            Locator::humanReadableString(null);
+            $this->fail("Expected exception when calling humanReadableString() with invalid selector");
+        } catch (\InvalidArgumentException $e) {
+        }
     }
 
     public function testLocatingElementPosition()
@@ -81,6 +96,5 @@ class LocatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('(descendant-or-self::p)[position()=1]', Locator::elementAt('p', 1));
         $this->assertEquals('(descendant-or-self::p)[position()=last()-0]', Locator::elementAt('p', -1));
         $this->assertEquals('(descendant-or-self::p)[position()=last()-1]', Locator::elementAt('p', -2));
-
     }
 }

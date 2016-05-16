@@ -5,7 +5,7 @@ use Codeception\Module\MongoDb;
 class MongoDbTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var array 
+     * @var array
      */
     private $mongoConfig = array(
         'dsn' => 'mongodb://localhost:27017/test'
@@ -70,7 +70,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
     {
         $user = $this->module->grabFromCollection('users', array('id' => 1));
         $this->assertTrue(isset($user['email']));
-        $this->assertEquals('miles@davis.com',$user['email']);
+        $this->assertEquals('miles@davis.com', $user['email']);
     }
 
     public function testSeeNumElementsInCollection()

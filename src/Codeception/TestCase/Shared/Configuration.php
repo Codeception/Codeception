@@ -4,7 +4,6 @@ namespace Codeception\TestCase\Shared;
 use Codeception\Exception\ConfigurationException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-
 trait Configuration
 {
     /**

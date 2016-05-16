@@ -34,7 +34,8 @@ use Codeception\TestCase;
  * * Oracle
  *
  * Connection is done by database Drivers, which are stored in the `Codeception\Lib\Driver` namespace.
- * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Lib/Driver) if you run into problems loading dumps and cleaning databases.
+ * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Lib/Driver)
+ * if you run into problems loading dumps and cleaning databases.
  *
  * ## Status
  *
@@ -73,21 +74,21 @@ use Codeception\TestCase;
  *              reconnect: true
  *
  * ### SQL data dump
- * 
+ *
  *  * Comments are permitted.
  *  * The `dump.sql` may contain multiline statements.
  *  * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
- *  
+ *
  * ```sql
  * -- Add a few contacts to the table.
  * REPLACE INTO `Contacts` (`created`, `modified`, `status`, `contact`, `first`, `last`) VALUES
  * (NOW(), NOW(), 1, 'Bob Ross', 'Bob', 'Ross'),
  * (NOW(), NOW(), 1, 'Fred Flintstone', 'Fred', 'Flintstone');
- * 
+ *
  * -- Remove existing orders for testing.
  * DELETE FROM `Order`;
  * ```
- * 
+ *
  * ## Public Properties
  * * dbh - contains the PDO connection
  * * driver - contains the Connection Driver
@@ -139,7 +140,6 @@ class Db extends CodeceptionModule implements DbInterface
     public function _initialize()
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
-
             if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
                 throw new ModuleConfigException(
                     __CLASS__,
@@ -174,7 +174,7 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
-                list ($missingDriver,) = explode(':', $this->config['dsn'], 2);
+                list ($missingDriver, ) = explode(':', $this->config['dsn'], 2);
                 $message = "could not find $missingDriver driver";
             }
 
@@ -306,7 +306,9 @@ class Db extends CodeceptionModule implements DbInterface
                     if (isset($row[$column])) {
                         $primary[$column] = $row[$column];
                     } else {
-                        throw new \InvalidArgumentException('Primary key field ' . $column . ' is not set for table ' . $table);
+                        throw new \InvalidArgumentException(
+                            'Primary key field ' . $column . ' is not set for table ' . $table
+                        );
                     }
                 }
             }
@@ -323,7 +325,11 @@ class Db extends CodeceptionModule implements DbInterface
     public function seeInDatabase($table, $criteria = [])
     {
         $res = $this->countInDatabase($table, $criteria);
-        $this->assertGreaterThan(0, $res, 'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table);
+        $this->assertGreaterThan(
+            0,
+            $res,
+            'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table
+        );
     }
 
     /**
@@ -342,13 +348,27 @@ class Db extends CodeceptionModule implements DbInterface
     public function seeNumRecords($expectedNumber, $table, array $criteria = [])
     {
         $actualNumber = $this->countInDatabase($table, $criteria);
-        $this->assertEquals($expectedNumber, $actualNumber, 'The number of found rows (' . $actualNumber. ') does not match expected number ' . $expectedNumber . ' for criteria ' . json_encode($criteria) . ' in table ' . $table);
+        $this->assertEquals(
+            $expectedNumber,
+            $actualNumber,
+            sprintf(
+                'The number of found rows (%d) does not match expected number %d for criteria %s in table %s',
+                $actualNumber,
+                $expectedNumber,
+                json_encode($criteria),
+                $table
+            )
+        );
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
         $count = $this->countInDatabase($table, $criteria);
-        $this->assertLessThan(1, $count, 'Unexpectedly found matching records for criteria ' . json_encode($criteria) . ' in table ' . $table);
+        $this->assertLessThan(
+            1,
+            $count,
+            'Unexpectedly found matching records for criteria ' . json_encode($criteria) . ' in table ' . $table
+        );
     }
 
     /**

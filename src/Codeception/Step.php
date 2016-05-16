@@ -100,7 +100,9 @@ abstract class Step
     {
         $argumentsAsJson = [];
         foreach ($arguments as $key => $argument) {
-            $argumentsAsJson []= stripcslashes(json_encode($this->parseArgumentAsString($argument), JSON_UNESCAPED_UNICODE));
+            $argumentsAsJson []= stripcslashes(
+                json_encode($this->parseArgumentAsString($argument), JSON_UNESCAPED_UNICODE)
+            );
         }
 
         return implode(',', $argumentsAsJson);
@@ -162,7 +164,6 @@ abstract class Step
     public function getMetaStep()
     {
         return $this->metaStep;
-
     }
 
     public function __toString()
@@ -176,7 +177,13 @@ abstract class Step
             return sprintf('%s %s', ucfirst($this->actor), $this->humanize($this->getAction()));
         }
 
-        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->actor), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
+        return sprintf(
+            '%s %s <span style="color: %s">%s</span>',
+            ucfirst($this->actor),
+            $this->humanize($this->getAction()),
+            $highlightColor,
+            $this->getHumanizedArguments()
+        );
     }
 
     public function getHumanizedActionWithoutArguments()

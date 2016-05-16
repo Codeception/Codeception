@@ -24,6 +24,4 @@ class CeptTest extends Codeception\TestCase\Test
             \Codeception\TestCase::getTestSignature($cept)
         );
     }
-
-
 }

@@ -78,11 +78,10 @@ class MongoDb extends CodeceptionModule
     public function _initialize()
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
-
             if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
                 throw new ModuleConfigException(
-                    __CLASS__, "
-                    File with dump doesn't exist.\n
+                    __CLASS__,
+                    "File with dump doesn't exist.\n
                     Please, check path for dump file: " . $this->config['dump']
                 );
             }
@@ -138,7 +137,6 @@ class MongoDb extends CodeceptionModule
         }
         try {
             $this->driver->cleanup();
-
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }

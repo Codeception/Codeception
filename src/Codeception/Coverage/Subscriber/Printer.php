@@ -12,7 +12,7 @@ class Printer implements EventSubscriberInterface
 {
     use StaticEvents;
 
-    static $events = [
+    public static $events = [
         Events::RESULT_PRINT_AFTER => 'printResult'
     ];
 
@@ -23,7 +23,7 @@ class Printer implements EventSubscriberInterface
         'show_uncovered' => false
     ];
 
-    static $coverage;
+    public static $coverage;
     protected $options;
     protected $logDir;
     protected $destination = [];
@@ -77,7 +77,6 @@ class Printer implements EventSubscriberInterface
             $this->printText();
             $printer->write("Text report generated in {$this->options['coverage-text']}\n");
         }
-
     }
 
     protected function printConsole(\PHPUnit_Util_Printer $printer)
@@ -120,8 +119,14 @@ class Printer implements EventSubscriberInterface
     protected function printText()
     {
         $writer = new \PHP_CodeCoverage_Report_Text(
-            $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered'], false
+            $this->settings['low_limit'],
+            $this->settings['high_limit'],
+            $this->settings['show_uncovered'],
+            false
         );
-        file_put_contents($this->absolutePath($this->options['coverage-text']), $writer->process(self::$coverage, false));
+        file_put_contents(
+            $this->absolutePath($this->options['coverage-text']),
+            $writer->process(self::$coverage, false)
+        );
     }
 }

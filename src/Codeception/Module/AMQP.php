@@ -104,7 +104,7 @@ class AMQP extends CodeceptionModule
     /**
      * Sends message to exchange by sending exchange name, message
      * and (optionally) a routing key
-     * 
+     *
      * ``` php
      * <?php
      * $I->pushToExchange('exchange.emails', 'thanks');

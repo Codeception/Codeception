@@ -14,7 +14,8 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @group core
      */
-    public function testAddCept() {
+    public function testAddCept()
+    {
         $this->testLoader->loadTest('SimpleCept.php');
         $this->assertEquals(1, count($this->testLoader->getTests()));
     }
@@ -23,7 +24,6 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->testLoader->loadTest('SimpleTest.php');
         $this->assertEquals(1, count($this->testLoader->getTests()));
-
     }
 
     public function testAddCeptAbsolutePath()
@@ -52,7 +52,11 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadAllTests()
     {
-        Codeception\Util\Autoload::addNamespace('Math', codecept_data_dir().'claypit/tests/_support/Math'); // to autoload dependencies
+        // to autoload dependencies
+        Codeception\Util\Autoload::addNamespace(
+            'Math',
+            codecept_data_dir().'claypit/tests/_support/Math'
+        );
         Codeception\Util\Autoload::addNamespace('Codeception\Module', codecept_data_dir().'claypit/tests/_support');
 
         $this->testLoader = new \Codeception\Lib\TestLoader(codecept_data_dir().'claypit/tests');
@@ -82,5 +86,4 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertNotSame(false, array_search($name, $testNames), "$name not found in tests");
     }
-
 }

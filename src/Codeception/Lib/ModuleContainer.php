@@ -170,9 +170,11 @@ class ModuleContainer
         }
         $config = $this->getModuleConfig($name);
         if (!isset($config['depends'])) {
-            throw new ModuleRequireException($module,
+            throw new ModuleRequireException(
+                $module,
                 "\nThis module depends on $dependency\n" .
-                "\n \n$message");
+                "\n \n$message"
+            );
         }
         $dependentModule = $this->create($config['depends'], false);
         if (!method_exists($module, '_inject')) {
@@ -193,7 +195,10 @@ class ModuleContainer
             }
             for ($j = $i; $j < count($this->modules); $j++) {
                 $inspectedModule = $this->modules[$moduleNames[$j]];
-                $nameAndInterfaces = array_merge([get_class($inspectedModule), $inspectedModule->_getName()], class_implements($inspectedModule));
+                $nameAndInterfaces = array_merge(
+                    [get_class($inspectedModule), $inspectedModule->_getName()],
+                    class_implements($inspectedModule)
+                );
                 if (in_array(ltrim($currentModule->_conflicts(), '\\'), $nameAndInterfaces)) {
                     throw new ModuleConflictException($currentModule, $inspectedModule);
                 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -56,7 +56,5 @@ class GenerateEnvironment extends Command
         } else {
             $output->writeln("<error>File $relativePath/$file already exists</error>");
         }
-
     }
-
 }

@@ -2,7 +2,7 @@
 
 use Codeception\Util\Stub;
 
-class Beanstalkd_Test extends \PHPUnit_Framework_TestCase
+class BeanstalkdTest extends \PHPUnit_Framework_TestCase
 {
     protected $config = array(
         'type' => 'beanstalkq',
@@ -17,8 +17,8 @@ class Beanstalkd_Test extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->module = new \Codeception\Module\Queue(make_container());
-            $this->module->_setConfig($this->config);
-            $this->module->_before(Stub::make('\Codeception\TestCase'));
+        $this->module->_setConfig($this->config);
+        $this->module->_before(Stub::make('\Codeception\TestCase'));
         try {
             $this->module->clearQueue('default');
         } catch (\Pheanstalk_Exception_ConnectionException $e) {

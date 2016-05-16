@@ -30,7 +30,7 @@ class Laravel4 extends Client
      *
      * @param \Codeception\Module\Laravel4 $module
      */
-    public function  __construct($module)
+    public function __construct($module)
     {
         $this->module = $module;
         $this->initialize();
@@ -134,11 +134,11 @@ class Laravel4 extends Client
      */
     private function setConfiguredSessionDriver(Application $app)
     {
+        $env = $this->module->config['environment'];
         $configDir = $app['path'] . DIRECTORY_SEPARATOR . 'config';
         $configFiles = array(
-            $configDir . DIRECTORY_SEPARATOR . $this->module->config['environment'] . DIRECTORY_SEPARATOR . 'session.php',
+            $configDir . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'session.php',
             $configDir . DIRECTORY_SEPARATOR . 'session.php',
-
         );
 
         foreach ($configFiles as $configFile) {

@@ -51,6 +51,8 @@ class GenerateGroup extends Command
         }
 
         $output->writeln("<info>Group extension was created in $filename</info>");
-        $output->writeln('To use this group extension, include it to "extensions" option of global Codeception config.');
+        $output->writeln(
+            'To use this group extension, include it to "extensions" option of global Codeception config.'
+        );
     }
 }

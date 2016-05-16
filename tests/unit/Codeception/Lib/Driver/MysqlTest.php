@@ -29,7 +29,6 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             $mysql->cleanup();
         } catch (\Exception $e) {
         }
-        
     }
 
     public function setUp()
@@ -90,12 +89,12 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('id', $this->mysql->getPrimaryColumn('order'));
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead
-     */
     public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
     {
+        $this->setExpectedException(
+            '\Exception',
+            'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
+        );
         $this->mysql->getPrimaryColumn('composite_pk');
     }
 

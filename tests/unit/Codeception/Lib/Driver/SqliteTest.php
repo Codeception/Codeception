@@ -23,7 +23,6 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
             self::$sqlite->cleanup();
         } catch (\Exception $e) {
         }
-        
     }
 
     public function setUp()
@@ -44,9 +43,14 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
     
     public function testCleanupDatabase()
     {
-        $this->assertGreaterThan(0, count(self::$sqlite->getDbh()->query('SELECT name FROM sqlite_master WHERE type = "table";')->fetchAll()));
+        $this->assertGreaterThan(
+            0,
+            count(self::$sqlite->getDbh()->query('SELECT name FROM sqlite_master WHERE type = "table";')->fetchAll())
+        );
         self::$sqlite->cleanup();
-        $this->assertEmpty(self::$sqlite->getDbh()->query('SELECT name FROM sqlite_master WHERE type = "table";')->fetchAll());
+        $this->assertEmpty(
+            self::$sqlite->getDbh()->query('SELECT name FROM sqlite_master WHERE type = "table";')->fetchAll()
+        );
     }
     
     public function testLoadDump()
@@ -80,12 +84,12 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('id', self::$sqlite->getPrimaryColumn('order'));
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead
-     */
     public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
     {
+        $this->setExpectedException(
+            '\Exception',
+            'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
+        );
         self::$sqlite->getPrimaryColumn('composite_pk');
     }
 }

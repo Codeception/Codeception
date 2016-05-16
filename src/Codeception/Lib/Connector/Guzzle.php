@@ -223,7 +223,7 @@ class Guzzle extends Client
 
     protected function extractBody(BrowserKitRequest $request)
     {
-        if (in_array(strtoupper($request->getMethod()), ['GET','HEAD'])) {
+        if (in_array(strtoupper($request->getMethod()), ['GET', 'HEAD'])) {
             return null;
         }
         if ($request->getContent() !== null) {
@@ -231,7 +231,7 @@ class Guzzle extends Client
         } else {
             return $request->getParameters();
         }
-}
+    }
 
     protected function extractFiles(BrowserKitRequest $request)
     {

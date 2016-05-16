@@ -25,7 +25,8 @@ trait Dependencies
                     );
                 }
                 return preg_replace('~with data set (.*?)~', '', $testname);
-            }, array_keys($passed)
+            },
+            array_keys($passed)
         );
 
         $dependencyInput = [];

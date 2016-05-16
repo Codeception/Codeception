@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
-class GenerateCestTest extends BaseCommandRunner {
+class GenerateCestTest extends BaseCommandRunner
+{
 
     protected function setUp()
     {
@@ -24,7 +25,7 @@ class GenerateCestTest extends BaseCommandRunner {
         $this->assertContains('public function _before(HobbitGuy $I)', $this->content);
         $this->assertContains('public function _after(HobbitGuy $I)', $this->content);
         $this->assertContains('public function tryToTest(HobbitGuy $I)', $this->content);
-        $this->assertContains('Test was created in tests/shire/HallUnderTheHillCest.php', $this->output);        
+        $this->assertContains('Test was created in tests/shire/HallUnderTheHillCest.php', $this->output);
     }
 
     /**
@@ -77,6 +78,4 @@ class GenerateCestTest extends BaseCommandRunner {
         $this->assertContains('class HallUnderTheHillCest', $this->content);
         $this->assertContains('Test was created in tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->output);
     }
-
-
 }

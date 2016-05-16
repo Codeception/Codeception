@@ -20,4 +20,4 @@ interface Configurable
     public function configEnv($env);
 
     public function initConfig();
-} 
+}

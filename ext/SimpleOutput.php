@@ -18,7 +18,7 @@ class SimpleOutput extends Extension
     }
 
     // we are listening for events
-    static $events = [
+    public static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_END     => 'after',
         Events::TEST_SUCCESS => 'success',

@@ -47,4 +47,3 @@ class ReflectionHelper
         return $method->invokeArgs($object, $args);
     }
 }
-

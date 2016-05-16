@@ -14,5 +14,5 @@ trait ScenarioPrint
         return $this->scenario->getText();
     }
 
-    abstract function getRawBody();
+    abstract public function getRawBody();
 }

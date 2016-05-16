@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Console;
 
-
 class MessageTest extends \Codeception\TestCase\Test
 {
 
@@ -16,7 +15,11 @@ class MessageTest extends \Codeception\TestCase\Test
     }
     
     //test message cutting
-    public function testVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestName() {}
+    // @codingStandardsIgnoreStart
+    public function testVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestName()
+    {
+        // @codingStandardsIgnoreEnd
+    }
 
     // test multibyte message width
     public function testWidth()
@@ -28,4 +31,3 @@ class MessageTest extends \Codeception\TestCase\Test
         $this->assertEquals('пример текста                 ', $message->width(30)->getMessage());
     }
 }
- 

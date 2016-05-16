@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Platform;
 
 use Codeception\Extension as BaseExtension;
@@ -11,5 +11,4 @@ use Codeception\Extension as BaseExtension;
  */
 abstract class Extension extends BaseExtension
 {
-
 }

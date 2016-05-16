@@ -19,11 +19,11 @@ class ExtensionsCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run unit FailingTest.php -c codeception_extended.yml --no-exit');
         $I->seeInShellOutput('FAILURES');
-        $I->seeFileFound('failed','tests/_output');
+        $I->seeFileFound('failed', 'tests/_output');
         $I->seeFileContentsEqual(<<<EOF
 tests{$ds}unit{$ds}FailingTest.php:testMe
 EOF
-);
+        );
         $I->executeCommand('run -g failed -c codeception_extended.yml --no-exit');
         $I->seeInShellOutput('Tests: 1, Assertions: 1, Failures: 1');
     }

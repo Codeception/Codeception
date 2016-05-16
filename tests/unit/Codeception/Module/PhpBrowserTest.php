@@ -1,6 +1,7 @@
 <?php
 
 use Codeception\Util\Stub;
+
 require_once 'tests/data/app/data.php';
 require_once __DIR__ . '/TestsForBrowsers.php';
 use GuzzleHttp\Psr7\Response;
@@ -14,7 +15,8 @@ class PhpBrowserTest extends TestsForBrowsers
 
     protected $history = [];
 
-    protected function setUp() {
+    protected function setUp()
+    {
         $this->module = new \Codeception\Module\PhpBrowser(make_container());
         $url = 'http://localhost:8000';
         $this->module->_setConfig(array('url' => $url));
@@ -27,7 +29,6 @@ class PhpBrowserTest extends TestsForBrowsers
         } else {
             $this->module->guzzle->getConfig('handler')->push(\GuzzleHttp\Middleware::history($this->history));
         }
-
     }
 
     private function getLastRequest()
@@ -39,7 +40,8 @@ class PhpBrowserTest extends TestsForBrowsers
         }
     }
     
-    protected function tearDown() {
+    protected function tearDown()
+    {
         if ($this->module) {
             $this->module->_after($this->makeTest());
         }
@@ -48,10 +50,14 @@ class PhpBrowserTest extends TestsForBrowsers
 
     protected function makeTest()
     {
-        return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
+        return Stub::makeEmpty(
+            '\Codeception\TestCase\Cept',
+            array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher'))
+        );
     }
 
-    public function testAjax() {
+    public function testAjax()
+    {
         $this->module->amOnPage('/');
         $this->module->sendAjaxGetRequest('/info');
         $this->assertNotNull(data::get('ajax'));
@@ -62,14 +68,16 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertEquals('author', $post['show']);
     }
 
-    public function testLinksWithNonLatin() {
+    public function testLinksWithNonLatin()
+    {
         $this->module->amOnPage('/info');
         $this->module->seeLink('Ссылочка');
         $this->module->click('Ссылочка');
     }
 
 
-	public function testSetMultipleCookies() {
+    public function testSetMultipleCookies()
+    {
         $this->module->amOnPage('/');
         $cookie_name_1  = 'test_cookie';
         $cookie_value_1 = 'this is a test';
@@ -118,7 +126,7 @@ class PhpBrowserTest extends TestsForBrowsers
     {
         $this->module->amOnPage('/redirect_params');
         $this->module->seeResponseCodeIs(200);
-        $this->module->seeCurrentUrlEquals('/search?one=1&two=2'); 
+        $this->module->seeCurrentUrlEquals('/search?one=1&two=2');
     }
 
     public function testMetaRefresh()
@@ -221,7 +229,11 @@ class PhpBrowserTest extends TestsForBrowsers
             $this->module->amOnPage('/redirect_twice');
             $this->assertTrue(false, 'redirect limit is not respected');
         } catch (\LogicException $e) {
-            $this->assertEquals('The maximum number (1) of redirections was reached.', $e->getMessage(), 'redirect limit is respected');
+            $this->assertEquals(
+                'The maximum number (1) of redirections was reached.',
+                $e->getMessage(),
+                'redirect limit is respected'
+            );
         }
     }
 
@@ -295,7 +307,6 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testHeadersBySetHeader()
     {
-
         $this->module->setHeader('xxx', 'yyyy');
         $this->module->amOnPage('/');
         $this->assertTrue($this->getLastRequest()->hasHeader('xxx'));
@@ -372,7 +383,7 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testRawGuzzle()
     {
-        $code = $this->module->executeInGuzzle(function(\GuzzleHttp\Client $client) {
+        $code = $this->module->executeInGuzzle(function (\GuzzleHttp\Client $client) {
             $res = $client->get('/info');
             return $res->getStatusCode();
         });
@@ -500,12 +511,12 @@ class PhpBrowserTest extends TestsForBrowsers
      */
     public function testEmptyValueOfCookie()
     {
-      //set cookie
-      $this->module->amOnPage('/cookies2');
+        //set cookie
+        $this->module->amOnPage('/cookies2');
 
-      $this->module->amOnPage('/unset-cookie');
-      $this->module->seeResponseCodeIs(200);
-      $this->module->dontSeeCookie('a');
+        $this->module->amOnPage('/unset-cookie');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->dontSeeCookie('a');
     }
 
     public function testRequestApi()
@@ -535,8 +546,10 @@ class PhpBrowserTest extends TestsForBrowsers
     public function testClickFailure()
     {
         $this->module->amOnPage('/info');
-        $this->setExpectedException('Codeception\Exception\ElementNotFound',
-            "'Sign In!' is invalid CSS and XPath selector and Link or Button element with 'name=Sign In!' was not found");
+        $this->setExpectedException(
+            'Codeception\Exception\ElementNotFound',
+            "'Sign In!' is invalid CSS and XPath selector and Link or Button element with 'name=Sign In!' was not found"
+        );
         $this->module->click('Sign In!');
     }
 

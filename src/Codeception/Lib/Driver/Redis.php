@@ -19,7 +19,7 @@ class Redis
     private $_sock;
     public $debug = false;
 
-    function __construct($host = 'localhost', $port = 6379)
+    public function __construct($host = 'localhost', $port = 6379)
     {
         $this->host = $host;
         $this->port = $port;
@@ -39,7 +39,7 @@ class Redis
         if (($errno !== 0) || ($errmsg !== null)) {
             $msg .= "," . ($errno ? " error $errno" : "") . ($errmsg ? " $errmsg" : "");
         }
-        throw new RedisException ("$msg.");
+        throw new RedisException("$msg.");
     }
 
     private function debug($msg)
@@ -56,7 +56,7 @@ class Redis
             return $s;
         }
         $this->disconnect();
-        throw new RedisException ("Cannot read from socket.");
+        throw new RedisException("Cannot read from socket.");
     }
 
     private function cmdResponse()
@@ -64,14 +64,14 @@ class Redis
         // Read the response
         $s = trim($this->read());
         switch ($s[0]) {
-            case '-' : // Error message
-                throw new RedisException (substr($s, 1));
+            case '-': // Error message
+                throw new RedisException(substr($s, 1));
                 break;
-            case '+' : // Single line response
+            case '+': // Single line response
                 return substr($s, 1);
-            case ':' : //Integer number
+            case ':': //Integer number
                 return substr($s, 1) + 0;
-            case '$' : //Bulk data response
+            case '$': //Bulk data response
                 $i = ( int )(substr($s, 1));
                 if ($i == -1) {
                     return null;
@@ -91,7 +91,7 @@ class Redis
                 }
                 return $buffer;
                 break;
-            case '*' : // Multi-bulk data (a list of values)
+            case '*': // Multi-bulk data (a list of values)
                 $i = ( int )(substr($s, 1));
                 if ($i == -1) {
                     return null;
@@ -102,8 +102,8 @@ class Redis
                 }
                 return $res;
                 break;
-            default :
-                throw new RedisException ('Unknown response line: ' . $s);
+            default:
+                throw new RedisException('Unknown response line: ' . $s);
                 break;
         }
     }
@@ -111,14 +111,18 @@ class Redis
     private $pipeline = false;
     private $pipeline_commands = 0;
 
-    function pipeline_begin()
+    // @codingStandardsIgnoreStart
+    public function pipeline_begin()
     {
+        // @codingStandardsIgnoreEnd
         $this->pipeline = true;
         $this->pipeline_commands = 0;
     }
 
-    function pipeline_responses()
+    // @codingStandardsIgnoreStart
+    public function pipeline_responses()
     {
+        // @codingStandardsIgnoreEnd
         $response = [];
         for ($i = 0; $i < $this->pipeline_commands; $i++) {
             $response[] = $this->cmdResponse();
@@ -158,7 +162,7 @@ class Redis
         }
     }
 
-    function disconnect()
+    public function disconnect()
     {
         if ($this->_sock) {
             @fclose($this->_sock);
@@ -177,7 +181,7 @@ class Redis
      *
      * @return void The connection is closed as soon as the QUIT command is received.
      */
-    function quit()
+    public function quit()
     {
         return $this->cmd('QUIT');
     }
@@ -200,7 +204,7 @@ class Redis
      *
      * @return string Status code reply
      */
-    function auth($password)
+    public function auth($password)
     {
         return $this->cmd(['AUTH', $password]);
     }
@@ -221,7 +225,7 @@ class Redis
      *
      * @return string Status code reply
      */
-    function set($key, $value, $preserve = false)
+    public function set($key, $value, $preserve = false)
     {
         return $this->cmd([($preserve ? 'SETNX' : 'SET'), $key, $value]);
     }
@@ -248,7 +252,7 @@ class Redis
      *
      * @return mixed Bulk reply | Multi bulk reply
      */
-    function get($key)
+    public function get($key)
     {
         $args = func_get_args();
         if (count($args) > 1) {
@@ -262,12 +266,12 @@ class Redis
         }
     }
 
-    function __get($key)
+    public function __get($key)
     {
         return $this->get($key);
     }
 
-    function __set($key, $value)
+    public function __set($key, $value)
     {
         return $this->set($key, $value);
     }
@@ -290,7 +294,7 @@ class Redis
      *
      * @return string Bulk reply
      */
-    function getset($key, $value)
+    public function getset($key, $value)
     {
         return $this->cmd(["GETSET", $key, $value]);
     }
@@ -312,7 +316,7 @@ class Redis
      *
      * @return int this commands will reply with the new value of key after the increment or decrement.
      */
-    function incr($key, $amount = 1)
+    public function incr($key, $amount = 1)
     {
         if ($amount == 1) {
             return $this->cmd(["INCR", $key]);
@@ -337,7 +341,7 @@ class Redis
      *
      * @return int this commands will reply with the new value of key after the increment or decrement.
      */
-    function decr($key, $amount = 1)
+    public function decr($key, $amount = 1)
     {
         if ($amount == 1) {
             return $this->cmd(["DECR", $key]);
@@ -358,12 +362,12 @@ class Redis
      *
      * @return int
      */
-    function exists($key)
+    public function exists($key)
     {
         return $this->cmd(["EXISTS", $key]);
     }
 
-    function __isset($key)
+    public function __isset($key)
     {
         return $this->exists($key);
     }
@@ -379,12 +383,12 @@ class Redis
      *
      * @return int
      */
-    function delete($key)
+    public function delete($key)
     {
         return $this->cmd(["DEL", $key]);
     }
 
-    function __unset($key)
+    public function __unset($key)
     {
         return $this->delete($key);
     }
@@ -400,7 +404,7 @@ class Redis
      *
      * @return string
      */
-    function type($key)
+    public function type($key)
     {
         return $this->cmd(["TYPE", $key]);
     }
@@ -415,7 +419,7 @@ class Redis
      *
      * @return string space separated list of keys
      */
-    function keys($pattern)
+    public function keys($pattern)
     {
         return $this->cmd(["KEYS", $pattern]);
     }
@@ -425,16 +429,18 @@ class Redis
      *
      * @return unknown_type
      */
-    function randomkey()
+    public function randomkey()
     {
         return $this->cmd("RANDOMKEY");
     }
 
     /**
-     * rename the old key in the new one, destroying the newname key if it already exists if if $preserve - if the dst does not already exist
+     * Rename the old key in the new one,
+     * destroying the newname key if it already exists if if $preserve - if the dst does not already exist
      *
      * Time complexity: O(1)
-     * Atomically renames the key oldkey to newkey. If the source and destination name are the same an error is returned. If newkey already exists it is overwritten.
+     * Atomically renames the key oldkey to newkey.
+     * If the source and destination name are the same an error is returned. If newkey already exists it is overwritten.
      *
      * @param $src
      * @param $dst
@@ -442,7 +448,7 @@ class Redis
      *
      * @return string Status code repy
      */
-    function rename($src, $dst, $preserve = false)
+    public function rename($src, $dst, $preserve = false)
     {
         if ($preserve) {
             return $this->cmd(["RENAMENX", $src, $dst]);
@@ -454,7 +460,7 @@ class Redis
      * return the number of keys in the current db
      * @return int
      */
-    function dbsize()
+    public function dbsize()
     {
         return $this->cmd("DBSIZE");
     }
@@ -467,7 +473,7 @@ class Redis
      *
      * @return int 1: the timeout was set. | 0: the timeout was not set since the key already has an associated timeout, or the key does not exist.
      */
-    function expire($key, $ttl)
+    public function expire($key, $ttl)
     {
         return $this->cmd(["EXPIRE", $key, $ttl]);
     }
@@ -479,7 +485,7 @@ class Redis
      *
      * @return int
      */
-    function ttl($key)
+    public function ttl($key)
     {
         return $this->cmd(["TTL", $key]);
     }
@@ -498,7 +504,7 @@ class Redis
      *
      * @return unknown_type
      */
-    function push($key, $value, $tail = true)
+    public function push($key, $value, $tail = true)
     {
         // default is to append the element to the list
         return $this->cmd([$tail ? 'RPUSH' : 'LPUSH', $key, $value]);
@@ -511,7 +517,7 @@ class Redis
      *
      * @return unknown_type
      */
-    function llen($key)
+    public function llen($key)
     {
         return $this->cmd(["LLEN", $key]);
     }
@@ -525,7 +531,7 @@ class Redis
      *
      * @return unknown_type
      */
-    function lrange($key, $start, $end)
+    public function lrange($key, $start, $end)
     {
         return $this->cmd(["LRANGE", $key, $start, $end]);
     }
@@ -539,7 +545,7 @@ class Redis
      *
      * @return unknown_type
      */
-    function ltrim($key, $start, $end)
+    public function ltrim($key, $start, $end)
     {
         return $this->cmd(["LTRIM", $key, $start, $end]);
     }
@@ -552,7 +558,7 @@ class Redis
      *
      * @return unknown_type
      */
-    function lindex($key, $index)
+    public function lindex($key, $index)
     {
         return $this->cmd(["LINDEX", $key, $index]);
     }
@@ -566,7 +572,7 @@ class Redis
      *
      * @return unknown_type
      */
-    function lset($key, $value, $index)
+    public function lset($key, $value, $index)
     {
         return $this->cmd(["LSET", $key, $index, $value]);
     }
@@ -591,7 +597,7 @@ class Redis
      *
      * @return int The number of removed elements if the operation succeeded
      */
-    function lrem($key, $value, $count = 1)
+    public function lrem($key, $value, $count = 1)
     {
         return $this->cmd(["LREM", $key, $count, $value]);
     }
@@ -604,7 +610,7 @@ class Redis
      *
      * @return string Bulk reply
      */
-    function pop($key, $tail = true)
+    public function pop($key, $tail = true)
     {
         return $this->cmd([$tail ? 'RPOP' : 'LPOP', $key]);
     }
@@ -622,7 +628,7 @@ class Redis
      *
      * @return unknown_type
      */
-    function sadd($key, $value)
+    public function sadd($key, $value)
     {
         return $this->cmd(["SADD", $key, $value]);
     }
@@ -635,7 +641,7 @@ class Redis
      *
      * @return unknown_type
      */
-    function srem($key, $value)
+    public function srem($key, $value)
     {
         return $this->cmd(["SREM", $key, $value]);
     }
@@ -645,7 +651,7 @@ class Redis
      *
      * @return string
      */
-    function spop($key)
+    public function spop($key)
     {
         return $this->cmd(["SPOP", $key]);
     }
@@ -659,7 +665,7 @@ class Redis
      *
      * @return int 1 if the element was moved | 0 if the element was not found on the first set and no operation was performed
      */
-    function smove($srckey, $dstkey, $member)
+    public function smove($srckey, $dstkey, $member)
     {
         $this->cmd(["SMOVE", $srckey, $dstkey, $member]);
     }
@@ -671,7 +677,7 @@ class Redis
      *
      * @return int
      */
-    function scard($key)
+    public function scard($key)
     {
         return $this->cmd(["SCARD", $key]);
     }
@@ -684,7 +690,7 @@ class Redis
      *
      * @return int
      */
-    function sismember($key, $value)
+    public function sismember($key, $value)
     {
         return $this->cmd(["SISMEMBER", $key, $value]);
     }
@@ -696,7 +702,7 @@ class Redis
      *
      * @return array
      */
-    function sinter($key1)
+    public function sinter($key1)
     {
         if (is_array($key1)) {
             $sets = $key1;
@@ -715,7 +721,7 @@ class Redis
      *
      * @return string Status code reply
      */
-    function sinterstore($dstkey, $key1)
+    public function sinterstore($dstkey, $key1)
     {
         if (is_array($key1)) {
             $sets = $key1;
@@ -734,7 +740,7 @@ class Redis
      *
      * @return array
      */
-    function sunion($key1)
+    public function sunion($key1)
     {
         if (is_array($key1)) {
             $sets = $key1;
@@ -753,7 +759,7 @@ class Redis
      *
      * @return string Status code reply
      */
-    function sunionstore($dstkey, $key1)
+    public function sunionstore($dstkey, $key1)
     {
         if (is_array($key1)) {
             $sets = $key1;
@@ -772,7 +778,7 @@ class Redis
      *
      * @return array
      */
-    function sdiff($key1)
+    public function sdiff($key1)
     {
         if (is_array($key1)) {
             $sets = $key1;
@@ -784,14 +790,15 @@ class Redis
     }
 
     /**
-     * Compute the difference between the Set key1 and all the Sets key2, ..., keyN, and store the resulting Set at dstkey
+     * Compute the difference between the Set key1 and all the Sets key2, ..., keyN,
+     * and store the resulting Set at dstkey
      *
      * @param $dstkey
      * @param $key1
      *
      * @return string Status code reply
      */
-    function sdiffstore($dstkey, $key1)
+    public function sdiffstore($dstkey, $key1)
     {
         if (is_array($key1)) {
             $sets = $key1;
@@ -810,7 +817,7 @@ class Redis
      *
      * @return array
      */
-    function smembers($key)
+    public function smembers($key)
     {
         return $this->cmd(["SMEMBERS", $key]);
     }
@@ -826,9 +833,11 @@ class Redis
      * @param $key
      *
      * @return string Status code reply
+     * @codingStandardsIgnoreStart
      */
-    function select_db($key)
+    public function select_db($key)
     {
+        // @codingStandardsIgnoreEnd
         return $this->cmd(["SELECT", $key]);
     }
 
@@ -840,7 +849,7 @@ class Redis
      *
      * @return int 1 if the key was moved | 0 if the key was not moved because already present on the target DB or was not found in the current DB.
      */
-    function move($key, $db)
+    public function move($key, $db)
     {
         return $this->cmd(["MOVE", $key, $db]);
     }
@@ -849,7 +858,7 @@ class Redis
      * Remove all the keys of the currently selected DB
      * @return string Status code reply
      */
-    function flushdb()
+    public function flushdb()
     {
         return $this->cmd("FLUSHDB");
     }
@@ -858,7 +867,7 @@ class Redis
      * Remove all the keys from all the databases
      * @return string Status code reply
      */
-    function flushall()
+    public function flushall()
     {
         return $this->cmd("FLUSHALL");
     }
@@ -875,7 +884,7 @@ class Redis
      *
      * @return array
      */
-    function sort($key, $query = false)
+    public function sort($key, $query = false)
     {
         if ($query === false) {
             return $this->cmd(["SORT", $key]);
@@ -896,7 +905,7 @@ class Redis
      *
      * @return string Status code reply
      */
-    function save($background = false)
+    public function save($background = false)
     {
         return $this->cmd(($background ? "BGSAVE" : "SAVE"));
     }
@@ -905,16 +914,17 @@ class Redis
      * Return the UNIX time stamp of the last successfully saving of the dataset on disk
      * @return int
      */
-    function lastsave()
+    public function lastsave()
     {
         return $this->cmd("LASTSAVE");
     }
 
     /**
      * Synchronously save the DB on disk, then shutdown the server
-     * @return string Status code reply on error. On success nothing is returned since the server quits and the connection is closed.
+     * @return string Status code reply on error.
+     *                On success nothing is returned since the server quits and the connection is closed.
      */
-    function shutdown()
+    public function shutdown()
     {
         return $this->cmd("SHUTDOWN");
     }
@@ -929,7 +939,7 @@ class Redis
      *
      * @return unknown_type
      */
-    function info($section = false)
+    public function info($section = false)
     {
         if ($section === false) {
             return $this->cmd("INFO");
@@ -959,7 +969,7 @@ class Redis
      *
      * @return string Status code reply
      */
-    function slaveof($host = null, $port = 6379)
+    public function slaveof($host = null, $port = 6379)
     {
         return $this->cmd(['SLAVEOF', $host ? "$host $port" : 'no one']);
     }
@@ -967,13 +977,15 @@ class Redis
     ////////////////////////////////
     ///// MISC
     ////////////////////////////////
-    function ping()
+    public function ping()
     {
         return $this->cmd("PING");
     }
 
-    function do_echo($s)
+    // @codingStandardsIgnoreStart
+    public function do_echo($s)
     {
+        // @codingStandardsIgnoreEnd
         return $this->cmd(["ECHO", $s]);
     }
 
@@ -983,7 +995,7 @@ class Redis
      * @param string $name
      * @param array $params
      */
-    function __call($name, $params)
+    public function __call($name, $params)
     {
         array_unshift($params, strtoupper($name));
         return $this->cmd($params);

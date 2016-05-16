@@ -46,5 +46,4 @@ class BuildTest extends BaseCommandRunner
         $this->assertContains('use _generated\HobbitGuyActions;', $this->content);
         $this->assertIsValidPhp($this->content);
     }
-
 }

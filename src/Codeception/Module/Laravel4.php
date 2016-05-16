@@ -739,5 +739,4 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
 
         return $compiledRoute->getHostRegex();
     }
-
 }

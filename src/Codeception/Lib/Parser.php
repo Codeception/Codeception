@@ -56,7 +56,8 @@ class Parser
             }
             foreach ($matches[0] as $line) {
                 // run $scenario->group or $scenario->env
-                \Codeception\Lib\Notification::deprecate("\$scenario->$call() is deprecated in favor of annotation: // @$call",
+                \Codeception\Lib\Notification::deprecate(
+                    "\$scenario->$call() is deprecated in favor of annotation: // @$call",
                     $this->scenario->getFeature()
                 );
                 eval($line);
@@ -72,7 +73,7 @@ class Parser
             foreach ($values as $value) {
                 call_user_func([$this->scenario, $annotation], $value);
             }
-        }        
+        }
     }
 
     public function parseSteps($code)
@@ -108,7 +109,6 @@ class Parser
                 $isFriend = false;
             }
         }
-
     }
 
     protected function addStep($matches)
@@ -196,7 +196,7 @@ class Parser
 
     /*
      * Include in different scope to prevent included file from affecting $file variable
-     */ 
+     */
     private static function includeFile($file)
     {
         include_once $file;

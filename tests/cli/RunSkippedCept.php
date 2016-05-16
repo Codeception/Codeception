@@ -5,4 +5,3 @@ $I->amInPath('tests/data/sandbox');
 $I->executeCommand('run skipped SkipMeCept.php');
 $I->seeShellOutputMatches("~\(SkipMeCept\)[\s\.]*?Skipped~");
 $I->seeInShellOutput('OK, but incomplete, skipped, or risky tests!');
-

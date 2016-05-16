@@ -80,7 +80,8 @@ trait PhpSuperGlobalsConverter
                     $innerInfo = array_map(
                         function ($v) use ($innerName) {
                             return [$innerName => $v];
-                        }, $innerInfo
+                        },
+                        $innerInfo
                     );
 
                     if (empty($files[$name])) {

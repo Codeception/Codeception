@@ -45,4 +45,4 @@ class Template
         }
         return $result;
     }
-} 
+}

@@ -2,13 +2,15 @@
 namespace Codeception\Util;
 
 /**
- * Autoloader, which is fully compatible with PSR-4, and can be used to autoload your `Helper`, `Page`, and `Step` classes.
+ * Autoloader, which is fully compatible with PSR-4,
+ * and can be used to autoload your `Helper`, `Page`, and `Step` classes.
  */
 class Autoload
 {
     protected static $registered = false;
     /**
-     * An associative array where the key is a namespace prefix and the value is an array of base directories for classes in that namespace.
+     * An associative array where the key is a namespace prefix and the value
+     * is an array of base directories for classes in that namespace.
      * @var array
      */
     protected static $map = [];
@@ -36,7 +38,8 @@ class Autoload
      *
      * @param string $prefix The namespace prefix.
      * @param string $base_dir A base directory for class files in the namespace.
-     * @param bool $prepend If true, prepend the base directory to the stack instead of appending it; this causes it to be searched first rather than last.
+     * @param bool $prepend If true, prepend the base directory to the stack instead of appending it;
+     *                      this causes it to be searched first rather than last.
      * @return void
      */
     public static function addNamespace($prefix, $base_dir, $prepend = false)
@@ -89,7 +92,6 @@ class Autoload
 
         // work backwards through the namespace names of the fully-qualified class name to find a mapped file name
         while (false !== ($pos = strrpos($prefix, '\\'))) {
-
             // retain the trailing namespace separator in the prefix
             $prefix = substr($class, 0, $pos + 1);
 

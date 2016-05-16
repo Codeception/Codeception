@@ -24,5 +24,4 @@ class TestTest extends \Codeception\TestCase\Test
             'feature' => 'test reported interface',
         ), $this->getReportFields());
     }
-
 }
