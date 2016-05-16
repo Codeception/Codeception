@@ -452,14 +452,21 @@ class Stub
     private static function doGenerateMock($args, $isAbstract = false)
     {
         $testCase = self::extractTestCaseFromArgs($args);
-        $class = $testCase instanceof \PHPUnit_Framework_TestCase
-            ? $testCase
-            : new \PHPUnit_Framework_MockObject_Generator;
         $methodName = $isAbstract ? 'getMockForAbstractClass' : 'getMock';
+        $generatorClass = new \PHPUnit_Framework_MockObject_Generator;
 
-        $mock = call_user_func_array([$class, $methodName], $args);
+        // using PHPUnit 5.4 mocks registration
+        if (version_compare(\PHPUnit_Runner_Version::series(), '5.4', '>=') and $testCase instanceof \PHPUnit_Framework_TestCase) {
+            $mock = call_user_func_array([$generatorClass, $methodName], $args);
+            $testCase->registerMockObject($mock);
+            return $mock;
+        }
 
-        return $mock;
+        if ($testCase instanceof  \PHPUnit_Framework_TestCase) {
+            $generatorClass = $testCase;
+        }
+
+        return call_user_func_array([$generatorClass, $methodName], $args);
     }
 
     private static function extractTestCaseFromArgs(&$args)
@@ -502,7 +509,7 @@ class Stub
         $reflectionClass = new \ReflectionClass($mock);
         if ($mock instanceof \PHPUnit_Framework_MockObject_MockObject) {
             $parentClass = $reflectionClass->getParentClass();
-            if ($parentClass !== false) {
+            if ($parentClass !== FALSE) {
                 $reflectionClass = $reflectionClass->getParentClass();
             }
         }
@@ -546,8 +553,7 @@ class Stub
                     } catch (\Exception $e) {
                         throw new \PHPUnit_Framework_Exception(
                             sprintf(
-                                'Could not add property %1$s, class %2$s implements __set method, '
-                                . 'and no %1$s property exists',
+                                'Could not add property %1$s, class %2$s implements __set method, and no %1$s property exists',
                                 $param,
                                 $reflectionClass->getName()
                             ),
