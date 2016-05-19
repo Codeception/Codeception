@@ -94,6 +94,18 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * Adds HTTP headers
+     *
+     * @param $headers
+     */
+    public function addHeaders($headers)
+    {
+        if (!empty($headers) && is_array($headers)) {
+            $this->headers = array_merge($this->headers, $headers);
+        }
+    }
+
+    /**
      * Sets HTTP header
      *
      * @param $name
