@@ -113,7 +113,11 @@ class Dbh extends CodeceptionModule implements DbInterface
         }
         $sparams = implode('AND ', $params);
 
-        $query = sprintf('select %s from %s where %s', $column, $table, $sparams);
+        if (empty($sparams)) {
+            $query = sprintf('select %s from %s', $column, $table);
+        } else {
+            $query = sprintf('select %s from %s where %s', $column, $table, $sparams);
+        }
 
         $this->debugSection('Query', $query, $sparams);
 
