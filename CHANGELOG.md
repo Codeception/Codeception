@@ -2,6 +2,7 @@
 
 #### 2.1.9
 
+* [Dbh] Fix seeInDatabase and dontSeeInDatabase with empty criteria. Closes #3116
 * [Symfony] Improve fail messages on seeInCurrentRoute and seeCurrentRouteIs
 * [Symfony] Improve route comparison on seeInCurrentRoute and seeCurrentRouteIs
 * [WebDriver] multi session testing with friends improved by @eXorus. Webdriver sessions are finished correctly; `leave()` method added to Friend class. See #3068
