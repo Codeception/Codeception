@@ -33,6 +33,12 @@ class RestTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    public function testConflictsWithAPI()
+    {
+        $this->assertInstanceOf('Codeception\Lib\Interfaces\ConflictsWithModule', $this->module);
+        $this->assertEquals('Codeception\Lib\Interfaces\API', $this->module->_conflicts());
+    }
+
     private function setStubResponse($response)
     {
         $connectionModule = Stub::make('\Codeception\Module\UniversalFramework', ['_getResponseContent' => $response]);

@@ -6,13 +6,13 @@ branches:
     - gh-pages
 
 services:
-  - mysql56
+  - mysql
   - postgresql93
   - mongodb
 
 install:
   # databases setup
-  - SET PATH=C:\Program Files\MySql\MySQL Server 5.6\bin\;%PATH%
+  - SET PATH=C:\Program Files\MySql\MySQL Server 5.7\bin\;%PATH%
   - SET PGUSER=postgres
   - SET PGPASSWORD=Password12!
   - SET PATH=C:\Program Files\PostgreSQL\9.3\bin\;%PATH%

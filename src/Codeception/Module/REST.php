@@ -1,9 +1,11 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ModuleException;
+use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
 use Codeception\TestInterface;
-use Codeception\Exception\ModuleException as ModuleException;
+use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\DependsOnModule;
@@ -20,14 +22,6 @@ use Codeception\Util\Soap as XmlUtils;
  * This module can be used either with frameworks or PHPBrowser.
  * If a framework module is connected, the testing will occur in the application directly.
  * Otherwise, a PHPBrowser should be specified as a dependency to send requests and receive responses from a server.
- *
- *
- * ## Status
- *
- * * Maintainer: **tiger-seo**, **davert**
- * * Stability: **stable**
- * * Contact: codecept@davert.mail.ua
- * * Contact: tiger.seo@gmail.com
  *
  * ## Configuration
  *
@@ -49,14 +43,17 @@ use Codeception\Util\Soap as XmlUtils;
  * * params - array of sent data
  * * response - last response (string)
  *
- *
  * ## Parts
  *
  * * Json - actions for validating Json responses (no Xml responses)
  * * Xml - actions for validating XML responses (no Json responses)
  *
+ * ## Conflicts
+ *
+ * Conflicts with SOAP module
+ *
  */
-class REST extends CodeceptionModule implements DependsOnModule, PartedModule
+class REST extends CodeceptionModule implements DependsOnModule, PartedModule, API, ConflictsWithModule
 {
     protected $config = [
         'url'           => '',
@@ -112,6 +109,11 @@ EOF;
         if ($this->client) {
             $this->client->setServerParameters([]);
         }
+    }
+
+    public function _conflicts()
+    {
+        return 'Codeception\Lib\Interfaces\API';
     }
 
     public function _depends()
