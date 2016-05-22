@@ -60,6 +60,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->dontSee('Welcome', 'h6');
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/3114
+     */
+    public function testSeeIsCaseInsensitiveForUnicodeText()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->see('ссылочка');
+    }
+
     public function testSeeInSource()
     {
         $this->module->amOnPage('/');
