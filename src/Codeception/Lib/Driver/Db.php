@@ -226,7 +226,7 @@ class Db
             $i++;
             if (is_bool($value)) {
                 $type = \PDO::PARAM_BOOL;
-            } elseif (preg_match('/^[-+]?\d+$/', $value)) {
+            } elseif (is_int($value)) {
                 $type = \PDO::PARAM_INT;
             } else {
                 $type = \PDO::PARAM_STR;
