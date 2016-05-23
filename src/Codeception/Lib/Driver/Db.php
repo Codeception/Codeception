@@ -221,7 +221,12 @@ class Db
             throw new \Exception("Query '$query' can't be prepared.");
         }
 
-        $sth->execute($params);
+        $i = 0;
+        foreach ($params as $value) {
+            $i++;
+            $type = preg_match('/^[-+]?\d+$/', $value) ? \PDO::PARAM_INT : \PDO::PARAM_STR;
+            $sth->bindValue($i, $value, $type);
+        }
         return $sth;
     }
 
