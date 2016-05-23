@@ -224,7 +224,13 @@ class Db
         $i = 0;
         foreach ($params as $value) {
             $i++;
-            $type = preg_match('/^[-+]?\d+$/', $value) ? \PDO::PARAM_INT : \PDO::PARAM_STR;
+            if (is_bool($value)) {
+                $type = \PDO::PARAM_BOOL;
+            } elseif (preg_match('/^[-+]?\d+$/', $value)) {
+                $type = \PDO::PARAM_INT;
+            } else {
+                $type = \PDO::PARAM_STR;
+            }
             $sth->bindValue($i, $value, $type);
         }
 
