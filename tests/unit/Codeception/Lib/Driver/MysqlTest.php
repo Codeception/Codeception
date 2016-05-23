@@ -36,7 +36,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         try {
             $this->mysql = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
         } catch (\Exception $e) {
-            $this->markTestSkipped('Coudn\'t establish connection to database');
+            $this->markTestSkipped('Couldn\'t establish connection to database');
         }
         $this->mysql->load(self::$sql);
     }
@@ -110,5 +110,18 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $this->mysql->deleteQuery('table_with_reserved_primary_key', 1, 'unique');
         $res = $this->mysql->getDbh()->query("select name from `table_with_reserved_primary_key` where `unique` = 1");
         $this->assertEquals(0, $res->rowCount());
+    }
+
+    public function testSelectWithBooleanParam()
+    {
+        $res = $this->mysql->executeQuery("select `id` from `users` where `is_active` = ?", [false]);
+        $this->assertEquals(1, $res->rowCount());
+    }
+
+    public function testInsertIntoBitField()
+    {
+        $res = $this->mysql->executeQuery("insert into `users`(`id`,`name`,`email`,`is_active`,`created_at`) values (?,?,?,?,?)",
+            [5,'insert.test','insert.test@mail.ua',false,'2012-02-01 21:17:47']);
+        $this->assertEquals(1, $res->rowCount());
     }
 }
