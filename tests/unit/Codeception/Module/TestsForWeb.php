@@ -67,6 +67,14 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/info');
         $this->module->see('ссылочка');
+        $this->module->see('ссылочка', 'a');
+    }
+
+    public function testDontSeeIsCaseInsensitiveForUnicodeText()
+    {
+        $this->setExpectedException("PHPUnit_Framework_AssertionFailedError");
+        $this->module->amOnPage('/info');
+        $this->module->dontSee('ссылочка');
     }
 
     public function testSeeInSource()
