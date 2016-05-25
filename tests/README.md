@@ -155,3 +155,81 @@ There are various test suites in `tests/data/claypit`. Maybe you will need to cr
 ## Coverage
 
 Acceptance tests that use demo application and `c3` collector, to check that a code coverage can be collected remotely. This tests are rarely updated, they should just work )
+
+---
+
+## Dockerized testing
+
+### Local testing and development with `docker-compose`
+
+Using `docker-compose` for test configurations 
+
+    cd tests
+
+Build the `codeception/codeception` image
+
+    docker-compose build
+    
+Start 
+
+    docker-compose up -d    
+    
+By default the image has `codecept` as its entrypoint, to run the tests simply supply the `run` command    
+
+    docker-compose run --rm codecept help
+
+Run suite
+
+    docker-compose run --rm codecept run cli
+
+Run folder
+
+    docker-compose run --rm codecept run unit Codeception/Command
+    
+Run single test
+    
+    docker-compose run --rm codecept run cli ExtensionsCest
+
+Development bash
+
+    docker-compose run --rm --entrypoint bash codecept
+    
+Cleanup
+
+    docker-compose run --rm codecept clean
+
+In parallel
+    
+    docker-compose --project-name test-cli run -d --rm codecept run --html report-cli.html cli & \
+    docker-compose --project-name test-unit-command run -d --rm codecept run --html report-unit-command.html unit Codeception/Command & \
+    docker-compose --project-name test-unit-constraints run -d --rm codecept run --html report-unit-constraints.html unit Codeception/Constraints
+    
+
+### Adding services
+
+Add Redis to `docker-compose.yml`
+
+    services:
+      [...]
+      redis:
+        image: redis:3
+
+Update `host`
+
+     protected static $config = [
+         'database' => 15,
+         'host' => 'redis'
+     ];
+
+Run Redis tests
+
+    docker-compose run --rm codecept run unit Codeception/Module/RedisTest
+
+Further Examples
+
+      firefox:
+        image: selenium/standalone-firefox-debug:2.52.0
+      chrome:
+        image: selenium/standalone-chrome-debug:2.52.0
+      mongo:
+        image: mongo
