@@ -31,7 +31,7 @@ class Message
 
     public function width($length, $char = ' ')
     {
-        $message_length = mb_strlen(strip_tags($this->message), 'utf-8');
+        $message_length = mb_strwidth(strip_tags($this->message), 'utf-8');
 
         if ($message_length < $length) {
             $this->message .= str_repeat($char, $length - $message_length);
