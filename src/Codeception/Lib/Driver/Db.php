@@ -224,7 +224,20 @@ class Db
             throw new \Exception("Query '$query' can't be prepared.");
         }
 
-        $sth->execute($params);
+        $i = 0;
+        foreach ($params as $value) {
+            $i++;
+            if (is_bool($value)) {
+                $type = \PDO::PARAM_BOOL;
+            } elseif (is_int($value)) {
+                $type = \PDO::PARAM_INT;
+            } else {
+                $type = \PDO::PARAM_STR;
+            }
+            $sth->bindValue($i, $value, $type);
+        }
+
+        $sth->execute();
         return $sth;
     }
 

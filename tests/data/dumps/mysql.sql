@@ -47,18 +47,19 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
+  `is_active` bit(1) DEFAULT b'1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-insert  into `users`(`id`,`name`,`email`,`created_at`) values (1,'davert','davert@mail.ua','2012-02-01 21:17:04');
+insert  into `users`(`id`,`name`,`email`, `is_active`,`created_at`) values (1,'davert','davert@mail.ua', b'1','2012-02-01 21:17:04');
 
-insert  into `users`(`id`,`name`,`email`,`created_at`) values (2,'nick','nick@mail.ua','2012-02-01 21:17:15');
+insert  into `users`(`id`,`name`,`email`, `is_active`,`created_at`) values (2,'nick','nick@mail.ua', b'1','2012-02-01 21:17:15');
 
-insert  into `users`(`id`,`name`,`email`,`created_at`) values (3,'miles','miles@davis.com','2012-02-01 21:17:25');
+insert  into `users`(`id`,`name`,`email`, `is_active`,`created_at`) values (3,'miles','miles@davis.com', b'1','2012-02-01 21:17:25');
 
-insert  into `users`(`id`,`name`,`email`,`created_at`) values (4,'bird','charlie@parker.com','2012-02-01 21:17:39');
+insert  into `users`(`id`,`name`,`email`, `is_active`,`created_at`) values (4,'bird','charlie@parker.com', b'0','2012-02-01 21:17:39');
 
 
 
