@@ -33,7 +33,7 @@ To avoid naming conflicts between Actor classes and Helper classes, they should 
 To create test suites with namespaces you can add `--namespace` option to bootstrap command.
 
 ``` bash
-$ php codecept.phar bootstrap --namespace frontend
+php codecept bootstrap --namespace frontend
 ```
 
 This will bootstrap a new project with `namespace: frontend` parameter in `codeception.yml` file. 
@@ -50,7 +50,7 @@ $I = new AcceptanceTester($scenario);
 Once each of your applications (bundles) has its own namespace and different Helper or Actor classes, you can execute all tests in one runner. Run codeception tests as usual, using meta-config we created earlier:
 
 ```bash
-$ php codecept.phar run
+php codecept run
 ```
 
 This will launch test suites for all 3 applications and merge the reports from all of them. Basically that would be very useful when you run your tests on Continuous Integration server and you want to get one report in JUnit and HTML format. Codecoverage report will be merged too.
@@ -66,7 +66,7 @@ By default, one `RunFailed` Extension is already enabled in your global `codecep
 It allows you to rerun failed tests with `-g failed` option:
    
 ```
-php codecept.phar run -g failed
+php codecept run -g failed
 ```
 
 Codeception comes with bundled extensions located in `ext` directory. For instance, you can enable Logger extension to log test execution with Monolog
@@ -196,7 +196,7 @@ extensions:
 If you want to activate the Command globally, because you use more then one ```codeception.yml``` file, then
 you have to register your command in ```codeception.dist.yml``` in the root folder of your project.
 
-You can find an example here: [/tests/data/register_command/examples/MyCustomCommand.php](https://gist.github.com/sd-tm/37d5f9bca871c72648cb)
+Please see a [complete example](https://gist.github.com/sd-tm/37d5f9bca871c72648cb)
 
 ## Group Objects
 
@@ -248,7 +248,7 @@ class Admin extends \Codeception\GroupObject
 ?>
 ```
 
-A group class can be created with `php codecept.phar generate:group groupname` command.
+A group class can be created with `php codecept generate:group groupname` command.
 Group class will be stored in `tests/_support/Group` directory.
 
 A group class can be enabled just like you enable extension class. In file `codeception.yml`:
@@ -259,6 +259,25 @@ extensions:
 ```
 
 Now Admin group class will listen to all events of tests that belong to the `admin` group.
+
+## Custom Reporters
+
+In order to customize output you can use Extensions, as it is done in [SimpleOutput Extension](https://github.com/Codeception/Codeception/blob/master/ext%2FSimpleOutput.php).
+But what if you need to change output format of XML or JSON results triggered with `--xml` or `--json` options?
+Codeception uses printers from PHPUnit and overrides some of them. If you need to customize one of standard reporters you can override them too.
+If you are thinking on implementing your own reporter you should add `reporters` section to `codeception.yml` and override one of standard printer classes to your own:
+
+```yaml
+reporters: 
+    xml: Codeception\PHPUnit\Log\JUnit
+    html: Codeception\PHPUnit\ResultPrinter\HTML
+    tap: PHPUnit_Util_Log_TAP
+    json: PHPUnit_Util_Log_JSON
+    report: Codeception\PHPUnit\ResultPrinter\Report
+```
+
+All reporters implement [PHPUnit_Framework_TestListener](https://phpunit.de/manual/current/en/extending-phpunit.html#extending-phpunit.PHPUnit_Framework_TestListener) interface.
+It is recommended to read the code of original reporter before overriding it.
 
 ## Conclusion
 

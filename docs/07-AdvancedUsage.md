@@ -61,7 +61,7 @@ class BasicCest
 ?>
 ```
 
-As you see, Cest class have no parents like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. This is done intentionally. It allows you to extend class with common behaviors and workarounds that may be used in child classes. But don't forget to make these methods `protected` so they won't be executed as tests.
+As you see, Cest class have no parents like `\Codeception\Test\Unit` or `PHPUnit_Framework_TestCase`. This is done intentionally. It allows you to extend class with common behaviors and workarounds that may be used in child classes. But don't forget to make these methods `protected` so they won't be executed as tests.
 
 Also you can define `_failed` method in Cest class which will be called if test finishes with `error` or fails.
 
@@ -159,6 +159,64 @@ class UserCest
 ```
 
 Moreover, Codeception can resolve dependencies recursively (when `A` depends on `B`, and `B` depends on `C` etc.) and handle parameters of primitive types with default values (like `$param = 'default'`). Of course, you are not allowed to have *cyclic dependencies*.
+
+### Examples
+
+What If you want to execute one test scenario but with different data? In this case you can use examples to provide different data for test and inject as `\Codeception\Example` instance. Data is defined via `@example` annotation, using with JSON or Doctrine-style notation (limited to a single line).
+
+```php
+<?php
+ /**
+  * @example ["/api/", 200]
+  * @example ["/api/protected", 401]
+  * @example ["/api/not-found-url", 404]
+  * @example ["/api/faulty", 500]
+  */
+  public function checkEndpoints(ApiTester $I, \Codeception\Example $example)
+  {
+    $I->sendGET($example[0]);
+    $I->seeResponseCodeIs($example[1]);
+  }
+```
+
+<div class="alert alert-notice">
+If you use JSON notation please keep in mind that all string keys and values should be enclosed in doble quotes " according to JSON standard.
+</div>
+
+You can pass key-value data as example and use it in tests as well
+
+```php
+ /**
+  * @example { "url": "/", "title": "Welcome" }
+  * @example { "url": "/info", "title": "Info" }
+  * @example { "url": "/about", "title": "About Us" }
+  * @example { "url": "/contact", "title": "Contact Us" }
+  */
+  public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+  {
+    $I->amOnPage($example['url']);
+    $I->see($example['title'], 'h1');
+    $I->seeInTitle($example['title']);
+  }
+```
+
+These examples can be written using Doctrine-style annotation syntax as well:
+
+```php
+ /**
+  * @example(url="/", title="Welcome")
+  * @example(url="/info", title="Info")
+  * @example(url="/about", title="About Us")
+  * @example(url="/contact", title="Contact Us")
+  */
+  public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+  {
+    $I->amOnPage($example['url']);
+    $I->see($example['title'], 'h1');
+    $I->seeInTitle($example['title']);
+  }
+```
+
 
 ### Before/After Annotations
 
@@ -315,25 +373,15 @@ class UserCest
 ?>
 ```
 
-For Cept you should use `$scenario->env()`:
+For Cept you should use simple comments
 
 ```php
 <?php
-$scenario->env('firefox');
-$scenario->env('phantom');
-// or
-$scenario->env(['phantom', 'firefox']);
+// @env firefox
+// @env phantom
 ?>
 ```
 
-If merged environments are used, then you can specify multiple required environments (order is ignored):
-
-```php
-<?php
-$scenario->env('firefox,dev');
-$scenario->env('dev,phantom');
-?>
-```
 
 This way you can easily control which tests will be executed for each environments.
 
@@ -352,10 +400,32 @@ $scenario->current('modules');
 
 // test name
 $scenario->current('name');
+
+// browser name (if WebDriver module enabled)
+$scenario->current('browser');
+
+// capabilities (if WebDriver module enabled)
+$scenario->current('capabilities');
 ?>
 ```
 
-### Depends Annotation
+You can access `\Codeception\Scenario` in Cept and Cest formats. In Cept `$scenario` variable is availble by default, while in Cests you should receive it through dependency injection:
+
+```php
+<?php
+public function myTest(\AcceptanceTester $I, \Codeception\Scenario $scenario)
+{
+    if ($scenario->current('browser') == 'phantomjs') {
+      // emulate popups for PhantomJS
+      $I->executeScript('window.alert = function(){return true;}'); 
+    }
+}
+```
+
+`Codeception\Scenario` is also availble in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
+
+
+### Dependencies
 
 With `@depends` annotation you can specify a test that should be passed before the current one. If that test fails, the current test will be skipped.
 You should pass a method name of a test you are relying on.
@@ -380,7 +450,14 @@ class ModeratorCest {
 ?>
 ```
 
-Hint: `@depends` can be combined with `@before`.
+
+Depends applies to `Cest` and `Codeception\Test\Unit` formats. Dependencies can be set accross different classes. To specify a dependent test from other file you should provide *test signature*. Regularly test signature matches `className:methodName` format. But to get the exact test signature just run test with `--steps` option to see it:
+
+```
+Signature: ModeratorCest:login`
+```
+
+Codeception reorders tests so dependent tests always will executed after the tests they rely on.
 
 ## Interactive Console
 
@@ -431,21 +508,7 @@ Or execute one (or several) specific groups of tests:
 $ php codecept.phar run -g admin -g editor
 ```
 
-In this case all tests that belongs to groups `admin` and `editor` will be executed. Concept of groups was taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. To add Cept to the group - use `$scenario` variable:
-
-```php
-<?php
-$scenario->group('admin');
-$scenario->group('editor');
-// or
-$scenario->group(['admin', 'editor']);
-// or
-$scenario->groups(['admin', 'editor'])
-
-$I = new AcceptanceTester($scenario);
-$I->wantToTest('admin area');
-?>
-```
+In this case all tests that belongs to groups `admin` and `editor` will be executed. Concept of groups was taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. 
 
 For Tests and Cests you can use `@group` annotation to add a test to the group.
 
@@ -455,12 +518,28 @@ For Tests and Cests you can use `@group` annotation to add a test to the group.
  * @group admin
  */
 public function testAdminUser()
-{
-    $this->assertEquals('admin', User::find(1)->role);
+{    
 }
 ?>
 ```
-Same annotation can be used in Cest classes.
+
+For Cept files, use pseudo-annotations in comments:
+
+```php
+<?php
+// @group admin
+// @group editor
+$I = new AcceptanceTester($scenario);
+$I->wantToTest('admin area');
+?>
+```
+
+For feature-files (Gherkin) use tags:
+
+```gherkin
+@admin @editor
+Feature: Admin area
+```
 
 ### Group Files
 
@@ -496,26 +575,6 @@ groups:
 ```
 
 This will load all found `p*` files in `tests/_data` as groups.
-
-
-## Custom Reporters
-
-In order to customize output you can use Extensions, as it is done in [SimpleOutput Extension](https://github.com/Codeception/Codeception/blob/master/ext%2FSimpleOutput.php).
-But what if you need to change output format of XML or JSON results triggered with `--xml` or `--json` options?
-Codeception uses printers from PHPUnit and overrides some of them. If you need to customize one of standard reporters you can override them too.
-If you are thinking on implementing your own reporter you should add `reporters` section to `codeception.yml` and override one of standard printer classes to your own:
-
-```yaml
-reporters: 
-    xml: Codeception\PHPUnit\Log\JUnit
-    html: Codeception\PHPUnit\ResultPrinter\HTML
-    tap: PHPUnit_Util_Log_TAP
-    json: PHPUnit_Util_Log_JSON
-    report: Codeception\PHPUnit\ResultPrinter\Report
-```
-
-All reporters implement [PHPUnit_Framework_TestListener](https://phpunit.de/manual/current/en/extending-phpunit.html#extending-phpunit.PHPUnit_Framework_TestListener) interface.
-It is recommended to read the code of original reporter before overriding it.
 
 ## Conclusion
 
