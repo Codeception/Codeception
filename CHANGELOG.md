@@ -29,6 +29,7 @@
 * *Breaking* [Symfony] public property `container` removed
 * *Breaking* [Asserts] removed deprecated `assertLessThen` and `assertGreaterThen`
 * *Breaking* mocks created with `Codeception\Util\Stub` are not verified in Cests. See #3005
+* [Sequence] Changed the prefix value. Generated sequences to include id inside a prefix: `sq('user1') => 'user1_876asd8as87a'. Added `prefix` config option.
 
 
 #### 2.1.9
