@@ -53,7 +53,8 @@ class Codecept
         'ansi'          => true,
         'verbosity'     => 1,
         'interactive'   => true,
-        'no-rebuild'    => false
+        'no-rebuild'    => false,
+        'quiet'         => false,
     ];
 
     protected $config = [];

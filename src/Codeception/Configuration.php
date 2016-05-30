@@ -86,7 +86,8 @@ class Configuration
             'colors'     => false,
             'bootstrap'  => false,
             'strict_xml' => false,
-            'lint'       => true
+            'lint'       => true,
+            'backup_globals' => true
         ],
         'coverage'   => [],
         'params'     => [],
