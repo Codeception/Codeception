@@ -830,7 +830,7 @@ class RoboFile extends \Robo\Tasks
      *
      * @param array $opt
      */
-    public function checkCodeStyle($opt = ['report|r' => 'summary'])
+    public function codestyleCheck($opt = ['report|r' => 'summary'])
     {
         $this->say("Checking code style");
 
@@ -838,6 +838,15 @@ class RoboFile extends \Robo\Tasks
             ->arg('.')
             ->arg('--standard=ruleset.xml')
             ->arg('--report=' . $opt['report'])
+            ->arg('--ignore=tests/data,vendor')
+            ->run();
+    }
+
+    public function codestyleFix()
+    {
+        $this->taskExec('php vendor/bin/phpcbf')
+            ->arg('.')
+            ->arg('--standard=ruleset.xml')
             ->arg('--ignore=tests/data,vendor')
             ->run();
     }
