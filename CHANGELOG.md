@@ -3,9 +3,12 @@
 #### 2.1.9
 
 * PHPUnit 5.4 compatibility for creating mocks using `Codeception\Util\Stub` by @davertmik. See #3093 and #3080
+* Updated dependencies to support Symfony 3.1
+* Added `settings: backup_global` to config, to disable backup_global option of PHPUnit by @mkeasling. See #3045. Fixes #3044
 * [PhpBrowser][Frameworks] `see` matches UTF-8 text case-insensitively by @Naktibalda. Fixes #3114
 * Fixed page object generation with namespaces by @eugene-manuilov and @Naktibalda. See #3126 Fixes #3012
 * `--steps` will not disable code coverage. By @Naktibalda. Fixes #2620
+* Suppress console coverage report with `--quiet` by @EspadaV8. See #2370
 * Improved multibyte output in console by @kt81. See #3130
 * [Lumen] Fixed: `initializeLumen()` method has been called twice on start by @kt81. See #3124 #2607
 * [Db] Allow INT Parameter SQL Binding by @davidcochrum . Fixes #3118
