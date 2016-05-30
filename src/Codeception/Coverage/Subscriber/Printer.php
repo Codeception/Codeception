@@ -52,9 +52,6 @@ class Printer implements EventSubscriberInterface
 
     public function printResult(PrintResultEvent $e)
     {
-        if ($this->options['steps']) {
-            return;
-        }
         $printer = $e->getPrinter();
         if (!$this->settings['enabled']) {
             $printer->write("\nCodeCoverage is disabled in `codeception.yml` config\n");
