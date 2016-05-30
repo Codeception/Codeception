@@ -220,7 +220,6 @@ use Symfony\Component\DomCrawler\Crawler;
  * $this->getModule('WebDriver')->webDriver->getKeyboard()->sendKeys('hello, webdriver');
  * ```
  *
- * ## Methods
  */
 class WebDriver extends CodeceptionModule implements
     WebInterface,

@@ -1,4 +1,4 @@
-
+# Db
 
 
 Works with SQL database.
@@ -84,6 +84,8 @@ DELETE FROM `Order`;
 * driver - contains the Connection Driver
 
 
+
+## Actions
 
 ### dontSeeInDatabase
  

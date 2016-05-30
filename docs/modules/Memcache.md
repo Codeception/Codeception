@@ -1,4 +1,4 @@
-
+# Memcache
 
 
 Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
@@ -23,6 +23,8 @@ Be sure you don't use the production server to connect.
 * memcache - instance of Memcache object
 
 
+
+## Actions
 
 ### clearMemcache
  

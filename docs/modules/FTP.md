@@ -1,4 +1,4 @@
-
+# FTP
 
 
 
@@ -83,6 +83,8 @@ For SFTP, add [phpseclib](http://phpseclib.sourceforge.net/) to require list.
 
 This module extends the Filesystem module, file contents methods are inherited from this module.
 
+
+## Actions
 
 ### amInPath
  

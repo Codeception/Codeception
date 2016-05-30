@@ -1,4 +1,4 @@
-
+# WebDriver
 
 
 New generation Selenium WebDriver module.
@@ -178,6 +178,8 @@ $this->getModule('WebDriver')->webDriver->getKeyboard()->sendKeys('hello, webdri
 
 ## Methods
 
+
+## Actions
 
 ### _findElements
 

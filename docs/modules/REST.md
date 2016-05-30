@@ -1,4 +1,4 @@
-
+# REST
 
 
 Module for testing REST WebService.
@@ -42,6 +42,8 @@ This module requires PHPBrowser or any of Framework modules enabled.
 * Xml - actions for validating XML responses (no Json responses)
 
 
+
+## Actions
 
 ### amBearerAuthenticated
  

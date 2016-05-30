@@ -1,4 +1,4 @@
-
+# PhpBrowser
 
 
 Uses [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
@@ -20,6 +20,8 @@ If test fails stores last shown page in 'output' dir.
 ## Configuration
 
 * url *required* - start url of your app
+* handler (default: curl) -  Guzzle handler to use. By default curl is used, also possible to pass `stream`, or any valid class name as [Handler](http://docs.guzzlephp.org/en/latest/handlers-and-middleware.html#handlers).
+* middleware - Guzzle middlewares to add. An array of valid callables is required.
 * curl - curl options
 * headers - ...
 * cookies - ...
@@ -64,6 +66,8 @@ Properties:
 * `client` - Symfony BrowserKit instance.
 
 
+
+## Actions
 
 ### _findElements
 
@@ -1027,6 +1031,15 @@ Provide an array for the second argument to select multiple options:
 ``` php
 <?php
 $I->selectOption('Which OS do you use?', array('Windows','Linux'));
+?>
+```
+
+Or provide an associative array for the second argument to specifically define which selection method should be used:
+
+``` php
+<?php
+$I->selectOption('Which OS do you use?', array('text' => 'Windows')); // Only search by text 'Windows'
+$I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only search by value 'windows'
 ?>
 ```
 

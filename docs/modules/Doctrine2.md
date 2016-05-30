@@ -1,11 +1,11 @@
-
+# Doctrine2
 
 
 Allows integration and testing for projects with Doctrine2 ORM.
 Doctrine2 uses EntityManager to perform all database operations.
 
 When using with Zend Framework 2 or Symfony2 Doctrine connection is automatically retrieved from Service Locator.
-In this case you should include either **Symfony2** or **ZF2** module and specify it as dependent for Doctrine:
+In this case you should include either **Symfony** or **ZF2** module and specify it as dependent for Doctrine:
 
 ```
 modules:
@@ -54,6 +54,8 @@ This behavior can be changed by specifying `cleanup: false` in config.
 
 * `em` - Entity Manager
 
+
+## Actions
 
 ### dontSeeInRepository
  

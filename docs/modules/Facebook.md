@@ -1,4 +1,4 @@
-
+# Facebook
 
 
 Provides testing for projects integrated with Facebook API.
@@ -70,6 +70,8 @@ $I->see('Welcome, ' . $fbUserFirstName);
 @since 1.6.3
 @author tiger.seo@gmail.com
 
+
+## Actions
 
 ### grabFacebookTestUserAccessToken
  

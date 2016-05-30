@@ -15,15 +15,15 @@ Fixtures::get('user1');
 
 
 
-#### *public static* add($name, $data) 
+#### * static* add($name, $data) 
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/Fixtures.php#L20)
 
-#### *public static* cleanup() 
+#### * static* cleanup() 
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/Fixtures.php#L34)
 
-#### *public static* get($name) 
+#### * static* get($name) 
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/Fixtures.php#L25)
 

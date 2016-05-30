@@ -1,4 +1,4 @@
-
+# DataFactory
 
 
 DataFactory allows you to easily generate and create test data using [**FactoryMuffin**](https://github.com/thephpleague/factory-muffin).
@@ -111,6 +111,8 @@ In case your ORM expects a related record itself (Doctrine) then you should use 
 ```
 
 
+
+## Actions
 
 ### have
  

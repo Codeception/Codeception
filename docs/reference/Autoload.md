@@ -6,7 +6,7 @@
 Autoloader, which is fully compatible with PSR-4, and can be used to autoload your `Helper`, `Page`, and `Step` classes.
 
 
-#### *public static* addNamespace($prefix, $base_dir, $prepend = null) 
+#### * static* addNamespace($prefix, $base_dir, $prepend = null) 
 
 Adds a base directory for a namespace prefix.
 
@@ -31,17 +31,17 @@ Autoload::addNamespace('app\Codeception', '/path/to/controllers');
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/Autoload.php#L42)
 
-#### *public static* load($class) 
+#### * static* load($class) 
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/Autoload.php#L85)
 
-#### *public static* register($namespace, $suffix, $path) 
+#### * static* register($namespace, $suffix, $path) 
 
  * `deprecated`  Use self::addNamespace() instead.
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/Autoload.php#L72)
 
-#### *public static* registerSuffix($suffix, $path) 
+#### * static* registerSuffix($suffix, $path) 
 
  * `deprecated`  Use self::addNamespace() instead.
 

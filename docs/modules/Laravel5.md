@@ -1,4 +1,4 @@
-
+# Laravel5
 
 
 
@@ -56,6 +56,8 @@ suite `_bootstrap.php` file:
 
 
 
+
+## Actions
 
 ### _findElements
 
@@ -1337,6 +1339,15 @@ Provide an array for the second argument to select multiple options:
 ``` php
 <?php
 $I->selectOption('Which OS do you use?', array('Windows','Linux'));
+?>
+```
+
+Or provide an associative array for the second argument to specifically define which selection method should be used:
+
+``` php
+<?php
+$I->selectOption('Which OS do you use?', array('text' => 'Windows')); // Only search by text 'Windows'
+$I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only search by value 'windows'
 ?>
 ```
 

@@ -1,4 +1,4 @@
-
+# AMQP
 
 
 This module interacts with message broker software that implements
@@ -46,6 +46,8 @@ To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em
 @author tiger.seo@gmail.com
 @author davert
 
+
+## Actions
 
 ### grabMessageFromQueue
  

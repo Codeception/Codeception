@@ -291,9 +291,12 @@ class RoboFile extends \Robo\Tasks
 
             $this->taskGenDoc('docs/modules/' . $moduleName . '.md')
                 ->docClass($className)
+                ->prepend('# '.$moduleName)
                 ->append('<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a></div>')
                 ->processClassSignature(false)
-                ->processProperty(false)
+                ->processClassDocBlock(function(\ReflectionClass $c, $text) {
+                  return "$text\n\n## Actions";
+                })->processProperty(false)
                 ->filterMethods(function(\ReflectionMethod $method) use ($className) {
                     if ($method->isConstructor() or $method->isDestructor()) return false;
                     if (!$method->isPublic()) return false;
@@ -342,6 +345,8 @@ class RoboFile extends \Robo\Tasks
                 ->append('<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a></div>')
                 ->processClassDocBlock(function(ReflectionClass $r, $text) {
                     return $text . "\n";
+                })->processMethodSignature(function(ReflectionMethod $r, $text) {
+                    return str_replace('public', '', $text);
                 })->processMethodDocBlock(function(ReflectionMethod $r, $text) use ($utilName, $source) {
                     $line = $r->getStartLine();
                     $text = preg_replace("~@(.*?)([$\s])~", ' * `$1` $2', $text);
@@ -521,6 +526,8 @@ class RoboFile extends \Robo\Tasks
                 $contents = $buttonHtml . $contents;
             } elseif(strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'reference') !== false) {
                 $newfile = 'docs/reference/' . $newfile;
+                if ($name == 'Commands') continue;
+                if ($name == 'Configuration') continue;
                 $reference[$name] = '/docs/reference/' . $doc->getBasename();
             } else {
                 $newfile = 'docs/'.$newfile;

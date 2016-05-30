@@ -28,7 +28,7 @@ Class JsonType
 @package Codeception\Util
 
 
-#### *public* __construct($jsonArray) 
+#### ** __construct($jsonArray) 
 
 Creates instance of JsonType
 Pass an array or `\Codeception\Util\JsonArray` with data.
@@ -38,7 +38,7 @@ If non-associative array is passed - the very first element of it will be used f
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/JsonType.php#L42)
 
-#### *public static* addCustomFilter($name, callable $callable) 
+#### * static* addCustomFilter($name, callable $callable) 
 
 Adds custom filter to JsonType list.
 You should specify a name and parameters of a filter.
@@ -67,13 +67,13 @@ JsonType::addCustomFilter('/len\((.*?)\)/', function($value, $len) {
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/JsonType.php#L76)
 
-#### *public static* cleanCustomFilters() 
+#### * static* cleanCustomFilters() 
 
 Removes all custom filters
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/JsonType.php#L84)
 
-#### *public* matches(array $jsonType) 
+#### ** matches(array $jsonType) 
 
 Checks data against passed JsonType.
 If matching fails function returns a string with a message describing failure.
