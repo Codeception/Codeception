@@ -117,22 +117,14 @@ class Lumen extends Framework implements ActiveRecord
     }
 
     /**
-     * After step hook.
-     *
-     * @param \Codeception\Step $step
-     */
-    public function _afterStep(Step $step)
-    {
-        Facade::clearResolvedInstances();
-    }
-
-    /**
      * Initialize the Lumen framework.
      *
      * @throws ModuleConfig
      */
     protected function initializeLumen()
     {
+        Facade::clearResolvedInstances();
+
         $this->app = $this->bootApplication();
         $this->app->instance('request', new Request());
         $this->client = new LumenConnector($this->app);
@@ -246,7 +238,7 @@ class Lumen extends Framework implements ActiveRecord
     {
         $url = $route['uri'];
 
-        while(count($params) > 0) {
+        while (count($params) > 0) {
             $param = array_shift($params);
             $url = preg_replace('/{.+?}/', $param, $url, 1);
         }

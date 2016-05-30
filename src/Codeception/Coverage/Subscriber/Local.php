@@ -12,7 +12,7 @@ use Codeception\Lib\Interfaces\Remote;
  */
 class Local extends SuiteSubscriber
 {
-    static $events = [
+    public static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::SUITE_AFTER  => 'afterSuite',
     ];

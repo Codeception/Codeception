@@ -56,8 +56,8 @@ class Build extends Command
 
         $file = $this->buildPath(
             Configuration::supportDir(),
-            $settings['class_name']) . $this->getClassName($settings['class_name']
-        );
+            $settings['class_name']
+        ) . $this->getClassName($settings['class_name']);
         $file .=  '.php';
         return $this->save($file, $content);
     }

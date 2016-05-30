@@ -28,11 +28,11 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     protected $coverage;
     protected $logDir;
     protected $options;
-    static $events = [];
+    public static $events = [];
 
     abstract protected function isEnabled();
 
-    function __construct($options = [])
+    public function __construct($options = [])
     {
         $this->options = $options;
         $this->logDir = Configuration::outputDir();
@@ -43,7 +43,9 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         try {
             $this->coverage = new \PHP_CodeCoverage();
         } catch (\PHP_CodeCoverage_Exception $e) {
-            throw new \Exception('XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini');
+            throw new \Exception(
+                'XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini'
+            );
         }
 
         $this->filters = $settings;

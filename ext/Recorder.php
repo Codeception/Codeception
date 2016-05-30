@@ -33,7 +33,9 @@ use Codeception\Util\Template;
  * #### Configuration
  *
  * * `delete_successful` (default: true) - delete records for successfully passed tests (log only failed and errored)
- * * `module` (default: WebDriver) - which module for screenshots to use. Module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface. Currently only WebDriver or any its children can be used.
+ * * `module` (default: WebDriver) - which module for screenshots to use.
+ * Module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+ * Currently only WebDriver or any its children can be used.
  *
  * ``` yaml
  * extensions:
@@ -207,7 +209,7 @@ EOF;
 </div>
 EOF;
 
-    static $events = [
+    public static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::SUITE_AFTER  => 'afterSuite',
         Events::TEST_BEFORE  => 'before',
@@ -236,9 +238,15 @@ EOF;
         $this->seed = uniqid();
         $this->webDriverModule = $this->getModule($this->config['module']);
         if (!$this->webDriverModule instanceof ScreenshotSaver) {
-            throw new ExtensionException($this, 'You should pass module which implements Codeception\Lib\Interfaces\ScreenshotSaver interface');
+            throw new ExtensionException(
+                $this,
+                'You should pass module which implements Codeception\Lib\Interfaces\ScreenshotSaver interface'
+            );
         }
-        $this->writeln(sprintf("⏺ <bold>Recording</bold> ⏺ step-by-step screenshots will be saved to <info>%s</info>", codecept_output_dir()));
+        $this->writeln(sprintf(
+            "⏺ <bold>Recording</bold> ⏺ step-by-step screenshots will be saved to <info>%s</info>",
+            codecept_output_dir()
+        ));
         $this->writeln("Directory Format: <debug>record_{$this->seed}_{testname}</debug> ----");
     }
 
@@ -337,5 +345,4 @@ EOF;
         $this->stepNum++;
         $this->slides[$filename] = $e->getStep();
     }
-
 }

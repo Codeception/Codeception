@@ -57,9 +57,10 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  *
  * ## Acceptance tests
  *
- * You should not use this module for acceptance tests. If you want to use Laravel functionality with your acceptance tests,
- * for example to do test setup, you can initialize the Laravel functionality by adding the following lines of code to your
- * suite `_bootstrap.php` file:
+ * You should not use this module for acceptance tests.
+ * If you want to use Laravel functionality with your acceptance tests,
+ * for example to do test setup, you can initialize the Laravel functionality
+ * by adding the following lines of code to your suite `_bootstrap.php` file:
  *
  *     require 'bootstrap/autoload.php';
  *     $app = require 'bootstrap/app.php';
@@ -186,7 +187,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         if (!file_exists($bootstrapFile)) {
             throw new ModuleConfigException(
                 $this,
-                "Laravel bootstrap file not found in $bootstrapFile.\nPlease provide a valid path to it using 'bootstrap' config param. "
+                "Laravel bootstrap file not found in $bootstrapFile.\n"
+                . "Please provide a valid path to it using 'bootstrap' config param. "
             );
         }
     }
@@ -380,7 +382,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $currentRouteName = $currentRoute ? $currentRoute->getName() : '';
 
         if ($currentRouteName != $routeName) {
-            $message = empty($currentRouteName) ? "Current route has no name" : "Current route is \"$currentRouteName\"";
+            $message = empty($currentRouteName)
+                ? "Current route has no name"
+                : "Current route is \"$currentRouteName\"";
             $this->fail($message);
         }
     }

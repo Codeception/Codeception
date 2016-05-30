@@ -9,7 +9,7 @@ class ErrorHandler implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
-    static $events = [
+    public static $events = [
         Events::SUITE_BEFORE => 'handle'
     ];
 
@@ -93,7 +93,12 @@ class ErrorHandler implements EventSubscriberInterface
             $old = set_error_handler('var_dump');
             restore_error_handler();
 
-            if ($old && is_array($old) && count($old) > 0 && is_object($old[0]) && get_class($old[0]) === 'Symfony\Component\Debug\ErrorHandler') {
+            if ($old
+                && is_array($old)
+                && count($old) > 0
+                && is_object($old[0])
+                && get_class($old[0]) === 'Symfony\Component\Debug\ErrorHandler'
+            ) {
                 restore_error_handler();
             }
 
@@ -108,5 +113,4 @@ class ErrorHandler implements EventSubscriberInterface
             call_user_func($this->oldHandler, $type, $message, $file, $line, $context);
         }
     }
-
 }

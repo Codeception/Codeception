@@ -29,7 +29,7 @@ class Message
 
     public function width($length, $char = ' ')
     {
-        $message_length = mb_strlen(strip_tags($this->message), 'utf-8');
+        $message_length = $this->getLength();
 
         if ($message_length < $length) {
             $this->message .= str_repeat($char, $length - $message_length);
@@ -105,9 +105,9 @@ class Message
         return $this;
     }
 
-    public function getLength()
+    public function getLength($includeTags = false)
     {
-        return mb_strlen($this->message, 'utf-8');
+        return mb_strwidth($includeTags ? $this->message : strip_tags($this->message), 'utf-8');
     }
 
     public function __toString()

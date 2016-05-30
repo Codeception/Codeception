@@ -4,12 +4,12 @@ class AssertsTest extends PHPUnit_Framework_TestCase
     public function testAsserts()
     {
         $module = new \Codeception\Module\Asserts(make_container());
-        $module->assertEquals(1,1);
-        $module->assertContains(1,[1,2]);
-        $module->assertSame(1,1);
+        $module->assertEquals(1, 1);
+        $module->assertContains(1, [1, 2]);
+        $module->assertSame(1, 1);
         $module->assertNotSame(1, '1');
-        $module->assertRegExp('/^[\d]$/','1');
-        $module->assertNotRegExp('/^[a-z]$/','1');
+        $module->assertRegExp('/^[\d]$/', '1');
+        $module->assertNotRegExp('/^[a-z]$/', '1');
         $module->assertEmpty([]);
         $module->assertNotEmpty([1]);
         $module->assertNull(null);
@@ -28,9 +28,15 @@ class AssertsTest extends PHPUnit_Framework_TestCase
     public function testExceptions()
     {
         $module = new \Codeception\Module\Asserts(make_container());
-        $module->expectException('Exception', function() { throw new Exception; });
-        $module->expectException(new Exception('here'), function() { throw new Exception('here'); });
-        $module->expectException(new Exception('here', 200), function() { throw new Exception('here', 200); });
+        $module->expectException('Exception', function () {
+            throw new Exception;
+        });
+        $module->expectException(new Exception('here'), function () {
+            throw new Exception('here');
+        });
+        $module->expectException(new Exception('here', 200), function () {
+            throw new Exception('here', 200);
+        });
     }
 
     /**
@@ -39,7 +45,8 @@ class AssertsTest extends PHPUnit_Framework_TestCase
     public function testExceptionFails()
     {
         $module = new \Codeception\Module\Asserts(make_container());
-        $module->expectException(new Exception('here', 200), function() { throw new Exception('here', 2); });
+        $module->expectException(new Exception('here', 200), function () {
+            throw new Exception('here', 2);
+        });
     }
-
 }

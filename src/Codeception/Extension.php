@@ -17,7 +17,7 @@ abstract class Extension implements EventSubscriberInterface
     protected $globalConfig;
     private $modules = [];
 
-    function __construct($config, $options)
+    public function __construct($config, $options)
     {
         $this->config = array_merge($this->config, $config);
         $this->options = $options;
@@ -26,7 +26,7 @@ abstract class Extension implements EventSubscriberInterface
     }
 
 
-    static function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
         if (isset(static::$events[Events::SUITE_INIT])) {
             if (!is_array(static::$events[Events::SUITE_INIT])) {

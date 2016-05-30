@@ -167,9 +167,11 @@ class ModuleContainer
         }
         $config = $this->getModuleConfig($name);
         if (!isset($config['depends'])) {
-            throw new ModuleRequireException($module,
+            throw new ModuleRequireException(
+                $module,
                 "\nThis module depends on $dependency\n" .
-                "\n \n$message");
+                "\n \n$message"
+            );
         }
         $dependentModule = $this->create($config['depends'], false);
         if (!method_exists($module, '_inject')) {

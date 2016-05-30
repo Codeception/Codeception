@@ -94,7 +94,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertContains('<body><h3>', $this->content);
         $this->assertContains('</body></html>', $this->content);
         $this->assertContains('* Skip_Me rendered', $this->output);
-        $this->assertContains('* Incomplete_Me rendered', $this->output);        
+        $this->assertContains('* Incomplete_Me rendered', $this->output);
     }
 
     public function testDifferentPath()
@@ -103,7 +103,5 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertEquals('docs/dummy.txt', $this->filename);
         $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $this->content);
         $this->assertContains('* File_Exists rendered', $this->output);
-
     }
-
 }

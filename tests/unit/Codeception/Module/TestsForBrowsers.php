@@ -32,10 +32,9 @@ abstract class TestsForBrowsers extends TestsForWeb
         $this->module->amOnPage('/form/empty');
         $this->module->seeCurrentUrlEquals('/form/empty');
         $this->assertEquals('http://127.0.0.1:8000', $this->module->_getUrl(), 'Host has changed');
-
     }
 
-    function testHeadersRedirect()
+    public function testHeadersRedirect()
     {
         $this->module->amOnPage('/redirect');
         $this->module->seeInCurrentUrl('info');

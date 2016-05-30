@@ -1,10 +1,11 @@
 <?php
-class IncludedCest {
+class IncludedCest
+{
 
     public function _before()
     {
         \Codeception\Util\FileSystem::doEmptyDir('tests/data/included/_log');
-        file_put_contents('tests/data/included/_log/.gitkeep','');
+        file_put_contents('tests/data/included/_log/.gitkeep', '');
     }
 
     /**
@@ -90,8 +91,5 @@ class IncludedCest {
         $I->seeInShellOutput('Jazz\\TestGuy');
         $I->seeInShellOutput('Jazz\\Pianist\\TestGuy');
         $I->seeInShellOutput('Shire\\TestGuy');
-
     }
 }
-
-

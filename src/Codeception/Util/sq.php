@@ -13,5 +13,4 @@ if (!function_exists('sq')) {
         }
         return $sequence;
     }
-
 }

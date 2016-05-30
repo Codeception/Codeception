@@ -147,7 +147,7 @@ class Console extends Command
     protected function listenToSignals()
     {
         if (function_exists('pcntl_signal')) {
-            declare(ticks = 1);
+            declare (ticks = 1);
             pcntl_signal(SIGINT, SIG_IGN);
             pcntl_signal(SIGTERM, SIG_IGN);
         }

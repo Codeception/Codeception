@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\Client;
  *
  * ### Bootstrap File
  *
- * Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs.org/doc/testing.html#webtestcase) should be.
+ * Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs.org/doc/testing.html#webtestcase).
  *
  * ``` php
  * <?
@@ -74,7 +74,7 @@ class Silex extends Framework implements DoctrineProvider
 
     public function _getEntityManager()
     {
-        if(!isset($this->app[$this->config['em_service']])){
+        if (!isset($this->app[$this->config['em_service']])) {
             return null;
         }
 
@@ -94,8 +94,8 @@ class Silex extends Framework implements DoctrineProvider
 
         // make doctrine persistent
         $db_orm_em = $this->_getEntityManager();
-        if($db_orm_em){
-            $this->app->extend($this->config['em_service'], function() use ($db_orm_em){
+        if ($db_orm_em) {
+            $this->app->extend($this->config['em_service'], function () use ($db_orm_em) {
                 return $db_orm_em;
             });
         }

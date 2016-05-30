@@ -9,7 +9,7 @@ class ExecutorTest extends \PHPUnit_Framework_TestCase
     {
         $expected = $returnValue;
 
-        $executor = new \Codeception\Step\Executor(function() use ($returnValue) {
+        $executor = new \Codeception\Step\Executor(function () use ($returnValue) {
             return $returnValue;
         });
         $actual = $executor->run();

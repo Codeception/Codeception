@@ -148,7 +148,8 @@ class RunCest
     public function skipSuites(\CliGuy $I)
     {
         $I->executeCommand(
-          'run dummy --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers --skip math --skip messages'
+            'run dummy --skip skipped --skip remote --skip remote_server --skip order --skip unit '
+            . '--skip powers --skip math --skip messages'
         );
         $I->seeInShellOutput("Dummy Tests");
         $I->dontSeeInShellOutput("Remote Tests");
@@ -199,8 +200,8 @@ class RunCest
         $I->seeInThisFile('<testsuite name="dummy"');
         $I->seeInThisFile('<testcase name="FileExists"');
         $I->seeFileFound('myownhtmlreport.html', 'tests/_output');
-        $I->dontSeeFileFound('report.xml','tests/_output');
-        $I->dontSeeFileFound('report.html','tests/_output');
+        $I->dontSeeFileFound('report.xml', 'tests/_output');
+        $I->dontSeeFileFound('report.html', 'tests/_output');
     }
 
     public function runTestsWithDependencyInjections(\CliGuy $I)
@@ -242,7 +243,7 @@ Scenario --
  I see file found "scenario.suite.yml"
  PASSED
 EOF
-);
+        );
     }
 
     /**

@@ -313,7 +313,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     {
         $record = $this->getModelRecord($model);
         $res = $record->save($attributes);
-        $field = function($field) {
+        $field = function ($field) {
             if (is_array($field)) {
                 return implode(', ', $field);
             }
@@ -325,7 +325,12 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
             $messages = $record->getMessages();
             $errors = [];
             foreach ($messages as $message) {
-                $errors[] = sprintf('[%s] %s: %s', $message->getType(), $field($message->getField()), $message->getMessage());
+                $errors[] = sprintf(
+                    '[%s] %s: %s',
+                    $message->getType(),
+                    $field($message->getField()),
+                    $message->getMessage()
+                );
             }
 
             $this->fail(sprintf("Record %s was not saved. Messages: \n%s", $model, implode(PHP_EOL, $errors)));

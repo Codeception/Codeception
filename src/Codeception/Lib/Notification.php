@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Lib;
 
 class Notification
@@ -29,5 +29,4 @@ class Notification
         self::$messages = [];
         return $messages;
     }
-
 }

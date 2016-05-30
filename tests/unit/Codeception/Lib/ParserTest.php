@@ -83,7 +83,6 @@ EOF;
         $code = "<?php\n /*\n \\\$I->wantTo('run this test'); \n */";
         $this->parser->parseFeature($code);
         $this->assertNull($this->scenario->getFeature());
-
     }
 
     public function testScenarioSkipOptionsHandled()
@@ -118,7 +117,6 @@ EOF;
         $this->assertContains("jon does", $text);
         $this->assertContains("I have friend", $text);
         $this->assertContains("back to me", $text);
-
     }
 
     public function testParseFile()

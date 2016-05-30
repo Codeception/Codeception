@@ -70,4 +70,4 @@ class Template
         }
         return $result;
     }
-} 
+}

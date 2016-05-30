@@ -100,7 +100,8 @@ class ZF1 extends Client
      * @param \Zend_Controller_Response_Abstract $response The ZF1 Response Object.
      * @return array the clean key/value headers
      */
-    private function formatResponseHeaders (\Zend_Controller_Response_Abstract $response) {
+    private function formatResponseHeaders(\Zend_Controller_Response_Abstract $response)
+    {
         $headers = array();
         foreach ($response->getHeaders() as $header) {
             $name = $header['name'];

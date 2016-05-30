@@ -25,7 +25,8 @@ class Stub
      * ?>
      * ```
      *
-     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     * To replace method provide it's name as a key in second parameter
+     * and it's return value or callback function as parameter
      *
      * ``` php
      * <?php
@@ -121,7 +122,8 @@ class Stub
      * ?>
      * ```
      *
-     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     * To replace method provide it's name as a key in second parameter
+     * and it's return value or callback function as parameter
      *
      * ``` php
      * <?php
@@ -193,7 +195,8 @@ class Stub
      * ?>
      * ```
      *
-     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     * To replace method provide it's name as a key in second parameter
+     * and it's return value or callback function as parameter
      *
      * ``` php
      * <?php
@@ -263,7 +266,8 @@ class Stub
      * ?>
      * ```
      *
-     * To replace method provide it's name as a key in third parameter and it's return value or callback function as parameter
+     * To replace method provide it's name as a key in third parameter
+     * and it's return value or callback function as parameter
      *
      * ``` php
      * <?php
@@ -314,7 +318,8 @@ class Stub
      * ?>
      * ```
      *
-     * To replace method provide it's name as a key in third parameter and it's return value or callback function as parameter
+     * To replace method provide it's name as a key in third parameter
+     * and it's return value or callback function as parameter
      *
      * ``` php
      * <?php
@@ -369,7 +374,8 @@ class Stub
      * ?>
      * ```
      *
-     * To replace method provide it's name as a key in third parameter and it's return value or callback function as parameter
+     * To replace method provide it's name as a key in third parameter
+     * and it's return value or callback function as parameter
      *
      * ``` php
      * <?php
@@ -452,12 +458,23 @@ class Stub
     private static function doGenerateMock($args, $isAbstract = false)
     {
         $testCase = self::extractTestCaseFromArgs($args);
-        $class = $testCase instanceof \PHPUnit_Framework_TestCase ? $testCase : new \PHPUnit_Framework_MockObject_Generator;
         $methodName = $isAbstract ? 'getMockForAbstractClass' : 'getMock';
+        $generatorClass = new \PHPUnit_Framework_MockObject_Generator;
 
-        $mock = call_user_func_array([$class, $methodName], $args);
+        // using PHPUnit 5.4 mocks registration
+        if (version_compare(\PHPUnit_Runner_Version::series(), '5.4', '>=')
+            && $testCase instanceof \PHPUnit_Framework_TestCase
+        ) {
+            $mock = call_user_func_array([$generatorClass, $methodName], $args);
+            $testCase->registerMockObject($mock);
+            return $mock;
+        }
 
-        return $mock;
+        if ($testCase instanceof  \PHPUnit_Framework_TestCase) {
+            $generatorClass = $testCase;
+        }
+
+        return call_user_func_array([$generatorClass, $methodName], $args);
     }
 
     private static function extractTestCaseFromArgs(&$args)
@@ -500,37 +517,36 @@ class Stub
         $reflectionClass = new \ReflectionClass($mock);
         if ($mock instanceof \PHPUnit_Framework_MockObject_MockObject) {
             $parentClass = $reflectionClass->getParentClass();
-            if ($parentClass !== FALSE) {
+            if ($parentClass !== false) {
                 $reflectionClass = $reflectionClass->getParentClass();
             }
         }
         
-
         foreach ($params as $param => $value) {
             // redefine method
             if ($reflectionClass->hasMethod($param)) {
                 if ($value instanceof StubMarshaler) {
                     $marshaler = $value;
-                    $mock->
-                    expects($marshaler->getMatcher())->
-                    method($param)->
-                    will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($marshaler->getValue()));
+                    $mock
+                        ->expects($marshaler->getMatcher())
+                        ->method($param)
+                        ->will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($marshaler->getValue()));
                 } elseif ($value instanceof \Closure) {
-                    $mock->
-                    expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
-                    method($param)->
-                    will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($value));
+                    $mock
+                        ->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
+                        ->method($param)
+                        ->will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($value));
                 } elseif ($value instanceof ConsecutiveMap) {
                     $consecutiveMap = $value;
-                    $mock->
-                    expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
-                    method($param)->
-                    will(new \PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($consecutiveMap->getMap()));
+                    $mock
+                        ->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
+                        ->method($param)
+                        ->will(new \PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($consecutiveMap->getMap()));
                 } else {
-                    $mock->
-                    expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
-                    method($param)->
-                    will(new \PHPUnit_Framework_MockObject_Stub_Return($value));
+                    $mock
+                        ->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
+                        ->method($param)
+                        ->will(new \PHPUnit_Framework_MockObject_Stub_Return($value));
                 }
             } elseif ($reflectionClass->hasProperty($param)) {
                 $reflectionProperty = $reflectionClass->getProperty($param);
@@ -544,7 +560,8 @@ class Stub
                     } catch (\Exception $e) {
                         throw new \PHPUnit_Framework_Exception(
                             sprintf(
-                                'Could not add property %1$s, class %2$s implements __set method, and no %1$s property exists',
+                                'Could not add property %1$s, class %2$s implements __set method, '
+                                . 'and no %1$s property exists',
                                 $param,
                                 $reflectionClass->getName()
                             ),
@@ -627,7 +644,13 @@ class Stub
      *
      * ``` php
      * <?php
-     * $user = Stub::make('User', array('getName' => Stub::once(function() { return 'Davert';}), 'someMethod' => function() {}));
+     * $user = Stub::make(
+     *     'User',
+     *     array(
+     *         'getName' => Stub::once(function() { return 'Davert';}),
+     *         'someMethod' => function() {}
+     *     )
+     * );
      * $userName = $user->getName();
      * $this->assertEquals('Davert', $userName);
      * ?>
@@ -653,7 +676,13 @@ class Stub
      *
      * ``` php
      * <?php
-     * $user = Stub::make('User', array('getName' => Stub::atLeastOnce(function() { return 'Davert';}), 'someMethod' => function() {}));
+     * $user = Stub::make(
+     *     'User',
+     *     array(
+     *         'getName' => Stub::atLeastOnce(function() { return 'Davert';}),
+     *         'someMethod' => function() {}
+     *     )
+     * );
      * $user->getName();
      * $user->getName();
      * ?>
@@ -681,7 +710,13 @@ class Stub
      *
      * ``` php
      * <?php
-     * $user = Stub::make('User', array('getName' => Stub::exactly(3, function() { return 'Davert';}), 'someMethod' => function() {}));
+     * $user = Stub::make(
+     *     'User',
+     *     array(
+     *         'getName' => Stub::exactly(3, function() { return 'Davert';}),
+     *         'someMethod' => function() {}
+     *     )
+     * );
      * $user->getName();
      * $user->getName();
      * $user->getName();

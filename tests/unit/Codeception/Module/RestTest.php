@@ -49,7 +49,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testBeforeHookResetsVariables()
     {
-        $this->module->haveHttpHeader('Origin','http://www.example.com');
+        $this->module->haveHttpHeader('Origin', 'http://www.example.com');
         $this->module->sendGET('/rest/user/');
         $server = $this->module->client->getInternalRequest()->getServer();
         $this->assertArrayHasKey('HTTP_ORIGIN', $server);
@@ -130,7 +130,9 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInJsonResponse()
     {
-        $this->setStubResponse('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}');
+        $this->setStubResponse(
+            '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}'
+        );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(['name' => 'Davert']);
         $this->module->seeResponseContainsJson(['user' => ['name' => 'Davert']]);
@@ -141,17 +143,24 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInJsonCollection()
     {
-        $this->setStubResponse('[{"user":"Blacknoir","age":"42","tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
+        $this->setStubResponse(
+            '[{"user":"Blacknoir","age":"42","tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(['tags' => ['web-dev', 'java']]);
         $this->module->seeResponseContainsJson(['user' => 'John Doe', 'age' => 27]);
         $this->module->seeResponseContainsJson([['user' => 'John Doe', 'age' => 27]]);
-        $this->module->seeResponseContainsJson([['user' => 'Blacknoir', 'age' => 42], ['user' => 'John Doe', 'age' => "27"]]);
+        $this->module->seeResponseContainsJson(
+            [['user' => 'Blacknoir', 'age' => 42], ['user' => 'John Doe', 'age' => "27"]]
+        );
     }
 
     public function testArrayJson()
     {
-        $this->setStubResponse('[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]');
+        $this->setStubResponse(
+            '[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]'
+        );
         $this->module->seeResponseContainsJson(['id' => 1]);
     }
 
@@ -202,7 +211,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->sendGET('/api/v1/users');
         /** @var $request \Symfony\Component\BrowserKit\Request  **/
         $request = $this->module->client->getRequest();
-        $this->assertEquals('http://localhost/api/v1/users',$request->getUri());
+        $this->assertEquals('http://localhost/api/v1/users', $request->getUri());
     }
 
     public function testSeeHeaders()
@@ -214,15 +223,14 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->client->mockResponse($response);
         $this->module->sendGET('/');
         $this->module->seeHttpHeader('Cache-Control');
-        $this->module->seeHttpHeader('content_language','en-US');
-        $this->module->seeHttpHeader('Content-Language','en-US');
-        $this->module->dontSeeHttpHeader('Content-Language','en-RU');
+        $this->module->seeHttpHeader('content_language', 'en-US');
+        $this->module->seeHttpHeader('Content-Language', 'en-US');
+        $this->module->dontSeeHttpHeader('Content-Language', 'en-RU');
         $this->module->dontSeeHttpHeader('Content-Language1');
         $this->module->seeHttpHeaderOnce('Content-Language');
         $this->assertEquals('en-US', $this->module->grabHttpHeader('Content-Language'));
         $this->assertEquals('no-cache', $this->module->grabHttpHeader('Cache-Control'));
         $this->assertEquals(['no-cache', 'no-store'], $this->module->grabHttpHeader('Cache-Control', false));
-
     }
 
     public function testSeeHeadersOnce()
@@ -238,7 +246,10 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayJsonPathAndXPath()
     {
-        $this->setStubResponse('[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
+        $this->setStubResponse(
+            '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseJsonMatchesXpath('//user');
         $this->module->seeResponseJsonMatchesJsonPath('$[*].user');
@@ -260,7 +271,10 @@ class RestTest extends \PHPUnit_Framework_TestCase
     public function testArrayJsonPathFails()
     {
         $this->shouldFail();
-        $this->setStubResponse('[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
+        $this->setStubResponse(
+            '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseJsonMatchesJsonPath('$[*].profile');
     }
@@ -268,7 +282,14 @@ class RestTest extends \PHPUnit_Framework_TestCase
     
     public function testStructuredJsonPathAndXPath()
     {
-        $this->setStubResponse('{ "store": {"book": [{ "category": "reference", "author": "Nigel Rees", "title": "Sayings of the Century", "price": 8.95 }, { "category": "fiction", "author": "Evelyn Waugh", "title": "Sword of Honour", "price": 12.99 }, { "category": "fiction", "author": "Herman Melville", "title": "Moby Dick", "isbn": "0-553-21311-3", "price": 8.99 }, { "category": "fiction", "author": "J. R. R. Tolkien", "title": "The Lord of the Rings", "isbn": "0-395-19395-8", "price": 22.99 } ], "bicycle": {"color": "red", "price": 19.95 } } }');
+        $this->setStubResponse(
+            '{ "store": {"book": [{ "category": "reference", "author": "Nigel Rees", '
+            . '"title": "Sayings of the Century", "price": 8.95 }, { "category": "fiction", "author": "Evelyn Waugh", '
+            . '"title": "Sword of Honour", "price": 12.99 }, { "category": "fiction", "author": "Herman Melville", '
+            . '"title": "Moby Dick", "isbn": "0-553-21311-3", "price": 8.99 }, { "category": "fiction", '
+            . '"author": "J. R. R. Tolkien", "title": "The Lord of the Rings", "isbn": "0-395-19395-8", '
+            . '"price": 22.99 } ], "bicycle": {"color": "red", "price": 19.95 } } }'
+        );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseJsonMatchesXpath('//book/category');
         $this->module->seeResponseJsonMatchesJsonPath('$..book');
@@ -307,7 +328,6 @@ class RestTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
-
 }
 
 class JsonSerializedItem implements JsonSerializable

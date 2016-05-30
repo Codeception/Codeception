@@ -104,7 +104,6 @@ class Parser
                 $isFriend = false;
             }
         }
-
     }
 
     protected function addStep($matches)
@@ -192,7 +191,7 @@ class Parser
 
     /*
      * Include in different scope to prevent included file from affecting $file variable
-     */ 
+     */
     private static function includeFile($file)
     {
         include_once $file;
