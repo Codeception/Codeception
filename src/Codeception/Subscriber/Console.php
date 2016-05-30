@@ -593,7 +593,7 @@ class Console implements EventSubscriberInterface
         }
         if ($this->message) {
             $this->message('')
-                ->width($this->columns[0] - $this->message->apply('strip_tags')->getLength() - $conditionalLen)
+                ->width($this->columns[0] - $this->message->getLength() - $conditionalLen)
                 ->append($conditionalFails)
                 ->write();
         }
