@@ -149,7 +149,7 @@ class Db extends CodeceptionModule implements DbInterface
                 );
             }
             $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
-            $sql = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
+            $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
             if (!empty($sql)) {
                 $this->sql = explode("\n", $sql);
             }
