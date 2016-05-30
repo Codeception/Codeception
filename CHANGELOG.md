@@ -7,6 +7,7 @@
 * Fixed page object generation with namespaces by @eugene-manuilov and @Naktibalda. See #3126 Fixes #3012
 * [Lumen] Fixed: `initializeLumen()` method has been called twice on start by @kt81. See #3124 #2607
 * [Db] Allow INT Parameter SQL Binding by @davidcochrum . Fixes #3118
+* [Db] Support LIKE conditions in assertions.
 * [Dbh] Fix `seeInDatabase` and `dontSeeInDatabase` with empty criteria. Closes #3116
 * [Symfony] Improve fail messages on seeInCurrentRoute and seeCurrentRouteIs
 * [Symfony] Improve route comparison on seeInCurrentRoute and seeCurrentRouteIs

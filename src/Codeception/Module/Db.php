@@ -39,14 +39,13 @@ use Codeception\TestCase;
  *
  * ## Status
  *
- * * Maintainer: **davert**
+ * * Maintainer: **Gintautas Miselis**
  * * stability:
  *     - Mysql: **stable**
  *     - SQLite: **stable**
  *     - Postgres: **beta**
  *     - MSSQL: **alpha**
  *     - Oracle: **alpha**
- * * Contact: codecept@davert.mail.ua
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*
  *
@@ -60,7 +59,7 @@ use Codeception\TestCase;
  * * cleanup: true - whether the dump should be reloaded after each test
  * * reconnect: false - whether the module should reconnect to the database before each test
  *
- * ### Example
+ * ## Example
  *
  *     modules:
  *        enabled:
@@ -73,7 +72,7 @@ use Codeception\TestCase;
  *              cleanup: false
  *              reconnect: true
  *
- * ### SQL data dump
+ * ## SQL data dump
  *
  *  * Comments are permitted.
  *  * The `dump.sql` may contain multiline statements.
@@ -88,7 +87,35 @@ use Codeception\TestCase;
  * -- Remove existing orders for testing.
  * DELETE FROM `Order`;
  * ```
+ * ## Query generation
  *
+ * seeInDatabase, dontSeeInDatabase, seeNumRecords and grabFromDatabase methods accept arrays as criteria.
+ * WHERE condition is generated using item key as a field name and item value as a field value.
+ *
+ * Example:
+ * ``` php
+ * <?php
+ * $I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
+ *
+ * ```
+ * Will generate:
+ *
+ * ``` sql
+ * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
+ * ```
+ * New addition to 2.1.9 is ability to use LIKE in condition. It is achieved by adding ' like' to column name.
+ *
+ * Example:
+ * ``` php
+ * <?php
+ * $I->seeInDatabase('users', array('name' => 'Davert', 'email like' => 'davert%'));
+ *
+ * ```
+ * Will generate:
+ *
+ * ``` sql
+ * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` LIKE 'davert%'
+ * ```
  * ## Public Properties
  * * dbh - contains the PDO connection
  * * driver - contains the Connection Driver
@@ -268,7 +295,7 @@ class Db extends CodeceptionModule implements DbInterface
      * ?>
      * ```
      *
-     * @param       $table
+     * @param string $table
      * @param array $data
      *
      * @return integer $id
@@ -341,9 +368,9 @@ class Db extends CodeceptionModule implements DbInterface
      * ?>
      * ```
      *
-     * @param int    $expectedNumber      Expected number
-     * @param string $table    Table name
-     * @param array  $criteria Search criteria [Optional]
+     * @param int $expectedNumber Expected number
+     * @param string $table Table name
+     * @param array $criteria Search criteria [Optional]
      */
     public function seeNumRecords($expectedNumber, $table, array $criteria = [])
     {
