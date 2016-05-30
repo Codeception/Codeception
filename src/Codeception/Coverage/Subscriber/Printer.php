@@ -58,7 +58,9 @@ class Printer implements EventSubscriberInterface
             return;
         }
 
-        $this->printConsole($printer);
+        if (!$this->options['quiet']) {
+            $this->printConsole($printer);
+        }
         $printer->write("Remote CodeCoverage reports are not printed to console\n");
         $this->printPHP();
         $printer->write("\n");
