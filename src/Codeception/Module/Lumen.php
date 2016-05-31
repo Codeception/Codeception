@@ -55,6 +55,11 @@ class Lumen extends Framework implements ActiveRecord
     protected $config = [];
 
     /**
+     * @var bool
+     */
+    protected $booted = false;
+
+    /**
      * Constructor.
      *
      * @param ModuleContainer $container
@@ -122,7 +127,9 @@ class Lumen extends Framework implements ActiveRecord
      */
     protected function initializeLumen()
     {
-        Facade::clearResolvedInstances();
+        if ($this->booted) {
+            Facade::clearResolvedInstances();
+        }
 
         $this->app = $this->bootApplication();
         $this->app->instance('request', new Request());
@@ -155,6 +162,7 @@ class Lumen extends Framework implements ActiveRecord
         }
 
         $app = require $bootstrapFile;
+        $this->booted = true;
 
         return $app;
     }
