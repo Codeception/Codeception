@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.1.10
+
+* [Db] Added missing support for LIKE condition to SqlSrv driver
+
 #### 2.1.9
 
 * PHPUnit 5.4 compatibility for creating mocks using `Codeception\Util\Stub` by @davertmik. See #3093 and #3080
