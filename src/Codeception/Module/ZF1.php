@@ -40,9 +40,6 @@ use Zend_Controller_Router_Route_Chain;
  *
  * ## Cleaning up
  *
- * For Doctrine1 and Doctrine2 all queries are put inside rollback transaction.
- * If you are using one of this ORMs connect their modules to speed up testing.
- *
  * Unfortunately Zend_Db doesn't support nested transactions,
  * thus, for cleaning your database you should either use standard Db module or
  * [implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
