@@ -841,6 +841,9 @@ class WebDriver extends CodeceptionModule implements
     public function seeLink($text, $url = null)
     {
         $nodes = $this->webDriver->findElements(WebDriverBy::partialLinkText($text));
+        if (empty($nodes)) {
+            $this->fail("No links containing text '$text' were found in page " . $this->_getCurrentUri());
+        }
         if (!$url) {
             $this->assertNodesContain($text, $nodes, 'a');
             return;
