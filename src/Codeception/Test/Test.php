@@ -31,7 +31,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      */
     protected $hooks = [
       'ignoreIfMetadataBlocked',
-      'coverage',
+      'codeCoverage',
       'assertionCounter',
       'errorLogger'
     ];

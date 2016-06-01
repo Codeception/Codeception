@@ -14,7 +14,7 @@ trait CodeCoverage
         if (!$codeCoverage) {
             return;
         }
-        $codeCoverage->start($this);
+        $codeCoverage->start(get_class($this));
     }
 
     public function codeCoverageEnd($status, $time)
@@ -23,8 +23,8 @@ trait CodeCoverage
         if (!$codeCoverage) {
             return;
         }
-        $linesToBeCovered = \PHPUnit_Util_Test::getLinesToBeCovered(get_class($this->testClassInstance), 'test');
-        $linesToBeUsed = \PHPUnit_Util_Test::getLinesToBeUsed(get_class($this->testClassInstance), 'test');
+        $linesToBeCovered = \PHPUnit_Util_Test::getLinesToBeCovered(get_class($this), 'test');
+        $linesToBeUsed = \PHPUnit_Util_Test::getLinesToBeUsed(get_class($this), 'test');
 
         try {
             $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
