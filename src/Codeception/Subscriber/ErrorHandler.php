@@ -3,6 +3,7 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
+use Codeception\Lib\Notification;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ErrorHandler implements EventSubscriberInterface
@@ -44,6 +45,7 @@ class ErrorHandler implements EventSubscriberInterface
     {
         if (E_USER_DEPRECATED === $errno) {
             $this->handleDeprecationError($errno, $errstr, $errfile, $errline, $context);
+            return;
         }
 
         if (!(error_reporting() & $errno)) {
@@ -106,7 +108,9 @@ class ErrorHandler implements EventSubscriberInterface
     {
         if ($this->deprecationsInstalled && $this->oldHandler) {
             call_user_func($this->oldHandler, $type, $message, $file, $line, $context);
+            return;
         }
+        Notification::deprecate("$message", "$file:$line");
     }
 
 }

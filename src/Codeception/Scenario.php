@@ -141,7 +141,7 @@ class Scenario
     public function __call($method, $args)
     {
         // all methods were deprecated and removed from here
-        Notification::deprecate("\$scenario->$method() was deprecated in 2.1 and removed. Don't use it");
+        trigger_error("Codeception: \$scenario->$method() has been deprecated and removed. Use annotations to pass scenario params", E_USER_DEPRECATED);
     }
 
     /**
