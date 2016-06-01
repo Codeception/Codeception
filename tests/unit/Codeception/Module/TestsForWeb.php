@@ -93,11 +93,48 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
 
     public function testSeeLink()
     {
-        $this->module->amOnPage('/');
-        $this->module->seeLink('More info');
-        $this->module->dontSeeLink('/info');
-        $this->module->dontSeeLink('#info');
-        $this->module->seeLink('More', '/info');
+        $this->module->amOnPage('/external_url');
+        $this->module->seeLink('Next');
+        $this->module->seeLink('Next', 'http://codeception.com/');
+    }
+
+    public function testDontSeeLink()
+    {
+        $this->module->amOnPage('/external_url');
+        $this->module->dontSeeLink('Back');
+        $this->module->dontSeeLink('Next', '/fsdfsdf/');
+    }
+
+    public function testSeeLinkFailsIfTextDoesNotMatch()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError',
+            "No links containing text 'Codeception' were found in page /external_url");
+        $this->module->amOnPage('/external_url');
+        $this->module->seeLink('Codeception');
+    }
+
+    public function testSeeLinkFailsIfHrefDoesNotMatch()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError',
+            "No links containing text 'Next' and URL '/fsdfsdf/' were found in page /external_url");
+        $this->module->amOnPage('/external_url');
+        $this->module->seeLink('Next', '/fsdfsdf/');
+    }
+
+    public function testDontSeeLinkFailsIfTextMatches()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError',
+            "Link containing text 'Next' was found in page /external_url");
+        $this->module->amOnPage('/external_url');
+        $this->module->dontSeeLink('Next');
+    }
+
+    public function testDontSeeLinkFailsIfTextAndUrlMatches()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError',
+            "Link containing text 'Next' and URL 'http://codeception.com/' was found in page /external_url");
+        $this->module->amOnPage('/external_url');
+        $this->module->dontSeeLink('Next', 'http://codeception.com/');
     }
 
     public function testClick()

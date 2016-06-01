@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.1.11
+
+* [WebDriver] fixed URL matching in WebDriver::seeLink
+* [WebDriver][InnerBrowser] Improved error messages of seeLink and dontSeeLink
+
 #### 2.1.10
 
 * PHPUnit version locked to <5.4
