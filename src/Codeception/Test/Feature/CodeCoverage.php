@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Test\Feature;
 
+use Codeception\Test\Descriptor;
+
 trait CodeCoverage
 {
     /**
@@ -14,7 +16,7 @@ trait CodeCoverage
         if (!$codeCoverage) {
             return;
         }
-        $codeCoverage->start($this);
+        $codeCoverage->start(Descriptor::getTestSignature($this));
     }
 
     public function codeCoverageEnd($status, $time)
@@ -23,11 +25,9 @@ trait CodeCoverage
         if (!$codeCoverage) {
             return;
         }
-        $linesToBeCovered = \PHPUnit_Util_Test::getLinesToBeCovered(get_class($this->testClassInstance), 'test');
-        $linesToBeUsed = \PHPUnit_Util_Test::getLinesToBeUsed(get_class($this->testClassInstance), 'test');
 
         try {
-            $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
+            $codeCoverage->stop(true);
         } catch (\PHP_CodeCoverage_Exception $cce) {
             if ($status === \Codeception\Test\Test::STATUS_OK) {
                 $this->getTestResultObject()->addError($this, $cce, $time);

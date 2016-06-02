@@ -41,6 +41,4 @@ class MathCest
     {
         $t->assertTanIsLessThen(0.5, 0.9);
     }
-
-
 }
