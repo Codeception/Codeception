@@ -18,7 +18,7 @@ class Notification
     private static function formatMessage($message, $location = '')
     {
         if ($location) {
-            return "<focus>$location</focus> | " . $message;
+            return "<bold>$message</bold> <info>$location</info>";
         }
         return $message;
     }
