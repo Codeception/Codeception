@@ -14,15 +14,10 @@ Codeception does not provide a command like `run-parallel`. There is no common s
 
 There are two approaches to achieve parallelization. We can use [Docker](http://docker.com) and run each process inside isolated containers, and have those containers executed simultaneously. 
 
-<div class="alert alert-warning">
 Docker works really well for isolating testing environments. 
-By the time of writing this chapter, we didn't have an awesome tool like it. This chapter demonstrates how to manage parallel execution manually. As you will see we spend too much effort trying to isolate tests which Docker does for free. Today we **recommend using Docker** for parallel testing.
-</div>
-
+By the time of writing this chapter, we didn't have an awesome tool like it. This chapter demonstrates how to manage parallel execution manually. As you will see we spend too much effort trying to isolate tests which Docker does for free. Today we <strong>recommend using Docker</strong> for parallel testing.
 
 ## Docker
-
-> :construction: Section is under construction
 
 ### Requirements
 
@@ -31,7 +26,7 @@ By the time of writing this chapter, we didn't have an awesome tool like it. Thi
 
 ### Using Codeception Docker image
 
-Run Docker image
+Run official Codeception image from DockerHub:
 
     docker run codeception/codeception    
 
@@ -40,7 +35,87 @@ The default working directory in the container is `/project`.
     
     docker run -v ${PWD}:/project codeception/codeception run
 
-For local testing of the Codeception repository with Docker and `docker-copmose`, please refer to the [testing documentation](../tests/README.md). 
+To prepare application and tests to be executed inside containers you will need to use [Docker Compose](https://docs.docker.com/compose/) to run multiple containers and connect them together. 
+
+Define all required services in `docker-compose.yml` file. Make sure to follow Docker philisophy: 1 service = 1 container. So each process should be defined as its own service. Those services can use official Docker images pulled from DockerHub. Directories with code and tests should be mounted using `volume` directive. And exposed ports should be explicitly set using `ports` directive.
+
+We prepared a sample config with codeception, web server, database, and selenium with firefox to be executed together.
+
+```yaml
+version: '2'
+services:
+  codeception:
+    image: codeception/codeception
+    depends_on:
+      - firefox    
+      - web
+    volumes:
+      - ./src:/src      
+      - ./tests:/tests
+      - ./codeception.yml:/codeception.yml
+  web:
+    image: php:7-apache
+    depends_on:
+      - db  
+    volumes:
+      - .:/var/www/html      
+  db:
+    image: percona:5.6
+    ports:
+      - '3306'
+  firefox:
+    image: selenium/standalone-firefox-debug:2.53.0
+    ports:
+      - '4444'
+      - '5900'
+```
+
+Codeception service will execute command `codecept run` but only after all services are started. This is defined using `depends_on` parameter. 
+
+It is easy to add more custom services. For instance to use Redis you just simple add this lines:
+
+```yaml
+  redis:
+    image: redis:3
+```
+
+By default the image has codecept as its entrypoint, to run the tests simply supply the run command
+
+```
+docker-compose run --rm codecept help
+```
+
+Run suite
+
+```
+docker-compose run --rm codecept run acceptance
+```
+
+
+```
+docker-compose run --rm codecept run acceptance LoginCest
+```
+
+Development bash
+
+```
+docker-compose run --rm --entrypoint bash codecept
+```
+
+
+And finally to execute testing in parallel you should define how you split your tests and run parallel processes for `docker-compose`. Here we split tests by suites, but you can use different groups to split your tests. In section below you will learn how to do that with Robo.
+
+```
+docker-compose --project-name test-web run -d --rm codecept run --html report-web.html web & \
+docker-compose --project-name test-unit run -d --rm codecept run --html report-unit.html unit & \
+docker-compose --project-name test-functional run -d --rm codecept run --html report-functional.html functional
+```
+
+At the end, it is worth specifying that Docker setup can be complicated and please make sure you understand Docker and Docker Compose before proceed. We prepared some links that might help you:
+
+* [Acceptance Tests Demo Repository](https://github.com/dmstr/docker-acception)
+* [Dockerized Codeception Internal Tests](https://github.com/Codeception/Codeception/blob/master/tests/README.md#dockerized-testing)
+* [Phundament App with Codeception](https://gist.github.com/schmunk42/d6893a64963509ff93daea80f722f694)
 
 
 ## Robo
@@ -340,4 +415,4 @@ To create one command to rule them all we can define new public method `parallel
 
 ## Conclusion
 
-Codeception does not provide tools for parallel test execution. This is a complex task and solutions may vary depending on a project. We use [Robo](http://robo.li) task runner as an external tool to perform all required steps. To prepare our tests to be executed in parallel we use Codeception features of dynamic groups and environments. To do even more we can create Extensions and Group classes to perform dynamic configuration depending on a test process.
+Codeception does not provide tools for parallel test execution. This is a complex task and solutions may vary depending on a project. We can use Docker rto run and isolate tasks and [Robo](http://robo.li) as task runner. To prepare our tests to be executed in parallel we use Codeception features of dynamic groups and environments. To do even more we can create Extensions and Group classes to perform dynamic configuration depending on a test process.
