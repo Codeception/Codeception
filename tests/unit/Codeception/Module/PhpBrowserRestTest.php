@@ -161,7 +161,8 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
      * @Issue https://github.com/Codeception/Codeception/issues/2075
      * Client is undefined for the second test
      */
-    public function testTwoTests() {
+    public function testTwoTests()
+    {
         $cest1 = Stub::makeEmpty('\Codeception\Test\Cest');
         $cest2 = Stub::makeEmpty('\Codeception\Test\Cest');
 

@@ -21,7 +21,7 @@ class ParserTest extends \Codeception\Test\Unit
 
     protected function _before()
     {
-        $cept = new \Codeception\Test\Cept('demo','DemoCept.php');
+        $cept = new \Codeception\Test\Cept('demo', 'DemoCept.php');
 
         $this->testMetadata = $cept->getMetadata();
         $this->scenario = new Codeception\Scenario($cept);

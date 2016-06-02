@@ -105,7 +105,7 @@ abstract class Step
 
         if ($totalLength > $maxLength) {
             //sort arguments from shortest to longest
-            uasort($arguments, function($arg1, $arg2) {
+            uasort($arguments, function ($arg1, $arg2) {
                 $length1 = mb_strlen($arg1, 'utf-8');
                 $length2 = mb_strlen($arg2, 'utf-8');
                 if ($length1 === $length2) {

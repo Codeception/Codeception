@@ -128,5 +128,4 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     {
         $this->ignored = $ignored;
     }
-
 }

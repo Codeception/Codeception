@@ -191,5 +191,4 @@ class Metadata
     {
         $this->services = $services;
     }
-
 }

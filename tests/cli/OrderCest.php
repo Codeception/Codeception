@@ -48,7 +48,7 @@ class OrderCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
-        $I->seeFileFound('order.txt','tests/_output');
+        $I->seeFileFound('order.txt', 'tests/_output');
         $I->seeFileContentsEqual("BIBP({{{{[ST][STFFT][STF][ST]}}}})");
     }
 
