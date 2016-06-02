@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Console;
 
-
 class MessageTest extends \Codeception\Test\Unit
 {
 

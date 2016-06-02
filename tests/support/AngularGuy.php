@@ -2,7 +2,6 @@
 use Codeception\Util\JsonArray;
 use Codeception\Util\Shared\Asserts;
 
-
 /**
  * Inherited Methods
  * @method void wantToTest($text)

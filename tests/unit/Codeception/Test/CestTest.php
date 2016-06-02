@@ -27,5 +27,4 @@ class CestTest extends \Codeception\Test\Unit
             \Codeception\Test\Descriptor::getTestSignature($cest)
         );
     }
-
 }
