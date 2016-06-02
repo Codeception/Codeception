@@ -26,7 +26,7 @@ use Codeception\Test\Descriptor;
  */
 class RunFailed extends Extension
 {
-    static $events = [
+    public static $events = [
         Events::RESULT_PRINT_AFTER => 'saveFailed'
     ];
 
@@ -67,5 +67,4 @@ class RunFailed extends Extension
         }
         return $path;
     }
-
-} 
+}

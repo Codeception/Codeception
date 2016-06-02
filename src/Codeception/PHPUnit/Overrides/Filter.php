@@ -1,7 +1,9 @@
 <?php
 
+// @codingStandardsIgnoreStart
 class PHPUnit_Util_Filter
 {
+    // @codingStandardsIgnoreEnd
     protected static $filteredClassesPattern = [
         'Symfony\Component\Console',
         'Codeception\Command\\',
@@ -18,7 +20,6 @@ class PHPUnit_Util_Filter
         }
 
         foreach ($trace as $step) {
-
             if (self::classIsFiltered($step) and $filter) {
                 continue;
             }
@@ -73,7 +74,8 @@ class PHPUnit_Util_Filter
             return true;
         }
 
-        if (strpos($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR . 'Module') !== false) {
+        $modulePath = 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR . 'Module';
+        if (strpos($step['file'], $modulePath) !== false) {
             return false; // don`t filter modules
         }
 

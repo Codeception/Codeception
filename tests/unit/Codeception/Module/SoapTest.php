@@ -17,9 +17,13 @@ class SoapTest extends \PHPUnit_Framework_TestCase
 
     protected $layout;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->module = new \Codeception\Module\SOAP(make_container());
-        $this->module->_setConfig(array('schema' => 'http://www.w3.org/2001/xml.xsd', 'endpoint' => 'http://codeception.com/api/wsdl'));
+        $this->module->_setConfig(array(
+            'schema' => 'http://www.w3.org/2001/xml.xsd',
+            'endpoint' => 'http://codeception.com/api/wsdl'
+        ));
         $this->layout = \Codeception\Configuration::dataDir().'/xml/layout.xml';
         $this->module->isFunctional = true;
         $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
@@ -32,20 +36,22 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Codeception\Lib\Interfaces\API', $this->module->_conflicts());
     }
     
-    public function testXmlIsBuilt() {
+    public function testXmlIsBuilt()
+    {
         $dom = new \DOMDocument();
         $dom->load($this->layout);
         $this->assertEqualXMLStructure($this->module->xmlRequest->documentElement, $dom->documentElement);
         $this->assertXmlStringEqualsXmlString($dom->saveXML(), $this->module->xmlRequest->saveXML());
     }
     
-    public function testBuildHeaders() {
+    public function testBuildHeaders()
+    {
         $this->module->haveSoapHeader('AuthHeader', ['username' => 'davert', 'password' => '123456']);
         $dom = new \DOMDocument();
         $dom->load($this->layout);
         $header = $dom->createElement('AuthHeader');
-        $header->appendChild($dom->createElement('username','davert'));
-        $header->appendChild($dom->createElement('password','123456'));
+        $header->appendChild($dom->createElement('username', 'davert'));
+        $header->appendChild($dom->createElement('password', '123456'));
         $dom->documentElement->getElementsByTagName('Header')->item(0)->appendChild($header);
         $this->assertEqualXMLStructure($this->module->xmlRequest->documentElement, $dom->documentElement);
     }
@@ -57,20 +63,21 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $dom = new \DOMDocument();
         $dom->load($this->layout);
         $body = $dom->createElement('item');
-        $body->appendChild($dom->createElement('id',1));
-        $body->appendChild($dom->createElement('subitem',2));
+        $body->appendChild($dom->createElement('id', 1));
+        $body->appendChild($dom->createElement('subitem', 2));
         $request = $dom->createElement('ns:KillHumans');
         $request->appendChild($body);
         $dom->documentElement->getElementsByTagName('Body')->item(0)->appendChild($request);
         $this->assertEqualXMLStructure($this->module->xmlRequest->documentElement, $dom->documentElement);
     }
 
-    public function testBuildRequestWithDomNode() {
+    public function testBuildRequestWithDomNode()
+    {
         $dom = new \DOMDocument();
         $dom->load($this->layout);
         $body = $dom->createElement('item');
-        $body->appendChild($dom->createElement('id',1));
-        $body->appendChild($dom->createElement('subitem',2));
+        $body->appendChild($dom->createElement('id', 1));
+        $body->appendChild($dom->createElement('subitem', 2));
         $request = $dom->createElement('ns:KillHumans');
         $request->appendChild($body);
         $dom->documentElement->getElementsByTagName('Body')->item(0)->appendChild($request);
@@ -79,7 +86,8 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $this->assertEqualXMLStructure($this->module->xmlRequest->documentElement, $dom->documentElement);
     }
     
-    public function testSeeXmlIncludes() {
+    public function testSeeXmlIncludes()
+    {
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
         $dom->preserveWhiteSpace = false;
@@ -87,7 +95,8 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $this->module->seeSoapResponseIncludes('<a    a2="2"      a1="1" >123</a>');
     }
 
-    public function testSeeXmlContainsXPath() {
+    public function testSeeXmlContainsXPath()
+    {
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
         $dom->preserveWhiteSpace = false;
@@ -95,7 +104,8 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $this->module->seeSoapResponseContainsXPath('//doc/a[@a2=2 and @a1=1]');
     }
 
-    public function testSeeXmlNotContainsXPath() {
+    public function testSeeXmlNotContainsXPath()
+    {
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
         $dom->preserveWhiteSpace = false;
@@ -104,7 +114,8 @@ class SoapTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testSeeXmlEquals() {
+    public function testSeeXmlEquals()
+    {
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
         $xml = '<?xml version="1.0" encoding="UTF-8"?> <doc> <a a2="2" a1="1" >123</a>  </doc>';
@@ -113,18 +124,20 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $this->module->seeSoapResponseEquals($xml);
     }
 
-    public function testSeeXmlIncludesWithBuilder() {
+    public function testSeeXmlIncludesWithBuilder()
+    {
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
         $dom->loadXML('<?xml version="1.0" encoding="UTF-8"?>'."\n".'  <doc><a    a2="2" a1="1"  >123</a></doc>');
         $xml = SoapUtil::request()->doc->a
-                ->attr('a2','2')
-                ->attr('a1','1')
+                ->attr('a2', '2')
+                ->attr('a1', '1')
                 ->val('123');
         $this->module->seeSoapResponseIncludes($xml);
     }
     
-    public function testGrabTextFrom() {
+    public function testGrabTextFrom()
+    {
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
         $dom->loadXML('<?xml version="1.0" encoding="UTF-8"?><doc><node>123</node></doc>');
@@ -133,5 +146,4 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $res = $this->module->grabTextContentFrom('descendant-or-self::doc/descendant::node');
         $this->assertEquals('123', $res);
     }
-
 }

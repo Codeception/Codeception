@@ -298,8 +298,8 @@ trait AngularGuyActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the current page contains the given string (case insensitive).
-     * 
-     * You can specify a specific HTML element (via CSS or XPath) as the second 
+     *
+     * You can specify a specific HTML element (via CSS or XPath) as the second
      * parameter to only search within that element.
      *
      * ``` php
@@ -308,19 +308,19 @@ trait AngularGuyActions
      * $I->see('Sign Up', 'h1');          // I can suppose it's a signup page
      * $I->see('Sign Up', '//body/h1');   // with XPath
      * ```
-     * 
+     *
      * Note that the search is done after stripping all HTML tags from the body,
      * so `$I->see('strong')` will return true for strings like:
-     * 
+     *
      *   - `<p>I am Stronger than thou</p>`
      *   - `<script>document.createElement('strong');</script>`
-     * 
+     *
      * But will *not* be true for strings like:
-     * 
+     *
      *   - `<strong>Home</strong>`
      *   - `<div class="strong">Home</strong>`
      *   - `<!-- strong -->`
-     * 
+     *
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
@@ -335,8 +335,8 @@ trait AngularGuyActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that the current page contains the given string (case insensitive).
-     * 
-     * You can specify a specific HTML element (via CSS or XPath) as the second 
+     *
+     * You can specify a specific HTML element (via CSS or XPath) as the second
      * parameter to only search within that element.
      *
      * ``` php
@@ -345,19 +345,19 @@ trait AngularGuyActions
      * $I->see('Sign Up', 'h1');          // I can suppose it's a signup page
      * $I->see('Sign Up', '//body/h1');   // with XPath
      * ```
-     * 
+     *
      * Note that the search is done after stripping all HTML tags from the body,
      * so `$I->see('strong')` will return true for strings like:
-     * 
+     *
      *   - `<p>I am Stronger than thou</p>`
      *   - `<script>document.createElement('strong');</script>`
-     * 
+     *
      * But will *not* be true for strings like:
-     * 
+     *
      *   - `<strong>Home</strong>`
      *   - `<div class="strong">Home</strong>`
      *   - `<!-- strong -->`
-     * 
+     *
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
@@ -381,19 +381,19 @@ trait AngularGuyActions
      * $I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
      * $I->dontSee('Sign Up','//body/h1');      // with XPath
      * ```
-     * 
+     *
      * Note that the search is done after stripping all HTML tags from the body,
      * so `$I->dontSee('strong')` will fail on strings like:
-     * 
+     *
      *   - `<p>I am Stronger than thou</p>`
      *   - `<script>document.createElement('strong');</script>`
-     * 
+     *
      * But will ignore strings like:
-     * 
+     *
      *   - `<strong>Home</strong>`
      *   - `<div class="strong">Home</strong>`
      *   - `<!-- strong -->`
-     * 
+     *
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
@@ -416,19 +416,19 @@ trait AngularGuyActions
      * $I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
      * $I->dontSee('Sign Up','//body/h1');      // with XPath
      * ```
-     * 
+     *
      * Note that the search is done after stripping all HTML tags from the body,
      * so `$I->dontSee('strong')` will fail on strings like:
-     * 
+     *
      *   - `<p>I am Stronger than thou</p>`
      *   - `<script>document.createElement('strong');</script>`
-     * 
+     *
      * But will ignore strings like:
-     * 
+     *
      *   - `<strong>Home</strong>`
      *   - `<div class="strong">Home</strong>`
      *   - `<!-- strong -->`
-     * 
+     *
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
@@ -1149,7 +1149,7 @@ trait AngularGuyActions
      *
      * Checks if the array of form parameters (name => value) are set on the form matched with the
      * passed selector.
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeInFormFields('form[name=myform]', [
@@ -1158,10 +1158,10 @@ trait AngularGuyActions
      * ]);
      * ?>
      * ```
-     * 
+     *
      * For multi-select elements, or to check values of multiple elements with the same name, an
      * array may be passed:
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeInFormFields('.form-class', [
@@ -1178,7 +1178,7 @@ trait AngularGuyActions
      * ```
      *
      * Additionally, checkbox values can be checked with a boolean.
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeInFormFields('#form-id', [
@@ -1187,9 +1187,9 @@ trait AngularGuyActions
      * ]);
      * ?>
      * ```
-     * 
+     *
      * Pair this with submitForm for quick testing magic.
-     * 
+     *
      * ``` php
      * <?php
      * $form = [
@@ -1203,7 +1203,7 @@ trait AngularGuyActions
      * $I->seeInFormFields('//form[@id=my-form]', $form);
      * ?>
      * ```
-     * 
+     *
      * @param $formSelector
      * @param $params
      * Conditional Assertion: Test won't be stopped on fail
@@ -1217,7 +1217,7 @@ trait AngularGuyActions
      *
      * Checks if the array of form parameters (name => value) are set on the form matched with the
      * passed selector.
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeInFormFields('form[name=myform]', [
@@ -1226,10 +1226,10 @@ trait AngularGuyActions
      * ]);
      * ?>
      * ```
-     * 
+     *
      * For multi-select elements, or to check values of multiple elements with the same name, an
      * array may be passed:
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeInFormFields('.form-class', [
@@ -1246,7 +1246,7 @@ trait AngularGuyActions
      * ```
      *
      * Additionally, checkbox values can be checked with a boolean.
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeInFormFields('#form-id', [
@@ -1255,9 +1255,9 @@ trait AngularGuyActions
      * ]);
      * ?>
      * ```
-     * 
+     *
      * Pair this with submitForm for quick testing magic.
-     * 
+     *
      * ``` php
      * <?php
      * $form = [
@@ -1271,7 +1271,7 @@ trait AngularGuyActions
      * $I->seeInFormFields('//form[@id=my-form]', $form);
      * ?>
      * ```
-     * 
+     *
      * @param $formSelector
      * @param $params
      * @see \Codeception\Module\WebDriver::seeInFormFields()
@@ -1286,7 +1286,7 @@ trait AngularGuyActions
      *
      * Checks if the array of form parameters (name => value) are not set on the form matched with
      * the passed selector.
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeInFormFields('form[name=myform]', [
@@ -1295,10 +1295,10 @@ trait AngularGuyActions
      * ]);
      * ?>
      * ```
-     * 
+     *
      * To check that an element hasn't been assigned any one of many values, an array can be passed
      * as the value:
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeInFormFields('.form-class', [
@@ -1311,7 +1311,7 @@ trait AngularGuyActions
      * ```
      *
      * Additionally, checkbox values can be checked with a boolean.
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeInFormFields('#form-id', [
@@ -1320,7 +1320,7 @@ trait AngularGuyActions
      * ]);
      * ?>
      * ```
-     * 
+     *
      * @param $formSelector
      * @param $params
      * Conditional Assertion: Test won't be stopped on fail
@@ -1334,7 +1334,7 @@ trait AngularGuyActions
      *
      * Checks if the array of form parameters (name => value) are not set on the form matched with
      * the passed selector.
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeInFormFields('form[name=myform]', [
@@ -1343,10 +1343,10 @@ trait AngularGuyActions
      * ]);
      * ?>
      * ```
-     * 
+     *
      * To check that an element hasn't been assigned any one of many values, an array can be passed
      * as the value:
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeInFormFields('.form-class', [
@@ -1359,7 +1359,7 @@ trait AngularGuyActions
      * ```
      *
      * Additionally, checkbox values can be checked with a boolean.
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeInFormFields('#form-id', [
@@ -1368,7 +1368,7 @@ trait AngularGuyActions
      * ]);
      * ?>
      * ```
-     * 
+     *
      * @param $formSelector
      * @param $params
      * @see \Codeception\Module\WebDriver::dontSeeInFormFields()
@@ -1525,7 +1525,8 @@ trait AngularGuyActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Finds and returns the text contents of the given element.
-     * If a fuzzy locator is used, the element is found using CSS, XPath, and by matching the full page source by regular expression.
+     * If a fuzzy locator is used, the element is found using CSS, XPath,
+     * and by matching the full page source by regular expression.
      *
      * ``` php
      * <?php
@@ -1599,23 +1600,23 @@ trait AngularGuyActions
      *
      * Grabs either the text content, or attribute values, of nodes
      * matched by $cssOrXpath and returns them as an array.
-     * 
+     *
      * ```html
      * <a href="#first">First</a>
      * <a href="#second">Second</a>
      * <a href="#third">Third</a>
      * ```
-     * 
+     *
      * ```php
      * <?php
      * // would return ['First', 'Second', 'Third']
      * $aLinkText = $I->grabMultiple('a');
-     * 
+     *
      * // would return ['#first', '#second', '#third']
      * $aLinks = $I->grabMultiple('a', 'href');
      * ?>
      * ```
-     * 
+     *
      * @param $cssOrXpath
      * @param $attribute
      * @return string[]
@@ -2014,7 +2015,8 @@ trait AngularGuyActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Accepts the active JavaScript native popup window, as created by `window.alert`|`window.confirm`|`window.prompt`.
-     * Don't confuse popups with modal windows, as created by [various libraries](http://jster.net/category/windows-modals-popups).
+     * Don't confuse popups with modal windows,
+     * as created by [various libraries](http://jster.net/category/windows-modals-popups).
      * @see \Codeception\Module\WebDriver::acceptPopup()
      */
     public function acceptPopup() {
@@ -2036,7 +2038,8 @@ trait AngularGuyActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * Checks that the active JavaScript popup, as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
+     * Checks that the active JavaScript popup,
+     * as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
      *
      * @param $text
      * Conditional Assertion: Test won't be stopped on fail
@@ -2048,7 +2051,8 @@ trait AngularGuyActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * Checks that the active JavaScript popup, as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
+     * Checks that the active JavaScript popup,
+     * as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
      *
      * @param $text
      * @see \Codeception\Module\WebDriver::seeInPopup()
@@ -2257,7 +2261,8 @@ trait AngularGuyActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Waits up to $timeout seconds for the given element to change.
-     * Element "change" is determined by a callback function which is called repeatedly until the return value evaluates to true.
+     * Element "change" is determined by a callback function which is called repeatedly
+     * until the return value evaluates to true.
      *
      * ``` php
      * <?php
@@ -2398,7 +2403,8 @@ trait AngularGuyActions
      * });
      * ```
      *
-     * This runs in the context of the [RemoteWebDriver class](https://github.com/facebook/php-webdriver/blob/master/lib/remote/RemoteWebDriver.php).
+     * This runs in the context of the
+     * [RemoteWebDriver class](https://github.com/facebook/php-webdriver/blob/master/lib/remote/RemoteWebDriver.php).
      * Try not to use this command on a regular basis.
      * If Codeception lacks a feature you need, please implement it and submit a patch.
      *
@@ -2559,7 +2565,8 @@ trait AngularGuyActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Move mouse over the first element matched by the given locator.
-     * If the second and third parameters are given, then the mouse is moved to an offset of the element's top-left corner.
+     * If the second and third parameters are given,
+     * then the mouse is moved to an offset of the element's top-left corner.
      * Otherwise, the mouse is moved to the center of the element.
      *
      * ``` php
@@ -2600,7 +2607,8 @@ trait AngularGuyActions
      * Pauses test execution in debug mode.
      * To proceed test press "ENTER" in console.
      *
-     * This method is useful while writing tests, since it allows you to inspect the current page in the middle of a test case.
+     * This method is useful while writing tests,
+     * since it allows you to inspect the current page in the middle of a test case.
      * @see \Codeception\Module\WebDriver::pauseExecution()
      */
     public function pauseExecution() {
@@ -2701,7 +2709,8 @@ trait AngularGuyActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Move to the middle of the given element matched by the given locator.
-     * Extra shift, calculated from the top-left corner of the element, can be set by passing $offsetX and $offsetY parameters.
+     * Extra shift, calculated from the top-left corner of the element,
+     * can be set by passing $offsetX and $offsetY parameters.
      *
      * ``` php
      * <?php

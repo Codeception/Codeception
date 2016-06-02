@@ -7,7 +7,8 @@ class EmulateModuleHelper extends \Codeception\Module
 {
     public $assertions = 0;
 
-    public function seeEquals($expected, $actual) {
+    public function seeEquals($expected, $actual)
+    {
         \PHPUnit_Framework_Assert::assertEquals($expected, $actual);
         $this->assertions++;
     }
@@ -19,5 +20,4 @@ class EmulateModuleHelper extends \Codeception\Module
     public function _before(\Codeception\TestInterface $test) {
         $this->feature = $test->getMetadata()->getFeature();
     }
-
 }

@@ -213,7 +213,6 @@ EOF;
      */
     public function persistEntity($obj, $values = [])
     {
-
         if ($values) {
             $reflectedObj = new \ReflectionClass($obj);
             foreach ($values as $key => $val) {
@@ -242,7 +241,8 @@ EOF;
      *
      * ```
      *
-     * This creates a stub class for Entity\User repository with redefined method findByUsername, which will always return the NULL value.
+     * This creates a stub class for Entity\User repository with redefined method findByUsername,
+     * which will always return the NULL value.
      *
      * @param $classname
      * @param array $methods
@@ -259,7 +259,8 @@ EOF;
         }
 
         $mock = Stub::make(
-            $customRepositoryClassName, array_merge(
+            $customRepositoryClassName,
+            array_merge(
                 [
                     '_entityName' => $metadata->name,
                     '_em' => $em,
@@ -275,7 +276,10 @@ EOF;
             $property->setAccessible(true);
             $property->setValue($em, array_merge($property->getValue($em), [$classname => $mock]));
         } else {
-            $this->debugSection('Warning', 'Repository can\'t be mocked, the EventManager class doesn\'t have "repositories" property');
+            $this->debugSection(
+                'Warning',
+                'Repository can\'t be mocked, the EventManager class doesn\'t have "repositories" property'
+            );
         }
     }
 

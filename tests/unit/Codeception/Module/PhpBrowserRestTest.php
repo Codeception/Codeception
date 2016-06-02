@@ -94,7 +94,9 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInJson()
     {
-        $this->setStubResponse('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}');
+        $this->setStubResponse(
+            '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}'
+        );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('name' => 'Davert'));
         $this->module->seeResponseContainsJson(array('user' => array('name' => 'Davert')));
@@ -105,7 +107,10 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInJsonCollection()
     {
-        $this->setStubResponse('[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
+        $this->setStubResponse(
+            '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('tags' => array('web-dev', 'java')));
         $this->module->seeResponseContainsJson(array('user' => 'John Doe', 'age' => 27));
@@ -114,7 +119,9 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayJson()
     {
-        $this->setStubResponse('[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]');
+        $this->setStubResponse(
+            '[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]'
+        );
         $this->module->seeResponseContainsJson(array('id' => 1));
     }
 
@@ -176,7 +183,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseContainsJson(array('name' => 'davert'));
         $this->module->seeResponseCodeIs(200);
         $this->module->dontSeeResponseCodeIs(404);
-        
     }
     
     /**
@@ -246,7 +252,7 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->sendGET('/rest/http-host/');
         $this->module->seeResponseContains('host: "localhost:8010"');
 
-        $this->module->haveHttpHeader('Host','www.example.com');
+        $this->module->haveHttpHeader('Host', 'www.example.com');
         $this->module->sendGET('/rest/http-host/');
         $this->module->seeResponseContains('host: "www.example.com"');
     }
@@ -255,5 +261,4 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
-
 }

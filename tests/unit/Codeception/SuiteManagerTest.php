@@ -1,5 +1,7 @@
 <?php
-if (!defined('PHPUNIT_TESTSUITE')) define('PHPUNIT_TESTSUITE', true);
+if (!defined('PHPUNIT_TESTSUITE')) {
+    define('PHPUNIT_TESTSUITE', true);
+}
 
 /**
  * @group core
@@ -37,19 +39,27 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @group core
      */
-    public function testRun() {
+    public function testRun()
+    {
         $events = [];
-        $eventListener = function ($event, $eventName) use (&$events) { $events[] = $eventName; };
+        $eventListener = function ($event, $eventName) use (&$events) {
+            $events[] = $eventName;
+        };
         $this->dispatcher->addListener('suite.before', $eventListener);
         $this->dispatcher->addListener('suite.after', $eventListener);
-        $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['colors' => false, 'steps' => true, 'debug' => false]);
+        $this->suiteman->run(
+            $this->runner,
+            new \PHPUnit_Framework_TestResult,
+            ['colors' => false, 'steps' => true, 'debug' => false]
+        );
         $this->assertEquals($events, ['suite.before', 'suite.after']);
     }
 
     /**
      * @group core
      */
-    public function testFewTests() {
+    public function testFewTests()
+    {
         $file = \Codeception\Configuration::dataDir().'SimpleCest.php';
 
         $this->suiteman->loadTests($file);
@@ -67,11 +77,16 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      *
      * @group core
      */
-    public function testAddCestWithEnv() {
+    public function testAddCestWithEnv()
+    {
         $file = \Codeception\Configuration::dataDir().'SimpleNamespacedTest.php';
         $this->suiteman->loadTests($file);
         $this->assertEquals(3, $this->suiteman->getSuite()->count());
-        $newSuiteMan = new \Codeception\SuiteManager($this->dispatcher, 'suite', \Codeception\Configuration::$defaultSuiteSettings);
+        $newSuiteMan = new \Codeception\SuiteManager(
+            $this->dispatcher,
+            'suite',
+            \Codeception\Configuration::$defaultSuiteSettings
+        );
         $newSuiteMan->loadTests($file);
         $this->assertEquals(3, $newSuiteMan->getSuite()->count());
     }
@@ -85,7 +100,9 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
     public function testGroupEventsAreFired()
     {
         $events = [];
-        $eventListener = function ($event, $eventName) use (&$events) { $events[] = $eventName; };
+        $eventListener = function ($event, $eventName) use (&$events) {
+            $events[] = $eventName;
+        };
         $this->dispatcher->addListener('test.before', $eventListener);
         $this->dispatcher->addListener('test.before.admin', $eventListener);
         $this->dispatcher->addListener('test.after', $eventListener);
@@ -95,13 +112,14 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $result = new \PHPUnit_Framework_TestResult;
         $listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
         $result->addListener($listener);
-        $this->suiteman->run($this->runner, $result, ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]);
+        $this->suiteman->run(
+            $this->runner,
+            $result,
+            ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]
+        );
         $this->assertContains('test.before', $events);
         $this->assertContains('test.before.admin', $events);
         $this->assertContains('test.after', $events);
         $this->assertContains('test.after.admin', $events);
     }
-
-
-
 }

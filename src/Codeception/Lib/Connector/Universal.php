@@ -62,7 +62,9 @@ class Universal extends Client
                 $headers[$name] = trim(implode(':', $parts));
             }
         }
-        $headers['Content-type'] = isset($headers['Content-type']) ? $headers['Content-type'] : "text/html; charset=UTF-8";
+        $headers['Content-type'] = isset($headers['Content-type'])
+            ? $headers['Content-type']
+            : "text/html; charset=UTF-8";
 
         $response = new Response($content, 200, $headers);
         return $response;

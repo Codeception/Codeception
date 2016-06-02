@@ -56,7 +56,13 @@ class SqlSrv extends Db
 
         $params = [];
         foreach ($criteria as $k => $v) {
-            $params[] = $this->getQuotedName($k) . " = ? ";        }
+            if (strpos(strtolower($k), ' like') > 0) {
+                $k = str_replace(' like', '', strtolower($k));
+                $params[] = $this->getQuotedName($k) . " LIKE ? ";
+            } else {
+                $params[] = $this->getQuotedName($k) . " = ? ";
+            }
+        }
 
         return 'WHERE ' . implode('AND ', $params);
     }

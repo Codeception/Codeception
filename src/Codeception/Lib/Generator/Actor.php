@@ -103,7 +103,6 @@ EOF;
             } else {
                 $params[] = '$' . $param->name;
             };
-
         }
         return implode(', ', $params);
     }

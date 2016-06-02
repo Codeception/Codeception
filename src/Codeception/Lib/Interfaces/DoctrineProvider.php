@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Lib\Interfaces;
 
 interface DoctrineProvider

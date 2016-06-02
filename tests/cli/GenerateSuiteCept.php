@@ -12,8 +12,8 @@ $I->seeInThisFile('class_name: HouseGuy');
 $I->seeInThisFile('- \Helper\House');
 $I->seeFileFound('House.php', 'tests/_support/Helper');
 $I->seeInThisFile('namespace Helper;');
-$I->seeFileFound('_bootstrap.php','tests/house');
+$I->seeFileFound('_bootstrap.php', 'tests/house');
 
-$I->expect ('suite is not created due to dashes');
+$I->expect('suite is not created due to dashes');
 $I->executeCommand('generate:suite invalid-dash-suite');
 $I->seeInShellOutput('contains invalid characters');

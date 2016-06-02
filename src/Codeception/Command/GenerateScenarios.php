@@ -55,7 +55,9 @@ class GenerateScenarios extends Command
         @mkdir($path);
 
         if (!is_writable($path)) {
-            throw new ConfigurationException("Path $path is not writable. Please, set valid permissions for folder to store scenarios.");
+            throw new ConfigurationException(
+                "Path $path is not writable. Please, set valid permissions for folder to store scenarios."
+            );
         }
 
         $path = $path . DIRECTORY_SEPARATOR . $suite;
@@ -137,5 +139,4 @@ class GenerateScenarios extends Command
         $name = preg_replace('/_Cest$/', '', $name);
         return $name;
     }
-
 }

@@ -7,7 +7,7 @@ namespace Codeception\PHPUnit;
  * Interface ConsolePrinter
  * @package Codeception\PHPUnit
  */
-interface ConsolePrinter 
+interface ConsolePrinter
 {
     public function write($buffer);
 

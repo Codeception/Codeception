@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
-class GenerateGroupTest extends BaseCommandRunner {
+class GenerateGroupTest extends BaseCommandRunner
+{
 
     protected function setUp()
     {
@@ -38,5 +39,4 @@ class GenerateGroupTest extends BaseCommandRunner {
         $this->assertContains('namespace Shire\Group;', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
     }
-
 }

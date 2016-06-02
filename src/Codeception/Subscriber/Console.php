@@ -24,18 +24,18 @@ class Console implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     public static $events = [
-        Events::SUITE_BEFORE       => 'beforeSuite',
-        Events::SUITE_AFTER        => 'afterSuite',
-        Events::TEST_START         => 'startTest',
-        Events::TEST_END           => 'endTest',
-        Events::STEP_BEFORE        => 'beforeStep',
-        Events::STEP_AFTER         => 'afterStep',
-        Events::TEST_SUCCESS       => 'testSuccess',
-        Events::TEST_FAIL          => 'testFail',
-        Events::TEST_ERROR         => 'testError',
-        Events::TEST_INCOMPLETE    => 'testIncomplete',
-        Events::TEST_SKIPPED       => 'testSkipped',
-        Events::TEST_FAIL_PRINT    => 'printFail',
+        Events::SUITE_BEFORE    => 'beforeSuite',
+        Events::SUITE_AFTER     => 'afterSuite',
+        Events::TEST_START      => 'startTest',
+        Events::TEST_END        => 'endTest',
+        Events::STEP_BEFORE     => 'beforeStep',
+        Events::STEP_AFTER      => 'afterStep',
+        Events::TEST_SUCCESS    => 'testSuccess',
+        Events::TEST_FAIL       => 'testFail',
+        Events::TEST_ERROR      => 'testError',
+        Events::TEST_INCOMPLETE => 'testIncomplete',
+        Events::TEST_SKIPPED    => 'testSkipped',
+        Events::TEST_FAIL_PRINT => 'printFail',
         Events::RESULT_PRINT_AFTER => 'afterResult'
     ];
 
@@ -122,10 +122,12 @@ class Console implements EventSubscriberInterface
         if ($e->getSuite() instanceof Suite) {
             $message = $this->message(
                 implode(
-                    ', ', array_map(
+                    ', ',
+                    array_map(
                         function ($module) {
                             return $module->_getName();
-                        }, $e->getSuite()->getModules()
+                        },
+                        $e->getSuite()->getModules()
                     )
                 )
             );
@@ -388,6 +390,7 @@ class Console implements EventSubscriberInterface
             }
         }
         $this->printException($fail, $failedStep);
+
         $this->printScenarioTrace($failedTest, $failToString);
         if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
             $this->printExceptionTrace($fail);

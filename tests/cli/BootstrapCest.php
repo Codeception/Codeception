@@ -4,7 +4,7 @@ class BootstrapCest
 
     protected $bootstrapPath;
 
-    function _before(\CliGuy $I)
+    public function _before(\CliGuy $I)
     {
         $this->bootstrapPath = 'tests/data/sandbox/boot'.uniqid();
         @mkdir($this->bootstrapPath, 0777, true);
@@ -39,7 +39,7 @@ class BootstrapCest
     public function bootstrapWithActor(\CliGuy $I)
     {
         $I->executeCommand('bootstrap --actor Ninja');
-        $I->seeFileFound('AcceptanceNinja.php','tests/_support/');
+        $I->seeFileFound('AcceptanceNinja.php', 'tests/_support/');
     }
 
 
@@ -47,7 +47,7 @@ class BootstrapCest
     {
         $I->executeCommand('bootstrap --empty');
         $I->dontSeeFileFound('tests/acceptance');
-        $I->dontSeeFileFound('AcceptanceTester.php','tests/acceptance');
+        $I->dontSeeFileFound('AcceptanceTester.php', 'tests/acceptance');
         $I->seeFileFound('codeception.yml');
     }
     
@@ -58,21 +58,20 @@ class BootstrapCest
         $I->seeDirFound('tests/_output');
         $I->seeDirFound('tests/_envs');
 
-        $I->seeFileFound('functional.suite.yml','tests');
-        $I->seeFileFound('acceptance.suite.yml','tests');
-        $I->seeFileFound('unit.suite.yml','tests');
+        $I->seeFileFound('functional.suite.yml', 'tests');
+        $I->seeFileFound('acceptance.suite.yml', 'tests');
+        $I->seeFileFound('unit.suite.yml', 'tests');
 
-        $I->seeFileFound('_bootstrap.php','tests/acceptance');
-        $I->seeFileFound('_bootstrap.php','tests/functional');
-        $I->seeFileFound('_bootstrap.php','tests/unit');
+        $I->seeFileFound('_bootstrap.php', 'tests/acceptance');
+        $I->seeFileFound('_bootstrap.php', 'tests/functional');
+        $I->seeFileFound('_bootstrap.php', 'tests/unit');
 
-        $I->seeFileFound('AcceptanceTester.php','tests/_support');
-        $I->seeFileFound('FunctionalTester.php','tests/_support');
-        $I->seeFileFound('UnitTester.php','tests/_support');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
+        $I->seeFileFound('FunctionalTester.php', 'tests/_support');
+        $I->seeFileFound('UnitTester.php', 'tests/_support');
 
-        $I->seeFileFound('Acceptance.php','tests/_support/Helper');
-        $I->seeFileFound('Functional.php','tests/_support/Helper');
-        $I->seeFileFound('Unit.php','tests/_support/Helper');
+        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
+        $I->seeFileFound('Functional.php', 'tests/_support/Helper');
+        $I->seeFileFound('Unit.php', 'tests/_support/Helper');
     }
-
 }

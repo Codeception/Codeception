@@ -77,12 +77,14 @@ class GroupManagerTest extends \Codeception\Test\Unit
 
     protected function makeTestCase($file, $name = '')
     {
-        return Stub::make('\Codeception\Lib\DescriptiveTestCase', [
+        return Stub::make(
+            '\Codeception\Lib\DescriptiveTestCase',
+            [
                 'getReportFields' => ['file' => codecept_root_dir() . $file],
-                'getName' => $name]
+                'getName' => $name
+            ]
         );
     }
-
 }
 
 class DescriptiveTestCase extends \Codeception\Test\Unit

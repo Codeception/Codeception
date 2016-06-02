@@ -58,7 +58,6 @@ class Yii1 extends Client
         $uriQuery = ltrim(parse_url($request->getUri(), PHP_URL_QUERY), '?');
         $scriptName = trim(parse_url($this->url, PHP_URL_PATH), '/');
         if (!empty($uriQuery)) {
-
             $uriPath .= "?{$uriQuery}";
 
             parse_str($uriQuery, $params);

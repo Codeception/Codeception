@@ -16,7 +16,11 @@ class MessageTest extends \Codeception\Test\Unit
     }
     
     //test message cutting
-    public function testVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestName() {}
+    // @codingStandardsIgnoreStart
+    public function testVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestName()
+    {
+        // @codingStandardsIgnoreEnd
+    }
 
     // test multibyte message width
     public function testWidth()
@@ -28,4 +32,3 @@ class MessageTest extends \Codeception\Test\Unit
         $this->assertEquals('пример текста                 ', $message->width(30)->getMessage());
     }
 }
- 

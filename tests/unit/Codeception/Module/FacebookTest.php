@@ -154,6 +154,9 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         ) {
             $this->markTestSkipped("You need both publish_actions and user_posts permissions for this test");
         }
+        if (getenv('TRAVIS')) {
+            $this->markTestSkipped('Facebook test is too fragile, skipping for CI');
+        }
     }
 
     private function initModule(PhpBrowser $browserModule, array $params)

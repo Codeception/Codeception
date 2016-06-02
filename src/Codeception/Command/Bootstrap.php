@@ -12,7 +12,8 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Console\Question\Question;
 
 /**
- * Creates default config, tests directory and sample suites for current project. Use this command to start building a test suite.
+ * Creates default config, tests directory and sample suites for current project.
+ * Use this command to start building a test suite.
  *
  * By default it will create 3 suites **acceptance**, **functional**, and **unit**.
  *
@@ -38,7 +39,12 @@ class Bootstrap extends Command
         $this->setDefinition(
             [
                 new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path', '.'),
-                new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers'),
+                new InputOption(
+                    'namespace',
+                    'ns',
+                    InputOption::VALUE_OPTIONAL,
+                    'Namespace to add for actor classes and helpers'
+                ),
                 new InputOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Tester'),
                 new InputOption('empty', 'e', InputOption::VALUE_NONE, 'Don\'t create standard suites')
             ]
@@ -176,7 +182,7 @@ EOF;
 
     protected function createAcceptanceSuite($actor = 'Acceptance')
     {
-            $suiteConfig = <<<EOF
+        $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
 #
 # Suite for acceptance tests.
@@ -244,5 +250,4 @@ EOF;
             '/* Replace this file with actual dump of your database */'
         );
     }
-
 }

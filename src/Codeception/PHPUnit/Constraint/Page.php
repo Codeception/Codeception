@@ -3,15 +3,43 @@ namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Lib\Console\Message;
 
-class Page extends \PHPUnit_Framework_Constraint_StringContains
+class Page extends \PHPUnit_Framework_Constraint
 {
     protected $uri;
 
     public function __construct($string, $uri = '')
     {
+        parent::__construct();
         $this->string = (string)$string;
         $this->uri = $uri;
-        $this->ignoreCase = true;
+    }
+
+    /**
+     * Evaluates the constraint for parameter $other. Returns true if the
+     * constraint is met, false otherwise.
+     *
+     * @param mixed $other Value or object to evaluate.
+     *
+     * @return bool
+     */
+    protected function matches($other)
+    {
+        return mb_stripos($other, $this->string, null, 'UTF-8') !== false;
+    }
+
+    /**
+     * Returns a string representation of the constraint.
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        $string = mb_strtolower($this->string, 'UTF-8');
+
+        return sprintf(
+            'contains "%s"',
+            $string
+        );
     }
 
     protected function failureDescription($other)
@@ -22,7 +50,9 @@ class Page extends \PHPUnit_Framework_Constraint_StringContains
         $message->prepend("\n--> ");
         $message->prepend($this->uriMessage());
         if (strlen($other) > 300) {
-            $debugMessage = new Message("[Content too long to display. See complete response in '" . codecept_output_dir() . "' directory]");
+            $debugMessage = new Message(
+                "[Content too long to display. See complete response in '" . codecept_output_dir() . "' directory]"
+            );
             $debugMessage->style('debug')->prepend("\n");
             $message->append($debugMessage);
         }
