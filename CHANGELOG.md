@@ -2,8 +2,7 @@
 
 #### 2.2.0
 
-* [Laravel5] Fixed issue where non-existing services were called in _before and _after methods. See #3028.
-* Long-not-awaited **Gherkin format support**. [Announcement](https://github.com/Codeception/Codeception/pull/2750#issue-129899745)
+* **Gherkin format support**. [Announcement](https://github.com/Codeception/Codeception/pull/2750#issue-129899745)
 * **Core Test Format Refactorings** Codeception becomes true multiformat testing platform. Format requires a [Loader](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Test/Loader/LoaderInterface.php) and class extending [Test](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Test/Test.php) class, implementing [TestInterface](https://github.com/Codeception/Codeception/blob/master/src/Codeception/TestInterface.php).
     * *Breaking* `Codeception\TestCase` replaced with `Codeception\TestInterface` in code and in module signatures.
     * *Breaking* Cept/Cest classes are no longer extending `PHPUnit_Framework_TestCase`, so they don't have `expectException`, `getMock`, etc.
@@ -14,23 +13,25 @@
 * **Test dependencies** with `@depends` annotation. [Announcement](http://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#test-dependencies)
 * **Custom Commands** inject your own commands as as simple as extension. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#custom-commands)
 * `codecept dry-run` command added to show scenario steps without executing them.
+* *Breaking* [Dbh] module removed
+* *Breaking* [Laravel4] module removed
+* *Breaking* [Symfony] public property `container` removed
+* *Breaking* [Asserts] removed deprecated `assertLessThen` and `assertGreaterThen`
+* *Breaking* mocks created with `Codeception\Util\Stub` are not verified in Cests. See #3005
+* *Breaking* [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
 * [WebDriver] allows getting current browser and capabilities in test. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#Getting-current-browser-and-capabilities-in-tests)
 * [AngularJS] module added. Extends WebDriver module for AngularJS testing. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#angularjs)
 * [DataFactory] module added. Performs data generation using FactoryMuffin library [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#datafactory)
-* *Breaking* [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
+* [Redis] Module rewritten using Predis library as driver by @marcverney
 * [Symfony] module Symfony2 renamed to Symfony
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
 * [Asserts] More `assert*` methods from PHPUnit added
 * [Asserts] Added `expectException` method
 * [WebDriver][Frameworks][PhpBrowser] `selectOption` can receive option as strict locator to exactly match option by text or by value. Use `['value' => 'myvalue']` or `['text' => 'optiontext']` to select a proper option. By @gdscei and @davertmik See #3003
 * Added config option to disable modules using `modules: disabled:`.
-* *Breaking* [Dbh] module removed
-* *Breaking* [Laravel4] module removed
-* *Breaking* [Symfony] public property `container` removed
-* *Breaking* [Asserts] removed deprecated `assertLessThen` and `assertGreaterThen`
-* *Breaking* mocks created with `Codeception\Util\Stub` are not verified in Cests. See #3005
 * [Sequence] Changed the prefix value. Generated sequences to include id inside a prefix: `sq('user1') => 'user1_876asd8as87a'. Added `prefix` config option.
-
+* Deprecation errors won't fail tests but will be printed.
+* Official [Docker image](https://hub.docker.com/r/codeception/codeception/) introduced by @schmunk42
 
 #### 2.1.10
 
@@ -40,6 +41,8 @@
 
 * PHPUnit 5.4 compatibility for creating mocks using `Codeception\Util\Stub` by @davertmik. See #3093 and #3080
 * Updated dependencies to support Symfony 3.1
+* [Laravel5] Fixed issue where non-existing services were called in _before and _after methods. See #3028.
+* Fix self-update command to update only to stable versions by @MAXakaWIZARD
 * Added `settings: backup_global` to config, to disable backup_global option of PHPUnit by @mkeasling. See #3045. Fixes #3044
 * [PhpBrowser][Frameworks] `see` matches UTF-8 text case-insensitively by @Naktibalda. Fixes #3114
 * Fixed page object generation with namespaces by @eugene-manuilov and @Naktibalda. See #3126 Fixes #3012
