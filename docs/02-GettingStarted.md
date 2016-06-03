@@ -43,7 +43,7 @@ A Scenario always starts with Actor class initialization. After that, writing a 
 <?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('login to website');
-?>
+
 ```
 
 The `wantTo` section describes your scenario in brief. There are additional comment methods that are useful to describe context of a scenario:
@@ -71,7 +71,6 @@ $I->fillField('Username','davert');
 $I->fillField('Password','qwerty');
 $I->click('Login');
 $I->see('Hello, davert');
-?>
 ```
 
 This scenario can probably be read by non-technical people. If you just remove all special chars like braces, arrows and `$`, this test transforms into plain English text:
@@ -198,7 +197,6 @@ class PageCrudCest
        // todo: write test
     }
 }
-?>
 ```
 
 Such Cest file can be created by running a generator:

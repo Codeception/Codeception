@@ -13,7 +13,7 @@ $I->amOnPage('/');
 $I->see('Hello');
 $I->seeInDatabase('users', array('id' => 1));
 $I->seeFileFound('running.lock');
-?>
+
 ```
 
 It can operate with different entities: the web page can be loaded with the PhpBrowser module, the database assertion uses the Db module, and file state can be checked with the Filesystem module. 
@@ -117,7 +117,7 @@ namespace Helper;
 class Functional extends \Codeception\Module
 {
 }
-?>
+
 ```
 
 As for actions, everything is quite simple. Every action you define is a public function. Write any public method, run the `build` command, and you will see the new function added into the FunctionalTester class.
@@ -136,7 +136,7 @@ Name your assertions like this:
 $I->seePageReloaded();
 $I->seeClassIsLoaded($classname);
 $I->dontSeeUserExist($user);
-?>
+
 ```
 And then use them in your tests:
 
@@ -145,7 +145,7 @@ And then use them in your tests:
 $I->seePageReloaded();
 $I->seeClassIsLoaded('FunctionalTester');
 $I->dontSeeUserExist($user);
-?>
+
 ```
 
 You can define asserts by using assertXXX methods in modules.
@@ -157,7 +157,7 @@ function seeClassExist($class)
 {
     $this->assertTrue(class_exists($class));
 }
-?>
+
 ```
 
 In your helpers you can use these assertions:
@@ -175,7 +175,7 @@ function seeCanCheckEverything($thing)
     $this->assertEquals("hello world", $thing, "this thing is 'Hello world'!");
     // ...
 }
-?>
+
 ```
 
 ### Accessing Other Modules
@@ -194,7 +194,7 @@ function reconnectToDatabase() {
     $dbh->close();
     $dbh->open();
 }
-?>
+
 ```
 
 By using the `getModule` function, you get access to all of the public methods and properties of the requested module. The `dbh` property was defined as public specifically to be available to other modules.
@@ -217,7 +217,7 @@ function seeNumResults($num)
     // asserting that table contains exactly $num rows
     $this->assertEquals($num, count($results));
 }
-?>
+
 ```
 
 In this example we use API of <a href="https://github.com/facebook/php-webdriver">facebook/php-webdriver</a> library, a Selenium WebDriver client a module is build on. 
@@ -233,7 +233,7 @@ namespace Helper;
 
 class MyExtendedSelenium extends \Codeception\Module\WebDriver  {
 }
-?>
+
 ```
 
 In this helper you can replace parent's methods with your own implementation.
@@ -256,7 +256,7 @@ class MyExtendedSelenium extends \Codeception\Module\WebDriver
     // exclude "seeElement" action
     public static $excludeActions = ['seeElement'];
 }
-?>
+
 ```
 
 Setting `$includeInheritedActions` to false adds the ability to create aliases for parent methods.
@@ -276,7 +276,7 @@ class SecondDb extends \Codeception\Module\Db
         $this->seeInDatabase($table, $data);
     }
 }
-?>
+
 ```
 
 Setting `$includeInheritedActions` to false won't include the methods from parent classes into the generated Actor.
@@ -327,7 +327,7 @@ All hooks are defined in `\Codeception\Module` and are listed here. You are free
     // HOOK: on fail
     public function _failed(\Codeception\TestInterface $test, $fail) {
     }
-?>
+
 ```
 
 Please note that methods with a `_` prefix are not added to the Actor class. This allows them to be defined as public but used only for internal purposes.
@@ -348,7 +348,7 @@ Here is an example of how it works for PhpBrowser:
     $this->debugSection('Request', $params);
     $this->client->request($method, $uri, $params);
     $this->debug('Response Code: ' . $this->client->getStatusCode());
-?>    
+    
 ```
 
 This test, running with the PhpBrowser module in debug mode, will print something like this:
@@ -371,7 +371,7 @@ Mandatory parameters should be defined in the `$requiredFields` property of the 
 class Db extends \Codeception\Module 
 {
     protected $requiredFields = ['dsn', 'user', 'password'];
-?>
+
 ```
 
 The next time you start the suite without setting one of these values, an exception will be thrown. 
@@ -384,7 +384,7 @@ class WebDriver extends \Codeception\Module
 {
     protected $requiredFields = ['browser', 'url'];    
     protected $config = ['host' => '127.0.0.1', 'port' => '4444'];
-?>    
+    
 ```
 
 The host and port parameter can be redefined in the suite config. Values are set in the `modules:config` section of the configuration file.
@@ -461,7 +461,7 @@ You may call it from a helper class and pass in all the fields you want to chang
 ```php
 <?php
 $this->getModule('WebDriver')->_reconfigure(array('browser' => 'chrome'));
-?>
+
 ```
 
 At the end of a test, all your changes will be rolled back to the original config values.

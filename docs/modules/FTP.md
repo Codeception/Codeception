@@ -16,7 +16,8 @@ Supported and tested FTP types are:
 * FTP
 * SFTP
 
-Connection uses php build in FTP client for FTP, connection to SFTP uses [phpseclib](http://phpseclib.sourceforge.net/) pulled in using composer.
+Connection uses php build in FTP client for FTP,
+connection to SFTP uses [phpseclib](http://phpseclib.sourceforge.net/) pulled in using composer.
 
 For SFTP, add [phpseclib](http://phpseclib.sourceforge.net/) to require list.
 ```
@@ -283,7 +284,8 @@ $I->makeDir('vendor');
 
 ### openFile
  
-Opens a file (downloads from the remote FTP/SFTP system to a tmp directory for processing) and stores it's content.
+Opens a file (downloads from the remote FTP/SFTP system to a tmp directory for processing)
+and stores it's content.
 
 Usage:
 
@@ -425,4 +427,4 @@ $I->writeToFile('composer.json', 'some data here');
  * `param` $filename
  * `param` $contents
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/FTP.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/FTP.php">Help us to improve documentation. Edit module reference</a></div>

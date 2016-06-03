@@ -18,7 +18,6 @@ $I->fillField('Password', 'Davis');
 $I->click('Enter');
 $I->see('Hello, Miles', 'h1');
 // $I->seeEmailIsSent() - special for Symfony2
-?>
 ```
 
 As you see you can use same tests for functional and acceptance testing. 
@@ -159,9 +158,8 @@ Therefore we can open a web page with `amOnPage` command.
 
 ```php
 <?php
-$I = new FunctionalTester;
+$I = new FunctionalTester($scenario);
 $I->amOnPage('/login');
-?>
 ```
 
 We can click links to open web pages of application.
@@ -175,7 +173,6 @@ $I->click('Logout', '.nav');
 $I->click('a.logout');
 // click with strict locator
 $I->click(['class' => 'logout']);
-?>
 ```
 
 We can submit forms as well:
@@ -187,7 +184,6 @@ $I->submitForm('form#login', ['name' => 'john', 'password' => '123456']);
 $I->fillField('#login input[name=name]', 'john');
 $I->fillField('#login input[name=password]', '123456');
 $I->click('Submit', '#login');
-?>
 ```
 
 And do assertions:
@@ -197,7 +193,6 @@ And do assertions:
 $I->see('Welcome, john');
 $I->see('Logged in successfully', '.notice');
 $I->seeCurrentUrlEquals('/profile/john');
-?>
 ```
 
 Framework modules also contain additional methods to access framework internals. For instance, `Laravel5`, `Phalcon`, and `Yii2` modules have `seeRecord` method which uses ActiveRecord layer to check that record exists in database.
@@ -218,7 +213,6 @@ class Functional extends \Codeception\Module
         $service->doSomething();
     }
 }
-?>
 ```
 
 Check also all available *Public Properties* of used modules to get full access to its data. 

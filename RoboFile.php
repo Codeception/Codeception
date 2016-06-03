@@ -360,9 +360,12 @@ class RoboFile extends \Robo\Tasks
                 ->processClassDocBlock(function (ReflectionClass $r, $text) {
                     return $text . "\n";
                 })->processMethodSignature(function(ReflectionMethod $r, $text) {
-                    return str_replace('public', '', $text);
+                    return '### ' . $r->getName();
                 })->processMethodDocBlock(function(ReflectionMethod $r, $text) use ($utilName, $source) {
                     $line = $r->getStartLine();
+                    if ($r->isStatic()) {
+                        $text = "\n*static*\n$text";
+                    }
                     $text = preg_replace("~@(.*?)([$\s])~", ' * `$1` $2', $text);
                     $text .= "\n[See source]($source#L$line)";
                     return "\n" . $text."\n";
@@ -546,7 +549,7 @@ class RoboFile extends \Robo\Tasks
                     'source' => self::REPO_BLOB_URL."/".self::STABLE_BRANCH."/src/Codeception/Module/$name.php"
                 ];
                 // building version switcher
-                foreach (['master', '2.1', '2.0', '1.8'] as $branch) {
+                foreach (['master', '2.2', '2.1', '2.0', '1.8'] as $branch) {
                     $buttons[$branch] = self::REPO_BLOB_URL."/$branch/docs/modules/$name.md";
                 }
                 $buttonHtml = "\n\n".'<div class="btn-group" role="group" style="float: right" aria-label="...">';
@@ -698,17 +701,17 @@ class RoboFile extends \Robo\Tasks
         $changelog = file_get_contents('CHANGELOG.md');
 
         //user
-        $changelog = preg_replace('~@(\w+)~', '<strong><a href="https://github.com/$1">@$1</a></strong>', $changelog);
+        $changelog = preg_replace('~\s@(\w+)~', ' **[$1](https://github.com/$1)**', $changelog);
 
         //issue
         $changelog = preg_replace(
             '~#(\d+)~',
-            '<a href="https://github.com/Codeception/Codeception/issues/$1">#$1</a>',
+            '[#$1](https://github.com/Codeception/Codeception/issues/$1)',
             $changelog
         );
 
         //module
-        $changelog = preg_replace('~\[(\w+)\]~', '<strong>[$1]</strong>', $changelog);
+        $changelog = preg_replace('~\s\[(\w+)\]\s~', ' **[$1]** ', $changelog);
 
         return $changelog;
     }

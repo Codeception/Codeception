@@ -14,7 +14,6 @@ $I->amOnPage('/');
 $I->see('Hello');
 $I->seeInDatabase('users', ['id' => 1]);
 $I->seeFileFound('running.lock');
-?>
 ```
 
 It can operate with different entities: the web page can be loaded with the PhpBrowser module, the database assertion uses the Db module, and file state can be checked with the Filesystem module. 
@@ -60,7 +59,7 @@ class AcceptanceTester extends \Codeception\Actor
     */
 
 }
-?>
+
 ```
 
 The most important part is `_generated\AcceptanceTesterActions` trait, which is used as a proxy for enabled modules. It knows which module executes which action and passes parameters into it. This trait was created by running `codecept build` and is regenerated each time module or configuration changes.
@@ -87,7 +86,7 @@ class AcceptanceTester extends \Codeception\Actor
         $I->see($name, '.navbar');
     } 
 }
-?>
+
 ```
 
 Now you can use `login` method inside your tests:
@@ -96,7 +95,7 @@ Now you can use `login` method inside your tests:
 <?php
 $I = new AcceptanceTester($scenario);
 $I->login('miles', '123456');
-?>
+
 ```
 
 However, implementing all actions for a reuse in one actor class may lead to breaking the [Single Responsibility Principle](http://en.wikipedia.org/wiki/Single_responsibility_principle). 
@@ -129,7 +128,7 @@ Let's improve code of our `login` method by making it executed only once for the
          // saving snapshot
         $I->saveSessionSnapshot('login');
     }
-?>
+
 ```
 
 Please note that session restoration only works for `WebDriver` and `PhpBrowser` modules (modules implementing `Codeception\Lib\Interfaces\SessionSnapshot`) 
@@ -167,7 +166,7 @@ class Admin extends \AcceptanceTester
         $I = $this;
     }
 }
-?>
+
 ```
 
 As you see, this class is very simple. It extends `AcceptanceTester` class, thus, all methods and properties of `AcceptanceTester` are available for usage in it.
@@ -189,7 +188,7 @@ class Member extends \AcceptanceTester
         $I->click('Login');
     }
 }
-?>
+
 ```
 
 In tests you can use a StepObject by instantiating `Step\Acceptance\Admin` instead of `AcceptanceTester`.
@@ -200,7 +199,7 @@ use Step\Acceptance\Admin as AdminTester;
 
 $I = new AdminTester($scenario);
 $I->loginAsAdmin();
-?>
+
 ```
 
 Same as above, StepObject can be instantiated automatically by Dependency Injection Container, when used inside Cest format:
@@ -216,7 +215,7 @@ class UserCest
         $I->see('Admin Profile', 'h1');        
     }
 }
-?>
+
 ```
 
 If you have complex interaction scenario you may use several step objects in one test. If you feel like adding too many actions into your Actor class (which is AcceptanceTester in this case) consider to move some of them into separate StepObjects.
@@ -250,7 +249,7 @@ class Login
     public static $passwordField = '#mainForm input[name=password]';
     public static $loginButton = '#mainForm input[type=submit]';
 }
-?>
+
 ```
 
 And this is how this page object can be used in a test:
@@ -266,7 +265,7 @@ $I->fillField(LoginPage::$usernameField, 'bill evans');
 $I->fillField(LoginPage::$passwordField, 'debby');
 $I->click(LoginPage::$loginButton);
 $I->see('Welcome, bill');
-?>
+
 ```
 As you see, you can freely change markup of your login page, and all the tests interacting with this page will have their locators updated according to properties of LoginPage class.
 
@@ -306,7 +305,7 @@ class Login
         return $this;
     }    
 }
-?>
+
 ```
 
 And here is an example of how this PageObject can be used in a test.
@@ -320,7 +319,7 @@ $loginPage = new LoginPage($I);
 $loginPage->login('bill evans', 'debby');
 $I->amOnPage('/profile');
 $I->see('Bill Evans Profile', 'h1');
-?>
+
 ```
 
 If you write your scenario-driven tests in Cest format (which is the recommended approach), you can bypass manual creation of a PageObject and delegate this task to Codeception. If you specify which object you need for a test, Codeception will try to create it using the dependency injection container. In the case of a PageObject you should declare a class as a parameter for a test method:
@@ -336,7 +335,7 @@ class UserCest
         $I->see('Bill Evans Profile', 'h1');        
     }
 }
-?>
+
 ```
 
 The dependency injection container can construct any object that require any known class type. For instance, `Page\Login` required `AcceptanceTester`, and so it was injected into `Page\Login` constructor, and PageObject was created and passed into method arguments. You should specify explicitly the types of required objects for Codeception to know what objects should be created for a test. Dependency Injection will be described in the next chapter.

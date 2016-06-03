@@ -51,7 +51,6 @@ class ExampleTest extends \Codeception\Test\Unit
     {
     }
 }
-?>
 ```
 
 This class has predefined `_before` and `_after` methods to start with. You can use them to create a tested object before each test, and destroy it afterwards.
@@ -94,7 +93,6 @@ class UserTest extends \Codeception\Test\Unit
         $this->assertTrue($user->validate(['username']));           
     }
 }
-?>
 ```
 
 
@@ -131,7 +129,6 @@ function testSavingUser()
     $this->assertEquals('Miles Davis', $user->getFullName());
     $this->tester->seeInDatabase('users', ['name' => 'Miles', 'surname' => 'Davis']);
 }
-?>
 ```
 
 To enable the database functionality in the unit tests please make sure the `Db` module is part of the enabled module list in the unit.suite.yml configuration file. 
@@ -170,7 +167,6 @@ function testUserNameCanBeChanged()
     $this->tester->seeRecord('users', ['name' => 'bill']);
     $this->tester->dontSeeRecord('users', ['name' => 'miles']);
 }
-?>
 ```
 
 The very similar approach can be used to all frameworks that have ORM implementing ActiveRecord pattern.
@@ -208,7 +204,6 @@ function testUserNameCanBeChanged()
     $this->tester->seeInRepository('Acme\DemoBundle\Entity\User', ['name' => 'bill']);
     $this->tester->dontSeeInRepository('Acme\DemoBundle\Entity\User', ['name' => 'miles']);
 }
-?>
 ```
 
 In both examples you should not be worried about the data persistence between tests.
@@ -225,7 +220,6 @@ We already demonstrated this case in previous code piece where we accessed Entit
 <?php
 /** @var Doctrine\ORM\EntityManager */
 $em = $this->getModule('Doctrine2')->em;
-?>
 ```
 
 If you use `Symfony` module, here is the way you can access Symfony container:
@@ -234,7 +228,6 @@ If you use `Symfony` module, here is the way you can access Symfony container:
 <?php
 /** @var Symfony\Component\DependencyInjection\Container */
 $container = $this->getModule('Symfony')->container;
-?>
 ```
 
 The same can be done for all public properties of an enabled module. Accessible properties are listed in the module reference
@@ -275,7 +268,6 @@ class UserTest extends \Codeception\Test\Unit
         });
     }
 }
-?>        
 ```
 
 Using `specify` codeblocks you can describe any piece of test. This makes tests much cleaner and understandable for everyone in your team.
@@ -287,7 +279,7 @@ Also you may add [Codeception\Verify](https://github.com/Codeception/Verify) for
 ```php
 <?php
 verify($user->getName())->equals('john');
-?>
+
 ```
 
 
@@ -316,7 +308,6 @@ class UserCest
         $t->seeInDatabase('users', ['name' => 'Miles', 'surname' => 'Davis']);
     }
 }
-?>
 ```
 
 For unit testing you may include `Asserts` module, that adds regular assertions to UnitTester which you may access from `$t` variable.
@@ -344,6 +335,7 @@ However Cest format is better at separating concerns. Test code does not interfe
 To check your code for exception you can use `expectException` method from `Asserts` module. Unlike similar method from PHPUnit this method asserts exception was thrown inside a test. For this code executing exception is wrapped inside a closure.
 
 ```php
+<?php
 $t->expectException(new Exception, {
    throw new Exception; 
 });
@@ -359,7 +351,6 @@ In this example we instantiate object without calling a constructor and replace 
 <?php
 $user = Stub::make('User', ['getName' => 'john']);
 $name = $user->getName(); // 'john'
-?>
 ```
 
 Stubs are created with PHPUnit's mocking framework. Alternatively you can use [Mockery](https://github.com/padraic/mockery) (with [Mockery module](https://github.com/Codeception/MockeryModule)), [AspectMock](https://github.com/Codeception/AspectMock) or others.

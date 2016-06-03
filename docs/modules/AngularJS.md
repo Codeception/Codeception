@@ -104,7 +104,8 @@ $this->getModule('AngularJS')->_saveScreenshot(codecept_output_dir().'screenshot
 ### acceptPopup
  
 Accepts the active JavaScript native popup window, as created by `window.alert`|`window.confirm`|`window.prompt`.
-Don't confuse popups with modal windows, as created by [various libraries](http://jster.net/category/windows-modals-popups).
+Don't confuse popups with modal windows,
+as created by [various libraries](http://jster.net/category/windows-modals-popups).
 
 
 ### amInsideAngularApp
@@ -540,7 +541,8 @@ $I->executeInSelenium(function(\Facebook\WebDriver\Remote\RemoteWebDriver $webdr
 });
 ```
 
-This runs in the context of the [RemoteWebDriver class](https://github.com/facebook/php-webdriver/blob/master/lib/remote/RemoteWebDriver.php).
+This runs in the context of the
+[RemoteWebDriver class](https://github.com/facebook/php-webdriver/blob/master/lib/remote/RemoteWebDriver.php).
 Try not to use this command on a regular basis.
 If Codeception lacks a feature you need, please implement it and submit a patch.
 
@@ -656,7 +658,8 @@ $aLinks = $I->grabMultiple('a', 'href');
 ### grabTextFrom
  
 Finds and returns the text contents of the given element.
-If a fuzzy locator is used, the element is found using CSS, XPath, and by matching the full page source by regular expression.
+If a fuzzy locator is used, the element is found using CSS, XPath,
+and by matching the full page source by regular expression.
 
 ``` php
 <?php
@@ -727,7 +730,8 @@ Moves forward in history.
 ### moveMouseOver
  
 Move mouse over the first element matched by the given locator.
-If the second and third parameters are given, then the mouse is moved to an offset of the element's top-left corner.
+If the second and third parameters are given,
+then the mouse is moved to an offset of the element's top-left corner.
 Otherwise, the mouse is moved to the center of the element.
 
 ``` php
@@ -748,7 +752,8 @@ $I->moveMouseOver(['css' => '.checkout'], 20, 50);
 Pauses test execution in debug mode.
 To proceed test press "ENTER" in console.
 
-This method is useful while writing tests, since it allows you to inspect the current page in the middle of a test case.
+This method is useful while writing tests,
+since it allows you to inspect the current page in the middle of a test case.
 
 
 ### pressKey
@@ -811,7 +816,8 @@ $I->resizeWindow(800, 600);
 ### scrollTo
  
 Move to the middle of the given element matched by the given locator.
-Extra shift, calculated from the top-left corner of the element, can be set by passing $offsetX and $offsetY parameters.
+Extra shift, calculated from the top-left corner of the element,
+can be set by passing $offsetX and $offsetY parameters.
 
 ``` php
 <?php
@@ -828,7 +834,7 @@ $I->scrollTo(['css' => '.checkout'], 20, 50);
  
 Checks that the current page contains the given string (case insensitive).
 
-You can specify a specific HTML element (via CSS or XPath) as the second 
+You can specify a specific HTML element (via CSS or XPath) as the second
 parameter to only search within that element.
 
 ``` php
@@ -1063,7 +1069,8 @@ $I->seeInPageSource('<link rel="apple-touch-icon"');
 
 ### seeInPopup
  
-Checks that the active JavaScript popup, as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
+Checks that the active JavaScript popup,
+as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
 
  * `param` $text
 
@@ -1449,7 +1456,8 @@ $I->click('#agree_button');
 ### waitForElementChange
  
 Waits up to $timeout seconds for the given element to change.
-Element "change" is determined by a callback function which is called repeatedly until the return value evaluates to true.
+Element "change" is determined by a callback function which is called repeatedly
+until the return value evaluates to true.
 
 ``` php
 <?php
@@ -1533,4 +1541,4 @@ $I->waitForText('foo', 30, '.title'); // secs
  * `param null` $selector
  * `throws`  \Exception
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/AngularJS.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/AngularJS.php">Help us to improve documentation. Edit module reference</a></div>

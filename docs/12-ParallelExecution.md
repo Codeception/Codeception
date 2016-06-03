@@ -80,7 +80,7 @@ class RoboFile extends \Robo\Tasks
 {
     // define public methods as commands
 }
-?>
+
 ```
 
 Install `codeception/robo-paracept` via Composer and include it into your RoboFile.
@@ -111,7 +111,7 @@ class Robofile extends \Robo\Tasks
 
     }
 }
-?>
+
 ```
 
 If you run `robo`, you can see the respective commands:
@@ -168,7 +168,7 @@ Tasks from `\Codeception\Task\SplitTestsByGroups` will generate non-intersecting
             ->groupsTo('tests/_log/p')
             ->run();
     }    
-?>
+
 ```
 
 In second case `Codeception\TestLoader` class will be used and test classes will be loaded into memory.
@@ -196,7 +196,7 @@ groups:
 Let's try to execute tests from the second group:
 
 ```bash
-$ php codecept.phar run functional -g p2
+$ php codecept run functional -g p2
 ```
 
 #### Step 2: Running Tests
@@ -218,7 +218,7 @@ As it was mentioned, Robo has `ParallelExec` task to spawn background processes.
         }
         return $parallel->run();
     }
-?>    
+    
 ```
 
 We missed something really important. We forgot to define different databases for different processes. This can be done using [Environments](http://codeception.com/docs/07-AdvancedUsage#Environments). Let's define 5 new environments in `acceptance.suite.yml`:
@@ -292,7 +292,7 @@ Now, we should update our `parallelRun` method to use corresponding environment:
         }
         return $parallel->run();
     }
-?>    
+    
 ```
 
 Now, we can execute tests with
@@ -316,7 +316,7 @@ We should not rely on console output when running our tests. In case of `paralle
         $merge->into("/tests/_log/result.xml")
             ->run();
     }
-?>
+
 ```
 
 `result.xml` file will be generated. It can be processed and analyzed.
@@ -334,7 +334,7 @@ To create one command to rule them all we can define new public method `parallel
         $this->parallelMergeResults();
         return $result;
     }
-?>
+
 ```
 
 
