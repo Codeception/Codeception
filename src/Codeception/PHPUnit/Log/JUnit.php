@@ -29,7 +29,7 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
 
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
-        if ($this->attachCurrentTestCase and $test instanceof Test) {
+        if ($this->currentTestCase !== null and $test instanceof Test) {
             $numAssertions = $test->getNumAssertions();
             $this->testSuiteAssertions[$this->testSuiteLevel] += $numAssertions;
 
