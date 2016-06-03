@@ -2,6 +2,7 @@
 
 #### 2.1.10
 
+* PHPUnit version locked to <5.4
 * [Db] Added missing support for LIKE condition to SqlSrv driver
 
 #### 2.1.9
