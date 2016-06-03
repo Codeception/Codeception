@@ -563,8 +563,6 @@ class RoboFile extends \Robo\Tasks
                 $contents = $buttonHtml . $contents;
             } elseif (strpos($doc->getPathname(), 'docs'.DIRECTORY_SEPARATOR.'reference') !== false) {
                 $newfile = 'docs/reference/' . $newfile;
-                if ($name == 'Commands') continue;
-                if ($name == 'Configuration') continue;
                 $reference[$name] = '/docs/reference/' . $doc->getBasename();
             } else {
                 $newfile = 'docs/'.$newfile;
@@ -664,6 +662,13 @@ class RoboFile extends \Robo\Tasks
 
         $reference_list = '';
         foreach ($reference as $name => $url) {
+            if ($name == 'Commands') {
+                continue;
+            }
+            if ($name == 'Configuration') {
+                continue;
+            }
+
             $url = substr($url, 0, -3);
             $reference_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }

@@ -9,7 +9,7 @@ Powered by PHPUnit.
 
 | General |  Windows |  Webdriver  |
 | ------- | -------- | -------- |
-| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.1)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.1) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/master/shields_badge.svg)](https://semaphoreci.com/codeception/codeception)
+| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.2)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.1) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/master/shields_badge.svg)](https://semaphoreci.com/codeception/codeception)
 
 
 #### Contributions
