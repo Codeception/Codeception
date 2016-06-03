@@ -324,7 +324,7 @@ class Redis extends CodeceptionModule
     public function dontSeeInRedis($key, $value = null)
     {
         $this->assertFalse(
-            $this->checkKeyExists($key, $value),
+            (bool) $this->checkKeyExists($key, $value),
             "The key \"$key\" exists" . ($value ? ' and its value matches the one provided' : '')
         );
     }
@@ -361,7 +361,7 @@ class Redis extends CodeceptionModule
     public function dontSeeRedisKeyContains($key, $item, $itemValue = null)
     {
         $this->assertFalse(
-            $this->checkKeyContains($key, $item, $itemValue),
+            (bool) $this->checkKeyContains($key, $item, $itemValue),
             "The key \"$key\" contains " . (
                 is_null($itemValue)
                 ? "\"$item\""
@@ -397,7 +397,7 @@ class Redis extends CodeceptionModule
     public function seeInRedis($key, $value = null)
     {
         $this->assertTrue(
-            $this->checkKeyExists($key, $value),
+            (bool) $this->checkKeyExists($key, $value),
             "Cannot find key \"$key\"" . ($value ? ' with the provided value' : '')
         );
     }
@@ -461,7 +461,7 @@ class Redis extends CodeceptionModule
     public function seeRedisKeyContains($key, $item, $itemValue = null)
     {
         $this->assertTrue(
-            $this->checkKeyContains($key, $item, $itemValue),
+            (bool) $this->checkKeyContains($key, $item, $itemValue),
             "The key \"$key\" does not contain " . (
             is_null($itemValue)
                 ? "\"$item\""
