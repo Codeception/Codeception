@@ -11,6 +11,8 @@ use Phalcon\Mvc\Application;
 use Phalcon\Mvc\Micro as MicroApplication;
 use Phalcon\Http\Request;
 use Phalcon\Http\RequestInterface;
+use Phalcon\Http\Response as PhResponse;
+use Phalcon\Http\ResponseInterface;
 use Phalcon\Session\AdapterInterface as SessionInterface;
 use ReflectionProperty;
 use RuntimeException;
@@ -113,6 +115,9 @@ class Phalcon extends Client
         $di['request'] = Stub::construct($phRequest, [], ['getRawBody' => $request->getContent()]);
 
         $response = $application->handle();
+        if (!$response instanceof ResponseInterface) {
+            $response = $application->response;
+        }
 
         $headers = $response->getHeaders();
         $status = (int) $headers->get('Status');
