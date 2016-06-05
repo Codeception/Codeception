@@ -39,6 +39,10 @@ To prepare application and tests to be executed inside containers you will need 
 
 Define all required services in `docker-compose.yml` file. Make sure to follow Docker philisophy: 1 service = 1 container. So each process should be defined as its own service. Those services can use official Docker images pulled from DockerHub. Directories with code and tests should be mounted using `volume` directive. And exposed ports should be explicitly set using `ports` directive.
 
+<div class="alert alert-info">
+There are two directives in docker-compose.yml, ports and expose - the latter is also available in Dockerfile and is only for communication between containers. While the former is merely for connecting the container to the outside world or in this case for debugging. I.e. you only need to define ports for the database service if you want to access the database for debugging. It's usually exposed by default so the PHP service finds your DB.
+</div>
+
 We prepared a sample config with codeception, web server, database, and selenium with firefox to be executed together.
 
 ```yaml
