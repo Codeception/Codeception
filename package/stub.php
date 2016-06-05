@@ -6,4 +6,4 @@ require_once 'phar://codecept.phar/autoload.php';
 
 require_once 'phar://codecept.phar/codecept';
 
-__halt_compiler();
+__HALT_COMPILER();

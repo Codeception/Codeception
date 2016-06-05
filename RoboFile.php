@@ -15,9 +15,8 @@ class RoboFile extends \Robo\Tasks
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
-        $this->installDependenciesForPhp54();
+
         $this->buildPhar54();
-        $this->installDependenciesForPhp56();
         $this->buildPhar();
         $this->revertComposerJsonChanges();
         $this->publishPhar();
@@ -194,7 +193,9 @@ class RoboFile extends \Robo\Tasks
         if (!file_exists('package/php54')) {
             mkdir('package/php54');
         }
+        $this->installDependenciesForPhp54();
         $this->packPhar('package/php54/codecept.phar');
+        $this->installDependenciesForPhp56();
     }
 
     private function packPhar($pharFileName)
@@ -240,11 +241,13 @@ class RoboFile extends \Robo\Tasks
             ->name('*.tpl.dist')
             ->name('*.html.dist')
             ->exclude('videlalvaro')
+            ->exclude('php-amqplib')
             ->exclude('pheanstalk')
             ->exclude('phpseclib')
             ->exclude('codegyre')
             ->exclude('monolog')
             ->exclude('phpspec')
+            ->exclude('squizlabs')
             ->exclude('Tests')
             ->exclude('tests')
             ->exclude('benchmark')

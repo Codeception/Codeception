@@ -14,7 +14,7 @@ Codeception does not provide a command like `run-parallel`. There is no common s
 
 There are two approaches to achieve parallelization. We can use [Docker](http://docker.com) and run each process inside isolated containers, and have those containers executed simultaneously. 
 
-<div class="alert alert-warning">
+<div class="alert alert-info">
 Docker works really well for isolating testing environments. 
 By the time of writing this chapter, we didn't have an awesome tool like it. This chapter demonstrates how to manage parallel execution manually. As you will see we spend too much effort trying to isolate tests which Docker does for free. Today we **recommend using Docker** for parallel testing.
 </div>
