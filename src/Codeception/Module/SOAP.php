@@ -101,6 +101,13 @@ EOF;
         $this->xmlStructure = null;
     }
 
+    protected function onReconfigure()
+    {
+        $this->buildRequest();
+        $this->xmlResponse = null;
+        $this->xmlStructure = null;
+    }
+
     public function _depends()
     {
         return ['Codeception\Lib\InnerBrowser' => $this->dependencyMessage];
