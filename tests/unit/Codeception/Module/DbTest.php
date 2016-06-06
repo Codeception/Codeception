@@ -56,6 +56,16 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('davert@mail.ua', $email);
     }
 
+    public function testGrabNumRecords()
+    {
+        $num = self::$module->grabNumRecords('users', ['name' => 'davert']);
+        $this->assertEquals($num, 1);
+        $num = self::$module->grabNumRecords('users', ['name' => 'davert', 'email' => 'xxx@yyy.zz']);
+        $this->assertEquals($num, 0);
+        $num = self::$module->grabNumRecords('users', ['name' => 'user1']);
+        $this->assertEquals($num, 0);
+    }
+
     public function testHaveAndSeeInDatabase()
     {
         self::$module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
