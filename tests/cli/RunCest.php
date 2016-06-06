@@ -386,5 +386,16 @@ EOF
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
     }
 
+    public function runTestWithComplexExample(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ExamplesCest:filesExistsComplexJson --debug');
+        $I->seeInShellOutput('Files exists complex json | {"path":"."');
+        $I->seeInShellOutput('OK (1 test');
+        $I->seeInShellOutput('I see file found "scenario.suite.yml"');
+        $I->seeInShellOutput('I see file found "dummy.suite.yml"');
+        $I->seeInShellOutput('I see file found "unit.suite.yml"');
+
+    }
+
 
 }
