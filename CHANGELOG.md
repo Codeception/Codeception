@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.2.2
+
+* Improved Examples to be Traversable; Fixed console output for complex data structures.
+
 #### 2.2.1
 
 * PHPUnit 5.4 and PHPUnit/php-code-coverage 4.0 compatibility.
