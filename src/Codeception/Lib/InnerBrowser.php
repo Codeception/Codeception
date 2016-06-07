@@ -1480,7 +1480,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected function redirectIfNecessary($result, $maxRedirects, $redirectCount)
     {
         $locationHeader = $this->client->getInternalResponse()->getHeader('Location');
-        if ($locationHeader) {
+        $statusCode = $this->getResponseStatusCode();
+        if ($locationHeader && $statusCode >= 300 && $statusCode < 400) {
             if ($redirectCount == $maxRedirects) {
                 throw new \LogicException(sprintf(
                     'The maximum number (%d) of redirections was reached.',
