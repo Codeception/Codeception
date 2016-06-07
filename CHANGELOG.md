@@ -41,6 +41,11 @@
 * Deprecation errors won't fail tests but will be printed.
 * Official [Docker image](https://hub.docker.com/r/codeception/codeception/) introduced by @schmunk42
 
+#### 2.1.11
+
+* [WebDriver] fixed URL matching in WebDriver::seeLink
+* [WebDriver][InnerBrowser] Improved error messages of seeLink and dontSeeLink
+
 #### 2.1.10
 
 * PHPUnit version locked to <5.4

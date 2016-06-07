@@ -27,6 +27,7 @@ $urls = array(
     '/redirect_interval' => 'redirect_interval',
     '/redirect_header_interval' => 'redirect_header_interval',
     '/redirect_meta_refresh' => 'redirect_meta_refresh',
+    '/location_201' => 'location_201',
     '/relative_redirect' => 'redirect_relative',
     '/relative/redirect' => 'redirect_relative',
     '/redirect_twice' => 'redirect_twice',
