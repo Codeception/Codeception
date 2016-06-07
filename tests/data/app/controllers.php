@@ -91,6 +91,12 @@ class redirect_base_uri_has_path_302 {
     }
 }
 
+class location_201 {
+    function GET() {
+        header('Location: /info', true, 201);
+    }
+}
+
 class external_url {
     function GET() {
         include __DIR__ . '/view/external_url.php';
