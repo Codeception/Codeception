@@ -79,7 +79,7 @@ class Logger extends Extension
 
     public function beforeTest(TestEvent $e)
     {
-        $this->logger = new \Monolog\Logger($e->getTest()->getFileName());
+        $this->logger = new \Monolog\Logger($e->getTest()->getMetadata()->getFilename());
         $this->logger->pushHandler($this->logHandler);
         $this->logger->info('------------------------------------');
         $this->logger->info("STARTED: " . ucfirst($e->getTest()->getName(false)));
