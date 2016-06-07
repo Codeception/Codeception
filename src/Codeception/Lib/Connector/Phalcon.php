@@ -11,7 +11,6 @@ use Phalcon\Mvc\Application;
 use Phalcon\Mvc\Micro as MicroApplication;
 use Phalcon\Http\Request;
 use Phalcon\Http\RequestInterface;
-use Phalcon\Http\Response as PhResponse;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Session\AdapterInterface as SessionInterface;
 use ReflectionProperty;
