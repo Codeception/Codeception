@@ -18,6 +18,7 @@ Follow [FactoryMuffin documentation](https://github.com/thephpleague/factory-muf
 Random data provided by [Faker](https://github.com/fzaninotto/Faker) library.
 
 ```php
+<?php
 use League\FactoryMuffin\Faker\Facade as Faker;
 
 $fm->define(User::class)->setDefinitions([
@@ -67,7 +68,7 @@ modules:
 In this case you can define factories from a Helper class with `_define` method.
 
 ```php
-
+<?php
 public function _beforeSuite()
 {
      $factory = $this->getModule('DataFactory');
@@ -144,4 +145,4 @@ $I->haveMultiple('User', 10, ['is_active' => true]); // create 10 active users
  * `param array` $extraAttrs
  * `return` \object[]
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/DataFactory.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/DataFactory.php">Help us to improve documentation. Edit module reference</a></div>

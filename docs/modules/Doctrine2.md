@@ -107,7 +107,8 @@ $I->haveFakeRepository('Entity\User', array('findByUsername' => function($userna
 
 ```
 
-This creates a stub class for Entity\User repository with redefined method findByUsername, which will always return the NULL value.
+This creates a stub class for Entity\User repository with redefined method findByUsername,
+which will always return the NULL value.
 
  * `param` $classname
  * `param array` $methods
@@ -162,4 +163,4 @@ Fails if record for given criteria can\'t be found,
  * `param` $entity
  * `param array` $params
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Doctrine2.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Doctrine2.php">Help us to improve documentation. Edit module reference</a></div>

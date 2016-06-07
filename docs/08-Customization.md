@@ -44,7 +44,7 @@ Thus, newly generated tests will look like this:
 <?php use frontend\AcceptanceTester;
 $I = new AcceptanceTester($scenario);
 //...
-?>
+
 ```
 
 Once each of your applications (bundles) has its own namespace and different Helper or Actor classes, you can execute all tests in one runner. Run codeception tests as usual, using meta-config we created earlier:
@@ -135,7 +135,7 @@ class MyCustomExtension extends \Codeception\Extension
 
     public function print(\Codeception\Event\PrintResultEvent $e) {}
 }
-?>
+
 ```  
 
 By implementing event handling methods you can listen to event and even update passed objects.
@@ -207,7 +207,7 @@ When a test is added to a group:
 <?php 
 $scenario->group('admin');
 $I = new AcceptanceTester($scenario);
-?>
+
 ```
 
 This test will trigger events:
@@ -245,7 +245,7 @@ class Admin extends \Codeception\GroupObject
         // ...
     }
 }
-?>
+
 ```
 
 A group class can be created with `php codecept generate:group groupname` command.

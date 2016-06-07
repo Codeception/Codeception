@@ -10,6 +10,7 @@ It makes no difference what CMS or Framework is used on the site. You can even t
 Probably the first test you would want to run would be signing in. In order to write such a test, we still require basic knowledge of PHP and HTML.
 
 ```php
+<?php
 $I->amOnPage('/login');
 $I->fillField('username', 'davert');
 $I->fillField('password', 'qwerty');
@@ -46,7 +47,6 @@ We should start by creating a 'Cept' file in the `tests/acceptance` directory. L
 <?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('sign in');
-?>
 ```
 
 The `$I` object is used to write all interactions. The methods of the `$I` object are taken from the `PhpBrowser` module. We will briefly describe them here:
@@ -54,7 +54,6 @@ The `$I` object is used to write all interactions. The methods of the `$I` objec
 ```php
 <?php
 $I->amOnPage('/login');
-?>
 ```
 
 We assume that all actions starting with `am` and `have` describe the initial environment. The `amOnPage` action sets the starting point of a test to the `/login` page.
@@ -74,7 +73,6 @@ $I->click('#login a');
 $I->click('//a[@id=login]');
 // Using context as second argument
 $I->click('Login', '.nav');
-?>
 ```
 
 Codeception tries to locate element either by its text, name, CSS or XPath. You can specify locator type manually by passing array as a parameter. We call this a **strict locator**. Available strict locator types are: 
@@ -91,7 +89,6 @@ Codeception tries to locate element either by its text, name, CSS or XPath. You 
 // By specifying locator type
 $I->click(['link' => 'Login']);
 $I->click(['class' => 'btn']);
-?>
 ```
 
 There is a special class [`Codeception\Util\Locator`](http://codeception.com/docs/reference/Locator) which may help you to generate complex XPath locators. For instance, it can easily allow you to click an element on a last row of a table:
@@ -132,7 +129,6 @@ $I->fillField('Name', 'Miles');
 $I->fillField('user[email]','miles@davis.com');
 $I->selectOption('Gender','Male');
 $I->click('Update');
-?>
 ```
 
 To match fields by their labels, you should write a `for` attribute in the label tag.
@@ -147,7 +143,6 @@ $I->submitForm('#update_form', array('user' => array(
      'email' => 'Davis',
      'gender' => 'm'
 )));
-?>
 ```
 
 The `submitForm` is not emulating a user's actions, but it's quite useful in situations when the form is not formatted properly, for example to discover that labels aren't set or that fields have unclean names or badly written ids, or the form is sent by a javascript call.
@@ -168,7 +163,6 @@ $I->submitForm('#update_form', array('user' => array(
      'gender' => 'm',
 	 'submitButton' => 'Update'
 )));
-?>
 ```
 
 #### Assertions
@@ -188,7 +182,6 @@ $I->see('Thank you, Miles', '.notice');
 $I->see('Thank you, Miles', "//table/tr[2]");
 // We check this message is not on page.
 $I->dontSee('Form is filled incorrectly');
-?>
 ```
 
 You can check that specific element exists (or not) on a page
@@ -197,7 +190,6 @@ You can check that specific element exists (or not) on a page
 <?php
 $I->seeElement('.notice');
 $I->dontSeeElement('.error');
-?>
 ```
 
 We also have other useful commands to perform checks. Please note that they all start with the `see` prefix.
@@ -208,7 +200,6 @@ $I->seeInCurrentUrl('/user/miles');
 $I->seeCheckboxIsChecked('#agree');
 $I->seeInField('user[name]', 'Miles');
 $I->seeLink('Login');
-?>
 ```
 
 #### Conditional Assertions
@@ -220,7 +211,6 @@ Sometimes you don't want the test to be stopped when an assertion fails. Maybe y
 $I->canSeeInCurrentUrl('/user/miles');
 $I->canSeeCheckboxIsChecked('#agree');
 $I->cantSeeInField('user[name]', 'Miles');
-?>
 ```
 
 Each failed assertion will be shown in test results. Still, a failed assertion won't stop the test.
@@ -237,7 +227,6 @@ $I->fillField('user[email]', 'miles');
 $I->click('Update');
 $I->expect('the form is not submitted');
 $I->see('Form is filled incorrectly');
-?>
 ```
 
 #### Grabbers
@@ -253,7 +242,6 @@ $I->click('Login');
 $I->fillField('email', 'miles@davis.com');
 $I->fillField('password', $password);
 $I->click('Log in!');
-?>
 ```
 
 Grabbers allow you to get a single value from the current page with commands.
@@ -263,7 +251,6 @@ Grabbers allow you to get a single value from the current page with commands.
 $token = $I->grabTextFrom('.token');
 $password = $I->grabTextFrom("descendant::input/descendant::*[@id = 'password']");
 $api_key = $I->grabValueFrom('input[name=api]');
-?>
 ```
 
 #### Cookies, Urls, Title, etc
@@ -275,7 +262,6 @@ Actions for cookies:
 $I->setCookie('auth', '123345');
 $I->grabCookie('auth');
 $I->seeCookie('auth');
-?>
 ```
 
 Actions for checking page title:
@@ -284,7 +270,6 @@ Actions for checking page title:
 <?php
 $I->seeInTitle('Login');
 $I->dontSeeInTitle('Register');
-?>
 ```
 
 Actions for url:
@@ -295,7 +280,6 @@ $I->seeCurrentUrlEquals('/login');
 $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 $I->seeInCurrentUrl('user/1');
 $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
-?>
 ```
 
 ## Selenium WebDriver
@@ -326,9 +310,7 @@ In this case `seeElement` won't just check that the element exists on a page, bu
 ```php
 <?php 
 $I->seeElement('#modal'); 
-?>
 ```
-
 
 #### Wait
 
@@ -340,7 +322,6 @@ For example:
 <?php
 $I->waitForElement('#agree_button', 30); // secs
 $I->click('#agree_button');
-?>
 ```
 
 In this case we are waiting for agree button to appear and then clicking it. If it didn't appear for 30 seconds, test will fail. There are other `wait` methods you may use.
@@ -352,6 +333,7 @@ See Codeception's [WebDriver module documentation](http://codeception.com/docs/m
 Codeception allows you to execute actions in concurrent sessions. The most obvious case for it is testing realtime messaging between users on site. In order to do it you will need to launch two browser windows at the same time for the same test. Codeception has very smart concept for doing this. It is called **Friends**.
 
 ```php
+<?php
 $I->amOnPage('/messages');
 $nick = $I->haveFriend('nick');
 $nick->does(function(AcceptanceTester $I) {
@@ -362,27 +344,24 @@ $nick->does(function(AcceptanceTester $I) {
 });
 $I->wait(3);
 $I->see('Hello all!', '.message');
-?>
 ```
 
 In this case we did some actions in second window with `does` command on a friend object.
 
 Sometimes you may want to close a web page before the end of the test. For such cases you may use leave(). You can also specify roles for friend : 
+
 ```php
 <?php
-
 $nickAdmin = $I->haveFriend('nickAdmin', adminStep::class);
 $nickAdmin->does(function(adminStep $I) {
     // Admin does ...
 });
 $nickAdmin->leave();
-?>
 ```
-
 
 ### Cloud Testing
 
-Selenium Webdriver allows to execute tests in real browsers on different platforms. Some environments are hard to be reproduced manually, testing Internet Explorer 6-8 on Windows XP may be a hard thing, especially if you don't have Windows XP installed. This is where Cloud Testing services come to help you. Services such as [SauceLabs](https://saucelabs.com), [BrowserStack](https://www.browserstack.com/) and [others](http://codeception.com/docs/modules/WebDriver#Cloud-Testing) can create virtual machine on demand and set up Selenium Server and desired browser. Tests are executed on a remote machine in a cloud, to access local files cloud testing service provides special application called **Tunnel**. Tunnel operates on secured protocol and allows browser executed in a cloud to connect to local web server. 
+Selenium WeDdriver allows to execute tests in real browsers on different platforms. Some environments are hard to be reproduced manually, testing Internet Explorer 6-8 on Windows XP may be a hard thing, especially if you don't have Windows XP installed. This is where Cloud Testing services come to help you. Services such as [SauceLabs](https://saucelabs.com), [BrowserStack](https://www.browserstack.com/) and [others](http://codeception.com/docs/modules/WebDriver#Cloud-Testing) can create virtual machine on demand and set up Selenium Server and desired browser. Tests are executed on a remote machine in a cloud, to access local files cloud testing service provides special application called **Tunnel**. Tunnel operates on secured protocol and allows browser executed in a cloud to connect to local web server. 
 
 Cloud Testing services work with standard WebDriver protocol. This makes setting up cloud testing relly easy. You just need to set [configuration into WebDriver module](http://codeception.com/docs/modules/WebDriver#Cloud-Testing): 
 
@@ -427,7 +406,6 @@ Codeception modules can print valuable information while running. Just execute t
 ```php
 <?php
 codecept_debug($I->grabTextFrom('#name'));
-?>
 ```
 
 On each fail, the snapshot of the last shown page will be stored in the `tests/_output` directory. PhpBrowser will store HTML code and WebDriver will save the screenshot of a page.

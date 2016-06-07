@@ -3,6 +3,7 @@ namespace Codeception\Test;
 
 use Codeception\Example;
 use Codeception\Lib\Parser;
+use Codeception\Step\Comment;
 use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
 
@@ -43,8 +44,8 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
 
         // add example params to feature
         if ($this->getMetadata()->getCurrent('example')) {
-            $params = implode(', ', array_values($this->getMetadata()->getCurrent('example')));
-            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | '.$params);
+            $step = new Comment('', $this->getMetadata()->getCurrent('example'));
+            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | '. $step->getArgumentsAsString(100));
         }
     }
 

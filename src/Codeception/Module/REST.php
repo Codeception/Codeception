@@ -168,6 +168,28 @@ EOF;
     }
 
     /**
+     * Deletes the header with the passed name.  Subsequent requests
+     * will not have the deleted header in its request.
+     *
+     * Example:
+     * ```php
+     * <?php
+     * $I->haveHttpHeader('X-Requested-With', 'Codeception');
+     * $I->sendGET('test-headers.php');
+     * // ...
+     * $I->deleteHeader('X-Requested-With');
+     * $I->sendPOST('some-other-page.php');
+     * ?>
+     * ```
+     *
+     * @param string $name the name of the header to delete.
+     */
+    public function deleteHeader($name)
+    {
+        $this->connectionModule->deleteHeader($name);
+    }
+
+    /**
      * Checks over the given HTTP header and (optionally)
      * its value, asserting that are there
      *

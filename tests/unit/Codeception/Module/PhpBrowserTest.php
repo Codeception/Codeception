@@ -242,6 +242,13 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/info');
     }
 
+    public function testLocationHeaderDoesNotRedirectWhenStatusCodeIs201()
+    {
+        $this->module->amOnPage('/location_201');
+        $this->module->seeResponseCodeIs(201);
+        $this->module->seeCurrentUrlEquals('/location_201');
+    }
+
     public function testSetCookieByHeader()
     {
         $this->module->amOnPage('/cookies2');

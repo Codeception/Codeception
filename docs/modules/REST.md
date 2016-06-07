@@ -7,14 +7,6 @@ This module can be used either with frameworks or PHPBrowser.
 If a framework module is connected, the testing will occur in the application directly.
 Otherwise, a PHPBrowser should be specified as a dependency to send requests and receive responses from a server.
 
-
-## Status
-
-* Maintainer: **tiger-seo**, **davert**
-* Stability: **stable**
-* Contact: codecept@davert.mail.ua
-* Contact: tiger.seo@gmail.com
-
 ## Configuration
 
 * url *optional* - the url of api
@@ -35,11 +27,14 @@ This module requires PHPBrowser or any of Framework modules enabled.
 * params - array of sent data
 * response - last response (string)
 
-
 ## Parts
 
 * Json - actions for validating Json responses (no Xml responses)
 * Xml - actions for validating XML responses (no Json responses)
+
+## Conflicts
+
+Conflicts with SOAP module
 
 
 
@@ -186,7 +181,8 @@ Deprecated since 2.0.9 and removed since 2.1.0
 ### grabDataFromResponseByJsonPath
  
 Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
-JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+JsonPath is XPath equivalent for querying Json structures.
+Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
 Even for a single value an array is returned.
 
 This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
@@ -366,7 +362,8 @@ This is done with libxml_get_last_error function.
 ### seeResponseJsonMatchesJsonPath
  
 Checks if json structure in response matches [JsonPath](http://goessner.net/articles/JsonPath/).
-JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+JsonPath is XPath equivalent for querying Json structures.
+Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
 This assertion allows you to check the structure of response json.
 
 This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
@@ -684,4 +681,4 @@ Enables automatic redirects to be followed by the client
  
 Prevents automatic redirects to be followed by the client
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/REST.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/REST.php">Help us to improve documentation. Edit module reference</a></div>

@@ -427,20 +427,30 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeLink($text, $url = null)
     {
-        $links = $this->getCrawler()->selectLink($text);
-        if ($url) {
-            $links = $links->filterXPath(sprintf('.//a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
+        $crawler = $this->getCrawler()->selectLink($text);
+        if ($crawler->count() === 0) {
+            $this->fail("No links containing text '$text' were found in page " . $this->_getCurrentUri());
         }
-        $this->assertDomContains($links, 'a');
+        if ($url) {
+            $crawler = $crawler->filterXPath(sprintf('.//a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
+            if ($crawler->count() === 0) {
+                $this->fail("No links containing text '$text' and URL '$url' were found in page " . $this->_getCurrentUri());
+            }
+        }
     }
 
     public function dontSeeLink($text, $url = null)
     {
-        $links = $this->getCrawler()->selectLink($text);
-        if ($url) {
-            $links = $links->filterXPath(sprintf('.//a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
+        $crawler = $this->getCrawler()->selectLink($text);
+        if (!$url) {
+            if ($crawler->count() > 0) {
+                $this->fail("Link containing text '$text' was found in page " . $this->_getCurrentUri());
+            }
         }
-        $this->assertDomNotContains($links, 'a');
+        $crawler = $crawler->filterXPath(sprintf('.//a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
+        if ($crawler->count() > 0) {
+            $this->fail("Link containing text '$text' and URL '$url' was found in page " . $this->_getCurrentUri());
+        }
     }
 
     /**
@@ -1526,7 +1536,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected function redirectIfNecessary($result, $maxRedirects, $redirectCount)
     {
         $locationHeader = $this->client->getInternalResponse()->getHeader('Location');
-        if ($locationHeader) {
+        $statusCode = $this->getResponseStatusCode();
+        if ($locationHeader && $statusCode >= 300 && $statusCode < 400) {
             if ($redirectCount == $maxRedirects) {
                 throw new \LogicException(sprintf(
                     'The maximum number (%d) of redirections was reached.',

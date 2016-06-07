@@ -26,6 +26,7 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  * Random data provided by [Faker](https://github.com/fzaninotto/Faker) library.
  *
  * ```php
+ * <?php
  * use League\FactoryMuffin\Faker\Facade as Faker;
  *
  * $fm->define(User::class)->setDefinitions([
@@ -75,7 +76,7 @@ gst * You should create this directory manually and create PHP files in it with 
  * In this case you can define factories from a Helper class with `_define` method.
  *
  * ```php
- *
+ * <?php
  * public function _beforeSuite()
  * {
  *      $factory = $this->getModule('DataFactory');

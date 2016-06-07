@@ -6,7 +6,7 @@ use \Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    const STABLE_BRANCH = '2.1';
+    const STABLE_BRANCH = '2.2';
     const REPO_BLOB_URL = 'https://github.com/Codeception/Codeception/blob';
 
     public function release()
@@ -15,9 +15,8 @@ class RoboFile extends \Robo\Tasks
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
-        $this->installDependenciesForPhp54();
+
         $this->buildPhar54();
-        $this->installDependenciesForPhp56();
         $this->buildPhar();
         $this->revertComposerJsonChanges();
         $this->publishPhar();
@@ -194,7 +193,9 @@ class RoboFile extends \Robo\Tasks
         if (!file_exists('package/php54')) {
             mkdir('package/php54');
         }
+        $this->installDependenciesForPhp54();
         $this->packPhar('package/php54/codecept.phar');
+        $this->installDependenciesForPhp56();
     }
 
     private function packPhar($pharFileName)
@@ -240,11 +241,13 @@ class RoboFile extends \Robo\Tasks
             ->name('*.tpl.dist')
             ->name('*.html.dist')
             ->exclude('videlalvaro')
+            ->exclude('php-amqplib')
             ->exclude('pheanstalk')
             ->exclude('phpseclib')
             ->exclude('codegyre')
             ->exclude('monolog')
             ->exclude('phpspec')
+            ->exclude('squizlabs')
             ->exclude('Tests')
             ->exclude('tests')
             ->exclude('benchmark')
@@ -296,16 +299,12 @@ class RoboFile extends \Robo\Tasks
                 ->prepend('# '.$moduleName)
                 ->append('<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a></div>')
                 ->processClassSignature(false)
-                ->processClassDocBlock(function (\ReflectionClass $c, $text) {
-                    return "$text\n\n## Actions";
+                ->processClassDocBlock(function(\ReflectionClass $c, $text) {
+                  return "$text\n\n## Actions";
                 })->processProperty(false)
-                ->filterMethods(function (\ReflectionMethod $method) use ($className) {
-                    if ($method->isConstructor() or $method->isDestructor()) {
-                        return false;
-                    }
-                    if (!$method->isPublic()) {
-                        return false;
-                    }
+                ->filterMethods(function(\ReflectionMethod $method) use ($className) {
+                    if ($method->isConstructor() or $method->isDestructor()) return false;
+                    if (!$method->isPublic()) return false;
                     if (strpos($method->name, '_') === 0) {
                         $doc = $method->getDocComment();
                         try {
@@ -363,10 +362,13 @@ class RoboFile extends \Robo\Tasks
                 )
                 ->processClassDocBlock(function (ReflectionClass $r, $text) {
                     return $text . "\n";
-                })->processMethodSignature(function (ReflectionMethod $r, $text) {
-                    return str_replace('public', '', $text);
-                })->processMethodDocBlock(function (ReflectionMethod $r, $text) use ($utilName, $source) {
+                })->processMethodSignature(function(ReflectionMethod $r, $text) {
+                    return '### ' . $r->getName();
+                })->processMethodDocBlock(function(ReflectionMethod $r, $text) use ($utilName, $source) {
                     $line = $r->getStartLine();
+                    if ($r->isStatic()) {
+                        $text = "\n*static*\n$text";
+                    }
                     $text = preg_replace("~@(.*?)([$\s])~", ' * `$1` $2', $text);
                     $text .= "\n[See source]($source#L$line)";
                     return "\n" . $text."\n";
@@ -550,7 +552,7 @@ class RoboFile extends \Robo\Tasks
                     'source' => self::REPO_BLOB_URL."/".self::STABLE_BRANCH."/src/Codeception/Module/$name.php"
                 ];
                 // building version switcher
-                foreach (['master', '2.1', '2.0', '1.8'] as $branch) {
+                foreach (['master', '2.2', '2.1', '2.0', '1.8'] as $branch) {
                     $buttons[$branch] = self::REPO_BLOB_URL."/$branch/docs/modules/$name.md";
                 }
                 $buttonHtml = "\n\n".'<div class="btn-group" role="group" style="float: right" aria-label="...">';
@@ -564,12 +566,6 @@ class RoboFile extends \Robo\Tasks
                 $contents = $buttonHtml . $contents;
             } elseif (strpos($doc->getPathname(), 'docs'.DIRECTORY_SEPARATOR.'reference') !== false) {
                 $newfile = 'docs/reference/' . $newfile;
-                if ($name == 'Commands') {
-                    continue;
-                }
-                if ($name == 'Configuration') {
-                    continue;
-                }
                 $reference[$name] = '/docs/reference/' . $doc->getBasename();
             } else {
                 $newfile = 'docs/'.$newfile;
@@ -669,6 +665,13 @@ class RoboFile extends \Robo\Tasks
 
         $reference_list = '';
         foreach ($reference as $name => $url) {
+            if ($name == 'Commands') {
+                continue;
+            }
+            if ($name == 'Configuration') {
+                continue;
+            }
+
             $url = substr($url, 0, -3);
             $reference_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
@@ -706,17 +709,17 @@ class RoboFile extends \Robo\Tasks
         $changelog = file_get_contents('CHANGELOG.md');
 
         //user
-        $changelog = preg_replace('~@(\w+)~', '<strong><a href="https://github.com/$1">@$1</a></strong>', $changelog);
+        $changelog = preg_replace('~\s@(\w+)~', ' **[$1](https://github.com/$1)**', $changelog);
 
         //issue
         $changelog = preg_replace(
             '~#(\d+)~',
-            '<a href="https://github.com/Codeception/Codeception/issues/$1">#$1</a>',
+            '[#$1](https://github.com/Codeception/Codeception/issues/$1)',
             $changelog
         );
 
         //module
-        $changelog = preg_replace('~\[(\w+)\]~', '<strong>[$1]</strong>', $changelog);
+        $changelog = preg_replace('~\s\[(\w+)\]\s~', ' **[$1]** ', $changelog);
 
         return $changelog;
     }

@@ -1,5 +1,17 @@
 # Console Commands
 
+## DryRun
+
+Shows step by step execution process for scenario driven tests without actually running them.
+
+* `codecept dry-run acceptance`
+* `codecept dry-run acceptance MyCest`
+* `codecept dry-run acceptance checkout.feature`
+* `codecept dry-run tests/acceptance/MyCest.php`
+
+
+
+
 ## GenerateSuite
 
 Create new test suite. Requires suite name and actor name
@@ -47,6 +59,15 @@ Generates Cept (scenario-driven test) file:
 
 Executes tests.
 
+Usage:
+
+* `codecept run acceptance` - run all acceptance tests
+* `codecept run tests/acceptance/MyCept.php` - run only MyCept
+* `codecept run acceptance MyCept` - same as above
+* `codecept run acceptance MyCest:myTestInIt` - run one test from a Cest
+* `codecept run acceptance checkout.feature` - run feature-file
+
+Full reference:
 ```
 Arguments:
  suite                 suite to be tested
@@ -128,7 +149,8 @@ Creates empty Helper class.
 
 ## Bootstrap
 
-Creates default config, tests directory and sample suites for current project. Use this command to start building a test suite.
+Creates default config, tests directory and sample suites for current project.
+Use this command to start building a test suite.
 
 By default it will create 3 suites **acceptance**, **functional**, and **unit**.
 

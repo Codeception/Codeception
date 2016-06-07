@@ -1,5 +1,13 @@
 # Changelog
 
+#### 2.2.2
+
+* Improved Examples to be Traversable; Fixed console output for complex data structures.
+
+#### 2.2.1
+
+* PHPUnit 5.4 and PHPUnit/php-code-coverage 4.0 compatibility.
+
 #### 2.2.0
 
 * **Gherkin format support**. [Announcement](https://github.com/Codeception/Codeception/pull/2750#issue-129899745)
@@ -33,8 +41,15 @@
 * Deprecation errors won't fail tests but will be printed.
 * Official [Docker image](https://hub.docker.com/r/codeception/codeception/) introduced by @schmunk42
 
+#### 2.1.11
+
+* [REST][InnerBrowser] redirect is not triggered when Location header is set but response code is not 3xx. By @Naktibalda. Fixes #3171.
+* [WebDriver] fixed URL matching in WebDriver::seeLink
+* [WebDriver][InnerBrowser] Improved error messages of seeLink and dontSeeLink
+
 #### 2.1.10
 
+* PHPUnit version locked to <5.4
 * [Db] Added missing support for LIKE condition to SqlSrv driver
 
 #### 2.1.9

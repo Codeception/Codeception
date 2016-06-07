@@ -37,4 +37,15 @@ class ExamplesCest
         $I->seeFileFound($example[1]);
     }
 
+    /**
+     * @example [{"path":".", "file":"scenario.suite.yml"}, {"path":".", "file":"dummy.suite.yml"}, {"path":".", "file":"unit.suite.yml"}]
+     */
+    public function filesExistsComplexJson(ScenarioGuy $I, Example $examples)
+    {
+        foreach ($examples as $example) {
+            $I->amInPath($example['path']);
+            $I->seeFileFound($example['file']);
+        }
+    }
+
 }

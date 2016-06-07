@@ -45,7 +45,7 @@ $I->haveInDatabase('posts', [
 ]);
 $I->amOnPage('/posts');
 $I->see('Top 10 Testing Frameworks');
-?>
+
 ```
 
 `haveInDatabase` inserts a row with provided values into database. All added records will be deleted in the end of a test. 
@@ -53,11 +53,12 @@ $I->see('Top 10 Testing Frameworks');
 If you want to check that a table record was created use [`seeInDatabase`](http://codeception.com/docs/modules/Db#haveInDatabase) method:
 
 ```php
+<?php
 $I->amOnPage('/posts/1');
 $I->fillField('comment', 'This is nice!');
 $I->click('Submit');
 $I->seeInDatabase('comments', ['body' => 'This is nice!']);
-?>
+
 ```
 
 Follow the module [reference](http://codeception.com/docs/modules/Db) for other methods you can use for database testing.
@@ -98,7 +99,7 @@ $I->seeRecord('posts', ['id' => $id]);
 $I->click('Delete');
 // record was deleted
 $I->dontSeeRecord('posts', ['id' => $id]); 
-?>
+
 ```
 
 <div class="alert alert-notice">
