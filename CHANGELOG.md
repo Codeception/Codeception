@@ -43,6 +43,7 @@
 
 #### 2.1.11
 
+* [REST][InnerBrowser] redirect is not triggered when Location header is set but response code is not 3xx. By @Naktibalda. Fixes #3171.
 * [WebDriver] fixed URL matching in WebDriver::seeLink
 * [WebDriver][InnerBrowser] Improved error messages of seeLink and dontSeeLink
 
