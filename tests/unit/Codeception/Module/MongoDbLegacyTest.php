@@ -70,7 +70,7 @@ class MongoDbLegacyTest extends \PHPUnit_Framework_TestCase
     {
         $user = $this->module->grabFromCollection('users', array('id' => 1));
         $this->assertTrue(isset($user['email']));
-        $this->assertEquals('miles@davis.com',$user['email']);
+        $this->assertEquals('miles@davis.com', $user['email']);
     }
 
     public function testSeeNumElementsInCollection()

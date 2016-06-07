@@ -53,5 +53,4 @@ class AnnotationTest extends PHPUnit_Framework_TestCase
         $values = Annotation::arrayValue('( code="200", user="davert", email = "davert@gmail.com")');
         $this->assertEquals(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
     }
-
 }

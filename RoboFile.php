@@ -296,12 +296,16 @@ class RoboFile extends \Robo\Tasks
                 ->prepend('# '.$moduleName)
                 ->append('<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a></div>')
                 ->processClassSignature(false)
-                ->processClassDocBlock(function(\ReflectionClass $c, $text) {
-                  return "$text\n\n## Actions";
+                ->processClassDocBlock(function (\ReflectionClass $c, $text) {
+                    return "$text\n\n## Actions";
                 })->processProperty(false)
-                ->filterMethods(function(\ReflectionMethod $method) use ($className) {
-                    if ($method->isConstructor() or $method->isDestructor()) return false;
-                    if (!$method->isPublic()) return false;
+                ->filterMethods(function (\ReflectionMethod $method) use ($className) {
+                    if ($method->isConstructor() or $method->isDestructor()) {
+                        return false;
+                    }
+                    if (!$method->isPublic()) {
+                        return false;
+                    }
                     if (strpos($method->name, '_') === 0) {
                         $doc = $method->getDocComment();
                         try {
@@ -359,9 +363,9 @@ class RoboFile extends \Robo\Tasks
                 )
                 ->processClassDocBlock(function (ReflectionClass $r, $text) {
                     return $text . "\n";
-                })->processMethodSignature(function(ReflectionMethod $r, $text) {
+                })->processMethodSignature(function (ReflectionMethod $r, $text) {
                     return str_replace('public', '', $text);
-                })->processMethodDocBlock(function(ReflectionMethod $r, $text) use ($utilName, $source) {
+                })->processMethodDocBlock(function (ReflectionMethod $r, $text) use ($utilName, $source) {
                     $line = $r->getStartLine();
                     $text = preg_replace("~@(.*?)([$\s])~", ' * `$1` $2', $text);
                     $text .= "\n[See source]($source#L$line)";
@@ -560,8 +564,12 @@ class RoboFile extends \Robo\Tasks
                 $contents = $buttonHtml . $contents;
             } elseif (strpos($doc->getPathname(), 'docs'.DIRECTORY_SEPARATOR.'reference') !== false) {
                 $newfile = 'docs/reference/' . $newfile;
-                if ($name == 'Commands') continue;
-                if ($name == 'Configuration') continue;
+                if ($name == 'Commands') {
+                    continue;
+                }
+                if ($name == 'Configuration') {
+                    continue;
+                }
                 $reference[$name] = '/docs/reference/' . $doc->getBasename();
             } else {
                 $newfile = 'docs/'.$newfile;

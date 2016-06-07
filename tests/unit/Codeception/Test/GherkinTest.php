@@ -177,5 +177,4 @@ class TagGherkinContext
     {
         GherkinTest::$calls .= 'X';
     }
-
 }
