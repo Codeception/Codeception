@@ -101,7 +101,7 @@ EOF;
         $this->xmlStructure = null;
     }
 
-    public function protected()
+    protected function onReconfigure()
     {
         $this->buildRequest();
         $this->xmlResponse = null;
