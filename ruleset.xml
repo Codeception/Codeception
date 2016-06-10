@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ruleset name="Codeception">
     <description>
-        Codeception coding standard. Inherits from PSR-2.
+        :Codeception coding standard. Inherits from PSR-2.
     </description>
 
     <rule ref="PSR2">
