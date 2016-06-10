@@ -66,7 +66,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || composer update -d frameworks-phalcon $composer_parameters'
   # Laravel 5
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-l5 $composer_parameters'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-l5 -n --prefer-dist --no-dev'
   # Lumen
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-lumen-sample.git frameworks-lumen'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-lumen $composer_parameters'
