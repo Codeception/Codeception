@@ -45,7 +45,9 @@ class Gherkin implements LoaderInterface
         if (!class_exists('Behat\Gherkin\Keywords\ArrayKeywords')) {
             throw new TestParseException('Feature file can only be parsed with Behat\Gherkin library. Please install `behat/gherkin` with Composer');
         }
-        $i18n = require __DIR__ . '/../../../../../../behat/gherkin/i18n.php';
+        $gherkin = new \ReflectionClass('Behat\Gherkin\Gherkin');
+        $gherkinClassPath = dirname($gherkin->getFileName());
+        $i18n = require $gherkinClassPath . '/../../../i18n.php';
         $keywords = new GherkinKeywords($i18n);
         $lexer = new GherkinLexer($keywords);
         $this->parser = new GherkinParser($lexer);
