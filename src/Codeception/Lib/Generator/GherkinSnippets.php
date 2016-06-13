@@ -16,22 +16,27 @@ class GherkinSnippets
      {
         throw new \Codeception\Exception\Incomplete("Step `{{text}}` is not defined");
      }
-     
+
 EOF;
 
     protected $snippets = [];
     protected $processed = [];
 
-    public function __construct($settings)
+    public function __construct($settings, $test = null)
     {
         $loader = new Gherkin($settings);
+        if (empty($test) || is_null($test)) {
+            $pattern = $loader->getPattern();
+        } else {
+            $pattern = $test;
+        }
 
         $finder = Finder::create()
             ->files()
             ->sortByName()
             ->in($settings['path'])
             ->followLinks()
-            ->name($loader->getPattern());
+            ->name($pattern);
 
         foreach ($finder as $file) {
             $pathname = str_replace("//", "/", $file->getPathname());
