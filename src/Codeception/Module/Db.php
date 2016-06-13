@@ -202,7 +202,7 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
-                list ($missingDriver, ) = explode(':', $this->config['dsn'], 2);
+                list($missingDriver, ) = explode(':', $this->config['dsn'], 2);
                 $message = "could not find $missingDriver driver";
             }
 

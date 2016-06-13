@@ -17,7 +17,7 @@ trait ErrorLogger
         }
 
         if ($status === CodeceptionTest::STATUS_ERROR) {
-             $this->getTestResultObject()->addError($this, $exception, $time);
+            $this->getTestResultObject()->addError($this, $exception, $time);
         }
         if ($status === CodeceptionTest::STATUS_FAIL) {
             $this->getTestResultObject()->addFailure($this, $exception, $time);

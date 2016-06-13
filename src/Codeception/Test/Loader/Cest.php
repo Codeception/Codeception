@@ -71,5 +71,4 @@ class Cest implements LoaderInterface
             }
         }
     }
-
 }

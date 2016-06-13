@@ -12,7 +12,7 @@ class Dependencies implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
-    static $events = [
+    public static $events = [
         Events::TEST_START => 'testStart',
         Events::TEST_SUCCESS => 'testSuccess'
     ];
@@ -43,5 +43,4 @@ class Dependencies implements EventSubscriberInterface
         }
         $this->successfulTests[] = Descriptor::getTestSignature($test);
     }
-
 }

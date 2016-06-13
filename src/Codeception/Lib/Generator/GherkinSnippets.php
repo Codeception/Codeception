@@ -87,7 +87,7 @@ EOF;
                 $pattern = str_replace('"'.$param.'"', ":arg$num", $pattern);
             }
         }
-        if (in_array($pattern, $this->processed))  {
+        if (in_array($pattern, $this->processed)) {
             return;
         }
 
