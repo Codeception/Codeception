@@ -257,7 +257,7 @@ class HTML extends CodeceptionResultPrinter
     private function cleanMessage($exception)
     {
         $msg = $exception->getMessage();
-        $msg = str_replace(['<info>','</info>','<bold>','</bold>'], ['','','',''], $msg);
+        $msg = str_replace(['<info>', '</info>', '<bold>', '</bold>'], ['', '', '', ''], $msg);
         return htmlentities($msg);
     }
 }

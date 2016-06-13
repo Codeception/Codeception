@@ -380,8 +380,7 @@ class Configuration
             array_map(
                 function ($m) {
                     return is_array($m) ? key($m) : $m;
-                }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled']))
-            , function ($m) use ($settings) {
+                }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled'])), function ($m) use ($settings) {
                 if (!isset($settings['modules']['disabled'])) {
                     return true;
                 }

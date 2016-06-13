@@ -350,7 +350,6 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         $intersection = array_intersect_assoc($expected, $match);
 
         $this->assertEquals($expected, $intersection);
-
     }
 
     /**
