@@ -25,7 +25,7 @@ EOF;
     public function __construct($settings, $test = null)
     {
         $loader = new Gherkin($settings);
-        if (is_null($test)) {
+        if (empty($test)) {
             $pattern = $loader->getPattern();
         } else {
             $pattern = $test;
