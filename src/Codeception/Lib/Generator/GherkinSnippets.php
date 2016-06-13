@@ -26,9 +26,9 @@ EOF;
     {
         $loader = new Gherkin($settings);
         if (empty($test) || is_null($test)) {
-          $pattern = $loader->getPattern();
+            $pattern = $loader->getPattern();
         } else {
-          $pattern = $test;
+            $pattern = $test;
         }
 
         $finder = Finder::create()
