@@ -130,7 +130,7 @@ class RunCest
     {
         $I->executeCommand('run dummy');
         $I->seeInShellOutput('Optimistic');
-        $I->seeInShellOutput('Dummy Tests (5)');
+        $I->seeInShellOutput('Dummy Tests (6)');
         $I->executeCommand('run dummy --skip-group ok');
         $I->seeInShellOutput('Pessimistic');
         $I->seeInShellOutput('Dummy Tests (4)');
@@ -141,7 +141,7 @@ class RunCest
     {
         $I->executeCommand('run skipped,dummy --no-exit');
         $I->seeInShellOutput("Skipped Tests (3)");
-        $I->seeInShellOutput("Dummy Tests (5)");
+        $I->seeInShellOutput("Dummy Tests (6)");
         $I->dontSeeInShellOutput("Remote Tests");
     }
 
