@@ -42,6 +42,9 @@ class Di
         $constructorArgs = null,
         $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME
     ) {
+        // normalize namespace
+        $className = ltrim($className, '\\');
+        
         // get class from container
         if (isset($this->container[$className])) {
             if ($this->container[$className] instanceof $className) {
