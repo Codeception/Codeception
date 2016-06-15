@@ -510,7 +510,7 @@ class Lumen extends Framework implements ActiveRecord
     /**
      * @param string $table
      * @param array $attributes
-     * @return mixed
+     * @return array
      */
     protected function findRecord($table, $attributes = [])
     {
