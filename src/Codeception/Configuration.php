@@ -646,7 +646,7 @@ class Configuration
             }
 
             // .env and ini files
-            if (preg_match('~(\.ini|\.env)$~', $paramStorage)) {
+            if (preg_match('~(\.ini$|\.env(\.|$))~', $paramStorage)) {
                 $params = parse_ini_file($paramsFile);
                 static::$params = array_merge(self::$params, $params);
                 continue;
