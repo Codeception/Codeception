@@ -922,17 +922,33 @@ EOF;
     /**
      * Checks response code equals to provided value.
      *
+     * ```php
+     * <?php
+     * $I->seeResponseCodeIs(200);
+     *
+     * // recommended \Codeception\Util\HttpCode
+     * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+     * ```
+     *
      * @part json
      * @part xml
      * @param $code
      */
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->getRunningClient()->getInternalResponse()->getStatus());
+        $this->connectionModule->seeResponseCodeIs($code);
     }
 
     /**
      * Checks that response code is not equal to provided value.
+     *
+     * ```php
+     * <?php
+     * $I->dontSeeResponseCodeIs(200);
+     *
+     * // recommended \Codeception\Util\HttpCode
+     * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+     * ```
      *
      * @part json
      * @part xml
@@ -940,7 +956,7 @@ EOF;
      */
     public function dontSeeResponseCodeIs($code)
     {
-        $this->assertNotEquals($code, $this->getRunningClient()->getInternalResponse()->getStatus());
+        $this->connectionModule->dontSeeResponseCodeIs($code);
     }
 
     /**
@@ -1125,6 +1141,14 @@ EOF;
 
     /**
      * Prevents automatic redirects to be followed by the client
+     *
+     * ```php
+     * <?php
+     * $I->stopFollowingRedirects();
+     * ```
+     *
+     * @part xml
+     * @part json
      */
     public function stopFollowingRedirects()
     {
@@ -1133,6 +1157,14 @@ EOF;
 
     /**
      * Enables automatic redirects to be followed by the client
+     *
+     * ```php
+     * <?php
+     * $I->startFollowingRedirects();
+     * ```
+     *
+     * @part xml
+     * @part json
      */
     public function startFollowingRedirects()
     {
