@@ -817,7 +817,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
 
         // by label
-        $label = $this->strictMatch(['xpath' => sprintf('.//label[text()=%s]', Crawler::xpathLiteral($field))]);
+        $label = $this->strictMatch(['xpath' => sprintf('.//label[text()[normalize-space()=%s]]', Crawler::xpathLiteral($field))]);
         if (count($label)) {
             $label = $label->first();
             if ($label->attr('for')) {

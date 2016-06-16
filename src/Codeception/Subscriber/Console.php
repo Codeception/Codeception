@@ -521,11 +521,7 @@ class Console implements EventSubscriberInterface
 
         if ($feature) {
             $this->message = $this
-                ->message(
-                    $inProgress
-                    ? $feature
-                    : mb_strtoupper(mb_substr($feature, 0, 1, 'utf-8'), 'utf-8') . mb_substr($feature, 1, null, 'utf-8')
-                )
+                ->message($inProgress ? $feature : Message::ucfirst($feature))
                 ->apply(function ($str) {
                     return str_replace('with data set', "|", $str);
                 })
