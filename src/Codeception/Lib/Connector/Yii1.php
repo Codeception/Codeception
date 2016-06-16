@@ -104,12 +104,14 @@ class Yii1 extends Client
         $app->onEndRequest->add([$this, 'setHeaders']);
         $app->run();
 
-        // close connection
-        $app->getDb()->setActive(false);
-        // cleanup metadata cache
-        $property = new \ReflectionProperty(\CActiveRecord::class, '_md');
-        $property->setAccessible(true);
-        $property->setValue([]);
+        if ($app->hasComponent('db')) {
+            // close connection
+            $app->getDb()->setActive(false);
+            // cleanup metadata cache
+            $property = new \ReflectionProperty(\CActiveRecord::class, '_md');
+            $property->setAccessible(true);
+            $property->setValue([]);
+        }
 
         $content = ob_get_clean();
 
