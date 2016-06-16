@@ -926,7 +926,7 @@ EOF;
      * <?php
      * $I->seeResponseCodeIs(200);
      *
-     * // recommended \Codeception\Util\HttpCode
+     * // preferred to use \Codeception\Util\HttpCode
      * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
      *
@@ -946,7 +946,7 @@ EOF;
      * <?php
      * $I->dontSeeResponseCodeIs(200);
      *
-     * // recommended \Codeception\Util\HttpCode
+     * // preferred to use \Codeception\Util\HttpCode
      * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
      * ```
      *

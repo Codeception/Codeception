@@ -1400,7 +1400,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->getResponseStatusCode(), $this->responseCodeFailureMessage($code));
+        $failureMessage = sprintf(
+            'Expected HTTP Status Code: %s. Actual Status Code: %s',
+            HttpCode::getDescription($code),
+            HttpCode::getDescription($this->getResponseStatusCode())
+        );
+        $this->assertEquals($code, $this->getResponseStatusCode(), $failureMessage);
     }
 
     /**
@@ -1412,12 +1417,16 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      *
      * // recommended \Codeception\Util\HttpCode
      * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
-     * ```     *
+     * ```
      * @param $code
      */
     public function dontSeeResponseCodeIs($code)
     {
-        $this->assertNotEquals($code, $this->getResponseStatusCode(), $this->responseCodeFailureMessage($code));
+        $failureMessage = sprintf(
+            'Expected HTTP status code other than %s',
+            HttpCode::getDescription($code)
+        );
+        $this->assertNotEquals($code, $this->getResponseStatusCode(), $failureMessage);
     }
 
     public function seeInTitle($title)
@@ -1702,19 +1711,5 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 ));
             }
         }
-    }
-
-    /**
-     * @param $code
-     * @return mixed
-     */
-    private function responseCodeFailureMessage($code)
-    {
-        $failureMessage = sprintf(
-            'Expected HTTP Status: %s. Actual Status: %s',
-            HttpCode::getDescription($code),
-            HttpCode::getDescription($this->getResponseStatusCode())
-        );
-        return $failureMessage;
     }
 }
