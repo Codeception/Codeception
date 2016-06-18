@@ -19,7 +19,7 @@ class MessageFactoryTest extends \Codeception\Test\Unit
         /**
          * @var Output $stub
          */
-        $stub = Stub::make(Output::class);
+        $stub = Stub::make('\Codeception\Lib\Console\Output');
         $this->messageFactory = new MessageFactory($stub);
     }
 
