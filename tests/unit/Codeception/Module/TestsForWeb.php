@@ -1329,6 +1329,27 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('Killgore Trout', $data['second-field']);
     }
 
+    public function testSubmitAdjacentFormsByButton()
+    {
+        $this->module->amOnPage('/form/submit_adjacentforms');
+        $this->module->fillField('first-field', 'First');
+        $this->module->fillField('second-field', 'Second');
+        $this->module->click('#submit1');
+        $data = data::get('form');
+        $this->assertTrue(isset($data['first-field']));
+        $this->assertFalse(isset($data['second-field']));
+        $this->assertEquals('First', $data['first-field']);
+
+        $this->module->amOnPage('/form/submit_adjacentforms');
+        $this->module->fillField('first-field', 'First');
+        $this->module->fillField('second-field', 'Second');
+        $this->module->click('#submit2');
+        $data = data::get('form');
+        $this->assertFalse(isset($data['first-field']));
+        $this->assertTrue(isset($data['second-field']));
+        $this->assertEquals('Second', $data['second-field']);
+    }
+
     public function testArrayField()
     {
         $this->module->amOnPage('/form/example17');

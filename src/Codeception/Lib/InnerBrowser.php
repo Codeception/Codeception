@@ -750,11 +750,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$form) {
             $this->fail('The selected node is not a form and does not have a form ancestor.');
         }
-        $action = (string) $this->getFormUrl($form);
-        if (!isset($this->forms[$action])) {
-            $this->forms[$action] = $this->getFormFromCrawler($form, $action);
+        $action = (string)$this->getFormUrl($form);
+        $identifier = $form->attr('id') ?: $action;
+        if (!isset($this->forms[$identifier])) {
+            $this->forms[$identifier] = $this->getFormFromCrawler($form, $action);
         }
-        return $this->forms[$action];
+        return $this->forms[$identifier];
     }
 
     /**
