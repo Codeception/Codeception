@@ -363,6 +363,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('Nothing special', $form['name']);
     }
 
+    public function testTextFieldByLabelWithoutFor()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->fillField('Other label', 'Nothing special');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('Nothing special', $form['othername']);
+    }
+
     public function testFileFieldByCss()
     {
         $this->module->amOnPage('/form/file');
