@@ -377,7 +377,7 @@ class Console implements EventSubscriberInterface
         if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
             $comparisonFailure = $e->getComparisonFailure();
             if ($comparisonFailure) {
-                $message = $this->messageFactory->prepareCompMessage($comparisonFailure);
+                $message = $this->messageFactory->prepareComparisonFailureMessage($comparisonFailure);
             }
         }
 

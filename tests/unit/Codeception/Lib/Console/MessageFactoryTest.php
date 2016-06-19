@@ -27,7 +27,7 @@ class MessageFactoryTest extends \Codeception\Test\Unit
     {
         $expectedDiff = $this->getExpectedDiff();
         $failure = $this->createFailure();
-        $message = $this->messageFactory->prepareCompMessage($failure);
+        $message = $this->messageFactory->prepareComparisonFailureMessage($failure);
 
         $this->assertEquals($expectedDiff, (string) $message, 'The diff should be generated.');
     }

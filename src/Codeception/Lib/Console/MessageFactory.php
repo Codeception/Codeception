@@ -37,17 +37,15 @@ class MessageFactory
      * @param ComparisonFailure $failure
      * @return Message|null
      */
-    public function prepareCompMessage(ComparisonFailure $failure)
+    public function prepareComparisonFailureMessage(ComparisonFailure $failure)
     {
-        $compMessage = $failure->getMessage();
         $diff = $this->getDiff($failure->getExpectedAsString(), $failure->getActualAsString());
-
         if (!$diff) {
             return null;
         }
 
         return $this
-            ->message($compMessage)
+            ->message($failure->getMessage())
             ->append($diff);
     }
 
