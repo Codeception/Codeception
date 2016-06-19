@@ -25,7 +25,7 @@ class Colorizer
                 case '+':
                     $line = "<info>$line</info>";
                     break;
-                case '-';
+                case '-':
                     $line = "<comment>$line</comment>";
                     break;
             }
