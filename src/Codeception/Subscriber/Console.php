@@ -89,12 +89,9 @@ class Console implements EventSubscriberInterface
 
     public function __construct($options)
     {
+        $this->prepareOptions($options);
         $this->output = new Output($options);
         $this->messageFactory = new MessageFactory($this->output);
-        $this->options = array_merge($this->options, $options);
-        $this->debug = $this->options['debug'] || $this->options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
-        $this->steps = $this->debug || $this->options['steps'];
-        $this->rawStackTrace = ($this->options['verbosity'] === OutputInterface::VERBOSITY_DEBUG);
         if ($this->debug) {
             Debug::setOutput($this->output);
         }
@@ -623,5 +620,16 @@ class Console implements EventSubscriberInterface
                 ->style('info')
                 ->write();
         }
+    }
+
+    /**
+     * @param $options
+     */
+    private function prepareOptions($options)
+    {
+        $this->options = array_merge($this->options, $options);
+        $this->debug = $this->options['debug'] || $this->options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
+        $this->steps = $this->debug || $this->options['steps'];
+        $this->rawStackTrace = ($this->options['verbosity'] === OutputInterface::VERBOSITY_DEBUG);
     }
 }
