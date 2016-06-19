@@ -5,29 +5,25 @@ use Codeception\Util\Stub;
 use SebastianBergmann\Comparator\ComparisonFailure;
 
 /**
- * MessageFactoryTest
+ * DiffFactoryTest
  **/
-class MessageFactoryTest extends \Codeception\Test\Unit
+class DiffFactoryTest extends \Codeception\Test\Unit
 {
     /**
-     * @var MessageFactory
+     * @var DiffFactory
      */
-    protected $messageFactory;
+    protected $diffFactory;
 
     protected function setUp()
     {
-        /**
-         * @var Output $stub
-         */
-        $stub = Stub::make('\Codeception\Lib\Console\Output');
-        $this->messageFactory = new MessageFactory($stub);
+        $this->diffFactory = new DiffFactory();
     }
 
     public function testItCreatesMessageForComparisonFailure()
     {
         $expectedDiff = $this->getExpectedDiff();
         $failure = $this->createFailure();
-        $message = $this->messageFactory->prepareComparisonFailureMessage($failure);
+        $message = $this->diffFactory->createDiff($failure);
 
         $this->assertEquals($expectedDiff, (string) $message, 'The diff should be generated.');
     }
@@ -65,7 +61,6 @@ XML;
     protected function getExpectedDiff()
     {
         $expectedDiff = <<<TXT
-- Expected | + Actual
 @@ @@
  <note>
      <to>Tove</to>
