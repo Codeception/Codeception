@@ -11,13 +11,12 @@ class Colorizer
      */
     public function colorize($string = '')
     {
-        $fp = fopen("php://memory", 'r+');
+        $fp = fopen('php://memory', 'r+');
         fwrite($fp, $string);
         rewind($fp);
 
         $colorizedMessage = '';
         while ($line = fgets($fp)) {
-
             $char = $line[0];
             $line = trim($line);
 
