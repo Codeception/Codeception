@@ -8,6 +8,7 @@ class Colorizer
 {
     /**
      * @param string $string
+     * @return string
      */
     public function colorize($string = '')
     {
