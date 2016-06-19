@@ -56,7 +56,7 @@ use Codeception\Util\Soap as XmlUtils;
 class REST extends CodeceptionModule implements DependsOnModule, PartedModule, API, ConflictsWithModule
 {
     protected $config = [
-        'url'           => '',
+        'url' => '',
         'xdebug_remote' => false
     ];
 
@@ -492,8 +492,10 @@ EOF;
             }
             if ($method == 'GET') {
                 $this->debugSection("Request", "$method $url");
+                $files = [];
             } else {
                 $this->debugSection("Request", "$method $url " . json_encode($parameters));
+                $files = $this->formatFilesArray($files);
             }
             $this->response = (string)$this->connectionModule->_request($method, $url, $parameters, $files);
         } else {
@@ -501,10 +503,10 @@ EOF;
             if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
                 // if the request data has non-printable bytes and it is not a valid unicode string, reformat the
                 // display string to signify the presence of request data
-                $requestData = '[binary-data length:'.strlen($requestData).' md5:'.md5($requestData).']';
+                $requestData = '[binary-data length:' . strlen($requestData) . ' md5:' . md5($requestData) . ']';
             }
             $this->debugSection("Request", "$method $url " . $requestData);
-            $this->response = (string) $this->connectionModule->_request($method, $url, [], $files, [], $parameters);
+            $this->response = (string)$this->connectionModule->_request($method, $url, [], $files, [], $parameters);
         }
         $this->debugSection("Response", $this->response);
     }
@@ -525,6 +527,67 @@ EOF;
             }
         }
         return $parameters;
+    }
+
+    private function formatFilesArray(array $files)
+    {
+        foreach ($files as $name => $value) {
+            if (is_string($value)) {
+                $this->checkFileBeforeUpload($value);
+
+                $files[$name] = [
+                    'name' => basename($value),
+                    'tmp_name' => $value,
+                    'size' => filesize($value),
+                    'type' => $this->getFileType($value),
+                    'error' => 0,
+                ];
+                continue;
+            } elseif (is_array($value)) {
+                if (isset($value['tmp_name'])) {
+                    $this->checkFileBeforeUpload($value['tmp_name']);
+                    if (!isset($value['name'])) {
+                        $value['name'] = basename($value);
+                    }
+                    if (!isset($value['size'])) {
+                        $value['size'] = filesize($value);
+                    }
+                    if (!isset($value['type'])) {
+                        $value['type'] = $this->getFileType($value);
+                    }
+                    if (!isset($value['error'])) {
+                        $value['error'] = 0;
+                    }
+                } else {
+                    $files[$name] = $this->formatFilesArray($value);
+                }
+            } else {
+                throw new ModuleException(__CLASS__, "Invalid value of key $name in files array");
+            }
+        }
+
+        return $files;
+    }
+
+    private function getFileType($file)
+    {
+        if (function_exists('mime_content_type') && mime_content_type($file)) {
+            return mime_content_type($file);
+        }
+        return 'application/octet-stream';
+    }
+
+    private function checkFileBeforeUpload($file)
+    {
+        if (!file_exists($file)) {
+            throw new ModuleException(__CLASS__, "File $file does not exist");
+        }
+        if (!is_readable($file)) {
+            throw new ModuleException(__CLASS__, "File $file is not readable");
+        }
+        if (!is_file($file)) {
+            throw new ModuleException(__CLASS__, "File $file is not a regular file");
+        }
     }
 
     /**
