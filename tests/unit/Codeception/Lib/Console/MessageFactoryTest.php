@@ -23,12 +23,11 @@ class MessageFactoryTest extends \Codeception\Test\Unit
         $this->messageFactory = new MessageFactory($stub);
     }
 
-
-    public function testItCreatesMessageForComparisonFail()
+    public function testItCreatesMessageForComparisonFailure()
     {
         $expectedDiff = $this->getExpectedDiff();
-        $fail = $this->failure();
-        $message = $this->messageFactory->prepareCompMessage($fail);
+        $failure = $this->createFailure();
+        $message = $this->messageFactory->prepareCompMessage($failure);
 
         $this->assertEquals($expectedDiff, (string) $message, 'The diff should be generated.');
     }
@@ -36,9 +35,9 @@ class MessageFactoryTest extends \Codeception\Test\Unit
     /**
      * @return ComparisonFailure
      */
-    protected function failure()
+    protected function createFailure()
     {
-        $leExpectedXml = <<<XML
+        $expectedXml = <<<XML
 <note>
     <to>Tove</to>
     <from>Jani</from>
@@ -47,7 +46,7 @@ class MessageFactoryTest extends \Codeception\Test\Unit
 </note>
 XML;
 
-        $leActualXml = <<<XML
+        $actualXml = <<<XML
 <note>
     <to>Tove</to>
     <from>Jani</from>
@@ -57,7 +56,7 @@ XML;
 </note>
 XML;
 
-        return new ComparisonFailure($leExpectedXml, $leActualXml, $leExpectedXml, $leActualXml);
+        return new ComparisonFailure($expectedXml, $actualXml, $expectedXml, $actualXml);
     }
 
     /**
@@ -80,5 +79,4 @@ TXT;
 
         return $expectedDiff . "\n";
     }
-
 }
