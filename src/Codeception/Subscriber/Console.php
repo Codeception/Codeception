@@ -375,9 +375,9 @@ class Console implements EventSubscriberInterface
         $message = $this->message($e->getMessage());
 
         if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
-            if ($e->getComparisonFailure()) {
-                $comparisionFailure = $e->getComparisonFailure();
-                $message = $this->messageFactory->prepareCompMessage($comparisionFailure);
+            $comparisonFailure = $e->getComparisonFailure();
+            if ($comparisonFailure) {
+                $message = $this->messageFactory->prepareCompMessage($comparisonFailure);
             }
         }
 
@@ -386,7 +386,7 @@ class Console implements EventSubscriberInterface
             || $class === 'PHPUnit_Framework_AssertionFailedError';
 
         if (!$isFailure) {
-            $message->prepend("[$class] ")->block("error");
+            $message->prepend("[$class] ")->block('error');
         }
 
         if ($isFailure && $cause) {
