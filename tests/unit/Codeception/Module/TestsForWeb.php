@@ -385,12 +385,14 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/form/checkbox');
         $this->module->dontSeeCheckboxIsChecked('#checkin');
+        $this->module->dontSeeCheckboxIsChecked('I Agree');
     }
 
     public function testSeeCheckboxChecked()
     {
         $this->module->amOnPage('/info');
         $this->module->seeCheckboxIsChecked('input[type=checkbox]');
+        $this->module->seeCheckboxIsChecked('Checked');
     }
 
     public function testSeeWithNonLatin()
