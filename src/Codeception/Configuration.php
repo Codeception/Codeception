@@ -146,7 +146,7 @@ class Configuration
         }
 
         // Preload config to retrieve params such that they are applied to codeception config file below
-        $tempConfig = self::mergeConfigs([], self::$defaultConfig);
+        $tempConfig = self::$defaultConfig;
 
         $distConfigContents = "";
         if(file_exists($configDistFile)) {
