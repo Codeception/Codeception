@@ -365,10 +365,10 @@ class WebDriver extends CodeceptionModule implements
     public function _failed(TestInterface $test, $fail)
     {
         $this->debugWebDriverLogs();
-        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test)) . '.fail';
+        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
-        $this->_saveScreenshot($outputDir . $filename . '.png');
-        $this->_savePageSource($outputDir . $filename . '.html');
+        $this->_saveScreenshot($outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
+        $this->_savePageSource($outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
         $this->debug("Screenshot and page source were saved into '$outputDir' dir");
     }
 
