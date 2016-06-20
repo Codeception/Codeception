@@ -24,4 +24,11 @@ class ConfigParamsCest
         $I->seeInShellOutput("Failed asserting that an array contains 'val1'");
     }
 
+    public function checkParamsPassedInSelf(CliGuy $I)
+    {
+        $I->amInPath('tests/data/params');
+        $I->executeCommand('run -c codeception_self.yml');
+        $I->seeInShellOutput('OK (1 test');
+    }
+
 }

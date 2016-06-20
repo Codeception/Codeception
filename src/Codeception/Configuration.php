@@ -137,12 +137,18 @@ class Configuration
         }
 
         $dir = realpath(dirname($configFile));
+        self::$dir = $dir;
 
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 
         if (!(file_exists($configDistFile) || file_exists($configFile))) {
             throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
         }
+
+        // Preload config to retrieve params such that they are applied to codeception config file below
+        $tempConfig = self::mergeConfigs(self::$defaultConfig, self::getConfFromFile($configDistFile));
+        $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromFile($configFile));
+        self::prepareParams($tempConfig);
 
         $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromFile($configDistFile));
         $config = self::mergeConfigs($config, self::getConfFromFile($configFile));
@@ -151,7 +157,6 @@ class Configuration
             throw new ConfigurationException("Configuration file is invalid");
         }
 
-        self::$dir = $dir;
         self::$config = $config;
 
         if (!isset($config['paths']['log'])) {
@@ -196,7 +201,6 @@ class Configuration
         }
 
         Autoload::addNamespace(self::$config['namespace'], self::supportDir());
-        self::prepareParams($config);
         self::loadBootstrap($config['settings']['bootstrap']);
         self::loadSuites();
 
