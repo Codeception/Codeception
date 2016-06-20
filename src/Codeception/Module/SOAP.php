@@ -3,6 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
+use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Module as CodeceptionModule;
 use Codeception\TestInterface;
 use Codeception\Exception\ModuleException;
@@ -42,12 +43,16 @@ use Codeception\Lib\Interfaces\API;
  * * xmlRequest - last SOAP request (DOMDocument)
  * * xmlResponse - last SOAP response (DOMDocument)
  *
+ * ## Parts
+ *
+ * * Soap - actions soap only
+ *
  * ## Conflicts
  *
  * Conflicts with REST module
  *
  */
-class SOAP extends CodeceptionModule implements DependsOnModule, API, ConflictsWithModule
+class SOAP extends CodeceptionModule implements DependsOnModule, PartedModule, API, ConflictsWithModule
 {
     protected $config = [
         'schema' => "",
@@ -118,11 +123,21 @@ EOF;
         return 'Codeception\Lib\Interfaces\API';
     }
 
-    public function _inject(InnerBrowser $connectionModule)
+    public function _parts()
     {
-        $this->connectionModule = $connectionModule;
-        if ($connectionModule instanceof Framework) {
+        return ['soap'];
+    }
+
+    public function _inject(InnerBrowser $connection)
+    {
+        $this->connectionModule = $connection;
+        if ($this->connectionModule instanceof Framework) {
             $this->isFunctional = true;
+        }
+        if ($this->connectionModule instanceof PhpBrowser) {
+            if (!$this->connectionModule->_getConfig('url')) {
+                $this->connectionModule->_setConfig(['url' => $this->config['url']]);
+            }
         }
     }
     
@@ -175,6 +190,7 @@ EOF;
      *
      * @param $header
      * @param array $params
+     * @part soap
      */
     public function haveSoapHeader($header, $params = [])
     {
@@ -205,6 +221,7 @@ EOF;
      *
      * @param $request
      * @param $body
+     * @part soap
      */
     public function sendSoapRequest($action, $body = "")
     {
@@ -261,6 +278,7 @@ EOF;
      * ```
      *
      * @param $xml
+     * @part soap
      */
     public function seeSoapResponseEquals($xml)
     {
@@ -287,6 +305,7 @@ EOF;
      * ```
      *
      * @param $xml
+     * @part soap
      */
     public function seeSoapResponseIncludes($xml)
     {
@@ -302,6 +321,7 @@ EOF;
      * Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
      *
      * @param $xml
+     * @part soap
      */
     public function dontSeeSoapResponseEquals($xml)
     {
@@ -316,6 +336,7 @@ EOF;
      * Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
      *
      * @param $xml
+     * @part soap
      */
     public function dontSeeSoapResponseIncludes($xml)
     {
@@ -342,6 +363,7 @@ EOF;
      * This method does not require path from root to match the structure.
      *
      * @param $xml
+     * @part soap
      */
     public function seeSoapResponseContainsStructure($xml)
     {
@@ -353,6 +375,7 @@ EOF;
     /**
      * Opposite to `seeSoapResponseContainsStructure`
      * @param $xml
+     * @part soap
      */
     public function dontSeeSoapResponseContainsStructure($xml)
     {
@@ -371,6 +394,7 @@ EOF;
      * ```
      *
      * @param $xpath
+     * @part soap
      */
     public function seeSoapResponseContainsXPath($xpath)
     {
@@ -387,6 +411,7 @@ EOF;
      * ```
      *
      * @param $xpath
+     * @part soap
      */
     public function dontSeeSoapResponseContainsXPath($xpath)
     {
