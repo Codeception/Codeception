@@ -444,6 +444,29 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     }
 
     /**
+     * Grabs a parameter from Symfony DIC container.
+     *
+     *
+     * ``` php
+     * <?php
+     * $em = $I->grabContainerParameter('app.base_url');
+     * ?>
+     * ```
+     *
+     * @param $key
+     * @return mixed
+     * @part services
+     */
+    public function grabContainerParameter($key)
+    {
+        $container = $this->_getContainer();
+        if (!$container->hasParameter($key)) {
+            $this->fail("The '$key'' is not specified");
+        }
+        return $container->getParameter($key);
+    }
+    
+    /**
      * @return \Symfony\Component\HttpKernel\Profiler\Profile
      */
     protected function getProfile()
