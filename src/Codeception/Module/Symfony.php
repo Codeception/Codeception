@@ -68,9 +68,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * * client - current Crawler instance
  *
  * ## Parts
- * 
+ *
  * * services - allows to use Symfony DIC only with WebDriver or PhpBrowser modules.
- * 
+ *
  * Usage example:
  *
  * ```yaml
@@ -135,7 +135,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     {
         $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
-            throw new ModuleRequireException(__CLASS__,
+            throw new ModuleRequireException(
+                __CLASS__,
                 "Symfony bootstrap file not found in $cache\n \n" .
                 "Please specify path to bootstrap file using `var_path` config option\n \n" .
                 "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
@@ -441,6 +442,29 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             $this->fail("Service $service is not available in container");
         }
         return $container->get($service);
+    }
+
+    /**
+     * Grabs a parameter from Symfony DIC container.
+     * 
+     *
+     * ``` php
+     * <?php
+     * $em = $I->grabContainerParameter('app.base_url');
+     * ?>
+     * ```
+     *
+     * @param $key
+     * @return mixed
+     * @part services
+     */
+    public function grabContainerParameter($key)
+    {
+        $container = $this->_getContainer();
+        if (!$container->hasParameter($key)) {
+            $this->fail("The '$key'' is not specified");
+        }
+        return $container->getParameter($key);
     }
 
     /**

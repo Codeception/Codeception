@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Util;
 
-
 class UriTest extends \Codeception\Test\Unit
 {
     // tests

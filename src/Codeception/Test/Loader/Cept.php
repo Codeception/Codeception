@@ -13,7 +13,8 @@ class Cept implements LoaderInterface
         return '~Cept\.php$~';
     }
 
-    function loadTests($file) {
+    function loadTests($file)
+    {
         Parser::validate($file);
         $name = basename($file, 'Cept.php');
 

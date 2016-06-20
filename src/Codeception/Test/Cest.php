@@ -132,7 +132,7 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
     }
     protected function executeTestMethod($I)
     {
-        if (!method_exists($this->testClassInstance,  $this->testMethod)) {
+        if (!method_exists($this->testClassInstance, $this->testMethod)) {
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
         }
 

@@ -1,5 +1,9 @@
 # Changelog
 
+#### 3.0
+
+* Dropped support for PHP 5.4
+
 #### 2.2.2
 
 * Improved Examples to be Traversable; Fixed console output for complex data structures.

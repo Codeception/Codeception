@@ -1448,5 +1448,4 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->selectOption('age', ['text' => '21']);
         $this->module->seeOptionIsSelected('age', '21');
     }
-
 }
