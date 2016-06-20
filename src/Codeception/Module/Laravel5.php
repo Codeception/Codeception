@@ -726,8 +726,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Return an instance of a class from the IoC Container.
-     * (http://laravel.com/docs/ioc)
+     * Return an instance of a class from the Laravel service container.
+     * (https://laravel.com/docs/master/container)
      *
      * ``` php
      * <?php
@@ -750,6 +750,84 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function grabService($class)
     {
         return $this->app[$class];
+    }
+
+    /**
+     * Add a binding to the Laravel service container.
+     * (https://laravel.com/docs/master/container)
+     *
+     * ``` php
+     * <?php
+     * $I->haveBinding('My\Interface', 'My\Implementation');
+     * ?>
+     * ```
+     *
+     * @param $abstract
+     * @param $concrete
+     */
+    public function haveBinding($abstract, $concrete)
+    {
+        $this->client->haveBinding($abstract, $concrete);
+    }
+
+    /**
+     * Add a singleton binding to the Laravel service container.
+     * (https://laravel.com/docs/master/container)
+     *
+     * ``` php
+     * <?php
+     * $I->haveSingleton('My\Interface', 'My\Singleton');
+     * ?>
+     * ```
+     *
+     * @param $abstract
+     * @param $concrete
+     */
+    public function haveSingleton($abstract, $concrete)
+    {
+        $this->client->haveBinding($abstract, $concrete, true);
+    }
+
+    /**
+     * Add a contextual binding to the Laravel service container.
+     * (https://laravel.com/docs/master/container)
+     *
+     * ``` php
+     * <?php
+     * $I->haveContextualBinding('My\Class', '$variable', 'value');
+     *
+     * // This is similar to the following in your Laravel application
+     * $app->when('My\Class')
+     *     ->needs('$variable')
+     *     ->give('value');
+     * ?>
+     * ```
+     *
+     * @param $concrete
+     * @param $abstract
+     * @param $implementation
+     */
+    public function haveContextualBinding($concrete, $abstract, $implementation)
+    {
+        $this->client->haveContextualBinding($concrete, $abstract, $implementation);
+    }
+
+    /**
+     * Add an instance binding to the Laravel service container.
+     * (https://laravel.com/docs/master/container)
+     *
+     * ``` php
+     * <?php
+     * $I->haveInstance('My\Class', new My\Class());
+     * ?>
+     * ```
+     *
+     * @param $abstract
+     * @param $instance
+     */
+    public function haveInstance($abstract, $instance)
+    {
+        $this->client->haveInstance($abstract, $instance);
     }
 
     /**

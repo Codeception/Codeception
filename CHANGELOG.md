@@ -3,6 +3,7 @@
 #### 2.2.2
 
 * Improved Examples to be Traversable; Fixed console output for complex data structures.
+* [Laravel5] Added `haveBinding`, `haveSingleton`, `haveContextualBinding` and `haveInstance` methods. By @janhenkgerritsen. See #2904.
 
 #### 2.2.1
 
