@@ -26,7 +26,10 @@
 * **Custom Commands** inject your own commands as as simple as extension. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#custom-commands)
 * `codecept dry-run` command added to show scenario steps without executing them.
 * *Breaking* [Dbh] module removed
-* *Breaking* [Laravel4] module removed
+* *Breaking* [Laravel4] module removed. See #2866
+* *Breaking* [Laravel5] Removed `createModel` method, use `have` method instead. See #2866
+* *Breaking* [Laravel5] Removed `makeModel` method. See #2866
+* *Breaking* [Laravel5] Renamed `haveModel` method to `have`. See #2866
 * *Breaking* [Symfony] public property `container` removed
 * *Breaking* [Asserts] removed deprecated `assertLessThen` and `assertGreaterThen`
 * *Breaking* mocks created with `Codeception\Util\Stub` are not verified in Cests. See #3005
@@ -35,6 +38,8 @@
 * [AngularJS] module added. Extends WebDriver module for AngularJS testing. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#angularjs)
 * [DataFactory] module added. Performs data generation using FactoryMuffin library [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#datafactory)
 * [Redis] Module rewritten using Predis library as driver by @marcverney
+* [Laravel5] Added a `haveMultiple` method to create more than one model per call. See #2866
+* [Laravel5] [Lumen] The `haveRecord`, `seeRecord`, `dontSeeRecord` and `grabRecord` methods now also accept Eloquent model class names instead of only database table names. See #2866
 * [Symfony] module Symfony2 renamed to Symfony
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
 * [Asserts] More `assert*` methods from PHPUnit added

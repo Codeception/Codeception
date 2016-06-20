@@ -2,14 +2,12 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
-use \Codeception\Util\Shared\Asserts as SharedAsserts;
 
 /**
  * Special module for using asserts in your tests.
  */
 class Asserts extends CodeceptionModule
 {
-    use SharedAsserts;
 
     /**
      * Checks that two variables are equal.

@@ -9,7 +9,7 @@ settings:
     silent: false
     log: false
 extensions:
-    enabled: [MyGroupHighlighter, SkipGroup]
+    enabled: [MyGroupHighlighter, SkipGroup, Group\CountEvents]
 modules:
     config:
         Db:

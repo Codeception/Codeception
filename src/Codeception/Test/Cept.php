@@ -51,7 +51,10 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
 
     public function toString()
     {
-        return $this->getSignature() . ': ' . ucfirst($this->getFeature());
+        $string = $this->getFeature();
+        $upper = mb_strtoupper(mb_substr($string, 0, 1, 'utf-8'), 'utf-8');
+        $feature = $upper.mb_substr($string, 1, null, 'utf-8');
+        return $this->getSignature() . ': ' . $feature;
     }
 
     public function getSourceCode()
