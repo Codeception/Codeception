@@ -6,6 +6,8 @@ use Codeception\Test\Loader\Gherkin;
 use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 class GherkinSnippets
 {
     protected $template = <<<EOF
@@ -21,20 +23,25 @@ EOF;
 
     protected $snippets = [];
     protected $processed = [];
+    protected $features = [];
 
     public function __construct($settings, $test = null)
     {
         $loader = new Gherkin($settings);
-        if (empty($test) || is_null($test)) {
-            $pattern = $loader->getPattern();
-        } else {
-            $pattern = $test;
+        $pattern = $loader->getPattern();
+        $path = $settings['path'];
+        if (empty($test) === false) {
+            if (preg_match($pattern, $test) == true) {
+                $pattern = $test;
+            } else {
+                $path = $settings['path'].'/'.$test;
+            }
         }
 
         $finder = Finder::create()
             ->files()
             ->sortByName()
-            ->in($settings['path'])
+            ->in($path)
             ->followLinks()
             ->name($pattern);
 
@@ -58,13 +65,16 @@ EOF;
                 $text = $step->getText();
                 foreach (array_keys($allSteps) as $pattern) {
                     if (preg_match($pattern, $text)) {
-                        echo "$pattern -> $text \n";
                         $matched = true;
                         break;
                     }
                 }
                 if (!$matched) {
                     $this->addSnippet($step);
+                    $file = str_ireplace($settings['path'], '', $test->getFeatureNode()->getFile());
+                    if( in_array($file, $this->features) === false ) {
+                        $this->features[] = $file;
+                    }
                 }
             }
         }
@@ -111,5 +121,10 @@ EOF;
     public function getSnippets()
     {
         return $this->snippets;
+    }
+
+    public function getFeatures()
+    {
+        return $this->features;
     }
 }

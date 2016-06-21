@@ -39,10 +39,15 @@ class GherkinSnippets extends Command
 
         $generator = new SnippetsGenerator($config, $test);
         $snippets = $generator->getSnippets();
+        $features = $generator->getFeatures();
 
         if (empty($snippets)) {
             $output->writeln("<notice> All Gherkin steps are defined. Exiting... </notice>");
             return;
+        }
+        $output->writeln("<comment> Snippets found in: </comment>");
+        foreach ($features as $feature) {
+            $output->writeln("<info>  - {$feature} </info>");
         }
         $output->writeln("<comment> Generated Snippets: </comment>");
         $output->writeln("<info> ----------------------------------------- </info>");
