@@ -70,6 +70,13 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertEquals('adult', $form['age']);
     }
 
+    public function testSelectInvalidOptionForSecondSelectFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/select_second');
+        $this->module->selectOption('#select2', 'Value2');
+    }
+
     public function testSeeInPopup()
     {
         $this->notForPhantomJS();
