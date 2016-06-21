@@ -108,7 +108,7 @@ class Yii1 extends Client
             // close connection
             $app->getDb()->setActive(false);
             // cleanup metadata cache
-            $property = new \ReflectionProperty(\CActiveRecord::class, '_md');
+            $property = new \ReflectionProperty('CActiveRecord', '_md');
             $property->setAccessible(true);
             $property->setValue([]);
         }
