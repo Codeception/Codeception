@@ -137,6 +137,7 @@ class Configuration
         }
 
         $dir = realpath(dirname($configFile));
+        self::$dir = $dir;
 
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 
@@ -144,14 +145,29 @@ class Configuration
             throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
         }
 
-        $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromFile($configDistFile));
-        $config = self::mergeConfigs($config, self::getConfFromFile($configFile));
+        // Preload config to retrieve params such that they are applied to codeception config file below
+        $tempConfig = self::$defaultConfig;
+
+        $distConfigContents = "";
+        if(file_exists($configDistFile)) {
+            $distConfigContents = file_get_contents($configDistFile);
+            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($distConfigContents));
+        }
+
+        $configContents = "";
+        if(file_exists($configFile)) {
+            $configContents = file_get_contents($configFile);
+            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($configContents));
+        }
+        self::prepareParams($tempConfig);
+
+        $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromContents($distConfigContents));
+        $config = self::mergeConfigs($config, self::getConfFromContents($configContents));
 
         if ($config == self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
         }
 
-        self::$dir = $dir;
         self::$config = $config;
 
         if (!isset($config['paths']['log'])) {
@@ -196,7 +212,6 @@ class Configuration
         }
 
         Autoload::addNamespace(self::$config['namespace'], self::supportDir());
-        self::prepareParams($config);
         self::loadBootstrap($config['settings']['bootstrap']);
         self::loadSuites();
 
@@ -318,6 +333,22 @@ class Configuration
     }
 
     /**
+     * Loads configuration from Yaml data
+     *
+     * @param string $contents Yaml config file contents
+     * @return array
+     */
+    protected static function getConfFromContents($contents)
+    {
+        if (self::$params) {
+            $template = new Template($contents, '%', '%');
+            $template->setVars(self::$params);
+            $contents = $template->produce();
+        }
+        return Yaml::parse($contents);
+    }
+
+    /**
      * Loads configuration from Yaml file or returns given value if the file doesn't exist
      *
      * @param string $filename filename
@@ -328,12 +359,7 @@ class Configuration
     {
         if (file_exists($filename)) {
             $yaml = file_get_contents($filename);
-            if (self::$params) {
-                $template = new Template($yaml, '%', '%');
-                $template->setVars(self::$params);
-                $yaml = $template->produce();
-            }
-            return Yaml::parse($yaml);
+            return self::getConfFromContents($yaml);
         }
         return $nonExistentValue;
     }
@@ -519,8 +545,12 @@ class Configuration
 
     public static function mergeConfigs($a1, $a2)
     {
-        if (!is_array($a1) || !is_array($a2)) {
+        if (!is_array($a1)) {
             return $a2;
+        }
+
+        if (!is_array($a2)) {
+            return $a1;
         }
 
         $res = [];
