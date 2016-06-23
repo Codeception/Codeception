@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Module;
 
 use Codeception\Lib\Interfaces\DataMapper;
@@ -57,7 +58,7 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  * (you can also use Laravel5 and Phalcon).
  *
  * In this example factories are loaded from `tests/_support/factories` directory.
-gst * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
+ gst * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
  *
  * In cases you want to use data from database inside your factory definitions you can define them in Helper.
  * For instance, if you use Doctrine, this allows you to access `EntityManager` inside a definition.
@@ -118,7 +119,6 @@ gst * You should create this directory manually and create PHP files in it with 
  * ```php
  * 'user' => 'entity|User'
  * ```
- *
  */
 class DataFactory extends \Codeception\Module implements DependsOnModule
 {
@@ -133,7 +133,7 @@ modules:
 EOF;
 
     /**
-     * ORM module on which we we depend on
+     * ORM module on which we we depend on.
      *
      * @var ORM
      */
@@ -163,7 +163,11 @@ EOF;
 
         if ($this->config['factories']) {
             foreach ((array) $this->config['factories'] as $factoryPath) {
-                $this->factoryMuffin->loadFactories(realpath(codecept_root_dir() . $factoryPath));
+                $realpath = realpath(codecept_root_dir().$factoryPath);
+                if ($realpath === false) {
+                    throw new \Exception('The path to one of your factories is not correct. Please specify the directory relative to the codeception.yml file (ie. _support/factories).');
+                }
+                $this->factoryMuffin->loadFactories($realpath);
             }
         }
     }
@@ -181,14 +185,13 @@ EOF;
         $this->factoryMuffin->deleteSaved();
     }
 
-
     public function _depends()
     {
         return ['Codeception\Lib\Interfaces\ORM' => $this->dependencyMessage];
     }
 
     /**
-     * Creates a model definition. This can be used from a helper:
+     * Creates a model definition. This can be used from a helper:.
      *
      * ```php
      * $this->getModule('{{MODULE_NAME}}')->_define('User', [
@@ -200,7 +203,9 @@ EOF;
      *
      * @param $model
      * @param $fields
+     *
      * @return \League\FactoryMuffin\Definition
+     *
      * @throws \League\FactoryMuffin\Exceptions\DefinitionAlreadyDefinedException
      */
     public function _define($model, $fields)
@@ -209,7 +214,7 @@ EOF;
     }
 
     /**
-     * Generates and saves a record,
+     * Generates and saves a record,.
      *
      * ```php
      * $I->have('User'); // creates user
@@ -220,6 +225,7 @@ EOF;
      *
      * @param $name
      * @param array $extraAttrs
+     *
      * @return object
      */
     public function have($name, array $extraAttrs = [])
@@ -228,7 +234,7 @@ EOF;
     }
 
     /**
-     * Generates and saves a record multiple times
+     * Generates and saves a record multiple times.
      *
      * ```php
      * $I->haveMultiple('User', 10); // create 10 users
@@ -238,6 +244,7 @@ EOF;
      * @param $name
      * @param $times
      * @param array $extraAttrs
+     *
      * @return \object[]
      */
     public function haveMultiple($name, $times, array $extraAttrs = [])
