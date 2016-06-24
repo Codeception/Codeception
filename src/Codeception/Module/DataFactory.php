@@ -5,6 +5,7 @@ namespace Codeception\Module;
 use Codeception\Lib\Interfaces\DataMapper;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\ORM;
+use Codeception\Exception\ModuleException;
 use Codeception\TestInterface;
 use League\FactoryMuffin\FactoryMuffin;
 use League\FactoryMuffin\Stores\RepositoryStore;
@@ -57,8 +58,8 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  *
  * (you can also use Laravel5 and Phalcon).
  *
- * In this example factories are loaded from `tests/_support/factories` directory. Please note that this directory is relative from the codeception.yml file (so for Yii2 it would be codeception/_support/factories). 
- gst * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
+ * In this example factories are loaded from `tests/_support/factories` directory. Please note that this directory is relative from the codeception.yml file (so for Yii2 it would be codeception/_support/factories).
+gst * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
  *
  * In cases you want to use data from database inside your factory definitions you can define them in Helper.
  * For instance, if you use Doctrine, this allows you to access `EntityManager` inside a definition.
@@ -163,11 +164,12 @@ EOF;
 
         if ($this->config['factories']) {
             foreach ((array) $this->config['factories'] as $factoryPath) {
+                $this->factoryMuffin->loadFactories(realpath(codecept_root_dir() . $factoryPath));
                 $realpath = realpath(codecept_root_dir().$factoryPath);
                 if ($realpath === false) {
-                    throw new \Exception('The path to one of your factories is not correct. Please specify the directory relative to the codeception.yml file (ie. _support/factories).');
+                    throw new ModuleException('The path to one of your factories is not correct. Please specify the directory relative to the codeception.yml file (ie. _support/factories).');
                 }
-                $this->factoryMuffin->loadFactories($realpath);
+                $this->factoryMuffin->loadFactories($realpath);                
             }
         }
     }
