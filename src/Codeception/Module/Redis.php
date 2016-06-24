@@ -66,6 +66,9 @@ class Redis extends CodeceptionModule
      */
     public function _initialize()
     {
+        if (!class_exists('Predis\Client')) {
+            throw new ModuleException($this, 'This module requires Predis library to be installed. Please add "predis/predis": "^1.0" to composer.json');
+        }
         try {
             $this->driver = new RedisDriver([
                 'host'     => $this->config['host'],
