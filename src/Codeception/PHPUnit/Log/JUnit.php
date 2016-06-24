@@ -2,6 +2,7 @@
 namespace Codeception\PHPUnit\Log;
 
 use Codeception\Configuration;
+use Codeception\Test\Gherkin;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Test;
 
@@ -38,6 +39,14 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
                 $numAssertions
             );
         }
+
+        if ($test instanceof Gherkin) {
+            $this->currentTestCase->setAttribute(
+                'name',
+                $test->getName() . ':' . $test->getMetadata()->getFeature()
+            );
+        }
+
         parent::endTest($test, $time);
     }
 }
