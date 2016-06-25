@@ -10,9 +10,10 @@ use Codeception\Lib\Di;
 use Codeception\Scenario;
 use Codeception\Step\Comment;
 use Codeception\Step\Meta;
+use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Interfaces\ScenarioDriven;
 
-class Gherkin extends Test implements ScenarioDriven
+class Gherkin extends Test implements ScenarioDriven, Reported
 {
     protected $steps = [];
 
@@ -189,5 +190,19 @@ class Gherkin extends Test implements ScenarioDriven
     public function getFeatureNode()
     {
         return $this->featureNode;
+    }
+
+    /**
+     * Field values for XML/JSON/TAP reports
+     *
+     * @return array
+     */
+    public function getReportFields()
+    {
+        return [
+            'file'    => $this->getFileName(),
+            'name'    => $this->toString(),
+            'feature' => $this->getFeature()
+        ];
     }
 }
