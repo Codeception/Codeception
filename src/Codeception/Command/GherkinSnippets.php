@@ -18,6 +18,7 @@ class GherkinSnippets extends Command
         $this->setDefinition(
             [
                 new InputArgument('suite', InputArgument::REQUIRED, 'suite to scan for feature files'),
+                new InputArgument('test', InputArgument::OPTIONAL, 'test to be scanned'),
                 new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
             ]
         );
@@ -33,9 +34,10 @@ class GherkinSnippets extends Command
     {
         $this->addStyles($output);
         $suite = $input->getArgument('suite');
+        $test = $input->getArgument('test');
         $config = $this->getSuiteConfig($suite, $input->getOption('config'));
 
-        $generator = new SnippetsGenerator($config);
+        $generator = new SnippetsGenerator($config, $test);
         $snippets = $generator->getSnippets();
 
         if (empty($snippets)) {

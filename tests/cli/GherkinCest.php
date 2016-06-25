@@ -24,4 +24,11 @@ class GherkinCest
         $I->seeInShellOutput('@Given I have only idea of what\'s going on here');
         $I->seeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
     }
+
+    public function snippetsScenario(CliGuy $I)
+    {
+        $I->executeCommand('gherkin:snippets scenario FileExamples.feature');
+        $I->dontSeeInShellOutput('@Given I have only idea of what\'s going on here');
+        $I->dontSeeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
+    }    
 }
