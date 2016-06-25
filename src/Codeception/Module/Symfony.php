@@ -448,6 +448,11 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     protected function getProfile()
     {
+        $container = $this->_getContainer();
+        if (!$container->has('profiler')) {
+            return null;
+        }
+
         $profiler = $this->grabService('profiler');
         $response = $this->client->getResponse();
         if (null === $response) {
