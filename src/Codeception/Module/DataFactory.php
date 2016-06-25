@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Module;
 
 use Codeception\Lib\Interfaces\DataMapper;
@@ -150,10 +149,10 @@ EOF;
     public function _beforeSuite($settings = [])
     {
         if (!class_exists('League\FactoryMuffin\FactoryMuffin')) {
-            throw new \Exception('FactoryMuffin not installed. Please add `"league/factory-muffin": "^3.0"` to composer.json');
+            throw new ModuleException($this, 'FactoryMuffin not installed. Please add `"league/factory-muffin": "^3.0"` to composer.json');
         }
         if (!class_exists('League\FactoryMuffin\Faker\Facade')) {
-            throw new \Exception('FactoryMuffin requires Faker integration. Please add `"league/factory-muffin-faker": "^1.0"` to composer.json');
+            throw new ModuleException($this, 'FactoryMuffin requires Faker integration. Please add `"league/factory-muffin-faker": "^1.0"` to composer.json');
         }
 
         $store = null;
@@ -167,7 +166,7 @@ EOF;
                 $this->factoryMuffin->loadFactories(realpath(codecept_root_dir() . $factoryPath));
                 $realpath = realpath(codecept_root_dir().$factoryPath);
                 if ($realpath === false) {
-                    throw new ModuleException('The path to one of your factories is not correct. Please specify the directory relative to the codeception.yml file (ie. _support/factories).');
+                    throw new ModuleException($this, 'The path to one of your factories is not correct. Please specify the directory relative to the codeception.yml file (ie. _support/factories).');
                 }
                 $this->factoryMuffin->loadFactories($realpath);                
             }
