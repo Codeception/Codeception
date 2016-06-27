@@ -17,9 +17,11 @@ use Codeception\Module as BaseModule;
  *
  * ## Status
  *
- * * Maintainer: **tiger-seo**
+ * [ ![Facebook Status for Codeception/Codeception](https://codeship.com/projects/e4bc90d0-1ed5-0134-566c-1ed679ae6c9d/status?branch=2.2)](https://codeship.com/projects/160201)
+ *
  * * Stability: **beta**
- * * Contact: tiger.seo@gmail.com
+ * * Maintainer: **tiger-seo**
+ * * Contact: tiger.seo@codeception.com
  *
  * ## Config
  *
