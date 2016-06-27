@@ -30,7 +30,7 @@ EOF;
         $loader = new Gherkin($settings);
         $pattern = $loader->getPattern();
         $path = $settings['path'];
-        if (empty($test) === false) {
+        if (!empty($test)) {
             if (preg_match($pattern, $test) == true) {
                 $pattern = $test;
             } else {
@@ -72,7 +72,7 @@ EOF;
                 if (!$matched) {
                     $this->addSnippet($step);
                     $file = str_ireplace($settings['path'], '', $test->getFeatureNode()->getFile());
-                    if( in_array($file, $this->features) === false ) {
+                    if (!in_array($file, $this->features)) {
                         $this->features[] = $file;
                     }
                 }
