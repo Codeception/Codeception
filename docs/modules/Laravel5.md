@@ -644,6 +644,20 @@ $I->dontSeeRecord('App\User', array('name' => 'davert'));
  * `[Part]` orm
 
 
+### dontSeeResponseCodeIs
+ 
+Checks that response code is equal to value provided.
+
+```php
+<?php
+$I->dontSeeResponseCodeIs(200);
+
+// recommended \Codeception\Util\HttpCode
+$I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+ * `param` $code
+
+
 ### enableExceptionHandling
  
 Enable Laravel exception handling.
@@ -767,8 +781,8 @@ $record = $I->grabRecord('App\User', array('name' => 'davert')); // returns Eloq
 
 ### grabService
  
-Return an instance of a class from the IoC Container.
-(http://laravel.com/docs/ioc)
+Return an instance of a class from the Laravel service container.
+(https://laravel.com/docs/master/container)
 
 ``` php
 <?php
@@ -817,6 +831,42 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
 __not documented__
 
 
+### haveBinding
+ 
+Add a binding to the Laravel service container.
+(https://laravel.com/docs/master/container)
+
+``` php
+<?php
+$I->haveBinding('My\Interface', 'My\Implementation');
+?>
+```
+
+ * `param` $abstract
+ * `param` $concrete
+
+
+### haveContextualBinding
+ 
+Add a contextual binding to the Laravel service container.
+(https://laravel.com/docs/master/container)
+
+``` php
+<?php
+$I->haveContextualBinding('My\Class', '$variable', 'value');
+
+// This is similar to the following in your Laravel application
+$app->when('My\Class')
+    ->needs('$variable')
+    ->give('value');
+?>
+```
+
+ * `param` $concrete
+ * `param` $abstract
+ * `param` $implementation
+
+
 ### haveHttpHeader
  
 Sets the HTTP header to the passed value - which is used on
@@ -833,6 +883,21 @@ $I->amOnPage('test-headers.php');
  * `param string` $name the name of the request header
  * `param string` $value the value to set it to for subsequent
        requests
+
+
+### haveInstance
+ 
+Add an instance binding to the Laravel service container.
+(https://laravel.com/docs/master/container)
+
+``` php
+<?php
+$I->haveInstance('My\Class', new My\Class());
+?>
+```
+
+ * `param` $abstract
+ * `param` $instance
 
 
 ### haveMultiple
@@ -856,6 +921,21 @@ $user = $I->haveRecord('App\User', array('name' => 'Davert')); // returns Eloque
  * `param array` $attributes
  * `return` integer|EloquentModel
  * `[Part]` orm
+
+
+### haveSingleton
+ 
+Add a singleton binding to the Laravel service container.
+(https://laravel.com/docs/master/container)
+
+``` php
+<?php
+$I->haveSingleton('My\Interface', 'My\Singleton');
+?>
+```
+
+ * `param` $abstract
+ * `param` $concrete
 
 
 ### logout
@@ -1305,8 +1385,15 @@ $I->seeRecord('App\User', array('name' => 'davert'));
  
 Checks that response code is equal to value provided.
 
- * `param` $code
+```php
+<?php
+$I->seeResponseCodeIs(200);
 
+// recommended \Codeception\Util\HttpCode
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+
+ * `param` $code
 
 
 ### seeSessionHasValues

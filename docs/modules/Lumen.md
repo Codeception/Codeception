@@ -526,6 +526,20 @@ $I->dontSeeRecord('App\User', array('name' => 'davert'));
  * `[Part]` orm
 
 
+### dontSeeResponseCodeIs
+ 
+Checks that response code is equal to value provided.
+
+```php
+<?php
+$I->dontSeeResponseCodeIs(200);
+
+// recommended \Codeception\Util\HttpCode
+$I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+ * `param` $code
+
+
 ### fillField
  
 Fills a text field or textarea with the given string.
@@ -1069,8 +1083,15 @@ $I->seeRecord('App\User', array('name' => 'davert'));
  
 Checks that response code is equal to value provided.
 
- * `param` $code
+```php
+<?php
+$I->seeResponseCodeIs(200);
 
+// recommended \Codeception\Util\HttpCode
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+
+ * `param` $code
 
 
 ### seeSessionHasValues
