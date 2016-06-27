@@ -121,13 +121,14 @@ class Unit extends \PHPUnit_Framework_TestCase implements
      */
     public function handleDependencies()
     {
-        if (empty($this->getDependencies())) {
+        $dependencies = $this->getDependencies();
+        if (empty($dependencies)) {
             return true;
         }
         $passed = $this->getTestResultObject()->passed();
         $dependencyInput = [];
 
-        foreach ($this->getDependencies() as $dependency) {
+        foreach ($dependencies as $dependency) {
             $dependency = str_replace(':', '::', $dependency); // Codeception => PHPUnit format
             if (strpos($dependency, '::') === false) {         // check it is method of same class
                 $dependency = get_class($this) . '::' . $dependency;
