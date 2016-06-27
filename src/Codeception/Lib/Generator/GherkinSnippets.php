@@ -31,10 +31,10 @@ EOF;
         $pattern = $loader->getPattern();
         $path = $settings['path'];
         if (!empty($test)) {
-            if (preg_match($pattern, $test) == true) {
-                $pattern = $test;
-            } else {
-                $path = $settings['path'].'/'.$test;
+            $path = $settings['path'].'/'.$test;
+            if (preg_match($pattern, $test)) {
+                $path = dirname($path);
+                $pattern = basename($test);
             }
         }
 
