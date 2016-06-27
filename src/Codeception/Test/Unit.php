@@ -128,7 +128,6 @@ class Unit extends \PHPUnit_Framework_TestCase implements
         $dependencyInput = [];
 
         foreach ($this->getDependencies() as $dependency) {
-
             $dependency = str_replace(':', '::', $dependency); // Codeception => PHPUnit format
             if (strpos($dependency, '::') === false) {         // check it is method of same class
                 $dependency = get_class($this) . '::' . $dependency;
