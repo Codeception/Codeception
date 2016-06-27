@@ -99,6 +99,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testSeePostOnFacebookWithAttachedPlace()
     {
+        $this->markTestSkipped('Broken due to data changes');
         $this->checkPublishPermissions();
 
         // precondition #1: I have facebook user
