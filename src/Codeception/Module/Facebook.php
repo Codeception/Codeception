@@ -286,7 +286,9 @@ EOF;
      */
     public function seePostOnFacebookWithAttachedPlace($placeId)
     {
-        $place = $this->facebook->getVisitedPlaceTagForTestUser($placeId, $this->grabFacebookTestUserAccessToken());
+        $token = $this->grabFacebookTestUserAccessToken();
+        $this->debugSection('Access Token', $token);
+        $place = $this->facebook->getVisitedPlaceTagForTestUser($placeId, $token);
         $this->assertEquals($placeId, $place['id'], "The place was not found on facebook page");
     }
 
