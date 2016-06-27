@@ -99,14 +99,13 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testSeePostOnFacebookWithAttachedPlace()
     {
-        $this->markTestSkipped('Broken due to data changes');
         $this->checkPublishPermissions();
 
         // precondition #1: I have facebook user
         $this->module->haveFacebookTestUserAccount();
 
         // precondition #2: I have published the post with place attached
-        $params = array('place' => '169265636469281'); //
+        $params = array('place' => '104644666320765'); //
         $this->module->postToFacebookAsTestUser($params);
 
         // assert that post was published in the facebook and place is the same
