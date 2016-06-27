@@ -9,6 +9,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Prints all steps from all Gherkin contexts for a specific suite
+ *
+ * ```
+ * codecept gherkin:steps acceptance
+ * ```
+ *
+ */
 class GherkinSteps extends Command
 {
     use Shared\Config;
