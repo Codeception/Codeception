@@ -105,7 +105,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module->haveFacebookTestUserAccount();
 
         // precondition #2: I have published the post with place attached
-        $params = array('place' => '104644666320765'); //
+        $params = array('place' => '111227078906045'); //
         $this->module->postToFacebookAsTestUser($params);
 
         // assert that post was published in the facebook and place is the same
