@@ -14,9 +14,14 @@ class MessageFactory
      */
     protected $diffFactory;
     /**
-     * @var OutputInterface
+     * @var Output
      */
     private $output;
+
+    /**
+     * @var Colorizer
+     */
+    protected $colorizer;
 
     /**
      * MessageFactory constructor.
