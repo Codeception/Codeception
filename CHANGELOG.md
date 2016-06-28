@@ -2,8 +2,27 @@
 
 #### 2.2.2
 
+* Parameters can be applied to global `codeception.yml` config. See #3255 Thanks to @LeRondPoint
+* Fixed loading of parameters from `.env.*` files. See #3224. By @smotesko
+* Better diff messages by @k0pernikus
+* [WebDriver][PhpBrowser][Frameworks] Fixed created files on failure. Fixes #3207
+* [Frameworks][PhpBrowser] Adjacent forms submit improvements by @dizzy7. Fixes #2331
+* [WebDriver] Fixed adjacent `selectOption` with similar options by @eXorus. Fixes #3246
+* [DataFactory] fixed loading factories from relative paths. Fixes #3208
+* *Test\Gherkin* Added JUnit reporter #3273
+* *Test\Unit* Dependencies can pass and receive values the same way as it is done in PHPUnit. Fixes #3213
+* [Symfony] Fixed failing tests when the profiler is disabled by @dizzy7. See #3223
+* [REST] Added `Codecepion\Util\HttpCode` util class with HTTP code constants. See [class reference](https://github.com/Codeception/Codeception/blob/2.2/docs/reference/HttpCode.md)
+* [REST] Support simple key-value format for file uploads. See #3244
+* Bugfix with duplicate instances in the modules container #3219 by @dizzy7
+* [REST] Added `deleteHeader` method by @Naktibalda. Fixes #3161
+* [Yii1] `init` part added to avoid conflicts with `WebDriver`
+* `generate:snippets` can accept second parameter to generate snippets from a specific file or folder.
+* [Db] Added `grabNumRecords` method by @tocsick. See #3175
+* Fixed group events fire twice #3112. By @jstaudenmaier
 * Improved Examples to be Traversable; Fixed console output for complex data structures.
 * [Laravel5] Added `haveBinding`, `haveSingleton`, `haveContextualBinding` and `haveInstance` methods. By @janhenkgerritsen. See #2904.
+* + changes from 2.1.11
 
 #### 2.2.1
 
@@ -51,8 +70,10 @@
 
 * [Yii1] Improved Yii connector. AR metadata is cleaned up between requests. `regenerateId` of session is disabled.
 * [REST][InnerBrowser] redirect is not triggered when Location header is set but response code is not 3xx. By @Naktibalda. Fixes #3171.
+* [PhpBrowser][Frameworks] checkboxes can be located by label by @dizzy7. See #3237
+* [PhpBrowser][Frameworks] field can be matched by its trimmed label value. See #3209. By @dizzy7
 * [WebDriver] fixed URL matching in WebDriver::seeLink
-* [WebDriver][InnerBrowser] Improved error messages of seeLink and dontSeeLink
+* [WebDriver][InnerBrowser] Improved error messages of `seeLink` and `dontSeeLink`
 
 #### 2.1.10
 
