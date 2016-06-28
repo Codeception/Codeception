@@ -2,6 +2,7 @@
 
 #### 2.2.2
 
+* [ZF2] Added services part which can be used to grabServiceFromContainer when conflicting module is used.
 * Improved Examples to be Traversable; Fixed console output for complex data structures.
 * [Laravel5] Added `haveBinding`, `haveSingleton`, `haveContextualBinding` and `haveInstance` methods. By @janhenkgerritsen. See #2904.
 
