@@ -4,7 +4,9 @@
 
 * Parameters can be applied to global `codeception.yml` config. See #3255 Thanks to @LeRondPoint
 * Fixed loading of parameters from `.env.*` files. See #3224. By @smotesko
-* Better diff messages by @k0pernikus
+* Better failure diff messages by @k0pernikus
+* UTF-8 improvements (replaced with custom `ucfirst`, `strtoupper` => `mb_strtoupper`) by @Naktibalda. See #3211
+* Print execution time of non-successful tests by @Naktibalda. Fixes #3274
 * [WebDriver][PhpBrowser][Frameworks] Fixed created files on failure. Fixes #3207
 * [Frameworks][PhpBrowser] Adjacent forms submit improvements by @dizzy7. Fixes #2331
 * [WebDriver] Fixed adjacent `selectOption` with similar options by @eXorus. Fixes #3246
@@ -20,7 +22,7 @@
 * `generate:snippets` can accept second parameter to generate snippets from a specific file or folder.
 * [Db] Added `grabNumRecords` method by @tocsick. See #3175
 * Fixed group events fire twice #3112. By @jstaudenmaier
-* [ZF2] Added services part which can be used to grabServiceFromContainer when conflicting module is used.
+* [ZF2] Added services part which can be used to `grabServiceFromContainer` when conflicting module is used by @Naktibalda.
 * Improved Examples to be Traversable; Fixed console output for complex data structures.
 * [Laravel5] Added `haveBinding`, `haveSingleton`, `haveContextualBinding` and `haveInstance` methods. By @janhenkgerritsen. See #2904.
 * + changes from 2.1.11
