@@ -25,7 +25,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
         $this->write("\n---------\n");
         $this->dispatcher->dispatch(
             Events::TEST_FAIL_PRINT,
-            new FailEvent($defect->failedTest(), $defect->thrownException(), $count)
+            new FailEvent($defect->failedTest(), null, $defect->thrownException(), $count)
         );
     }
 
