@@ -20,6 +20,7 @@
 * `generate:snippets` can accept second parameter to generate snippets from a specific file or folder.
 * [Db] Added `grabNumRecords` method by @tocsick. See #3175
 * Fixed group events fire twice #3112. By @jstaudenmaier
+* [ZF2] Added services part which can be used to grabServiceFromContainer when conflicting module is used.
 * Improved Examples to be Traversable; Fixed console output for complex data structures.
 * [Laravel5] Added `haveBinding`, `haveSingleton`, `haveContextualBinding` and `haveInstance` methods. By @janhenkgerritsen. See #2904.
 * + changes from 2.1.11
