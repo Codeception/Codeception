@@ -177,7 +177,7 @@ Tasks from `\Codeception\Task\SplitTestsByGroups` will generate non-intersecting
         $this->taskSplitTestFilesByGroups(5)
             ->projectRoot('.')
             ->testsFrom('tests/acceptance')
-            ->groupsTo('tests/_data/p')
+            ->groupsTo('tests/_data/paracept_')
             ->run();
             
         /*
@@ -185,64 +185,42 @@ Tasks from `\Codeception\Task\SplitTestsByGroups` will generate non-intersecting
         $this->taskSplitTestsByGroups(5)
             ->projectRoot('.')
             ->testsFrom('tests/acceptance')
-            ->groupsTo('tests/_data/p')
+            ->groupsTo('tests/_data/paracept_')
             ->run();
         */
     }    
 
 ```
 
-In second case `Codeception\TestLoader` class will be used and test classes will be loaded into memory.
-
 Let's prepare group files:
 
 ```bash
-$ robo parallel:split-tests
+$ ./vendor/bin/robo parallel:split-tests
 
  [Codeception\Task\SplitTestFilesByGroupsTask] Processing 33 files
- [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p1
- [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p2
- [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p3
- [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p4
- [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p5
+ [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_data/paracept_1
+ [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_data/paracept_2
+ [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_data/paracept_3
+ [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_data/paracept_4
+ [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_data/paracept_5
 ```
 
-Now we have group files. We should update `codeception.yml` to load generated group files. In our case we have groups: *p1*, *p2*, *p3*, *p4*, *p5*.
+Now we have group files. We should update `codeception.yml` to load generated group files. In our case we have groups: *paracept_1*, *paracept_2*, *paracept_3*, *paracept_4*, *paracept_5*.
 
 ```yaml
 groups:
-    p*: tests/_log/p*
+    paracept_*: tests/_data/paracept_*
 ```
 
 Let's try to execute tests from the second group:
 
 ```bash
-$ php codecept run functional -g p2
+$ ./vendor/bin/codecept run acceptance -g paracept_2
 ```
 
 #### Step 2: Running Tests
 
-As it was mentioned, Robo has `ParallelExec` task to spawn background processes. But you should not think of it as the only option. For instance, you can execute tests remotely via SSH, or spawn processes with Gearman, RabbitMQ, etc. But in our example we will use 5 background processes:
-
-```php
-<?php
-    function parallelRun()
-    {
-        $parallel = $this->taskParallelExec();
-        for ($i = 1; $i <= 5; $i++) {            
-            $parallel->process(
-                $this->taskCodecept() // use built-in Codecept task
-                ->suite('acceptance') // run acceptance tests
-                ->group("p$i")        // for all p* groups
-                ->xml("tests/_log/result_$i.xml") // save XML results
-            );
-        }
-        return $parallel->run();
-    }
-    
-```
-
-We missed something really important. We forgot to define different databases for different processes. This can be done using [Environments](http://codeception.com/docs/07-AdvancedUsage#Environments). Let's define 5 new environments in `acceptance.suite.yml`:
+We can define different databases for different processes. This can be done using [Environments](http://codeception.com/docs/07-AdvancedUsage#Environments). Let's define 5 new environments in `acceptance.suite.yml`:
 
 ```yaml
 class_name: AcceptanceTester
@@ -258,35 +236,35 @@ modules:
         WebDriver:
             url: 'http://localhost/'
 env:
-    p1:
+    env1:
         modules:
             config:
                 Db:
                     dsn: 'mysql:dbname=testdb_1;host=127.0.0.1' 
                 WebDriver:
                     url: 'http://test1.localhost/'
-    p2:
+    env2:
         modules:
             config:
                 Db:
                     dsn: 'mysql:dbname=testdb_2;host=127.0.0.1' 
                 WebDriver:
                     url: 'http://test2.localhost/'
-    p3:
+    env3:
         modules:
             config:
                 Db:
                     dsn: 'mysql:dbname=testdb_3;host=127.0.0.1' 
                 WebDriver:
                     url: 'http://test3.localhost/'
-    p4:
+    env4:
         modules:
             config:
                 Db:
                     dsn: 'mysql:dbname=testdb_4;host=127.0.0.1' 
                 WebDriver:
                     url: 'http://test4.localhost/'
-    p5:
+    env5:
         modules:
             config:
                 Db:
@@ -295,7 +273,7 @@ env:
                     url: 'http://test5.localhost/'
 ```
 
-Now, we should update our `parallelRun` method to use corresponding environment:
+As it was mentioned, Robo has `ParallelExec` task to spawn background processes. But you should not think of it as the only option. For instance, you can execute tests remotely via SSH, or spawn processes with Gearman, RabbitMQ, etc. But in our example we will use 5 background processes:
 
 ```php
 <?php
@@ -304,27 +282,28 @@ Now, we should update our `parallelRun` method to use corresponding environment:
         $parallel = $this->taskParallelExec();
         for ($i = 1; $i <= 5; $i++) {            
             $parallel->process(
-                $this->taskCodecept() // use built-in Codecept task
-                ->suite('acceptance') // run acceptance tests
-                ->group("p$i")        // for all p* groups
-                ->env("p$i")          // in its own environment
-                ->xml("tests/_log/result_$i.xml") // save XML results
-              );
+                $this->taskCodecept('./vendor/bin/codecept')
+                ->suite('acceptance')
+                ->group("paracept_$i")
+                ->env("env$i")
+                ->xml("result_paracept_$i.xml")
+            );
         }
         return $parallel->run();
     }
     
 ```
 
+
 Now, we can execute tests with
 
 ```bash
-$ robo parallel:run
+$ ./vendor/bin/robo parallel:run
 ```
 
 #### Step 3: Merge Results
 
-We should not rely on console output when running our tests. In case of `parallelExec` task, some text can be missed. We recommend to save results as JUnit XML, which can be merged and plugged into Continuous Integration server.
+In case of `parallelExec` task we recommend to save results as JUnit XML, which can be merged and plugged into Continuous Integration server.
 
 ```php
 <?php
@@ -332,15 +311,14 @@ We should not rely on console output when running our tests. In case of `paralle
     {
         $merge = $this->taskMergeXmlReports();
         for ($i=1; $i<=5; $i++) {
-            $merge->from("/tests/_log/result_$i.xml");
+            $merge->from("tests/_output/result_paracept_$i.xml");
         }
-        $merge->into("/tests/_log/result.xml")
-            ->run();
+        $merge->into("tests/_output/result_paracept.xml")->run();
     }
 
 ```
 
-`result.xml` file will be generated. It can be processed and analyzed.
+`result_paracept.xml` file will be generated. It can be processed and analyzed.
 
 #### All Together
 
