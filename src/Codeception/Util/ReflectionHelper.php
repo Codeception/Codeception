@@ -48,7 +48,7 @@ class ReflectionHelper
     }
 
     /**
-     * Returns class name without namesoace
+     * Returns class name without namespace
      *
      * (does not use reflection actually)
      *
