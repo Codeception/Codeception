@@ -12,6 +12,7 @@
 * [WebDriver] Fixed adjacent `selectOption` with similar options by @eXorus. Fixes #3246
 * [DataFactory] fixed loading factories from relative paths. Fixes #3208
 * *Test\Gherkin* Added JUnit reporter #3273
+* *Test\Gherkin* Added support for multiple languages by @dizzy7. See #3203
 * *Test\Unit* Dependencies can pass and receive values the same way as it is done in PHPUnit. Fixes #3213
 * [Symfony] Fixed failing tests when the profiler is disabled by @dizzy7. See #3223
 * [REST] Added `Codecepion\Util\HttpCode` util class with HTTP code constants. See [class reference](https://github.com/Codeception/Codeception/blob/2.2/docs/reference/HttpCode.md)
