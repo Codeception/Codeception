@@ -16,12 +16,30 @@ Uses `tests/application.config.php` config file by default.
 
 * config: relative path to config file (default: `tests/application.config.php`)
 
-## API
+## Public Properties
 
 * application -  instance of `\Zend\Mvc\ApplicationInterface`
 * db - instance of `\Zend\Db\Adapter\AdapterInterface`
 * client - BrowserKit client
 
+## Parts
+
+* services - allows to use grabServiceFromContainer with WebDriver or PhpBrowser modules.
+
+Usage example:
+
+```yaml
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - ZF2:
+            part: services
+        - Doctrine2:
+            depends: ZF2
+        - WebDriver:
+            url: http://your-url.com
+            browser: phantomjs
+```
 
 
 ## Actions
@@ -600,6 +618,7 @@ $em = $I->grabServiceFromContainer('Doctrine\ORM\EntityManager');
 ```
 
  * `param` $service
+ * `[Part]` services
 
 
 ### grabTextFrom

@@ -79,6 +79,14 @@ Do not forget that after adding module in your functional.suite.yml you must run
 
 ### Parts
 
+If you ever encounter error message:
+
+```
+Yii1 module conflicts with WebDriver
+```
+
+you should include Yii module partially, with `init` part only
+
 * `init`: only initializes module and not provides any actions from it. Can be used for unit/acceptance tests to avoid conflicts.
 
 ### Acceptance Testing Example:
