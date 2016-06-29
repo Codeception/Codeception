@@ -21,8 +21,8 @@ class RoboFile extends \Robo\Tasks
         $this->revertComposerJsonChanges();
         $this->publishPhar();
         $this->publishGit();
-        $this->versionBump();
         $this->publishBase();
+        $this->versionBump();
     }
 
     public function versionBump($version = '')
