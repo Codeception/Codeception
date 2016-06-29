@@ -830,6 +830,7 @@ class RoboFile extends \Robo\Tasks
         }
 
         $this->taskGitStack()
+            ->checkout('-- composer.json')
             ->checkout($branch)
             ->exec("branch -D $tempBranch")
             ->run();
