@@ -59,33 +59,40 @@ To conclude, we need:
 
 * [Robo](http://robo.li), a task runner.
 * [robo-paracept](https://github.com/Codeception/robo-paracept) - Codeception tasks for parallel execution.
+ 
+## Preparing Robo and Robo-paracept
+
+Execute this command in an empty folder to install Robo and Robo-paracept :
+```bash
+$ composer require codeception/robo-paracept:dev-master
+```
+
+You need to install Codeception after, if codeception is already installed it will not work.
+```bash
+$ composer require codeception/codeception
+```
+
 
 ### Preparing Robo
 
-`Robo` is recommended to be installed globally. You can either do [a global install with Composer](https://getcomposer.org/doc/03-cli.md#global) or download `robo.phar` and put it somewhere in PATH.
-
-Execute `robo` in the root of your project
+Intitalizes basic RoboFile in the root of your project
 
 ```bash
-$ robo
-  RoboFile.php not found in this dir
-  Should I create RoboFile here? (y/n)
+$ ./vendor/bin/robo init
 ```
 
-Confirm to create `RoboFile.php`.
+Open `RoboFile.php` to edit it
 
 ```php
 <?php
+
 class RoboFile extends \Robo\Tasks
 {
     // define public methods as commands
 }
-
 ```
 
-Install `codeception/robo-paracept` via Composer and include it into your RoboFile.
-
-Each public method in robofile can be executed as a command from console. Let's define commands for 3 steps.
+Each public method in robofile can be executed as a command from console. Let's define commands for 3 steps and include autoload.
 
 ```php
 <?php
@@ -111,22 +118,33 @@ class Robofile extends \Robo\Tasks
 
     }
 }
-
 ```
 
-If you run `robo`, you can see the respective commands:
+If you run `./vendor/bin/robo`, you can see the respective commands:
 
 ```bash
-$ robo
-Robo version 0.4.4
----
+$ ./vendor/bin/robo
+Robo version 0.6.0
+
+Usage:
+  command [options] [arguments]
+
+Options:
+  -h, --help            Display this help message
+  -q, --quiet           Do not output any message
+  -V, --version         Display this application version
+      --ansi            Force ANSI output
+      --no-ansi         Disable ANSI output
+  -n, --no-interaction  Do not ask any interactive question
+  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
 Available commands:
-  help                     Displays help 
-  list                     Lists commands
-parallel
-  parallel:merge-results   
-  parallel:run             
-  parallel:split-tests     
+  help                    Displays help for a command
+  list                    Lists commands
+ parallel
+  parallel:merge-results  
+  parallel:run            
+  parallel:split-tests   
 ```
 
 ### Sample Project
@@ -155,18 +173,21 @@ Tasks from `\Codeception\Task\SplitTestsByGroups` will generate non-intersecting
 <?php
     function parallelSplitTests()
     {
+        // Slip your tests by files
         $this->taskSplitTestFilesByGroups(5)
             ->projectRoot('.')
-            ->testsFrom('tests/functional')
-            ->groupsTo('tests/_log/p')
+            ->testsFrom('tests/acceptance')
+            ->groupsTo('tests/_data/p')
             ->run();
-
-        // alternatively
+            
+        /*
+        // Slip your tests by single tests (alternatively)
         $this->taskSplitTestsByGroups(5)
             ->projectRoot('.')
-            ->testsFrom('tests/functional')
-            ->groupsTo('tests/_log/p')
+            ->testsFrom('tests/acceptance')
+            ->groupsTo('tests/_data/p')
             ->run();
+        */
     }    
 
 ```
