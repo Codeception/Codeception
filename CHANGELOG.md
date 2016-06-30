@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.2.3
+
+* [REST] Allow objects in files array #3298
+* [ZendExpressive] allow instances of UploadedFile in files array
+
 #### 2.2.2
 
 * Parameters can be applied to global `codeception.yml` config. See #3255 Thanks to @LeRondPoint
