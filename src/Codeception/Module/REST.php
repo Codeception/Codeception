@@ -561,6 +561,11 @@ EOF;
                 } else {
                     $files[$name] = $this->formatFilesArray($value);
                 }
+            } elseif (is_object($value)) {
+                /**
+                 * do nothing, probably the user knows what he is doing
+                 * @issue https://github.com/Codeception/Codeception/issues/3298
+                 */
             } else {
                 throw new ModuleException(__CLASS__, "Invalid value of key $name in files array");
             }
