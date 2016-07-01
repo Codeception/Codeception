@@ -161,6 +161,17 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
     }
 
     /**
+     * Adds service to ZF2 container
+     * @param string $name
+     * @param object $service
+     * @part services
+     */
+    public function addServiceToContainer($name, $service)
+    {
+        $this->client->addServiceToContainer($name, $service);
+    }
+
+    /**
      * Opens web page using route name and parameters.
      *
      * ``` php

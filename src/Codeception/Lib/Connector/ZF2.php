@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Lib\Connector\ZF2\DoctrineServiceManager;
+use Codeception\Lib\Connector\ZF2\PersistentServiceManager;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
@@ -30,9 +30,9 @@ class ZF2 extends Client
     protected $zendRequest;
 
     /**
-     * @var DoctrineServiceManager
+     * @var PersistentServiceManager
      */
-    private $doctrineServiceManager;
+    private $persistentServiceManager;
 
     /**
      * @param array $applicationConfig
@@ -141,11 +141,24 @@ class ZF2 extends Client
             throw new \PHPUnit_Framework_AssertionFailedError("Service $service is not available in container");
         }
 
-        if ($service === 'Doctrine\ORM\EntityManager') {
-            $this->doctrineServiceManager = new DoctrineServiceManager($serviceManager);
+        if ($service === 'Doctrine\ORM\EntityManager' && !isset($this->persistentServiceManager)) {
+            $this->persistentServiceManager = new PersistentServiceManager($serviceManager);
         }
 
-        return  $serviceManager->get($service);
+        return $serviceManager->get($service);
+    }
+
+    public function addServiceToContainer($name, $service)
+    {
+        if (!isset($this->persistentServiceManager)) {
+            $serviceManager = $this->application->getServiceManager();
+            $this->persistentServiceManager = new PersistentServiceManager($serviceManager);
+            $serviceManager->addPeeringServiceManager($this->persistentServiceManager);
+            $serviceManager->setRetrieveFromPeeringManagerFirst(true);
+        }
+        $this->persistentServiceManager->setAllowOverride(true);
+        $this->persistentServiceManager->setService($name, $service);
+        $this->persistentServiceManager->setAllowOverride(false);
     }
 
     private function createApplication()
@@ -153,8 +166,8 @@ class ZF2 extends Client
         $this->application = Application::init($this->applicationConfig);
         $serviceManager = $this->application->getServiceManager();
 
-        if (isset($this->doctrineServiceManager)) {
-            $serviceManager->addPeeringServiceManager($this->doctrineServiceManager);
+        if (isset($this->persistentServiceManager)) {
+            $serviceManager->addPeeringServiceManager($this->persistentServiceManager);
             $serviceManager->setRetrieveFromPeeringManagerFirst(true);
         }
 
