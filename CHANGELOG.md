@@ -46,6 +46,7 @@
 * `codecept dry-run` command added to show scenario steps without executing them.
 * *Breaking* [Dbh] module removed
 * *Breaking* [Laravel4] module removed. See #2866
+* *Breaking* [Laravel5] Minimum supported Laravel version is 5.1. See [#3243](https://github.com/Codeception/Codeception/issues/3243#issuecomment-227078266)
 * *Breaking* [Laravel5] Removed `createModel` method, use `have` method instead. See #2866
 * *Breaking* [Laravel5] Removed `makeModel` method. See #2866
 * *Breaking* [Laravel5] Renamed `haveModel` method to `have`. See #2866
