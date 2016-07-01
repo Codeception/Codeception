@@ -2,7 +2,6 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\ZF2\DoctrineServiceManager;
-use GuzzleHttp\Psr7\Uri;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
@@ -139,7 +138,7 @@ class ZF2 extends Client
         $serviceManager = $this->application->getServiceManager();
 
         if (!$serviceManager->has($service)) {
-            $this->fail("Service $service is not available in container");
+            throw new \PHPUnit_Framework_AssertionFailedError("Service $service is not available in container");
         }
 
         if ($service === 'Doctrine\ORM\EntityManager') {
