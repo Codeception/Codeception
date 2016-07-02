@@ -94,27 +94,27 @@ use Codeception\TestInterface;
  * item value as a field value.
  *
  * Example:
- * ``` php
+ * ```php
  * <?php
  * $I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
  *
  * ```
  * Will generate:
  *
- * ``` sql
+ * ```sql
  * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
  * ```
  * New addition to 2.1.9 is ability to use LIKE in condition. It is achieved by adding ' like' to column name.
  *
  * Example:
- * ``` php
+ * ```php
  * <?php
  * $I->seeInDatabase('users', array('name' => 'Davert', 'email like' => 'davert%'));
  *
  * ```
  * Will generate:
  *
- * ``` sql
+ * ```sql
  * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` LIKE 'davert%'
  * ```
  * ## Public Properties
@@ -290,7 +290,7 @@ class Db extends CodeceptionModule implements DbInterface
     /**
      * Inserts an SQL record into a database. This record will be erased after the test.
      *
-     * ``` php
+     * ```php
      * <?php
      * $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
      * ?>
@@ -363,7 +363,7 @@ class Db extends CodeceptionModule implements DbInterface
     /**
      * Asserts that the given number of records were found in the database.
      *
-     * ``` php
+     * ```php
      * <?php
      * $I->seeNumRecords(1, 'users', ['name' => 'davert'])
      * ?>
