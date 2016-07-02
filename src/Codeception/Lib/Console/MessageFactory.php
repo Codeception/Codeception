@@ -49,10 +49,13 @@ class MessageFactory
      */
     public function prepareComparisonFailureMessage(ComparisonFailure $failure)
     {
+        $message = $this->message($failure->getMessage());
         $diff = $this->diffFactory->createDiff($failure);
+        if (!$diff) {
+            return $message;
+        }
         $diff = $this->colorizer->colorize($diff);
 
-        return $this->message($diff)
-            ->prepend("<comment>- Expected</comment> | <info>+ Actual</info>\n");
+        return $message->append("\n<comment>- Expected</comment> | <info>+ Actual</info>\n")->append($diff);
     }
 }
