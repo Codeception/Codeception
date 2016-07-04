@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * It should **not** be used for acceptance tests.
  * See the Acceptance tests section below for more details.
  *
+ * As of Codeception 2.2 this module only works for Laravel 5.1 and later releases.
+ * If you want to test a Laravel 5.0 application you have to use Codeception 2.1.
+ * You can also upgrade your Laravel application to 5.1, for more details check the Laravel Upgrade Guide at <https://laravel.com/docs/master/upgrade>.
+ *
  * ## Demo project
  * <https://github.com/janhenkgerritsen/codeception-laravel5-sample>
  *
