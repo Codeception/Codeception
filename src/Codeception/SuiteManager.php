@@ -125,8 +125,7 @@ class SuiteManager
 
         if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
             $groupDetails = [];
-            foreach ($groups as $group)
-            {
+            foreach ($groups as $group) {
                 $groupDetails[$group] = $test->getGroupDetails()['default'];
             }
             $test->setGroupDetails($groupDetails);
