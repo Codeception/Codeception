@@ -105,7 +105,8 @@ class GroupManager
             $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->getName(false)));
         }
         if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
-            if (!empty($test->testAt(0)) && $test->testAt(0) instanceof TestInterface) {
+            
+            if ($test->testAt(0) != false && $test->testAt(0) instanceof TestInterface) {
                 $groups = array_merge($groups, $test->testAt(0)->getMetadata()->getGroups());
                 $filename = Descriptor::getTestFileName($test->testAt(0));
             }
