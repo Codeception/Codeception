@@ -47,7 +47,8 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * * packages: `string`, default `workbench` - Root path of application packages (if any).
  * * disable_exception_handling: `boolean`, default `true` - disable Laravel exception handling
  * * disable_middleware: `boolean`, default `false` - disable all middleware.
- * * disable_events: `boolean`, default `false` - disable all events.
+ * * disable_events: `boolean`, default `false` - disable events (does not disable model events).
+ * * disable_model_events: `boolean`, default `false` - disable model events.
  * * url: `string`, default `` - The application URL.
  *
  * ## API
@@ -105,6 +106,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'disable_exception_handling' => true,
                 'disable_middleware' => false,
                 'disable_events' => false,
+                'disable_model_events' => false,
             ],
             (array)$config
         );
@@ -279,6 +281,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Disable events for the next requests.
+     * This method does not disable model events.
+     * To disable model events you have to use the disableModelEvents() method.
      *
      * ``` php
      * <?php
@@ -289,6 +293,20 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function disableEvents()
     {
         $this->client->disableEvents();
+    }
+
+    /**
+     * Disable model events for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->disableModelEvents();
+     * ?>
+     * ```
+     */
+    public function disableModelEvents()
+    {
+        $this->client->disableModelEvents();
     }
 
     /**

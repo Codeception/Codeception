@@ -2,6 +2,7 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\Laravel5\ExceptionHandlerDecorator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -46,6 +47,11 @@ class Laravel5 extends Client
     private $eventsDisabled;
 
     /**
+     * @var bool
+     */
+    private $modelEventsDisabled;
+
+    /**
      * @var array
      */
     private $bindings = [];
@@ -77,6 +83,7 @@ class Laravel5 extends Client
         $this->exceptionHandlingDisabled = $this->module->config['disable_exception_handling'];
         $this->middlewareDisabled = $this->module->config['disable_middleware'];
         $this->eventsDisabled = $this->module->config['disable_events'];
+        $this->modelEventsDisabled = $this->module->config['disable_model_events'];
 
         $this->initialize();
 
@@ -165,6 +172,10 @@ class Laravel5 extends Client
 
         if ($this->module->config['disable_events'] || $this->eventsDisabled) {
             $this->mockEventDispatcher();
+        }
+
+        if ($this->module->config['disable_model_events'] || $this->modelEventsDisabled) {
+            Model::unsetEventDispatcher();
         }
 
         $this->applyBindings();
@@ -315,6 +326,15 @@ class Laravel5 extends Client
     {
         $this->eventsDisabled = true;
         $this->mockEventDispatcher();
+    }
+
+    /**
+     * Disable model events.
+     */
+    public function disableModelEvents()
+    {
+        $this->modelEventsDisabled = true;
+        Model::unsetEventDispatcher();
     }
 
     /*
