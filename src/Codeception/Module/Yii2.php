@@ -92,7 +92,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if ($this->transaction && $this->config['cleanup']) {
             $this->transaction->rollback();
         }
-        
+
         \yii\web\UploadedFile::reset();
 
         if (Yii::$app) {
@@ -272,7 +272,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (Yii::$app->urlManager->enablePrettyUrl) {
             foreach (Yii::$app->urlManager->rules as $rule) {
                 /** @var \yii\web\UrlRule $rule */
-                if ($rule->host !== null) {
+                if (isset($rule->host)) {
                     $domains[] = $this->getDomainRegex($rule->host);
                 }
             }
