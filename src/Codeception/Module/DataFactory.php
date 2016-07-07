@@ -163,7 +163,6 @@ EOF;
 
         if ($this->config['factories']) {
             foreach ((array) $this->config['factories'] as $factoryPath) {
-                $this->factoryMuffin->loadFactories(realpath(codecept_root_dir() . $factoryPath));
                 $realpath = realpath(codecept_root_dir().$factoryPath);
                 if ($realpath === false) {
                     throw new ModuleException($this, 'The path to one of your factories is not correct. Please specify the directory relative to the codeception.yml file (ie. _support/factories).');
