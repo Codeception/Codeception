@@ -668,8 +668,10 @@ EOF;
      */
     public function seeResponseContainsJson($json = [])
     {
-    	\PHPUnit_Framework_Assert::assertThat($this->connectionModule->_getResponseContent(),
-            new JsonContains($json));
+        \PHPUnit_Framework_Assert::assertThat(
+            $this->connectionModule->_getResponseContent(),
+            new JsonContains($json)
+        );
     }
 
     /**
