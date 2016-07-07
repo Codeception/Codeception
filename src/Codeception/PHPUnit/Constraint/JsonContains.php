@@ -44,7 +44,8 @@ class JsonContains extends \PHPUnit_Framework_Constraint
         } catch (ComparisonFailure $failure) {
             throw new \PHPUnit_Framework_ExpectationFailedException(
                 "Response JSON does not contain the provided JSON\n",
-                $failure);
+                $failure
+            );
         }
     }
 
