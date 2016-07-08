@@ -88,7 +88,7 @@ class ZF2 extends Client
         $zendRequest->setHeaders($this->extractHeaders($request));
         $this->application->run();
 
-        // get the response *after* the application has run, because other ZF 
+        // get the response *after* the application has run, because other ZF
         //     libraries like API Agility may *replace* the application's response
         //
         $zendResponse = $this->application->getResponse();
