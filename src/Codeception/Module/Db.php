@@ -193,8 +193,12 @@ class Db extends CodeceptionModule implements DbInterface
                 . $this->config['dump']
             );
         }
+
         $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
+
+        // remove C-style comments (except MySQL directives)
         $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
+
         if (!empty($sql)) {
             $this->sql = explode("\n", $sql);
         }
