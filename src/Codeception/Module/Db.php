@@ -200,7 +200,8 @@ class Db extends CodeceptionModule implements DbInterface
         $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
 
         if (!empty($sql)) {
-            $this->sql = explode("\n", $sql);
+            // split SQL dump into lines
+            $this->sql = preg_split('/\r\n|\n|\r/', $sql, -1, PREG_SPLIT_NO_EMPTY);
         }
     }
 
