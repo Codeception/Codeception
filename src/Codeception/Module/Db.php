@@ -168,19 +168,7 @@ class Db extends CodeceptionModule implements DbInterface
     public function _initialize()
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
-            if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
-                throw new ModuleConfigException(
-                    __CLASS__,
-                    "\nFile with dump doesn't exist.\n"
-                    . "Please, check path for sql file: "
-                    . $this->config['dump']
-                );
-            }
-            $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
-            $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
-            if (!empty($sql)) {
-                $this->sql = explode("\n", $sql);
-            }
+            $this->readSql();
         }
 
         $this->connect();
@@ -192,6 +180,28 @@ class Db extends CodeceptionModule implements DbInterface
             }
             $this->loadDump();
             $this->populated = true;
+        }
+    }
+
+    private function readSql()
+    {
+        if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "\nFile with dump doesn't exist.\n"
+                . "Please, check path for sql file: "
+                . $this->config['dump']
+            );
+        }
+
+        $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
+
+        // remove C-style comments (except MySQL directives)
+        $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
+
+        if (!empty($sql)) {
+            // split SQL dump into lines
+            $this->sql = preg_split('/\r\n|\n|\r/', $sql, -1, PREG_SPLIT_NO_EMPTY);
         }
     }
 
