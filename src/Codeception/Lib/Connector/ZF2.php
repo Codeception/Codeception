@@ -53,9 +53,7 @@ class ZF2 extends Client
     {
         $this->createApplication();
         $zendRequest = $this->application->getRequest();
-        $zendResponse = $this->application->getResponse();
 
-        $zendResponse->setStatusCode(200);
         $uri = new HttpUri($request->getUri());
         $queryString = $uri->getQuery();
         $method = strtoupper($request->getMethod());
@@ -88,6 +86,11 @@ class ZF2 extends Client
         
         $zendRequest->setHeaders($this->extractHeaders($request));
         $this->application->run();
+
+        // get the response *after* the application has run, because other ZF
+        //     libraries like API Agility may *replace* the application's response
+        //
+        $zendResponse = $this->application->getResponse();
 
         $this->zendRequest = $zendRequest;
 
