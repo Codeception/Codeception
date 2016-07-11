@@ -4,6 +4,7 @@ namespace Codeception\Module;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
+use Codeception\PHPUnit\Constraint\JsonContains;
 use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Framework;
@@ -667,12 +668,9 @@ EOF;
      */
     public function seeResponseContainsJson($json = [])
     {
-        $jsonResponseArray = new JsonArray($this->connectionModule->_getResponseContent());
-        \PHPUnit_Framework_Assert::assertTrue(
-            $jsonResponseArray->containsArray($json),
-            "Response JSON does not contain the provided JSON\n"
-            . "- <info>" . var_export($json, true) . "</info>\n"
-            . "+ " . var_export($jsonResponseArray->toArray(), true)
+        \PHPUnit_Framework_Assert::assertThat(
+            $this->connectionModule->_getResponseContent(),
+            new JsonContains($json)
         );
     }
 

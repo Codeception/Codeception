@@ -4,7 +4,9 @@
 
 * [Laravel5] Added `disableModelEvents()` method and `disable_model_events` configuration option. Fixes #2897.
 * [REST] Allow objects in files array #3298
+* [ZF2] Added addServiceToContainer method
 * [ZendExpressive] allow instances of UploadedFile in files array
+* [ZF2] Added addServiceToContainer method
 
 #### 2.2.2
 
