@@ -24,6 +24,9 @@ class Page extends \PHPUnit_Framework_Constraint
      */
     protected function matches($other)
     {
+        $other = str_replace("\n", ' ', $other);
+        $other = trim(preg_replace('/\\s{2,}/', ' ', $other));
+
         return mb_stripos($other, $this->string, null, 'UTF-8') !== false;
     }
 
