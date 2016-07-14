@@ -363,6 +363,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('Nothing special', $form['name']);
     }
 
+    public function testTextFieldByLabelWithoutFor()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->fillField('Other label', 'Nothing special');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('Nothing special', $form['othername']);
+    }
+
     public function testFileFieldByCss()
     {
         $this->module->amOnPage('/form/file');
@@ -385,12 +394,14 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/form/checkbox');
         $this->module->dontSeeCheckboxIsChecked('#checkin');
+        $this->module->dontSeeCheckboxIsChecked('I Agree');
     }
 
     public function testSeeCheckboxChecked()
     {
         $this->module->amOnPage('/info');
         $this->module->seeCheckboxIsChecked('input[type=checkbox]');
+        $this->module->seeCheckboxIsChecked('Checked');
     }
 
     public function testSeeWithNonLatin()
@@ -1327,6 +1338,27 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertTrue(isset($data['second-field']));
         $this->assertFalse(isset($data['first-field']));
         $this->assertEquals('Killgore Trout', $data['second-field']);
+    }
+
+    public function testSubmitAdjacentFormsByButton()
+    {
+        $this->module->amOnPage('/form/submit_adjacentforms');
+        $this->module->fillField('first-field', 'First');
+        $this->module->fillField('second-field', 'Second');
+        $this->module->click('#submit1');
+        $data = data::get('form');
+        $this->assertTrue(isset($data['first-field']));
+        $this->assertFalse(isset($data['second-field']));
+        $this->assertEquals('First', $data['first-field']);
+
+        $this->module->amOnPage('/form/submit_adjacentforms');
+        $this->module->fillField('first-field', 'First');
+        $this->module->fillField('second-field', 'Second');
+        $this->module->click('#submit2');
+        $data = data::get('form');
+        $this->assertFalse(isset($data['first-field']));
+        $this->assertTrue(isset($data['second-field']));
+        $this->assertEquals('Second', $data['second-field']);
     }
 
     public function testArrayField()

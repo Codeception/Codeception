@@ -2,9 +2,12 @@
 
 #### 2.1.11
 
+* [Yii1] Improved Yii connector. AR metadata is cleaned up between requests. `regenerateId` of session is disabled.
 * [REST][InnerBrowser] redirect is not triggered when Location header is set but response code is not 3xx. By @Naktibalda. Fixes #3171.
+* [PhpBrowser][Frameworks] checkboxes can be located by label by @dizzy7. See #3237
+* [PhpBrowser][Frameworks] field can be matched by its trimmed label value. See #3209. By @dizzy7
 * [WebDriver] fixed URL matching in WebDriver::seeLink
-* [WebDriver][InnerBrowser] Improved error messages of seeLink and dontSeeLink
+* [WebDriver][InnerBrowser] Improved error messages of `seeLink` and `dontSeeLink`
 
 #### 2.1.10
 
