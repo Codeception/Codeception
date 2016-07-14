@@ -24,7 +24,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module = Stub::make('\Codeception\Module\REST');
         $this->module->_inject($connectionModule);
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
         $this->module->client->setServerParameters([
             'SCRIPT_FILENAME' => 'index.php',
             'SCRIPT_NAME' => 'index',
@@ -33,25 +33,30 @@ class RestTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    public function testConflictsWithAPI()
+    {
+        $this->assertInstanceOf('Codeception\Lib\Interfaces\ConflictsWithModule', $this->module);
+        $this->assertEquals('Codeception\Lib\Interfaces\API', $this->module->_conflicts());
+    }
+
     private function setStubResponse($response)
     {
         $connectionModule = Stub::make('\Codeception\Module\UniversalFramework', ['_getResponseContent' => $response]);
         $this->module->_inject($connectionModule);
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
     }
 
     public function testBeforeHookResetsVariables()
     {
         $this->module->haveHttpHeader('Origin', 'http://www.example.com');
         $this->module->sendGET('/rest/user/');
-        $this->assertEquals(
-            'http://www.example.com',
-            $this->module->client->getServerParameter('HTTP_ORIGIN')
-        );
-
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
-        $this->assertNull($this->module->client->getServerParameter('HTTP_ORIGIN', null));
+        $server = $this->module->client->getInternalRequest()->getServer();
+        $this->assertArrayHasKey('HTTP_ORIGIN', $server);
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
+        $this->module->sendGET('/rest/user/');
+        $server = $this->module->client->getInternalRequest()->getServer();
+        $this->assertArrayNotHasKey('HTTP_ORIGIN', $server);
     }
 
     public function testGet()

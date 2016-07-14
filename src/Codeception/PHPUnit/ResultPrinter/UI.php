@@ -3,7 +3,8 @@ namespace Codeception\PHPUnit\ResultPrinter;
 
 use Codeception\Event\FailEvent;
 use Codeception\Events;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class UI extends \PHPUnit_TextUI_ResultPrinter
@@ -15,7 +16,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
 
     public function __construct(EventDispatcher $dispatcher, $options, $out = null)
     {
-        parent::__construct($out, $options['verbosity'] > 1, $options['colors'] ? 'always' : 'never');
+        parent::__construct($out, $options['verbosity'] > OutputInterface::VERBOSITY_NORMAL, $options['colors'] ? 'always' : 'never');
         $this->dispatcher = $dispatcher;
     }
 
@@ -24,7 +25,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
         $this->write("\n---------\n");
         $this->dispatcher->dispatch(
             Events::TEST_FAIL_PRINT,
-            new FailEvent($defect->failedTest(), $defect->thrownException(), $count)
+            new FailEvent($defect->failedTest(), null, $defect->thrownException(), $count)
         );
     }
 
@@ -58,14 +59,14 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
 
     public function startTest(\PHPUnit_Framework_Test $test)
     {
-        if ($test instanceof Test) {
+        if ($test instanceof Unit) {
             parent::startTest($test);
         }
     }
 
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
-        if ($test instanceof \PHPUnit_Framework_TestCase) {
+        if ($test instanceof \PHPUnit_Framework_TestCase or $test instanceof \Codeception\Test\Test) {
             $this->numAssertions += $test->getNumAssertions();
         }
 

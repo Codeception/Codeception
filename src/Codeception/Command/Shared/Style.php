@@ -10,5 +10,9 @@ trait Style
     {
         $style = new OutputFormatterStyle('white', 'green', ['bold']);
         $output->getFormatter()->setStyle('notice', $style);
+        $style = new OutputFormatterStyle(null, null, ['bold']);
+        $output->getFormatter()->setStyle('bold', $style);
+        $style = new OutputFormatterStyle(null, 'yellow', ['bold']);
+        $output->getFormatter()->setStyle('warning', $style);
     }
 }

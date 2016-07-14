@@ -1,14 +1,19 @@
 <?php
+
+/**
+ * Class TestLoaderTest
+ * @group load
+ */
 class TestLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Codeception\Lib\TestLoader
+     * @var \Codeception\Test\Loader
      */
     protected $testLoader;
 
     protected function setUp()
     {
-        $this->testLoader = new \Codeception\Lib\TestLoader(\Codeception\Configuration::dataDir());
+        $this->testLoader = new \Codeception\Test\Loader(['path' => \Codeception\Configuration::dataDir()]);
     }
 
     /**
@@ -59,25 +64,23 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
         );
         Codeception\Util\Autoload::addNamespace('Codeception\Module', codecept_data_dir().'claypit/tests/_support');
 
-        $this->testLoader = new \Codeception\Lib\TestLoader(codecept_data_dir().'claypit/tests');
+        $this->testLoader = new \Codeception\Test\Loader(['path' => codecept_data_dir().'claypit/tests']);
         $this->testLoader->loadTests();
 
         $testNames = $this->getTestNames($this->testLoader->getTests());
 
-        $this->assertContainsTestName('order/AnotherCept', $testNames);
-        $this->assertContainsTestName('MageGuildCest::darkPower', $testNames);
-        $this->assertContainsTestName('FailingTest::testMe', $testNames);
-        $this->assertContainsTestName('MathCest::testAddition', $testNames);
-        $this->assertContainsTestName('MathTest::testAll', $testNames);
+        $this->assertContainsTestName('AnotherCept', $testNames);
+        $this->assertContainsTestName('MageGuildCest:darkPower', $testNames);
+        $this->assertContainsTestName('FailingTest:testMe', $testNames);
+        $this->assertContainsTestName('MathCest:testAddition', $testNames);
+        $this->assertContainsTestName('MathTest:testAll', $testNames);
     }
 
     protected function getTestNames($tests)
     {
         $testNames = [];
         foreach ($tests as $test) {
-            if ($test instanceof \PHPUnit_Framework_TestCase) {
-                $testNames[] = \Codeception\TestCase::getTestSignature($test);
-            }
+            $testNames[] = \Codeception\Test\Descriptor::getTestSignature($test);
         }
         return $testNames;
     }

@@ -1,0 +1,13 @@
+actor: RegisterCommand
+paths:
+    tests: tests
+    log: tests/_log
+    data: tests/_data
+    support: tests/_support
+settings:
+    bootstrap: _autoload.php
+    colors: false
+extensions:
+    commands:
+        - Project\Command\MyCustomCommand
+        - Project\Command\YourCustomCommand

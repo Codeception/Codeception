@@ -1,7 +1,23 @@
-
+# Asserts
 
 
 Special module for using asserts in your tests.
+
+
+## Actions
+
+### assertArrayHasKey
+ 
+ * `param` $key
+ * `param` $actual
+ * `param` $description
+
+
+### assertArrayNotHasKey
+ 
+ * `param` $key
+ * `param` $actual
+ * `param` $description
 
 
 ### assertContains
@@ -54,6 +70,13 @@ Checks if file doesn't exist
  * `param string` $message
 
 
+### assertGreaterOrEquals
+ 
+ * `param` $expected
+ * `param` $actual
+ * `param` $description
+
+
 ### assertGreaterThan
  
 Checks that actual is greater than expected
@@ -72,14 +95,31 @@ Checks that actual is greater or equal than expected
  * `param string` $message
 
 
-### assertGreaterThen
+### assertInstanceOf
  
- * `deprecated` 
+ * `param` $class
+ * `param` $actual
+ * `param` $description
 
 
-### assertGreaterThenOrEqual
+### assertInternalType
  
- * `deprecated` 
+ * `param` $type
+ * `param` $actual
+ * `param` $description
+
+
+### assertIsEmpty
+ 
+ * `param` $actual
+ * `param` $description
+
+
+### assertLessOrEquals
+ 
+ * `param` $expected
+ * `param` $actual
+ * `param` $description
 
 
 ### assertLessThan
@@ -124,6 +164,13 @@ Checks that two variables are not equal
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
+
+
+### assertNotInstanceOf
+ 
+ * `param` $class
+ * `param` $actual
+ * `param` $description
 
 
 ### assertNotNull
@@ -176,6 +223,7 @@ Checks that two variables are same
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
+ * `return` mixed|void
 
 
 ### assertTrue
@@ -186,10 +234,38 @@ Checks that condition is positive.
  * `param string` $message
 
 
+### expectException
+ 
+Handles and checks exception called inside callback function.
+Either exception class name or exception instance should be provided.
+
+```php
+<?php
+$I->expectException(MyException::class, function() {
+    $this->doSomethingBad();
+});
+
+$I->expectException(new MyException(), function() {
+    $this->doSomethingBad();
+});
+```
+If you want to check message or exception code, you can pass them with exception instance:
+```php
+<?php
+// will check that exception MyException is thrown with "Don't do bad things" message
+$I->expectException(new MyException("Don't do bad things"), function() {
+    $this->doSomethingBad();
+});
+```
+
+ * `param` $exception string or \Exception
+ * `param` $callback
+
+
 ### fail
  
 Fails the test with message.
 
  * `param` $message
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>

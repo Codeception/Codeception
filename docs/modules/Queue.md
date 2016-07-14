@@ -1,4 +1,4 @@
-
+# Queue
 
 
 
@@ -15,7 +15,7 @@ Supported and tested queue types are:
 
 The following dependencies are needed for the listed queue servers:
 
-* Beanstalkd: pda/pheanstalk ~2.0
+* Beanstalkd: pda/pheanstalk ~3.0
 * Amazon SQS: aws/aws-sdk-php
 * IronMQ: iron-io/iron_mq
 
@@ -42,6 +42,22 @@ service.
 * project - Iron.io project ID.
 * key - AWS access key ID.
 * secret - AWS secret access key.
+     Warning:
+         Hard-coding your credentials can be dangerous, because it is easy to accidentally commit your credentials
+         into an SCM repository, potentially exposing your credentials to more people than intended.
+         It can also make it difficult to rotate credentials in the future.
+* profile - AWS credential profile
+          - it should be located in ~/.aws/credentials file
+          - eg:  [default]
+                 aws_access_key_id = YOUR_AWS_ACCESS_KEY_ID
+                 aws_secret_access_key = YOUR_AWS_SECRET_ACCESS_KEY
+                 [project1]
+                 aws_access_key_id = YOUR_AWS_ACCESS_KEY_ID
+                 aws_secret_access_key = YOUR_AWS_SECRET_ACCESS_KEY
+         - Note: Using IAM roles is the preferred technique for providing credentials
+                 to applications running on Amazon EC2
+                 http://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html?highlight=credentials
+
 * region - A region parameter is also required for AWS, refer to the AWS documentation for possible values list.
 
 ### Example
@@ -78,7 +94,28 @@ service.
              'secret' => 'your-secret-key',
              'region' => 'us-west-2'
 
+#### Example AWS SQS using profile credentials
 
+    modules:
+       enabled: [Queue]
+       config:
+          Queue:
+             'type' => 'aws',
+             'profile' => 'project1', //see documentation
+             'region' => 'us-west-2'
+
+#### Example AWS SQS running on Anazon EC2 instance
+
+    modules:
+       enabled: [Queue]
+       config:
+          Queue:
+             'type' => 'aws',
+             'region' => 'us-west-2'
+
+
+
+## Actions
 
 ### addMessageToQueue
  
@@ -256,4 +293,4 @@ $I->seeQueueHasTotalCount('default', 10);
  * `param string` $queue Queue Name
  * `param int` $expected Number of messages expected
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Queue.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Queue.php">Help us to improve documentation. Edit module reference</a></div>

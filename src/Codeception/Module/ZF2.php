@@ -2,13 +2,13 @@
 namespace Codeception\Module;
 
 use Codeception\Lib\Framework;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Configuration;
 use Codeception\Lib\Interfaces\DoctrineProvider;
+use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Util\ReflectionHelper;
 use Zend\Console\Console;
 use Zend\EventManager\StaticEventManager;
-use Zend\Mvc\Application;
 use Zend\Version\Version;
 use Zend\View\Helper\Placeholder\Registry;
 use Codeception\Lib\Connector\ZF2 as ZF2Connector;
@@ -29,14 +29,32 @@ use Codeception\Lib\Connector\ZF2 as ZF2Connector;
  *
  * * config: relative path to config file (default: `tests/application.config.php`)
  *
- * ## API
+ * ## Public Properties
  *
  * * application -  instance of `\Zend\Mvc\ApplicationInterface`
  * * db - instance of `\Zend\Db\Adapter\AdapterInterface`
  * * client - BrowserKit client
  *
+ * ## Parts
+ *
+ * * services - allows to use grabServiceFromContainer with WebDriver or PhpBrowser modules.
+ *
+ * Usage example:
+ *
+ * ```yaml
+ * class_name: AcceptanceTester
+ * modules:
+ *     enabled:
+ *         - ZF2:
+ *             part: services
+ *         - Doctrine2:
+ *             depends: ZF2
+ *         - WebDriver:
+ *             url: http://your-url.com
+ *             browser: phantomjs
+ * ```
  */
-class ZF2 extends Framework implements DoctrineProvider
+class ZF2 extends Framework implements DoctrineProvider, PartedModule
 {
     protected $config = [
         'config' => 'tests/application.config.php',
@@ -82,14 +100,14 @@ class ZF2 extends Framework implements DoctrineProvider
         $this->client->setApplicationConfig($this->applicationConfig);
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = new ZF2Connector();
         $this->client->setApplicationConfig($this->applicationConfig);
         $_SERVER['REQUEST_URI'] = '';
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         $_SESSION = [];
         $_GET = [];
@@ -135,10 +153,22 @@ class ZF2 extends Framework implements DoctrineProvider
      *
      * @param $service
      * @return mixed
+     * @part services
      */
     public function grabServiceFromContainer($service)
     {
         return $this->client->grabServiceFromContainer($service);
+    }
+
+    /**
+     * Adds service to ZF2 container
+     * @param string $name
+     * @param object $service
+     * @part services
+     */
+    public function addServiceToContainer($name, $service)
+    {
+        $this->client->addServiceToContainer($name, $service);
     }
 
     /**
@@ -216,5 +246,10 @@ class ZF2 extends Framework implements DoctrineProvider
     {
         $regex = ReflectionHelper::readPrivateProperty($route, 'regex');
         $this->domainCollector []= '/^' . $regex . '$/';
+    }
+
+    public function _parts()
+    {
+        return ['services'];
     }
 }

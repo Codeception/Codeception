@@ -106,7 +106,7 @@ class RunCest
     {
         $I->wantTo('try the reporting mode');
         $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
-        $I->seeInShellOutput('✔ check config exists (FileExistsCept)');
+        $I->seeInShellOutput('FileExistsCept: Check config exists');
         $I->dontSeeInShellOutput('Ok');
     }
 
@@ -130,10 +130,10 @@ class RunCest
     {
         $I->executeCommand('run dummy');
         $I->seeInShellOutput('Optimistic');
-        $I->seeInShellOutput('Dummy Tests (5)');
+        $I->seeInShellOutput('Dummy Tests (6)');
         $I->executeCommand('run dummy --skip-group ok');
         $I->seeInShellOutput('Pessimistic');
-        $I->seeInShellOutput('Dummy Tests (4)');
+        $I->seeInShellOutput('Dummy Tests (5)');
         $I->dontSeeInShellOutput('Optimistic');
     }
 
@@ -141,7 +141,7 @@ class RunCest
     {
         $I->executeCommand('run skipped,dummy --no-exit');
         $I->seeInShellOutput("Skipped Tests (3)");
-        $I->seeInShellOutput("Dummy Tests (5)");
+        $I->seeInShellOutput("Dummy Tests (6)");
         $I->dontSeeInShellOutput("Remote Tests");
     }
 
@@ -160,36 +160,36 @@ class RunCest
     public function runOneTestFromUnit(\CliGuy $I)
     {
         $I->executeCommand('run tests/dummy/AnotherTest.php:testFirst');
-        $I->seeShellOutputMatches("~AnotherTest::testFirst\s*?Ok~");
-        $I->dontSeeInShellOutput('AnotherTest::testSecond');
+        $I->seeInShellOutput("AnotherTest: First");
+        $I->seeInShellOutput('OK');
+        $I->dontSeeInShellOutput('AnotherTest: Second');
     }
 
     public function runOneTestFromCest(\CliGuy $I)
     {
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic');
-        $I->seeShellOutputMatches("~\(AnotherCest::optimistic\)\s*?Ok~");
-        $I->dontSeeInShellOutput('AnotherCest::pessimistic');
+        $I->seeInShellOutput("Optimistic");
+        $I->dontSeeInShellOutput('Pessimistic');
     }
 
     public function runTestWithDataProviders(\CliGuy $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
-        $I->seeInShellOutput(
-            'Test is triangle | "real triangle" (DataProvidersTest::testIsTriangle)'
-        );
-        $I->seeInShellOutput('Test is triangle | #0 (DataProvidersTest::testIsTriangle)');
-        $I->seeInShellOutput('Test is triangle | #1 (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput('Is triangle | "real triangle"');
+        $I->seeInShellOutput('Is triangle | #0');
+        $I->seeInShellOutput('Is triangle | #1');
+        $I->seeInShellOutput('DataProvidersTest');
         $I->seeInShellOutput("OK");
     }
 
     public function runTestWithFailFast(\CliGuy $I)
     {
         $I->executeCommand('run unit --skip-group error --no-exit');
-        $I->seeInShellOutput('FailingTest::testMe');
-        $I->seeInShellOutput("PassingTest::testMe");
+        $I->seeInShellOutput('FailingTest: Me');
+        $I->seeInShellOutput("PassingTest: Me");
         $I->executeCommand('run unit --fail-fast --skip-group error --no-exit');
         $I->seeInShellOutput('There was 1 failure');
-        $I->dontSeeInShellOutput("PassingTest::testMe");
+        $I->dontSeeInShellOutput("PassingTest: Me");
     }
 
     public function runWithCustomOuptutPath(\CliGuy $I)
@@ -207,10 +207,10 @@ class RunCest
     public function runTestsWithDependencyInjections(\CliGuy $I)
     {
         $I->executeCommand('run math');
-        $I->seeInShellOutput('Test addition (MathCest::testAddition)');
-        $I->seeInShellOutput('Test subtraction (MathCest::testSubtraction)');
-        $I->seeInShellOutput('Test square (MathCest::testSquare)');
-        $I->seeInShellOutput('Test all (MathTest::testAll)');
+        $I->seeInShellOutput('MathCest: Test addition');
+        $I->seeInShellOutput('MathCest: Test subtraction');
+        $I->seeInShellOutput('MathCest: Test square');
+        $I->seeInShellOutput('MathTest: All');
         $I->seeInShellOutput('OK (');
         $I->dontSeeInShellOutput('fail');
         $I->dontSeeInShellOutput('error');
@@ -238,9 +238,9 @@ class RunCest
     {
         $I->executeCommand('run scenario SuccessCept --steps');
         $I->seeInShellOutput(<<<EOF
-Scenario:
-* I am in path "."
-* I see file found "scenario.suite.yml"
+Scenario --
+ I am in path "."
+ I see file found "scenario.suite.yml"
  PASSED
 EOF
         );
@@ -256,10 +256,12 @@ EOF
         }
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
         $I->seeInShellOutput(<<<EOF
-Fail when file is not found (FailedCept)
-Scenario:
-* I am in path "."
-* I see file found "games.zip"
+FailedCept: Fail when file is not found
+Signature: FailedCept
+Test: tests/scenario/FailedCept.php
+Scenario --
+ I am in path "."
+ I see file found "games.zip"
  FAIL
 EOF
         );
@@ -286,17 +288,114 @@ EOF
         $file = "codeception".DIRECTORY_SEPARATOR."c3";
         $I->executeCommand('run scenario SubStepsCept --steps');
         $I->seeInShellOutput(<<<EOF
-Scenario:
-* I am in path "."
-* I see code coverage files are present
+Scenario --
+ I am in path "."
+ I see code coverage files are present
 EOF
         );
         // I split this assertion into two, because extra space is printed after "present" on HHVM
         $I->seeInShellOutput(<<<EOF
-  I see file found "c3.php"
-  I see file found "composer.json"
-  I see in this file "$file"
+   I see file found "c3.php"
+   I see file found "composer.json"
+   I see in this file "$file"
 EOF
         );
     }
+
+    public function runDependentCest(CliGuy $I)
+    {
+        $I->executeCommand('run order DependentCest --no-exit');
+        $I->seeInShellOutput('Skipped: 1');
+    }
+
+    public function runDependentTest(CliGuy $I)
+    {
+        $I->executeCommand('run unit DependsTest --no-exit');
+        $I->seeInShellOutput('Skipped: 1');
+        $I->executeCommand('run unit --no-exit');
+        $I->seeInShellOutput('Skipped: 2');
+    }
+
+    public function runGherkinTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario File.feature --steps');
+        $I->seeInShellOutput(<<<EOF
+ In order to test a feature
+ As a user
+ I need to be able to see output
+EOF
+        );
+        $I->seeInShellOutput('Given i have terminal opened');
+        $I->seeInShellOutput('When i am in current directory');
+        $I->seeInShellOutput('Then there is a file "scenario.suite.yml"');
+        $I->seeInShellOutput('And there are keywords in "scenario.suite.yml"');
+        $I->seeInShellOutput(<<<EOF
+   | class_name | ScenarioGuy |
+   | enabled    | Filesystem  |
+EOF
+        );
+        $I->seeInShellOutput('PASSED');
+    }
+
+    public function runIncompleteGherkinTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario File.feature -v');
+        $I->seeInShellOutput('OK, but incomplete');
+        $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
+    }
+
+    public function runGherkinScenarioOutline(CliGuy $I)
+    {
+        $I->executeCommand('run scenario FileExamples.feature -v');
+        $I->seeInShellOutput('OK (3 tests');
+    }
+
+
+    /**
+     * @param CliGuy $I
+     * @after checkExampleFiles
+     */
+    public function runTestWithAnnotationExamples(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ExamplesCest:filesExistsAnnotation --steps');
+    }
+
+    /**
+     * @param CliGuy $I
+     * @after checkExampleFiles
+     */
+    public function runTestWithJsonExamples(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ExamplesCest:filesExistsByJson --steps');
+    }
+
+    /**
+     * @param CliGuy $I
+     * @after checkExampleFiles
+     */
+    public function runTestWithArrayExamples(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ExamplesCest:filesExistsByArray --steps');
+    }
+
+    protected function checkExampleFiles(CliGuy $I)
+    {
+        $I->seeInShellOutput('OK (3 tests');
+        $I->seeInShellOutput('I see file found "scenario.suite.yml"');
+        $I->seeInShellOutput('I see file found "dummy.suite.yml"');
+        $I->seeInShellOutput('I see file found "unit.suite.yml"');
+    }
+
+    public function runTestWithComplexExample(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ExamplesCest:filesExistsComplexJson --debug');
+        $I->seeInShellOutput('Files exists complex json | {"path":"."');
+        $I->seeInShellOutput('OK (1 test');
+        $I->seeInShellOutput('I see file found "scenario.suite.yml"');
+        $I->seeInShellOutput('I see file found "dummy.suite.yml"');
+        $I->seeInShellOutput('I see file found "unit.suite.yml"');
+
+    }
+
+
 }

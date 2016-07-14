@@ -13,10 +13,7 @@ class ScenarioTest extends \PHPUnit_Framework_TestCase
             ->setMethods(null)
             ->getMock();
 
-        $scenario = $this->getMockBuilder('\Codeception\Scenario')
-            ->disableOriginalConstructor()
-            ->setMethods(null)
-            ->getMock();
+        $scenario = new \Codeception\Scenario(new \Codeception\Test\Cept('test','testCept.php'));
         $scenario->addStep($step1);
         $scenario->addStep($step2);
         $scenario->setFeature('Do some testing');

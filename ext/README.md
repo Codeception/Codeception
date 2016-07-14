@@ -47,7 +47,9 @@ extensions:
 #### Configuration
 
 * `delete_successful` (default: true) - delete records for successfully passed tests (log only failed and errored)
-* `module` (default: WebDriver) - which module for screenshots to use. Module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface. Currently only WebDriver or any its children can be used.
+* `module` (default: WebDriver) - which module for screenshots to use.
+Module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+Currently only WebDriver or any its children can be used.
 
 ``` yaml
 extensions:

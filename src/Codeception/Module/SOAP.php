@@ -1,15 +1,17 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Util\Soap as SoapUtils;
 use Codeception\Util\XmlStructure;
+use Codeception\Lib\Interfaces\API;
 
 /**
  * Module for testing SOAP WSDL web services.
@@ -40,8 +42,12 @@ use Codeception\Util\XmlStructure;
  * * xmlRequest - last SOAP request (DOMDocument)
  * * xmlResponse - last SOAP response (DOMDocument)
  *
+ * ## Conflicts
+ *
+ * Conflicts with REST module
+ *
  */
-class SOAP extends CodeceptionModule implements DependsOnModule
+class SOAP extends CodeceptionModule implements DependsOnModule, API, ConflictsWithModule
 {
     protected $config = [
         'schema' => "",
@@ -87,9 +93,16 @@ EOF;
      */
     protected $connectionModule;
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = &$this->connectionModule->client;
+        $this->buildRequest();
+        $this->xmlResponse = null;
+        $this->xmlStructure = null;
+    }
+
+    protected function onReconfigure()
+    {
         $this->buildRequest();
         $this->xmlResponse = null;
         $this->xmlStructure = null;
@@ -98,6 +111,11 @@ EOF;
     public function _depends()
     {
         return ['Codeception\Lib\InnerBrowser' => $this->dependencyMessage];
+    }
+
+    public function _conflicts()
+    {
+        return 'Codeception\Lib\Interfaces\API';
     }
 
     public function _inject(InnerBrowser $connectionModule)

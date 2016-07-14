@@ -1,5 +1,5 @@
 <tr>
- <td class="stepName" ><p onclick="showHide('{id}', this)">[+] {metaStep}</p>
+ <td class="stepName {error}" ><p onclick="showHide('{id}', this)"><span class="toggle">+</span> {metaStep}</p>
 
      </td>
 </tr>

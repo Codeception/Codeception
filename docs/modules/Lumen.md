@@ -1,4 +1,4 @@
-
+# Lumen
 
 
 
@@ -27,6 +27,8 @@ Please try it and leave your feedback.
 * client - `BrowserKit` client
 
 
+
+## Actions
 
 ### _findElements
 
@@ -252,6 +254,25 @@ $I->click(['link' => 'Login']);
 
  * `param` $link
  * `param` $context
+
+
+### deleteHeader
+ 
+Deletes the header with the passed name.  Subsequent requests
+will not have the deleted header in its request.
+
+Example:
+```php
+<?php
+$I->haveHttpHeader('X-Requested-With', 'Codeception');
+$I->amOnPage('test-headers.php');
+// ...
+$I->deleteHeader('X-Requested-With');
+$I->amOnPage('some-other-page.php');
+?>
+```
+
+ * `param string` $name the name of the header to delete.
 
 
 ### dontSee
@@ -491,15 +512,32 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 ### dontSeeRecord
  
 Checks that record does not exist in database.
+You can pass the name of a database table or the class name of an Eloquent model as the first argument.
 
 ``` php
 <?php
 $I->dontSeeRecord('users', array('name' => 'davert'));
+$I->dontSeeRecord('App\User', array('name' => 'davert'));
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
+ * `[Part]` orm
+
+
+### dontSeeResponseCodeIs
+ 
+Checks that response code is equal to value provided.
+
+```php
+<?php
+$I->dontSeeResponseCodeIs(200);
+
+// recommended \Codeception\Util\HttpCode
+$I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+ * `param` $code
 
 
 ### fillField
@@ -596,15 +634,20 @@ $aLinks = $I->grabMultiple('a', 'href');
 ### grabRecord
  
 Retrieves record from database
+If you pass the name of a database table as the first argument, this method returns an array.
+You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
 
 ``` php
 <?php
-$category = $I->grabRecord('users', array('name' => 'davert'));
+$record = $I->grabRecord('users', array('name' => 'davert')); // returns array
+$record = $I->grabRecord('App\User', array('name' => 'davert')); // returns Eloquent model
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
+ * `return` array|EloquentModel
+ * `[Part]` orm
 
 
 ### grabService
@@ -633,7 +676,8 @@ $service = $I->grabService('foo');
 ### grabTextFrom
  
 Finds and returns the text contents of the given element.
-If a fuzzy locator is used, the element is found using CSS, XPath, and by matching the full page source by regular expression.
+If a fuzzy locator is used, the element is found using CSS, XPath,
+and by matching the full page source by regular expression.
 
 ``` php
 <?php
@@ -654,18 +698,41 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  * `return` array|mixed|null|string
 
 
-### haveRecord
+### haveHttpHeader
  
-Inserts record into the database.
+Sets the HTTP header to the passed value - which is used on
+subsequent HTTP requests through PhpBrowser.
 
-``` php
+Example:
+```php
 <?php
-$user_id = $I->haveRecord('users', array('name' => 'Davert'));
+$I->setHeader('X-Requested-With', 'Codeception');
+$I->amOnPage('test-headers.php');
 ?>
 ```
 
- * `param` $tableName
+ * `param string` $name the name of the request header
+ * `param string` $value the value to set it to for subsequent
+       requests
+
+
+### haveRecord
+ 
+Inserts record into the database.
+If you pass the name of a database table as the first argument, this method returns an integer ID.
+You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
+
+``` php
+<?php
+$user_id = $I->haveRecord('users', array('name' => 'Davert')); // returns integer
+$user = $I->haveRecord('App\User', array('name' => 'Davert')); // returns Eloquent model
+?>
+```
+
+ * `param string` $table
  * `param array` $attributes
+ * `return` integer|EloquentModel
+ * `[Part]` orm
 
 
 ### logout
@@ -694,7 +761,7 @@ You can set additional cookie params like `domain`, `path` in array passed as la
  
 Checks that the current page contains the given string (case insensitive).
 
-You can specify a specific HTML element (via CSS or XPath) as the second 
+You can specify a specific HTML element (via CSS or XPath) as the second
 parameter to only search within that element.
 
 ``` php
@@ -998,21 +1065,33 @@ Asserts that current page has 404 response status code.
 ### seeRecord
  
 Checks that record exists in database.
+You can pass the name of a database table or the class name of an Eloquent model as the first argument.
 
 ``` php
+<?php
 $I->seeRecord('users', array('name' => 'davert'));
+$I->seeRecord('App\User', array('name' => 'davert'));
+?>
 ```
 
- * `param` $tableName
+ * `param string` $table
  * `param array` $attributes
+ * `[Part]` orm
 
 
 ### seeResponseCodeIs
  
 Checks that response code is equal to value provided.
 
- * `param` $code
+```php
+<?php
+$I->seeResponseCodeIs(200);
 
+// recommended \Codeception\Util\HttpCode
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+
+ * `param` $code
 
 
 ### seeSessionHasValues
@@ -1040,6 +1119,15 @@ Provide an array for the second argument to select multiple options:
 ``` php
 <?php
 $I->selectOption('Which OS do you use?', array('Windows','Linux'));
+?>
+```
+
+Or provide an associative array for the second argument to specifically define which selection method should be used:
+
+``` php
+<?php
+$I->selectOption('Which OS do you use?', array('text' => 'Windows')); // Only search by text 'Windows'
+$I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only search by value 'windows'
 ?>
 ```
 
@@ -1123,8 +1211,8 @@ Submits the given form on the page, optionally with the given form
 values.  Pass the form field's values as an array in the second
 parameter.
 
-Although this function can be used as a short-hand version of 
-`fillField()`, `selectOption()`, `click()` etc. it has some important 
+Although this function can be used as a short-hand version of
+`fillField()`, `selectOption()`, `click()` etc. it has some important
 differences:
 
  * Only field *names* may be used, not CSS/XPath selectors nor field labels
@@ -1134,7 +1222,7 @@ differences:
    like you would if you called `fillField()` or `selectOption()` with
    a missing field.
 
-Fields that are not provided will be filled by their values from the page, 
+Fields that are not provided will be filled by their values from the page,
 or from any previous calls to `fillField()`, `selectOption()` etc.
 You don't need to click the 'Submit' button afterwards.
 This command itself triggers the request to form's action.
@@ -1215,7 +1303,7 @@ $I->submitForm(
 );
 ```
 
-This function works well when paired with `seeInFormFields()` 
+This function works well when paired with `seeInFormFields()`
 for quickly testing CRUD interfaces and form validation logic.
 
 ``` php
@@ -1259,7 +1347,7 @@ $I->submitForm('#my-form', [
 Mixing string and boolean values for a checkbox's value is not supported
 and may produce unexpected results.
 
-Field names ending in `[]` must be passed without the trailing square 
+Field names ending in `[]` must be passed without the trailing square
 bracket characters, and must contain an array for its value.  This allows
 submitting multiple values with the same name, consider:
 
@@ -1320,4 +1408,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Lumen.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Lumen.php">Help us to improve documentation. Edit module reference</a></div>

@@ -8,4 +8,4 @@
 
 class_name: TestGuy
 modules:
-    enabled: [Filesystem, TestHelper]
+    enabled: [Filesystem, \Jazz\Pianist\TestHelper]

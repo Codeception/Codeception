@@ -2,11 +2,12 @@
 
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\API;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleRequireException;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 
 /**
  * Module for testing XMLRPC WebService.
@@ -40,7 +41,7 @@ use Codeception\TestCase;
  * @since 1.1.5
  * @author tiger.seo@gmail.com
  */
-class XMLRPC extends CodeceptionModule
+class XMLRPC extends CodeceptionModule implements API
 {
     protected $config = ['url' => ""];
 
@@ -62,7 +63,7 @@ class XMLRPC extends CodeceptionModule
         parent::_initialize();
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         if (!$this->client) {
             if (!strpos($this->config['url'], '://')) {

@@ -6,10 +6,6 @@ use Codeception\Step as CodeceptionStep;
 
 class Meta extends CodeceptionStep
 {
-    protected function storeCallerInfo()
-    {
-    }
-
     public function run(ModuleContainer $container = null)
     {
     }
@@ -20,8 +16,27 @@ class Meta extends CodeceptionStep
         $this->line = $line;
     }
 
-    public function setActor($actor)
+    public function setPrefix($actor)
     {
-        $this->actor = $actor;
+        $this->prefix = $actor;
+    }
+
+    public function getArgumentsAsString($maxLength = 200)
+    {
+        $argumentBackup = $this->arguments;
+        $lastArgAsString = '';
+        $lastArg = end($this->arguments);
+        if (is_string($lastArg) && strpos($lastArg, "\n")  !== false) {
+            $lastArgAsString = "\r\n   " . str_replace("\n", "\n   ", $lastArg);
+            array_pop($this->arguments);
+        }
+        $result = parent::getArgumentsAsString($maxLength) . $lastArgAsString;
+        $this->arguments = $argumentBackup;
+        return $result;
+    }
+
+    public function setFailed($failed)
+    {
+        $this->failed = $failed;
     }
 }

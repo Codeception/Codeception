@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Codecept
 {
-    const VERSION = "2.1.10";
+    const VERSION = "2.2.3";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -50,6 +50,7 @@ class Codecept
         'filter'        => null,
         'env'           => null,
         'fail-fast'     => false,
+        'ansi'          => true,
         'verbosity'     => 1,
         'interactive'   => true,
         'no-rebuild'    => false,
@@ -133,6 +134,7 @@ class Codecept
         // required
         $this->dispatcher->addSubscriber(new Subscriber\GracefulTermination());
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
+        $this->dispatcher->addSubscriber(new Subscriber\Dependencies());
         $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterTest());

@@ -1,4 +1,4 @@
-
+# Memcache
 
 
 Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
@@ -23,6 +23,8 @@ Be sure you don't use the production server to connect.
 * memcache - instance of Memcache object
 
 
+
+## Actions
 
 ### clearMemcache
  
@@ -60,4 +62,4 @@ Checks item in Memcached exists and the same as expected.
  * `param` $key
  * `param` $value
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Memcache.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Memcache.php">Help us to improve documentation. Edit module reference</a></div>

@@ -1,4 +1,4 @@
-
+# Db
 
 
 Works with SQL database.
@@ -25,18 +25,18 @@ Supported but not tested.
 * Oracle
 
 Connection is done by database Drivers, which are stored in the `Codeception\Lib\Driver` namespace.
-[Check out the drivers](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Lib/Driver) if you run into problems loading dumps and cleaning databases.
+[Check out the drivers](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Lib/Driver)
+if you run into problems loading dumps and cleaning databases.
 
 ## Status
 
-* Maintainer: **davert**
+* Maintainer: **Gintautas Miselis**
 * stability:
     - Mysql: **stable**
     - SQLite: **stable**
     - Postgres: **beta**
     - MSSQL: **alpha**
     - Oracle: **alpha**
-* Contact: codecept@davert.mail.ua
 
 *Please review the code of non-stable modules and provide patches if you have issues.*
 
@@ -50,7 +50,7 @@ Connection is done by database Drivers, which are stored in the `Codeception\Lib
 * cleanup: true - whether the dump should be reloaded after each test
 * reconnect: false - whether the module should reconnect to the database before each test
 
-### Example
+## Example
 
     modules:
        enabled:
@@ -63,12 +63,12 @@ Connection is done by database Drivers, which are stored in the `Codeception\Lib
              cleanup: false
              reconnect: true
 
-### SQL data dump
+## SQL data dump
 
  * Comments are permitted.
  * The `dump.sql` may contain multiline statements.
  * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
- 
+
 ```sql
 -- Add a few contacts to the table.
 REPLACE INTO `Contacts` (`created`, `modified`, `status`, `contact`, `first`, `last`) VALUES
@@ -78,12 +78,43 @@ REPLACE INTO `Contacts` (`created`, `modified`, `status`, `contact`, `first`, `l
 -- Remove existing orders for testing.
 DELETE FROM `Order`;
 ```
+## Query generation
 
+seeInDatabase, dontSeeInDatabase, seeNumRecords, grabFromDatabase and grabNumRecords methods
+accept arrays as criteria. WHERE condition is generated using item key as a field name and
+item value as a field value.
+
+Example:
+``` php
+<?php
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
+
+```
+Will generate:
+
+``` sql
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
+```
+New addition to 2.1.9 is ability to use LIKE in condition. It is achieved by adding ' like' to column name.
+
+Example:
+``` php
+<?php
+$I->seeInDatabase('users', array('name' => 'Davert', 'email like' => 'davert%'));
+
+```
+Will generate:
+
+``` sql
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` LIKE 'davert%'
+```
 ## Public Properties
 * dbh - contains the PDO connection
 * driver - contains the Connection Driver
 
 
+
+## Actions
 
 ### dontSeeInDatabase
  
@@ -92,21 +123,13 @@ Effect is opposite to ->seeInDatabase
 Asserts that there is no record with the given column values in a database.
 Provide table name and column values.
 
-Example:
-
 ``` php
 <?php
 $I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
-
-```
-Will generate:
-
-``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
 ```
 Fails if such user was found.
 
- * `param`       $table
+ * `param string` $table
  * `param array` $criteria
 
 
@@ -115,20 +138,25 @@ Fails if such user was found.
 Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
-Example:
-
 ``` php
 <?php
 $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
-
 ```
 
- * `Available since` 1.1
-
- * `param`       $table
- * `param`       $column
+ * `param string` $table
+ * `param string` $column
  * `param array` $criteria
 
+
+
+### grabNumRecords
+ 
+Returns the number of rows in a database
+
+ * `param string` $table    Table name
+ * `param array`  $criteria Search criteria [Optional]
+
+ * `return` int
 
 
 ### haveInDatabase
@@ -141,7 +169,7 @@ $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles * `davis.
 ?>
 ```
 
- * `param`       $table
+ * `param string` $table
  * `param array` $data
 
  * `return integer` $id
@@ -152,21 +180,13 @@ $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles * `davis.
 Asserts that a row with the given column values exists.
 Provide table name and column values.
 
-Example:
-
 ``` php
 <?php
 $I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
-
-```
-Will generate:
-
-``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
 ```
 Fails if no such user found.
 
- * `param`       $table
+ * `param string` $table
  * `param array` $criteria
 
 
@@ -180,8 +200,8 @@ $I->seeNumRecords(1, 'users', ['name' => 'davert'])
 ?>
 ```
 
- * `param int`    $expectedNumber      Expected number
- * `param string` $table    Table name
- * `param array`  $criteria Search criteria [Optional]
+ * `param int` $expectedNumber Expected number
+ * `param string` $table Table name
+ * `param array` $criteria Search criteria [Optional]
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Db.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Db.php">Help us to improve documentation. Edit module reference</a></div>

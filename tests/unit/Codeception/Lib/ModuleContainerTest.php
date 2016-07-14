@@ -5,6 +5,7 @@ use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Util\Stub;
 
+// @codingStandardsIgnoreFile
 class ModuleContainerTest extends \PHPUnit_Framework_TestCase
 {
     use \Codeception\Specify;
@@ -189,6 +190,64 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->moduleContainer->validateConflicts();
     }
 
+    public function testConflictsByWebInterface()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleConflictException');
+        $this->moduleContainer->create('Laravel5');
+        $this->moduleContainer->create('Symfony2');
+        $this->moduleContainer->validateConflicts();
+    }
+
+    public function testConflictsForREST()
+    {
+        $config = ['modules' =>
+            ['config' => [
+                'REST' => [
+                    'depends' => 'ZF1',
+                    ]
+                ]
+            ]
+        ];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('ZF1');
+        $this->moduleContainer->create('REST');
+        $this->moduleContainer->validateConflicts();
+    }
+
+    public function testConflictsOnDependentModules()
+    {
+        $config = ['modules' =>
+            ['config' => [
+                'WebDriver' => ['url' => 'localhost', 'browser' => 'firefox'],
+                'REST' => [
+                    'depends' => 'PhpBrowser',
+                    ]
+                ]
+            ]
+        ];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('WebDriver');
+        $this->moduleContainer->create('REST');
+        $this->moduleContainer->validateConflicts();
+    }
+
+
+    public function testNoConflictsForPartedModules()
+    {
+        $config = ['modules' =>
+            ['config' => [
+                'Laravel5' => [
+                    'part' => 'ORM',
+                    ]
+                ]
+            ]
+        ];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('Laravel5');
+        $this->moduleContainer->create('Symfony2');
+        $this->moduleContainer->validateConflicts();
+    }
+
     public function testModuleDependenciesFail()
     {
         $this->setExpectedException('Codeception\Exception\ModuleRequireException');
@@ -217,9 +276,10 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
             'config' => [
                 '\Codeception\Lib\PartedModule' => [
                     'part' => 'one'
+                    ]
                 ]
             ]
-        ]];
+        ];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('\Codeception\Lib\PartedModule');
         $actions = $this->moduleContainer->getActions();
@@ -233,9 +293,10 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
             'enabled' => ['\Codeception\Lib\PartedModule'],
             'config' => ['\Codeception\Lib\PartedModule' => [
                     'part' => ['Two']
+                    ]
                 ]
             ]
-        ]];
+        ];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('\Codeception\Lib\PartedModule');
         $actions = $this->moduleContainer->getActions();
@@ -245,11 +306,16 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
 
     public function testShortConfigParts()
     {
-        $config = ['modules' => [
-            'enabled' => [['\Codeception\Lib\PartedModule' => [
-                'part' => 'one'
-            ]]],
-        ]];
+        $config = [
+            'modules' => [
+                'enabled' => [
+                        ['\Codeception\Lib\PartedModule' => [
+                            'part' => 'one'
+                        ]
+                    ]
+                ],
+            ]
+        ];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('\Codeception\Lib\PartedModule');
         $actions = $this->moduleContainer->getActions();
@@ -260,12 +326,13 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
     public function testShortConfigFormat()
     {
         $config = [
-            'modules' => [
-                'enabled' => [
+            'modules' =>
+                ['enabled' => [
                     ['Codeception\Lib\StubModule' => [
                         'firstField' => 'firstValue',
                         'secondField' => 'secondValue',
-                    ]]
+                        ]
+                    ]
                 ]
             ]
         ];

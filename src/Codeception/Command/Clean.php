@@ -26,10 +26,6 @@ class Clean extends Command
 
     protected function configure()
     {
-        $this->setDefinition([
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-        ]);
-        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

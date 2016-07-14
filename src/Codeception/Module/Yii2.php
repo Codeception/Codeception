@@ -4,7 +4,7 @@ namespace Codeception\Module;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Framework;
 use Codeception\Configuration;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Lib\Connector\Yii2 as Yii2Connector;
@@ -63,7 +63,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         }
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = new Yii2Connector();
         $this->client->configFile = Configuration::projectDir().$this->config['configFile'];
@@ -81,7 +81,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         }
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(\Codeception\TestInterface $test)
     {
         $_SESSION = [];
         $_FILES = [];
@@ -92,7 +92,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if ($this->transaction && $this->config['cleanup']) {
             $this->transaction->rollback();
         }
-        
+
         \yii\web\UploadedFile::reset();
 
         if (Yii::$app) {
@@ -272,7 +272,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (Yii::$app->urlManager->enablePrettyUrl) {
             foreach (Yii::$app->urlManager->rules as $rule) {
                 /** @var \yii\web\UrlRule $rule */
-                if ($rule->host !== null) {
+                if (isset($rule->host)) {
                     $domains[] = $this->getDomainRegex($rule->host);
                 }
             }

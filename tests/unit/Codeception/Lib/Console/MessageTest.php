@@ -1,7 +1,8 @@
 <?php
 namespace Codeception\Lib\Console;
 
-class MessageTest extends \Codeception\TestCase\Test
+
+class MessageTest extends \Codeception\Test\Unit
 {
 
     // tests

@@ -24,8 +24,9 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module = Stub::make('\Codeception\Module\REST');
         $this->module->_inject($this->phpBrowser);
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
-        $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
+        $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
+
     }
 
     private function setStubResponse($response)
@@ -33,7 +34,7 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->phpBrowser = Stub::make('\Codeception\Module\PhpBrowser', ['_getResponseContent' => $response]);
         $this->module->_inject($this->phpBrowser);
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
     }
 
     public function testGet()
@@ -50,10 +51,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     {
         $this->module->sendGET('http://127.0.0.1:8010/rest/user/');
         $this->module->seeResponseCodeIs(200);
-        $this->assertEquals(
-            'http://127.0.0.1:8010/rest/user/',
-            $this->module->client->getHistory()->current()->getUri()
-        );
     }
 
     public function testPost()
@@ -164,10 +161,9 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
      * @Issue https://github.com/Codeception/Codeception/issues/2075
      * Client is undefined for the second test
      */
-    public function testTwoTests()
-    {
-        $cest1 = Stub::makeEmpty('\Codeception\TestCase\Cest');
-        $cest2 = Stub::makeEmpty('\Codeception\TestCase\Cest');
+    public function testTwoTests() {
+        $cest1 = Stub::makeEmpty('\Codeception\Test\Cest');
+        $cest2 = Stub::makeEmpty('\Codeception\Test\Cest');
 
         $this->module->sendGET('/rest/user/');
         $this->module->seeResponseIsJson();

@@ -7,7 +7,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\Db as DbInterface;
 use Codeception\Lib\Driver\Db as Driver;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 
 /**
  * Works with SQL database.
@@ -89,31 +89,32 @@ use Codeception\TestCase;
  * ```
  * ## Query generation
  *
- * seeInDatabase, dontSeeInDatabase, seeNumRecords and grabFromDatabase methods accept arrays as criteria.
- * WHERE condition is generated using item key as a field name and item value as a field value.
+ * seeInDatabase, dontSeeInDatabase, seeNumRecords, grabFromDatabase and grabNumRecords methods
+ * accept arrays as criteria. WHERE condition is generated using item key as a field name and
+ * item value as a field value.
  *
  * Example:
- * ``` php
+ * ```php
  * <?php
  * $I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
  *
  * ```
  * Will generate:
  *
- * ``` sql
+ * ```sql
  * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
  * ```
  * New addition to 2.1.9 is ability to use LIKE in condition. It is achieved by adding ' like' to column name.
  *
  * Example:
- * ``` php
+ * ```php
  * <?php
  * $I->seeInDatabase('users', array('name' => 'Davert', 'email like' => 'davert%'));
  *
  * ```
  * Will generate:
  *
- * ``` sql
+ * ```sql
  * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` LIKE 'davert%'
  * ```
  * ## Public Properties
@@ -167,19 +168,7 @@ class Db extends CodeceptionModule implements DbInterface
     public function _initialize()
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
-            if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
-                throw new ModuleConfigException(
-                    __CLASS__,
-                    "\nFile with dump doesn't exist.\n"
-                    . "Please, check path for sql file: "
-                    . $this->config['dump']
-                );
-            }
-            $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
-            $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
-            if (!empty($sql)) {
-                $this->sql = explode("\n", $sql);
-            }
+            $this->readSql();
         }
 
         $this->connect();
@@ -191,6 +180,28 @@ class Db extends CodeceptionModule implements DbInterface
             }
             $this->loadDump();
             $this->populated = true;
+        }
+    }
+
+    private function readSql()
+    {
+        if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "\nFile with dump doesn't exist.\n"
+                . "Please, check path for sql file: "
+                . $this->config['dump']
+            );
+        }
+
+        $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
+
+        // remove C-style comments (except MySQL directives)
+        $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
+
+        if (!empty($sql)) {
+            // split SQL dump into lines
+            $this->sql = preg_split('/\r\n|\n|\r/', $sql, -1, PREG_SPLIT_NO_EMPTY);
         }
     }
 
@@ -217,7 +228,7 @@ class Db extends CodeceptionModule implements DbInterface
         $this->driver = null;
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         if ($this->config['reconnect']) {
             $this->connect();
@@ -229,7 +240,7 @@ class Db extends CodeceptionModule implements DbInterface
         parent::_before($test);
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         $this->populated = false;
         $this->removeInserted();
@@ -289,7 +300,7 @@ class Db extends CodeceptionModule implements DbInterface
     /**
      * Inserts an SQL record into a database. This record will be erased after the test.
      *
-     * ``` php
+     * ```php
      * <?php
      * $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
      * ?>
@@ -362,7 +373,7 @@ class Db extends CodeceptionModule implements DbInterface
     /**
      * Asserts that the given number of records were found in the database.
      *
-     * ``` php
+     * ```php
      * <?php
      * $I->seeNumRecords(1, 'users', ['name' => 'davert'])
      * ?>
@@ -427,5 +438,18 @@ class Db extends CodeceptionModule implements DbInterface
     public function grabFromDatabase($table, $column, $criteria = [])
     {
         return $this->proceedSeeInDatabase($table, $column, $criteria);
+    }
+
+    /**
+     * Returns the number of rows in a database
+     *
+     * @param string $table    Table name
+     * @param array  $criteria Search criteria [Optional]
+     *
+     * @return int
+     */
+    public function grabNumRecords($table, array $criteria = [])
+    {
+        return $this->countInDatabase($table, $criteria);
     }
 }

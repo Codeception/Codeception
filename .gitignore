@@ -1,6 +1,5 @@
 .idea
 .roboci
-Dockerfile
 composer.phar
 composer.lock
 vendor
@@ -29,3 +28,4 @@ tests/data/included_w/src/foo/AcmePack/tests/_support/_generated/UnitTesterActio
 tests/data/params/tests/_support/_generated/DummyTesterActions.php
 .DS_Store
 robo.phar
+.env

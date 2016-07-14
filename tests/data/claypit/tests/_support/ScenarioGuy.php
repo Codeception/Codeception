@@ -20,10 +20,53 @@ class ScenarioGuy extends \Codeception\Actor
 {
     use _generated\ScenarioGuyActions;
 
-    function seeCodeCoverageFilesArePresent()
+    public function seeCodeCoverageFilesArePresent()
     {
         $this->seeFileFound('c3.php');
         $this->seeFileFound('composer.json');
         $this->seeInThisFile('codeception/c3');
+    }
+
+    /**
+     * @Given I have terminal opened
+     */
+    public function terminal()
+    {
+        $this->comment('I am terminal user!');
+    }
+
+    /**
+     * @When I am in current directory
+     */
+    public function openCurrentDir()
+    {
+        $this->amInPath('.');
+    }
+
+    /**
+     * @Given I am inside :dir
+     */
+    public function openDir($path)
+    {
+        $this->amInPath($path);
+    }
+
+    /**
+     * @Then there is a file :name
+     */
+    public function matchFile($name)
+    {
+        $this->seeFileFound($name);
+    }
+
+    /**
+     * @Then there are keywords in :smth
+     */
+    public function thereAreValues($file, \Behat\Gherkin\Node\TableNode $node)
+    {
+        $this->seeFileFound($file);
+        foreach ($node->getRows() as $row) {
+            $this->seeThisFileMatches('~' . implode('.*?', $row) . '~');
+        }
     }
 }

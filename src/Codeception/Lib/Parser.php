@@ -5,16 +5,25 @@ use Codeception\Configuration;
 use Codeception\Exception\TestParseException;
 use Codeception\Scenario;
 use Codeception\Step;
+use Codeception\Test\Metadata;
 use Codeception\Util\Annotation;
 
 class Parser
 {
+    /**
+     * @var Scenario
+     */
     protected $scenario;
+    /**
+     * @var Metadata
+     */
+    protected $metadata;
     protected $code;
 
-    public function __construct(Scenario $scenario)
+    public function __construct(Scenario $scenario, Metadata $metadata)
     {
         $this->scenario = $scenario;
+        $this->metadata = $metadata;
     }
 
     public function prepareToRun($code)
@@ -43,37 +52,23 @@ class Parser
     {
         $comments = $this->matchComments($code);
         $this->attachMetadata($comments);
-        
-        // deprecated - parsing $scenario->xxx calls
-        $metaData = ['group', 'env'];
-        $phpCode = $this->stripComments($code);
-        $scenario = $this->scenario;
-        $feature = $scenario->getFeature();
-        foreach ($metaData as $call) {
-            $res = preg_match_all("~\\\$scenario->$call.*?;~", $phpCode, $matches);
-            if (!$res) {
-                continue;
-            }
-            foreach ($matches[0] as $line) {
-                // run $scenario->group or $scenario->env
-                \Codeception\Lib\Notification::deprecate(
-                    "\$scenario->$call() is deprecated in favor of annotation: // @$call",
-                    $this->scenario->getFeature()
-                );
-                eval($line);
-            }
-        }
     }
 
     public function attachMetadata($comments)
     {
-        $annotations = ['group', 'env', 'skip', 'incomplete', 'ignore'];
-        foreach ($annotations as $annotation) {
-            $values = Annotation::fetchAllFromComment($annotation, $comments);
-            foreach ($values as $value) {
-                call_user_func([$this->scenario, $annotation], $value);
-            }
+        $this->metadata->setGroups(Annotation::fetchAllFromComment('group', $comments));
+        $this->metadata->setEnv(Annotation::fetchAllFromComment('env', $comments));
+        $this->metadata->setDependencies(Annotation::fetchAllFromComment('depends', $comments));
+        $this->metadata->setSkip($this->firstOrNull(Annotation::fetchAllFromComment('skip', $comments)));
+        $this->metadata->setIncomplete($this->firstOrNull(Annotation::fetchAllFromComment('incomplete', $comments)));
+    }
+
+    private function firstOrNull($array)
+    {
+        if (empty($array)) {
+            return null;
         }
+        return (string)$array[0];
     }
 
     public function parseSteps($code)

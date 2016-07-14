@@ -8,6 +8,7 @@ use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
+use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\PageSourceSaver;
@@ -19,7 +20,8 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
-use Codeception\TestCase;
+use Codeception\Test\Descriptor;
+use Codeception\TestInterface;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
@@ -212,6 +214,11 @@ use Symfony\Component\DomCrawler\Crawler;
  * 4. Throw an `ElementNotFound` exception.
  *
  * Be warned that fuzzy locators can be significantly slower than strict locators.
+ * Especially if you use Selenium WebDriver with `wait` (aka implicit wait) option.
+ * In the example above if you set `wait` to 5 seconds and use XPath string as fuzzy locator,
+ * `submitForm` method will wait for 5 seconds at each step.
+ * That means 5 seconds finding the form by ID, another 5 seconds finding by CSS
+ * until it finally tries to find the form by XPath).
  * If speed is a concern, it's recommended you stick with explicitly specifying the locator type via the array syntax.
  *
  * ## Public Properties
@@ -223,7 +230,6 @@ use Symfony\Component\DomCrawler\Crawler;
  * $this->getModule('WebDriver')->webDriver->getKeyboard()->sendKeys('hello, webdriver');
  * ```
  *
- * ## Methods
  */
 class WebDriver extends CodeceptionModule implements
     WebInterface,
@@ -232,7 +238,8 @@ class WebDriver extends CodeceptionModule implements
     SessionSnapshot,
     ScreenshotSaver,
     PageSourceSaver,
-    ElementLocator
+    ElementLocator,
+    ConflictsWithModule
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
@@ -304,11 +311,15 @@ class WebDriver extends CodeceptionModule implements
         return 'Codeception\Lib\Interfaces\Web';
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
+        $test->getMetadata()->setCurrent([
+            'browser' => $this->config['browser'],
+            'capabilities' => $this->config['capabilities']
+        ]);
     }
 
     protected function loadFirefoxProfile()
@@ -340,7 +351,7 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         if ($this->config['restart']) {
             $this->cleanWebDriver();
@@ -351,13 +362,13 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
-    public function _failed(TestCase $test, $fail)
+    public function _failed(TestInterface $test, $fail)
     {
         $this->debugWebDriverLogs();
-        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($test)) . '.fail';
+        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
-        $this->_saveScreenshot($outputDir . $filename . '.png');
-        $this->_savePageSource($outputDir . $filename . '.html');
+        $this->_saveScreenshot($outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
+        $this->_savePageSource($outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
         $this->debug("Screenshot and page source were saved into '$outputDir' dir");
     }
 
@@ -453,7 +464,7 @@ class WebDriver extends CodeceptionModule implements
         }
         return $this->config['url'];
     }
-    
+
     protected function getProxy()
     {
         $proxyConfig = [];
@@ -1059,25 +1070,30 @@ class WebDriver extends CodeceptionModule implements
 
         $matched = false;
 
-        foreach ($option as $opt) {
-            try {
-                $wdSelect->selectByVisibleText($opt);
-                $matched = true;
-            } catch (NoSuchElementException $e) {
-                // exception treated at the end
+        if (key($option) !== 'value') {
+            foreach ($option as $opt) {
+                try {
+                    $wdSelect->selectByVisibleText($opt);
+                    $matched = true;
+                } catch (NoSuchElementException $e) {
+                }
             }
         }
+
         if ($matched) {
             return;
         }
-        foreach ($option as $opt) {
-            try {
-                $wdSelect->selectByValue($opt);
-                $matched = true;
-            } catch (NoSuchElementException $e) {
-                // exception treated at the end
+
+        if (key($option) !== 'text') {
+            foreach ($option as $opt) {
+                try {
+                    $wdSelect->selectByValue($opt);
+                    $matched = true;
+                } catch (NoSuchElementException $e) {
+                }
             }
         }
+
         if ($matched) {
             return;
         }
@@ -1085,7 +1101,7 @@ class WebDriver extends CodeceptionModule implements
         // partially matching
         foreach ($option as $opt) {
             try {
-                $optElement = $el->findElement(WebDriverBy::xpath('//option [contains (., "' . $opt . '")]'));
+                $optElement = $el->findElement(WebDriverBy::xpath('.//option [contains (., "' . $opt . '")]'));
                 $matched = true;
                 if (!$optElement->isSelected()) {
                     $optElement->click();

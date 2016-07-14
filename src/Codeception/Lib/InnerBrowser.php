@@ -7,6 +7,7 @@ use Codeception\Exception\ExternalUrlException;
 use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
+use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Web;
@@ -14,20 +15,22 @@ use Codeception\Module;
 use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
 use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
-use Codeception\TestCase;
+use Codeception\Test\Descriptor;
+use Codeception\TestInterface;
+use Codeception\Util\HttpCode;
 use Codeception\Util\Locator;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Uri;
 use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\DomCrawler\Link;
 
-class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocator
+class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocator, ConflictsWithModule
 {
     /**
      * @var \Symfony\Component\DomCrawler\Crawler
@@ -45,29 +48,28 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     protected $forms = [];
 
+    public $headers = [];
+
     protected $defaultCookieParameters = ['expires' => null, 'path' => '/', 'domain' => '', 'secure' => false];
 
     protected $internalDomains = null;
 
-    public function _failed(TestCase $test, $fail)
+    public function _failed(TestInterface $test, $fail)
     {
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $this->_savePageSource(
-            codecept_output_dir().str_replace(
-                ['::', '\\', '/'],
-                ['.', '.', '.'],
-                TestCase::getTestSignature($test)
-            ) . '.fail.html'
-        );
+        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
+        $filename = mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html';
+        $this->_savePageSource(codecept_output_dir() . $filename);
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         $this->client = null;
         $this->crawler = null;
         $this->forms = [];
+        $this->headers = [];
     }
 
     public function _conflicts()
@@ -144,19 +146,28 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         return (string)$this->getRunningClient()->getInternalResponse()->getContent();
     }
 
-    protected function clientRequest(
-        $method,
-        $uri,
-        array $parameters = array(),
-        array $files = array(),
-        array $server = array(),
-        $content = null,
-        $changeHistory = true
-    ) {
+    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    {
+        $this->debugSection("Request Headers", $this->headers);
+
+        foreach ($this->headers as $header => $val) { // moved from REST module
+
+            if (!$val) {
+                continue;
+            }
+
+            $header = str_replace('-', '_', strtoupper($header));
+            $server["HTTP_$header"] = $val;
+
+            // Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
+            if ($this instanceof Framework && $header === 'CONTENT_TYPE') {
+                $server[$header] = $val;
+            }
+        }
+
         if ($this instanceof Framework) {
             if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
                 $hostname = parse_url($uri, PHP_URL_HOST);
-
                 if (!$this->isInternalDomain($hostname)) {
                     throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
                 }
@@ -171,17 +182,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
             $this->debugResponse($uri);
             return $result;
-        } else {
-            $maxRedirects = ReflectionHelper::readPrivateProperty(
-                $this->client,
-                'maxRedirects',
-                'Symfony\Component\BrowserKit\Client'
-            );
-            $this->client->followRedirects(false);
-            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse($uri);
-            return $this->redirectIfNecessary($result, $maxRedirects, 0);
         }
+
+        $maxRedirects = ReflectionHelper::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
+        $this->client->followRedirects(false);
+        $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        $this->debugResponse($uri);
+        return $this->redirectIfNecessary($result, $maxRedirects, 0);
     }
 
     protected function isInternalDomain($domain)
@@ -271,6 +278,49 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->client->setServerParameter('PHP_AUTH_PW', $password);
     }
 
+    /**
+     * Sets the HTTP header to the passed value - which is used on
+     * subsequent HTTP requests through PhpBrowser.
+     *
+     * Example:
+     * ```php
+     * <?php
+     * $I->setHeader('X-Requested-With', 'Codeception');
+     * $I->amOnPage('test-headers.php');
+     * ?>
+     * ```
+     *
+     * @param string $name the name of the request header
+     * @param string $value the value to set it to for subsequent
+     *        requests
+     */
+    public function haveHttpHeader($name, $value)
+    {
+        $this->headers[$name] = $value;
+    }
+
+    /**
+     * Deletes the header with the passed name.  Subsequent requests
+     * will not have the deleted header in its request.
+     *
+     * Example:
+     * ```php
+     * <?php
+     * $I->haveHttpHeader('X-Requested-With', 'Codeception');
+     * $I->amOnPage('test-headers.php');
+     * // ...
+     * $I->deleteHeader('X-Requested-With');
+     * $I->amOnPage('some-other-page.php');
+     * ?>
+     * ```
+     *
+     * @param string $name the name of the header to delete.
+     */
+    public function deleteHeader($name)
+    {
+        unset($this->headers[$name]);
+    }
+
 
     public function amOnPage($page)
     {
@@ -350,20 +400,22 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         if (!$selector) {
             $this->assertPageContains($text);
-        } else {
-            $nodes = $this->match($selector);
-            $this->assertDomContains($nodes, $this->stringifySelector($selector), $text);
+            return;
         }
+
+        $nodes = $this->match($selector);
+        $this->assertDomContains($nodes, $this->stringifySelector($selector), $text);
     }
 
     public function dontSee($text, $selector = null)
     {
         if (!$selector) {
             $this->assertPageNotContains($text);
-        } else {
-            $nodes = $this->match($selector);
-            $this->assertDomNotContains($nodes, $this->stringifySelector($selector), $text);
+            return;
         }
+
+        $nodes = $this->match($selector);
+        $this->assertDomNotContains($nodes, $this->stringifySelector($selector), $text);
     }
 
     public function seeInSource($raw)
@@ -461,13 +513,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeCheckboxIsChecked($checkbox)
     {
-        $checkboxes = $this->getCrawler()->filter($checkbox);
+        $checkboxes = $this->getFieldsByLabelOrCss($checkbox);
         $this->assertDomContains($checkboxes->filter('input[checked=checked]'), 'checkbox');
     }
 
     public function dontSeeCheckboxIsChecked($checkbox)
     {
-        $checkboxes = $this->getCrawler()->filter($checkbox);
+        $checkboxes = $this->getFieldsByLabelOrCss($checkbox);
         $this->assertEquals(0, $checkboxes->filter('input[checked=checked]')->count());
     }
 
@@ -750,11 +802,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$form) {
             $this->fail('The selected node is not a form and does not have a form ancestor.');
         }
-        $action = (string) $this->getFormUrl($form);
-        if (!isset($this->forms[$action])) {
-            $this->forms[$action] = $this->getFormFromCrawler($form, $action);
+        $action = (string)$this->getFormUrl($form);
+        $identifier = $form->attr('id') ?: $action;
+        if (!isset($this->forms[$identifier])) {
+            $this->forms[$identifier] = $this->getFormFromCrawler($form, $action);
         }
-        return $this->forms[$action];
+        return $this->forms[$identifier];
     }
 
     /**
@@ -817,11 +870,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
 
         // by label
-        $label = $this->strictMatch(['xpath' => sprintf('.//label[text()=%s]', Crawler::xpathLiteral($field))]);
+        $label = $this->strictMatch(['xpath' => sprintf('.//label[descendant-or-self::node()[text()[normalize-space()=%s]]]', Crawler::xpathLiteral($field))]);
         if (count($label)) {
             $label = $label->first();
             if ($label->attr('for')) {
                 $input = $this->strictMatch(['id' => $label->attr('for')]);
+            } else {
+                $input = $this->strictMatch(['xpath' => sprintf('.//label[descendant-or-self::node()[text()[normalize-space()=%s]]]//input', Crawler::xpathLiteral($field))]);
             }
         }
 
@@ -855,6 +910,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $fieldName = $this->getSubmissionFormFieldName($field->attr('name'));
 
         if (is_array($option)) {
+            if (!isset($option[0])) { // strict option locator
+                $form[$fieldName]->select($this->matchOption($field, $option));
+                codecept_debug($option);
+                return;
+            }
             $options = [];
             foreach ($option as $opt) {
                 $options[] = $this->matchOption($field, $opt);
@@ -885,11 +945,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected function matchOption(Crawler $field, $option)
     {
-        $options = $field->filterXPath(sprintf(
-            '//option[text()=normalize-space("%s")]|//input[@type="radio" and @value=normalize-space("%s")]',
-            $option,
-            $option
-        ));
+        if (isset($option['value'])) {
+            return $option['value'];
+        }
+        if (isset($option['text'])) {
+            $option = $option['text'];
+        }
+        $options = $field->filterXPath(sprintf('//option[text()=normalize-space("%s")]|//input[@type="radio" and @value=normalize-space("%s")]', $option, $option));
         if ($options->count()) {
             if ($options->getNode(0)->tagName === 'option') {
                 $options->getNode(0)->setAttribute('selected', 'selected');
@@ -1331,13 +1393,45 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     /**
      * Checks that response code is equal to value provided.
      *
-     * @param $code
+     * ```php
+     * <?php
+     * $I->seeResponseCodeIs(200);
      *
-     * @return mixed
+     * // recommended \Codeception\Util\HttpCode
+     * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+     * ```
+     *
+     * @param $code
      */
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->getResponseStatusCode());
+        $failureMessage = sprintf(
+            'Expected HTTP Status Code: %s. Actual Status Code: %s',
+            HttpCode::getDescription($code),
+            HttpCode::getDescription($this->getResponseStatusCode())
+        );
+        $this->assertEquals($code, $this->getResponseStatusCode(), $failureMessage);
+    }
+
+    /**
+     * Checks that response code is equal to value provided.
+     *
+     * ```php
+     * <?php
+     * $I->dontSeeResponseCodeIs(200);
+     *
+     * // recommended \Codeception\Util\HttpCode
+     * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+     * ```
+     * @param $code
+     */
+    public function dontSeeResponseCodeIs($code)
+    {
+        $failureMessage = sprintf(
+            'Expected HTTP status code other than %s',
+            HttpCode::getDescription($code)
+        );
+        $this->assertNotEquals($code, $this->getResponseStatusCode(), $failureMessage);
     }
 
     public function seeInTitle($title)

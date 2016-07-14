@@ -1,9 +1,12 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ModuleException;
+use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
-use Codeception\Exception\ModuleException as ModuleException;
+use Codeception\PHPUnit\Constraint\JsonContains;
+use Codeception\TestInterface;
+use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\DependsOnModule;
@@ -20,14 +23,6 @@ use Codeception\Util\Soap as XmlUtils;
  * This module can be used either with frameworks or PHPBrowser.
  * If a framework module is connected, the testing will occur in the application directly.
  * Otherwise, a PHPBrowser should be specified as a dependency to send requests and receive responses from a server.
- *
- *
- * ## Status
- *
- * * Maintainer: **tiger-seo**, **davert**
- * * Stability: **stable**
- * * Contact: codecept@davert.mail.ua
- * * Contact: tiger.seo@gmail.com
  *
  * ## Configuration
  *
@@ -49,17 +44,20 @@ use Codeception\Util\Soap as XmlUtils;
  * * params - array of sent data
  * * response - last response (string)
  *
- *
  * ## Parts
  *
  * * Json - actions for validating Json responses (no Xml responses)
  * * Xml - actions for validating XML responses (no Json responses)
  *
+ * ## Conflicts
+ *
+ * Conflicts with SOAP module
+ *
  */
-class REST extends CodeceptionModule implements DependsOnModule, PartedModule
+class REST extends CodeceptionModule implements DependsOnModule, PartedModule, API, ConflictsWithModule
 {
     protected $config = [
-        'url'           => '',
+        'url' => '',
         'xdebug_remote' => false
     ];
 
@@ -86,11 +84,10 @@ EOF;
      */
     protected $connectionModule;
 
-    public $headers = [];
     public $params = [];
     public $response = "";
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = &$this->connectionModule->client;
         $this->resetVariables();
@@ -107,12 +104,17 @@ EOF;
 
     protected function resetVariables()
     {
-        $this->headers = [];
         $this->params = [];
         $this->response = "";
+        $this->connectionModule->headers = [];
         if ($this->client) {
             $this->client->setServerParameters([]);
         }
+    }
+
+    public function _conflicts()
+    {
+        return 'Codeception\Lib\Interfaces\API';
     }
 
     public function _depends()
@@ -147,7 +149,14 @@ EOF;
     }
 
     /**
-     * Sets HTTP header
+     * Sets HTTP header valid for all next requests. Use `deleteHeader` to unset it
+     *
+     * ```php
+     * <?php
+     * $I->haveHttpHeader('Content-Type', 'application/json');
+     * // all next requests will contain this header
+     * ?>
+     * ```
      *
      * @param $name
      * @param $value
@@ -156,7 +165,29 @@ EOF;
      */
     public function haveHttpHeader($name, $value)
     {
-        $this->headers[$name] = $value;
+        $this->connectionModule->haveHttpHeader($name, $value);
+    }
+
+    /**
+     * Deletes the header with the passed name.  Subsequent requests
+     * will not have the deleted header in its request.
+     *
+     * Example:
+     * ```php
+     * <?php
+     * $I->haveHttpHeader('X-Requested-With', 'Codeception');
+     * $I->sendGET('test-headers.php');
+     * // ...
+     * $I->deleteHeader('X-Requested-With');
+     * $I->sendPOST('some-other-page.php');
+     * ?>
+     * ```
+     *
+     * @param string $name the name of the header to delete.
+     */
+    public function deleteHeader($name)
+    {
+        $this->connectionModule->deleteHeader($name);
     }
 
     /**
@@ -403,7 +434,7 @@ EOF;
             $values[] = $linkEntry['uri'] . '; ' . $linkEntry['link-param'];
         }
 
-        $this->headers['Link'] = join(', ', $values);
+        $this->haveHttpHeader('Link', implode(', ', $values));
     }
 
     /**
@@ -442,18 +473,6 @@ EOF;
 
     protected function execute($method, $url, $parameters = [], $files = [])
     {
-        $this->debugSection("Request headers", $this->headers);
-
-        foreach ($this->headers as $header => $val) {
-            $header = str_replace('-', '_', strtoupper($header));
-            $this->client->setServerParameter("HTTP_$header", $val);
-
-            // Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
-            if ($this->isFunctional && $header === 'CONTENT_TYPE') {
-                $this->client->setServerParameter($header, $val);
-            }
-        }
-
         // allow full url to be requested
         if (strpos($url, '://') === false) {
             $url = $this->config['url'] . $url;
@@ -474,35 +493,30 @@ EOF;
             }
             if ($method == 'GET') {
                 $this->debugSection("Request", "$method $url");
+                $files = [];
             } else {
                 $this->debugSection("Request", "$method $url " . json_encode($parameters));
+                $files = $this->formatFilesArray($files);
             }
-            $this->client->request($method, $url, $parameters, $files);
+            $this->response = (string)$this->connectionModule->_request($method, $url, $parameters, $files);
         } else {
             $requestData = $parameters;
             if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
                 // if the request data has non-printable bytes and it is not a valid unicode string, reformat the
                 // display string to signify the presence of request data
-                $requestData = '[binary-data length:'.strlen($requestData).' md5:'.md5($requestData).']';
+                $requestData = '[binary-data length:' . strlen($requestData) . ' md5:' . md5($requestData) . ']';
             }
             $this->debugSection("Request", "$method $url " . $requestData);
-            $this->client->request($method, $url, [], $files, [], $parameters);
+            $this->response = (string)$this->connectionModule->_request($method, $url, [], $files, [], $parameters);
         }
-        $this->response = (string)$this->connectionModule->_getResponseContent();
         $this->debugSection("Response", $this->response);
-
-        if (count($this->client->getInternalRequest()->getCookies())) {
-            $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
-        }
-        $this->debugSection("Headers", $this->client->getInternalResponse()->getHeaders());
-        $this->debugSection("Status", $this->client->getInternalResponse()->getStatus());
     }
 
     protected function encodeApplicationJson($method, $parameters)
     {
-        if ($method !== 'GET' && array_key_exists('Content-Type', $this->headers)
-            && ($this->headers['Content-Type'] === 'application/json'
-                || preg_match('!^application/.+\+json$!', $this->headers['Content-Type'])
+        if ($method !== 'GET' && array_key_exists('Content-Type', $this->connectionModule->headers)
+            && ($this->connectionModule->headers['Content-Type'] === 'application/json'
+                || preg_match('!^application/.+\+json$!', $this->connectionModule->headers['Content-Type'])
             )
         ) {
             if ($parameters instanceof \JsonSerializable) {
@@ -514,6 +528,72 @@ EOF;
             }
         }
         return $parameters;
+    }
+
+    private function formatFilesArray(array $files)
+    {
+        foreach ($files as $name => $value) {
+            if (is_string($value)) {
+                $this->checkFileBeforeUpload($value);
+
+                $files[$name] = [
+                    'name' => basename($value),
+                    'tmp_name' => $value,
+                    'size' => filesize($value),
+                    'type' => $this->getFileType($value),
+                    'error' => 0,
+                ];
+                continue;
+            } elseif (is_array($value)) {
+                if (isset($value['tmp_name'])) {
+                    $this->checkFileBeforeUpload($value['tmp_name']);
+                    if (!isset($value['name'])) {
+                        $value['name'] = basename($value);
+                    }
+                    if (!isset($value['size'])) {
+                        $value['size'] = filesize($value);
+                    }
+                    if (!isset($value['type'])) {
+                        $value['type'] = $this->getFileType($value);
+                    }
+                    if (!isset($value['error'])) {
+                        $value['error'] = 0;
+                    }
+                } else {
+                    $files[$name] = $this->formatFilesArray($value);
+                }
+            } elseif (is_object($value)) {
+                /**
+                 * do nothing, probably the user knows what he is doing
+                 * @issue https://github.com/Codeception/Codeception/issues/3298
+                 */
+            } else {
+                throw new ModuleException(__CLASS__, "Invalid value of key $name in files array");
+            }
+        }
+
+        return $files;
+    }
+
+    private function getFileType($file)
+    {
+        if (function_exists('mime_content_type') && mime_content_type($file)) {
+            return mime_content_type($file);
+        }
+        return 'application/octet-stream';
+    }
+
+    private function checkFileBeforeUpload($file)
+    {
+        if (!file_exists($file)) {
+            throw new ModuleException(__CLASS__, "File $file does not exist");
+        }
+        if (!is_readable($file)) {
+            throw new ModuleException(__CLASS__, "File $file is not readable");
+        }
+        if (!is_file($file)) {
+            throw new ModuleException(__CLASS__, "File $file is not a regular file");
+        }
     }
 
     /**
@@ -588,12 +668,9 @@ EOF;
      */
     public function seeResponseContainsJson($json = [])
     {
-        $jsonResponseArray = new JsonArray($this->connectionModule->_getResponseContent());
-        \PHPUnit_Framework_Assert::assertTrue(
-            $jsonResponseArray->containsArray($json),
-            "Response JSON does not contain the provided JSON\n"
-            . "- <info>" . var_export($json, true) . "</info>\n"
-            . "+ " . var_export($jsonResponseArray->toArray(), true)
+        \PHPUnit_Framework_Assert::assertThat(
+            $this->connectionModule->_getResponseContent(),
+            new JsonContains($json)
         );
     }
 
@@ -911,17 +988,33 @@ EOF;
     /**
      * Checks response code equals to provided value.
      *
+     * ```php
+     * <?php
+     * $I->seeResponseCodeIs(200);
+     *
+     * // preferred to use \Codeception\Util\HttpCode
+     * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+     * ```
+     *
      * @part json
      * @part xml
      * @param $code
      */
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->getRunningClient()->getInternalResponse()->getStatus());
+        $this->connectionModule->seeResponseCodeIs($code);
     }
 
     /**
      * Checks that response code is not equal to provided value.
+     *
+     * ```php
+     * <?php
+     * $I->dontSeeResponseCodeIs(200);
+     *
+     * // preferred to use \Codeception\Util\HttpCode
+     * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+     * ```
      *
      * @part json
      * @part xml
@@ -929,7 +1022,7 @@ EOF;
      */
     public function dontSeeResponseCodeIs($code)
     {
-        $this->assertNotEquals($code, $this->getRunningClient()->getInternalResponse()->getStatus());
+        $this->connectionModule->dontSeeResponseCodeIs($code);
     }
 
     /**
@@ -1013,7 +1106,7 @@ EOF;
      * @return string
      * @part xml
      */
-    public function grabAttributeFrom($cssOrXPath, $attribute)
+    public function grabAttributeFromXmlElement($cssOrXPath, $attribute)
     {
         $el = (new XmlStructure($this->connectionModule->_getResponseContent()))->matchElement($cssOrXPath);
         if (!$el->hasAttribute($attribute)) {
@@ -1114,6 +1207,14 @@ EOF;
 
     /**
      * Prevents automatic redirects to be followed by the client
+     *
+     * ```php
+     * <?php
+     * $I->stopFollowingRedirects();
+     * ```
+     *
+     * @part xml
+     * @part json
      */
     public function stopFollowingRedirects()
     {
@@ -1122,6 +1223,14 @@ EOF;
 
     /**
      * Enables automatic redirects to be followed by the client
+     *
+     * ```php
+     * <?php
+     * $I->startFollowingRedirects();
+     * ```
+     *
+     * @part xml
+     * @part json
      */
     public function startFollowingRedirects()
     {

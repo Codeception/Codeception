@@ -4,7 +4,7 @@ namespace Codeception\Module;
 use Codeception\Util\FileSystem as Util;
 use Symfony\Component\Finder\Finder;
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Configuration;
 
 /**
@@ -26,7 +26,7 @@ class Filesystem extends CodeceptionModule
 
     protected $path = '';
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->path = Configuration::projectDir();
     }
@@ -170,6 +170,15 @@ class Filesystem extends CodeceptionModule
             (int) $number === count($lines),
             "The number of new lines does not match with $number"
         );
+    }
+    /**
+     * Checks that contents of currently opened file matches $regex
+     *
+     * @param $regex
+     */
+    public function seeThisFileMatches($regex)
+    {
+        $this->assertRegExp($regex, $this->file, "Contents of currently opened file does not match '$regex'");
     }
 
     /**

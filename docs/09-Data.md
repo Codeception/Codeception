@@ -6,7 +6,7 @@ This chapter summarizes all of the notices on cleaning ups from the previous cha
 
 When we decide to clean up a database, we should make this cleaning as fast as possible. Tests should always run fast. Rebuilding the database from scratch is not the best way, but might be the only one. In any case, you should use a special test database for testing. **Do not ever run tests on development or production database!**
 
-## Automatic Cleanup
+## Db
 
 Codeception has a `Db` module, which takes on most of the tasks of database interaction. By default it will try to repopulate the database from a dump and clean it up after each test. This module expects a database dump in SQL format. It's already prepared for configuration in `codeception.yml`:
 
@@ -20,105 +20,191 @@ modules:
             dump: tests/_data/your-dump-name.sql
 ```
 
+
+<div class="alert alert-notice">
+Use [module params](06-ModulesAndHelpers#DynamicConfiguration With Params) to set database credentials from environment variables or from application configuration files.
+</div>
+
 After you enable this module in your test suite, it will automatically populate the database from a dump and repopulate it on each test run. These settings can be changed through the `populate` and `cleanup` options, which may be set to `false`.
 
-The `Db` module is a rough tool. It works for any type of database supported by PDO. It could be used for all of the tests if it wasn't so slow. Loading a dump can take a lot of time that can be saved by using other techniques. When your test and application share the same database connection, as may be the case in functional and unit tests, the best way to speed up everything is to put all of the code in transaction, rolled back when test ends. In acceptance tests, different database connections are used, you can speed up tests by using SQLite file database. Alternatively, you can avoid recreating database on every test, but cleaning up all updates after the test.
+<div class="alert alert-notice">
+Full database cleanup can be painfully slow if you use large database dumps. It is recommended to do more data testing on functional and integration level, this way you can get performance bonuses from using ORM.
+</div>
 
-## Separate connections
+In acceptance tests your tests are interacting with the application through a web server.This means that the test and the application will work with the same database. You should provide in the Db module the same credentials that your application uses, and then you can access the database for assertions (`seeInDatabase` actions) and to perform automatic cleanups.
 
-In acceptance tests, your test is interacting with the application through a web server. There is no way to receive a database connection from the web server. This means that the test and the application will work with the same database but on different connections. Provide in the Db module the same credentials that your application uses, and then you can access the database for assertions (`seeInDatabase` actions) and perform automatic cleanups.
-
-## Shared connections
-
-When an application or its parts are run within the Codeception process, you can use your application connection in your tests.
-If you can access the connection, all database operations can be put into one global transaction and rolled back at the end. That will dramatically improve performance. Nothing will be written to the database at the end, thus no database repopulation is actually needed.
-
-### ORM modules
-
-If your application is using an ORM like Doctrine or Doctrine2, connect the respective modules to the suite. By default they will cover everything in a transaction. If you use several database connections, or there are transactions not tracked by the ORM, that module will be useless for you.
-
-An ORM module can be connected with a `Db` module, but by default both will perform cleanup. Thus you should explicitly set which module is used:
-
-In `tests/functional.suite.yml`:
-
-```yaml
-modules:
-	  enabled: 
-        - Db:
-          cleanup: false      
-        - Doctrine2:
-            depends: Symfony2
-        - \Helper\Functional
-```
-
-Still, the `Db` module will perform database population from a dump before each test. Use `populate: false` to disable it.
-
-### Dbh module
-
-If you use PostgreSQL, or any other database which supports nested transactions, you can use the `Dbh` module. It takes a PDO instance from your application, starts a transaction at the beginning of the tests, and rolls it back at the end.
-A PDO connection can be set in the bootstrap file. This module also overrides the `seeInDatabase` and `dontSeeInDatabase` actions of the `Db` module.
-
-To use the `Db` module for population and `Dbh` for cleanups, use this config:
-
-```yaml
-modules:
-  	enabled: 
-        - Db:
-            cleanup: false
-        - Dbh
-        - \Helper\Functional
-```
-
-Please, note that `Dbh` module should go after the `Db`. That allows the `Dbh` module to override actions.
-
-## Fixtures
-
-Fixtures are sample data that we can use in tests. This data can be either generated, or taken from a sample database. Fixtures can be defined in separate PHP file and loaded in tests.
-
-#### Fixtures for Acceptance and Functional Tests
-
-Let's create `fixtures.php` file in `tests/functional` and load data from database to be used in tests.
-
-```php
-<?php
-// let's take user from sample database,
-// we can populate it with Db module
-$john = User::findOneBy('name', 'john');
-?>
-```
-
-Fixture usage in a sample acceptance or functional test:
-
-```php
-<?php
-require 'fixtures.php';
-
-$I = new FunctionalTester($scenario);
-$I->amLoggedAs($john);
-$I->see('Welcome, John');
-?>
-```
-
-Also you can use the [Faker](https://github.com/fzaninotto/Faker) library to create test data within a bootstrap file.
-
-### Per Test Fixtures
+Db module provides actions to create and verify data inside a database.
 
 If you want to create special database record for one test, you can use [`haveInDatabase`](http://codeception.com/docs/modules/Db#haveInDatabase) method of `Db` module.
 
 ```php
 <?php 
-$I = new FunctionalTester($scenario);
 $I->haveInDatabase('posts', [
   'title' => 'Top 10 Testing Frameworks', 
   'body' => '1. Codeception'
 ]);
 $I->amOnPage('/posts');
 $I->see('Top 10 Testing Frameworks');
-?>
+
 ```
 
-`haveInDatabase` inserts a row with provided values into database. All added records will be deleted in the end of a test. In `MongoDB` module we have similar [`haveInCollection`](http://codeception.com/docs/modules/MongoDb#haveInCollection) method.
+`haveInDatabase` inserts a row with provided values into database. All added records will be deleted in the end of a test. 
+
+If you want to check that a table record was created use [`seeInDatabase`](http://codeception.com/docs/modules/Db#haveInDatabase) method:
+
+```php
+<?php
+$I->amOnPage('/posts/1');
+$I->fillField('comment', 'This is nice!');
+$I->click('Submit');
+$I->seeInDatabase('comments', ['body' => 'This is nice!']);
+
+```
+
+Follow the module [reference](http://codeception.com/docs/modules/Db) for other methods you can use for database testing.
+
+There are also modules for [MongoDb](http://codeception.com/docs/modules/MongoDb), [Redis](http://codeception.com/docs/modules/Redis), [Memcache](http://codeception.com/docs/modules/Memcache) which act in similar manner.
+
+### Sequence
+
+If database cleanup takes to long for you you can follow different strategy: create new data for each test. This way the only problem you may face is duplication of data records. [Sequence](http://codeception.com/docs/modules/Sequence) was created to solve this. It provides `sq()` function which generates unique suffixes for creating data in tests. 
+
+## ORM modules
+
+Probably your application is using ORM to work with database. In this case Codeception allows you to use methods of ORM to work with database, instead of accessing database directly. This way you can work with models and entities of a domain, and not on tables and rows.
+
+By using ORM in functional and integration you can also improve performance of your tests. Instead of cleaning up database after each test ORM module will wrap all the database actions into transactions and rollback it in the end. This way no actual data will be written to the database. This cleanup strategy is enabled by default, you can disable it by setting `cleanup: false` in config of any ORM module.
+
+### ActiveRecord
+
+Popular frameworks like Laravel, Yii, and Phalcon include ActiveRecord data layer by default. Because of this tight integration you just need to enable framework module, and use its config for database access. 
+
+Corresponding framework modules provide similar methods for ORM access:
+
+* `haveRecord`
+* `seeRecord`
+* `dontSeeRecord`
+* `grabRecord`
+
+They allow to create and check data by model name and field names in model. Here is the example in Laravel
+
+```php
+<?php
+// create record and get its id
+$id = $I->haveRecord('posts', ['body' => 'My first blogpost', 'user_id' => 1]);
+$I->amOnPage('/posts/'.$id);
+$I->see('My first blogpost', 'article');
+// check record exists
+$I->seeRecord('posts', ['id' => $id]);
+$I->click('Delete');
+// record was deleted
+$I->dontSeeRecord('posts', ['id' => $id]); 
+
+```
+
+<div class="alert alert-notice">
+Laravel5 module also provides `haveModel`, `makeModel` methods which use factories to generate models with fake data.
+</div>
+
+In case you want to use ORM for integration testing only, you should enable framework module with only `ORM` part enabled:
+
+```yaml
+modules:
+    enabled:
+        - Laravel5:
+            - part: ORM
+```
+
+```yaml
+modules:
+    enabled:
+        - Yii2:
+            - part: ORM
+```
+
+This way no web actions will be added to `$I` object. 
+
+If you want to use ORM to work with data inside acceptance tests you should also include only ORM part of a module. Please note, that inside acceptance tests web application works inside a webserver so test data can't be cleaned up by rolling back transaction. So you will need to disable cleanup and use `Db` module to cleanup database betweem tests. Here is a sample config:
+
+```yaml
+modules:
+    enabled:
+        - WebDriver:
+            url: http://localhost
+            browser: firefox
+        - Laravel5:
+            cleanup: false
+        - Db
+```
+
+
+### DataMapper
+
+Doctrine is also a popular ORM, unlike other it implements DataMapper pattern and is not bound to any framework. [Doctrine2](http://codeception.com/docs/modules/Doctrine2) module requires `EntityManager` instance to work with. It can be obtained from a frameworks Symfony or Zend Framework (configured with Doctrine):
+
+```yaml
+modules:
+    enabled:
+        - Symfony
+        - Doctrine2:
+            depends: Symfony
+```
+
+```yaml
+modules:
+    enabled:
+        - ZF2
+        - Doctrine2:
+            depends: ZF2
+```
+
+
+If no framework is used with Doctrine you should provide `connection_callback` option with a valid callback to function which returns `EntityManager` instance.
+
+Doctrine2 also provides methods to create and check data:
+
+* `haveInRepository`
+* `grabFromRepository`
+* `seeInRepository`
+* `dontSeeInRepository`
+
+### DataFactory
+
+Preparing data for testing is a very creative nevertheless boring task. If you create a record you will need to fill in all fields of a model. It would be much easier to use [Faker](https://github.com/fzaninotto/Faker) for this task, and which is more effective to setup data generation rules for models. Such set of rules is called *factories* and are provided by [DataFactory](http://codeception.com/docs/modules/DataFactory) module.
+
+Once configured it can create records with ease:
+
+```php
+<?php
+// creates a new user
+$user_id = $I->have('App\Model\User');
+// creates 3 posts
+$I->haveMultiple('App\Model\Post', 3);
+```
+
+Created records will be deleted at the end of a test. DataFactory works only with ORM, so require one of ORM modules to be enabled:
+
+```yaml
+modules:
+    enabled:
+        - Yii2:
+            configFile: path/to/config.php
+        - DataFactory:
+            depends: Yii2
+```
+
+```yaml
+modules:
+    enabled:
+        - Symfony
+        - Doctrine2:
+            depends: Symfony
+        - DataFactory:
+            depends: Doctrine2            
+```
+
+DataFactory provides a powerful solution for managing data in integration/functional/acceptance tests. Read the [full reference](http://codeception.com/docs/modules/DataFactory) to learn how to setup this module.
 
 ## Conclusion
 
-Codeception is not abandoning the developer when dealing with data. Tools for database population and cleanups are bundled within the `Db` module. To manipulate sample data in a test, use fixtures that can be defined within the bootstrap file.
+Codeception is not leaving the developer when dealing with data. Tools for database population and cleanups are bundled within the `Db` module. If you use ORM you can use one of provided framework modules to operate with database through data abstraction layer, and use DataFactory module to generate new records with ease.

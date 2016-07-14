@@ -2,8 +2,9 @@
 namespace Codeception;
 
 use Codeception\Lib\ModuleContainer;
-use Codeception\Step\Meta;
+use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
+use Codeception\Lib\Console\Message;
 
 abstract class Step
 {
@@ -24,28 +25,26 @@ abstract class Step
 
     protected $line = null;
     protected $file = null;
-    protected $actor = 'I';
+    protected $prefix = 'I';
 
     /**
-     * @var Meta
+     * @var MetaStep
      */
     protected $metaStep = null;
 
     protected $failed = false;
 
-    public function __construct($action, array $arguments)
+    public function __construct($action, array $arguments = [])
     {
         $this->action = $action;
         $this->arguments = $arguments;
-        $this->storeCallerInfo();
     }
 
-    protected function storeCallerInfo()
+    public function saveTrace()
     {
         if (!function_exists('xdebug_get_function_stack')) {
             return;
         }
-
         ini_set('xdebug.collect_params', '1');
         $stack = xdebug_get_function_stack();
         ini_set('xdebug.collect_params', 0);
@@ -91,51 +90,79 @@ abstract class Step
         return $this->failed;
     }
 
-    public function getArguments($asString = false)
+    public function getArgumentsAsString($maxLength = 200)
     {
-        return ($asString) ? $this->getArgumentsAsString($this->arguments) : $this->arguments;
-    }
+        $arguments = $this->arguments;
 
-    protected function getArgumentsAsString(array $arguments)
-    {
-        $argumentsAsJson = [];
+        $argumentCount = count($arguments);
+        $totalLength = $argumentCount - 1; // count separators before adding length of individual arguments
+
         foreach ($arguments as $key => $argument) {
-            $argumentsAsJson []= stripcslashes(
-                json_encode($this->parseArgumentAsString($argument), JSON_UNESCAPED_UNICODE)
-            );
+            $stringifiedArgument = $this->stringifyArgument($argument);
+            $arguments[$key] = $stringifiedArgument;
+            $totalLength += mb_strlen($stringifiedArgument, 'utf-8');
         }
 
-        return implode(',', $argumentsAsJson);
+        if ($totalLength > $maxLength) {
+            //sort arguments from shortest to longest
+            uasort($arguments, function($arg1, $arg2) {
+                $length1 = mb_strlen($arg1, 'utf-8');
+                $length2 = mb_strlen($arg2, 'utf-8');
+                if ($length1 === $length2) {
+                    return 0;
+                }
+                return ($length1 < $length2) ? -1 : 1;
+            });
+
+            $allowedLength = floor(($maxLength - $argumentCount + 1) / $argumentCount);
+
+            $lengthRemaining = $maxLength;
+            $argumentsRemaining = $argumentCount;
+            foreach ($arguments as $key => $argument) {
+                $argumentsRemaining--;
+                if (mb_strlen($argument, 'utf-8') > $allowedLength) {
+                    $arguments[$key] = mb_substr($argument, 0, $allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
+                    $lengthRemaining -= ($allowedLength + 1);
+                } else {
+                    $lengthRemaining -= (mb_strlen($arguments[$key], 'utf-8') + 1);
+                    //recalculate allowed length because this argument was short
+                    if ($argumentsRemaining > 0) {
+                        $allowedLength = floor(($lengthRemaining - $argumentsRemaining + 1) / $argumentsRemaining);
+                    }
+                }
+            }
+
+            //restore original order of arguments
+            ksort($arguments);
+        }
+
+        return implode(',', $arguments);
     }
 
-    protected function parseArgumentAsString($argument)
+    protected function stringifyArgument($argument)
     {
-        if (is_object($argument)) {
-            if (method_exists($argument, '__toString')) {
-                return (string)$argument;
-            }
-            if (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
-                return Locator::humanReadableString($argument);
-            }
-            return $this->getClassName($argument);
-        }
-
-        if (is_array($argument)) {
+        if (is_string($argument)) {
+            return '"' . strtr($argument, ["\n" => '\n', "\r" => '\r', "\t" => ' ']) . '"';
+        } elseif (is_resource($argument)) {
+            $argument = (string)$argument;
+        } elseif (is_array($argument)) {
             foreach ($argument as $key => $value) {
                 if (is_object($value)) {
                     $argument[$key] = $this->getClassName($value);
                 }
             }
-            return $argument;
+        } elseif (is_object($argument)) {
+            if (method_exists($argument, '__toString')) {
+                $argument = (string)$argument;
+            } elseif (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
+                $argument = Locator::humanReadableString($argument);
+            } else {
+                $argument = $this->getClassName($argument);
+            }
         }
 
-        if (is_resource($argument)) {
-            return (string)$argument;
-        }
-
-        return $argument;
+        return json_encode($argument, JSON_UNESCAPED_UNICODE);
     }
-
 
     protected function getClassName($argument)
     {
@@ -153,13 +180,17 @@ abstract class Step
         return trim($classname, "\\");
     }
 
-    public function getPhpCode()
+    public function getPhpCode($maxLength)
     {
-        return "\${$this->actor}->" . $this->getAction() . '(' . $this->getHumanizedArguments() .')';
+        $result = "\${$this->prefix}->" . $this->getAction() . '(';
+        $maxLength = $maxLength - mb_strlen($result, 'utf-8') - 1;
+
+        $result .= $this->getHumanizedArguments($maxLength) .')';
+        return $result;
     }
 
     /**
-     * @return Meta
+     * @return MetaStep
      */
     public function getMetaStep()
     {
@@ -168,22 +199,25 @@ abstract class Step
 
     public function __toString()
     {
-        return $this->actor . ' ' . $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
+        $humanizedAction = $this->humanize($this->getAction());
+        return $humanizedAction . ' ' . $this->getHumanizedArguments();
+    }
+
+
+    public function toString($maxLength)
+    {
+        $humanizedAction = $this->humanize($this->getAction());
+        $maxLength = $maxLength - mb_strlen($humanizedAction, 'utf-8') - 1;
+        return $humanizedAction . ' ' . $this->getHumanizedArguments($maxLength);
     }
 
     public function getHtml($highlightColor = '#732E81')
     {
         if (empty($this->arguments)) {
-            return sprintf('%s %s', ucfirst($this->actor), $this->humanize($this->getAction()));
+            return sprintf('%s %s', ucfirst($this->prefix), $this->humanize($this->getAction()));
         }
 
-        return sprintf(
-            '%s %s <span style="color: %s">%s</span>',
-            ucfirst($this->actor),
-            $this->humanize($this->getAction()),
-            $highlightColor,
-            $this->getHumanizedArguments()
-        );
+        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->prefix), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
     }
 
     public function getHumanizedActionWithoutArguments()
@@ -191,9 +225,9 @@ abstract class Step
         return $this->humanize($this->getAction());
     }
 
-    public function getHumanizedArguments()
+    public function getHumanizedArguments($maxLength = 200)
     {
-        return $this->clean($this->getArguments(true));
+        return $this->getArgumentsAsString($maxLength);
     }
 
     protected function clean($text)
@@ -225,6 +259,9 @@ abstract class Step
             $res = call_user_func_array([$activeModule, $this->action], $this->arguments);
         } catch (\Exception $e) {
             $this->failed = true;
+            if ($this->getMetaStep()) {
+                $this->getMetaStep()->setFailed(true);
+            }
             throw $e;
         }
         return $res;
@@ -257,14 +294,30 @@ abstract class Step
                 continue;
             }
 
-            $this->metaStep = new Meta($step['function'], array_values($step['params']));
+            $this->metaStep = new Step\Meta($step['function'], array_values($step['params']));
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // pageobjects or other classes should not be included with "I"
-            if (!(new \ReflectionClass($step['class']))->isSubclassOf('Codeception\Actor')) {
-                $this->metaStep->setActor($step['class'] . ':');
+            if (!in_array('Codeception\Actor', class_parents($step['class']))) {
+                $this->metaStep->setPrefix($step['class'] . ':');
             }
             return;
         }
+    }
+
+    /**
+     * @param MetaStep $metaStep
+     */
+    public function setMetaStep($metaStep)
+    {
+        $this->metaStep = $metaStep;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix . ' ';
     }
 }

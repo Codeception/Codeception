@@ -26,7 +26,6 @@ class GenerateCept extends Command
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
             new InputArgument('test', InputArgument::REQUIRED, 'test to be run'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ]);
     }
 

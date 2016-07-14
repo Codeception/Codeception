@@ -1,6 +1,7 @@
 <?php
 
 use Codeception\Util\Stub;
+use Pheanstalk\Exception\ConnectionException;
 
 class BeanstalkdTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,11 +18,11 @@ class BeanstalkdTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->module = new \Codeception\Module\Queue(make_container());
-        $this->module->_setConfig($this->config);
-        $this->module->_before(Stub::make('\Codeception\TestCase'));
+            $this->module->_setConfig($this->config);
+            $this->module->_before(Stub::makeEmpty('\Codeception\TestInterface'));
         try {
             $this->module->clearQueue('default');
-        } catch (\Pheanstalk_Exception_ConnectionException $e) {
+        } catch (ConnectionException $e) {
             $this->markTestSkipped("Beanstalk is not running");
         }
     }

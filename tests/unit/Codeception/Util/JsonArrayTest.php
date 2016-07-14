@@ -1,7 +1,8 @@
 <?php
 namespace Codeception\Util;
 
-class JsonArrayTest extends \Codeception\TestCase\Test
+
+class JsonArrayTest extends \Codeception\Test\Unit
 {
 
     /**

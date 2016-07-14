@@ -70,6 +70,13 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertEquals('adult', $form['age']);
     }
 
+    public function testSelectInvalidOptionForSecondSelectFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/select_second');
+        $this->module->selectOption('#select2', 'Value2');
+    }
+
     public function testSeeInPopup()
     {
         $this->notForPhantomJS();
@@ -397,7 +404,7 @@ class WebDriverTest extends TestsForBrowsers
             ]),
         ]);
         $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
-        $cept = (new \Codeception\TestCase\Cept())->configName('loginCept.php');
+            $cept = (new \Codeception\Test\Cept('loginCept', 'loginCept.php'));
         $module->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
     }
 
@@ -417,9 +424,7 @@ class WebDriverTest extends TestsForBrowsers
             ]),
         ]);
         $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
-        $cest = (new \Codeception\TestCase\Cest())
-            ->config('testClassInstance', new stdClass())
-            ->config('testMethod', 'login');
+        $cest = new \Codeception\Test\Cest(new stdClass(), 'login', 'someCest.php');
         $module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
     }
 
@@ -509,7 +514,7 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeOptionIsSelected('input[name=first_test_radio]', 'Yes');
         $this->module->dontSeeOptionIsSelected('input[name=first_test_radio]', 'No');
     }
-    
+
     public function testBug2046()
     {
         $this->module->webDriver = null;
@@ -650,4 +655,5 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/bug2921');
         $this->module->seeInField('foo', 'bar baz');
     }
+
 }

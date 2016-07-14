@@ -4,9 +4,9 @@
  * Codeception CLI
  */
 
-require_once dirname(__FILE__).'/autoload.php';
+require_once __DIR__.'/autoload.php';
 
-use Symfony\Component\Console\Application;
+use Codeception\Application;
 
 $app = new Application('Codeception', Codeception\Codecept::VERSION);
 $app->add(new Codeception\Command\Build('build'));
@@ -25,4 +25,9 @@ $app->add(new Codeception\Command\GenerateGroup('generate:groupobject'));
 $app->add(new Codeception\Command\GeneratePageObject('generate:pageobject'));
 $app->add(new Codeception\Command\GenerateStepObject('generate:stepobject'));
 $app->add(new Codeception\Command\GenerateEnvironment('generate:environment'));
+$app->add(new Codeception\Command\GenerateFeature('generate:feature'));
+$app->add(new Codeception\Command\GherkinSnippets('gherkin:snippets'));
+$app->add(new Codeception\Command\GherkinSteps('gherkin:steps'));
+$app->add(new Codeception\Command\DryRun('dry-run'));
+$app->registerCustomCommands();
 $app->run();

@@ -34,10 +34,13 @@ class Output extends ConsoleOutput
             && $_SERVER['TERM'] != 'linux';
 
         $formatter = new OutputFormatter($this->config['colors']);
+        $formatter->setStyle('default', new OutputFormatterStyle());
         $formatter->setStyle('bold', new OutputFormatterStyle(null, null, ['bold']));
         $formatter->setStyle('focus', new OutputFormatterStyle('magenta', null, ['bold']));
-        $formatter->setStyle('ok', new OutputFormatterStyle('white', 'magenta'));
-        $formatter->setStyle('error', new OutputFormatterStyle('white', 'red'));
+        $formatter->setStyle('ok', new OutputFormatterStyle('green', null, ['bold']));
+        $formatter->setStyle('error', new OutputFormatterStyle('white', 'red', ['bold']));
+        $formatter->setStyle('fail', new OutputFormatterStyle('red', null, ['bold']));
+        $formatter->setStyle('pending', new OutputFormatterStyle('yellow', null, ['bold']));
         $formatter->setStyle('debug', new OutputFormatterStyle('cyan'));
         $formatter->setStyle('comment', new OutputFormatterStyle('yellow'));
         $formatter->setStyle('info', new OutputFormatterStyle('green'));

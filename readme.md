@@ -1,4 +1,11 @@
-# Codeception [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)[![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)![DailyDownloads](https://img.shields.io/packagist/dd/codeception/codeception.svg)[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Codeception/Codeception?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)[![PHP 7 ready](http://php7ready.timesplinter.ch/Codeception/Codeception/badge.svg)](https://travis-ci.org/Codeception/Codeception)
+# Codeception
+
+[![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
+[![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
+[![Daily Downloads](https://img.shields.io/packagist/dd/codeception/codeception.svg)](https://packagist.org/packages/codeception/codeception)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Codeception/Codeception?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![PHP 7 ready](http://php7ready.timesplinter.ch/Codeception/Codeception/badge.svg)](https://travis-ci.org/Codeception/Codeception)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Codeception/Codeception/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Codeception/Codeception/?branch=master)
 
 
 **Modern PHP Testing for everyone** 
@@ -7,9 +14,9 @@ Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
 Powered by PHPUnit.
 
-| General |  Windows |  Webdriver  |
-| ------- | -------- | -------- |
-| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.1)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.1) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/master/shields_badge.svg)](https://semaphoreci.com/codeception/codeception)
+| General |  Windows |  Webdriver  | Facebook |
+| ------- | -------- | -------- | -------- |
+| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.2)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.1) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/master/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) | [ ![Facebook Status for Codeception/Codeception](https://codeship.com/projects/e4bc90d0-1ed5-0134-566c-1ed679ae6c9d/status?branch=2.2)](https://codeship.com/projects/160201) |
 
 
 #### Contributions

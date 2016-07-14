@@ -9,7 +9,7 @@ use Codeception\Events;
 use Codeception\Lib\Console\Output;
 use Codeception\Scenario;
 use Codeception\SuiteManager;
-use Codeception\TestCase\Cept;
+use Codeception\Test\Cept;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -36,7 +36,6 @@ class Console extends Command
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
             new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
         ]);
 
@@ -74,12 +73,11 @@ class Console extends Command
 
         $this->actions = array_keys($moduleContainer->getActions());
 
-        $this->test = (new Cept())
-            ->configDispatcher($dispatcher)
-            ->configModules($moduleContainer)
-            ->configName('')
-            ->config('file', '')
-            ->initConfig();
+        $this->test = new Cept(null, null);
+        $this->test->getMetadata()->setServices([
+           'dispatcher' => $dispatcher,
+           'modules' =>  $moduleContainer
+        ]);
 
         $scenario = new Scenario($this->test);
         if (isset($config["namespace"])) {
@@ -102,7 +100,6 @@ class Console extends Command
         $dispatcher->dispatch(Events::TEST_BEFORE, new TestEvent($this->test));
 
         $output->writeln("\n\n<comment>\$I</comment> = new {$settings['class_name']}(\$scenario);");
-        $scenario->stopIfBlocked();
         $this->executeCommands($input, $output, $I, $settings['bootstrap']);
 
         $dispatcher->dispatch(Events::TEST_AFTER, new TestEvent($this->test));

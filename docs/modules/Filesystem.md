@@ -1,4 +1,4 @@
-
+# Filesystem
 
 
 Module for testing local filesystem.
@@ -12,6 +12,8 @@ Fork it to extend the module for FTP, Amazon S3, others.
 
 Module was developed to test Codeception itself.
 
+
+## Actions
 
 ### amInPath
  
@@ -181,6 +183,13 @@ $I->seeNumberNewLines(5);
  * `param int` $number New lines
 
 
+### seeThisFileMatches
+ 
+Checks that contents of currently opened file matches $regex
+
+ * `param` $regex
+
+
 ### writeToFile
  
 Saves contents to file
@@ -188,4 +197,4 @@ Saves contents to file
  * `param` $filename
  * `param` $contents
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Filesystem.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Filesystem.php">Help us to improve documentation. Edit module reference</a></div>

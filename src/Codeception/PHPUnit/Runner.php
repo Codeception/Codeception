@@ -62,7 +62,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
         if ($arguments['filter']) {
             $filterFactory->addFilter(
-                new \ReflectionClass('PHPUnit_Runner_Filter_Test'),
+                new \ReflectionClass('Codeception\PHPUnit\FilterTest'),
                 $arguments['filter']
             );
         }
@@ -87,6 +87,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             $arguments['listeners'] = isset($arguments['listeners']) ? $arguments['listeners'] : array();
             $arguments['listeners'][] = new \Symfony\Bridge\PhpUnit\SymfonyTestsListener();
         }
+
         $arguments['listeners'][] = $this->printer;
 
         // clean up listeners between suites

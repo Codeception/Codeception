@@ -1,4 +1,4 @@
-## Code Coverage
+# Code Coverage
 
 At some point you want to review which parts of your application are tested well and which are not.
 Just for this case the [CodeCoverage](http://en.wikipedia.org/wiki/Code_coverage) is used. When you execute your tests to collect coverage report,

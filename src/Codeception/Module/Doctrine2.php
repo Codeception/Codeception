@@ -1,11 +1,12 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\DataMapper;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Doctrine\ORM\EntityManager;
 use Codeception\Util\Stub;
 
@@ -14,14 +15,14 @@ use Codeception\Util\Stub;
  * Doctrine2 uses EntityManager to perform all database operations.
  *
  * When using with Zend Framework 2 or Symfony2 Doctrine connection is automatically retrieved from Service Locator.
- * In this case you should include either **Symfony2** or **ZF2** module and specify it as dependent for Doctrine:
+ * In this case you should include either **Symfony** or **ZF2** module and specify it as dependent for Doctrine:
  *
  * ```
  * modules:
  *     enabled:
- *         - Symfony2
+ *         - Symfony
  *         - Doctrine2:
- *             depends: Symfony2
+ *             depends: Symfony
  * ```
  *
  * If you don't use any of frameworks above, you should specify a callback function to receive entity manager:
@@ -64,7 +65,7 @@ use Codeception\Util\Stub;
  * * `em` - Entity Manager
  */
 
-class Doctrine2 extends CodeceptionModule implements DependsOnModule
+class Doctrine2 extends CodeceptionModule implements DependsOnModule, DataMapper
 {
 
     protected $config = [
@@ -81,12 +82,12 @@ modules:
         - Doctrine2:
             connection_callback: [My\ConnectionClass, getEntityManager]
 
-Or set a dependent module, which can be either Symfony2 or ZF2 to get EM from service locator:
+Or set a dependent module, which can be either Symfony or ZF2 to get EM from service locator:
 
 modules:
     enabled:
         - Doctrine2:
-            depends: Symfony2
+            depends: Symfony
 EOF;
 
     /**
@@ -117,7 +118,7 @@ EOF;
         $this->retrieveEntityManager();
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->retrieveEntityManager();
         if ($this->config['cleanup']) {
@@ -141,7 +142,7 @@ EOF;
                 "EntityManager can't be obtained.\n \n"
                 . "Please specify either `connection_callback` config option\n"
                 . "with callable which will return instance of EntityManager or\n"
-                . "pass a dependent module which are Symfony2 or ZF2\n"
+                . "pass a dependent module which are Symfony or ZF2\n"
                 . "to connect to Doctrine using Dependency Injection Container"
             );
         }
@@ -158,7 +159,7 @@ EOF;
         $this->em->getConnection()->connect();
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
             return;
@@ -433,5 +434,10 @@ EOF;
                 $qb->setParameter($paramname, $val);
             }
         }
+    }
+
+    public function _getEntityManager()
+    {
+        return $this->em;
     }
 }

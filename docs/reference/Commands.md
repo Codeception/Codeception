@@ -1,5 +1,17 @@
 # Console Commands
 
+## DryRun
+
+Shows step by step execution process for scenario driven tests without actually running them.
+
+* `codecept dry-run acceptance`
+* `codecept dry-run acceptance MyCest`
+* `codecept dry-run acceptance checkout.feature`
+* `codecept dry-run tests/acceptance/MyCest.php`
+
+
+
+
 ## GenerateSuite
 
 Create new test suite. Requires suite name and actor name
@@ -9,6 +21,20 @@ Create new test suite. Requires suite name and actor name
 * `codecept g:suite integration Code` -> integration + CodeTester
 * `codecept g:suite frontend Front` -> frontend + FrontTester
 
+
+
+
+## GherkinSnippets
+
+Generates code snippets for matched feature files in a suite.
+Code snuppets are expected to be implemtned in Actor or PageOjects
+
+Usage:
+
+* `codecept gherkin:snippets acceptance` - snippets from all feature of acceptance tests
+* `codecept gherkin:snippets acceptance/feature/users` - snippets from `feature/users` dir of acceptance tests
+* `codecept gherkin:snippets acceptance user_account.feature` - snippets from a single feature file
+* `codecept gherkin:snippets acceptance/feature/users/user_accout.feature` - snippets from feature file in a dir
 
 
 
@@ -43,6 +69,15 @@ Generates Cept (scenario-driven test) file:
 
 Executes tests.
 
+Usage:
+
+* `codecept run acceptance` - run all acceptance tests
+* `codecept run tests/acceptance/MyCept.php` - run only MyCept
+* `codecept run acceptance MyCept` - same as above
+* `codecept run acceptance MyCest:myTestInIt` - run one test from a Cest
+* `codecept run acceptance checkout.feature` - run feature-file
+
+Full reference:
 ```
 Arguments:
  suite                 suite to be tested
@@ -124,7 +159,8 @@ Creates empty Helper class.
 
 ## Bootstrap
 
-Creates default config, tests directory and sample suites for current project. Use this command to start building a test suite.
+Creates default config, tests directory and sample suites for current project.
+Use this command to start building a test suite.
 
 By default it will create 3 suites **acceptance**, **functional**, and **unit**.
 
@@ -144,6 +180,17 @@ Generates empty environment configuration file into envs dir:
  * `codecept g:env firefox`
 
 Required to have `envs` path to be specifed in `codeception.yml`
+
+
+
+## GenerateFeature
+
+Generates Feature file (in Gherkin):
+
+* `codecept generate:feature suite Login`
+* `codecept g:feature suite subdir/subdir/login.feature`
+* `codecept g:feature suite login.feature -c path/to/project`
+
 
 
 
@@ -184,6 +231,17 @@ Cleans `output` directory
 
 * `codecept clean`
 * `codecept clean -c path/to/project`
+
+
+
+
+## GherkinSteps
+
+Prints all steps from all Gherkin contexts for a specific suite
+
+```
+codecept gherkin:steps acceptance
+```
 
 
 
