@@ -304,21 +304,16 @@ class Lumen extends Framework implements ActiveRecord
     public function amLoggedAs($user, $driver = null)
     {
         $guard = $auth = $this->app['auth'];
-
         if (method_exists($auth, 'driver')) {
             $guard = $auth->driver($driver);
         }
-
         if (method_exists($auth, 'guard')) {
             $guard = $auth->guard($driver);
         }
-
         if ($user instanceof Authenticatable) {
-            $this->app['auth']->driver($driver)->setUser($user);
             $guard->setUser($user);
             return;
         }
-
         if (! $guard->attempt($user)) {
             $this->fail("Failed to login with credentials " . json_encode($user));
         }
