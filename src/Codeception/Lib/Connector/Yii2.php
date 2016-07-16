@@ -19,6 +19,8 @@ class Yii2 extends Client
      */
     public $configFile;
 
+    public $defaultServerVars = [];
+
     /**
      * @var array
      */
@@ -78,6 +80,7 @@ class Yii2 extends Client
     {
         $_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
+        $this->restoreServerVars();
         $_FILES = $this->remapFiles($request->getFiles());
         $_REQUEST = $this->remapRequestParameters($request->getParameters());
         $_POST = $_GET = [];
@@ -151,6 +154,14 @@ class Yii2 extends Client
         $this->resetApplication();
 
         return new Response($content, $this->statusCode, $this->headers);
+    }
+
+    public function restoreServerVars()
+    {
+        $this->server = $this->defaultServerVars;
+        foreach ($this->server as $key => $value) {
+            $_SERVER[$key] = $value;
+        }
     }
 
     public function processResponse($event)

@@ -22,13 +22,14 @@ use Yii;
  * The entry script must return the application configuration array.
  *
  * You can use this module by setting params in your functional.suite.yml:
- * <pre>
- * class_name: TestGuy
+ *
+ * ```yaml
+ * class_name: FunctionalTester
  * modules:
  *     enabled:
  *         - Yii2:
  *             configFile: '/path/to/config.php'
- * </pre>
+ * ```
  *
  * ## Parts
  *
@@ -37,7 +38,7 @@ use Yii;
  *
  * ## Status
  *
- * Maintainer: **qiangxue**
+ * Maintainer: **samdark**
  * Stability: **stable**
  *
  */
@@ -47,7 +48,14 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * Application config file must be set.
      * @var array
      */
-    protected $config = ['cleanup' => false];
+    protected $config = [
+        'cleanup' => false,
+        'entryScript' => '',
+        'entryUrl' => 'http://localhost/index-test.php',
+        'env' => 'test',
+        'debug' => true
+    ];
+
     protected $requiredFields = ['configFile'];
     protected $transaction;
 
@@ -61,19 +69,26 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                 "The application config file does not exist: {$this->config['configFile']}"
             );
         }
+        defined('YII_DEBUG') or define('YII_DEBUG', $this->config['debug']);
+        defined('YII_ENV') or define('YII_ENV', 'test');
     }
 
     public function _before(TestInterface $test)
     {
+        $entryUrl = $this->config['entryUrl'];
+        $entryFile = $this->config['entryScript'] ?: basename($entryUrl);
+        $entryScript = $this->config['entryScript'] ?: parse_url($entryUrl, PHP_URL_PATH);
+
         $this->client = new Yii2Connector();
+        $this->client->defaultServerVars = [
+            'SCRIPT_FILENAME' => $entryFile,
+            'SCRIPT_NAME' => $entryScript,
+            'SERVER_NAME' => parse_url($entryUrl, PHP_URL_HOST),
+            'SERVER_PORT' =>  parse_url($entryUrl, PHP_URL_PORT) ?: '80',
+        ];
+        $this->client->defaultServerVars['HTTPS'] = parse_url($entryUrl, PHP_URL_SCHEME) === 'https';
+        $this->client->restoreServerVars();
         $this->client->configFile = Configuration::projectDir().$this->config['configFile'];
-        $mainConfig = Configuration::config();
-        if (isset($mainConfig['config']) && isset($mainConfig['config']['test_entry_url'])) {
-            $this->client->setServerParameter(
-                'HTTPS',
-                parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME) === 'https'
-            );
-        }
         $this->app = $this->client->getApplication();
 
         if ($this->config['cleanup'] && isset($this->app->db)) {
@@ -104,7 +119,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _parts()
     {
-        return ['orm'];
+        return ['orm', 'init'];
     }
 
     /**
