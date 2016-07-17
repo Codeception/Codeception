@@ -815,7 +815,7 @@ class RoboFile extends \Robo\Tasks
 
         $this->taskComposerUpdate()->run();
         $this->taskGitStack()
-            ->add('composer.json')
+            ->add('composer*')
             ->commit('auto-update')
             ->exec("push -f base $tempBranch:$branch")
             ->run();
