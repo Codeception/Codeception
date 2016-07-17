@@ -4,6 +4,7 @@ namespace Codeception\Module;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Framework;
 use Codeception\Configuration;
+use Codeception\Lib\Notification;
 use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
@@ -13,13 +14,13 @@ use Yii;
 
 /**
  * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
- *
+ * It initializes Yii framework in test environment and provides actions for functional testing.
  *
  * ## Config
  *
- * * configFile *required* - the path to the application config file
- *
- * The entry script must return the application configuration array.
+ * * `configFile` *required* - the path to the application config file. File should be configured for test environment and return configuration array.
+ * * `entryUrl` - initial application url (default: http://localhost/index-test.php).
+ * * `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
  *
  * You can use this module by setting params in your functional.suite.yml:
  *
@@ -31,10 +32,47 @@ use Yii;
  *             configFile: '/path/to/config.php'
  * ```
  *
- * ## Parts
+ * ### Parts
  *
- * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+ * * `init` - use module only for initialization (for acceptance tests).
+ * * `orm` - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
  *
+ * ### Example (`functional.suite.yml`)
+ *
+ * ```yml
+ * class_name: FunctionalTester
+ * modules:
+ *   enabled:
+ *      - Yii2:
+ *          configFile: 'config/test.php'
+ * ```
+ *
+ * ### Example (`unit.suite.yml`)
+ *
+ * ```yml
+ * class_name: FunctionalTester
+ * modules:
+ *   enabled:
+ *      - Asserts
+ *      - Yii2:
+ *          configFile: 'config/test.php'
+ *          part: ORM
+ * ```
+ *
+ * ### Example (`acceptance.suite.yml`)
+ *
+ * ```yml
+ * class_name: AcceptanceTester
+ * modules:
+ *     enabled:
+ *         - WebDriver:
+ *             url: http://127.0.0.1:8080/
+ *             browser: firefox
+ *         - Yii2:
+ *             configFile: 'config/test.php'
+ *             part: init
+ *             entryScript: index-test.php
+ * ```
  *
  * ## Status
  *
@@ -52,8 +90,6 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         'cleanup' => false,
         'entryScript' => '',
         'entryUrl' => 'http://localhost/index-test.php',
-        'env' => 'test',
-        'debug' => true
     ];
 
     protected $requiredFields = ['configFile'];
@@ -69,8 +105,12 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                 "The application config file does not exist: {$this->config['configFile']}"
             );
         }
-        defined('YII_DEBUG') or define('YII_DEBUG', $this->config['debug']);
+        defined('YII_DEBUG') or define('YII_DEBUG', true);
         defined('YII_ENV') or define('YII_ENV', 'test');
+
+        if (YII_ENV !== 'test') {
+            Notification::warning("YII_ENV is not set to `test`, please add \n\n`define(\'YII_ENV\', \'test\');`\n\nto bootstrap file", 'Yii Framework');
+        }
     }
 
     public function _before(TestInterface $test)
@@ -111,7 +151,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         \yii\web\UploadedFile::reset();
 
         if (Yii::$app) {
-            Yii::$app->session->destroy();
+            if (\Yii::$app->has('session', true)) {
+                \Yii::$app->session->close();
+            }
+            Yii::$app = null;
+            Yii::$container = new Container();
         }
 
         parent::_after($test);
