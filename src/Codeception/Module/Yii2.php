@@ -6,7 +6,6 @@ use Codeception\Exception\ModuleException;
 use Codeception\Lib\Framework;
 use Codeception\Configuration;
 use Codeception\Lib\Notification;
-use Codeception\Subscriber\ErrorHandler;
 use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
@@ -91,31 +90,33 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * @var array
      */
     protected $config = [
-        'cleanup' => false,
+        'cleanup'     => false,
         'entryScript' => '',
-        'entryUrl' => 'http://localhost/index-test.php',
+        'entryUrl'    => 'http://localhost/index-test.php',
     ];
 
     protected $requiredFields = ['configFile'];
     protected $transaction;
 
+    /**
+     * @var \yii\base\Application
+     */
     public $app;
+
+    /**
+     * @var Yii2Connector\FixturesStore[]
+     */
+    public $loadedFixtures = [];
 
     public function _initialize()
     {
-        if (!is_file(Configuration::projectDir() . $this->config['configFile'])) {
+        if (!is_file(codecept_root_dir() . $this->config['configFile'])) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "The application config file does not exist: {$this->config['configFile']}"
+                "The application config file does not exist: " . codecept_root_dir() . $this->config['configFile']
             );
         }
         $this->defineConstants();
-    }
-
-    protected function revertErrorHandler()
-    {
-        $handler = new ErrorHandler();
-        set_error_handler(array($handler, 'errorHandler'));
     }
 
     public function _before(TestInterface $test)
@@ -127,15 +128,14 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $this->client = new Yii2Connector();
         $this->client->defaultServerVars = [
             'SCRIPT_FILENAME' => $entryFile,
-            'SCRIPT_NAME' => $entryScript,
-            'SERVER_NAME' => parse_url($entryUrl, PHP_URL_HOST),
-            'SERVER_PORT' =>  parse_url($entryUrl, PHP_URL_PORT) ?: '80',
+            'SCRIPT_NAME'     => $entryScript,
+            'SERVER_NAME'     => parse_url($entryUrl, PHP_URL_HOST),
+            'SERVER_PORT'     => parse_url($entryUrl, PHP_URL_PORT) ?: '80',
         ];
         $this->client->defaultServerVars['HTTPS'] = parse_url($entryUrl, PHP_URL_SCHEME) === 'https';
         $this->client->restoreServerVars();
-        $this->client->configFile = Configuration::projectDir().$this->config['configFile'];
+        $this->client->configFile = Configuration::projectDir() . $this->config['configFile'];
         $this->app = $this->client->getApplication();
-        $this->revertErrorHandler();
 
         if ($this->config['cleanup'] && isset($this->app->db)) {
             $this->transaction = $this->app->db->beginTransaction();
@@ -150,6 +150,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $_POST = [];
         $_COOKIE = [];
         $_REQUEST = [];
+
+        foreach ($this->loadedFixtures as $fixture) {
+            $fixture->unloadFixtures();
+        }
+
         if ($this->transaction && $this->config['cleanup']) {
             $this->transaction->rollback();
         }
@@ -164,7 +169,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _parts()
     {
-        return ['orm', 'init'];
+        return ['orm', 'init', 'fixtures'];
     }
 
     /**
@@ -198,6 +203,84 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $identity = call_user_func([$identityClass, 'findIdentity'], $user);
         }
         Yii::$app->user->login($identity);
+    }
+
+    /**
+     * Creates and loads fixtures from a config.
+     * Signature is the same as for `fixtures()` method of `yii\test\FixtureTrait`
+     *
+     * ```php
+     * <?php
+     * $I->haveFixtures(,
+     *     'posts' => PostsFixture::className(),
+     *     'user' => [
+     *         'class' => UserFixture::className(),
+     *         'dataFile' => '@tests/_data/models/user.php'
+     *      ],
+     * );
+     * ```
+     *
+     * @param $fixtures
+     * @part fixtures
+     */
+    public function haveFixtures($fixtures)
+    {
+        $fixturesStore = new Yii2Connector\FixturesStore($fixtures);
+        $fixturesStore->loadFixtures();
+        $this->loadedFixtures[] = $fixturesStore;
+    }
+
+    /**
+     * Returns all loaded fixtures.
+     * Array of fixture instances
+     *
+     * @part fixtures
+     * @return array
+     */
+    public function grabFixtures()
+    {
+        return call_user_func_array('array_merge',
+            array_map(function($fixturesStore) {
+                return $fixturesStore->getFixtures();
+            })
+        );
+    }
+
+    /**
+     * Gets a fixtures by name.
+     * Returns a Fixture instance. If a fixture is an instance of `\yii\test\BaseActiveFixture` a second parameter
+     * can be used to return a specific model:
+     *
+     * ```php
+     * $I->haveFixtures(['users' => UserFixture::className()]);
+     *
+     * $users = $I->grabFixture('users');
+     *
+     * // get first user by key, if a fixture is instance of ActiveFixture
+     * $user = $I->grabFixture('users', 'user1');
+     * ```
+     *
+     * @param $name
+     * @return mixed
+     * @throws ModuleException if a fixture is not found
+     * @part fixtures
+     */
+    public function grabFixture($name, $index = null)
+    {
+        foreach ($this->loadedFixtures as $fixtureManager) {
+            $fixture = $fixtureManager->getFixture($name);
+            if ($fixture === null) {
+                continue;
+            }
+            if ($index === null) {
+                return $fixture;
+            }
+            if ($fixture instanceof \yii\test\BaseActiveFixture) {
+                return $fixture->getModel($index);
+            }
+            throw new ModuleException($this, "Fixture $name is not an instance of ActiveFixture and can't be loaded with scond parameter");
+        }
+        throw new ModuleException($this, "Fixture $name is not loaded");
     }
 
     /**
