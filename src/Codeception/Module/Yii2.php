@@ -2,9 +2,11 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleConfigException;
+use Codeception\Exception\ModuleException;
 use Codeception\Lib\Framework;
 use Codeception\Configuration;
 use Codeception\Lib\Notification;
+use Codeception\Subscriber\ErrorHandler;
 use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
@@ -21,6 +23,7 @@ use Yii;
  * * `configFile` *required* - the path to the application config file. File should be configured for test environment and return configuration array.
  * * `entryUrl` - initial application url (default: http://localhost/index-test.php).
  * * `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
+ * * `cleanup` - (default: true) wrap all database connection inside a transaction and roll it back after the test. Should be disabled for acceptance testing..
  *
  * You can use this module by setting params in your functional.suite.yml:
  *
@@ -50,13 +53,13 @@ use Yii;
  * ### Example (`unit.suite.yml`)
  *
  * ```yml
- * class_name: FunctionalTester
+ * class_name: UnitTester
  * modules:
  *   enabled:
  *      - Asserts
  *      - Yii2:
  *          configFile: 'config/test.php'
- *          part: ORM
+ *          part: init
  * ```
  *
  * ### Example (`acceptance.suite.yml`)
@@ -70,7 +73,8 @@ use Yii;
  *             browser: firefox
  *         - Yii2:
  *             configFile: 'config/test.php'
- *             part: init
+ *             part: ORM # allow to use AR methods
+ *             cleanup: false # don't wrap test in transaction
  *             entryScript: index-test.php
  * ```
  *
@@ -105,12 +109,13 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                 "The application config file does not exist: {$this->config['configFile']}"
             );
         }
-        defined('YII_DEBUG') or define('YII_DEBUG', true);
-        defined('YII_ENV') or define('YII_ENV', 'test');
+        $this->defineConstants();
+    }
 
-        if (YII_ENV !== 'test') {
-            Notification::warning("YII_ENV is not set to `test`, please add \n\n`define(\'YII_ENV\', \'test\');`\n\nto bootstrap file", 'Yii Framework');
-        }
+    protected function revertErrorHandler()
+    {
+        $handler = new ErrorHandler();
+        set_error_handler(array($handler, 'errorHandler'));
     }
 
     public function _before(TestInterface $test)
@@ -130,6 +135,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $this->client->restoreServerVars();
         $this->client->configFile = Configuration::projectDir().$this->config['configFile'];
         $this->app = $this->client->getApplication();
+        $this->revertErrorHandler();
 
         if ($this->config['cleanup'] && isset($this->app->db)) {
             $this->transaction = $this->app->db->beginTransaction();
@@ -150,20 +156,48 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         \yii\web\UploadedFile::reset();
 
-        if (Yii::$app) {
-            if (\Yii::$app->has('session', true)) {
-                \Yii::$app->session->close();
-            }
-            Yii::$app = null;
-            Yii::$container = new Container();
+        if (\Yii::$app->has('session', true)) {
+            \Yii::$app->session->close();
         }
-
         parent::_after($test);
     }
 
     public function _parts()
     {
         return ['orm', 'init'];
+    }
+
+    /**
+     * Authorizes user on a site without submitting login form.
+     * Use it for fast pragmatic authorization in functional tests.
+     *
+     * ```php
+     * <?php
+     * // User is found by id
+     * $I->amLoggedAs(1);
+     *
+     * // User object is passed as parameter
+     * $admin = \app\models\User::findByUsername('admin');
+     * $I->amLoggedAs($admin);
+     * ```
+     * Requires `user` component to be enabled and configured.
+     *
+     * @param $user
+     * @throws ModuleException
+     */
+    public function amLoggedAs($user)
+    {
+        if (!Yii::$app->has('user')) {
+            throw new ModuleException($this, 'User component is not loaded');
+        }
+        if ($user instanceof \yii\web\IdentityInterface) {
+            $identity = $user;
+        } else {
+            // class name implementing IdentityInterface
+            $identityClass = Yii::$app->user->identityClass;
+            $identity = call_user_func([$identityClass, 'findIdentity'], $user);
+        }
+        Yii::$app->user->login($identity);
     }
 
     /**
@@ -189,7 +223,6 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (!$res) {
             $this->fail("Record $model was not saved");
         }
-
         return $record->primaryKey;
     }
 
@@ -337,5 +370,16 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             }
         }
         return array_unique($domains);
+    }
+
+    private function defineConstants()
+    {
+        defined('YII_DEBUG') or define('YII_DEBUG', true);
+        defined('YII_ENV') or define('YII_ENV', 'test');
+        defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
+
+        if (YII_ENV !== 'test') {
+            Notification::warning("YII_ENV is not set to `test`, please add \n\n`define(\'YII_ENV\', \'test\');`\n\nto bootstrap file", 'Yii Framework');
+        }
     }
 }
