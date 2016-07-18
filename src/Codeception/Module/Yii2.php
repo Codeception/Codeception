@@ -408,6 +408,40 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Similar to amOnPage but accepts route as first argument and params as second
+     *
+     * ```
+     * $I->amOnRoute('site/view', ['page' => 'about']);
+     * ```
+     *
+     */
+    public function amOnRoute($route, array $params = [])
+    {
+        array_unshift($params, $route);
+        $this->amOnPage($params);
+    }
+
+    /**
+     * Gets a component from Yii container. Throws exception if component is not available
+     *
+     * ```php
+     * <?php
+     * $mailer = $I->grabComponent('mailer');
+     * ```
+     *
+     * @param $component
+     * @return mixed
+     * @throws ModuleException
+     */
+    public function grabComponent($component)
+    {
+        if (!Yii::$app->has($component)) {
+            throw new ModuleException($this, "Component $component is not avilable in current application");
+        }
+        return Yii::$app->get($component);
+    }
+
+    /**
      * Getting domain regex from rule host template
      *
      * @param string $template
