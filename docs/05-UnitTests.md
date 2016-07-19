@@ -336,7 +336,7 @@ To check your code for exception you can use `expectException` method from `Asse
 
 ```php
 <?php
-$t->expectException(new Exception, {
+$t->expectException(Exception::class, function() {
    throw new Exception; 
 });
 ```
