@@ -39,6 +39,11 @@ class Yii2 extends Client
     public static $db; // remember the db instance
 
     /**
+     * @var TestMailer
+     */
+    public static $mailer;
+
+    /**
      * @return \yii\web\Application
      */
     public function getApplication()
@@ -63,14 +68,25 @@ class Yii2 extends Client
         /** @var \yii\web\Application $app */
         $app = Yii::createObject($config);
         // always use the same DB connection
-        if (isset(static::$db)) {
+        if (static::$db) {
             $app->set('db', static::$db);
         } elseif ($app->has('db')) {
             static::$db = $app->get('db');
         }
         // replace mailer with in memory mailer
-        $app->set('mailer', new TestMailer());
+        if (static::$mailer) {
+            $app->set('mailer', static::$mailer);
+        } else {
+            static::$mailer = new TestMailer();
+        }
         return $app;
+    }
+
+    public function resetPersistentVars()
+    {
+        static::$db = null;
+        static::$mailer = null;
+        \yii\web\UploadedFile::reset();
     }
 
     /**

@@ -137,7 +137,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $this->client->configFile = Configuration::projectDir() . $this->config['configFile'];
         $this->app = $this->client->getApplication();
 
-        if ($this->config['cleanup'] && isset($this->app->db)) {
+        if ($this->config['cleanup'] && $this->app->has('db')) {
             $this->transaction = $this->app->db->beginTransaction();
         }
     }
@@ -159,7 +159,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->transaction->rollback();
         }
 
-        \yii\web\UploadedFile::reset();
+        $this->client->resetPersistentVars();
 
         if (\Yii::$app->has('session', true)) {
             \Yii::$app->session->close();
@@ -169,7 +169,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _parts()
     {
-        return ['orm', 'init', 'fixtures'];
+        return ['orm', 'init', 'fixtures', 'email'];
     }
 
     /**
@@ -455,8 +455,9 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      *
      * @param int $num
      * @throws ModuleException
+     * @part email
      */
-    public function seeEmailIsSent($num)
+    public function seeEmailIsSent($num = null)
     {
         if ($num === null) {
             $this->assertNotEmpty($this->grabSentEmails(), 'emails were sent');
@@ -467,6 +468,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Checks that no email was sent
+     *
+     * @part email
      */
     public function dontSeeEmailIsSent()
     {
@@ -481,10 +484,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * ```php
      * <?php
      * $I->seeEmailIsSent();
-     * $messages = $I->grabSentMails();
+     * $messages = $I->grabSentEmails();
      * $I->assertEquals('admin@site,com', $messages[0]->getTo());
      * ```
      *
+     * @part email
      * @return array
      * @throws ModuleException
      */
@@ -495,6 +499,23 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             throw new ModuleException($this, "Mailer module is not mocked, can't test emails");
         }
         return $mailer->getSentMessages();
+    }
+
+    /**
+     * Returns last sent email:
+     *
+     * ```php
+     * <?php
+     * $I->seeEmailIsSent();
+     * $message = $I->grabLastSentEmail();
+     * $I->assertEquals('admin@site,com', $message->getTo());
+     * ```
+     * @part email
+     */
+    public function grabLastSentEmail()
+    {
+        $this->seeEmailIsSent();
+        return $this->grabSentEmails()[0];
     }
 
     /**
