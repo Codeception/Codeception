@@ -179,18 +179,18 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * ```php
      * <?php
      * // User is found by id
-     * $I->amLoggedAs(1);
+     * $I->amLoggedInAs(1);
      *
      * // User object is passed as parameter
      * $admin = \app\models\User::findByUsername('admin');
-     * $I->amLoggedAs($admin);
+     * $I->amLoggedInAs($admin);
      * ```
      * Requires `user` component to be enabled and configured.
      *
      * @param $user
      * @throws ModuleException
      */
-    public function amLoggedAs($user)
+    public function amLoggedInAs($user)
     {
         if (!Yii::$app->has('user')) {
             throw new ModuleException($this, 'User component is not loaded');
@@ -439,6 +439,62 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             throw new ModuleException($this, "Component $component is not avilable in current application");
         }
         return Yii::$app->get($component);
+    }
+
+    /**
+     * Checks that email is sent.
+     *
+     * ```php
+     * <?php
+     * // check that at least 1 email was sent
+     * $I->seeEmailIsSent();
+     *
+     * // check that only 3 emails were sent
+     * $I->seeEmailIsSent(3);
+     * ```
+     *
+     * @param int $num
+     * @throws ModuleException
+     */
+    public function seeEmailIsSent($num)
+    {
+        if ($num === null) {
+            $this->assertNotEmpty($this->grabSentEmails(), 'emails were sent');
+            return;
+        }
+        $this->assertEquals($num, count($this->grabSentEmails()), 'number of sent emails is equal to '.$num);
+    }
+
+    /**
+     * Checks that no email was sent
+     */
+    public function dontSeeEmailIsSent()
+    {
+        $this->seeEmailIsSent(0);
+    }
+
+    /**
+     * Returns array fo all sent email messages.
+     * Each message implements `yii\mail\Message` interface.
+     * Useful to perform additional checks using `Asserts` module:
+     *
+     * ```php
+     * <?php
+     * $I->seeEmailIsSent();
+     * $messages = $I->grabSentMails();
+     * $I->assertEquals('admin@site,com', $messages[0]->getTo());
+     * ```
+     *
+     * @return array
+     * @throws ModuleException
+     */
+    public function grabSentEmails()
+    {
+        $mailer = $this->grabComponent('mailer');
+        if (!$mailer instanceof Yii2Connector\TestMailer) {
+            throw new ModuleException($this, "Mailer module is not mocked, can't test emails");
+        }
+        return $mailer->getSentMessages();
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Util\Debug;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
@@ -67,6 +68,8 @@ class Yii2 extends Client
         } elseif ($app->has('db')) {
             static::$db = $app->get('db');
         }
+        // replace mailer with in memory mailer
+        $app->set('mailer', new TestMailer());
         return $app;
     }
 
