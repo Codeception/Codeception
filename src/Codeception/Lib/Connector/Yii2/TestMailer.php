@@ -25,3 +25,4 @@ class TestMailer extends BaseMailer
         $this->sentMessages = [];
     }
 }
+

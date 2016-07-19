@@ -1,17 +1,17 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Configuration;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
+use Codeception\Lib\Connector\Yii2 as Yii2Connector;
 use Codeception\Lib\Framework;
-use Codeception\Configuration;
-use Codeception\Lib\Notification;
-use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
-use Codeception\Lib\Connector\Yii2 as Yii2Connector;
-use yii\db\ActiveRecordInterface;
+use Codeception\Lib\Notification;
+use Codeception\TestInterface;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 /**
  * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
@@ -239,19 +239,23 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     public function grabFixtures()
     {
-        return call_user_func_array('array_merge',
-            array_map(function($fixturesStore) {
-                return $fixturesStore->getFixtures();
-            })
+        return call_user_func_array(
+            'array_merge', array_map( // merge all fixtures from all fixture stores
+                function ($fixturesStore) {
+                    return $fixturesStore->getFixtures();
+                }
+                , $this->loadedFixtures
+            )
         );
     }
 
     /**
-     * Gets a fixtures by name.
+     * Gets a fixture by name.
      * Returns a Fixture instance. If a fixture is an instance of `\yii\test\BaseActiveFixture` a second parameter
      * can be used to return a specific model:
      *
      * ```php
+     * <?php
      * $I->haveFixtures(['users' => UserFixture::className()]);
      *
      * $users = $I->grabFixture('users');
@@ -392,6 +396,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * Allows input like:
      *
      * ```php
+     * <?php
      * $I->amOnPage(['site/view','page'=>'about']);
      * $I->amOnPage('index-test.php?site/index');
      * $I->amOnPage('http://localhost/index-test.php?site/index');
@@ -463,7 +468,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->assertNotEmpty($this->grabSentEmails(), 'emails were sent');
             return;
         }
-        $this->assertEquals($num, count($this->grabSentEmails()), 'number of sent emails is equal to '.$num);
+        $this->assertEquals($num, count($this->grabSentEmails()), 'number of sent emails is equal to ' . $num);
     }
 
     /**
@@ -477,7 +482,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Returns array fo all sent email messages.
+     * Returns array of all sent email messages.
      * Each message implements `yii\mail\Message` interface.
      * Useful to perform additional checks using `Asserts` module:
      *
