@@ -515,7 +515,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     public function grabLastSentEmail()
     {
         $this->seeEmailIsSent();
-        return $this->grabSentEmails()[0];
+        $messages = $this->grabSentEmails();
+        return end($messages);
     }
 
     /**
