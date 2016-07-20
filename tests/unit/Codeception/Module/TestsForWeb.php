@@ -51,6 +51,12 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!', 'h1');
 
+        $this->module->see('Some text with formatting on separate lines');
+        $this->module->see('Some text with formatting on separate lines', '#area4');
+        $this->module->see('on separate lines', '#area4 .someclass');
+        $this->module->dontSee('Some text with        formatting on separate lines');
+        $this->module->dontSee('Some text with        formatting on separate lines', '#area4');
+
         $this->module->amOnPage('/info');
         $this->module->see('valuable', 'p');
         $this->module->see('valuable', 'descendant-or-self::body/p');
