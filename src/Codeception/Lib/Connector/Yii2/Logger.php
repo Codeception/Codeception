@@ -7,6 +7,7 @@ class Logger extends \yii\log\Logger
 {
     public function init()
     {
+        // overridden to prevent register_shutdown_function
     }
 
     public function log($message, $level, $category = 'application')

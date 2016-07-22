@@ -19,7 +19,7 @@ class TestMailer extends BaseMailer
     protected function saveMessage($message)
     {
         return $this->sendMessage($message);
-    }    
+    }
 
     public function getSentMessages()
     {
@@ -31,4 +31,3 @@ class TestMailer extends BaseMailer
         $this->sentMessages = [];
     }
 }
-
