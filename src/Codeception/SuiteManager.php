@@ -122,6 +122,15 @@ class SuiteManager
         }
 
         $groups = $this->groupManager->groupsForTest($test);
+
+        if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+            $groupDetails = [];
+            foreach ($groups as $group) {
+                $groupDetails[$group] = $test->getGroupDetails()['default'];
+            }
+            $test->setGroupDetails($groupDetails);
+        }
+
         $this->suite->addTest($test, $groups);
 
         if (!empty($groups) && $test instanceof TestInterface) {
