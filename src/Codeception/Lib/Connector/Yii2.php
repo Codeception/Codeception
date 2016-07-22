@@ -73,12 +73,7 @@ class Yii2 extends Client
         $this->persistDb();
         $this->mockMailer($config);
         $this->mockAssetManager();
-        \Yii::setLogger(new Logger([
-            'levels' => ['error', 'warning', 'info'],
-            'except' => [
-                'yii\db\Command:*',
-            ],
-        ]));
+        \Yii::setLogger(new Logger());
     }
 
     public function resetPersistentVars()
