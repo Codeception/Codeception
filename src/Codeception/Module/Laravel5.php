@@ -366,6 +366,27 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Call an Artisan command.
+     *
+     * ``` php
+     * <?php
+     * $I->callArtisan('command:name');
+     * $I->callArtisan('command:name', ['parameter' => 'value']);
+     * ?>
+     * ```
+
+     * @param string $command
+     * @param array $parameters
+     */
+    public function callArtisan($command, $parameters = [])
+    {
+        $console = $this->app->make('Illuminate\Contracts\Console\Kernel');
+        $console->call($command, $parameters);
+
+        return trim($console->output());
+    }
+
+    /**
      * Opens web page using route name and parameters.
      *
      * ``` php
