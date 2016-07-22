@@ -13,7 +13,13 @@ class TestMailer extends BaseMailer
     protected function sendMessage($message)
     {
         $this->sentMessages[] = $message;
+        return true;
     }
+    
+    protected function saveMessage($message)
+    {
+        return $this->sendMessage($message);
+    }    
 
     public function getSentMessages()
     {

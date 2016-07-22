@@ -271,20 +271,18 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     public function grabFixture($name, $index = null)
     {
-        foreach ($this->loadedFixtures as $fixtureManager) {
-            $fixture = $fixtureManager->getFixture($name);
-            if ($fixture === null) {
-                continue;
-            }
-            if ($index === null) {
-                return $fixture;
-            }
-            if ($fixture instanceof \yii\test\BaseActiveFixture) {
-                return $fixture->getModel($index);
-            }
-            throw new ModuleException($this, "Fixture $name is not an instance of ActiveFixture and can't be loaded with scond parameter");
+        $fixtures = $this->grabFixtures();
+        if (!isset($fixtures[$name])) {
+            throw new ModuleException($this, "Fixture $name is not loaded");
         }
-        throw new ModuleException($this, "Fixture $name is not loaded");
+        $fixture = $fixtures[$name];
+        if ($index === null) {
+            return $fixture;
+        }
+        if ($fixture instanceof \yii\test\BaseActiveFixture) {
+            return $fixture->getModel($index);
+        }
+        throw new ModuleException($this, "Fixture $name is not an instance of ActiveFixture and can't be loaded with scond parameter");
     }
 
     /**

@@ -1,8 +1,11 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Lib\Connector\Yii2\Logger;
 use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Util\Debug;
+use Codeception\Util\Maybe;
+use Codeception\Util\Stub;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Response;
@@ -49,7 +52,7 @@ class Yii2 extends Client
     public function getApplication()
     {
         if (!isset($this->app)) {
-            $this->app = $this->startApp();
+            $this->startApp();
         }
         return $this->app;
     }
@@ -66,20 +69,11 @@ class Yii2 extends Client
             $config['class'] = 'yii\web\Application';
         }
         /** @var \yii\web\Application $app */
-        $app = Yii::createObject($config);
-        // always use the same DB connection
-        if (static::$db) {
-            $app->set('db', static::$db);
-        } elseif ($app->has('db')) {
-            static::$db = $app->get('db');
-        }
-        // replace mailer with in memory mailer
-        if (static::$mailer) {
-            $app->set('mailer', static::$mailer);
-        } else {
-            static::$mailer = new TestMailer();
-        }
-        return $app;
+        $this->app = Yii::createObject($config);
+        $this->persistDb();
+        $this->mockMailer($config);
+        $this->mockAssetManager();
+        \Yii::setLogger(new Logger());
     }
 
     public function resetPersistentVars()
@@ -149,11 +143,7 @@ class Yii2 extends Client
         try {
             $app->handleRequest($yiiRequest)->send();
         } catch (\Exception $e) {
-            if ($e instanceof HttpException) {
-                // we shouldn't discard existing output as PHPUnit preform output level verification since PHPUnit 4.2.
-                $app->errorHandler->discardExistingOutput = false;
-                $app->errorHandler->handleException($e);
-            } elseif ($e instanceof ExitException) {
+            if ($e instanceof ExitException) {
                 // nothing to do
             } else {
                 // for exceptions not related to Http, we pass them to Codeception
@@ -174,6 +164,13 @@ class Yii2 extends Client
 
         return new Response($content, $this->statusCode, $this->headers);
     }
+
+    protected function revertErrorHandler()
+    {
+        $handler = new ErrorHandler();
+        set_error_handler(array($handler, 'errorHandler'));
+    }
+
 
     public function restoreServerVars()
     {
@@ -219,4 +216,43 @@ class Yii2 extends Client
         }
         $cookies->removeAll();
     }
+
+    /**
+     * Replace mailer with in memory mailer
+     * @param $config
+     * @param $app
+     */
+    protected function mockMailer($config)
+    {
+        if (static::$mailer) {
+            $this->app->set('mailer', static::$mailer);
+            return;
+        }
+        $mailerConfig = [];
+        if (isset($config['components']['mailer'])) {
+            $mailerConfig = $config['components']['mailer'];
+        }
+        $mailerConfig['class'] = 'Codeception\Lib\Connector\Yii2\TestMailer';
+        $this->app->set('mailer', $mailerConfig);
+        static::$mailer = $this->app->get('mailer');
+    }
+
+    /**
+     * @param $app
+     */
+    protected function persistDb()
+    {
+        // always use the same DB connection
+        if (static::$db) {
+            $this->app->set('db', static::$db);
+        } elseif ($this->app->has('db')) {
+            static::$db = $this->app->get('db');
+        }
+    }
+
+    private function mockAssetManager()
+    {
+        $this->app->set('assetManager', Stub::make('yii\web\AssetManager'));
+    }
+
 }
