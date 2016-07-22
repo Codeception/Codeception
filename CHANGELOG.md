@@ -2,6 +2,7 @@
 
 #### 2.2.3
 
+* [Laravel5] Added `run_database_migrations` configuration option. By @janhenkgerritsen.
 * [Laravel5] Added `callArtisan` method. By @janhenkgerritsen.
 * [Laravel5] Added `disableModelEvents()` method and `disable_model_events` configuration option. Fixes #2897.
 * [REST] Allow objects in files array #3298
