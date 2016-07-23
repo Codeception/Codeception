@@ -610,11 +610,8 @@ class Console implements EventSubscriberInterface
     {
         $time = $event->getTime();
         if ($time) {
-            $seconds = (int) ($milliseconds = (int) ($time * 100)) / 100;
-            $time = ($seconds % 60) . '.' . $milliseconds;
-
             $this
-                ->message($time)
+                ->message(number_format(round($time, 2),2))
                 ->prepend('(')
                 ->append('s)')
                 ->style('info')
