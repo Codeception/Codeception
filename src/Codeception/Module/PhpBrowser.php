@@ -7,6 +7,7 @@ use Codeception\Lib\Connector\Guzzle6;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Remote;
+use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\TestInterface;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
@@ -23,7 +24,7 @@ use GuzzleHttp\Client as GuzzleClient;
  *
  * * Maintainer: **davert**
  * * Stability: **stable**
- * * Contact: davert.codecept@mailican.com
+ * * Contact: codeception@codeception.com
  * * Works with [Guzzle](http://guzzlephp.org/)
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*
@@ -77,7 +78,7 @@ use GuzzleHttp\Client as GuzzleClient;
  * * `client` - Symfony BrowserKit instance.
  *
  */
-class PhpBrowser extends InnerBrowser implements Remote, MultiSession
+class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresPackage
 {
 
     private $isGuzzlePsr7;
@@ -123,6 +124,11 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
      */
     public $guzzle;
 
+    public function _requires()
+    {
+        return ['GuzzleHttp\Client' => '"guzzlehttp/guzzle": ">=4.1.4 <7.0"'];
+    }
+
     public function _initialize()
     {
         $this->client = $this->guessGuzzleConnector();
@@ -131,12 +137,6 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     protected function guessGuzzleConnector()
     {
-        if (!class_exists('GuzzleHttp\Client')) {
-            throw new ModuleException(
-                $this,
-                "Guzzle is not installed. Please install `guzzlehttp/guzzle` with composer"
-            );
-        }
         if (class_exists('GuzzleHttp\Url')) {
             $this->isGuzzlePsr7 = false;
             return new \Codeception\Lib\Connector\Guzzle();

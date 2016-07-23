@@ -5,6 +5,7 @@ use Codeception\Lib\Interfaces\DataMapper;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\ORM;
 use Codeception\Exception\ModuleException;
+use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\TestInterface;
 use League\FactoryMuffin\FactoryMuffin;
 use League\FactoryMuffin\Stores\RepositoryStore;
@@ -120,7 +121,7 @@ gst * You should create this directory manually and create PHP files in it with 
  * 'user' => 'entity|User'
  * ```
  */
-class DataFactory extends \Codeception\Module implements DependsOnModule
+class DataFactory extends \Codeception\Module implements DependsOnModule, RequiresPackage
 {
     protected $dependencyMessage = <<<EOF
 ORM module (like Doctrine2) or Framework module with ActiveRecord support is required:
@@ -146,15 +147,16 @@ EOF;
 
     protected $config = ['factories' => null];
 
+    public function _requires()
+    {
+        return [
+            'League\FactoryMuffin\FactoryMuffin' => '"league/factory-muffin": "^3.0"',
+            'League\FactoryMuffin\Faker\Facade' => '"league/factory-muffin-faker": "^1.0"'
+        ];
+    }
+
     public function _beforeSuite($settings = [])
     {
-        if (!class_exists('League\FactoryMuffin\FactoryMuffin')) {
-            throw new ModuleException($this, 'FactoryMuffin not installed. Please add `"league/factory-muffin": "^3.0"` to composer.json');
-        }
-        if (!class_exists('League\FactoryMuffin\Faker\Facade')) {
-            throw new ModuleException($this, 'FactoryMuffin requires Faker integration. Please add `"league/factory-muffin-faker": "^1.0"` to composer.json');
-        }
-
         $store = null;
         if ($this->ormModule instanceof DataMapper) { // for Doctrine
             $store = new RepositoryStore($this->ormModule->_getEntityManager());

@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Lib\Interfaces\DependsOnModule;
+use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Module as BaseModule;
 
 /**
@@ -79,7 +80,7 @@ use Codeception\Module as BaseModule;
  * @since 1.6.3
  * @author tiger.seo@gmail.com
  */
-class Facebook extends BaseModule implements DependsOnModule
+class Facebook extends BaseModule implements DependsOnModule, RequiresPackage
 {
     protected $requiredFields = ['app_id', 'secret'];
 
@@ -112,6 +113,11 @@ modules
                 locale: uk_UA
                 permissions: [email, publish_stream]
 EOF;
+
+    public function _requires()
+    {
+        return ['Facebook\Facebook' => '"facebook/php-sdk-v4": "~5.0"'];
+    }
 
     public function _depends()
     {

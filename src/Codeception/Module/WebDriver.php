@@ -13,6 +13,7 @@ use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
+use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
 use Codeception\Lib\Interfaces\SessionSnapshot;
 use Codeception\Lib\Interfaces\Web as WebInterface;
@@ -239,7 +240,8 @@ class WebDriver extends CodeceptionModule implements
     ScreenshotSaver,
     PageSourceSaver,
     ElementLocator,
-    ConflictsWithModule
+    ConflictsWithModule,
+    RequiresPackage
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
@@ -275,6 +277,11 @@ class WebDriver extends CodeceptionModule implements
      * @var RemoteWebDriver
      */
     public $webDriver;
+
+    public function _requires()
+    {
+        return ['Facebook\WebDriver\Remote\RemoteWebDriver' => '"facebook/webdriver": "^1.0.1"'];
+    }
 
     public function _initialize()
     {
