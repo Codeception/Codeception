@@ -275,7 +275,6 @@ class Configuration
 
         // load suite config
         $settings = self::loadSuiteConfig($suite, $config['paths']['tests'], $settings);
-
         // load from environment configs
         if (isset($config['paths']['envs'])) {
             $envConf = self::loadEnvConfigs(self::$dir . DIRECTORY_SEPARATOR . $config['paths']['envs']);
@@ -555,6 +554,12 @@ class Configuration
 
         $res = [];
 
+        // for sequential arrays
+        if (isset($a1[0]) && isset($a2[0])) {
+            return array_merge_recursive($a2, $a1);
+        }
+
+        // for associative arrays
         foreach ($a2 as $k2 => $v2) {
             if (!isset($a1[$k2])) { // if no such key
                 $res[$k2] = $v2;

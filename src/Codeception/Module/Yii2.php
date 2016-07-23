@@ -1,43 +1,85 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfigException;
-use Codeception\Lib\Framework;
 use Codeception\Configuration;
-use Codeception\TestInterface;
+use Codeception\Exception\ModuleConfigException;
+use Codeception\Exception\ModuleException;
+use Codeception\Lib\Connector\Yii2 as Yii2Connector;
+use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
-use Codeception\Lib\Connector\Yii2 as Yii2Connector;
-use yii\db\ActiveRecordInterface;
+use Codeception\Lib\Notification;
+use Codeception\TestInterface;
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 /**
  * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
- *
+ * It initializes Yii framework in test environment and provides actions for functional testing.
  *
  * ## Config
  *
- * * configFile *required* - the path to the application config file
- *
- * The entry script must return the application configuration array.
+ * * `configFile` *required* - the path to the application config file. File should be configured for test environment and return configuration array.
+ * * `entryUrl` - initial application url (default: http://localhost/index-test.php).
+ * * `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
+ * * `cleanup` - (default: true) wrap all database connection inside a transaction and roll it back after the test. Should be disabled for acceptance testing..
  *
  * You can use this module by setting params in your functional.suite.yml:
- * <pre>
- * class_name: TestGuy
+ *
+ * ```yaml
+ * class_name: FunctionalTester
  * modules:
  *     enabled:
  *         - Yii2:
  *             configFile: '/path/to/config.php'
- * </pre>
+ * ```
  *
- * ## Parts
+ * ### Parts
  *
- * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+ * * `init` - use module only for initialization (for acceptance tests).
+ * * `orm` - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
  *
+ * ### Example (`functional.suite.yml`)
+ *
+ * ```yml
+ * class_name: FunctionalTester
+ * modules:
+ *   enabled:
+ *      - Yii2:
+ *          configFile: 'config/test.php'
+ * ```
+ *
+ * ### Example (`unit.suite.yml`)
+ *
+ * ```yml
+ * class_name: UnitTester
+ * modules:
+ *   enabled:
+ *      - Asserts
+ *      - Yii2:
+ *          configFile: 'config/test.php'
+ *          part: init
+ * ```
+ *
+ * ### Example (`acceptance.suite.yml`)
+ *
+ * ```yml
+ * class_name: AcceptanceTester
+ * modules:
+ *     enabled:
+ *         - WebDriver:
+ *             url: http://127.0.0.1:8080/
+ *             browser: firefox
+ *         - Yii2:
+ *             configFile: 'config/test.php'
+ *             part: ORM # allow to use AR methods
+ *             cleanup: false # don't wrap test in transaction
+ *             entryScript: index-test.php
+ * ```
  *
  * ## Status
  *
- * Maintainer: **qiangxue**
+ * Maintainer: **samdark**
  * Stability: **stable**
  *
  */
@@ -47,36 +89,55 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * Application config file must be set.
      * @var array
      */
-    protected $config = ['cleanup' => false];
+    protected $config = [
+        'cleanup'     => false,
+        'entryScript' => '',
+        'entryUrl'    => 'http://localhost/index-test.php',
+    ];
+
     protected $requiredFields = ['configFile'];
     protected $transaction;
 
+    /**
+     * @var \yii\base\Application
+     */
     public $app;
+
+    /**
+     * @var Yii2Connector\FixturesStore[]
+     */
+    public $loadedFixtures = [];
 
     public function _initialize()
     {
-        if (!is_file(Configuration::projectDir() . $this->config['configFile'])) {
+        if (!is_file(codecept_root_dir() . $this->config['configFile'])) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "The application config file does not exist: {$this->config['configFile']}"
+                "The application config file does not exist: " . codecept_root_dir() . $this->config['configFile']
             );
         }
+        $this->defineConstants();
     }
 
     public function _before(TestInterface $test)
     {
+        $entryUrl = $this->config['entryUrl'];
+        $entryFile = $this->config['entryScript'] ?: basename($entryUrl);
+        $entryScript = $this->config['entryScript'] ?: parse_url($entryUrl, PHP_URL_PATH);
+
         $this->client = new Yii2Connector();
-        $this->client->configFile = Configuration::projectDir().$this->config['configFile'];
-        $mainConfig = Configuration::config();
-        if (isset($mainConfig['config']) && isset($mainConfig['config']['test_entry_url'])) {
-            $this->client->setServerParameter(
-                'HTTPS',
-                parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME) === 'https'
-            );
-        }
+        $this->client->defaultServerVars = [
+            'SCRIPT_FILENAME' => $entryFile,
+            'SCRIPT_NAME'     => $entryScript,
+            'SERVER_NAME'     => parse_url($entryUrl, PHP_URL_HOST),
+            'SERVER_PORT'     => parse_url($entryUrl, PHP_URL_PORT) ?: '80',
+        ];
+        $this->client->defaultServerVars['HTTPS'] = parse_url($entryUrl, PHP_URL_SCHEME) === 'https';
+        $this->client->restoreServerVars();
+        $this->client->configFile = Configuration::projectDir() . $this->config['configFile'];
         $this->app = $this->client->getApplication();
 
-        if ($this->config['cleanup'] && isset($this->app->db)) {
+        if ($this->config['cleanup'] && $this->app->has('db')) {
             $this->transaction = $this->app->db->beginTransaction();
         }
     }
@@ -89,22 +150,139 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $_POST = [];
         $_COOKIE = [];
         $_REQUEST = [];
+
+        foreach ($this->loadedFixtures as $fixture) {
+            $fixture->unloadFixtures();
+        }
+
         if ($this->transaction && $this->config['cleanup']) {
             $this->transaction->rollback();
         }
 
-        \yii\web\UploadedFile::reset();
+        $this->client->resetPersistentVars();
 
-        if (Yii::$app) {
-            Yii::$app->session->destroy();
+        if (\Yii::$app->has('session', true)) {
+            \Yii::$app->session->close();
         }
-
         parent::_after($test);
     }
 
     public function _parts()
     {
-        return ['orm'];
+        return ['orm', 'init', 'fixtures', 'email'];
+    }
+
+    /**
+     * Authorizes user on a site without submitting login form.
+     * Use it for fast pragmatic authorization in functional tests.
+     *
+     * ```php
+     * <?php
+     * // User is found by id
+     * $I->amLoggedInAs(1);
+     *
+     * // User object is passed as parameter
+     * $admin = \app\models\User::findByUsername('admin');
+     * $I->amLoggedInAs($admin);
+     * ```
+     * Requires `user` component to be enabled and configured.
+     *
+     * @param $user
+     * @throws ModuleException
+     */
+    public function amLoggedInAs($user)
+    {
+        if (!Yii::$app->has('user')) {
+            throw new ModuleException($this, 'User component is not loaded');
+        }
+        if ($user instanceof \yii\web\IdentityInterface) {
+            $identity = $user;
+        } else {
+            // class name implementing IdentityInterface
+            $identityClass = Yii::$app->user->identityClass;
+            $identity = call_user_func([$identityClass, 'findIdentity'], $user);
+        }
+        Yii::$app->user->login($identity);
+    }
+
+    /**
+     * Creates and loads fixtures from a config.
+     * Signature is the same as for `fixtures()` method of `yii\test\FixtureTrait`
+     *
+     * ```php
+     * <?php
+     * $I->haveFixtures(,
+     *     'posts' => PostsFixture::className(),
+     *     'user' => [
+     *         'class' => UserFixture::className(),
+     *         'dataFile' => '@tests/_data/models/user.php'
+     *      ],
+     * );
+     * ```
+     *
+     * @param $fixtures
+     * @part fixtures
+     */
+    public function haveFixtures($fixtures)
+    {
+        $fixturesStore = new Yii2Connector\FixturesStore($fixtures);
+        $fixturesStore->loadFixtures();
+        $this->loadedFixtures[] = $fixturesStore;
+    }
+
+    /**
+     * Returns all loaded fixtures.
+     * Array of fixture instances
+     *
+     * @part fixtures
+     * @return array
+     */
+    public function grabFixtures()
+    {
+        return call_user_func_array('array_merge',
+            array_map( // merge all fixtures from all fixture stores
+                function ($fixturesStore) {
+                    return $fixturesStore->getFixtures();
+                },
+                $this->loadedFixtures
+            )
+        );
+    }
+
+    /**
+     * Gets a fixture by name.
+     * Returns a Fixture instance. If a fixture is an instance of `\yii\test\BaseActiveFixture` a second parameter
+     * can be used to return a specific model:
+     *
+     * ```php
+     * <?php
+     * $I->haveFixtures(['users' => UserFixture::className()]);
+     *
+     * $users = $I->grabFixture('users');
+     *
+     * // get first user by key, if a fixture is instance of ActiveFixture
+     * $user = $I->grabFixture('users', 'user1');
+     * ```
+     *
+     * @param $name
+     * @return mixed
+     * @throws ModuleException if a fixture is not found
+     * @part fixtures
+     */
+    public function grabFixture($name, $index = null)
+    {
+        $fixtures = $this->grabFixtures();
+        if (!isset($fixtures[$name])) {
+            throw new ModuleException($this, "Fixture $name is not loaded");
+        }
+        $fixture = $fixtures[$name];
+        if ($index === null) {
+            return $fixture;
+        }
+        if ($fixture instanceof \yii\test\BaseActiveFixture) {
+            return $fixture->getModel($index);
+        }
+        throw new ModuleException($this, "Fixture $name is not an instance of ActiveFixture and can't be loaded with scond parameter");
     }
 
     /**
@@ -130,7 +308,6 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (!$res) {
             $this->fail("Record $model was not saved");
         }
-
         return $record->primaryKey;
     }
 
@@ -217,6 +394,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * Allows input like:
      *
      * ```php
+     * <?php
      * $I->amOnPage(['site/view','page'=>'about']);
      * $I->amOnPage('index-test.php?site/index');
      * $I->amOnPage('http://localhost/index-test.php?site/index');
@@ -230,6 +408,118 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $page = Yii::$app->getUrlManager()->createUrl($page);
         }
         parent::amOnPage($page);
+    }
+
+    /**
+     * Similar to amOnPage but accepts route as first argument and params as second
+     *
+     * ```
+     * $I->amOnRoute('site/view', ['page' => 'about']);
+     * ```
+     *
+     */
+    public function amOnRoute($route, array $params = [])
+    {
+        array_unshift($params, $route);
+        $this->amOnPage($params);
+    }
+
+    /**
+     * Gets a component from Yii container. Throws exception if component is not available
+     *
+     * ```php
+     * <?php
+     * $mailer = $I->grabComponent('mailer');
+     * ```
+     *
+     * @param $component
+     * @return mixed
+     * @throws ModuleException
+     */
+    public function grabComponent($component)
+    {
+        if (!Yii::$app->has($component)) {
+            throw new ModuleException($this, "Component $component is not avilable in current application");
+        }
+        return Yii::$app->get($component);
+    }
+
+    /**
+     * Checks that email is sent.
+     *
+     * ```php
+     * <?php
+     * // check that at least 1 email was sent
+     * $I->seeEmailIsSent();
+     *
+     * // check that only 3 emails were sent
+     * $I->seeEmailIsSent(3);
+     * ```
+     *
+     * @param int $num
+     * @throws ModuleException
+     * @part email
+     */
+    public function seeEmailIsSent($num = null)
+    {
+        if ($num === null) {
+            $this->assertNotEmpty($this->grabSentEmails(), 'emails were sent');
+            return;
+        }
+        $this->assertEquals($num, count($this->grabSentEmails()), 'number of sent emails is equal to ' . $num);
+    }
+
+    /**
+     * Checks that no email was sent
+     *
+     * @part email
+     */
+    public function dontSeeEmailIsSent()
+    {
+        $this->seeEmailIsSent(0);
+    }
+
+    /**
+     * Returns array of all sent email messages.
+     * Each message implements `yii\mail\Message` interface.
+     * Useful to perform additional checks using `Asserts` module:
+     *
+     * ```php
+     * <?php
+     * $I->seeEmailIsSent();
+     * $messages = $I->grabSentEmails();
+     * $I->assertEquals('admin@site,com', $messages[0]->getTo());
+     * ```
+     *
+     * @part email
+     * @return array
+     * @throws ModuleException
+     */
+    public function grabSentEmails()
+    {
+        $mailer = $this->grabComponent('mailer');
+        if (!$mailer instanceof Yii2Connector\TestMailer) {
+            throw new ModuleException($this, "Mailer module is not mocked, can't test emails");
+        }
+        return $mailer->getSentMessages();
+    }
+
+    /**
+     * Returns last sent email:
+     *
+     * ```php
+     * <?php
+     * $I->seeEmailIsSent();
+     * $message = $I->grabLastSentEmail();
+     * $I->assertEquals('admin@site,com', $message->getTo());
+     * ```
+     * @part email
+     */
+    public function grabLastSentEmail()
+    {
+        $this->seeEmailIsSent();
+        $messages = $this->grabSentEmails();
+        return end($messages);
     }
 
     /**
@@ -278,5 +568,16 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             }
         }
         return array_unique($domains);
+    }
+
+    private function defineConstants()
+    {
+        defined('YII_DEBUG') or define('YII_DEBUG', true);
+        defined('YII_ENV') or define('YII_ENV', 'test');
+        defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
+
+        if (YII_ENV !== 'test') {
+            Notification::warning("YII_ENV is not set to `test`, please add \n\n`define(\'YII_ENV\', \'test\');`\n\nto bootstrap file", 'Yii Framework');
+        }
     }
 }
