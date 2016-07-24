@@ -2,7 +2,21 @@
 
 #### 2.2.3
 
+* [Yii2] Improvements:
+    * Added `init` part to initialize Yii app for unit and acceptance testing.
+    * added `entryScript` and `entryUrl` config values for acceptance testing.
+    * Fixtures support: `haveFixtures`, `grabFixtures` methods.
+    * Yii logs to be printed in debug mode.
+    * added `amOnRoute` method.
+    * added `amloggedInAs` method.
+    * added `grabComponent` method.
+    * added `seeEmailIsSent`, `grabLastSentEmail`, etc and email part.
+    * assetManager disabled for unit/functional tests.
 * Fixed `@example` to `@group` defined in group files. By @eXorus. Fixes #3278
+* Fixed timing values in output. Closes #3331
+* Fixed merging module configs. Closes #3292
+* [Recorder Extension] Fixes saving of files on windows and with using examples.
+* [DataFactory] Fixed loading factories twice by @samusenkoiv. See #3314
 * [Laravel5] Added `run_database_migrations` configuration option. By @janhenkgerritsen.
 * [Laravel5] Added `callArtisan` method. By @janhenkgerritsen.
 * [Laravel5] Added `disableModelEvents()` method and `disable_model_events` configuration option. Fixes #2897.
@@ -10,6 +24,7 @@
 * [ZF2] Added addServiceToContainer method
 * [ZendExpressive] allow instances of UploadedFile in files array
 * [ZF2] Added addServiceToContainer method
+* Don't fail test validation when exec function is disabled by @Naktialda
 
 #### 2.2.2
 

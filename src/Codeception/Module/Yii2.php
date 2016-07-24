@@ -36,8 +36,12 @@ use yii\db\ActiveRecordInterface;
  *
  * ### Parts
  *
+ * By default all available methods are loaded, but you can specify parts to select only needed actions and avoid conflicts.
+ *
  * * `init` - use module only for initialization (for acceptance tests).
- * * `orm` - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+ * * `orm` - include only `haveRecord/grabRecord/seeRecord/dontSeeRecord` actions.
+ * * `fixtures` - use fixtures inside tests with `haveFixtures/grabFixture/grabFixtures` actions.
+ * * `email` - include email actions `seeEmailsIsSent/grabLastSentEmail/...`
  *
  * ### Example (`functional.suite.yml`)
  *
