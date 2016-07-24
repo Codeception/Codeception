@@ -59,7 +59,7 @@ use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 class AMQP extends CodeceptionModule
 {
     protected $config = [
-        'host'     => 'locahost',
+        'host'     => 'localhost',
         'username' => 'guest',
         'password' => 'guest',
         'port'     => '5672',
