@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Configuration as Configuration;
 use Codeception\Exception\ModuleConfigException;
@@ -29,7 +30,7 @@ use Codeception\TestInterface;
  *
  * * Maintainer: **judgedim**, **davert**
  * * Stability: **beta**
- * * Contact: codecept@davert.mail.ua
+ * * Contact: davert@codeception.com
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*
  *
@@ -43,7 +44,7 @@ use Codeception\TestInterface;
  * * cleanup: true - should the dump be reloaded after each test
  *
  */
-class MongoDb extends CodeceptionModule
+class MongoDb extends CodeceptionModule implements RequiresPackage
 {
     /**
      * @api
@@ -351,5 +352,13 @@ class MongoDb extends CodeceptionModule
         $collection = $this->driver->getDbh()->selectCollection($collection);
         $res = $collection->count($criteria);
         \PHPUnit_Framework_Assert::assertSame($expected, $res);
+    }
+
+    /**
+     * Returns list of classes and corresponding packages required for this module
+     */
+    public function _requires()
+    {
+        return ['MongoDB\Client' => '"mongodb/mongodb": "^1.0"'];
     }
 }
