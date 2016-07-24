@@ -13,6 +13,7 @@
     * added `seeEmailIsSent`, `grabLastSentEmail`, etc and email part.
     * assetManager disabled for unit/functional tests.
 * Fixed `@example` to `@group` defined in group files. By @eXorus. Fixes #3278
+* Added `ReqiuiresPackage` interface to set external dependencies for modules.
 * Fixed timing values in output. Closes #3331
 * Fixed merging module configs. Closes #3292
 * [Recorder Extension] Fixes saving of files on windows and with using examples.

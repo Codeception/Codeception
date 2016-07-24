@@ -43,5 +43,4 @@ class Dependencies implements EventSubscriberInterface
         }
         $this->successfulTests[] = Descriptor::getTestSignature($test);
     }
-
 }

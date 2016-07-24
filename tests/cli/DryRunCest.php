@@ -21,6 +21,5 @@ class DryRunCest
         $I->seeInShellOutput('Given i have terminal opened');
         $I->seeInShellOutput('INCOMPLETE');
         $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found');
-
     }
 }

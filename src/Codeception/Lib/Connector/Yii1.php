@@ -144,5 +144,4 @@ class Yii1 extends Client
     {
         return $this->headers;
     }
-
 }

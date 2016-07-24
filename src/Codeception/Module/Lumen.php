@@ -429,7 +429,7 @@ class Lumen extends Framework implements ActiveRecord
             if (! $this->findModel($table, $attributes)) {
                 $this->fail("Could not find $table with " . json_encode($attributes));
             }
-        } else if (! $this->findRecord($table, $attributes)) {
+        } elseif (! $this->findRecord($table, $attributes)) {
             $this->fail("Could not find matching record in table '$table'");
         }
     }
@@ -455,7 +455,7 @@ class Lumen extends Framework implements ActiveRecord
             if ($this->findModel($table, $attributes)) {
                 $this->fail("Unexpectedly found matching $table with " . json_encode($attributes));
             }
-        } else if ($this->findRecord($table, $attributes)) {
+        } elseif ($this->findRecord($table, $attributes)) {
             $this->fail("Unexpectedly found matching record in table '$table'");
         }
     }
@@ -530,5 +530,4 @@ class Lumen extends Framework implements ActiveRecord
 
         return (array) $query->first();
     }
-
 }
