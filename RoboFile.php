@@ -852,7 +852,7 @@ class RoboFile extends \Robo\Tasks
             ->arg('.')
             ->arg('--standard=ruleset.xml')
             ->arg('--report=' . $opt['report'])
-            ->arg('--ignore=tests/data,vendor')
+            ->arg('--ignore=tests,vendor,package,docs')
             ->run();
     }
 
@@ -861,7 +861,7 @@ class RoboFile extends \Robo\Tasks
         $this->taskExec('php vendor/bin/phpcbf')
             ->arg('.')
             ->arg('--standard=ruleset.xml')
-            ->arg('--ignore=tests,vendor,package')
+            ->arg('--ignore=tests,vendor,package,docs')
             ->run();
     }
 }
