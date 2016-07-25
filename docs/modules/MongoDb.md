@@ -21,7 +21,7 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 
 * Maintainer: **judgedim**, **davert**
 * Stability: **beta**
-* Contact: codecept@davert.mail.ua
+* Contact: davert@codeception.com
 
 *Please review the code of non-stable modules and provide patches if you have issues.*
 
