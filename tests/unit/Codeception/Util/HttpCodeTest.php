@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Util;
 
-
 class HttpCodeTest extends \Codeception\Test\Unit
 {
     public function testHttpCodeConstants()

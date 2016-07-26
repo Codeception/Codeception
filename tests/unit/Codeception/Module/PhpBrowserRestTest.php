@@ -26,7 +26,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
         $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
-
     }
 
     private function setStubResponse($response)
@@ -161,7 +160,8 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
      * @Issue https://github.com/Codeception/Codeception/issues/2075
      * Client is undefined for the second test
      */
-    public function testTwoTests() {
+    public function testTwoTests()
+    {
         $cest1 = Stub::makeEmpty('\Codeception\Test\Cest');
         $cest2 = Stub::makeEmpty('\Codeception\Test\Cest');
 

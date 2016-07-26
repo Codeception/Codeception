@@ -611,7 +611,7 @@ class Console implements EventSubscriberInterface
         $time = $event->getTime();
         if ($time) {
             $this
-                ->message(number_format(round($time, 2),2))
+                ->message(number_format(round($time, 2), 2))
                 ->prepend('(')
                 ->append('s)')
                 ->style('info')

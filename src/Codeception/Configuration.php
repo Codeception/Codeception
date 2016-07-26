@@ -149,13 +149,13 @@ class Configuration
         $tempConfig = self::$defaultConfig;
 
         $distConfigContents = "";
-        if(file_exists($configDistFile)) {
+        if (file_exists($configDistFile)) {
             $distConfigContents = file_get_contents($configDistFile);
             $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($distConfigContents));
         }
 
         $configContents = "";
-        if(file_exists($configFile)) {
+        if (file_exists($configFile)) {
             $configContents = file_get_contents($configFile);
             $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($configContents));
         }
@@ -405,8 +405,11 @@ class Configuration
             array_map(
                 function ($m) {
                     return is_array($m) ? key($m) : $m;
-                }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled']))
-            , function ($m) use ($settings) {
+                },
+                $settings['modules']['enabled'],
+                array_keys($settings['modules']['enabled'])
+            ),
+            function ($m) use ($settings) {
                 if (!isset($settings['modules']['disabled'])) {
                     return true;
                 }

@@ -56,7 +56,7 @@ class DryRun extends Command
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
 
-        $config = Configuration::config( $input->getOption('config'));
+        $config = Configuration::config($input->getOption('config'));
         if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
             list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }

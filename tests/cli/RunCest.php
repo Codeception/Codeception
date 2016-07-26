@@ -394,8 +394,5 @@ EOF
         $I->seeInShellOutput('I see file found "scenario.suite.yml"');
         $I->seeInShellOutput('I see file found "dummy.suite.yml"');
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
-
     }
-
-
 }

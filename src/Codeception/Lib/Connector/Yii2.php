@@ -254,5 +254,4 @@ class Yii2 extends Client
     {
         $this->app->set('assetManager', Stub::make('yii\web\AssetManager'));
     }
-
 }

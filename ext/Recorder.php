@@ -266,7 +266,6 @@ EOF;
 
         file_put_contents(codecept_output_dir().'records.html', $indexHTML);
         $this->writeln("⏺ Records saved into: <info>file://" . codecept_output_dir().'records.html</info>');
-
     }
 
     public function before(TestEvent $e)

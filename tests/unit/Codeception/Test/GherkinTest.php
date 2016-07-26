@@ -134,7 +134,6 @@ class GherkinTest extends \Codeception\Test\Unit
         $regex = $this->loader->makePlaceholderPattern($pattern);
         $this->assertRegExp($regex, 'there is a User called "John"');
         $this->assertNotRegExp($regex, 'there is a User called "John" and surname "Smith"');
-
     }
 }
 
@@ -177,5 +176,4 @@ class TagGherkinContext
     {
         GherkinTest::$calls .= 'X';
     }
-
 }

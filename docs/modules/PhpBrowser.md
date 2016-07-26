@@ -12,7 +12,7 @@ If test fails stores last shown page in 'output' dir.
 
 * Maintainer: **davert**
 * Stability: **stable**
-* Contact: davert.codecept@mailican.com
+* Contact: codeception@codeception.com
 * Works with [Guzzle](http://guzzlephp.org/)
 
 *Please review the code of non-stable modules and provide patches if you have issues.*

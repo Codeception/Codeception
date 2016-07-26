@@ -66,7 +66,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $content = $this->saved[$file];
         $this->assertContains('<html><body><h3>I WANT TO CHECK CONFIG EXISTS</h3>', $content);
         $this->assertContains('I see file found "$codeception"', strip_tags($content));
-        $this->assertContains('* File_Exists generated', $this->output);        
+        $this->assertContains('* File_Exists generated', $this->output);
     }
 
     public function testOneFile()

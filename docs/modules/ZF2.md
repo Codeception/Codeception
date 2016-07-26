@@ -161,6 +161,14 @@ $this->getModule('ZF2')->_savePageSource(codecept_output_dir().'page.html');
  * `param` $filename
 
 
+### addServiceToContainer
+ 
+Adds service to ZF2 container
+ * `param string` $name
+ * `param object` $service
+ * `[Part]` services
+
+
 ### amHttpAuthenticated
  
 Authenticates user for HTTP_AUTH

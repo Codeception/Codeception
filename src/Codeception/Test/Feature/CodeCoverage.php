@@ -33,8 +33,5 @@ trait CodeCoverage
                 $this->getTestResultObject()->addError($this, $cce, $time);
             }
         }
-
     }
-    
-
 }

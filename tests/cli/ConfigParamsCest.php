@@ -30,5 +30,4 @@ class ConfigParamsCest
         $I->executeCommand('run -c codeception_self.yml');
         $I->seeInShellOutput('OK (1 test');
     }
-
 }
