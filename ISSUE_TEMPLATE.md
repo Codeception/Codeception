@@ -19,7 +19,7 @@
 * Codeception version: 
 * PHP Version:
 * Operating System:
-* Intallation type: Phar || Composer
+* Installation type: Phar || Composer
 * List of installed packages (`composer show`):
 
 ```bash
