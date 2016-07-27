@@ -1,8 +1,6 @@
-> Questions should go to http://phptest.club
+#### What are you trying to achieve?
 
-### Expected and Actual Behavior
-
-> **Describe what you are trying to achieve and what goes wrong.**
+#### What do you get instead?
 
 > Provide console output if related. Use `-vvv` mode for more details.
 
@@ -20,14 +18,9 @@
 * PHP Version:
 * Operating System:
 * Intallation type: Phar || Composer
-* List of installed packages (`composer show`):
-
-```bash
-# paste dependencies here
-```
-
+* List of installed packages (`composer show`)
 * Suite configuration:
 
 ```yml
-# paste config here
+# paste suite config here
 ```
