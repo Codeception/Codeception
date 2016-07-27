@@ -52,6 +52,9 @@ Locates an element containing a text inside.
 Either CSS or XPath locator can be passed, however they will be converted to XPath.
 
 ```php
+<?php
+use Codeception\Util\Locator;
+
 Locator::contains('label', 'Name'); // label containing name
 Locator::contains('div[ * `contenteditable=true]',`  'hello world');
 ```
@@ -60,7 +63,7 @@ Locator::contains('div[ * `contenteditable=true]',`  'hello world');
  * `param` $text
  * `return`  string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L199)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L212)
 
 ### elementAt 
 
@@ -72,6 +75,9 @@ position is an integer. If a negative value is provided, counting starts from th
 First element has index 1
 
 ```php
+<?php
+use Codeception\Util\Locator;
+
 Locator::elementAt('//table/tr', 2); // second row
 Locator::elementAt('//table/tr', -1); // last row
 Locator::elementAt('table#grind>tr', -2); // previous than last row
@@ -81,13 +87,20 @@ Locator::elementAt('table#grind>tr', -2); // previous than last row
  * `param` $position xpath index
  * `return`  mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L221)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L237)
 
 ### find 
 
 *static*
 
 Finds element by it's attribute(s)
+
+```php
+<?php
+use \Codeception\Util\Locator;
+
+$I->seeElement(Locator::find('img', ['title' => 'diagram']));
+```
 
  * `static` 
 
@@ -96,7 +109,7 @@ Finds element by it's attribute(s)
 
  * `return`  string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L137)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L144)
 
 ### firstElement 
 
@@ -107,13 +120,16 @@ Either CSS or XPath locator can be passed as locator,
 Equal to `Locator::elementAt($locator, 1)`
 
 ```php
+<?php
+use Codeception\Util\Locator;
+
 Locator::firstElement('//table/tr');
 ```
 
  * `param` $element
  * `return`  mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L247)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L266)
 
 ### href 
 
@@ -144,25 +160,28 @@ Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string represe
  * `param` $selector
  * `return`  string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L275)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L297)
 
 ### isCSS 
 
 *static*
 
+Checks that provided string is CSS selector
+
  * `param` $selector
  * `return`  bool
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L154)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L163)
 
 ### isID 
 
 *static*
 
 Checks that string and CSS selector for element by ID
+ * `param` $id
+ * `return`  bool
 
-
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L181)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L191)
 
 ### isXPath 
 
@@ -173,7 +192,7 @@ Checks that locator is an XPath
  * `param` $locator
  * `return`  bool
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L170)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L179)
 
 ### lastElement 
 
@@ -184,13 +203,16 @@ Either CSS or XPath locator can be passed as locator,
 Equal to `Locator::elementAt($locator, -1)`
 
 ```php
+<?php
+use Codeception\Util\Locator;
+
 Locator::lastElement('//table/tr');
 ```
 
  * `param` $element
  * `return`  mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L264)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L286)
 
 ### option 
 

@@ -36,7 +36,7 @@ services:
 sudo: false
 
 install:
-  - pecl install mongodb
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || pecl install mongodb'
   #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # use hhvm-serve instead of builtin server
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || mkdir -p /home/travis/go/{src,bin,pkg}'
@@ -53,12 +53,13 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || composer remove mongodb/mongodb --no-update --dev'
   - composer_parameters="-n --prefer-dist" # this variable will be used in all composer install commands
   - '[[ "$dependencies" != "lowest" ]] || composer_parameters="$composer_parameters --prefer-lowest"'
   - composer update $composer_parameters
   - composer_parameters="$composer_parameters --no-dev" # Codeception needs dev dependencies, but frameworks don't
   # Yii2
-  - composer create-project "yiisoft/yii2-app-basic:@dev" frameworks-yii-basic
+  - composer create-project "yiisoft/yii2-app-basic:@dev" frameworks-yii-basic --no-dev
   # Phalcon
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || (cd cphalcon/ext; export CFLAGS="-g0 -O0 -std=gnu90"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
@@ -122,7 +123,7 @@ before_script:
   - "mysql -e 'create database zf2_test;'"
   - php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create
   # Build
-  - php codecept build -c frameworks-yii-basic/tests
+  - php codecept build -c frameworks-yii-basic
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept build -c frameworks-phalcon'
   - '[[ -z "$SYMFONY" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-l5'
@@ -138,7 +139,7 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] ||  php codecept run coverage'  # run coverage tests on php only
   # disable xdebug before running framework tests
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "xdebug.enable = Off" >> /etc/hhvm/php.ini'
-  - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
+  - php codecept run functional -c frameworks-yii-basic # Yii2 tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests

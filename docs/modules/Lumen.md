@@ -162,7 +162,7 @@ Takes either an object that implements the User interface or
 an array of credentials.
 
  * `param`  \Illuminate\Contracts\Auth\User|array $user
- * `param`  string $driver
+ * `param`  string|null $driver The authentication driver for Lumen <= 5.1.*, guard name for Lumen >= 5.2
  * `return` void
 
 
