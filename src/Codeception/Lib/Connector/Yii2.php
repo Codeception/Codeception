@@ -252,7 +252,6 @@ class Yii2 extends Client
                     $mailerConfig[$name] = $value;
                 }
             }
-            $mailerConfig = $config['components']['mailer'];
         }
         
         $this->app->set('mailer', $mailerConfig);
