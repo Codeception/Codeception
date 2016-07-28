@@ -87,7 +87,7 @@ class Guzzle6 extends Client
      * @param string $password
      * @param string $type  Default: 'basic'
      */
-    public function setAuth($username, $password, $type='basic')
+    public function setAuth($username, $password, $type = 'basic')
     {
         if (!$username) {
             unset($this->requestOptions['auth']);
