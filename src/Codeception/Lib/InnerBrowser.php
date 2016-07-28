@@ -164,7 +164,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 $server[$header] = $val;
             }
         }
-
+        $server['REQUEST_TIME'] = time();
+        $server['REQUEST_TIME_FLOAT'] = microtime(true);
         if ($this instanceof Framework) {
             if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
                 $hostname = parse_url($uri, PHP_URL_HOST);
