@@ -228,11 +228,32 @@ class Yii2 extends Client
             $this->app->set('mailer', static::$mailer);
             return;
         }
-        $mailerConfig = [];
-        if (isset($config['components']['mailer'])) {
-            $mailerConfig = $config['components']['mailer'];
+        
+        // options that make sense for mailer mock
+        $allowedOptions = [
+            'htmlLayout',
+            'textLayout',
+            'messageConfig',
+            'messageClass',
+            'useFileTransport',
+            'fileTransportPath',
+            'fileTransportCallback',
+            'view',
+            'viewPath',
+        ];
+        
+        $mailerConfig = [
+            'class' => 'Codeception\Lib\Connector\Yii2\TestMailer',
+        ];
+        
+        if (isset($config['components']['mailer']) && is_array($config['components']['mailer'])) {
+            foreach ($config['components']['mailer'] as $name => $value) {
+                if (in_array($name, $allowedOptions, true)) {
+                    $mailerConfig[$name] = $value;
+                }
+            }
         }
-        $mailerConfig['class'] = 'Codeception\Lib\Connector\Yii2\TestMailer';
+        
         $this->app->set('mailer', $mailerConfig);
         static::$mailer = $this->app->get('mailer');
     }
