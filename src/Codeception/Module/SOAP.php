@@ -36,6 +36,7 @@ use Codeception\Lib\Interfaces\API;
  * ## Configuration
  *
  * * endpoint *required* - soap wsdl endpoint
+ * * SOAPAction - replace header SOAPAction (Set to '' to SOAP 1.2)
  *
  * ## Public Properties
  *
