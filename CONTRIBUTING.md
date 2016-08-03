@@ -12,7 +12,9 @@ All contributions must follow [PSR-2](http://www.php-fig.org/psr/psr-2/) coding 
 
 Breaking features and major improvements should be sent into `master`. When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
 
-Check also the "tests/README.md" to learn more about the available internal Codeception tests.
+## Tests
+
+Check the ["tests/README.md"](tests/README.md) to learn how to run and write Codeception internal tests.
 
 ## Documentation
 
