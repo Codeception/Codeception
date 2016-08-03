@@ -16,7 +16,7 @@ Breaking features and major improvements should be sent into `master`. When you 
 ## Tests
 
 Check the [tests/README.md](tests/README.md) to learn how to run and write internal tests.
-We encourage you to write a test for a feature/bug you are implementing. If that doesn't seem possible such PRs are stil can be accepted. 
+We encourage you to write a test for a patch you are implementing. If that doesn't seem possible such PRs are stil can be accepted. 
 
 ## Documentation
 
