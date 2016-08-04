@@ -16,7 +16,9 @@ Breaking features and major improvements should be sent into `master`. When you 
 ## Tests
 
 Check the [tests/README.md](tests/README.md) to learn how to run and write internal tests.
-We encourage you to write a test for a patch you are implementing. If that doesn't seem possible such PRs are stil can be accepted. 
+We encourage you to write a test for a patch you are implementing. If this doesn't seem possible, such PRs are stil valid and can be accepted.
+
+We also encourage to submit bug reports with a failing test or test environment (3rd party repo with Codeception installation) with demonstration of a failure. That makes easier to us to find the cause and fix it.
 
 ## Documentation
 
