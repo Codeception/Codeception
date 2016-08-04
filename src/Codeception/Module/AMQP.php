@@ -205,16 +205,16 @@ class AMQP extends CodeceptionModule implements RequiresPackage
      * $I->purgeQueue('queue.emails');
      * ?>
      * ```
-     */ 
+     */
     public function purgeQueue($queueName = '')
     {
         if (! in_array($queueName, $this->config['queues'])) {
             throw new ModuleException(__CLASS__, "'$queueName' doesn't exist in queues config list");
-        }        
-        
-        $this->connection->channel()->queue_purge($queueName, true);        
+        }
+
+        $this->connection->channel()->queue_purge($queueName, true);
     }
-    
+
     /**
      * Purge all queues defined in config.
      *
@@ -223,12 +223,12 @@ class AMQP extends CodeceptionModule implements RequiresPackage
      * $I->purgeAllQueues();
      * ?>
      * ```
-     */    
+     */
     public function purgeAllQueues()
     {
         $this->cleanup();
-    }    
-    
+    }
+
     protected function cleanup()
     {
         if (!isset($this->config['queues'])) {
