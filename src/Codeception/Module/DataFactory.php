@@ -242,6 +242,6 @@ EOF;
      */
     public function haveMultiple($name, $times, array $extraAttrs = [])
     {
-        return $this->factoryMuffin->seed($name, $times, $extraAttrs);
+        return $this->factoryMuffin->seed($times, $name, $extraAttrs);
     }
 }
