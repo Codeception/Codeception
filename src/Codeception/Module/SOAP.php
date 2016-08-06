@@ -36,6 +36,7 @@ use Codeception\Lib\Interfaces\API;
  * ## Configuration
  *
  * * endpoint *required* - soap wsdl endpoint
+ * * SOAPAction - replace SOAPAction HTTP header (Set to '' to SOAP 1.2)
  *
  * ## Public Properties
  *
@@ -479,7 +480,7 @@ EOF;
             [
                 'HTTP_Content-Type' => 'text/xml; charset=UTF-8',
                 'HTTP_Content-Length' => strlen($body),
-                'HTTP_SOAPAction' => $action
+                'HTTP_SOAPAction' => isset($this->config['SOAPAction']) ? $this->config['SOAPAction'] : $action
             ],
             $body
         );
