@@ -120,6 +120,27 @@ class Laravel5 extends Client
     }
 
     /**
+     * Override filterFiles
+     *
+     * We need to create an array of \Illuminate\Http\UploadedFile, rather than
+     * \Symfony\Component\HttpFoundation\File\UploadedFile.
+     *
+     * @param array $files
+     * @return array
+     */
+    protected function filterFiles(array $files)
+    {
+        $files = parent::filterFiles($files);
+
+        $filtered = [];
+        foreach ($files as $key => $file) {
+            $filtered[$key] = UploadedFile::createFromBase($file, true);
+        }
+
+        return $filtered;
+    }
+
+    /**
      * Initialize the Laravel framework.
      *
      * @param SymfonyRequest $request
