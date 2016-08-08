@@ -136,7 +136,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             'SERVER_NAME'           => parse_url($entryUrl, PHP_URL_HOST),
             'SERVER_PORT'           => parse_url($entryUrl, PHP_URL_PORT) ?: '80',
             'REQUEST_TIME'          => time(),
-            'REQUEST_TIME_FLOAT'    => microtime(true),            
+            'REQUEST_TIME_FLOAT'    => microtime(true),
         ];
         $this->client->defaultServerVars['HTTPS'] = parse_url($entryUrl, PHP_URL_SCHEME) === 'https';
         $this->client->restoreServerVars();
