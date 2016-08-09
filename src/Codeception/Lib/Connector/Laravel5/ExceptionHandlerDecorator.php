@@ -76,7 +76,7 @@ class ExceptionHandlerDecorator implements ExceptionHandlerContract
      * @param  \Exception $e
      * @return void
      */
-    public function report( Exception $e )
+    public function report(Exception $e)
     {
         $this->laravelExceptionHandler->report($e);
     }
@@ -87,7 +87,7 @@ class ExceptionHandlerDecorator implements ExceptionHandlerContract
      * @param  \Exception $e
      * @return void
      */
-    public function renderForConsole( $output, Exception $e )
+    public function renderForConsole($output, Exception $e)
     {
         $this->laravelExceptionHandler->renderForConsole($output, $e);
     }
