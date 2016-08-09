@@ -265,7 +265,7 @@ EOF;
     public function seeSoapResponseEquals($xml)
     {
         $xml = SoapUtils::toXml($xml);
-        $this->assertEquals($this->getXmlResponse()->C14N(), $xml->C14N());
+        $this->assertEquals($xml->C14N(), $this->getXmlResponse()->C14N());
     }
 
     /**
@@ -306,7 +306,7 @@ EOF;
     public function dontSeeSoapResponseEquals($xml)
     {
         $xml = SoapUtils::toXml($xml);
-        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($this->getXmlResponse()->C14N(), $xml->C14N());
+        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($xml->C14N(), $this->getXmlResponse()->C14N());
     }
 
 
