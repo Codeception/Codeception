@@ -58,6 +58,8 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
 
     protected $dumpFile;
     protected $isDumpFileEmpty = true;
+    protected $isDumpFileDirectory = false;
+    protected $isDumpFileArchive = false;
 
     protected $config = [
         'populate' => true,
@@ -89,10 +91,19 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
             $this->dumpFile = Configuration::projectDir() . $this->config['dump'];
             $this->isDumpFileEmpty = false;
 
-            $content = file_get_contents($this->dumpFile);
-            $content = trim(preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $content));
-            if (!sizeof(explode("\n", $content))) {
-                $this->isDumpFileEmpty = true;
+            if (is_dir($this->dumpFile)) {
+                $this->isDumpFileDirectory = true;
+            } elseif (
+                strlen($this->dumpFile) > 7
+                && substr($this->dumpFile, -7) === '.tar.gz'
+            ) {
+                $this->isDumpFileArchive = true;
+            } else {
+                $content = file_get_contents($this->dumpFile);
+                $content = trim(preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $content));
+                if (!sizeof(explode("\n", $content))) {
+                    $this->isDumpFileEmpty = true;
+                }
             }
         }
 
@@ -145,11 +156,40 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
 
     protected function loadDump()
     {
+        if ($this->isDumpFileDirectory) {
+            $this->loadDumpFromDirectory();
+            return;
+        }
+        if ($this->isDumpFileArchive) {
+            $this->loadDumpFromArchive();
+            return;
+        }
         if ($this->isDumpFileEmpty) {
             return;
         }
         try {
             $this->driver->load($this->dumpFile);
+        } catch (\Exception $e) {
+            throw new ModuleException(__CLASS__, $e->getMessage());
+        }
+    }
+
+    protected function loadDumpFromDirectory()
+    {
+        try {
+            $this->driver->loadFromMongoDump($this->dumpFile);
+        } catch (\Exception $e) {
+            throw new ModuleException(__CLASS__, $e->getMessage());
+        }
+    }
+
+    protected function loadDumpFromArchive()
+    {
+        if (stripos(shell_exec('which tar'), 'not found')) {
+            return;
+        }
+        try {
+            $this->driver->loadFromTarGzMongoDump($this->dumpFile);
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }

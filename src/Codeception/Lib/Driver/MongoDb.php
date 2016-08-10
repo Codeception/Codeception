@@ -7,6 +7,8 @@ use Codeception\Exception\ModuleException;
 
 class MongoDb
 {
+    const DEFAULT_PORT = 27017;
+
     private $legacy;
     private $dbh;
     private $dsn;
@@ -167,6 +169,71 @@ class MongoDb
         shell_exec($cmd);
     }
 
+    public function loadFromMongoDump($dumpFile)
+    {
+        list($host, $port) = $this->getHostPort();
+        if ($this->user && $this->password) {
+            $cmd = sprintf(
+                'mongorestore --host %s --port %s --username %s --password %s %s',
+                $host,
+                $port,
+                $this->user,
+                $this->password,
+                escapeshellarg($dumpFile)
+            );
+        } else {
+            $cmd = sprintf(
+                'mongorestore --host %s --port %s %s',
+                $host,
+                $port,
+                escapeshellarg($dumpFile)
+            );
+        }
+        shell_exec($cmd);
+    }
+
+    public function loadFromTarGzMongoDump($dumpFile)
+    {
+        list($host, $port) = $this->getHostPort();
+        $getDirCmd = 'tar -tf ' . escapeshellarg($dumpFile)
+            . '| awk \'BEGIN { FS = "/" } ; { print $1 }\' '
+            . '| uniq';
+        $dirCountCmd = $getDirCmd . ' | wc -l';
+        if (trim(shell_exec($dirCountCmd)) !== '1') {
+            throw new ModuleException(
+                $this,
+                'Archive MUST contain single directory with db dump'
+            );
+        }
+        $dirName = trim(shell_exec($getDirCmd));
+        if ($this->user && $this->password) {
+            $cmd = sprintf(
+                'tar -xzf %s '
+                    . '&& mongorestore --host %s --port %s --username %s --password %s %s '
+                    . '&& rm -r %s',
+                escapeshellarg($dumpFile),
+                $host,
+                $port,
+                $this->user,
+                $this->password,
+                $dirName,
+                $dirName
+            );
+        } else {
+            $cmd = sprintf(
+                'tar -xzf %s '
+                    . '&& mongorestore --host %s --port %s %s '
+                    . '&& rm -r %s',
+                $dumpFile,
+                $host,
+                $port,
+                $dirName,
+                $dirName
+            );
+        }
+        shell_exec($cmd);
+    }
+
     public function getDbh()
     {
         return $this->dbh;
@@ -185,5 +252,17 @@ class MongoDb
     public function isLegacy()
     {
         return $this->legacy;
+    }
+
+    private function getHostPort()
+    {
+        $hostPort = explode(':', $this->host);
+        if (count($hostPort) === 2) {
+            return $hostPort;
+        }
+        if (count($hostPort) === 1) {
+            return [$hostPort[0], self::DEFAULT_PORT];
+        }
+        throw new ModuleException($this, '$dsn MUST be like (mongodb://)<host>:<port>/<db name>');
     }
 }
