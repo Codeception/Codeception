@@ -296,7 +296,7 @@ EOF;
      */
     public function amDigestAuthenticated($username, $password)
     {
-        $this->client->setAuth($username, $password, CURLAUTH_DIGEST);
+        $this->client->setAuth($username, $password, 'digest');
     }
 
     /**
