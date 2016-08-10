@@ -296,7 +296,7 @@ EOF;
      */
     public function amDigestAuthenticated($username, $password)
     {
-        $this->client->setAuth($username, $password, CURLAUTH_DIGEST);
+        $this->client->setAuth($username, $password, 'digest');
     }
 
     /**
@@ -604,7 +604,9 @@ EOF;
      */
     public function seeResponseIsJson()
     {
-        json_decode($this->connectionModule->_getResponseContent());
+        $responseContent = $this->connectionModule->_getResponseContent();
+        \PHPUnit_Framework_Assert::assertNotEquals('', $responseContent, 'response is empty');
+        json_decode($responseContent);
         $errorCode = json_last_error();
         $errorMessage = json_last_error_msg();
         \PHPUnit_Framework_Assert::assertEquals(
@@ -612,8 +614,8 @@ EOF;
             $errorCode,
             sprintf(
                 "Invalid json: %s. System message: %s.",
-                $this->connectionModule->_getResponseContent(),
-                json_last_error_msg()
+                $responseContent,
+                $errorMessage
             )
         );
     }

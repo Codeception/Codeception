@@ -63,10 +63,16 @@ class Template
 
         foreach ($matches as $match) { // fill in placeholders
             $placeholder = $match[1];
-            if (!isset($this->vars[$placeholder])) {
-                continue;
+            $value = $this->vars;
+            foreach (explode('.', $placeholder) as $segment) {
+                if (is_array($value) && array_key_exists($segment, $value)) {
+                    $value = $value[$segment];
+                } else {
+                    continue 2;
+                }
             }
-            $result = str_replace($this->placehodlerStart . $placeholder . $this->placeholderEnd, $this->vars[$placeholder], $result);
+
+            $result = str_replace($this->placehodlerStart . $placeholder . $this->placeholderEnd, $value, $result);
         }
         return $result;
     }

@@ -323,6 +323,20 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseMatchesJsonType(['id' => 'integer'], '$.users[0]');
     }
 
+    public function testSeeResponseIsJsonFailsWhenResponseIsEmpty()
+    {
+        $this->shouldFail();
+        $this->setStubResponse('');
+        $this->module->seeResponseIsJson();
+    }
+
+    public function testSeeResponseIsJsonFailsWhenResponseIsInvalidJson()
+    {
+        $this->shouldFail();
+        $this->setStubResponse('{');
+        $this->module->seeResponseIsJson();
+    }
+
 
     protected function shouldFail()
     {

@@ -45,17 +45,16 @@ class MessageFactory
 
     /**
      * @param ComparisonFailure $failure
-     * @return Message|null
+     * @return string
      */
     public function prepareComparisonFailureMessage(ComparisonFailure $failure)
     {
-        $message = $this->message($failure->getMessage());
         $diff = $this->diffFactory->createDiff($failure);
         if (!$diff) {
-            return $message;
+            return '';
         }
         $diff = $this->colorizer->colorize($diff);
 
-        return $message->append("\n<comment>- Expected</comment> | <info>+ Actual</info>\n")->append($diff);
+        return "\n<comment>- Expected</comment> | <info>+ Actual</info>\n$diff";
     }
 }

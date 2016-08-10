@@ -36,6 +36,7 @@ use Codeception\Lib\Interfaces\API;
  * ## Configuration
  *
  * * endpoint *required* - soap wsdl endpoint
+ * * SOAPAction - replace SOAPAction HTTP header (Set to '' to SOAP 1.2)
  *
  * ## Public Properties
  *
@@ -265,7 +266,7 @@ EOF;
     public function seeSoapResponseEquals($xml)
     {
         $xml = SoapUtils::toXml($xml);
-        $this->assertEquals($this->getXmlResponse()->C14N(), $xml->C14N());
+        $this->assertEquals($xml->C14N(), $this->getXmlResponse()->C14N());
     }
 
     /**
@@ -306,7 +307,7 @@ EOF;
     public function dontSeeSoapResponseEquals($xml)
     {
         $xml = SoapUtils::toXml($xml);
-        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($this->getXmlResponse()->C14N(), $xml->C14N());
+        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($xml->C14N(), $this->getXmlResponse()->C14N());
     }
 
 
@@ -479,7 +480,7 @@ EOF;
             [
                 'HTTP_Content-Type' => 'text/xml; charset=UTF-8',
                 'HTTP_Content-Length' => strlen($body),
-                'HTTP_SOAPAction' => $action
+                'HTTP_SOAPAction' => isset($this->config['SOAPAction']) ? $this->config['SOAPAction'] : $action
             ],
             $body
         );

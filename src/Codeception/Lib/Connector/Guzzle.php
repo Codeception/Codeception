@@ -79,13 +79,18 @@ class Guzzle extends Client
         unset($this->requestOptions['headers'][$name]);
     }
 
-    public function setAuth($username, $password)
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $type  Default: 'basic'
+     */
+    public function setAuth($username, $password, $type = 'basic')
     {
         if (!$username) {
             unset($this->requestOptions['auth']);
             return;
         }
-        $this->requestOptions['auth'] = [$username, $password];
+        $this->requestOptions['auth'] = [$username, $password, $type];
     }
 
     /**
