@@ -131,6 +131,12 @@ class Laravel5 extends Client
     {
         $files = parent::filterFiles($files);
 
+        if (! class_exists('Illuminate\Http\UploadedFile')) {
+            // The \Illuminate\Http\UploadedFile class was introduced in Laravel 5.2.15,
+            // so don't change the $files array if it does not exist.
+            return $files;
+        }
+
         $filtered = [];
         foreach ($files as $key => $file) {
             $filtered[$key] = UploadedFile::createFromBase($file, true);

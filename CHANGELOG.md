@@ -2,6 +2,7 @@
 
 #### 2.2.4
 
+# [Laravel5] Fixed an issue with error handling for Laravel 5.3. See #3420. By @bonsi.
 * [Laravel5] Fixed an issue with uploaded files. See #3417. By @torkiljohnsen.
 
 #### 2.2.3
