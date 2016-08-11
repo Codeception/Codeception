@@ -126,7 +126,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
                     if (!sizeof(explode("\n", $content))) {
                         $this->isDumpFileEmpty = true;
                     }
-                break;
+                    break;
                 case self::DUMP_TYPE_MONGODUMP:
                     if (!is_dir($this->dumpFile)) {
                         throw new ModuleConfigException(
@@ -144,7 +144,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
                         }
                     }
                     $dumpDir->close();
-                break;
+                    break;
                 case self::DUMP_TYPE_MONGODUMP_TAR_GZ:
                     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                         $this->isDumpFileEmpty = true;
@@ -157,15 +157,15 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
                             Please, check dump file: " . $this->config['dump']
                         );
                     }
-                break;
+                    break;
                 default:
-                throw new ModuleConfigException(
-                    __CLASS__,
-                    '\"dump_type\" must be one of ["'
-                    . self::DUMP_TYPE_JS . '", "'
-                    . self::DUMP_TYPE_MONGODUMP . '", "'
-                    . self::DUMP_TYPE_MONGODUMP_TAR_GZ . '"].'
-                );
+                    throw new ModuleConfigException(
+                        __CLASS__,
+                        '\"dump_type\" must be one of ["'
+                        . self::DUMP_TYPE_JS . '", "'
+                        . self::DUMP_TYPE_MONGODUMP . '", "'
+                        . self::DUMP_TYPE_MONGODUMP_TAR_GZ . '"].'
+                    );
             }
         }
     }
@@ -207,13 +207,13 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
         switch ($this->config['dump_type']) {
             case self::DUMP_TYPE_JS:
                 $this->loadDumpFromJs();
-            break;
+                break;
             case self::DUMP_TYPE_MONGODUMP:
                 $this->loadDumpFromDirectory();
-            break;
+                break;
             case self::DUMP_TYPE_MONGODUMP_TAR_GZ:
                 $this->loadDumpFromArchive();
-            break;
+                break;
         }
     }
 
