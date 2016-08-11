@@ -143,9 +143,12 @@ class Yii2 extends Client
         try {
             $app->handleRequest($yiiRequest)->send();
         } catch (\Exception $e) {
-            if ($e instanceof ExitException) {
-                // nothing to do
-            } else {
+            if ($e instanceof HttpException) {
+                // Don't discard output and pass exception handling to Yii to be able
+                // to expect error response codes in tests.
+                $app->errorHandler->discardExistingOutput = false;
+                $app->errorHandler->handleException($e);
+            } elseif (!$e instanceof ExitException) {
                 // for exceptions not related to Http, we pass them to Codeception
                 $this->resetApplication();
                 throw $e;
