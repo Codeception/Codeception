@@ -45,7 +45,7 @@ class XmlStructure
         } catch (ParseException $e) {
         }
         $els = $xpath->query($cssOrXPath);
-        if ($els) {
+        if ($els->length) {
             return $els->item(0);
         }
         throw new ElementNotFound($cssOrXPath);
