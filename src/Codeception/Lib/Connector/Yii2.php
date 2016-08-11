@@ -4,7 +4,6 @@ namespace Codeception\Lib\Connector;
 use Codeception\Lib\Connector\Yii2\Logger;
 use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Util\Debug;
-use Codeception\Util\Maybe;
 use Codeception\Util\Stub;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
@@ -98,7 +97,7 @@ class Yii2 extends Client
         $_REQUEST = $this->remapRequestParameters($request->getParameters());
         $_POST = $_GET = [];
 
-        if (strtoupper($request->getMethod()) == 'GET') {
+        if (strtoupper($request->getMethod()) === 'GET') {
             $_GET = $_REQUEST;
         } else {
             $_POST = $_REQUEST;
