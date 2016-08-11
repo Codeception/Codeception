@@ -39,6 +39,9 @@ use Codeception\TestInterface;
  * * dsn *required* - MongoDb DSN with the db name specified at the end of the host after slash
  * * user *required* - user to access database
  * * password *required* - password
+ * * dump_type *required* - type of dump
+ *   (one of MongoDb::DUMP_TYPE_JS, MongoDb::DUMP_TYPE_MONGODUMP, MongoDb::DUMP_TYPE_MONGODUMP_TAR_GZ,
+ *   default: MongoDb::DUMP_TYPE_JS).
  * * dump - path to database dump
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
@@ -46,6 +49,10 @@ use Codeception\TestInterface;
  */
 class MongoDb extends CodeceptionModule implements RequiresPackage
 {
+    const DUMP_TYPE_JS = 'js';
+    const DUMP_TYPE_MONGODUMP = 'mongodump';
+    const DUMP_TYPE_MONGODUMP_TAR_GZ = 'tar-gz';
+
     /**
      * @api
      * @var
@@ -58,15 +65,14 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
 
     protected $dumpFile;
     protected $isDumpFileEmpty = true;
-    protected $isDumpFileDirectory = false;
-    protected $isDumpFileArchive = false;
 
     protected $config = [
-        'populate' => true,
-        'cleanup'  => true,
-        'dump'     => null,
-        'user'     => null,
-        'password' => null
+        'populate'  => true,
+        'cleanup'   => true,
+        'dump'      => null,
+        'dump_type' => self::DUMP_TYPE_JS,
+        'user'      => null,
+        'password'  => null,
     ];
 
     protected $populated = false;
@@ -80,32 +86,6 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
 
     public function _initialize()
     {
-        if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
-            if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
-                throw new ModuleConfigException(
-                    __CLASS__,
-                    "File with dump doesn't exist.\n
-                    Please, check path for dump file: " . $this->config['dump']
-                );
-            }
-            $this->dumpFile = Configuration::projectDir() . $this->config['dump'];
-            $this->isDumpFileEmpty = false;
-
-            if (is_dir($this->dumpFile)) {
-                $this->isDumpFileDirectory = true;
-            } elseif (
-                strlen($this->dumpFile) > 7
-                && substr($this->dumpFile, -7) === '.tar.gz'
-            ) {
-                $this->isDumpFileArchive = true;
-            } else {
-                $content = file_get_contents($this->dumpFile);
-                $content = trim(preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $content));
-                if (!sizeof(explode("\n", $content))) {
-                    $this->isDumpFileEmpty = true;
-                }
-            }
-        }
 
         try {
             $this->driver = MongoDbDriver::create(
@@ -122,6 +102,70 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
             $this->cleanup();
             $this->loadDump();
             $this->populated = true;
+        }
+    }
+
+    private function validateDump()
+    {
+        if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
+            if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
+                throw new ModuleConfigException(
+                    __CLASS__,
+                    "File with dump doesn't exist.\n
+                    Please, check path for dump file: " . $this->config['dump']
+                );
+            }
+            $this->dumpFile = Configuration::projectDir() . $this->config['dump'];
+            $this->isDumpFileEmpty = false;
+
+            switch ($this->config['dump_type']) {
+            case self::DUMP_TYPE_JS:
+                $content = file_get_contents($this->dumpFile);
+                $content = trim(preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $content));
+                if (!sizeof(explode("\n", $content))) {
+                    $this->isDumpFileEmpty = true;
+                }
+                break;
+            case self::DUMP_TYPE_MONGODUMP:
+                if (!is_dir($this->dumpFile)) {
+                    throw new ModuleConfigException(
+                        __CLASS__,
+                        "Dump must be a directory.\n
+                        Please, check dump: " . $this->config['dump']
+                    );
+                }
+                $this->isDumpFileEmpty = true;
+                $dumpDir = dir($this->dumpFile);
+                while (false !== ($entry = $dumpDir->read())) {
+                    if ($entity !== '..' && $entity !== '.') {
+                        $this->isDumpFileEmpty = false;
+                        break;
+                    }
+                }
+                $dumpDir->close();
+                break;
+            case self::DUMP_TYPE_MONGODUMP_TAR_GZ:
+                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    $this->isDumpFileEmpty = true;
+                    break;
+                }
+                if (strlen($this->dumpFile) <= 7 || substr($this->dumpFile, -7) !== '.tar.gz') {
+                    throw new ModuleConfigException(
+                        __CLASS__,
+                        "Dump file must be a valid tar gunzip archive.\n
+                        Please, check dump file: " . $this->config['dump']
+                    );
+                }
+                break;
+            default:
+                throw new ModuleConfigException(
+                    __CLASS__,
+                    '\"dump_type\" must be one of ["'
+                    . self::DUMP_TYPE_JS . '", "'
+                    . self::DUMP_TYPE_MONGODUMP . '", "'
+                    . self::DUMP_TYPE_MONGODUMP_TAR_GZ . '"].'
+                );
+            }
         }
     }
 
@@ -156,6 +200,20 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
 
     protected function loadDump()
     {
+        if ($this->isDumpFileEmpty) {
+            return;
+        }
+        switch ($this->config['dump_type']) {
+        case self::DUMP_TYPE_JS:
+            $this->loadDumpFromJs();
+            break;
+        case self::DUMP_TYPE_MONGODUMP:
+            $this->loadDumpFromDirectory();
+            break;
+        case self::DUMP_TYPE_MONGODUMP_TAR_GZ:
+            $this->loadDumpFromArchive();
+            break;
+        }
         if ($this->isDumpFileDirectory) {
             $this->loadDumpFromDirectory();
             return;
@@ -164,9 +222,10 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
             $this->loadDumpFromArchive();
             return;
         }
-        if ($this->isDumpFileEmpty) {
-            return;
-        }
+    }
+
+    private function loadDumpFromJs()
+    {
         try {
             $this->driver->load($this->dumpFile);
         } catch (\Exception $e) {
@@ -174,7 +233,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
         }
     }
 
-    protected function loadDumpFromDirectory()
+    private function loadDumpFromDirectory()
     {
         try {
             $this->driver->loadFromMongoDump($this->dumpFile);
@@ -183,11 +242,8 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
         }
     }
 
-    protected function loadDumpFromArchive()
+    private function loadDumpFromArchive()
     {
-        if (stripos(shell_exec('which tar'), 'not found')) {
-            return;
-        }
         try {
             $this->driver->loadFromTarGzMongoDump($this->dumpFile);
         } catch (\Exception $e) {
