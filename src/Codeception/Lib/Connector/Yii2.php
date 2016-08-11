@@ -4,7 +4,6 @@ namespace Codeception\Lib\Connector;
 use Codeception\Lib\Connector\Yii2\Logger;
 use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Util\Debug;
-use Codeception\Util\Maybe;
 use Codeception\Util\Stub;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
@@ -98,7 +97,7 @@ class Yii2 extends Client
         $_REQUEST = $this->remapRequestParameters($request->getParameters());
         $_POST = $_GET = [];
 
-        if (strtoupper($request->getMethod()) == 'GET') {
+        if (strtoupper($request->getMethod()) === 'GET') {
             $_GET = $_REQUEST;
         } else {
             $_POST = $_REQUEST;
@@ -143,9 +142,12 @@ class Yii2 extends Client
         try {
             $app->handleRequest($yiiRequest)->send();
         } catch (\Exception $e) {
-            if ($e instanceof ExitException) {
-                // nothing to do
-            } else {
+            if ($e instanceof HttpException) {
+                // Don't discard output and pass exception handling to Yii to be able
+                // to expect error response codes in tests.
+                $app->errorHandler->discardExistingOutput = false;
+                $app->errorHandler->handleException($e);
+            } elseif (!$e instanceof ExitException) {
                 // for exceptions not related to Http, we pass them to Codeception
                 $this->resetApplication();
                 throw $e;
