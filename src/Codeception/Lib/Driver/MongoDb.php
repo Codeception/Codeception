@@ -209,8 +209,8 @@ class MongoDb
         if ($this->user && $this->password) {
             $cmd = sprintf(
                 'tar -xzf %s '
-                    . '&& mongorestore --host %s --port %s --username %s --password %s %s '
-                    . '&& rm -r %s',
+                . '&& mongorestore --host %s --port %s --username %s --password %s %s '
+                . '&& rm -r %s',
                 escapeshellarg($dumpFile),
                 $host,
                 $port,
@@ -222,8 +222,8 @@ class MongoDb
         } else {
             $cmd = sprintf(
                 'tar -xzf %s '
-                    . '&& mongorestore --host %s --port %s %s '
-                    . '&& rm -r %s',
+                . '&& mongorestore --host %s --port %s %s '
+                . '&& rm -r %s',
                 $dumpFile,
                 $host,
                 $port,
