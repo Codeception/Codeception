@@ -10,7 +10,7 @@ class Page extends \PHPUnit_Framework_Constraint
     public function __construct($string, $uri = '')
     {
         parent::__construct();
-        $this->string = (string)$string;
+        $this->string = $this->normalizeText((string)$string);
         $this->uri = $uri;
     }
 
@@ -24,10 +24,18 @@ class Page extends \PHPUnit_Framework_Constraint
      */
     protected function matches($other)
     {
-        $other = str_replace("\n", ' ', $other);
-        $other = trim(preg_replace('/\\s{2,}/', ' ', $other));
-
+        $other = $this->normalizeText($other);
         return mb_stripos($other, $this->string, null, 'UTF-8') !== false;
+    }
+
+    /**
+     * @param $text
+     * @return string
+     */
+    private function normalizeText($text)
+    {
+        $text = strtr($text, "\r\n", "  ");
+        return trim(preg_replace('/\\s{2,}/', ' ', $text));
     }
 
     /**
