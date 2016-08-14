@@ -2,7 +2,18 @@
 
 #### 2.2.4
 
+* Improved using complex params, nested params can be set using dot (`.`). See #3339
+* [Yii2] Mailer mock is now configured with options that make sense for it. Fixes #3382
+* [Yii2] Fixed creating `@webroot` directory on running functional tests. See #3387
+* [REST] `seeResponseIsJson` fails when response is empty. See #3401, closes #3400
+* [AMQP] Added `purgeQueue` and `purgeAllQueues` actions. By @niclopez
+* [DataFactory] `haveMultiple` fixed; corrected the order of arguments in `FactoryMuffin->seed`. See #3413 by @buffcode
+* [SOAP] Improved error reporting by @eXorus See #3426 #3422
+* [SOAP] Added `SOAPAction` config param to unset `SOAPAction` header in SOAP >= 1.2. See #3396
+* [REST] fixed digest authentication. See #3416
 * [Laravel5] Fixed an issue with uploaded files. See #3417. By @torkiljohnsen.
+* [Db] Error is thrown if SQLite memory is used. #3319
+* [Frameworks] `REQUEST_TIME` server variable to be set on request. By @gimler. Fixes #3374
 
 #### 2.2.3
 
