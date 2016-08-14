@@ -6,6 +6,7 @@
 * [Yii2] Mailer mock is now configured with options that make sense for it. Fixes #3382
 * [Yii2] Fixed creating `@webroot` directory on running functional tests. See #3387
 * [Yii2] Fixed regression in Yii 2 connector not allowing to work with output of error pages in functional tests. Fixes #3332
+* [Mongo] support of standard mongodump/mongorestore tools to populate mongo db database. Thanks @GSokol. Fixes #3427
 * [REST] `seeResponseIsJson` fails when response is empty. See #3401, closes #3400
 * [AMQP] Added `purgeQueue` and `purgeAllQueues` actions. By @niclopez
 * [DataFactory] `haveMultiple` fixed; corrected the order of arguments in `FactoryMuffin->seed`. See #3413 by @buffcode
