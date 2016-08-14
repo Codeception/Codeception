@@ -11,7 +11,9 @@
 * [SOAP] Improved error reporting by @eXorus See #3426 #3422
 * [SOAP] Added `SOAPAction` config param to unset `SOAPAction` header in SOAP >= 1.2. See #3396
 * [REST] fixed digest authentication. See #3416
+* [Laravel5] Fixed an issue with error handling for Laravel 5.3. See #3420. By @bonsi.
 * [Laravel5] Fixed an issue with uploaded files. See #3417. By @torkiljohnsen.
+* [ZF2] Support for zend-mvc 3.0
 * [Db] Error is thrown if SQLite memory is used. #3319
 * [Frameworks] `REQUEST_TIME` server variable to be set on request. By @gimler. Fixes #3374
 
