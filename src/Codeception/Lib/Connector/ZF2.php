@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Exception\ModuleException;
 use Codeception\Lib\Connector\ZF2\PersistentServiceManager;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
@@ -145,6 +146,9 @@ class ZF2 extends Client
         }
 
         if ($service === 'Doctrine\ORM\EntityManager' && !isset($this->persistentServiceManager)) {
+            if (!method_exists($serviceManager, 'addPeeringServiceManager')) {
+                throw new ModuleException('Codeception\Module\ZF2', 'integration with Doctrine2 module is not compatible with ZF3');
+            }
             $this->persistentServiceManager = new PersistentServiceManager($serviceManager);
         }
 
@@ -155,6 +159,9 @@ class ZF2 extends Client
     {
         if (!isset($this->persistentServiceManager)) {
             $serviceManager = $this->application->getServiceManager();
+            if (!method_exists($serviceManager, 'addPeeringServiceManager')) {
+                throw new ModuleException('Codeception\Module\ZF2', 'addServiceToContainer method is not compatible with ZF3');
+            }
             $this->persistentServiceManager = new PersistentServiceManager($serviceManager);
             $serviceManager->addPeeringServiceManager($this->persistentServiceManager);
             $serviceManager->setRetrieveFromPeeringManagerFirst(true);
@@ -174,7 +181,12 @@ class ZF2 extends Client
             $serviceManager->setRetrieveFromPeeringManagerFirst(true);
         }
 
+        $sendResponseListener = $serviceManager->get('SendResponseListener');
         $events = $this->application->getEventManager();
-        $events->detach($serviceManager->get('SendResponseListener'));
+        if (class_exists('Zend\EventManager\StaticEventManager')) {
+            $events->detach($sendResponseListener); //ZF2
+        } else {
+            $events->detach([$sendResponseListener, 'sendResponse']); //ZF3
+        }
     }
 }
