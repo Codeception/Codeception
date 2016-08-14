@@ -32,7 +32,8 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 * user *required* - user to access database
 * password *required* - password
 * dump_type *required* - type of dump.
-  One of MongoDb::DUMP_TYPE_JS ('js'), MongoDb::DUMP_TYPE_MONGODUMP ('mongodump') or MongoDb::DUMP_TYPE_MONGODUMP_TAR_GZ ('tar-gz'). Default value is MongoDb::DUMP_TYPE_JS.
+  One of 'js' (MongoDb::DUMP_TYPE_JS), 'mongodump' (MongoDb::DUMP_TYPE_MONGODUMP) or 'mongodump-tar-gz' (MongoDb::DUMP_TYPE_MONGODUMP_TAR_GZ).
+  default: MongoDb::DUMP_TYPE_JS).
 * dump - path to database dump
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test

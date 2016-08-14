@@ -100,7 +100,14 @@ class Locator
     }
 
     /**
-     * Matches option by text
+     * Matches option by text:
+     *
+     * ```php
+     * <?php
+     * use Codeception\Util\Locator;
+     *
+     * $I->seeElement(Locator::option('Male'), '#select-gender');
+     * ```
      *
      * @param $value
      *
@@ -157,6 +164,13 @@ class Locator
     /**
      * Checks that provided string is CSS selector
      *
+     * ```php
+     * <?php
+     * Locator::isCSS('#user .hello') => true
+     * Locator::isCSS('body') => true
+     * Locator::isCSS('//body/p/user') => false
+     * ```
+     *
      * @param $selector
      * @return bool
      */
@@ -172,6 +186,13 @@ class Locator
 
     /**
      * Checks that locator is an XPath
+     *
+     * ```php
+     * <?php
+     * Locator::isCSS('#user .hello') => false
+     * Locator::isCSS('body') => false
+     * Locator::isCSS('//body/p/user') => true
+     * ```
      *
      * @param $locator
      * @return bool
