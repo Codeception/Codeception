@@ -115,8 +115,8 @@ class ErrorHandler implements EventSubscriberInterface
             call_user_func($this->oldHandler, $type, $message, $file, $line, $context);
             return;
         }
-        
-        // if the error is included in the configured error reporting 
+
+        // if the error is included in the configured error reporting
         if (error_reporting() & $type) {
             Notification::deprecate("$message", "$file:$line");
         }
