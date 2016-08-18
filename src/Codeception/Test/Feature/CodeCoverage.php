@@ -26,8 +26,20 @@ trait CodeCoverage
             return;
         }
 
+        if (method_exists($this, 'getLinesToBeCovered')) {
+            $linesToBeCovered = $this->getLinesToBeCovered();
+        } else {
+            $linesToBeCovered = [];
+        }
+
+        if (method_exists($this, 'getLinesToBeUsed')) {
+            $linesToBeUsed = $this->getLinesToBeUsed();
+        } else {
+            $linesToBeUsed = [];
+        }
+
         try {
-            $codeCoverage->stop(true);
+            $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
         } catch (\PHP_CodeCoverage_Exception $cce) {
             if ($status === \Codeception\Test\Test::STATUS_OK) {
                 $this->getTestResultObject()->addError($this, $cce, $time);

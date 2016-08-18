@@ -192,4 +192,20 @@ class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reporte
         }
         return $names;
     }
+
+    public function getLinesToBeCovered()
+    {
+        $class  = get_class($this->getTestClass());
+        $method = $this->getTestMethod();
+
+        return \PHPUnit_Util_Test::getLinesToBeCovered($class, $method);
+    }
+
+    public function getLinesToBeUsed()
+    {
+        $class  = get_class($this->getTestClass());
+        $method = $this->getTestMethod();
+
+        return \PHPUnit_Util_Test::getLinesToBeUsed($class, $method);
+    }
 }
