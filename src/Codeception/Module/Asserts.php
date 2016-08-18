@@ -248,7 +248,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertGreaterOrEquals($expected, $actual, $description  = '')
+    public function assertGreaterOrEquals($expected, $actual, $description = '')
     {
         $this->assertGreaterThanOrEqual($expected, $actual, $description);
     }
@@ -258,7 +258,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertLessOrEquals($expected, $actual, $description  = '')
+    public function assertLessOrEquals($expected, $actual, $description = '')
     {
         $this->assertLessThanOrEqual($expected, $actual, $description);
     }
@@ -277,7 +277,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertArrayHasKey($key, $actual, $description  = '')
+    public function assertArrayHasKey($key, $actual, $description = '')
     {
         parent::assertArrayHasKey($key, $actual, $description);
     }
