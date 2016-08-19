@@ -323,7 +323,7 @@ class Console implements EventSubscriberInterface
     {
         $this->message()->width($this->width, '-')->writeln();
         $deprecationMessages = Notification::all();
-        foreach ($deprecationMessages as $message) {
+        foreach (array_unique($deprecationMessages) as $message) {
             $this->output->notification($message);
         }
     }
