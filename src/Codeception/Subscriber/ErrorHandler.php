@@ -25,15 +25,20 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var int stores bitmask for errors
      */
-    private $errorLevel = 'E_ALL & ~E_STRICT & ~E_DEPRECATED';
+    private $errorLevel;
+
+    public function __construct()
+    {
+        $this->errorLevel = E_ALL & ~E_STRICT & ~E_DEPRECATED;
+    }
 
     public function handle(SuiteEvent $e)
     {
         $settings = $e->getSettings();
         if ($settings['error_level']) {
-            $this->errorLevel = $settings['error_level'];
+            $this->errorLevel = eval("return {$settings['error_level']};");
         }
-        error_reporting(eval("return {$this->errorLevel};"));
+        error_reporting($this->errorLevel);
         // We must register shutdown function before deprecation error handler to restore previous error handler
         // and silence DeprecationErrorHandler yelling about 'THE ERROR HANDLER HAS CHANGED!'
         register_shutdown_function([$this, 'shutdownHandler']);
@@ -43,14 +48,14 @@ class ErrorHandler implements EventSubscriberInterface
 
     public function errorHandler($errno, $errstr, $errfile, $errline, $context)
     {
+        if (!($this->errorLevel & $errno)) {
+            // This error code is not included in error_reporting
+            return false;
+        }
+
         if (E_USER_DEPRECATED === $errno) {
             $this->handleDeprecationError($errno, $errstr, $errfile, $errline, $context);
             return;
-        }
-
-        if (!(error_reporting() & $errno)) {
-            // This error code is not included in error_reporting
-            return false;
         }
 
         if (strpos($errstr, 'Cannot modify header information') !== false) {
