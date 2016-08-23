@@ -48,14 +48,14 @@ class ErrorHandler implements EventSubscriberInterface
 
     public function errorHandler($errno, $errstr, $errfile, $errline, $context)
     {
-        if (!($this->errorLevel & $errno)) {
-            // This error code is not included in error_reporting
-            return false;
-        }
-
         if (E_USER_DEPRECATED === $errno) {
             $this->handleDeprecationError($errno, $errstr, $errfile, $errline, $context);
             return;
+        }
+
+        if (!(error_reporting() & $errno)) {
+            // This error code is not included in error_reporting
+            return false;
         }
 
         if (strpos($errstr, 'Cannot modify header information') !== false) {
@@ -116,6 +116,9 @@ class ErrorHandler implements EventSubscriberInterface
 
     private function handleDeprecationError($type, $message, $file, $line, $context)
     {
+        if (!($this->errorLevel & $type)) {
+            return;
+        }
         if ($this->deprecationsInstalled && $this->oldHandler) {
             call_user_func($this->oldHandler, $type, $message, $file, $line, $context);
             return;
