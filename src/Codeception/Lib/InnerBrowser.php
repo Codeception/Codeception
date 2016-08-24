@@ -1470,7 +1470,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat(
-            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
+            $this->getNormalizedResponseContent(),
             $constraint,
             $message
         );
@@ -1480,7 +1480,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
-            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
+            $this->getNormalizedResponseContent(),
             $constraint,
             $message
         );
@@ -1717,5 +1717,19 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 ));
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNormalizedResponseContent()
+    {
+        $content = $this->_getResponseContent();
+        $content = strip_tags($content);
+        $content = html_entity_decode($content);
+        $content = str_replace("\n", ' ', $content);
+        $content = preg_replace('/\s{2,}/', ' ', $content);
+
+        return $content;
     }
 }
