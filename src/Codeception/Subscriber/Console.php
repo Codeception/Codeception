@@ -322,8 +322,11 @@ class Console implements EventSubscriberInterface
     public function afterSuite(SuiteEvent $e)
     {
         $this->message()->width($this->width, '-')->writeln();
-        $deprecationMessages = Notification::all();
-        foreach (array_unique($deprecationMessages) as $message) {
+        $messages = Notification::all();
+        foreach (array_count_values($messages) as $message => $count) {
+            if ($count > 1) {
+                $message = $count . 'x ' . $message;
+            }
             $this->output->notification($message);
         }
     }
