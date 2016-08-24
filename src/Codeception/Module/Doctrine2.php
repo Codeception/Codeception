@@ -7,7 +7,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestInterface;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Codeception\Util\Stub;
 
 /**
@@ -91,7 +91,7 @@ modules:
 EOF;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     public $em = null;
 
@@ -148,10 +148,10 @@ EOF;
         }
 
 
-        if (!($this->em instanceof \Doctrine\ORM\EntityManager)) {
+        if (!($this->em instanceof \Doctrine\ORM\EntityManagerInterface)) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Connection object is not an instance of \\Doctrine\\ORM\\EntityManager.\n"
+                "Connection object is not an instance of \\Doctrine\\ORM\\EntityManagerInterface.\n"
                 . "Use `connection_callback` or dependent framework modules to specify one"
             );
         }
@@ -161,7 +161,7 @@ EOF;
 
     public function _after(TestInterface $test)
     {
-        if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
+        if (!$this->em instanceof \Doctrine\ORM\EntityManagerInterface) {
             return;
         }
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
