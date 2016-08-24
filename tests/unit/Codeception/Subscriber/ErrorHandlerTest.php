@@ -15,9 +15,9 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         $suiteEvent = new SuiteEvent(new Suite(), null, ['error_level' => 'E_ERROR']);
         $errorHandler->handle($suiteEvent);
 
-        $messagesBeforeRun = count(Notification::all());
+        $messagesBeforeRun = Notification::all();
         $errorHandler->errorHandler(E_USER_DEPRECATED, 'deprecated message', __FILE__, __LINE__, []);
-        $messagesAfterRun = count(Notification::all());
+        $messagesAfterRun = Notification::all();
         $this->assertSame($messagesBeforeRun, $messagesAfterRun, 'Deprecation message was added to notifications');
     }
 }
