@@ -59,11 +59,16 @@ class RedisTest extends \PHPUnit_Framework_TestCase
         }
         /** @var ModuleContainer $container */
         $container = make_container();
-        $this->module = new Redis($container);
-        $this->module->_setConfig(self::$config);
-        $this->module->_initialize();
-        
-        $this->module->driver->flushDb();
+
+        try {
+            $this->module = new Redis($container);
+            $this->module->_setConfig(self::$config);
+            $this->module->_initialize();
+
+            $this->module->driver->flushDb();
+        } catch (Predis\Connection\ConnectionException $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
 
         $addMethods = [
             'string' => 'set',
