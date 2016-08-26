@@ -261,4 +261,10 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
+
+    public function testGrabFromCurrentUrl()
+    {
+        $this->module->sendGET('/rest/http-host/');
+        $this->assertEquals('/rest/http-host/', $this->phpBrowser->grabFromCurrentUrl());
+    }
 }
