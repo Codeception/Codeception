@@ -55,6 +55,8 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
 
         //ensure backwards compatibility, this assertion passed before this change
         $this->module->see("Test Link \n\n\n    Test");
+        //Single quote HTML entities must be decoded
+        $this->module->see("please don't provide us any personal information.");
 
         $this->module->amOnPage('/info');
         $this->module->see('valuable', 'p');

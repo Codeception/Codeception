@@ -1726,7 +1726,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $content = $this->_getResponseContent();
         $content = strip_tags($content);
-        $content = html_entity_decode($content);
+        $content = html_entity_decode($content, ENT_QUOTES);
         $content = str_replace("\n", ' ', $content);
         $content = preg_replace('/\s{2,}/', ' ', $content);
 

@@ -31,6 +31,8 @@
 
 A wise man said: "debug!"
 
+Please don&#039;t provide us any personal information.
+
 <?php print_r($_POST); ?>
 
 </body>
