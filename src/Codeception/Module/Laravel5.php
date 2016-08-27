@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * It should **not** be used for acceptance tests.
  * See the Acceptance tests section below for more details.
  *
+ * As of Codeception 2.2 this module only works for Laravel 5.1 and later releases.
+ * If you want to test a Laravel 5.0 application you have to use Codeception 2.1.
+ * You can also upgrade your Laravel application to 5.1, for more details check the Laravel Upgrade Guide at <https://laravel.com/docs/master/upgrade>.
+ *
  * ## Demo project
  * <https://github.com/janhenkgerritsen/codeception-laravel5-sample>
  *
@@ -37,13 +41,15 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * ## Config
  *
  * * cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
+ * * run_database_migrations: `boolean`, default `false` - enable to run database migrations before each test.
  * * environment_file: `string`, default `.env` - The .env file to load for the tests.
  * * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
  * * root: `string`, default `` - Root path of our application.
  * * packages: `string`, default `workbench` - Root path of application packages (if any).
  * * disable_exception_handling: `boolean`, default `true` - disable Laravel exception handling
  * * disable_middleware: `boolean`, default `false` - disable all middleware.
- * * disable_events: `boolean`, default `false` - disable all events.
+ * * disable_events: `boolean`, default `false` - disable events (does not disable model events).
+ * * disable_model_events: `boolean`, default `false` - disable model events.
  * * url: `string`, default `` - The application URL.
  *
  * ## API
@@ -94,6 +100,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $this->config = array_merge(
             [
                 'cleanup' => true,
+                'run_database_migrations' => false,
                 'environment_file' => '.env',
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
@@ -101,6 +108,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'disable_exception_handling' => true,
                 'disable_middleware' => false,
                 'disable_events' => false,
+                'disable_model_events' => false,
             ],
             (array)$config
         );
@@ -140,6 +148,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function _before(\Codeception\TestInterface $test)
     {
         $this->client = new LaravelConnector($this);
+
+        if ($this->config['run_database_migrations']) {
+            // Must be called before database transactions are started
+            $this->callArtisan('migrate');
+        }
 
         if (isset($this->app['db']) && $this->config['cleanup']) {
             $this->app['db']->beginTransaction();
@@ -275,6 +288,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Disable events for the next requests.
+     * This method does not disable model events.
+     * To disable model events you have to use the disableModelEvents() method.
      *
      * ``` php
      * <?php
@@ -285,6 +300,20 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function disableEvents()
     {
         $this->client->disableEvents();
+    }
+
+    /**
+     * Disable model events for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->disableModelEvents();
+     * ?>
+     * ```
+     */
+    public function disableModelEvents()
+    {
+        $this->client->disableModelEvents();
     }
 
     /**
@@ -341,6 +370,27 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 $this->fail("The '$event' event triggered");
             }
         }
+    }
+
+    /**
+     * Call an Artisan command.
+     *
+     * ``` php
+     * <?php
+     * $I->callArtisan('command:name');
+     * $I->callArtisan('command:name', ['parameter' => 'value']);
+     * ?>
+     * ```
+
+     * @param string $command
+     * @param array $parameters
+     */
+    public function callArtisan($command, $parameters = [])
+    {
+        $console = $this->app->make('Illuminate\Contracts\Console\Kernel');
+        $console->call($command, $parameters);
+
+        return trim($console->output());
     }
 
     /**
@@ -726,8 +776,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Return an instance of a class from the IoC Container.
-     * (http://laravel.com/docs/ioc)
+     * Return an instance of a class from the Laravel service container.
+     * (https://laravel.com/docs/master/container)
      *
      * ``` php
      * <?php
@@ -750,6 +800,84 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function grabService($class)
     {
         return $this->app[$class];
+    }
+
+    /**
+     * Add a binding to the Laravel service container.
+     * (https://laravel.com/docs/master/container)
+     *
+     * ``` php
+     * <?php
+     * $I->haveBinding('My\Interface', 'My\Implementation');
+     * ?>
+     * ```
+     *
+     * @param $abstract
+     * @param $concrete
+     */
+    public function haveBinding($abstract, $concrete)
+    {
+        $this->client->haveBinding($abstract, $concrete);
+    }
+
+    /**
+     * Add a singleton binding to the Laravel service container.
+     * (https://laravel.com/docs/master/container)
+     *
+     * ``` php
+     * <?php
+     * $I->haveSingleton('My\Interface', 'My\Singleton');
+     * ?>
+     * ```
+     *
+     * @param $abstract
+     * @param $concrete
+     */
+    public function haveSingleton($abstract, $concrete)
+    {
+        $this->client->haveBinding($abstract, $concrete, true);
+    }
+
+    /**
+     * Add a contextual binding to the Laravel service container.
+     * (https://laravel.com/docs/master/container)
+     *
+     * ``` php
+     * <?php
+     * $I->haveContextualBinding('My\Class', '$variable', 'value');
+     *
+     * // This is similar to the following in your Laravel application
+     * $app->when('My\Class')
+     *     ->needs('$variable')
+     *     ->give('value');
+     * ?>
+     * ```
+     *
+     * @param $concrete
+     * @param $abstract
+     * @param $implementation
+     */
+    public function haveContextualBinding($concrete, $abstract, $implementation)
+    {
+        $this->client->haveContextualBinding($concrete, $abstract, $implementation);
+    }
+
+    /**
+     * Add an instance binding to the Laravel service container.
+     * (https://laravel.com/docs/master/container)
+     *
+     * ``` php
+     * <?php
+     * $I->haveInstance('My\Class', new My\Class());
+     * ?>
+     * ```
+     *
+     * @param $abstract
+     * @param $instance
+     */
+    public function haveInstance($abstract, $instance)
+    {
+        $this->client->haveInstance($abstract, $instance);
     }
 
     /**
@@ -901,7 +1029,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * @param string $table
      * @param array $attributes
-     * @return mixed
+     * @return array
      */
     protected function findRecord($table, $attributes = [])
     {

@@ -1,17 +1,19 @@
 # Yii1
 
 
-This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
+This module provides integration with [Yii Framework 1.1](http://www.yiiframework.com/doc/guide/).
 
 The following configurations are available for this module:
-<ul>
-<li>appPath - full path to the application, include index.php</li>
-<li>url - full url to the index.php entry script</li>
-</ul>
+
+ * `appPath` - full path to the application, include index.php</li>
+ * `url` - full url to the index.php entry script</li>
+
 In your index.php you must return an array with correct configuration for the application:
 
 For the simple created yii application index.php will be like this:
-<pre>
+
+```php
+<?php
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/../yii/framework/yii.php';
 $config=dirname(__FILE__).'/protected/config/main.php';
@@ -25,26 +27,34 @@ return array(
        'class' => 'CWebApplication',
        'config' => $config,
 );
-</pre>
+```
 
-You can use this module by setting params in your functional.suite.yml:
-<pre>
-class_name: TestGuy
+You can use this module by setting params in your `functional.suite.yml`:
+
+```yaml
+class_name: FunctionalTester
 modules:
-    enabled: [Yii1, TestHelper]
-    config:
-        Yii1:
+    enabled:
+        - Yii1:
             appPath: '/path/to/index.php'
             url: 'http://localhost/path/to/index.php'
-</pre>
-
+        - \Helper\Functional
+```
 
 You will also need to install [Codeception-Yii Bridge](https://github.com/Codeception/YiiBridge)
 which include component wrappers for testing.
 
-When you are done, you can test this module by creating new empty Yii application and creating this scenario:
-<pre>
-$I = new TestGuy($scenario);
+When you are done, you can test this module by creating new empty Yii application and creating this Cept scenario:
+
+```
+php codecept.phar g:cept functional IndexCept
+```
+
+and write it as in example:
+
+```php
+<?php
+$I = new FunctionalTester($scenario);
 $I->wantTo('Test index page');
 $I->amOnPage('/index.php');
 $I->see('My Web Application','#header #logo');
@@ -57,12 +67,45 @@ $I->click('#login-form input[type="submit"]');
 $I->seeLink('Logout (demo)');
 $I->click('Logout (demo)');
 $I->seeLink('Login');
-</pre>
+```
+
 Then run codeception: php codecept.phar --steps run functional
 You must see "OK" and that all steps are marked with asterisk (*).
 Do not forget that after adding module in your functional.suite.yml you must run codeception "build" command.
 
-@property Codeception\Lib\Connector\Yii1 $client
+### Public Properties
+
+`client`: instance of `\Codeception\Lib\Connector\Yii1`
+
+### Parts
+
+If you ever encounter error message:
+
+```
+Yii1 module conflicts with WebDriver
+```
+
+you should include Yii module partially, with `init` part only
+
+* `init`: only initializes module and not provides any actions from it. Can be used for unit/acceptance tests to avoid conflicts.
+
+### Acceptance Testing Example:
+
+In `acceptance.suite.yml`:
+
+```yaml
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            browser: firefox
+            url: http://localhost
+        - Yii1:
+            appPath: '/path/to/index.php'
+            url: 'http://localhost/path/to/index.php'
+            part: init # to not conflict with WebDriver
+        - \Helper\Acceptance
+```
 
 
 ## Actions
@@ -516,6 +559,20 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 
 
 
+### dontSeeResponseCodeIs
+ 
+Checks that response code is equal to value provided.
+
+```php
+<?php
+$I->dontSeeResponseCodeIs(200);
+
+// recommended \Codeception\Util\HttpCode
+$I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+ * `param` $code
+
+
 ### fillField
  
 Fills a text field or textarea with the given string.
@@ -962,8 +1019,15 @@ Asserts that current page has 404 response status code.
  
 Checks that response code is equal to value provided.
 
- * `param` $code
+```php
+<?php
+$I->seeResponseCodeIs(200);
 
+// recommended \Codeception\Util\HttpCode
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+
+ * `param` $code
 
 
 ### selectOption

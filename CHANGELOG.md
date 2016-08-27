@@ -4,9 +4,78 @@
 
 * Dropped support for PHP 5.4
 
+#### 2.2.4
+
+* Improved using complex params, nested params can be set using dot (`.`). See #3339
+* [Yii2] Mailer mock is now configured with options that make sense for it. Fixes #3382
+* [Yii2] Fixed creating `@webroot` directory on running functional tests. See #3387
+* [Yii2] Fixed regression in Yii 2 connector not allowing to work with output of error pages in functional tests. Fixes #3332
+* [REST] `seeResponseIsJson` fails when response is empty. See #3401, closes #3400
+* [AMQP] Added `purgeQueue` and `purgeAllQueues` actions. By @niclopez
+* [DataFactory] `haveMultiple` fixed; corrected the order of arguments in `FactoryMuffin->seed`. See #3413 by @buffcode
+* [SOAP] Improved error reporting by @eXorus See #3426 #3422
+* [SOAP] Added `SOAPAction` config param to unset `SOAPAction` header in SOAP >= 1.2. See #3396
+* [REST] fixed digest authentication. See #3416
+* [Laravel5] Fixed an issue with error handling for Laravel 5.3. See #3420. By @bonsi.
+* [Laravel5] Fixed an issue with uploaded files. See #3417. By @torkiljohnsen.
+* [ZF2] Support for zend-mvc 3.0
+* [Db] Error is thrown if SQLite memory is used. #3319
+* [Frameworks] `REQUEST_TIME` server variable to be set on request. By @gimler. Fixes #3374
+
+#### 2.2.3
+
+* [Yii2] Improvements:
+    * Added `init` part to initialize Yii app for unit and acceptance testing.
+    * added `entryScript` and `entryUrl` config values for acceptance testing.
+    * Fixtures support: `haveFixtures`, `grabFixtures` methods.
+    * Yii logs to be printed in debug mode.
+    * added `amOnRoute` method.
+    * added `amloggedInAs` method.
+    * added `grabComponent` method.
+    * added `seeEmailIsSent`, `grabLastSentEmail`, etc and email part.
+    * assetManager disabled for unit/functional tests.
+* Fixed `@example` to `@group` defined in group files. By @eXorus. Fixes #3278
+* Added `ReqiuiresPackage` interface to set external dependencies for modules.
+* Fixed timing values in output. Closes #3331
+* Fixed merging module configs. Closes #3292
+* [Recorder Extension] Fixes saving of files on windows and with using examples.
+* [DataFactory] Fixed loading factories twice by @samusenkoiv. See #3314
+* [Laravel5] Added `run_database_migrations` configuration option. By @janhenkgerritsen.
+* [Laravel5] Added `callArtisan` method. By @janhenkgerritsen.
+* [Laravel5] Added `disableModelEvents()` method and `disable_model_events` configuration option. Fixes #2897.
+* [REST] Allow objects in files array #3298
+* [ZF2] Added addServiceToContainer method
+* [ZendExpressive] allow instances of UploadedFile in files array
+* [ZF2] Added addServiceToContainer method
+* Don't fail test validation when exec function is disabled by @Naktialda
+
 #### 2.2.2
 
+* Parameters can be applied to global `codeception.yml` config. See #3255 Thanks to @LeRondPoint
+* Fixed loading of parameters from `.env.*` files. See #3224. By @smotesko
+* Better failure diff messages by @k0pernikus
+* UTF-8 improvements (replaced with custom `ucfirst`, `strtoupper` => `mb_strtoupper`) by @Naktibalda. See #3211
+* Print execution time of non-successful tests by @Naktibalda. Fixes #3274
+* [WebDriver][PhpBrowser][Frameworks] Fixed created files on failure. Fixes #3207
+* [Frameworks][PhpBrowser] Adjacent forms submit improvements by @dizzy7. Fixes #2331
+* [WebDriver] Fixed adjacent `selectOption` with similar options by @eXorus. Fixes #3246
+* [DataFactory] fixed loading factories from relative paths. Fixes #3208
+* *Test\Gherkin* Added JUnit reporter #3273
+* *Test\Gherkin* Added support for multiple languages by @dizzy7. See #3203
+* *Test\Unit* Dependencies can pass and receive values the same way as it is done in PHPUnit. Fixes #3213
+* [Symfony] Fixed failing tests when the profiler is disabled by @dizzy7. See #3223
+* [REST] Added `Codecepion\Util\HttpCode` util class with HTTP code constants. See [class reference](https://github.com/Codeception/Codeception/blob/2.2/docs/reference/HttpCode.md)
+* [REST] Support simple key-value format for file uploads. See #3244
+* Bugfix with duplicate instances in the modules container #3219 by @dizzy7
+* [REST] Added `deleteHeader` method by @Naktibalda. Fixes #3161
+* [Yii1] `init` part added to avoid conflicts with `WebDriver`
+* `generate:snippets` can accept second parameter to generate snippets from a specific file or folder.
+* [Db] Added `grabNumRecords` method by @tocsick. See #3175
+* Fixed group events fire twice #3112. By @jstaudenmaier
+* [ZF2] Added services part which can be used to `grabServiceFromContainer` when conflicting module is used by @Naktibalda.
 * Improved Examples to be Traversable; Fixed console output for complex data structures.
+* [Laravel5] Added `haveBinding`, `haveSingleton`, `haveContextualBinding` and `haveInstance` methods. By @janhenkgerritsen. See #2904.
+* + changes from 2.1.11
 
 #### 2.2.1
 
@@ -26,7 +95,11 @@
 * **Custom Commands** inject your own commands as as simple as extension. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#custom-commands)
 * `codecept dry-run` command added to show scenario steps without executing them.
 * *Breaking* [Dbh] module removed
-* *Breaking* [Laravel4] module removed
+* *Breaking* [Laravel4] module removed. See #2866
+* *Breaking* [Laravel5] Minimum supported Laravel version is 5.1. See [#3243](https://github.com/Codeception/Codeception/issues/3243#issuecomment-227078266)
+* *Breaking* [Laravel5] Removed `createModel` method, use `have` method instead. See #2866
+* *Breaking* [Laravel5] Removed `makeModel` method. See #2866
+* *Breaking* [Laravel5] Renamed `haveModel` method to `have`. See #2866
 * *Breaking* [Symfony] public property `container` removed
 * *Breaking* [Asserts] removed deprecated `assertLessThen` and `assertGreaterThen`
 * *Breaking* mocks created with `Codeception\Util\Stub` are not verified in Cests. See #3005
@@ -35,6 +108,8 @@
 * [AngularJS] module added. Extends WebDriver module for AngularJS testing. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#angularjs)
 * [DataFactory] module added. Performs data generation using FactoryMuffin library [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#datafactory)
 * [Redis] Module rewritten using Predis library as driver by @marcverney
+* [Laravel5] Added a `haveMultiple` method to create more than one model per call. See #2866
+* [Laravel5] [Lumen] The `haveRecord`, `seeRecord`, `dontSeeRecord` and `grabRecord` methods now also accept Eloquent model class names instead of only database table names. See #2866
 * [Symfony] module Symfony2 renamed to Symfony
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
 * [Asserts] More `assert*` methods from PHPUnit added
@@ -47,9 +122,12 @@
 
 #### 2.1.11
 
+* [Yii1] Improved Yii connector. AR metadata is cleaned up between requests. `regenerateId` of session is disabled.
 * [REST][InnerBrowser] redirect is not triggered when Location header is set but response code is not 3xx. By @Naktibalda. Fixes #3171.
+* [PhpBrowser][Frameworks] checkboxes can be located by label by @dizzy7. See #3237
+* [PhpBrowser][Frameworks] field can be matched by its trimmed label value. See #3209. By @dizzy7
 * [WebDriver] fixed URL matching in WebDriver::seeLink
-* [WebDriver][InnerBrowser] Improved error messages of seeLink and dontSeeLink
+* [WebDriver][InnerBrowser] Improved error messages of `seeLink` and `dontSeeLink`
 
 #### 2.1.10
 

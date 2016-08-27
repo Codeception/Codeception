@@ -59,6 +59,28 @@ $message = $I->grabMessageFromQueue('queue.emails');
  * `return` AMQPMessage
 
 
+### purgeAllQueues
+ 
+Purge all queues defined in config.
+
+``` php
+<?php
+$I->purgeAllQueues();
+?>
+```
+
+
+### purgeQueue
+ 
+Purge a specific queue defined in config.
+
+``` php
+<?php
+$I->purgeQueue('queue.emails');
+?>
+```
+
+
 ### pushToExchange
  
 Sends message to exchange by sending exchange name, message

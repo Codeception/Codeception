@@ -3,6 +3,7 @@ namespace Codeception\Test;
 
 use Codeception\Exception\TestParseException;
 use Codeception\Lib\Parser;
+use Codeception\Lib\Console\Message;
 
 /**
  * Executes tests delivered in Cept format.
@@ -51,7 +52,7 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
 
     public function toString()
     {
-        return $this->getSignature() . ': ' . ucfirst($this->getFeature());
+        return $this->getSignature() . ': ' . Message::ucfirst($this->getFeature());
     }
 
     public function getSourceCode()

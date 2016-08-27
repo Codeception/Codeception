@@ -41,13 +41,13 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
-        $this->fire(Events::TEST_FAIL, new FailEvent($test, $e));
+        $this->fire(Events::TEST_FAIL, new FailEvent($test, $time, $e));
     }
 
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
-        $this->fire(Events::TEST_ERROR, new FailEvent($test, $e));
+        $this->fire(Events::TEST_ERROR, new FailEvent($test, $time, $e));
     }
 
     public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
@@ -56,7 +56,7 @@ class Listener implements \PHPUnit_Framework_TestListener
             return;
         }
         $this->unsuccessfulTests[] = spl_object_hash($test);
-        $this->fire(Events::TEST_INCOMPLETE, new FailEvent($test, $e));
+        $this->fire(Events::TEST_INCOMPLETE, new FailEvent($test, $time, $e));
         $this->skippedTests[] = spl_object_hash($test);
     }
 
@@ -66,7 +66,7 @@ class Listener implements \PHPUnit_Framework_TestListener
             return;
         }
         $this->unsuccessfulTests[] = spl_object_hash($test);
-        $this->fire(Events::TEST_SKIPPED, new FailEvent($test, $e));
+        $this->fire(Events::TEST_SKIPPED, new FailEvent($test, $time, $e));
         $this->skippedTests[] = spl_object_hash($test);
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use Codeception\Module\MongoDb;
+use Codeception\Exception\ModuleException;
 
 class MongoDbTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,7 +37,11 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
 
         $this->module = new MongoDb(make_container());
         $this->module->_setConfig($this->mongoConfig);
-        $this->module->_initialize();
+        try {
+            $this->module->_initialize();
+        } catch (ModuleException $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
 
         $this->db = $mongo->selectDatabase('test');
         $this->userCollection = $this->db->users;

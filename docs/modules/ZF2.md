@@ -6,22 +6,41 @@ This module allows you to run tests inside Zend Framework 2.
 File `init_autoloader` in project's root is required.
 Uses `tests/application.config.php` config file by default.
 
+Note: services part and Doctrine integration is not compatible with ZF3 yet
+
 ## Status
 
-* Maintainer: **bladeofsteel**
-* Stability: **alpha**
-* Contact: https://github.com/bladeofsteel
+* Maintainer: **Naktibalda**
+* Stability: **stable**
 
 ## Config
 
 * config: relative path to config file (default: `tests/application.config.php`)
 
-## API
+## Public Properties
 
 * application -  instance of `\Zend\Mvc\ApplicationInterface`
 * db - instance of `\Zend\Db\Adapter\AdapterInterface`
 * client - BrowserKit client
 
+## Parts
+
+* services - allows to use grabServiceFromContainer and addServiceToContainer with WebDriver or PhpBrowser modules.
+
+Usage example:
+
+```yaml
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - ZF2:
+            part: services
+        - Doctrine2:
+            depends: ZF2
+        - WebDriver:
+            url: http://your-url.com
+            browser: phantomjs
+```
 
 
 ## Actions
@@ -141,6 +160,14 @@ Saves page source of to a file
 $this->getModule('ZF2')->_savePageSource(codecept_output_dir().'page.html');
 ```
  * `param` $filename
+
+
+### addServiceToContainer
+ 
+Adds service to ZF2 container
+ * `param string` $name
+ * `param object` $service
+ * `[Part]` services
 
 
 ### amHttpAuthenticated
@@ -490,6 +517,20 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 
 
 
+### dontSeeResponseCodeIs
+ 
+Checks that response code is equal to value provided.
+
+```php
+<?php
+$I->dontSeeResponseCodeIs(200);
+
+// recommended \Codeception\Util\HttpCode
+$I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+ * `param` $code
+
+
 ### fillField
  
 Fills a text field or textarea with the given string.
@@ -586,6 +627,7 @@ $em = $I->grabServiceFromContainer('Doctrine\ORM\EntityManager');
 ```
 
  * `param` $service
+ * `[Part]` services
 
 
 ### grabTextFrom
@@ -958,8 +1000,15 @@ Asserts that current page has 404 response status code.
  
 Checks that response code is equal to value provided.
 
- * `param` $code
+```php
+<?php
+$I->seeResponseCodeIs(200);
 
+// recommended \Codeception\Util\HttpCode
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+
+ * `param` $code
 
 
 ### selectOption

@@ -162,7 +162,7 @@ Takes either an object that implements the User interface or
 an array of credentials.
 
  * `param`  \Illuminate\Contracts\Auth\User|array $user
- * `param`  string $driver
+ * `param`  string|null $driver The authentication driver for Lumen <= 5.1.*, guard name for Lumen >= 5.2
  * `return` void
 
 
@@ -524,6 +524,20 @@ $I->dontSeeRecord('App\User', array('name' => 'davert'));
  * `param string` $table
  * `param array` $attributes
  * `[Part]` orm
+
+
+### dontSeeResponseCodeIs
+ 
+Checks that response code is equal to value provided.
+
+```php
+<?php
+$I->dontSeeResponseCodeIs(200);
+
+// recommended \Codeception\Util\HttpCode
+$I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+ * `param` $code
 
 
 ### fillField
@@ -1069,8 +1083,15 @@ $I->seeRecord('App\User', array('name' => 'davert'));
  
 Checks that response code is equal to value provided.
 
- * `param` $code
+```php
+<?php
+$I->seeResponseCodeIs(200);
 
+// recommended \Codeception\Util\HttpCode
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+
+ * `param` $code
 
 
 ### seeSessionHasValues

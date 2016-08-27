@@ -5,9 +5,10 @@ class DependsTest extends \Codeception\Test\Unit {
      * @group depends
      * @depends testOne
      */
-    public function testTwo()
+    public function testTwo($res)
     {
         $this->assertTrue(true);
+        $this->assertEquals(1, $res);
     }
     
     /**
@@ -31,6 +32,7 @@ class DependsTest extends \Codeception\Test\Unit {
     public function testOne()
     {
         $this->assertTrue(false);
+        return 1;
     }
 
 }

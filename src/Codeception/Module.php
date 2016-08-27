@@ -1,6 +1,8 @@
 <?php
 namespace Codeception;
 
+use Codeception\Exception\ModuleException;
+use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Shared\Asserts;
 
@@ -91,6 +93,18 @@ abstract class Module
                 "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
                 "Please, update the configuration and set all the required fields\n\n"
             );
+        }
+        if ($this instanceof RequiresPackage) {
+            $errorMessage = '';
+            foreach ($this->_requires() as $className => $package) {
+                if (class_exists($className)) {
+                    continue;
+                }
+                $errorMessage .= "Class $className can't be loaded, please add $package to composer.json\n";
+            }
+            if ($errorMessage) {
+                throw new ModuleException($this, $errorMessage);
+            }
         }
     }
 

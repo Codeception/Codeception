@@ -10,7 +10,7 @@ class PHPUnit_Util_Filter
         'Codeception\TestCase\\',
     ];
 
-    public static function getFilteredStackTrace(Exception $e, $asString = true, $filter = true)
+    public static function getFilteredStackTrace($e, $asString = true, $filter = true)
     {
         $stackTrace = $asString ? '' : [];
 

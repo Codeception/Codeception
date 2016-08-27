@@ -92,4 +92,14 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
         );
         self::$sqlite->getPrimaryColumn('composite_pk');
     }
+
+    public function testThrowsExceptionIfInMemoryDatabaseIsUsed()
+    {
+        $this->setExpectedException(
+            '\Codeception\Exception\ModuleException',
+            ':memory: database is not supported'
+        );
+
+        Db::create('sqlite::memory:', '', '');
+    }
 }

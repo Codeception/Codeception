@@ -2,31 +2,75 @@
 
 
 This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
-
+It initializes Yii framework in test environment and provides actions for functional testing.
 
 ## Config
 
-* configFile *required* - the path to the application config file
-
-The entry script must return the application configuration array.
+* `configFile` *required* - the path to the application config file. File should be configured for test environment and return configuration array.
+* `entryUrl` - initial application url (default: http://localhost/index-test.php).
+* `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
+* `cleanup` - (default: true) wrap all database connection inside a transaction and roll it back after the test. Should be disabled for acceptance testing..
 
 You can use this module by setting params in your functional.suite.yml:
-<pre>
-class_name: TestGuy
+
+```yaml
+class_name: FunctionalTester
 modules:
     enabled:
         - Yii2:
             configFile: '/path/to/config.php'
-</pre>
+```
 
-## Parts
+### Parts
 
-* ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+By default all available methods are loaded, but you can specify parts to select only needed actions and avoid conflicts.
 
+* `init` - use module only for initialization (for acceptance tests).
+* `orm` - include only `haveRecord/grabRecord/seeRecord/dontSeeRecord` actions.
+* `fixtures` - use fixtures inside tests with `haveFixtures/grabFixture/grabFixtures` actions.
+* `email` - include email actions `seeEmailsIsSent/grabLastSentEmail/...`
+
+### Example (`functional.suite.yml`)
+
+```yml
+class_name: FunctionalTester
+modules:
+  enabled:
+     - Yii2:
+         configFile: 'config/test.php'
+```
+
+### Example (`unit.suite.yml`)
+
+```yml
+class_name: UnitTester
+modules:
+  enabled:
+     - Asserts
+     - Yii2:
+         configFile: 'config/test.php'
+         part: init
+```
+
+### Example (`acceptance.suite.yml`)
+
+```yml
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: http://127.0.0.1:8080/
+            browser: firefox
+        - Yii2:
+            configFile: 'config/test.php'
+            part: ORM # allow to use AR methods
+            cleanup: false # don't wrap test in transaction
+            entryScript: index-test.php
+```
 
 ## Status
 
-Maintainer: **qiangxue**
+Maintainer: **samdark**
 Stability: **stable**
 
 
@@ -158,6 +202,26 @@ Authenticates user for HTTP_AUTH
  * `param` $password
 
 
+### amLoggedInAs
+ 
+Authorizes user on a site without submitting login form.
+Use it for fast pragmatic authorization in functional tests.
+
+```php
+<?php
+// User is found by id
+$I->amLoggedInAs(1);
+
+// User object is passed as parameter
+$admin = \app\models\User::findByUsername('admin');
+$I->amLoggedInAs($admin);
+```
+Requires `user` component to be enabled and configured.
+
+ * `param` $user
+ * `throws`  ModuleException
+
+
 ### amOnPage
  
 Converting $page to valid Yii 2 URL
@@ -165,12 +229,23 @@ Converting $page to valid Yii 2 URL
 Allows input like:
 
 ```php
+<?php
 $I->amOnPage(['site/view','page'=>'about']);
 $I->amOnPage('index-test.php?site/index');
 $I->amOnPage('http://localhost/index-test.php?site/index');
 ```
 
  * `param` $page string|array parameter for \yii\web\UrlManager::createUrl()
+
+
+### amOnRoute
+ 
+Similar to amOnPage but accepts route as first argument and params as second
+
+```
+$I->amOnRoute('site/view', ['page' => 'about']);
+```
+
 
 
 ### attachFile
@@ -354,6 +429,13 @@ $I->dontSeeElement('input', ['value' => '123456']);
  * `param array` $attributes
 
 
+### dontSeeEmailIsSent
+ 
+Checks that no email was sent
+
+ * `[Part]` email
+
+
 ### dontSeeInCurrentUrl
  
 Checks that the current URI doesn't contain the given string.
@@ -495,6 +577,20 @@ $I->dontSeeRecord('app\models\User', array('name' => 'davert'));
  * `[Part]` orm
 
 
+### dontSeeResponseCodeIs
+ 
+Checks that response code is equal to value provided.
+
+```php
+<?php
+$I->dontSeeResponseCodeIs(200);
+
+// recommended \Codeception\Util\HttpCode
+$I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+ * `param` $code
+
+
 ### fillField
  
 Fills a text field or textarea with the given string.
@@ -534,6 +630,19 @@ $I->grabAttributeFrom('#tooltip', 'title');
 
 
 
+### grabComponent
+ 
+Gets a component from Yii container. Throws exception if component is not available
+
+```php
+<?php
+$mailer = $I->grabComponent('mailer');
+```
+
+ * `param` $component
+ * `throws`  ModuleException
+
+
 ### grabCookie
  
 Grabs a cookie value.
@@ -542,6 +651,36 @@ You can set additional cookie params like `domain`, `path` in array passed as la
  * `param` $cookie
 
  * `param array` $params
+
+
+### grabFixture
+ 
+Gets a fixture by name.
+Returns a Fixture instance. If a fixture is an instance of `\yii\test\BaseActiveFixture` a second parameter
+can be used to return a specific model:
+
+```php
+<?php
+$I->haveFixtures(['users' => UserFixture::className()]);
+
+$users = $I->grabFixture('users');
+
+// get first user by key, if a fixture is instance of ActiveFixture
+$user = $I->grabFixture('users', 'user1');
+```
+
+ * `param` $name
+ * `throws`  ModuleException if a fixture is not found
+ * `[Part]` fixtures
+
+
+### grabFixtures
+ 
+Returns all loaded fixtures.
+Array of fixture instances
+
+ * `[Part]` fixtures
+ * `return` array
 
 
 ### grabFromCurrentUrl
@@ -558,6 +697,19 @@ $uri = $I->grabFromCurrentUrl();
 
  * `param null` $uri
 
+
+
+### grabLastSentEmail
+ 
+Returns last sent email:
+
+```php
+<?php
+$I->seeEmailIsSent();
+$message = $I->grabLastSentEmail();
+$I->assertEquals('admin * `site,com',`  $message->getTo());
+```
+ * `[Part]` email
 
 
 ### grabMultiple
@@ -599,6 +751,24 @@ $category = $I->grabRecord('app\models\User', array('name' => 'davert'));
  * `[Part]` orm
 
 
+### grabSentEmails
+ 
+Returns array of all sent email messages.
+Each message implements `yii\mail\Message` interface.
+Useful to perform additional checks using `Asserts` module:
+
+```php
+<?php
+$I->seeEmailIsSent();
+$messages = $I->grabSentEmails();
+$I->assertEquals('admin * `site,com',`  $messages[0]->getTo());
+```
+
+ * `[Part]` email
+ * `return` array
+ * `throws`  ModuleException
+
+
 ### grabTextFrom
  
 Finds and returns the text contents of the given element.
@@ -622,6 +792,26 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  * `param` $field
 
  * `return` array|mixed|null|string
+
+
+### haveFixtures
+ 
+Creates and loads fixtures from a config.
+Signature is the same as for `fixtures()` method of `yii\test\FixtureTrait`
+
+```php
+<?php
+$I->haveFixtures(,
+    'posts' => PostsFixture::className(),
+    'user' => [
+        'class' => UserFixture::className(),
+        'dataFile' => ' * `tests/_data/models/user.php'` 
+     ],
+);
+```
+
+ * `param` $fixtures
+ * `[Part]` fixtures
 
 
 ### haveHttpHeader
@@ -785,6 +975,24 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
  * `param` $selector
  * `param array` $attributes
  * `return` 
+
+
+### seeEmailIsSent
+ 
+Checks that email is sent.
+
+```php
+<?php
+// check that at least 1 email was sent
+$I->seeEmailIsSent();
+
+// check that only 3 emails were sent
+$I->seeEmailIsSent(3);
+```
+
+ * `param int` $num
+ * `throws`  ModuleException
+ * `[Part]` email
 
 
 ### seeInCurrentUrl
@@ -982,8 +1190,15 @@ $I->seeRecord('app\models\User', array('name' => 'davert'));
  
 Checks that response code is equal to value provided.
 
- * `param` $code
+```php
+<?php
+$I->seeResponseCodeIs(200);
 
+// recommended \Codeception\Util\HttpCode
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+
+ * `param` $code
 
 
 ### selectOption

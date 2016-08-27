@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Lib\Interfaces\DependsOnModule;
+use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Module as BaseModule;
 
 /**
@@ -17,9 +18,11 @@ use Codeception\Module as BaseModule;
  *
  * ## Status
  *
- * * Maintainer: **tiger-seo**
+ * [ ![Facebook Status for Codeception/Codeception](https://codeship.com/projects/e4bc90d0-1ed5-0134-566c-1ed679ae6c9d/status?branch=2.2)](https://codeship.com/projects/160201)
+ *
  * * Stability: **beta**
- * * Contact: tiger.seo@gmail.com
+ * * Maintainer: **tiger-seo**
+ * * Contact: tiger.seo@codeception.com
  *
  * ## Config
  *
@@ -77,7 +80,7 @@ use Codeception\Module as BaseModule;
  * @since 1.6.3
  * @author tiger.seo@gmail.com
  */
-class Facebook extends BaseModule implements DependsOnModule
+class Facebook extends BaseModule implements DependsOnModule, RequiresPackage
 {
     protected $requiredFields = ['app_id', 'secret'];
 
@@ -110,6 +113,11 @@ modules
                 locale: uk_UA
                 permissions: [email, publish_stream]
 EOF;
+
+    public function _requires()
+    {
+        return ['Facebook\Facebook' => '"facebook/php-sdk-v4": "~5.0"'];
+    }
 
     public function _depends()
     {
@@ -286,7 +294,9 @@ EOF;
      */
     public function seePostOnFacebookWithAttachedPlace($placeId)
     {
-        $place = $this->facebook->getVisitedPlaceTagForTestUser($placeId, $this->grabFacebookTestUserAccessToken());
+        $token = $this->grabFacebookTestUserAccessToken();
+        $this->debugSection('Access Token', $token);
+        $place = $this->facebook->getVisitedPlaceTagForTestUser($placeId, $token);
         $this->assertEquals($placeId, $place['id'], "The place was not found on facebook page");
     }
 

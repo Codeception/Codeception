@@ -52,6 +52,9 @@ Locates an element containing a text inside.
 Either CSS or XPath locator can be passed, however they will be converted to XPath.
 
 ```php
+<?php
+use Codeception\Util\Locator;
+
 Locator::contains('label', 'Name'); // label containing name
 Locator::contains('div[ * `contenteditable=true]',`  'hello world');
 ```
@@ -60,7 +63,7 @@ Locator::contains('div[ * `contenteditable=true]',`  'hello world');
  * `param` $text
  * `return`  string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L199)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L233)
 
 ### elementAt 
 
@@ -72,6 +75,9 @@ position is an integer. If a negative value is provided, counting starts from th
 First element has index 1
 
 ```php
+<?php
+use Codeception\Util\Locator;
+
 Locator::elementAt('//table/tr', 2); // second row
 Locator::elementAt('//table/tr', -1); // last row
 Locator::elementAt('table#grind>tr', -2); // previous than last row
@@ -81,13 +87,20 @@ Locator::elementAt('table#grind>tr', -2); // previous than last row
  * `param` $position xpath index
  * `return`  mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L221)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L258)
 
 ### find 
 
 *static*
 
 Finds element by it's attribute(s)
+
+```php
+<?php
+use \Codeception\Util\Locator;
+
+$I->seeElement(Locator::find('img', ['title' => 'diagram']));
+```
 
  * `static` 
 
@@ -96,7 +109,7 @@ Finds element by it's attribute(s)
 
  * `return`  string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L137)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L151)
 
 ### firstElement 
 
@@ -107,13 +120,16 @@ Either CSS or XPath locator can be passed as locator,
 Equal to `Locator::elementAt($locator, 1)`
 
 ```php
+<?php
+use Codeception\Util\Locator;
+
 Locator::firstElement('//table/tr');
 ```
 
  * `param` $element
  * `return`  mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L247)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L287)
 
 ### href 
 
@@ -144,25 +160,35 @@ Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string represe
  * `param` $selector
  * `return`  string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L275)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L318)
 
 ### isCSS 
 
 *static*
 
+Checks that provided string is CSS selector
+
+```php
+<?php
+Locator::isCSS('#user .hello') => true
+Locator::isCSS('body') => true
+Locator::isCSS('//body/p/user') => false
+```
+
  * `param` $selector
  * `return`  bool
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L154)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L177)
 
 ### isID 
 
 *static*
 
 Checks that string and CSS selector for element by ID
+ * `param` $id
+ * `return`  bool
 
-
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L181)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L212)
 
 ### isXPath 
 
@@ -170,10 +196,17 @@ Checks that string and CSS selector for element by ID
 
 Checks that locator is an XPath
 
+```php
+<?php
+Locator::isCSS('#user .hello') => false
+Locator::isCSS('body') => false
+Locator::isCSS('//body/p/user') => true
+```
+
  * `param` $locator
  * `return`  bool
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L170)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L200)
 
 ### lastElement 
 
@@ -184,25 +217,35 @@ Either CSS or XPath locator can be passed as locator,
 Equal to `Locator::elementAt($locator, -1)`
 
 ```php
+<?php
+use Codeception\Util\Locator;
+
 Locator::lastElement('//table/tr');
 ```
 
  * `param` $element
  * `return`  mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L264)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L307)
 
 ### option 
 
 *static*
 
-Matches option by text
+Matches option by text:
+
+```php
+<?php
+use Codeception\Util\Locator;
+
+$I->seeElement(Locator::option('Male'), '#select-gender');
+```
 
  * `param` $value
 
  * `return`  string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L109)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L116)
 
 ### tabIndex 
 

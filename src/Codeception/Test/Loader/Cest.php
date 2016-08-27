@@ -62,9 +62,7 @@ class Cest implements LoaderInterface
                         }
                         $test = new CestFormat($unit, $method, $file);
                         $test->getMetadata()->setCurrent(['example' => $example]);
-
-                        $groups = Annotation::forMethod($unit, $method)->fetchAll('group');
-                        $dataProvider->addTest($test, $groups);
+                        $dataProvider->addTest($test);
                     }
                     $this->tests[] = $dataProvider;
                     continue;
