@@ -2,6 +2,7 @@
 namespace Codeception\Lib\Driver;
 
 use Codeception\Configuration;
+use Codeception\Exception\ModuleException;
 
 class Sqlite extends Db
 {
@@ -11,7 +12,12 @@ class Sqlite extends Db
 
     public function __construct($dsn, $user, $password)
     {
-        $this->filename = Configuration::projectDir() . substr($dsn, 7);
+        $filename = substr($dsn, 7);
+        if ($filename === ':memory:') {
+            throw new ModuleException(__CLASS__, ':memory: database is not supported');
+        }
+
+        $this->filename = Configuration::projectDir() . $filename;
         $this->dsn = 'sqlite:' . $this->filename;
         parent::__construct($this->dsn, $user, $password);
     }

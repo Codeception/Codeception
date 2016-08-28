@@ -26,7 +26,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
         $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
-
     }
 
     private function setStubResponse($response)
@@ -261,5 +260,11 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+    }
+
+    public function testGrabFromCurrentUrl()
+    {
+        $this->module->sendGET('/rest/http-host/');
+        $this->assertEquals('/rest/http-host/', $this->phpBrowser->grabFromCurrentUrl());
     }
 }

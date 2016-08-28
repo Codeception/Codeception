@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\TestInterface;
@@ -56,10 +57,10 @@ use PhpAmqpLib\Exception\AMQPProtocolChannelException;
  * @author tiger.seo@gmail.com
  * @author davert
  */
-class AMQP extends CodeceptionModule
+class AMQP extends CodeceptionModule implements RequiresPackage
 {
     protected $config = [
-        'host'     => 'locahost',
+        'host'     => 'localhost',
         'username' => 'guest',
         'password' => 'guest',
         'port'     => '5672',
@@ -78,6 +79,11 @@ class AMQP extends CodeceptionModule
     protected $channel;
 
     protected $requiredFields = ['host', 'username', 'password', 'vhost'];
+
+    public function _requires()
+    {
+        return ['PhpAmqpLib\Connection\AMQPStreamConnection' => '"php-amqplib/php-amqplib": "~2.4"'];
+    }
 
     public function _initialize()
     {
@@ -189,6 +195,38 @@ class AMQP extends CodeceptionModule
     {
         $message = $this->connection->channel()->basic_get($queue);
         return $message;
+    }
+
+    /**
+     * Purge a specific queue defined in config.
+     *
+     * ``` php
+     * <?php
+     * $I->purgeQueue('queue.emails');
+     * ?>
+     * ```
+     */
+    public function purgeQueue($queueName = '')
+    {
+        if (! in_array($queueName, $this->config['queues'])) {
+            throw new ModuleException(__CLASS__, "'$queueName' doesn't exist in queues config list");
+        }
+
+        $this->connection->channel()->queue_purge($queueName, true);
+    }
+
+    /**
+     * Purge all queues defined in config.
+     *
+     * ``` php
+     * <?php
+     * $I->purgeAllQueues();
+     * ?>
+     * ```
+     */
+    public function purgeAllQueues()
+    {
+        $this->cleanup();
     }
 
     protected function cleanup()

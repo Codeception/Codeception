@@ -131,7 +131,7 @@ Let's improve code of our `login` method by making it executed only once for the
 
 ```
 
-Please note that session restoration only works for `WebDriver` and `PhpBrowser` modules (modules implementing `Codeception\Lib\Interfaces\SessionSnapshot`) 
+Please note that session restoration only works for `WebDriver` module (modules implementing `Codeception\Lib\Interfaces\SessionSnapshot`) 
 
 ## StepObjects
 

@@ -13,6 +13,7 @@ use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
+use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
 use Codeception\Lib\Interfaces\SessionSnapshot;
 use Codeception\Lib\Interfaces\Web as WebInterface;
@@ -239,7 +240,8 @@ class WebDriver extends CodeceptionModule implements
     ScreenshotSaver,
     PageSourceSaver,
     ElementLocator,
-    ConflictsWithModule
+    ConflictsWithModule,
+    RequiresPackage
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
@@ -275,6 +277,11 @@ class WebDriver extends CodeceptionModule implements
      * @var RemoteWebDriver
      */
     public $webDriver;
+
+    public function _requires()
+    {
+        return ['Facebook\WebDriver\Remote\RemoteWebDriver' => '"facebook/webdriver": "^1.0.1"'];
+    }
 
     public function _initialize()
     {
@@ -365,10 +372,10 @@ class WebDriver extends CodeceptionModule implements
     public function _failed(TestInterface $test, $fail)
     {
         $this->debugWebDriverLogs();
-        $filename = str_replace([':', '\\', '/'], ['.', '', ''], Descriptor::getTestSignature($test)) . '.fail';
+        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
-        $this->_saveScreenshot($outputDir . $filename . '.png');
-        $this->_savePageSource($outputDir . $filename . '.html');
+        $this->_saveScreenshot($outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
+        $this->_savePageSource($outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
         $this->debug("Screenshot and page source were saved into '$outputDir' dir");
     }
 
@@ -1101,7 +1108,7 @@ class WebDriver extends CodeceptionModule implements
         // partially matching
         foreach ($option as $opt) {
             try {
-                $optElement = $el->findElement(WebDriverBy::xpath('//option [contains (., "' . $opt . '")]'));
+                $optElement = $el->findElement(WebDriverBy::xpath('.//option [contains (., "' . $opt . '")]'));
                 $matched = true;
                 if (!$optElement->isSelected()) {
                     $optElement->click();

@@ -29,6 +29,11 @@ settings:
     # inside a suite directory.
 
     bootstrap: _bootstrap.php
+    
+    # enable/disable syntax of test files before loading
+    # for php < 7 exec('php -l') is used
+    # disable if you need to speed up tests execution
+    lint: true
 
     # randomize test order
     shuffle: true
@@ -44,7 +49,6 @@ settings:
     # This value controls whether PHPUnit attempts to backup global variables
     # See https://phpunit.de/manual/current/en/appendixes.annotations.html#appendixes.annotations.backupGlobals
     backup_globals: true
-    
 
 # Global modules configuration.    
 modules:
@@ -56,7 +60,7 @@ modules:
             dump: tests/_data/dump.sql
 ```
 
-Suite configuration acceptance.yml
+Suite configuration `acceptance.suite.yml`
 
 ```yaml
 class_name: AcceptanceTester

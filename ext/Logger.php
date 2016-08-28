@@ -8,6 +8,7 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Extension;
+use Codeception\Test\Descriptor;
 use Monolog\Handler\RotatingFileHandler;
 
 /**
@@ -57,12 +58,11 @@ class Logger extends Extension
 
     protected $config = ['max_files' => 3];
 
-    public function __construct()
+    public function _initialize()
     {
         if (!class_exists('\Monolog\Logger')) {
             throw new ConfigurationException("Logger extension requires Monolog library to be installed");
         }
-
         $this->path = $this->getLogDir();
 
         // internal log
@@ -79,10 +79,10 @@ class Logger extends Extension
 
     public function beforeTest(TestEvent $e)
     {
-        $this->logger = new \Monolog\Logger($e->getTest()->getFileName());
+        $this->logger = new \Monolog\Logger(Descriptor::getTestFileName($e->getTest()));
         $this->logger->pushHandler($this->logHandler);
         $this->logger->info('------------------------------------');
-        $this->logger->info("STARTED: " . ucfirst($e->getTest()->getName(false)));
+        $this->logger->info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
     }
 
     public function afterTest(TestEvent $e)

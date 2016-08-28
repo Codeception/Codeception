@@ -38,7 +38,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         try {
             $this->postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
         } catch (\Exception $e) {
-            $this->markTestSkipped('Coudn\'t establish connection to database');
+            $this->markTestSkipped('Coudn\'t establish connection to database: ' . $e->getMessage());
         }
         $this->postgres->load(self::$sql);
     }

@@ -7,6 +7,8 @@ use Codeception\Exception\ModuleException;
 
 class MongoDb
 {
+    const DEFAULT_PORT = 27017;
+
     private $legacy;
     private $dbh;
     private $dsn;
@@ -153,18 +155,65 @@ class MongoDb
      */
     public function load($dumpFile)
     {
-        if ($this->user && $this->password) {
-            $cmd = sprintf(
-                'mongo %s --username %s --password %s %s',
-                $this->host . '/' . $this->dbName,
-                $this->user,
-                $this->password,
-                escapeshellarg($dumpFile)
-            );
-        } else {
-            $cmd = sprintf('mongo %s %s', $this->host . '/' . $this->dbName, escapeshellarg($dumpFile));
-        }
+        $cmd = sprintf(
+            'mongo %s %s%s',
+            $this->host . '/' . $this->dbName,
+            $this->createUserPasswordCmdString(),
+            escapeshellarg($dumpFile)
+        );
         shell_exec($cmd);
+    }
+
+    public function loadFromMongoDump($dumpFile)
+    {
+        list($host, $port) = $this->getHostPort();
+        $cmd = sprintf(
+            "mongorestore --host %s --port %s %s%s",
+            $host,
+            $port,
+            $this->createUserPasswordCmdString(),
+            escapeshellarg($dumpFile)
+        );
+        shell_exec($cmd);
+    }
+
+    public function loadFromTarGzMongoDump($dumpFile)
+    {
+        list($host, $port) = $this->getHostPort();
+        $getDirCmd = sprintf(
+            "tar -tf %s | awk 'BEGIN { FS = \"/\" } ; { print $1 }' | uniq",
+            escapeshellarg($dumpFile)
+        );
+        $dirCountCmd = $getDirCmd . ' | wc -l';
+        if (trim(shell_exec($dirCountCmd)) !== '1') {
+            throw new ModuleException(
+                $this,
+                'Archive MUST contain single directory with db dump'
+            );
+        }
+        $dirName = trim(shell_exec($getDirCmd));
+        $cmd = sprintf(
+            'tar -xzf %s && mongorestore --host %s --port %s%s %s && rm -r %s',
+            escapeshellarg($dumpFile),
+            $host,
+            $port,
+            $this->createUserPasswordCmdString(),
+            $dirName,
+            $dirName
+        );
+        shell_exec($cmd);
+    }
+
+    private function createUserPasswordCmdString()
+    {
+        if ($this->user && $this->password) {
+            return sprintf(
+                '--username %s --password %s ',
+                $this->user,
+                $this->password
+            );
+        }
+        return '';
     }
 
     public function getDbh()
@@ -185,5 +234,17 @@ class MongoDb
     public function isLegacy()
     {
         return $this->legacy;
+    }
+
+    private function getHostPort()
+    {
+        $hostPort = explode(':', $this->host);
+        if (count($hostPort) === 2) {
+            return $hostPort;
+        }
+        if (count($hostPort) === 1) {
+            return [$hostPort[0], self::DEFAULT_PORT];
+        }
+        throw new ModuleException($this, '$dsn MUST be like (mongodb://)<host>:<port>/<db name>');
     }
 }

@@ -100,7 +100,14 @@ class Locator
     }
 
     /**
-     * Matches option by text
+     * Matches option by text:
+     *
+     * ```php
+     * <?php
+     * use Codeception\Util\Locator;
+     *
+     * $I->seeElement(Locator::option('Male'), '#select-gender');
+     * ```
      *
      * @param $value
      *
@@ -127,6 +134,13 @@ class Locator
     /**
      * Finds element by it's attribute(s)
      *
+     * ```php
+     * <?php
+     * use \Codeception\Util\Locator;
+     *
+     * $I->seeElement(Locator::find('img', ['title' => 'diagram']));
+     * ```
+     *
      * @static
      *
      * @param $element
@@ -148,6 +162,15 @@ class Locator
     }
 
     /**
+     * Checks that provided string is CSS selector
+     *
+     * ```php
+     * <?php
+     * Locator::isCSS('#user .hello') => true
+     * Locator::isCSS('body') => true
+     * Locator::isCSS('//body/p/user') => false
+     * ```
+     *
      * @param $selector
      * @return bool
      */
@@ -164,6 +187,13 @@ class Locator
     /**
      * Checks that locator is an XPath
      *
+     * ```php
+     * <?php
+     * Locator::isCSS('#user .hello') => false
+     * Locator::isCSS('body') => false
+     * Locator::isCSS('//body/p/user') => true
+     * ```
+     *
      * @param $locator
      * @return bool
      */
@@ -176,7 +206,8 @@ class Locator
 
     /**
      * Checks that string and CSS selector for element by ID
-     *
+     * @param $id
+     * @return bool
      */
     public static function isID($id)
     {
@@ -188,6 +219,9 @@ class Locator
      * Either CSS or XPath locator can be passed, however they will be converted to XPath.
      *
      * ```php
+     * <?php
+     * use Codeception\Util\Locator;
+     *
      * Locator::contains('label', 'Name'); // label containing name
      * Locator::contains('div[@contenteditable=true]', 'hello world');
      * ```
@@ -209,6 +243,9 @@ class Locator
      * First element has index 1
      *
      * ```php
+     * <?php
+     * use Codeception\Util\Locator;
+     *
      * Locator::elementAt('//table/tr', 2); // second row
      * Locator::elementAt('//table/tr', -1); // last row
      * Locator::elementAt('table#grind>tr', -2); // previous than last row
@@ -238,6 +275,9 @@ class Locator
      * Equal to `Locator::elementAt($locator, 1)`
      *
      * ```php
+     * <?php
+     * use Codeception\Util\Locator;
+     *
      * Locator::firstElement('//table/tr');
      * ```
      *
@@ -255,6 +295,9 @@ class Locator
      * Equal to `Locator::elementAt($locator, -1)`
      *
      * ```php
+     * <?php
+     * use Codeception\Util\Locator;
+     *
      * Locator::lastElement('//table/tr');
      * ```
      *

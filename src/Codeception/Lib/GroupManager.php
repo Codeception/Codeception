@@ -104,6 +104,13 @@ class GroupManager
         if ($test instanceof \PHPUnit_Framework_TestCase) {
             $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->getName(false)));
         }
+        if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+            $firstTest = $test->testAt(0);
+            if ($firstTest != false && $firstTest instanceof TestInterface) {
+                $groups = array_merge($groups, $firstTest->getMetadata()->getGroups());
+                $filename = Descriptor::getTestFileName($firstTest);
+            }
+        }
 
         foreach ($this->testsInGroups as $group => $tests) {
             foreach ($tests as $testPattern) {

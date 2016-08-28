@@ -9,7 +9,7 @@ matrix:
     - php: hhvm # because we haven't fixed all issues yet
   include:
     - php: 5.4 # lowest versions of all dependencies
-      env: SYMFONY=2.7.0 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.7.*
+      env: PHALCON=2.1.x SYMFONY=2.7.0 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.7.*
     - php: 5.5
       env: dependencies=lowest SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.6
@@ -36,7 +36,7 @@ services:
 sudo: false
 
 install:
-  - pecl install mongodb
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || pecl install mongodb'
   #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # use hhvm-serve instead of builtin server
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || mkdir -p /home/travis/go/{src,bin,pkg}'
@@ -53,17 +53,19 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || composer remove mongodb/mongodb --no-update --dev'
   - composer_parameters="-n --prefer-dist" # this variable will be used in all composer install commands
   - '[[ "$dependencies" != "lowest" ]] || composer_parameters="$composer_parameters --prefer-lowest"'
   - composer update $composer_parameters
   - composer_parameters="$composer_parameters --no-dev" # Codeception needs dev dependencies, but frameworks don't
   # Yii2
-  - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
+  - composer create-project "yiisoft/yii2-app-basic:@dev" frameworks-yii-basic --no-dev
   # Phalcon
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || (cd cphalcon/ext; export CFLAGS="-g0 -O0 -std=gnu90"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j2 &> /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || git clone -q --depth=1 -b 2.2 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || composer update -d frameworks-phalcon $composer_parameters'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ -z "$PHALCON" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b $PHALCON'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ ! -z "$PHALCON" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/build; bash install &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null && cd ../..;)'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || composer update -d frameworks-phalcon $composer_parameters'
   # Laravel 5
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-l5 $composer_parameters'
@@ -75,10 +77,10 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
   - '[[ -z "$SYMFONY" ]] || composer update -d frameworks-symfony $composer_parameters'
   # ZF1
-  - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
+  - git clone -q -b 2.2-simple-file-upload --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
   - composer update -d frameworks-zf1 $composer_parameters
   # ZF2
-  - git clone -q -b 2.2-doctrine2 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
+  - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
   - composer update -d frameworks-zf2 $composer_parameters
   # Zend Expressive
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
@@ -122,8 +124,8 @@ before_script:
   - "mysql -e 'create database zf2_test;'"
   - php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create
   # Build
-  - php codecept build -c frameworks-yii-basic/tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept build -c frameworks-phalcon'
+  - php codecept build -c frameworks-yii-basic
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept build -c frameworks-phalcon'
   - '[[ -z "$SYMFONY" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-lumen'
@@ -138,10 +140,10 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] ||  php codecept run coverage'  # run coverage tests on php only
   # disable xdebug before running framework tests
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "xdebug.enable = Off" >> /etc/hhvm/php.ini'
-  - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
+  - php codecept run functional -c frameworks-yii-basic # Yii2 tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
   - '[[ -z "$SYMFONY" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle '# Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
   - php codecept run -c frameworks-zf2 functional,doctrine # ZF2 Tests

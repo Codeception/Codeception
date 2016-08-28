@@ -59,7 +59,6 @@ EOF;
         $this->parser->parseScenarioOptions($code);
         $this->assertContains('davert', $this->testMetadata->getGroups());
         $this->assertContains('windows', $this->testMetadata->getEnv());
-
     }
 
     public function testCommentedInBlockScenarioOptions()

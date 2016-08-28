@@ -1,0 +1,15 @@
+actor: Tester
+paths:
+    tests: tests
+    log: .
+    data: .
+    support: tests/_support
+params:
+    - env
+    - params.yml
+
+modules:
+    enabled:
+        - \Helper\Dummy:
+            vars: [%KEY1%, %KEY2%]
+            path: %PATH%

@@ -64,11 +64,13 @@ $I->wantTo('create a user via API');
 $I->amHttpAuthenticated('service_user', '123456');
 $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
 $I->sendPOST('/users', ['name' => 'davert', 'email' => 'davert@codeception.com']);
-$I->seeResponseCodeIs(200);
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK); // 200
 $I->seeResponseIsJson();
 $I->seeResponseContains('{"result":"ok"}');
 
 ```
+
+We can use HTTP code constants from `Codeception\Util\HttpCode` instead of numeric values to check response code in `seeResponseCodeIs` and `dontSeeResponseCodeIs` methods. 
 
 ### Testing JSON Responses
 
@@ -94,6 +96,7 @@ You may want to perform even more complex assertions on a response. This can be 
 ```php
 <?php
 namespace Helper;
+
 class Api extends \Codeception\Module
 {
   public function seeResponseIsHtml()
@@ -118,6 +121,7 @@ If we expect a JSON response to be received we can check its structure with [JSO
 $I = new ApiTester($scenario);
 $I->wantTo('validate structure of GitHub api responses');
 $I->sendGET('/users');
+$I->seeResponseCodeIs(HttpCode::OK); // 200
 $I->seeResponseIsJson();
 $I->seeResponseJsonMatchesJsonPath('$[0].user.login');
 $I->seeResponseJsonMatchesXpath('//user/login');
@@ -130,6 +134,7 @@ You can do that by using with a [seeResponseMatchesJsonType](http://codeception.
 ```php
 <?php
 $I->sendGET('/users/1');
+$I->seeResponseCodeIs(HttpCode::OK); // 200
 $I->seeResponseIsJson();
 $I->seeResponseMatchesJsonType([
     'id' => 'integer',
@@ -156,6 +161,7 @@ use Codeception\Util\Xml as XmlUtils;
 $I = new ApiTester($scenario);
 $I->wantTo('validate structure of GitHub api responses');
 $I->sendGET('/users.xml');
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK); // 200
 $I->seeResponseIsXml();
 $I->seeXmlResponseMatchesXpath('//user/login');
 $I->seeXmlResponseIncludes(XmlUtils::toXml(

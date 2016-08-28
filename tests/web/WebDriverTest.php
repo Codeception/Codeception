@@ -70,6 +70,13 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertEquals('adult', $form['age']);
     }
 
+    public function testSelectInvalidOptionForSecondSelectFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/select_second');
+        $this->module->selectOption('#select2', 'Value2');
+    }
+
     public function testSeeInPopup()
     {
         $this->notForPhantomJS();
@@ -385,10 +392,8 @@ class WebDriverTest extends TestsForBrowsers
     {
         $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
             'takeScreenshot' => Stub::once(function () {
-
             }),
             'getPageSource' => Stub::once(function () {
-
             }),
             'manage' => Stub::make('\Facebook\WebDriver\WebDriverOptions', [
                 'getAvailableLogTypes' => Stub::atLeastOnce(function () {
@@ -408,7 +413,6 @@ class WebDriverTest extends TestsForBrowsers
                 PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $filename);
             }),
             'getPageSource' => Stub::once(function () {
-
             }),
             'manage' => Stub::make('\Facebook\WebDriver\WebDriverOptions', [
                 'getAvailableLogTypes' => Stub::atLeastOnce(function () {
@@ -432,7 +436,6 @@ class WebDriverTest extends TestsForBrowsers
                 );
             }),
             'getPageSource' => Stub::once(function () {
-
             }),
             'manage' => Stub::make('\Facebook\WebDriver\WebDriverOptions', [
                 'getAvailableLogTypes' => Stub::atLeastOnce(function () {

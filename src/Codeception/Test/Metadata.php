@@ -39,7 +39,7 @@ class Metadata
      */
     public function getGroups()
     {
-        return $this->groups;
+        return array_unique($this->groups);
     }
 
     /**

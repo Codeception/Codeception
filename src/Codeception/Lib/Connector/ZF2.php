@@ -1,8 +1,8 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Lib\Connector\ZF2\DoctrineServiceManager;
-use GuzzleHttp\Psr7\Uri;
+use Codeception\Exception\ModuleException;
+use Codeception\Lib\Connector\ZF2\PersistentServiceManager;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
@@ -31,9 +31,9 @@ class ZF2 extends Client
     protected $zendRequest;
 
     /**
-     * @var DoctrineServiceManager
+     * @var PersistentServiceManager
      */
-    private $doctrineServiceManager;
+    private $persistentServiceManager;
 
     /**
      * @param array $applicationConfig
@@ -54,9 +54,7 @@ class ZF2 extends Client
     {
         $this->createApplication();
         $zendRequest = $this->application->getRequest();
-        $zendResponse = $this->application->getResponse();
 
-        $zendResponse->setStatusCode(200);
         $uri = new HttpUri($request->getUri());
         $queryString = $uri->getQuery();
         $method = strtoupper($request->getMethod());
@@ -89,6 +87,11 @@ class ZF2 extends Client
         
         $zendRequest->setHeaders($this->extractHeaders($request));
         $this->application->run();
+
+        // get the response *after* the application has run, because other ZF
+        //     libraries like API Agility may *replace* the application's response
+        //
+        $zendResponse = $this->application->getResponse();
 
         $this->zendRequest = $zendRequest;
 
@@ -139,14 +142,33 @@ class ZF2 extends Client
         $serviceManager = $this->application->getServiceManager();
 
         if (!$serviceManager->has($service)) {
-            $this->fail("Service $service is not available in container");
+            throw new \PHPUnit_Framework_AssertionFailedError("Service $service is not available in container");
         }
 
-        if ($service === 'Doctrine\ORM\EntityManager') {
-            $this->doctrineServiceManager = new DoctrineServiceManager($serviceManager);
+        if ($service === 'Doctrine\ORM\EntityManager' && !isset($this->persistentServiceManager)) {
+            if (!method_exists($serviceManager, 'addPeeringServiceManager')) {
+                throw new ModuleException('Codeception\Module\ZF2', 'integration with Doctrine2 module is not compatible with ZF3');
+            }
+            $this->persistentServiceManager = new PersistentServiceManager($serviceManager);
         }
 
-        return  $serviceManager->get($service);
+        return $serviceManager->get($service);
+    }
+
+    public function addServiceToContainer($name, $service)
+    {
+        if (!isset($this->persistentServiceManager)) {
+            $serviceManager = $this->application->getServiceManager();
+            if (!method_exists($serviceManager, 'addPeeringServiceManager')) {
+                throw new ModuleException('Codeception\Module\ZF2', 'addServiceToContainer method is not compatible with ZF3');
+            }
+            $this->persistentServiceManager = new PersistentServiceManager($serviceManager);
+            $serviceManager->addPeeringServiceManager($this->persistentServiceManager);
+            $serviceManager->setRetrieveFromPeeringManagerFirst(true);
+        }
+        $this->persistentServiceManager->setAllowOverride(true);
+        $this->persistentServiceManager->setService($name, $service);
+        $this->persistentServiceManager->setAllowOverride(false);
     }
 
     private function createApplication()
@@ -154,12 +176,17 @@ class ZF2 extends Client
         $this->application = Application::init($this->applicationConfig);
         $serviceManager = $this->application->getServiceManager();
 
-        if (isset($this->doctrineServiceManager)) {
-            $serviceManager->addPeeringServiceManager($this->doctrineServiceManager);
+        if (isset($this->persistentServiceManager)) {
+            $serviceManager->addPeeringServiceManager($this->persistentServiceManager);
             $serviceManager->setRetrieveFromPeeringManagerFirst(true);
         }
 
+        $sendResponseListener = $serviceManager->get('SendResponseListener');
         $events = $this->application->getEventManager();
-        $events->detach($serviceManager->get('SendResponseListener'));
+        if (class_exists('Zend\EventManager\StaticEventManager')) {
+            $events->detach($sendResponseListener); //ZF2
+        } else {
+            $events->detach([$sendResponseListener, 'sendResponse']); //ZF3
+        }
     }
 }

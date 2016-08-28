@@ -37,9 +37,14 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    protected function makeContainer()
+    {
+        return \Codeception\Util\Stub::make('Codeception\Lib\ModuleContainer');
+    }
+
     public function setUp()
     {
-        $this->module = new Facebook(make_container());
+        $this->module = new Facebook($this->makeContainer());
         $this->module->_setConfig($this->config);
         $this->module->_initialize();
 
@@ -100,7 +105,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module->haveFacebookTestUserAccount();
 
         // precondition #2: I have published the post with place attached
-        $params = array('place' => '141971499276483');
+        $params = array('place' => '111227078906045'); //
         $this->module->postToFacebookAsTestUser($params);
 
         // assert that post was published in the facebook and place is the same
@@ -109,12 +114,9 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginToFacebook()
     {
-        if (PHP_MAJOR_VERSION < 7 && getenv('TRAVIS')) {
-            $this->markTestSkipped('run only one thread on Travis');
-        }
         // precondition: you need to have a server running for this test
         // you can start a php server with: php -S 127.0.0.1:8000 -t tests/data/app
-        $browserModule = new PhpBrowser(make_container());
+        $browserModule = new PhpBrowser($this->makeContainer());
         $this->initModule($browserModule, ['url' => 'http://localhost:8000']);
         $this->module->_inject($browserModule);
 
@@ -153,9 +155,6 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
             !in_array('user_posts', $this->config['test_user']['permissions'])
         ) {
             $this->markTestSkipped("You need both publish_actions and user_posts permissions for this test");
-        }
-        if (getenv('TRAVIS')) {
-            $this->markTestSkipped('Facebook test is too fragile, skipping for CI');
         }
     }
 

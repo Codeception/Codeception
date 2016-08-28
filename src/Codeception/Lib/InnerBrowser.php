@@ -17,6 +17,7 @@ use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
+use Codeception\Util\HttpCode;
 use Codeception\Util\Locator;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Uri;
@@ -58,7 +59,9 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $this->_savePageSource(codecept_output_dir().str_replace(['::', '\\', '/'], ['.', '.', '.'], Descriptor::getTestSignature($test)) . '.fail.html');
+        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
+        $filename = mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html';
+        $this->_savePageSource(codecept_output_dir() . $filename);
     }
 
     public function _after(TestInterface $test)
@@ -116,7 +119,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         array $server = [],
         $content = null
     ) {
-        $this->clientRequest($method, $uri, $parameters, $files, $server, $content, false);
+        $this->clientRequest($method, $uri, $parameters, $files, $server, $content, true);
         return $this->_getResponseContent();
     }
 
@@ -161,7 +164,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 $server[$header] = $val;
             }
         }
-
+        $server['REQUEST_TIME'] = time();
+        $server['REQUEST_TIME_FLOAT'] = microtime(true);
         if ($this instanceof Framework) {
             if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
                 $hostname = parse_url($uri, PHP_URL_HOST);
@@ -510,13 +514,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeCheckboxIsChecked($checkbox)
     {
-        $checkboxes = $this->getCrawler()->filter($checkbox);
+        $checkboxes = $this->getFieldsByLabelOrCss($checkbox);
         $this->assertDomContains($checkboxes->filter('input[checked=checked]'), 'checkbox');
     }
 
     public function dontSeeCheckboxIsChecked($checkbox)
     {
-        $checkboxes = $this->getCrawler()->filter($checkbox);
+        $checkboxes = $this->getFieldsByLabelOrCss($checkbox);
         $this->assertEquals(0, $checkboxes->filter('input[checked=checked]')->count());
     }
 
@@ -799,11 +803,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$form) {
             $this->fail('The selected node is not a form and does not have a form ancestor.');
         }
-        $action = (string) $this->getFormUrl($form);
-        if (!isset($this->forms[$action])) {
-            $this->forms[$action] = $this->getFormFromCrawler($form, $action);
+        $action = (string)$this->getFormUrl($form);
+        $identifier = $form->attr('id') ?: $action;
+        if (!isset($this->forms[$identifier])) {
+            $this->forms[$identifier] = $this->getFormFromCrawler($form, $action);
         }
-        return $this->forms[$action];
+        return $this->forms[$identifier];
     }
 
     /**
@@ -866,11 +871,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
 
         // by label
-        $label = $this->strictMatch(['xpath' => sprintf('.//label[text()=%s]', Crawler::xpathLiteral($field))]);
+        $label = $this->strictMatch(['xpath' => sprintf('.//label[descendant-or-self::node()[text()[normalize-space()=%s]]]', Crawler::xpathLiteral($field))]);
         if (count($label)) {
             $label = $label->first();
             if ($label->attr('for')) {
                 $input = $this->strictMatch(['id' => $label->attr('for')]);
+            } else {
+                $input = $this->strictMatch(['xpath' => sprintf('.//label[descendant-or-self::node()[text()[normalize-space()=%s]]]//input', Crawler::xpathLiteral($field))]);
             }
         }
 
@@ -1387,13 +1394,45 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     /**
      * Checks that response code is equal to value provided.
      *
-     * @param $code
+     * ```php
+     * <?php
+     * $I->seeResponseCodeIs(200);
      *
-     * @return mixed
+     * // recommended \Codeception\Util\HttpCode
+     * $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+     * ```
+     *
+     * @param $code
      */
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->getResponseStatusCode());
+        $failureMessage = sprintf(
+            'Expected HTTP Status Code: %s. Actual Status Code: %s',
+            HttpCode::getDescription($code),
+            HttpCode::getDescription($this->getResponseStatusCode())
+        );
+        $this->assertEquals($code, $this->getResponseStatusCode(), $failureMessage);
+    }
+
+    /**
+     * Checks that response code is equal to value provided.
+     *
+     * ```php
+     * <?php
+     * $I->dontSeeResponseCodeIs(200);
+     *
+     * // recommended \Codeception\Util\HttpCode
+     * $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+     * ```
+     * @param $code
+     */
+    public function dontSeeResponseCodeIs($code)
+    {
+        $failureMessage = sprintf(
+            'Expected HTTP status code other than %s',
+            HttpCode::getDescription($code)
+        );
+        $this->assertNotEquals($code, $this->getResponseStatusCode(), $failureMessage);
     }
 
     public function seeInTitle($title)
@@ -1431,7 +1470,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat(
-            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
+            $this->getNormalizedResponseContent(),
             $constraint,
             $message
         );
@@ -1441,7 +1480,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
-            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
+            $this->getNormalizedResponseContent(),
             $constraint,
             $message
         );
@@ -1678,5 +1717,19 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 ));
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNormalizedResponseContent()
+    {
+        $content = $this->_getResponseContent();
+        $content = strip_tags($content);
+        $content = html_entity_decode($content, ENT_QUOTES);
+        $content = str_replace("\n", ' ', $content);
+        $content = preg_replace('/\s{2,}/', ' ', $content);
+
+        return $content;
     }
 }

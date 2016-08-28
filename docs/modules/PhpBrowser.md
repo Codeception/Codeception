@@ -12,7 +12,7 @@ If test fails stores last shown page in 'output' dir.
 
 * Maintainer: **davert**
 * Stability: **stable**
-* Contact: davert.codecept@mailican.com
+* Contact: codeception@codeception.com
 * Works with [Guzzle](http://guzzlephp.org/)
 
 *Please review the code of non-stable modules and provide patches if you have issues.*
@@ -551,6 +551,20 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 
 
 
+### dontSeeResponseCodeIs
+ 
+Checks that response code is equal to value provided.
+
+```php
+<?php
+$I->dontSeeResponseCodeIs(200);
+
+// recommended \Codeception\Util\HttpCode
+$I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+ * `param` $code
+
+
 ### executeInGuzzle
  
 Low-level API method.
@@ -1011,8 +1025,15 @@ Asserts that current page has 404 response status code.
  
 Checks that response code is equal to value provided.
 
- * `param` $code
+```php
+<?php
+$I->seeResponseCodeIs(200);
 
+// recommended \Codeception\Util\HttpCode
+$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
+```
+
+ * `param` $code
 
 
 ### selectOption

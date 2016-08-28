@@ -47,9 +47,16 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
         $this->module->see('A wise man said: "debug!"');
-
-        $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!', 'h1');
+
+        $this->module->see('Some text with formatting on separate lines');
+        $this->module->see('Some text with formatting on separate lines', '#area4');
+        $this->module->see('on separate lines', '#area4 .someclass');
+
+        //ensure backwards compatibility, this assertion passed before this change
+        $this->module->see("Test Link \n\n\n    Test");
+        //Single quote HTML entities must be decoded
+        $this->module->see("please don't provide us any personal information.");
 
         $this->module->amOnPage('/info');
         $this->module->see('valuable', 'p');
@@ -58,6 +65,20 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->dontSee('Welcome');
         $this->module->dontSee('valuable', 'h1');
         $this->module->dontSee('Welcome', 'h6');
+    }
+
+    public function testDontSeeFailsWhenMultilineTextMatches()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/');
+        $this->module->dontSee('Some text with formatting on separate lines');
+    }
+
+    public function testDontSeeFailsWhenMultilineTextMatchesInSelector()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/');
+        $this->module->dontSee('Some text with formatting on separate lines', '#area4');
     }
 
     /**
@@ -107,32 +128,40 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
 
     public function testSeeLinkFailsIfTextDoesNotMatch()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError',
-            "No links containing text 'Codeception' were found in page /external_url");
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            "No links containing text 'Codeception' were found in page /external_url"
+        );
         $this->module->amOnPage('/external_url');
         $this->module->seeLink('Codeception');
     }
 
     public function testSeeLinkFailsIfHrefDoesNotMatch()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError',
-            "No links containing text 'Next' and URL '/fsdfsdf/' were found in page /external_url");
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            "No links containing text 'Next' and URL '/fsdfsdf/' were found in page /external_url"
+        );
         $this->module->amOnPage('/external_url');
         $this->module->seeLink('Next', '/fsdfsdf/');
     }
 
     public function testDontSeeLinkFailsIfTextMatches()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError',
-            "Link containing text 'Next' was found in page /external_url");
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            "Link containing text 'Next' was found in page /external_url"
+        );
         $this->module->amOnPage('/external_url');
         $this->module->dontSeeLink('Next');
     }
 
     public function testDontSeeLinkFailsIfTextAndUrlMatches()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError',
-            "Link containing text 'Next' and URL 'http://codeception.com/' was found in page /external_url");
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            "Link containing text 'Next' and URL 'http://codeception.com/' was found in page /external_url"
+        );
         $this->module->amOnPage('/external_url');
         $this->module->dontSeeLink('Next', 'http://codeception.com/');
     }
@@ -363,6 +392,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('Nothing special', $form['name']);
     }
 
+    public function testTextFieldByLabelWithoutFor()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->fillField('Other label', 'Nothing special');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('Nothing special', $form['othername']);
+    }
+
     public function testFileFieldByCss()
     {
         $this->module->amOnPage('/form/file');
@@ -385,12 +423,14 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/form/checkbox');
         $this->module->dontSeeCheckboxIsChecked('#checkin');
+        $this->module->dontSeeCheckboxIsChecked('I Agree');
     }
 
     public function testSeeCheckboxChecked()
     {
         $this->module->amOnPage('/info');
         $this->module->seeCheckboxIsChecked('input[type=checkbox]');
+        $this->module->seeCheckboxIsChecked('Checked');
     }
 
     public function testSeeWithNonLatin()
@@ -1327,6 +1367,27 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertTrue(isset($data['second-field']));
         $this->assertFalse(isset($data['first-field']));
         $this->assertEquals('Killgore Trout', $data['second-field']);
+    }
+
+    public function testSubmitAdjacentFormsByButton()
+    {
+        $this->module->amOnPage('/form/submit_adjacentforms');
+        $this->module->fillField('first-field', 'First');
+        $this->module->fillField('second-field', 'Second');
+        $this->module->click('#submit1');
+        $data = data::get('form');
+        $this->assertTrue(isset($data['first-field']));
+        $this->assertFalse(isset($data['second-field']));
+        $this->assertEquals('First', $data['first-field']);
+
+        $this->module->amOnPage('/form/submit_adjacentforms');
+        $this->module->fillField('first-field', 'First');
+        $this->module->fillField('second-field', 'Second');
+        $this->module->click('#submit2');
+        $data = data::get('form');
+        $this->assertFalse(isset($data['first-field']));
+        $this->assertTrue(isset($data['second-field']));
+        $this->assertEquals('Second', $data['second-field']);
     }
 
     public function testArrayField()

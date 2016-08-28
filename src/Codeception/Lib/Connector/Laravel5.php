@@ -2,8 +2,10 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\Laravel5\ExceptionHandlerDecorator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Client;
@@ -46,6 +48,26 @@ class Laravel5 extends Client
     private $eventsDisabled;
 
     /**
+     * @var bool
+     */
+    private $modelEventsDisabled;
+
+    /**
+     * @var array
+     */
+    private $bindings = [];
+
+    /**
+     * @var array
+     */
+    private $contextualBindings = [];
+
+    /**
+     * @var array
+     */
+    private $instances = [];
+
+    /**
      * @var object
      */
     private $oldDb;
@@ -62,6 +84,7 @@ class Laravel5 extends Client
         $this->exceptionHandlingDisabled = $this->module->config['disable_exception_handling'];
         $this->middlewareDisabled = $this->module->config['disable_middleware'];
         $this->eventsDisabled = $this->module->config['disable_events'];
+        $this->modelEventsDisabled = $this->module->config['disable_model_events'];
 
         $this->initialize();
 
@@ -95,6 +118,31 @@ class Laravel5 extends Client
         $this->app->make('Illuminate\Contracts\Http\Kernel')->terminate($request, $response);
 
         return $response;
+    }
+
+    /**
+     * Make sure files are \Illuminate\Http\UploadedFile instances with the private $test property set to true.
+     * Fixes issue https://github.com/Codeception/Codeception/pull/3417.
+     *
+     * @param array $files
+     * @return array
+     */
+    protected function filterFiles(array $files)
+    {
+        $files = parent::filterFiles($files);
+
+        if (! class_exists('Illuminate\Http\UploadedFile')) {
+            // The \Illuminate\Http\UploadedFile class was introduced in Laravel 5.2.15,
+            // so don't change the $files array if it does not exist.
+            return $files;
+        }
+
+        $filtered = [];
+        foreach ($files as $key => $file) {
+            $filtered[$key] = UploadedFile::createFromBase($file, true);
+        }
+
+        return $filtered;
     }
 
     /**
@@ -151,6 +199,14 @@ class Laravel5 extends Client
         if ($this->module->config['disable_events'] || $this->eventsDisabled) {
             $this->mockEventDispatcher();
         }
+
+        if ($this->module->config['disable_model_events'] || $this->modelEventsDisabled) {
+            Model::unsetEventDispatcher();
+        }
+
+        $this->applyBindings();
+        $this->applyContextualBindings();
+        $this->applyInstances();
 
         $this->module->setApplication($this->app);
     }
@@ -214,6 +270,40 @@ class Laravel5 extends Client
         return $segments[0];
     }
 
+    /**
+     * Apply the registered Laravel service container bindings.
+     */
+    private function applyBindings()
+    {
+        foreach ($this->bindings as $abstract => $binding) {
+            list($concrete, $shared) = $binding;
+
+            $this->app->bind($abstract, $concrete, $shared);
+        }
+    }
+
+    /**
+     * Apply the registered Laravel service container contextual bindings.
+     */
+    private function applyContextualBindings()
+    {
+        foreach ($this->contextualBindings as $concrete => $bindings) {
+            foreach ($bindings as $abstract => $implementation) {
+                $this->app->addContextualBinding($concrete, $abstract, $implementation);
+            }
+        }
+    }
+
+    /**
+     * Apply the registered Laravel service container instance bindings.
+     */
+    private function applyInstances()
+    {
+        foreach ($this->instances as $abstract => $instance) {
+            $this->app->instance($abstract, $instance);
+        }
+    }
+
     //======================================================================
     // Public methods called by module
     //======================================================================
@@ -264,6 +354,15 @@ class Laravel5 extends Client
         $this->mockEventDispatcher();
     }
 
+    /**
+     * Disable model events.
+     */
+    public function disableModelEvents()
+    {
+        $this->modelEventsDisabled = true;
+        Model::unsetEventDispatcher();
+    }
+
     /*
      * Disable middleware.
      */
@@ -271,5 +370,47 @@ class Laravel5 extends Client
     {
         $this->middlewareDisabled = true;
         $this->app->instance('middleware.disable', true);
+    }
+
+    /**
+     * Register a Laravel service container binding that should be applied
+     * after initializing the Laravel Application object.
+     *
+     * @param $abstract
+     * @param $concrete
+     * @param bool $shared
+     */
+    public function haveBinding($abstract, $concrete, $shared = false)
+    {
+        $this->bindings[$abstract] = [$concrete, $shared];
+    }
+
+    /**
+     * Register a Laravel service container contextual binding that should be applied
+     * after initializing the Laravel Application object.
+     *
+     * @param $concrete
+     * @param $abstract
+     * @param $implementation
+     */
+    public function haveContextualBinding($concrete, $abstract, $implementation)
+    {
+        if (! isset($this->contextualBindings[$concrete])) {
+            $this->contextualBindings[$concrete] = [];
+        }
+
+        $this->contextualBindings[$concrete][$abstract] = $implementation;
+    }
+
+    /**
+     * Register a Laravel service container instance binding that should be applied
+     * after initializing the Laravel Application object.
+     *
+     * @param $abstract
+     * @param $instance
+     */
+    public function haveInstance($abstract, $instance)
+    {
+        $this->instances[$abstract] = $instance;
     }
 }
