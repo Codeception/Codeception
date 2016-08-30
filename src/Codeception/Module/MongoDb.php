@@ -74,6 +74,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
         'dump_type' => self::DUMP_TYPE_JS,
         'user'      => null,
         'password'  => null,
+        'quiet'     => false,
     ];
 
     protected $populated = false;
@@ -206,18 +207,22 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
 
     protected function loadDump()
     {
+        $this->validateDump();
+
         if ($this->isDumpFileEmpty) {
             return;
         }
 
         try {
-            if ($this->config['dump_type'] === DUMP_TYPE_JS) {
+            if ($this->config['dump_type'] === self::DUMP_TYPE_JS) {
                 $this->driver->load($this->dumpFile);
             }
-            if ($this->config['dump_type'] === DUMP_TYPE_MONGODUMP) {
+            if ($this->config['dump_type'] === self::DUMP_TYPE_MONGODUMP) {
+                $this->driver->setQuiet($this->config['quiet']);
                 $this->driver->loadFromMongoDump($this->dumpFile);
             }
-            if ($this->config['dump_type'] === DUMP_TYPE_MONGODUMP_TAR_GZ) {
+            if ($this->config['dump_type'] === self::DUMP_TYPE_MONGODUMP_TAR_GZ) {
+                $this->driver->setQuiet($this->config['quiet']);
                 $this->driver->loadFromTarGzMongoDump($this->dumpFile);
             }
         } catch (\Exception $e) {
