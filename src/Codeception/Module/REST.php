@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\JsonContains;
+use Codeception\PHPUnit\Constraint\JsonType as JsonTypeConstraint;
 use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Framework;
@@ -944,12 +945,16 @@ EOF;
      */
     public function seeResponseMatchesJsonType(array $jsonType, $jsonPath = null)
     {
+
         $jsonArray = new JsonArray($this->connectionModule->_getResponseContent());
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
-        $matched = (new JsonType($jsonArray))->matches($jsonType);
-        $this->assertTrue($matched, $matched);
+
+        \PHPUnit_Framework_Assert::assertThat(
+            $jsonArray,
+            new JsonTypeConstraint($jsonType)
+        );
     }
 
     /**

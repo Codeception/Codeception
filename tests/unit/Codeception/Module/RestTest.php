@@ -323,6 +323,17 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseMatchesJsonType(['id' => 'integer'], '$.users[0]');
     }
 
+    public function testMatchJsonTypeFailsWithNiceMessage()
+    {
+        $this->setStubResponse('{"xxx": "yyy", "user_id": 1}');
+        try {
+            $this->module->seeResponseMatchesJsonType(['zzz' => 'string']);
+            $this->fail('it had to throw exception');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            $this->assertEquals('Key `zzz` doesn\'t exist in {"xxx":"yyy","user_id":1}', $e->getMessage());
+        }
+    }
+
     public function testSeeResponseIsJsonFailsWhenResponseIsEmpty()
     {
         $this->shouldFail();
