@@ -334,6 +334,17 @@ class RestTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testDontMatchJsonTypeFailsWithNiceMessage()
+    {
+        $this->setStubResponse('{"xxx": "yyy", "user_id": 1}');
+        try {
+            $this->module->dontSeeResponseMatchesJsonType(['xxx' => 'string']);
+            $this->fail('it had to throw exception');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            $this->assertEquals('Unexpectedly response matched: {"xxx":"yyy","user_id":1}', $e->getMessage());
+        }
+    }
+
     public function testSeeResponseIsJsonFailsWhenResponseIsEmpty()
     {
         $this->shouldFail();

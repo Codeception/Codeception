@@ -7,15 +7,14 @@ use Codeception\Util\JsonArray;
 
 class JsonType extends \PHPUnit_Framework_Constraint
 {
-    /**
-     * @var
-     */
     protected $jsonType;
+    private $match;
 
-    public function __construct(array $jsonType)
+    public function __construct(array $jsonType, $match = true)
     {
         parent::__construct();
         $this->jsonType = $jsonType;
+        $this->match = $match;
     }
 
     /**
@@ -34,9 +33,16 @@ class JsonType extends \PHPUnit_Framework_Constraint
 
         $matched = (new JsonTypeUtil($jsonArray))->matches($this->jsonType);
 
-        if ($matched !== true) {
-            throw new \PHPUnit_Framework_ExpectationFailedException($matched);
+        if ($this->match) {
+            if ($matched !== true) {
+                throw new \PHPUnit_Framework_ExpectationFailedException($matched);
+            }
+        } else {
+            if ($matched === true) {
+                throw new \PHPUnit_Framework_ExpectationFailedException('Unexpectedly response matched: ' . json_encode($jsonArray));
+            }
         }
+        return true;
     }
 
     /**

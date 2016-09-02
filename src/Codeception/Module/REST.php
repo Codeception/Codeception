@@ -945,16 +945,12 @@ EOF;
      */
     public function seeResponseMatchesJsonType(array $jsonType, $jsonPath = null)
     {
-
         $jsonArray = new JsonArray($this->connectionModule->_getResponseContent());
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
 
-        \PHPUnit_Framework_Assert::assertThat(
-            $jsonArray,
-            new JsonTypeConstraint($jsonType)
-        );
+        \PHPUnit_Framework_Assert::assertThat($jsonArray, new JsonTypeConstraint($jsonType));
     }
 
     /**
@@ -972,12 +968,8 @@ EOF;
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
-        $matched = (new JsonType($jsonArray))->matches($jsonType);
-        $this->assertNotEquals(
-            true,
-            $matched,
-            sprintf("Unexpectedly the response matched the %s data type", var_export($jsonType, true))
-        );
+
+        \PHPUnit_Framework_Assert::assertThat($jsonArray, new JsonTypeConstraint($jsonType, false));
     }
 
     /**
