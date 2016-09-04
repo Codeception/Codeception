@@ -346,7 +346,7 @@ class Run extends Command
 
     private function matchFilteredTestName(&$path)
     {
-        $test_parts = explode(':', $path);
+        $test_parts = explode(':', $path, 2);
         if (count($test_parts) > 1) {
             list($path, $filter) = $test_parts;
             return $filter;
