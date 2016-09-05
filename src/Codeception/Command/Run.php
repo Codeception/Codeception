@@ -349,7 +349,7 @@ class Run extends Command
         $test_parts = explode(':', $path);
         if (count($test_parts) > 1) {
             list($path, $filter) = $test_parts;
-            return $filter;
+            return ':' . $filter .'$';
         }
 
         return null;
