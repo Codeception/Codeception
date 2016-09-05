@@ -349,6 +349,12 @@ class Run extends Command
         $test_parts = explode(':', $path, 2);
         if (count($test_parts) > 1) {
             list($path, $filter) = $test_parts;
+            // use carat to signify start of string like in normal regex
+            // phpunit --filter matches against the fully qualified method name, so tests actually begin with :
+            $carat_pos = strpos($filter, '^');
+            if ($carat_pos !== false) {
+                $filter = substr_replace($filter, ':', $carat_pos, 1);
+            }
             return $filter;
         }
 
