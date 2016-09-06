@@ -2,6 +2,7 @@
 namespace Codeception\Test\Feature;
 
 use Codeception\Test\Descriptor;
+use Codeception\Test\Interfaces\StrictCoverage;
 
 trait CodeCoverage
 {
@@ -26,15 +27,11 @@ trait CodeCoverage
             return;
         }
 
-        if (method_exists($this, 'getLinesToBeCovered')) {
+        if ($this instanceof StrictCoverage) {
             $linesToBeCovered = $this->getLinesToBeCovered();
-        } else {
-            $linesToBeCovered = [];
-        }
-
-        if (method_exists($this, 'getLinesToBeUsed')) {
             $linesToBeUsed = $this->getLinesToBeUsed();
         } else {
+            $linesToBeCovered = [];
             $linesToBeUsed = [];
         }
 
