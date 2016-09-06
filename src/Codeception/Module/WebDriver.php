@@ -374,9 +374,18 @@ class WebDriver extends CodeceptionModule implements
         $this->debugWebDriverLogs();
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
-        $this->_saveScreenshot($outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
-        $this->_savePageSource($outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
-        $this->debug("Screenshot and page source were saved into '$outputDir' dir");
+        $filenamePng = mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png';
+        $filenameHtml = mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html';
+        for ($i = 1; $i < 1000; $i++) {
+            if ((! file_exists($outputDir . $filenamePng)) && (! file_exists($outputDir . $filenameHtml))) {
+                break;
+            }
+            $filenamePng = mb_strcut($filename . '.' . $i, 0, 245, 'utf-8') . '.fail.png';
+            $filenameHtml = mb_strcut($filename . '.' . $i, 0, 244, 'utf-8') . '.fail.html';
+        }
+        $this->_saveScreenshot($outputDir . $filenamePng);
+        $this->_savePageSource($outputDir . $filenameHtml);
+        $this->debug("Screenshot and page source were saved into '$outputDir' dir [$filenamePng, $filenameHtml]");
     }
 
     /**
