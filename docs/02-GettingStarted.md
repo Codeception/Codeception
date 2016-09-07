@@ -241,7 +241,7 @@ Alternatively you can provide the full path to test file:
 php codecept run tests/acceptance/SigninCept.php
 ```
 
-You can further filter which tests are run by appending a regular expression to the class, separated by a colon (for Cest or Test formats):
+You can further filter which tests are run by appending a method name to the class, separated by a colon (for Cest or Test formats):
 
 ```bash
 php codecept run tests/acceptance/SignInCest.php:^anonymousLogin$
@@ -253,7 +253,7 @@ You can provide a directory path as well. This will execute all tests from the b
 php codecept run tests/acceptance/backend
 ```
 
-Combined with regular expressions, you can filter tests in the same directory. This will execute all tests from the backend dir beginning with the word login:
+Using regular expressions, you can even run many different test methods from the same directory or class. For example, this will execute all tests from the backend dir beginning with the word login:
 
 ```bash
 php codecept run tests/acceptance/backend:^login
