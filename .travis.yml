@@ -128,7 +128,7 @@ before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept build -c frameworks-phalcon'
   - '[[ -z "$SYMFONY" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-l5'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-lumen'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-lumen'
   - php codecept build -c frameworks-zf1
   - php codecept build -c frameworks-zf2
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-zend-expressive'
