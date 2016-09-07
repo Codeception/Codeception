@@ -170,18 +170,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $this->app['db']->rollback();
         }
 
-        if (isset($this->app['auth'])) {
-            $this->app['auth']->logout();
-        }
-
-        if (isset($this->app['session'])) {
-            $this->app['session']->flush();
-        }
-
-        if (isset($this->app['cache'])) {
-            $this->app['cache']->flush();
-        }
-
         // disconnect from DB to prevent "Too many connections" issue
         if (isset($this->app['db'])) {
             $this->app['db']->disconnect();

@@ -140,6 +140,10 @@ class Laravel5 extends Client
         return $this->convertToTestFiles($files);
     }
 
+    /**
+     * @param array $files
+     * @return array
+     */
     private function convertToTestFiles(array $files)
     {
         $filtered = [];
