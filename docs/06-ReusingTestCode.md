@@ -177,7 +177,7 @@ As you see, this class is very simple. It extends `AcceptanceTester` class, thus
 <?php
 namespace Step\Acceptance;
 
-class Member extends \AcceptanceTester
+class Admin extends \AcceptanceTester
 {
     public function loginAsAdmin()
     {
