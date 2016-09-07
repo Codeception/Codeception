@@ -1,6 +1,7 @@
 # Changelog
 
 #### 2.2.5
+* [Laravel5] Removed calls to Auth::logout(), Session::flush() and Cache::flush() from after hook. See #3493. By @janhenkgerritsen
 * [Memcache] Updated `Memcache::seeInMemcached` to check if the key exists alone or with the desired value. By @sergeyklay
 * [Memcache] Added `Memcache::haveInMemcached`. By @sergeyklay
 * [Memcache] Fixed `Memcache::dontSeeInMemcached`. By @sergeyklay
