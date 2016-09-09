@@ -22,7 +22,7 @@ modules:
 
 
 <div class="alert alert-notice">
-Use [module params](06-ModulesAndHelpers#DynamicConfiguration With Params) to set database credentials from environment variables or from application configuration files.
+Use <a href="http://codeception.com/docs/06-ModulesAndHelpers#Dynamic-Configuration-With-Params">module params</a> to set database credentials from environment variables or from application configuration files.
 </div>
 
 After you enable this module in your test suite, it will automatically populate the database from a dump and repopulate it on each test run. These settings can be changed through the `populate` and `cleanup` options, which may be set to `false`.
