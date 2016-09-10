@@ -469,25 +469,6 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    /**
-     * Sample Message: create user in CreateUserCept.php is not ready for release
-     *
-     * @param $feature
-     * @param $fileName
-     * @param $failToString
-     */
-    public function printSkippedTest($feature, $fileName, $failToString)
-    {
-        $message = $this->message();
-        if ($feature) {
-            $message->append($feature)->style('focus')->append(' in ');
-        }
-        $message->append($fileName);
-        if ($failToString) {
-            $message->append(": $failToString");
-        }
-        $message->write(OutputInterface::VERBOSITY_VERBOSE);
-    }
 
     /**
      * @param $failedTest
