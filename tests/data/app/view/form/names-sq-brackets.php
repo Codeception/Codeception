@@ -35,6 +35,7 @@
             <option value="4">Select 4</option>
             <option value="5">Select 5</option>
         </select>
+        <label for="inventory_stock_availability">Stock Availability</label>
         <select id="inventory_stock_availability" name="product[stock_data][is_in_stock]" class="select" >
                                             <option value="1" >In Stock</option>
                                             <option value="0" selected="selected">Out of Stock</option>
