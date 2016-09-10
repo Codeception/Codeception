@@ -123,16 +123,38 @@ class PostgreSql extends Db
         }
     }
 
+	/**
+	* Get the last inserted ID of table
+	*/
     public function lastInsertId($table)
     {
-        /**
+        /*
          * We make an assumption that the sequence name for this table
          * is based on how postgres names sequences for SERIAL columns
          */
-        $sequenceName = $this->getQuotedName($table . '_id_seq');
-        return $this->getDbh()->lastInsertId($sequenceName);
+                
+        $sequenceName = $this->getQuotedName($table.'_id_seq');
+        $lastSequence = null;
+
+		try {
+	        $lastSequence = $this->getDbh()->lastInsertId($sequenceName);
+		} catch (\PDOException $e) {
+			// in this case, the sequence name might be combined with the primary key name
+		}
+		
+		// here we check if for instance, it's something like table_primary_key_seq instead of table_id_seq
+		if(!$lastSequence) {
+			$primaryKeys = $this->getPrimaryKey($table);
+			$pkName = array_shift($primaryKeys);
+	        $lastSequence = $this->getDbh()->lastInsertId($this->getQuotedName($table.'_'.$pkName.'_seq'));
+		}	
+        
+        return $lastSequence;
     }
 
+	/**
+	* Gets a quoted name of a variable
+	*/
     public function getQuotedName($name)
     {
         $name = explode('.', $name);
@@ -146,26 +168,35 @@ class PostgreSql extends Db
     }
 
     /**
+     * Returns the primary key(s) of the table, based on:
+     * https://wiki.postgresql.org/wiki/Retrieve_primary_key_columns
      * @param string $tableName
-     *
      * @return array[string]
      */
     public function getPrimaryKey($tableName)
     {
         if (!isset($this->primaryKeys[$tableName])) {
             $primaryKey = [];
-            $query = 'SELECT a.attname
-                FROM   pg_index i
-                JOIN   pg_attribute a ON a.attrelid = i.indrelid
-                                     AND a.attnum = ANY(i.indkey)
-                WHERE  i.indrelid = ?::regclass
-                AND    i.indisprimary';
+            $query = "
+            SELECT pg_attribute.attname, format_type(pg_attribute.atttypid, pg_attribute.atttypmod) 
+                FROM pg_index, pg_class, pg_attribute, pg_namespace 
+            WHERE 
+	           pg_class.oid = ?::regclass AND 
+	           indrelid = pg_class.oid AND 
+	           nspname = 'public' AND 
+	           pg_class.relnamespace = pg_namespace.oid AND 
+	           pg_attribute.attrelid = pg_class.oid AND 
+	           pg_attribute.attnum = any(pg_index.indkey)
+	           AND 
+               indisprimary
+            ";
             $stmt = $this->executeQuery($query, [$tableName]);
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($columns as $column) {
-                $primaryKey []= $column['attname'];
+                $primaryKey [] = $column['attname'];
             }
+			
             $this->primaryKeys[$tableName] = $primaryKey;
         }
 
