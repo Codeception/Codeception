@@ -1432,6 +1432,8 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->selectOption('//input[@name="input[radio][name][]"]', '1');
 
         $this->module->selectOption('//select[@name="select[name][]"]', '1');
+        $this->module->selectOption('//select[@name="select[name][]"]', '1');
+        $this->module->selectOption('//select[@name="product[stock_data][is_in_stock]"]', '0');
     }
 
     public function testFillFieldWithAmpersand()
