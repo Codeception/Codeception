@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Lib\Driver;
 
 use Codeception\Exception\ModuleException;
@@ -11,6 +12,11 @@ class PostgreSql extends Db
 
     protected $searchPath = null;
 
+    /**
+     * Loads a SQL file.
+     *
+     * @param string $sql sql file
+     */
     public function load($sql)
     {
         $query = '';
@@ -42,12 +48,12 @@ class PostgreSql extends Db
                 $this->searchPath = $match[0];
             }
 
-            $query .= "\n" . rtrim($sqlLine);
+            $query .= "\n".rtrim($sqlLine);
 
             if (!$dollarsOpen && substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
                 $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
                 $this->sqlQuery($this->sqlToRun);
-                $query = "";
+                $query = '';
             }
         }
     }
@@ -57,7 +63,7 @@ class PostgreSql extends Db
         $tables = $this->dbh
             ->query(
                 "SELECT 'DROP TABLE IF EXISTS \"' || tablename || '\" cascade;' "
-                . "FROM pg_tables WHERE schemaname = 'public';"
+                ."FROM pg_tables WHERE schemaname = 'public';"
             )
             ->fetchAll();
 
@@ -89,12 +95,13 @@ class PostgreSql extends Db
 
         if ($sql == '\.') {
             $this->putline = false;
-            pg_put_line($this->connection, $sql . "\n");
+            pg_put_line($this->connection, $sql."\n");
             pg_end_copy($this->connection);
             pg_close($this->connection);
         } else {
-            pg_put_line($this->connection, $sql . "\n");
+            pg_put_line($this->connection, $sql."\n");
         }
+
         return true;
     }
 
@@ -108,8 +115,8 @@ class PostgreSql extends Db
                 );
             }
             $constring = str_replace(';', ' ', substr($this->dsn, 6));
-            $constring .= ' user=' . $this->user;
-            $constring .= ' password=' . $this->password;
+            $constring .= ' user='.$this->user;
+            $constring .= ' password='.$this->password;
             $this->connection = pg_connect($constring);
 
             if ($this->searchPath !== null) {
@@ -123,80 +130,75 @@ class PostgreSql extends Db
         }
     }
 
-	/**
-	* Get the last inserted ID of table
-	*/
+    /**
+     * Get the last inserted ID of table.
+     */
     public function lastInsertId($table)
     {
         /*
          * We make an assumption that the sequence name for this table
          * is based on how postgres names sequences for SERIAL columns
          */
-                
+
         $sequenceName = $this->getQuotedName($table.'_id_seq');
         $lastSequence = null;
 
-		try {
-	        $lastSequence = $this->getDbh()->lastInsertId($sequenceName);
-		} catch (\PDOException $e) {
-			// in this case, the sequence name might be combined with the primary key name
-		}
-		
-		// here we check if for instance, it's something like table_primary_key_seq instead of table_id_seq
-		if(!$lastSequence) {
-			$primaryKeys = $this->getPrimaryKey($table);
-			$pkName = array_shift($primaryKeys);
-	        $lastSequence = $this->getDbh()->lastInsertId($this->getQuotedName($table.'_'.$pkName.'_seq'));
-		}	
-        
+        try {
+            $lastSequence = $this->getDbh()->lastInsertId($sequenceName);
+        } catch (\PDOException $e) {
+            // in this case, the sequence name might be combined with the primary key name
+        }
+
+        // here we check if for instance, it's something like table_primary_key_seq instead of table_id_seq
+        // this could occur when you use some kind of import tool like pgloader
+        if (!$lastSequence) {
+            $primaryKeys = $this->getPrimaryKey($table);
+            $pkName = array_shift($primaryKeys);
+            $lastSequence = $this->getDbh()->lastInsertId($this->getQuotedName($table.'_'.$pkName.'_seq'));
+        }
+
         return $lastSequence;
     }
 
-	/**
-	* Gets a quoted name of a variable
-	*/
+    /**
+     * Gets a quoted name of a variable.
+     */
     public function getQuotedName($name)
     {
         $name = explode('.', $name);
         $name = array_map(
             function ($data) {
-                return '"' . $data . '"';
+                return '"'.$data.'"';
             },
             $name
         );
+
         return implode('.', $name);
     }
 
     /**
      * Returns the primary key(s) of the table, based on:
-     * https://wiki.postgresql.org/wiki/Retrieve_primary_key_columns
+     * https://wiki.postgresql.org/wiki/Retrieve_primary_key_columns.
+     *
      * @param string $tableName
+     *
      * @return array[string]
      */
     public function getPrimaryKey($tableName)
     {
         if (!isset($this->primaryKeys[$tableName])) {
             $primaryKey = [];
-            $query = "
-            SELECT pg_attribute.attname, format_type(pg_attribute.atttypid, pg_attribute.atttypmod) 
-                FROM pg_index, pg_class, pg_attribute, pg_namespace 
-            WHERE 
-	           pg_class.oid = ?::regclass AND 
-	           indrelid = pg_class.oid AND 
-	           nspname = 'public' AND 
-	           pg_class.relnamespace = pg_namespace.oid AND 
-	           pg_attribute.attrelid = pg_class.oid AND 
-	           pg_attribute.attnum = any(pg_index.indkey)
-	           AND 
-               indisprimary
-            ";
+            $query = 'SELECT a.attname
+                FROM   pg_index i
+                JOIN   pg_attribute a ON a.attrelid = i.indrelid
+                                     AND a.attnum = ANY(i.indkey)
+                WHERE  i.indrelid = ?::regclass
+                AND    i.indisprimary';
             $stmt = $this->executeQuery($query, [$tableName]);
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
             foreach ($columns as $column) {
                 $primaryKey [] = $column['attname'];
             }
-			
             $this->primaryKeys[$tableName] = $primaryKey;
         }
 
