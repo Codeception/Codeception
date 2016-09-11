@@ -391,7 +391,7 @@ class Console implements EventSubscriberInterface
         }
 
         if ($isFailure && $cause) {
-            $cause = ucfirst($cause);
+            $cause = OutputFormatter::escape(ucfirst($cause));
             $message->prepend("<error> Step </error> $cause\n<error> Fail </error> ");
         }
 
