@@ -1,4 +1,5 @@
 <?php
+
 use \Codeception\Lib\Driver\Db;
 
 /**
@@ -14,7 +15,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
 
     protected static $sql;
     protected $postgres;
-    
+
     public static function setUpBeforeClass()
     {
         if (!function_exists('pg_connect')) {
@@ -23,8 +24,8 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         if (getenv('APPVEYOR')) {
             self::$config['password'] = 'Password12!';
         }
-        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/postgres.sql');
-        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
+        $sql = file_get_contents(\Codeception\Configuration::dataDir().'/dumps/postgres.sql');
+        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', '', $sql);
         self::$sql = explode("\n", $sql);
         try {
             $postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
@@ -38,18 +39,17 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         try {
             $this->postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
         } catch (\Exception $e) {
-            $this->markTestSkipped('Coudn\'t establish connection to database: ' . $e->getMessage());
+            $this->markTestSkipped('Coudn\'t establish connection to database: '.$e->getMessage());
         }
         $this->postgres->load(self::$sql);
     }
-    
+
     public function tearDown()
     {
         if (isset($this->postgres)) {
             $this->postgres->cleanup();
         }
     }
-
 
     public function testCleanupDatabase()
     {
@@ -68,7 +68,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         foreach ($customTypes as $customType) {
             $this->assertNotEmpty(
                 $this->postgres->getDbh()
-                    ->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")
+                    ->query("SELECT 1 FROM pg_type WHERE typname = '".$customType."';")
                     ->fetchAll()
             );
         }
@@ -76,7 +76,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         foreach ($customTypes as $customType) {
             $this->assertEmpty(
                 $this->postgres->getDbh()
-                    ->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")
+                    ->query("SELECT 1 FROM pg_type WHERE typname = '".$customType."';")
                     ->fetchAll()
             );
         }
@@ -122,6 +122,11 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
     public function testGetEmptyArrayIfTableHasNoPrimaryKey()
     {
         $this->assertEquals([], $this->postgres->getPrimaryKey('no_pk'));
+    }
+
+    public function testTableWithOtherSequenceNameHasPrimaryKey()
+    {
+        $this->assertEquals(['pk_id'], $this->postgres->getPrimaryKey('seqnames'));
     }
 
     public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
