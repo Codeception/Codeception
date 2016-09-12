@@ -48,7 +48,7 @@ class PostgreSql extends Db
                 $this->searchPath = $match[0];
             }
 
-            $query .= "\n".rtrim($sqlLine);
+            $query .= "\n" . rtrim($sqlLine);
 
             if (!$dollarsOpen && substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
                 $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
@@ -197,7 +197,7 @@ class PostgreSql extends Db
             $stmt = $this->executeQuery($query, [$tableName]);
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($columns as $column) {
-                $primaryKey [] = $column['attname'];
+                $primaryKey[] = $column['attname'];
             }
             $this->primaryKeys[$tableName] = $primaryKey;
         }
