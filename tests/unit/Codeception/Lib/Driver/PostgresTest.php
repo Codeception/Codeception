@@ -24,7 +24,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         if (getenv('APPVEYOR')) {
             self::$config['password'] = 'Password12!';
         }
-        $sql = file_get_contents(\Codeception\Configuration::dataDir().'/dumps/postgres.sql');
+        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/postgres.sql');
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', '', $sql);
         self::$sql = explode("\n", $sql);
         try {
@@ -39,7 +39,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         try {
             $this->postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
         } catch (\Exception $e) {
-            $this->markTestSkipped('Coudn\'t establish connection to database: '.$e->getMessage());
+            $this->markTestSkipped('Coudn\'t establish connection to database: ' . $e->getMessage());
         }
         $this->postgres->load(self::$sql);
     }
@@ -68,7 +68,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         foreach ($customTypes as $customType) {
             $this->assertNotEmpty(
                 $this->postgres->getDbh()
-                    ->query("SELECT 1 FROM pg_type WHERE typname = '".$customType."';")
+                    ->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")
                     ->fetchAll()
             );
         }
@@ -76,7 +76,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         foreach ($customTypes as $customType) {
             $this->assertEmpty(
                 $this->postgres->getDbh()
-                    ->query("SELECT 1 FROM pg_type WHERE typname = '".$customType."';")
+                    ->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")
                     ->fetchAll()
             );
         }
