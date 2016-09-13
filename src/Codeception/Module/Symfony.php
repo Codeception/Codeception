@@ -202,6 +202,9 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             if ($this->_getContainer()->has('doctrine.orm.default_entity_manager')) {
                 $this->persistService('doctrine.orm.default_entity_manager', true);
             }
+            if ($this->_getContainer()->has('doctrine.dbal.backend_connection')) {
+                $this->persistService('doctrine.dbal.backend_connection', true);
+            }
         }
         return $this->permanentServices[$this->config['em_service']];
     }
