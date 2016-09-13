@@ -68,6 +68,8 @@ class Output extends ConsoleOutput
         $message = print_r($message, true);
         $message = str_replace("\n", "\n  ", $message);
         $message = $this->clean($message);
+        $message = OutputFormatter::escape($message);
+
         if ($this->waitForDebugOutput) {
             $this->writeln('');
             $this->waitForDebugOutput = false;
