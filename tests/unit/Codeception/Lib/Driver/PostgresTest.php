@@ -124,9 +124,10 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $this->postgres->getPrimaryKey('no_pk'));
     }
 
-    public function testTableWithOtherSequenceNameHasPrimaryKey()
+    public function testLastInsertIdReturnsSequenceValueWhenNonStandardSequenceNameIsUsed()
     {
-        $this->assertEquals(['pk_id'], $this->postgres->getPrimaryKey('seqnames'));
+        $this->postgres->executeQuery('INSERT INTO seqnames(name) VALUES(?)',['test']);
+        $this->assertEquals(1, $this->postgres->lastInsertId('seqnames'));
     }
 
     public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
