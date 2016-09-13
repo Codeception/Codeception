@@ -54,6 +54,32 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 SET search_path = public, pg_catalog;
 
+--
+-- Name: seqnames; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+DROP TABLE IF EXISTS seqnames CASCADE;
+CREATE TABLE seqnames (
+    name character varying(30),
+    pk_id integer NOT NULL
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE seqnames_pk_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+--
+-- Name: seqnames_pk_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE seqnames_pk_id_seq OWNED BY seqnames.pk_id;
 
 --
 -- Name: empty_table; Type: TABLE; Schema: public; Owner: -; Tablespace:
@@ -192,6 +218,13 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 SET search_path = public, pg_catalog;
 
 --
+-- Name:pk_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY seqnames ALTER COLUMN pk_id SET DEFAULT nextval('seqnames_pk_id_seq'::regclass);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -244,6 +277,12 @@ SET search_path = public, pg_catalog;
 
 COPY empty_table (id, field) FROM stdin;
 \.
+
+--
+-- Name: seqnames_pk_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('seqnames_pk_id_seq', 1, false);
 
 
 --
@@ -319,6 +358,13 @@ ALTER TABLE ONLY users
 
 
 SET search_path = public, pg_catalog;
+
+--
+-- Name: g1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY seqnames
+    ADD CONSTRAINT s1 PRIMARY KEY (pk_id);
 
 --
 -- Name: g1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
