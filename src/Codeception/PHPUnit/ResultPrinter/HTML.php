@@ -97,13 +97,13 @@ class HTML extends CodeceptionResultPrinter
         $subStepsBuffer = '';
         $subStepsRendered = [];
 
-        foreach ($steps as $key => $step) {
+        foreach ($steps as $step) {
             if ($step->getMetaStep()) {
                 $subStepsRendered[$step->getMetaStep()->getAction()][] = $this->renderStep($step);
             }
         }
 
-        foreach ($steps as $key => $step) {
+        foreach ($steps as $step) {
             if ($step->getMetaStep()) {
 
                 if (! empty($subStepsRendered[$step->getMetaStep()->getAction()])) {
