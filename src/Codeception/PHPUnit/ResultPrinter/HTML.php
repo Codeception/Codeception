@@ -94,27 +94,28 @@ class HTML extends CodeceptionResultPrinter
         }
 
         $stepsBuffer = '';
-        $metaStep = null;
-
         $subStepsBuffer = '';
+        $subStepsRendered = [];
 
-        foreach ($steps as $step) {
-            /** @var $step Step  **/
+        foreach ($steps as $key => $step) {
             if ($step->getMetaStep()) {
-                $subStepsBuffer .= $this->renderStep($step);
-                $metaStep = $step->getMetaStep();
-                continue;
+                $subStepsRendered[$step->getMetaStep()->getAction()][] = $this->renderStep($step);
             }
-            if ($step->getMetaStep() != $metaStep) {
-                $stepsBuffer .= $this->renderSubsteps($metaStep, $subStepsBuffer);
-                $subStepsBuffer = '';
-            }
-            $metaStep = $step->getMetaStep();
-            $stepsBuffer .= $this->renderStep($step);
         }
 
-        if ($subStepsBuffer and $metaStep) {
-            $stepsBuffer .= $this->renderSubsteps($metaStep, $subStepsBuffer);
+        foreach ($steps as $key => $step) {
+            if ($step->getMetaStep()) {
+
+                if (! empty($subStepsRendered[$step->getMetaStep()->getAction()])) {
+                    $subStepsBuffer = implode('', $subStepsRendered[$step->getMetaStep()->getAction()]);
+                    unset($subStepsRendered[$step->getMetaStep()->getAction()]);
+
+                    $stepsBuffer .= $this->renderSubsteps($step->getMetaStep(), $subStepsBuffer);
+                }
+
+            } else {
+                $stepsBuffer .= $this->renderStep($step);
+            }
         }
 
         $scenarioTemplate = new \Text_Template(
