@@ -469,8 +469,8 @@ class ModuleContainer
     /**
      * Check if the modules passed as arguments to this method conflict with each other.
      *
-     * @param \Codception\Module $module
-     * @param \Codception\Module $otherModule
+     * @param \Codeception\Module $module
+     * @param \Codeception\Module $otherModule
      * @throws \Codeception\Exception\ModuleConflictException
      */
     private function validateConflict($module, $otherModule)

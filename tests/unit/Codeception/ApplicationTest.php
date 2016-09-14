@@ -1,8 +1,6 @@
 <?php
 
-namespace Codception;
-
-use Codeception\Application;
+namespace Codeception;
 
 class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
