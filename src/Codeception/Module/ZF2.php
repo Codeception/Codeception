@@ -135,6 +135,11 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
 
     public function _getEntityManager()
     {
+        if (!$this->client) {
+            $this->client = new ZF2Connector();
+            $this->client->setApplicationConfig($this->applicationConfig);
+        }
+
         return $this->grabServiceFromContainer('Doctrine\ORM\EntityManager');
     }
 
