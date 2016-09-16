@@ -297,6 +297,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function haveHttpHeader($name, $value)
     {
+        $name = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $name)))));
         $this->headers[$name] = $value;
     }
 
@@ -319,6 +320,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function deleteHeader($name)
     {
+        $name = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $name)))));
         unset($this->headers[$name]);
     }
 
