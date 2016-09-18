@@ -146,6 +146,21 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($request->getParameters());
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/3516
+     */
+    public function testApplicationJsonHeaderCheckIsCaseInsensitive()
+    {
+        $this->module->haveHttpHeader('content-type', 'application/json');
+        $this->module->sendPOST('/', array('name' => 'john'));
+        /** @var $request \Symfony\Component\BrowserKit\Request  **/
+        $request = $this->module->client->getRequest();
+        $server = $request->getServer();
+        $this->assertEquals('application/json', $server['HTTP_CONTENT_TYPE']);
+        $this->assertJson($request->getContent());
+        $this->assertEmpty($request->getParameters());
+    }
+
     public function testGetApplicationJsonNotIncludesJsonAsContent()
     {
         $this->module->haveHttpHeader('Content-Type', 'application/json');
