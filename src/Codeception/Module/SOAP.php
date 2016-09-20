@@ -389,13 +389,21 @@ EOF;
      *
      * @param $code
      */
-    public function seeResponseCodeIs($code)
+    public function seeSoapResponseCodeIs($code)
     {
         $this->assertEquals(
             $code,
             $this->client->getInternalResponse()->getStatus(),
             "soap response code matches expected"
         );
+    }
+
+    /**
+     * @deprecated use seeSoapResponseCodeIs instead
+     */
+    public function seeResponseCodeIs($code)
+    {
+        $this->seeSoapResponseCodeIs($code);
     }
 
     /**
