@@ -131,7 +131,7 @@ class Parser
         if (empty($config['settings']['lint'])) { // lint disabled in config
             return;
         }
-        if(function_exists("exec")) {
+        if (function_exists("exec")) {
             exec("php -l ".escapeshellarg($file)." 2>&1", $output, $code);
         }
         if ($code !== 0) {
