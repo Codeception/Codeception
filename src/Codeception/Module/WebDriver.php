@@ -509,11 +509,10 @@ class WebDriver extends CodeceptionModule implements
 
     public function _saveScreenshot($filename)
     {
-        if ($this->webDriver !== null) {
+        try {
             $this->webDriver->takeScreenshot($filename);
-        } else {
-            codecept_debug('WebDriver::_saveScreenshot method has been called when webDriver is not set');
-            codecept_debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+        } catch (\Exception $e) {
+            $this->debug("Unable to retrieve screenshot from Selenium : ".$e->getMessage());
         }
     }
 
