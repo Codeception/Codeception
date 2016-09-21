@@ -304,13 +304,11 @@ class WebDriver extends CodeceptionModule implements
                 $this->httpProxyPort
             );
             $this->sessions[] = $this->_backupSession();
-        } catch (WebDriverCurlException $e) {
-            throw new ConnectionException(
-                $e->getMessage() . "\n \nPlease make sure that Selenium Server or PhantomJS is running."
-            );
+            $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+            $this->initialWindowSize();
+        } catch (\Exception $e) {
+            $this->debug("Please make sure that Selenium Server or PhantomJS is running : ".$e->getMessage());
         }
-        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
-        $this->initialWindowSize();
     }
 
     public function _conflicts()
