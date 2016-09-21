@@ -398,10 +398,8 @@ class WebDriver extends CodeceptionModule implements
                 }
                 $this->debugSection("Selenium {$logType} Logs", "\n" . $this->formatLogEntries($logEntries));
             }
-        } catch (UnknownServerException $e) {
-            // This only happens with the IE driver, which doesn't support retrieving logs yet:
-            // https://github.com/SeleniumHQ/selenium/issues/468
-            $this->debug("Unable to retrieve Selenium logs");
+        } catch (\Exception $e) {
+            $this->debug("Unable to retrieve Selenium logs : ".$e->getMessage());
         }
     }
 
