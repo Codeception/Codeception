@@ -527,7 +527,11 @@ class WebDriver extends CodeceptionModule implements
      */
     public function _savePageSource($filename)
     {
-        file_put_contents($filename, $this->webDriver->getPageSource());
+        try {
+            file_put_contents($filename, $this->webDriver->getPageSource());
+        } catch (\Exception $e) {
+            $this->debug("Unable to retrieve source page from Selenium : ".$e->getMessage());
+        }
     }
 
     /**
