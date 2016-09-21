@@ -437,7 +437,7 @@ class WebDriver extends CodeceptionModule implements
             $this->_loadSession($session);
             try {
                 $this->webDriver->quit();
-            } catch (UnknownServerException $e) {
+            } catch (\Exception $e) {
                 // Session already closed so nothing to do
             }
             unset($this->webDriver);
