@@ -1,9 +1,8 @@
 <?php
 namespace Codeception\Lib\Console;
 
-/**
- * Colorizer
- **/
+use Symfony\Component\Console\Formatter\OutputFormatter;
+
 class Colorizer
 {
     /**
@@ -19,7 +18,7 @@ class Colorizer
         $colorizedMessage = '';
         while ($line = fgets($fp)) {
             $char = $line[0];
-            $line = trim($line);
+            $line = OutputFormatter::escape(trim($line));
 
             switch ($char) {
                 case '+':

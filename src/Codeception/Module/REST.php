@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\JsonContains;
+use Codeception\PHPUnit\Constraint\JsonType as JsonTypeConstraint;
 use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Framework;
@@ -948,8 +949,8 @@ EOF;
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
-        $matched = (new JsonType($jsonArray))->matches($jsonType);
-        $this->assertTrue($matched, $matched);
+
+        \PHPUnit_Framework_Assert::assertThat($jsonArray, new JsonTypeConstraint($jsonType));
     }
 
     /**
@@ -967,12 +968,8 @@ EOF;
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
-        $matched = (new JsonType($jsonArray))->matches($jsonType);
-        $this->assertNotEquals(
-            true,
-            $matched,
-            sprintf("Unexpectedly the response matched the %s data type", var_export($jsonType, true))
-        );
+
+        \PHPUnit_Framework_Assert::assertThat($jsonArray, new JsonTypeConstraint($jsonType, false));
     }
 
     /**

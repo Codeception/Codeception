@@ -2296,7 +2296,7 @@ class WebDriver extends CodeceptionModule implements
      * ```
      *
      * @param $element
-     * @param $char Can be char or array with modifier. You can provide several chars.
+     * @param $char string|array Can be char or array with modifier. You can provide several chars.
      * @throws \Codeception\Exception\ElementNotFound
      */
     public function pressKey($element, $char)
