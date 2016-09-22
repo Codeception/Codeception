@@ -108,9 +108,6 @@ EOF;
         $this->params = [];
         $this->response = "";
         $this->connectionModule->headers = [];
-        if ($this->client) {
-            $this->client->setServerParameters([]);
-        }
     }
 
     public function _conflicts()
