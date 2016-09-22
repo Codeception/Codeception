@@ -182,6 +182,16 @@ class RunCest
         $I->seeInShellOutput("OK");
     }
 
+    public function runOneGroupWithDataProviders(\CliGuy $I)
+    {
+        $I->executeCommand('run unit -g data-providers');
+        $I->seeInShellOutput('Is triangle | "real triangle"');
+        $I->seeInShellOutput('Is triangle | #0');
+        $I->seeInShellOutput('Is triangle | #1');
+        $I->seeInShellOutput('DataProvidersTest');
+        $I->seeInShellOutput("OK");
+    }
+
     public function runTestWithFailFast(\CliGuy $I)
     {
         $I->executeCommand('run unit --skip-group error --no-exit');
