@@ -307,7 +307,7 @@ class WebDriver extends CodeceptionModule implements
             $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
             $this->initialWindowSize();
         } catch (\Exception $e) {
-            $this->debug("Please make sure that Selenium Server or PhantomJS is running : ".$e->getMessage());
+            $this->debug('Please make sure that Selenium Server or PhantomJS is running : ' . $e->getMessage());
         }
     }
 
@@ -397,7 +397,7 @@ class WebDriver extends CodeceptionModule implements
                 $this->debugSection("Selenium {$logType} Logs", "\n" . $this->formatLogEntries($logEntries));
             }
         } catch (\Exception $e) {
-            $this->debug("Unable to retrieve Selenium logs : ".$e->getMessage());
+            $this->debug('Unable to retrieve Selenium logs : ' . $e->getMessage());
         }
     }
 
@@ -500,7 +500,7 @@ class WebDriver extends CodeceptionModule implements
     {
         $url = $this->webDriver->getCurrentURL();
         if ($url == 'about:blank') {
-            throw new ModuleException($this, "Current url is blank, no page was opened");
+            throw new ModuleException($this, 'Current url is blank, no page was opened');
         }
         return Uri::retrieveUri($url);
     }
@@ -509,11 +509,11 @@ class WebDriver extends CodeceptionModule implements
     {
         try {
             if ($this->webDriver === null) {
-                throw new \Exception("WebDriver::_saveScreenshot method has been called when webDriver is not set");
+                throw new \Exception('WebDriver::_saveScreenshot method has been called when webDriver is not set');
             }
             $this->webDriver->takeScreenshot($filename);
         } catch (\Exception $e) {
-            $this->debug("Unable to retrieve screenshot from Selenium : ".$e->getMessage());
+            $this->debug('Unable to retrieve screenshot from Selenium : ' . $e->getMessage());
         }
     }
 
@@ -531,7 +531,7 @@ class WebDriver extends CodeceptionModule implements
         try {
             file_put_contents($filename, $this->webDriver->getPageSource());
         } catch (\Exception $e) {
-            $this->debug("Unable to retrieve source page from Selenium : ".$e->getMessage());
+            $this->debug('Unable to retrieve source page from Selenium : ' . $e->getMessage());
         }
     }
 
