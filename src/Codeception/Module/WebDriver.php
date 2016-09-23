@@ -321,6 +321,10 @@ class WebDriver extends CodeceptionModule implements
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
+        if (!isset($this->webDriver)) {
+            $test->getMetadata()->setSkip('WebDriver failed to initialise, please make sure that Selenium Server or PhantomJS is running');
+            return;
+        }
         $test->getMetadata()->setCurrent([
             'browser' => $this->config['browser'],
             'capabilities' => $this->config['capabilities']
