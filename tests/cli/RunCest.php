@@ -349,7 +349,15 @@ EOF
         $I->executeCommand('run scenario FileExamples.feature -v');
         $I->seeInShellOutput('OK (3 tests');
     }
-
+    
+    /**
+     * @param CliGuy $I
+     */
+    public function runTestWithAnnotationExamplesFromGroupFile(CliGuy $I)
+    {
+        $I->executeCommand('run scenario -g groupFile1 --steps');
+        $I->seeInShellOutput('OK (10 tests');
+    }
 
     /**
      * @param CliGuy $I
