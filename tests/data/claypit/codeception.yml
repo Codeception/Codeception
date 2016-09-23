@@ -12,6 +12,7 @@ settings:
     log: true
 groups:
     failed: tests/_log/failed
+    groupFile1: tests/_data/groupFile1
 modules:
     config:
         Db:
