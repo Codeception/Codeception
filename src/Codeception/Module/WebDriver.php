@@ -294,21 +294,7 @@ class WebDriver extends CodeceptionModule implements
         $this->connectionTimeoutInMs = $this->config['connection_timeout'] * 1000;
         $this->requestTimeoutInMs = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
-        try {
-            $this->webDriver = RemoteWebDriver::create(
-                $this->wd_host,
-                $this->capabilities,
-                $this->connectionTimeoutInMs,
-                $this->requestTimeoutInMs,
-                $this->httpProxy,
-                $this->httpProxyPort
-            );
-            $this->sessions[] = $this->_backupSession();
-            $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
-            $this->initialWindowSize();
-        } catch (\Exception $e) {
-            $this->debug('Please make sure that Selenium Server or PhantomJS is running : ' . $e->getMessage());
-        }
+        $this->_initializeSession();
     }
 
     public function _conflicts()
@@ -1132,9 +1118,21 @@ class WebDriver extends CodeceptionModule implements
 
     public function _initializeSession()
     {
-        $this->webDriver = RemoteWebDriver::create($this->wd_host, $this->capabilities);
-        $this->sessions[] = $this->_backupSession();
-        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+        try {
+            $this->webDriver = RemoteWebDriver::create(
+                $this->wd_host,
+                $this->capabilities,
+                $this->connectionTimeoutInMs,
+                $this->requestTimeoutInMs,
+                $this->httpProxy,
+                $this->httpProxyPort
+            );
+            $this->sessions[] = $this->_backupSession();
+            $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+            $this->initialWindowSize();
+        } catch (\Exception $e) {
+            $this->debug('Please make sure that Selenium Server or PhantomJS is running : ' . $e->getMessage());
+        }
     }
 
     public function _loadSession($session)
