@@ -119,11 +119,16 @@ EOF;
         return 'Codeception\Lib\Interfaces\API';
     }
 
-    public function _inject(InnerBrowser $connectionModule)
+    public function _inject(InnerBrowser $connection)
     {
-        $this->connectionModule = $connectionModule;
-        if ($connectionModule instanceof Framework) {
+        $this->connectionModule = $connection;
+        if ($this->connectionModule instanceof Framework) {
             $this->isFunctional = true;
+        }
+        if ($this->connectionModule instanceof PhpBrowser) {
+            if (!$this->connectionModule->_getConfig('url')) {
+                $this->connectionModule->_setConfig(['url' => $this->config['url']]);
+            }
         }
     }
     
