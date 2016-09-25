@@ -363,7 +363,7 @@ $nickAdmin->leave();
 
 Selenium WeDdriver allows to execute tests in real browsers on different platforms. Some environments are hard to be reproduced manually, testing Internet Explorer 6-8 on Windows XP may be a hard thing, especially if you don't have Windows XP installed. This is where Cloud Testing services come to help you. Services such as [SauceLabs](https://saucelabs.com), [BrowserStack](https://www.browserstack.com/) and [others](http://codeception.com/docs/modules/WebDriver#Cloud-Testing) can create virtual machine on demand and set up Selenium Server and desired browser. Tests are executed on a remote machine in a cloud, to access local files cloud testing service provides special application called **Tunnel**. Tunnel operates on secured protocol and allows browser executed in a cloud to connect to local web server. 
 
-Cloud Testing services work with standard WebDriver protocol. This makes setting up cloud testing relly easy. You just need to set [configuration into WebDriver module](http://codeception.com/docs/modules/WebDriver#Cloud-Testing): 
+Cloud Testing services work with standard WebDriver protocol. This makes setting up cloud testing really easy. You just need to set [configuration into WebDriver module](http://codeception.com/docs/modules/WebDriver#Cloud-Testing): 
 
 * specify host to connect (depends on cloud provider)
 * authentication details (to use your account)
@@ -376,7 +376,7 @@ It should be mentioned that Cloud Testing services are not free. You should inve
 
 ### AngularJS Testing
 
-In modern era of Single Page Applications browser replaces the server in creating user interface. Unlike traditional web applications, web pages are not reloded on user actions. All interactions with a server is done in javascrpt with XHR requests. However, testing Single Page Applications can be a hard task. There is could be no information of application state: is it completed rendering or not. What is possible to do in this case is to use more `wait*` methods or execute javascript that checks appliacation state.
+In modern era of Single Page Applications browser replaces the server in creating user interface. Unlike traditional web applications, web pages are not reloded on user actions. All interactions with a server is done in javascrpt with XHR requests. However, testing Single Page Applications can be a hard task. There could be no information of application state: is it completed rendering or not? What is possible to do in this case is to use more `wait*` methods or execute javascript that checks appliacation state.
 
 For applications built with AngularJS v1.x framework we implemented [AngularJS module](http://codeception.com/docs/modules/AngularJS) which is based on Protactor (an official tool for testing Angular apps). Under the hood it pauses step execution before previous actions is completed and uses AngularJS API to check application state.
 
@@ -412,7 +412,7 @@ On each fail, the snapshot of the last shown page will be stored in the `tests/_
 
 Sometimes you may want to inspect a web page opened by a running test. For such cases you may use [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of WebDriver module.
 
-You can also record your tests step by step and review execution flow as slideshow with the help of [Recorder extension](http://codeception.com/addons#CodeceptionExtensionRecorder). 
+You can also record your tests step by step and review execution flow as a slideshow with the help of [Recorder extension](http://codeception.com/addons#CodeceptionExtensionRecorder). 
 
 ## Conclusion
 
