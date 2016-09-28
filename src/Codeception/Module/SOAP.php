@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Module as CodeceptionModule;
 use Codeception\TestInterface;
@@ -11,7 +10,6 @@ use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Util\Soap as SoapUtils;
 use Codeception\Util\XmlStructure;
-use Codeception\Lib\Interfaces\API;
 
 /**
  * Module for testing SOAP WSDL web services.
@@ -43,21 +41,17 @@ use Codeception\Lib\Interfaces\API;
  * * xmlRequest - last SOAP request (DOMDocument)
  * * xmlResponse - last SOAP response (DOMDocument)
  *
- * ## Conflicts
- *
- * Conflicts with REST module
- *
  */
-class SOAP extends CodeceptionModule implements DependsOnModule, API, ConflictsWithModule
+class SOAP extends CodeceptionModule implements DependsOnModule
 {
     protected $config = [
         'schema' => "",
         'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/',
         'framework_collect_buffer' => true
     ];
-    
+
     protected $requiredFields = ['endpoint'];
-    
+
     protected $dependencyMessage = <<<EOF
 Example using PhpBrowser as backend for SOAP module.
 --
@@ -114,11 +108,6 @@ EOF;
         return ['Codeception\Lib\InnerBrowser' => $this->dependencyMessage];
     }
 
-    public function _conflicts()
-    {
-        return 'Codeception\Lib\Interfaces\API';
-    }
-
     public function _inject(InnerBrowser $connectionModule)
     {
         $this->connectionModule = $connectionModule;
@@ -126,7 +115,7 @@ EOF;
             $this->isFunctional = true;
         }
     }
-    
+
     private function getClient()
     {
         if (!$this->client) {
@@ -142,7 +131,7 @@ EOF;
         }
         return $this->xmlResponse;
     }
-    
+
     private function getXmlStructure()
     {
         if (!$this->xmlStructure) {
@@ -150,7 +139,7 @@ EOF;
         }
         return $this->xmlStructure;
     }
-    
+
     /**
      * Prepare SOAP header.
      * Receives header name and parameters as array.
@@ -400,13 +389,21 @@ EOF;
      *
      * @param $code
      */
-    public function seeResponseCodeIs($code)
+    public function seeSoapResponseCodeIs($code)
     {
         $this->assertEquals(
             $code,
             $this->client->getInternalResponse()->getStatus(),
             "soap response code matches expected"
         );
+    }
+
+    /**
+     * @deprecated use seeSoapResponseCodeIs instead
+     */
+    public function seeResponseCodeIs($code)
+    {
+        $this->seeSoapResponseCodeIs($code);
     }
 
     /**
