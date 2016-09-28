@@ -310,12 +310,12 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
      *
      * ``` php
      * <?php
-     * $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
+     * $user = $I->grabFromCollection('users', array('name' => 'miles'));
      * ```
      *
      * @param $collection
      * @param array $criteria
-     * @return \MongoCursor
+     * @return array
      */
     public function grabFromCollection($collection, $criteria = [])
     {
