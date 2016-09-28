@@ -89,5 +89,5 @@ function codecept_data_dir($appendPath = '')
 
 function codecept_relative_path($path)
 {
-    return substr($path, strlen(codecept_root_dir()));
+    return \Codeception\Configuration::getRelativeDir($path, \Codeception\Configuration::projectDir(), DIRECTORY_SEPARATOR);
 }
