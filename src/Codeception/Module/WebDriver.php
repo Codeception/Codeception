@@ -734,7 +734,11 @@ class WebDriver extends CodeceptionModule implements
         }
         $el = $this->findClickable($page, $link);
         if (!$el) {
-            $els = $this->match($page, $link);
+            try {
+                $els = $this->match($page, $link);
+            } catch (MalformedLocatorException $e) {
+                throw new ElementNotFound("name=$link", "'$link' is invalid CSS and XPath selector and Link or Button");
+            }
             $el = reset($els);
         }
         if (!$el) {

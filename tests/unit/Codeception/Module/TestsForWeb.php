@@ -1490,6 +1490,24 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->seeCurrentUrlEquals('/');
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/3528
+     */
+    public function testClickThrowsElementNotFoundExceptionWhenTextContainsNumber()
+    {
+        $this->setExpectedException('Codeception\Exception\ElementNotFound',
+            "'Link 2' is invalid CSS and XPath selector and Link or Button element with 'name=Link 2' was not found.");
+        $this->module->amOnPage('/info');
+        $this->module->click('Link 2');
+    }
+
+    public function testClickExistingLinkWithTextContainingNumber()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->click('Link 3');
+        $this->module->seeCurrentUrlEquals('/cookies');
+    }
+
     public function testSelectOptionValueSelector()
     {
         $this->module->amOnPage('/form/select_selectors');
