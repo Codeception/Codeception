@@ -1,7 +1,9 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Interfaces\DependsOnModule;
+use Codeception\Lib\Notification;
 use Codeception\Module as CodeceptionModule;
 use Codeception\TestInterface;
 use Codeception\Exception\ModuleException;
@@ -42,7 +44,7 @@ use Codeception\Util\XmlStructure;
  * * xmlResponse - last SOAP response (DOMDocument)
  *
  */
-class SOAP extends CodeceptionModule implements DependsOnModule
+class SOAP extends CodeceptionModule implements DependsOnModule, API
 {
     protected $config = [
         'schema' => "",
@@ -403,6 +405,7 @@ EOF;
      */
     public function seeResponseCodeIs($code)
     {
+        Notification::deprecate('SOAP::seeResponseCodeIs deprecated in favor of seeSoapResponseCodeIs', 'SOAP Module');
         $this->seeSoapResponseCodeIs($code);
     }
 

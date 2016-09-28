@@ -1,11 +1,30 @@
 # Changelog
 
 #### 2.2.5
+
+* Support for PhpUnit 5.x.
 * [Lumen] Major refactoring of Lumen module. See [#3533](https://github.com/Codeception/Codeception/pull/3533). By @janhenkgerritsen
 * [Laravel5] Removed calls to Auth::logout(), Session::flush() and Cache::flush() from after hook. See #3493. By @janhenkgerritsen
 * [Memcache] Updated `Memcache::seeInMemcached` to check if the key exists alone or with the desired value. By @sergeyklay
 * [Memcache] Added `Memcache::haveInMemcached`. By @sergeyklay
 * [Memcache] Fixed `Memcache::dontSeeInMemcached`. By @sergeyklay
+* [ZF2] **Zend Framework 3 Support**. Made `init_autoloader` optional, because ZF3 uses composer for autoloading #3525. By @Naktibalda
+* [ZF2] Fixed accessing Doctrine Entity Manager when client is not initialized. By @chris1312. See #3524
+* Escaped tags in debug output by @Naktibalda. See #3507. Fixes #3495
+* [Facebook] Replaced `facebook/php-sdk-v4` library with `facebook/graph-sdk`.
+* Fixed #3410: Wrong subSteps rendering in HTML ResultPrinter by @niclopez
+* [WebDriver] Improved exception message thrown when click('name') does not match any element #3546 by @Naktibalda. Fixes #3528
+* [SOAP] Removed conflict with REST module. `seeResponseCodeIs` is deprecated in favor of `seeSoapResponseCodeIs` by @eXorus. See #3512. Fixes #3512
+* Fixed #3472: group Files not working with a non-empty data provider by @eXorus
+* [REST] Disabled resetting server parameters in _before. Fixed REST+Laravel usage: #3263. See #3539. By @janhenkgerritsen
+* [REST] Improved output of failed JsonType assertions #3480. By @Naktibalda. Fixes #2858
+* [REST] Requests are added to browser history #3446. Fixes regression #3197. By @Naktibalda
+* Fix bug in Coverage Filter related to relative filepaths #3518. By @sbacic
+* [Db] PostgreSQL: fixed a problem when sequences are not a standard format (ie. table_id_seq). See #3506. By @alexjeen
+* [Symfony] Persist doctrine.dbal.backend_connection if Doctrine2 module is used #3500. Fixes #3479. By @Naktibalda
+* [Doctrine2] Using Doctrine\ORM\EntityManagerInterface as valid em instance #3467. Fixes #3459. By @akbwm
+* [MongoDb] Fixes mongorestore command syntax and adds --quiet option to config
+* Handle deprecation messages according to `error_level` setting #3460. Fixes #3424. By @Naktibalda.
 
 #### 2.2.4
 
