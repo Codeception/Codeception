@@ -21,7 +21,17 @@
     <a href="info">Document-Relative Link</a>
 </div>
 
+<div id="area4">
+    Some text
+    <span>with        formatting</span>
+    <div class="someclass"> on separate
+        <span>lines</span>
+    </div>
+</div>
+
 A wise man said: "debug!"
+
+Please don&#039;t provide us any personal information.
 
 <?php print_r($_POST); ?>
 

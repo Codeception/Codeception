@@ -103,11 +103,11 @@ However, implementing all actions for a reuse in one actor class may lead to bre
 ### Session Snapshot
 
 If you need to authorize user for each test you can do so by filling Login form in the beginning of each test. 
-Running those steps take time, and in case of Selenium tests (which are slow by themselves) can be this time can be significant.
+Running those steps takes time, and in the case of Selenium tests (which are slow by themselves) that time loss can become significant.
 
-Codeception allows you to share cookies between tests, so once logged in user could stay authorized for other tests.
+Codeception allows you to share cookies between tests, so a test user can stay logged in for other tests.
 
-Let's improve code of our `login` method by making it executed only once for the first login and then restore the session from cookies.  
+Let's improve the code of our `login` method, executing the form submission only once and restoring the session from cookies for each subsequent login function call.
 
 ``` php
 <?php
@@ -131,20 +131,19 @@ Let's improve code of our `login` method by making it executed only once for the
 
 ```
 
-Please note that session restoration only works for `WebDriver` module (modules implementing `Codeception\Lib\Interfaces\SessionSnapshot`) 
+Please note that session restoration only works for `WebDriver` modules (modules implementing `Codeception\Lib\Interfaces\SessionSnapshot`).
 
 ## StepObjects
 
-If `login` method defined in Actor class may be used in 90% of your tests,
-StepObjects are great if you need some common functionality for a group of tests. Let's say you are going to test an admin area of a site. Probably, you won't need the same actions from admin area while testing the frontend, so it's a good idea to move those admin-specific into their own class. We will call such class a StepObject.
+StepObjects are great if you need some common functionality for a group of tests. Let's say you are going to test an admin area of a site. Probably, you won't need the same actions from admin area while testing the frontend, so it's a good idea to move these admin-specific tests into their own class. We will call such a class a StepObject.
 
-Lets create an Admin StepObject with generator, by specifying test suite, and passing method expected names on prompt.
+Lets create an Admin StepObject with the generator:
 
 ```bash
 php codecept generate:stepobject acceptance Admin
 ```
 
-You will be asked to enter action names, but it's optional. Enter one at a time, and press Enter. After specifying all needed actions, leave empty line to go on to StepObject creation.
+You can supply optional action names. Enter one at a time, followed by a newline. End with an empty line to continue to StepObject creation.
 
 ```bash
 php codecept generate:stepobject acceptance Admin
@@ -153,7 +152,7 @@ Add action to StepObject class (ENTER to exit):
 StepObject was created in /tests/acceptance/_support/Step/Acceptance/Admin.php
 ```
 
-It will generate class in `/tests/_support/Step/Acceptance/Admin.php` similar to this:
+This will generate a class in `/tests/_support/Step/Acceptance/Admin.php` similar to this:
 
 ```php
 <?php
@@ -169,7 +168,7 @@ class Admin extends \AcceptanceTester
 
 ```
 
-As you see, this class is very simple. It extends `AcceptanceTester` class, thus, all methods and properties of `AcceptanceTester` are available for usage in it.
+As you see, this class is very simple. It extends `AcceptanceTester` class, meaning it can access all methods and properties of `AcceptanceTester`.
 
 `loginAsAdmin` method may be implemented like this:
 
@@ -177,7 +176,7 @@ As you see, this class is very simple. It extends `AcceptanceTester` class, thus
 <?php
 namespace Step\Acceptance;
 
-class Member extends \AcceptanceTester
+class Admin extends \AcceptanceTester
 {
     public function loginAsAdmin()
     {

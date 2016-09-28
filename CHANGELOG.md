@@ -1,5 +1,12 @@
 # Changelog
 
+#### 2.2.5
+* [Lumen] Major refactoring of Lumen module. See [#3533](https://github.com/Codeception/Codeception/pull/3533). By @janhenkgerritsen
+* [Laravel5] Removed calls to Auth::logout(), Session::flush() and Cache::flush() from after hook. See #3493. By @janhenkgerritsen
+* [Memcache] Updated `Memcache::seeInMemcached` to check if the key exists alone or with the desired value. By @sergeyklay
+* [Memcache] Added `Memcache::haveInMemcached`. By @sergeyklay
+* [Memcache] Fixed `Memcache::dontSeeInMemcached`. By @sergeyklay
+
 #### 2.2.4
 
 * Improved using complex params, nested params can be set using dot (`.`). See #3339

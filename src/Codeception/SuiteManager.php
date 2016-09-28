@@ -124,7 +124,7 @@ class SuiteManager
         $groups = $this->groupManager->groupsForTest($test);
 
         // registering group for data providers
-        if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+        if (!empty($groups) && $test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
             $groupDetails = [];
             foreach ($groups as $group) {
                 $groupDetails[$group] = $test->getGroupDetails()['default'];

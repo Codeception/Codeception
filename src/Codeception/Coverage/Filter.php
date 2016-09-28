@@ -73,7 +73,7 @@ class Filter
         if (isset($coverage['whitelist']['include'])) {
             foreach ($coverage['whitelist']['include'] as $fileOrDir) {
                 $finder = strpos($fileOrDir, '*') === false
-                    ? [$fileOrDir]
+                    ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
                 foreach ($finder as $file) {
@@ -85,7 +85,7 @@ class Filter
         if (isset($coverage['whitelist']['exclude'])) {
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 $finder = strpos($fileOrDir, '*') === false
-                    ? [$fileOrDir]
+                    ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
                 foreach ($finder as $file) {
@@ -116,7 +116,7 @@ class Filter
             if (isset($coverage['blacklist']['include'])) {
                 foreach ($coverage['blacklist']['include'] as $fileOrDir) {
                     $finder = strpos($fileOrDir, '*') === false
-                        ? [$fileOrDir]
+                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {
@@ -127,7 +127,7 @@ class Filter
             if (isset($coverage['blacklist']['exclude'])) {
                 foreach ($coverage['blacklist']['exclude'] as $fileOrDir) {
                     $finder = strpos($fileOrDir, '*') === false
-                        ? [$fileOrDir]
+                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {

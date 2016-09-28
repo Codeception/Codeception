@@ -1,4 +1,5 @@
 <?php
+
 use \Codeception\Lib\Driver\Db;
 
 /**
@@ -14,7 +15,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
 
     protected static $sql;
     protected $postgres;
-    
+
     public static function setUpBeforeClass()
     {
         if (!function_exists('pg_connect')) {
@@ -24,7 +25,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
             self::$config['password'] = 'Password12!';
         }
         $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/postgres.sql');
-        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
+        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', '', $sql);
         self::$sql = explode("\n", $sql);
         try {
             $postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
@@ -42,14 +43,13 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         }
         $this->postgres->load(self::$sql);
     }
-    
+
     public function tearDown()
     {
         if (isset($this->postgres)) {
             $this->postgres->cleanup();
         }
     }
-
 
     public function testCleanupDatabase()
     {
@@ -122,6 +122,12 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
     public function testGetEmptyArrayIfTableHasNoPrimaryKey()
     {
         $this->assertEquals([], $this->postgres->getPrimaryKey('no_pk'));
+    }
+
+    public function testLastInsertIdReturnsSequenceValueWhenNonStandardSequenceNameIsUsed()
+    {
+        $this->postgres->executeQuery('INSERT INTO seqnames(name) VALUES(?)',['test']);
+        $this->assertEquals(1, $this->postgres->lastInsertId('seqnames'));
     }
 
     public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()

@@ -262,7 +262,7 @@ trait Asserts
      * @param        $constraint
      * @param string $message
      */
-    protected function assertThat($haystack, $constraint, $message)
+    protected function assertThat($haystack, $constraint, $message = '')
     {
         \PHPUnit_Framework_Assert::assertThat($haystack, $constraint, $message);
     }
@@ -274,7 +274,7 @@ trait Asserts
      * @param        $constraint
      * @param string $message
      */
-    protected function assertThatItsNot($haystack, $constraint, $message)
+    protected function assertThatItsNot($haystack, $constraint, $message = '')
     {
         $constraint = new \PHPUnit_Framework_Constraint_Not($constraint);
         \PHPUnit_Framework_Assert::assertThat($haystack, $constraint, $message);
@@ -309,7 +309,7 @@ trait Asserts
      * @param $actual
      * @param $description
      */
-    protected function assertGreaterOrEquals($expected, $actual, $description)
+    protected function assertGreaterOrEquals($expected, $actual, $description = '')
     {
         \PHPUnit_Framework_Assert::assertGreaterThanOrEqual($expected, $actual, $description);
     }
@@ -319,7 +319,7 @@ trait Asserts
      * @param $actual
      * @param $description
      */
-    protected function assertLessOrEquals($expected, $actual, $description)
+    protected function assertLessOrEquals($expected, $actual, $description = '')
     {
         \PHPUnit_Framework_Assert::assertLessThanOrEqual($expected, $actual, $description);
     }
@@ -328,7 +328,7 @@ trait Asserts
      * @param $actual
      * @param $description
      */
-    protected function assertIsEmpty($actual, $description)
+    protected function assertIsEmpty($actual, $description = '')
     {
         \PHPUnit_Framework_Assert::assertEmpty($actual, $description);
     }
@@ -338,7 +338,7 @@ trait Asserts
      * @param $actual
      * @param $description
      */
-    protected function assertArrayHasKey($key, $actual, $description)
+    protected function assertArrayHasKey($key, $actual, $description = '')
     {
         \PHPUnit_Framework_Assert::assertArrayHasKey($key, $actual, $description);
     }
@@ -348,7 +348,7 @@ trait Asserts
      * @param $actual
      * @param $description
      */
-    protected function assertArrayNotHasKey($key, $actual, $description)
+    protected function assertArrayNotHasKey($key, $actual, $description = '')
     {
         \PHPUnit_Framework_Assert::assertArrayNotHasKey($key, $actual, $description);
     }
@@ -358,7 +358,7 @@ trait Asserts
      * @param $actual
      * @param $description
      */
-    protected function assertInstanceOf($class, $actual, $description)
+    protected function assertInstanceOf($class, $actual, $description = '')
     {
         \PHPUnit_Framework_Assert::assertInstanceOf($class, $actual, $description);
     }
@@ -368,7 +368,7 @@ trait Asserts
      * @param $actual
      * @param $description
      */
-    protected function assertNotInstanceOf($class, $actual, $description)
+    protected function assertNotInstanceOf($class, $actual, $description = '')
     {
         \PHPUnit_Framework_Assert::assertNotInstanceOf($class, $actual, $description);
     }
@@ -378,7 +378,7 @@ trait Asserts
      * @param $actual
      * @param $description
      */
-    protected function assertInternalType($type, $actual, $description)
+    protected function assertInternalType($type, $actual, $description = '')
     {
         \PHPUnit_Framework_Assert::assertInternalType($type, $actual, $description);
     }

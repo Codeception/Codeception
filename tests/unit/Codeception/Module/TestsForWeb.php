@@ -47,9 +47,16 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
         $this->module->see('A wise man said: "debug!"');
-
-        $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!', 'h1');
+
+        $this->module->see('Some text with formatting on separate lines');
+        $this->module->see('Some text with formatting on separate lines', '#area4');
+        $this->module->see('on separate lines', '#area4 .someclass');
+
+        //ensure backwards compatibility, this assertion passed before this change
+        $this->module->see("Test Link \n\n\n    Test");
+        //Single quote HTML entities must be decoded
+        $this->module->see("please don't provide us any personal information.");
 
         $this->module->amOnPage('/info');
         $this->module->see('valuable', 'p');
@@ -58,6 +65,20 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->dontSee('Welcome');
         $this->module->dontSee('valuable', 'h1');
         $this->module->dontSee('Welcome', 'h6');
+    }
+
+    public function testDontSeeFailsWhenMultilineTextMatches()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/');
+        $this->module->dontSee('Some text with formatting on separate lines');
+    }
+
+    public function testDontSeeFailsWhenMultilineTextMatchesInSelector()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/');
+        $this->module->dontSee('Some text with formatting on separate lines', '#area4');
     }
 
     /**

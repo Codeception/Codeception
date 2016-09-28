@@ -137,9 +137,23 @@ class Laravel5 extends Client
             return $files;
         }
 
+        return $this->convertToTestFiles($files);
+    }
+
+    /**
+     * @param array $files
+     * @return array
+     */
+    private function convertToTestFiles(array $files)
+    {
         $filtered = [];
-        foreach ($files as $key => $file) {
-            $filtered[$key] = UploadedFile::createFromBase($file, true);
+
+        foreach ($files as $key => $value) {
+            if (is_array($value)) {
+                $filtered[$key] = $this->convertToTestFiles($value);
+            } else {
+                $filtered[$key] = UploadedFile::createFromBase($value, true);
+            }
         }
 
         return $filtered;
