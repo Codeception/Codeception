@@ -4,6 +4,9 @@ platform: 'x86'
 branches:
   except:
     - gh-pages
+    
+cache:
+  - c:\tools\php -> appveyor.yml    
 
 services:
   - mysql
