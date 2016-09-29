@@ -10,6 +10,7 @@ use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Lib\Notification;
 use Codeception\TestInterface;
+use Codeception\Test\Unit as UnitTest;
 use Yii;
 use yii\db\ActiveRecordInterface;
 
@@ -140,6 +141,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $this->client->restoreServerVars();
         $this->client->configFile = Configuration::projectDir() . $this->config['configFile'];
         $this->app = $this->client->getApplication();
+
+        // load fixtures before db transaction
+        if ($test instanceof UnitTest && method_exists($test, 'fixtures') && ($fixtures = $test->fixtures()) !== false) {
+            $this->haveFixtures($fixtures);
+        }
 
         if ($this->config['cleanup'] && $this->app->has('db')) {
             $this->transaction = $this->app->db->beginTransaction();
