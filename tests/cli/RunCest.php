@@ -399,6 +399,6 @@ EOF
     public function runTestWithAnnotationExamplesFromGroupFileTest(CliGuy $I)
     {
         $I->executeCommand('run scenario -g groupFileTest1 --steps');
-        $I->seeInShellOutput('OK (10 tests');
+        $I->seeInShellOutput('OK (3 tests');
     }
 }
