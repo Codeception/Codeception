@@ -27,6 +27,7 @@
 * [Doctrine2] Using `Doctrine\ORM\EntityManagerInterface` as valid em instance #3467. Fixes #3459. By @akbwm
 * [MongoDb] Fixes `mongorestore` command syntax and adds --quiet option to config
 * [Facebook] Replaced `facebook/php-sdk-v4` library with `facebook/graph-sdk`.
+* Fixed #3433 detection of relative path when `codeception.yml` is not in project root. See #3434. By @loren-osborn
 * Handle deprecation messages according to `error_level` setting #3460. Fixes #3424. By @Naktibalda.
 
 #### 2.2.4
