@@ -306,10 +306,10 @@ class WebDriver extends CodeceptionModule implements
     {
         if (!isset($this->webDriver)) {
             $this->_initialize();
-        }
-        if (!isset($this->webDriver)) {
-            $test->getMetadata()->setSkip('WebDriver failed to initialise, please make sure that Selenium Server or PhantomJS is running');
-            return;
+            
+            if (!isset($this->webDriver)) {
+                $test->getMetadata()->setFail('WebDriver failed to initialise, please make sure that Selenium Server or PhantomJS is running');
+            }            
         }
         $test->getMetadata()->setCurrent([
             'browser' => $this->config['browser'],
@@ -497,7 +497,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function _saveScreenshot($filename)
     {
-        if ($this->webDriver === null) {
+        if (!isset($this->webDriver)) {
             $this->debug('WebDriver::_saveScreenshot method has been called when webDriver is not set');
             return;
         }
