@@ -167,7 +167,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         // load fixtures before db transaction
         if (method_exists($test, self::TEST_FIXTURES_METHOD)) {
-            $this->haveFixtures(call_user_func($test, self::TEST_FIXTURES_METHOD));
+            $this->haveFixtures(call_user_func([$test, self::TEST_FIXTURES_METHOD]));
         }
 
         if ($this->config['cleanup'] && $this->app->has('db')) {
