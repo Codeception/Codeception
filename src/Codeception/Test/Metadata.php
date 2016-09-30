@@ -14,6 +14,7 @@ class Metadata
     protected $dependencies = [];
     protected $skip = null;
     protected $incomplete = null;
+    protected $fail = null;
 
     protected $current = [];
     protected $services = [];
@@ -80,6 +81,22 @@ class Metadata
     public function setIncomplete($incomplete)
     {
         $this->incomplete = $incomplete;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFail()
+    {
+        return $this->fail;
+    }
+
+    /**
+     * @param mixed $fail
+     */
+    public function setFail($fail)
+    {
+        $this->fail = $fail;
     }
 
     /**
@@ -152,7 +169,7 @@ class Metadata
 
     public function isBlocked()
     {
-        return $this->skip !== null || $this->incomplete !== null;
+        return $this->skip !== null || $this->incomplete !== null || $this->fail !== null;
     }
 
     /**
