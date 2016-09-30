@@ -37,6 +37,9 @@ class Unit extends \PHPUnit_Framework_TestCase implements
             if ($this->getMetadata()->getIncomplete() !== null) {
                 $this->markTestIncomplete($this->getMetadata()->getIncomplete());
             }
+            if ($this->getMetadata()->getFail() !== null) {
+                $this->fail($this->getMetadata()->getFail());
+            }
             return;
         }
         $scenario = new Scenario($this);
