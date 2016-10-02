@@ -44,7 +44,7 @@ use Codeception\Util\XmlStructure;
  * * xmlResponse - last SOAP response (DOMDocument)
  *
  */
-class SOAP extends CodeceptionModule implements DependsOnModule, API
+class SOAP extends CodeceptionModule implements DependsOnModule
 {
     protected $config = [
         'schema' => "",
