@@ -341,28 +341,37 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $this->clickByLocator($link);
             return;
         }
+
         $anchor = $this->strictMatch(['link' => $link]);
         if (!count($anchor)) {
             $anchor = $this->getCrawler()->selectLink($link);
         }
         if (count($anchor)) {
-            $this->crawler = $this->clientClick($anchor->first()->link());
+            $this->crawler = $this->amOnPage($anchor->getNode(0)->getAttribute('href'));
             $this->forms = [];
             return;
         }
 
         $buttonText = str_replace('"', "'", $link);
         $button = $this->crawler->selectButton($buttonText);
+
         if (count($button)) {
-            $buttonValue = [];
-            if (strval($button->attr('name')) !== '' && $button->attr('value') !== null) {
-                $buttonValue = [$button->attr('name') => $button->attr('value')];
+            foreach ($button->parents() as $parent) {
+                if ($parent->tagName === 'a' && $parent->hasAttribute('href')) {
+                    $this->amOnPage($parent->getAttribute('href'));
+                    return;
+                } elseif ($parent->tagName === 'form') {
+                    $buttonValue = [];
+                    if (strval($button->attr('name')) !== '' && $button->attr('value') !== null) {
+                        $buttonValue = [$button->attr('name') => $button->attr('value')];
+                    }
+                    $this->proceedSubmitForm(
+                        $button->parents()->filter('form')->first(),
+                        $buttonValue
+                    );
+                    return;
+                }
             }
-            $this->proceedSubmitForm(
-                $button->parents()->filter('form')->first(),
-                $buttonValue
-            );
-            return;
         }
 
         try {
@@ -380,22 +389,34 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
 
         foreach ($nodes as $node) {
-            $tag = $node->nodeName;
+            $tag = $node->tagName;
             $type = $node->getAttribute('type');
+
             if ($tag === 'a') {
-                $this->crawler = $this->clientClick($nodes->first()->link());
-                $this->forms = [];
+                $this->amOnPage($node->getAttribute('href'));
                 break;
             } elseif (in_array($tag, ['input', 'button']) && in_array($type, ['submit', 'image'])) {
-                $buttonValue = [];
-                if (strval($nodes->first()->attr('name')) !== '' && $nodes->first()->attr('value') !== null) {
-                    $buttonValue = [$nodes->first()->attr('name') => $nodes->first()->attr('value')];
+                $formParams = [];
+                $buttonName = (string)$node->getAttribute('name');
+                $buttonValue = $node->getAttribute('value');
+
+                if ($buttonName !== '' && $buttonValue !== null) {
+                    $formParams = [$buttonName => $buttonValue];
                 }
-                $this->proceedSubmitForm(
-                    $nodes->parents()->filter('form')->first(),
-                    $buttonValue
-                );
-                break;
+
+                while ($node->parentNode !== null) {
+                    $node = $node->parentNode;
+                    if ($node->tagName === 'a') {
+                        $this->amOnPage($node->getAttribute('href'));
+                        break;
+                    } elseif ($node->tagName === 'form') {
+                        $this->proceedSubmitForm(
+                            new Crawler($node),
+                            $formParams
+                        );
+                        break;
+                    }
+                }
             }
         }
     }
@@ -1601,15 +1622,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * Clicks on a given link.
      *
      * @param Link $link A Link instance
-     *
      * @return Crawler
+     * @deprecated No longer used by InnerBrowser, please use amOnPage instead
      */
     protected function clientClick(Link $link)
     {
         if ($link instanceof Form) {
             return $this->proceedSubmitForm($link);
         }
-
         return $this->clientRequest($link->getMethod(), $link->getUri());
     }
 
