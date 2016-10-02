@@ -355,23 +355,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $buttonText = str_replace('"', "'", $link);
         $button = $this->crawler->selectButton($buttonText);
 
-        if (count($button)) {
-            foreach ($button->parents() as $parent) {
-                if ($parent->tagName === 'a' && $parent->hasAttribute('href')) {
-                    $this->amOnPage($parent->getAttribute('href'));
-                    return;
-                } elseif ($parent->tagName === 'form') {
-                    $buttonValue = [];
-                    if (strval($button->attr('name')) !== '' && $button->attr('value') !== null) {
-                        $buttonValue = [$button->attr('name') => $button->attr('value')];
-                    }
-                    $this->proceedSubmitForm(
-                        $button->parents()->filter('form')->first(),
-                        $buttonValue
-                    );
-                    return;
-                }
-            }
+        if (count($button) && $this->clickButton($button->getNode(0))) {
+            return;
         }
 
         try {
@@ -381,6 +366,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
     }
 
+    /**
+     * @param $link
+     * @return bool
+     */
     protected function clickByLocator($link)
     {
         $nodes = $this->match($link);
@@ -394,31 +383,43 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
             if ($tag === 'a') {
                 $this->amOnPage($node->getAttribute('href'));
-                break;
+                return true;
             } elseif (in_array($tag, ['input', 'button']) && in_array($type, ['submit', 'image'])) {
-                $formParams = [];
-                $buttonName = (string)$node->getAttribute('name');
-                $buttonValue = $node->getAttribute('value');
-
-                if ($buttonName !== '' && $buttonValue !== null) {
-                    $formParams = [$buttonName => $buttonValue];
-                }
-
-                while ($node->parentNode !== null) {
-                    $node = $node->parentNode;
-                    if ($node->tagName === 'a') {
-                        $this->amOnPage($node->getAttribute('href'));
-                        break;
-                    } elseif ($node->tagName === 'form') {
-                        $this->proceedSubmitForm(
-                            new Crawler($node),
-                            $formParams
-                        );
-                        break;
-                    }
-                }
+                return $this->clickButton($node);
             }
         }
+    }
+
+
+    /**
+     * Clicks the link or submits the form when the button is clicked
+     * @param \DOMNode $node
+     * @return boolean clicked something
+     */
+    private function clickButton(\DOMNode $node)
+    {
+        $formParams = [];
+        $buttonName = (string)$node->getAttribute('name');
+        $buttonValue = $node->getAttribute('value');
+
+        if ($buttonName !== '' && $buttonValue !== null) {
+            $formParams = [$buttonName => $buttonValue];
+        }
+
+        while ($node->parentNode !== null) {
+            $node = $node->parentNode;
+            if ($node->tagName === 'a') {
+                $this->amOnPage($node->getAttribute('href'));
+                return true;
+            } elseif ($node->tagName === 'form') {
+                $this->proceedSubmitForm(
+                    new Crawler($node),
+                    $formParams
+                );
+                return true;
+            }
+        }
+        return false;
     }
 
     public function see($text, $selector = null)
