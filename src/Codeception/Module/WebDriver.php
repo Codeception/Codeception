@@ -372,6 +372,10 @@ class WebDriver extends CodeceptionModule implements
      */
     public function debugWebDriverLogs()
     {
+        if (!isset($this->webDriver)) {
+            $this->debug('WebDriver::debugWebDriverLogs method has been called when webDriver is not set');
+            return;
+        }
         try {
             // Dump out latest Selenium logs
             $logs = $this->webDriver->manage()->getAvailableLogTypes();
@@ -519,6 +523,10 @@ class WebDriver extends CodeceptionModule implements
      */
     public function _savePageSource($filename)
     {
+        if (!isset($this->webDriver)) {
+            $this->debug('WebDriver::_savePageSource method has been called when webDriver is not set');
+            return;
+        }
         try {
             file_put_contents($filename, $this->webDriver->getPageSource());
         } catch (\Exception $e) {
