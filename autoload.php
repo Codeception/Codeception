@@ -100,7 +100,10 @@ if (!function_exists('codecept_data_dir')) {
 if (!function_exists('codecept_relative_path')) {
     function codecept_relative_path($path)
     {
-        return \Codeception\Util\PathResolver::getRelativeDir($path, \Codeception\Configuration::projectDir(),
-            DIRECTORY_SEPARATOR);
+        return \Codeception\Util\PathResolver::getRelativeDir(
+            $path,
+            \Codeception\Configuration::projectDir(),
+            DIRECTORY_SEPARATOR
+        );
     }
 }
