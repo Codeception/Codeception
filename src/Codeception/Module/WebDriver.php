@@ -1742,6 +1742,24 @@ class WebDriver extends CodeceptionModule implements
      *     ]
      * ]);
      * ```
+     *
+     * The `$button` parameter can be either a string, an array or an instance
+     * of Facebook\WebDriver\WebDriverBy. When it is a string, the
+     * button will be found by its "name" attribute. If $button is an
+     * array then it will be treated as a strict selector and a WebDriverBy
+     * will be used verbatim.
+     *
+     * For example, given the following HTML:
+     *
+     * ``` html
+     * <input type="submit" name="submitButton" value="Submit" />
+     * ```
+     *
+     * `$button` could be any one of the following:
+     *   - 'submitButton'
+     *   - ['name' => 'submitButton']
+     *   - WebDriverBy::name('submitButton')
+     *
      * @param $selector
      * @param $params
      * @param $button
@@ -1806,7 +1824,16 @@ class WebDriver extends CodeceptionModule implements
 
         $submitted = false;
         if (!empty($button)) {
-            $els = $form->findElements(WebDriverBy::name($button));
+            if (is_array($button)) {
+                $buttonSelector = $this->getStrictLocator($button);
+            } elseif ($button instanceof WebDriverBy) {
+                $buttonSelector = $button;
+            } else {
+                $buttonSelector = WebDriverBy::name($button);
+            }
+
+            $els = $form->findElements($buttonSelector);
+
             if (!empty($els)) {
                 $el = reset($els);
                 $el->click();
