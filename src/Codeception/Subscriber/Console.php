@@ -529,7 +529,7 @@ class Console implements EventSubscriberInterface
         } else if ($this->isWin() && (php_sapi_name() == "cli")) {
             exec('mode con', $output);
             preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
-            $this->width = (int) $matches[1] - 2;
+            $this->width = (int) $matches[1];
         }
 
         return $this->width;
