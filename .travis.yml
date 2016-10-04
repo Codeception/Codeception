@@ -44,7 +44,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || export PATH="$GOPATH/bin:$PATH"'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || go get github.com/Naktibalda/hhvm-serve'
   - composer self-update && composer --version
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || phpenv config-rm xdebug.ini' # removing xdebug from PHP
+  - phpenv config-rm xdebug.ini # removing xdebug from PHP
   - if [ -n "$CI_USER_TOKEN" ]; then composer config github-oauth.github.com ${CI_USER_TOKEN}; echo "Configured Github token"; fi;
   - composer global require "fxp/composer-asset-plugin:~1.1.1"
   - '[[ -z "$SYMFONY" ]] || composer require symfony/finder=~$SYMFONY --no-update --ignore-platform-reqs'
@@ -57,16 +57,16 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || composer remove mongodb/mongodb --no-update --dev'
   - composer_parameters="-n --prefer-dist" # this variable will be used in all composer install commands
   - '[[ "$dependencies" != "lowest" ]] || composer_parameters="$composer_parameters --prefer-lowest"'
-  - composer update $composer_parameters
+  - php -d xdebug.enable=0 composer update $composer_parameters
   - composer_parameters="$composer_parameters --no-dev" # Codeception needs dev dependencies, but frameworks don't
   # Yii2
-  - composer create-project "yiisoft/yii2-app-basic:@dev" frameworks-yii-basic --no-dev
+  - php -d xdebug.enable=0 composer create-project "yiisoft/yii2-app-basic:@dev" frameworks-yii-basic --no-dev
   # Phalcon
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ -z "$PHALCON" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b $PHALCON'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ ! -z "$PHALCON" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/build; bash install &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null && cd ../..;)'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || composer update -d frameworks-phalcon $composer_parameters'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php -d xdebug.enable=0 composer update -d frameworks-phalcon $composer_parameters'
   # Laravel 5
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-l5 $composer_parameters'
@@ -76,19 +76,18 @@ install:
   # Symfony
   - git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony
   - '[[ -z "$SYMFONY" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
-  - '[[ -z "$SYMFONY" ]] || composer update -d frameworks-symfony $composer_parameters'
+  - '[[ -z "$SYMFONY" ]] || php -d xdebug.enable=0 composer update -d frameworks-symfony $composer_parameters'
   # ZF1
   - git clone -q -b 2.2-simple-file-upload --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
-  - composer update -d frameworks-zf1 $composer_parameters
+  - php -d xdebug.enable=0 composer update -d frameworks-zf1 $composer_parameters
   # ZF2
   - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
-  - composer update -d frameworks-zf2 $composer_parameters
+  - php -d xdebug.enable=0 composer update -d frameworks-zf2 $composer_parameters
   # Zend Expressive
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-zend-expressive $composer_parameters'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php -d xdebug.enable=0 composer update -d frameworks-zend-expressive $composer_parameters'
 
 before_script:
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || phpenv config-add xdebug.ini' # bring back xdebug for tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # create config file for hhvm daemon
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "pid = /tmp/hhvm.pid" >>/tmp/hhvm.ini'
