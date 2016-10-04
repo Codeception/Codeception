@@ -44,7 +44,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || export PATH="$GOPATH/bin:$PATH"'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || go get github.com/Naktibalda/hhvm-serve'
   - composer self-update && composer --version
-  - phpenv config-rm xdebug.ini # removing xdebug from PHP
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || phpenv config-rm xdebug.ini' # removing xdebug from PHP
   - if [ -n "$CI_USER_TOKEN" ]; then composer config github-oauth.github.com ${CI_USER_TOKEN}; echo "Configured Github token"; fi;
   - composer global require "fxp/composer-asset-plugin:~1.1.1"
   - '[[ -z "$SYMFONY" ]] || composer require symfony/finder=~$SYMFONY --no-update --ignore-platform-reqs'
@@ -88,6 +88,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-zend-expressive $composer_parameters'
 
 before_script:
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || phpenv config-add xdebug.ini' # bring back xdebug for tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # create config file for hhvm daemon
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "pid = /tmp/hhvm.pid" >>/tmp/hhvm.ini'
