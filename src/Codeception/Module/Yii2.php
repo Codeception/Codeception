@@ -194,7 +194,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         $this->client->resetPersistentVars();
 
-        if (\Yii::$app->has('session', true)) {
+        if (isset(\Yii::$app) && \Yii::$app->has('session', true)) {
             \Yii::$app->session->close();
         }
         parent::_after($test);
