@@ -526,12 +526,11 @@ class Console implements EventSubscriberInterface
             && (getenv('TERM') != 'unknown')
         ) {
             $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
-        } else if ($this->isWin() && (php_sapi_name() == "cli")) {
+        } elseif ($this->isWin() && (php_sapi_name() == "cli")) {
             exec('mode con', $output);
             preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
             $this->width = (int) $matches[1];
         }
-
         return $this->width;
     }
 
