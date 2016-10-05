@@ -36,6 +36,9 @@ services:
 sudo: false
 
 install:
+  # disable xdebug on PHP 5.4
+  - '[[ "$TRAVIS_PHP_VERSION" != "5.4" ]] || cp $HOME/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini /tmp'
+  - '[[ "$TRAVIS_PHP_VERSION" != "5.4" ]] || phpenv config-rm xdebug.ini'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || pecl install mongodb'
   #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # use hhvm-serve instead of builtin server
@@ -134,8 +137,9 @@ before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-zend-expressive'
 
 script:
-  # enable xdebug before running codeception tests on hhvm
+  # enable xdebug before running codeception tests on hhvm and PHP 5.4
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "xdebug.enable = On" >> /etc/hhvm/php.ini'
+  - '[[ "$TRAVIS_PHP_VERSION" != "5.4" ]] || phpenv config-add /tmp/xdebug.ini'
   - php codecept run cli,unit # self tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run coverage'  # run coverage tests on php only
   # disable xdebug before running framework tests
