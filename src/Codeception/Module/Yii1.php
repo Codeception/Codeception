@@ -116,7 +116,8 @@ use Yii;
  *         - \Helper\Acceptance
  * ```
  */
-class Yii1 extends Framework implements PartedModule {
+class Yii1 extends Framework implements PartedModule
+{
 
     /**
      * Application path and url must be set always
@@ -132,12 +133,13 @@ class Yii1 extends Framework implements PartedModule {
 
     private $_appConfig;
 
-    public function _initialize() {
+    public function _initialize()
+    {
         if (!file_exists($this->config['appPath'])) {
             throw new ModuleConfigException(
-              __CLASS__,
-              "Couldn't load application config file {$this->config['appPath']}\n" .
-              "Please provide application bootstrap file configured for testing"
+                __CLASS__,
+                "Couldn't load application config file {$this->config['appPath']}\n" .
+                "Please provide application bootstrap file configured for testing"
             );
         }
 
@@ -146,23 +148,22 @@ class Yii1 extends Framework implements PartedModule {
         // get configuration from array or file
         if (is_array($this->appSettings['config'])) {
             $this->_appConfig = $this->appSettings['config'];
-        }
-        else {
+        } else {
             if (!file_exists($this->appSettings['config'])) {
                 throw new ModuleConfigException(
-                  __CLASS__,
-                  "Couldn't load configuration file from Yii app file: {$this->appSettings['config']}\n" .
-                  "Please provide valid 'config' parameter"
+                    __CLASS__,
+                    "Couldn't load configuration file from Yii app file: {$this->appSettings['config']}\n" .
+                    "Please provide valid 'config' parameter"
                 );
             }
             $this->_appConfig = include($this->appSettings['config']);
         }
 
         if (!defined('YII_ENABLE_EXCEPTION_HANDLER')) {
-            define('YII_ENABLE_EXCEPTION_HANDLER', FALSE);
+            define('YII_ENABLE_EXCEPTION_HANDLER', false);
         }
         if (!defined('YII_ENABLE_ERROR_HANDLER')) {
-            define('YII_ENABLE_ERROR_HANDLER', FALSE);
+            define('YII_ENABLE_ERROR_HANDLER', false);
         }
 
         $_SERVER['SCRIPT_NAME'] = parse_url($this->config['url'], PHP_URL_PATH);
@@ -170,38 +171,41 @@ class Yii1 extends Framework implements PartedModule {
 
         if (!function_exists('launch_codeception_yii_bridge')) {
             throw new ModuleConfigException(
-              __CLASS__,
-              "Codeception-Yii Bridge is not launched. In order to run tests you need to install "
-              . "https://github.com/Codeception/YiiBridge Implement function 'launch_codeception_yii_bridge' to "
-              . "load all Codeception overrides"
+                __CLASS__,
+                "Codeception-Yii Bridge is not launched. In order to run tests you need to install "
+                . "https://github.com/Codeception/YiiBridge Implement function 'launch_codeception_yii_bridge' to "
+                . "load all Codeception overrides"
             );
         }
         launch_codeception_yii_bridge();
 
-        Yii::$enableIncludePath = FALSE;
-        Yii::setApplication(NULL);
+        Yii::$enableIncludePath = false;
+        Yii::setApplication(null);
         Yii::createApplication($this->appSettings['class'], $this->_appConfig);
     }
 
     /*
      * Create the client connector. Called before each test
      */
-    public function _createClient() {
+    public function _createClient()
+    {
         $this->client = new Yii1Connector();
         $this->client->setServerParameter("HTTP_HOST", parse_url($this->config['url'], PHP_URL_HOST));
         $this->client->appPath = $this->config['appPath'];
         $this->client->url = $this->config['url'];
         $this->client->appSettings = [
-          'class' => $this->appSettings['class'],
-          'config' => $this->_appConfig,
+            'class' => $this->appSettings['class'],
+            'config' => $this->_appConfig,
         ];
     }
 
-    public function _before(TestInterface $test) {
+    public function _before(TestInterface $test)
+    {
         $this->_createClient();
     }
 
-    public function _after(TestInterface $test) {
+    public function _after(TestInterface $test)
+    {
         $_SESSION = [];
         $_GET = [];
         $_POST = [];
@@ -218,11 +222,12 @@ class Yii1 extends Framework implements PartedModule {
      * @param array $parameters
      * @return string
      */
-    private function getDomainRegex($template, $parameters = []) {
+    private function getDomainRegex($template, $parameters = [])
+    {
         if (preg_match('#https?://(.*?)/#', $template, $matches)) {
             $template = $matches[1];
         }
-        if (strpos($template, '<') !== FALSE) {
+        if (strpos($template, '<') !== false) {
             $template = str_replace(['<', '>'], '#', $template);
         }
 
@@ -242,13 +247,14 @@ class Yii1 extends Framework implements PartedModule {
      *
      * @return array
      */
-    public function getInternalDomains() {
+    public function getInternalDomains()
+    {
         $domains = [$this->getDomainRegex(Yii::app()->request->getHostInfo())];
         if (Yii::app()->urlManager->urlFormat === 'path') {
-            $parent = Yii::app()->urlManager instanceof \CUrlManager ? '\CUrlManager' : NULL;
+            $parent = Yii::app()->urlManager instanceof \CUrlManager ? '\CUrlManager' : null;
             $rules = ReflectionHelper::readPrivateProperty(Yii::app()->urlManager, '_rules', $parent);
             foreach ($rules as $rule) {
-                if ($rule->hasHostInfo === TRUE) {
+                if ($rule->hasHostInfo === true) {
                     $domains[] = $this->getDomainRegex($rule->template, $rule->params);
                 }
             }
@@ -256,7 +262,8 @@ class Yii1 extends Framework implements PartedModule {
         return array_unique($domains);
     }
 
-    public function _parts() {
+    public function _parts()
+    {
         return ['init', 'initialize'];
     }
 }
