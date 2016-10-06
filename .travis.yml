@@ -53,7 +53,6 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ "$SYMFONY" == "2.7.0" ]] || export SYMFONY=' #Don't test symfony-demo with Symfony 2.7.0
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || composer remove mongodb/mongodb --no-update --dev'
   - composer_parameters="-n --prefer-dist" # this variable will be used in all composer install commands
   - '[[ "$dependencies" != "lowest" ]] || composer_parameters="$composer_parameters --prefer-lowest"'
@@ -74,9 +73,9 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-lumen-sample.git frameworks-lumen'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-lumen $composer_parameters'
   # Symfony
-  - '[[ -z "$SYMFONY" ]] || git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony'
-  - '[[ -z "$SYMFONY" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
-  - '[[ -z "$SYMFONY" ]] || composer update -d frameworks-symfony $composer_parameters'
+  - '[[ -z "$SYMFONY" ]] || [[ "$SYMFONY" == "2.7.0" ]] || git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony'
+  - '[[ -z "$SYMFONY" ]] || [[ "$SYMFONY" == "2.7.0" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
+  - '[[ -z "$SYMFONY" ]] || [[ "$SYMFONY" == "2.7.0" ]] || composer update -d frameworks-symfony $composer_parameters'
   # ZF1
   - git clone -q -b 2.2-simple-file-upload --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
   - composer update -d frameworks-zf1 $composer_parameters
@@ -119,15 +118,15 @@ before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || touch frameworks-lumen/storage/testing.sqlite'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php frameworks-lumen/artisan migrate --database=testing --force'
   # Symfony
-  - '[[ -z "$SYMFONY" ]] || php frameworks-symfony/app/console doctrine:schema:create -n --env test'
-  - '[[ -z "$SYMFONY" ]] || php frameworks-symfony/app/console doctrine:fixtures:load -n --env test'
+  - '[[ -z "$SYMFONY" ]] || [[ "$SYMFONY" == "2.7.0" ]] || php frameworks-symfony/app/console doctrine:schema:create -n --env test'
+  - '[[ -z "$SYMFONY" ]] || [[ "$SYMFONY" == "2.7.0" ]] || php frameworks-symfony/app/console doctrine:fixtures:load -n --env test'
   # ZF2
   - "mysql -e 'create database zf2_test;'"
   - php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create
   # Build
   - php codecept build -c frameworks-yii-basic
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept build -c frameworks-phalcon'
-  - '[[ -z "$SYMFONY" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
+  - '[[ -z "$SYMFONY" ]] || [[ "$SYMFONY" == "2.7.0" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-lumen'
   - php codecept build -c frameworks-zf1
@@ -145,7 +144,7 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
-  - '[[ -z "$SYMFONY" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle '# Symfony Tests
+  - '[[ -z "$SYMFONY" ]] || [[ "$SYMFONY" == "2.7.0" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle '# Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
   - php codecept run -c frameworks-zf2 functional,doctrine # ZF2 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-zend-expressive' # Zend Expressive Tests
