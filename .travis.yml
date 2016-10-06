@@ -37,7 +37,6 @@ sudo: false
 
 install:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || pecl install mongodb'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || echo "memory_limit=2048M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # use hhvm-serve instead of builtin server
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || mkdir -p /home/travis/go/{src,bin,pkg}'
@@ -54,6 +53,7 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
+  - '[[ "$SYMFONY" == "2.7.0" ]] || export SYMFONY=' #Don't test symfony-demo with Symfony 2.7.0
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || composer remove mongodb/mongodb --no-update --dev'
   - composer_parameters="-n --prefer-dist" # this variable will be used in all composer install commands
   - '[[ "$dependencies" != "lowest" ]] || composer_parameters="$composer_parameters --prefer-lowest"'
@@ -74,7 +74,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-lumen-sample.git frameworks-lumen'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-lumen $composer_parameters'
   # Symfony
-  - git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony
+  - '[[ -z "$SYMFONY" ]] || git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony'
   - '[[ -z "$SYMFONY" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
   - '[[ -z "$SYMFONY" ]] || composer update -d frameworks-symfony $composer_parameters'
   # ZF1
