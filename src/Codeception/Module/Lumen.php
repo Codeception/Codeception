@@ -476,7 +476,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
         return (array)$query->first();
     }
 
-    /*
+    /**
      * Use Lumen's model factory to create a model.
      * Can only be used with Lumen 5.1 and later.
      *
@@ -504,7 +504,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
         }
     }
 
-    /*
+    /**
      * Use Laravel's model factory to create multiple models.
      * Can only be used with Lumen 5.1 and later.
      *
