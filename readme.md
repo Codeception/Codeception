@@ -6,7 +6,7 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Codeception/Codeception?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![PHP 7 ready](http://php7ready.timesplinter.ch/Codeception/Codeception/badge.svg)](https://travis-ci.org/Codeception/Codeception)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Codeception/Codeception/badges/quality-score.png?b=2.2)](https://scrutinizer-ci.com/g/Codeception/Codeception/?branch=2.2)
-
+[![](https://images.microbadger.com/badges/image/codeception/codeception.svg)](https://microbadger.com/images/codeception/codeception "Get your own image badge on microbadger.com")
 
 **Modern PHP Testing for everyone** 
 
