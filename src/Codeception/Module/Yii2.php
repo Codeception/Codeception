@@ -168,6 +168,12 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (\Yii::$app->has('session', true)) {
             \Yii::$app->session->close();
         }
+
+        // Close connections if exists
+        if (\Yii::$app->has('db', true)) {
+            \Yii::$app->db->close();
+        }
+
         parent::_after($test);
     }
 
