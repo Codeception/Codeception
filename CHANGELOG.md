@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.2.6
+
+* [Laravel5][Lumen] Fixed issue that caused the `have` and `haveMultiple` methods not being available when using the ORM part of the modules. See #3587. By @janhenkgerritsen
+
 #### 2.2.5
 
 * Support for PhpUnit 5.x.

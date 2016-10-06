@@ -1029,7 +1029,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         return (array) $query->first();
     }
 
-    /*
+    /**
      * Use Laravel's model factory to create a model.
      * Can only be used with Laravel 5.1 and later.
      *
@@ -1057,7 +1057,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
     }
 
-    /*
+    /**
      * Use Laravel's model factory to create multiple models.
      * Can only be used with Laravel 5.1 and later.
      *
