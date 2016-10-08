@@ -567,4 +567,12 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->click('#submit-registration');
         $this->assertEmpty(data::get('query'), 'Query string is not empty');
     }
+
+    public function testClickLinkAndFillField()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->click('Sign in!');
+        $this->module->seeCurrentUrlEquals('/login');
+        $this->module->fillField('email', 'email@example.org');
+    }
 }

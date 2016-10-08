@@ -347,8 +347,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $anchor = $this->getCrawler()->selectLink($link);
         }
         if (count($anchor)) {
-            $this->crawler = $this->amOnPage($anchor->getNode(0)->getAttribute('href'));
-            $this->forms = [];
+            $this->amOnPage($anchor->getNode(0)->getAttribute('href'));
             return;
         }
 
