@@ -234,6 +234,7 @@ class Yii1 extends Framework implements PartedModule
         foreach ($parameters as $name => $value) {
             $template = str_replace("#$name#", $value, $template);
         }
+        $template = str_replace('/', '\\/', $template);
         return '/^' . $template . '$/u';
     }
 
