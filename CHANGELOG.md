@@ -5,6 +5,9 @@
 * [Laravel5] Add `database_migrations_path` configuration option. See #3628. By @janhenkgerritsen
 * [Laravel5][Lumen] Fixed issue that caused the `have` and `haveMultiple` methods not being available when using the ORM part of the modules. See #3587. By @janhenkgerritsen
 * [APC] Added `Codeception\Module\Apc` module to interact with the Alternative PHP Cache (APC) using either APCu or APC extension. By @sergeyklay
+* [InnerBrowser] Fixed clicking on a button inside the link
+* [InnerBrowser] Click on the first clickable item when clickBySelector is used
+* Removed tags from see/dontSee output and friends output
 
 #### 2.2.5
 
