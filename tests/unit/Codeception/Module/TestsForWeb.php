@@ -1555,18 +1555,4 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->click(['css' => 'input[value="Span Info"]']);
         $this->module->seeCurrentUrlEquals('/info');
     }
-
-    public function testClickSelectsClickableElementFromMatches()
-    {
-        $this->module->amOnPage('/form/multiple_matches');
-        $this->module->click('Press Me!');
-        $this->module->seeCurrentUrlEquals('/info');
-    }
-
-    public function testClickSelectsClickableElementFromMatchesUsingCssLocator()
-    {
-        $this->module->amOnPage('/form/multiple_matches');
-        $this->module->click(['css' => '.link']);
-        $this->module->seeCurrentUrlEquals('/info');
-    }
 }

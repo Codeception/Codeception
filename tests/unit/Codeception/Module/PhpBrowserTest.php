@@ -575,4 +575,18 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/login');
         $this->module->fillField('email', 'email@example.org');
     }
+
+    public function testClickSelectsClickableElementFromMatches()
+    {
+        $this->module->amOnPage('/form/multiple_matches');
+        $this->module->click('Press Me!');
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickSelectsClickableElementFromMatchesUsingCssLocator()
+    {
+        $this->module->amOnPage('/form/multiple_matches');
+        $this->module->click(['css' => '.link']);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
 }
