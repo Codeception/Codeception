@@ -59,7 +59,13 @@ class Console extends Command
         $options['debug'] = true;
         $options['silent'] = true;
         $options['interactive'] = false;
-        $options['colors'] = isset($config['settings']['colors']) ? $config['settings']['colors'] : true;
+        if (isset($config['settings']['colors'])) {
+            $options['colors'] = (bool) $config['settings']['colors'];
+        } else {
+            $options['colors'] = DIRECTORY_SEPARATOR === '\\'
+                ? getenv('ANSICON') !== false || getenv('ConEmuANSI') === 'ON'
+                : function_exists('posix_isatty') && @posix_isatty(STDOUT);
+        }
 
         Debug::setOutput(new Output($options));
 
