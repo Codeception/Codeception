@@ -59,11 +59,7 @@ class Console extends Command
         $options['debug'] = true;
         $options['silent'] = true;
         $options['interactive'] = false;
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $options['colors'] = false;
-        } else {
-            $options['colors'] = true;
-        }
+        $options['colors'] = isset($config['settings']['colors']) ? $config['settings']['colors'] : true;
 
         Debug::setOutput(new Output($options));
 
