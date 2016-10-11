@@ -306,10 +306,6 @@ class WebDriver extends CodeceptionModule implements
     {
         if (!isset($this->webDriver)) {
             $this->_initialize();
-
-            if (!isset($this->webDriver)) {
-                $test->getMetadata()->setFail('WebDriver failed to initialise, please make sure that Selenium Server or PhantomJS is running');
-            }
         }
         $test->getMetadata()->setCurrent([
             'browser' => $this->config['browser'],
@@ -1139,7 +1135,9 @@ class WebDriver extends CodeceptionModule implements
             $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
             $this->initialWindowSize();
         } catch (\Exception $e) {
-            $this->debug('Please make sure that Selenium Server or PhantomJS is running : ' . $e->getMessage());
+            throw new ConnectionException(
+                $e->getMessage() . "\n \nPlease make sure that Selenium Server or PhantomJS is running."
+            );
         }
     }
 
