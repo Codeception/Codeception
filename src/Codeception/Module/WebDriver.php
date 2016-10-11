@@ -380,8 +380,8 @@ class WebDriver extends CodeceptionModule implements
             if ((! file_exists($outputDir . $filenamePng)) && (! file_exists($outputDir . $filenameHtml))) {
                 break;
             }
-            $filenamePng = mb_strcut($filename . '.' . $i, 0, 245, 'utf-8') . '.fail.png';
-            $filenameHtml = mb_strcut($filename . '.' . $i, 0, 244, 'utf-8') . '.fail.html';
+            $filenamePng = mb_strcut($filename, 0, 244 - strlen($i), 'utf-8') . ".$i.fail.png";
+            $filenameHtml = mb_strcut($filename, 0, 243 - strlen($i), 'utf-8') . ".$i.fail.html";
         }
         $this->_saveScreenshot($outputDir . $filenamePng);
         $this->_savePageSource($outputDir . $filenameHtml);
