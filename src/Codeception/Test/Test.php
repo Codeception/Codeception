@@ -65,17 +65,24 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     final public function run(\PHPUnit_Framework_TestResult $result = null)
     {
         $this->testResult = $result;
-        $result->startTest($this);
+
+        $status = self::STATUS_PENDING;
+        $time = 0;
+        $e = null;
+        
+        try {
+            $result->startTest($this);
+        } catch (\Exception $e) {
+            $status = self::STATUS_ERROR;
+            $this->ignored = true;
+        }
 
         foreach ($this->hooks as $hook) {
             if (method_exists($this, $hook.'Start')) {
                 $this->{$hook.'Start'}();
             }
         }
-
-        $status = self::STATUS_PENDING;
-        $time = 0;
-        $e = null;
+        
         if (!$this->ignored) {
             \PHP_Timer::start();
             try {
