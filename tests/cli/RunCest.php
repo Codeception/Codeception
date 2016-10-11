@@ -355,6 +355,9 @@ EOF
      */
     public function runTestWithAnnotationExamplesFromGroupFile(CliGuy $I)
     {
+        var_dump(file_get_contents('/repo/tests/data/sandbox/codeception.yml'));
+        var_dump(scandir('/repo/tests/data/sandbox/tests/_data/'));
+        var_dump(file_get_contents('/repo/tests/data/sandbox/tests/_data/groupFile1'));
         $I->executeCommand('run scenario -g groupFile1 --steps');
         $I->seeInShellOutput('OK (10 tests');
     }
