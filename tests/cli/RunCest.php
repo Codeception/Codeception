@@ -355,10 +355,7 @@ EOF
      */
     public function runTestWithAnnotationExamplesFromGroupFile(CliGuy $I)
     {
-        var_dump(file_get_contents(getcwd().'/codeception.yml'));
-        var_dump(scandir(getcwd().'/tests/_data/'));
-        var_dump(file_get_contents(getcwd().'/tests/_data/groupFile1'));
-        $I->executeCommand('run tests/scenario/ExamplesCest.php');
+        $I->executeCommand('run -g groupFile1');
         $I->seeInShellOutput('OK (10 tests');
     }
 
