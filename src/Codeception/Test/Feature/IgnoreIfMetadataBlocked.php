@@ -33,9 +33,5 @@ trait IgnoreIfMetadataBlocked
             $this->getTestResultObject()->addFailure($this, new \PHPUnit_Framework_IncompleteTestError((string)$this->getMetadata()->getIncomplete()), 0);
             return;
         }
-        if ($this->getMetadata()->getFail() !== null) {
-            $this->getTestResultObject()->addFailure($this, new \PHPUnit_Framework_AssertionFailedError((string)$this->getMetadata()->getFail()), 0);
-            return;
-        }
     }
 }
