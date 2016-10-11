@@ -6,6 +6,7 @@ use Codeception\Step;
 use Codeception\Step\Meta;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\TestInterface;
 
 class HTML extends CodeceptionResultPrinter
 {
@@ -132,16 +133,27 @@ class HTML extends CodeceptionResultPrinter
             $failure = $failTemplate->render();
         }
 
+        $png = '';
+        if ($test instanceof TestInterface) {
+            $reports = $test->getMetadata()->getReports();
+            if (isset($reports['png'])) {
+                $png = "<tr><td class='error screenshot'><img src='{$reports['png']}' alt='failure screenshot'></td></tr>";
+            }
+        }
+
         $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';
+
+        $testString = preg_replace('~^([\s\w\\\]+):\s~', '<span class="quiet">$1 &raquo;</span> ', ucfirst(Descriptor::getTestAsString($test)));
 
         $scenarioTemplate->setVar(
             [
                 'id'             => ++$this->id,
-                'name'           => ucfirst(Descriptor::getTestAsString($test)),
+                'name'           => $testString,
                 'scenarioStatus' => $scenarioStatus,
                 'steps'          => $stepsBuffer,
                 'toggle'         => $toggle,
                 'failure'        => $failure,
+                'png'            => $png,
                 'time'           => round($time, 2)
             ]
         );
