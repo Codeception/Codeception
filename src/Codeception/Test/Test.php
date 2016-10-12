@@ -72,8 +72,9 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         
         try {
             $result->startTest($this);
-        } catch (\Exception $e) {
-            $status = self::STATUS_ERROR;
+        } catch (\Exception $er) {
+            // failure is created: not a user's test code error so we don't need detailed stacktrace
+            $this->testResult->addError($this, new \PHPUnit_Framework_AssertionFailedError($er->getMessage()), 0);
             $this->ignored = true;
         }
 
