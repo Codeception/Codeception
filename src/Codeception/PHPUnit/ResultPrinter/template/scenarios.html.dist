@@ -71,6 +71,10 @@
              border-radius: 0px;
          }
 
+         .scenarioStepsTable .error a {
+             color: #eef;
+         }
+
          .scenarioStepsTable.substeps td {
              background: #bdc3c7;
          }

@@ -61,7 +61,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $filename = mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html';
-        $this->_savePageSource(codecept_output_dir() . $filename);
+        $this->_savePageSource($report = codecept_output_dir() . $filename);
+        $test->getMetadata()->addReport('html', $report);
     }
 
     public function _after(TestInterface $test)

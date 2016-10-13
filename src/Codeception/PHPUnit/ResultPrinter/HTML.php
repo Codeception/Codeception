@@ -134,11 +134,16 @@ class HTML extends CodeceptionResultPrinter
         }
 
         $png = '';
+        $html = '';
         if ($test instanceof TestInterface) {
             $reports = $test->getMetadata()->getReports();
             if (isset($reports['png'])) {
-                $png = "<tr><td class='error screenshot'><img src='{$reports['png']}' alt='failure screenshot'></td></tr>";
+                $png = "<tr><td class='error'><div class='screenshot'><img src='file://{$reports['png']}' alt='failure screenshot'></div></td></tr>";
             }
+            if (isset($reports['html'])) {
+                $html = "<tr><td class='error'>See <a href='file://{$reports['html']}' target='_blank'>HTML snapshot</a> of a failed page</td></tr>";
+            }
+
         }
 
         $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';
@@ -154,6 +159,7 @@ class HTML extends CodeceptionResultPrinter
                 'toggle'         => $toggle,
                 'failure'        => $failure,
                 'png'            => $png,
+                'html'            => $html,
                 'time'           => round($time, 2)
             ]
         );
