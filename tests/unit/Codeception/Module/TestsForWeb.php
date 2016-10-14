@@ -1560,20 +1560,20 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/form/anchor');
         $this->module->click('Hash Link');
-        $this->module->seeCurrentUrlEquals('/form/anchor#b');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
     }
 
     public function testClickHashButton()
     {
         $this->module->amOnPage('/form/anchor');
         $this->module->click('Hash Button');
-        $this->module->seeCurrentUrlEquals('/form/anchor#c');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
     }
 
     public function testSubmitHashForm()
     {
         $this->module->amOnPage('/form/anchor');
         $this->module->click('Hash Form');
-        $this->module->seeCurrentUrlEquals('/form/anchor#a');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
     }
 }

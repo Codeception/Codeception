@@ -189,7 +189,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $maxRedirects = ReflectionHelper::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
         $this->client->followRedirects(false);
         $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-        $this->debugResponse($this->client->getInternalRequest()->getUri());
+        $this->debugResponse($uri);
         return $this->redirectIfNecessary($result, $maxRedirects, 0);
     }
 
@@ -347,7 +347,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $anchor = $this->getCrawler()->selectLink($link);
         }
         if (count($anchor)) {
-            $this->amOnPage($anchor->getNode(0)->getAttribute('href'));
+            $this->openHrefFromDomNode($anchor->getNode(0));
             return;
         }
 
@@ -381,7 +381,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $type = $node->getAttribute('type');
 
             if ($tag === 'a') {
-                $this->amOnPage($node->getAttribute('href'));
+                $this->openHrefFromDomNode($node);
                 return true;
             } elseif (in_array($tag, ['input', 'button']) && in_array($type, ['submit', 'image'])) {
                 return $this->clickButton($node);
@@ -408,7 +408,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         while ($node->parentNode !== null) {
             $node = $node->parentNode;
             if ($node->tagName === 'a') {
-                $this->amOnPage($node->getAttribute('href'));
+                $this->openHrefFromDomNode($node);
                 return true;
             } elseif ($node->tagName === 'form') {
                 $this->proceedSubmitForm(
@@ -419,6 +419,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
         }
         return false;
+    }
+
+    private function openHrefFromDomNode(\DOMNode $node)
+    {
+        $this->amOnPage($this->getAbsoluteUrlFor($node->getAttribute('href')));
     }
 
     public function see($text, $selector = null)
@@ -748,7 +753,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected function getAbsoluteUrlFor($uri)
     {
         $currentUrl = $this->getRunningClient()->getHistory()->current()->getUri();
-        if (empty($uri) || $uri === '#') {
+        if (empty($uri) || $uri[0] === '#') {
             return $currentUrl;
         }
         return Uri::mergeUrls($currentUrl, $uri);
