@@ -3,6 +3,7 @@
 #### 2.2.6
 
 * [Laravel5][Lumen] Fixed issue that caused the `have` and `haveMultiple` methods not being available when using the ORM part of the modules. See #3587. By @janhenkgerritsen
+* [APC] Added `Codeception\Module\Apc` module to interact with the Alternative PHP Cache (APC) using either APCu or APC extension. By @sergeyklay
 
 #### 2.2.5
 
