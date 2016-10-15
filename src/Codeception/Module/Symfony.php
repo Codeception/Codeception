@@ -9,6 +9,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\Lib\Interfaces\PartedModule;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 /**
  * This module uses Symfony Crawler and HttpKernel to emulate requests and test response.
@@ -474,10 +475,16 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if ($profile = $this->getProfile()) {
             if ($profile->hasCollector('security')) {
                 if ($profile->getCollector('security')->isAuthenticated()) {
+                    $roles = $profile->getCollector('security')->getRoles();
+
+                    if ($roles instanceof Data) {
+                        $roles = $this->extractRawRoles($roles);
+                    }
+
                     $this->debugSection(
                         'User',
                         $profile->getCollector('security')->getUser()
-                        . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']'
+                        . ' [' . implode(',', $roles) . ']'
                     );
                 } else {
                     $this->debugSection('User', 'Anonymous');
@@ -493,6 +500,17 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
                 $this->debugSection('Time', $profile->getCollector('timer')->getTime());
             }
         }
+    }
+
+    /**
+     * @param Data $data
+     * @return array
+     */
+    private function extractRawRoles(Data $data)
+    {
+        $raw = $data->getRawData();
+
+        return isset($raw[1]) ? $raw[1] : [];
     }
 
     /**
