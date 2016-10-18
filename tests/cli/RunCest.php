@@ -395,10 +395,4 @@ EOF
         $I->seeInShellOutput('I see file found "dummy.suite.yml"');
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
     }
-
-    public function runTestWithAnnotationExamplesFromGroupFileTest(CliGuy $I)
-    {
-        $I->executeCommand('run scenario -g groupFileTest1 --steps');
-        $I->seeInShellOutput('OK (3 tests');
-    }
 }
