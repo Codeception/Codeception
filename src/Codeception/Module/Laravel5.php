@@ -154,7 +154,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             // Must be called before database transactions are started
             $this->callArtisan('migrate');
 
-            if ($this->config['run_database_seeds']){
+            if ($this->config['run_database_seeds']) {
                 $this->callArtisan('db:seed');
             }
         }
