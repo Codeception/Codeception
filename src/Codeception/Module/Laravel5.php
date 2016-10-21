@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  *
  * * cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
  * * run_database_migrations: `boolean`, default `false` - enable to run database migrations before each test.
+ * * database_migrations_path: `string`, default `` - the path to the database migrations relative to the root of the application
  * * environment_file: `string`, default `.env` - The .env file to load for the tests.
  * * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
  * * root: `string`, default `` - Root path of our application.
@@ -101,6 +102,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             [
                 'cleanup' => true,
                 'run_database_migrations' => false,
+                'database_migrations_path' => '',
                 'environment_file' => '.env',
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
@@ -151,7 +153,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
         if ($this->config['run_database_migrations']) {
             // Must be called before database transactions are started
-            $this->callArtisan('migrate');
+            $this->callArtisan('migrate', ['--path' => $this->config['database_migrations_path']]);
         }
 
         if (isset($this->app['db']) && $this->config['cleanup']) {
