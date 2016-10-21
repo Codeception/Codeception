@@ -101,6 +101,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             [
                 'cleanup' => true,
                 'run_database_migrations' => false,
+                'run_database_seeds' => false,
                 'environment_file' => '.env',
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
@@ -152,6 +153,10 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         if ($this->config['run_database_migrations']) {
             // Must be called before database transactions are started
             $this->callArtisan('migrate');
+
+            if ($this->config['run_database_seeds']) {
+                $this->callArtisan('db:seed');
+            }
         }
 
         if (isset($this->app['db']) && $this->config['cleanup']) {
