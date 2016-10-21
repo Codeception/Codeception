@@ -23,7 +23,7 @@ class WebDriverNot extends WebDriver
 
         $output = "There was $selectorString element";
         $output .= $this->uriMessage("on page");
-        $output .= str_replace($this->string, "<bold>{$this->string}</bold>", $this->nodesList($nodes, $this->string));
+        $output .= $this->nodesList($nodes, $this->string);
         $output .= "\ncontaining '{$this->string}'";
 
         throw new \PHPUnit_Framework_ExpectationFailedException(

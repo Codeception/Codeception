@@ -55,7 +55,13 @@ php codecept run
 
 This will launch test suites for all 3 applications and merge the reports from all of them. Basically that would be very useful when you run your tests on Continuous Integration server and you want to get one report in JUnit and HTML format. Codecoverage report will be merged too.
 
-If your applications uses same helpers, follow the next section of this chapter.
+If you want to run specific suite from application you can execute:
+
+```
+php codecept run unit -c frontend
+```
+Where `unit` is the name of suite and with `-c` you can specify path to `codeception.yml` config to use. In this example we assume that there is `frontend/codeception.yml` config and we execute unit tests only for that app.
+
 
 ## Extension
 

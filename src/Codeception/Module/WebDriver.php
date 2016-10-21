@@ -294,23 +294,6 @@ class WebDriver extends CodeceptionModule implements
         $this->connectionTimeoutInMs = $this->config['connection_timeout'] * 1000;
         $this->requestTimeoutInMs = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
-        try {
-            $this->webDriver = RemoteWebDriver::create(
-                $this->wd_host,
-                $this->capabilities,
-                $this->connectionTimeoutInMs,
-                $this->requestTimeoutInMs,
-                $this->httpProxy,
-                $this->httpProxyPort
-            );
-            $this->sessions[] = $this->_backupSession();
-        } catch (WebDriverCurlException $e) {
-            throw new ConnectionException(
-                $e->getMessage() . "\n \nPlease make sure that Selenium Server or PhantomJS is running."
-            );
-        }
-        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
-        $this->initialWindowSize();
     }
 
     public function _conflicts()
@@ -321,7 +304,7 @@ class WebDriver extends CodeceptionModule implements
     public function _before(TestInterface $test)
     {
         if (!isset($this->webDriver)) {
-            $this->_initialize();
+            $this->_initializeSession();
         }
         $test->getMetadata()->setCurrent([
             'browser' => $this->config['browser'],
@@ -374,8 +357,10 @@ class WebDriver extends CodeceptionModule implements
         $this->debugWebDriverLogs();
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
-        $this->_saveScreenshot($outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
-        $this->_savePageSource($outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
+        $this->_saveScreenshot($report = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
+        $test->getMetadata()->addReport('png', $report);
+        $this->_savePageSource($report = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
+        $test->getMetadata()->addReport('html', $report);
         $this->debug("Screenshot and page source were saved into '$outputDir' dir");
     }
 
@@ -384,6 +369,10 @@ class WebDriver extends CodeceptionModule implements
      */
     public function debugWebDriverLogs()
     {
+        if (!isset($this->webDriver)) {
+            $this->debug('WebDriver::debugWebDriverLogs method has been called when webDriver is not set');
+            return;
+        }
         try {
             // Dump out latest Selenium logs
             $logs = $this->webDriver->manage()->getAvailableLogTypes();
@@ -398,10 +387,8 @@ class WebDriver extends CodeceptionModule implements
                 }
                 $this->debugSection("Selenium {$logType} Logs", "\n" . $this->formatLogEntries($logEntries));
             }
-        } catch (UnknownServerException $e) {
-            // This only happens with the IE driver, which doesn't support retrieving logs yet:
-            // https://github.com/SeleniumHQ/selenium/issues/468
-            $this->debug("Unable to retrieve Selenium logs");
+        } catch (\Exception $e) {
+            $this->debug('Unable to retrieve Selenium logs : ' . $e->getMessage());
         }
     }
 
@@ -439,7 +426,7 @@ class WebDriver extends CodeceptionModule implements
             $this->_loadSession($session);
             try {
                 $this->webDriver->quit();
-            } catch (UnknownServerException $e) {
+            } catch (\Exception $e) {
                 // Session already closed so nothing to do
             }
             unset($this->webDriver);
@@ -504,18 +491,21 @@ class WebDriver extends CodeceptionModule implements
     {
         $url = $this->webDriver->getCurrentURL();
         if ($url == 'about:blank') {
-            throw new ModuleException($this, "Current url is blank, no page was opened");
+            throw new ModuleException($this, 'Current url is blank, no page was opened');
         }
         return Uri::retrieveUri($url);
     }
 
     public function _saveScreenshot($filename)
     {
-        if ($this->webDriver !== null) {
+        if (!isset($this->webDriver)) {
+            $this->debug('WebDriver::_saveScreenshot method has been called when webDriver is not set');
+            return;
+        }
+        try {
             $this->webDriver->takeScreenshot($filename);
-        } else {
-            codecept_debug('WebDriver::_saveScreenshot method has been called when webDriver is not set');
-            codecept_debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+        } catch (\Exception $e) {
+            $this->debug('Unable to retrieve screenshot from Selenium : ' . $e->getMessage());
         }
     }
 
@@ -530,7 +520,15 @@ class WebDriver extends CodeceptionModule implements
      */
     public function _savePageSource($filename)
     {
-        file_put_contents($filename, $this->webDriver->getPageSource());
+        if (!isset($this->webDriver)) {
+            $this->debug('WebDriver::_savePageSource method has been called when webDriver is not set');
+            return;
+        }
+        try {
+            file_put_contents($filename, $this->webDriver->getPageSource());
+        } catch (\Exception $e) {
+            $this->debug('Unable to retrieve source page from Selenium : ' . $e->getMessage());
+        }
     }
 
     /**
@@ -1129,9 +1127,21 @@ class WebDriver extends CodeceptionModule implements
 
     public function _initializeSession()
     {
-        $this->webDriver = RemoteWebDriver::create($this->wd_host, $this->capabilities);
-        $this->sessions[] = $this->_backupSession();
-        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+        try {
+            $this->webDriver = RemoteWebDriver::create(
+                $this->wd_host,
+                $this->capabilities,
+                $this->connectionTimeoutInMs,
+                $this->requestTimeoutInMs,
+                $this->httpProxy,
+                $this->httpProxyPort
+            );
+            $this->sessions[] = $this->_backupSession();
+            $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+            $this->initialWindowSize();
+        } catch (WebDriverCurlException $e) {
+            throw new ConnectionException("Can't connect to Webdriver at {$this->wd_host}. Please make sure that Selenium Server or PhantomJS is running.");
+        }
     }
 
     public function _loadSession($session)
