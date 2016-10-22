@@ -112,7 +112,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'run_database_migrations' => false,
                 'run_database_seeder' => false,
                 'database_migrations_path' => '',
-                'database_seeder_class' => ['DatabaseSeeder'],
+                'database_seeder_class' => 'DatabaseSeeder',
                 'environment_file' => '.env',
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
@@ -168,9 +168,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
         if ($this->config['run_database_seeder']) {
             // Must be called before database transactions are started
-            foreach ($this->config['database_seeder_class'] as $seeder_class) {
-                $this->callArtisan('db:seed', ['--class' => $seeder_class]);
-            }
+            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class']]);
         }
 
         if (isset($this->app['db']) && $this->config['cleanup']) {
