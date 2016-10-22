@@ -28,6 +28,18 @@ php codecept generate:test unit Example
 
 Both tests will create a new `ExampleTest` file located in `tests/unit` directory.
 
+As always, you can run the just created test with this command:
+
+```bash
+php codecept run unit ExampleTest
+```
+
+or simply run the whole set of unit tests with this:
+
+```bash
+php codecept run unit
+```
+
 A test created by `generate:test` command will look like this:
 
 ```php
