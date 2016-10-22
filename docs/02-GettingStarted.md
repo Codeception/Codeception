@@ -86,7 +86,7 @@ I click 'Login'
 I see 'Hello, davert'
 ```
 
-Codeception generate this text represenation from PHP code by executing:
+Codeception generates this text representation from PHP code by executing:
 
 ``` bash
 php codecept generate:scenarios
@@ -105,13 +105,13 @@ modules:
         - \Helper\Acceptance
 ```
 
-After we configured the URL we can run this test with the `run` command:
+After configuring the URL we can run this test with the `run` command:
 
 ``` bash
 php codecept run
 ```
 
-Here is the output we should see:
+This is the output we should see:
 
 ``` bash
 Acceptance Tests (1) -------------------------------
@@ -152,8 +152,7 @@ Time: 0 seconds, Memory: 21.00Mb
 OK (1 test, 1 assertions)
 ```
 
-This simple test can be extended to a complete scenario of site usage. 
-So by emulating the user's actions you can test any of your websites.
+This simple test can be extended to a complete scenario of site usage therefore, by emulating the user's actions, you can test any of your websites.
 
 Give it a try!
 
