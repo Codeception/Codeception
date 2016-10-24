@@ -45,6 +45,8 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  *   which will be rolled back at the end of each test.
  * * run_database_migrations: `boolean`, default `false` - run database migrations before each test.
  * * database_migrations_path: `string`, default `` - path to the database migrations, relative to the root of the application.
+ * * run_database_seeder: `boolean`, default `false` - run database seeder before each test.
+ * * database_seeder_class: `string`, default `` - database seeder class name.
  * * environment_file: `string`, default `.env` - the environment file to load for the tests.
  * * bootstrap: `string`, default `bootstrap/app.php` - relative path to app.php config file.
  * * root: `string`, default `` - root path of the application.
@@ -110,9 +112,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             [
                 'cleanup' => true,
                 'run_database_migrations' => false,
-                'run_database_seeder' => false,
                 'database_migrations_path' => '',
-                'database_seeder_class' => 'DatabaseSeeder',
+                'run_database_seeder' => false,
+                'database_seeder_class' => '',
                 'environment_file' => '.env',
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
@@ -161,13 +163,12 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         $this->client = new LaravelConnector($this);
 
+        // Database migrations and seeder should run before database cleanup transaction starts
         if ($this->config['run_database_migrations']) {
-            // Must be called before database transactions are started
             $this->callArtisan('migrate', ['--path' => $this->config['database_migrations_path']]);
         }
 
         if ($this->config['run_database_seeder']) {
-            // Must be called before database transactions are started
             $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class']]);
         }
 
