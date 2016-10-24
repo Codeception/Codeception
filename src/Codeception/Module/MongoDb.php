@@ -140,7 +140,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
                 $this->isDumpFileEmpty = true;
                 $dumpDir = dir($this->dumpFile);
                 while (false !== ($entry = $dumpDir->read())) {
-                    if ($entity !== '..' && $entity !== '.') {
+                    if ($entry !== '..' && $entry !== '.') {
                         $this->isDumpFileEmpty = false;
                         break;
                     }
