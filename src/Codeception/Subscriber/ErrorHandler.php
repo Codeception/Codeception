@@ -17,12 +17,12 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var bool $stopped to keep shutdownHandler from possible looping.
      */
-    private static $stopped = false;
+    private $stopped = false;
 
     /**
      * @var bool $initialized to avoid double error handler substitution
      */
-    private static $initialized = false;
+    private $initialized = false;
 
     private $deprecationsInstalled = false;
     private $oldHandler;
@@ -45,7 +45,7 @@ class ErrorHandler implements EventSubscriberInterface
         }
         error_reporting($this->errorLevel);
 
-        if (self::$initialized) {
+        if ($this->initialized) {
             return;
         }
         // We must register shutdown function before deprecation error handler to restore previous error handler
@@ -53,7 +53,7 @@ class ErrorHandler implements EventSubscriberInterface
         register_shutdown_function([$this, 'shutdownHandler']);
         $this->registerDeprecationErrorHandler();
         $this->oldHandler = set_error_handler([$this, 'errorHandler']);
-        self::$initialized = true;
+        $this->initialized = true;
     }
 
     public function errorHandler($errno, $errstr, $errfile, $errline, $context)
@@ -81,10 +81,10 @@ class ErrorHandler implements EventSubscriberInterface
             restore_error_handler();
         }
 
-        if (self::$stopped) {
+        if ($this->stopped) {
             return;
         }
-        self::$stopped = true;
+        $this->stopped = true;
         $error = error_get_last();
         if (!is_array($error)) {
             return;
