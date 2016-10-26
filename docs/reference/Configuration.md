@@ -6,7 +6,7 @@ Configuration file `codeception.yml` is generate by `codecept bootstrap` command
 
 Here are global options you can change inside configuration:
 
-* `actor: Tester`: changes suffix for Actor classes. This defines a reult to generate new test suites. If you change `Tester` to `Ninja`, and generate new `api` test suite, you will get `ApiNinja` tester class inside tests.
+* `actor: Tester`: changes suffix for Actor classes. This defines a rule to generate new test suites. If you change `Tester` to `Ninja`, and generate new `api` test suite, you will get `ApiNinja` actor class.
 * `namespace`: set a namespace for tests. All new tests and support classes will be generated under that namespace. Allows to configure [multiple test setups for one runner](http://codeception.com/docs/08-Customization#Namespaces).
 * `include: []`: include additional Codeception configurations for [multiple applications setup](http://codeception.com/docs/08-Customization#Namespaces).
 * `paths` directories used by Codeception. Default values are:
@@ -29,7 +29,7 @@ paths:
     envs: tests/_envs
 ```
 
-* `settings` provide additional options for test runner. They may dramatically change the way Codeception is executed. For instance, take a note of `shuffle` option which allows to randomize tests execution order and `lint` option that toggles parsing a test file (using `php -l`) before loading it.
+* `settings`: provide additional options for test runner. They may dramatically change the way Codeception is executed. For instance, take a note of `shuffle` option which allows to randomize tests execution order and `lint` option that toggles parsing a test file (using `php -l`) before loading it.
 
 ```yaml
 settings:
@@ -87,8 +87,8 @@ modules:
 
 Each generated suite have its own configuration inside directory set by `paths: tests: ` configuration option in `codeception.yml`. Each suite configuration is named like `suitename.suite.yml`. It allows to enable and configure modules, and more.
 
-* `class_name`: name of the actor class in this suite. 
-* `modules:` list of enabled modules with their configuration.
+* `class_name`: name of the actor class for current suite. 
+* `modules`: list of enabled modules with their configuration.
 
 ```yaml
 modules:
@@ -105,7 +105,7 @@ modules:
         # by convention their names start with \        
         - \Helper\Acceptance
 
-    # additional modules config
+    # additional modules configuration
     # can be used for modules which are not currently enabled
     config:
         WebDriver:
@@ -118,8 +118,25 @@ modules:
 ```
 
 
-* `namespace:` default namespace of actor, support classes and tests.
+* `namespace`: default namespace of actor, support classes and tests.
+* `env`: override any configuration per [environment](http://codeception.com/docs/07-AdvancedUsage#Environments).
 * `groups`: [groups](http://codeception.com/docs/07-AdvancedUsage#Groups) with the list of tests of for corresponding group.
 * `coverage`: pre suite [CodeCoverage](http://codeception.com/docs/11-Codecoverage#Configuration) settings.
 * `gherkin`: per suite [BDD Gherkin](http://codeception.com/docs/07-BDD#Configuration) settings.
 * `error_level`: [error level](http://codeception.com/docs/04-FunctionalTests#Error-Reporting) for runner in current suite. Should be specified for unit, integration, functional tests. Passes value to `error_reporting` function.
+
+
+## Config Templates (dist)
+
+To provide same configuration templates for development team you can creare `codeception.dist.yml` config which will be loaded before `codeception.yml`. Dist config will provide shared options whil local `codeception.yml` will override them per user basis. This way `codeception.yml` should be ignored by VCS system.
+
+For suite configuration template configs are also availble. Rename `suitename.suite.yml` to `suitename.dist.yml` to make a dist config.
+
+
+Configuration loading order:
+
+1. `codeception.dist.yml`
+2. `codeception.yml`
+3. `acceptance.suite.dist.yml`
+4. `acceptance.suite.yml`
+5. environment config
