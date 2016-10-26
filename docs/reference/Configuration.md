@@ -1,13 +1,19 @@
 # Configuration
 
-Default your global configuration file will be this:
+## Global Configuration
+
+Configuration file `codeception.yml` is generate by `codecept bootstrap` command. It has preconfigured settings you can change.
+
+Here are global options you can change inside condifuration
+
+* `actor: Tester`: affects the naming Actor classes. This sets the suffix is used to generate new test suites. If you change `Tester` to `Ninja`, and generate new `api` test suitem, you will get `ApiNinja` tester class inside tests.
+* `namespace`: set a namespace for tests. All new tests and support classes will be generated under that namespace. Allows to configure [multiple test setups for one runner](http://codeception.com/docs/08-Customization#Namespaces).
+* `include: []`: include additional Codeception configurations for [multiple applications setup](http://codeception.com/docs/08-Customization#Namespaces).
+* `paths` directories used by Codeception. Default values are:
 
 ```yaml
-# can be changed while bootstrapping project
-actor: Tester 
-
 paths:
-    # where the modules stored
+    # where the tests stored
     tests: tests
 
     # directory for fixture data    
@@ -21,15 +27,18 @@ paths:
     
     # directory for environment configuration
     envs: tests/_envs
+```
 
+* `settings` provide additional options for test runner. They may dramatically change the way Codeception is executed. For instance, take a note of `shuffle` option which allows to randomize tests execution order and `lint` option that toggles parsing a test file (using `php -l`) before loading it.
+
+```yaml
 settings:
 
     # name of bootstrap that will be used
     # each bootstrap file should be 
     # inside a suite directory.
-
     bootstrap: _bootstrap.php
-    
+
     # enable/disable syntax of test files before loading
     # for php < 7 exec('php -l') is used
     # disable if you need to speed up tests execution
@@ -42,6 +51,11 @@ settings:
     # use [ANSICON](http://adoxa.110mb.com/ansicon/) to colorize output.
     colors: true
 
+    # Generate XML JUnit report using strict schema
+    # Avoid putting additional report fields like steps or scenario names tot it
+    # Required for XML reports on Jenkins CI
+    strict_xml: false
+
     # Tests (especially functional) can take a lot of memory
     # We set a high limit for them by default.
     memory_limit: 1024M
@@ -49,8 +63,11 @@ settings:
     # This value controls whether PHPUnit attempts to backup global variables
     # See https://phpunit.de/manual/current/en/appendixes.annotations.html#appendixes.annotations.backupGlobals
     backup_globals: true
+```
 
-# Global modules configuration.    
+* `modules`: allows to create share modules configuration for all included suites. However, module is can not be enabled from global config. By default sample configuration for Db module is included.
+
+```yaml
 modules:
     config:
         Db:
@@ -60,7 +77,15 @@ modules:
             dump: tests/_data/dump.sql
 ```
 
-Suite configuration `acceptance.suite.yml`
+* `extensions`: allows to enable and configure [Codeception extensions](http://codeception.com/docs/08-Customization#Extension), [Group Objects](http://codeception.com/docs/08-Customization#Group-Objects), and [Custom Commands](http://codeception.com/docs/08-Customization#Custom-Commands).
+* `reporters`: allows to [change default reporters](http://codeception.com/docs/08-Customization#Custom-Reporters) of Codeception
+* `coverage`: [CodeCoverage](http://codeception.com/docs/11-Codecoverage#Configuration) settings.
+* `params`: allows to pass [external parameters](http://codeception.com/docs/06-ModulesAndHelpers#Dynamic-Configuration-With-Params) into module configuration.
+* `gherkin`: BDD-specific [Gherkin options](http://codeception.com/docs/07-BDD#Configuration).
+
+## Suite Configuration
+
+Suite configuration acceptance.yml
 
 ```yaml
 class_name: AcceptanceTester
