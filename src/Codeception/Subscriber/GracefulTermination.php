@@ -1,11 +1,11 @@
 <?php
+declare (ticks = 1);
 namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-declare (ticks = 1);
 
 class GracefulTermination implements EventSubscriberInterface
 {
@@ -18,6 +18,9 @@ class GracefulTermination implements EventSubscriberInterface
 
     public function handleSuite(SuiteEvent $event)
     {
+        if (PHP_MAJOR_VERSION === 7 and PHP_MINOR_VERSION === 0) {
+            return; // skip for PHP 7.0: https://github.com/Codeception/Codeception/issues/3607
+        }
         if (function_exists(self::SIGNAL_FUNC)) {
             pcntl_signal(SIGTERM, [$this, 'terminate']);
             pcntl_signal(SIGINT, [$this, 'terminate']);
