@@ -405,4 +405,14 @@ EOF
         $I->seeInShellOutput('I see file found "dummy.suite.yml"');
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
     }
+
+    public function overrideConfigOptionsToChangeReporter(CliGuy $I)
+    {
+        if (!class_exists('PHPUnit_Util_Log_TeamCity')) {
+            throw new \Codeception\Exception\Skip('Reporter does not exist for this PHPUnit version');
+        }
+        $I->executeCommand('run scenario --report -o "reporters: report: PHPUnit_Util_Log_TeamCity" --no-exit');
+        $I->seeInShellOutput('##teamcity[testStarted');
+        $I->dontSeeInShellOutput('............Ok');
+    }
 }

@@ -13,6 +13,14 @@ class ExtensionsCest
         $I->seeInShellOutput('Modules used: Filesystem, DumbHelper');
     }
 
+    public function loadExtensionByOverride(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run tests/dummy/FileExistsCept.php -o "extensions: enabled: [\Codeception\Extension\SimpleOutput]"');
+        $I->dontSeeInShellOutput("Check config");
+        $I->seeInShellOutput('[+] FileExistsCept');
+    }
+
     public function reRunFailedTests(CliGuy $I)
     {
         $ds = DIRECTORY_SEPARATOR;
