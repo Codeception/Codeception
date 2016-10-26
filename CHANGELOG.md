@@ -2,6 +2,9 @@
 
 #### 2.2.6
 
+* Ability to update config on run with `--override` (`-o`) option. Usage Examples:
+    * `codecept run -o "settings: shuffle: true"`: enable shuffle
+    * `codecept run -o "settings: lint: false"`: disable linting
 * [Laravel5] Add `run_database_seeder` configuration option. See #3625 and #3630. By @Bouhnosaure
 * [Laravel5] Add `database_migrations_path` configuration option. See #3628. By @janhenkgerritsen
 * [Laravel5][Lumen] Fixed issue that caused the `have` and `haveMultiple` methods not being available when using the ORM part of the modules. See #3587. By @janhenkgerritsen
