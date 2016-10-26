@@ -22,6 +22,6 @@ class Logger extends \yii\log\Logger
         if (strpos($category, 'yii\db\Command')===0) {
             return; // don't log queries
         }
-        Debug::debug("[$category] $message ");
+        Debug::debug("[$category] " .  \yii\helpers\VarDumper::export($message));
     }
 }
