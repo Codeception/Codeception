@@ -2,7 +2,14 @@
 
 #### 2.2.6
 
+* [Laravel5] Add `run_database_seeder` configuration option. See #3625 and #3630. By @Bouhnosaure
+* [Laravel5] Add `database_migrations_path` configuration option. See #3628. By @janhenkgerritsen
 * [Laravel5][Lumen] Fixed issue that caused the `have` and `haveMultiple` methods not being available when using the ORM part of the modules. See #3587. By @janhenkgerritsen
+* [APC] Added `Codeception\Module\Apc` module to interact with the Alternative PHP Cache (APC) using either APCu or APC extension. By @sergeyklay
+* [PhpBrowser][Frameworks] Fixed clicking on a button inside the link
+* [PhpBrowser][Frameworks] Click on the first clickable item when clickBySelector is used
+* [PhpBrowser][Frameworks] Anchor is no longer sent to server
+* Removed tags from see/dontSee output and friends output
 
 #### 2.2.5
 

@@ -11,8 +11,11 @@
 
 {steps}
          {failure}
-
+         {png}
+         {html}
      </table>
+
+
     </td>
    </tr>
 

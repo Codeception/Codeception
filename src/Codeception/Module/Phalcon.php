@@ -32,7 +32,7 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  *
  * * Maintainer: **Serghei Iakovlev**
  * * Stability: **stable**
- * * Contact: sadhooklay@gmail.com
+ * * Contact: serghei@phalconphp.com
  *
  * ## Example
  *

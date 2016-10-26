@@ -21,6 +21,8 @@ class Di
 
     public function get($className)
     {
+        // normalize namespace
+        $className = ltrim($className, '\\');
         return isset($this->container[$className]) ? $this->container[$className] : null;
     }
 

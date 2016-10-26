@@ -30,20 +30,27 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  *
  * ## Config
  *
- * * cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
- * * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
- * * root: `string`, default `` - Root path of our application.
- * * packages: `string`, default `workbench` - Root path of application packages (if any).
- * * url: `string`, default `http://localhost` - The application URL
+ * * cleanup: `boolean`, default `true` - all database queries will be run in a transaction,
+ *   which will be rolled back at the end of each test.
+ * * bootstrap: `string`, default `bootstrap/app.php` - relative path to app.php config file.
+ * * root: `string`, default `` - root path of the application.
+ * * packages: `string`, default `workbench` - root path of application packages (if any).
+ * * url: `string`, default `http://localhost` - the application URL
  *
  * ## API
  *
- * * app - `\Laravel\Lumen\Application` instance
- * * client - `\Symfony\Component\BrowserKit\Client` instance
+ * * app - `\Laravel\Lumen\Application`
+ * * config - `array`
  *
  * ## Parts
  *
- * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+ * * ORM - only include the database methods of this module:
+ *     * have
+ *     * haveMultiple
+ *     * haveRecord
+ *     * grabRecord
+ *     * seeRecord
+ *     * dontSeeRecord
  */
 class Lumen extends Framework implements ActiveRecord, PartedModule
 {

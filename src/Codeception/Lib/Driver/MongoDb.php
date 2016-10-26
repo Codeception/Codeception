@@ -95,7 +95,7 @@ class MongoDb
      */
     public function __construct($dsn, $user, $password)
     {
-        $this->legacy = class_exists('\\MongoClient');
+        $this->legacy = class_exists('\\MongoClient') && strpos(\MongoClient::VERSION, 'mongofill') === false;
 
         /* defining DB name */
         $this->dbName = substr($dsn, strrpos($dsn, '/') + 1);

@@ -368,11 +368,12 @@ class Run extends Command
         $tokens = explode(' ', $request);
         foreach ($tokens as $token) {
             $token = preg_replace('~=.*~', '', $token); // strip = from options
-            if (strpos($token, '--') === 0 && $token !== '--') {
-                $options[] = substr($token, 2);
-                continue;
+            if ($token == '--') {
+                break; // there should be no options after ' -- ', only arguments
             }
-            if (strpos($token, '-') === 0) {
+            if (substr($token, 0, 2) === '--') {
+                $options[] = substr($token, 2);
+            } elseif ($token[0] === '-') {
                 $shortOption = substr($token, 1);
                 $options[] = $this->getDefinition()->getOptionForShortcut($shortOption)->getName();
             }

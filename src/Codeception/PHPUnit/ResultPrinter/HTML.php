@@ -6,6 +6,7 @@ use Codeception\Step;
 use Codeception\Step\Meta;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\TestInterface;
 
 class HTML extends CodeceptionResultPrinter
 {
@@ -132,16 +133,33 @@ class HTML extends CodeceptionResultPrinter
             $failure = $failTemplate->render();
         }
 
+        $png = '';
+        $html = '';
+        if ($test instanceof TestInterface) {
+            $reports = $test->getMetadata()->getReports();
+            if (isset($reports['png'])) {
+                $png = "<tr><td class='error'><div class='screenshot'><img src='file://{$reports['png']}' alt='failure screenshot'></div></td></tr>";
+            }
+            if (isset($reports['html'])) {
+                $html = "<tr><td class='error'>See <a href='file://{$reports['html']}' target='_blank'>HTML snapshot</a> of a failed page</td></tr>";
+            }
+
+        }
+
         $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';
+
+        $testString = preg_replace('~^([\s\w\\\]+):\s~', '<span class="quiet">$1 &raquo;</span> ', ucfirst(Descriptor::getTestAsString($test)));
 
         $scenarioTemplate->setVar(
             [
                 'id'             => ++$this->id,
-                'name'           => ucfirst(Descriptor::getTestAsString($test)),
+                'name'           => $testString,
                 'scenarioStatus' => $scenarioStatus,
                 'steps'          => $stepsBuffer,
                 'toggle'         => $toggle,
                 'failure'        => $failure,
+                'png'            => $png,
+                'html'            => $html,
                 'time'           => round($time, 2)
             ]
         );

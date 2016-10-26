@@ -294,7 +294,6 @@ class WebDriver extends CodeceptionModule implements
         $this->connectionTimeoutInMs = $this->config['connection_timeout'] * 1000;
         $this->requestTimeoutInMs = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
-        $this->_initializeSession();
     }
 
     public function _conflicts()
@@ -305,7 +304,7 @@ class WebDriver extends CodeceptionModule implements
     public function _before(TestInterface $test)
     {
         if (!isset($this->webDriver)) {
-            $this->_initialize();
+            $this->_initializeSession();
         }
         $test->getMetadata()->setCurrent([
             'browser' => $this->config['browser'],
@@ -358,8 +357,10 @@ class WebDriver extends CodeceptionModule implements
         $this->debugWebDriverLogs();
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
-        $this->_saveScreenshot($outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
-        $this->_savePageSource($outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
+        $this->_saveScreenshot($report = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
+        $test->getMetadata()->addReport('png', $report);
+        $this->_savePageSource($report = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
+        $test->getMetadata()->addReport('html', $report);
         $this->debug("Screenshot and page source were saved into '$outputDir' dir");
     }
 
@@ -1138,10 +1139,8 @@ class WebDriver extends CodeceptionModule implements
             $this->sessions[] = $this->_backupSession();
             $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
             $this->initialWindowSize();
-        } catch (\Exception $e) {
-            throw new ConnectionException(
-                $e->getMessage() . "\n \nPlease make sure that Selenium Server or PhantomJS is running."
-            );
+        } catch (WebDriverCurlException $e) {
+            throw new ConnectionException("Can't connect to Webdriver at {$this->wd_host}. Please make sure that Selenium Server or PhantomJS is running.");
         }
     }
 

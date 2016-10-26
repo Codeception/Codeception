@@ -61,7 +61,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $filename = mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html';
-        $this->_savePageSource(codecept_output_dir() . $filename);
+        $this->_savePageSource($report = codecept_output_dir() . $filename);
+        $test->getMetadata()->addReport('html', $report);
     }
 
     public function _after(TestInterface $test)
@@ -340,27 +341,20 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $this->clickByLocator($link);
             return;
         }
+
         $anchor = $this->strictMatch(['link' => $link]);
         if (!count($anchor)) {
             $anchor = $this->getCrawler()->selectLink($link);
         }
         if (count($anchor)) {
-            $this->crawler = $this->clientClick($anchor->first()->link());
-            $this->forms = [];
+            $this->openHrefFromDomNode($anchor->getNode(0));
             return;
         }
 
         $buttonText = str_replace('"', "'", $link);
         $button = $this->crawler->selectButton($buttonText);
-        if (count($button)) {
-            $buttonValue = [];
-            if (strval($button->attr('name')) !== '' && $button->attr('value') !== null) {
-                $buttonValue = [$button->attr('name') => $button->attr('value')];
-            }
-            $this->proceedSubmitForm(
-                $button->parents()->filter('form')->first(),
-                $buttonValue
-            );
+
+        if (count($button) && $this->clickButton($button->getNode(0))) {
             return;
         }
 
@@ -371,6 +365,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
     }
 
+    /**
+     * @param $link
+     * @return bool
+     */
     protected function clickByLocator($link)
     {
         $nodes = $this->match($link);
@@ -379,24 +377,53 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
 
         foreach ($nodes as $node) {
-            $tag = $node->nodeName;
+            $tag = $node->tagName;
             $type = $node->getAttribute('type');
+
             if ($tag === 'a') {
-                $this->crawler = $this->clientClick($nodes->first()->link());
-                $this->forms = [];
-                break;
+                $this->openHrefFromDomNode($node);
+                return true;
             } elseif (in_array($tag, ['input', 'button']) && in_array($type, ['submit', 'image'])) {
-                $buttonValue = [];
-                if (strval($nodes->first()->attr('name')) !== '' && $nodes->first()->attr('value') !== null) {
-                    $buttonValue = [$nodes->first()->attr('name') => $nodes->first()->attr('value')];
-                }
-                $this->proceedSubmitForm(
-                    $nodes->parents()->filter('form')->first(),
-                    $buttonValue
-                );
-                break;
+                return $this->clickButton($node);
             }
         }
+    }
+
+
+    /**
+     * Clicks the link or submits the form when the button is clicked
+     * @param \DOMNode $node
+     * @return boolean clicked something
+     */
+    private function clickButton(\DOMNode $node)
+    {
+        $formParams = [];
+        $buttonName = (string)$node->getAttribute('name');
+        $buttonValue = $node->getAttribute('value');
+
+        if ($buttonName !== '' && $buttonValue !== null) {
+            $formParams = [$buttonName => $buttonValue];
+        }
+
+        while ($node->parentNode !== null) {
+            $node = $node->parentNode;
+            if ($node->tagName === 'a') {
+                $this->openHrefFromDomNode($node);
+                return true;
+            } elseif ($node->tagName === 'form') {
+                $this->proceedSubmitForm(
+                    new Crawler($node),
+                    $formParams
+                );
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function openHrefFromDomNode(\DOMNode $node)
+    {
+        $this->amOnPage($this->getAbsoluteUrlFor($node->getAttribute('href')));
     }
 
     public function see($text, $selector = null)
@@ -726,7 +753,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected function getAbsoluteUrlFor($uri)
     {
         $currentUrl = $this->getRunningClient()->getHistory()->current()->getUri();
-        if (empty($uri) || $uri === '#') {
+        if (empty($uri) || $uri[0] === '#') {
             return $currentUrl;
         }
         return Uri::mergeUrls($currentUrl, $uri);
@@ -1600,15 +1627,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * Clicks on a given link.
      *
      * @param Link $link A Link instance
-     *
      * @return Crawler
+     * @deprecated No longer used by InnerBrowser, please use amOnPage instead
      */
     protected function clientClick(Link $link)
     {
         if ($link instanceof Form) {
             return $this->proceedSubmitForm($link);
         }
-
         return $this->clientRequest($link->getMethod(), $link->getUri());
     }
 
