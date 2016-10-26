@@ -4,9 +4,9 @@
 
 Configuration file `codeception.yml` is generate by `codecept bootstrap` command. It has preconfigured settings you can change.
 
-Here are global options you can change inside condifuration
+Here are global options you can change inside configuration:
 
-* `actor: Tester`: affects the naming Actor classes. This sets the suffix is used to generate new test suites. If you change `Tester` to `Ninja`, and generate new `api` test suitem, you will get `ApiNinja` tester class inside tests.
+* `actor: Tester`: changes suffix for Actor classes. This defines a reult to generate new test suites. If you change `Tester` to `Ninja`, and generate new `api` test suite, you will get `ApiNinja` tester class inside tests.
 * `namespace`: set a namespace for tests. All new tests and support classes will be generated under that namespace. Allows to configure [multiple test setups for one runner](http://codeception.com/docs/08-Customization#Namespaces).
 * `include: []`: include additional Codeception configurations for [multiple applications setup](http://codeception.com/docs/08-Customization#Namespaces).
 * `paths` directories used by Codeception. Default values are:
@@ -85,19 +85,41 @@ modules:
 
 ## Suite Configuration
 
-Suite configuration acceptance.yml
+Each generated suite have its own configuration inside directory set by `paths: tests: ` configuration option in `codeception.yml`. Each suite configuration is named like `suitename.suite.yml`. It allows to enable and configure modules, and more.
+
+* `class_name`: name of the actor class in this suite. 
+* `modules:` list of enabled modules with their configuration.
 
 ```yaml
-class_name: AcceptanceTester
 modules:
     # enabled modules and helpers
     enabled:
-        - PhpBrowser
-        - AcceptanceHelper
+        # built-in modules are listed by their names
+        - PhpBrowser:
+            # module configuration
+            url: http://localhost
+        # this module is pre-configured in global config
         - Db
 
-    # local module configuration. Overrides the global.        
+        # helper names are listed by their class names
+        # by convention their names start with \        
+        - \Helper\Acceptance
+
+    # additional modules config
+    # can be used for modules which are not currently enabled
     config:
-        Db:
-            dsn:
+        WebDriver:
+            browser: firefox
+    
+    # list of modules disabled for this suite
+    disabled:
+        - WebDriver
+
 ```
+
+
+* `namespace:` default namespace of actor, support classes and tests.
+* `groups`: [groups](http://codeception.com/docs/07-AdvancedUsage#Groups) with the list of tests of for corresponding group.
+* `coverage`: pre suite [CodeCoverage](http://codeception.com/docs/11-Codecoverage#Configuration) settings.
+* `gherkin`: per suite [BDD Gherkin](http://codeception.com/docs/07-BDD#Configuration) settings.
+* `error_level`: [error level](http://codeception.com/docs/04-FunctionalTests#Error-Reporting) for runner in current suite. Should be specified for unit, integration, functional tests. Passes value to `error_reporting` function.
