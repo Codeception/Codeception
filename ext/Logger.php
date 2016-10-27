@@ -150,48 +150,9 @@ class Logger extends Extension
         self::info((string)$e->getStep());
     }
 
-    public static function emergency($message, array $context = array())
+    public static function __callStatic($name, $arguments)
     {
-        self::getLogger()->emergency($message, $context);
-    }
-
-    public static function alert($message, array $context = array())
-    {
-        self::getLogger()->alert($message, $context);
-    }
-
-    public static function critical($message, array $context = array())
-    {
-        self::getLogger()->critical($message, $context);
-    }
-
-    public static function error($message, array $context = array())
-    {
-        self::getLogger()->error($message, $context);
-    }
-
-    public static function warning($message, array $context = array())
-    {
-        self::getLogger()->warning($message, $context);
-    }
-
-    public static function notice($message, array $context = array())
-    {
-        self::getLogger()->emergency($message, $context);
-    }
-
-    public static function info($message, array $context = array())
-    {
-        self::getLogger()->info($message, $context);
-    }
-
-    public static function debug($message, array $context = array())
-    {
-        self::getLogger()->debug($message, $context);
-    }
-
-    public static function log($level, $message, array $context = array())
-    {
-        self::getLogger()->log($level, $message, $context);
+        $logger = self::getLogger();
+        call_user_func_array(array($logger, $name), $arguments);
     }
 }
