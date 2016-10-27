@@ -11,6 +11,7 @@ use Codeception\Extension;
 use Codeception\Test\Descriptor;
 use Monolog\Handler\RotatingFileHandler;
 use Codeception\Configuration as Config;
+use Psr\Log\LoggerInterface;
 
 /**
  * Log suites/tests/steps using Monolog library.
@@ -37,15 +38,15 @@ use Codeception\Configuration as Config;
 class Logger extends Extension
 {
     public static $events = [
-        Events::SUITE_BEFORE => 'beforeSuite',
-        Events::TEST_BEFORE => 'beforeTest',
-        Events::TEST_AFTER => 'afterTest',
-        Events::TEST_END => 'endTest',
-        Events::STEP_BEFORE => 'beforeStep',
-        Events::TEST_FAIL => 'testFail',
-        Events::TEST_ERROR => 'testError',
+        Events::SUITE_BEFORE    => 'beforeSuite',
+        Events::TEST_BEFORE     => 'beforeTest',
+        Events::TEST_AFTER      => 'afterTest',
+        Events::TEST_END        => 'endTest',
+        Events::STEP_BEFORE     => 'beforeStep',
+        Events::TEST_FAIL       => 'testFail',
+        Events::TEST_ERROR      => 'testError',
         Events::TEST_INCOMPLETE => 'testIncomplete',
-        Events::TEST_SKIPPED => 'testSkipped',
+        Events::TEST_SKIPPED    => 'testSkipped',
     ];
 
     protected $logHandler;
