@@ -415,4 +415,10 @@ EOF
         $I->seeInShellOutput('##teamcity[testStarted');
         $I->dontSeeInShellOutput('............Ok');
     }
+
+    public function runTestWithAnnotationExamplesFromGroupFileTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario -g groupFileTest1 --steps');
+        $I->seeInShellOutput('OK (3 tests');
+    }
 }
