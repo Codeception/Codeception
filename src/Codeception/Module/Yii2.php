@@ -166,12 +166,26 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $this->app = $this->client->getApplication();
 
         // load fixtures before db transaction
-        if (method_exists($test, self::TEST_FIXTURES_METHOD)) {
-            $this->haveFixtures(call_user_func([$test, self::TEST_FIXTURES_METHOD]));
+        if ($test instanceof \Codeception\Test\Cest) {
+            $this->loadFixtures($test->getTestClass());
+        } else {
+            $this->loadFixtures($test);
         }
 
         if ($this->config['cleanup'] && $this->app->has('db')) {
             $this->transaction = $this->app->db->beginTransaction();
+        }
+    }
+
+    /**
+     * load fixtures before db transaction
+     *
+     * @param mixed $test instance of test class
+     */
+    private function loadFixtures($test)
+    {
+        if (method_exists($test, self::TEST_FIXTURES_METHOD)) {
+            $this->haveFixtures(call_user_func([$test, self::TEST_FIXTURES_METHOD]));
         }
     }
 
