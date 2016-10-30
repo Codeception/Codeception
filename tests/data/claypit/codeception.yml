@@ -12,6 +12,7 @@ settings:
     log: true
 groups:
     failed: tests/_log/failed
+    groupFile1: [tests/scenario/ExamplesCest.php]
 modules:
     config:
         Db:
