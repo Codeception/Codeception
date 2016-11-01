@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.2.7
+
+* [Phalcon] Added `services` part which can be used to `grabServiceFromContainer` and `addServiceToContainer` when conflicting module is used. By @sergeyklay
+
 #### 2.2.6 (October 2016)
 
 * Ability to update config on run with `--override` (`-o`) option. Usage Examples:
