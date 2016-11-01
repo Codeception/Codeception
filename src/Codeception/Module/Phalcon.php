@@ -17,7 +17,6 @@ use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Exception\ModuleConfigException;
-use Codeception\Lib\Connector\PhalconMemorySession;
 use Codeception\Lib\Connector\Phalcon as PhalconConnector;
 
 /**
@@ -157,7 +156,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
 
         if ($this->di->has('session')) {
             // Destroy existing sessions of previous tests
-            $this->di['session'] = new PhalconMemorySession();
+            $this->di['session'] = new PhalconConnector\MemorySession();
         }
 
         if ($this->di->has('cookies')) {
@@ -635,9 +634,9 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
 
             foreach ($routes as $route) {
                 if ($route instanceof RouteInterface) {
-                    $hostName = $route->getHostName();
+                    $hostName = $route->getHostname();
                     if (!empty($hostName)) {
-                        $internalDomains[] = '/^' . str_replace('.', '\.', $route->getHostName()) . '$/';
+                        $internalDomains[] = '/^' . str_replace('.', '\.', $route->getHostname()) . '$/';
                     }
                 }
             }
