@@ -37,9 +37,10 @@ use Codeception\Lib\Connector\Phalcon as PhalconConnector;
  *
  * The following configurations are required for this module:
  *
- * * bootstrap: the path of the application bootstrap file
- * * cleanup: cleanup database (using transactions)
- * * savepoints: use savepoints to emulate nested transactions
+ * * bootstrap: `string`, default `app/config/bootstrap.php` - relative path to app.php config file
+ * * cleanup: `boolean`, default `true` - all database queries will be run in a transaction,
+ *   which will be rolled back at the end of each test
+ * * savepoints: `boolean`, default `true` - use savepoints to emulate nested transactions
  *
  * The application bootstrap file must return Application object but not call its handle() method.
  *
@@ -50,7 +51,8 @@ use Codeception\Lib\Connector\Phalcon as PhalconConnector;
  *
  * ## Parts
  *
- * By default all available methods are loaded, but you can specify parts to select only needed actions and avoid conflicts.
+ * By default all available methods are loaded, but you can specify parts to select only needed
+ * actions and avoid conflicts.
  *
  * * `orm` - include only `haveRecord/grabRecord/seeRecord/dontSeeRecord` actions.
  * * `services` - allows to use `grabServiceFromContainer` and `addServiceToContainer`.
