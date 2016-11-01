@@ -1,32 +1,31 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleException;
-use PDOException;
 use Phalcon\Di;
+use PDOException;
+use Phalcon\Mvc\Url;
 use Phalcon\DiInterface;
 use Phalcon\Di\Injectable;
-use Phalcon\Mvc\Model as PhalconModel;
-use Phalcon\Mvc\RouterInterface;
-use Phalcon\Mvc\Router\RouteInterface;
-use Codeception\Util\ReflectionHelper;
-use Phalcon\Mvc\Url;
 use Codeception\TestInterface;
 use Codeception\Configuration;
-use Codeception\Lib\Connector\Phalcon as PhalconConnector;
 use Codeception\Lib\Framework;
+use Phalcon\Mvc\RouterInterface;
+use Phalcon\Mvc\Model as PhalconModel;
+use Phalcon\Mvc\Router\RouteInterface;
+use Codeception\Util\ReflectionHelper;
+use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Exception\ModuleConfigException;
-use Codeception\Lib\Connector\PhalconMemorySession;
+use Codeception\Lib\Connector\Phalcon as PhalconConnector;
 
 /**
- * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (2.x).
+ * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (3.x).
  * Please try it and leave your feedback.
  *
  * ## Demo Project
  *
- * <https://github.com/phalcon/forum>
+ * <https://github.com/Codeception/phalcon-demo>
  *
  * ## Status
  *
@@ -34,24 +33,31 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  * * Stability: **stable**
  * * Contact: serghei@phalconphp.com
  *
- * ## Example
- *
- *     modules:
- *         enabled:
- *             - Phalcon:
- *                 bootstrap: 'app/config/bootstrap.php'
- *                 cleanup: true
- *                 savepoints: true
- *
  * ## Config
  *
  * The following configurations are required for this module:
  *
- * * bootstrap: the path of the application bootstrap file
- * * cleanup: cleanup database (using transactions)
- * * savepoints: use savepoints to emulate nested transactions
+ * * bootstrap: `string`, default `app/config/bootstrap.php` - relative path to app.php config file
+ * * cleanup: `boolean`, default `true` - all database queries will be run in a transaction,
+ *   which will be rolled back at the end of each test
+ * * savepoints: `boolean`, default `true` - use savepoints to emulate nested transactions
  *
  * The application bootstrap file must return Application object but not call its handle() method.
+ *
+ * ## API
+ *
+ * * di - `Phalcon\Di\Injectable` instance
+ * * client - `BrowserKit` client
+ *
+ * ## Parts
+ *
+ * By default all available methods are loaded, but you can specify parts to select only needed
+ * actions and avoid conflicts.
+ *
+ * * `orm` - include only `haveRecord/grabRecord/seeRecord/dontSeeRecord` actions.
+ * * `services` - allows to use `grabServiceFromContainer` and `addServiceToContainer`.
+ *
+ * Usage example:
  *
  * Sample bootstrap (`app/config/bootstrap.php`):
  *
@@ -65,15 +71,19 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  * ?>
  * ```
  *
- * ## API
- *
- * * di - `Phalcon\Di\Injectable` instance
- * * client - `BrowserKit` client
- *
- * ## Parts
- *
- * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
- *
+ * ```yaml
+ * class_name: AcceptanceTester
+ * modules:
+ *     enabled:
+ *         - Phalcon:
+ *             part: services
+ *             bootstrap: 'app/config/bootstrap.php'
+ *             cleanup: true
+ *             savepoints: true
+ *         - WebDriver:
+ *             url: http://your-url.com
+ *             browser: phantomjs
+ * ```
  */
 class Phalcon extends Framework implements ActiveRecord, PartedModule
 {
@@ -107,7 +117,9 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      */
     public function _initialize()
     {
-        if (!file_exists($this->bootstrapFile = Configuration::projectDir() . $this->config['bootstrap'])) {
+        $this->bootstrapFile = Configuration::projectDir() . $this->config['bootstrap'];
+
+        if (!file_exists($this->bootstrapFile)) {
             throw new ModuleConfigException(
                 __CLASS__,
                 "Bootstrap file does not exist in " . $this->config['bootstrap'] . "\n"
@@ -133,6 +145,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      */
     public function _before(TestInterface $test)
     {
+        /** @noinspection PhpIncludeInspection */
         $application = require $this->bootstrapFile;
         if (!$application instanceof Injectable) {
             throw new ModuleException(__CLASS__, 'Bootstrap must return \Phalcon\Di\Injectable object');
@@ -140,16 +153,12 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
 
         $this->di = $application->getDI();
 
-        if (!$this->di instanceof DiInterface) {
-            throw new ModuleException(__CLASS__, 'Dependency injector container must implement DiInterface');
-        }
-
         Di::reset();
         Di::setDefault($this->di);
 
         if ($this->di->has('session')) {
             // Destroy existing sessions of previous tests
-            $this->di['session'] = new PhalconMemorySession();
+            $this->di['session'] = new PhalconConnector\MemorySession();
         }
 
         if ($this->di->has('cookies')) {
@@ -167,6 +176,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         $bootstrap = $this->bootstrapFile;
         $this->client->setApplication(function () use ($bootstrap) {
             $currentDi = Di::getDefault();
+            /** @noinspection PhpIncludeInspection */
             $application = require $bootstrap;
             $di = $application->getDI();
             if ($currentDi->has('db')) {
@@ -210,14 +220,14 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
 
     public function _parts()
     {
-        return ['orm'];
+        return ['orm', 'services'];
     }
 
     /**
      * Provides access the Phalcon application object.
      *
      * @see \Codeception\Lib\Connector\Phalcon::getApplication
-     * @return \Phalcon\Mvc\Application|\Phalcon\Mvc\Micro|\Phalcon\Cli\Console
+     * @return \Phalcon\Application|\Phalcon\Mvc\Micro
      */
     public function getApplication()
     {
@@ -299,8 +309,8 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      *
      * ``` php
      * <?php
-     * $user_id = $I->haveRecord('Phosphorum\Models\Users', ['name' => 'Phalcon']);
-     * $I->haveRecord('Phosphorum\Models\Categories', ['name' => 'Testing']');
+     * $user_id = $I->haveRecord('App\Models\Users', ['name' => 'Phalcon']);
+     * $I->haveRecord('App\Models\Categories', ['name' => 'Testing']');
      * ?>
      * ```
      *
@@ -325,6 +335,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
             $messages = $record->getMessages();
             $errors = [];
             foreach ($messages as $message) {
+                /** @var \Phalcon\Mvc\Model\MessageInterface $message */
                 $errors[] = sprintf(
                     '[%s] %s: %s',
                     $message->getType(),
@@ -334,7 +345,10 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
             }
 
             $this->fail(sprintf("Record %s was not saved. Messages: \n%s", $model, implode(PHP_EOL, $errors)));
+
+            return null;
         }
+
         $this->debugSection($model, json_encode($record));
 
         return $this->getModelIdentity($record);
@@ -345,12 +359,13 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      *
      * ``` php
      * <?php
-     * $I->seeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
+     * $I->seeRecord('App\Models\Categories', ['name' => 'Testing']);
      * ?>
      * ```
      *
      * @param string $model Model name
-     * @param array $attributes Model attributes
+     * @param array  $attributes Model attributes
+     * @part orm
      */
     public function seeRecord($model, $attributes = [])
     {
@@ -366,12 +381,13 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      *
      * ``` php
      * <?php
-     * $I->dontSeeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
+     * $I->dontSeeRecord('App\Models\Categories', ['name' => 'Testing']);
      * ?>
      * ```
      *
      * @param string $model Model name
      * @param array $attributes Model attributes
+     * @part orm
      */
     public function dontSeeRecord($model, $attributes = [])
     {
@@ -387,12 +403,12 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      *
      * ``` php
      * <?php
-     * $category = $I->grabRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
+     * $category = $I->grabRecord('App\Models\Categories', ['name' => 'Testing']);
      * ?>
      * ```
      *
      * @param string $model Model name
-     * @param array $attributes Model attributes
+     * @param array  $attributes Model attributes
      * @return mixed
      * @part orm
      */
@@ -407,10 +423,10 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      *
      * @param string $service    Service name
      * @param array  $parameters Parameters [Optional]
-     *
      * @return mixed
+     * @part services
      */
-    public function grabServiceFromDi($service, array $parameters = [])
+    public function grabServiceFromContainer($service, array $parameters = [])
     {
         if (!$this->di->has($service)) {
             $this->fail("Service $service is not available in container");
@@ -420,22 +436,40 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Alias for `grabServiceFromContainer`.
+     *
+     * Note: Deprecated. Will be removed in Codeception 2.3.
+     *
+     * @param string $service    Service name
+     * @param array  $parameters Parameters [Optional]
+     * @return mixed
+     * @part services
+     */
+    public function grabServiceFromDi($service, array $parameters = [])
+    {
+        return $this->grabServiceFromContainer($service, $parameters);
+    }
+
+    /**
      * Registers a service in the services container and resolve it. This record will be erased after the test.
      * Recommended to use for unit testing.
      *
      * ``` php
      * <?php
-     * $filter = $I->haveServiceInDi('filter', ['className' => '\Phalcon\Filter']);
+     * $filter = $I->addServiceToContainer('filter', ['className' => '\Phalcon\Filter']);
+     * $filter = $I->addServiceToContainer('answer', function () {
+     *      return rand(0, 1) ? 'Yes' : 'No';
+     * }, true);
      * ?>
      * ```
      *
      * @param string $name
      * @param mixed $definition
      * @param boolean $shared
-     *
      * @return mixed|null
+     * @part services
      */
-    public function haveServiceInDi($name, $definition, $shared = false)
+    public function addServiceToContainer($name, $definition, $shared = false)
     {
         try {
             $service = $this->di->set($name, $definition, $shared);
@@ -448,6 +482,22 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Alias for `addServiceToContainer`.
+     *
+     * Note: Deprecated. Will be removed in Codeception 2.3.
+     *
+     * @param string $name
+     * @param mixed $definition
+     * @param boolean $shared
+     * @return mixed|null
+     * @part services
+     */
+    public function haveServiceInDi($name, $definition, $shared = false)
+    {
+        return $this->addServiceToContainer($name, $definition, $shared);
+    }
+
+    /**
      * Opens web page using route name and parameters.
      *
      * ``` php
@@ -456,8 +506,8 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @param $routeName
-     * @param array $params
+     * @param string $routeName
+     * @param array  $params
      */
     public function amOnRoute($routeName, array $params = [])
     {
@@ -474,11 +524,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
             $urlParams += $params;
         }
 
-        try {
-            $this->amOnPage($url->get($urlParams, null, true));
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $this->amOnPage($url->get($urlParams, null, true));
     }
 
     /**
@@ -499,12 +545,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
 
         /** @var Url $url */
         $url = $this->di->getShared('url');
-
-        try {
-            $this->seeCurrentUrlEquals($url->get(['for' => $routeName], null, true));
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $this->seeCurrentUrlEquals($url->get(['for' => $routeName], null, true));
     }
 
     /**
@@ -595,9 +636,9 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
 
             foreach ($routes as $route) {
                 if ($route instanceof RouteInterface) {
-                    $hostName = $route->getHostName();
+                    $hostName = $route->getHostname();
                     if (!empty($hostName)) {
-                        $internalDomains[] = '/^' . str_replace('.', '\.', $route->getHostName()) . '$/';
+                        $internalDomains[] = '/^' . str_replace('.', '\.', $route->getHostname()) . '$/';
                     }
                 }
             }
