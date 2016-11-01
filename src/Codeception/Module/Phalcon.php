@@ -456,8 +456,8 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      *
      * ``` php
      * <?php
-     * $filter = $I->haveServiceInDi('filter', ['className' => '\Phalcon\Filter']);
-     * $filter = $I->haveServiceInDi('answer', function () {
+     * $filter = $I->addServiceToContainer('filter', ['className' => '\Phalcon\Filter']);
+     * $filter = $I->addServiceToContainer('answer', function () {
      *      return rand(0, 1) ? 'Yes' : 'No';
      * }, true);
      * ?>
