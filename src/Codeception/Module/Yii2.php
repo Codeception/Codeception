@@ -118,7 +118,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * @var array
      */
     protected $config = [
-        'cleanup'     => true,
+        'cleanup'     => false,
         'entryScript' => '',
         'entryUrl'    => 'http://localhost/index-test.php',
     ];
