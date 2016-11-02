@@ -48,7 +48,7 @@ settings:
     shuffle: true
 
     # by default it's false on Windows
-    # use [ANSICON](http://adoxa.110mb.com/ansicon/) to colorize output.
+    # use [ANSICON](https://github.com/adoxa/ansicon) to colorize output.
     colors: true
 
     # Generate XML JUnit report using strict schema
