@@ -421,6 +421,10 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeElement(WebDriverBy::linkText('Test'));
         $this->module->click(WebDriverBy::linkText('Test'));
         $this->module->seeCurrentUrlEquals('/form/hidden');
+
+        $this->module->amOnPage('/form/example7');
+        $this->module->click('Chocolate Bar');
+        $this->module->seeCurrentUrlEquals('/');
     }
 
     public function testSeeVisible()

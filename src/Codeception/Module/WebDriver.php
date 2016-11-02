@@ -783,7 +783,7 @@ class WebDriver extends CodeceptionModule implements
 
         // wide
         $xpath = Locator::combine(
-            ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or .//img[contains(./@alt, $locator)])]",
+            ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or contains(./@title, $locator) or .//img[contains(./@alt, $locator)])]",
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
             ".//input[./@type = 'image'][contains(./@alt, $locator)]",
             ".//button[contains(normalize-space(string(.)), $locator)]",
