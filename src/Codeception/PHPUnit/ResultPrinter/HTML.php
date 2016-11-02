@@ -123,14 +123,16 @@ class HTML extends CodeceptionResultPrinter
             $this->templatePath . 'scenario.html'
         );
 
-        $failure = '';
+        $failures = '';
         $name = Descriptor::getTestSignature($test);
         if (isset($this->failures[$name])) {
             $failTemplate = new \Text_Template(
                 $this->templatePath . 'fail.html'
             );
-            $failTemplate->setVar(['fail' => nl2br($this->failures[$name])]);
-            $failure = $failTemplate->render();
+            foreach ($this->failures[$name] as $failure) {
+                $failTemplate->setVar(['fail' => nl2br($failure)]);
+                $failures .= $failTemplate->render() . PHP_EOL;
+            }
         }
 
         $png = '';
@@ -157,7 +159,7 @@ class HTML extends CodeceptionResultPrinter
                 'scenarioStatus' => $scenarioStatus,
                 'steps'          => $stepsBuffer,
                 'toggle'         => $toggle,
-                'failure'        => $failure,
+                'failure'        => $failures,
                 'png'            => $png,
                 'html'            => $html,
                 'time'           => round($time, 2)
@@ -232,7 +234,7 @@ class HTML extends CodeceptionResultPrinter
      */
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
-        $this->failures[Descriptor::getTestSignature($test)] = $this->cleanMessage($e);
+        $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addError($test, $e, $time);
     }
 
@@ -245,7 +247,7 @@ class HTML extends CodeceptionResultPrinter
      */
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
     {
-        $this->failures[Descriptor::getTestSignature($test)] = $this->cleanMessage($e);
+        $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addFailure($test, $e, $time);
     }
 
