@@ -544,6 +544,8 @@ class WebDriver extends CodeceptionModule implements
      * ?>
      * ```
      *
+     * @When I save a screenshot in :name
+     *
      * @param $name
      */
     public function makeScreenshot($name)
