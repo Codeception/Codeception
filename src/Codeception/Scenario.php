@@ -51,6 +51,11 @@ class Scenario
         return $this->metadata->getFeature();
     }
 
+    public function getGroups()
+    {
+        return $this->metadata->getGroups();
+    }
+
     public function current($key)
     {
         return $this->metadata->getCurrent($key);
