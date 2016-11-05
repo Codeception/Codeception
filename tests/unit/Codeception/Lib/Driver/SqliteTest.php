@@ -64,22 +64,27 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($res->fetchAll());
     }
 
-    public function testGetSingleColumnPrimaryKey()
+    public function testGetPrimaryKeyReturnsRowIdIfTableHasIt()
+    {
+        $this->assertEquals(['_ROWID_'], self::$sqlite->getPrimaryKey('groups'));
+    }
+
+    public function testGetPrimaryKeyReturnsRowIdIfTableHasNoPrimaryKey()
+    {
+        $this->assertEquals(['_ROWID_'], self::$sqlite->getPrimaryKey('no_pk'));
+    }
+
+    public function testGetSingleColumnPrimaryKeyWhenTableHasNoRowId()
     {
         $this->assertEquals(['id'], self::$sqlite->getPrimaryKey('order'));
     }
 
-    public function testGetCompositePrimaryKey()
+    public function testGetCompositePrimaryKeyWhenTableHasNoRowId()
     {
         $this->assertEquals(['group_id', 'id'], self::$sqlite->getPrimaryKey('composite_pk'));
     }
 
-    public function testGetEmptyArrayIfTableHasNoPrimaryKey()
-    {
-        $this->assertEquals([], self::$sqlite->getPrimaryKey('no_pk'));
-    }
-
-    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
+    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableNameWhenTableHasNoRowId()
     {
         $this->assertEquals('id', self::$sqlite->getPrimaryColumn('order'));
     }

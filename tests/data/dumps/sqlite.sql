@@ -25,16 +25,16 @@ CREATE TABLE "composite_pk" (
   "id" INTEGER NOT NULL,
   "status" VARCHAR NOT NULL,
   PRIMARY KEY ("group_id", "id")
-);
+) WITHOUT ROWID;
 
 CREATE TABLE "no_pk" (
   "status" VARCHAR NOT NULL
 );
 
 CREATE TABLE "order" (
-  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER NOT NULL PRIMARY KEY,
   "name" VARCHAR NOT NULL,
   "status" VARCHAR NOT NULL
-);
+) WITHOUT ROWID;
 
 insert  into "order"("id","name","status") values (1,'main', 'open');
