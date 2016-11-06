@@ -18,6 +18,7 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console implements EventSubscriberInterface
@@ -312,7 +313,7 @@ class Console implements EventSubscriberInterface
             $msg->style('bold');
         }
         $maxLength = $this->width - $prefixLength;
-        $msg->append($step->toString($maxLength));
+        $msg->append(OutputFormatter::escape($step->toString($maxLength)));
         if ($this->metaStep) {
             $msg->style('info');
         }
@@ -322,8 +323,11 @@ class Console implements EventSubscriberInterface
     public function afterSuite(SuiteEvent $e)
     {
         $this->message()->width($this->width, '-')->writeln();
-        $deprecationMessages = Notification::all();
-        foreach ($deprecationMessages as $message) {
+        $messages = Notification::all();
+        foreach (array_count_values($messages) as $message => $count) {
+            if ($count > 1) {
+                $message = $count . 'x ' . $message;
+            }
             $this->output->notification($message);
         }
     }
@@ -354,7 +358,7 @@ class Console implements EventSubscriberInterface
     {
         if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
             if ($e->getMessage()) {
-                $this->message($e->getMessage())->prepend("\n")->writeln();
+                $this->message(OutputFormatter::escape($e->getMessage()))->prepend("\n")->writeln();
             }
 
             return;
@@ -369,12 +373,12 @@ class Console implements EventSubscriberInterface
         }
 
         $this->output->writeln('');
-        $message = $this->message($e->getMessage());
+        $message = $this->message(OutputFormatter::escape($e->getMessage()));
 
         if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
             $comparisonFailure = $e->getComparisonFailure();
             if ($comparisonFailure) {
-                $message = $this->messageFactory->prepareComparisonFailureMessage($comparisonFailure);
+                $message->append($this->messageFactory->prepareComparisonFailureMessage($comparisonFailure));
             }
         }
 
@@ -387,7 +391,7 @@ class Console implements EventSubscriberInterface
         }
 
         if ($isFailure && $cause) {
-            $cause = ucfirst($cause);
+            $cause = OutputFormatter::escape(ucfirst($cause));
             $message->prepend("<error> Step </error> $cause\n<error> Fail </error> ");
         }
 
@@ -429,7 +433,7 @@ class Console implements EventSubscriberInterface
         }
 
         if ($this->rawStackTrace) {
-            $this->message(\PHPUnit_Util_Filter::getFilteredStacktrace($e, true, false))->writeln();
+            $this->message(OutputFormatter::escape(\PHPUnit_Util_Filter::getFilteredStacktrace($e, true, false)))->writeln();
 
             return;
         }
@@ -465,25 +469,6 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    /**
-     * Sample Message: create user in CreateUserCept.php is not ready for release
-     *
-     * @param $feature
-     * @param $fileName
-     * @param $failToString
-     */
-    public function printSkippedTest($feature, $fileName, $failToString)
-    {
-        $message = $this->message();
-        if ($feature) {
-            $message->append($feature)->style('focus')->append(' in ');
-        }
-        $message->append($fileName);
-        if ($failToString) {
-            $message->append(": $failToString");
-        }
-        $message->write(OutputInterface::VERBOSITY_VERBOSE);
-    }
 
     /**
      * @param $failedTest
@@ -512,7 +497,7 @@ class Console implements EventSubscriberInterface
                 ->prepend(' ')
                 ->width(strlen($length))
                 ->append(". ");
-            $message->append($step->getPhpCode($this->width - $message->getLength()));
+            $message->append(OutputFormatter::escape($step->getPhpCode($this->width - $message->getLength())));
 
             if ($step->hasFailed()) {
                 $message->style('bold');
@@ -536,13 +521,18 @@ class Console implements EventSubscriberInterface
     {
         $this->width = 60;
         if (!$this->isWin()
-            && (php_sapi_name() == "cli")
+            && (php_sapi_name() === "cli")
             && (getenv('TERM'))
             && (getenv('TERM') != 'unknown')
         ) {
             $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
+        } elseif ($this->isWin() && (php_sapi_name() === "cli")) {
+            exec('mode con', $output);
+            preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
+            if (!empty($matches[1])) {
+                $this->width = (int) $matches[1];
+            }
         }
-
         return $this->width;
     }
 

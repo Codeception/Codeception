@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Lib\Driver;
 
 use Codeception\Exception\ModuleException;
@@ -11,6 +12,11 @@ class PostgreSql extends Db
 
     protected $searchPath = null;
 
+    /**
+     * Loads a SQL file.
+     *
+     * @param string $sql sql file
+     */
     public function load($sql)
     {
         $query = '';
@@ -47,7 +53,7 @@ class PostgreSql extends Db
             if (!$dollarsOpen && substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
                 $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
                 $this->sqlQuery($this->sqlToRun);
-                $query = "";
+                $query = '';
             }
         }
     }
@@ -95,6 +101,7 @@ class PostgreSql extends Db
         } else {
             pg_put_line($this->connection, $sql . "\n");
         }
+
         return true;
     }
 
@@ -123,16 +130,39 @@ class PostgreSql extends Db
         }
     }
 
+    /**
+     * Get the last inserted ID of table.
+     */
     public function lastInsertId($table)
     {
-        /**
+        /*
          * We make an assumption that the sequence name for this table
          * is based on how postgres names sequences for SERIAL columns
          */
+
         $sequenceName = $this->getQuotedName($table . '_id_seq');
-        return $this->getDbh()->lastInsertId($sequenceName);
+        $lastSequence = null;
+
+        try {
+            $lastSequence = $this->getDbh()->lastInsertId($sequenceName);
+        } catch (\PDOException $e) {
+            // in this case, the sequence name might be combined with the primary key name
+        }
+
+        // here we check if for instance, it's something like table_primary_key_seq instead of table_id_seq
+        // this could occur when you use some kind of import tool like pgloader
+        if (!$lastSequence) {
+            $primaryKeys = $this->getPrimaryKey($table);
+            $pkName = array_shift($primaryKeys);
+            $lastSequence = $this->getDbh()->lastInsertId($this->getQuotedName($table . '_' . $pkName . '_seq'));
+        }
+
+        return $lastSequence;
     }
 
+    /**
+     * Gets a quoted name of a variable.
+     */
     public function getQuotedName($name)
     {
         $name = explode('.', $name);
@@ -142,10 +172,14 @@ class PostgreSql extends Db
             },
             $name
         );
+
         return implode('.', $name);
     }
 
     /**
+     * Returns the primary key(s) of the table, based on:
+     * https://wiki.postgresql.org/wiki/Retrieve_primary_key_columns.
+     *
      * @param string $tableName
      *
      * @return array[string]
@@ -162,7 +196,6 @@ class PostgreSql extends Db
                 AND    i.indisprimary';
             $stmt = $this->executeQuery($query, [$tableName]);
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
             foreach ($columns as $column) {
                 $primaryKey []= $column['attname'];
             }

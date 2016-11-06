@@ -6,11 +6,12 @@ This module allows you to run tests inside Zend Framework 2.
 File `init_autoloader` in project's root is required.
 Uses `tests/application.config.php` config file by default.
 
+Note: services part and Doctrine integration is not compatible with ZF3 yet
+
 ## Status
 
-* Maintainer: **bladeofsteel**
-* Stability: **alpha**
-* Contact: https://github.com/bladeofsteel
+* Maintainer: **Naktibalda**
+* Stability: **stable**
 
 ## Config
 
@@ -24,7 +25,7 @@ Uses `tests/application.config.php` config file by default.
 
 ## Parts
 
-* services - allows to use grabServiceFromContainer with WebDriver or PhpBrowser modules.
+* services - allows to use grabServiceFromContainer and addServiceToContainer with WebDriver or PhpBrowser modules.
 
 Usage example:
 

@@ -134,6 +134,74 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertEquals('child', $form['age']);
     }
 
+    /**
+     * @dataProvider strictSelectorProvider
+     */
+    public function testSubmitFormWithButtonAsStrictSelector(array $selector)
+    {
+        $this->module->amOnPage('/form/strict_selectors');
+        $this->module->submitForm('form', [
+                'name' => 'Davert',
+                'age' => 'child',
+                'terms' => 'agree',
+                'description' => 'My Bio'
+        ], $selector);
+
+        $form = data::get('form');
+
+        $this->assertEquals('Davert', $form['name']);
+        $this->assertEquals('kill_all', $form['action']);
+        $this->assertEquals('My Bio', $form['description']);
+        $this->assertEquals('agree', $form['terms']);
+        $this->assertEquals('child', $form['age']);
+    }
+
+    public function strictSelectorProvider()
+    {
+        return [
+            'by id' => [['id' => 'submit_button']],
+            'by name' => [['name' => 'submit_button_name']],
+            'by css' => [['css' => 'form #submit_button']],
+            'by xpath' => [['xpath' => '//*[@id="submit_button"]']],
+            'by link' => [['link' => 'Submit']],
+            'by class' => [['class' => 'button']],
+        ];
+    }
+
+    /**
+     * @dataProvider webDriverByProvider
+     */
+    public function testSubmitFormWithButtonAsWebDriverBy(WebDriverBy $selector)
+    {
+        $this->module->amOnPage('/form/strict_selectors');
+        $this->module->submitForm('form', [
+                'name' => 'Davert',
+                'age' => 'child',
+                'terms' => 'agree',
+                'description' => 'My Bio'
+        ], $selector);
+
+        $form = data::get('form');
+
+        $this->assertEquals('Davert', $form['name']);
+        $this->assertEquals('kill_all', $form['action']);
+        $this->assertEquals('My Bio', $form['description']);
+        $this->assertEquals('agree', $form['terms']);
+        $this->assertEquals('child', $form['age']);
+    }
+
+    public function webDriverByProvider()
+    {
+        return [
+            'by id' => [WebDriverBy::id('submit_button')],
+            'by name' => [WebDriverBy::name('submit_button_name')],
+            'by css selector' => [WebDriverBy::cssSelector('form #submit_button')],
+            'by xpath' => [WebDriverBy::xpath('//*[@id="submit_button"]')],
+            'by link text' => [WebDriverBy::linkText('Submit')],
+            'by class name' => [WebDriverBy::className('button')],
+        ];
+    }
+
     public function testRadioButtonByValue()
     {
         $this->module->amOnPage('/form/radio');
@@ -650,5 +718,26 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->module->amOnPage('/form/bug2921');
         $this->module->seeInField('foo', 'bar baz');
+    }
+
+    public function testClickHashLink()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Link');
+        $this->module->seeCurrentUrlEquals('/form/anchor#b');
+    }
+
+    public function testClickHashButton()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Button');
+        $this->module->seeCurrentUrlEquals('/form/anchor#c');
+    }
+
+    public function testSubmitHashForm()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Form');
+        $this->module->seeCurrentUrlEquals('/form/anchor#a');
     }
 }

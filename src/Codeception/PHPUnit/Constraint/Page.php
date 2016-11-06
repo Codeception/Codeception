@@ -10,7 +10,7 @@ class Page extends \PHPUnit_Framework_Constraint
     public function __construct($string, $uri = '')
     {
         parent::__construct();
-        $this->string = (string)$string;
+        $this->string = $this->normalizeText((string)$string);
         $this->uri = $uri;
     }
 
@@ -24,7 +24,18 @@ class Page extends \PHPUnit_Framework_Constraint
      */
     protected function matches($other)
     {
+        $other = $this->normalizeText($other);
         return mb_stripos($other, $this->string, null, 'UTF-8') !== false;
+    }
+
+    /**
+     * @param $text
+     * @return string
+     */
+    private function normalizeText($text)
+    {
+        $text = strtr($text, "\r\n", "  ");
+        return trim(preg_replace('/\\s{2,}/', ' ', $text));
     }
 
     /**
@@ -42,19 +53,16 @@ class Page extends \PHPUnit_Framework_Constraint
         );
     }
 
-    protected function failureDescription($other)
+    protected function failureDescription($pageContent)
     {
-        $page = substr($other, 0, 300);
-        $message = new Message($page);
-        $message->style('info');
-        $message->prepend("\n--> ");
-        $message->prepend($this->uriMessage());
-        if (strlen($other) > 300) {
+        $message = $this->uriMessage('on page');
+        $message->append("\n--> ");
+        $message->append(substr($pageContent, 0, 300));
+        if (strlen($pageContent) > 300) {
             $debugMessage = new Message(
                 "[Content too long to display. See complete response in '" . codecept_output_dir() . "' directory]"
             );
-            $debugMessage->style('debug')->prepend("\n");
-            $message->append($debugMessage);
+            $message->append("\n")->append($debugMessage);
         }
         $message->append("\n--> ");
         return $message->getMessage() . $this->toString();
@@ -66,7 +74,6 @@ class Page extends \PHPUnit_Framework_Constraint
             return "";
         }
         $message = new Message($this->uri);
-        $message->style('bold');
         $message->prepend(" $onPage ");
         return $message;
     }

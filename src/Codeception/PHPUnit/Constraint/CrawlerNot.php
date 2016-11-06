@@ -22,7 +22,7 @@ class CrawlerNot extends Crawler
 
         $output = "There was '$selector' element";
         $output .= $this->uriMessage('on page');
-        $output .= str_replace($this->string, "<bold>{$this->string}</bold>", $this->nodesList($nodes, $this->string));
+        $output .= $this->nodesList($nodes, $this->string);
         $output .= "\ncontaining '{$this->string}'";
 
         throw new \PHPUnit_Framework_ExpectationFailedException(

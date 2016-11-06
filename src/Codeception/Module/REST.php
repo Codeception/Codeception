@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\JsonContains;
+use Codeception\PHPUnit\Constraint\JsonType as JsonTypeConstraint;
 use Codeception\TestInterface;
 use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Framework;
@@ -107,9 +108,6 @@ EOF;
         $this->params = [];
         $this->response = "";
         $this->connectionModule->headers = [];
-        if ($this->client) {
-            $this->client->setServerParameters([]);
-        }
     }
 
     public function _conflicts()
@@ -296,7 +294,7 @@ EOF;
      */
     public function amDigestAuthenticated($username, $password)
     {
-        $this->client->setAuth($username, $password, CURLAUTH_DIGEST);
+        $this->client->setAuth($username, $password, 'digest');
     }
 
     /**
@@ -604,7 +602,9 @@ EOF;
      */
     public function seeResponseIsJson()
     {
-        json_decode($this->connectionModule->_getResponseContent());
+        $responseContent = $this->connectionModule->_getResponseContent();
+        \PHPUnit_Framework_Assert::assertNotEquals('', $responseContent, 'response is empty');
+        json_decode($responseContent);
         $errorCode = json_last_error();
         $errorMessage = json_last_error_msg();
         \PHPUnit_Framework_Assert::assertEquals(
@@ -612,8 +612,8 @@ EOF;
             $errorCode,
             sprintf(
                 "Invalid json: %s. System message: %s.",
-                $this->connectionModule->_getResponseContent(),
-                json_last_error_msg()
+                $responseContent,
+                $errorMessage
             )
         );
     }
@@ -946,8 +946,8 @@ EOF;
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
-        $matched = (new JsonType($jsonArray))->matches($jsonType);
-        $this->assertTrue($matched, $matched);
+
+        \PHPUnit_Framework_Assert::assertThat($jsonArray, new JsonTypeConstraint($jsonType));
     }
 
     /**
@@ -965,12 +965,8 @@ EOF;
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
-        $matched = (new JsonType($jsonArray))->matches($jsonType);
-        $this->assertNotEquals(
-            true,
-            $matched,
-            sprintf("Unexpectedly the response matched the %s data type", var_export($jsonType, true))
-        );
+
+        \PHPUnit_Framework_Assert::assertThat($jsonArray, new JsonTypeConstraint($jsonType, false));
     }
 
     /**

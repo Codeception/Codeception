@@ -44,7 +44,7 @@ class WebDriver extends Page
             $output .= $this->nodesList($nodes);
         } else {
             $message = new Message("[total %s elements]");
-            $output .= $message->with(count($nodes))->style('debug');
+            $output .= $message->with(count($nodes));
         }
         $output .= "\ncontains text '" . $this->string . "'";
 
@@ -71,8 +71,8 @@ class WebDriver extends Page
                 continue;
             }
             /** @var $node \WebDriverElement  * */
-            $message = new Message("<%s> %s");
-            $output .= $message->with($node->getTagName(), $node->getText())->style('info')->prepend("\n+ ");
+            $message = new Message("\n+ <%s> %s");
+            $output .= $message->with($node->getTagName(), $node->getText());
         }
         return $output;
     }

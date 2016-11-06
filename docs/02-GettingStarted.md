@@ -86,7 +86,7 @@ I click 'Login'
 I see 'Hello, davert'
 ```
 
-Codeception generate this text represenation from PHP code by executing:
+Codeception generates this text representation from PHP code by executing:
 
 ``` bash
 php codecept generate:scenarios
@@ -105,13 +105,13 @@ modules:
         - \Helper\Acceptance
 ```
 
-After we configured the URL we can run this test with the `run` command:
+After configuring the URL we can run this test with the `run` command:
 
 ``` bash
 php codecept run
 ```
 
-Here is the output we should see:
+This is the output we should see:
 
 ``` bash
 Acceptance Tests (1) -------------------------------
@@ -152,8 +152,7 @@ Time: 0 seconds, Memory: 21.00Mb
 OK (1 test, 1 assertions)
 ```
 
-This simple test can be extended to a complete scenario of site usage. 
-So by emulating the user's actions you can test any of your websites.
+This simple test can be extended to a complete scenario of site usage therefore, by emulating the user's actions, you can test any of your websites.
 
 Give it a try!
 
@@ -223,13 +222,13 @@ Tests can be started with the `run` command.
 php codecept run
 ```
 
-With the first argument you can run tests from one suite.
+With the first argument you can run all tests from one suite.
 
 ```bash
 php codecept run acceptance
 ```
 
-To run exactly one test, add a second argument. Provide a local path to the test, from the suite directory.
+To limit tests run to a single class, add a second argument. Provide a local path to the test class, from the suite directory.
 
 ```bash
 php codecept run acceptance SigninCept.php
@@ -241,19 +240,23 @@ Alternatively you can provide the full path to test file:
 php codecept run tests/acceptance/SigninCept.php
 ```
 
-You can execute one test from a test class (for Cest or Test formats)
+You can further filter which tests are run by appending a method name to the class, separated by a colon (for Cest or Test formats):
 
 ```bash
-php codecept run tests/acceptance/SignInCest.php:anonymousLogin
+php codecept run tests/acceptance/SignInCest.php:^anonymousLogin$
 ```
 
-You can provide a directory path as well:
+You can provide a directory path as well. This will execute all tests from the backend dir:
 
 ```bash
 php codecept run tests/acceptance/backend
 ```
 
-This will execute all tests from the backend dir.
+Using regular expressions, you can even run many different test methods from the same directory or class. For example, this will execute all tests from the backend dir beginning with the word login:
+
+```bash
+php codecept run tests/acceptance/backend:^login
+```
 
 To execute a group of tests that are not stored in the same directory, you can organize them in [groups](http://codeception.com/docs/07-AdvancedUsage#Groups).
 

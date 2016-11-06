@@ -1,6 +1,94 @@
 # Changelog
 
-#### 2.2.3
+#### 2.2.7
+
+* [Phalcon] Added `services` part which can be used to `grabServiceFromContainer` and `addServiceToContainer` when conflicting module is used. By @sergeyklay
+* [Phalcon] **Refactored**. Moved in-memory session adapter to the separated namespace. By @sergeyklay
+* [Phalcon] Fixed overwriting server parameters on requests. By @sergeyklay
+
+#### 2.2.6 (October 2016)
+
+* Ability to update config on run with `--override` (`-o`) option. Usage Examples:
+    * `codecept run -o "settings: shuffle: true"`: enable shuffle
+    * `codecept run -o "settings: lint: false"`: disable linting
+* [WebDriver] **HTML report to include screenshots of failed tests.** See #3602
+* [PhpBrowser][Frameworks] HTML report to include HTML of failed tests. See #3602
+* [Apc] **Module added** to interact with the Alternative PHP Cache (APC) using either APCu or APC extension. By @sergeyklay
+* [Laravel5] Add `run_database_seeder` configuration option. See #3625 and #3630. By @Bouhnosaure
+* [Laravel5] Add `database_migrations_path` configuration option. See #3628. By @janhenkgerritsen
+* [Laravel5][Lumen] Fixed issue that caused the `have` and `haveMultiple` methods not being available when using the ORM part of the modules. See #3587. By @janhenkgerritsen
+* [PhpBrowser][Frameworks] Fixed clicking on a button inside the link
+* [PhpBrowser][Frameworks] Click on the first clickable item when clickBySelector is used
+* [PhpBrowser][Frameworks] Anchor is no longer sent to server
+* Removed tags from `see`/`dontSee` output and friends output
+* `--` separates options from arguments in `codecept run` by @Naktibalda. Fixes #3614. See #3615
+* Fixed terminating run process with Ctrl-C for PHP 7.0. Disabled graceful termination
+* [Yii2] fixed Yii2 logging complex data by @svoboda2010 Fixes #3452
+* [Yii2] `cleanup` set to true by default (as it was documented but not enabled).
+* [Yii2] Close db connections when running `haveFixtures` by @Ni-san. Fixes #3456. See #3586
+* [Yii2] Fixed loading fixtures from `_fixtures` method in testcase by @iRipVanWinkle. See #3565
+* [MongoDb] Added support for [mongofill](https://github.com/mongofill/mongofill), an alternative Mongo client in pure PHP. By @hlogeon at #3641
+* [MongoDb] Fixed data import using mongotype dump type by @hlogeon #3637
+* Fixed #3392 by normalizing namespace loading classes in DI getterby @Mitrichius at #3633
+* [Symfony] Fixed #3608  `[PHPUnit_Framework_Exception] implode()` while printing debug for security roles by @Prazmok.
+* [Yii1] Fix domain regex #3581 to return correct value by @amashigeseiji See #3597
+* [WebDriver] Improved tests stability when Selenium server is gone #3534 by @eXorus. Fixes #3531
+* [WebDriver] Tests are errored when Selenium server can't be connected. See #3603
+* MetaSteps are printed even with disabled xdebug by @niclopez. See #3600
+* [WebDriver] submit button in `submitForm` can be located by name or strict locator by @imjoehaines. See #3560
+* [SOAP][REST] removed module conflict by @eXorus.
+* Fixed #3571: error handler to call `registerDeprecationErrorHandler` method and `register_shutdown_function` on first SuiteEvent only. By @positronium. See #3572
+
+#### 2.2.5 (September 2016)
+
+* Support for PhpUnit 5.x.
+* [Lumen] Major refactoring of Lumen module. See #3533. By @janhenkgerritsen
+* [Laravel5] Removed calls to `Auth::logout()`, `Session::flush()` and `Cache::flush()` from after hook. See #3493. By @janhenkgerritsen
+* [Memcache] Updated `Memcache::seeInMemcached` to check if the key exists alone or with the desired value. By @sergeyklay
+* [Memcache] Added `Memcache::haveInMemcached`. By @sergeyklay
+* [Memcache] Fixed `Memcache::dontSeeInMemcached`. By @sergeyklay
+* [ZF2] Zend Framework 3 Support. Made `init_autoloader` optional, because ZF3 uses composer for autoloading #3525. By @Naktibalda
+* [ZF2] Fixed accessing Doctrine Entity Manager when client is not initialized. By @chris1312. See #3524
+* [Yii2] Allow to load fixtures from `_fixtures` method of a testcase. [See reference](http://codeception.com/docs/modules/Yii2#Fixtures). Fixes usage of nested transactions #3520. By @kalyabin and @davertmik
+* [Yii1] Fix private property accessible; allows to change urlManager class to subclass of CUrlManager. See @3287. By @amashigeseiji
+* Escaped tags in debug output by @Naktibalda. See #3507. Fixes #3495
+* Fixed #3410: Wrong subSteps rendering in HTML ResultPrinter by @niclopez
+* [WebDriver] Improved exception message thrown when click('name') does not match any element #3546 by @Naktibalda. Fixes #3528
+* [SOAP] Removed conflict with REST module. `seeResponseCodeIs` is deprecated in favor of `seeSoapResponseCodeIs` by @eXorus. See #3512. Fixes #3512
+* Fixed #3472: group Files not working with a non-empty data provider by @eXorus
+* [REST] Disabled resetting server parameters in _before. Fixed REST+Laravel usage: #3263. See #3539. By @janhenkgerritsen
+* [REST] Improved output of failed JsonType assertions #3480. By @Naktibalda. Fixes #2858
+* [REST] Requests are added to browser history #3446. Fixes regression #3197. By @Naktibalda
+* [REST] application/json header check made case insensitive. Fixes #3516. By @Naktibalda
+* Fix bug in Coverage Filter related to relative filepaths #3518. By @sbacic
+* [Db] PostgreSQL: fixed a problem when sequences are not a standard format (ie. table_id_seq). See #3506. By @alexjeen
+* [Symfony] Persist doctrine.dbal.backend_connection if Doctrine2 module is used #3500. Fixes #3479. By @Naktibalda
+* [Doctrine2] Using `Doctrine\ORM\EntityManagerInterface` as valid em instance #3467. Fixes #3459. By @akbwm
+* [MongoDb] Fixes `mongorestore` command syntax and adds --quiet option to config
+* [Facebook] Replaced `facebook/php-sdk-v4` library with `facebook/graph-sdk`.
+* Fixed #3433 detection of relative path when `codeception.yml` is not in project root. See #3434. By @loren-osborn
+* Handle deprecation messages according to `error_level` setting #3460. Fixes #3424. By @Naktibalda.
+
+#### 2.2.4 (August 2016)
+
+* Improved using complex params, nested params can be set using dot (`.`). See #3339
+* [Yii2] Mailer mock is now configured with options that make sense for it. Fixes #3382
+* [Yii2] Fixed creating `@webroot` directory on running functional tests. See #3387
+* [Yii2] Fixed regression in Yii 2 connector not allowing to work with output of error pages in functional tests. Fixes #3332
+* [Mongo] support of standard mongodump/mongorestore tools to populate mongo db database. Thanks @GSokol. Fixes #3427
+* [REST] `seeResponseIsJson` fails when response is empty. See #3401, closes #3400
+* [AMQP] Added `purgeQueue` and `purgeAllQueues` actions. By @niclopez
+* [DataFactory] `haveMultiple` fixed; corrected the order of arguments in `FactoryMuffin->seed`. See #3413 by @buffcode
+* [SOAP] Improved error reporting by @eXorus See #3426 #3422
+* [SOAP] Added `SOAPAction` config param to unset `SOAPAction` header in SOAP >= 1.2. See #3396
+* [REST] fixed digest authentication. See #3416
+* [Laravel5] Fixed an issue with error handling for Laravel 5.3. See #3420. By @bonsi.
+* [Laravel5] Fixed an issue with uploaded files. See #3417. By @torkiljohnsen.
+* [ZF2] Support for zend-mvc 3.0
+* [Db] Error is thrown if SQLite memory is used. #3319
+* [Frameworks] `REQUEST_TIME` server variable to be set on request. By @gimler. Fixes #3374
+
+#### 2.2.3 (July 2016)
 
 * [Yii2] Improvements:
     * Added `init` part to initialize Yii app for unit and acceptance testing.

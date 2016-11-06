@@ -81,6 +81,28 @@ use yii\db\ActiveRecordInterface;
  *             entryScript: index-test.php
  * ```
  *
+ * ## Fixtures
+ *
+ * This module allows to use [fixtures](http://www.yiiframework.com/doc-2.0/guide-test-fixtures.html) inside a test. There are two options for that.
+ * Fixtures can be loaded using [haveFixtures](#haveFixtures) method inside a test:
+ *
+ * ```php
+ * <?php
+ * $I->haveFixtures(['posts' => PostsFixture::className()]);
+ * ```
+ *
+ * or, if you need to load fixtures before the test (probably before the cleanup transaction is started), you
+ * can specify fixtures with `_fixtures` method of a testcase:
+ *
+ * ```php
+ * <?php
+ * // inside Cest file or Codeception\TestCase\Unit
+ * public function _fixtures()
+ * {
+ *     return ['posts' => PostsFixture::className()]
+ * }
+ * ```
+ *
  * ## Status
  *
  * Maintainer: **samdark**
@@ -89,12 +111,14 @@ use yii\db\ActiveRecordInterface;
  */
 class Yii2 extends Framework implements ActiveRecord, PartedModule
 {
+    const TEST_FIXTURES_METHOD = '_fixtures';
+
     /**
      * Application config file must be set.
      * @var array
      */
     protected $config = [
-        'cleanup'     => false,
+        'cleanup'     => true,
         'entryScript' => '',
         'entryUrl'    => 'http://localhost/index-test.php',
     ];
@@ -141,6 +165,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $this->client->configFile = Configuration::projectDir() . $this->config['configFile'];
         $this->app = $this->client->getApplication();
 
+        // load fixtures before db transaction
+        if (method_exists($test, self::TEST_FIXTURES_METHOD)) {
+            $this->haveFixtures(call_user_func([$test, self::TEST_FIXTURES_METHOD]));
+        }
+
         if ($this->config['cleanup'] && $this->app->has('db')) {
             $this->transaction = $this->app->db->beginTransaction();
         }
@@ -165,9 +194,15 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         $this->client->resetPersistentVars();
 
-        if (\Yii::$app->has('session', true)) {
+        if (isset(\Yii::$app) && \Yii::$app->has('session', true)) {
             \Yii::$app->session->close();
         }
+
+        // Close connections if exists
+        if (isset(\Yii::$app) && \Yii::$app->has('db', true)) {
+            \Yii::$app->db->close();
+        }
+
         parent::_after($test);
     }
 
@@ -229,6 +264,9 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     public function haveFixtures($fixtures)
     {
+        if (empty($fixtures)) {
+            return;
+        }
         $fixturesStore = new Yii2Connector\FixturesStore($fixtures);
         $fixturesStore->loadFixtures();
         $this->loadedFixtures[] = $fixturesStore;

@@ -9,21 +9,20 @@ use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Util\ReflectionHelper;
 use Zend\Console\Console;
 use Zend\EventManager\StaticEventManager;
-use Zend\Version\Version;
-use Zend\View\Helper\Placeholder\Registry;
 use Codeception\Lib\Connector\ZF2 as ZF2Connector;
 
 /**
- * This module allows you to run tests inside Zend Framework 2.
+ * This module allows you to run tests inside Zend Framework 2 and Zend Framework 3.
  *
- * File `init_autoloader` in project's root is required.
+ * File `init_autoloader` in project's root is required by Zend Framework 2.
  * Uses `tests/application.config.php` config file by default.
+ *
+ * Note: services part and Doctrine integration is not compatible with ZF3 yet
  *
  * ## Status
  *
- * * Maintainer: **bladeofsteel**
- * * Stability: **alpha**
- * * Contact: https://github.com/bladeofsteel
+ * * Maintainer: **Naktibalda**
+ * * Stability: **stable**
  *
  * ## Config
  *
@@ -37,7 +36,7 @@ use Codeception\Lib\Connector\ZF2 as ZF2Connector;
  *
  * ## Parts
  *
- * * services - allows to use grabServiceFromContainer with WebDriver or PhpBrowser modules.
+ * * services - allows to use grabServiceFromContainer and addServiceToContainer with WebDriver or PhpBrowser modules.
  *
  * Usage example:
  *
@@ -87,7 +86,10 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
 
     public function _initialize()
     {
-        require Configuration::projectDir() . 'init_autoloader.php';
+        $initAutoloaderFile = Configuration::projectDir() . 'init_autoloader.php';
+        if (file_exists($initAutoloaderFile)) {
+            require $initAutoloaderFile;
+        }
 
         $this->applicationConfig = require Configuration::projectDir() . $this->config['config'];
         if (isset($this->applicationConfig['module_listener_options']['config_cache_enabled'])) {
@@ -114,13 +116,11 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
         $_POST = [];
         $_COOKIE = [];
 
-        // reset singleton
-        StaticEventManager::resetInstance();
-
-        // Reset singleton placeholder if version < 2.2.0, no longer required in 2.2.0+
-        if (Version::compareVersion('2.2.0') >= 0) {
-            Registry::unsetRegistry();
+        if (class_exists('Zend\EventManager\StaticEventManager')) {
+            // reset singleton (ZF2)
+            StaticEventManager::resetInstance();
         }
+
         //Close the session, if any are open
         if (session_status() == PHP_SESSION_ACTIVE) {
             session_write_close();
@@ -138,6 +138,11 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
 
     public function _getEntityManager()
     {
+        if (!$this->client) {
+            $this->client = new ZF2Connector();
+            $this->client->setApplicationConfig($this->applicationConfig);
+        }
+
         return $this->grabServiceFromContainer('Doctrine\ORM\EntityManager');
     }
 
@@ -225,11 +230,11 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
     private function addInternalDomainsFromRoutes($routes)
     {
         foreach ($routes as $name => $route) {
-            if ($route instanceof \Zend\Mvc\Router\Http\Hostname) {
+            if ($route instanceof \Zend\Mvc\Router\Http\Hostname || $route instanceof \Zend\Router\Http\Hostname) {
                 $this->addInternalDomain($route);
-            } elseif ($route instanceof \Zend\Mvc\Router\Http\Part) {
+            } elseif ($route instanceof \Zend\Mvc\Router\Http\Part || $route instanceof \Zend\Router\Http\Part) {
                 $parentRoute = ReflectionHelper::readPrivateProperty($route, 'route');
-                if ($parentRoute instanceof \Zend\Mvc\Router\Http\Hostname) {
+                if ($parentRoute instanceof \Zend\Mvc\Router\Http\Hostname || $parentRoute instanceof \Zend\Mvc\Router\Http\Hostname) {
                     $this->addInternalDomain($parentRoute);
                 }
                 // this is necessary to instantiate child routes
@@ -242,7 +247,7 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
         }
     }
 
-    private function addInternalDomain(\Zend\Mvc\Router\Http\Hostname $route)
+    private function addInternalDomain($route)
     {
         $regex = ReflectionHelper::readPrivateProperty($route, 'regex');
         $this->domainCollector []= '/^' . $regex . '$/';

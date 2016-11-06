@@ -649,7 +649,7 @@ interface Web
      * $I->selectOption('Which OS do you use?', array('text' => 'Windows')); // Only search by text 'Windows'
      * $I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only search by value 'windows'
      * ?>
-     + ```
+     * ```
      *
      * @param $select
      * @param $option

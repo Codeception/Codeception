@@ -17,7 +17,12 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var bool $stopped to keep shutdownHandler from possible looping.
      */
-    private static $stopped = false;
+    private $stopped = false;
+
+    /**
+     * @var bool $initialized to avoid double error handler substitution
+     */
+    private $initialized = false;
 
     private $deprecationsInstalled = false;
     private $oldHandler;
@@ -25,20 +30,30 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var int stores bitmask for errors
      */
-    private $errorLevel = 'E_ALL & ~E_STRICT & ~E_DEPRECATED';
+    private $errorLevel;
+
+    public function __construct()
+    {
+        $this->errorLevel = E_ALL & ~E_STRICT & ~E_DEPRECATED;
+    }
 
     public function handle(SuiteEvent $e)
     {
         $settings = $e->getSettings();
         if ($settings['error_level']) {
-            $this->errorLevel = $settings['error_level'];
+            $this->errorLevel = eval("return {$settings['error_level']};");
         }
-        error_reporting(eval("return {$this->errorLevel};"));
+        error_reporting($this->errorLevel);
+
+        if ($this->initialized) {
+            return;
+        }
         // We must register shutdown function before deprecation error handler to restore previous error handler
         // and silence DeprecationErrorHandler yelling about 'THE ERROR HANDLER HAS CHANGED!'
         register_shutdown_function([$this, 'shutdownHandler']);
         $this->registerDeprecationErrorHandler();
         $this->oldHandler = set_error_handler([$this, 'errorHandler']);
+        $this->initialized = true;
     }
 
     public function errorHandler($errno, $errstr, $errfile, $errline, $context)
@@ -66,10 +81,10 @@ class ErrorHandler implements EventSubscriberInterface
             restore_error_handler();
         }
 
-        if (self::$stopped) {
+        if ($this->stopped) {
             return;
         }
-        self::$stopped = true;
+        $this->stopped = true;
         $error = error_get_last();
         if (!is_array($error)) {
             return;
@@ -111,6 +126,9 @@ class ErrorHandler implements EventSubscriberInterface
 
     private function handleDeprecationError($type, $message, $file, $line, $context)
     {
+        if (!($this->errorLevel & $type)) {
+            return;
+        }
         if ($this->deprecationsInstalled && $this->oldHandler) {
             call_user_func($this->oldHandler, $type, $message, $file, $line, $context);
             return;

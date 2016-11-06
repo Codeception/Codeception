@@ -499,6 +499,7 @@ class Configuration
         return self::$dir . DIRECTORY_SEPARATOR;
     }
 
+
     /**
      * Returns path to tests directory
      *
