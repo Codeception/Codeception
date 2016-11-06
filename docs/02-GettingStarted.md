@@ -1,12 +1,22 @@
 # Getting Started
 
-Let's take a look at Codeception's architecture. We assume that you already [installed](http://codeception.com/install) it, and bootstrapped your first test suites. Codeception has generated three of them: unit, functional, and acceptance. They are well described in the previous chapter. Inside your __/tests__ folder you will have three config files and three directories with names corresponding to these suites. Suites are independent groups of tests with a common purpose. 
+Let's take a look at Codeception's architecture. We assume that you already [installed](http://codeception.com/install) it,
+and bootstrapped your first test suites. Codeception has generated three of them: unit, functional, and acceptance.
+They are well described in the previous chapter. Inside your __/tests__ folder you will have three config files and three directories
+with names corresponding to these suites. Suites are independent groups of tests with a common purpose. 
 
 ## Actors
 
-One of the main concepts of Codeception is representation of tests as actions of a person. We have a UnitTester, who executes functions and tests the code. We also have a FunctionalTester, a qualified tester, who tests the application as a whole, with knowledge of its internals. And an AcceptanceTester, a user that works with our application through an interface that we provide.
+One of the main concepts of Codeception is representation of tests as actions of a person.
+We have a UnitTester, who executes functions and tests the code. We also have a FunctionalTester, a qualified tester,
+who tests the application as a whole, with knowledge of its internals. And an AcceptanceTester, a user that works with our application
+through an interface that we provide.
 
-Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from Codeception Modules**. Each module provides predefined actions for different testing purposes, and they can be combined to fit the testing environment. Codeception tries to solve 90% of possible testing issues in its modules, so you don't have reinvent the wheel. We think that you can spend more time on writing tests and less on writing support code to make those tests run. By default AcceptanceTester relies on PhpBrowser module, which is set in `tests/acceptance.suite.yml` configuration file:
+Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from Codeception Modules**.
+Each module provides predefined actions for different testing purposes, and they can be combined to fit the testing environment.
+Codeception tries to solve 90% of possible testing issues in its modules, so you don't have reinvent the wheel.
+We think that you can spend more time on writing tests and less on writing support code to make those tests run.
+By default AcceptanceTester relies on PhpBrowser module, which is set in `tests/acceptance.suite.yml` configuration file:
 
 ```yaml
 class_name: AcceptanceTester
@@ -18,7 +28,8 @@ modules:
 ```
 
 In this configuration file you can enable/disable and reconfigure modules for your needs.
-When you change configuration, actor classes are rebuilt automatically. If Actor classes are not created or updated as you expect, try to generate them manually with `build` command:
+When you change configuration, actor classes are rebuilt automatically. If Actor classes are not created or updated as you expect,
+try to generate them manually with `build` command:
 
 ```bash
 php codecept build
@@ -37,7 +48,8 @@ We can do that by running the following command:
 php codecept generate:cept acceptance Signin
 ```
 
-A Scenario always starts with Actor class initialization. After that, writing a scenario is just like typing `$I->` and choosing a proper action from the auto-completion list. Let's log in to our website.
+A Scenario always starts with Actor class initialization. After that, writing a scenario is just like typing `$I->`
+and choosing a proper action from the auto-completion list. Let's log in to our website.
 
 ```php
 <?php
@@ -58,7 +70,8 @@ $I->lookForwardTo('access all website features'); // result to achieve
 
 After we have described the story background, let's start writing a scenario.
 
-We assume that we have a 'login' page where we are getting authenticated by providing a username and password. Then we are sent to a user page, where we see the text `Hello, %username%`. Let's look at how this scenario is written in Codeception.
+We assume that we have a 'login' page where we are getting authenticated by providing a username and password.
+Then we are sent to a user page, where we see the text `Hello, %username%`. Let's look at how this scenario is written in Codeception.
 
 ```php
 <?php
@@ -73,7 +86,8 @@ $I->click('Login');
 $I->see('Hello, davert');
 ```
 
-This scenario can probably be read by non-technical people. If you just remove all special chars like braces, arrows and `$`, this test transforms into plain English text:
+This scenario can probably be read by non-technical people. If you just remove all special chars like braces, arrows and `$`,
+this test transforms into plain English text:
 
 ```
 I am user
@@ -94,7 +108,8 @@ php codecept generate:scenarios
 
 Generated scenarios will be stored in your `_output` directory in text files.
 
-Before we execute this test, we should make sure that the website is running on a local web server. Let's open the `tests/acceptance.suite.yml` file and replace the URL with the URL of your web application:
+Before we execute this test, we should make sure that the website is running on a local web server.
+Let's open the `tests/acceptance.suite.yml` file and replace the URL with the URL of your web application:
 
 ``` yaml
 class_name: AcceptanceTester
@@ -152,19 +167,23 @@ Time: 0 seconds, Memory: 21.00Mb
 OK (1 test, 1 assertions)
 ```
 
-This simple test can be extended to a complete scenario of site usage therefore, by emulating the user's actions, you can test any of your websites.
+This simple test can be extended to a complete scenario of site usage therefore,
+by emulating the user's actions, you can test any of your websites.
 
 Give it a try!
 
 ## Bootstrap
 
-Each suite has its own bootstrap file. It's located in the suite directory and is named `_bootstrap.php`. It will be executed before test suite. There is also a global bootstrap file located in the `tests` directory. It can be used to include additional files.
+Each suite has its own bootstrap file. It's located in the suite directory and is named `_bootstrap.php`. It will be executed before test suite.
+There is also a global bootstrap file located in the `tests` directory. It can be used to include additional files.
 
 ## Cept, Cest and Test Formats
 
-Codeception supports three test formats. Beside the previously described scenario-based Cept format, Codeception can also execute [PHPUnit test files for unit testing](http://codeception.com/docs/05-UnitTests), and Cest format.
+Codeception supports three test formats. Beside the previously described scenario-based Cept format,
+Codeception can also execute [PHPUnit test files for unit testing](http://codeception.com/docs/05-UnitTests), and Cest format.
 
-Cest combines scenario-driven test approach with OOP design. In case you want to group a few testing scenarios into one you should consider using Cest format. In the example below we are testing CRUD actions within a single file but with a several test (one per each operation):
+Cest combines scenario-driven test approach with OOP design. In case you want to group a few testing scenarios into one you should consider using Cest format.
+In the example below we are testing CRUD actions within a single file but with a several test (one per each operation):
 
 ```php
 <?php
@@ -208,11 +227,14 @@ Learn more about [Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest
 
 ## BDD
 
-Codeception allows to execute user stories in Gherkin format in a similar manner as it is done in Cucumber or Behat. Please refer to [BDD chapter of guides](http://codeception.com/docs/07-BDD) to learn more.
+Codeception allows to execute user stories in Gherkin format in a similar manner as it is done in Cucumber or Behat.
+Please refer to [BDD chapter of guides](http://codeception.com/docs/07-BDD) to learn more.
 
 ## Configuration
 
-Codeception has a global configuration in `codeception.yml` and a config for    each suite. We also support `.dist` configuration files. If you have several developers in a project, put shared settings into `codeception.dist.yml` and personal settings into `codeception.yml`. The same goes for suite configs. For example, the `unit.suite.yml` will be merged with `unit.suite.dist.yml`. 
+Codeception has a global configuration in `codeception.yml` and a config for    each suite. We also support `.dist` configuration files.
+If you have several developers in a project, put shared settings into `codeception.dist.yml` and personal settings into `codeception.yml`.
+The same goes for suite configs. For example, the `unit.suite.yml` will be merged with `unit.suite.dist.yml`. 
 
 ## Running Tests
 
@@ -252,7 +274,8 @@ You can provide a directory path as well. This will execute all tests from the b
 php codecept run tests/acceptance/backend
 ```
 
-Using regular expressions, you can even run many different test methods from the same directory or class. For example, this will execute all tests from the backend dir beginning with the word login:
+Using regular expressions, you can even run many different test methods from the same directory or class.
+For example, this will execute all tests from the backend dir beginning with the word login:
 
 ```bash
 php codecept run tests/acceptance/backend:^login
@@ -301,4 +324,5 @@ There are plenty of useful Codeception commands:
 
 ## Conclusion
 
-We took a look into the Codeception structure. Most of the things you need were already generated by the `bootstrap` command. After you have reviewed the basic concepts and configurations, you can start writing your first scenario. 
+We took a look into the Codeception structure. Most of the things you need were already generated by the `bootstrap` command.
+After you have reviewed the basic concepts and configurations, you can start writing your first scenario. 
