@@ -421,4 +421,13 @@ EOF
         $I->executeCommand('run scenario -g groupFileTest1 --steps');
         $I->seeInShellOutput('OK (3 tests');
     }
+
+    public function testsWithConditionalFails(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ConditionalCept --no-exit');
+        $I->seeInShellOutput('There were 3 failures');
+        $I->seeInShellOutput('Fail  File "not-a-file" not found');
+        $I->seeInShellOutput('Fail  File "not-a-dir" not found');
+        $I->seeInShellOutput('Fail  File "nothing" not found');
+    }
 }
