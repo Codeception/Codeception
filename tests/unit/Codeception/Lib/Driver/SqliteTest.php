@@ -15,7 +15,13 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
     
     public static function setUpBeforeClass()
     {
-        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/sqlite.sql');
+        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+            $dumpFile = '/dumps/sqlite-54.sql';
+        } else {
+            $dumpFile = '/dumps/sqlite.sql';
+        }
+
+        $sql = file_get_contents(\Codeception\Configuration::dataDir() . $dumpFile);
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         self::$sql = explode("\n", $sql);
         try {
@@ -39,7 +45,6 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
             self::$sqlite->cleanup();
         }
     }
-    
     
     public function testCleanupDatabase()
     {
@@ -76,16 +81,25 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSingleColumnPrimaryKeyWhenTableHasNoRowId()
     {
+        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+            $this->markTestSkipped('Does not support WITHOUT ROWID on travis');
+        }
         $this->assertEquals(['id'], self::$sqlite->getPrimaryKey('order'));
     }
 
     public function testGetCompositePrimaryKeyWhenTableHasNoRowId()
     {
+        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+            $this->markTestSkipped('Does not support WITHOUT ROWID on travis');
+        }
         $this->assertEquals(['group_id', 'id'], self::$sqlite->getPrimaryKey('composite_pk'));
     }
 
     public function testGetPrimaryColumnOfTableUsingReservedWordAsTableNameWhenTableHasNoRowId()
     {
+        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+            $this->markTestSkipped('Does not support WITHOUT ROWID on travis');
+        }
         $this->assertEquals('id', self::$sqlite->getPrimaryColumn('order'));
     }
 

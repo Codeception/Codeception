@@ -22,7 +22,12 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
         $sqlite = self::$module->driver;
         $sqlite->cleanup();
-        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/sqlite.sql');
+        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+            $dumpFile = '/dumps/sqlite-54.sql';
+        } else {
+            $dumpFile = '/dumps/sqlite.sql';
+        }
+        $sql = file_get_contents(\Codeception\Configuration::dataDir() . $dumpFile);
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         $sql = explode("\n", $sql);
         $sqlite->load($sql);
@@ -80,6 +85,9 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveInDatabaseWithCompositePrimaryKey()
     {
+        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+            $this->markTestSkipped('Does not support WITHOUT ROWID on travis');
+        }
         self::$module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
         $insertQuery = 'INSERT INTO composite_pk (group_id, id, status) VALUES(?, ?, ?)';
         //this test checks that module does not delete columns by partial primary key
