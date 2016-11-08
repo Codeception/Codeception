@@ -1,12 +1,16 @@
 # Functional Tests
 
-Now that we've written some acceptance tests, functional tests are almost the same, with just one major difference: functional tests don't require a web server to run tests.
+Now that we've written some acceptance tests, functional tests are almost the same, with just one major difference:
+functional tests don't require a web server to run tests.
 
-In simple terms we set `$_REQUEST`, `$_GET` and `$_POST` variables and then we execute application from a test. This may be valuable as functional tests are faster and provide detailed stack traces on failures.
+In simple terms we set `$_REQUEST`, `$_GET` and `$_POST` variables and then we execute application from a test.
+This may be valuable as functional tests are faster and provide detailed stack traces on failures.
 
-Codeception can connect to different web frameworks which support functional testing: Symfony2, Laravel5, Yii2, Zend Framework and others. You just need to enable desired module in your functional suite config to start.
+Codeception can connect to different web frameworks which support functional testing: Symfony2, Laravel5, Yii2,
+Zend Framework and others. You just need to enable desired module in your functional suite config to start.
 
-Modules for all of these frameworks share the same interface, and thus your tests are not bound to any one of them. This is a sample functional test.
+Modules for all of these frameworks share the same interface, and thus your tests are not bound to any one of them.
+This is a sample functional test.
 
 ```php
 <?php
@@ -24,31 +28,37 @@ As you see you can use same tests for functional and acceptance testing.
 
 ## Pitfalls
 
-Acceptance tests are usually much slower than functional tests. But functional tests are less stable as they run Codeception and application in one environment. If your application was not designed to run in long living process, for instance you use `exit` operator or global variables, probably functional tests are not for you. 
+Acceptance tests are usually much slower than functional tests. But functional tests are less stable as they run Codeception
+and application in one environment. If your application was not designed to run in long living process,
+for instance you use `exit` operator or global variables, probably functional tests are not for you. 
 
 #### Headers, Cookies, Sessions
 
 One of the common issues with functional tests is usage of PHP functions that deal with `headers`, `sessions`, `cookies`.
-As you know, `header` function triggers an error if it is executed more than once for the same header. In functional tests we run application multiple times, thus, we will get lots of trash errors in the result.
+As you know, `header` function triggers an error if it is executed more than once for the same header.
+In functional tests we run application multiple times, thus, we will get lots of trash errors in the result.
 
 #### Shared Memory
 
 In functional testing unlike the traditional way, PHP application does not stop after it finished processing a request. 
 As all requests run in one memory container they are not isolated.
 So **if you see that your tests are mysteriously failing when they shouldn't - try to execute a single test.**
-This will check if tests were isolated during run. Because it's really easy to spoil environment as all tests are run in shared memory.
+This will check if tests were isolated during run. Because it's really easy to spoil environment
+as all tests are run in shared memory.
 Keep your memory clean, avoid memory leaks and clean global and static variables.
 
 ## Enabling Framework Modules
 
 You have a functional testing suite in `tests/functional` dir.
-To start you need to include one of the framework modules in suite config file: `tests/functional.suite.yml`. Below we provide simplified instructions for setting up functional tests with the most popular PHP frameworks.
+To start you need to include one of the framework modules in suite config file: `tests/functional.suite.yml`.
+Below we provide simplified instructions for setting up functional tests with the most popular PHP frameworks.
 
 ### Symfony
 
 To perform Symfony integrations you don't need to install any bundles or do any configuration changes.
 You just need to include the `Symfony` module into your test suite. If you also use Doctrine2, don't forget to include it too.
-To make Doctrine2 module connect using `doctrine` service from Symfony DIC you should specify Symfony module as a dependency for Doctrine2.
+To make Doctrine2 module connect using `doctrine` service from Symfony DIC
+you should specify Symfony module as a dependency for Doctrine2.
 
 Example of `functional.suite.yml`
 
@@ -85,7 +95,8 @@ modules:
 
 ### Yii2
 
-Yii2 tests are included in [Basic](https://github.com/yiisoft/yii2-app-basic) and [Advanced](https://github.com/yiisoft/yii2-app-advanced) application templates. Follow Yii2 guides to start.
+Yii2 tests are included in [Basic](https://github.com/yiisoft/yii2-app-basic)
+and [Advanced](https://github.com/yiisoft/yii2-app-advanced) application templates. Follow Yii2 guides to start.
 
 ### Yii
 
@@ -119,7 +130,8 @@ modules:
 ### Zend Framework 1.x
 
 The module for Zend Framework is highly inspired by ControllerTestCase class, used for functional testing with PHPUnit. 
-It follows similar approaches for bootstrapping and cleaning up. To start using Zend Framework in your functional tests, include the `ZF1` module.
+It follows similar approaches for bootstrapping and cleaning up.
+To start using Zend Framework in your functional tests, include the `ZF1` module.
 
 Example of `functional.suite.yml`
 
@@ -135,7 +147,9 @@ modules:
 
 ### Phalcon
 
-`Phalcon` module requires creating bootstrap file which returns instance of `\Phalcon\Mvc\Application`. To start writing functional tests with Phalcon support you should enable `Phalcon` module and provide path to this bootstrap file:
+`Phalcon` module requires creating bootstrap file which returns instance of `\Phalcon\Mvc\Application`.
+To start writing functional tests with Phalcon support you should enable `Phalcon` module
+and provide path to this bootstrap file:
 
 ```yaml
 class_name: FunctionalTester
@@ -152,7 +166,8 @@ modules:
 
 ## Writing Functional Tests
 
-Functional tests are written in the same manner as [Acceptance Tests](http://codeception.com/docs/03-AcceptanceTests) with `PhpBrowser` module enabled. All framework modules and `PhpBrowser` module share the same methods and the same engine.
+Functional tests are written in the same manner as [Acceptance Tests](http://codeception.com/docs/03-AcceptanceTests)
+with `PhpBrowser` module enabled. All framework modules and `PhpBrowser` module share the same methods and the same engine.
 
 Therefore we can open a web page with `amOnPage` command.
 
@@ -195,11 +210,14 @@ $I->see('Logged in successfully', '.notice');
 $I->seeCurrentUrlEquals('/profile/john');
 ```
 
-Framework modules also contain additional methods to access framework internals. For instance, `Laravel5`, `Phalcon`, and `Yii2` modules have `seeRecord` method which uses ActiveRecord layer to check that record exists in database.
+Framework modules also contain additional methods to access framework internals. For instance, `Laravel5`, `Phalcon`,
+and `Yii2` modules have `seeRecord` method which uses ActiveRecord layer to check that record exists in database.
 
-Take a look at the complete reference for module you are using. Most of its methods are common for all modules but some of them are unique.
+Take a look at the complete reference for module you are using. Most of its methods are common for all modules
+but some of them are unique.
 
-Also you can access framework globals inside a test or access Dependency Injection containers inside `Helper\Functional` class.
+Also you can access framework globals inside a test or access Dependency Injection containers
+inside `Helper\Functional` class.
 
 ```php
 <?php
@@ -237,6 +255,8 @@ error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
 
 ## Conclusion
 
-Functional tests are great if you are using powerful frameworks. By using functional tests you can access and manipulate their internal state. 
-This makes your tests shorter and faster. In other cases, if you don't use frameworks there is no practical reason to write functional tests.
+Functional tests are great if you are using powerful frameworks. By using functional tests you can access
+and manipulate their internal state. 
+This makes your tests shorter and faster. In other cases, if you don't use frameworks
+there is no practical reason to write functional tests.
 If you are using a framework other than the ones listed here, create a module for it and share it with community.
