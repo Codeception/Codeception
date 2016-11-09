@@ -30,10 +30,6 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 * xmlRequest - last SOAP request (DOMDocument)
 * xmlResponse - last SOAP response (DOMDocument)
 
-## Conflicts
-
-Conflicts with REST module
-
 
 
 ## Actions
@@ -126,6 +122,11 @@ Will produce header:
 
 
 ### seeResponseCodeIs
+ 
+ * `deprecated`  use seeSoapResponseCodeIs instead
+
+
+### seeSoapResponseCodeIs
  
 Checks response code from server.
 

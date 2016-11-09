@@ -71,11 +71,32 @@ Executes tests.
 
 Usage:
 
-* `codecept run acceptance` - run all acceptance tests
-* `codecept run tests/acceptance/MyCept.php` - run only MyCept
-* `codecept run acceptance MyCept` - same as above
-* `codecept run acceptance MyCest:myTestInIt` - run one test from a Cest
-* `codecept run acceptance checkout.feature` - run feature-file
+* `codecept run acceptance`: run all acceptance tests
+* `codecept run tests/acceptance/MyCept.php`: run only MyCept
+* `codecept run acceptance MyCept`: same as above
+* `codecept run acceptance MyCest:myTestInIt`: run one test from a Cest
+* `codecept run acceptance checkout.feature`: run feature-file
+* `codecept run acceptance -g slow`: run tests from *slow* group
+* `codecept run unit,functional`: run only unit and functional suites
+
+Verbosity modes:
+
+* `codecept run -v`:
+* `codecept run --steps`: print step-by-step execution
+* `codecept run -vv`:
+* `codecept run --debug`: print steps and debug information
+* `codecept run -vvv`: print internal debug information
+
+Load config:
+
+* `codecept run -c path/to/another/config`: from another dir
+* `codecept run -c another_config.yml`: from another config file
+
+Override config values:
+
+* `codecept run -o "settings: shuffle: true"`: enable shuffle
+* `codecept run -o "settings: lint: false"`: disable linting
+* `codecept run -o "reporters: report: \Custom\Reporter" --report`: use custom reporter
 
 Full reference:
 ```
@@ -84,6 +105,7 @@ Arguments:
  test                  test to be run
 
 Options:
+ -o, --override=OVERRIDE Override config values (multiple values allowed)
  --config (-c)         Use custom path for config
  --report              Show output in compact style
  --html                Generate html with results (default: "report.html")

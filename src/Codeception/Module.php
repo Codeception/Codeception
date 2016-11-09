@@ -6,6 +6,14 @@ use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Shared\Asserts;
 
+/**
+ * Basic class for Modules and Helpers.
+ * You must extend from it while implementing own helpers.
+ *
+ * Public methods of this class start with `_` prefix in order to ignore them in actor classes.
+ * Module contains **HOOKS** which allow to handle test execution routine.
+ *
+ */
 abstract class Module
 {
     use Asserts;
@@ -51,6 +59,14 @@ abstract class Module
 
     protected $requiredFields = [];
 
+    /**
+     * Module constructor.
+     *
+     * Requires module container (to provide access between modules of suite) and config.
+     *
+     * @param ModuleContainer $moduleContainer
+     * @param null $config
+     */
     public function __construct(ModuleContainer $moduleContainer, $config = null)
     {
         $this->moduleContainer = $moduleContainer;
@@ -61,12 +77,45 @@ abstract class Module
         }
     }
 
+    /**
+     * Allows to define initial module config.
+     * Can be used in `_beforeSuite` hook of Helpers or Extensions
+     *
+     * ```php
+     * <?php
+     * public function _beforeSuite($settings = []) {
+     *     $this->getModule('otherModule')->_setConfig($this->myOtherConfig);
+     * }
+     * ```
+     *
+     * @param $config
+     * @throws Exception\ModuleConfigException
+     * @throws ModuleException
+     */
     public function _setConfig($config)
     {
         $this->config = $this->backupConfig = array_merge($this->config, $config);
         $this->validateConfig();
     }
 
+    /**
+     * Allows to redefine config for a specific test.
+     * Config is restored at the end of a test.
+     *
+     * ```php
+     * <?php
+     * // cleanup DB only for specific group of tests
+     * public function _before(Test $test) {
+     *     if (in_array('cleanup', $test->getMetadata()->getGroups()) {
+     *         $this->getModule('Db')->_reconfigure(['cleanup' => true]);
+     *     }
+     * }
+     * ```
+     *
+     * @param $config
+     * @throws Exception\ModuleConfigException
+     * @throws ModuleException
+     */
     public function _reconfigure($config)
     {
         $this->config = array_merge($this->backupConfig, $config);
@@ -74,16 +123,28 @@ abstract class Module
         $this->validateConfig();
     }
 
+    /**
+     * HOOK to be executed when config changes with `_reconfigure`.
+     */
     protected function onReconfigure()
     {
         // update client on reconfigurations
     }
 
+    /**
+     * Reverts config changed by `_reconfigure`
+     */
     public function _resetConfig()
     {
         $this->config = $this->backupConfig;
     }
 
+    /**
+     * Validates current config for required fields and required packages.
+     *
+     * @throws Exception\ModuleConfigException
+     * @throws ModuleException
+     */
     protected function validateConfig()
     {
         $fields = array_keys($this->config);
@@ -108,6 +169,11 @@ abstract class Module
         }
     }
 
+    /**
+     * Returns a module name for a Module, a class name for Helper
+     *
+     * @return string
+     */
     public function _getName()
     {
         $moduleName = '\\'.get_class($this);
@@ -119,61 +185,105 @@ abstract class Module
         return $moduleName;
     }
 
+    /**
+     * Checks if a module has required fields
+     *
+     * @return bool
+     */
     public function _hasRequiredFields()
     {
         return !empty($this->requiredFields);
     }
 
-    // HOOK: used after configuration is loaded
+    /**
+     * **HOOK** triggered after module is created and configuration is loaded
+     */
     public function _initialize()
     {
     }
 
-    // HOOK: on every Guy class initialization
     public function _cleanup()
     {
     }
 
-    // HOOK: before each suite
+    /**
+     * **HOOK** executed before suite
+     *
+     * @param array $settings
+     */
     public function _beforeSuite($settings = [])
     {
     }
 
-    // HOOK: after suite
+    /**
+     * **HOOK** executed after suite
+     */
     public function _afterSuite()
     {
     }
 
-    // HOOK: before every step
+    /**
+     * **HOOK** executed before step
+     *
+     * @param Step $step
+     */
     public function _beforeStep(Step $step)
     {
     }
 
-    // HOOK: after every  step
+    /**
+     * **HOOK** executed after step
+     *
+     * @param Step $step
+     */
     public function _afterStep(Step $step)
     {
     }
 
-    // HOOK: before scenario
+    /**
+     * **HOOK** executed before test
+     *
+     * @param TestInterface $test
+     */
     public function _before(TestInterface $test)
     {
     }
 
-    // HOOK: after scenario
+    /**
+     * **HOOK** executed after test
+     *
+     * @param TestInterface $test
+     */
     public function _after(TestInterface $test)
     {
     }
 
-    // HOOK: on fail
+    /**
+     * **HOOK** executed when test fails but before `_after`
+     *
+     * @param TestInterface $test
+     * @param \Exception $fail
+     */
     public function _failed(TestInterface $test, $fail)
     {
     }
 
+    /**
+     * Print debug message to the screen.
+     *
+     * @param $message
+     */
     protected function debug($message)
     {
         codecept_debug($message);
     }
 
+    /**
+     * Print debug message with a title
+     *
+     * @param $title
+     * @param $message
+     */
     protected function debugSection($title, $message)
     {
         if (is_array($message) or is_object($message)) {
@@ -182,16 +292,39 @@ abstract class Module
         $this->debug("[$title] $message");
     }
 
+    /**
+     * Checks that module is enabled.
+     *
+     * @param $name
+     * @return bool
+     */
     protected function hasModule($name)
     {
         return $this->moduleContainer->hasModule($name);
     }
 
+    /**
+     * Get all enabled modules
+     *
+     * @return array
+     */
     protected function getModules()
     {
         return $this->moduleContainer->all();
     }
 
+    /**
+     * Get another module by its name:
+     *
+     * ```php
+     * <?php
+     * $this->getModule('WebDriver')->_findElements('.items');
+     * ```
+     *
+     * @param $name
+     * @return Module
+     * @throws ModuleException
+     */
     protected function getModule($name)
     {
         if (!$this->hasModule($name)) {
@@ -200,6 +333,12 @@ abstract class Module
         return $this->moduleContainer->getModule($name);
     }
 
+    /**
+     * Get config values or specific config item.
+     *
+     * @param null $key
+     * @return array|mixed|null
+     */
     public function _getConfig($key = null)
     {
         if (!$key) {

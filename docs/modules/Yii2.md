@@ -68,6 +68,28 @@ modules:
             entryScript: index-test.php
 ```
 
+## Fixtures
+
+This module allows to use [fixtures](http://www.yiiframework.com/doc-2.0/guide-test-fixtures.html) inside a test. There are two options for that.
+Fixtures can be loaded using [haveFixtures](#haveFixtures) method inside a test:
+
+```php
+<?php
+$I->haveFixtures(['posts' => PostsFixture::className()]);
+```
+
+or, if you need to load fixtures before the test (probably before the cleanup transaction is started), you
+can specify fixtures with `_fixtures` method of a testcase:
+
+```php
+<?php
+// inside Cest file or Codeception\TestCase\Unit
+public function _fixtures()
+{
+    return ['posts' => PostsFixture::className()]
+}
+```
+
 ## Status
 
 Maintainer: **samdark**
@@ -801,13 +823,13 @@ Signature is the same as for `fixtures()` method of `yii\test\FixtureTrait`
 
 ```php
 <?php
-$I->haveFixtures(,
+$I->haveFixtures([
     'posts' => PostsFixture::className(),
     'user' => [
         'class' => UserFixture::className(),
-        'dataFile' => ' * `tests/_data/models/user.php'` 
+        'dataFile' => ' * `tests/_data/models/user.php',` 
      ],
-);
+]);
 ```
 
  * `param` $fixtures

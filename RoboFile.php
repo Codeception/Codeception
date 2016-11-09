@@ -357,27 +357,18 @@ class RoboFile extends \Robo\Tasks
             $className = '\Codeception\Util\\' . $utilName;
             $source = self::REPO_BLOB_URL."/".self::STABLE_BRANCH."/src/Codeception/Util/$utilName.php";
 
-            $this->taskGenDoc('docs/reference/' . $utilName . '.md')
-                ->docClass($className)
-                ->append(
-                    '<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. '
-                    .'<a href="'.$source.'">Help us to improve documentation. Edit module reference</a></div>'
-                )
-                ->processClassDocBlock(function (ReflectionClass $r, $text) {
-                    return $text . "\n";
-                })->processMethodSignature(function (ReflectionMethod $r, $text) {
-                    return '### ' . $r->getName();
-                })->processMethodDocBlock(function (ReflectionMethod $r, $text) use ($utilName, $source) {
-                    $line = $r->getStartLine();
-                    if ($r->isStatic()) {
-                        $text = "\n*static*\n$text";
-                    }
-                    $text = preg_replace("~@(.*?)([$\s])~", ' * `$1` $2', $text);
-                    $text .= "\n[See source]($source#L$line)";
-                    return "\n" . $text."\n";
-                })
-                ->reorderMethods('ksort')
-                ->run();
+            $this->documentApiClass('docs/reference/' . $utilName . '.md', $className, $source);
+        }
+    }
+
+    public function buildDocsApi()
+    {
+        $this->say("API Classes");
+        $apiClasses = ['Codeception\Module'];
+
+        foreach ($apiClasses as $apiClass) {
+            $name = (new ReflectionClass($apiClass))->getShortName();
+            $this->documentApiClass('docs/reference/' . $name . '.md', $apiClass, true);
         }
     }
 
@@ -862,6 +853,57 @@ class RoboFile extends \Robo\Tasks
             ->arg('.')
             ->arg('--standard=ruleset.xml')
             ->arg('--ignore=tests,vendor,package,docs')
+            ->run();
+    }
+
+    /**
+     * @param $file
+     * @param $className
+     * @param $source
+     */
+    protected function documentApiClass($file, $className, $all = false)
+    {
+        $uri = str_replace('\\', '/', $className);
+        $source = self::REPO_BLOB_URL."/".self::STABLE_BRANCH."/src/$uri.php";
+
+        $this->taskGenDoc($file)
+            ->docClass($className)
+            ->filterMethods(function(ReflectionMethod $r) use ($all, $className) {
+                return $all || $r->isPublic();
+            })
+            ->append(
+                '<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. '
+                . '<a href="' . $source . '">Help us to improve documentation. Edit module reference</a></div>'
+            )
+            ->processPropertySignature(function($r) {
+                return "\n#### $" . $r->name. "\n\n";
+            })
+            ->processPropertyDocBlock(function($r, $text) {
+                $modifiers = implode(' ', \Reflection::getModifierNames($r->getModifiers()));
+                $text = ' *' . $modifiers . '* **$' . $r->name . "**\n" . $text;
+                $text = preg_replace("~@(.*?)\s(.*)~", 'type `$2`', $text);
+                return $text;
+            })
+            ->processClassDocBlock(
+                function (ReflectionClass $r, $text) {
+                    return $text . "\n";
+                }
+            )
+            ->processMethodSignature(function($r, $text) {
+                return "#### {$r->name}()\n\n" . ltrim($text, '#');
+            })
+            ->processMethodDocBlock(
+                function (ReflectionMethod $r, $text) use ($file) {
+                    $file = str_replace(__DIR__, '', $r->getFileName());
+                    $source = self::REPO_BLOB_URL."/".self::STABLE_BRANCH. $file;
+                    
+                    $line = $r->getStartLine();
+                    $text = preg_replace("~^\s?@(.*?)\s~m", ' * `$1` $2', $text);
+                    $text .= "\n[See source]($source#L$line)";
+                    return "\n" . $text . "\n";
+                }
+            )
+            ->reorderMethods('ksort')
             ->run();
     }
 }
