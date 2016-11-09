@@ -275,6 +275,16 @@ class Yii2 extends Client
 
     private function mockAssetManager()
     {
-        $this->app->set('assetManager', Stub::make('yii\web\AssetManager', ['publish' => function() {}]));
+        $this->app->set(
+            'assetManager',
+            Stub::make(
+                'yii\web\AssetManager',
+                [
+                    'publish' => function () {
+                        return null;
+                    },
+                ]
+            )
+        );
     }
 }
