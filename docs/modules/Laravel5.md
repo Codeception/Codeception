@@ -8,7 +8,8 @@ See the Acceptance tests section below for more details.
 
 As of Codeception 2.2 this module only works for Laravel 5.1 and later releases.
 If you want to test a Laravel 5.0 application you have to use Codeception 2.1.
-You can also upgrade your Laravel application to 5.1, for more details check the Laravel Upgrade Guide at <https://laravel.com/docs/master/upgrade>.
+You can also upgrade your Laravel application to 5.1, for more details check the Laravel Upgrade Guide
+at <https://laravel.com/docs/master/upgrade>.
 
 ## Demo project
 <https://github.com/janhenkgerritsen/codeception-laravel5-sample>
@@ -27,33 +28,43 @@ You can also upgrade your Laravel application to 5.1, for more details check the
 
 ## Config
 
-* cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
-* run_database_migrations: `boolean`, default `false` - enable to run database migrations before each test.
-* environment_file: `string`, default `.env` - The .env file to load for the tests.
-* bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
-* root: `string`, default `` - Root path of our application.
-* packages: `string`, default `workbench` - Root path of application packages (if any).
-* disable_exception_handling: `boolean`, default `true` - disable Laravel exception handling
+* cleanup: `boolean`, default `true` - all database queries will be run in a transaction,
+  which will be rolled back at the end of each test.
+* run_database_migrations: `boolean`, default `false` - run database migrations before each test.
+* database_migrations_path: `string`, default `` - path to the database migrations, relative to the root of the application.
+* run_database_seeder: `boolean`, default `false` - run database seeder before each test.
+* database_seeder_class: `string`, default `` - database seeder class name.
+* environment_file: `string`, default `.env` - the environment file to load for the tests.
+* bootstrap: `string`, default `bootstrap/app.php` - relative path to app.php config file.
+* root: `string`, default `` - root path of the application.
+* packages: `string`, default `workbench` - root path of application packages (if any).
+* disable_exception_handling: `boolean`, default `true` - disable Laravel exception handling.
 * disable_middleware: `boolean`, default `false` - disable all middleware.
 * disable_events: `boolean`, default `false` - disable events (does not disable model events).
 * disable_model_events: `boolean`, default `false` - disable model events.
-* url: `string`, default `` - The application URL.
+* url: `string`, default `` - the application URL.
 
 ## API
 
-* app - `Illuminate\Foundation\Application` instance
-* client - `\Symfony\Component\BrowserKit\Client` instance
+* app - `Illuminate\Foundation\Application`
+* config - `array`
 
 ## Parts
 
-* ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+* ORM - only include the database methods of this module:
+    * have
+    * haveMultiple
+    * haveRecord
+    * grabRecord
+    * seeRecord
+    * dontSeeRecord
 
 ## Acceptance tests
 
 You should not use this module for acceptance tests.
 If you want to use Laravel functionality with your acceptance tests,
 for example to do test setup, you can initialize the Laravel functionality
-by adding the following lines of code to your suite `_bootstrap.php` file:
+by adding the following lines of code to the `_bootstrap.php` file of your test suite:
 
     require 'bootstrap/autoload.php';
     $app = require 'bootstrap/app.php';
@@ -862,7 +873,23 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
 
 
 ### have
-__not documented__
+ 
+Use Laravel's model factory to create a model.
+Can only be used with Laravel 5.1 and later.
+
+``` php
+<?php
+$I->have('App\User');
+$I->have('App\User', ['name' => 'John Doe']);
+$I->have('App\User', [], 'admin');
+?>
+```
+
+ * `see`  http://laravel.com/docs/5.1/testing#model-factories
+ * `param string` $model
+ * `param array` $attributes
+ * `param string` $name
+ * `[Part]` orm
 
 
 ### haveBinding
@@ -935,7 +962,24 @@ $I->haveInstance('My\Class', new My\Class());
 
 
 ### haveMultiple
-__not documented__
+ 
+Use Laravel's model factory to create multiple models.
+Can only be used with Laravel 5.1 and later.
+
+``` php
+<?php
+$I->haveMultiple('App\User', 10);
+$I->haveMultiple('App\User', 10, ['name' => 'John Doe']);
+$I->haveMultiple('App\User', 10, [], 'admin');
+?>
+```
+
+ * `see`  http://laravel.com/docs/5.1/testing#model-factories
+ * `param string` $model
+ * `param int` $times
+ * `param array` $attributes
+ * `param string` $name
+ * `[Part]` orm
 
 
 ### haveRecord
