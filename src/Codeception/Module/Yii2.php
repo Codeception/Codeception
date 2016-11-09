@@ -264,13 +264,13 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      *
      * ```php
      * <?php
-     * $I->haveFixtures(,
+     * $I->haveFixtures([
      *     'posts' => PostsFixture::className(),
      *     'user' => [
      *         'class' => UserFixture::className(),
-     *         'dataFile' => '@tests/_data/models/user.php'
+     *         'dataFile' => '@tests/_data/models/user.php',
      *      ],
-     * );
+     * ]);
      * ```
      *
      * @param $fixtures

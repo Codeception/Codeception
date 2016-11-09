@@ -67,7 +67,8 @@ class Console implements EventSubscriberInterface
      * @var OutputInterface
      */
     protected $output;
-    protected $fails = [];
+    protected $conditionalFails = [];
+    protected $failedStep;
     protected $reports = [];
     protected $namespace = '';
     protected $chars = ['success' => '+', 'fail' => 'x', 'of' => ':'];
@@ -155,7 +156,7 @@ class Console implements EventSubscriberInterface
     // triggered for all tests
     public function startTest(TestEvent $e)
     {
-        $this->fails = [];
+        $this->conditionalFails = [];
         $test = $e->getTest();
         $this->printedTest = $test;
         $this->message = null;
@@ -186,8 +187,12 @@ class Console implements EventSubscriberInterface
     public function afterStep(StepEvent $e)
     {
         $step = $e->getStep();
-        if ($step->hasFailed() and $step instanceof Step\ConditionalAssertion) {
-            $this->fails[] = $step;
+        if ($step->hasFailed()) {
+            if ($step instanceof Step\ConditionalAssertion) {
+                $this->conditionalFails[] = $step;
+            } else {
+                $this->failedStep = $step;
+            }
         }
     }
 
@@ -400,18 +405,15 @@ class Console implements EventSubscriberInterface
 
     protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
     {
-        $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
-
-        $failedStep = "";
-        foreach ($failedTest->getScenario()->getSteps() as $step) {
-            if ($step->hasFailed()) {
-                $failedStep = (string) $step;
-                break;
-            }
+        if ($this->conditionalFails) {
+            $failedStep = (string) array_shift($this->conditionalFails);
+        } else {
+            $failedStep = (string) $this->failedStep;
         }
+
         $this->printException($fail, $failedStep);
 
-        $this->printScenarioTrace($failedTest, $failToString);
+        $this->printScenarioTrace($failedTest);
         if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
             $this->printExceptionTrace($fail);
 
@@ -571,15 +573,15 @@ class Console implements EventSubscriberInterface
         $result->append(' ')->write();
         $this->writeCurrentTest($test, false);
 
-        $conditionalFails = "";
-        $numFails = count($this->fails);
+        $conditionalFailsMessage = "";
+        $numFails = count($this->conditionalFails);
         if ($numFails == 1) {
-            $conditionalFails = "[F]";
+            $conditionalFailsMessage = "[F]";
         } elseif ($numFails) {
-            $conditionalFails = "{$numFails}x[F]";
+            $conditionalFailsMessage = "{$numFails}x[F]";
         }
-        $conditionalFails = "<error>$conditionalFails</error> ";
-        $this->message($conditionalFails)->write();
+        $conditionalFailsMessage = "<error>$conditionalFailsMessage</error> ";
+        $this->message($conditionalFailsMessage)->write();
         $this->writeTimeInformation($event);
         $this->output->writeln('');
     }
