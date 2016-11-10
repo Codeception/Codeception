@@ -45,7 +45,7 @@ use yii\db\ActiveRecordInterface;
  *
  * ### Example (`functional.suite.yml`)
  *
- * ```yml
+ * ```yaml
  * class_name: FunctionalTester
  * modules:
  *   enabled:
@@ -55,7 +55,7 @@ use yii\db\ActiveRecordInterface;
  *
  * ### Example (`unit.suite.yml`)
  *
- * ```yml
+ * ```yaml
  * class_name: UnitTester
  * modules:
  *   enabled:
@@ -67,7 +67,7 @@ use yii\db\ActiveRecordInterface;
  *
  * ### Example (`acceptance.suite.yml`)
  *
- * ```yml
+ * ```yaml
  * class_name: AcceptanceTester
  * modules:
  *     enabled:
