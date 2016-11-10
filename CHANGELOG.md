@@ -5,6 +5,7 @@
 * [Phalcon] Added `services` part which can be used to `grabServiceFromContainer` and `addServiceToContainer` when conflicting module is used. By @sergeyklay
 * [Phalcon] **Refactored**. Moved in-memory session adapter to the separated namespace. By @sergeyklay
 * [Phalcon] Fixed overwriting server parameters on requests. By @sergeyklay
+* [Yii2] Fixed unintentional DB connection drop during exception logging, #3696 by @ivokund
 
 #### 2.2.6 (October 2016)
 

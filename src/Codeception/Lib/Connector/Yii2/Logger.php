@@ -22,6 +22,12 @@ class Logger extends \yii\log\Logger
         if (strpos($category, 'yii\db\Command')===0) {
             return; // don't log queries
         }
+
+        // https://github.com/Codeception/Codeception/issues/3696
+        if ($message instanceof \yii\base\Exception) {
+            $message = $message->__toString();
+        }
+
         Debug::debug("[$category] " .  \yii\helpers\VarDumper::export($message));
     }
 }
