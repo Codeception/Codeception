@@ -2,7 +2,8 @@
 
 Codeception uses modularity to create a comfortable testing environment for every test suite you write.
 
-All actions and assertions that can be performed by the Tester object in a class are defined in modules. You can extend the testing suite with your own actions and assertions, by writing them into a custom module.
+All actions and assertions that can be performed by the Tester object in a class are defined in modules.
+You can extend the testing suite with your own actions and assertions, by writing them into a custom module.
 
 Let's look at the following test:
 
@@ -16,7 +17,8 @@ $I->seeFileFound('running.lock');
 
 ```
 
-It can operate with different entities: the web page can be loaded with the PhpBrowser module, the database assertion uses the Db module, and file state can be checked with the Filesystem module. 
+It can operate with different entities: the web page can be loaded with the PhpBrowser module,
+the database assertion uses the Db module, and file state can be checked with the Filesystem module. 
 
 Modules are attached to Actor classes in the suite config.
 For example, in `tests/functional.suite.yml` we should see:
@@ -32,18 +34,30 @@ modules:
         - Filesystem
 ```
 
-The FunctionalTester class has its methods defined in modules. Actually it doesn't contain any of them, but rather acts as a proxy. It knows which module executes this action and passes parameters into it. To make your IDE see all of the FunctionalTester methods, you should run use the `codecept build` command. It generates method signatures from enabled modules and saves them into a trait which is included into an actor. In current example, `tests/support/_generated/FunctionalTesterActions.php` file will be generated.
+The FunctionalTester class has its methods defined in modules. Actually it doesn't contain any of them,
+but rather acts as a proxy. It knows which module executes this action and passes parameters into it.
+To make your IDE see all of the FunctionalTester methods, you should run use the `codecept build` command.
+It generates method signatures from enabled modules and saves them into a trait which is included into an actor.
+In current example, `tests/support/_generated/FunctionalTesterActions.php` file will be generated.
 By default Codeception auto rebuilds Actions trait on each change of suite configuration.
 
 ## Standard Modules
 
-Codeception has many bundled modules which will help you run tests for different purposes and different environments. The idea of modules is to share common actions so developers and QA engineers could concentrate on testing and not on reinventing the wheel. Each module provides methods for testing its part, by combining modules you can get powerful setup to test application at all levels.
+Codeception has many bundled modules which will help you run tests for different purposes and different environments.
+The idea of modules is to share common actions so developers and QA engineers could concentrate on testing
+and not on reinventing the wheel. Each module provides methods for testing its part,
+by combining modules you can get powerful setup to test application at all levels.
 
-There is `WebDriver` module for acceptance testing, modules for all popular PHP frameworks, `PHPBrowser` to emulate browser execution, `REST` for testing APIs, and more. Modules are considered to be the most valuable part of Codeception. They are constanly improving to provide the best testing experience, and be flexible to satisfy everyone's needs.
+There is `WebDriver` module for acceptance testing, modules for all popular PHP frameworks,
+`PHPBrowser` to emulate browser execution, `REST` for testing APIs, and more.
+Modules are considered to be the most valuable part of Codeception.
+They are constanly improving to provide the best testing experience, and be flexible to satisfy everyone's needs.
 
 ### Module Conflicts
 
-Modules may conflict with each other. If a module implements `Codeception\Lib\Interfaces\ConflictsWithModule` it might declare a conflict rule to be used with other modules. For instance, WebDriver condlicts with all modules implementing `Codeception\Lib\Interfaces\Web` interface.
+Modules may conflict with each other. If a module implements `Codeception\Lib\Interfaces\ConflictsWithModule`
+it might declare a conflict rule to be used with other modules. For instance, WebDriver condlicts
+with all modules implementing `Codeception\Lib\Interfaces\Web` interface.
 
 ```php
 public function _conflicts()
@@ -54,9 +68,14 @@ public function _conflicts()
 
 This way if you try to use two modules sharing the same conflicted interface you will get an exception.
 
-**Framework modules, PhpBrowser, and WebDriver** can't be used together to avoid confusion. For instance, `amOnPage` method exists in all those modules, and you should not guess which module will actually execute it. If you do acceptance testing set up either WebDriver or PHPBrowser but do not setup both. If you do functional testing, enable one of the framework modules. 
+**Framework modules, PhpBrowser, and WebDriver** can't be used together to avoid confusion.
+For instance, `amOnPage` method exists in all those modules, and you should not guess which module will actually execute it.
+If you do acceptance testing set up either WebDriver or PHPBrowser but do not setup both.
+If you do functional testing, enable one of the framework modules. 
 
-In case you need to use a module which depends on conflicted one, specify it as dependent module in config. Probably you may want to use `WebDriver` with `REST` module which interacts with a server through `PhpBrowser`. In this case your config should look like:
+In case you need to use a module which depends on conflicted one, specify it as dependent module in config.
+Probably you may want to use `WebDriver` with `REST` module which interacts with a server through `PhpBrowser`.
+In this case your config should look like:
 
 ```yaml
 modules:
@@ -76,9 +95,11 @@ In case you only need some parts of conflicted module to be loaded, please refer
 
 ### Module Parts
 
-Modules with *Parts* section in their reference can be partially loaded. This way `$I` object will have actions belonging only to a specific part of that module. Partially loaded modules can be also used to avoid module conflicts.
+Modules with *Parts* section in their reference can be partially loaded. This way `$I` object will have actions
+belonging only to a specific part of that module. Partially loaded modules can be also used to avoid module conflicts.
 
-For instance, Laravel5 module has ORM part which contains database actions. You can enable PhpBrowser module for testing and Laravel + ORM for connecting to database and checking the data.
+For instance, Laravel5 module has ORM part which contains database actions. You can enable PhpBrowser module
+for testing and Laravel + ORM for connecting to database and checking the data.
 
 ```yaml
 modules:
@@ -91,7 +112,8 @@ modules:
 
 Modules won't conflict as actions with the same names won't be loaded.
 
-The same way REST module has `Xml` and `Json` parts. In case you test REST service with JSON responses only, you can enable only JSON part of this module:
+The same way REST module has `Xml` and `Json` parts. In case you test REST service with JSON responses only,
+you can enable only JSON part of this module:
 
 ```yaml
 class_name: ApiTester
@@ -105,7 +127,10 @@ modules:
 
 ## Helpers
 
-Codeception doesn't restrict you to only the modules from the main repository. No doubt your project might need your own actions added to the test suite. By running the `bootstrap` command, Codeception generates three dummy modules for you, one for each of the newly created suites. These custom modules are called 'Helpers', and they can be found in the `tests/_support` directory.
+Codeception doesn't restrict you to only the modules from the main repository.
+No doubt your project might need your own actions added to the test suite. By running the `bootstrap` command,
+Codeception generates three dummy modules for you, one for each of the newly created suites.
+These custom modules are called 'Helpers', and they can be found in the `tests/_support` directory.
 
 
 
@@ -120,7 +145,8 @@ class Functional extends \Codeception\Module
 
 ```
 
-As for actions, everything is quite simple. Every action you define is a public function. Write any public method, run the `build` command, and you will see the new function added into the FunctionalTester class.
+As for actions, everything is quite simple. Every action you define is a public function. Write any public method,
+run the `build` command, and you will see the new function added into the FunctionalTester class.
 
 
 <div class="alert alert-info">
@@ -180,11 +206,14 @@ function seeCanCheckEverything($thing)
 
 ### Accessing Other Modules
 
-It's possible that you will need to access internal data or functions from other modules. For example, for your module you might need to access responses or internal actions of modules.
+It's possible that you will need to access internal data or functions from other modules.
+For example, for your module you might need to access responses or internal actions of modules.
 
-Modules can interact with each other through the `getModule` method. Please note that this method will throw an exception if the required module was not loaded.
+Modules can interact with each other through the `getModule` method.
+Please note that this method will throw an exception if the required module was not loaded.
 
-Let's imagine that we are writing a module that reconnects to a database. It's supposed to use the dbh connection value from the Db module.
+Let's imagine that we are writing a module that reconnects to a database.
+It's supposed to use the dbh connection value from the Db module.
 
 ```php
 <?php
@@ -197,9 +226,11 @@ function reconnectToDatabase() {
 
 ```
 
-By using the `getModule` function, you get access to all of the public methods and properties of the requested module. The `dbh` property was defined as public specifically to be available to other modules.
+By using the `getModule` function, you get access to all of the public methods and properties of the requested module.
+The `dbh` property was defined as public specifically to be available to other modules.
 
-Modules may also contain methods that are exposed for use in helper classes. Those methods start with `_` prefix and are not available in Actor classes, so can be accessed only from modules and extensions.
+Modules may also contain methods that are exposed for use in helper classes. Those methods start with `_` prefix
+and are not available in Actor classes, so can be accessed only from modules and extensions.
 
 You should use them to write your own actions using module internals.
    
@@ -220,8 +251,10 @@ function seeNumResults($num)
 
 ```
 
-In this example we use API of <a href="https://github.com/facebook/php-webdriver">facebook/php-webdriver</a> library, a Selenium WebDriver client a module is build on. 
-You can also access `webDriver` property of a module to get access to `Facebook\WebDriver\RemoteWebDriver` instance for direct Selenium interaction.
+In this example we use API of <a href="https://github.com/facebook/php-webdriver">facebook/php-webdriver</a> library,
+a Selenium WebDriver client a module is build on. 
+You can also access `webDriver` property of a module to get access to `Facebook\WebDriver\RemoteWebDriver` instance
+for direct Selenium interaction.
 
 ### Extending a Module
 
@@ -237,9 +270,11 @@ class MyExtendedSelenium extends \Codeception\Module\WebDriver  {
 ```
 
 In this helper you can replace parent's methods with your own implementation.
-You can also replace `_before` and `_after` hooks, which might be an option when you need to customize starting and stopping of a testing session.
+You can also replace `_before` and `_after` hooks, which might be an option
+when you need to customize starting and stopping of a testing session.
 
-If some of the methods of the parent class should not be used in a child module, you can disable them. Codeception has several options for this:
+If some of the methods of the parent class should not be used in a child module, you can disable them.
+Codeception has several options for this:
 
 ```php
 <?php
@@ -283,7 +318,8 @@ Setting `$includeInheritedActions` to false won't include the methods from paren
  
 ### Hooks
 
-Each module can handle events from the running test. A module can be executed before the test starts, or after the test is finished. This can be useful for bootstrap/cleanup actions.
+Each module can handle events from the running test. A module can be executed before the test starts,
+or after the test is finished. This can be useful for bootstrap/cleanup actions.
 You can also define special behavior for when the test fails. This may help you in debugging the issue.
 For example, the PhpBrowser module saves the current webpage to the `tests/_output` directory when a test fails.
 
@@ -330,15 +366,18 @@ All hooks are defined in `\Codeception\Module` and are listed here. You are free
 
 ```
 
-Please note that methods with a `_` prefix are not added to the Actor class. This allows them to be defined as public but used only for internal purposes.
+Please note that methods with a `_` prefix are not added to the Actor class.
+This allows them to be defined as public but used only for internal purposes.
 
 ### Debug
 
-As we mentioned, the `_failed` hook can help in debugging a failed test. You have the opportunity to save the current test's state and show it to the user, but you are not limited to this.
+As we mentioned, the `_failed` hook can help in debugging a failed test.
+You have the opportunity to save the current test's state and show it to the user, but you are not limited to this.
 
 Each module can output internal values that may be useful during debug.
 For example, the PhpBrowser module prints the response code and current URL every time it moves to a new page.
-Thus, modules are not black boxes. They are trying to show you what is happening during the test. This makes debugging your tests less painful.
+Thus, modules are not black boxes. They are trying to show you what is happening during the test.
+This makes debugging your tests less painful.
 
 To display additional information, use the `debug` and `debugSection` methods of the module.
 Here is an example of how it works for PhpBrowser:
@@ -364,7 +403,8 @@ I click "All pages"
 
 Modules and Helpers can be configured from the suite config file, or globally from `codeception.yml`.
 
-Mandatory parameters should be defined in the `$requiredFields` property of the class. Here is how it is done in the Db module:
+Mandatory parameters should be defined in the `$requiredFields` property of the class.
+Here is how it is done in the Db module:
 
 ```php
 <?php
@@ -376,7 +416,8 @@ class Db extends \Codeception\Module
 
 The next time you start the suite without setting one of these values, an exception will be thrown. 
 
-For optional parameters, you should set default values. The `$config` property is used to define optional parameters as well as their values. In the WebDriver module we use default Selenium Server address and port. 
+For optional parameters, you should set default values. The `$config` property is used to define optional parameters
+as well as their values. In the WebDriver module we use default Selenium Server address and port. 
 
 ```php
 <?php
@@ -387,7 +428,8 @@ class WebDriver extends \Codeception\Module
     
 ```
 
-The host and port parameter can be redefined in the suite config. Values are set in the `modules:config` section of the configuration file.
+The host and port parameter can be redefined in the suite config.
+Values are set in the `modules:config` section of the configuration file.
 
 ```yaml
 modules:
@@ -400,13 +442,17 @@ modules:
             repopulate: false
 ```
 
-Optional and mandatory parameters can be accessed through the `$config` property. Use `$this->config['parameter']` to get its value.
+Optional and mandatory parameters can be accessed through the `$config` property.
+Use `$this->config['parameter']` to get its value.
 
 ### Dynamic Configuration With Params
 
-Module can dynamically be configured from environment variables. Parameter storage should be specified in global `codeception.yml` config inside `params` section. Parameters can be loaded from environment vars, from yaml (Symfony format), .env (Laravel format) or ini file. 
+Module can dynamically be configured from environment variables.
+Parameter storage should be specified in global `codeception.yml` config inside `params` section.
+Parameters can be loaded from environment vars, from yaml (Symfony format), .env (Laravel format) or ini file. 
 
-Use `params` section of global config `codeception.yml` to specify how to load them. You can specify several sources for params to be loaded from.
+Use `params` section of global config `codeception.yml` to specify how to load them.
+You can specify several sources for params to be loaded from.
 
 Example: load parameters from environment:
 
@@ -430,9 +476,11 @@ params:
     - .env.testing
 ```
 
-Once loaded, param variables can be used as module configuration values. Use variable name wrapped with `%` as placeholder and it will be replaced with its value. 
+Once loaded, param variables can be used as module configuration values.
+Use variable name wrapped with `%` as placeholder and it will be replaced with its value. 
 
-Let's say we want to specify credentials for cloud testing service. We have loaded `SAUCE_USER` and `SAUCE_KEY` variables from environment, and now we are passing their values into config of `WebDriver`:
+Let's say we want to specify credentials for cloud testing service. We have loaded `SAUCE_USER`
+and `SAUCE_KEY` variables from environment, and now we are passing their values into config of `WebDriver`:
 
 ```yaml
     modules:
@@ -469,4 +517,8 @@ At the end of a test, all your changes will be rolled back to the original confi
 ## Conclusion
 
 
-Modules are the real power of Codeception. They are used to emulate multiple inheritances for Actor classes (UnitTester, FunctionalTester, AcceptanceTester, etc). Codeception provides modules to emulate web requests, access data, interact with popular PHP libraries, etc. If bundled modules are not enough for you that's ok, you are free to write your own! Use Helpers (custom modules) for everything that Codeception can't do out of the box. Helpers also can be used to extend the functionality of original modules.
+Modules are the real power of Codeception. They are used to emulate multiple inheritances for Actor classes
+(UnitTester, FunctionalTester, AcceptanceTester, etc). Codeception provides modules to emulate web requests,
+access data, interact with popular PHP libraries, etc. If bundled modules are not enough for you that's ok,
+you are free to write your own! Use Helpers (custom modules) for everything that Codeception can't do out of the box.
+Helpers also can be used to extend the functionality of original modules.
