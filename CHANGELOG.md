@@ -6,6 +6,7 @@
 * [Phalcon] **Refactored**. Moved in-memory session adapter to the separated namespace. By @sergeyklay
 * [Phalcon] Fixed overwriting server parameters on requests. By @sergeyklay
 * [Yii2] Fixed unintentional DB connection drop during exception logging, #3696 by @ivokund
+* [Yii2] Added procesing for native url formats of Yii2 #3725 by @githubjeka
 
 #### 2.2.6 (October 2016)
 
