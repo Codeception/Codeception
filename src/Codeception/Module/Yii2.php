@@ -483,7 +483,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * @param bool $changeHistory
      * @return mixed
      */
-    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    protected function clientRequest($method, $uri, array $parameters = [], array $files = [], array $server = [], $content = null, $changeHistory = true)
     {
         if (is_array($uri)) {
             $uri = Yii::$app->getUrlManager()->createUrl($uri);
