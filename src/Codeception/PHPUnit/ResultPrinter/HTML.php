@@ -7,6 +7,7 @@ use Codeception\Step\Meta;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
+use Codeception\Util\PathResolver;
 
 class HTML extends CodeceptionResultPrinter
 {
@@ -140,10 +141,12 @@ class HTML extends CodeceptionResultPrinter
         if ($test instanceof TestInterface) {
             $reports = $test->getMetadata()->getReports();
             if (isset($reports['png'])) {
-                $png = "<tr><td class='error'><div class='screenshot'><img src='file://{$reports['png']}' alt='failure screenshot'></div></td></tr>";
+                $localPath = PathResolver::getRelativeDir($reports['png'], codecept_data_dir());
+                $png = "<tr><td class='error'><div class='screenshot'><img src='$localPath' alt='failure screenshot'></div></td></tr>";
             }
             if (isset($reports['html'])) {
-                $html = "<tr><td class='error'>See <a href='file://{$reports['html']}' target='_blank'>HTML snapshot</a> of a failed page</td></tr>";
+                $localPath = PathResolver::getRelativeDir($reports['html'], codecept_data_dir());
+                $html = "<tr><td class='error'>See <a href='$localPath' target='_blank'>HTML snapshot</a> of a failed page</td></tr>";
             }
 
         }
