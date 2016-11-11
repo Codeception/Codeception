@@ -103,6 +103,18 @@ use yii\db\ActiveRecordInterface;
  * }
  * ```
  *
+ * ## URL
+ * This module provide to use native URL formats of Yii2 for all codeception commands that use url for work.
+ * This commands allows input like:
+ *
+ * ```php
+ * <?php
+ * $I->amOnPage(['site/view','page'=>'about']);
+ * $I->amOnPage('index-test.php?site/index');
+ * $I->amOnPage('http://localhost/index-test.php?site/index');
+ * $I->sendAjaxPostRequest(['/user/update', 'id' => 1], ['UserForm[name]' => 'G.Hopper');
+ * ```
+ *
  * ## Status
  *
  * Maintainer: **samdark**
@@ -446,28 +458,6 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Converting $page to valid Yii 2 URL
-     *
-     * Allows input like:
-     *
-     * ```php
-     * <?php
-     * $I->amOnPage(['site/view','page'=>'about']);
-     * $I->amOnPage('index-test.php?site/index');
-     * $I->amOnPage('http://localhost/index-test.php?site/index');
-     * ```
-     *
-     * @param $page string|array parameter for \yii\web\UrlManager::createUrl()
-     */
-    public function amOnPage($page)
-    {
-        if (is_array($page)) {
-            $page = Yii::$app->getUrlManager()->createUrl($page);
-        }
-        parent::amOnPage($page);
-    }
-
-    /**
      * Similar to amOnPage but accepts route as first argument and params as second
      *
      * ```
@@ -479,6 +469,26 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         array_unshift($params, $route);
         $this->amOnPage($params);
+    }
+    
+    /**
+     * To support to use the behavior of urlManager component
+     * for the methods like this: amOnPage(), sendAjaxRequest() and etc. 
+     * @param $method
+     * @param $uri
+     * @param array $parameters
+     * @param array $files
+     * @param array $server
+     * @param null $content
+     * @param bool $changeHistory
+     * @return mixed
+     */
+    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    {
+        if (is_array($uri)) {
+            $uri = Yii::$app->getUrlManager()->createUrl($uri);
+        }
+        return parent::clientRequest($method, $uri, $parameters, $files, $server, $content, $changeHistory);
     }
 
     /**
