@@ -105,8 +105,10 @@ you should use a tunnel application provided by a service.
 
 * `url` *required* - Starting URL for your app.
 * `browser` *required* - Browser to launch.
+* `protocol` - Selenium server protocol (http by default).
 * `host` - Selenium server host (127.0.0.1 by default).
 * `port` - Selenium server port (4444 by default).
+* `path` - Selenium server path (/wd/hub by default).
 * `restart` - Set to false (default) to share browser session between tests, or set to true to create a separate session for each test.
 * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
 * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
