@@ -41,7 +41,9 @@ class Cest implements LoaderInterface
                 if (strpos($method, '_') === 0) {
                     continue;
                 }
+                $examples = [];
 
+                // example Annotation
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
                 if (count($rawExamples)) {
                     $examples = array_map(
@@ -50,6 +52,27 @@ class Cest implements LoaderInterface
                         },
                         $rawExamples
                     );
+                }
+
+                // dataprovider Annotation
+                $dataMethod = Annotation::forMethod($testClass, $method)->fetch('dataprovider');
+                if(!empty($dataMethod)) {
+                    if (false === is_callable([$unit, $dataMethod])) {
+                        throw new TestParseException(
+                            $file, "DataProvider $dataMethod for $testClass->$method is invalid or not callable."
+                            . PHP_EOL .
+                            "Make sure that the dataprovider method is a public static function."
+                        );
+                    }
+                    // allow to mix axample and dataprovider annotations
+                    if(count($examples)) {
+                        $examples = array_merge($examples, $testClass::$dataMethod());
+                    } else {
+                        $examples = $testClass::$dataMethod();
+                    }
+                }
+
+                if (count($examples)) {
                     $dataProvider = new \PHPUnit_Framework_TestSuite_DataProvider();
                     foreach ($examples as $k => $example) {
                         if ($example === null) {
