@@ -1,6 +1,6 @@
 # Advanced Usage
 
-In this chapter we will cover some techniques and options that you can use to improve your testing experience and stay with better organization of your project. 
+In this chapter we will cover some techniques and options that you can use to improve your testing experience and stay with better organization of your project.
 
 ## Cest Classes
 
@@ -28,7 +28,7 @@ class BasicCest
     }
 
     // tests
-    public function tryToTest(\AcceptanceTester $I) 
+    public function tryToTest(\AcceptanceTester $I)
     {    
     }
 }
@@ -46,7 +46,7 @@ As you see, we are passing Actor object into `tryToTest` method. It allows us to
 class BasicCest
 {
     // test
-    public function checkLogin(\AcceptanceTester $I) 
+    public function checkLogin(\AcceptanceTester $I)
     {
         $I->wantTo('log in to site');
         $I->amOnPage('/');
@@ -82,17 +82,17 @@ class SignUpCest
      * @var Helper\NavBarHelper
      */
     protected $navBar;
- 
+
     protected function _inject(\Helper\SignUp $signUp, \Helper\NavBar $navBar)
     {
         $this->signUp = $signUp;
         $this->navBar = $navBar;
     }
-    
+
     public function signUp(\AcceptanceTester $I)
     {
         $I->wantTo('sign up');
- 
+
         $this->navBar->click('Sign up');
         $this->signUp->register([
             'first_name'            => 'Joe',
@@ -217,6 +217,28 @@ These examples can be written using Doctrine-style annotation syntax as well:
   }
 ```
 
+You can also use the `@dataprovider` annotation for creating dynamic examples, using a public static method for providing example data:
+```php
+   /**
+    * @dataprovider __staticPageProvider
+    */
+    public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+    {
+        $I->amOnPage($example['url']);
+        $I->see($example['title'], 'h1');
+        $I->seeInTitle($example['title']);
+    }
+
+    public function static __staticPageProvider()
+    {
+        return [
+            ['url'=>"/", 'title'=>"Welcome"],
+            ['url'=>"/info", 'title'=>"Info"],
+            ['url'=>"/about", 'title'=>"About Us"],
+            ['url'="/contact", 'title'="Contact Us"]
+        ];
+    }
+```
 
 ### Before/After Annotations
 
@@ -243,7 +265,7 @@ class ModeratorCest {
         $I->see('Ban', '.button');
         $I->click('Ban');
     }
-    
+
     /**
      * @before login
      * @before cleanup
@@ -310,7 +332,7 @@ paths:
     envs: tests/_envs
 ```
 
-Names of these files are used as environments names (e.g. `chrome.yml` or `chrome.dist.yml` for environment named `chrome`). 
+Names of these files are used as environments names (e.g. `chrome.yml` or `chrome.dist.yml` for environment named `chrome`).
 You can generate a new file with environment configuration using `generate:environment` command:
 
 ```bash
@@ -389,14 +411,14 @@ This way you can easily control which tests will be executed for each environmen
 
 Sometimes you may need to change test behavior in realtime. For instance, behavior of the same test may differ in Firefox and in Chromium.
 In runtime we can receive current environment name, test name, or list of enabled modules by calling `$scenario->current()` method.
-    
+
 ```php
 <?php
 // retrieve current environment
-$scenario->current('env'); 
+$scenario->current('env');
 
 // list of all enabled modules
-$scenario->current('modules'); 
+$scenario->current('modules');
 
 // test name
 $scenario->current('name');
@@ -417,7 +439,7 @@ public function myTest(\AcceptanceTester $I, \Codeception\Scenario $scenario)
 {
     if ($scenario->current('browser') == 'phantomjs') {
       // emulate popups for PhantomJS
-      $I->executeScript('window.alert = function(){return true;}'); 
+      $I->executeScript('window.alert = function(){return true;}');
     }
 }
 ```
@@ -461,7 +483,7 @@ Codeception reorders tests so dependent tests always will executed after the tes
 
 ## Interactive Console
 
-Interactive console was added to try Codeception commands before executing them inside a test. 
+Interactive console was added to try Codeception commands before executing them inside a test.
 
 ![console](http://img267.imageshack.us/img267/204/003nk.png)
 
@@ -508,7 +530,7 @@ Or execute one (or several) specific groups of tests:
 $ php codecept run -g admin -g editor
 ```
 
-In this case all tests that belongs to groups `admin` and `editor` will be executed. Concept of groups was taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. 
+In this case all tests that belongs to groups `admin` and `editor` will be executed. Concept of groups was taken from PHPUnit and in classical PHPUnit tests they behave just in the same way.
 
 For Tests and Cests you can use `@group` annotation to add a test to the group.
 
@@ -564,7 +586,7 @@ tests/unit/UserTest.php:create
 tests/unit/UserTest.php:update
 ```
 
-You can create group files manually or generate them from 3rd party applications. 
+You can create group files manually or generate them from 3rd party applications.
 For example, you may write a script that updates the slow group by taking the slowest tests from xml report.
 
 You can even specify patterns for loading multiple group files by single definition:
