@@ -2,6 +2,7 @@
 
 #### 2.2.7
 
+* [Lumen] Fixed error where a non-existing exception class was thrown. See #3729. By @janhenkgerritsen
 * [Phalcon] Added `services` part which can be used to `grabServiceFromContainer` and `addServiceToContainer` when conflicting module is used. By @sergeyklay
 * [Phalcon] **Refactored**. Moved in-memory session adapter to the separated namespace. By @sergeyklay
 * [Phalcon] Fixed overwriting server parameters on requests. By @sergeyklay
