@@ -67,7 +67,7 @@ There are also modules for [MongoDb](http://codeception.com/docs/modules/MongoDb
 
 ### Sequence
 
-If database cleanup takes to long for you you can follow different strategy: create new data for each test. This way the only problem you may face is duplication of data records. [Sequence](http://codeception.com/docs/modules/Sequence) was created to solve this. It provides `sq()` function which generates unique suffixes for creating data in tests. 
+If a database cleanup takes too long for you you can follow a different strategy: create new data for each test. This way the only problem you may face is duplication of data records. [Sequence](http://codeception.com/docs/modules/Sequence) was created to solve this. It provides `sq()` function which generates unique suffixes for creating data in tests. 
 
 ## ORM modules
 
