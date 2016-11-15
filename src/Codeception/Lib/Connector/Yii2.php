@@ -70,7 +70,7 @@ class Yii2 extends Client
         /** @var \yii\web\Application $app */
         $this->app = Yii::createObject($config);
         $this->persistDb();
-        $this->mockMailer($config);       
+        $this->mockMailer($config);
         \Yii::setLogger(new Logger());
     }
 
