@@ -1953,7 +1953,7 @@ class WebDriver extends CodeceptionModule implements
     /**
      * Waits up to $timeout seconds for the given string to appear on the page.
      *
-     * Can also be passed a selector to search in, bas a specifica as possible when using selectors.
+     * Can also be passed a selector to search in, be as specific as possible when using selectors.
      * WaitForText() will only watch the first instance of the matching selector / text provided.
      * If the given text doesn't appear, a timeout exception is thrown.
      *
