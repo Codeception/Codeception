@@ -608,7 +608,7 @@ and use its methods for the steps implementation.
 
 It is common to think that a BDD scenario is equal to a test. But that's actually not the case.
 Not every test should be described as a feature. Not every test is written to test real business value.
-For instance, regression tests or negative scenario tests don't bringing any value to the business.
+For instance, regression tests or negative scenario tests don't bring any value to the business.
 Business analysts don't care about the scenario reproducing bug #13, or what error message is displayed
 when the user tries to enter the wrong password on the login screen.
 Writing all the tests inside a feature file creates information overflow.
