@@ -105,8 +105,10 @@ you should use a tunnel application provided by a service.
 
 * `url` *required* - Starting URL for your app.
 * `browser` *required* - Browser to launch.
+* `protocol` - Selenium server protocol (http by default).
 * `host` - Selenium server host (127.0.0.1 by default).
 * `port` - Selenium server port (4444 by default).
+* `path` - Selenium server path (/wd/hub by default).
 * `restart` - Set to false (default) to share browser session between tests, or set to true to create a separate session for each test.
 * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
 * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
@@ -761,7 +763,7 @@ If no parameters are provided, the full URI is returned.
 
 ``` php
 <?php
-$user_id = $I->grabFromCurrentUrl('~^/user/(\d+)/~');
+$user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 $uri = $I->grabFromCurrentUrl();
 ?>
 ```
@@ -916,7 +918,7 @@ $I->pressKey('#name', array('ctrl', 'a'), \Facebook\WebDriver\WebDriverKeys::DEL
 ```
 
  * `param` $element
- * `param` $char Can be char or array with modifier. You can provide several chars.
+ * `param` $char string|array Can be char or array with modifier. You can provide several chars.
  * `throws`  \Codeception\Exception\ElementNotFound
 
 
@@ -1482,6 +1484,24 @@ $I->submitForm('#my-form', [
     ]
 ]);
 ```
+
+The `$button` parameter can be either a string, an array or an instance
+of Facebook\WebDriver\WebDriverBy. When it is a string, the
+button will be found by its "name" attribute. If $button is an
+array then it will be treated as a strict selector and a WebDriverBy
+will be used verbatim.
+
+For example, given the following HTML:
+
+``` html
+<input type="submit" name="submitButton" value="Submit" />
+```
+
+`$button` could be any one of the following:
+  - 'submitButton'
+  - ['name' => 'submitButton']
+  - WebDriverBy::name('submitButton')
+
  * `param` $selector
  * `param` $params
  * `param` $button

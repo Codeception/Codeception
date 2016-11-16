@@ -245,8 +245,10 @@ class WebDriver extends CodeceptionModule implements
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
+        'protocol'           => 'http',
         'host'               => '127.0.0.1',
         'port'               => '4444',
+        'path'               => '/wd/hub',
         'restart'            => false,
         'wait'               => 0,
         'clear_cookies'      => true,
@@ -285,7 +287,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function _initialize()
     {
-        $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
+        $this->wd_host = sprintf('%s://%s:%s%s', $this->config['protocol'], $this->config['host'], $this->config['port'], $this->config['path']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
         if ($proxy = $this->getProxy()) {

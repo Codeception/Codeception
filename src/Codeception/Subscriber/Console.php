@@ -187,13 +187,14 @@ class Console implements EventSubscriberInterface
     public function afterStep(StepEvent $e)
     {
         $step = $e->getStep();
-        if ($step->hasFailed()) {
-            if ($step instanceof Step\ConditionalAssertion) {
-                $this->conditionalFails[] = $step;
-            } else {
-                $this->failedStep = $step;
-            }
+        if (!$step->hasFailed()) {
+            return;
         }
+        if ($step instanceof Step\ConditionalAssertion) {
+            $this->conditionalFails[] = $step;
+            return;
+        }
+        $this->failedStep = $step;
     }
 
     /**

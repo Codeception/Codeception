@@ -775,7 +775,7 @@ $I->pressKey('#name', array('ctrl', 'a'), \Facebook\WebDriver\WebDriverKeys::DEL
 ```
 
  * `param` $element
- * `param` $char Can be char or array with modifier. You can provide several chars.
+ * `param` $char string|array Can be char or array with modifier. You can provide several chars.
  * `throws`  \Codeception\Exception\ElementNotFound
 
 
@@ -1341,6 +1341,24 @@ $I->submitForm('#my-form', [
     ]
 ]);
 ```
+
+The `$button` parameter can be either a string, an array or an instance
+of Facebook\WebDriver\WebDriverBy. When it is a string, the
+button will be found by its "name" attribute. If $button is an
+array then it will be treated as a strict selector and a WebDriverBy
+will be used verbatim.
+
+For example, given the following HTML:
+
+``` html
+<input type="submit" name="submitButton" value="Submit" />
+```
+
+`$button` could be any one of the following:
+  - 'submitButton'
+  - ['name' => 'submitButton']
+  - WebDriverBy::name('submitButton')
+
  * `param` $selector
  * `param` $params
  * `param` $button

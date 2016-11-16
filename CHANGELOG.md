@@ -2,9 +2,13 @@
 
 #### 2.2.7
 
+* [Laravel5] Fixed error where custom service container bindings were not available on the first request. See #3728. By @janhenkgerritsen
+* [Lumen] Fixed error where a non-existing exception class was thrown. See #3729. By @janhenkgerritsen
 * [Phalcon] Added `services` part which can be used to `grabServiceFromContainer` and `addServiceToContainer` when conflicting module is used. By @sergeyklay
 * [Phalcon] **Refactored**. Moved in-memory session adapter to the separated namespace. By @sergeyklay
 * [Phalcon] Fixed overwriting server parameters on requests. By @sergeyklay
+* [Yii2] Fixed unintentional DB connection drop during exception logging, #3696 by @ivokund
+* [Yii2] Added procesing for native url formats of Yii2 #3725 by @githubjeka
 
 #### 2.2.6 (October 2016)
 
