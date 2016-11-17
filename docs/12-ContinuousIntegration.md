@@ -122,7 +122,8 @@ Travis doesn't provide visualization for XML or HTML reports so you can't view r
 If a file ```.gitlab-ci.yml``` exists in the root of the git repository, gitlab will run a pipeline each time you push to the gitlab server. The file configures the docker image that will be called. Below is a sample which loads a php7 docker image, clones your files, installs composer dependencies, runs the built-in php webserver and finally runs codeception:
 
 ```yaml
-image: mychiara/php7
+# Select image from https://hub.docker.com/_/php/
+image: php:7.0
 
 # Select what we should cache
 cache:
@@ -130,10 +131,14 @@ cache:
   - vendor/
 
 before_script:
+# Install git and unzip (composer will need them)
+- apt-get update && apt-get install -qqy git unzip
+# Install composer
+- curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 # Install all project dependencies
 - composer install
 # Run webserver
-- php -S localhost:8085&>/dev/null&
+- php -S localhost:8085 --docroot public &>/dev/null&
 
 # Test
 test:
