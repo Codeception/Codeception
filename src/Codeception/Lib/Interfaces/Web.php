@@ -59,6 +59,7 @@ interface Web
      * $I->dontSee('Login');                    // I can suppose user is already logged in
      * $I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
      * $I->dontSee('Sign Up','//body/h1');      // with XPath
+     * I->see('Sign Up', ['css' => 'body h1']); // with strict CSS locator
      * ```
      *
      * Note that the search is done after stripping all HTML tags from the body,
