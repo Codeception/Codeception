@@ -6,7 +6,8 @@ MAINTAINER Tobias Munk tobias@diemeisterei.de
 RUN apk update --no-cache && \
     apk add --no-cache \
         git \
-        zlib-dev
+        zlib-dev \
+        openssl-dev
 
 # Install php extensions
 RUN docker-php-ext-install \
@@ -20,7 +21,6 @@ RUN apk add --no-cache  --virtual .ext-deps \
         git \
         make \
         musl-dev \
-        openssl-dev \
         re2c && \
     pecl install mongodb xdebug && \
     docker-php-ext-enable mongodb && \
