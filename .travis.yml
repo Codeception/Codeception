@@ -1,12 +1,11 @@
+sudo: false
+
 language: php
 
 php:
   - 7.0
-  - hhvm
 
 matrix:
-  allow_failures:
-    - php: hhvm # because we haven't fixed all issues yet
   include:
     - php: 5.4 # lowest versions of all dependencies
       env: PHALCON=2.1.x SYMFONY=2.7.19 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.7.*
@@ -14,6 +13,9 @@ matrix:
       env: dependencies=lowest SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.6
       env: SYMFONY=2.8.12 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.8.*
+    - php: hhvm
+      dist: trusty
+      group: edge
 
 addons:
   postgresql: "9.2"
@@ -32,8 +34,6 @@ services:
   - rabbitmq
   - postgresql
   - redis
-
-sudo: false
 
 install:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || pecl install mongodb'
