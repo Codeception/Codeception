@@ -65,7 +65,7 @@ class Cest implements LoaderInterface
                     } catch (\Exception $e) {
                         throw new TestParseException(
                             $file,
-                            "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable.\n"
+                            "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable.\n" .
                             "Make sure that the dataprovider exist within the test class."
                         );
                     }
