@@ -60,13 +60,12 @@ class Cest implements LoaderInterface
                 if (!empty($dataMethod)) {
                     try {
                         $data = ReflectionHelper::invokePrivateMethod($unit, $dataMethod);
-                        // allow to mix axample and dataprovider annotations
+                        // allow to mix example and dataprovider annotations
                         $examples = array_merge($examples, $data);
                     } catch (\Exception $e) {
                         throw new TestParseException(
                             $file,
-                            "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable."
-                            . PHP_EOL .
+                            "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable.\n"
                             "Make sure that the dataprovider exist within the test class."
                         );
                     }
