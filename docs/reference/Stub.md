@@ -4,7 +4,7 @@
 
 
 
-#### *public static* magicMethods### atLeastOnce 
+#### *public static* magicMethods### atLeastOnce
 
 *static*
 
@@ -33,7 +33,7 @@ $user->getName();
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L695)
 
-### consecutive 
+### consecutive
 
 *static*
 
@@ -53,7 +53,7 @@ $user->getName(); //amy
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L764)
 
-### construct 
+### construct
 
 *static*
 
@@ -83,7 +83,7 @@ and it's return value or callback function as parameter
 ``` php
 <?php
 Stub::construct('User', array(), array('save' => function () { return true; }));
-Stub::construct('User', array(), array('save' => true }));
+Stub::construct('User', array(), array('save' => true));
 ?>
 ```
 
@@ -96,7 +96,7 @@ Stub::construct('User', array(), array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L286)
 
-### constructEmpty 
+### constructEmpty
 
 *static*
 
@@ -139,7 +139,7 @@ Stub::constructEmpty('User', array(), array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L338)
 
-### constructEmptyExcept 
+### constructEmptyExcept
 
 *static*
 
@@ -183,7 +183,7 @@ Stub::constructEmptyExcept('User', 'save', array(), array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L395)
 
-### copy 
+### copy
 
 *static*
 
@@ -196,7 +196,7 @@ Clones an object and redefines it's properties (even protected and private)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L240)
 
-### exactly 
+### exactly
 
 *static*
 
@@ -229,7 +229,7 @@ $user->getName();
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L731)
 
-### factory 
+### factory
 
 *static*
 
@@ -243,7 +243,7 @@ Creates $num instances of class through `Stub::make`.
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L94)
 
-### make 
+### make
 
 *static*
 
@@ -285,7 +285,7 @@ Stub::make('User', array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L45)
 
-### makeEmpty 
+### makeEmpty
 
 *static*
 
@@ -327,7 +327,7 @@ Stub::makeEmpty('User', array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L214)
 
-### makeEmptyExcept 
+### makeEmptyExcept
 
 *static*
 
@@ -370,7 +370,7 @@ Stub::makeEmptyExcept('User', 'save', array('isValid' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L142)
 
-### never 
+### never
 
 *static*
 
@@ -392,7 +392,7 @@ $user->someMethod();
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L630)
 
-### once 
+### once
 
 *static*
 
@@ -422,7 +422,7 @@ $this->assertEquals('Davert', $userName);
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L663)
 
-### update 
+### update
 
 *static*
 
