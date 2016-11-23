@@ -493,15 +493,21 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
      */
     public function seeCurrentRouteIs($routeName)
     {
-        if (!$this->di->has('url')) {
-            $this->fail('Unable to resolve "url" service.');
+        if (!$this->di->has('router')) {
+            $this->fail('Unable to resolve "router" service.');
         }
 
-        /** @var Url $url */
-        $url = $this->di->getShared('url');
+        /** @var Router $router */
+        $router = $this->di->getShared('router');
+        $route = $router->getMatchedRoute();
+
+        $matchedRouteName = false;
+        if ($route) {
+            $matchedRouteName = $route->getName();
+        }
 
         try {
-            $this->seeCurrentUrlEquals($url->get(['for' => $routeName], null, true));
+            $this->assertEquals($routeName, $matchedRouteName);
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
