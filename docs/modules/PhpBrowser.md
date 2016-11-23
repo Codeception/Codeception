@@ -126,7 +126,7 @@ Link or button are found by their names or CSS selector.
 Submits a form if button is a submit type.
 
 If link is an image it's found by alt attribute value of image.
-If button is image button is found by it's value
+If button is image button is found by its value
 If link or button can't be found by name they are searched by CSS selector.
 
 The second parameter is a context: CSS or XPath locator to narrow the search.
@@ -413,7 +413,7 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 ### grabValueFrom
 
 
-Finds and returns field and returns it's value.
+Finds and returns field and returns its value.
 Searches by field name, then by CSS, then by XPath
 
 Example:
@@ -751,7 +751,7 @@ Sets a cookie.
 
 
 Submits a form located on page.
-Specify the form by it's css or xpath selector.
+Specify the form by its css or xpath selector.
 Fill the form fields values as array.
 
 Skipped fields will be filled by their values from page.
