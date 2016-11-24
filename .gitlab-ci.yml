@@ -6,11 +6,10 @@ services:
 variables:
   # @TODO: should be codeception/codeception
   ALPINE_IMAGE: herloct/codeception-test:$CI_BUILD_REF_NAME-alpine
-  # @TODO: should be registry.gitlab.com/codeception/codeception
-  ALPINE_IMAGE_TEST: registry.gitlab.com/herloct/codeception:$CI_BUILD_REF_NAME-alpine-test
+  ALPINE_IMAGE_TEST: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME-alpine-test
 
 before_script:
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
 
 build:alpine:
   stage: build
