@@ -6,7 +6,7 @@ services:
 variables:
   DOCKER_HUB_REGISTRY_IMAGE: codeception/codeception
   ALPINE_TAG: $CI_BUILD_REF_NAME-alpine
-  ALPINE_IMAGE_TEST: $CI_REGISTRY_IMAGE:$ALPINE_TAG-test
+  ALPINE_IMAGE_TEST: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME-alpine-test
 
 before_script:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
