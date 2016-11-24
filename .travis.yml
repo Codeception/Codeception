@@ -131,7 +131,7 @@ script:
   # enable xdebug before running codeception tests on hhvm
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "xdebug.enable = On" >> /etc/hhvm/php.ini'
   - php codecept run cli,unit # self tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] ||  php codecept run coverage'  # run coverage tests on php only
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run coverage'  # run coverage tests on php only
   # disable xdebug before running framework tests
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "xdebug.enable = Off" >> /etc/hhvm/php.ini'
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
