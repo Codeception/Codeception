@@ -37,7 +37,7 @@ RUN apk update --no-cache && \
     apk del --no-cache --purge -r .ext-deps && \
 
     # Configure php
-    echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
+    echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini && \
 
     # Install composer
     curl -sS https://getcomposer.org/installer | php -- \
