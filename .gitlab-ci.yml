@@ -4,9 +4,9 @@ services:
   - docker:dind
 
 variables:
-  # @TODO: should be codeception/codeception
-  ALPINE_IMAGE: herloct/codeception-test:$CI_BUILD_REF_NAME-alpine
-  ALPINE_IMAGE_TEST: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME-alpine-test
+  DOCKER_HUB_REGISTRY_IMAGE: codeception/codeception
+  ALPINE_TAG: $CI_BUILD_REF_NAME-alpine
+  ALPINE_IMAGE_TEST: $CI_REGISTRY_IMAGE:$ALPINE_TAG-test
 
 before_script:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
@@ -57,6 +57,6 @@ deploy:alpine:
   stage: deploy
   script:
     - docker pull $ALPINE_IMAGE_TEST
-    - docker tag $ALPINE_IMAGE_TEST $ALPINE_IMAGE
+    - docker tag $ALPINE_IMAGE_TEST $DOCKER_HUB_REGISTRY_IMAGE:$ALPINE_TAG
     - docker login -u $DOCKER_HUB_USER -p "$DOCKER_HUB_PASSWORD"
-    - docker push $ALPINE_IMAGE
+    - docker push $DOCKER_HUB_REGISTRY_IMAGE:$ALPINE_TAG
