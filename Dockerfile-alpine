@@ -2,6 +2,12 @@ FROM php:7.0-alpine
 
 MAINTAINER Tobias Munk tobias@diemeisterei.de
 
+# Add source-code
+COPY . /repo
+
+ENV COMPOSER_ALLOW_SUPERUSER=1 \
+    PATH=/repo:${PATH}
+
 # Install required system packages
 RUN apk update --no-cache && \
     apk add --no-cache \
@@ -9,13 +15,15 @@ RUN apk update --no-cache && \
         zlib-dev \
         openssl-dev && \
 
-    # Install pecl extensions
+    # Install deletable required system packages
     apk add --no-cache  --virtual .ext-deps \
         autoconf \
         gcc \
         make \
         musl-dev \
         re2c && \
+
+    # Install pecl extensions
     pecl install mongodb xdebug && \
     docker-php-ext-enable mongodb && \
     docker-php-ext-enable xdebug && \
@@ -27,17 +35,12 @@ RUN apk update --no-cache && \
 
     # Cleanup
     apk del --no-cache --purge -r .ext-deps && \
-    rm -rf /var/cache/apk/* /var/tmp/* /tmp/*
 
-# Configure php
-RUN echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
+    # Configure php
+    echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
 
-# Add source-code
-COPY . /repo
-
-# Install composer
-ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN curl -sS https://getcomposer.org/installer | php -- \
+    # Install composer
+    curl -sS https://getcomposer.org/installer | php -- \
         --filename=composer \
         --install-dir=/usr/local/bin && \
     composer global require --optimize-autoloader \
@@ -45,9 +48,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 
     # Install dependencies
     composer install --prefer-dist --optimize-autoloader --no-dev --working-dir /repo && \
-    composer clear-cache
 
-ENV PATH /repo:${PATH}
+    # Cleanup
+    composer clear-cache && \
+    rm -rf /var/cache/apk/* /var/tmp/* /tmp/*
+
 ENTRYPOINT ["codecept"]
 
 # Prepare host-volume working directory
