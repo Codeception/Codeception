@@ -18,7 +18,6 @@ RUN docker-php-ext-install \
 RUN apk add --no-cache  --virtual .ext-deps \
         autoconf \
         gcc \
-        git \
         make \
         musl-dev \
         re2c && \
