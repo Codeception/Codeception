@@ -1,0 +1,63 @@
+---
+image: docker:latest
+services:
+  - docker:dind
+
+variables:
+  # @TODO: should be codeception/codeception
+  ALPINE_IMAGE: herloct/codeception-test:$CI_BUILD_REF_NAME-alpine
+  # @TODO: should be registry.gitlab.com/codeception/codeception
+  ALPINE_IMAGE_TEST: registry.gitlab.com/herloct/codeception:$CI_BUILD_REF_NAME-alpine-test
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+
+build:alpine:
+  stage: build
+  script:
+    - >
+      docker build --rm
+      --tag $ALPINE_IMAGE_TEST
+      --file Dockerfile-alpine .
+    - docker push $ALPINE_IMAGE_TEST
+
+test_cli:alpine:
+  stage: test
+  script:
+    - >
+      docker run --rm
+      --workdir /repo
+      --volume $(pwd)/tests:/repo/tests
+      --volume $(pwd)/codeception.yml:/repo/codeception.yml
+      --volume $(pwd)/src:/repo/src
+      $ALPINE_IMAGE_TEST run cli
+
+test_command:alpine:
+  stage: test
+  script:
+    - >
+      docker run --rm
+      --workdir /repo
+      --volume $(pwd)/tests:/repo/tests
+      --volume $(pwd)/codeception.yml:/repo/codeception.yml
+      --volume $(pwd)/src:/repo/src
+      $ALPINE_IMAGE_TEST run unit Codeception/Command
+
+test_constraint:alpine:
+  stage: test
+  script:
+    - >
+      docker run --rm
+      --workdir /repo
+      --volume $(pwd)/tests:/repo/tests
+      --volume $(pwd)/codeception.yml:/repo/codeception.yml
+      --volume $(pwd)/src:/repo/src
+      $ALPINE_IMAGE_TEST run unit Codeception/Constraints
+
+deploy:alpine:
+  stage: deploy
+  script:
+    - docker pull $ALPINE_IMAGE_TEST
+    - docker tag $ALPINE_IMAGE_TEST $ALPINE_IMAGE
+    - docker login -u $DOCKER_HUB_USER -p "$DOCKER_HUB_PASSWORD"
+    - docker push $ALPINE_IMAGE
