@@ -57,4 +57,5 @@ ENTRYPOINT ["codecept"]
 
 # Prepare host-volume working directory
 RUN mkdir /project
+VOLUME /project
 WORKDIR /project
