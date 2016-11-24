@@ -1,26 +1,32 @@
-FROM php:7.0-cli
+FROM php:7.0-alpine
 
 MAINTAINER Tobias Munk tobias@diemeisterei.de
 
 # Install required system packages
-RUN apt-get update && \
-    apt-get -y install \
-            git \
-            zlib1g-dev \
-            libssl-dev \
-        --no-install-recommends && \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apk update --no-cache && \
+    apk add --no-cache \
+        git \
+        zlib-dev \
+        openssl-dev
 
 # Install php extensions
 RUN docker-php-ext-install \
-    bcmath \
-    zip
+        bcmath \
+        zip
 
 # Install pecl extensions
-RUN pecl install mongodb xdebug && \
+RUN apk add --no-cache  --virtual .ext-deps \
+        autoconf \
+        gcc \
+        git \
+        make \
+        musl-dev \
+        re2c && \
+    pecl install mongodb xdebug && \
     docker-php-ext-enable mongodb && \
-    docker-php-ext-enable xdebug
+    docker-php-ext-enable xdebug && \
+    apk del --no-cache --purge -r .ext-deps && \
+    rm -rf /var/cache/apk/* /var/tmp/* /tmp/*
 
 # Configure php
 RUN echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
