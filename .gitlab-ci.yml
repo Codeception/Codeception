@@ -51,10 +51,7 @@ test_cli:alpine:
   script:
     - >
       docker run --rm
-      --workdir /repo
-      --volume $(pwd)/tests:/repo/tests
-      --volume $(pwd)/codeception.yml:/repo/codeception.yml
-      --volume $(pwd)/src:/repo/src
+      --volume $(pwd):/project
       $ALPINE_IMAGE_TEST run cli
 
 test_command:alpine:
@@ -65,10 +62,7 @@ test_command:alpine:
   script:
     - >
       docker run --rm
-      --workdir /repo
-      --volume $(pwd)/tests:/repo/tests
-      --volume $(pwd)/codeception.yml:/repo/codeception.yml
-      --volume $(pwd)/src:/repo/src
+      --volume $(pwd):/project
       $ALPINE_IMAGE_TEST run unit Codeception/Command
 
 test_constraint:alpine:
@@ -79,10 +73,7 @@ test_constraint:alpine:
   script:
     - >
       docker run --rm
-      --workdir /repo
-      --volume $(pwd)/tests:/repo/tests
-      --volume $(pwd)/codeception.yml:/repo/codeception.yml
-      --volume $(pwd)/src:/repo/src
+      --volume $(pwd):/project
       $ALPINE_IMAGE_TEST run unit Codeception/Constraints
 
 deploy:alpine:
