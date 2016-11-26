@@ -1576,4 +1576,18 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->click('Hash Form');
         $this->module->seeCurrentUrlEquals('/form/anchor');
     }
+
+    public function testClickingRelativeLinkHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Link');
+        $this->module->seeCurrentUrlEquals('/form/example7');
+    }
+
+    public function testSubmittingRelativeFormHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Form');
+        $this->module->seeCurrentUrlEquals('/form/example5');
+    }
 }
