@@ -97,7 +97,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
     public $config = [
         'app_path' => 'app',
-        'var_path' => 'app',
+        'var_path' => 'var',
         'environment' => 'test',
         'debug' => true,
         'cache_router' => false,
