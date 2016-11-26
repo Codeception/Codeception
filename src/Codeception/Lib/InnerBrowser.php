@@ -1168,7 +1168,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             case 'xpath':
                 return $this->filterByXPath($locator);
             case 'link':
-                return $this->filterByXPath(sprintf('.//a[.=%s]', Crawler::xpathLiteral($locator)));
+                return $this->filterByXPath(sprintf('.//a[.=%s or contains(./@title, %s)]', Crawler::xpathLiteral($locator), Crawler::xpathLiteral($locator)));
             case 'class':
                 return $this->filterByCSS(".$locator");
             default:
