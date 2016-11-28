@@ -56,8 +56,8 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
     protected $config = array('curl' => array());
 
     protected $curl_defaults = array(
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_CERTINFO => false,
+        'CURLOPT_SSL_VERIFYPEER' => false,
+        'CURLOPT_CERTINFO' => false,
     );
 
     /**
