@@ -51,6 +51,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  * * bootstrap: `string`, default `bootstrap/app.php` - relative path to app.php config file.
  * * root: `string`, default `` - root path of the application.
  * * packages: `string`, default `workbench` - root path of application packages (if any).
+ * * vendor_dir: `string`, default `vendor` - optional relative path to vendor directory.
  * * disable_exception_handling: `boolean`, default `true` - disable Laravel exception handling.
  * * disable_middleware: `boolean`, default `false` - disable all middleware.
  * * disable_events: `boolean`, default `false` - disable events (does not disable model events).
@@ -119,6 +120,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
                 'packages' => 'workbench',
+                'vendor_dir' => 'vendor',
                 'disable_exception_handling' => true,
                 'disable_middleware' => false,
                 'disable_events' => false,
@@ -217,7 +219,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function registerAutoloaders()
     {
-        require $this->config['project_dir'] . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+        require $this->config['project_dir'] . $this->config['vendor_dir'] . DIRECTORY_SEPARATOR . 'autoload.php';
 
         \Illuminate\Support\ClassLoader::register();
     }
