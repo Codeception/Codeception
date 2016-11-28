@@ -2,6 +2,7 @@
 
 #### 2.2.7
 
+* [Laravel5] Added `vender_dir` option. See #3775. By @AdrianSkierniewski
 * [Laravel5] Fixed error where custom service container bindings were not available on the first request. See #3728. By @janhenkgerritsen
 * [Lumen] Fixed error where a non-existing exception class was thrown. See #3729. By @janhenkgerritsen
 * [Phalcon] Added `services` part which can be used to `grabServiceFromContainer` and `addServiceToContainer` when conflicting module is used. By @sergeyklay
