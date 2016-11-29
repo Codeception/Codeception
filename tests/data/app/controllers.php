@@ -182,6 +182,15 @@ class form {
     }
 }
 
+class basehref{
+    function GET($matches) {
+        $url = strtolower($matches[1]);
+        if (empty($matches[1])) {
+            $url = 'index';
+        }
+        include __DIR__.'/view/basehref/'.$url.'.php';
+    }
+}
 class articles {
     function DELETE() {
     }

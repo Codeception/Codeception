@@ -756,7 +756,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (empty($uri) || $uri[0] === '#') {
             return $currentUrl;
         }
-        return Uri::mergeUrls($currentUrl, $uri);
+        $basehref = $this->_findElements('base')->getBaseHref();
+        if (empty($basehref)) {
+            $basehref = $currentUrl;
+        }
+        return Uri::mergeUrls($basehref, $uri);
     }
 
     /**
@@ -1215,7 +1219,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $result = [];
         $nodes = $this->match($cssOrXpath);
-        
+
         foreach ($nodes as $node) {
             if ($attribute !== null) {
                 $result[] = $node->getAttribute($attribute);
