@@ -13,7 +13,7 @@ class ConfigValidateCest
         $I->dontSeeInShellOutput('ConfigurationException');
         $I->seeInShellOutput(
             <<<HERE
-                paths => Array
+    paths => Array
         (
             tests => tests
             log => tests/_output
@@ -39,5 +39,10 @@ HERE
         $I->seeInShellOutput('codeception_invalid.yml');
     }
 
+    public function validatesConfigWithOverrideOption(CliGuy $I)
+    {
+        $I->executeCommand('config:validate -o "reporters: report: \Custom\Reporter"');
+        $I->seeInShellOutput('report => \Custom\Reporter');
+    }
 
 }

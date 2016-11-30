@@ -24,6 +24,7 @@ class ConfigValidate extends Command
             [
                 new InputArgument('suite', InputArgument::OPTIONAL, 'to show suite configuration'),
                 new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+                new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Override config values'),
             ]
         );
         parent::configure();
@@ -47,6 +48,10 @@ class ConfigValidate extends Command
 
         $output->write("Validating global config... ");
         $config = Configuration::config($input->getOption('config'));
+        $output->writeln($input->getOption('override'));
+        if (count($input->getOption('override'))) {
+            $config = $this->overrideConfig($input->getOption('override'));
+        }
         $suites = Configuration::suites();
         $output->writeln("Ok");
 
