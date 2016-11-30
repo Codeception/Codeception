@@ -113,6 +113,10 @@ class Laravel5 extends Client
         }
         $this->firstRequest = false;
 
+        $this->applyBindings();
+        $this->applyContextualBindings();
+        $this->applyInstances();
+
         $request = Request::createFromBase($request);
         $response = $this->kernel->handle($request);
         $this->app->make('Illuminate\Contracts\Http\Kernel')->terminate($request, $response);
@@ -217,10 +221,6 @@ class Laravel5 extends Client
         if ($this->module->config['disable_model_events'] || $this->modelEventsDisabled) {
             Model::unsetEventDispatcher();
         }
-
-        $this->applyBindings();
-        $this->applyContextualBindings();
-        $this->applyInstances();
 
         $this->module->setApplication($this->app);
     }

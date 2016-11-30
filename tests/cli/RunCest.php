@@ -430,4 +430,10 @@ EOF
         $I->seeInShellOutput('Fail  File "not-a-dir" not found');
         $I->seeInShellOutput('Fail  File "nothing" not found');
     }
+
+    public function runTestWithAnnotationDataprovider(CliGuy $I)
+    {
+        $I->executeCommand('run scenario DataProviderCest --steps');
+        $I->seeInShellOutput('OK (10 tests');
+    }
 }

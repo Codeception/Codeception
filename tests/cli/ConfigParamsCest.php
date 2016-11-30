@@ -16,6 +16,13 @@ class ConfigParamsCest
         $I->seeInShellOutput('OK (1 test');
     }
 
+    public function checkComplexDotEnvParamsPassed(CliGuy $I)
+    {
+        $I->amInPath('tests/data/params');
+        $I->executeCommand('run -c codeception_dotenv2.yml');
+        $I->seeInShellOutput('OK (1 test');
+    }
+
     public function checkEnvParamsPassed(CliGuy $I)
     {
         $I->amInPath('tests/data/params');
