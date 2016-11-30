@@ -11,18 +11,8 @@ class ConfigValidateCest
     {
         $I->executeCommand('config:validate', false);
         $I->dontSeeInShellOutput('ConfigurationException');
-        $I->seeInShellOutput(
-            <<<HERE
-    paths => Array
-        (
-            tests => tests
-            log => tests/_output
-            data => tests/_data
-            helpers => tests/_support
-            envs => tests/_envs
-        )
-HERE
-        );
+        $I->seeInShellOutput('tests => tests');
+        $I->seeInShellOutput('data => tests/_data');
     }
 
     public function validatesInvalidConfigOnParse(CliGuy $I)
