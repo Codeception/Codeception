@@ -28,10 +28,15 @@ class GroupManager
      * proceeds group names with asterisk:
      *
      * ```
-     * "tests/_log/g_*" => [
-     *      "tests/_log/group_1",
-     *      "tests/_log/group_2",
-     *      "tests/_log/group_3",
+     * "tests/groups/g*" => [
+     *      "tests/groups/g1",
+     *      "tests/groups/g2",
+     *      "tests/groups/ga",
+     *      "tests/groups/gb"
+     * ]
+     * "tests/groups/module*" => [
+     *      "tests/groups/moduleCore",
+     *      "tests/groups/moduleApi"
      * ]
      * ```
      */
@@ -47,11 +52,9 @@ class GroupManager
                 ->sortByName()
                 ->in(Configuration::projectDir());
 
-            $i = 1;
             foreach ($files as $file) {
                 /** @var SplFileInfo $file * */
-                $this->configuredGroups[str_replace('*', $i, $group)] = $file->getRelativePathname();
-                $i++;
+                $this->configuredGroups[$file->getBasename()] = $file->getRelativePathname();
             }
             unset($this->configuredGroups[$group]);
         }
