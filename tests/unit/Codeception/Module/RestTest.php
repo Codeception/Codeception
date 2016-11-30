@@ -287,6 +287,11 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 
+    public function testGrabResponseStatus()
+    {
+        $this->module->sendGET('/');
+        $this->assertEquals(200, $this->module->grabResponseStatus());
+    }
 
 }
 

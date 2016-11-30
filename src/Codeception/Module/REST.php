@@ -94,6 +94,32 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * Returns current response status code so that it can be used in next scenario steps.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $status = $I->grabResponseStatus();
+     * switch($status) {
+     *     case 201:
+     *         $I->seeResponseIsJson();
+     *     break;
+     *     case 202:
+     *         // "Accepted" Response Handling
+     *     break;
+     * }
+     * ?>
+     * ```
+     *
+     * @return integer
+     */
+    public function grabResponseStatus()
+    {
+        return $this->client->getInternalResponse()->getStatus();
+    }
+
+    /**
      * Sets HTTP header
      *
      * @param $name
