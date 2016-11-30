@@ -184,13 +184,15 @@ class form {
 
 class basehref{
     function GET($matches) {
-        $url = strtolower($matches[1]);
-        if (empty($matches[1])) {
-            $url = 'index';
+        $url = '/view/basehref/'.strtolower($matches[1]);
+        if(is_dir(__DIR__.$url)){
+            echo "folder indexing not supported";
+        } else {
+            include __DIR__.$url.'.php';
         }
-        include __DIR__.'/view/basehref/'.$url.'.php';
     }
 }
+
 class articles {
     function DELETE() {
     }

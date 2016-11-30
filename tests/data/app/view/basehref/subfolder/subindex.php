@@ -3,10 +3,11 @@
 <head>
     <meta charset="utf-8">
     <title>Tests for base href tag dependent applications</title>
-    <base href="http://localhost:8000/basehref/subfolder/"/>
+    <base href="/basehref/subfolder/"/>
 </head>
 <body>
     <h1>Sub Index For Base Href Tag Tests</h1>
+    <div class="notice"><?php if (isset($notice)) echo $notice; ?></div>
     <h2>Note : This page is in subfolder</h2>
     <h2>Links</h2>
     <div id="area1">

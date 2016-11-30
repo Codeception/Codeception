@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Tests for base href tag dependent applications</title>
-    <base href="http://localhost:8000/basehref/"/>
+    <base href="/basehref/"/>
 </head>
 <body>
     <h1>Welcome to test app base href section!</h1>
