@@ -56,8 +56,13 @@ class ConfigValidate extends Command
     {
         $this->addStyles($output);
 
-        if ($input->getArgument('suite')) {
-            $config = $this->getSuiteConfig($input->getArgument('suite'), $input->getOption('config'));
+        if ($suite = $input->getArgument('suite')) {
+
+            $output->write("Validating <bold>$suite</bold> config... ");
+            $config = $this->getSuiteConfig($suite, $input->getOption('config'));
+            $output->writeln("Ok");
+            $output->writeln("------------------------------\n");
+            $output->writeln("<info>$suite Suite Config</info>:\n");
             $output->writeln($this->formatOutput($config));
             return;
         }
