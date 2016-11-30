@@ -3,6 +3,7 @@
 namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\ParamsLoader;
 use Codeception\Util\Autoload;
 use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
@@ -656,41 +657,10 @@ class Configuration
     private static function prepareParams($settings)
     {
         self::$params = [];
+        $paramsLoader = new ParamsLoader();
 
         foreach ($settings['params'] as $paramStorage) {
-            if (is_array($paramStorage)) {
-                static::$params = array_merge(self::$params, $paramStorage);
-                continue;
-            }
-
-            // environment
-            if ($paramStorage === 'env' || $paramStorage === 'environment') {
-                static::$params = array_merge(self::$params, $_SERVER);
-                continue;
-            }
-
-            $paramsFile = realpath(self::$dir . '/' . $paramStorage);
-            if (!file_exists($paramsFile)) {
-                throw new ConfigurationException("Params file $paramsFile not found");
-            }
-
-            // yaml parameters
-            if (preg_match('~\.yml$~', $paramStorage)) {
-                $params = Yaml::parse(file_get_contents($paramsFile));
-                if (isset($params['parameters'])) { // Symfony style
-                    $params = $params['parameters'];
-                }
-                static::$params = array_merge(self::$params, $params);
-                continue;
-            }
-
-            // .env and ini files
-            if (preg_match('~(\.ini$|\.env(\.|$))~', $paramStorage)) {
-                $params = parse_ini_file($paramsFile);
-                static::$params = array_merge(self::$params, $params);
-                continue;
-            }
-            throw new ConfigurationException("Params can't be loaded from `$paramStorage`.");
+            static::$params = array_merge(self::$params, $paramsLoader->load($paramStorage));
         }
     }
 }

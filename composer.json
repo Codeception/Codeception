@@ -46,7 +46,8 @@
         "league/factory-muffin-faker": "^1.0",
         "mongodb/mongodb": "^1.0",
         "predis/predis": "^1.0",
-        "squizlabs/php_codesniffer": "~2.0"
+        "squizlabs/php_codesniffer": "~2.0",
+        "vlucas/phpdotenv": "^2.4.0"
     },
     "suggest": {
         "codeception/specify": "BDD-style code blocks",
