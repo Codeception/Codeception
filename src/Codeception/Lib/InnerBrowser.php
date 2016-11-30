@@ -756,9 +756,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (empty($uri) || $uri[0] === '#') {
             return $currentUrl;
         }
-        $basehref = $this->_findElements('base')->getBaseHref();
-        if (empty($basehref)) {
-            $basehref = $currentUrl;
+        //set default as currentUrl
+        $basehref = $currentUrl;
+        //use basehref if exists
+        $basetag = $this->crawler->filter('base');
+        if (count($basetag) > 0) {
+            $basehref = $basetag->getNode(0)->getAttribute('href');
         }
         return Uri::mergeUrls($basehref, $uri);
     }
