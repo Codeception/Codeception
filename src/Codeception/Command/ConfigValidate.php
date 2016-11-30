@@ -91,5 +91,4 @@ class ConfigValidate extends Command
         $output = print_r($config, true);
         return preg_replace('~\[(.*?)\] =>~', "<fg=yellow>$1</fg=yellow> =>", $output);
     }
-
 }
