@@ -412,7 +412,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 return true;
             } elseif ($node->tagName === 'form') {
                 $this->proceedSubmitForm(
-                    new Crawler($node),
+                    new Crawler($node, $this->getAbsoluteUrlFor($this->_getCurrentUri()), $this->getBaseUrl()),
                     $formParams
                 );
                 return true;
@@ -423,7 +423,22 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     private function openHrefFromDomNode(\DOMNode $node)
     {
-        $this->amOnPage($this->getAbsoluteUrlFor($node->getAttribute('href')));
+        $link = new Link($node, $this->getBaseUrl());
+        $this->amOnPage(preg_replace('/#.*/', '', $link->getUri()));
+    }
+
+    private function getBaseUrl()
+    {
+        $baseUrl = '';
+
+        $baseHref = $this->crawler->filter('base');
+        if (count($baseHref) > 0) {
+            $baseUrl = $baseHref->getNode(0)->getAttribute('href');
+        }
+        if ($baseUrl == '') {
+            $baseUrl = $this->_getCurrentUri();
+        }
+        return $this->getAbsoluteUrlFor($baseUrl);
     }
 
     public function see($text, $selector = null)
@@ -717,6 +732,9 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (strcasecmp($form->getMethod(), 'GET') === 0) {
             $url = Uri::mergeUrls($url, '?' . http_build_query($requestParams));
         }
+
+        $url = preg_replace('/#.*/', '', $url);
+
         $this->debugSection('Uri', $url);
         $this->debugSection('Method', $form->getMethod());
         $this->debugSection('Parameters', $requestParams);
@@ -769,7 +787,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     protected function getFormUrl(Crawler $form)
     {
-        $action = $form->attr('action');
+        $action = $form->form()->getUri();
         return $this->getAbsoluteUrlFor($action);
     }
 
@@ -799,7 +817,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $fakeDom = new \DOMDocument();
         $fakeDom->appendChild($fakeDom->importNode($form->getNode(0), true));
         $node = $fakeDom->documentElement;
-        $cloned = new Crawler($node, $action);
+        $cloned = new Crawler($node, $action, $this->getBaseUrl());
         $shouldDisable = $cloned->filter(
             'input:disabled:not([disabled]),select option:disabled,select optgroup:disabled option:not([disabled])'
         );
