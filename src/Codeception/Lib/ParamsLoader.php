@@ -46,14 +46,6 @@ class ParamsLoader
         throw new ConfigurationException("Params can't be loaded from `$paramStorage`.");
     }
 
-    public function loadByCallable()
-    {
-        if (!is_callable($this->paramStorage)) {
-            throw new ConfigurationException($this->paramStorage . ' is not a valid callable');
-        }
-        return call_user_func($this->paramStorage);
-    }
-
     public function loadArray()
     {
         return $this->paramStorage;
