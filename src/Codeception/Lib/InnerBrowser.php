@@ -407,6 +407,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         while ($node->parentNode !== null) {
             $node = $node->parentNode;
+            if (!isset($node->tagName)) {
+                // this is the top most node, it has no parent either
+                break;
+            }
             if ($node->tagName === 'a') {
                 $this->openHrefFromDomNode($node);
                 return true;
@@ -418,6 +422,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 return true;
             }
         }
+        codecept_debug('Button is not inside a link or a form');
         return false;
     }
 
