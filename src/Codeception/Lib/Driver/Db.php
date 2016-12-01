@@ -105,6 +105,14 @@ class Db
     {
     }
 
+    protected function shouldCleanTable($table, array $cleanOnly=[])
+    {
+        if (empty($cleanOnly) || in_array($table, $cleanOnly)) {
+            return true;
+        }
+        return false;
+    }
+
     public function load($sql)
     {
         $query           = '';

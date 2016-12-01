@@ -94,9 +94,10 @@ class Db extends Module implements DbInterface
      * @var array
      */
     protected $config = [
-      'populate' => true,
-      'cleanup'  => true,
-      'dump'     => null
+      'populate'     => true,
+      'cleanup'      => true,
+      'dump'         => null,
+      'clean_tables' => [],
     ];
 
     /**
@@ -203,7 +204,7 @@ class Db extends Module implements DbInterface
             if (!count($this->sql)) {
                 return;
             }
-            $this->driver->cleanup();
+            $this->driver->cleanup($this->config['clean_tables']);
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
