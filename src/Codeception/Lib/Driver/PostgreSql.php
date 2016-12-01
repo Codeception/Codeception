@@ -194,13 +194,13 @@ class PostgreSql extends Db
     {
         if (!isset($this->primaryKeys[$tableName])) {
             $primaryKey = [];
-            $query = 'SELECT a.attname
+            $query = "SELECT a.attname
                 FROM   pg_index i
                 JOIN   pg_attribute a ON a.attrelid = i.indrelid
                                      AND a.attnum = ANY(i.indkey)
-                WHERE  i.indrelid = ?::regclass
-                AND    i.indisprimary';
-            $stmt = $this->executeQuery($query, [$tableName]);
+                WHERE  i.indrelid = '$tableName'::regclass
+                AND    i.indisprimary";
+            $stmt = $this->executeQuery($query, []);
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($columns as $column) {
                 $primaryKey []= $column['attname'];
