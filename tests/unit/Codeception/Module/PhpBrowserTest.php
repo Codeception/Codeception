@@ -316,4 +316,30 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertEquals('booze', $data['FooBar']['bar']);
         $this->assertEquals('crunked', $data['Food']['beer']['yum']['yeah']);
     }
+
+    public function testSubmitFormInputSubmitWithArrayName()
+    {
+        $this->module->amOnPage('/form/example18');
+        $this->module->fillField('Foo', 'foo value');
+        $this->module->fillField('Bar', 'bar value');
+        $this->module->click('Submit Foo');
+
+        $data = data::get('form');
+        $this->assertEquals('foo value', $data['example18']['foo']);
+        $this->assertEquals('bar value', $data['example18']['bar']);
+        $this->assertEquals('Submit Foo', $data['example18']['submit']);
+    }
+
+    public function testSubmitFormButtonWithArrayName()
+    {
+        $this->module->amOnPage('/form/example18');
+        $this->module->fillField('Foo', 'foo value');
+        $this->module->fillField('Bar', 'bar value');
+        $this->module->click(['id' => 'cancelButton']);
+
+        $data = data::get('form');
+        $this->assertEquals('foo value', $data['example18']['foo']);
+        $this->assertEquals('bar value', $data['example18']['bar']);
+        $this->assertEquals('cancel', $data['example18']['cancel']);
+    }
 }
