@@ -14,3 +14,9 @@ Feature: Run gherkin
 
   Scenario: Describe a new feature
     Given I have only idea of what's going on here
+
+
+  Scenario: Check file once more
+    Given I am in current directory
+    When there is a file "scenario.suite.yml"
+    Then I see file "scenario.suite.yml"
