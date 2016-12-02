@@ -134,17 +134,24 @@ class GherkinTest extends \Codeception\Test\Unit
     {
         $pattern = 'hello :name, are you from :place?';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertEquals('/^hello (?|\"([^"]*?)\"|(\d+)), are you from (?|\"([^"]*?)\"|(\d+))\?$/', $regex);
+        $this->assertEquals('/^hello (?|\"((?|[^"\\\]|\\\.)*?)\"|(\d+)), are you from (?|\"((?|[^"\\\]|\\\.)*?)\"|(\d+))\?$/', $regex);
 
         $pattern = 'hello ":name", how are you';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertEquals('/^hello (?|\"([^"]*?)\"|(\d+)), how are you$/', $regex);
+        $this->assertEquals('/^hello (?|\"((?|[^"\\\]|\\\.)*?)\"|(\d+)), how are you$/', $regex);
 
         $pattern = 'there should be :num cow(s)';
         $regex = $this->loader->makePlaceholderPattern($pattern);
         $this->assertRegExp($regex, 'there should be "1" cow');
         $this->assertRegExp($regex, 'there should be "5" cows');
         $this->assertRegExp($regex, 'there should be 1000 cows');
+    }
+
+    public function testMatchingEscapedPatterns()
+    {
+        $pattern = 'use password ":pass"';
+        $regex = $this->loader->makePlaceholderPattern($pattern);
+        $this->assertRegExp($regex, 'use password "fref\"fr"');
     }
 
     /**
