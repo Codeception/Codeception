@@ -589,4 +589,13 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->click(['css' => '.link']);
         $this->module->seeCurrentUrlEquals('/info');
     }
+
+    /**
+     * @expectedException PHPUnit_Framework_AssertionFailedError
+     */
+    public function testClickingOnButtonOutsideFormDoesNotCauseFatalError()
+    {
+        $this->module->amOnPage('/form/button-not-in-form');
+        $this->module->click('The Button');
+    }
 }
