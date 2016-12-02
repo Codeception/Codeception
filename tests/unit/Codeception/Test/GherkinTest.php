@@ -112,17 +112,34 @@ class GherkinTest extends \Codeception\Test\Unit
     {
         $pattern = 'hello :name, are you from :place?';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertEquals('/^hello (?|\"((?|[^"\\\]|\\\.)*?)\"|(\d+)), are you from (?|\"((?|[^"\\\]|\\\.)*?)\"|(\d+))\?$/', $regex);
+        $this->assertRegExp($regex, 'hello "davert", are you from "kiev"?');
+        $this->assertNotRegExp($regex, 'hello davert, are you from "kiev"?');
 
         $pattern = 'hello ":name", how are you';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertEquals('/^hello (?|\"((?|[^"\\\]|\\\.)*?)\"|(\d+)), how are you$/', $regex);
+        $this->assertRegExp($regex, 'hello "davert", how are you');
+        $this->assertNotRegExp($regex, 'hello "davert", are you from "kiev"?');
 
         $pattern = 'there should be :num cow(s)';
         $regex = $this->loader->makePlaceholderPattern($pattern);
         $this->assertRegExp($regex, 'there should be "1" cow');
         $this->assertRegExp($regex, 'there should be "5" cows');
         $this->assertRegExp($regex, 'there should be 1000 cows');
+    }
+
+    public function testGherkinCurrencySymbols()
+    {
+        $pattern = 'I have :money in my pocket';
+        $regex = $this->loader->makePlaceholderPattern($pattern);
+        $this->assertRegExp($regex, 'I have 3.5$ in my pocket');
+        $this->assertRegExp($regex, 'I have 3.5€ in my pocket');
+        $this->assertNotRegExp($regex, 'I have 3.5 $ in my pocket');
+        $this->assertNotRegExp($regex, 'I have 3.5euro in my pocket');
+
+        // Issue #3156
+        $pattern = "there is a :arg1 product witch costs :arg2 €";
+        $regex = $this->loader->makePlaceholderPattern($pattern);
+        $this->assertRegExp($regex, 'there is a "football ball" product witch costs "1,5" €');
     }
 
     public function testMatchingEscapedPatterns()
