@@ -59,11 +59,11 @@ Feature: checkout process
   I want to be able to buy several products 
 
   Scenario:
-    Given I have product with 600 $ price in my cart 
-    And I have product with 1000 $ price
+    Given I have product with 600$ price in my cart 
+    And I have product with 1000$ price
     When I go to checkout process 
     Then I should see that total number of products is 2
-    And my order amount is 1600 $
+    And my order amount is 1600$
 ```
 
 Cucumber, Behat, and sure, **Codeception** can execute this scenario step by step as an automated test. 
@@ -122,8 +122,8 @@ Scenario: order several products
 Scenarios are written in step-by-step manner using Given-When-Then approach. At start, scenario should describe its context with **Given** keyword:
 
 ```gherkin
-  Given I have product with 600 $ price in my cart 
-  And I have product with 1000 $ price in my cart
+  Given I have product with 600$ price in my cart 
+  And I have product with 1000$ price in my cart
 ```
 
 Here we also use word **And** to extend the Given and not to repeat it in each line.
@@ -138,7 +138,7 @@ And in the end we are verifying our expectation using **Then** keyword. The acti
 
 ```gherkin
   Then I should see that total number of products is 2
-  And my order amount is 1600 $
+  And my order amount is 1600$
 ```
 
 We can test this scenario by executing it in dry-run mode. In this mode test won't be executed (actually, we didn't define any step for it, so it won't be executed in any case).
@@ -155,18 +155,18 @@ Scenario --
  In order to buy product
  As a customer
  I need to be able to checkout the selected products
- Given i have product with 600 $ price in my cart 
- And i have product with 1000 $ price in my cart
+ Given i have product with 600$ price in my cart 
+ And i have product with 1000$ price in my cart
  When i go to checkout process 
  Then i should see that total number of products is 2 
- And my order amount is 1600 $ 
+ And my order amount is 1600$ 
 
  INCOMPLETE 
-Step definition for `I have product with 600 $ price in my cart` not found in contexts
-Step definition for `I have product with 1000 $ price` not found in contexts
+Step definition for `I have product with 600$ price in my cart` not found in contexts
+Step definition for `I have product with 1000$ price` not found in contexts
 Step definition for `I go to checkout process` not found in contexts
 Step definition for `I should see that total number of products is 2` not found in contexts
-Step definition for `my order amount is 1600 $` not found in contexts
+Step definition for `my order amount is 1600$` not found in contexts
 Run gherkin:snippets to define missing steps
 ```
 
@@ -246,11 +246,11 @@ class AcceptanceTester extends \Codeception\Actor
     use _generated\AcceptanceTesterActions;
 
     /**
-     * @Given I have product with :num1 $ price in my cart
+     * @Given I have product with :num1 price in my cart
      */
      public function iHaveProductWithPriceInMyCart($num1)
      {
-        throw new \Codeception\Exception\Incomplete("Step `I have product with :num1 $ price in my cart` is not defined");
+        throw new \Codeception\Exception\Incomplete("Step `I have product with :num1 price in my cart` is not defined");
      }
           
     /**
@@ -270,14 +270,18 @@ class AcceptanceTester extends \Codeception\Actor
      }
      
     /**
-     * @Then my order amount is :num1 $
+     * @Then my order amount is :num1
      */
      public function myOrderAmountIs($num1)
      {
-        throw new \Codeception\Exception\Incomplete("Step `my order amount is :num1 $` is not defined");
+        throw new \Codeception\Exception\Incomplete("Step `my order amount is :num1` is not defined");
      }
 }
 ```
+
+Please note that `:num1` placeholder is used both for arbitrary numbers and money with a currency sign. 
+A char passed after the number expected to be currency sign and is ignored in a value.  
+In our case `:num1` matches `600$` but `$num1` will be assigned to 600.
 
 By default they throw Incomplete exceptions to ensure test with missing steps won't be accidentally marked as successful. We will need to implement those steps. As we are in acceptance suite we are probably using [PHPBrowser](http://codeception.com/docs/modules/PhpBrowser) or [WebDriver](http://codeception.com/docs/modules/WebDriver) modules. This means that we can use their methods inside Tester file, as we do with writing tests using `$I->`. You can use `amOnPage`, `click`, `see` methods inside a step definitions, so each Gherkin scenario step to be extended with basic Codeception steps. Let's show how it can be implemented in our case:
 
@@ -288,7 +292,7 @@ class AcceptanceTester extends \Codeception\Actor
     use _generated\AcceptanceTesterActions;
 
     /**
-     * @Given I have product with :num1 $ price in my cart
+     * @Given I have product with :num1 price in my cart
      */
      public function iHaveProductWithPriceInMyCart($num1)
      {
@@ -315,7 +319,7 @@ class AcceptanceTester extends \Codeception\Actor
      }
      
     /**
-     * @Then my order amount is :num1 $
+     * @Then my order amount is :num1
      */
      public function myOrderAmountIs($num1)
      {
@@ -329,11 +333,11 @@ To make testing more effective we assumed that we are using one of the ActiveRec
 We can dry-run (or run) our feature file to see that Given/When/Then are expanded with substeps:
 
 ```bash
- Given i have product with 600 $ price in my cart 
+ Given i have product with 600$ price in my cart 
    I have record 'Product',{"name":"randomProduct571fad4f88a04","price":"600"}
    I am on page "/item/1"
    I click "Order"
- And i have product with 1000 $ price in my cart 
+ And i have product with 1000$ price in my cart 
    I have record 'Product',{"name":"randomProduct571fad4f88b14","price":"1000"}
    I am on page "/item/2"
    I click "Order"
@@ -341,7 +345,7 @@ We can dry-run (or run) our feature file to see that Given/When/Then are expande
    I am on page "/checkout"
  Then i should see that total number of products is 2
    I see "2",".products-count"
- And my order amount is 1600 $ 
+ And my order amount is 1600$ 
    I see "1600",".total" 
 ```
 
@@ -409,8 +413,8 @@ In case scenarios represent the same logic but differ on data, we can use *Scena
 
 ```gherkin
   Scenario Outline: order discount
-    Given I have product with price <price> $ in my cart 
-    And discount for orders greater than 20 $ is 10 %
+    Given I have product with price <price>$ in my cart 
+    And discount for orders greater than 20$ is 10 %
     When I go to checkout 
     Then I should see overall price is "<total>" $
 
