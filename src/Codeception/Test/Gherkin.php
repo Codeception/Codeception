@@ -6,6 +6,7 @@ use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
+use Codeception\Exception\TestParseException;
 use Codeception\Lib\Di;
 use Codeception\Scenario;
 use Codeception\Step\Comment;
@@ -92,7 +93,8 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     {
         $stepText = $stepNode->getText();
         foreach ($this->steps as $pattern => $context) {
-            if (!preg_match($pattern, $stepText)) {
+            $res = preg_match($pattern, $stepText);
+            if (!$res) {
                 continue;
             }
             return;

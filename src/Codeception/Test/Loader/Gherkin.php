@@ -10,6 +10,7 @@ use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Parser as GherkinParser;
 use Codeception\Configuration;
+use Codeception\Exception\ParseException;
 use Codeception\Exception\TestParseException;
 use Codeception\Test\Gherkin as GherkinFormat;
 use Codeception\Util\Annotation;
@@ -93,6 +94,7 @@ class Gherkin implements LoaderInterface
                         continue;
                     }
                     $pattern = $this->makePlaceholderPattern($pattern);
+                    $this->validatePattern($pattern);
                     $this->steps[$group][$pattern] = [$context, $method];
                 }
             }
@@ -115,6 +117,13 @@ class Gherkin implements LoaderInterface
             $pattern = "/^$pattern$/";
         }
         return $pattern;
+    }
+
+    private function validatePattern($pattern)
+    {
+        if (@preg_match($pattern, ' ') === false) {
+            throw new ParseException("Loading Gherkin step with regex\n \n$pattern\n \nfailed. This regular expression is invalid.");
+        }
     }
 
     public function loadTests($filename)
