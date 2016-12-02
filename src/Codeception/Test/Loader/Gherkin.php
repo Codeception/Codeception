@@ -93,8 +93,8 @@ class Gherkin implements LoaderInterface
                     if (!$pattern) {
                         continue;
                     }
-                    $pattern = $this->makePlaceholderPattern($pattern);
                     $this->validatePattern($pattern);
+                    $pattern = $this->makePlaceholderPattern($pattern);
                     $this->steps[$group][$pattern] = [$context, $method];
                 }
             }
@@ -114,13 +114,16 @@ class Gherkin implements LoaderInterface
 
             // params
             $pattern = preg_replace('~"?\\\:(\w+)"?~', '(?|\"([^"]*?)\"|(\d+))', $pattern);
-            $pattern = "/^$pattern$/";
+            $pattern = "/^$pattern$/"; // validating this pattern is slow, so we skip it now
         }
         return $pattern;
     }
 
     private function validatePattern($pattern)
     {
+        if (strpos($pattern, '/') !== 0) {
+            return; // not a user-regex but a string with placeholder
+        }
         if (@preg_match($pattern, ' ') === false) {
             throw new ParseException("Loading Gherkin step with regex\n \n$pattern\n \nfailed. This regular expression is invalid.");
         }
