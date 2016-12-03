@@ -114,11 +114,15 @@ class Gherkin implements LoaderInterface
             $pattern = preg_replace('~(\w+)\/(\w+)~', '(?:$1|$2)', $pattern); // or
             $pattern = preg_replace('~\\\\\((\w)\\\\\)~', '$1?', $pattern); // (s)
 
-            // pattern to match integers or escaped string
-            $replacePattern = sprintf('(?|\"%s\"|%s)', "((?|[^\"\\\\\\]|\\\\\\.)*?)", '(\d+)');
+            $replacePattern = sprintf(
+                '(?|\"%s\"|%s)',
+                "((?|[^\"\\\\\\]|\\\\\\.)*?)", // matching escaped string in ""
+                '([\d\,\.]+)?.'
+            ); // or matching numbers with optional $ or € chars
+
             // params converting from :param to match 11 and "aaa" and "aaa\"aaa"
             $pattern = preg_replace('~"?\\\:(\w+)"?~', $replacePattern, $pattern);
-            $pattern = "/^$pattern$/";
+            $pattern = "/^$pattern$/u";
             // validating this pattern is slow, so we skip it now
         }
         return $pattern;
