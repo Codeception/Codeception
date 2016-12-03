@@ -7,6 +7,15 @@ use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * A base class for all Codeception Extensions and GroupObjects
+ *
+ * Available Properties:
+ *
+ * * config: current extension configuration
+ * * options: passed running options
+ *
+ */
 abstract class Extension implements EventSubscriberInterface
 {
     public static $events = [];

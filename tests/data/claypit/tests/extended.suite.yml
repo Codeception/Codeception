@@ -1,0 +1,9 @@
+class_name: ExtendedGuy
+modules:
+    enabled:
+        - \Helper\Extended
+
+extensions:
+    enabled:
+        - SuiteExtension:
+            config1: value1
