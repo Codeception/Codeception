@@ -10,6 +10,7 @@ use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Parser as GherkinParser;
 use Codeception\Configuration;
+use Codeception\Exception\ParseException;
 use Codeception\Exception\TestParseException;
 use Codeception\Test\Gherkin as GherkinFormat;
 use Codeception\Util\Annotation;
@@ -93,6 +94,7 @@ class Gherkin implements LoaderInterface
                         if (!$pattern) {
                             continue;
                         }
+                        $this->validatePattern($pattern);
                         $pattern = $this->makePlaceholderPattern($pattern);
                         $this->steps[$group][$pattern] = [$context, $method];
                     }
@@ -112,11 +114,24 @@ class Gherkin implements LoaderInterface
             $pattern = preg_replace('~(\w+)\/(\w+)~', '(?:$1|$2)', $pattern); // or
             $pattern = preg_replace('~\\\\\((\w)\\\\\)~', '$1?', $pattern); // (s)
 
-            // params
-            $pattern = preg_replace('~"?\\\:(\w+)"?~', '(?|\"([^"]*?)\"|(\d+))', $pattern);
+            // pattern to match integers or escaped string
+            $replacePattern = sprintf('(?|\"%s\"|%s)', "((?|[^\"\\\\\\]|\\\\\\.)*?)", '(\d+)');
+            // params converting from :param to match 11 and "aaa" and "aaa\"aaa"
+            $pattern = preg_replace('~"?\\\:(\w+)"?~', $replacePattern, $pattern);
             $pattern = "/^$pattern$/";
+            // validating this pattern is slow, so we skip it now
         }
         return $pattern;
+    }
+
+    private function validatePattern($pattern)
+    {
+        if (strpos($pattern, '/') !== 0) {
+            return; // not a user-regex but a string with placeholder
+        }
+        if (@preg_match($pattern, ' ') === false) {
+            throw new ParseException("Loading Gherkin step with regex\n \n$pattern\n \nfailed. This regular expression is invalid.");
+        }
     }
 
     public function loadTests($filename)
