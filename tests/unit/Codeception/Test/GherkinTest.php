@@ -63,6 +63,28 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->assertEquals('abc', self::$calls);
     }
 
+    /**
+     * @depends testLoadGherkin
+     * @expectedException \Codeception\Exception\ParseException
+     */
+    public function testBadRegex()
+    {
+        $this->loader = new \Codeception\Test\Loader\Gherkin(
+            [
+                'gherkin' => [
+                    'contexts' => [
+                        'default' => ['GherkinInvalidContext'],
+                    ]
+                ]
+            ]
+        );
+        $this->loader->loadTests(codecept_data_dir('refund.feature'));
+        $test = $this->loader->getTests()[0];
+        /** @var $test \Codeception\Test\Gherkin  * */
+        $test->getMetadata()->setServices($this->getServices());
+        $test->test();
+    }
+
     public function testTags()
     {
         $this->loader = new \Codeception\Test\Loader\Gherkin(
@@ -182,5 +204,16 @@ class TagGherkinContext
     public function heReturns()
     {
         GherkinTest::$calls .= 'X';
+    }
+}
+
+class GherkinInvalidContext
+{
+
+    /**
+     * @Given /I (?:use:am connected to) the database (?db:.+)/i
+     */
+    public function notWorks()
+    {
     }
 }
