@@ -48,7 +48,7 @@ class ExtensionLoader implements EventSubscriberInterface
 
     public function registerSuiteExtensions(SuiteEvent $e)
     {
-        $suiteConfig = Configuration::suiteSettings($e->getSuite()->getBaseName(), $this->config);
+        $suiteConfig = $e->getSettings();
         $extensions = $this->bootExtensions($suiteConfig);
 
         $this->suiteExtensions = [];

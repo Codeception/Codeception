@@ -63,5 +63,15 @@ EOF
         $I->seeInShellOutput('Config2: value2');
     }
 
+    public function runPerSuiteExtensionsInEnvironment(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run extended --env black', false);
+        $I->seeInShellOutput('Suite setup for extended');
+        $I->seeInShellOutput('Test setup for Hello');
+        $I->seeInShellOutput('Config1: black_value');
+        $I->seeInShellOutput('Config2: value2');
+    }
+
 
 }
