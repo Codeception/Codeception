@@ -185,8 +185,8 @@ class GherkinTest extends \Codeception\Test\Unit
     public function testMultipleSteps()
     {
         $patterns = array_keys($this->loader->getSteps()['default']);
-        $this->assertContains('/^he returns the microwave$/', $patterns);
-        $this->assertContains('/^microwave is brought back$/', $patterns);
+        $this->assertContains('/^he returns the microwave$/u', $patterns);
+        $this->assertContains('/^microwave is brought back$/u', $patterns);
     }
 }
 
