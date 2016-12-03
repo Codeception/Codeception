@@ -53,6 +53,7 @@ class ScenarioGuy extends \Codeception\Actor
 
     /**
      * @Then there is a file :name
+     * @Then I see file :name
      */
     public function matchFile($name)
     {

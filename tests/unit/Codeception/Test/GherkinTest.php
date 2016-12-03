@@ -63,6 +63,28 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->assertEquals('abc', self::$calls);
     }
 
+    /**
+     * @depends testLoadGherkin
+     * @expectedException \Codeception\Exception\ParseException
+     */
+    public function testBadRegex()
+    {
+        $this->loader = new \Codeception\Test\Loader\Gherkin(
+            [
+                'gherkin' => [
+                    'contexts' => [
+                        'default' => ['GherkinInvalidContext'],
+                    ]
+                ]
+            ]
+        );
+        $this->loader->loadTests(codecept_data_dir('refund.feature'));
+        $test = $this->loader->getTests()[0];
+        /** @var $test \Codeception\Test\Gherkin  * */
+        $test->getMetadata()->setServices($this->getServices());
+        $test->test();
+    }
+
     public function testTags()
     {
         $this->loader = new \Codeception\Test\Loader\Gherkin(
@@ -159,6 +181,13 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->assertRegExp($regex, 'there is a User called "John"');
         $this->assertNotRegExp($regex, 'there is a User called "John" and surname "Smith"');
     }
+
+    public function testMultipleSteps()
+    {
+        $patterns = array_keys($this->loader->getSteps()['default']);
+        $this->assertContains('/^he returns the microwave$/', $patterns);
+        $this->assertContains('/^microwave is brought back$/', $patterns);
+    }
 }
 
 class GherkinTestContext
@@ -174,6 +203,7 @@ class GherkinTestContext
 
     /**
      * @When he returns the microwave
+     * @Then microwave is brought back
      */
     public function heReturns()
     {
@@ -199,5 +229,16 @@ class TagGherkinContext
     public function heReturns()
     {
         GherkinTest::$calls .= 'X';
+    }
+}
+
+class GherkinInvalidContext
+{
+
+    /**
+     * @Given /I (?:use:am connected to) the database (?db:.+)/i
+     */
+    public function notWorks()
+    {
     }
 }
