@@ -70,6 +70,7 @@ class GenerateSuite extends Command
             true
         );
         $actorName = $this->removeSuffix($actor, $config['actor']);
+        $config['class_name'] = $actorName . $config['actor'];
 
         $file = $this->buildPath(
             Configuration::supportDir() . "Helper",
@@ -95,7 +96,7 @@ EOF;
         $this->save(
             $dir . $suite . '.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
-                ->place('actor', $actorName . $config['actor'])
+                ->place('actor', $config['class_name'])
                 ->place('helper', $gen->getHelperName())
                 ->produce()
         );
@@ -121,6 +122,8 @@ EOF;
         $output->writeln("1. Edit <bold>$suite.suite.yml</bold> to enable modules for this suite");
         $output->writeln("2. Create first test with <bold>generate:cest testName</bold> ( or test|cept) command");
         $output->writeln("3. Run tests of this suite with <bold>codecept run $suite</bold> command");
+
+        $output->writeln("<info>Suite $suite generated</info>");
     }
 
     private function containsInvalidCharacters($suite)
