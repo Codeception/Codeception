@@ -164,6 +164,13 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->assertRegExp($regex, 'there is a User called "John"');
         $this->assertNotRegExp($regex, 'there is a User called "John" and surname "Smith"');
     }
+
+    public function testMultipleSteps()
+    {
+        $patterns = array_keys($this->loader->getSteps()['default']);
+        $this->assertContains('/^he returns the microwave$/', $patterns);
+        $this->assertContains('/^microwave is brought back$/', $patterns);
+    }
 }
 
 class GherkinTestContext
@@ -179,6 +186,7 @@ class GherkinTestContext
 
     /**
      * @When he returns the microwave
+     * @Then microwave is brought back
      */
     public function heReturns()
     {

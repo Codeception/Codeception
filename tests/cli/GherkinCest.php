@@ -15,6 +15,7 @@ class GherkinCest
         $I->seeInShellOutput('I have terminal opened');
         $I->seeInShellOutput('ScenarioGuy::terminal');
         $I->seeInShellOutput('there is a file :name');
+        $I->seeInShellOutput('I see file :name');
         $I->seeInShellOutput('ScenarioGuy::matchFile');
     }
 

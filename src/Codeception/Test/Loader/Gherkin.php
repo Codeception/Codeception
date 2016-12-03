@@ -89,13 +89,15 @@ class Gherkin implements LoaderInterface
             foreach ($methods as $method) {
                 $annotation = Annotation::forMethod($context, $method);
                 foreach (['Given', 'When', 'Then'] as $type) {
-                    $pattern = $annotation->fetch($type);
-                    if (!$pattern) {
-                        continue;
+                    $patterns = $annotation->fetchAll($type);
+                    foreach ($patterns as $pattern) {
+                        if (!$pattern) {
+                            continue;
+                        }
+                        $this->validatePattern($pattern);
+                        $pattern = $this->makePlaceholderPattern($pattern);
+                        $this->steps[$group][$pattern] = [$context, $method];
                     }
-                    $this->validatePattern($pattern);
-                    $pattern = $this->makePlaceholderPattern($pattern);
-                    $this->steps[$group][$pattern] = [$context, $method];
                 }
             }
         }
