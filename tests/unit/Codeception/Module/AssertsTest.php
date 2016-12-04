@@ -23,6 +23,7 @@ class AssertsTest extends PHPUnit_Framework_TestCase
         $module->assertInstanceOf('Exception', new Exception());
         $module->assertInternalType('integer', 5);
         $module->assertArrayHasKey('one', ['one' => 1, 'two' => 2]);
+        $module->assertCount(3, [1, 2, 3]);
     }
 
     public function testExceptions()

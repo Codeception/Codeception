@@ -189,6 +189,13 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('val', $form['text']);
     }
 
+    public function testClickByLinkTitle()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click("Link Title");
+        $this->module->seeInCurrentUrl('/info');
+    }
+
     public function testClickOnContext()
     {
         $this->module->amOnPage('/');
@@ -1575,5 +1582,19 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/form/anchor');
         $this->module->click('Hash Form');
         $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testClickingRelativeLinkHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Link');
+        $this->module->seeCurrentUrlEquals('/form/example7');
+    }
+
+    public function testSubmittingRelativeFormHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Form');
+        $this->module->seeCurrentUrlEquals('/form/example5');
     }
 }

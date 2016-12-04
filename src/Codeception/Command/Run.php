@@ -83,6 +83,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Run extends Command
 {
+    use Shared\Config;
     /**
      * @var Codecept
      */
@@ -209,7 +210,7 @@ class Run extends Command
         $this->output = $output;
 
         // load config
-        $config = Configuration::config($this->options['config']);
+        $config = $this->getGlobalConfig($this->options['config']);
 
         // update config from options
         if (count($this->options['override'])) {
@@ -431,22 +432,6 @@ class Run extends Command
             }
         }
         return $values;
-    }
-
-    private function overrideConfig($configOptions)
-    {
-        $updatedConfig = [];
-        foreach ($configOptions as $option) {
-            $keys = explode(':', $option);
-            if (count($keys) < 2) {
-                throw new \InvalidArgumentException('--config-option should have config passed as "key:value"');
-            }
-            $value = array_pop($keys);
-            $key = implode(":\n  ", $keys);
-            $config = Yaml::parse("$key:$value");
-            $updatedConfig = array_merge_recursive($updatedConfig, $config);
-        }
-        return Configuration::append($updatedConfig);
     }
 
     private function ensureCurlIsAvailable()

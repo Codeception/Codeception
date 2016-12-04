@@ -354,6 +354,15 @@ EOF
         $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
     }
 
+    public function runGherkinScenarioWithMultipleStepDefinitions(CliGuy $I)
+    {
+        $I->executeCommand('run scenario "File.feature:Check file once more" --steps');
+        $I->seeInShellOutput('When there is a file "scenario.suite.yml"');
+        $I->seeInShellOutput('Then i see file "scenario.suite.yml"');
+        $I->dontSeeInShellOutput('Step definition for `I see file "scenario.suite.yml"` not found in contexts');
+        $I->seeInShellOutput('PASSED');
+    }
+
     public function runGherkinScenarioOutline(CliGuy $I)
     {
         $I->executeCommand('run scenario FileExamples.feature -v');
@@ -429,5 +438,11 @@ EOF
         $I->seeInShellOutput('Fail  File "not-a-file" not found');
         $I->seeInShellOutput('Fail  File "not-a-dir" not found');
         $I->seeInShellOutput('Fail  File "nothing" not found');
+    }
+
+    public function runTestWithAnnotationDataprovider(CliGuy $I)
+    {
+        $I->executeCommand('run scenario DataProviderCest --steps');
+        $I->seeInShellOutput('OK (10 tests');
     }
 }

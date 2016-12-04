@@ -293,6 +293,16 @@ class Asserts extends CodeceptionModule
     }
 
     /**
+     * @param $expectedCount
+     * @param $actual
+     * @param $description
+     */
+    public function assertCount($expectedCount, $actual, $description = '')
+    {
+        parent::assertCount($expectedCount, $actual, $description);
+    }
+
+    /**
      * @param $class
      * @param $actual
      * @param $description

@@ -23,7 +23,7 @@ We also encourage to submit bug reports with a failing test or test environment 
 ## Documentation
 
 ### Guides
-If you want to contribute documentation to the guides you are asked to send your changes to the /docs/ folder: https://github.com/Codeception/Codeception/tree/2.0/docs. This files are the source for the codeception website guides: http://codeception.com/docs/01-Introduction. Remind to send your documentation improvements to the right "repository branch" depending on the Codeception version you are working with: 2.0, master,...
+If you want to contribute documentation to the guides you are asked to send your changes to the /docs/ folder: https://github.com/Codeception/Codeception/tree/2.2/docs. Theses files are the source for the codeception website guides: http://codeception.com/docs/01-Introduction. Remind to send your documentation improvements to the right "repository branch" depending on the Codeception version you are working with: 2.2, master,...
 
 ### Modules Documentation
-The documentation for each module is directly generated from the corresponding docblock which can be found in each module (src/Module/Codeception/*.php).
+The documentation for each module is directly generated from the corresponding docblock which can be found in each module (src/Codeception/Module/*.php).

@@ -785,7 +785,7 @@ class WebDriver extends CodeceptionModule implements
 
         // wide
         $xpath = Locator::combine(
-            ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or .//img[contains(./@alt, $locator)])]",
+            ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or contains(./@title, $locator) or .//img[contains(./@alt, $locator)])]",
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
             ".//input[./@type = 'image'][contains(./@alt, $locator)]",
             ".//button[contains(normalize-space(string(.)), $locator)]",
@@ -1952,7 +1952,9 @@ class WebDriver extends CodeceptionModule implements
 
     /**
      * Waits up to $timeout seconds for the given string to appear on the page.
-     * Can also be passed a selector to search in.
+     *
+     * Can also be passed a selector to search in, be as specific as possible when using selectors.
+     * waitForText() will only watch the first instance of the matching selector / text provided.
      * If the given text doesn't appear, a timeout exception is thrown.
      *
      * ``` php

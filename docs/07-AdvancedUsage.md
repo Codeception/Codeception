@@ -230,6 +230,56 @@ These examples can be written using Doctrine-style annotation syntax as well:
   }
 ```
 
+You can also use the `@dataprovider` annotation for creating dynamic examples, using a protected method for providing example data:
+```php
+   /**
+    * @dataprovider pageProvider
+    */
+    public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+    {
+        $I->amOnPage($example['url']);
+        $I->see($example['title'], 'h1');
+        $I->seeInTitle($example['title']);
+    }
+
+    /**
+     * @return array
+     */
+    protected function pageProvider()
+    {
+        return [
+            ['url'=>"/", 'title'=>"Welcome"],
+            ['url'=>"/info", 'title'=>"Info"],
+            ['url'=>"/about", 'title'=>"About Us"],
+            ['url'="/contact", 'title'="Contact Us"]
+        ];
+    }
+```
+
+Alternatively, the `@dataprovider` can also be a public method starting with `_` prefix so it will not be considered as a test:
+
+```php
+   /**
+    * @dataprovider _pageProvider
+    */
+    public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
+    {
+        $I->amOnPage($example['url']);
+        $I->see($example['title'], 'h1');
+        $I->seeInTitle($example['title']);
+    }
+
+    /**
+     * @return array
+     */
+    public function _pageProvider()
+    {
+        return [
+            ['url'=>"/", 'title'=>"Welcome"],
+            ['url'=>"/info", 'title'=>"Info"],
+        ];
+    }
+```
 
 ### Before/After Annotations
 

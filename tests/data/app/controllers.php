@@ -246,3 +246,9 @@ class unsetCookie {
         header('Set-Cookie: a=; Expires=Thu, 01 Jan 1970 00:00:01 GMT');
     }
 }
+
+class basehref {
+    function GET() {
+        include __DIR__.'/view/basehref.php';
+    }
+}

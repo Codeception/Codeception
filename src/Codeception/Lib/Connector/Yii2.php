@@ -71,7 +71,6 @@ class Yii2 extends Client
         $this->app = Yii::createObject($config);
         $this->persistDb();
         $this->mockMailer($config);
-        $this->mockAssetManager();
         \Yii::setLogger(new Logger());
     }
 
@@ -271,10 +270,5 @@ class Yii2 extends Client
         } elseif ($this->app->has('db')) {
             static::$db = $this->app->get('db');
         }
-    }
-
-    private function mockAssetManager()
-    {
-        $this->app->set('assetManager', Stub::make('yii\web\AssetManager', ['bundles' => false]));
     }
 }
