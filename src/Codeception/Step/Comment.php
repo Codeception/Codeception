@@ -13,7 +13,7 @@ class Comment extends CodeceptionStep
 
     public function toString($maxLength)
     {
-        return mb_strcut($this->__toString(), 0, $maxLength);
+        return mb_strcut($this->__toString(), 0, $maxLength, 'utf-8');
     }
 
     public function getHtml($highlightColor = '#732E81')
