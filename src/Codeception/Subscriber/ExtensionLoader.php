@@ -1,5 +1,6 @@
 <?php
 namespace Codeception\Subscriber;
+
 use Codeception\Configuration;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
@@ -27,7 +28,7 @@ class ExtensionLoader implements EventSubscriberInterface
      */
     protected $dispatcher;
 
-    function __construct(EventDispatcher $dispatcher)
+    public function __construct(EventDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
         $this->config = Configuration::config();
@@ -53,11 +54,12 @@ class ExtensionLoader implements EventSubscriberInterface
 
         $this->suiteExtensions = [];
         foreach ($extensions as $extension) {
-            if (in_array($extension, $this->globalExtensions)) {
+            $extensionClass = get_class($extension);
+            if (isset($this->globalExtensions[$extensionClass])) {
                 continue; // already globally enabled
             }
             $this->dispatcher->addSubscriber($extension);
-            $this->suiteExtensions[] = $extension;
+            $this->suiteExtensions[$extensionClass] = $extension;
         }
     }
 
@@ -91,7 +93,7 @@ class ExtensionLoader implements EventSubscriberInterface
                     "Class $extensionClass is not an EventListener. Please create it as Extension or GroupObject."
                 );
             }
-            $extensions[] = $extension;
+            $extensions[get_class($extension)] = $extension;
         }
         return $extensions;
     }
