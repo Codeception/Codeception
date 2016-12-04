@@ -145,7 +145,7 @@
   {
     var subObj = document.getElementById('stepContainer' + nodeId);
     var toggle = linkObj.childNodes[0];
-    if (toggle.innerHTML == '+') {
+    if (toggle.innerHTML != '-') {
       toggle.innerHTML = '-';
       subObj.style.display='block';
       subObj.style.width = '100%';
