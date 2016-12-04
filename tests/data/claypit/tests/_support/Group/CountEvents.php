@@ -12,7 +12,7 @@ use \Codeception\Event\TestEvent;
  *
  * To use this group extension, include it to "extensions" option of global Codeception config.
  */
-class CountEvents extends \Codeception\Platform\Group
+class CountEvents extends \Codeception\GroupObject
 {
     public static $group = 'countevents';
     public static $beforeCount = 0;

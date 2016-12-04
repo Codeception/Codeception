@@ -107,6 +107,10 @@ class Configuration
         'path'        => '',
         'groups'      => [],
         'shuffle'     => false,
+        'extensions'  => [ // suite extensions
+            'enabled' => [],
+            'config' => [],
+        ],
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     ];
 
@@ -269,7 +273,7 @@ class Configuration
 
         // load global config
         $globalConf = $config['settings'];
-        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'gherkin'] as $key) {
+        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'gherkin', 'extensions'] as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }

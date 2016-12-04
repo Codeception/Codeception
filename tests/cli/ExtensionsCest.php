@@ -49,4 +49,29 @@ EOF
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic -c codeception_extended.yml -vvv');
         $I->seeInShellOutput('Extreme verbosity');
     }
+
+    public function runPerSuiteExtensions(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run extended,scenario', false);
+        $I->seeInShellOutput('Suite setup for extended');
+        $I->seeInShellOutput('Test setup for Hello');
+        $I->seeInShellOutput('Test teardown for Hello');
+        $I->seeInShellOutput('Suite teardown for extended');
+        $I->dontSeeInShellOutput('Suite setup for scenario');
+        $I->seeInShellOutput('Config1: value1');
+        $I->seeInShellOutput('Config2: value2');
+    }
+
+    public function runPerSuiteExtensionsInEnvironment(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run extended --env black', false);
+        $I->seeInShellOutput('Suite setup for extended');
+        $I->seeInShellOutput('Test setup for Hello');
+        $I->seeInShellOutput('Config1: black_value');
+        $I->seeInShellOutput('Config2: value2');
+    }
+
+
 }

@@ -20,3 +20,8 @@ modules:
             user: ''
             password: ''
             dump: tests/_data/dump.sql
+
+extensions:
+    config:
+        SuiteExtension:
+            config2: value2
