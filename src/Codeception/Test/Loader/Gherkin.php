@@ -117,7 +117,7 @@ class Gherkin implements LoaderInterface
             $replacePattern = sprintf(
                 '(?|\"%s\"|%s)',
                 "((?|[^\"\\\\\\]|\\\\\\.)*?)", // matching escaped string in ""
-                '([\d\,\.]+)?.'
+                '[\W\D]{0,1}([\d\,\.]+)[\W\D]{0,1}'
             ); // or matching numbers with optional $ or € chars
 
             // params converting from :param to match 11 and "aaa" and "aaa\"aaa"

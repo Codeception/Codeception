@@ -155,6 +155,10 @@ class GherkinTest extends \Codeception\Test\Unit
         $regex = $this->loader->makePlaceholderPattern($pattern);
         $this->assertRegExp($regex, 'I have 3.5$ in my pocket');
         $this->assertRegExp($regex, 'I have 3.5€ in my pocket');
+        $this->assertRegExp($regex, 'I have $3.5 in my pocket');
+        $this->assertRegExp($regex, 'I have £3.5 in my pocket');
+        $this->assertRegExp($regex, 'I have "35.10" in my pocket');
+
         $this->assertNotRegExp($regex, 'I have 3.5 $ in my pocket');
         $this->assertNotRegExp($regex, 'I have 3.5euro in my pocket');
 
@@ -162,6 +166,8 @@ class GherkinTest extends \Codeception\Test\Unit
         $pattern = "there is a :arg1 product witch costs :arg2 €";
         $regex = $this->loader->makePlaceholderPattern($pattern);
         $this->assertRegExp($regex, 'there is a "football ball" product witch costs "1,5" €');
+
+
     }
 
     public function testMatchingEscapedPatterns()
