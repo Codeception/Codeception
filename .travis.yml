@@ -1,12 +1,11 @@
+sudo: false
+
 language: php
 
 php:
   - 7.0
-  - hhvm
 
 matrix:
-  allow_failures:
-    - php: hhvm # because we haven't fixed all issues yet
   include:
     - php: 5.4 # lowest versions of all dependencies
       env: PHALCON=2.1.x SYMFONY=2.7.19 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.7.*
@@ -14,6 +13,9 @@ matrix:
       env: dependencies=lowest SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.6
       env: SYMFONY=2.8.12 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.8.*
+    - php: hhvm
+      dist: trusty
+      group: edge
 
 addons:
   postgresql: "9.2"
@@ -33,10 +35,14 @@ services:
   - postgresql
   - redis
 
-sudo: false
-
 install:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || pecl install mongodb'
+  # reset mysql password on trusty
+  - 'if [ -f ~/.my.cnf ]; then mysql -e "update mysql.user set password='''' where User=''root''"; fi'
+  - 'if [ -f ~/.my.cnf ]; then mysql -e "flush privileges"; fi'
+  - 'if [ -f ~/.my.cnf ]; then sed -i "s/password = travis/password =/" ~/.my.cnf; fi'
+  # use different mysql socket on trusty
+  - 'if [ -f ~/.my.cnf ]; then echo "pdo_mysql.default_socket = /run/mysql-5.6/mysqld.sock" >> /etc/hhvm/php.ini; fi'
   #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   # use hhvm-serve instead of builtin server
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || mkdir -p /home/travis/go/{src,bin,pkg}'

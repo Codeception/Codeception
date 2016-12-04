@@ -24,7 +24,11 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         if (getenv('APPVEYOR')) {
             self::$config['password'] = 'Password12!';
         }
-        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/postgres.sql');
+        $dumpFile = 'dumps/postgres.sql';
+        if (defined('HHVM_VERSION')) {
+            $dumpFile = 'dumps/postgres-hhvm.sql';
+        }
+        $sql = file_get_contents(codecept_data_dir($dumpFile));
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', '', $sql);
         self::$sql = explode("\n", $sql);
         try {

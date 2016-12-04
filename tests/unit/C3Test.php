@@ -37,6 +37,9 @@ class C3Test extends PHPUnit_Framework_TestCase
 
     public function testC3CodeCoverageStarted()
     {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped('This test fails on HHVM');
+        }
         $_SERVER['REQUEST_URI'] = '/';
         include $this->c3;
         $this->assertInstanceOf('PHP_CodeCoverage', $codeCoverage);
@@ -62,6 +65,9 @@ class C3Test extends PHPUnit_Framework_TestCase
 
     public function testCodeCoverageHtmlReport()
     {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped('Remote coverage HTML report does not work on HHVM');
+        }
         $_SERVER['REQUEST_URI'] = '/c3/report/html';
         include $this->c3;
         $this->assertEquals('html', $route);
