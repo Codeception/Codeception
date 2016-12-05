@@ -32,3 +32,4 @@ build:
         name: codeception
         code: |
           php codecept run cli
+          php codecept run unit -g core
