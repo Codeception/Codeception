@@ -2,14 +2,72 @@
 
 #### 2.2.7
 
+* **Config validation** with `codecept config:validate` command. Use it:
+
+```
+codecept config:validate
+codecept config:validate acceptance
+```
+
+This should help you next time you get messed with YAML formatting.
+
+* Gherkin improvements:
+  * multiple step definitions per method allowed (Fixes #3670)
+
+  ```php
+  /**
+    * @When I have no orders
+    * @Then I have empty bucket
+    */
+  public function haveEmptyBucket()
+  ```
+
+  * regex validation for Gherkin steps; throws exception if invalid regex passed. Fixes #3676  
+  * currency chars supported in placeholders:
+
+  $,€,£ and other signs can be used before or after a number inside Gherkin scenario. This char will be ignored inside a PHP variable, so you receive only number.
+
+  ```gherkin
+  When I have 100$ => $num === 100
+  And I have $100 => $num === 100
+  ```
+  * escaped strings can now be passed into placeholders. Fixes #3676.
+
+* Codeception is tested with latest verision of HHVM
+* Extensions loader refactored:
+  * Extensions can be **enabled for suite** in suite config.
+  * Extensions can be loaded per suite and per environment.
+  * Extensions configs can be done inside `enabled` section (as it is for modules):
+
+  ```yaml
+  extensions:
+      enabled:
+          Codeception\Extension\Recorder:
+              delete_successful: false
+  ```
+* **Added dataprovider to Cest** format by @endo. See [updated documentation](http://codeception.com/docs/07-AdvancedUsage#Examples).
+* Params loader refactored. Using `vlucas/phpdotenv` to parse .env files. Please install it if you don't have it yet.
+* Improved `generate:suite` command to generate actor file for suite.
+* HTML reporter: snapshot and screenshots paths made relative to make them accessible on CI. Fixes #3702
+* [WebDriver] added `protocol` and `path` config options by @sven-carstens-udg. See #3717
+* [PhpBrowser][Frameworks] Honour `<base href="">` meta tag by @Naktibalda. See #3764
+* [Yii2] Removed mockAssetManager by @githubjeka 
+* [Yii2] Added procesing for native url formats of Yii2 #3725 by @githubjeka
+* [Yii2] Fixed unintentional DB connection drop during exception logging, #3696 by @ivokund
+* [Yii2] Fixed calling `_fixtures()` method of Cest class. See #3655, fixes #3612 by @primipilus
+* [Db] Fixed `removeInserted` for Sqlite by @Naktibalda. Fixes #3680
+* Allows to get groups from scenario by `$scenario->getGroups()`. By @frantzen. See #3675
+* Fixed #3225: incorrect steps shown for multiple canXXX conditional assertion failures. By @Mitrichius
+* [SOAP] Force string for debugSection output by @Noles. Fixes #3690
+* Fixed #3562 group files with exact test not working with `@example` on Windows by @Naktibalda.
 * [Laravel5] Added `vendor_dir` option. See #3775. By @AdrianSkierniewski
 * [Laravel5] Fixed error where custom service container bindings were not available on the first request. See #3728. By @janhenkgerritsen
 * [Lumen] Fixed error where a non-existing exception class was thrown. See #3729. By @janhenkgerritsen
 * [Phalcon] Added `services` part which can be used to `grabServiceFromContainer` and `addServiceToContainer` when conflicting module is used. By @sergeyklay
 * [Phalcon] **Refactored**. Moved in-memory session adapter to the separated namespace. By @sergeyklay
 * [Phalcon] Fixed overwriting server parameters on requests. By @sergeyklay
-* [Yii2] Fixed unintentional DB connection drop during exception logging, #3696 by @ivokund
-* [Yii2] Added procesing for native url formats of Yii2 #3725 by @githubjeka
+* [Asserts] `assertCount` method added by @disc
+* Documentation improvements by @CJDennis
 
 #### 2.2.6 (October 2016)
 
