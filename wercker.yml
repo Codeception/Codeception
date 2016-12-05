@@ -1,0 +1,34 @@
+box: hhvm/hhvm-proxygen
+# Build definition
+
+services:
+  - redis
+
+build:
+  # The steps that will be executed on build
+  steps:
+    - install-packages:
+      packages: curl git
+    - script:
+        name: install composer
+        code: |
+          rm composer.lock
+          export COMPOSER_CACHE_DIR=$WERCKER_CACHE_DIR
+          curl -sS https://getcomposer.org/installer | hhvm --php -- --install-dir=/usr/local/bin/
+          composer.phar remove mongodb/mongodb --no-update --dev
+          composer.phar install
+          echo "xdebug.enable = On" >> /etc/hhvm/php.ini
+    - script:
+        name: setup HHVM servers
+        code: |
+          echo "hhvm.server.source_root=${WERCKER_ROOT}/tests/data/app" >> tests/data/app/hhvm-server.ini
+          hhvm -m server -c tests/data/app/hhvm-server.ini -c /etc/hhvm/site.ini &
+          echo "hhvm.server.source_root=${WERCKER_ROOT}/tests/data/rest" >> tests/data/rest/hhvm-server.ini
+          hhvm -m server -c tests/data/rest/hhvm-server.ini -c /etc/hhvm/site.ini &
+
+    # A custom script step, name value is used in the UI
+    # and the code value contains the command that get executed
+    - script:
+        name: codeception
+        code: |
+          php codecept run cli
