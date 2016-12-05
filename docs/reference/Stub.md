@@ -7,7 +7,7 @@
 
 #### $magicMethods
 
-*modifiers* $magicMethods
+*public static* **$magicMethods**
 #### atLeastOnce()
 
  *public static* atLeastOnce($params = null) 

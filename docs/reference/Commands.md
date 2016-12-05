@@ -46,6 +46,30 @@ Try to execute test commands in run-time. You may try commands before writing th
 
 
 
+## ConfigValidate
+
+Validates and prints Codeception config.
+Use it do debug Yaml configs
+
+Check config:
+
+* `codecept config`: check global config
+* `codecept config unit`: check suite config
+
+Load config:
+
+* `codecept config:validate -c path/to/another/config`: from another dir
+* `codecept config:validate -c another_config.yml`: from another config file
+
+Check overriding config values (like in `run` command)
+
+* `codecept config:validate -o "settings: shuffle: true"`: enable shuffle
+* `codecept config:validate -o "settings: lint: false"`: disable linting
+* `codecept config:validate -o "reporters: report: \Custom\Reporter" --report`: use custom reporter
+
+
+
+
 ## GenerateGroup
 
 Creates empty GroupObject - extension which handles all group events.
