@@ -1013,6 +1013,37 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Checks that number of given records were found in database.
+     * You can pass the name of a database table or the class name of an Eloquent model as the first argument.
+     *
+     * ``` php
+     * <?php
+     * $I->seeNumRecords(1, 'users', array('name' => 'davert'));
+     * $I->seeNumRecords(1, 'App\User', array('name' => 'davert'));
+     * ?>
+     * ```
+     *
+     * @param integer $expectedNum
+     * @param string $table
+     * @param array $attributes
+     * @part orm
+     */
+    public function seeNumRecords($expectedNum, $table, $attributes = [])
+    {
+        if (class_exists($table)) {
+            $currentNum = $this->countModels($table, $attributes);
+            if ($currentNum != $expectedNum) {
+                $this->fail("The number of found $table ($currentNum) does not match expected number $expectedNum in with " . json_encode($attributes));
+            }
+        } else {
+            $currentNum = $this->countRecords($table, $attributes);
+            if ($currentNum != $expectedNum) {
+                $this->fail("The number of found records ($currentNum) do not match expected number $expectedNum in table $table with " . json_encode($attributes));
+            }
+        }
+    }
+
+    /**
      * @param string $modelClass
      * @param array $attributes
      *
@@ -1020,13 +1051,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function findModel($modelClass, $attributes = [])
     {
-        $model = new $modelClass;
-
-        if (!$model instanceof EloquentModel) {
-            throw new \RuntimeException("Class $modelClass is not an Eloquent model");
-        }
-
-        $query = $model->newQuery();
+        $query = $this->getQueryBuilderFromModel($modelClass);
         foreach ($attributes as $key => $value) {
             $query->where($key, $value);
         }
@@ -1041,12 +1066,68 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function findRecord($table, $attributes = [])
     {
-        $query = $this->app['db']->table($table);
+        $query = $this->getQueryBuilderFromTable($table);
         foreach ($attributes as $key => $value) {
             $query->where($key, $value);
         }
 
         return (array) $query->first();
+    }
+
+    /**
+     * @param string $modelClass
+     * @param array $attributes
+     * @return array
+     */
+    protected function countModels($modelClass, $attributes = [])
+    {
+        $query = $this->getQueryBuilderFromModel($modelClass);
+        foreach ($attributes as $key => $value) {
+            $query->where($key, $value);
+        }
+
+        return $query->count();
+    }
+
+    /**
+     * @param string $table
+     * @param array $attributes
+     * @return array
+     */
+    protected function countRecords($table, $attributes = [])
+    {
+        $query = $this->getQueryBuilderFromTable($table);
+        foreach ($attributes as $key => $value) {
+            $query->where($key, $value);
+        }
+
+        return $query->count();
+    }
+
+    /**
+     * @param string $modelClass
+     *
+     * @return EloquentModel
+     */
+    protected function getQueryBuilderFromModel($modelClass)
+    {
+        $model = new $modelClass;
+
+        if (!$model instanceof EloquentModel) {
+            throw new \RuntimeException("Class $modelClass is not an Eloquent model");
+        }
+
+        return $model->newQuery();
+    }
+
+    /**
+     * @param string $table
+     *
+     * @return EloquentModel
+     */
+    protected function getQueryBuilderFromTable($table)
+    {
+        return $query = $this->app['db']->table($table);
     }
 
     /**
