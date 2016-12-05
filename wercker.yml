@@ -33,5 +33,5 @@ build:
     - script:
         name: codeception tests
         code: |
-          php codecept run cli, unit
+          php codecept run cli,unit
 
