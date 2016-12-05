@@ -21,7 +21,9 @@ build:
     - script:
         name: setup HHVM servers
         code: |
+          echo ${WERCKER_ROOT}/tests/data/app
           echo "hhvm.server.source_root=${WERCKER_ROOT}/tests/data/app" >> tests/data/app/hhvm-server.ini
+          cat tests/data/app/hhvm-server.ini
           hhvm -m server -c tests/data/app/hhvm-server.ini -c /etc/hhvm/site.ini &
           echo "hhvm.server.source_root=${WERCKER_ROOT}/tests/data/rest" >> tests/data/rest/hhvm-server.ini
           hhvm -m server -c tests/data/rest/hhvm-server.ini -c /etc/hhvm/site.ini &
@@ -31,5 +33,5 @@ build:
     - script:
         name: codeception tests
         code: |
-          php codecept run cli -o "settings: lint: false"
-          php codecept run unit -g core -o "settings: lint: false"
+          php codecept run cli, unit
+

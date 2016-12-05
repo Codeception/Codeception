@@ -156,6 +156,9 @@ EOF;
      */
     public function testCeptValidation()
     {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped('Not for HHVM');
+        }
         $this->setExpectedException('Codeception\Exception\TestParseException');
         Parser::validate(codecept_data_dir('Invalid.php'));
     }
