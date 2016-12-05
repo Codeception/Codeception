@@ -158,6 +158,8 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->assertRegExp($regex, 'I have $3.5 in my pocket');
         $this->assertRegExp($regex, 'I have £3.5 in my pocket');
         $this->assertRegExp($regex, 'I have "35.10" in my pocket');
+        $this->assertRegExp($regex, 'I have 5 in my pocket');
+        $this->assertRegExp($regex, 'I have 5.1 in my pocket');
 
         $this->assertNotRegExp($regex, 'I have 3.5 $ in my pocket');
         $this->assertNotRegExp($regex, 'I have 3.5euro in my pocket');
