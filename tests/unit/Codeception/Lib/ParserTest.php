@@ -150,18 +150,6 @@ EOF;
         $classes = Parser::getClassesFromFile(codecept_data_dir('unsetFile.php'));
         $this->assertEquals([], $classes);
     }
-    /**
-     * @group core
-     * @throws \Codeception\Exception\TestParseException
-     */
-    public function testCeptValidation()
-    {
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped('Not for HHVM');
-        }
-        $this->setExpectedException('Codeception\Exception\TestParseException');
-        Parser::validate(codecept_data_dir('Invalid.php'));
-    }
 
     /**
      * @group core
