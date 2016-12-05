@@ -31,5 +31,5 @@ build:
     - script:
         name: codeception tests
         code: |
-          php codecept run cli
-          php codecept run unit -g core
+          php codecept run cli -o "settings: lint: false"
+          php codecept run unit -g core -o "settings: lint: false"
