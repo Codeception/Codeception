@@ -9,7 +9,7 @@ codecept config:validate
 codecept config:validate acceptance
 ```
 
-This should save you much time and efforts next time you get messed with YAML formatting.
+This should help you next time you get messed with YAML formatting.
 
 * Gherkin improvements:
   * multiple step definitions per method allowed (Fixes #3670)
@@ -66,6 +66,8 @@ This should save you much time and efforts next time you get messed with YAML fo
 * [Phalcon] Added `services` part which can be used to `grabServiceFromContainer` and `addServiceToContainer` when conflicting module is used. By @sergeyklay
 * [Phalcon] **Refactored**. Moved in-memory session adapter to the separated namespace. By @sergeyklay
 * [Phalcon] Fixed overwriting server parameters on requests. By @sergeyklay
+* [Asserts] `assertCount` method added by @disc
+* Documentation improvements by @CJDennis
 
 #### 2.2.6 (October 2016)
 
