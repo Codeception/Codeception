@@ -16,7 +16,7 @@ class Friend
         $this->name = $name;
         $this->actor = $actor;
 
-        $this->multiSessionModules = array_filter($modules, function ($m) {
+        $this->multiSessionModules = array_filter($modules, function($m) {
             return $m instanceof Interfaces\MultiSession;
         });
 

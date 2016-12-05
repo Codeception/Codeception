@@ -30,7 +30,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
     public function phpUnitOverriders()
     {
-        require_once __DIR__ . DIRECTORY_SEPARATOR . 'Overrides/Filter.php';
+        require_once __DIR__.DIRECTORY_SEPARATOR.'Overrides/Filter.php';
     }
 
     /**
@@ -171,6 +171,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         if ((strpos($path, '/') === 0) or (strpos($path, ':') === 1)) { // absolute path
             return $path;
         }
-        return $this->logDir . $path;
+        return $this->logDir.$path;
     }
 }

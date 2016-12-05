@@ -47,7 +47,7 @@ class GenerateFeature extends Command
         if (!preg_match('~\.feature$~', $filename)) {
             $filename .= '.feature';
         }
-        $full_path = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
+        $full_path = rtrim($config['path'], DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$filename;
         $res = $this->save($full_path, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Feature $filename already exists</error>");

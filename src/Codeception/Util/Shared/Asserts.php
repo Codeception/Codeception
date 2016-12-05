@@ -16,7 +16,7 @@ trait Asserts
             $not = '';
         }
 
-        call_user_func_array(['\PHPUnit_Framework_Assert', 'assert' . $not . $method], $arguments);
+        call_user_func_array(['\PHPUnit_Framework_Assert', 'assert'.$not.$method], $arguments);
     }
 
     protected function assertNot($arguments)

@@ -48,8 +48,8 @@ class Build extends Command
     {
         $actorGenerator = new ActorGenerator($settings);
         $this->output->writeln(
-            '<info>' . Configuration::config()['namespace'] . '\\' . $actorGenerator->getActorName()
-            . "</info> includes modules: " . implode(', ', $actorGenerator->getModules())
+            '<info>'.Configuration::config()['namespace'].'\\'.$actorGenerator->getActorName()
+            . "</info> includes modules: ".implode(', ', $actorGenerator->getModules())
         );
         
         $content = $actorGenerator->produce();
@@ -57,8 +57,8 @@ class Build extends Command
         $file = $this->buildPath(
             Configuration::supportDir(),
             $settings['class_name']
-        ) . $this->getClassName($settings['class_name']);
-        $file .=  '.php';
+        ).$this->getClassName($settings['class_name']);
+        $file .= '.php';
         return $this->save($file, $content);
     }
     
@@ -67,13 +67,13 @@ class Build extends Command
         $actionsGenerator = new ActionsGenerator($settings);
         $this->output->writeln(
             " -> {$settings['class_name']}Actions.php generated successfully. "
-            . $actionsGenerator->getNumMethods() . " methods added"
+            . $actionsGenerator->getNumMethods()." methods added"
         );
         
         $content = $actionsGenerator->produce();
         
-        $file = $this->buildPath(Configuration::supportDir() . '_generated', $settings['class_name']);
-        $file .= $this->getClassName($settings['class_name']) . 'Actions.php';
+        $file = $this->buildPath(Configuration::supportDir().'_generated', $settings['class_name']);
+        $file .= $this->getClassName($settings['class_name']).'Actions.php';
         return $this->save($file, $content, true);
     }
 
@@ -81,7 +81,7 @@ class Build extends Command
     {
         $suites = $this->getSuites($configFile);
         if (!empty($suites)) {
-            $this->output->writeln("<info>Building Actor classes for suites: " . implode(', ', $suites) . '</info>');
+            $this->output->writeln("<info>Building Actor classes for suites: ".implode(', ', $suites).'</info>');
         }
         foreach ($suites as $suite) {
             $settings = $this->getSuiteConfig($suite, $configFile);
@@ -103,7 +103,7 @@ class Build extends Command
 
         foreach ($config['include'] as $subConfig) {
             $this->output->writeln("<comment>Included Configuration: $subConfig</comment>");
-            $this->buildActorsForConfig($dir . DIRECTORY_SEPARATOR . $subConfig);
+            $this->buildActorsForConfig($dir.DIRECTORY_SEPARATOR.$subConfig);
         }
         $this->buildSuiteActors($configFile);
     }

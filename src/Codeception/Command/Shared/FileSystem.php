@@ -11,8 +11,8 @@ trait FileSystem
     {
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR);
         $testName = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $testName);
-        $path = $basePath . DIRECTORY_SEPARATOR . $testName;
-        $path = pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
+        $path = $basePath.DIRECTORY_SEPARATOR.$testName;
+        $path = pathinfo($path, PATHINFO_DIRNAME).DIRECTORY_SEPARATOR;
         if (!file_exists($path)) {
             // Second argument should be mode. Well, umask() doesn't seem to return any if not set. Config may fix this.
             mkdir($path, 0775, true); // Third parameter commands to create directories recursively
@@ -39,13 +39,16 @@ trait FileSystem
         return $namespaces;
     }
 
+    /**
+     * @param string $suffix
+     */
     protected function completeSuffix($filename, $suffix)
     {
         if (strpos(strrev($filename), strrev($suffix)) === 0) {
             $filename .= '.php';
         }
-        if (strpos(strrev($filename), strrev($suffix . '.php')) !== 0) {
-            $filename .= $suffix . '.php';
+        if (strpos(strrev($filename), strrev($suffix.'.php')) !== 0) {
+            $filename .= $suffix.'.php';
         }
         if (strpos(strrev($filename), strrev('.php')) !== 0) {
             $filename .= '.php';
@@ -60,6 +63,9 @@ trait FileSystem
         return preg_replace("~$suffix$~", '', $classname);
     }
 
+    /**
+     * @param string $filename
+     */
     protected function save($filename, $contents, $force = false, $flags = null)
     {
         if (file_exists($filename) && !$force) {

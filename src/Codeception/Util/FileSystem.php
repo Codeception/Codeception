@@ -57,9 +57,9 @@ class FileSystem
                 continue;
             }
 
-            if (!self::deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
-                chmod($dir . DIRECTORY_SEPARATOR . $item, 0777);
-                if (!self::deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
+            if (!self::deleteDir($dir.DIRECTORY_SEPARATOR.$item)) {
+                chmod($dir.DIRECTORY_SEPARATOR.$item, 0777);
+                if (!self::deleteDir($dir.DIRECTORY_SEPARATOR.$item)) {
                     return false;
                 }
             }
@@ -78,10 +78,10 @@ class FileSystem
         @mkdir($dst);
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..')) {
-                if (is_dir($src . DIRECTORY_SEPARATOR . $file)) {
-                    self::copyDir($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
+                if (is_dir($src.DIRECTORY_SEPARATOR.$file)) {
+                    self::copyDir($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
                 } else {
-                    copy($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
+                    copy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
                 }
             }
         }

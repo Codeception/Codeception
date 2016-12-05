@@ -96,7 +96,7 @@ class AMQP extends CodeceptionModule implements RequiresPackage
         try {
             $this->connection = new AMQPStreamConnection($host, $port, $username, $password, $vhost);
         } catch (Exception $e) {
-            throw new ModuleException(__CLASS__, $e->getMessage() . ' while establishing connection to MQ server');
+            throw new ModuleException(__CLASS__, $e->getMessage().' while establishing connection to MQ server');
         }
     }
 
@@ -208,7 +208,7 @@ class AMQP extends CodeceptionModule implements RequiresPackage
      */
     public function purgeQueue($queueName = '')
     {
-        if (! in_array($queueName, $this->config['queues'])) {
+        if (!in_array($queueName, $this->config['queues'])) {
             throw new ModuleException(__CLASS__, "'$queueName' doesn't exist in queues config list");
         }
 

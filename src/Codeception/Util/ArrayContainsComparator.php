@@ -136,11 +136,11 @@ class ArrayContainsComparator
     private function isEqualValue($val1, $val2)
     {
         if (is_numeric($val1)) {
-            $val1 = (string) $val1;
+            $val1 = (string)$val1;
         }
 
         if (is_numeric($val2)) {
-            $val2 = (string) $val2;
+            $val2 = (string)$val2;
         }
 
         return $val1 === $val2;

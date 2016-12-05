@@ -48,7 +48,7 @@ class PostgreSql extends Db
                 $this->searchPath = $match[0];
             }
 
-            $query .= "\n" . rtrim($sqlLine);
+            $query .= "\n".rtrim($sqlLine);
 
             if (!$dollarsOpen && substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
                 $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
@@ -95,16 +95,19 @@ class PostgreSql extends Db
 
         if ($sql == '\.') {
             $this->putline = false;
-            pg_put_line($this->connection, $sql . "\n");
+            pg_put_line($this->connection, $sql."\n");
             pg_end_copy($this->connection);
             pg_close($this->connection);
         } else {
-            pg_put_line($this->connection, $sql . "\n");
+            pg_put_line($this->connection, $sql."\n");
         }
 
         return true;
     }
 
+    /**
+     * @param string $query
+     */
     public function sqlQuery($query)
     {
         if (strpos(trim($query), 'COPY ') === 0) {
@@ -121,8 +124,8 @@ class PostgreSql extends Db
                 );
             }
             $constring = str_replace(';', ' ', substr($this->dsn, 6));
-            $constring .= ' user=' . $this->user;
-            $constring .= ' password=' . $this->password;
+            $constring .= ' user='.$this->user;
+            $constring .= ' password='.$this->password;
             $this->connection = pg_connect($constring);
 
             if ($this->searchPath !== null) {
@@ -146,7 +149,7 @@ class PostgreSql extends Db
          * is based on how postgres names sequences for SERIAL columns
          */
 
-        $sequenceName = $this->getQuotedName($table . '_id_seq');
+        $sequenceName = $this->getQuotedName($table.'_id_seq');
         $lastSequence = null;
 
         try {
@@ -160,7 +163,7 @@ class PostgreSql extends Db
         if (!$lastSequence) {
             $primaryKeys = $this->getPrimaryKey($table);
             $pkName = array_shift($primaryKeys);
-            $lastSequence = $this->getDbh()->lastInsertId($this->getQuotedName($table . '_' . $pkName . '_seq'));
+            $lastSequence = $this->getDbh()->lastInsertId($this->getQuotedName($table.'_'.$pkName.'_seq'));
         }
 
         return $lastSequence;
@@ -168,11 +171,16 @@ class PostgreSql extends Db
 
     /**
      * Gets a quoted name of a variable.
+     * @param string $name
      */
     public function getQuotedName($name)
     {
         $name = explode('.', $name);
         $name = array_map(
+
+            /**
+             * @param string $data
+             */
             function ($data) {
                 return '"' . $data . '"';
             },
@@ -203,7 +211,7 @@ class PostgreSql extends Db
             $stmt = $this->executeQuery($query, []);
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($columns as $column) {
-                $primaryKey []= $column['attname'];
+                $primaryKey [] = $column['attname'];
             }
             $this->primaryKeys[$tableName] = $primaryKey;
         }

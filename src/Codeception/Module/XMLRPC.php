@@ -156,7 +156,7 @@ class XMLRPC extends CodeceptionModule implements API
 
         $requestBody = xmlrpc_encode_request($methodName, array_values($parameters));
 
-        $this->debugSection('Request', $url . PHP_EOL . $requestBody);
+        $this->debugSection('Request', $url.PHP_EOL.$requestBody);
         $this->client->request('POST', $url, [], [], [], $requestBody);
 
         $this->response = $this->client->getInternalResponse()->getContent();

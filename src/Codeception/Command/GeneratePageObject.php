@@ -6,7 +6,6 @@ use Codeception\Lib\Generator\PageObject as PageObjectGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -51,16 +50,16 @@ class GeneratePageObject extends Command
             : $this->getGlobalConfig($input->getOption('config'));
 
         if ($suite) {
-            $suite = DIRECTORY_SEPARATOR . ucfirst($suite);
+            $suite = DIRECTORY_SEPARATOR.ucfirst($suite);
         }
 
-        $path = $this->buildPath(Configuration::supportDir() . 'Page' . $suite, $class);
+        $path = $this->buildPath(Configuration::supportDir().'Page'.$suite, $class);
 
-        $filename = $path . $this->getClassName($class) . '.php';
+        $filename = $path.$this->getClassName($class).'.php';
 
         $output->writeln($filename);
 
-        $gen = new PageObjectGenerator($conf, ucfirst($suite) . '\\' . $class);
+        $gen = new PageObjectGenerator($conf, ucfirst($suite).'\\'.$class);
         $res = $this->save($filename, $gen->produce());
 
         if (!$res) {

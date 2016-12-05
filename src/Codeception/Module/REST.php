@@ -306,7 +306,7 @@ EOF;
      */
     public function amBearerAuthenticated($accessToken)
     {
-        $this->haveHttpHeader('Authorization', 'Bearer ' . $accessToken);
+        $this->haveHttpHeader('Authorization', 'Bearer '.$accessToken);
     }
 
     /**
@@ -429,7 +429,7 @@ EOF;
                 $linkEntry,
                 'linkEntry should contain property "link-param"'
             );
-            $values[] = $linkEntry['uri'] . '; ' . $linkEntry['link-param'];
+            $values[] = $linkEntry['uri'].'; '.$linkEntry['link-param'];
         }
 
         $this->haveHttpHeader('Link', implode(', ', $values));
@@ -473,7 +473,7 @@ EOF;
     {
         // allow full url to be requested
         if (strpos($url, '://') === false) {
-            $url = $this->config['url'] . $url;
+            $url = $this->config['url'].$url;
         }
 
         $this->params = $parameters;
@@ -493,7 +493,7 @@ EOF;
                 $this->debugSection("Request", "$method $url");
                 $files = [];
             } else {
-                $this->debugSection("Request", "$method $url " . json_encode($parameters));
+                $this->debugSection("Request", "$method $url ".json_encode($parameters));
                 $files = $this->formatFilesArray($files);
             }
             $this->response = (string)$this->connectionModule->_request($method, $url, $parameters, $files);
@@ -502,14 +502,17 @@ EOF;
             if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
                 // if the request data has non-printable bytes and it is not a valid unicode string, reformat the
                 // display string to signify the presence of request data
-                $requestData = '[binary-data length:' . strlen($requestData) . ' md5:' . md5($requestData) . ']';
+                $requestData = '[binary-data length:'.strlen($requestData).' md5:'.md5($requestData).']';
             }
-            $this->debugSection("Request", "$method $url " . $requestData);
+            $this->debugSection("Request", "$method $url ".$requestData);
             $this->response = (string)$this->connectionModule->_request($method, $url, [], $files, [], $parameters);
         }
         $this->debugSection("Response", $this->response);
     }
 
+    /**
+     * @param string $method
+     */
     protected function encodeApplicationJson($method, $parameters)
     {
         if ($method !== 'GET' && array_key_exists('Content-Type', $this->connectionModule->headers)
@@ -771,7 +774,7 @@ EOF;
         $this->assertGreaterThan(
             0,
             (new JsonArray($response))->filterByXPath($xpath)->length,
-            "Received JSON did not match the XPath `$xpath`.\nJson Response: \n" . $response
+            "Received JSON did not match the XPath `$xpath`.\nJson Response: \n".$response
         );
     }
 
@@ -824,7 +827,7 @@ EOF;
         $response = $this->connectionModule->_getResponseContent();
         $this->assertNotEmpty(
             (new JsonArray($response))->filterByJsonPath($jsonPath),
-            "Received JSON did not match the JsonPath provided\n" . $response
+            "Received JSON did not match the JsonPath provided\n".$response
         );
     }
 
@@ -839,7 +842,7 @@ EOF;
         $response = $this->connectionModule->_getResponseContent();
         $this->assertEmpty(
             (new JsonArray($response))->filterByJsonPath($jsonPath),
-            "Received JSON did (but should not) match the JsonPath provided\n" . $response
+            "Received JSON did (but should not) match the JsonPath provided\n".$response
         );
     }
 
@@ -855,8 +858,8 @@ EOF;
         $this->assertFalse(
             $jsonResponseArray->containsArray($json),
             "Response JSON contains provided JSON\n"
-            . "- <info>" . var_export($json, true) . "</info>\n"
-            . "+ " . var_export($jsonResponseArray->toArray(), true)
+            . "- <info>".var_export($json, true)."</info>\n"
+            . "+ ".var_export($jsonResponseArray->toArray(), true)
         );
     }
 

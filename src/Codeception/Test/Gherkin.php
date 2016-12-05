@@ -61,13 +61,13 @@ class Gherkin extends Test implements ScenarioDriven, Reported
             $this->validateStep($step);
         }
         if ($this->getMetadata()->getIncomplete()) {
-            $this->getMetadata()->setIncomplete($this->getMetadata()->getIncomplete() . "\nRun gherkin:snippets to define missing steps");
+            $this->getMetadata()->setIncomplete($this->getMetadata()->getIncomplete()."\nRun gherkin:snippets to define missing steps");
         }
     }
     
     public function getSignature()
     {
-        return basename($this->getFileName(), '.feature') . ':' . $this->getFeature();
+        return basename($this->getFileName(), '.feature').':'.$this->getFeature();
     }
 
     public function test()
@@ -152,7 +152,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
 
     public function toString()
     {
-        return $this->featureNode->getTitle() . ': ' . $this->getFeature();
+        return $this->featureNode->getTitle().': '.$this->getFeature();
     }
 
     public function getFeature()

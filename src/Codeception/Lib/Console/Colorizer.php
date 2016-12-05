@@ -29,7 +29,7 @@ class Colorizer
                     break;
             }
 
-            $colorizedMessage .= $line . "\n";
+            $colorizedMessage .= $line."\n";
         }
 
         return trim($colorizedMessage);

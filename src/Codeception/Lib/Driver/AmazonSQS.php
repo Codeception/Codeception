@@ -21,11 +21,11 @@ class AmazonSQS implements Queue
             'region' => $config['region']
         ];
 
-        if (! empty($config['key']) && ! empty($config['secret'])) {
+        if (!empty($config['key']) && !empty($config['secret'])) {
             $params['credentials'] = new Credentials($config['key'], $config['secret']);
         }
 
-        if (! empty($config['profile'])) {
+        if (!empty($config['profile'])) {
             $params['profile'] = $config['profile'];
         }
 
@@ -129,7 +129,7 @@ class AmazonSQS implements Queue
                 return $queueURL;
             }
         }
-        throw new TestRuntime('queue [' . $queue . '] not found');
+        throw new TestRuntime('queue ['.$queue.'] not found');
     }
 
     public function getRequiredConfig()

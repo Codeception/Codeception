@@ -26,11 +26,11 @@ class Meta extends CodeceptionStep
         $argumentBackup = $this->arguments;
         $lastArgAsString = '';
         $lastArg = end($this->arguments);
-        if (is_string($lastArg) && strpos($lastArg, "\n")  !== false) {
-            $lastArgAsString = "\r\n   " . str_replace("\n", "\n   ", $lastArg);
+        if (is_string($lastArg) && strpos($lastArg, "\n") !== false) {
+            $lastArgAsString = "\r\n   ".str_replace("\n", "\n   ", $lastArg);
             array_pop($this->arguments);
         }
-        $result = parent::getArgumentsAsString($maxLength) . $lastArgAsString;
+        $result = parent::getArgumentsAsString($maxLength).$lastArgAsString;
         $this->arguments = $argumentBackup;
         return $result;
     }

@@ -81,12 +81,12 @@ class ConfigValidate extends Command
         $output->writeln($this->formatOutput($config));
 
         $output->writeln('<info>Directories</info>:');
-        $output->writeln("<comment>codecept_root_dir()</comment>   " . codecept_root_dir());
-        $output->writeln("<comment>codecept_output_dir()</comment> " . codecept_output_dir());
-        $output->writeln("<comment>codecept_data_dir()</comment>   " . codecept_data_dir());
+        $output->writeln("<comment>codecept_root_dir()</comment>   ".codecept_root_dir());
+        $output->writeln("<comment>codecept_output_dir()</comment> ".codecept_output_dir());
+        $output->writeln("<comment>codecept_data_dir()</comment>   ".codecept_data_dir());
         $output->writeln('');
 
-        $output->writeln("<info>Available suites</info>: " . implode(', ', $suites));
+        $output->writeln("<info>Available suites</info>: ".implode(', ', $suites));
 
         foreach ($suites as $suite) {
             $output->write("Validating suite <bold>$suite</bold>... ");

@@ -361,8 +361,8 @@ class Redis extends CodeceptionModule implements RequiresPackage
     public function dontSeeInRedis($key, $value = null)
     {
         $this->assertFalse(
-            (bool) $this->checkKeyExists($key, $value),
-            "The key \"$key\" exists" . ($value ? ' and its value matches the one provided' : '')
+            (bool)$this->checkKeyExists($key, $value),
+            "The key \"$key\" exists".($value ? ' and its value matches the one provided' : '')
         );
     }
 
@@ -400,13 +400,13 @@ class Redis extends CodeceptionModule implements RequiresPackage
      * @param null   $itemValue Optional and only used for zsets and hashes. If
      * specified, the method will also check that the $item has this value/score
      *
-     * @return bool
+     * @return boolean|null
      */
     public function dontSeeRedisKeyContains($key, $item, $itemValue = null)
     {
         $this->assertFalse(
-            (bool) $this->checkKeyContains($key, $item, $itemValue),
-            "The key \"$key\" contains " . (
+            (bool)$this->checkKeyContains($key, $item, $itemValue),
+            "The key \"$key\" contains ".(
                 is_null($itemValue)
                 ? "\"$item\""
                 : "[\"$item\" => \"$itemValue\"]"
@@ -447,8 +447,8 @@ class Redis extends CodeceptionModule implements RequiresPackage
     public function seeInRedis($key, $value = null)
     {
         $this->assertTrue(
-            (bool) $this->checkKeyExists($key, $value),
-            "Cannot find key \"$key\"" . ($value ? ' with the provided value' : '')
+            (bool)$this->checkKeyExists($key, $value),
+            "Cannot find key \"$key\"".($value ? ' with the provided value' : '')
         );
     }
 
@@ -519,8 +519,8 @@ class Redis extends CodeceptionModule implements RequiresPackage
     public function seeRedisKeyContains($key, $item, $itemValue = null)
     {
         $this->assertTrue(
-            (bool) $this->checkKeyContains($key, $item, $itemValue),
-            "The key \"$key\" does not contain " . (
+            (bool)$this->checkKeyContains($key, $item, $itemValue),
+            "The key \"$key\" does not contain ".(
             is_null($itemValue)
                 ? "\"$item\""
                 : "[\"$item\" => \"$itemValue\"]"
@@ -592,7 +592,7 @@ class Redis extends CodeceptionModule implements RequiresPackage
                 if (is_null($reply)) {
                     $result = false;
                 } elseif (!is_null($itemValue)) {
-                    $result = (float) $reply === (float) $itemValue;
+                    $result = (float)$reply === (float)$itemValue;
                 } else {
                     $result = true;
                 }
@@ -603,7 +603,7 @@ class Redis extends CodeceptionModule implements RequiresPackage
 
                 $result = is_null($itemValue)
                     ? !is_null($reply)
-                    : (string) $reply === (string) $itemValue;
+                    : (string)$reply === (string)$itemValue;
                 break;
 
             case 'none':
@@ -688,7 +688,7 @@ class Redis extends CodeceptionModule implements RequiresPackage
     private function scoresToFloat(array $arr)
     {
         foreach ($arr as $member => $score) {
-            $arr[$member] = (float) $score;
+            $arr[$member] = (float)$score;
         }
 
         return $arr;

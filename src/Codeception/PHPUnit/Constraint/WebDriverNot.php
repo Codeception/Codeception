@@ -35,7 +35,7 @@ class WebDriverNot extends WebDriver
     public function toString()
     {
         if ($this->string) {
-            return 'that contains text "' . $this->string . '"';
+            return 'that contains text "'.$this->string.'"';
         }
     }
 }

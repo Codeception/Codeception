@@ -30,10 +30,10 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      * @var array
      */
     protected $hooks = [
-      'ignoreIfMetadataBlocked',
-      'codeCoverage',
-      'assertionCounter',
-      'errorLogger'
+        'ignoreIfMetadataBlocked',
+        'codeCoverage',
+        'assertionCounter',
+        'errorLogger'
     ];
 
     const STATUS_FAIL = 'fail';

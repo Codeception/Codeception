@@ -137,7 +137,7 @@ class Console implements EventSubscriberInterface
                 implode(
                     ', ',
                     array_map(
-                        function ($module) {
+                        function($module) {
                             return $module->_getName();
                         },
                         $e->getSuite()->getModules()
@@ -217,7 +217,7 @@ class Console implements EventSubscriberInterface
             return $path;
         }
 
-        return codecept_output_dir() . $path;
+        return codecept_output_dir().$path;
     }
 
     public function testSuccess(TestEvent $e)
@@ -294,7 +294,7 @@ class Console implements EventSubscriberInterface
         }
         $metaStep = $e->getStep()->getMetaStep();
         if ($metaStep and $this->metaStep != $metaStep) {
-            $this->message(' ' . $metaStep->getPrefix())
+            $this->message(' '.$metaStep->getPrefix())
                 ->style('bold')
                 ->append($metaStep->__toString())
                 ->writeln();
@@ -332,7 +332,7 @@ class Console implements EventSubscriberInterface
         $messages = Notification::all();
         foreach (array_count_values($messages) as $message => $count) {
             if ($count > 1) {
-                $message = $count . 'x ' . $message;
+                $message = $count.'x '.$message;
             }
             $this->output->notification($message);
         }
@@ -343,7 +343,7 @@ class Console implements EventSubscriberInterface
         $failedTest = $e->getTest();
         $fail = $e->getFail();
 
-        $this->output->write($e->getCount() . ") ");
+        $this->output->write($e->getCount().") ");
         $this->writeCurrentTest($failedTest, false);
         $this->output->writeln('');
         $this->message("<error> Test </error> ")
@@ -360,6 +360,9 @@ class Console implements EventSubscriberInterface
         $this->printExceptionTrace($fail);
     }
 
+    /**
+     * @param string $cause
+     */
     protected function printException($e, $cause = null)
     {
         if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
@@ -404,12 +407,15 @@ class Console implements EventSubscriberInterface
         $message->writeln();
     }
 
+    /**
+     * @param \Exception $fail
+     */
     protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
     {
         if ($this->conditionalFails) {
-            $failedStep = (string) array_shift($this->conditionalFails);
+            $failedStep = (string)array_shift($this->conditionalFails);
         } else {
-            $failedStep = (string) $this->failedStep;
+            $failedStep = (string)$this->failedStep;
         }
 
         $this->printException($fail, $failedStep);
@@ -462,7 +468,7 @@ class Console implements EventSubscriberInterface
                 $message->writeln();
                 continue;
             }
-            $message->append($step['file'] . ':' . $step['line']);
+            $message->append($step['file'].':'.$step['line']);
             $message->writeln();
         }
 
@@ -528,12 +534,12 @@ class Console implements EventSubscriberInterface
             && (getenv('TERM'))
             && (getenv('TERM') != 'unknown')
         ) {
-            $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
+            $this->width = (int)(`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
         } elseif ($this->isWin() && (php_sapi_name() === "cli")) {
             exec('mode con', $output);
             preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
             if (!empty($matches[1])) {
-                $this->width = (int) $matches[1];
+                $this->width = (int)$matches[1];
             }
         }
         return $this->width;

@@ -202,7 +202,7 @@ EOF;
     {
         $soap_schema_url = $this->config['schema_url'];
         $xml = $this->xmlRequest;
-        $call = $xml->createElement('ns:' . $action);
+        $call = $xml->createElement('ns:'.$action);
         if ($body) {
             $bodyXml = SoapUtils::toXml($body);
             if ($bodyXml->hasChildNodes()) {
@@ -229,7 +229,7 @@ EOF;
             $response = $this->processExternalRequest($action, $req);
         }
 
-        $this->debugSection("Response", (string) $response);
+        $this->debugSection("Response", (string)$response);
         $this->xmlResponse = SoapUtils::toXml($response);
         $this->xmlStructure = null;
     }

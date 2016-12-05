@@ -35,12 +35,12 @@ class RunFailed extends Extension
     public function _initialize()
     {
         $logPath = str_replace($this->getRootDir(), '', $this->getLogDir()); // get local path to logs
-        $this->_reconfigure(['groups' => ['failed' => $logPath . $this->config['file']]]);
+        $this->_reconfigure(['groups' => ['failed' => $logPath.$this->config['file']]]);
     }
 
     public function saveFailed(PrintResultEvent $e)
     {
-        $file = $this->getLogDir() . $this->config['file'];
+        $file = $this->getLogDir().$this->config['file'];
         $result = $e->getResult();
         if ($result->wasSuccessful()) {
             if (is_file($file)) {
@@ -61,7 +61,7 @@ class RunFailed extends Extension
 
     protected function localizePath($path)
     {
-        $root = realpath($this->getRootDir()) . DIRECTORY_SEPARATOR;
+        $root = realpath($this->getRootDir()).DIRECTORY_SEPARATOR;
         if (substr($path, 0, strlen($root)) == $root) {
             return substr($path, strlen($root));
         }

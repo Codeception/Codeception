@@ -48,7 +48,7 @@ class Gherkin implements LoaderInterface
         }
         $gherkin = new \ReflectionClass('Behat\Gherkin\Gherkin');
         $gherkinClassPath = dirname($gherkin->getFileName());
-        $i18n = require $gherkinClassPath . '/../../../i18n.php';
+        $i18n = require $gherkinClassPath.'/../../../i18n.php';
         $keywords = new GherkinKeywords($i18n);
         $lexer = new GherkinLexer($keywords);
         $this->parser = new GherkinParser($lexer);
@@ -68,7 +68,7 @@ class Gherkin implements LoaderInterface
 
         if (empty($this->steps) and empty($contexts['default'])) { // if no context is set, actor to be a context
             $actorContext = $this->settings['namespace']
-                ? rtrim($this->settings['namespace'] . '\\' . $this->settings['class_name'], '\\')
+                ? rtrim($this->settings['namespace'].'\\'.$this->settings['class_name'], '\\')
                 : $this->settings['class_name'];
             if ($actorContext) {
                 $contexts['default'][] = $actorContext;
@@ -169,7 +169,7 @@ class Gherkin implements LoaderInterface
                 foreach ($scenarioNode->getExamples() as $example) {
                     /** @var $example ExampleNode  **/
                     $params = implode(', ', $example->getTokens());
-                    $exampleNode = new ScenarioNode($scenarioNode->getTitle() . " | $params", $scenarioNode->getTags(), $example->getSteps(), $example->getKeyword(), $example->getLine());
+                    $exampleNode = new ScenarioNode($scenarioNode->getTitle()." | $params", $scenarioNode->getTags(), $example->getSteps(), $example->getKeyword(), $example->getLine());
                     $this->tests[] = new GherkinFormat($featureNode, $exampleNode, $steps);
                 }
                 continue;

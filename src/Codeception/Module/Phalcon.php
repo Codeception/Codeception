@@ -117,19 +117,19 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      */
     public function _initialize()
     {
-        $this->bootstrapFile = Configuration::projectDir() . $this->config['bootstrap'];
+        $this->bootstrapFile = Configuration::projectDir().$this->config['bootstrap'];
 
         if (!file_exists($this->bootstrapFile)) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Bootstrap file does not exist in " . $this->config['bootstrap'] . "\n"
+                "Bootstrap file does not exist in ".$this->config['bootstrap']."\n"
                 . "Please create the bootstrap file that returns Application object\n"
                 . "And specify path to it with 'bootstrap' config\n\n"
                 . "Sample bootstrap: \n\n<?php\n"
-                . '$config = include __DIR__ . "/config.php";' . "\n"
-                . 'include __DIR__ . "/loader.php";' . "\n"
-                . '$di = new \Phalcon\DI\FactoryDefault();' . "\n"
-                . 'include __DIR__ . "/services.php";' . "\n"
+                . '$config = include __DIR__ . "/config.php";'."\n"
+                . 'include __DIR__ . "/loader.php";'."\n"
+                . '$di = new \Phalcon\DI\FactoryDefault();'."\n"
+                . 'include __DIR__ . "/services.php";'."\n"
                 . 'return new \Phalcon\Mvc\Application($di);'
             );
         }
@@ -174,7 +174,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
 
         // localize
         $bootstrap = $this->bootstrapFile;
-        $this->client->setApplication(function () use ($bootstrap) {
+        $this->client->setApplication(function() use ($bootstrap) {
             $currentDi = Di::getDefault();
             /** @noinspection PhpIncludeInspection */
             $application = require $bootstrap;
@@ -323,7 +323,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     {
         $record = $this->getModelRecord($model);
         $res = $record->save($attributes);
-        $field = function ($field) {
+        $field = function($field) {
             if (is_array($field)) {
                 return implode(', ', $field);
             }
@@ -371,7 +371,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     {
         $record = $this->findRecord($model, $attributes);
         if (!$record) {
-            $this->fail("Couldn't find $model with " . json_encode($attributes));
+            $this->fail("Couldn't find $model with ".json_encode($attributes));
         }
         $this->debugSection($model, json_encode($record));
     }
@@ -394,7 +394,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         $record = $this->findRecord($model, $attributes);
         $this->debugSection($model, json_encode($record));
         if ($record) {
-            $this->fail("Unexpectedly managed to find $model with " . json_encode($attributes));
+            $this->fail("Unexpectedly managed to find $model with ".json_encode($attributes));
         }
     }
 
@@ -571,7 +571,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     /**
      * Get Model Record
      *
-     * @param $model
+     * @param string $model
      *
      * @return \Phalcon\Mvc\Model
      * @throws ModuleException
@@ -621,7 +621,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     /**
      * Returns a list of recognized domain names
      *
-     * @return array
+     * @return string[]
      */
     protected function getInternalDomains()
     {
@@ -638,7 +638,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
                 if ($route instanceof RouteInterface) {
                     $hostName = $route->getHostname();
                     if (!empty($hostName)) {
-                        $internalDomains[] = '/^' . str_replace('.', '\.', $route->getHostname()) . '$/';
+                        $internalDomains[] = '/^'.str_replace('.', '\.', $route->getHostname()).'$/';
                     }
                 }
             }
@@ -655,6 +655,6 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         $server = ReflectionHelper::readPrivateProperty($this->client, 'server');
         $domain = $server['HTTP_HOST'];
 
-        return '/^' . str_replace('.', '\.', $domain) . '$/';
+        return '/^'.str_replace('.', '\.', $domain).'$/';
     }
 }

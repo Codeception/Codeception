@@ -46,7 +46,7 @@ class GenerateTest extends Command
         $path = $this->buildPath($config['path'], $class);
 
         $filename = $this->completeSuffix($className, 'Test');
-        $filename = $path . $filename;
+        $filename = $path.$filename;
 
         $gen = new TestGenerator($config, $class);
 

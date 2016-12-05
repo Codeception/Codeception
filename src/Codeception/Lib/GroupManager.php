@@ -64,10 +64,10 @@ class GroupManager
             if (is_array($tests)) {
                 foreach ($tests as $test) {
                     $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $test);
-                    $this->testsInGroups[$group][] = Configuration::projectDir() . $file;
+                    $this->testsInGroups[$group][] = Configuration::projectDir().$file;
                 }
-            } elseif (is_file(Configuration::projectDir() . $tests)) {
-                $handle = @fopen(Configuration::projectDir() . $tests, "r");
+            } elseif (is_file(Configuration::projectDir().$tests)) {
+                $handle = @fopen(Configuration::projectDir().$tests, "r");
                 if ($handle) {
                     while (($test = fgets($handle, 4096)) !== false) {
                         // if the current line is blank then we need to move to the next line
@@ -77,7 +77,7 @@ class GroupManager
                             continue;
                         }
 
-                        $file = trim(Configuration::projectDir() . $test);
+                        $file = trim(Configuration::projectDir().$test);
                         $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $file);
                         $this->testsInGroups[$group][] = $file;
                     }
@@ -117,13 +117,13 @@ class GroupManager
                 if ($filename == $testPattern) {
                     $groups[] = $group;
                 }
-                if (strpos($filename . ':' . $test->getName(false), $testPattern) === 0) {
+                if (strpos($filename.':'.$test->getName(false), $testPattern) === 0) {
                     $groups[] = $group;
                 }
                 if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
                     $firstTest = $test->testAt(0);
                     if ($firstTest != false && $firstTest instanceof TestInterface) {
-                        if (strpos($filename . ':' . $firstTest->getName(false), $testPattern) === 0) {
+                        if (strpos($filename.':'.$firstTest->getName(false), $testPattern) === 0) {
                             $groups[] = $group;
                         }
                     }

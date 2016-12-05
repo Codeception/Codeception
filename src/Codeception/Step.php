@@ -78,7 +78,7 @@ abstract class Step
     public function getLine()
     {
         if ($this->line && $this->file) {
-            return codecept_relative_path($this->file) . ':' . $this->line;
+            return codecept_relative_path($this->file).':'.$this->line;
         }
     }
 
@@ -102,7 +102,7 @@ abstract class Step
 
         if ($totalLength > $maxLength) {
             //sort arguments from shortest to longest
-            uasort($arguments, function ($arg1, $arg2) {
+            uasort($arguments, function($arg1, $arg2) {
                 $length1 = mb_strlen($arg1, 'utf-8');
                 $length2 = mb_strlen($arg2, 'utf-8');
                 if ($length1 === $length2) {
@@ -118,7 +118,7 @@ abstract class Step
             foreach ($arguments as $key => $argument) {
                 $argumentsRemaining--;
                 if (mb_strlen($argument, 'utf-8') > $allowedLength) {
-                    $arguments[$key] = mb_substr($argument, 0, $allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
+                    $arguments[$key] = mb_substr($argument, 0, $allowedLength - 4, 'utf-8').'...'.mb_substr($argument, -1, 1, 'utf-8');
                     $lengthRemaining -= ($allowedLength + 1);
                 } else {
                     $lengthRemaining -= (mb_strlen($arguments[$key], 'utf-8') + 1);
@@ -139,7 +139,7 @@ abstract class Step
     protected function stringifyArgument($argument)
     {
         if (is_string($argument)) {
-            return '"' . strtr($argument, ["\n" => '\n', "\r" => '\r', "\t" => ' ']) . '"';
+            return '"'.strtr($argument, ["\n" => '\n', "\r" => '\r', "\t" => ' ']).'"';
         } elseif (is_resource($argument)) {
             $argument = (string)$argument;
         } elseif (is_array($argument)) {
@@ -179,10 +179,10 @@ abstract class Step
 
     public function getPhpCode($maxLength)
     {
-        $result = "\${$this->prefix}->" . $this->getAction() . '(';
+        $result = "\${$this->prefix}->".$this->getAction().'(';
         $maxLength = $maxLength - mb_strlen($result, 'utf-8') - 1;
 
-        $result .= $this->getHumanizedArguments($maxLength) .')';
+        $result .= $this->getHumanizedArguments($maxLength).')';
         return $result;
     }
 
@@ -197,7 +197,7 @@ abstract class Step
     public function __toString()
     {
         $humanizedAction = $this->humanize($this->getAction());
-        return $humanizedAction . ' ' . $this->getHumanizedArguments();
+        return $humanizedAction.' '.$this->getHumanizedArguments();
     }
 
 
@@ -205,7 +205,7 @@ abstract class Step
     {
         $humanizedAction = $this->humanize($this->getAction());
         $maxLength = $maxLength - mb_strlen($humanizedAction, 'utf-8') - 1;
-        return $humanizedAction . ' ' . $this->getHumanizedArguments($maxLength);
+        return $humanizedAction.' '.$this->getHumanizedArguments($maxLength);
     }
 
     public function getHtml($highlightColor = '#732E81')
@@ -296,7 +296,7 @@ abstract class Step
 
             // pageobjects or other classes should not be included with "I"
             if (!in_array('Codeception\Actor', class_parents($step['class']))) {
-                $this->metaStep->setPrefix($step['class'] . ':');
+                $this->metaStep->setPrefix($step['class'].':');
             }
             return;
         }
@@ -315,6 +315,6 @@ abstract class Step
      */
     public function getPrefix()
     {
-        return $this->prefix . ' ';
+        return $this->prefix.' ';
     }
 }

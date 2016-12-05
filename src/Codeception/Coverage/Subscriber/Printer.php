@@ -47,7 +47,7 @@ class Printer implements EventSubscriberInterface
         if ((strpos($path, '/') === 0) || (strpos($path, ':') === 1)) { // absolute path
             return $path;
         }
-        return $this->logDir . $path;
+        return $this->logDir.$path;
     }
 
     public function printResult(PrintResultEvent $e)

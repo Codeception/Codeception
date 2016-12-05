@@ -26,6 +26,9 @@ class Parser
         $this->metadata = $metadata;
     }
 
+    /**
+     * @param string $code
+     */
     public function prepareToRun($code)
     {
         $this->parseFeature($code);
@@ -43,7 +46,7 @@ class Parser
         }
         $res = preg_match("~\\\$I->wantToTest\\(['\"](.*?)['\"]\\);~", $code, $matches);
         if ($res) {
-            $this->scenario->setFeature("test " . $matches[1]);
+            $this->scenario->setFeature("test ".$matches[1]);
             return;
         }
     }
@@ -106,6 +109,9 @@ class Parser
         }
     }
 
+    /**
+     * @param string[] $matches
+     */
     protected function addStep($matches)
     {
         list($m, $action, $params) = $matches;
@@ -126,7 +132,7 @@ class Parser
         if (empty($config['settings']['lint'])) { // lint disabled in config
             return;
         }
-        @exec("php -l " . escapeshellarg($file) . " 2>&1", $output, $code);
+        @exec("php -l ".escapeshellarg($file)." 2>&1", $output, $code);
         if (!isset($code)) {
             //probably exec function is disabled #3324
             return;
@@ -163,7 +169,7 @@ class Parser
                 $namespace = '';
                 for ($j = $i + 1; $j < $tokenCount; $j++) {
                     if ($tokens[$j][0] === T_STRING) {
-                        $namespace .= $tokens[$j][1] . '\\';
+                        $namespace .= $tokens[$j][1].'\\';
                     } else {
                         if ($tokens[$j] === '{' || $tokens[$j] === ';') {
                             break;
@@ -174,7 +180,7 @@ class Parser
 
             if ($tokens[$i][0] === T_CLASS) {
                 if (!isset($tokens[$i - 2])) {
-                    $classes[] = $namespace . $tokens[$i + 2][1];
+                    $classes[] = $namespace.$tokens[$i + 2][1];
                     continue;
                 }
                 if ($tokens[$i - 2][0] === T_NEW) {
@@ -186,7 +192,7 @@ class Parser
                 if ($tokens[$i - 1][0] === T_DOUBLE_COLON) {
                     continue;
                 }
-                $classes[] = $namespace . $tokens[$i + 2][1];
+                $classes[] = $namespace.$tokens[$i + 2][1];
             }
         }
 

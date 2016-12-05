@@ -5,7 +5,6 @@ use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
-use Codeception\Test\Interfaces\Configurable;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
 use Codeception\Test\Descriptor;
@@ -80,7 +79,7 @@ class SuiteManager
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
-        if (!file_exists(Configuration::supportDir() . $this->settings['class_name'] . '.php')) {
+        if (!file_exists(Configuration::supportDir().$this->settings['class_name'].'.php')) {
             throw new Exception\ConfigurationException(
                 $this->settings['class_name']
                 . " class doesn't exist in suite folder.\nRun the 'build' command to generate it"
@@ -144,11 +143,11 @@ class SuiteManager
         $suite = new Suite();
         $suite->setBaseName(preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
-            $name = $this->settings['namespace'] . ".$name";
+            $name = $this->settings['namespace'].".$name";
         }
         $suite->setName($name);
         if (isset($this->settings['backup_globals'])) {
-            $suite->setBackupGlobals((bool) $this->settings['backup_globals']);
+            $suite->setBackupGlobals((bool)$this->settings['backup_globals']);
         }
         $suite->setModules($this->moduleContainer->all());
         return $suite;
@@ -182,7 +181,7 @@ class SuiteManager
     protected function getActor()
     {
         return $this->settings['namespace']
-            ? rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['class_name']
+            ? rtrim($this->settings['namespace'], '\\').'\\'.$this->settings['class_name']
             : $this->settings['class_name'];
     }
 

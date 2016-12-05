@@ -156,7 +156,7 @@ EOF;
                 'app_id' => $this->config['app_id'],
                 'secret' => $this->config['secret'],
             ],
-            function ($title, $message) {
+            function($title, $message) {
                 if (version_compare(PHP_VERSION, '5.4', '>=')) {
                     $this->debugSection($title, $message);
                 }

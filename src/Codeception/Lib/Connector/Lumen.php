@@ -104,7 +104,7 @@ class Lumen extends Client
 
         // Reset the old database if there is one
         if ($this->oldDb) {
-            $this->app->singleton('db', function () {
+            $this->app->singleton('db', function() {
                 return $this->oldDb;
             });
             Model::setConnectionResolver($this->oldDb);

@@ -102,7 +102,7 @@ class LocalServer extends SuiteSubscriber
         if (!$this->isEnabled()) {
             return;
         }
-        $coverageFile = Configuration::outputDir() . 'c3tmp/codecoverage.serialized';
+        $coverageFile = Configuration::outputDir().'c3tmp/codecoverage.serialized';
 
         $retries = 5;
         while (!file_exists($coverageFile) && --$retries >= 0) {
@@ -110,8 +110,8 @@ class LocalServer extends SuiteSubscriber
         }
 
         if (!file_exists($coverageFile)) {
-            if (file_exists(Configuration::outputDir() . 'c3tmp/error.txt')) {
-                throw new \RuntimeException(file_get_contents(Configuration::outputDir() . 'c3tmp/error.txt'));
+            if (file_exists(Configuration::outputDir().'c3tmp/error.txt')) {
+                throw new \RuntimeException(file_get_contents(Configuration::outputDir().'c3tmp/error.txt'));
             }
             return;
         }
@@ -124,21 +124,24 @@ class LocalServer extends SuiteSubscriber
         $this->mergeToPrint($coverage);
     }
 
+    /**
+     * @param string $action
+     */
     protected function c3Request($action)
     {
         $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
         $context = stream_context_create($this->c3Access);
         $c3Url = $this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl();
-        $contents = file_get_contents($c3Url . '/c3/report/' . $action, false, $context);
+        $contents = file_get_contents($c3Url.'/c3/report/'.$action, false, $context);
 
         $okHeaders = array_filter(
             $http_response_header,
-            function ($h) {
+            function($h) {
                 return preg_match('~^HTTP(.*?)\s200~', $h);
             }
         );
         if (empty($okHeaders)) {
-            throw new RemoteException("Request was not successful. See response header: " . $http_response_header[0]);
+            throw new RemoteException("Request was not successful. See response header: ".$http_response_header[0]);
         }
         if ($contents === false) {
             $this->getRemoteError($http_response_header);
@@ -175,6 +178,9 @@ class LocalServer extends SuiteSubscriber
         }
     }
 
+    /**
+     * @param string $header
+     */
     protected function addC3AccessHeader($header, $value)
     {
         $headerString = "$header: $value\r\n";

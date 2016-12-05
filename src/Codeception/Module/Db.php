@@ -185,7 +185,7 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function readSql()
     {
-        if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
+        if (!file_exists(Configuration::projectDir().$this->config['dump'])) {
             throw new ModuleConfigException(
                 __CLASS__,
                 "\nFile with dump doesn't exist.\n"
@@ -194,7 +194,7 @@ class Db extends CodeceptionModule implements DbInterface
             );
         }
 
-        $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
+        $sql = file_get_contents(Configuration::projectDir().$this->config['dump']);
 
         // remove C-style comments (except MySQL directives)
         $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
@@ -212,11 +212,11 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
-                list ($missingDriver, ) = explode(':', $this->config['dsn'], 2);
+                list ($missingDriver,) = explode(':', $this->config['dsn'], 2);
                 $message = "could not find $missingDriver driver";
             }
 
-            throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
+            throw new ModuleException(__CLASS__, $message.' while creating PDO connection');
         }
 
         $this->dbh = $this->driver->getDbh();
@@ -256,7 +256,7 @@ class Db extends CodeceptionModule implements DbInterface
             try {
                 $this->driver->deleteQueryByCriteria($row['table'], $row['primary']);
             } catch (\Exception $e) {
-                $this->debug("coudn't delete record " . json_encode($row['primary']) ." from {$row['table']}");
+                $this->debug("coudn't delete record ".json_encode($row['primary'])." from {$row['table']}");
             }
         }
         $this->insertedRows = [];
@@ -292,7 +292,7 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\PDOException $e) {
             throw new ModuleException(
                 __CLASS__,
-                $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
+                $e->getMessage()."\nSQL query being executed: ".$this->driver->sqlToRun
             );
         }
     }
@@ -332,6 +332,10 @@ class Db extends CodeceptionModule implements DbInterface
         return $lastInsertId;
     }
 
+    /**
+     * @param string $table
+     * @param integer $id
+     */
     private function addInsertedRow($table, array $row, $id)
     {
         $primaryKey = $this->driver->getPrimaryKey($table);
@@ -345,7 +349,7 @@ class Db extends CodeceptionModule implements DbInterface
                         $primary[$column] = $row[$column];
                     } else {
                         throw new \InvalidArgumentException(
-                            'Primary key field ' . $column . ' is not set for table ' . $table
+                            'Primary key field '.$column.' is not set for table '.$table
                         );
                     }
                 }
@@ -366,7 +370,7 @@ class Db extends CodeceptionModule implements DbInterface
         $this->assertGreaterThan(
             0,
             $res,
-            'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table
+            'No matching records found for criteria '.json_encode($criteria).' in table '.$table
         );
     }
 
@@ -405,7 +409,7 @@ class Db extends CodeceptionModule implements DbInterface
         $this->assertLessThan(
             1,
             $count,
-            'Unexpectedly found matching records for criteria ' . json_encode($criteria) . ' in table ' . $table
+            'Unexpectedly found matching records for criteria '.json_encode($criteria).' in table '.$table
         );
     }
 
@@ -419,9 +423,13 @@ class Db extends CodeceptionModule implements DbInterface
      */
     protected function countInDatabase($table, array $criteria = [])
     {
-        return (int) $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
+        return (int)$this->proceedSeeInDatabase($table, 'count(*)', $criteria);
     }
 
+    /**
+     * @param string $table
+     * @param string $column
+     */
     protected function proceedSeeInDatabase($table, $column, $criteria)
     {
         $query = $this->driver->select($column, $table, $criteria);

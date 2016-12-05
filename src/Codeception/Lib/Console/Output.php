@@ -56,6 +56,9 @@ class Output extends ConsoleOutput
         return $this->isInteractive;
     }
 
+    /**
+     * @return string
+     */
     protected function clean($message)
     {
         // clear json serialization

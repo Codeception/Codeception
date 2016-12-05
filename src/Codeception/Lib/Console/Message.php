@@ -21,6 +21,9 @@ class Message
         return $this;
     }
 
+    /**
+     * @param string $name
+     */
     public function style($name)
     {
         $this->message = sprintf('<%s>%s</%s>', $name, $this->message, $name);
@@ -64,7 +67,7 @@ class Message
         if ($string instanceof Message) {
             $string = $string->getMessage();
         }
-        $this->message = $string . $this->message;
+        $this->message = $string.$this->message;
         return $this;
     }
 
@@ -84,9 +87,12 @@ class Message
         return $this;
     }
 
+    /**
+     * @param string $char
+     */
     public function center($char)
     {
-        $this->message = $char . $this->message . $char;
+        $this->message = $char.$this->message.$char;
         return $this;
     }
 
@@ -98,6 +104,9 @@ class Message
         return $this->message;
     }
 
+    /**
+     * @param string $style
+     */
     public function block($style)
     {
         $this->message = $this->output->formatHelper->formatBlock($this->message, $style, true);
@@ -112,7 +121,7 @@ class Message
 
     public static function ucfirst($text)
     {
-        return mb_strtoupper(mb_substr($text, 0, 1, 'utf-8'), 'utf-8') . mb_substr($text, 1, null, 'utf-8');
+        return mb_strtoupper(mb_substr($text, 0, 1, 'utf-8'), 'utf-8').mb_substr($text, 1, null, 'utf-8');
     }
 
     public function __toString()

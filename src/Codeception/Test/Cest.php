@@ -50,7 +50,7 @@ class Cest extends Test implements
         // add example params to feature
         if ($this->getMetadata()->getCurrent('example')) {
             $step = new Comment('', $this->getMetadata()->getCurrent('example'));
-            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | '. $step->getArgumentsAsString(100));
+            $this->getScenario()->setFeature($this->getScenario()->getFeature().' | '.$step->getArgumentsAsString(100));
         }
     }
 
@@ -124,7 +124,7 @@ class Cest extends Test implements
             return;
         }
         throw new \LogicException(
-            "Method $context defined in annotation but does not exist in " . get_class($this->testClassInstance)
+            "Method $context defined in annotation but does not exist in ".get_class($this->testClassInstance)
         );
     }
 
@@ -155,7 +155,7 @@ class Cest extends Test implements
 
     public function getSignature()
     {
-        return get_class($this->getTestClass()) . ":" . $this->getTestMethod();
+        return get_class($this->getTestClass()).":".$this->getTestMethod();
     }
 
     public function getTestClass()
@@ -191,7 +191,7 @@ class Cest extends Test implements
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
             if ((strpos($required, ':') === false) and method_exists($this->getTestClass(), $required)) {
-                $required = get_class($this->getTestClass()) . ":$required";
+                $required = get_class($this->getTestClass()).":$required";
             }
             $names[] = $required;
         }

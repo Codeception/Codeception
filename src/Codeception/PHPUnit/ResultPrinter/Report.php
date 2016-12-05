@@ -34,10 +34,10 @@ class Report extends ResultPrinter implements ConsolePrinter
         if (strlen($name) > 75) {
             $name = substr($name, 0, 70);
         }
-        $line = $name . str_repeat('.', 75 - strlen($name));
+        $line = $name.str_repeat('.', 75 - strlen($name));
         $line .= $status;
 
-        $this->write($line . "\n");
+        $this->write($line."\n");
     }
 
     protected function endRun()
@@ -49,7 +49,7 @@ class Report extends ResultPrinter implements ConsolePrinter
             $this->failed,
             $this->skipped,
             $this->incomplete
-        ) . "\n");
+        )."\n");
     }
 
     public function printResult(\PHPUnit_Framework_TestResult $result)

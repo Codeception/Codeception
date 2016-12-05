@@ -39,8 +39,8 @@ class Filesystem extends CodeceptionModule
      */
     public function amInPath($path)
     {
-        chdir($this->path = $this->absolutizePath($path) . DIRECTORY_SEPARATOR);
-        $this->debug('Moved to ' . getcwd());
+        chdir($this->path = $this->absolutizePath($path).DIRECTORY_SEPARATOR);
+        $this->debug('Moved to '.getcwd());
     }
 
     protected function absolutizePath($path)
@@ -54,7 +54,7 @@ class Filesystem extends CodeceptionModule
             return $path;
         }
 
-        return $this->path . $path;
+        return $this->path.$path;
     }
 
     /**
@@ -167,7 +167,7 @@ class Filesystem extends CodeceptionModule
         $lines = preg_split('/\n|\r/', $this->file);
 
         $this->assertTrue(
-            (int) $number === count($lines),
+            (int)$number === count($lines),
             "The number of new lines does not match with $number"
         );
     }
@@ -246,7 +246,7 @@ class Filesystem extends CodeceptionModule
             $this->openFile($filename);
             $this->filepath = $filename;
             $this->debug($filename);
-            \PHPUnit_Framework_Assert::assertFileExists($path . $filename);
+            \PHPUnit_Framework_Assert::assertFileExists($path.$filename);
             return;
         }
 
@@ -276,7 +276,7 @@ class Filesystem extends CodeceptionModule
      */
     public function dontSeeFileFound($filename, $path = '')
     {
-        \PHPUnit_Framework_Assert::assertFileNotExists($path . $filename);
+        \PHPUnit_Framework_Assert::assertFileNotExists($path.$filename);
     }
 
 

@@ -33,13 +33,13 @@ EOF;
     public function produce()
     {
         return (new Template($this->template))
-            ->place('namespace', $this->getNamespaceHeader($this->namespace . '\\Helper\\' . $this->name))
+            ->place('namespace', $this->getNamespaceHeader($this->namespace.'\\Helper\\'.$this->name))
             ->place('name', $this->getShortClassName($this->name))
             ->produce();
     }
 
     public function getHelperName()
     {
-        return rtrim('\\' . $this->namespace, '\\') . '\\Helper\\' . $this->name;
+        return rtrim('\\'.$this->namespace, '\\').'\\Helper\\'.$this->name;
     }
 }

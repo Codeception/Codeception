@@ -363,7 +363,7 @@ EOF;
         $this->debug($qb->getDQL());
         $res = $qb->getQuery()->getArrayResult();
 
-        return ['True', (count($res) > 0), "$entity with " . json_encode($params)];
+        return ['True', (count($res) > 0), "$entity with ".json_encode($params)];
     }
 
     /**
@@ -391,7 +391,7 @@ EOF;
         $this->em->flush();
         $data = $this->em->getClassMetadata($entity);
         $qb = $this->em->getRepository($entity)->createQueryBuilder('s');
-        $qb->select('s.' . $field);
+        $qb->select('s.'.$field);
         $this->buildAssociationQuery($qb, $entity, 's', $params);
         $this->debug($qb->getDQL());
         return $qb->getQuery()->getSingleScalarResult();
@@ -402,7 +402,7 @@ EOF;
      *
      * @param $qb
      * @param $assoc
-     * @param $alias
+     * @param string $alias
      * @param $params
      */
     protected function buildAssociationQuery($qb, $assoc, $alias, $params)
@@ -418,7 +418,7 @@ EOF;
                                 $this->buildAssociationQuery($qb, $map['targetEntity'], $column, $v);
                                 continue;
                             }
-                            $paramname = $key . '__' . $column;
+                            $paramname = $key.'__'.$column;
                             $qb->andWhere("$key.$column = :$paramname");
                             $qb->setParameter($paramname, $v);
                         }

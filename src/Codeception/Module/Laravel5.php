@@ -117,7 +117,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'run_database_seeder' => false,
                 'database_seeder_class' => '',
                 'environment_file' => '.env',
-                'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
+                'bootstrap' => 'bootstrap'.DIRECTORY_SEPARATOR.'app.php',
                 'root' => '',
                 'packages' => 'workbench',
                 'vendor_dir' => 'vendor',
@@ -133,13 +133,13 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $projectDir .= $this->config['root'];
 
         $this->config['project_dir'] = $projectDir;
-        $this->config['bootstrap_file'] = $projectDir . $this->config['bootstrap'];
+        $this->config['bootstrap_file'] = $projectDir.$this->config['bootstrap'];
 
         parent::__construct($container);
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function _parts()
     {
@@ -219,7 +219,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function registerAutoloaders()
     {
-        require $this->config['project_dir'] . $this->config['vendor_dir'] . DIRECTORY_SEPARATOR . 'autoload.php';
+        require $this->config['project_dir'].$this->config['vendor_dir'].DIRECTORY_SEPARATOR.'autoload.php';
 
         \Illuminate\Support\ClassLoader::register();
     }
@@ -530,7 +530,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $rootNamespace = $this->getRootControllerNamespace();
 
         if ($rootNamespace && !(strpos($action, '\\') === 0)) {
-            return $rootNamespace . '\\' . $action;
+            return $rootNamespace.'\\'.$action;
         } else {
             return trim($action, '\\');
         }
@@ -573,11 +573,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             return;
         }
 
-        if (! $this->app['session']->has($key)) {
+        if (!$this->app['session']->has($key)) {
             $this->fail("No session variable with key '$key'");
         }
 
-        if (! is_null($value)) {
+        if (!is_null($value)) {
             $this->assertEquals($value, $this->app['session']->get($key));
         }
     }
@@ -615,7 +615,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @return bool
+     * @return boolean|null
      */
     public function seeFormHasErrors()
     {
@@ -634,13 +634,13 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @return bool
+     * @return boolean|null
      */
     public function dontSeeFormErrors()
     {
         $viewErrorBag = $this->app->make('view')->shared('errors');
         if (count($viewErrorBag) > 0) {
-            $this->fail("Found the following form errors: \n\n" . $viewErrorBag->toJson(JSON_PRETTY_PRINT));
+            $this->fail("Found the following form errors: \n\n".$viewErrorBag->toJson(JSON_PRETTY_PRINT));
         }
     }
 
@@ -692,7 +692,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $this->fail("No form error message for key '$key'\n");
         }
 
-        if (! is_null($expectedErrorMessage)) {
+        if (!is_null($expectedErrorMessage)) {
             $this->assertContains($expectedErrorMessage, $viewErrorBag->first($key));
         }
     }
@@ -734,8 +734,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             return;
         }
 
-        if (! $guard->attempt($user)) {
-            $this->fail("Failed to login with credentials " . json_encode($user));
+        if (!$guard->attempt($user)) {
+            $this->fail("Failed to login with credentials ".json_encode($user));
         }
     }
 
@@ -760,7 +760,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $auth = $auth->guard($guard);
         }
 
-        if (! $auth->check()) {
+        if (!$auth->check()) {
             $this->fail("There is no authenticated user");
         }
     }
@@ -910,7 +910,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         if (class_exists($table)) {
             $model = new $table;
 
-            if (! $model instanceof EloquentModel) {
+            if (!$model instanceof EloquentModel) {
                 throw new \RuntimeException("Class $table is not an Eloquent model");
             }
 
@@ -922,7 +922,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         try {
             return $this->app['db']->table($table)->insertGetId($attributes);
         } catch (\Exception $e) {
-            $this->fail("Could not insert record into table '$table':\n\n" . $e->getMessage());
+            $this->fail("Could not insert record into table '$table':\n\n".$e->getMessage());
         }
     }
 
@@ -944,10 +944,10 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function seeRecord($table, $attributes = [])
     {
         if (class_exists($table)) {
-            if (! $this->findModel($table, $attributes)) {
-                $this->fail("Could not find $table with " . json_encode($attributes));
+            if (!$this->findModel($table, $attributes)) {
+                $this->fail("Could not find $table with ".json_encode($attributes));
             }
-        } elseif (! $this->findRecord($table, $attributes)) {
+        } elseif (!$this->findRecord($table, $attributes)) {
             $this->fail("Could not find matching record in table '$table'");
         }
     }
@@ -971,7 +971,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         if (class_exists($table)) {
             if ($this->findModel($table, $attributes)) {
-                $this->fail("Unexpectedly found matching $table with " . json_encode($attributes));
+                $this->fail("Unexpectedly found matching $table with ".json_encode($attributes));
             }
         } elseif ($this->findRecord($table, $attributes)) {
             $this->fail("Unexpectedly found matching record in table '$table'");
@@ -998,14 +998,14 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function grabRecord($table, $attributes = [])
     {
         if (class_exists($table)) {
-            if (! $model = $this->findModel($table, $attributes)) {
-                $this->fail("Could not find $table with " . json_encode($attributes));
+            if (!$model = $this->findModel($table, $attributes)) {
+                $this->fail("Could not find $table with ".json_encode($attributes));
             }
 
             return $model;
         }
 
-        if (! $record = $this->findRecord($table, $attributes)) {
+        if (!$record = $this->findRecord($table, $attributes)) {
             $this->fail("Could not find matching record in table '$table'");
         }
 
@@ -1046,7 +1046,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $query->where($key, $value);
         }
 
-        return (array) $query->first();
+        return (array)$query->first();
     }
 
     /**
@@ -1073,7 +1073,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         try {
             return $this->modelFactory($model, $name)->create($attributes);
         } catch (\Exception $e) {
-            $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+            $this->fail("Could not create model: \n\n".get_class($e)."\n\n".$e->getMessage());
         }
     }
 
@@ -1102,7 +1102,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         try {
             return $this->modelFactory($model, $name, $times)->create($attributes);
         } catch (\Exception $e) {
-            $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+            $this->fail("Could not create model: \n\n".get_class($e)."\n\n".$e->getMessage());
         }
     }
 
@@ -1115,8 +1115,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function modelFactory($model, $name, $times = 1)
     {
-        if (! function_exists('factory')) {
-            throw new ModuleException($this, 'The factory() method does not exist. ' .
+        if (!function_exists('factory')) {
+            throw new ModuleException($this, 'The factory() method does not exist. '.
                 'This functionality relies on Laravel model factories, which were introduced in Laravel 5.1.');
         }
 
@@ -1127,7 +1127,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * Returns a list of recognized domain names.
      * This elements of this list are regular expressions.
      *
-     * @return array
+     * @return string[]
      */
     protected function getInternalDomains()
     {
@@ -1150,7 +1150,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $server = ReflectionHelper::readPrivateProperty($this->client, 'server');
         $domain = $server['HTTP_HOST'];
 
-        return '/^' . str_replace('.', '\.', $domain) . '$/';
+        return '/^'.str_replace('.', '\.', $domain).'$/';
     }
 
     /**

@@ -107,7 +107,7 @@ class Configuration
         'path'        => '',
         'groups'      => [],
         'shuffle'     => false,
-        'extensions'  => [ // suite extensions
+        'extensions'  => [// suite extensions
             'enabled' => [],
             'config' => [],
         ],
@@ -135,17 +135,17 @@ class Configuration
         }
 
         if ($configFile === null) {
-            $configFile = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
+            $configFile = getcwd().DIRECTORY_SEPARATOR.'codeception.yml';
         }
 
         if (is_dir($configFile)) {
-            $configFile = $configFile . DIRECTORY_SEPARATOR . 'codeception.yml';
+            $configFile = $configFile.DIRECTORY_SEPARATOR.'codeception.yml';
         }
 
         $dir = realpath(dirname($configFile));
         self::$dir = $dir;
 
-        $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
+        $configDistFile = $dir.DIRECTORY_SEPARATOR.'codeception.dist.yml';
 
         if (!(file_exists($configDistFile) || file_exists($configFile))) {
             throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
@@ -230,7 +230,7 @@ class Configuration
         if (!$bootstrap) {
             return;
         }
-        $bootstrap = self::$dir . DIRECTORY_SEPARATOR . self::$testsDir . DIRECTORY_SEPARATOR . $bootstrap;
+        $bootstrap = self::$dir.DIRECTORY_SEPARATOR.self::$testsDir.DIRECTORY_SEPARATOR.$bootstrap;
         if (file_exists($bootstrap)) {
             include_once $bootstrap;
         }
@@ -241,7 +241,7 @@ class Configuration
         $suites = Finder::create()
             ->files()
             ->name('*.{suite,suite.dist}.yml')
-            ->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)
+            ->in(self::$dir.DIRECTORY_SEPARATOR.self::$testsDir)
             ->depth('< 1');
         self::$suites = [];
 
@@ -284,12 +284,12 @@ class Configuration
         $settings = self::loadSuiteConfig($suite, $config['paths']['tests'], $settings);
         // load from environment configs
         if (isset($config['paths']['envs'])) {
-            $envConf = self::loadEnvConfigs(self::$dir . DIRECTORY_SEPARATOR . $config['paths']['envs']);
+            $envConf = self::loadEnvConfigs(self::$dir.DIRECTORY_SEPARATOR.$config['paths']['envs']);
             $settings = self::mergeConfigs($settings, $envConf);
         }
 
-        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
-            . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+        $settings['path'] = self::$dir.DIRECTORY_SEPARATOR.$config['paths']['tests']
+            . DIRECTORY_SEPARATOR.$suite.DIRECTORY_SEPARATOR;
 
         return $settings;
     }
@@ -323,10 +323,10 @@ class Configuration
             $envConfig[$env] = [];
             $envPath = $path;
             if ($envFile->getRelativePath()) {
-                $envPath .= DIRECTORY_SEPARATOR . $envFile->getRelativePath();
+                $envPath .= DIRECTORY_SEPARATOR.$envFile->getRelativePath();
             }
             foreach (['.dist.yml', '.yml'] as $suffix) {
-                $envConf = self::getConfFromFile($envPath . DIRECTORY_SEPARATOR . $env . $suffix, null);
+                $envConf = self::getConfFromFile($envPath.DIRECTORY_SEPARATOR.$env.$suffix, null);
                 if ($envConf === null) {
                     continue;
                 }
@@ -423,13 +423,13 @@ class Configuration
     {
         return array_filter(
             array_map(
-                function ($m) {
+                function($m) {
                     return is_array($m) ? key($m) : $m;
                 },
                 $settings['modules']['enabled'],
                 array_keys($settings['modules']['enabled'])
             ),
-            function ($m) use ($settings) {
+            function($m) use ($settings) {
                 if (!isset($settings['modules']['disabled'])) {
                     return true;
                 }
@@ -453,7 +453,7 @@ class Configuration
      */
     public static function dataDir()
     {
-        return self::$dir . DIRECTORY_SEPARATOR . self::$dataDir . DIRECTORY_SEPARATOR;
+        return self::$dir.DIRECTORY_SEPARATOR.self::$dataDir.DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -464,7 +464,7 @@ class Configuration
      */
     public static function supportDir()
     {
-        return self::$dir . DIRECTORY_SEPARATOR . self::$supportDir . DIRECTORY_SEPARATOR;
+        return self::$dir.DIRECTORY_SEPARATOR.self::$supportDir.DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -480,9 +480,9 @@ class Configuration
             throw new ConfigurationException("Path for output not specified. Please, set output path in global config");
         }
 
-        $dir = self::$logDir . DIRECTORY_SEPARATOR;
+        $dir = self::$logDir.DIRECTORY_SEPARATOR;
         if (strcmp(self::$logDir[0], "/") !== 0) {
-            $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
+            $dir = self::$dir.DIRECTORY_SEPARATOR.$dir;
         }
 
         if (!is_writable($dir)) {
@@ -516,7 +516,7 @@ class Configuration
      */
     public static function projectDir()
     {
-        return self::$dir . DIRECTORY_SEPARATOR;
+        return self::$dir.DIRECTORY_SEPARATOR;
     }
 
 
@@ -527,7 +527,7 @@ class Configuration
      */
     public static function testsDir()
     {
-        return self::$dir . DIRECTORY_SEPARATOR . self::$testsDir . DIRECTORY_SEPARATOR;
+        return self::$dir.DIRECTORY_SEPARATOR.self::$testsDir.DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -541,7 +541,7 @@ class Configuration
         if (!self::$envsDir) {
             return null;
         }
-        return self::$dir . DIRECTORY_SEPARATOR . self::$envsDir . DIRECTORY_SEPARATOR;
+        return self::$dir.DIRECTORY_SEPARATOR.self::$envsDir.DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -605,7 +605,7 @@ class Configuration
     /**
      * Loads config from *.dist.suite.yml and *.suite.yml
      *
-     * @param $suite
+     * @param string $suite
      * @param $path
      * @param $settings
      * @return array
@@ -613,10 +613,10 @@ class Configuration
     protected static function loadSuiteConfig($suite, $path, $settings)
     {
         $suiteDistConf = self::getConfFromFile(
-            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml"
+            self::$dir.DIRECTORY_SEPARATOR.$path.DIRECTORY_SEPARATOR."$suite.suite.dist.yml"
         );
         $suiteConf = self::getConfFromFile(
-            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml"
+            self::$dir.DIRECTORY_SEPARATOR.$path.DIRECTORY_SEPARATOR."$suite.suite.yml"
         );
         $settings = self::mergeConfigs($settings, $suiteDistConf);
         $settings = self::mergeConfigs($settings, $suiteConf);
@@ -652,13 +652,13 @@ class Configuration
     protected static function expandWildcardsFor($include)
     {
         if (1 !== preg_match('/[\?\.\*]/', $include)) {
-            return [$include,];
+            return [$include, ];
         }
 
         try {
             $configFiles = Finder::create()->files()
                 ->name('/codeception(\.dist\.yml|\.yml)/')
-                ->in(self::$dir . DIRECTORY_SEPARATOR . $include);
+                ->in(self::$dir.DIRECTORY_SEPARATOR.$include);
         } catch (\InvalidArgumentException $e) {
             throw new ConfigurationException(
                 "Configuration file(s) could not be found in \"$include\"."

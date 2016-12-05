@@ -1,8 +1,6 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfigException;
-use Codeception\Exception\ModuleException;
 use Codeception\Lib\Connector\Guzzle6;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
@@ -213,7 +211,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
      * It is not recommended to use this command on a regular basis.
      * If Codeception lacks important Guzzle Client methods, implement them and submit patches.
      *
-     * @param callable $function
+     * @param \Closure $function
      */
     public function executeInGuzzle(\Closure $function)
     {

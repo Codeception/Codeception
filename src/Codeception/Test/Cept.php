@@ -47,12 +47,12 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
 
     public function getSignature()
     {
-        return $this->getMetadata()->getName() . 'Cept';
+        return $this->getMetadata()->getName().'Cept';
     }
 
     public function toString()
     {
-        return $this->getSignature() . ': ' . Message::ucfirst($this->getFeature());
+        return $this->getSignature().': '.Message::ucfirst($this->getFeature());
     }
 
     public function getSourceCode()

@@ -80,7 +80,7 @@ class ZF2 extends Client
         $zendRequest->setUri($uri);
         $requestUri = $uri->getPath();
         if (!empty($queryString)) {
-            $requestUri .= '?' . $queryString;
+            $requestUri .= '?'.$queryString;
         }
 
         $zendRequest->setRequestUri($requestUri);

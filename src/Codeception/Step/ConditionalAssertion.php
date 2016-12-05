@@ -17,11 +17,11 @@ class ConditionalAssertion extends Assertion
 
     public function getAction()
     {
-        return 'can' . ucfirst($this->action);
+        return 'can'.ucfirst($this->action);
     }
 
     public function getHumanizedAction()
     {
-        return $this->humanize($this->action . ' ' . $this->getHumanizedArguments());
+        return $this->humanize($this->action.' '.$this->getHumanizedArguments());
     }
 }

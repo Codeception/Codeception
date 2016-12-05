@@ -61,7 +61,7 @@ EOF;
     {
         $this->settings = $settings;
         $this->name = $this->getShortClassName($name);
-        $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Page\\' . $name);
+        $this->namespace = $this->getNamespaceString($this->settings['namespace'].'\\Page\\'.$name);
     }
 
     public function produce()
@@ -82,7 +82,7 @@ EOF;
         $actor = lcfirst($this->settings['class_name']);
         $actorClass = $this->settings['class_name'];
         if (!empty($this->settings['namespace'])) {
-            $actorClass = rtrim($this->settings['namespace'], '\\') . '\\' . $actorClass;
+            $actorClass = rtrim($this->settings['namespace'], '\\').'\\'.$actorClass;
         }
 
         return (new Template($this->actionsTemplate))

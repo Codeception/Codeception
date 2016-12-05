@@ -72,7 +72,7 @@ EOF;
 
         $uses = [];
         foreach ($this->modules as $module) {
-            $uses[] = "use " . get_class($module) . ";";
+            $uses[] = "use ".get_class($module).";";
         }
 
         $methods = [];
@@ -89,7 +89,7 @@ EOF;
         }
 
         return (new Template($this->template))
-            ->place('namespace', $namespace ? $namespace . '\\' : '')
+            ->place('namespace', $namespace ? $namespace.'\\' : '')
             ->place('hash', self::genHash($this->modules, $this->settings))
             ->place('name', $this->name)
             ->place('use', implode("\n", $uses))
@@ -111,7 +111,7 @@ EOF;
             $doc = "*";
         }
 
-        $conditionalDoc = $doc . "\n     * Conditional Assertion: Test won't be stopped on fail";
+        $conditionalDoc = $doc."\n     * Conditional Assertion: Test won't be stopped on fail";
 
         $methodTemplate = (new Template($this->methodTemplate))
             ->place('module', $module)
@@ -123,7 +123,7 @@ EOF;
             $type = 'Assertion';
             $body .= $methodTemplate
                 ->place('doc', $conditionalDoc)
-                ->place('action', 'can' . ucfirst($refMethod->name))
+                ->place('action', 'can'.ucfirst($refMethod->name))
                 ->place('step', 'ConditionalAssertion')
                 ->produce();
 
@@ -152,16 +152,16 @@ EOF;
 
     /**
      * @param \ReflectionMethod $refMethod
-     * @return array
+     * @return string
      */
     protected function getParamsString(\ReflectionMethod $refMethod)
     {
         $params = [];
         foreach ($refMethod->getParameters() as $param) {
             if ($param->isOptional()) {
-                $params[] = '$' . $param->name . ' = null';
+                $params[] = '$'.$param->name.' = null';
             } else {
-                $params[] = '$' . $param->name;
+                $params[] = '$'.$param->name;
             };
         }
         return implode(', ', $params);
@@ -205,7 +205,7 @@ EOF;
             $actions[$moduleName] = get_class_methods(get_class($module));
         }
 
-        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']));
+        return md5(Codecept::VERSION.serialize($actions).serialize($settings['modules']));
     }
 
     public function getNumMethods()

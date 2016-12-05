@@ -142,8 +142,8 @@ class FTP extends Filesystem
 
         // Clean up temp files
         if ($this->config['cleanup']) {
-            if (file_exists($this->config['tmp'] . '/ftp_data_file.tmp')) {
-                unlink($this->config['tmp'] . '/ftp_data_file.tmp');
+            if (file_exists($this->config['tmp'].'/ftp_data_file.tmp')) {
+                unlink($this->config['tmp'].'/ftp_data_file.tmp');
             }
         }
     }
@@ -177,8 +177,8 @@ class FTP extends Filesystem
      */
     public function amInPath($path)
     {
-        $this->_changeDirectory($this->path = $this->absolutizePath($path) . ($path == '/' ? '' : DIRECTORY_SEPARATOR));
-        $this->debug('Moved to ' . $this->path);
+        $this->_changeDirectory($this->path = $this->absolutizePath($path).($path == '/' ? '' : DIRECTORY_SEPARATOR));
+        $this->debug('Moved to '.$this->path);
     }
 
     /**
@@ -192,7 +192,7 @@ class FTP extends Filesystem
         if (strpos($path, '/') === 0) {
             return $path;
         }
-        return $this->path . $path;
+        return $this->path.$path;
     }
 
     // ----------- SEARCH METHODS BELOW HERE ------------------------//
@@ -461,7 +461,7 @@ class FTP extends Filesystem
                         $file
                     );
                     $display_files[] = $file;
-                    $this->debug('    - ' . $file);
+                    $this->debug('    - '.$file);
                 }
             }
             return $ignore ? $display_files : $files;
@@ -557,14 +557,14 @@ class FTP extends Filesystem
      */
     private function _openConnection($user = 'anonymous', $password = '')
     {
-        $this->_closeConnection();   // Close connection if already open
+        $this->_closeConnection(); // Close connection if already open
         if ($this->isSFTP()) {
             $this->sftpConnect($user, $password);
         } else {
             $this->ftpConnect($user, $password);
         }
         $pwd = $this->grabDirectory();
-        $this->path = $pwd . ($pwd == '/' ? '' : DIRECTORY_SEPARATOR);
+        $this->path = $pwd.($pwd == '/' ? '' : DIRECTORY_SEPARATOR);
     }
 
     /**
@@ -648,7 +648,7 @@ class FTP extends Filesystem
         }
 
         // Download file to local tmp directory
-        $tmp_file = $this->config['tmp'] . "/ftp_data_file.tmp";
+        $tmp_file = $this->config['tmp']."/ftp_data_file.tmp";
 
         if ($this->isSFTP()) {
             $downloaded = @$this->ftp->get($filename, $tmp_file);
@@ -681,7 +681,7 @@ class FTP extends Filesystem
         }
 
         // Build temp file
-        $tmp_file = $this->config['tmp'] . "/ftp_data_file.tmp";
+        $tmp_file = $this->config['tmp']."/ftp_data_file.tmp";
         file_put_contents($tmp_file, $contents);
 
         // Update variables

@@ -58,7 +58,7 @@ class Oci extends Db
                 continue;
             }
 
-            $query .= "\n" . rtrim($sqlLine);
+            $query .= "\n".rtrim($sqlLine);
 
             if (substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
                 $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
@@ -88,7 +88,7 @@ class Oci extends Db
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($columns as $column) {
-                $primaryKey []= $column['column_name'];
+                $primaryKey [] = $column['column_name'];
             }
             $this->primaryKeys[$tableName] = $primaryKey;
         }

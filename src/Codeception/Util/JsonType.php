@@ -102,7 +102,7 @@ class JsonType
             foreach ($this->jsonArray as $array) {
                 $res = $this->typeComparison($array, $jsonType);
                 if ($res !== true) {
-                    $msg .= "\n" . $res;
+                    $msg .= "\n".$res;
                 }
             }
             if ($msg) {
@@ -117,7 +117,7 @@ class JsonType
     {
         foreach ($jsonType as $key => $type) {
             if (!array_key_exists($key, $data)) {
-                return "Key `$key` doesn't exist in " . json_encode($data);
+                return "Key `$key` doesn't exist in ".json_encode($data);
             }
             if (is_array($jsonType[$key])) {
                 $message = $this->typeComparison($data[$key], $jsonType[$key]);

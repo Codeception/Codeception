@@ -72,7 +72,7 @@ class Template
                 }
             }
 
-            $result = str_replace($this->placehodlerStart . $placeholder . $this->placeholderEnd, $value, $result);
+            $result = str_replace($this->placehodlerStart.$placeholder.$this->placeholderEnd, $value, $result);
         }
         return $result;
     }

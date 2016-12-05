@@ -98,7 +98,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
                 $this->config['password']
             );
         } catch (\MongoConnectionException $e) {
-            throw new ModuleException(__CLASS__, $e->getMessage() . ' while creating Mongo connection');
+            throw new ModuleException(__CLASS__, $e->getMessage().' while creating Mongo connection');
         }
 
         // starting with loading dump
@@ -112,14 +112,14 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
     private function validateDump()
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
-            if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
+            if (!file_exists(Configuration::projectDir().$this->config['dump'])) {
                 throw new ModuleConfigException(
                     __CLASS__,
                     "File with dump doesn't exist.\n
                     Please, check path for dump file: " . $this->config['dump']
                 );
             }
-            $this->dumpFile = Configuration::projectDir() . $this->config['dump'];
+            $this->dumpFile = Configuration::projectDir().$this->config['dump'];
             $this->isDumpFileEmpty = false;
 
             if ($this->config['dump_type'] === self::DUMP_TYPE_JS) {
@@ -171,9 +171,9 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
             throw new ModuleConfigException(
                 __CLASS__,
                 '\"dump_type\" must be one of ["'
-                . self::DUMP_TYPE_JS . '", "'
-                . self::DUMP_TYPE_MONGODUMP . '", "'
-                . self::DUMP_TYPE_MONGODUMP_TAR_GZ . '"].'
+                . self::DUMP_TYPE_JS.'", "'
+                . self::DUMP_TYPE_MONGODUMP.'", "'
+                . self::DUMP_TYPE_MONGODUMP_TAR_GZ.'"].'
             );
         }
     }

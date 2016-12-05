@@ -28,6 +28,9 @@ class Db
      */
     protected $primaryKeys = [];
 
+    /**
+     * @param string $dsn
+     */
     public static function connect($dsn, $user, $password)
     {
         $dbh = new \PDO($dsn, $user, $password);
@@ -120,7 +123,7 @@ class Db
                 continue;
             }
 
-            $query .= "\n" . rtrim($sqlLine);
+            $query .= "\n".rtrim($sqlLine);
 
             if (substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
                 $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
@@ -130,6 +133,9 @@ class Db
         }
     }
 
+    /**
+     * @param string $tableName
+     */
     public function insert($tableName, array &$data)
     {
         $columns = array_map(
@@ -162,17 +168,17 @@ class Db
         $params = [];
         foreach ($criteria as $k => $v) {
             if ($v === null) {
-                $params[] = $this->getQuotedName($k) . " IS NULL ";
+                $params[] = $this->getQuotedName($k)." IS NULL ";
                 unset($criteria[$k]);
             } elseif (strpos(strtolower($k), ' like') > 0) {
                 $k = str_replace(' like', '', strtolower($k));
-                $params[] = $this->getQuotedName($k) . " LIKE ? ";
+                $params[] = $this->getQuotedName($k)." LIKE ? ";
             } else {
-                $params[] = $this->getQuotedName($k) . " = ? ";
+                $params[] = $this->getQuotedName($k)." = ? ";
             }
         }
 
-        return 'WHERE ' . implode('AND ', $params);
+        return 'WHERE '.implode('AND ', $params);
     }
 
     /**
@@ -180,7 +186,7 @@ class Db
      */
     public function deleteQuery($table, $id, $primaryKey = 'id')
     {
-        $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' WHERE ' . $this->getQuotedName($primaryKey) . ' = ?';
+        $query = 'DELETE FROM '.$this->getQuotedName($table).' WHERE '.$this->getQuotedName($primaryKey).' = ?';
         $this->executeQuery($query, [$id]);
     }
 
@@ -188,10 +194,13 @@ class Db
     {
         $where = $this->generateWhereClause($criteria);
 
-        $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' ' . $where;
+        $query = 'DELETE FROM '.$this->getQuotedName($table).' '.$where;
         $this->executeQuery($query, array_values($criteria));
     }
 
+    /**
+     * @param string $table
+     */
     public function lastInsertId($table)
     {
         return $this->getDbh()->lastInsertId();
@@ -199,7 +208,7 @@ class Db
 
     public function getQuotedName($name)
     {
-        return '"' . str_replace('.', '"."', $name) . '"';
+        return '"'.str_replace('.', '"."', $name).'"';
     }
 
     protected function sqlLine($sql)

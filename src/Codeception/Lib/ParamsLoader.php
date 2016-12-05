@@ -40,7 +40,7 @@ class ParamsLoader
                 return $this->loadIniFile();
             }
         } catch (\Exception $e) {
-            throw new ConfigurationException("Failed loading params from $paramStorage\n" . $e->getMessage());
+            throw new ConfigurationException("Failed loading params from $paramStorage\n".$e->getMessage());
         }
 
         throw new ConfigurationException("Params can't be loaded from `$paramStorage`.");
@@ -69,7 +69,7 @@ class ParamsLoader
     {
         if (!class_exists('Dotenv\Dotenv')) {
             throw new ConfigurationException(
-                "`vlucas/phpdotenv` library is required to parse .env files.\n" .
+                "`vlucas/phpdotenv` library is required to parse .env files.\n".
                 "Please install it via composer: composer require vlucas/phpdotenv"
             );
         }

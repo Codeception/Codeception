@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Creates default config, tests directory and sample suites for current project.
@@ -59,7 +58,7 @@ class Bootstrap extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('namespace')) {
-            $this->namespace = trim($input->getOption('namespace'), '\\') . '\\';
+            $this->namespace = trim($input->getOption('namespace'), '\\').'\\';
         }
 
         if ($input->getOption('actor')) {
@@ -82,7 +81,7 @@ class Bootstrap extends Command
         }
 
         $output->writeln(
-            "<fg=white;bg=magenta> Initializing Codeception in " . $realpath . " </fg=white;bg=magenta>\n"
+            "<fg=white;bg=magenta> Initializing Codeception in ".$realpath." </fg=white;bg=magenta>\n"
         );
 
         $this->createGlobalConfig();
@@ -104,7 +103,7 @@ class Bootstrap extends Command
 
         if (file_exists('.gitignore')) {
             file_put_contents('tests/_output/.gitignore', '');
-            file_put_contents('.gitignore', file_get_contents('.gitignore') . "\ntests/_output/*");
+            file_put_contents('.gitignore', file_get_contents('.gitignore')."\ntests/_output/*");
             $output->writeln("tests/_output was added to .gitignore");
         }
 
@@ -120,7 +119,7 @@ class Bootstrap extends Command
             $output
         );
 
-        $output->writeln("<info>\nBootstrap is done. Check out " . $realpath . "/tests directory</info>");
+        $output->writeln("<info>\nBootstrap is done. Check out ".$realpath."/tests directory</info>");
     }
 
     public function createGlobalConfig()
@@ -157,7 +156,7 @@ class Bootstrap extends Command
         $str = Yaml::dump($basicConfig, 4);
         if ($this->namespace) {
             $namespace = rtrim($this->namespace, '\\');
-            $str = "namespace: $namespace\n" . $str;
+            $str = "namespace: $namespace\n".$str;
         }
         file_put_contents('codeception.yml', $str);
     }
@@ -215,6 +214,10 @@ EOF;
         $this->createSuite('unit', $actor, $suiteConfig);
     }
 
+    /**
+     * @param string $suite
+     * @param string $actor
+     */
     protected function createSuite($suite, $actor, $config)
     {
         @mkdir("tests/$suite");
@@ -222,14 +225,17 @@ EOF;
             "tests/$suite/_bootstrap.php",
             "<?php\n// Here you can initialize variables that will be available to your tests\n"
         );
-        @mkdir($this->supportDir . DIRECTORY_SEPARATOR . "Helper");
+        @mkdir($this->supportDir.DIRECTORY_SEPARATOR."Helper");
         file_put_contents(
-            $this->supportDir . DIRECTORY_SEPARATOR . "Helper" . DIRECTORY_SEPARATOR . "$actor.php",
+            $this->supportDir.DIRECTORY_SEPARATOR."Helper".DIRECTORY_SEPARATOR."$actor.php",
             (new Helper($actor, rtrim($this->namespace, '\\')))->produce()
         );
         file_put_contents("tests/$suite.suite.yml", $config);
     }
 
+    /**
+     * @param string $path
+     */
     protected function ignoreFolderContent($path)
     {
         if (file_exists('.gitignore')) {
@@ -246,7 +252,7 @@ EOF;
         @mkdir($this->supportDir);
         @mkdir($this->envsDir);
         file_put_contents(
-            $this->dataDir . '/dump.sql',
+            $this->dataDir.'/dump.sql',
             '/* Replace this file with actual dump of your database */'
         );
     }

@@ -75,13 +75,13 @@ class Console extends Command
 
         $this->test = new Cept(null, null);
         $this->test->getMetadata()->setServices([
-           'dispatcher' => $dispatcher,
-           'modules' =>  $moduleContainer
+            'dispatcher' => $dispatcher,
+            'modules' =>  $moduleContainer
         ]);
 
         $scenario = new Scenario($this->test);
         if (isset($config["namespace"])) {
-            $settings['class_name'] = $config["namespace"] .'\\' . $settings['class_name'];
+            $settings['class_name'] = $config["namespace"].'\\'.$settings['class_name'];
         }
         $actor = $settings['class_name'];
         $I = new $actor($scenario);
@@ -122,7 +122,7 @@ class Console extends Command
 
             $command = $dialog->ask($input, $output, $question);
             if ($command == 'actions') {
-                $output->writeln("<info>" . implode(' ', $this->actions));
+                $output->writeln("<info>".implode(' ', $this->actions));
                 continue;
             }
             if ($command == 'exit') {
@@ -137,9 +137,9 @@ class Console extends Command
                     codecept_debug($value);
                 }
             } catch (\PHPUnit_Framework_AssertionFailedError $fail) {
-                $output->writeln("<error>fail</error> " . $fail->getMessage());
+                $output->writeln("<error>fail</error> ".$fail->getMessage());
             } catch (\Exception $e) {
-                $output->writeln("<error>error</error> " . $e->getMessage());
+                $output->writeln("<error>error</error> ".$e->getMessage());
             }
         } while (true);
     }

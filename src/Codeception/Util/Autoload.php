@@ -50,11 +50,11 @@ class Autoload
         }
 
         // normalize namespace prefix
-        $prefix = trim($prefix, '\\') . '\\';
+        $prefix = trim($prefix, '\\').'\\';
 
         // normalize the base directory with a trailing separator
-        $base_dir = rtrim($base_dir, '/') . DIRECTORY_SEPARATOR;
-        $base_dir = rtrim($base_dir, DIRECTORY_SEPARATOR) . '/';
+        $base_dir = rtrim($base_dir, '/').DIRECTORY_SEPARATOR;
+        $base_dir = rtrim($base_dir, DIRECTORY_SEPARATOR).'/';
 
         // initialize the namespace prefix array
         if (isset(self::$map[$prefix]) === false) {
@@ -110,7 +110,7 @@ class Autoload
 
         // fix for empty prefix
         if (isset(self::$map['\\']) && ($class[0] != '\\')) {
-            return self::load('\\' . $class);
+            return self::load('\\'.$class);
         }
 
         // backwards compatibility with old autoloader
@@ -131,7 +131,7 @@ class Autoload
      *
      * @param string $prefix The namespace prefix.
      * @param string $relative_class The relative class name.
-     * @return mixed Boolean false if no mapped file can be loaded, or the name of the mapped file that was loaded.
+     * @return false|string Boolean false if no mapped file can be loaded, or the name of the mapped file that was loaded.
      */
     protected static function loadMappedFile($prefix, $relative_class)
     {
@@ -153,6 +153,9 @@ class Autoload
         return false;
     }
 
+    /**
+     * @param string $file
+     */
     protected static function requireFile($file)
     {
         if (file_exists($file)) {

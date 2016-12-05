@@ -66,7 +66,7 @@ class Logger extends Extension
         $this->path = $this->getLogDir();
 
         // internal log
-        $logHandler = new RotatingFileHandler($this->path . 'codeception.log', $this->config['max_files']);
+        $logHandler = new RotatingFileHandler($this->path.'codeception.log', $this->config['max_files']);
         $this->logger = new \Monolog\Logger('Codeception');
         $this->logger->pushHandler($logHandler);
     }
@@ -74,7 +74,7 @@ class Logger extends Extension
     public function beforeSuite(SuiteEvent $e)
     {
         $suite = str_replace('\\', '_', $e->getSuite()->getName());
-        $this->logHandler = new RotatingFileHandler($this->path . $suite, $this->config['max_files']);
+        $this->logHandler = new RotatingFileHandler($this->path.$suite, $this->config['max_files']);
     }
 
     public function beforeTest(TestEvent $e)
@@ -82,7 +82,7 @@ class Logger extends Extension
         $this->logger = new \Monolog\Logger(Descriptor::getTestFileName($e->getTest()));
         $this->logger->pushHandler($this->logHandler);
         $this->logger->info('------------------------------------');
-        $this->logger->info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
+        $this->logger->info("STARTED: ".ucfirst(Descriptor::getTestAsString($e->getTest())));
     }
 
     public function afterTest(TestEvent $e)
@@ -118,6 +118,6 @@ class Logger extends Extension
 
     public function beforeStep(StepEvent $e)
     {
-        $this->logger->info((string) $e->getStep());
+        $this->logger->info((string)$e->getStep());
     }
 }

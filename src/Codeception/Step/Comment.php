@@ -8,7 +8,7 @@ class Comment extends CodeceptionStep
 {
     public function __toString()
     {
-        return (string) $this->getAction();
+        return (string)$this->getAction();
     }
 
     public function toString($maxLength)
@@ -18,12 +18,12 @@ class Comment extends CodeceptionStep
 
     public function getHtml($highlightColor = '#732E81')
     {
-        return '<strong>' . $this->getAction() . '</strong>';
+        return '<strong>'.$this->getAction().'</strong>';
     }
 
     public function getPhpCode($maxLength)
     {
-        return '// ' . $this->getAction();
+        return '// '.$this->getAction();
     }
 
     public function run(ModuleContainer $container = null)
