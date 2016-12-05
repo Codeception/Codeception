@@ -12,7 +12,7 @@ build:
     - script:
         name: install composer
         code: |
-          rm composer.lock
+          rm -f composer.lock
           export COMPOSER_CACHE_DIR=$WERCKER_CACHE_DIR
           curl -sS https://getcomposer.org/installer | hhvm --php -- --install-dir=/usr/local/bin/
           composer.phar remove mongodb/mongodb --no-update --dev
