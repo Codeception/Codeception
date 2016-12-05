@@ -74,7 +74,7 @@ and that we will execute the unit tests for only that app.
 
 Codeception has limited capabilities to extend its core features.
 Extensions are not supposed to override current functionality,
-but are can be useful if you are an experienced developer and you want to hook into the testing flow.
+but can be useful if you are an experienced developer and you want to hook into the testing flow.
 
 By default, one `RunFailed` Extension is already enabled in your global `codeception.yml`.
 It allows you to rerun failed tests by using the `-g failed` option:
@@ -96,7 +96,7 @@ extensions:
             max_files: 5 # logger configuration
 ```
 
-But what are extensions, anyway? Basically speaking, extensions are nothing more then event listeners
+But what are extensions, anyway? Basically speaking, extensions are nothing more than event listeners
 based on the [Symfony Event Dispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) component.
 
 Here are the events and event classes. The events are listed in the order in which they happen during execution.
@@ -304,7 +304,7 @@ interface. It is recommended to read the code of the original reporter before ov
 
 ## Conclusion
 
-Each feature mentioned above may dramatically help when using Codeception to automate the testing of large projects,
+Each feature mentioned above may help dramatically when using Codeception to automate the testing of large projects,
 although some features may require advanced knowledge of PHP. There is no "best practice" or "use cases"
 when we talk about groups, extensions, or other powerful features of Codeception.
 If you see you have a problem that can be solved using these extensions, then give them a try.

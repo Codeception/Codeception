@@ -13,14 +13,14 @@ The most popular paradigm is [Unit Testing](http://en.wikipedia.org/wiki/Unit_te
 For web applications, testing just the controller and / or the model doesn't prove that your application is working.
 To test the behavior of your application as a whole, you should write functional or acceptance tests.
 
-The Codeception testing framework distinguishes these levels of testing.
+Codeception supports these testing types.
 Out of the box you have tools for writing unit, functional, and acceptance tests in a unified framework.
 
 Let's review the listed testing paradigms in reverse order.
 
 ### Acceptance Tests
 
-How does your client, manager, or tester, or any other non-technical person, know your website is working?
+How does your client, manager, tester, or any other non-technical person know your website is working?
 By opening the browser, accessing a site, clicking on links, filling in the forms,
 and actually seeing the content on a web page. They has no idea of the framework, database, web-server,
 or programming language you use or why the application did not behave as expected.
@@ -28,7 +28,7 @@ or programming language you use or why the application did not behave as expecte
 Acceptance tests can cover standard but complex scenarios from a user's perspective.
 With acceptance tests, you can be confident that users, following all the defined scenarios, won't get errors.
 
-Please, note that **any website** can be covered with acceptance tests, even if you use a very custom CMS or framework.
+Please note that **any website** can be covered with acceptance tests, even if you use a very custom CMS or framework.
 
 #### Sample acceptance test
 
@@ -65,7 +65,7 @@ which returns the HTML response. Inside a test, you can make assertions about th
 and you can check if the data was successfully stored in the database.
 
 For functional tests, your application needs to be structured in order to run in a test environment.
-Codeception provides connectors to several popular PHP frameworks, or you could write your own.
+Codeception provides connectors to several popular PHP frameworks. You can also write your own.
 
 #### Sample functional test
 
@@ -143,4 +143,4 @@ It allows writing unit, functional, integration, and acceptance tests, in a sing
 
 It can be called a *BDD* (Behavior Driven Development) framework. All Codeception tests are written in a descriptive manner.
 Just by looking at the test body, you can clearly understand what is being tested and how it is performed.
-Even complex tests with many assertions are written in a simple PHP domain-specific language (DSL).
+Even complex tests with many assertions are written in a simple PHP Domain-Specific Language (*DSL*).
