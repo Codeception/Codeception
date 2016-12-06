@@ -21,9 +21,12 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
+use Codeception\Test\Cept;
+use Codeception\Test\Cest;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
 use Codeception\Util\Debug;
+use Codeception\Util\JSErrorToHtml;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
 use Facebook\WebDriver\Exception\InvalidElementStateException;
@@ -162,6 +165,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `http_proxy` - sets http proxy server url for testing a remote server.
  * * `http_proxy_port` - sets http proxy server port
  * * `debug_log_entries` - how many selenium entries to print with `debugWebDriverLogs` or on fail (15 by default).
+ * * `log_js_errors` - Set to true to include possible JavaScript to HTML report, or set to false (default) to deactivate.
  *
  * Example (`acceptance.suite.yml`)
  *
@@ -261,6 +265,7 @@ class WebDriver extends CodeceptionModule implements
         'ssl_proxy'          => null,
         'ssl_proxy_port'     => null,
         'debug_log_entries'  => 15,
+        'log_js_errors'      => false
     ];
 
     protected $wd_host;
@@ -356,7 +361,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function _failed(TestInterface $test, $fail)
     {
-        $this->debugWebDriverLogs();
+        $this->debugWebDriverLogs($test);
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
         $this->_saveScreenshot($report = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
@@ -369,7 +374,7 @@ class WebDriver extends CodeceptionModule implements
     /**
      * Print out latest Selenium Logs in debug mode
      */
-    public function debugWebDriverLogs()
+    public function debugWebDriverLogs(TestInterface $test = null)
     {
         if (!isset($this->webDriver)) {
             $this->debug('WebDriver::debugWebDriverLogs method has been called when webDriver is not set');
@@ -383,11 +388,19 @@ class WebDriver extends CodeceptionModule implements
                     $this->webDriver->manage()->getLog($logType),
                     -$this->config['debug_log_entries']
                 );
+
                 if (empty($logEntries)) {
                     $this->debugSection("Selenium {$logType} Logs", " EMPTY ");
                     continue;
                 }
                 $this->debugSection("Selenium {$logType} Logs", "\n" . $this->formatLogEntries($logEntries));
+
+                if ($logType === 'browser' && $this->config['log_js_errors']
+                    && ($test instanceof Cest || $test instanceof Cept)
+                ) {
+
+                    $test->getScenario()->comment($this->formatLogEntriesToHtml($logEntries));
+                }
             }
         } catch (\Exception $e) {
             $this->debug('Unable to retrieve Selenium logs : ' . $e->getMessage());
@@ -414,6 +427,68 @@ class WebDriver extends CodeceptionModule implements
             $formattedLogs .= "{$time} {$logEntry['level']} - {$logEntry['message']}\n";
         }
         return $formattedLogs;
+    }
+
+    /**
+     * Turns an array of log entries into a HTML string containing only relevant errors.
+     * Each log entry is an array with the keys "timestamp", "level", and "message".
+     * See https://code.google.com/p/selenium/wiki/JsonWireProtocol#Log_Entry_JSON_Object
+     *
+     * @param array $logEntries
+     * @return string
+     */
+    protected function formatLogEntriesToHtml(array $logEntries)
+    {
+        if (empty($logEntries)) {
+            return '';
+        }
+
+        $formattedLogs = '
+            <div style="color: red; font-size: 13px; font-weight: 500; font-family: Courier,serif;">
+                <u><b>Javascript error log</b></u>:<br/><br/>
+            ';
+
+        $browser = $this->_getConfig('browser');
+
+        $errorFound = false;
+        foreach ($logEntries as $logEntry) {
+
+            if ($this->isJSError($browser, $logEntry['level'],$logEntry['message'])) {
+                $errorFound = true;
+                // Timestamp is in milliseconds, but date() requires seconds.
+                $time = date('H:i:s', $logEntry['timestamp'] / 1000) .
+                    // Append the milliseconds to the end of the time string
+                    '.' . ($logEntry['timestamp'] % 1000);
+                $formattedLogs .= "{$time} {$logEntry['level']} - {$logEntry['message']}<br/>";
+            }
+        }
+
+        if (false === $errorFound) {
+            return '';
+        }
+
+        $formattedLogs .= '</div>';
+
+        return $formattedLogs;
+    }
+
+    /**
+     * Determines if the log entry is an error.
+     * The decision is made depending on browser and log-level.
+     *
+     * @param string $browser
+     * @param string $logEntryLevel
+     * @return bool
+     */
+    protected function isJSError($browser, $logEntryLevel, $message)
+    {
+        return
+        (
+            ($browser === 'phantomjs' && $logEntryLevel != 'INFO')    // phantomjs logs errors as "WARNING"
+            || $logEntryLevel === 'SEVERE'                            // other browsers log errors as "SEVERE"
+        )
+        && strpos($message, 'ERR_PROXY_CONNECTION_FAILED') === false  // dont log blackhole proxy errors
+        ;
     }
 
     public function _afterSuite()
