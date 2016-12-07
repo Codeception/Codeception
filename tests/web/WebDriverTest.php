@@ -763,10 +763,6 @@ class WebDriverTest extends TestsForBrowsers
             "TypeError",
             $lastStep->getHtml()
         );
-        $this->assertContains(
-            "xyz",
-            $lastStep->getHtml()
-        );
     }
 
     public function testJSErrorLoggingNegative()

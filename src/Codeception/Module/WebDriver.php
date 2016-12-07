@@ -398,7 +398,6 @@ class WebDriver extends CodeceptionModule implements
                 if ($logType === 'browser' && $this->config['log_js_errors']
                     && ($test instanceof Cest || $test instanceof Cept)
                 ) {
-
                     $test->getScenario()->comment($this->formatLogEntriesToHtml($logEntries));
                 }
             }
@@ -450,8 +449,7 @@ class WebDriver extends CodeceptionModule implements
 
         $errorFound = false;
         foreach ($logEntries as $logEntry) {
-
-            if ($this->isJSError($logEntry['level'],$logEntry['message'])) {
+            if ($this->isJSError($logEntry['level'], $logEntry['message'])) {
                 $errorFound = true;
                 // Timestamp is in milliseconds, but date() requires seconds.
                 $time = date('H:i:s', $logEntry['timestamp'] / 1000) .
