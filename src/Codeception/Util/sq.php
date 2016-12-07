@@ -8,7 +8,7 @@ if (!function_exists('sq')) {
             return Sequence::$hash[$id];
         }
         $prefix = str_replace('{id}', $id, Sequence::$prefix);
-        $sequence = $prefix . uniqid($id);
+        $sequence = $prefix.uniqid($id);
         if ($id) {
             Sequence::$hash[$id] = $sequence;
         }
@@ -23,7 +23,7 @@ if (!function_exists('sqs')) {
             return Sequence::$suiteHash[$id];
         }
         $prefix = str_replace('{id}', $id, Sequence::$prefix);
-        $sequence = $prefix . uniqid($id);
+        $sequence = $prefix.uniqid($id);
         if ($id) {
             Sequence::$suiteHash[$id] = $sequence;
         }

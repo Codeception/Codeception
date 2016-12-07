@@ -19,7 +19,7 @@ class Descriptor
             return $testCase->getSignature();
         }
         if ($testCase instanceof \PHPUnit_Framework_TestCase) {
-            return get_class($testCase) . ':' . $testCase->getName(false);
+            return get_class($testCase).':'.$testCase->getName(false);
         }
         return $testCase->toString();
     }
@@ -37,7 +37,7 @@ class Descriptor
             $text = preg_replace('/^test /', '', $text);
             $text = ucfirst(strtolower($text));
             $text = str_replace(['::', 'with data set'], [':', '|'], $text);
-            return ReflectionHelper::getClassShortName($testCase) . ': ' . $text;
+            return ReflectionHelper::getClassShortName($testCase).': '.$text;
         }
         return $testCase->toString();
     }
@@ -67,11 +67,11 @@ class Descriptor
         }
         if ($testCase instanceof Descriptive) {
             $signature = $testCase->getSignature(); // cut everything before ":" from signature
-            return self::getTestFileName($testCase) . ':' . preg_replace('~^(.*?):~', '', $signature);
+            return self::getTestFileName($testCase).':'.preg_replace('~^(.*?):~', '', $signature);
         }
         if ($testCase instanceof \PHPUnit_Framework_TestCase) {
-            return self::getTestFileName($testCase) . ':' . $testCase->getName(false);
+            return self::getTestFileName($testCase).':'.$testCase->getName(false);
         }
-        return self::getTestFileName($testCase) . ':' . $testCase->toString();
+        return self::getTestFileName($testCase).':'.$testCase->toString();
     }
 }

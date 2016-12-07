@@ -122,7 +122,7 @@ class Sequence extends CodeceptionModule
 }
 
 if (!function_exists('sq') && !function_exists('sqs')) {
-    require_once __DIR__ . '/../Util/sq.php';
+    require_once __DIR__.'/../Util/sq.php';
 } else {
     throw new ModuleException('Codeception\Module\Sequence', "function 'sq' and 'sqs' already defined");
 }

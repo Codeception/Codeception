@@ -47,12 +47,12 @@ EOF;
     {
         $this->settings = $settings;
         $this->name = $name;
-        $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Group\\' . $name);
+        $this->namespace = $this->getNamespaceString($this->settings['namespace'].'\\Group\\'.$name);
     }
 
     public function produce()
     {
-        $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $this->name);
+        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$this->name);
         return (new Template($this->template))
             ->place('class', ucfirst($this->name))
             ->place('name', $this->name)

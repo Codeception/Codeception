@@ -76,7 +76,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
         $this->config = array_merge(
             array(
                 'cleanup' => true,
-                'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
+                'bootstrap' => 'bootstrap'.DIRECTORY_SEPARATOR.'app.php',
                 'root' => '',
                 'packages' => 'workbench',
                 'url' => 'http://localhost',
@@ -88,13 +88,13 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
         $projectDir .= $this->config['root'];
 
         $this->config['project_dir'] = $projectDir;
-        $this->config['bootstrap_file'] = $projectDir . $this->config['bootstrap'];
+        $this->config['bootstrap_file'] = $projectDir.$this->config['bootstrap'];
 
         parent::__construct($container);
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function _parts()
     {
@@ -165,7 +165,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
      */
     protected function registerAutoloaders()
     {
-        require $this->config['project_dir'] . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+        require $this->config['project_dir'].'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
     }
 
     /**
@@ -357,7 +357,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
         try {
             return $this->app['db']->table($table)->insertGetId($attributes);
         } catch (\Exception $e) {
-            $this->fail("Could not insert record into table '$table':\n\n" . $e->getMessage());
+            $this->fail("Could not insert record into table '$table':\n\n".$e->getMessage());
         }
     }
 
@@ -380,7 +380,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
     {
         if (class_exists($table)) {
             if (!$this->findModel($table, $attributes)) {
-                $this->fail("Could not find $table with " . json_encode($attributes));
+                $this->fail("Could not find $table with ".json_encode($attributes));
             }
         } elseif (!$this->findRecord($table, $attributes)) {
             $this->fail("Could not find matching record in table '$table'");
@@ -406,7 +406,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
     {
         if (class_exists($table)) {
             if ($this->findModel($table, $attributes)) {
-                $this->fail("Unexpectedly found matching $table with " . json_encode($attributes));
+                $this->fail("Unexpectedly found matching $table with ".json_encode($attributes));
             }
         } elseif ($this->findRecord($table, $attributes)) {
             $this->fail("Unexpectedly found matching record in table '$table'");
@@ -434,7 +434,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
     {
         if (class_exists($table)) {
             if (!$model = $this->findModel($table, $attributes)) {
-                $this->fail("Could not find $table with " . json_encode($attributes));
+                $this->fail("Could not find $table with ".json_encode($attributes));
             }
 
             return $model;
@@ -508,7 +508,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
         try {
             return $this->modelFactory($model, $name)->create($attributes);
         } catch (\Exception $e) {
-            $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+            $this->fail("Could not create model: \n\n".get_class($e)."\n\n".$e->getMessage());
         }
     }
 
@@ -537,7 +537,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
         try {
             return $this->modelFactory($model, $name, $times)->create($attributes);
         } catch (\Exception $e) {
-            $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+            $this->fail("Could not create model: \n\n".get_class($e)."\n\n".$e->getMessage());
         }
     }
 
@@ -551,7 +551,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
     protected function modelFactory($model, $name, $times = 1)
     {
         if (!function_exists('factory')) {
-            throw new ModuleException($this, 'The factory() method does not exist. ' .
+            throw new ModuleException($this, 'The factory() method does not exist. '.
                 'This functionality relies on Lumen model factories, which were introduced in Lumen 5.1.');
         }
 
@@ -562,12 +562,12 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
      * Returns a list of recognized domain names.
      * This elements of this list are regular expressions.
      *
-     * @return array
+     * @return string[]
      */
     protected function getInternalDomains()
     {
         $server = ReflectionHelper::readPrivateProperty($this->client, 'server');
 
-        return ['/^' . str_replace('.', '\.', $server['HTTP_HOST']) . '$/'];
+        return ['/^'.str_replace('.', '\.', $server['HTTP_HOST']).'$/'];
     }
 }

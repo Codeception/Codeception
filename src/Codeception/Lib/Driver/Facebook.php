@@ -56,7 +56,7 @@ class Facebook
 
         $this->appId     = $config['app_id'];
         $this->appSecret = $config['secret'];
-        $this->appToken  = $this->appId . '|' . $this->appSecret;
+        $this->appToken  = $this->appId.'|'.$this->appSecret;
     }
 
     /**
@@ -69,7 +69,7 @@ class Facebook
     {
         $response = $this->executeFacebookRequest(
             'POST',
-            $this->appId . '/accounts/test-users',
+            $this->appId.'/accounts/test-users',
             [
                 'name'        => $name,
                 'installed'   => true,
@@ -82,9 +82,12 @@ class Facebook
 
     public function deleteTestUser($testUserID)
     {
-        $this->executeFacebookRequest('DELETE', '/' . $testUserID);
+        $this->executeFacebookRequest('DELETE', '/'.$testUserID);
     }
 
+    /**
+     * @param string $testUserAccessToken
+     */
     public function getTestUserInfo($testUserAccessToken)
     {
         $response = $this->executeFacebookRequest(
@@ -97,6 +100,9 @@ class Facebook
         return $response->getDecodedBody();
     }
 
+    /**
+     * @param string $testUserAccessToken
+     */
     public function getLastPostsForTestUser($testUserAccessToken)
     {
         $response = $this->executeFacebookRequest(
@@ -109,6 +115,10 @@ class Facebook
         return $response->getDecodedBody();
     }
 
+    /**
+     * @param string $placeId
+     * @param string $testUserAccessToken
+     */
     public function getVisitedPlaceTagForTestUser($placeId, $testUserAccessToken)
     {
         $response = $this->executeFacebookRequest(
@@ -121,6 +131,9 @@ class Facebook
         return $response->getDecodedBody();
     }
 
+    /**
+     * @param string $testUserAccessToken
+     */
     public function sendPostToFacebook($testUserAccessToken, array $parameters)
     {
         $response = $this->executeFacebookRequest(
@@ -163,7 +176,7 @@ class Facebook
                 $response = $this->fb->delete($endpoint, $parameters, $token);
                 break;
             default:
-                throw new \Exception("Facebook driver exception, please add support for method: " . $method);
+                throw new \Exception("Facebook driver exception, please add support for method: ".$method);
                 break;
         }
 

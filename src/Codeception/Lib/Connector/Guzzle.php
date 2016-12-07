@@ -7,7 +7,6 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Post\PostFile;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
-use GuzzleHttp\Url;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 
 class Guzzle extends Client
@@ -96,7 +95,7 @@ class Guzzle extends Client
     /**
      * Taken from Mink\BrowserKitDriver
      *
-     * @param Response $response
+     * @param \Psr\Http\Message\ResponseInterface|null $response
      *
      * @return \Symfony\Component\BrowserKit\Response
      */
@@ -111,7 +110,7 @@ class Guzzle extends Client
         if (strpos($contentType, 'charset=') === false) {
             $body = $response->getBody(true);
             if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
-                $contentType .= ';charset=' . $matches[1];
+                $contentType .= ';charset='.$matches[1];
             }
             $response->setHeader('Content-Type', $contentType);
         }
@@ -156,6 +155,9 @@ class Guzzle extends Client
         return new BrowserKitResponse($response->getBody(), $status, $headers);
     }
 
+    /**
+     * @param string $uri
+     */
     public function getAbsoluteUri($uri)
     {
         $baseUri = $this->baseUri;

@@ -52,7 +52,7 @@ class Metadata
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSkip()
     {
@@ -68,7 +68,7 @@ class Metadata
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getIncomplete()
     {
@@ -76,7 +76,7 @@ class Metadata
     }
 
     /**
-     * @param mixed $incomplete
+     * @param null|string $incomplete
      */
     public function setIncomplete($incomplete)
     {
@@ -173,8 +173,8 @@ class Metadata
     }
 
     /**
-     * @param $service
-     * @return array
+     * @param string $service
+     * @return null|\Codeception\Lib\ModuleContainer
      * @throws InjectionException
      */
     public function getService($service)
@@ -202,8 +202,8 @@ class Metadata
     }
 
     /**
-     * @param $type
-     * @param $report
+     * @param string $type
+     * @param string $report
      */
     public function addReport($type, $report)
     {

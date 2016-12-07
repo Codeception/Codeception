@@ -169,7 +169,7 @@ class Codecept
             }
             $suiteToRun = $suite;
             if (!empty($envList)) {
-                $suiteToRun .= ' (' . implode(', ', $envArray) . ')';
+                $suiteToRun .= ' ('.implode(', ', $envArray).')';
             }
             $this->runSuite($config, $suiteToRun, $test);
         }
@@ -186,7 +186,7 @@ class Codecept
 
     public static function versionString()
     {
-        return 'Codeception PHP Testing Framework v' . self::VERSION;
+        return 'Codeception PHP Testing Framework v'.self::VERSION;
     }
 
     public function printResult()

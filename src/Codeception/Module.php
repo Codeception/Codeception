@@ -151,7 +151,7 @@ abstract class Module
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
             throw new Exception\ModuleConfigException(
                 get_class($this),
-                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
+                "\nOptions: ".implode(', ', $this->requiredFields)." are required\n".
                 "Please, update the configuration and set all the required fields\n\n"
             );
         }
@@ -321,7 +321,7 @@ abstract class Module
      * $this->getModule('WebDriver')->_findElements('.items');
      * ```
      *
-     * @param $name
+     * @param string $name
      * @return Module
      * @throws ModuleException
      */
@@ -336,7 +336,7 @@ abstract class Module
     /**
      * Get config values or specific config item.
      *
-     * @param null $key
+     * @param string $key
      * @return array|mixed|null
      */
     public function _getConfig($key = null)

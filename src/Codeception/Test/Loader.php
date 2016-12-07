@@ -65,6 +65,9 @@ class Loader
         return str_replace([$this->path, '\\'], ['', '/'], $file);
     }
 
+    /**
+     * @param string $path
+     */
     protected function findPath($path)
     {
         if (!file_exists($path)
@@ -79,10 +82,10 @@ class Loader
 
     protected function makePath($originalPath)
     {
-        $path = $this->path . $this->relativeName($originalPath);
+        $path = $this->path.$this->relativeName($originalPath);
 
         if (file_exists($newPath = $this->findPath($path))
-            || file_exists($newPath = $this->findPath(getcwd() . "/{$originalPath}"))
+            || file_exists($newPath = $this->findPath(getcwd()."/{$originalPath}"))
         ) {
             $path = $newPath;
         }

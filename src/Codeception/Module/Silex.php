@@ -59,7 +59,7 @@ class Silex extends Framework implements DoctrineProvider
 
     public function _initialize()
     {
-        if (!file_exists(Configuration::projectDir() . $this->config['app'])) {
+        if (!file_exists(Configuration::projectDir().$this->config['app'])) {
             throw new ModuleConfigException(__CLASS__, "Bootstrap file {$this->config['app']} not found");
         }
 
@@ -83,7 +83,7 @@ class Silex extends Framework implements DoctrineProvider
 
     protected function loadApp()
     {
-        $this->app = require Configuration::projectDir() . $this->config['app'];
+        $this->app = require Configuration::projectDir().$this->config['app'];
         // if $app is not returned but exists
         if (isset($app)) {
             $this->app = $app;
@@ -95,7 +95,7 @@ class Silex extends Framework implements DoctrineProvider
         // make doctrine persistent
         $db_orm_em = $this->_getEntityManager();
         if ($db_orm_em) {
-            $this->app->extend($this->config['em_service'], function () use ($db_orm_em) {
+            $this->app->extend($this->config['em_service'], function() use ($db_orm_em) {
                 return $db_orm_em;
             });
         }
@@ -133,7 +133,7 @@ class Silex extends Framework implements DoctrineProvider
 
         foreach ($this->app['routes'] as $route) {
             if ($domain = $route->getHost()) {
-                $internalDomains[] = '/^' . preg_quote($domain, '/') . '$/';
+                $internalDomains[] = '/^'.preg_quote($domain, '/').'$/';
             }
         }
 

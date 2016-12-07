@@ -9,7 +9,6 @@ use Codeception\Subscriber\Bootstrap as BootstrapLoader;
 use Codeception\Subscriber\Console as ConsolePrinter;
 use Codeception\SuiteManager;
 use Codeception\Test\Interfaces\ScenarioDriven;
-use Codeception\Test\Loader;
 use Codeception\Test\Test;
 use Codeception\Util\Maybe;
 use Symfony\Component\Console\Command\Command;
@@ -57,7 +56,7 @@ class DryRun extends Command
         $test = $input->getArgument('test');
 
         $config = Configuration::config($input->getOption('config'));
-        if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
+        if (!Configuration::isEmpty() && !$test && strpos($suite, $config['paths']['tests']) === 0) {
             list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
         $settings = $this->getSuiteConfig($suite, $input->getOption('config'));
@@ -125,10 +124,10 @@ class DryRun extends Command
         if ($test->getMetadata()->isBlocked()) {
             $output->writeln('');
             if ($skip = $test->getMetadata()->getSkip()) {
-                $output->writeln("<warning> SKIPPED </warning>" . $skip);
+                $output->writeln("<warning> SKIPPED </warning>".$skip);
             }
             if ($incomplete = $test->getMetadata()->getIncomplete()) {
-                $output->writeln("<warning> INCOMPLETE </warning>" . $incomplete);
+                $output->writeln("<warning> INCOMPLETE </warning>".$incomplete);
             }
         }
         $output->writeln('');

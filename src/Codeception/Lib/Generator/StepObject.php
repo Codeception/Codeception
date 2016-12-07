@@ -36,16 +36,16 @@ EOF;
     {
         $this->settings = $settings;
         $this->name = $this->getShortClassName($name);
-        $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Step\\' . $name);
+        $this->namespace = $this->getNamespaceString($this->settings['namespace'].'\\Step\\'.$name);
     }
 
     public function produce()
     {
         $actor = $this->settings['class_name'];
-        $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $actor . '\\' . $this->name);
+        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$actor.'\\'.$this->name);
         $ns = ltrim($ns, '\\');
 
-        $extended = '\\' . ltrim('\\' . $this->settings['namespace'] . '\\' . $actor, '\\');
+        $extended = '\\'.ltrim('\\'.$this->settings['namespace'].'\\'.$actor, '\\');
 
         return (new Template($this->template))
             ->place('namespace', $this->namespace)

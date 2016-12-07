@@ -3,7 +3,6 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
-use Codeception\TestInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class BeforeAfterTest implements EventSubscriberInterface
@@ -40,6 +39,9 @@ class BeforeAfterTest implements EventSubscriberInterface
         $this->runHooks('afterClass');
     }
 
+    /**
+     * @param string $hookName
+     */
     protected function runHooks($hookName)
     {
         foreach ($this->hooks as $className => $hook) {

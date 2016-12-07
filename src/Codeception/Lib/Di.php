@@ -79,7 +79,7 @@ class Di
                     $constructorArgs = $this->prepareArgs($reflectedConstructor);
                 }
             } catch (\Exception $e) {
-                throw new InjectionException("Failed to create instance of '$className'. " . $e->getMessage());
+                throw new InjectionException("Failed to create instance of '$className'. ".$e->getMessage());
             }
             $object = $reflectedClass->newInstanceArgs($constructorArgs);
         }
@@ -113,7 +113,7 @@ class Di
             $args = $this->prepareArgs($reflectedMethod, $defaults);
         } catch (\Exception $e) {
             throw new InjectionException(
-                "Failed to inject dependencies in instance of '{$reflectedObject->name}'. " . $e->getMessage()
+                "Failed to inject dependencies in instance of '{$reflectedObject->name}'. ".$e->getMessage()
             );
         }
 

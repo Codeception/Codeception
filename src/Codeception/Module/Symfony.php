@@ -134,16 +134,16 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
     public function _initialize()
     {
-        $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
+        $cache = Configuration::projectDir().$this->config['var_path'].DIRECTORY_SEPARATOR.'bootstrap.php.cache';
         if (!file_exists($cache)) {
             throw new ModuleRequireException(
                 __CLASS__,
-                "Symfony bootstrap file not found in $cache\n \n" .
-                "Please specify path to bootstrap file using `var_path` config option\n \n" .
-                "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
-                "modules:\n    enabled:\n" .
-                "    - Symfony:\n" .
-                "        var_path: '../../app'\n" .
+                "Symfony bootstrap file not found in $cache\n \n".
+                "Please specify path to bootstrap file using `var_path` config option\n \n".
+                "If you are trying to load bootstrap from a Bundle provide path like:\n \n".
+                "modules:\n    enabled:\n".
+                "    - Symfony:\n".
+                "        var_path: '../../app'\n".
                 "        app_path: '../../app'"
             );
         }
@@ -229,8 +229,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     protected function getKernelClass()
     {
-        $path = \Codeception\Configuration::projectDir() . $this->config['app_path'];
-        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['app_path'])) {
+        $path = \Codeception\Configuration::projectDir().$this->config['app_path'];
+        if (!file_exists(\Codeception\Configuration::projectDir().$this->config['app_path'])) {
             throw new ModuleRequireException(
                 __CLASS__,
                 "Can't load Kernel from $path.\n"
@@ -484,7 +484,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
                     $this->debugSection(
                         'User',
                         $profile->getCollector('security')->getUser()
-                        . ' [' . implode(',', $roles) . ']'
+                        . ' ['.implode(',', $roles).']'
                     );
                 } else {
                     $this->debugSection('User', 'Anonymous');
@@ -493,7 +493,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             if ($profile->hasCollector('swiftmailer')) {
                 $messages = $profile->getCollector('swiftmailer')->getMessageCount();
                 if ($messages) {
-                    $this->debugSection('Emails', $messages . ' sent');
+                    $this->debugSection('Emails', $messages.' sent');
                 }
             }
             if ($profile->hasCollector('timer')) {
@@ -516,7 +516,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     /**
      * Returns a list of recognized domain names.
      *
-     * @return array
+     * @return string[]
      */
     protected function getInternalDomains()
     {

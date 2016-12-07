@@ -8,7 +8,7 @@ class MySql extends Db
         $this->dbh->exec('SET FOREIGN_KEY_CHECKS=0;');
         $res = $this->dbh->query("SHOW FULL TABLES WHERE TABLE_TYPE LIKE '%TABLE';")->fetchAll();
         foreach ($res as $row) {
-            $this->dbh->exec('drop table `' . $row[0] . '`');
+            $this->dbh->exec('drop table `'.$row[0].'`');
         }
         $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1;');
     }
@@ -22,7 +22,7 @@ class MySql extends Db
 
     public function getQuotedName($name)
     {
-        return '`' . str_replace('.', '`.`', $name) . '`';
+        return '`'.str_replace('.', '`.`', $name).'`';
     }
 
     /**
@@ -35,12 +35,12 @@ class MySql extends Db
         if (!isset($this->primaryKeys[$tableName])) {
             $primaryKey = [];
             $stmt = $this->getDbh()->query(
-                'SHOW KEYS FROM ' . $this->getQuotedName($tableName) . ' WHERE Key_name = "PRIMARY"'
+                'SHOW KEYS FROM '.$this->getQuotedName($tableName).' WHERE Key_name = "PRIMARY"'
             );
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($columns as $column) {
-                $primaryKey []= $column['Column_name'];
+                $primaryKey [] = $column['Column_name'];
             }
             $this->primaryKeys[$tableName] = $primaryKey;
         }

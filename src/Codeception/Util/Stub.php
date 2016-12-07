@@ -148,20 +148,20 @@ class Stub
 
         $methods = array_filter(
             $methods,
-            function ($m) {
+            function($m) {
                 return !in_array($m->name, Stub::$magicMethods);
             }
         );
 
         $methods = array_filter(
             $methods,
-            function ($m) use ($method) {
+            function($m) use ($method) {
                 return $method != $m->name;
             }
         );
 
         $methods = array_map(
-            function ($m) {
+            function($m) {
                 return $m->name;
             },
             $methods
@@ -219,7 +219,7 @@ class Stub
         $methods = get_class_methods($class);
         $methods = array_filter(
             $methods,
-            function ($i) {
+            function($i) {
                 return !in_array($i, Stub::$magicMethods);
             }
         );
@@ -343,7 +343,7 @@ class Stub
         $methods = get_class_methods($class);
         $methods = array_filter(
             $methods,
-            function ($i) {
+            function($i) {
                 return !in_array($i, Stub::$magicMethods);
             }
         );
@@ -404,18 +404,18 @@ class Stub
         $methods = $reflectionClass->getMethods();
         $methods = array_filter(
             $methods,
-            function ($m) {
+            function($m) {
                 return !in_array($m->name, Stub::$magicMethods);
             }
         );
         $methods = array_filter(
             $methods,
-            function ($m) use ($method) {
+            function($m) use ($method) {
                 return $method != $m->name;
             }
         );
         $methods = array_map(
-            function ($m) {
+            function($m) {
                 return $m->name;
             },
             $methods
@@ -437,14 +437,6 @@ class Stub
      * methods of the class mocked. Concrete methods to mock can be specified with
      * the last parameter
      *
-     * @param  string $originalClassName
-     * @param  array $arguments
-     * @param  string $mockClassName
-     * @param  boolean $callOriginalConstructor
-     * @param  boolean $callOriginalClone
-     * @param  boolean $callAutoload
-     * @param  array $mockedMethods
-     * @param  boolean $cloneArguments
      *
      * @return object
      * @since  Method available since Release 1.0.0
@@ -477,6 +469,9 @@ class Stub
         return call_user_func_array([$generatorClass, $methodName], $args);
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     private static function extractTestCaseFromArgs(&$args)
     {
         $argsLength = count($args) - 1;
@@ -493,7 +488,7 @@ class Stub
      * @param \PHPUnit_Framework_MockObject_MockObject $mock
      * @param array $params
      *
-     * @return mixed
+     * @return \PHPUnit_Framework_MockObject_MockObject
      * @throws \LogicException
      */
     public static function update($mock, array $params)
@@ -739,7 +734,7 @@ class Stub
     private static function closureIfNull($params)
     {
         if ($params == null) {
-            return function () {
+            return function() {
             };
         } else {
             return $params;

@@ -63,7 +63,7 @@ class Annotation
      * Parses raw comment for annotations
      *
      * @param $comment
-     * @param $annotation
+     * @param string $annotation
      * @return array
      */
     public static function fetchAllFromComment($annotation, $comment)
@@ -91,8 +91,8 @@ class Annotation
     }
 
     /**
-     * @param $annotation
-     * @return null
+     * @param string $annotation
+     * @return string|null
      */
     public function fetch($annotation)
     {
@@ -104,7 +104,7 @@ class Annotation
     }
 
     /**
-     * @param $annotation
+     * @param string $annotation
      * @return array
      */
     public function fetchAll($annotation)

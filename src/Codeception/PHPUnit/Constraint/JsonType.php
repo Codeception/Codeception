@@ -39,7 +39,7 @@ class JsonType extends \PHPUnit_Framework_Constraint
             }
         } else {
             if ($matched === true) {
-                throw new \PHPUnit_Framework_ExpectationFailedException('Unexpectedly response matched: ' . json_encode($jsonArray));
+                throw new \PHPUnit_Framework_ExpectationFailedException('Unexpectedly response matched: '.json_encode($jsonArray));
             }
         }
         return true;

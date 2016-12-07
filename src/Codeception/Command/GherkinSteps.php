@@ -58,7 +58,7 @@ class GherkinSteps extends Command
                 if (count($callable) < 2) {
                     continue;
                 }
-                $method = $callable[0] . '::' . $callable[1];
+                $method = $callable[0].'::'.$callable[1];
                 $table->addRow([$step, $method]);
             }
             $table->render();

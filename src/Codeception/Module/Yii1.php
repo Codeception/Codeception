@@ -138,7 +138,7 @@ class Yii1 extends Framework implements PartedModule
         if (!file_exists($this->config['appPath'])) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Couldn't load application config file {$this->config['appPath']}\n" .
+                "Couldn't load application config file {$this->config['appPath']}\n".
                 "Please provide application bootstrap file configured for testing"
             );
         }
@@ -152,7 +152,7 @@ class Yii1 extends Framework implements PartedModule
             if (!file_exists($this->appSettings['config'])) {
                 throw new ModuleConfigException(
                     __CLASS__,
-                    "Couldn't load configuration file from Yii app file: {$this->appSettings['config']}\n" .
+                    "Couldn't load configuration file from Yii app file: {$this->appSettings['config']}\n".
                     "Please provide valid 'config' parameter"
                 );
             }
@@ -234,14 +234,14 @@ class Yii1 extends Framework implements PartedModule
         foreach ($parameters as $name => $value) {
             $template = str_replace("#$name#", $value, $template);
         }
-        return '/^' . $template . '$/u';
+        return '/^'.$template.'$/u';
     }
 
 
     /**
      * Returns a list of regex patterns for recognized domain names
      *
-     * @return array
+     * @return string[]
      */
     public function getInternalDomains()
     {

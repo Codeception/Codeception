@@ -6,7 +6,6 @@ use Codeception\Exception\ConfigurationException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -48,7 +47,7 @@ class GenerateEnvironment extends Command
         $file = "$env.yml";
 
         $path = $this->buildPath($relativePath, $file);
-        $saved = $this->save($path . $file, "# `$env` environment config goes here");
+        $saved = $this->save($path.$file, "# `$env` environment config goes here");
 
         if ($saved) {
             $output->writeln("<info>$env config was created in $relativePath/$file</info>");

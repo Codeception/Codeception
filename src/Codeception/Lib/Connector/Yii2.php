@@ -4,7 +4,6 @@ namespace Codeception\Lib\Connector;
 use Codeception\Lib\Connector\Yii2\Logger;
 use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Util\Debug;
-use Codeception\Util\Stub;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Response;
@@ -106,7 +105,7 @@ class Yii2 extends Client
 
         $pathString = parse_url($uri, PHP_URL_PATH);
         $queryString = parse_url($uri, PHP_URL_QUERY);
-        $_SERVER['REQUEST_URI'] = $queryString === null ? $pathString : $pathString . '?' . $queryString;
+        $_SERVER['REQUEST_URI'] = $queryString === null ? $pathString : $pathString.'?'.$queryString;
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
 
         parse_str($queryString, $params);
@@ -158,7 +157,7 @@ class Yii2 extends Client
         // catch "location" header and display it in debug, otherwise it would be handled
         // by symfony browser-kit and not displayed.
         if (isset($this->headers['location'])) {
-            Debug::debug("[Headers] " . json_encode($this->headers));
+            Debug::debug("[Headers] ".json_encode($this->headers));
         }
 
         $this->resetApplication();

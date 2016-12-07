@@ -1,8 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Exception\ConfigurationException;
-use Codeception\Exception\ModuleConfigException;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\CookieJar;
@@ -16,7 +14,6 @@ use GuzzleHttp\Psr7\Response as Psr7Response;
 use GuzzleHttp\Psr7\Uri as Psr7Uri;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
 
@@ -47,7 +44,7 @@ class Guzzle6 extends Client
         $this->refreshMaxInterval = $seconds;
     }
 
-    public function setClient(GuzzleClient &$client)
+    public function setClient(GuzzleClient & $client)
     {
         $this->client = $client;
     }
@@ -99,13 +96,13 @@ class Guzzle6 extends Client
     /**
      * Taken from Mink\BrowserKitDriver
      *
-     * @param Response $response
+     * @param Psr7Response $response
      *
      * @return \Symfony\Component\BrowserKit\Response
      */
     protected function createResponse(Psr7Response $response)
     {
-        $body = (string) $response->getBody();
+        $body = (string)$response->getBody();
         $headers = $response->getHeaders();
 
         $contentType = null;
@@ -119,7 +116,7 @@ class Guzzle6 extends Client
 
         if (strpos($contentType, 'charset=') === false) {
             if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
-                $contentType .= ';charset=' . $matches[1];
+                $contentType .= ';charset='.$matches[1];
             }
             $headers['Content-Type'] = [$contentType];
         }
@@ -157,6 +154,9 @@ class Guzzle6 extends Client
         return new BrowserKitResponse($body, $status, $headers);
     }
 
+    /**
+     * @param string $uri
+     */
     public function getAbsoluteUri($uri)
     {
         $baseUri = $this->client->getConfig('base_uri');
@@ -271,7 +271,7 @@ class Guzzle6 extends Client
             }
             return $parts;
         }
-        $parts[] = ['name' => $key, 'contents' => (string) $value];
+        $parts[] = ['name' => $key, 'contents' => (string)$value];
         return $parts;
     }
 
@@ -280,7 +280,7 @@ class Guzzle6 extends Client
         $files = [];
         foreach ($requestFiles as $name => $info) {
             if (!empty($arrayName)) {
-                $name = $arrayName . '[' . $name . ']';
+                $name = $arrayName.'['.$name.']';
             }
 
             if (is_array($info)) {

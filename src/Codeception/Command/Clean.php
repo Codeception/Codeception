@@ -31,7 +31,7 @@ class Clean extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getGlobalConfig($input->getOption('config'));
-        $output->writeln("<info>Cleaning up " . Configuration::outputDir() . "...</info>");
+        $output->writeln("<info>Cleaning up ".Configuration::outputDir()."...</info>");
         FileSystem::doEmptyDir(Configuration::outputDir());
         $output->writeln("Done");
     }

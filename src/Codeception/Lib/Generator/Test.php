@@ -50,10 +50,10 @@ EOF;
     {
         $actor = $this->settings['class_name'];
         if ($this->settings['namespace']) {
-            $actor = $this->settings['namespace'] . '\\' . $actor;
+            $actor = $this->settings['namespace'].'\\'.$actor;
         }
 
-        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . $this->name);
+        $ns = $this->getNamespaceHeader($this->settings['namespace'].'\\'.$this->name);
 
         return (new Template($this->template))
             ->place('namespace', $ns)

@@ -48,7 +48,7 @@ class Cest implements LoaderInterface
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
                 if (count($rawExamples)) {
                     $examples = array_map(
-                        function ($v) {
+                        function($v) {
                             return Annotation::arrayValue($v);
                         },
                         $rawExamples
@@ -65,7 +65,7 @@ class Cest implements LoaderInterface
                     } catch (\Exception $e) {
                         throw new TestParseException(
                             $file,
-                            "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable.\n" .
+                            "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable.\n".
                             "Make sure that the dataprovider exist within the test class."
                         );
                     }
@@ -77,8 +77,8 @@ class Cest implements LoaderInterface
                         if ($example === null) {
                             throw new TestParseException(
                                 $file,
-                                "Example for $testClass->$method contains invalid data:\n" .
-                                $rawExamples[$k] . "\n" .
+                                "Example for $testClass->$method contains invalid data:\n".
+                                $rawExamples[$k]."\n".
                                 "Make sure this is a valid JSON (Hint: \"-char for strings) or a single-line annotation in Doctrine-style"
                             );
                         }

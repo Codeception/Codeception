@@ -44,15 +44,15 @@ class GenerateStepObject extends Command
 
         $class = $this->getClassName($step);
 
-        $path = $this->buildPath(Configuration::supportDir() . 'Step' . DIRECTORY_SEPARATOR . ucfirst($suite), $step);
+        $path = $this->buildPath(Configuration::supportDir().'Step'.DIRECTORY_SEPARATOR.ucfirst($suite), $step);
 
         $dialog = $this->getHelperSet()->get('question');
-        $filename = $path . $class . '.php';
+        $filename = $path.$class.'.php';
 
         $helper = $this->getHelper('question');
         $question = new Question("Add action to StepObject class (ENTER to exit): ");
 
-        $gen = new StepObjectGenerator($config, ucfirst($suite) . '\\' . $step);
+        $gen = new StepObjectGenerator($config, ucfirst($suite).'\\'.$step);
 
         if (!$input->getOption('silent')) {
             do {

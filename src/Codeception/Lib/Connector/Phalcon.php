@@ -27,7 +27,7 @@ class Phalcon extends Client
     /**
      * Set Phalcon Application by \Phalcon\DI\Injectable, Closure or bootstrap file path
      *
-     * @param mixed $application
+     * @param Closure $application
      */
     public function setApplication($application)
     {
@@ -84,7 +84,7 @@ class Phalcon extends Client
 
         $_SERVER = array_merge($_SERVER, $request->getServer());
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        $_SERVER['REQUEST_URI'] = null === $queryString ? $pathString : $pathString . '?' . $queryString;
+        $_SERVER['REQUEST_URI'] = null === $queryString ? $pathString : $pathString.'?'.$queryString;
 
         $_COOKIE  = $request->getCookies();
         $_FILES   = $this->remapFiles($request->getFiles());
@@ -117,7 +117,7 @@ class Phalcon extends Client
         }
 
         $headers = $response->getHeaders();
-        $status = (int) $headers->get('Status');
+        $status = (int)$headers->get('Status');
 
         $headersProperty = new ReflectionProperty($headers, '_headers');
         $headersProperty->setAccessible(true);

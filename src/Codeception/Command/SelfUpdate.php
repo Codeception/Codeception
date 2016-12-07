@@ -136,7 +136,7 @@ class SelfUpdate extends Command
 
         return array_reduce(
             $stableVersions,
-            function ($a, $b) {
+            function($a, $b) {
                 return version_compare($a, $b, '>') ? $a : $b;
             }
         );
@@ -148,7 +148,7 @@ class SelfUpdate extends Command
      */
     private function filterStableVersions($tags)
     {
-        return array_filter($tags, function ($tag) {
+        return array_filter($tags, function($tag) {
             return preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $tag);
         });
     }
@@ -162,11 +162,11 @@ class SelfUpdate extends Command
     protected function getGithubTags($repo)
     {
         $jsonTags = $this->retrieveContentFromUrl(
-            'https://api.github.com/repos/' . $repo . '/tags'
+            'https://api.github.com/repos/'.$repo.'/tags'
         );
 
         return array_map(
-            function ($tag) {
+            function($tag) {
                 return $tag['name'];
             },
             json_decode($jsonTags, true)
@@ -250,7 +250,7 @@ class SelfUpdate extends Command
      */
     protected function retrievePharFile($version, OutputInterface $output)
     {
-        $temp = basename($this->filename, '.phar') . '-temp.phar';
+        $temp = basename($this->filename, '.phar').'-temp.phar';
 
         try {
             $sourceUrl = $this->getPharUrl($version);

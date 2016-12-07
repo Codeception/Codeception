@@ -10,6 +10,6 @@ class ModuleRequireException extends \Exception
         }
         $module = str_replace('Codeception\\Module\\', '', ltrim($module, '\\'));
         parent::__construct($message);
-        $this->message = "[$module] module requirements not met --\n \n" . $this->message;
+        $this->message = "[$module] module requirements not met --\n \n".$this->message;
     }
 }

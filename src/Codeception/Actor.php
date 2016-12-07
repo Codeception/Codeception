@@ -30,7 +30,7 @@ abstract class Actor
 
     public function wantToTest($text)
     {
-        $this->wantTo('test ' . $text);
+        $this->wantTo('test '.$text);
     }
 
     public function wantTo($text)

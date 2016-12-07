@@ -20,8 +20,8 @@ class AutoRebuild implements EventSubscriberInterface
         $settings = $e->getSettings();
         $modules = $e->getSuite()->getModules();
 
-        $actorActionsFile = Configuration::supportDir() . '_generated' . DIRECTORY_SEPARATOR
-            . $settings['class_name'] . 'Actions.php';
+        $actorActionsFile = Configuration::supportDir().'_generated'.DIRECTORY_SEPARATOR
+            . $settings['class_name'].'Actions.php';
 
         if (!file_exists($actorActionsFile)) {
             codecept_debug("Generating {$settings['class_name']}Actions...");
@@ -49,10 +49,13 @@ class AutoRebuild implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @param string $actorActionsFile
+     */
     protected function generateActorActions($actorActionsFile, $settings)
     {
-        if (!file_exists(Configuration::supportDir() . '_generated')) {
-            @mkdir(Configuration::supportDir() . '_generated');
+        if (!file_exists(Configuration::supportDir().'_generated')) {
+            @mkdir(Configuration::supportDir().'_generated');
         }
         $actionsGenerator = new Actions($settings);
         $generated = $actionsGenerator->produce();

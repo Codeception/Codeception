@@ -150,10 +150,10 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _initialize()
     {
-        if (!is_file(codecept_root_dir() . $this->config['configFile'])) {
+        if (!is_file(codecept_root_dir().$this->config['configFile'])) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "The application config file does not exist: " . codecept_root_dir() . $this->config['configFile']
+                "The application config file does not exist: ".codecept_root_dir().$this->config['configFile']
             );
         }
         $this->defineConstants();
@@ -174,7 +174,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         ];
         $this->client->defaultServerVars['HTTPS'] = parse_url($entryUrl, PHP_URL_SCHEME) === 'https';
         $this->client->restoreServerVars();
-        $this->client->configFile = Configuration::projectDir() . $this->config['configFile'];
+        $this->client->configFile = Configuration::projectDir().$this->config['configFile'];
         $this->app = $this->client->getApplication();
 
         // load fixtures before db transaction
@@ -395,7 +395,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         $record = $this->findRecord($model, $attributes);
         if (!$record) {
-            $this->fail("Couldn't find $model with " . json_encode($attributes));
+            $this->fail("Couldn't find $model with ".json_encode($attributes));
         }
         $this->debugSection($model, json_encode($record));
     }
@@ -416,7 +416,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $record = $this->findRecord($model, $attributes);
         $this->debugSection($model, json_encode($record));
         if ($record) {
-            $this->fail("Unexpectedly managed to find $model with " . json_encode($attributes));
+            $this->fail("Unexpectedly managed to find $model with ".json_encode($attributes));
         }
     }
 
@@ -499,7 +499,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * $mailer = $I->grabComponent('mailer');
      * ```
      *
-     * @param $component
+     * @param string $component
      * @return mixed
      * @throws ModuleException
      */
@@ -533,7 +533,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->assertNotEmpty($this->grabSentEmails(), 'emails were sent');
             return;
         }
-        $this->assertEquals($num, count($this->grabSentEmails()), 'number of sent emails is equal to ' . $num);
+        $this->assertEquals($num, count($this->grabSentEmails()), 'number of sent emails is equal to '.$num);
     }
 
     /**
@@ -604,8 +604,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (strpos($template, '<') !== false) {
             $template = preg_replace_callback(
                 '/<(?:\w+):?([^>]+)?>/u',
-                function ($matches) use (&$parameters) {
-                    $key = '#' . count($parameters) . '#';
+                function($matches) use (&$parameters) {
+                    $key = '#'.count($parameters).'#';
                     $parameters[$key] = isset($matches[1]) ? $matches[1] : '\w+';
                     return $key;
                 },
@@ -614,13 +614,13 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         }
         $template = preg_quote($template);
         $template = strtr($template, $parameters);
-        return '/^' . $template . '$/u';
+        return '/^'.$template.'$/u';
     }
 
     /**
      * Returns a list of regex patterns for recognized domain names
      *
-     * @return array
+     * @return string[]
      */
     public function getInternalDomains()
     {

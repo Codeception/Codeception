@@ -374,7 +374,7 @@ class Asserts extends CodeceptionModule
         $msg = null;
         if (is_object($exception)) {
             /** @var $exception \Exception  **/
-             $class = get_class($exception);
+                $class = get_class($exception);
             $msg = $exception->getMessage();
             $code = $exception->getCode();
         } else {
@@ -399,7 +399,7 @@ class Asserts extends CodeceptionModule
                 ));
             }
             $this->assertTrue(true); // increment assertion counter
-             return;
+                return;
         }
         $this->fail("Expected exception to be thrown, but nothing was caught");
     }

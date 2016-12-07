@@ -58,18 +58,18 @@ class SqlSrv extends Db
         foreach ($criteria as $k => $v) {
             if (strpos(strtolower($k), ' like') > 0) {
                 $k = str_replace(' like', '', strtolower($k));
-                $params[] = $this->getQuotedName($k) . " LIKE ? ";
+                $params[] = $this->getQuotedName($k)." LIKE ? ";
             } else {
-                $params[] = $this->getQuotedName($k) . " = ? ";
+                $params[] = $this->getQuotedName($k)." = ? ";
             }
         }
 
-        return 'WHERE ' . implode('AND ', $params);
+        return 'WHERE '.implode('AND ', $params);
     }
 
     public function getQuotedName($name)
     {
-        return '[' . $name . ']';
+        return '['.$name.']';
     }
 
     /**
@@ -93,7 +93,7 @@ class SqlSrv extends Db
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($columns as $column) {
-                $primaryKey []= $column['Column_Name'];
+                $primaryKey [] = $column['Column_Name'];
             }
             $this->primaryKeys[$tableName] = $primaryKey;
         }

@@ -188,7 +188,7 @@ class MemorySession implements AdapterInterface
         if ($removeData) {
             if (!empty($this->sessionId)) {
                 foreach ($this->memory as $key => $value) {
-                    if (0 === strpos($key, $this->sessionId . '#')) {
+                    if (0 === strpos($key, $this->sessionId.'#')) {
                         unset($this->memory[$key]);
                     }
                 }
@@ -242,7 +242,7 @@ class MemorySession implements AdapterInterface
      */
     public function toArray()
     {
-        return (array) $this->memory;
+        return (array)$this->memory;
     }
 
     /**
@@ -291,7 +291,7 @@ class MemorySession implements AdapterInterface
     private function prepareIndex($index)
     {
         if ($this->sessionId) {
-            $key = $this->sessionId . '#' . $index;
+            $key = $this->sessionId.'#'.$index;
         } else {
             $key = $index;
         }

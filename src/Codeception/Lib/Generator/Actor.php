@@ -92,16 +92,16 @@ EOF;
 
     /**
      * @param \ReflectionMethod $refMethod
-     * @return array
+     * @return string
      */
     protected function getParamsString(\ReflectionMethod $refMethod)
     {
         $params = [];
         foreach ($refMethod->getParameters() as $param) {
             if ($param->isOptional()) {
-                $params[] = '$' . $param->name . ' = '.$this->getDefaultValue($param);
+                $params[] = '$'.$param->name.' = '.$this->getDefaultValue($param);
             } else {
-                $params[] = '$' . $param->name;
+                $params[] = '$'.$param->name;
             };
         }
         return implode(', ', $params);
@@ -174,7 +174,7 @@ EOF;
      */
     private function phpEncodeArray(array $array)
     {
-        $isPlainArray = function (array $value) {
+        $isPlainArray = function(array $value) {
             return ((count($value) === 0)
                 || (
                     (array_keys($value) === range(0, count($value) - 1))
@@ -186,7 +186,7 @@ EOF;
             return '['.implode(', ', array_map([$this, 'phpEncodeValue'], $array)).']';
         }
 
-        return '['.implode(', ', array_map(function ($key) use ($array) {
+        return '['.implode(', ', array_map(function($key) use ($array) {
             return $this->phpEncodeValue($key).' => '.$this->phpEncodeValue($array[$key]);
         }, array_keys($array))).']';
     }

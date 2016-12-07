@@ -108,7 +108,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
             if ((strpos($required, ':') === false) and method_exists($this, $required)) {
-                $required = get_class($this) . ":$required";
+                $required = get_class($this).":$required";
             }
             $names[] = $required;
         }
@@ -131,7 +131,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
         foreach ($dependencies as $dependency) {
             $dependency = str_replace(':', '::', $dependency); // Codeception => PHPUnit format
             if (strpos($dependency, '::') === false) {         // check it is method of same class
-                $dependency = get_class($this) . '::' . $dependency;
+                $dependency = get_class($this).'::'.$dependency;
             }
             if (isset($passed[$dependency])) {
                 $dependencyInput[] = $passed[$dependency]['result'];

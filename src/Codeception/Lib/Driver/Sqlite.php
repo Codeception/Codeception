@@ -17,8 +17,8 @@ class Sqlite extends Db
             throw new ModuleException(__CLASS__, ':memory: database is not supported');
         }
 
-        $this->filename = Configuration::projectDir() . $filename;
-        $this->dsn = 'sqlite:' . $this->filename;
+        $this->filename = Configuration::projectDir().$filename;
+        $this->dsn = 'sqlite:'.$this->filename;
         parent::__construct($this->dsn, $user, $password);
     }
 
@@ -33,14 +33,14 @@ class Sqlite extends Db
     {
         if ($this->hasSnapshot) {
             $this->dbh = null;
-            file_put_contents($this->filename, file_get_contents($this->filename . '_snapshot'));
+            file_put_contents($this->filename, file_get_contents($this->filename.'_snapshot'));
             $this->dbh = new \PDO($this->dsn, $this->user, $this->password);
         } else {
-            if (file_exists($this->filename . '_snapshot')) {
-                unlink($this->filename . '_snapshot');
+            if (file_exists($this->filename.'_snapshot')) {
+                unlink($this->filename.'_snapshot');
             }
             parent::load($sql);
-            copy($this->filename, $this->filename . '_snapshot');
+            copy($this->filename, $this->filename.'_snapshot');
             $this->hasSnapshot = true;
         }
     }
@@ -58,13 +58,13 @@ class Sqlite extends Db
             }
 
             $primaryKey = [];
-            $query = 'PRAGMA table_info(' . $this->getQuotedName($tableName) . ')';
+            $query = 'PRAGMA table_info('.$this->getQuotedName($tableName).')';
             $stmt = $this->executeQuery($query, []);
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($columns as $column) {
                 if ($column['pk'] !== '0') {
-                    $primaryKey []= $column['name'];
+                    $primaryKey [] = $column['name'];
                 }
             }
 
@@ -75,7 +75,7 @@ class Sqlite extends Db
     }
 
     /**
-     * @param $tableName
+     * @param string $tableName
      * @return bool
      */
     private function hasRowId($tableName)

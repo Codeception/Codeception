@@ -153,9 +153,9 @@ class Locator
         $operands = [];
         foreach ($attributes as $attribute => $value) {
             if (is_int($attribute)) {
-                $operands[] = '@' . $value;
+                $operands[] = '@'.$value;
             } else {
-                $operands[] = '@' . $attribute . ' = ' . Translator::getXpathLiteral($value);
+                $operands[] = '@'.$attribute.' = '.Translator::getXpathLiteral($value);
             }
         }
         return sprintf('//%s[%s]', $element, implode(' and ', $operands));
@@ -253,7 +253,7 @@ class Locator
      *
      * @param $element CSS or XPath locator
      * @param $position xpath index
-     * @return mixed
+     * @return string
      */
     public static function elementAt($element, $position)
     {
@@ -282,7 +282,7 @@ class Locator
      * ```
      *
      * @param $element
-     * @return mixed
+     * @return string
      */
     public static function firstElement($element)
     {
@@ -302,7 +302,7 @@ class Locator
      * ```
      *
      * @param $element
-     * @return mixed
+     * @return string
      */
     public static function lastElement($element)
     {

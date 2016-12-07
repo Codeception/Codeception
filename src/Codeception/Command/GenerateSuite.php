@@ -52,30 +52,30 @@ class GenerateSuite extends Command
 
         $config = \Codeception\Configuration::config($input->getOption('config'));
         if (!$actor) {
-            $actor = ucfirst($suite) . $config['actor'];
+            $actor = ucfirst($suite).$config['actor'];
         }
         $config['class_name'] = $actor;
 
         $dir = Configuration::testsDir();
-        if (file_exists($dir . $suite . '.suite.yml')) {
+        if (file_exists($dir.$suite.'.suite.yml')) {
             throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
 
-        $this->buildPath($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
+        $this->buildPath($dir.$suite.DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
 
         // generate bootstrap
         $this->save(
-            $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
+            $dir.$suite.DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],
             "<?php\n// Here you can initialize variables that will be available to your tests\n",
             true
         );
         $actorName = $this->removeSuffix($actor, $config['actor']);
-        $config['class_name'] = $actorName . $config['actor'];
+        $config['class_name'] = $actorName.$config['actor'];
 
         $file = $this->buildPath(
-            Configuration::supportDir() . "Helper",
+            Configuration::supportDir()."Helper",
             "$actorName.php"
-        ) . "$actorName.php";
+        )."$actorName.php";
 
         $gen = new Helper($actorName, $config['namespace']);
         // generate helper
@@ -84,7 +84,7 @@ class GenerateSuite extends Command
             $gen->produce()
         );
 
-        $output->writeln("Helper <info>" . $gen->getHelperName() . "</info> was created in $file");
+        $output->writeln("Helper <info>".$gen->getHelperName()."</info> was created in $file");
 
         $yamlSuiteConfigTemplate = <<<EOF
 class_name: {{actor}}
@@ -94,7 +94,7 @@ modules:
 EOF;
 
         $this->save(
-            $dir . $suite . '.suite.yml',
+            $dir.$suite.'.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
                 ->place('actor', $config['class_name'])
                 ->place('helper', $gen->getHelperName())
@@ -109,12 +109,12 @@ EOF;
         $file = $this->buildPath(
             Configuration::supportDir(),
             $config['class_name']
-        ) . $this->getClassName($config['class_name']);
-        $file .=  '.php';
+        ).$this->getClassName($config['class_name']);
+        $file .= '.php';
 
         $this->save($file, $content);
 
-        $output->writeln("Actor <info>" . $config['class_name'] . "</info> was created in $file");
+        $output->writeln("Actor <info>".$config['class_name']."</info> was created in $file");
 
         $output->writeln("Suite config <info>$suite.suite.yml</info> was created.");
         $output->writeln(' ');

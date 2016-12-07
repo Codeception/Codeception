@@ -328,9 +328,9 @@ EOF;
             ->place('carousel_class', $this->config['animate_slides'] ? ' slide' : '')
             ->produce();
 
-        $indexFile = $this->dir . DIRECTORY_SEPARATOR . 'index.html';
+        $indexFile = $this->dir.DIRECTORY_SEPARATOR.'index.html';
         file_put_contents($indexFile, $html);
-        $testName = Descriptor::getTestSignature($e->getTest()). ' - '.ucfirst($e->getTest()->getFeature());
+        $testName = Descriptor::getTestSignature($e->getTest()).' - '.ucfirst($e->getTest()->getFeature());
         $this->recordedTests[$testName] = substr($indexFile, strlen(codecept_output_dir()));
     }
 
@@ -343,8 +343,8 @@ EOF;
             return;
         }
 
-        $filename = str_pad($this->stepNum, 3, "0", STR_PAD_LEFT) . '.png';
-        $this->webDriverModule->_saveScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
+        $filename = str_pad($this->stepNum, 3, "0", STR_PAD_LEFT).'.png';
+        $this->webDriverModule->_saveScreenshot($this->dir.DIRECTORY_SEPARATOR.$filename);
         $this->stepNum++;
         $this->slides[$filename] = $e->getStep();
     }

@@ -35,7 +35,7 @@ class PHPUnit_Util_Filter
                 continue;
             }
 
-            $stackTrace .= $step['file'] . ':' . $step['line'] . "\n";
+            $stackTrace .= $step['file'].':'.$step['line']."\n";
         }
 
         return $stackTrace;
@@ -66,20 +66,20 @@ class PHPUnit_Util_Filter
             return true;
         }
 
-        if (strpos($step['file'], 'vendor' . DIRECTORY_SEPARATOR . 'phpunit') !== false) {
+        if (strpos($step['file'], 'vendor'.DIRECTORY_SEPARATOR.'phpunit') !== false) {
             return true;
         }
 
-        if (strpos($step['file'], 'vendor' . DIRECTORY_SEPARATOR . 'codeception') !== false) {
+        if (strpos($step['file'], 'vendor'.DIRECTORY_SEPARATOR.'codeception') !== false) {
             return true;
         }
 
-        $modulePath = 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR . 'Module';
+        $modulePath = 'src'.DIRECTORY_SEPARATOR.'Codeception'.DIRECTORY_SEPARATOR.'Module';
         if (strpos($step['file'], $modulePath) !== false) {
             return false; // don`t filter modules
         }
 
-        if (strpos($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR) !== false) {
+        if (strpos($step['file'], 'src'.DIRECTORY_SEPARATOR.'Codeception'.DIRECTORY_SEPARATOR) !== false) {
             return true;
         }
 

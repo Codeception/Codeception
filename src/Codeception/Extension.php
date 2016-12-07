@@ -75,6 +75,9 @@ abstract class Extension implements EventSubscriberInterface
         $this->_reconfigure(); // hook for BC only.
     }
 
+    /**
+     * @param string $message
+     */
     protected function write($message)
     {
         if (!$this->options['silent']) {

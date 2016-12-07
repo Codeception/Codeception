@@ -40,11 +40,11 @@ class Uri
             if ($base->getPath() && (strpos($path, '/') !== 0) && !empty($path)) {
                 // if it ends with a slash, relative paths are below it
                 if (preg_match('~/$~', $base->getPath())) {
-                    $path = $base->getPath() . $path;
+                    $path = $base->getPath().$path;
                 } else {
                     // remove double slashes
                     $dir = rtrim(dirname($base->getPath()), '\\/');
-                    $path = $dir . '/' . $path;
+                    $path = $dir.'/'.$path;
                 }
             }
             $base = $base->withPath($path);
@@ -82,9 +82,9 @@ class Uri
         if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
             throw new \InvalidArgumentException("Wrong URL passes, host and scheme not set");
         }
-        $host = $urlParts['scheme'] . '://' . $urlParts['host'];
+        $host = $urlParts['scheme'].'://'.$urlParts['host'];
         if (isset($urlParts['port'])) {
-            $host .= ':' . $urlParts['port'];
+            $host .= ':'.$urlParts['port'];
         }
         return $host;
     }
@@ -95,9 +95,9 @@ class Uri
         $cutUrl = (string)$uri->withQuery('')->withFragment('');
 
         if ($path === '' || $path[0] === '#') {
-            return $cutUrl . $path;
+            return $cutUrl.$path;
         } else {
-            return rtrim($cutUrl, '/') . '/'  . ltrim($path, '/');
+            return rtrim($cutUrl, '/').'/'.ltrim($path, '/');
         }
     }
 }

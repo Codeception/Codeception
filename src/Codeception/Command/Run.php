@@ -8,7 +8,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Executes tests.
@@ -114,7 +113,7 @@ class Run extends Command
         $this->setDefinition([
             new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
             new InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
-            new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY  | InputOption::VALUE_REQUIRED, 'Override config values'),
+            new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Override config values'),
             new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
             new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html'),
             new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
@@ -222,7 +221,7 @@ class Run extends Command
         }
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString()
+                Codecept::versionString()."\nPowered by ".\PHPUnit_Runner_Version::getVersionString()
             );
         }
         if ($this->options['debug']) {
@@ -260,7 +259,7 @@ class Run extends Command
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
 
-        if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
+        if (!Configuration::isEmpty() && !$test && strpos($suite, $config['paths']['tests']) === 0) {
             list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
 
@@ -317,7 +316,7 @@ class Run extends Command
     protected function runIncludedSuites($suites, $parent_dir)
     {
         foreach ($suites as $relativePath) {
-            $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
+            $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$relativePath;
             $config = Configuration::config($current_dir);
             $suites = Configuration::suites();
 

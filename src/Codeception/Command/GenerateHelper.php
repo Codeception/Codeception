@@ -38,8 +38,8 @@ class GenerateHelper extends Command
         $name = ucfirst($input->getArgument('name'));
         $config = Configuration::config($input->getOption('config'));
 
-        $path = $this->buildPath(Configuration::supportDir() . 'Helper', $name);
-        $filename = $path . $this->getClassName($name) . '.php';
+        $path = $this->buildPath(Configuration::supportDir().'Helper', $name);
+        $filename = $path.$this->getClassName($name).'.php';
 
         $res = $this->save($filename, (new Helper($name, $config['namespace']))->produce());
         if ($res) {

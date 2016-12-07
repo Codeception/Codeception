@@ -117,7 +117,7 @@ class ModuleContainer
             return false;
         }
 
-        return (bool) $module->_depends();
+        return (bool)$module->_depends();
     }
 
     /**
@@ -219,7 +219,7 @@ class ModuleContainer
             return $moduleName;
         }
 
-        return self::MODULE_NAMESPACE . $moduleName;
+        return self::MODULE_NAMESPACE.$moduleName;
     }
 
     /**
@@ -288,7 +288,7 @@ class ModuleContainer
      * Mock a module in this ModuleContainer.
      *
      * @param string $moduleName
-     * @param object $mock
+     * @param \Codeception\Util\Maybe $mock
      */
     public function mock($moduleName, $mock)
     {
@@ -311,7 +311,7 @@ class ModuleContainer
             throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
         }
 
-        $dependencies = array_map(function ($dependency) {
+        $dependencies = array_map(function($dependency) {
             return $this->create($dependency, false);
         }, $this->getConfiguredDependencies($moduleName));
 

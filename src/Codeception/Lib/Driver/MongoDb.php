@@ -21,7 +21,7 @@ class MongoDb
 
     public static function connect($dsn, $user, $password)
     {
-        throw new \Exception(__CLASS__ . '::connect() - hm, it looked like this method had become obsolete...');
+        throw new \Exception(__CLASS__.'::connect() - hm, it looked like this method had become obsolete...');
     }
 
     /**
@@ -152,19 +152,22 @@ class MongoDb
      * dump file has to be a javascript document where one can use all the mongo shell's commands
      * just FYI: this file can be easily created be RockMongo's export button
      *
-     * @param $dumpFile
+     * @param string $dumpFile
      */
     public function load($dumpFile)
     {
         $cmd = sprintf(
             'mongo %s %s%s',
-            $this->host . '/' . $this->dbName,
+            $this->host.'/'.$this->dbName,
             $this->createUserPasswordCmdString(),
             escapeshellarg($dumpFile)
         );
         shell_exec($cmd);
     }
 
+    /**
+     * @param string $dumpFile
+     */
     public function loadFromMongoDump($dumpFile)
     {
         list($host, $port) = $this->getHostPort();
@@ -180,6 +183,9 @@ class MongoDb
         shell_exec($cmd);
     }
 
+    /**
+     * @param string $dumpFile
+     */
     public function loadFromTarGzMongoDump($dumpFile)
     {
         list($host, $port) = $this->getHostPort();
@@ -187,7 +193,7 @@ class MongoDb
             "tar -tf %s | awk 'BEGIN { FS = \"/\" } ; { print $1 }' | uniq",
             escapeshellarg($dumpFile)
         );
-        $dirCountCmd = $getDirCmd . ' | wc -l';
+        $dirCountCmd = $getDirCmd.' | wc -l';
         if (trim(shell_exec($dirCountCmd)) !== '1') {
             throw new ModuleException(
                 $this,

@@ -104,9 +104,9 @@ class ZF1 extends Framework
         defined('APPLICATION_ENV') || define('APPLICATION_ENV', $this->config['env']);
         defined('APPLICATION_PATH') || define(
             'APPLICATION_PATH',
-            Configuration::projectDir() . $this->config['app_path']
+            Configuration::projectDir().$this->config['app_path']
         );
-        defined('LIBRARY_PATH') || define('LIBRARY_PATH', Configuration::projectDir() . $this->config['lib_path']);
+        defined('LIBRARY_PATH') || define('LIBRARY_PATH', Configuration::projectDir().$this->config['lib_path']);
 
         // Ensure library/ is on include_path
         set_include_path(
@@ -131,7 +131,7 @@ class ZF1 extends Framework
         try {
             $this->bootstrap = new \Zend_Application(
                 $this->config['env'],
-                Configuration::projectDir() . $this->config['config']
+                Configuration::projectDir().$this->config['config']
             );
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
@@ -181,8 +181,8 @@ class ZF1 extends Framework
             $profiler = $this->db->getProfiler();
             $queries = $profiler->getTotalNumQueries() - $this->queries;
             $time = $profiler->getTotalElapsedSecs() - $this->time;
-            $this->debugSection('Db', $queries . ' queries');
-            $this->debugSection('Time', round($time, 2) . ' secs taken');
+            $this->debugSection('Db', $queries.' queries');
+            $this->debugSection('Time', round($time, 2).' secs taken');
             $this->time = $profiler->getTotalElapsedSecs();
             $this->queries = $profiler->getTotalNumQueries();
         }
@@ -261,6 +261,6 @@ class ZF1 extends Framework
             }
         }
         $regex = implode('\.', $parts);
-        $this->domainCollector []= '/^' . $regex . '$/iu';
+        $this->domainCollector [] = '/^'.$regex.'$/iu';
     }
 }

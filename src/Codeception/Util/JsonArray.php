@@ -114,13 +114,18 @@ class JsonArray
         }
     }
 
+    /**
+     * @param string $key
+     *
+     * @return string
+     */
     private function getValidTagNameForInvalidKey($key)
     {
         static $map = [];
         if (!isset($map[$key])) {
-            $tagName = 'invalidTag' . (count($map) + 1);
+            $tagName = 'invalidTag'.(count($map) + 1);
             $map[$key] = $tagName;
-            codecept_debug($tagName . ' is "' . $key . '"');
+            codecept_debug($tagName.' is "'.$key.'"');
         }
         return $map[$key];
     }

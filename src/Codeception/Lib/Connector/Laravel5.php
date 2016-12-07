@@ -135,7 +135,7 @@ class Laravel5 extends Client
     {
         $files = parent::filterFiles($files);
 
-        if (! class_exists('Illuminate\Http\UploadedFile')) {
+        if (!class_exists('Illuminate\Http\UploadedFile')) {
             // The \Illuminate\Http\UploadedFile class was introduced in Laravel 5.2.15,
             // so don't change the $files array if it does not exist.
             return $files;
@@ -181,7 +181,7 @@ class Laravel5 extends Client
 
         // Set the request instance for the application,
         if (is_null($request)) {
-            $appConfig = require $this->module->config['project_dir'] . 'config/app.php';
+            $appConfig = require $this->module->config['project_dir'].'config/app.php';
             $request = SymfonyRequest::create($appConfig['url']);
         }
         $this->app->instance('request', Request::createFromBase($request));
@@ -190,8 +190,8 @@ class Laravel5 extends Client
         // This way other service providers that rely on the $app['db'] entry
         // have the correct instance available.
         if ($this->oldDb) {
-            $this->app['events']->listen('Illuminate\Database\DatabaseServiceProvider', function () {
-                $this->app->singleton('db', function () {
+            $this->app['events']->listen('Illuminate\Database\DatabaseServiceProvider', function() {
+                $this->app->singleton('db', function() {
                     return $this->oldDb;
                 });
             });
@@ -200,7 +200,7 @@ class Laravel5 extends Client
         $this->app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
 
         // Record all triggered events by adding a wildcard event listener
-        $this->app['events']->listen('*', function () {
+        $this->app['events']->listen('*', function() {
             $this->triggeredEvents[] = $this->normalizeEvent($this->app['events']->firing());
         });
 
@@ -250,7 +250,7 @@ class Laravel5 extends Client
         // Even if events are disabled we still want to record the triggered events.
         // But by mocking the event dispatcher the wildcard listener registered in the initialize method is removed.
         // So to record the triggered events we have to catch the calls to the fire method of the event dispatcher mock.
-        $callback = function ($event) {
+        $callback = function($event) {
             $this->triggeredEvents[] = $this->normalizeEvent($event);
 
             return [];
@@ -409,7 +409,7 @@ class Laravel5 extends Client
      */
     public function haveContextualBinding($concrete, $abstract, $implementation)
     {
-        if (! isset($this->contextualBindings[$concrete])) {
+        if (!isset($this->contextualBindings[$concrete])) {
             $this->contextualBindings[$concrete] = [];
         }
 

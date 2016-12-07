@@ -9,6 +9,6 @@ class ExtensionException extends \Exception
         if (is_object($extension)) {
             $extension = get_class($extension);
         }
-        $this->message = $extension . "\n\n" . $this->message;
+        $this->message = $extension."\n\n".$this->message;
     }
 }

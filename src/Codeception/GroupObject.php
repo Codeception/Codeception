@@ -21,8 +21,8 @@ abstract class GroupObject extends Extension
         $events = [];
         if (static::$group) {
             $events = [
-                Events::TEST_BEFORE . '.' . static::$group => '_before',
-                Events::TEST_AFTER . '.' . static::$group  => '_after',
+                Events::TEST_BEFORE.'.'.static::$group => '_before',
+                Events::TEST_AFTER.'.'.static::$group  => '_after',
             ];
         }
         return array_merge($events, $inheritedEvents);

@@ -86,12 +86,12 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
 
     public function _initialize()
     {
-        $initAutoloaderFile = Configuration::projectDir() . 'init_autoloader.php';
+        $initAutoloaderFile = Configuration::projectDir().'init_autoloader.php';
         if (file_exists($initAutoloaderFile)) {
             require $initAutoloaderFile;
         }
 
-        $this->applicationConfig = require Configuration::projectDir() . $this->config['config'];
+        $this->applicationConfig = require Configuration::projectDir().$this->config['config'];
         if (isset($this->applicationConfig['module_listener_options']['config_cache_enabled'])) {
             $this->applicationConfig['module_listener_options']['config_cache_enabled'] = false;
         }
@@ -156,7 +156,7 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
      * ?>
      * ```
      *
-     * @param $service
+     * @param string $service
      * @return mixed
      * @part services
      */
@@ -250,7 +250,7 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
     private function addInternalDomain($route)
     {
         $regex = ReflectionHelper::readPrivateProperty($route, 'regex');
-        $this->domainCollector []= '/^' . $regex . '$/';
+        $this->domainCollector [] = '/^'.$regex.'$/';
     }
 
     public function _parts()

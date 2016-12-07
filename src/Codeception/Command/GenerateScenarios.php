@@ -48,7 +48,7 @@ class GenerateScenarios extends Command
 
         $path = $input->getOption('path')
             ? $input->getOption('path')
-            : Configuration::dataDir() . 'scenarios';
+            : Configuration::dataDir().'scenarios';
 
         $format = $input->getOption('format');
 
@@ -60,7 +60,7 @@ class GenerateScenarios extends Command
             );
         }
 
-        $path = $path . DIRECTORY_SEPARATOR . $suite;
+        $path = $path.DIRECTORY_SEPARATOR.$suite;
         if (!$input->getOption('single-file')) {
             @mkdir($path);
         }
@@ -68,8 +68,8 @@ class GenerateScenarios extends Command
         $suiteManager = new \Codeception\SuiteManager(new EventDispatcher(), $suite, $suiteConf);
 
         if ($suiteConf['bootstrap']) {
-            if (file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
-                require_once $suiteConf['path'] . $suiteConf['bootstrap'];
+            if (file_exists($suiteConf['path'].$suiteConf['bootstrap'])) {
+                require_once $suiteConf['path'].$suiteConf['bootstrap'];
             }
         }
 
@@ -94,13 +94,13 @@ class GenerateScenarios extends Command
                 $output->writeln("* $name rendered");
             } else {
                 $feature = $this->decorate($feature, $format);
-                $this->save($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
+                $this->save($path.DIRECTORY_SEPARATOR.$name.$this->formatExtension($format), $feature, true);
                 $output->writeln("* $name generated");
             }
         }
 
         if ($input->getOption('single-file')) {
-            $this->save($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
+            $this->save($path.$this->formatExtension($format), $this->decorate($scenarios, $format), true);
         }
     }
 
@@ -114,6 +114,9 @@ class GenerateScenarios extends Command
         }
     }
 
+    /**
+     * @param \Codeception\SuiteManager $suiteManager
+     */
     protected function getTests($suiteManager)
     {
         $suiteManager->loadTests();

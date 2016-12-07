@@ -67,7 +67,7 @@ class Crawler extends Page
             if ($contains && strpos($node->nodeValue, $contains) === false) {
                 continue;
             }
-            $output .= "\n+ " . $node->C14N();
+            $output .= "\n+ ".$node->C14N();
         }
         return $output;
     }

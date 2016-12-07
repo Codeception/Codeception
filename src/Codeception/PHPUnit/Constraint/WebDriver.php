@@ -36,7 +36,7 @@ class WebDriver extends Page
             throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
         }
 
-        $output = "Failed asserting that any element by " . Locator::humanReadableString($selector);
+        $output = "Failed asserting that any element by ".Locator::humanReadableString($selector);
         $output .= $this->uriMessage('on page');
 
         if (count($nodes) < 5) {
@@ -46,7 +46,7 @@ class WebDriver extends Page
             $message = new Message("[total %s elements]");
             $output .= $message->with(count($nodes));
         }
-        $output .= "\ncontains text '" . $this->string . "'";
+        $output .= "\ncontains text '".$this->string."'";
 
         throw new \PHPUnit_Framework_ExpectationFailedException(
             $output,

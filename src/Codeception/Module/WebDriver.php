@@ -324,7 +324,7 @@ class WebDriver extends CodeceptionModule implements
         if (file_exists($firefox_profile) === false) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Firefox profile does not exist under given path " . $firefox_profile
+                "Firefox profile does not exist under given path ".$firefox_profile
             );
         }
         // Set firefox profile as capability
@@ -359,9 +359,9 @@ class WebDriver extends CodeceptionModule implements
         $this->debugWebDriverLogs();
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
-        $this->_saveScreenshot($report = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
+        $this->_saveScreenshot($report = $outputDir.mb_strcut($filename, 0, 245, 'utf-8').'.fail.png');
         $test->getMetadata()->addReport('png', $report);
-        $this->_savePageSource($report = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
+        $this->_savePageSource($report = $outputDir.mb_strcut($filename, 0, 244, 'utf-8').'.fail.html');
         $test->getMetadata()->addReport('html', $report);
         $this->debug("Screenshot and page source were saved into '$outputDir' dir");
     }
@@ -387,10 +387,10 @@ class WebDriver extends CodeceptionModule implements
                     $this->debugSection("Selenium {$logType} Logs", " EMPTY ");
                     continue;
                 }
-                $this->debugSection("Selenium {$logType} Logs", "\n" . $this->formatLogEntries($logEntries));
+                $this->debugSection("Selenium {$logType} Logs", "\n".$this->formatLogEntries($logEntries));
             }
         } catch (\Exception $e) {
-            $this->debug('Unable to retrieve Selenium logs : ' . $e->getMessage());
+            $this->debug('Unable to retrieve Selenium logs : '.$e->getMessage());
         }
     }
 
@@ -408,9 +408,9 @@ class WebDriver extends CodeceptionModule implements
 
         foreach ($logEntries as $logEntry) {
             // Timestamp is in milliseconds, but date() requires seconds.
-            $time = date('H:i:s', $logEntry['timestamp'] / 1000) .
+            $time = date('H:i:s', $logEntry['timestamp'] / 1000).
                 // Append the milliseconds to the end of the time string
-                '.' . ($logEntry['timestamp'] % 1000);
+                '.'.($logEntry['timestamp'] % 1000);
             $formattedLogs .= "{$time} {$logEntry['level']} - {$logEntry['message']}\n";
         }
         return $formattedLogs;
@@ -467,13 +467,13 @@ class WebDriver extends CodeceptionModule implements
         if ($this->config['http_proxy']) {
             $proxyConfig['httpProxy'] = $this->config['http_proxy'];
             if ($this->config['http_proxy_port']) {
-                $proxyConfig['httpProxy'] .= ':' . $this->config['http_proxy_port'];
+                $proxyConfig['httpProxy'] .= ':'.$this->config['http_proxy_port'];
             }
         }
         if ($this->config['ssl_proxy']) {
             $proxyConfig['sslProxy'] = $this->config['ssl_proxy'];
             if ($this->config['ssl_proxy_port']) {
-                $proxyConfig['sslProxy'] .= ':' . $this->config['ssl_proxy_port'];
+                $proxyConfig['sslProxy'] .= ':'.$this->config['ssl_proxy_port'];
             }
         }
         if (!empty($proxyConfig)) {
@@ -498,6 +498,9 @@ class WebDriver extends CodeceptionModule implements
         return Uri::retrieveUri($url);
     }
 
+    /**
+     * @param string $filename
+     */
     public function _saveScreenshot($filename)
     {
         if (!isset($this->webDriver)) {
@@ -507,7 +510,7 @@ class WebDriver extends CodeceptionModule implements
         try {
             $this->webDriver->takeScreenshot($filename);
         } catch (\Exception $e) {
-            $this->debug('Unable to retrieve screenshot from Selenium : ' . $e->getMessage());
+            $this->debug('Unable to retrieve screenshot from Selenium : '.$e->getMessage());
         }
     }
 
@@ -518,7 +521,7 @@ class WebDriver extends CodeceptionModule implements
 
     /**
      * Saves HTML source of a page to a file
-     * @param $filename
+     * @param string $filename
      */
     public function _savePageSource($filename)
     {
@@ -529,7 +532,7 @@ class WebDriver extends CodeceptionModule implements
         try {
             file_put_contents($filename, $this->webDriver->getPageSource());
         } catch (\Exception $e) {
-            $this->debug('Unable to retrieve source page from Selenium : ' . $e->getMessage());
+            $this->debug('Unable to retrieve source page from Selenium : '.$e->getMessage());
         }
     }
 
@@ -548,11 +551,11 @@ class WebDriver extends CodeceptionModule implements
      */
     public function makeScreenshot($name)
     {
-        $debugDir = codecept_log_dir() . 'debug';
+        $debugDir = codecept_log_dir().'debug';
         if (!is_dir($debugDir)) {
             mkdir($debugDir, 0777);
         }
-        $screenName = $debugDir . DIRECTORY_SEPARATOR . $name . '.png';
+        $screenName = $debugDir.DIRECTORY_SEPARATOR.$name.'.png';
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
     }
@@ -578,7 +581,7 @@ class WebDriver extends CodeceptionModule implements
     {
         $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
         $cookies = array_map(
-            function ($c) {
+            function($c) {
                 return $c['name'];
             },
             $cookies
@@ -591,7 +594,7 @@ class WebDriver extends CodeceptionModule implements
     {
         $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
         $cookies = array_map(
-            function ($c) {
+            function($c) {
                 return $c['name'];
             },
             $cookies
@@ -634,6 +637,9 @@ class WebDriver extends CodeceptionModule implements
         return $cookie['value'];
     }
 
+    /**
+     * @param \Facebook\WebDriver\Remote\WebDriverResponse $cookies
+     */
     protected function filterCookies($cookies, $params = [])
     {
         foreach (['domain', 'path', 'name'] as $filter) {
@@ -642,6 +648,10 @@ class WebDriver extends CodeceptionModule implements
             }
             $cookies = array_filter(
                 $cookies,
+
+                /**
+                 * @param \Facebook\WebDriver\Remote\WebDriverResponse $item
+                 */
                 function ($item) use ($filter, $params) {
                     return $item[$filter] == $params[$filter];
                 }
@@ -864,17 +874,17 @@ class WebDriver extends CodeceptionModule implements
     {
         $nodes = $this->webDriver->findElements(WebDriverBy::partialLinkText($text));
         if (empty($nodes)) {
-            $this->fail("No links containing text '$text' were found in page " . $this->_getCurrentUri());
+            $this->fail("No links containing text '$text' were found in page ".$this->_getCurrentUri());
         }
         if ($url) {
             $nodes = array_filter(
                 $nodes,
-                function (WebDriverElement $e) use ($url) {
+                function(WebDriverElement $e) use ($url) {
                     return trim($e->getAttribute('href')) == trim($url);
                 }
             );
             if (empty($nodes)) {
-                $this->fail("No links containing text '$text' and URL '$url' were found in page " . $this->_getCurrentUri());
+                $this->fail("No links containing text '$text' and URL '$url' were found in page ".$this->_getCurrentUri());
             }
         }
     }
@@ -884,18 +894,18 @@ class WebDriver extends CodeceptionModule implements
         $nodes = $this->webDriver->findElements(WebDriverBy::partialLinkText($text));
         if (!$url) {
             if (!empty($nodes)) {
-                $this->fail("Link containing text '$text' was found in page " . $this->_getCurrentUri());
+                $this->fail("Link containing text '$text' was found in page ".$this->_getCurrentUri());
             }
             return;
         }
         $nodes = array_filter(
             $nodes,
-            function (WebDriverElement $e) use ($url) {
+            function(WebDriverElement $e) use ($url) {
                 return trim($e->getAttribute('href')) == trim($url);
             }
         );
         if (!empty($nodes)) {
-            $this->fail("Link containing text '$text' and URL '$url' was found in page " . $this->_getCurrentUri());
+            $this->fail("Link containing text '$text' and URL '$url' was found in page ".$this->_getCurrentUri());
         }
     }
 
@@ -937,7 +947,7 @@ class WebDriver extends CodeceptionModule implements
         $matches = [];
         $res = preg_match($uri, $this->_getCurrentUri(), $matches);
         if (!$res) {
-            $this->fail("Couldn't match $uri in " . $this->_getCurrentUri());
+            $this->fail("Couldn't match $uri in ".$this->_getCurrentUri());
         }
         if (!isset($matches[1])) {
             $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
@@ -977,6 +987,9 @@ class WebDriver extends CodeceptionModule implements
         $this->proceedSeeInFormFields($formSelector, $params, true);
     }
 
+    /**
+     * @param boolean $assertNot
+     */
     protected function proceedSeeInFormFields($formSelector, array $params, $assertNot)
     {
         $form = $this->match($this->webDriver, $formSelector);
@@ -1048,7 +1061,7 @@ class WebDriver extends CodeceptionModule implements
             'Contains',
             $value,
             $currentValues,
-            "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
+            "Failed testing for '$value' in $strField's value: ".implode(', ', $currentValues)
         ];
     }
 
@@ -1112,7 +1125,7 @@ class WebDriver extends CodeceptionModule implements
         // partially matching
         foreach ($option as $opt) {
             try {
-                $optElement = $el->findElement(WebDriverBy::xpath('.//option [contains (., "' . $opt . '")]'));
+                $optElement = $el->findElement(WebDriverBy::xpath('.//option [contains (., "'.$opt.'")]'));
                 $matched = true;
                 if (!$optElement->isSelected()) {
                     $optElement->click();
@@ -1311,7 +1324,7 @@ class WebDriver extends CodeceptionModule implements
     {
         $el = $this->findField($field);
         // in order to be compatible on different OS
-        $filePath = realpath(codecept_data_dir() . $filename);
+        $filePath = realpath(codecept_data_dir().$filename);
         if (!is_readable($filePath)) {
             throw new \InvalidArgumentException("file not found or not readable: $filePath");
         }
@@ -1373,7 +1386,7 @@ class WebDriver extends CodeceptionModule implements
     {
         $els = $this->match($this->webDriver, $cssOrXpath);
         return array_map(
-            function (WebDriverElement $e) use ($attribute) {
+            function(WebDriverElement $e) use ($attribute) {
                 if ($attribute) {
                     return $e->getAttribute($attribute);
                 }
@@ -1389,7 +1402,7 @@ class WebDriver extends CodeceptionModule implements
         foreach ($attributes as $attr => $value) {
             $els = array_filter(
                 $els,
-                function (WebDriverElement $el) use ($attr, $value) {
+                function(WebDriverElement $el) use ($attr, $value) {
                     return $el->getAttribute($attr) == $value;
                 }
             );
@@ -1489,7 +1502,7 @@ class WebDriver extends CodeceptionModule implements
             $this->assertNotEmpty(
                 array_filter(
                     $els,
-                    function ($e) {
+                    function($e) {
                         return $e && $e->isSelected();
                     }
                 )
@@ -1511,7 +1524,7 @@ class WebDriver extends CodeceptionModule implements
             $this->assertEmpty(
                 array_filter(
                     $els,
-                    function ($e) {
+                    function($e) {
                         return $e && $e->isSelected();
                     }
                 )
@@ -1609,6 +1622,9 @@ class WebDriver extends CodeceptionModule implements
         $this->debug($this->_getCurrentUri());
     }
 
+    /**
+     * @return integer
+     */
     protected function getSubmissionFormFieldName($name)
     {
         if (substr($name, -2) === '[]') {
@@ -1882,7 +1898,7 @@ class WebDriver extends CodeceptionModule implements
     public function waitForElementChange($element, \Closure $callback, $timeout = 30)
     {
         $el = $this->matchFirstOrFail($this->webDriver, $element);
-        $checker = function () use ($el, $callback) {
+        $checker = function() use ($el, $callback) {
             return $callback($el);
         };
         $this->webDriver->wait($timeout)->until($checker);
@@ -2014,7 +2030,7 @@ class WebDriver extends CodeceptionModule implements
      * Try not to use this command on a regular basis.
      * If Codeception lacks a feature you need, please implement it and submit a patch.
      *
-     * @param callable $function
+     * @param \Closure $function
      */
     public function executeInSelenium(\Closure $function)
     {
@@ -2105,7 +2121,7 @@ class WebDriver extends CodeceptionModule implements
      */
     public function waitForJS($script, $timeout = 5)
     {
-        $condition = function ($wd) use ($script) {
+        $condition = function($wd) use ($script) {
             return $wd->executeScript($script);
         };
         $this->webDriver->wait($timeout)->until($condition);
@@ -2231,11 +2247,11 @@ class WebDriver extends CodeceptionModule implements
             try {
                 return $page->findElements($this->getStrictLocator($selector));
             } catch (InvalidSelectorException $e) {
-                throw new MalformedLocatorException(key($selector) . ' => ' . reset($selector), "Strict locator");
+                throw new MalformedLocatorException(key($selector).' => '.reset($selector), "Strict locator");
             } catch (InvalidElementStateException $e) {
                 if ($this->isPhantom() and $e->getResults()['status'] == 12) {
                     throw new MalformedLocatorException(
-                        key($selector) . ' => ' . reset($selector),
+                        key($selector).' => '.reset($selector),
                         "Strict locator ".$e->getCode()
                     );
                 }
@@ -2380,11 +2396,17 @@ class WebDriver extends CodeceptionModule implements
         return $keys;
     }
 
+    /**
+     * @param string $selector
+     */
     protected function assertNodesContain($text, $nodes, $selector = null)
     {
         $this->assertThat($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $selector);
     }
 
+    /**
+     * @param string $selector
+     */
     protected function assertNodesNotContain($text, $nodes, $selector = null)
     {
         $this->assertThat($nodes, new WebDriverConstraintNot($text, $this->_getCurrentUri()), $selector);
@@ -2511,7 +2533,7 @@ class WebDriver extends CodeceptionModule implements
         $els = $this->match($this->webDriver, $selector);
         $nodes = array_filter(
             $els,
-            function (WebDriverElement $el) {
+            function(WebDriverElement $el) {
                 return $el->isDisplayed();
             }
         );

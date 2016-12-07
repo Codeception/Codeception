@@ -52,7 +52,7 @@ class XmlStructure
     }
     /**
 
-     * @param $xml
+     * @param \DOMDocument $xml
      * @return bool
      */
     public function matchXmlStructure($xml)

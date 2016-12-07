@@ -61,7 +61,7 @@ class ZF1 extends Client
         $queryString = parse_url($uri, PHP_URL_QUERY);
         $requestUri = parse_url($uri, PHP_URL_PATH);
         if (!empty($queryString)) {
-            $requestUri .= '?' . $queryString;
+            $requestUri .= '?'.$queryString;
         }
         $zendRequest->setRequestUri($requestUri);
 
