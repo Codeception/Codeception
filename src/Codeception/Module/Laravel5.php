@@ -1033,14 +1033,35 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         if (class_exists($table)) {
             $currentNum = $this->countModels($table, $attributes);
             if ($currentNum != $expectedNum) {
-                $this->fail("The number of found $table ($currentNum) does not match expected number $expectedNum in with " . json_encode($attributes));
+                $this->fail("The number of found $table ($currentNum) does not match expected number $expectedNum with " . json_encode($attributes));
             }
         } else {
             $currentNum = $this->countRecords($table, $attributes);
             if ($currentNum != $expectedNum) {
-                $this->fail("The number of found records ($currentNum) do not match expected number $expectedNum in table $table with " . json_encode($attributes));
+                $this->fail("The number of found records ($currentNum) does not match expected number $expectedNum in table $table with " . json_encode($attributes));
             }
         }
+    }
+
+    /**
+     * Retrieves number of records from database
+     * You can pass the name of a database table or the class name of an Eloquent model as the first argument.
+     *
+     * ``` php
+     * <?php
+     * $I->grabNumRecords('users', array('name' => 'davert'));
+     * $I->grabNumRecords('App\User', array('name' => 'davert'));
+     * ?>
+     * ```
+     *
+     * @param string $table
+     * @param array $attributes
+     * @return integer
+     * @part orm
+     */
+    public function grabNumRecords($table, $attributes = [])
+    {
+        return (class_exists($table))? $this->countModels($table, $attributes) : $this->countRecords($table, $attributes);
     }
 
     /**
@@ -1077,7 +1098,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * @param string $modelClass
      * @param array $attributes
-     * @return array
+     * @return integer
      */
     protected function countModels($modelClass, $attributes = [])
     {
@@ -1092,7 +1113,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * @param string $table
      * @param array $attributes
-     * @return array
+     * @return integer
      */
     protected function countRecords($table, $attributes = [])
     {
@@ -1127,7 +1148,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function getQueryBuilderFromTable($table)
     {
-        return $query = $this->app['db']->table($table);
+        return $this->app['db']->table($table);
     }
 
     /**
