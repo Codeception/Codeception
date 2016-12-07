@@ -1061,7 +1061,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function grabNumRecords($table, $attributes = [])
     {
-        return (class_exists($table))? $this->countModels($table, $attributes) : $this->countRecords($table, $attributes);
+        return class_exists($table)? $this->countModels($table, $attributes) : $this->countRecords($table, $attributes);
     }
 
     /**
