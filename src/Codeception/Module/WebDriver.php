@@ -448,12 +448,10 @@ class WebDriver extends CodeceptionModule implements
                 <u><b>Javascript error log</b></u>:<br/><br/>
             ';
 
-        $browser = $this->_getConfig('browser');
-
         $errorFound = false;
         foreach ($logEntries as $logEntry) {
 
-            if ($this->isJSError($browser, $logEntry['level'],$logEntry['message'])) {
+            if ($this->isJSError($logEntry['level'],$logEntry['message'])) {
                 $errorFound = true;
                 // Timestamp is in milliseconds, but date() requires seconds.
                 $time = date('H:i:s', $logEntry['timestamp'] / 1000) .
@@ -476,19 +474,18 @@ class WebDriver extends CodeceptionModule implements
      * Determines if the log entry is an error.
      * The decision is made depending on browser and log-level.
      *
-     * @param string $browser
      * @param string $logEntryLevel
+     * @param string $message
      * @return bool
      */
-    protected function isJSError($browser, $logEntryLevel, $message)
+    protected function isJSError($logEntryLevel, $message)
     {
         return
         (
-            ($browser === 'phantomjs' && $logEntryLevel != 'INFO')    // phantomjs logs errors as "WARNING"
+            ($this->isPhantom() && $logEntryLevel != 'INFO')          // phantomjs logs errors as "WARNING"
             || $logEntryLevel === 'SEVERE'                            // other browsers log errors as "SEVERE"
         )
-        && strpos($message, 'ERR_PROXY_CONNECTION_FAILED') === false  // dont log blackhole proxy errors
-        ;
+        && strpos($message, 'ERR_PROXY_CONNECTION_FAILED') === false;  // ignore blackhole proxy
     }
 
     public function _afterSuite()

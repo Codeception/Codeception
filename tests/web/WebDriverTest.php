@@ -758,8 +758,13 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertGreaterThan(0, count($steps));
 
         $lastStep = end($steps);
+
         $this->assertContains(
-            "Uncaught TypeError: Cannot read property 'xyz' of undefined",
+            "TypeError",
+            $lastStep->getHtml()
+        );
+        $this->assertContains(
+            "xyz",
             $lastStep->getHtml()
         );
     }
