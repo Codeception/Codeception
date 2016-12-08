@@ -598,4 +598,12 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->amOnPage('/form/button-not-in-form');
         $this->module->click('The Button');
     }
+
+    public function testSubmitFormWithoutEmptyOptionsInSelect()
+    {
+        $this->module->amOnPage('/form/bug3824');
+        $this->module->submitForm('form', []);
+        $this->module->dontSee('ERROR');
+    }
+
 }
