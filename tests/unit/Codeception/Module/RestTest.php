@@ -359,6 +359,24 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsJson();
     }
 
+    public function testSeeResponseJsonMatchesXpathCanHandleResponseWithOneElement()
+    {
+        $this->setStubResponse('{"success": 1}');
+        $this->module->seeResponseJsonMatchesXpath('//success');
+    }
+
+    public function testSeeResponseJsonMatchesXpathCanHandleResponseWithTwoElements()
+    {
+        $this->setStubResponse('{"success": 1, "info": "test"}');
+        $this->module->seeResponseJsonMatchesXpath('//success');
+    }
+
+    public function testSeeResponseJsonMatchesXpathCanHandleResponseWithOneSubArray()
+    {
+        $this->setStubResponse('{"array": {"success": 1}}');
+        $this->module->seeResponseJsonMatchesXpath('//array/success');
+    }
+
 
     protected function shouldFail()
     {
