@@ -437,7 +437,7 @@ class WebDriver extends CodeceptionModule implements
     protected function logJSErrors(ScenarioDriven $test, array $browserLogEntries)
     {
         foreach ($browserLogEntries as $logEntry) {
-            if (   true === isset($logEntry['level'])
+            if (true === isset($logEntry['level'])
                 && true === isset($logEntry['message'])
                 && $this->isJSError($logEntry['level'], $logEntry['message'])
             ) {
