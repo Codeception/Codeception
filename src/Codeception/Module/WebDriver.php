@@ -21,12 +21,10 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
-use Codeception\Test\Cept;
-use Codeception\Test\Cest;
 use Codeception\Test\Descriptor;
+use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\Debug;
-use Codeception\Util\JSErrorToHtml;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
 use Facebook\WebDriver\Exception\InvalidElementStateException;
@@ -373,6 +371,8 @@ class WebDriver extends CodeceptionModule implements
 
     /**
      * Print out latest Selenium Logs in debug mode
+     *
+     * @param TestInterface $test
      */
     public function debugWebDriverLogs(TestInterface $test = null)
     {
@@ -396,9 +396,9 @@ class WebDriver extends CodeceptionModule implements
                 $this->debugSection("Selenium {$logType} Logs", "\n" . $this->formatLogEntries($logEntries));
 
                 if ($logType === 'browser' && $this->config['log_js_errors']
-                    && ($test instanceof Cest || $test instanceof Cept)
+                    && ($test instanceof ScenarioDriven)
                 ) {
-                    $test->getScenario()->comment($this->formatLogEntriesToHtml($logEntries));
+                    $this->logJSErrors($test, $logEntries);
                 }
             }
         } catch (\Exception $e) {
@@ -429,43 +429,25 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
-     * Turns an array of log entries into a HTML string containing only relevant errors.
-     * Each log entry is an array with the keys "timestamp", "level", and "message".
-     * See https://code.google.com/p/selenium/wiki/JsonWireProtocol#Log_Entry_JSON_Object
+     * Logs JavaScript errors as comments.
      *
-     * @param array $logEntries
-     * @return string
+     * @param ScenarioDriven $test
+     * @param array $browserLogEntries
      */
-    protected function formatLogEntriesToHtml(array $logEntries)
+    protected function logJSErrors(ScenarioDriven $test, array $browserLogEntries)
     {
-        if (empty($logEntries)) {
-            return '';
-        }
-
-        $formattedLogs = '
-            <div style="color: red; font-size: 13px; font-weight: 500; font-family: Courier,serif;">
-                <u><b>Javascript error log</b></u>:<br/><br/>
-            ';
-
-        $errorFound = false;
-        foreach ($logEntries as $logEntry) {
-            if ($this->isJSError($logEntry['level'], $logEntry['message'])) {
-                $errorFound = true;
+        foreach ($browserLogEntries as $logEntry) {
+            if (   true === isset($logEntry['level'])
+                && true === isset($logEntry['message'])
+                && $this->isJSError($logEntry['level'], $logEntry['message'])
+            ) {
                 // Timestamp is in milliseconds, but date() requires seconds.
                 $time = date('H:i:s', $logEntry['timestamp'] / 1000) .
                     // Append the milliseconds to the end of the time string
                     '.' . ($logEntry['timestamp'] % 1000);
-                $formattedLogs .= "{$time} {$logEntry['level']} - {$logEntry['message']}<br/>";
+                $test->getScenario()->comment("{$time} {$logEntry['level']} - {$logEntry['message']}");
             }
         }
-
-        if (false === $errorFound) {
-            return '';
-        }
-
-        $formattedLogs .= '</div>';
-
-        return $formattedLogs;
     }
 
     /**
