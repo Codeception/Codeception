@@ -46,8 +46,11 @@ class JsonArray
         $root = 'root';
         $jsonArray = $this->jsonArray;
         if (count($jsonArray) == 1) {
-            $root = key($jsonArray);
-            $jsonArray = reset($jsonArray);
+            $value = reset($jsonArray);
+            if (is_array($value)) {
+                $root = key($jsonArray);
+                $jsonArray = $value;
+            }
         }
 
         $dom = new DOMDocument('1.0', 'UTF-8');
