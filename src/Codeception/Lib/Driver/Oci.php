@@ -78,7 +78,7 @@ class Oci extends Db
         if (!isset($this->primaryKeys[$tableName])) {
             $primaryKey = [];
             $query = "SELECT cols.column_name
-                FROM all_constraints cons, all_cons_columns cols
+                FROM user_constraints cons, user_cons_columns cols
                 WHERE cols.table_name = ?
                 AND cons.constraint_type = 'P'
                 AND cons.constraint_name = cols.constraint_name
