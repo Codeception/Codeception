@@ -3,6 +3,11 @@ namespace Codeception\Lib\Driver;
 
 class Oci extends Db
 {
+    public function __construct($dsn, $user, $password)
+    {
+        parent::__construct($dsn, $user, $password);
+        $this->dbh->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER);
+    }
 
     public function cleanup()
     {
