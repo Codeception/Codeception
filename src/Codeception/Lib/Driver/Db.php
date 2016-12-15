@@ -32,7 +32,7 @@ class Db
     {
         $dbh = new \PDO($dsn, $user, $password);
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->dbh->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER);
+        $dbh->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER);
 
         return $dbh;
     }
