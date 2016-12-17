@@ -8,6 +8,7 @@ RUN apt-get update && \
             git \
             zlib1g-dev \
             libssl-dev \
+            lsof \
         --no-install-recommends && \
         apt-get clean && \
         rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

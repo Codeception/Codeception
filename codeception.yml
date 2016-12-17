@@ -22,6 +22,26 @@ modules:
             vhost: '/'
             queues: [queue1, queue2]
 
+environment_modules:
+    App:
+        source:
+            type: path
+            path: tests/data/app
+        executor:
+            type: phpBuiltIn
+            configuration: defined
+            host: localhost
+            port: 8000
+    Rest:
+        source:
+            type: path
+            path: tests/data/rest
+        executor:
+            type: phpBuiltIn
+            configuration: defined
+            host: localhost
+            port: 8010
+
 extensions:
     enabled: [Codeception\Extension\RunFailed]
 
