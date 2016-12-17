@@ -88,7 +88,7 @@ class Oci extends Db
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($columns as $column) {
-                $primaryKey []= $column['column_name'];
+                $primaryKey []= $column['COLUMN_NAME'];
             }
             $this->primaryKeys[$tableName] = $primaryKey;
         }
