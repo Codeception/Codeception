@@ -105,7 +105,7 @@ class Dbh extends CodeceptionModule implements DbInterface
         \PHPUnit_Framework_Assert::assertLessThan(1, $res);
     }
 
-    protected function proceedSeeInDatabase($table, $column, $criteria)
+    protected function proceedSeeInDatabase($table, $column, $criteria, $allValues = false)
     {
         $params = [];
         foreach ($criteria as $k => $v) {
@@ -123,11 +123,14 @@ class Dbh extends CodeceptionModule implements DbInterface
 
         $sth = self::$dbh->prepare($query);
         $sth->execute(array_values($criteria));
-        return $sth->fetchColumn();
+        return $allValues?
+            array_column($sth->fetchAll(), $column)
+            :
+            $sth->fetchColumn();
     }
 
-    public function grabFromDatabase($table, $column, $criteria = [])
+    public function grabFromDatabase($table, $column, $criteria = [], $allValues = false)
     {
-        return $this->proceedSeeInDatabase($table, $column, $criteria);
+        return $this->proceedSeeInDatabase($table, $column, $criteria, $allValues);
     }
 }
