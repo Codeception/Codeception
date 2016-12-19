@@ -652,7 +652,7 @@ groups:
   p*: tests/_data/p*
 ```
 
-This will load all found `p*` files in `tests/_data` as groups.
+This will load all found `p*` files in `tests/_data` as groups. Group names will be as follows p1,p2,...,pN.
 
 ## Conclusion
 
