@@ -762,6 +762,7 @@ EOF;
      * $I->seeResponseJsonMatchesXpath('/store//price');
      * ?>
      * ```
+     * @param string $xpath
      * @part json
      * @version 2.0.9
      */
@@ -772,6 +773,22 @@ EOF;
             0,
             (new JsonArray($response))->filterByXPath($xpath)->length,
             "Received JSON did not match the XPath `$xpath`.\nJson Response: \n" . $response
+        );
+    }
+
+    /**
+     * Opposite to seeResponseJsonMatchesXpath
+     *
+     * @param string $xpath
+     * @part json
+     */
+    public function dontSeeResponseJsonMatchesXpath($xpath)
+    {
+        $response = $this->connectionModule->_getResponseContent();
+        $this->assertEquals(
+            0,
+            (new JsonArray($response))->filterByXPath($xpath)->length,
+            "Received JSON matched the XPath `$xpath`.\nJson Response: \n" . $response
         );
     }
 
@@ -816,6 +833,7 @@ EOF;
      * ?>
      * ```
      *
+     * @param string $jsonPath
      * @part json
      * @version 2.0.9
      */
@@ -824,14 +842,14 @@ EOF;
         $response = $this->connectionModule->_getResponseContent();
         $this->assertNotEmpty(
             (new JsonArray($response))->filterByJsonPath($jsonPath),
-            "Received JSON did not match the JsonPath provided\n" . $response
+            "Received JSON did not match the JsonPath `$jsonPath`.\nJson Response: \n" . $response
         );
     }
 
     /**
      * Opposite to seeResponseJsonMatchesJsonPath
      *
-     * @param array $jsonPath
+     * @param string $jsonPath
      * @part json
      */
     public function dontSeeResponseJsonMatchesJsonPath($jsonPath)
@@ -839,7 +857,7 @@ EOF;
         $response = $this->connectionModule->_getResponseContent();
         $this->assertEmpty(
             (new JsonArray($response))->filterByJsonPath($jsonPath),
-            "Received JSON did (but should not) match the JsonPath provided\n" . $response
+            "Received JSON matched the JsonPath `$jsonPath`.\nJson Response: \n" . $response
         );
     }
 
