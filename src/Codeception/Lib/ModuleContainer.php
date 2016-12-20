@@ -152,6 +152,10 @@ class ModuleContainer
                 }
             }
 
+            if (isset($this->actions[$method->name])) {
+                throw new ModuleException($module, $method->name . ' has only already been declared in module '.$this->actions[$method->name]);
+            }
+
             $this->actions[$method->name] = $name;
         }
         return $module;
