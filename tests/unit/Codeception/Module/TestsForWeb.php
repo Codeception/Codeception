@@ -216,6 +216,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('agree', $form['terms']);
     }
 
+    public function testCheckboxByName()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption('terms');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('agree', $form['terms']);
+    }
+
     public function testCheckboxByLabel()
     {
         $this->module->amOnPage('/form/checkbox');
