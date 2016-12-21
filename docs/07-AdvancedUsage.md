@@ -232,6 +232,7 @@ These examples can be written using Doctrine-style annotation syntax as well:
 
 You can also use the `@dataprovider` annotation for creating dynamic examples, using a protected method for providing example data:
 ```php
+<?php
    /**
     * @dataprovider pageProvider
     */
@@ -536,7 +537,7 @@ Codeception reorders tests so dependent tests always will executed after the tes
 
 The interactive console was added to try Codeception commands before executing them inside a test.
 
-![console](http://img267.imageshack.us/img267/204/003nk.png)
+![console](http://codeception.com/images/console.png)
 
 You can run the console with the following command:
 

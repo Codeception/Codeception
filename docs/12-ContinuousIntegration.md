@@ -80,7 +80,7 @@ Jenkins should locate `report.html` at `tests/_output/`. Now Jenkins will displa
 
 ## TeamCity
 
-![TeamCity](https://codeception.com/images/teamcity.png)
+![TeamCity](http://codeception.com/images/teamcity.png)
 
 TeamCity is a hotsed solution from JetBrains. The setup of it can be a bit tricky as TeamCity uses its own reporter format for parsing test results. PHPUnit since verison 5.x has integrated support for this format, so does Codeception. What we need to do is to configure Codeception to use custom reporter. By default there is `--report` option which provides an alternative output. You can change the reporter class in `codeception.yml` configuration:
 
@@ -97,15 +97,15 @@ After you create build project you should define build step with Codeception whi
 php codecept run --report
 ```
 
-![build step](https://codeception.com/images/teamcity/build.png)
+![build step](http://codeception.com/images/teamcity/build.png)
 
 Once you execute your first build you should see detailed report inside TeamCity interface:
 
-![report](https://codeception.com/images/teamcity/report.png)
+![report](http://codeception.com/images/teamcity/report.png)
 
 ## TravisCI
 
-![Travis CI](https://codeception.com/images/travis.png)
+![Travis CI](http://codeception.com/images/travis.png)
 
 Travis CI is popular service CI with good GitHub integration. Codeception is self-tested with Travis CI. There nothing specifal about configuration. Just add to the bottom line of travis configuration:
 
