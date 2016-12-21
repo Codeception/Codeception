@@ -193,7 +193,7 @@ Data is defined via the `@example` annotation, using JSON or Doctrine-style nota
 
 <div class="alert alert-notice">
 If you use JSON notation please keep in mind that all string keys
-and values should be enclosed in doble quotes " according to JSON standard.
+and values should be enclosed in double quotes " according to JSON standard.
 </div>
 
 You can pass key-value data as an example and use it in tests as well:
