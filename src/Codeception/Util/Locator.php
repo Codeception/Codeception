@@ -38,9 +38,12 @@ class Locator
      * As a result the Locator will produce a mixed XPath value that will be used in fillField action.
      *
      * @static
+     *
      * @param $selector1
      * @param $selector2
+     *
      * @throws \Exception
+     *
      * @return string
      */
     public static function combine($selector1, $selector2)
@@ -67,7 +70,9 @@ class Locator
      * ```
      *
      * @static
+     *
      * @param $url
+     *
      * @return string
      */
     public static function href($url)
@@ -91,7 +96,9 @@ class Locator
      * ```
      *
      * @static
+     *
      * @param $index
+     *
      * @return string
      */
     public static function tabIndex($index)
@@ -172,6 +179,7 @@ class Locator
      * ```
      *
      * @param $selector
+     *
      * @return bool
      */
     public static function isCSS($selector)
@@ -195,6 +203,7 @@ class Locator
      * ```
      *
      * @param $locator
+     *
      * @return bool
      */
     public static function isXPath($locator)
@@ -206,7 +215,9 @@ class Locator
 
     /**
      * Checks that string and CSS selector for element by ID
+     *
      * @param $id
+     *
      * @return bool
      */
     public static function isID($id)
@@ -228,6 +239,7 @@ class Locator
      *
      * @param $element
      * @param $text
+     *
      * @return string
      */
     public static function contains($element, $text)
@@ -253,6 +265,7 @@ class Locator
      *
      * @param $element CSS or XPath locator
      * @param $position xpath index
+     *
      * @return mixed
      */
     public static function elementAt($element, $position)
@@ -282,6 +295,7 @@ class Locator
      * ```
      *
      * @param $element
+     *
      * @return mixed
      */
     public static function firstElement($element)
@@ -302,6 +316,7 @@ class Locator
      * ```
      *
      * @param $element
+     *
      * @return mixed
      */
     public static function lastElement($element)
@@ -313,6 +328,7 @@ class Locator
      * Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string represenation
      *
      * @param $selector
+     *
      * @return string
      */
     public static function humanReadableString($selector)
