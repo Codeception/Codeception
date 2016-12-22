@@ -212,7 +212,7 @@ class PhalconMemorySession implements SessionInterface
      *
      * @param array $options
      */
-    public function setOptions(array $options)
+    public function setOptions($options = array())
     {
         if (isset($options['uniqueId'])) {
             $this->sessionId = $options['uniqueId'];
