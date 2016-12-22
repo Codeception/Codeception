@@ -355,11 +355,18 @@ EOF
         $I->seeInShellOutput('PASSED');
     }
 
-    public function runIncompleteGherkinTest(CliGuy $I)
+    public function reportsCorrectFailedStep(CliGuy $I)
     {
         $I->executeCommand('run scenario File.feature -v');
         $I->seeInShellOutput('OK, but incomplete');
         $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
+    }
+
+    public function runFailingGherkinTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario Fail.feature -v --no-exit');
+        $I->seeInShellOutput('Step  I see file "games.zip"');
+        $I->seeInShellOutput('Step  I see file "tools.zip"');
     }
 
     public function runGherkinScenarioWithMultipleStepDefinitions(CliGuy $I)
