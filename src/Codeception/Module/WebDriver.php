@@ -2218,12 +2218,15 @@ class WebDriver extends CodeceptionModule implements
 
     /**
      * Move mouse over the first element matched by the given locator.
+     * If the first parameter null then the page is used.
      * If the second and third parameters are given,
      * then the mouse is moved to an offset of the element's top-left corner.
      * Otherwise, the mouse is moved to the center of the element.
      *
      * ``` php
      * <?php
+     * $I->moveMouseOver(['css' => '.checkout']);
+     * $I->moveMouseOver(null, 20, 50);
      * $I->moveMouseOver(['css' => '.checkout'], 20, 50);
      * ?>
      * ```
@@ -2234,22 +2237,69 @@ class WebDriver extends CodeceptionModule implements
      *
      * @throws \Codeception\Exception\ElementNotFound
      */
-    public function moveMouseOver($cssOrXPath, $offsetX = null, $offsetY = null)
+    public function moveMouseOver($cssOrXPath = null, $offsetX = null, $offsetY = null)
     {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $this->webDriver->getMouse()->mouseMove($el->getCoordinates(), $offsetX, $offsetY);
+        $where = null;
+        if (null !== $cssOrXPath) {
+            $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+            $where = $el->getCoordinates();
+        }
+
+        $this->webDriver->getMouse()->mouseMove($where, $offsetX, $offsetY);
+    }
+
+    /**
+     * Performs click with the left mouse button on an element.
+     * If the first parameter `null` then the offset is relative to the actual mouse position.
+     * If the second and third parameters are given,
+     * then the mouse is moved to an offset of the element's top-left corner.
+     * Otherwise, the mouse is moved to the center of the element.
+     *
+     * ``` php
+     * <?php
+     * $I->clickWithLeftButton(['css' => '.checkout']);
+     * $I->clickWithLeftButton(null, 20, 50);
+     * $I->clickWithLeftButton(['css' => '.checkout'], 20, 50);
+     * ?>
+     * ```
+     *
+     * @param string $cssOrXPath css or xpath of the web element (body by default).
+     * @param int $offsetX
+     * @param int $offsetY
+     *
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    public function clickWithLeftButton($cssOrXPath = null, $offsetX = null, $offsetY = null)
+    {
+        $this->moveMouseOver($cssOrXPath, $offsetX, $offsetY);
+        $this->webDriver->getMouse()->click();
     }
 
     /**
      * Performs contextual click with the right mouse button on an element.
+     * If the first parameter `null` then the offset is relative to the actual mouse position.
+     * If the second and third parameters are given,
+     * then the mouse is moved to an offset of the element's top-left corner.
+     * Otherwise, the mouse is moved to the center of the element.
      *
-     * @param $cssOrXPath
+     * ``` php
+     * <?php
+     * $I->clickWithRightButton(['css' => '.checkout']);
+     * $I->clickWithRightButton(null, 20, 50);
+     * $I->clickWithRightButton(['css' => '.checkout'], 20, 50);
+     * ?>
+     * ```
+     *
+     * @param string $cssOrXPath css or xpath of the web element (body by default).
+     * @param int    $offsetX
+     * @param int    $offsetY
+     *
      * @throws \Codeception\Exception\ElementNotFound
      */
-    public function clickWithRightButton($cssOrXPath)
+    public function clickWithRightButton($cssOrXPath = null, $offsetX = null, $offsetY = null)
     {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $this->webDriver->getMouse()->contextClick($el->getCoordinates());
+        $this->moveMouseOver($cssOrXPath, $offsetX, $offsetY);
+        $this->webDriver->getMouse()->contextClick();
     }
 
     /**
