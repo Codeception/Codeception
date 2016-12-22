@@ -2264,7 +2264,11 @@ class WebDriver extends CodeceptionModule implements
             }
             if (empty($nodes) and Locator::isCSS($selector)) {
                 $isValidLocator = true;
-                $nodes = $page->findElements(WebDriverBy::cssSelector($selector));
+                try {
+                    $nodes = $page->findElements(WebDriverBy::cssSelector($selector));
+                } catch (InvalidElementStateException $e) {
+                    $nodes = $page->findElements(WebDriverBy::linkText($selector));
+                }
             }
             if (empty($nodes) and Locator::isXPath($selector)) {
                 $isValidLocator = true;
