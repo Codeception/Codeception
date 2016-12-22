@@ -8,6 +8,20 @@ require_once dirname(__FILE__).'/autoload.php';
 
 use Symfony\Component\Console\Application;
 
+/**
+ * Suppressing E_USER_DEPRECATED errors thrown by vendor packages
+ */
+set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) {
+    foreach (Codeception\Configuration::$silenceVendorDeprecatedFiles as $file) {
+        // Suppress error for matched file
+        if (preg_match('#'.$file.'$#', $errfile)) {
+            return true;
+        }
+    }
+    // Continue to default error handling
+    return false;
+}, E_USER_DEPRECATED);
+
 $app = new Application('Codeception', Codeception\Codecept::VERSION);
 $app->add(new Codeception\Command\Build('build'));
 $app->add(new Codeception\Command\Run('run'));
