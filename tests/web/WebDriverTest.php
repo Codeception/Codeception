@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Step;
 use Codeception\Util\Stub;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
@@ -739,5 +740,44 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/anchor');
         $this->module->click('Hash Form');
         $this->module->seeCurrentUrlEquals('/form/anchor#a');
+    }
+
+    public function testJSErrorLoggingPositive()
+    {
+        // arrange
+        $this->module->_setConfig(['log_js_errors' => true]);
+        $cept = new \Codeception\Test\Cept('foo', 'bar');
+
+        // act
+        $this->module->amOnPage('/jserroronload');
+        $this->module->_failed($cept, 'anyFailMessage');
+
+        // assert
+        /* @var $steps Step[]  */
+        $steps = $cept->getScenario()->getSteps();
+        $this->assertGreaterThan(0, count($steps));
+
+        $lastStep = end($steps);
+
+        $this->assertContains(
+            "TypeError",
+            $lastStep->getHtml()
+        );
+    }
+
+    public function testJSErrorLoggingNegative()
+    {
+        // arrange
+        $this->module->_setConfig(['log_js_errors' => false]);
+        $cept = new \Codeception\Test\Cept('foo', 'bar');
+
+        // act
+        $this->module->amOnPage('/jserroronload');
+        $this->module->_failed($cept, 'anyFailMessage');
+
+        // assert
+        /* @var $steps Step[]  */
+        $steps = $cept->getScenario()->getSteps();
+        $this->assertEquals(0, count($steps));
     }
 }
