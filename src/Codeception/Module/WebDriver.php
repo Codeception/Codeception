@@ -1194,7 +1194,7 @@ class WebDriver extends CodeceptionModule implements
             );
             $this->sessions[] = $this->_backupSession();
             $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
-            if(!is_null($this->config['pageload_timeout'])) {
+            if (!is_null($this->config['pageload_timeout'])) {
                 $this->webDriver->manage()->timeouts()->pageLoadTimeout($this->config['pageload_timeout']);
             }
             $this->initialWindowSize();
