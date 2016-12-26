@@ -691,6 +691,10 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/form/select');
         $result = $this->module->grabValueFrom('#age');
         $this->assertEquals('oldfag', $result);
+        $this->module->amOnPage('/form/bug3866');
+        $this->module->fillField('empty', 'new value');
+        $result = $this->module->grabValueFrom('#empty');
+        $this->assertEquals('new value', $result);
     }
 
     public function testGrabAttributeFrom()

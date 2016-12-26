@@ -904,7 +904,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             : new InputFormField($input->getNode(0));
         $formField = $this->matchFormField($name, $form, $dynamicField);
         $formField->setValue($value);
-        $input->getNode(0)->nodeValue = htmlspecialchars($value);
+        $input->getNode(0)->setAttribute('value', htmlspecialchars($value));
     }
 
     /**
