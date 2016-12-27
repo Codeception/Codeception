@@ -218,7 +218,9 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->transaction->rollback();
         }
 
-        $this->client->resetPersistentVars();
+        if ($this->client) {
+            $this->client->resetPersistentVars();
+        }
 
         if (isset(\Yii::$app) && \Yii::$app->has('session', true)) {
             \Yii::$app->session->close();
