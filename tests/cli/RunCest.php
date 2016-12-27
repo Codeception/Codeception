@@ -442,7 +442,7 @@ EOF
 
     public function runTestWithAnnotationDataprovider(CliGuy $I)
     {
-        $I->executeCommand('run scenario DataProviderCest --steps');
-        $I->seeInShellOutput('OK (10 tests');
+        $I->executeCommand('run scenario -g dataprovider --steps');
+        $I->seeInShellOutput('OK (15 tests');
     }
 }
