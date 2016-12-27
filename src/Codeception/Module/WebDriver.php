@@ -160,6 +160,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `capabilities` - Sets Selenium2 [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  * * `connection_timeout` - timeout for opening a connection to remote selenium server (30 seconds by default).
  * * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
+ * * `pageload_timeout` - amount of time to wait for a page load to complete before throwing an error (default 0 seconds).
  * * `http_proxy` - sets http proxy server url for testing a remote server.
  * * `http_proxy_port` - sets http proxy server port
  * * `debug_log_entries` - how many selenium entries to print with `debugWebDriverLogs` or on fail (15 by default).
@@ -258,6 +259,7 @@ class WebDriver extends CodeceptionModule implements
         'capabilities'       => [],
         'connection_timeout' => null,
         'request_timeout'    => null,
+        'pageload_timeout'   => null,
         'http_proxy'         => null,
         'http_proxy_port'    => null,
         'ssl_proxy'          => null,
@@ -1192,6 +1194,9 @@ class WebDriver extends CodeceptionModule implements
             );
             $this->sessions[] = $this->_backupSession();
             $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+            if (!is_null($this->config['pageload_timeout'])) {
+                $this->webDriver->manage()->timeouts()->pageLoadTimeout($this->config['pageload_timeout']);
+            }
             $this->initialWindowSize();
         } catch (WebDriverCurlException $e) {
             throw new ConnectionException("Can't connect to Webdriver at {$this->wd_host}. Please make sure that Selenium Server or PhantomJS is running.");
