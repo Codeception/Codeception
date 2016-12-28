@@ -3,12 +3,18 @@ namespace Codeception\Lib\Driver;
 
 class MySql extends Db
 {
-    public function cleanup()
+    public function cleanup($ignoreDrop=false)
     {
         $this->dbh->exec('SET FOREIGN_KEY_CHECKS=0;');
         $res = $this->dbh->query("SHOW FULL TABLES WHERE TABLE_TYPE LIKE '%TABLE';")->fetchAll();
         foreach ($res as $row) {
-            $this->dbh->exec('drop table `' . $row[0] . '`');
+            try {
+                $this->dbh->exec('drop table `' . $row[0] . '`');
+            } catch (\PDOException $e) {
+                if (!$ignoreDrop) {
+                    throw $e;
+                }
+            }
         }
         $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1;');
     }
