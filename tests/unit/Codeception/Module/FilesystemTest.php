@@ -76,7 +76,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException PHPUnit_Framework_AssertionFailedError
-     * @expectedExceptionMessage Failed asserting that file "tests/data/dumps/mysql.sql" does not exist.
+     * @expectedExceptionMessageRegExp /Failed asserting that file ".*tests\/data\/dumps\/mysql.sql" does not exist/
      */
     public function testDontSeeFileFoundFailsWhenFileExistsInSubdirectoryOfPath()
     {

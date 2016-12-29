@@ -251,7 +251,6 @@ class Filesystem extends CodeceptionModule
         }
 
         $path = $this->absolutizePath($path);
-        $this->debug($path);
         if (!file_exists($path)) {
             $this->fail("Directory does not exist: $path");
         }
@@ -276,7 +275,25 @@ class Filesystem extends CodeceptionModule
      */
     public function dontSeeFileFound($filename, $path = '')
     {
-        \PHPUnit_Framework_Assert::assertFileNotExists($path . $filename);
+        if ($path === '') {
+            \PHPUnit_Framework_Assert::assertFileNotExists($filename);
+            return;
+        }
+        if (!file_exists($path)) {
+            $this->fail("Directory does not exist: $path");
+        }
+
+        $files = Finder::create()->files()->name($filename)->in($path);
+        if ($files->count() === 0) {
+            //this line keeps a count of assertions correct
+            \PHPUnit_Framework_Assert::assertTrue(true);
+        }
+
+        $files = Finder::create()->files()->name($filename)->in($path);
+        foreach ($files as $file) {
+            \PHPUnit_Framework_Assert::assertFileNotExists($file->getRealPath());
+            return;
+        }
     }
 
 
