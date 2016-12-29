@@ -35,7 +35,7 @@ class Filesystem extends CodeceptionModule
      * Enters a directory In local filesystem.
      * Project root directory is used by default
      *
-     * @param $path
+     * @param string $path
      */
     public function amInPath($path)
     {
@@ -43,6 +43,10 @@ class Filesystem extends CodeceptionModule
         $this->debug('Moved to ' . getcwd());
     }
 
+    /**
+     * @param string $path
+     * @return string
+     */
     protected function absolutizePath($path)
     {
         // *nix way
@@ -69,7 +73,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $filename
+     * @param string $filename
      */
     public function openFile($filename)
     {
@@ -85,7 +89,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $filename
+     * @param string $filename
      */
     public function deleteFile($filename)
     {
@@ -104,7 +108,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $dirname
+     * @param string $dirname
      */
     public function deleteDir($dirname)
     {
@@ -121,8 +125,8 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $src
-     * @param $dst
+     * @param string $src
+     * @param string $dst
      */
     public function copyDir($src, $dst)
     {
@@ -141,7 +145,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $text
+     * @param string $text
      */
     public function seeInThisFile($text)
     {
@@ -174,7 +178,7 @@ class Filesystem extends CodeceptionModule
     /**
      * Checks that contents of currently opened file matches $regex
      *
-     * @param $regex
+     * @param string $regex
      */
     public function seeThisFileMatches($regex)
     {
@@ -194,7 +198,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $text
+     * @param string $text
      */
     public function seeFileContentsEqual($text)
     {
@@ -212,7 +216,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $text
+     * @param string $text
      */
     public function dontSeeInThisFile($text)
     {
@@ -237,7 +241,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $filename
+     * @param string $filename
      * @param string $path
      */
     public function seeFileFound($filename, $path = '')
@@ -270,7 +274,7 @@ class Filesystem extends CodeceptionModule
     /**
      * Checks if file does not exist in path
      *
-     * @param $filename
+     * @param string $filename
      * @param string $path
      */
     public function dontSeeFileFound($filename, $path = '')
@@ -306,7 +310,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $dirname
+     * @param string $dirname
      */
     public function cleanDir($dirname)
     {
@@ -317,8 +321,8 @@ class Filesystem extends CodeceptionModule
     /**
      * Saves contents to file
      *
-     * @param $filename
-     * @param $contents
+     * @param string $filename
+     * @param string $contents
      */
     public function writeToFile($filename, $contents)
     {
