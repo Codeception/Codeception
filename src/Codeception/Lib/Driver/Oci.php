@@ -30,6 +30,15 @@ class Oci extends Db
                           END LOOP;
                       END;"
         );
+        $this->dbh->exec(
+            "BEGIN
+                        FOR i IN (SELECT view_name FROM user_views)
+                          LOOP
+                            EXECUTE IMMEDIATE('DROP VIEW ' || user || '.' || i.view_name);
+                          END LOOP;
+                      END;"
+        );
+        $this->dbh->exec(
     }
 
     /**
