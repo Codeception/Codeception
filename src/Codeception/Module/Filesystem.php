@@ -78,6 +78,7 @@ class Filesystem extends CodeceptionModule
     public function openFile($filename)
     {
         $this->file = file_get_contents($this->absolutizePath($filename));
+        $this->filepath = $filename;
     }
 
     /**
@@ -246,29 +247,20 @@ class Filesystem extends CodeceptionModule
      */
     public function seeFileFound($filename, $path = '')
     {
-        if (file_exists($filename) and !$path) {
+        if ($path === '' && file_exists($filename)) {
             $this->openFile($filename);
-            $this->filepath = $filename;
-            $this->debug($filename);
-            \PHPUnit_Framework_Assert::assertFileExists($path . $filename);
+            \PHPUnit_Framework_Assert::assertFileExists($filename);
             return;
         }
 
-        $path = $this->absolutizePath($path);
-        if (!file_exists($path)) {
-            $this->fail("Directory does not exist: $path");
+        $found = $this->findFileInPath($filename, $path);
+
+        if ($found === false) {
+            $this->fail("File \"$filename\" not found at \"$path\"");
         }
 
-        $files = Finder::create()->files()->name($filename)->in($path);
-        foreach ($files as $file) {
-            $file = $file->getRealPath();
-            $this->openFile($file);
-            $this->filepath = $file;
-            $this->debug($file);
-            \PHPUnit_Framework_Assert::assertFileExists($file);
-            return;
-        }
-        $this->fail("File \"$filename\" not found at \"$path\"");
+        $this->openFile($found);
+        \PHPUnit_Framework_Assert::assertFileExists($found);
     }
 
     /**
@@ -283,20 +275,40 @@ class Filesystem extends CodeceptionModule
             \PHPUnit_Framework_Assert::assertFileNotExists($filename);
             return;
         }
+
+        $found = $this->findFileInPath($filename, $path);
+
+        if ($found === false) {
+            //this line keeps a count of assertions correct
+            \PHPUnit_Framework_Assert::assertTrue(true);
+            return;
+        }
+
+        \PHPUnit_Framework_Assert::assertFileNotExists($found);
+    }
+
+    /**
+     * Finds the first matching file
+     *
+     * @param string $filename
+     * @param string $path
+     * @throws \PHPUnit_Framework_AssertionFailedError When path does not exist
+     * @return string|false Path to the first matching file
+     */
+    private function findFileInPath($filename, $path)
+    {
+        $path = $this->absolutizePath($path);
         if (!file_exists($path)) {
             $this->fail("Directory does not exist: $path");
         }
 
         $files = Finder::create()->files()->name($filename)->in($path);
         if ($files->count() === 0) {
-            //this line keeps a count of assertions correct
-            \PHPUnit_Framework_Assert::assertTrue(true);
+            return false;
         }
 
-        $files = Finder::create()->files()->name($filename)->in($path);
         foreach ($files as $file) {
-            \PHPUnit_Framework_Assert::assertFileNotExists($file->getRealPath());
-            return;
+            return $file->getRealPath();
         }
     }
 
