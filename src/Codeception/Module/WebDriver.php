@@ -1225,7 +1225,7 @@ class WebDriver extends CodeceptionModule implements
         unset($this->sessions[$key]);
     }
 
-    /*
+    /**
      * Unselect an option in the given select box.
      *
      * @param $select
