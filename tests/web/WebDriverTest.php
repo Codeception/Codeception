@@ -827,18 +827,18 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/click');
 
         $this->module->clickWithRightButton(null, 123, 88);
-        $this->module->see('click, offsetX: 123 - offsetY: 88');
+        $this->module->see('context, offsetX: 123 - offsetY: 88');
 
         $this->module->clickWithRightButton('body');
-        $this->module->see('click, offsetX: 600 - offsetY: 384');
+        $this->module->see('context, offsetX: 600 - offsetY: 384');
 
         $this->module->clickWithRightButton('body', 50, 75);
-        $this->module->see('click, offsetX: 58 - offsetY: 83');
+        $this->module->see('context, offsetX: 58 - offsetY: 83');
 
         $this->module->clickWithRightButton('body div');
-        $this->module->see('click, offsetX: 58 - offsetY: 58');
+        $this->module->see('context, offsetX: 58 - offsetY: 58');
 
         $this->module->clickWithRightButton('#element2', 70, 75);
-        $this->module->see('click, offsetX: 78 - offsetY: 183');
+        $this->module->see('context, offsetX: 78 - offsetY: 183');
     }
 }

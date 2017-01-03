@@ -1,4 +1,9 @@
 <html>
+<head>
+    <style>
+        body { overflow: hidden; height: 752px; }
+    </style>
+</head>
 <body>
 <div style="width: 100px;height: 100px;background-color:#99cb84" id="element"></div>
 <div style="width: 100px;height: 100px;background-color:#aa0077" id="element2"></div>
@@ -9,24 +14,19 @@
     var doc = document.getElementById('result');
 
     var click = function click(event) {
-
         doc.textContent =
             "click, " +
-//            "offsetX: " + event.offsetX +
-//            " - offsetY: " + event.offsetY;
-        "offsetX: " + event.pageX +
-        " - offsetY: " + event.pageY;
+            "offsetX: " + event.pageX +
+            " - offsetY: " + event.pageY;
 
         event.preventDefault();
     }
 
     var context = function context(event) {
-        document.removeEventListener('click', click);
-
         doc.textContent =
             "context, " +
-            "offsetX: " + event.offsetX +
-            " - offsetY: " + event.offsetY;
+            "offsetX: " + event.pageX +
+            " - offsetY: " + event.pageY;
 
         event.preventDefault();
     }
