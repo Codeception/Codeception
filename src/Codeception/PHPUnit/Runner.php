@@ -78,7 +78,8 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         unset($GLOBALS['app']); // hook for not to serialize globals
 
         $result->convertErrorsToExceptions(false);
-
+        $result->beStrictAboutOutputDuringTests(true);
+		
         if (empty(self::$persistentListeners)) {
             $this->applyReporters($result, $arguments);
         }
@@ -134,7 +135,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             codecept_debug('Printing JUNIT report into ' . $arguments['xml']);
             self::$persistentListeners[] = $this->instantiateReporter(
                 'xml',
-                [$this->absolutePath($arguments['xml']), false]
+                [$this->absolutePath($arguments['xml']), true]
             );
         }
         if ($arguments['tap']) {
