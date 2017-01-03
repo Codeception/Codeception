@@ -80,7 +80,9 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         $result->convertErrorsToExceptions(false);
         $result->beStrictAboutTestsThatDoNotTestAnything(true);
         $result->beStrictAboutOutputDuringTests(true);
-		
+
+		$suite->setbeStrictAboutChangesToGlobalState(true);
+
         if (empty(self::$persistentListeners)) {
             $this->applyReporters($result, $arguments);
         }
