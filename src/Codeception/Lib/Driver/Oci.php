@@ -38,7 +38,6 @@ class Oci extends Db
                           END LOOP;
                       END;"
         );
-        $this->dbh->exec(
     }
 
     /**
