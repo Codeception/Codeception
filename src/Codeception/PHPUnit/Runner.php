@@ -78,6 +78,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         unset($GLOBALS['app']); // hook for not to serialize globals
 
         $result->convertErrorsToExceptions(false);
+        $result->beStrictAboutTestsThatDoNotTestAnything(true);
         $result->beStrictAboutOutputDuringTests(true);
 		
         if (empty(self::$persistentListeners)) {
