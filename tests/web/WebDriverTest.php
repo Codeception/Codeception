@@ -824,6 +824,9 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testRightClick()
     {
+        // actually not supported in phantomjs see https://github.com/ariya/phantomjs/issues/14005
+        $this->notForPhantomJS();
+
         $this->module->amOnPage('/form/click');
 
         $this->module->clickWithRightButton(null, 123, 88);
