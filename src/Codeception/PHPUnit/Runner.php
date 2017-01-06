@@ -78,10 +78,19 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         unset($GLOBALS['app']); // hook for not to serialize globals
 
         $result->convertErrorsToExceptions(false);
-        $result->beStrictAboutTestsThatDoNotTestAnything(true);
-        $result->beStrictAboutOutputDuringTests(true);
 
-		$suite->setbeStrictAboutChangesToGlobalState(true);
+        if ($arguments['reportUselessTests']) {
+            $result->beStrictAboutTestsThatDoNotTestAnything((bool)$arguments['reportUselessTests']);
+        }
+
+        if ($arguments['disallowTestOutput']) {
+            $result->beStrictAboutOutputDuringTests((bool)$arguments['disallowTestOutput']);
+        }
+
+        if ($arguments['beStrictAboutChangesToGlobalState']) {
+            $suite->setbeStrictAboutChangesToGlobalState((bool)$arguments['beStrictAboutChangesToGlobalState']);
+        }
+
 
         if (empty(self::$persistentListeners)) {
             $this->applyReporters($result, $arguments);
@@ -138,7 +147,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             codecept_debug('Printing JUNIT report into ' . $arguments['xml']);
             self::$persistentListeners[] = $this->instantiateReporter(
                 'xml',
-                [$this->absolutePath($arguments['xml']), true]
+                [$this->absolutePath($arguments['xml']), (bool)$arguments['logIncompleteSkipped']]
             );
         }
         if ($arguments['tap']) {

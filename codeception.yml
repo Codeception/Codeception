@@ -12,6 +12,10 @@ settings:
     memory_limit: 1024M
     log: true
     lint: true
+    reportUselessTests: false
+    disallowTestOutput: false
+    beStrictAboutChangesToGlobalState: false
+    logIncompleteSkipped: false
 modules:
     config:
         AMQP:

@@ -63,6 +63,23 @@ settings:
     # This value controls whether PHPUnit attempts to backup global variables
     # See https://phpunit.de/manual/current/en/appendixes.annotations.html#appendixes.annotations.backupGlobals
     backup_globals: true
+    
+    # PHPUnit can be strict about tests that do not test anything
+    # See https://phpunit.de/manual/current/en/risky-tests.html#risky-tests.useless-tests
+    reportUselessTests: false
+    
+    # PHPUnit can be strict about output during tests.
+    # See https://phpunit.de/manual/current/en/risky-tests.html#risky-tests.output-during-test-execution
+    disallowTestOutput: false
+    
+    # PHPUnit can be strict about tests that manipulate global state.
+    # See https://phpunit.de/manual/current/en/risky-tests.html#risky-tests.global-state-manipulation
+    beStrictAboutChangesToGlobalState: false
+    
+    # Log the incomplete ans skipped tests into junit report
+    # See https://phpunit.de/manual/current/en/appendixes.configuration.html 
+    # Section logging > junit
+    logIncompleteSkipped: false
 ```
 
 * `modules`: allows to create shared module configuration for all included suites. By default sample configuration for Db module is included.
