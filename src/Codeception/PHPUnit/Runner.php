@@ -87,7 +87,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             $result->beStrictAboutOutputDuringTests((bool)$arguments['disallowTestOutput']);
         }
 
-        if ($arguments['beStrictAboutChangesToGlobalState']) {
+        if (isset($arguments['beStrictAboutChangesToGlobalState'])) {
             $suite->setbeStrictAboutChangesToGlobalState((bool)$arguments['beStrictAboutChangesToGlobalState']);
         }
 
