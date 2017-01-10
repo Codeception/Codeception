@@ -36,6 +36,7 @@ use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\UselessFileDetector;
+use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
@@ -1057,12 +1058,17 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
+    /**
+     * @param RemoteWebElement[] $elements
+     * @param $value
+     * @return array
+     */
     protected function proceedSeeInField(array $elements, $value)
     {
         $strField = reset($elements)->getAttribute('name');
         if (reset($elements)->getTagName() === 'select') {
             $el = reset($elements);
-            $elements = $el->findElements(WebDriverBy::xpath('.//option[@selected]'));
+            $elements = $el->findElements(WebDriverBy::xpath('.//option'));
             if (empty($value) && empty($elements)) {
                 return ['True', true];
             }
@@ -1088,10 +1094,15 @@ class WebDriver extends CodeceptionModule implements
                         $currentValues[] = $el->getAttribute('value');
                     }
                     break;
-
+                case 'option':
+                    // no break we need the trim text and the value also
+                    if (!$el->isSelected()) {
+                        break;
+                    }
+                    $currentValues[] = $el->getText();
                 case 'textarea':
                     // we include trimmed and real value of textarea for check
-                    $currentValues[] = $el->getText(); // trimmed value
+                    $currentValues[] = trim($el->getText());
                 default:
                     $currentValues[] = $el->getAttribute('value'); // raw value
                     break;
@@ -1102,7 +1113,7 @@ class WebDriver extends CodeceptionModule implements
             'Contains',
             $value,
             $currentValues,
-            "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
+            "Failed testing for '$value' in $strField's value: '" . implode("', '", $currentValues) . "'"
         ];
     }
 
