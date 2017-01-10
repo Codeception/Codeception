@@ -6,7 +6,7 @@
 
 <form action="#a" method="post">
     <input name="field1" />
-    <input type="submit" value="Hash Form" />
+    <input type="submit" value="Hash Form" title="Hash Form Title" />
     <button type="submit" title="Hash Button Form"></button>
 </form>
 
