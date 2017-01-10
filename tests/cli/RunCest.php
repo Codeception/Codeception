@@ -202,7 +202,7 @@ class RunCest
         $I->dontSeeInShellOutput("PassingTest: Me");
     }
 
-    public function runWithCustomOuptutPath(\CliGuy $I)
+    public function runWithCustomOutputPath(\CliGuy $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
         $I->seeFileFound('myverycustom.xml', 'tests/_output');

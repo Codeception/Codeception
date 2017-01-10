@@ -47,7 +47,6 @@ class BootstrapCest
     {
         $I->executeCommand('bootstrap --empty');
         $I->dontSeeFileFound('tests/acceptance');
-        $I->dontSeeFileFound('AcceptanceTester.php', 'tests/acceptance');
         $I->seeFileFound('codeception.yml');
     }
     
