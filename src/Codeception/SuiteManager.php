@@ -142,6 +142,10 @@ class SuiteManager
         if (isset($this->settings['backup_globals'])) {
             $suite->setBackupGlobals((bool) $this->settings['backup_globals']);
         }
+
+        if (isset($this->settings['beStrictAboutChangesToGlobalState'])) {
+            $suite->setbeStrictAboutChangesToGlobalState((bool)$this->settings['beStrictAboutChangesToGlobalState']);
+        }
         $suite->setModules($this->moduleContainer->all());
         return $suite;
     }
