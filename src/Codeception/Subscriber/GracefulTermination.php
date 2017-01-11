@@ -18,8 +18,11 @@ class GracefulTermination implements EventSubscriberInterface
 
     public function handleSuite(SuiteEvent $event)
     {
-        if (PHP_MAJOR_VERSION === 7 and PHP_MINOR_VERSION === 0) {
-            return; // skip for PHP 7.0: https://github.com/Codeception/Codeception/issues/3607
+        if (PHP_MAJOR_VERSION === 7) {
+            if (PHP_MINOR_VERSION === 0) {
+                return; // skip for PHP 7.0: https://github.com/Codeception/Codeception/issues/3607
+            }
+            pcntl_async_signals(true);
         }
         if (function_exists(self::SIGNAL_FUNC)) {
             pcntl_signal(SIGTERM, [$this, 'terminate']);
