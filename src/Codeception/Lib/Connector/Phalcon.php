@@ -82,7 +82,7 @@ class Phalcon extends Client
         $pathString  = parse_url($uri, PHP_URL_PATH);
         $queryString = parse_url($uri, PHP_URL_QUERY);
 
-        $_SERVER = array_merge($_SERVER, $request->getServer());
+        $_SERVER = $request->getServer();
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_SERVER['REQUEST_URI'] = null === $queryString ? $pathString : $pathString . '?' . $queryString;
 
