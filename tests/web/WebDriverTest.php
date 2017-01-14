@@ -780,4 +780,68 @@ class WebDriverTest extends TestsForBrowsers
         $steps = $cept->getScenario()->getSteps();
         $this->assertEquals(0, count($steps));
     }
+
+    public function testMoveMouseOver()
+    {
+        $this->module->amOnPage('/form/click');
+
+        $this->module->moveMouseOver(null, 123, 88);
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 123 - offsetY: 88');
+
+        $this->module->moveMouseOver(null, 10, 10);
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 133 - offsetY: 98');
+
+        $this->module->moveMouseOver('#element2');
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 58 - offsetY: 158');
+
+        $this->module->moveMouseOver('#element2', 0, 0);
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 8 - offsetY: 108');
+    }
+
+    public function testLeftClick()
+    {
+        $this->module->amOnPage('/form/click');
+
+        $this->module->clickWithLeftButton(null, 123, 88);
+        $this->module->see('click, offsetX: 123 - offsetY: 88');
+
+        $this->module->clickWithLeftButton('body');
+        $this->module->see('click, offsetX: 600 - offsetY: 384');
+
+        $this->module->clickWithLeftButton('body', 50, 75);
+        $this->module->see('click, offsetX: 58 - offsetY: 83');
+
+        $this->module->clickWithLeftButton('body div');
+        $this->module->see('click, offsetX: 58 - offsetY: 58');
+
+        $this->module->clickWithLeftButton('#element2', 70, 75);
+        $this->module->see('click, offsetX: 78 - offsetY: 183');
+    }
+
+    public function testRightClick()
+    {
+        // actually not supported in phantomjs see https://github.com/ariya/phantomjs/issues/14005
+        $this->notForPhantomJS();
+
+        $this->module->amOnPage('/form/click');
+
+        $this->module->clickWithRightButton(null, 123, 88);
+        $this->module->see('context, offsetX: 123 - offsetY: 88');
+
+        $this->module->clickWithRightButton('body');
+        $this->module->see('context, offsetX: 600 - offsetY: 384');
+
+        $this->module->clickWithRightButton('body', 50, 75);
+        $this->module->see('context, offsetX: 58 - offsetY: 83');
+
+        $this->module->clickWithRightButton('body div');
+        $this->module->see('context, offsetX: 58 - offsetY: 58');
+
+        $this->module->clickWithRightButton('#element2', 70, 75);
+        $this->module->see('context, offsetX: 78 - offsetY: 183');
+    }
 }
