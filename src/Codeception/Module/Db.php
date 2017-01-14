@@ -181,6 +181,10 @@ class Db extends CodeceptionModule implements DbInterface
             $this->loadDump();
             $this->populated = true;
         }
+
+        if ($this->config['reconnect']) {
+            $this->disconnect();
+        }
     }
 
     private function readSql()
