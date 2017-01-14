@@ -76,7 +76,7 @@ settings:
     # See https://phpunit.de/manual/current/en/risky-tests.html#risky-tests.global-state-manipulation
     beStrictAboutChangesToGlobalState: false
     
-    # Log the incomplete ans skipped tests into junit report
+    # Log the incomplete and skipped tests into junit report
     # See https://phpunit.de/manual/current/en/appendixes.configuration.html 
     # Section logging > junit
     logIncompleteSkipped: false
