@@ -79,7 +79,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-zend-expressive $composer_parameters'
 
 before_script:
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
+  - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # preparing databases
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
