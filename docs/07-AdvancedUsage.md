@@ -193,7 +193,7 @@ Data is defined via the `@example` annotation, using JSON or Doctrine-style nota
 
 <div class="alert alert-notice">
 If you use JSON notation please keep in mind that all string keys
-and values should be enclosed in doble quotes " according to JSON standard.
+and values should be enclosed in double quotes " according to JSON standard.
 </div>
 
 You can pass key-value data as an example and use it in tests as well:
@@ -231,7 +231,9 @@ These examples can be written using Doctrine-style annotation syntax as well:
 ```
 
 You can also use the `@dataprovider` annotation for creating dynamic examples, using a protected method for providing example data:
+
 ```php
+<?php
    /**
     * @dataprovider pageProvider
     */
@@ -259,6 +261,7 @@ You can also use the `@dataprovider` annotation for creating dynamic examples, u
 Alternatively, the `@dataprovider` can also be a public method starting with `_` prefix so it will not be considered as a test:
 
 ```php
+<?php
    /**
     * @dataprovider _pageProvider
     */
@@ -536,7 +539,7 @@ Codeception reorders tests so dependent tests always will executed after the tes
 
 The interactive console was added to try Codeception commands before executing them inside a test.
 
-![console](http://img267.imageshack.us/img267/204/003nk.png)
+![console](http://codeception.com/images/console.png)
 
 You can run the console with the following command:
 
@@ -622,24 +625,30 @@ Feature: Admin area
 ### Group Files
 
 Groups can be defined in global or suite configuration files.
-Tests for groups can be specified as an array or as a path to a file containing a list of groups:
+Tests for groups can be specified as an array of file names or directories containing them:
 
 ```yaml
 groups:
   # add 2 tests to db group
   db: [tests/unit/PersistTest.php, tests/unit/DataTest.php]
-
-  # add list of tests to slow group
-  slow: tests/_data/slow
+  
+  # add all tests from a directory to api group
+  api: [tests/functional/api]
 ```
 
-For instance, you can create a file with the list of the slowest tests, and run them inside their own group.
-Group file is a plain text file with test names on separate lines:
+A list of tests for the group can be passed from a Group file. It should be defined in plain text with test names on separate lines:
 
 ```bash
 tests/unit/DbTest.php
 tests/unit/UserTest.php:create
 tests/unit/UserTest.php:update
+```
+A group file can be included by its relative filename:
+
+```yaml
+groups:
+  # requiring a group file
+  slow: tests/_data/slow.txt
 ```
 
 You can create group files manually or generate them from third party applications.
@@ -652,7 +661,8 @@ groups:
   p*: tests/_data/p*
 ```
 
-This will load all found `p*` files in `tests/_data` as groups.
+This will load all found `p*` files in `tests/_data` as groups. Group names will be as follows p1,p2,...,pN.
+
 
 ## Conclusion
 

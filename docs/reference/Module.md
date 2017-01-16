@@ -261,6 +261,16 @@ Checks that haystack contains needle
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L151)
 
+#### assertCount()
+
+ *protected* assertCount($expectedCount, $actual, $description = null) 
+
+ * `param` $expectedCount
+ * `param` $actual
+ * `param` $description
+
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L361)
+
 #### assertEmpty()
 
  *protected* assertEmpty($actual, $message = null) 
@@ -372,7 +382,7 @@ Checks that actual is greater or equal than expected
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L361)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L371)
 
 #### assertInternalType()
 
@@ -382,7 +392,7 @@ Checks that actual is greater or equal than expected
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L381)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L391)
 
 #### assertIsEmpty()
 
@@ -476,7 +486,7 @@ Checks that two variables are not equal
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L371)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L381)
 
 #### assertNotNull()
 
@@ -612,7 +622,7 @@ Fails the test with message.
 
  * `param` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L391)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Shared/Asserts.php#L401)
 
 #### getModule()
 

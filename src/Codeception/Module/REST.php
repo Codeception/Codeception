@@ -58,8 +58,7 @@ use Codeception\Util\Soap as XmlUtils;
 class REST extends CodeceptionModule implements DependsOnModule, PartedModule, API, ConflictsWithModule
 {
     protected $config = [
-        'url' => '',
-        'xdebug_remote' => false
+        'url' => ''
     ];
 
     protected $dependencyMessage = <<<EOF
@@ -92,15 +91,6 @@ EOF;
     {
         $this->client = &$this->connectionModule->client;
         $this->resetVariables();
-
-        if ($this->config['xdebug_remote']
-            && function_exists('xdebug_is_enabled')
-            && ini_get('xdebug.remote_enable')
-            && !$this->isFunctional
-        ) {
-            $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
-            $this->client->getCookieJar()->set($cookie);
-        }
     }
 
     protected function resetVariables()
@@ -762,6 +752,7 @@ EOF;
      * $I->seeResponseJsonMatchesXpath('/store//price');
      * ?>
      * ```
+     * @param string $xpath
      * @part json
      * @version 2.0.9
      */
@@ -772,6 +763,22 @@ EOF;
             0,
             (new JsonArray($response))->filterByXPath($xpath)->length,
             "Received JSON did not match the XPath `$xpath`.\nJson Response: \n" . $response
+        );
+    }
+
+    /**
+     * Opposite to seeResponseJsonMatchesXpath
+     *
+     * @param string $xpath
+     * @part json
+     */
+    public function dontSeeResponseJsonMatchesXpath($xpath)
+    {
+        $response = $this->connectionModule->_getResponseContent();
+        $this->assertEquals(
+            0,
+            (new JsonArray($response))->filterByXPath($xpath)->length,
+            "Received JSON matched the XPath `$xpath`.\nJson Response: \n" . $response
         );
     }
 
@@ -816,6 +823,7 @@ EOF;
      * ?>
      * ```
      *
+     * @param string $jsonPath
      * @part json
      * @version 2.0.9
      */
@@ -824,14 +832,14 @@ EOF;
         $response = $this->connectionModule->_getResponseContent();
         $this->assertNotEmpty(
             (new JsonArray($response))->filterByJsonPath($jsonPath),
-            "Received JSON did not match the JsonPath provided\n" . $response
+            "Received JSON did not match the JsonPath `$jsonPath`.\nJson Response: \n" . $response
         );
     }
 
     /**
      * Opposite to seeResponseJsonMatchesJsonPath
      *
-     * @param array $jsonPath
+     * @param string $jsonPath
      * @part json
      */
     public function dontSeeResponseJsonMatchesJsonPath($jsonPath)
@@ -839,7 +847,7 @@ EOF;
         $response = $this->connectionModule->_getResponseContent();
         $this->assertEmpty(
             (new JsonArray($response))->filterByJsonPath($jsonPath),
-            "Received JSON did (but should not) match the JsonPath provided\n" . $response
+            "Received JSON matched the JsonPath `$jsonPath`.\nJson Response: \n" . $response
         );
     }
 

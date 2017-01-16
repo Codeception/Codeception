@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Step;
 use Codeception\Util\Stub;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
@@ -739,5 +740,108 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/anchor');
         $this->module->click('Hash Form');
         $this->module->seeCurrentUrlEquals('/form/anchor#a');
+    }
+
+    public function testJSErrorLoggingPositive()
+    {
+        // arrange
+        $this->module->_setConfig(['log_js_errors' => true]);
+        $cept = new \Codeception\Test\Cept('foo', 'bar');
+
+        // act
+        $this->module->amOnPage('/jserroronload');
+        $this->module->_failed($cept, 'anyFailMessage');
+
+        // assert
+        /* @var $steps Step[]  */
+        $steps = $cept->getScenario()->getSteps();
+        $this->assertGreaterThan(0, count($steps));
+
+        $lastStep = end($steps);
+
+        $this->assertContains(
+            "TypeError",
+            $lastStep->getHtml()
+        );
+    }
+
+    public function testJSErrorLoggingNegative()
+    {
+        // arrange
+        $this->module->_setConfig(['log_js_errors' => false]);
+        $cept = new \Codeception\Test\Cept('foo', 'bar');
+
+        // act
+        $this->module->amOnPage('/jserroronload');
+        $this->module->_failed($cept, 'anyFailMessage');
+
+        // assert
+        /* @var $steps Step[]  */
+        $steps = $cept->getScenario()->getSteps();
+        $this->assertEquals(0, count($steps));
+    }
+
+    public function testMoveMouseOver()
+    {
+        $this->module->amOnPage('/form/click');
+
+        $this->module->moveMouseOver(null, 123, 88);
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 123 - offsetY: 88');
+
+        $this->module->moveMouseOver(null, 10, 10);
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 133 - offsetY: 98');
+
+        $this->module->moveMouseOver('#element2');
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 58 - offsetY: 158');
+
+        $this->module->moveMouseOver('#element2', 0, 0);
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 8 - offsetY: 108');
+    }
+
+    public function testLeftClick()
+    {
+        $this->module->amOnPage('/form/click');
+
+        $this->module->clickWithLeftButton(null, 123, 88);
+        $this->module->see('click, offsetX: 123 - offsetY: 88');
+
+        $this->module->clickWithLeftButton('body');
+        $this->module->see('click, offsetX: 600 - offsetY: 384');
+
+        $this->module->clickWithLeftButton('body', 50, 75);
+        $this->module->see('click, offsetX: 58 - offsetY: 83');
+
+        $this->module->clickWithLeftButton('body div');
+        $this->module->see('click, offsetX: 58 - offsetY: 58');
+
+        $this->module->clickWithLeftButton('#element2', 70, 75);
+        $this->module->see('click, offsetX: 78 - offsetY: 183');
+    }
+
+    public function testRightClick()
+    {
+        // actually not supported in phantomjs see https://github.com/ariya/phantomjs/issues/14005
+        $this->notForPhantomJS();
+
+        $this->module->amOnPage('/form/click');
+
+        $this->module->clickWithRightButton(null, 123, 88);
+        $this->module->see('context, offsetX: 123 - offsetY: 88');
+
+        $this->module->clickWithRightButton('body');
+        $this->module->see('context, offsetX: 600 - offsetY: 384');
+
+        $this->module->clickWithRightButton('body', 50, 75);
+        $this->module->see('context, offsetX: 58 - offsetY: 83');
+
+        $this->module->clickWithRightButton('body div');
+        $this->module->see('context, offsetX: 58 - offsetY: 58');
+
+        $this->module->clickWithRightButton('#element2', 70, 75);
+        $this->module->see('context, offsetX: 78 - offsetY: 183');
     }
 }

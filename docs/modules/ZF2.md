@@ -295,9 +295,10 @@ Give a locator as the second parameter to match a specific region.
 
 ```php
 <?php
-$I->dontSee('Login');                    // I can suppose user is already logged in
-$I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
-$I->dontSee('Sign Up','//body/h1');      // with XPath
+$I->dontSee('Login');                         // I can suppose user is already logged in
+$I->dontSee('Sign Up','h1');                  // I can suppose it's not a signup page
+$I->dontSee('Sign Up','//body/h1');           // with XPath
+$I->dontSee('Sign Up', ['css' => 'body h1']); // with strict CSS locator
 ```
 
 Note that the search is done after stripping all HTML tags from the body,
@@ -699,9 +700,10 @@ parameter to only search within that element.
 
 ``` php
 <?php
-$I->see('Logout');                 // I can suppose user is logged in
-$I->see('Sign Up', 'h1');          // I can suppose it's a signup page
-$I->see('Sign Up', '//body/h1');   // with XPath
+$I->see('Logout');                        // I can suppose user is logged in
+$I->see('Sign Up', 'h1');                 // I can suppose it's a signup page
+$I->see('Sign Up', '//body/h1');          // with XPath
+$I->see('Sign Up', ['css' => 'body h1']); // with strict CSS locator
 ```
 
 Note that the search is done after stripping all HTML tags from the body,

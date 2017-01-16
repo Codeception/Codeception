@@ -31,11 +31,9 @@ Checks that haystack contains needle
 
 ### assertCount
  
-Checks that number of elements in actual equals expected count
-
- * `param`        $expectedCount
- * `param`        $actual
- * `param string` $message
+ * `param` $expectedCount
+ * `param` $actual
+ * `param` $description
 
 
 ### assertEmpty

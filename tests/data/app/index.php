@@ -46,6 +46,7 @@ $urls = array(
     '/external_url' => 'external_url',
     '/iframe' => 'iframe',
     '/basehref' => 'basehref',
+    '/jserroronload' => 'jserroronload'
 );
 
 glue::stick($urls);

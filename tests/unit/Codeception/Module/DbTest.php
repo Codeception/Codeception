@@ -118,19 +118,24 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $testCase2 = \Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface');
 
         self::$module->_reconfigure(['reconnect' => true]);
-        $this->assertNotNull(self::$module->driver, 'driver is null before test');
-        $this->assertNotNull(self::$module->dbh, 'dbh is null before test');
 
-        self::$module->_after($testCase1);
+        self::$module->_initialize();
 
-        $this->assertNull(self::$module->driver, 'driver is not unset by _after');
-        $this->assertNull(self::$module->dbh, 'dbh is not unset by _after');
+        $this->assertNull(self::$module->driver, 'driver is not null after _initialize');
+        $this->assertNull(self::$module->dbh, 'dbh is not null after _initialize');
 
         self::$module->_before($testCase2);
 
         $this->assertNotNull(self::$module->driver, 'driver is not set by _before');
         $this->assertNotNull(self::$module->dbh, 'dbh is not set by _before');
 
+        self::$module->_after($testCase1);
+
+        $this->assertNull(self::$module->driver, 'driver is not unset by _after');
+        $this->assertNull(self::$module->dbh, 'dbh is not unset by _after');
+
         self::$module->_reconfigure(['reconnect' => false]);
+
+        self::$module->_initialize();
     }
 }

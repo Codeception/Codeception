@@ -312,7 +312,7 @@ or after the test is finished. This can be useful for bootstrap/cleanup actions.
 You can also define special behavior for when the test fails. This may help you in debugging the issue.
 For example, the PhpBrowser module saves the current webpage to the `tests/_output` directory when a test fails.
 
-All hooks are defined in `\Codeception\Module` and are listed here. You are free to redefine them in your module.
+All hooks are defined in [Codeception\Module](http://codeception.com/docs/reference/Commands) and are listed here. You are free to redefine them in your module.
 
 ```php
 <?php

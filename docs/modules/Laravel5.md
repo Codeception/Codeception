@@ -38,6 +38,7 @@ at <https://laravel.com/docs/master/upgrade>.
 * bootstrap: `string`, default `bootstrap/app.php` - relative path to app.php config file.
 * root: `string`, default `` - root path of the application.
 * packages: `string`, default `workbench` - root path of application packages (if any).
+* vendor_dir: `string`, default `vendor` - optional relative path to vendor directory.
 * disable_exception_handling: `boolean`, default `true` - disable Laravel exception handling.
 * disable_middleware: `boolean`, default `false` - disable all middleware.
 * disable_events: `boolean`, default `false` - disable events (does not disable model events).
@@ -415,9 +416,10 @@ Give a locator as the second parameter to match a specific region.
 
 ```php
 <?php
-$I->dontSee('Login');                    // I can suppose user is already logged in
-$I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
-$I->dontSee('Sign Up','//body/h1');      // with XPath
+$I->dontSee('Login');                         // I can suppose user is already logged in
+$I->dontSee('Sign Up','h1');                  // I can suppose it's not a signup page
+$I->dontSee('Sign Up','//body/h1');           // with XPath
+$I->dontSee('Sign Up', ['css' => 'body h1']); // with strict CSS locator
 ```
 
 Note that the search is done after stripping all HTML tags from the body,
@@ -1047,9 +1049,10 @@ parameter to only search within that element.
 
 ``` php
 <?php
-$I->see('Logout');                 // I can suppose user is logged in
-$I->see('Sign Up', 'h1');          // I can suppose it's a signup page
-$I->see('Sign Up', '//body/h1');   // with XPath
+$I->see('Logout');                        // I can suppose user is logged in
+$I->see('Sign Up', 'h1');                 // I can suppose it's a signup page
+$I->see('Sign Up', '//body/h1');          // with XPath
+$I->see('Sign Up', ['css' => 'body h1']); // with strict CSS locator
 ```
 
 Note that the search is done after stripping all HTML tags from the body,

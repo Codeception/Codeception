@@ -13,7 +13,7 @@ class ExtensionLoader implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     public static $events = [
-        Events::SUITE_INIT => 'registerSuiteExtensions',
+        Events::MODULE_INIT => 'registerSuiteExtensions',
         Events::SUITE_AFTER  => 'stopSuiteExtensions'
     ];
 

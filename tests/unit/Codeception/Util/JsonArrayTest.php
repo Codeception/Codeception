@@ -69,4 +69,28 @@ class JsonArrayTest extends \Codeception\Test\Unit
             . '<b><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></b><baz>2</baz>';
         $this->assertContains($expectedXml, $jsonArray->toXml()->saveXML());
     }
+
+    public function testConvertsArrayHavingSingleElement()
+    {
+        $jsonArray = new JsonArray('{"success": 1}');
+        $expectedXml = '<?xml version="1.0" encoding="UTF-8"?>'
+            . "\n<root><success>1</success></root>\n";
+        $this->assertEquals($expectedXml, $jsonArray->toXml()->saveXML());
+    }
+
+    public function testConvertsArrayHavingTwoElements()
+    {
+        $jsonArray = new JsonArray('{"success": 1, "info": "test"}');
+        $expectedXml = '<?xml version="1.0" encoding="UTF-8"?>'
+            . "\n<root><success>1</success><info>test</info></root>\n";
+        $this->assertEquals($expectedXml, $jsonArray->toXml()->saveXML());
+    }
+
+    public function testConvertsArrayHavingSingleSubArray()
+    {
+        $jsonArray = new JsonArray('{"array": {"success": 1}}');
+        $expectedXml = '<?xml version="1.0" encoding="UTF-8"?>'
+            . "\n<array><success>1</success></array>\n";
+        $this->assertEquals($expectedXml, $jsonArray->toXml()->saveXML());
+    }
 }
