@@ -184,7 +184,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->loadFixtures($test);
         }
 
-        if ($this->config['cleanup'] && $this->app->has('db')) {
+        if ($this->config['cleanup'] && $this->app->has('db') && $this->app->db instanceof \yii\db\Connection) {
             $this->transaction = $this->app->db->beginTransaction();
         }
     }
