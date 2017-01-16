@@ -181,6 +181,10 @@ class Db extends CodeceptionModule implements DbInterface
             $this->loadDump();
             $this->populated = true;
         }
+
+        if ($this->config['reconnect']) {
+            $this->disconnect();
+        }
     }
 
     private function readSql()
@@ -256,7 +260,7 @@ class Db extends CodeceptionModule implements DbInterface
             try {
                 $this->driver->deleteQueryByCriteria($row['table'], $row['primary']);
             } catch (\Exception $e) {
-                $this->debug("coudn't delete record " . json_encode($row['primary']) ." from {$row['table']}");
+                $this->debug("couldn't delete record " . json_encode($row['primary']) ." from {$row['table']}");
             }
         }
         $this->insertedRows = [];

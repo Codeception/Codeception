@@ -202,7 +202,7 @@ class RunCest
         $I->dontSeeInShellOutput("PassingTest: Me");
     }
 
-    public function runWithCustomOuptutPath(\CliGuy $I)
+    public function runWithCustomOutputPath(\CliGuy $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
         $I->seeFileFound('myverycustom.xml', 'tests/_output');
@@ -442,7 +442,7 @@ EOF
 
     public function runTestWithAnnotationDataprovider(CliGuy $I)
     {
-        $I->executeCommand('run scenario DataProviderCest --steps');
-        $I->seeInShellOutput('OK (10 tests');
+        $I->executeCommand('run scenario -g dataprovider --steps');
+        $I->seeInShellOutput('OK (15 tests');
     }
 }

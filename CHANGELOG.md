@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.2.8
+
+* [Laravel5] Added `seeNumRecords` and `grabNumRecords` methods. See #3816. By @dmoreno
+
 #### 2.2.7
 
 * **Config validation** with `codecept config:validate` command. Use it:

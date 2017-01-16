@@ -35,7 +35,7 @@ class Filesystem extends CodeceptionModule
      * Enters a directory In local filesystem.
      * Project root directory is used by default
      *
-     * @param $path
+     * @param string $path
      */
     public function amInPath($path)
     {
@@ -43,6 +43,10 @@ class Filesystem extends CodeceptionModule
         $this->debug('Moved to ' . getcwd());
     }
 
+    /**
+     * @param string $path
+     * @return string
+     */
     protected function absolutizePath($path)
     {
         // *nix way
@@ -69,11 +73,12 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $filename
+     * @param string $filename
      */
     public function openFile($filename)
     {
         $this->file = file_get_contents($this->absolutizePath($filename));
+        $this->filepath = $filename;
     }
 
     /**
@@ -85,7 +90,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $filename
+     * @param string $filename
      */
     public function deleteFile($filename)
     {
@@ -104,7 +109,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $dirname
+     * @param string $dirname
      */
     public function deleteDir($dirname)
     {
@@ -121,8 +126,8 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $src
-     * @param $dst
+     * @param string $src
+     * @param string $dst
      */
     public function copyDir($src, $dst)
     {
@@ -141,7 +146,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $text
+     * @param string $text
      */
     public function seeInThisFile($text)
     {
@@ -174,7 +179,7 @@ class Filesystem extends CodeceptionModule
     /**
      * Checks that contents of currently opened file matches $regex
      *
-     * @param $regex
+     * @param string $regex
      */
     public function seeThisFileMatches($regex)
     {
@@ -194,7 +199,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $text
+     * @param string $text
      */
     public function seeFileContentsEqual($text)
     {
@@ -212,7 +217,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $text
+     * @param string $text
      */
     public function dontSeeInThisFile($text)
     {
@@ -237,46 +242,74 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $filename
+     * @param string $filename
      * @param string $path
      */
     public function seeFileFound($filename, $path = '')
     {
-        if (file_exists($filename) and !$path) {
+        if ($path === '' && file_exists($filename)) {
             $this->openFile($filename);
-            $this->filepath = $filename;
-            $this->debug($filename);
-            \PHPUnit_Framework_Assert::assertFileExists($path . $filename);
+            \PHPUnit_Framework_Assert::assertFileExists($filename);
             return;
         }
 
-        $path = $this->absolutizePath($path);
-        $this->debug($path);
-        if (!file_exists($path)) {
-            $this->fail("Directory does not exist: $path");
+        $found = $this->findFileInPath($filename, $path);
+
+        if ($found === false) {
+            $this->fail("File \"$filename\" not found at \"$path\"");
         }
 
-        $files = Finder::create()->files()->name($filename)->in($path);
-        foreach ($files as $file) {
-            $file = $file->getRealPath();
-            $this->openFile($file);
-            $this->filepath = $file;
-            $this->debug($file);
-            \PHPUnit_Framework_Assert::assertFileExists($file);
-            return;
-        }
-        $this->fail("File \"$filename\" not found at \"$path\"");
+        $this->openFile($found);
+        \PHPUnit_Framework_Assert::assertFileExists($found);
     }
 
     /**
      * Checks if file does not exist in path
      *
-     * @param $filename
+     * @param string $filename
      * @param string $path
      */
     public function dontSeeFileFound($filename, $path = '')
     {
-        \PHPUnit_Framework_Assert::assertFileNotExists($path . $filename);
+        if ($path === '') {
+            \PHPUnit_Framework_Assert::assertFileNotExists($filename);
+            return;
+        }
+
+        $found = $this->findFileInPath($filename, $path);
+
+        if ($found === false) {
+            //this line keeps a count of assertions correct
+            \PHPUnit_Framework_Assert::assertTrue(true);
+            return;
+        }
+
+        \PHPUnit_Framework_Assert::assertFileNotExists($found);
+    }
+
+    /**
+     * Finds the first matching file
+     *
+     * @param string $filename
+     * @param string $path
+     * @throws \PHPUnit_Framework_AssertionFailedError When path does not exist
+     * @return string|false Path to the first matching file
+     */
+    private function findFileInPath($filename, $path)
+    {
+        $path = $this->absolutizePath($path);
+        if (!file_exists($path)) {
+            $this->fail("Directory does not exist: $path");
+        }
+
+        $files = Finder::create()->files()->name($filename)->in($path);
+        if ($files->count() === 0) {
+            return false;
+        }
+
+        foreach ($files as $file) {
+            return $file->getRealPath();
+        }
     }
 
 
@@ -289,7 +322,7 @@ class Filesystem extends CodeceptionModule
      * ?>
      * ```
      *
-     * @param $dirname
+     * @param string $dirname
      */
     public function cleanDir($dirname)
     {
@@ -300,8 +333,8 @@ class Filesystem extends CodeceptionModule
     /**
      * Saves contents to file
      *
-     * @param $filename
-     * @param $contents
+     * @param string $filename
+     * @param string $contents
      */
     public function writeToFile($filename, $contents)
     {

@@ -4,6 +4,7 @@ use Codeception\Example;
 class DataProviderCest
 {
      /**
+      * @group dataprovider
       * @dataprovider __exampleDataSource
       */
       public function withDataProvider(ScenarioGuy $I, Example $example)
@@ -13,6 +14,7 @@ class DataProviderCest
       }
 
       /**
+       * @group dataprovider
        * @dataprovider protectedDataSource
        */
        public function withProtectedDataProvider(ScenarioGuy $I, Example $example)
@@ -22,6 +24,7 @@ class DataProviderCest
        }
 
       /**
+       * @group dataprovider
        * @dataprovider __exampleDataSource
        * @example(path=".", file="skipped.suite.yml")
        */
@@ -29,6 +32,26 @@ class DataProviderCest
        {
            $I->amInPath($example['path']);
            $I->seeFileFound($example['file']);
+       }
+
+       /**
+        * @group dataprovider
+        * @depends Codeception\Demo\Depends\DependencyForCest:forTestPurpose
+        * @dataprovider protectedDataSource
+        */
+       public function testDependsWithDataProvider(ScenarioGuy $I, Example $example)
+       {
+           $I->amInPath($example['path']);
+           $I->seeFileFound($example['file']);
+       }
+
+       /**
+        * @group dataprovider
+        * @depends DataProviderCest:testDependsWithDataProvider
+        */
+       public function testDependsOnTestWithDataProvider()
+       {
+           return true;
        }
 
       /**

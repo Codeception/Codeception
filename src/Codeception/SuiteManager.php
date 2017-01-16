@@ -111,8 +111,9 @@ class SuiteManager
 
         if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
             foreach ($test->tests() as $t) {
-                $this->configureTest($t);
+                $this->addToSuite($t);
             }
+            return;
         }
         if ($test instanceof TestInterface) {
             $this->checkEnvironmentExists($test);
@@ -122,15 +123,6 @@ class SuiteManager
         }
 
         $groups = $this->groupManager->groupsForTest($test);
-
-        // registering group for data providers
-        if (!empty($groups) && $test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
-            $groupDetails = [];
-            foreach ($groups as $group) {
-                $groupDetails[$group] = $test->getGroupDetails()['default'];
-            }
-            $test->setGroupDetails($groupDetails);
-        }
 
         $this->suite->addTest($test, $groups);
 

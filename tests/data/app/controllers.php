@@ -252,3 +252,9 @@ class basehref {
         include __DIR__.'/view/basehref.php';
     }
 }
+
+class jserroronload {
+    function GET() {
+        include __DIR__.'/view/jserroronload.php';
+    }
+}

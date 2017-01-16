@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Util;
 
 class Stub
@@ -521,7 +522,7 @@ class Stub
                 $reflectionClass = $reflectionClass->getParentClass();
             }
         }
-        
+
         foreach ($params as $param => $value) {
             // redefine method
             if ($reflectionClass->hasMethod($param)) {
@@ -764,49 +765,5 @@ class Stub
     public static function consecutive()
     {
         return new ConsecutiveMap(func_get_args());
-    }
-}
-
-/**
- * Holds matcher and value of mocked method
- */
-class StubMarshaler
-{
-    private $methodMatcher;
-
-    private $methodValue;
-
-    public function __construct(\PHPUnit_Framework_MockObject_Matcher_InvokedRecorder $matcher, $value)
-    {
-        $this->methodMatcher = $matcher;
-        $this->methodValue = $value;
-    }
-
-    public function getMatcher()
-    {
-        return $this->methodMatcher;
-    }
-
-    public function getValue()
-    {
-        return $this->methodValue;
-    }
-}
-
-/**
- * Holds the Consecutive Map for matching
- */
-class ConsecutiveMap
-{
-    private $consecutiveMap = [];
-
-    public function __construct(array $consecutiveMap)
-    {
-        $this->consecutiveMap = $consecutiveMap;
-    }
-
-    public function getMap()
-    {
-        return $this->consecutiveMap;
     }
 }
