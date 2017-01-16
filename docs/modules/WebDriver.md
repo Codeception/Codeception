@@ -714,7 +714,7 @@ Fills a text field or textarea with the given string.
 ``` php
 <?php
 $I->fillField("//input[ * `type='text']",`  "Hello World!");
-$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
+$I->fillField(['name' => 'email'], 'jon@mail.com');
 ?>
 ```
 
