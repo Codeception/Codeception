@@ -645,7 +645,7 @@ tests/unit/UserTest.php:update
 ```
 A group file can be included by its relative filename:
 
-```
+```yaml
 groups:
   # requiring a group file
   slow: tests/_data/slow.txt
