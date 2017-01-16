@@ -8,6 +8,9 @@ php:
 
 matrix:
   include:
+    - php: hhvm
+      dist: trusty
+      group: edge
     - php: 5.4 # lowest versions of all dependencies
       env: PHALCON=2.1.x SYMFONY=2.7.19 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.7.*
     - php: 5.5
