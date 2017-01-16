@@ -58,8 +58,7 @@ use Codeception\Util\Soap as XmlUtils;
 class REST extends CodeceptionModule implements DependsOnModule, PartedModule, API, ConflictsWithModule
 {
     protected $config = [
-        'url' => '',
-        'xdebug_remote' => false
+        'url' => ''
     ];
 
     protected $dependencyMessage = <<<EOF
@@ -92,15 +91,6 @@ EOF;
     {
         $this->client = &$this->connectionModule->client;
         $this->resetVariables();
-
-        if ($this->config['xdebug_remote']
-            && function_exists('xdebug_is_enabled')
-            && ini_get('xdebug.remote_enable')
-            && !$this->isFunctional
-        ) {
-            $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
-            $this->client->getCookieJar()->set($cookie);
-        }
     }
 
     protected function resetVariables()
