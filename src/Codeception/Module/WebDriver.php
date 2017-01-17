@@ -1489,6 +1489,7 @@ class WebDriver extends CodeceptionModule implements
      * ```
      *
      * @param $selector
+     * @param array $attributes
      */
     public function seeElementInDOM($selector, $attributes = [])
     {
@@ -1502,6 +1503,7 @@ class WebDriver extends CodeceptionModule implements
      * Opposite of `seeElementInDOM`.
      *
      * @param $selector
+     * @param array $attributes
      */
     public function dontSeeElementInDOM($selector, $attributes = [])
     {
@@ -1629,6 +1631,8 @@ class WebDriver extends CodeceptionModule implements
      * as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
      *
      * @param $text
+     *
+     * @throws \Codeception\Exception\ModuleException
      */
     public function seeInPopup($text)
     {
@@ -1642,6 +1646,8 @@ class WebDriver extends CodeceptionModule implements
      * Enters text into a native JavaScript prompt popup, as created by `window.prompt`.
      *
      * @param $keys
+     *
+     * @throws \Codeception\Exception\ModuleException
      */
     public function typeInPopup($keys)
     {
