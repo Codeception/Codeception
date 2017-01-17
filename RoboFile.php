@@ -341,7 +341,7 @@ class RoboFile extends \Robo\Tasks
                     $text = str_replace('@part ', ' * `[Part]` ', $text);
                     $text = str_replace("@return mixed\n", '', $text);
                     $text = preg_replace('~@return (.*?)~', ' * `return` $1', $text);
-                    $text = preg_replace("~@(.*?)([$\s])~", ' * `$1` $2', $text);
+                    $text = preg_replace("~^@(.*?)([$\s])~", ' * `$1` $2', $text);
                     return $title . $text;
                 })->processMethodSignature(false)
                 ->reorderMethods('ksort')

@@ -128,7 +128,7 @@ Get facebook test user be created.
 Get facebook test user be logged in on facebook.
 This is done by going to facebook.com
 
- * `throws`  ModuleConfigException
+@throws ModuleConfigException
 
 
 ### postToFacebookAsTestUser
