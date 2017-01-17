@@ -96,7 +96,6 @@ class HTML extends CodeceptionResultPrinter
         }
 
         $stepsBuffer = '';
-        $subStepsBuffer = '';
         $subStepsRendered = [];
 
         foreach ($steps as $step) {
@@ -141,11 +140,11 @@ class HTML extends CodeceptionResultPrinter
         if ($test instanceof TestInterface) {
             $reports = $test->getMetadata()->getReports();
             if (isset($reports['png'])) {
-                $localPath = PathResolver::getRelativeDir($reports['png'], codecept_data_dir());
+                $localPath = PathResolver::getRelativeDir($reports['png'], codecept_output_dir());
                 $png = "<tr><td class='error'><div class='screenshot'><img src='$localPath' alt='failure screenshot'></div></td></tr>";
             }
             if (isset($reports['html'])) {
-                $localPath = PathResolver::getRelativeDir($reports['html'], codecept_data_dir());
+                $localPath = PathResolver::getRelativeDir($reports['html'], codecept_output_dir());
                 $html = "<tr><td class='error'>See <a href='$localPath' target='_blank'>HTML snapshot</a> of a failed page</td></tr>";
             }
 
