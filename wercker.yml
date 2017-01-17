@@ -1,14 +1,23 @@
 box: hhvm/hhvm-proxygen
 # Build definition
 
-services:
-  - redis
-
 build:
   # The steps that will be executed on build
   steps:
+    - script:
+        name: disable interactive install
+        code: |
+          export DEBIAN_FRONTEND=noninteractive
     - install-packages:
-      packages: curl git
+      packages: curl git mysql-server mysql-server-5.5 redis-server postgresql
+    - script:
+        name: start database servers
+        code: |
+          /etc/init.d/mysql start
+          /etc/init.d/redis-server start
+          sed -i "s/ peer/ trust/g" /etc/postgresql/*/main/pg_hba.conf
+          sed -i "s/ md5/ trust/g" /etc/postgresql/*/main/pg_hba.conf
+          /etc/init.d/postgresql start
     - script:
         name: install composer
         code: |
@@ -27,6 +36,11 @@ build:
           hhvm -m server -c tests/data/app/hhvm-server.ini -c /etc/hhvm/site.ini &
           echo "hhvm.server.source_root=${WERCKER_ROOT}/tests/data/rest" >> tests/data/rest/hhvm-server.ini
           hhvm -m server -c tests/data/rest/hhvm-server.ini -c /etc/hhvm/site.ini &
+    - script:
+        name: prepare databases
+        code: |
+          mysql -e 'create database codeception_test;'
+          su postgres -c "psql -c 'create database codeception_test;' -U postgres"
 
     # A custom script step, name value is used in the UI
     # and the code value contains the command that get executed
@@ -34,4 +48,3 @@ build:
         name: codeception tests
         code: |
           php codecept run cli,unit
-
