@@ -81,7 +81,7 @@ before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # preparing databases
   - "mysql -e 'create database codeception_test;'"
-  - psql -c 'create database codeception_test;'
+  - psql -c 'create database codeception_test;' -U postgres
   # starting demo servers
   - 'php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &'
   - 'php -S 127.0.0.1:8010 -t tests/data >/dev/null 2>&1 &'
