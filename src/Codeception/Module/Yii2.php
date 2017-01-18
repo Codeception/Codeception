@@ -213,6 +213,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         foreach ($this->loadedFixtures as $fixture) {
             $fixture->unloadFixtures();
         }
+        $this->loadedFixtures = [];
 
         if ($this->transaction && $this->config['cleanup']) {
             $this->transaction->rollback();
