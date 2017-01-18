@@ -96,6 +96,7 @@ class HTML extends CodeceptionResultPrinter
         }
 
         $stepsBuffer = '';
+        $subStepsBuffer = '';
         $subStepsRendered = [];
 
         foreach ($steps as $step) {
