@@ -651,10 +651,31 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/textarea');
         //make sure we see 'sunrise' which is the default text in the textarea
         $this->module->seeInField('#description', 'sunrise');
+
+        if ($this->notForSelenium()) {
+            $this->module->seeInField('#whitespaces', '        no_whitespaces    ');
+        }
+        $this->module->seeInField('#whitespaces', 'no_whitespaces');
+
         //fill in some new text and see if we can see it
         $textarea_value = 'test string';
         $this->module->fillField('#description', $textarea_value);
         $this->module->seeInField('#description', $textarea_value);
+    }
+
+    public function testSeeInFieldSelect()
+    {
+        $this->module->amOnPage('/form/select_second');
+
+        if ($this->notForSelenium()) {
+            $this->module->seeInField('#select2', '        no_whitespaces    ');
+        }
+        $this->module->seeInField('#select2', 'no_whitespaces');
+
+        // select new option and check it
+        $option_value = 'select2_value1';
+        $this->module->selectOption('#select2', $option_value);
+        $this->module->seeInField('#select2', $option_value);
     }
 
     public function testAppendFieldDiv()
@@ -701,6 +722,13 @@ class WebDriverTest extends TestsForBrowsers
     {
         if ($this->module->_getConfig('browser') == 'phantomjs') {
             $this->markTestSkipped('does not work for phantomjs');
+        }
+    }
+
+    protected function notForSelenium()
+    {
+        if ($this->module->_getConfig('browser') != 'phantom') {
+            $this->markTestSkipped('does not work for selenium');
         }
     }
 
