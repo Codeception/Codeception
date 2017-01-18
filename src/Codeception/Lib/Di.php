@@ -112,8 +112,12 @@ class Di
         try {
             $args = $this->prepareArgs($reflectedMethod, $defaults);
         } catch (\Exception $e) {
+            $msg = $e->getMessage();
+            if($e->getPrevious()){ // injection failed because PHP code is invalid. See #3869
+                $msg .= '; '. $e->getPrevious();
+            }
             throw new InjectionException(
-                "Failed to inject dependencies in instance of '{$reflectedObject->name}'. " . $e->getMessage()
+                "Failed to inject dependencies in instance of '{$reflectedObject->name}'. $msg"
             );
         }
 
