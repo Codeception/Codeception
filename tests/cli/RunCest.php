@@ -425,6 +425,15 @@ EOF
         $I->dontSeeInShellOutput('............Ok');
     }
 
+    public function overrideModuleOptions(CliGuy $I)
+    {
+        $I->executeCommand('run powers --no-exit');
+        $I->seeInShellOutput('FAILURES');
+        $I->executeCommand('run powers -o "modules: config: PowerHelper: has_power: true" --no-exit');
+        $I->dontSeeInShellOutput('FAILURES');
+    }
+
+
     public function runTestWithAnnotationExamplesFromGroupFileTest(CliGuy $I)
     {
         $I->executeCommand('run scenario -g groupFileTest1 --steps');
