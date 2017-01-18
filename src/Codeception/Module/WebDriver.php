@@ -2751,4 +2751,88 @@ class WebDriver extends CodeceptionModule implements
         $y = $el->getLocation()->getY() + $offsetY;
         $this->webDriver->executeScript("window.scrollTo($x, $y)");
     }
+
+    /**
+     * Opens a new browser tab (wherever it is possible) and switches to it.
+     *
+     * ```php
+     * <?php
+     * $I->openNewTab();
+     * ```
+     * Tab is opened by sending `ctrl-t` key into browser.
+     * If ctrl-t does not open a tab in current browser, nothing happens.
+     *
+     */
+    public function openNewTab()
+    {
+        $this->pressKey('body', array('ctrl','t'));
+        $this->switchToNextTab();
+    }
+
+    /**
+     * Closes current browser tab and switches to previous active tab.
+     *
+     * ```php
+     * <?php
+     * $I->closeTab();
+     * ```
+     */
+    public function closeTab()
+    {
+        $prevTab = $this->getRelativeTabHandle(-1);
+        $this->webDriver->close();
+        $this->webDriver->switchTo()->window($prevTab);
+    }
+
+    /**
+     * Switches to next browser tab.
+     * An offset can be specified.
+     *
+     * ```php
+     * <?php
+     * // switch to next tab
+     * $I->switchToNextTab();
+     * // switch to 2nd next tab
+     * $I->switchToNextTab();
+     * ```
+     *
+     * @param int $offset 1
+     */
+    public function switchToNextTab($offset = 1)
+    {
+        $tab = $this->getRelativeTabHandle($offset);
+        $this->webDriver->switchTo()->window($tab);
+    }
+
+    /**
+     * Switches to next browser tab.
+     * An offset can be specified.
+     *
+     * ```php
+     * <?php
+     * // switch to previous tab
+     * $I->switchToNextTab();
+     * // switch to 2nd previous tab
+     * $I->switchToNextTab(-2);
+     * ```
+     *
+     * @param int $offset 1
+     */
+    public function switchToPreviousTab($offset = 1)
+    {
+        $this->switchToNextTab(0 - $offset);
+    }
+
+    protected function getRelativeTabHandle($offset)
+    {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, "PhantomJS doesn't support tab actions");
+        }
+        $handle = $this->webDriver->getWindowHandle();
+        $handles = $this->webDriver->getWindowHandles();
+        $idx = array_search($handle, $handles);
+        return $handles[($idx + $offset) % count($handles)];
+    }
+
+
 }
