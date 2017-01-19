@@ -154,7 +154,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `browser` *required* - Browser to launch.
  * * `host` - Selenium server host (127.0.0.1 by default).
  * * `port` - Selenium server port (4444 by default).
- * * `restart` - Set to false (default) to share browser session between tests, or set to true to create a separate session for each test.
+ * * `restart` - Set to false (default) to share browser window between tests, or set to true to create a separate window for each test.
  * * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
  * * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * `wait` - Implicit wait (default 0 seconds).
