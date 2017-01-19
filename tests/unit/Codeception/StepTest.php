@@ -98,6 +98,16 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('am on url "http://www.example.org/test"', $output);
     }
 
+    public function testNoArgs()
+    {
+        $step = $this->getStep(['acceptPopup', []]);
+        $output = $step->toString(200);
+        $this->assertEquals('accept popup ', $output);
+        $output = $step->toString(-5);
+        $this->assertEquals('accept popup ', $output);
+
+    }
+
     public function testSeeMultiLineStringInSingleLine()
     {
         $step = $this->getStep(['see', ["aaaa\nbbbb\nc"]]);
