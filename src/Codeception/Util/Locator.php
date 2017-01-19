@@ -214,7 +214,7 @@ class Locator
     }
 
     /**
-     * Checks that string and CSS selector for element by ID
+     * Checks that a string is valid CSS ID
      *
      * @param $id
      *
@@ -223,6 +223,18 @@ class Locator
     public static function isID($id)
     {
         return (bool)preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
+    }
+
+    /**
+     * Checks that a string is valid CSS class
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public static function isClass($class)
+    {
+        return (bool)preg_match('~^\.[\w\.\-\[\]\=\^\~\:]+$~', $class);
     }
 
     /**
