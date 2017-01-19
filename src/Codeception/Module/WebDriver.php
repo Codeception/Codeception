@@ -2765,7 +2765,7 @@ class WebDriver extends CodeceptionModule implements
      */
     public function openNewTab()
     {
-        $this->pressKey('body', array('ctrl','t'));
+        $this->executeJS("window.open('about:blank','_blank');");
         $this->switchToNextTab();
     }
 
