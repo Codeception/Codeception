@@ -100,7 +100,7 @@ abstract class Step
             $totalLength += mb_strlen($stringifiedArgument, 'utf-8');
         }
 
-        if ($totalLength > $maxLength) {
+        if ($totalLength > $maxLength && $maxLength > 0) {
             //sort arguments from shortest to longest
             uasort($arguments, function ($arg1, $arg2) {
                 $length1 = mb_strlen($arg1, 'utf-8');
