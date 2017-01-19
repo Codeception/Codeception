@@ -872,4 +872,28 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->clickWithRightButton('#element2', 70, 75);
         $this->module->see('context, offsetX: 78 - offsetY: 183');
     }
+
+    public function testBrowserTabs()
+    {
+        $this->notForPhantomJS();
+        $this->module->amOnPage('/form/example1');
+        $this->module->openNewTab();
+        $this->module->amOnPage('/form/example2');
+        $this->module->openNewTab();
+        $this->module->amOnPage('/form/example3');
+        $this->module->openNewTab();
+        $this->module->amOnPage('/form/example4');
+        $this->module->openNewTab();
+        $this->module->amOnPage('/form/example5');
+        $this->module->closeTab();
+        $this->module->seeInCurrentUrl('example4');
+        $this->module->switchToPreviousTab(2);
+        $this->module->seeInCurrentUrl('example2');
+        $this->module->switchToNextTab();
+        $this->module->seeInCurrentUrl('example3');
+        $this->module->closeTab();
+        $this->module->seeInCurrentUrl('example2');
+        $this->module->switchToNextTab(2);
+        $this->module->seeInCurrentUrl('example1');
+    }
 }
