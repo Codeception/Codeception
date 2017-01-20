@@ -2115,7 +2115,9 @@ class WebDriver extends CodeceptionModule implements
      * ?>
      * ```
      *
-     * If the window has no name, the only way to access it is via the `executeInSelenium()` method, like so:
+     * If the window has no name, match it by switching to next active tab using `switchToNextTab` method.
+     *
+     * Or use native Selenium functions to get access to all opened windows:
      *
      * ``` php
      * <?php
@@ -2763,8 +2765,10 @@ class WebDriver extends CodeceptionModule implements
      * <?php
      * $I->openNewTab();
      * ```
-     * Tab is opened by sending `ctrl-t` key into browser.
-     * If ctrl-t does not open a tab in current browser, nothing happens.
+     * Tab is opened by using `window.open` javascript in a browser.
+     * Please note, that adblock can restrict creating such tabs.
+     *
+     * Can't be used with PhantomJS
      *
      */
     public function openNewTab()
@@ -2780,6 +2784,8 @@ class WebDriver extends CodeceptionModule implements
      * <?php
      * $I->closeTab();
      * ```
+     *
+     * Can't be used with PhantomJS
      */
     public function closeTab()
     {
@@ -2797,8 +2803,10 @@ class WebDriver extends CodeceptionModule implements
      * // switch to next tab
      * $I->switchToNextTab();
      * // switch to 2nd next tab
-     * $I->switchToNextTab();
+     * $I->switchToNextTab(2);
      * ```
+     *
+     * Can't be used with PhantomJS
      *
      * @param int $offset 1
      */
@@ -2819,6 +2827,8 @@ class WebDriver extends CodeceptionModule implements
      * // switch to 2nd previous tab
      * $I->switchToNextTab(-2);
      * ```
+     *
+     * Can't be used with PhantomJS
      *
      * @param int $offset 1
      */
