@@ -756,6 +756,16 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/form/anchor#b');
     }
 
+    /**
+     * @Issue 3865
+     */
+    public function testClickNumericLink()
+    {
+        $this->module->amOnPage('/form/bug3865');
+        $this->module->click('222');
+        $this->module->see('Welcome to test app');
+    }
+
     public function testClickHashButton()
     {
         $this->module->amOnPage('/form/anchor');
