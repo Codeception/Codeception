@@ -2,12 +2,12 @@
 
 #### 2.2.8
 
-* [WebDriver] added tab actions (not supported in PhantomJS):
+* [WebDriver] Added tab actions (not supported in PhantomJS):
   * `openNewTab` opens a new tab and switches to it
   * `closeTab` closes a tab and switches to previous
   * `switchToNextTab` switches to next tab 
   * `switchToPreviousTab` switches to previous tab
-* [WebDriver] added actions to click element by coordinates. Via @gimler
+* [WebDriver] Added actions to click element by coordinates. Via @gimler
   * `clickWithLeftButton` clicks element with offset
   * `clickWithRightButton` right clicks on element with offset 
 * [WebDriver] Added `js_error_logging` option to print JS logs in console and in HTML report by @ngraf. See #3821
@@ -17,6 +17,7 @@
   * fix bug seeInField not working after selectOption
 * [Wedriver] `pageload_timeout` config option added. The amount of time to wait for a page load to complete before throwing an error. This patch allows to reduce issues from phantomjs random freezing. See #3874. Thanks to @oprudkyi
 * [WebDriver] `checkOption` can check option by name #3852. By @gimler
+* [WebDriver] Fixed clicking numerical links, like `<a href='/'>222</a>` (DOM Exception 12 errors). See #3865. By @gimler
 * [PhpBrowser][Frameworks] Fixed #3824 when submitForm used wrong value for `select` by @JorisVanEijden
 * [Laravel5] Added `seeNumRecords` and `grabNumRecords` methods. See #3816. By @dmoreno
 * Improved `@depends` to work with `@dataprovider`. Fixes #3862. Thanks @edno
