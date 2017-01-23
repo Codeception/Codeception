@@ -172,6 +172,8 @@ EOF;
      * ```
      *
      * @param string $name the name of the header to delete.
+     * @part json
+     * @part xml
      */
     public function deleteHeader($name)
     {
