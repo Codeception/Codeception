@@ -76,12 +76,28 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseContainsJson(['name' => 'john']);
     }
 
+    public function testPostWithPresetData()
+    {
+        $this->module->params = ['name' => 'david'];
+        $this->module->sendPost('/rest/user/');
+        $this->module->seeResponseContains('david');
+        $this->module->seeResponseContainsJson(['name' => 'david']);
+    }
+
     public function testPut()
     {
         $this->module->sendPUT('/rest/user/', ['name' => 'laura']);
         $this->module->seeResponseContains('davert@mail.ua');
         $this->module->seeResponseContainsJson(['name' => 'laura']);
         $this->module->dontSeeResponseContainsJson(['name' => 'john']);
+    }
+
+    public function testPutWithPresetData()
+    {
+        $this->module->params = ['name' => 'david'];
+        $this->module->sendPut('/rest/user/');
+        $this->module->seeResponseContains('david');
+        $this->module->seeResponseContainsJson(['name' => 'david']);
     }
 
     public function testGrabDataFromResponseByJsonPath()
