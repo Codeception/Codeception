@@ -175,7 +175,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class']]);
         }
 
-        if (isset($this->app['db']) && $this->config['cleanup']) {
+        if ($this->applicationUsesDatabase() && $this->config['cleanup']) {
             $this->app['db']->beginTransaction();
         }
     }
@@ -187,6 +187,10 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function _after(\Codeception\TestInterface $test)
     {
+        if (! $this->applicationUsesDatabase()) {
+            return;
+        }
+
         if (isset($this->app['db']) && $this->config['cleanup']) {
             $this->app['db']->rollback();
         }
@@ -195,6 +199,16 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         if (isset($this->app['db'])) {
             $this->app['db']->disconnect();
         }
+    }
+
+    /**
+     * Does the application use the database?
+     *
+     * @return bool
+     */
+    private function applicationUsesDatabase()
+    {
+        return ! empty($this->app['config']['database.default']);
     }
 
     /**
