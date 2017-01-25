@@ -79,12 +79,12 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
         $result->convertErrorsToExceptions(false);
 
-        if ($arguments['reportUselessTests']) {
-            $result->beStrictAboutTestsThatDoNotTestAnything((bool)$arguments['reportUselessTests']);
+        if ($arguments['report_useless_tests']) {
+            $result->beStrictAboutTestsThatDoNotTestAnything((bool)$arguments['report_useless_tests']);
         }
 
-        if ($arguments['disallowTestOutput']) {
-            $result->beStrictAboutOutputDuringTests((bool)$arguments['disallowTestOutput']);
+        if ($arguments['disallow_test_output']) {
+            $result->beStrictAboutOutputDuringTests((bool)$arguments['disallow_test_output']);
         }
 
 
@@ -145,7 +145,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             codecept_debug('Printing JUNIT report into ' . $arguments['xml']);
             self::$persistentListeners[] = $this->instantiateReporter(
                 'xml',
-                [$this->absolutePath($arguments['xml']), (bool)$arguments['logIncompleteSkipped']]
+                [$this->absolutePath($arguments['xml']), (bool)$arguments['log_incomplete_skipped']]
             );
         }
         if ($arguments['tap']) {

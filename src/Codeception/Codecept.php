@@ -42,7 +42,7 @@ class Codecept
         'steps'                             => false,
         'html'                              => false,
         'xml'                               => false,
-        'logIncompleteSkipped'              => false,
+        'log_incomplete_skipped'              => false,
         'json'                              => false,
         'tap'                               => false,
         'report'                            => false,
@@ -61,9 +61,9 @@ class Codecept
         'interactive'                       => true,
         'no-rebuild'                        => false,
         'quiet'                             => false,
-        'reportUselessTests'                => false,
-        'disallowTestOutput'                => false,
-        'beStrictAboutChangesToGlobalState' => false
+        'report_useless_tests'                => false,
+        'disallow_test_output'                => false,
+        'be_strict_about_changes_to_global_state' => false
     ];
 
     protected $config = [];
