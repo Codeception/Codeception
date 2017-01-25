@@ -116,7 +116,7 @@ script:
   - php codecept run cli,unit # self tests
   - 'php codecept run coverage'  # run coverage tests on php only
   - php codecept run functional -c frameworks-yii-basic # Yii2 tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-l5 --skip=seeder' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "7.1" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
   - '[[ -z "$SYMFONY" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle '# Symfony Tests
