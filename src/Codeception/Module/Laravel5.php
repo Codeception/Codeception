@@ -12,6 +12,7 @@ use Codeception\Subscriber\ErrorHandler;
 use Codeception\Util\ReflectionHelper;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Collection;
 
 /**
  *
@@ -220,8 +221,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     protected function registerAutoloaders()
     {
         require $this->config['project_dir'] . $this->config['vendor_dir'] . DIRECTORY_SEPARATOR . 'autoload.php';
-
-        \Illuminate\Support\ClassLoader::register();
     }
 
     /**
@@ -1173,7 +1172,14 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function have($model, $attributes = [], $name = 'default')
     {
         try {
-            return $this->modelFactory($model, $name)->create($attributes);
+            $result = $this->modelFactory($model, $name)->create($attributes);
+
+            // Since Laravel 5.4 the model factory returns a collection instead of a single object
+            if ($result instanceof Collection) {
+                $result = $result[0];
+            }
+
+            return $result;
         } catch (\Exception $e) {
             $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
         }
