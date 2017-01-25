@@ -166,17 +166,17 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         $this->client = new LaravelConnector($this);
 
-        // Database migrations and seeder should run before database cleanup transaction starts
+        // Database migrations should run before database cleanup transaction starts
         if ($this->config['run_database_migrations']) {
             $this->callArtisan('migrate', ['--path' => $this->config['database_migrations_path']]);
         }
 
-        if ($this->config['run_database_seeder']) {
-            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class']]);
+        if ($this->applicationUsesDatabase() && $this->config['cleanup']) {
+            $this->app['db']->beginTransaction();
         }
 
-        if (isset($this->app['db']) && $this->config['cleanup']) {
-            $this->app['db']->beginTransaction();
+        if ($this->config['run_database_seeder']) {
+            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class']]);
         }
     }
 
@@ -187,6 +187,10 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function _after(\Codeception\TestInterface $test)
     {
+        if (! $this->applicationUsesDatabase()) {
+            return;
+        }
+
         if (isset($this->app['db']) && $this->config['cleanup']) {
             $this->app['db']->rollback();
         }
@@ -195,6 +199,16 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         if (isset($this->app['db'])) {
             $this->app['db']->disconnect();
         }
+    }
+
+    /**
+     * Does the application use the database?
+     *
+     * @return bool
+     */
+    private function applicationUsesDatabase()
+    {
+        return ! empty($this->app['config']['database.default']);
     }
 
     /**
