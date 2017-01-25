@@ -11,11 +11,12 @@ settings:
     colors: true
     memory_limit: 1024M
     log: true
-    lint: true
+    lint: false
     reportUselessTests: false
     disallowTestOutput: false
     beStrictAboutChangesToGlobalState: false
     logIncompleteSkipped: false
+    
 modules:
     config:
         AMQP:

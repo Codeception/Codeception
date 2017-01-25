@@ -35,12 +35,13 @@ $I->fillField(Locator::combine('form input[type=text]','//form/textarea[2]'), 'q
 ```
 
 As a result the Locator will produce a mixed XPath value that will be used in fillField action.
- * `static`  * `param` $selector1
+ * `static` 
+ * `param` $selector1
  * `param` $selector2
  * `throws` \Exception
  * `return` string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L46)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L49)
 
 #### contains()
 
@@ -61,7 +62,7 @@ Locator::contains('div[@contenteditable=true]', 'hello world');
  * `param` $text
  * `return` string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L233)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L245)
 
 #### elementAt()
 
@@ -85,7 +86,7 @@ Locator::elementAt('table#grind>tr', -2); // previous than last row
  * `param` $position xpath index
  * `return` mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L258)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L271)
 
 #### find()
 
@@ -104,7 +105,7 @@ $I->seeElement(Locator::find('img', ['title' => 'diagram']));
  * `param` $attributes
  * `return` string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L151)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L158)
 
 #### firstElement()
 
@@ -124,7 +125,7 @@ Locator::firstElement('//table/tr');
  * `param` $element
  * `return` mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L287)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L301)
 
 #### href()
 
@@ -139,10 +140,11 @@ use \Codeception\Util\Locator;
 $I->see('Log In', Locator::href('/login.php'));
 ?>
 ```
- * `static`  * `param` $url
+ * `static` 
+ * `param` $url
  * `return` string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L73)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L78)
 
 #### humanReadableString()
 
@@ -153,7 +155,7 @@ Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string represe
  * `param` $selector
  * `return` string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L318)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L334)
 
 #### isCSS()
 
@@ -171,17 +173,18 @@ Locator::isCSS('//body/p/user') => false
  * `param` $selector
  * `return` bool
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L177)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L185)
 
 #### isID()
 
  *public static* isID($id) 
 
 Checks that string and CSS selector for element by ID
+
  * `param` $id
  * `return` bool
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L212)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L223)
 
 #### isXPath()
 
@@ -199,7 +202,7 @@ Locator::isCSS('//body/p/user') => true
  * `param` $locator
  * `return` bool
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L200)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L209)
 
 #### lastElement()
 
@@ -219,7 +222,7 @@ Locator::lastElement('//table/tr');
  * `param` $element
  * `return` mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L307)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L322)
 
 #### option()
 
@@ -237,7 +240,7 @@ $I->seeElement(Locator::option('Male'), '#select-gender');
  * `param` $value
  * `return` string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L116)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L123)
 
 #### tabIndex()
 
@@ -256,15 +259,16 @@ $I->fillField(Locator::tabIndex(2) , 'qwerty');
 $I->click('Login');
 ?>
 ```
- * `static`  * `param` $index
+ * `static` 
+ * `param` $index
  * `return` string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L97)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L104)
 
 #### toXPath()
 
  *protected static* toXPath($selector) 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L121)
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Locator.php#L128)
 
 <p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.2/src//Codeception/Util/Locator.php">Help us to improve documentation. Edit module reference</a></div>

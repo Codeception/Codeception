@@ -150,15 +150,6 @@ EOF;
         $classes = Parser::getClassesFromFile(codecept_data_dir('unsetFile.php'));
         $this->assertEquals([], $classes);
     }
-    /**
-     * @group core
-     * @throws \Codeception\Exception\TestParseException
-     */
-    public function testCeptValidation()
-    {
-        $this->setExpectedException('Codeception\Exception\TestParseException');
-        Parser::validate(codecept_data_dir('Invalid.php'));
-    }
 
     /**
      * @group core

@@ -9,6 +9,7 @@ settings:
     suite_class: \PHPUnit_Framework_TestSuite
     colors: false
     memory_limit: 1024M
+    lint: false
     log: true
 groups:
     failed: tests/_log/failed

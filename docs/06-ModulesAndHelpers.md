@@ -434,7 +434,7 @@ Use `$this->config['parameter']` to get its value.
 
 Modules can be dynamically configured from environment variables.
 Parameter storage should be specified in the global `codeception.yml` configuration inside the `params` section.
-Parameters can be loaded from environment vars, from yaml (Symfony format), .env (Laravel format) or ini files.
+Parameters can be loaded from environment vars, from yaml (Symfony format), .env (Laravel format), ini, or php files.
 
 Use the `params` section of the global configuration file `codeception.yml` to specify how to load them.
 You can specify several sources for parameters to be loaded from.
@@ -446,14 +446,21 @@ params:
     - env # load params from environment vars
 ```
 
-Example: load parameters a yaml file (Symfony):
+Example: load parameters from YAML file (Symfony):
 
 ```yaml
 params:
     - app/config/parameters.yml
 ```
 
-Example: load parameters from env files (Laravel):
+Example: load parameters from php file (Yii)
+
+```yaml
+params:
+    - config/params.php
+```
+
+Example: load parameters from .env files (Laravel):
 
 ```yaml
 params:

@@ -36,6 +36,7 @@ use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\UselessFileDetector;
+use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
@@ -153,7 +154,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `browser` *required* - Browser to launch.
  * * `host` - Selenium server host (127.0.0.1 by default).
  * * `port` - Selenium server port (4444 by default).
- * * `restart` - Set to false (default) to share browser session between tests, or set to true to create a separate session for each test.
+ * * `restart` - Set to false (default) to share browser window between tests, or set to true to create a separate window for each test.
  * * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
  * * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * `wait` - Implicit wait (default 0 seconds).
@@ -1057,12 +1058,17 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
+    /**
+     * @param RemoteWebElement[] $elements
+     * @param $value
+     * @return array
+     */
     protected function proceedSeeInField(array $elements, $value)
     {
         $strField = reset($elements)->getAttribute('name');
         if (reset($elements)->getTagName() === 'select') {
             $el = reset($elements);
-            $elements = $el->findElements(WebDriverBy::xpath('.//option[@selected]'));
+            $elements = $el->findElements(WebDriverBy::xpath('.//option'));
             if (empty($value) && empty($elements)) {
                 return ['True', true];
             }
@@ -1088,10 +1094,15 @@ class WebDriver extends CodeceptionModule implements
                         $currentValues[] = $el->getAttribute('value');
                     }
                     break;
-
+                case 'option':
+                    // no break we need the trim text and the value also
+                    if (!$el->isSelected()) {
+                        break;
+                    }
+                    $currentValues[] = $el->getText();
                 case 'textarea':
                     // we include trimmed and real value of textarea for check
-                    $currentValues[] = $el->getText(); // trimmed value
+                    $currentValues[] = trim($el->getText());
                 default:
                     $currentValues[] = $el->getAttribute('value'); // raw value
                     break;
@@ -1102,7 +1113,7 @@ class WebDriver extends CodeceptionModule implements
             'Contains',
             $value,
             $currentValues,
-            "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
+            "Failed testing for '$value' in $strField's value: '" . implode("', '", $currentValues) . "'"
         ];
     }
 
@@ -1225,7 +1236,7 @@ class WebDriver extends CodeceptionModule implements
         unset($this->sessions[$key]);
     }
 
-    /*
+    /**
      * Unselect an option in the given select box.
      *
      * @param $select
@@ -1478,6 +1489,7 @@ class WebDriver extends CodeceptionModule implements
      * ```
      *
      * @param $selector
+     * @param array $attributes
      */
     public function seeElementInDOM($selector, $attributes = [])
     {
@@ -1491,6 +1503,7 @@ class WebDriver extends CodeceptionModule implements
      * Opposite of `seeElementInDOM`.
      *
      * @param $selector
+     * @param array $attributes
      */
     public function dontSeeElementInDOM($selector, $attributes = [])
     {
@@ -1618,6 +1631,8 @@ class WebDriver extends CodeceptionModule implements
      * as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
      *
      * @param $text
+     *
+     * @throws \Codeception\Exception\ModuleException
      */
     public function seeInPopup($text)
     {
@@ -1631,6 +1646,8 @@ class WebDriver extends CodeceptionModule implements
      * Enters text into a native JavaScript prompt popup, as created by `window.prompt`.
      *
      * @param $keys
+     *
+     * @throws \Codeception\Exception\ModuleException
      */
     public function typeInPopup($keys)
     {
@@ -2098,7 +2115,9 @@ class WebDriver extends CodeceptionModule implements
      * ?>
      * ```
      *
-     * If the window has no name, the only way to access it is via the `executeInSelenium()` method, like so:
+     * If the window has no name, match it by switching to next active tab using `switchToNextTab` method.
+     *
+     * Or use native Selenium functions to get access to all opened windows:
      *
      * ``` php
      * <?php
@@ -2218,12 +2237,15 @@ class WebDriver extends CodeceptionModule implements
 
     /**
      * Move mouse over the first element matched by the given locator.
+     * If the first parameter null then the page is used.
      * If the second and third parameters are given,
      * then the mouse is moved to an offset of the element's top-left corner.
      * Otherwise, the mouse is moved to the center of the element.
      *
      * ``` php
      * <?php
+     * $I->moveMouseOver(['css' => '.checkout']);
+     * $I->moveMouseOver(null, 20, 50);
      * $I->moveMouseOver(['css' => '.checkout'], 20, 50);
      * ?>
      * ```
@@ -2234,22 +2256,69 @@ class WebDriver extends CodeceptionModule implements
      *
      * @throws \Codeception\Exception\ElementNotFound
      */
-    public function moveMouseOver($cssOrXPath, $offsetX = null, $offsetY = null)
+    public function moveMouseOver($cssOrXPath = null, $offsetX = null, $offsetY = null)
     {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $this->webDriver->getMouse()->mouseMove($el->getCoordinates(), $offsetX, $offsetY);
+        $where = null;
+        if (null !== $cssOrXPath) {
+            $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+            $where = $el->getCoordinates();
+        }
+
+        $this->webDriver->getMouse()->mouseMove($where, $offsetX, $offsetY);
+    }
+
+    /**
+     * Performs click with the left mouse button on an element.
+     * If the first parameter `null` then the offset is relative to the actual mouse position.
+     * If the second and third parameters are given,
+     * then the mouse is moved to an offset of the element's top-left corner.
+     * Otherwise, the mouse is moved to the center of the element.
+     *
+     * ``` php
+     * <?php
+     * $I->clickWithLeftButton(['css' => '.checkout']);
+     * $I->clickWithLeftButton(null, 20, 50);
+     * $I->clickWithLeftButton(['css' => '.checkout'], 20, 50);
+     * ?>
+     * ```
+     *
+     * @param string $cssOrXPath css or xpath of the web element (body by default).
+     * @param int $offsetX
+     * @param int $offsetY
+     *
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    public function clickWithLeftButton($cssOrXPath = null, $offsetX = null, $offsetY = null)
+    {
+        $this->moveMouseOver($cssOrXPath, $offsetX, $offsetY);
+        $this->webDriver->getMouse()->click();
     }
 
     /**
      * Performs contextual click with the right mouse button on an element.
+     * If the first parameter `null` then the offset is relative to the actual mouse position.
+     * If the second and third parameters are given,
+     * then the mouse is moved to an offset of the element's top-left corner.
+     * Otherwise, the mouse is moved to the center of the element.
      *
-     * @param $cssOrXPath
+     * ``` php
+     * <?php
+     * $I->clickWithRightButton(['css' => '.checkout']);
+     * $I->clickWithRightButton(null, 20, 50);
+     * $I->clickWithRightButton(['css' => '.checkout'], 20, 50);
+     * ?>
+     * ```
+     *
+     * @param string $cssOrXPath css or xpath of the web element (body by default).
+     * @param int    $offsetX
+     * @param int    $offsetY
+     *
      * @throws \Codeception\Exception\ElementNotFound
      */
-    public function clickWithRightButton($cssOrXPath)
+    public function clickWithRightButton($cssOrXPath = null, $offsetX = null, $offsetY = null)
     {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $this->webDriver->getMouse()->contextClick($el->getCoordinates());
+        $this->moveMouseOver($cssOrXPath, $offsetX, $offsetY);
+        $this->webDriver->getMouse()->contextClick();
     }
 
     /**
@@ -2319,9 +2388,17 @@ class WebDriver extends CodeceptionModule implements
                 $isValidLocator = true;
                 $nodes = $page->findElements(WebDriverBy::id(substr($selector, 1)));
             }
+            if (Locator::isClass($selector)) {
+                $isValidLocator = true;
+                $nodes = $page->findElements(WebDriverBy::className(substr($selector, 1)));
+            }
             if (empty($nodes) and Locator::isCSS($selector)) {
                 $isValidLocator = true;
-                $nodes = $page->findElements(WebDriverBy::cssSelector($selector));
+                try {
+                    $nodes = $page->findElements(WebDriverBy::cssSelector($selector));
+                } catch (InvalidElementStateException $e) {
+                    $nodes = $page->findElements(WebDriverBy::linkText($selector));
+                }
             }
             if (empty($nodes) and Locator::isXPath($selector)) {
                 $isValidLocator = true;
@@ -2684,4 +2761,96 @@ class WebDriver extends CodeceptionModule implements
         $y = $el->getLocation()->getY() + $offsetY;
         $this->webDriver->executeScript("window.scrollTo($x, $y)");
     }
+
+    /**
+     * Opens a new browser tab (wherever it is possible) and switches to it.
+     *
+     * ```php
+     * <?php
+     * $I->openNewTab();
+     * ```
+     * Tab is opened by using `window.open` javascript in a browser.
+     * Please note, that adblock can restrict creating such tabs.
+     *
+     * Can't be used with PhantomJS
+     *
+     */
+    public function openNewTab()
+    {
+        $this->executeJS("window.open('about:blank','_blank');");
+        $this->switchToNextTab();
+    }
+
+    /**
+     * Closes current browser tab and switches to previous active tab.
+     *
+     * ```php
+     * <?php
+     * $I->closeTab();
+     * ```
+     *
+     * Can't be used with PhantomJS
+     */
+    public function closeTab()
+    {
+        $prevTab = $this->getRelativeTabHandle(-1);
+        $this->webDriver->close();
+        $this->webDriver->switchTo()->window($prevTab);
+    }
+
+    /**
+     * Switches to next browser tab.
+     * An offset can be specified.
+     *
+     * ```php
+     * <?php
+     * // switch to next tab
+     * $I->switchToNextTab();
+     * // switch to 2nd next tab
+     * $I->switchToNextTab(2);
+     * ```
+     *
+     * Can't be used with PhantomJS
+     *
+     * @param int $offset 1
+     */
+    public function switchToNextTab($offset = 1)
+    {
+        $tab = $this->getRelativeTabHandle($offset);
+        $this->webDriver->switchTo()->window($tab);
+    }
+
+    /**
+     * Switches to next browser tab.
+     * An offset can be specified.
+     *
+     * ```php
+     * <?php
+     * // switch to previous tab
+     * $I->switchToNextTab();
+     * // switch to 2nd previous tab
+     * $I->switchToNextTab(-2);
+     * ```
+     *
+     * Can't be used with PhantomJS
+     *
+     * @param int $offset 1
+     */
+    public function switchToPreviousTab($offset = 1)
+    {
+        $this->switchToNextTab(0 - $offset);
+    }
+
+    protected function getRelativeTabHandle($offset)
+    {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, "PhantomJS doesn't support tab actions");
+        }
+        $handle = $this->webDriver->getWindowHandle();
+        $handles = $this->webDriver->getWindowHandles();
+        $idx = array_search($handle, $handles);
+        return $handles[($idx + $offset) % count($handles)];
+    }
+
+
 }

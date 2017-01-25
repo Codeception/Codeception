@@ -2,8 +2,48 @@
 
 #### 2.2.8
 
+* [WebDriver] Added tab actions (not supported in PhantomJS):
+  * `openNewTab` opens a new tab and switches to it
+  * `closeTab` closes a tab and switches to previous
+  * `switchToNextTab` switches to next tab 
+  * `switchToPreviousTab` switches to previous tab
+* [WebDriver] Added actions to click element by coordinates. Via @gimler
+  * `clickWithLeftButton` clicks element with offset
+  * `clickWithRightButton` right clicks on element with offset 
+* [WebDriver] Added `js_error_logging` option to print JS logs in console and in HTML report by @ngraf. See #3821
+* [WebDriver] Improvements to `seeInField` by @gimler. See #3905
+  * support option text in seeInField not only value
+  * fix bug match with and without whitespaces
+  * fix bug seeInField not working after selectOption
+* [Wedriver] `pageload_timeout` config option added. The amount of time to wait for a page load to complete before throwing an error. This patch allows to reduce issues from phantomjs random freezing. See #3874. Thanks to @oprudkyi
+* [WebDriver] `checkOption` can check option by name #3852. By @gimler
+* [WebDriver] Fixed clicking numerical links, like `<a href='/'>222</a>` (DOM Exception 12 errors). See #3865. By @gimler
+* [PhpBrowser][Frameworks] Fixed #3824 when submitForm used wrong value for `select` by @JorisVanEijden
 * [Laravel5] Added `seeNumRecords` and `grabNumRecords` methods. See #3816. By @dmoreno
-
+* Improved `@depends` to work with `@dataprovider`. Fixes #3862. Thanks @edno
+* Fixed relative paths for screenshots in HTML report. Fixes #3857
+* Improved error description when injecting invalid classes by @timtkachenko
+* Improved `--override` option to support deep configs. See #3820
+* [Yii2] Clear unloaded fixtures after test. Closes #3794
+* [PhpBrowser] Ensure sessions have independent cookies by @insightfuls. Fixes #3911
+* Implemented load params from php files by @arrilot. See #3914
+* [Yii2] Fixes #3916: Don't try to start transaction when working with non-transactional DBs by @samdark.
+* [REST] Removed broken xdebug_remote functionality by @Naktibalda. Fixes #3883
+* Added graceful termination by Ctrl-C in PHP 7.1 by @AdrianSkierniewski. See #3907
+* [Db] Disconnect after initializing when using reconnect, fixes #3903. By @insightfuls
+* [Phalcon] Fixed handling `$_SERVER` with Phalcon Connector by @sergeyklay
+* Avoid notice when checking width of terminal on Windows by @ashnazg. See #3893
+* [Filesystem] `dontSeeFileFound` searches in path by @Naktibalda. Fixes #3877
+* [PhpBrowser][Frameworks] `grabValueFrom` to work after `fillField` by @wumouse. Fix #3866
+* [Db] Oci driver to cleans up views #3881, and result set improvements #3840 by @ashnazg.
+* [Yii2] Close transaction created by the controller-action on interruption. See #3834. By @alex20465
+* [Yii2] Fixed using `part: init` with other modules like WebDriver. See #3876. By @margori
+* [REST] Implemented `dontSeeResponseJsonMatchesXpath` method by @Naktibalda. Closes #3843
+* [REST] Convert array having single element to XML correctly. Fixes #3827 by @Naktibalda
+* Linter to check `exec` function to be enabled before using it. By @Naktibalda. See #3886
+* Fixed #3922: division by zero in steps output on small terminal windows.
+* Improved getting terminal width from ENV variable (bash). Fixes #3788 by @schmunk42 
+ 
 #### 2.2.7
 
 * **Config validation** with `codecept config:validate` command. Use it:
@@ -16,25 +56,17 @@ codecept config:validate acceptance
 This should help you next time you get messed with YAML formatting.
 
 * Gherkin improvements:
-  * multiple step definitions per method allowed (Fixes #3670)
-
-  ```php
-  /**
-    * @When I have no orders
-    * @Then I have empty bucket
-    */
-  public function haveEmptyBucket()
-  ```
-
+  * multiple step definitions per method allowed (Fixes #3670).  
   * regex validation for Gherkin steps; throws exception if invalid regex passed. Fixes #3676  
   * currency chars supported in placeholders:
 
   $,€,£ and other signs can be used before or after a number inside Gherkin scenario. This char will be ignored inside a PHP variable, so you receive only number.
 
-  ```gherkin
-  When I have 100$ => $num === 100
-  And I have $100 => $num === 100
-  ```
+```gherkin
+When I have 100$ => $num === 100
+And I have $100 => $num === 100
+```
+
   * escaped strings can now be passed into placeholders. Fixes #3676.
 
 * Codeception is tested with latest verision of HHVM
@@ -43,12 +75,13 @@ This should help you next time you get messed with YAML formatting.
   * Extensions can be loaded per suite and per environment.
   * Extensions configs can be done inside `enabled` section (as it is for modules):
 
-  ```yaml
-  extensions:
-      enabled:
-          Codeception\Extension\Recorder:
-              delete_successful: false
-  ```
+```yaml
+extensions:
+  enabled:
+      Codeception\Extension\Recorder:
+          delete_successful: false
+```
+
 * **Added dataprovider to Cest** format by @endo. See [updated documentation](http://codeception.com/docs/07-AdvancedUsage#Examples).
 * Params loader refactored. Using `vlucas/phpdotenv` to parse .env files. Please install it if you don't have it yet.
 * Improved `generate:suite` command to generate actor file for suite.

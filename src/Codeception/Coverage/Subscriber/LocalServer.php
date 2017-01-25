@@ -7,6 +7,7 @@ use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\ModuleException;
 use Codeception\Exception\RemoteException;
 
 /**
@@ -148,18 +149,54 @@ class LocalServer extends SuiteSubscriber
 
     protected function startCoverageCollection($testName)
     {
-        $cookie = [
+        $value = [
             'CodeCoverage'        => $testName,
             'CodeCoverage_Suite'  => $this->suiteName,
             'CodeCoverage_Config' => $this->settings['remote_config']
         ];
+        $value = json_encode($value);
+
         $this->module->amOnPage('/');
-        $this->module->setCookie(self::COVERAGE_COOKIE, json_encode($cookie));
+        $this->module->setCookie(self::COVERAGE_COOKIE, $value);
+
+        // putting in configuration ensures the cookie is used for all sessions of a MultiSession test
+
+        $cookies = $this->module->_getConfig('cookies');
+        if (!$cookies || !is_array($cookies)) {
+            $cookies = [];
+        }
+
+        $found = false;
+        foreach ($cookies as &$cookie) {
+            if (!is_array($cookie) || !array_key_exists('Name', $cookie) || !array_key_exists('Value', $cookie)) {
+                // \Codeception\Lib\InnerBrowser will complain about this
+                continue;
+            }
+            if ($cookie['Name'] === self::COVERAGE_COOKIE) {
+                $found = true;
+                $cookie['Value'] = $value;
+                break;
+            }
+        }
+        if (!$found) {
+            $cookies[] = [
+                'Name' => self::COVERAGE_COOKIE,
+                'Value' => $value
+            ];
+        }
+
+        $this->module->_setConfig(['cookies' => $cookies]);
     }
 
     protected function fetchErrors()
     {
-        $error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR);
+        try {
+            $error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR);
+        } catch (ModuleException $e) {
+            // when a new session is started we can't get cookies because there is no
+            // current page, but there can be no code coverage error either
+            $error = null;
+        }
         if (!empty($error)) {
             $this->module->resetCookie(self::COVERAGE_COOKIE_ERROR);
             throw new RemoteException($error);

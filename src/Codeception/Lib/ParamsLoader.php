@@ -28,16 +28,20 @@ class ParamsLoader
         }
 
         try {
-            if (preg_match('~(\.env(\.|$))~', $paramStorage)) {
-                return $this->loadDotEnvFile();
-            }
-
             if (preg_match('~\.yml$~', $paramStorage)) {
                 return $this->loadYamlFile();
             }
 
             if (preg_match('~\.ini$~', $paramStorage)) {
                 return $this->loadIniFile();
+            }
+
+            if (preg_match('~\.php$~', $paramStorage)) {
+                return $this->loadPhpFile();
+            }
+
+            if (preg_match('~(\.env(\.|$))~', $paramStorage)) {
+                return $this->loadDotEnvFile();
             }
         } catch (\Exception $e) {
             throw new ConfigurationException("Failed loading params from $paramStorage\n" . $e->getMessage());
@@ -54,6 +58,11 @@ class ParamsLoader
     protected function loadIniFile()
     {
         return parse_ini_file($this->paramsFile);
+    }
+
+    protected function loadPhpFile()
+    {
+        return require $this->paramsFile;
     }
 
     protected function loadYamlFile()
