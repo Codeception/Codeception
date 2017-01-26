@@ -628,4 +628,17 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->dontSee('ERROR');
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/3953
+     */
+    public function testFillFieldInGetFormWithoutId()
+    {
+        $this->module->amOnPage('/form/bug3953');
+        $this->module->selectOption('select_name', 'two');
+        $this->module->fillField('search_name', 'searchterm');
+        $this->module->click('Submit');
+        $params = data::get('query');
+        $this->assertEquals('two', $params['select_name']);
+        $this->assertEquals('searchterm', $params['search_name']);
+    }
 }
