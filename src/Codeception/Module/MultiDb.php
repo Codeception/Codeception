@@ -337,7 +337,8 @@ class MultiDb extends CodeceptionModule implements DbInterface
      *
      * @param $database string
      */
-    public function amConnectedToDatabase($database) {
+    public function amConnectedToDatabase($database)
+    {
         $this->currentConnection = $database;
         $this->currentDriver = $this->drivers[$database];
     }
