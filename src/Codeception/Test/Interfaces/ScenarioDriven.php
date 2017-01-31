@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Test\Interfaces;
 
-use Codeception\Step;
 
 interface ScenarioDriven
 {

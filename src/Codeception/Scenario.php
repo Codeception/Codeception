@@ -3,8 +3,6 @@ namespace Codeception;
 
 use Codeception\Event\StepEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
-use Codeception\Lib\Notification;
-use Codeception\Step;
 use Codeception\Test\Metadata;
 
 class Scenario
