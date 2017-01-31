@@ -58,7 +58,7 @@ class Yii2 extends Client
 
     public function resetApplication()
     {
-        if ($this->app->db !== null && $this->app->db->transaction !== null) {
+        if ($this->app->has('db') && $this->app->db !== null && $this->app->db->transaction !== null) {
             $this->app->db->transaction->rollBack();
         }
         $this->app = null;
