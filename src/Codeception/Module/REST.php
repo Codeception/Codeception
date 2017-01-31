@@ -15,7 +15,6 @@ use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Util\JsonArray;
 use Codeception\Util\JsonType;
 use Codeception\Util\XmlStructure;
-use Symfony\Component\BrowserKit\Cookie;
 use Codeception\Util\Soap as XmlUtils;
 
 /**

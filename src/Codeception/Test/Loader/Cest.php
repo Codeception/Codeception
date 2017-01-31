@@ -2,10 +2,8 @@
 namespace Codeception\Test\Loader;
 
 use Codeception\Exception\TestParseException;
-use Codeception\Lib\ExampleSuite;
 use Codeception\Lib\Parser;
 use Codeception\Test\Cest as CestFormat;
-use Codeception\Test\Descriptor;
 use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
 

@@ -6,7 +6,6 @@ namespace Jazz\Pianist\_generated;
 // @codingStandardsIgnoreFile
 
 use Codeception\Module\Filesystem;
-use Jazz\Pianist\TestHelper;
 
 trait TestGuyActions
 {

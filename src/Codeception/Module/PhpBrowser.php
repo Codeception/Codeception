@@ -1,8 +1,6 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfigException;
-use Codeception\Exception\ModuleException;
 use Codeception\Lib\Connector\Guzzle6;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
