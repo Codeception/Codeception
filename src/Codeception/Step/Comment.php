@@ -8,17 +8,12 @@ class Comment extends CodeceptionStep
 {
     public function __toString()
     {
-        return $this->getAction();
+        return (string) $this->getAction();
     }
 
     public function toString($maxLength)
     {
-        return $this->getAction();
-    }
-
-    public function getHumanizedAction()
-    {
-        return $this->getAction();
+        return mb_strcut($this->__toString(), 0, $maxLength, 'utf-8');
     }
 
     public function getHtml($highlightColor = '#732E81')

@@ -47,7 +47,7 @@ if you run into problems loading dumps and cleaning databases.
 * password *required* - password
 * dump - path to database dump
 * populate: true - whether the the dump should be loaded before the test suite is started
-* cleanup: true - whether the dump should be reloaded after each test
+* cleanup: true - whether the dump should be reloaded before each test
 * reconnect: false - whether the module should reconnect to the database before each test
 
 ## Example
@@ -125,7 +125,7 @@ Provide table name and column values.
 
 ``` php
 <?php
-$I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
+$I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 ```
 Fails if such user was found.
 
@@ -165,7 +165,7 @@ Inserts an SQL record into a database. This record will be erased after the test
 
 ```php
 <?php
-$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles * `davis.com'));` 
+$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
 ?>
 ```
 
@@ -182,7 +182,7 @@ Provide table name and column values.
 
 ``` php
 <?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 ```
 Fails if no such user found.
 

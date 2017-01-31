@@ -5,22 +5,28 @@ namespace Codeception\Module;
 
 class CliHelper extends \Codeception\Module
 {
+    public function _beforeSuite($settings = [])
+    {
+        $this->debug('Building actor classes for claypit');
+        $this->getModule('Cli')->runShellCommand('php ' . codecept_root_dir() . 'codecept build -c ' . codecept_data_dir() . 'claypit');
+    }
+
     public function _before(\Codeception\TestInterface $test)
     {
         codecept_debug('creating dirs');
-        $this->getModule('Filesystem')->copyDir(\Codeception\Configuration::dataDir().'claypit', \Codeception\Configuration::dataDir().'sandbox');
+        $this->getModule('Filesystem')->copyDir(codecept_data_dir() . 'claypit', codecept_data_dir() . 'sandbox');
     }
 
     public function _after(\Codeception\TestInterface $test)
     {
         codecept_debug('deleting dirs');
-        $this->getModule('Filesystem')->deleteDir(\Codeception\Configuration::dataDir().'sandbox');
+        $this->getModule('Filesystem')->deleteDir(codecept_data_dir() . 'sandbox');
         chdir(\Codeception\Configuration::projectDir());
     }
 
-    public function executeCommand($command)
+    public function executeCommand($command, $fail = true)
     {
-        $this->getModule('Cli')->runShellCommand('php '.\Codeception\Configuration::projectDir().'codecept '.$command.' -n');
+        $this->getModule('Cli')->runShellCommand('php ' . \Codeception\Configuration::projectDir() . 'codecept ' . $command . ' -n', $fail);
     }
 
     public function executeFailCommand($command)

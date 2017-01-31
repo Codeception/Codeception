@@ -244,7 +244,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeHttpHeaderOnce('Cache-Control');
     }
 
-    public function testArrayJsonPathAndXPath()
+    public function testSeeResponseJsonMatchesXpath()
     {
         $this->setStubResponse(
             '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
@@ -252,9 +252,45 @@ class RestTest extends \PHPUnit_Framework_TestCase
         );
         $this->module->seeResponseIsJson();
         $this->module->seeResponseJsonMatchesXpath('//user');
+    }
+
+    public function testSeeResponseJsonMatchesJsonPath()
+    {
+        $this->setStubResponse(
+            '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
         $this->module->seeResponseJsonMatchesJsonPath('$[*].user');
         $this->module->seeResponseJsonMatchesJsonPath('$[1].tags');
+    }
+
+
+    public function testDontSeeResponseJsonMatchesJsonPath()
+    {
+        $this->setStubResponse(
+            '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
         $this->module->dontSeeResponseJsonMatchesJsonPath('$[*].profile');
+    }
+
+    public function testDontSeeResponseJsonMatchesXpath()
+    {
+        $this->setStubResponse(
+            '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
+        $this->module->dontSeeResponseJsonMatchesXpath('//status');
+    }
+
+    public function testDontSeeResponseJsonMatchesXpathFails()
+    {
+        $this->shouldFail();
+        $this->setStubResponse(
+            '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
+            . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
+        );
+        $this->module->dontSeeResponseJsonMatchesXpath('//user');
     }
 
     /**
@@ -268,7 +304,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
     }
 
     
-    public function testArrayJsonPathFails()
+    public function testSeeResponseJsonMatchesJsonPathFails()
     {
         $this->shouldFail();
         $this->setStubResponse(
@@ -323,6 +359,28 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseMatchesJsonType(['id' => 'integer'], '$.users[0]');
     }
 
+    public function testMatchJsonTypeFailsWithNiceMessage()
+    {
+        $this->setStubResponse('{"xxx": "yyy", "user_id": 1}');
+        try {
+            $this->module->seeResponseMatchesJsonType(['zzz' => 'string']);
+            $this->fail('it had to throw exception');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            $this->assertEquals('Key `zzz` doesn\'t exist in {"xxx":"yyy","user_id":1}', $e->getMessage());
+        }
+    }
+
+    public function testDontMatchJsonTypeFailsWithNiceMessage()
+    {
+        $this->setStubResponse('{"xxx": "yyy", "user_id": 1}');
+        try {
+            $this->module->dontSeeResponseMatchesJsonType(['xxx' => 'string']);
+            $this->fail('it had to throw exception');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            $this->assertEquals('Unexpectedly response matched: {"xxx":"yyy","user_id":1}', $e->getMessage());
+        }
+    }
+
     public function testSeeResponseIsJsonFailsWhenResponseIsEmpty()
     {
         $this->shouldFail();
@@ -335,6 +393,24 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->shouldFail();
         $this->setStubResponse('{');
         $this->module->seeResponseIsJson();
+    }
+
+    public function testSeeResponseJsonMatchesXpathCanHandleResponseWithOneElement()
+    {
+        $this->setStubResponse('{"success": 1}');
+        $this->module->seeResponseJsonMatchesXpath('//success');
+    }
+
+    public function testSeeResponseJsonMatchesXpathCanHandleResponseWithTwoElements()
+    {
+        $this->setStubResponse('{"success": 1, "info": "test"}');
+        $this->module->seeResponseJsonMatchesXpath('//success');
+    }
+
+    public function testSeeResponseJsonMatchesXpathCanHandleResponseWithOneSubArray()
+    {
+        $this->setStubResponse('{"array": {"success": 1}}');
+        $this->module->seeResponseJsonMatchesXpath('//array/success');
     }
 
 

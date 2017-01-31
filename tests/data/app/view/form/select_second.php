@@ -7,6 +7,7 @@
     </select>
     <select id="select2">
         <option value="select2_value1">Value1</option>
+        <option value="white" selected>        no_whitespaces    </option>
     </select>
     <input type="submit" value="Submit" />
 </form>

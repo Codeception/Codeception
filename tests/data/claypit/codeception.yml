@@ -9,9 +9,11 @@ settings:
     suite_class: \PHPUnit_Framework_TestSuite
     colors: false
     memory_limit: 1024M
+    lint: false
     log: true
 groups:
     failed: tests/_log/failed
+    groupFileTest1: tests/_data/groupFileTest1
 modules:
     config:
         Db:
@@ -19,3 +21,8 @@ modules:
             user: ''
             password: ''
             dump: tests/_data/dump.sql
+
+extensions:
+    config:
+        SuiteExtension:
+            config2: value2

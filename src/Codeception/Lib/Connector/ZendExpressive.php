@@ -7,7 +7,6 @@ use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Response as ZendResponse;
 use Zend\Expressive\Application;
 use Zend\Diactoros\UploadedFile;
 

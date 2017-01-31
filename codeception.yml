@@ -11,7 +11,7 @@ settings:
     colors: true
     memory_limit: 1024M
     log: true
-    lint: true
+    lint: false
 modules:
     config:
         AMQP:

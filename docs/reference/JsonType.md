@@ -28,7 +28,9 @@ Class JsonType
 @package Codeception\Util
 
 
-### __construct 
+#### __construct()
+
+ *public* __construct($jsonArray) 
 
 Creates instance of JsonType
 Pass an array or `\Codeception\Util\JsonArray` with data.
@@ -38,9 +40,9 @@ If non-associative array is passed - the very first element of it will be used f
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/JsonType.php#L42)
 
-### addCustomFilter 
+#### addCustomFilter()
 
-*static*
+ *public static* addCustomFilter($name, callable $callable) 
 
 Adds custom filter to JsonType list.
 You should specify a name and parameters of a filter.
@@ -69,23 +71,37 @@ JsonType::addCustomFilter('/len\((.*?)\)/', function($value, $len) {
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/JsonType.php#L76)
 
-### cleanCustomFilters 
+#### cleanCustomFilters()
 
-*static*
+ *public static* cleanCustomFilters() 
 
 Removes all custom filters
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/JsonType.php#L84)
 
-### matches 
+#### matchFilter()
+
+ *protected* matchFilter($filter, $value) 
+
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/JsonType.php#L158)
+
+#### matches()
+
+ *public* matches(array $jsonType) 
 
 Checks data against passed JsonType.
 If matching fails function returns a string with a message describing failure.
 On success returns `true`.
 
  * `param array` $jsonType
- * `return`  bool|string
+ * `return` bool|string
 
 [See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/JsonType.php#L97)
 
-<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/JsonType.php">Help us to improve documentation. Edit module reference</a></div>
+#### typeComparison()
+
+ *protected* typeComparison($data, $jsonType) 
+
+[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/JsonType.php#L116)
+
+<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.2/src//Codeception/Util/JsonType.php">Help us to improve documentation. Edit module reference</a></div>

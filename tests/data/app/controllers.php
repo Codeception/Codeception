@@ -162,6 +162,7 @@ class facebookController {
 
 class form {
     function GET($matches) {
+        data::set('query', $_GET);
         $url = strtolower($matches[1]);
         if (empty($matches[1])) {
             $url = 'index';
@@ -244,5 +245,17 @@ class contentType2 {
 class unsetCookie {
     function GET() {
         header('Set-Cookie: a=; Expires=Thu, 01 Jan 1970 00:00:01 GMT');
+    }
+}
+
+class basehref {
+    function GET() {
+        include __DIR__.'/view/basehref.php';
+    }
+}
+
+class jserroronload {
+    function GET() {
+        include __DIR__.'/view/jserroronload.php';
     }
 }

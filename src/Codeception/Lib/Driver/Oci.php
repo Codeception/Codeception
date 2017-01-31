@@ -30,6 +30,14 @@ class Oci extends Db
                           END LOOP;
                       END;"
         );
+        $this->dbh->exec(
+            "BEGIN
+                        FOR i IN (SELECT view_name FROM user_views)
+                          LOOP
+                            EXECUTE IMMEDIATE('DROP VIEW ' || user || '.' || i.view_name);
+                          END LOOP;
+                      END;"
+        );
     }
 
     /**
@@ -88,7 +96,7 @@ class Oci extends Db
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($columns as $column) {
-                $primaryKey []= $column['column_name'];
+                $primaryKey []= $column['COLUMN_NAME'];
             }
             $this->primaryKeys[$tableName] = $primaryKey;
         }

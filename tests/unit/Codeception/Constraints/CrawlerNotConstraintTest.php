@@ -24,9 +24,9 @@ class CrawlerNotConstraintTest extends PHPUnit_Framework_TestCase
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
         } catch (PHPUnit_Framework_AssertionFailedError $fail) {
-            $this->assertContains("There was 'selector' element on page <bold>/user</bold>", $fail->getMessage());
-            $this->assertNotContains('+ <info><p>Bye world</p></info>', $fail->getMessage());
-            $this->assertContains('+ <info><p>Bye <bold>warcraft</bold></p></info>', $fail->getMessage());
+            $this->assertContains("There was 'selector' element on page /user", $fail->getMessage());
+            $this->assertNotContains('+ <p>Bye world</p>', $fail->getMessage());
+            $this->assertContains('+ <p>Bye warcraft</p>', $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
@@ -42,9 +42,9 @@ class CrawlerNotConstraintTest extends PHPUnit_Framework_TestCase
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
         } catch (PHPUnit_Framework_AssertionFailedError $fail) {
-            $this->assertContains("There was 'selector' element on page <bold>/user</bold>", $fail->getMessage());
-            $this->assertContains('+ <info><p><bold>warcraft</bold> 0</p></info>', $fail->getMessage());
-            $this->assertContains('+ <info><p><bold>warcraft</bold> 14</p></info>', $fail->getMessage());
+            $this->assertContains("There was 'selector' element on page /user", $fail->getMessage());
+            $this->assertContains('+ <p>warcraft 0</p>', $fail->getMessage());
+            $this->assertContains('+ <p>warcraft 14</p>', $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
@@ -58,7 +58,7 @@ class CrawlerNotConstraintTest extends PHPUnit_Framework_TestCase
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
         } catch (PHPUnit_Framework_AssertionFailedError $fail) {
             $this->assertContains("There was 'selector' element", $fail->getMessage());
-            $this->assertNotContains("There was 'selector' element on page <bold>/user</bold>", $fail->getMessage());
+            $this->assertNotContains("There was 'selector' element on page /user", $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");

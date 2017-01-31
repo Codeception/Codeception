@@ -1,5 +1,5 @@
 {
-    "name":"codeception/base",
+    "name":"codeception/codeception",
     "description":"BDD-style testing framework",
     "keywords":["BDD", "acceptance testing", "functional testing", "unit testing", "tdd"],
     "homepage":"http://codeception.com/",
@@ -29,7 +29,7 @@
         "symfony/yaml": ">=2.7 <4.0",
         "symfony/browser-kit": ">=2.7 <4.0",
         "symfony/css-selector": ">=2.7 <4.0",
-        "symfony/dom-crawler": ">=2.7 <4.0",
+        "symfony/dom-crawler": ">=2.7.5 <4.0",
         "behat/gherkin": "~4.4.0",
         "sebastian/comparator": "~1.1",
         "sebastian/diff": "^1.4"
@@ -37,7 +37,7 @@
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
-        "facebook/php-sdk-v4": "~5.0",
+        "facebook/graph-sdk": "~5.3",
         "php-amqplib/php-amqplib": "~2.4",
         "codeception/specify": "~0.3",
         "pda/pheanstalk": "~3.0",
@@ -46,7 +46,8 @@
         "league/factory-muffin-faker": "^1.0",
         "mongodb/mongodb": "^1.0",
         "predis/predis": "^1.0",
-        "squizlabs/php_codesniffer": "~2.0"
+        "squizlabs/php_codesniffer": "~2.0",
+        "vlucas/phpdotenv": "^2.4.0"
     },
     "suggest": {
         "codeception/specify": "BDD-style code blocks",

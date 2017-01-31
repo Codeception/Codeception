@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Module\Filesystem;
 use Codeception\TestInterface;
 
 /**

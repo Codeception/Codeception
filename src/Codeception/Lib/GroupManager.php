@@ -3,7 +3,6 @@ namespace Codeception\Lib;
 
 use Codeception\Configuration;
 use Codeception\Test\Interfaces\Reported;
-use Codeception\Test\Interfaces\Configurable;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
 use Symfony\Component\Finder\Finder;
@@ -117,9 +116,16 @@ class GroupManager
                 if ($filename == $testPattern) {
                     $groups[] = $group;
                 }
-
                 if (strpos($filename . ':' . $test->getName(false), $testPattern) === 0) {
                     $groups[] = $group;
+                }
+                if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+                    $firstTest = $test->testAt(0);
+                    if ($firstTest != false && $firstTest instanceof TestInterface) {
+                        if (strpos($filename . ':' . $firstTest->getName(false), $testPattern) === 0) {
+                            $groups[] = $group;
+                        }
+                    }
                 }
             }
         }

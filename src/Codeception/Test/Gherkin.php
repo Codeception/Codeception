@@ -92,7 +92,8 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     {
         $stepText = $stepNode->getText();
         foreach ($this->steps as $pattern => $context) {
-            if (!preg_match($pattern, $stepText)) {
+            $res = preg_match($pattern, $stepText);
+            if (!$res) {
                 continue;
             }
             return;

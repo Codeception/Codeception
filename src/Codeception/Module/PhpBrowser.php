@@ -1,8 +1,6 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfigException;
-use Codeception\Exception\ModuleException;
 use Codeception\Lib\Connector\Guzzle6;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
@@ -131,7 +129,6 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
 
     public function _initialize()
     {
-        $this->client = $this->guessGuzzleConnector();
         $this->_initializeSession();
     }
 
@@ -150,7 +147,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
         if (!$this->client) {
             $this->client = $this->guessGuzzleConnector();
         }
-        $this->_initializeSession();
+        $this->_prepareSession();
     }
 
     public function _getUrl()
@@ -193,7 +190,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
 
     protected function onReconfigure()
     {
-        $this->_initializeSession();
+        $this->_prepareSession();
     }
 
     /**
@@ -227,6 +224,13 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
     }
 
     public function _initializeSession()
+    {
+        // independent sessions need independent cookies
+        $this->client = $this->guessGuzzleConnector();
+        $this->_prepareSession();
+    }
+
+    public function _prepareSession()
     {
         $defaults = array_intersect_key($this->config, array_flip($this->guzzleConfigFields));
         $curlOptions = [];

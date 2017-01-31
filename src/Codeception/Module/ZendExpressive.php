@@ -5,7 +5,6 @@ use Codeception\Lib\Framework;
 use Codeception\TestInterface;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\ZendExpressive as ZendExpressiveConnector;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * This module allows you to run tests inside Zend Expressive.

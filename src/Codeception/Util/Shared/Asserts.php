@@ -354,6 +354,16 @@ trait Asserts
     }
 
     /**
+     * @param $expectedCount
+     * @param $actual
+     * @param $description
+     */
+    protected function assertCount($expectedCount, $actual, $description = '')
+    {
+        \PHPUnit_Framework_Assert::assertCount($expectedCount, $actual, $description);
+    }
+
+    /**
      * @param $class
      * @param $actual
      * @param $description

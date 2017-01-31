@@ -7,7 +7,6 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Codeception\Util\Stub;
 
 /**

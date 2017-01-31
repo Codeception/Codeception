@@ -1,37 +1,44 @@
 # Phalcon
 
 
-This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (2.x).
+This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (3.x).
 Please try it and leave your feedback.
 
 ## Demo Project
 
-<https://github.com/phalcon/forum>
+<https://github.com/Codeception/phalcon-demo>
 
 ## Status
 
 * Maintainer: **Serghei Iakovlev**
 * Stability: **stable**
-* Contact: sadhooklay@gmail.com
-
-## Example
-
-    modules:
-        enabled:
-            - Phalcon:
-                bootstrap: 'app/config/bootstrap.php'
-                cleanup: true
-                savepoints: true
+* Contact: serghei@phalconphp.com
 
 ## Config
 
 The following configurations are required for this module:
 
-* bootstrap: the path of the application bootstrap file
-* cleanup: cleanup database (using transactions)
-* savepoints: use savepoints to emulate nested transactions
+* bootstrap: `string`, default `app/config/bootstrap.php` - relative path to app.php config file
+* cleanup: `boolean`, default `true` - all database queries will be run in a transaction,
+  which will be rolled back at the end of each test
+* savepoints: `boolean`, default `true` - use savepoints to emulate nested transactions
 
 The application bootstrap file must return Application object but not call its handle() method.
+
+## API
+
+* di - `Phalcon\Di\Injectable` instance
+* client - `BrowserKit` client
+
+## Parts
+
+By default all available methods are loaded, but you can specify parts to select only needed
+actions and avoid conflicts.
+
+* `orm` - include only `haveRecord/grabRecord/seeRecord/dontSeeRecord` actions.
+* `services` - allows to use `grabServiceFromContainer` and `addServiceToContainer`.
+
+Usage example:
 
 Sample bootstrap (`app/config/bootstrap.php`):
 
@@ -45,15 +52,19 @@ return new \Phalcon\Mvc\Application($di);
 ?>
 ```
 
-## API
-
-* di - `Phalcon\Di\Injectable` instance
-* client - `BrowserKit` client
-
-## Parts
-
-* ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
-
+```yaml
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - Phalcon:
+            part: services
+            bootstrap: 'app/config/bootstrap.php'
+            cleanup: true
+            savepoints: true
+        - WebDriver:
+            url: http://your-url.com
+            browser: phantomjs
+```
 
 
 ## Actions
@@ -104,7 +115,7 @@ public function seeResponseContains($text)
 ```
 
  * `return` string
- * `throws`  ModuleException
+@throws ModuleException
 
 
 ### _loadPage
@@ -159,8 +170,8 @@ To load arbitrary page for interaction, use `_loadPage` method.
  * `param array` $server
  * `param null` $content
  * `return` mixed|Crawler
- * `throws`  ExternalUrlException
- * `see`  `_loadPage`
+@throws ExternalUrlException
+@see `_loadPage`
 
 
 ### _savePageSource
@@ -173,6 +184,27 @@ Saves page source of to a file
 $this->getModule('Phalcon')->_savePageSource(codecept_output_dir().'page.html');
 ```
  * `param` $filename
+
+
+### addServiceToContainer
+ 
+Registers a service in the services container and resolve it. This record will be erased after the test.
+Recommended to use for unit testing.
+
+``` php
+<?php
+$filter = $I->addServiceToContainer('filter', ['className' => '\Phalcon\Filter']);
+$filter = $I->addServiceToContainer('answer', function () {
+     return rand(0, 1) ? 'Yes' : 'No';
+}, true);
+?>
+```
+
+ * `param string` $name
+ * `param mixed` $definition
+ * `param boolean` $shared
+ * `return` mixed|null
+ * `[Part]` services
 
 
 ### amHttpAuthenticated
@@ -208,8 +240,8 @@ $I->amOnRoute('posts.create');
 ?>
 ```
 
- * `param` $routeName
- * `param array` $params
+ * `param string` $routeName
+ * `param array`  $params
 
 
 ### attachFile
@@ -219,7 +251,7 @@ Attaches a file relative to the Codeception data directory to the given file upl
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[ * `type="file"]',`  'prices.xls');
+$I->attachFile('input[@type="file"]', 'prices.xls');
 ?>
 ```
 
@@ -261,7 +293,7 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[ * `type=submit]');` 
+$I->click('//form/*[@type=submit]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
@@ -299,9 +331,10 @@ Give a locator as the second parameter to match a specific region.
 
 ```php
 <?php
-$I->dontSee('Login');                    // I can suppose user is already logged in
-$I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
-$I->dontSee('Sign Up','//body/h1');      // with XPath
+$I->dontSee('Login');                         // I can suppose user is already logged in
+$I->dontSee('Sign Up','h1');                  // I can suppose it's not a signup page
+$I->dontSee('Sign Up','//body/h1');           // with XPath
+$I->dontSee('Sign Up', ['css' => 'body h1']); // with strict CSS locator
 ```
 
 Note that the search is done after stripping all HTML tags from the body,
@@ -417,7 +450,7 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+$I->dontSeeInField('//form/*[@name=search]','Search');
 $I->dontSeeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -527,12 +560,13 @@ Checks that record does not exist in database.
 
 ``` php
 <?php
-$I->dontSeeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
+$I->dontSeeRecord('App\Models\Categories', ['name' => 'Testing']);
 ?>
 ```
 
  * `param string` $model Model name
  * `param array` $attributes Model attributes
+ * `[Part]` orm
 
 
 ### dontSeeResponseCodeIs
@@ -555,8 +589,8 @@ Fills a text field or textarea with the given string.
 
 ``` php
 <?php
-$I->fillField("//input[ * `type='text']",`  "Hello World!");
-$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
+$I->fillField("//input[@type='text']", "Hello World!");
+$I->fillField(['name' => 'email'], 'jon@mail.com');
 ?>
 ```
 
@@ -568,8 +602,8 @@ $I->fillField(['name' => 'email'], 'jon * `mail.com');`
  
 Provides access the Phalcon application object.
 
- * `see`  \Codeception\Lib\Connector\Phalcon::getApplication
- * `return` \Phalcon\Mvc\Application|\Phalcon\Mvc\Micro|\Phalcon\Cli\Console
+@see \Codeception\Lib\Connector\Phalcon::getApplication
+ * `return` \Phalcon\Application|\Phalcon\Mvc\Micro
 
 
 ### grabAttributeFrom
@@ -647,23 +681,34 @@ Retrieves record from database
 
 ``` php
 <?php
-$category = $I->grabRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
+$category = $I->grabRecord('App\Models\Categories', ['name' => 'Testing']);
 ?>
 ```
 
  * `param string` $model Model name
- * `param array` $attributes Model attributes
+ * `param array`  $attributes Model attributes
  * `[Part]` orm
 
 
-### grabServiceFromDi
+### grabServiceFromContainer
  
 Resolves the service based on its configuration from Phalcon's DI container
 Recommended to use for unit testing.
 
  * `param string` $service    Service name
  * `param array`  $parameters Parameters [Optional]
+ * `[Part]` services
 
+
+### grabServiceFromDi
+ 
+Alias for `grabServiceFromContainer`.
+
+Note: Deprecated. Will be removed in Codeception 2.3.
+
+ * `param string` $service    Service name
+ * `param array`  $parameters Parameters [Optional]
+ * `[Part]` services
 
 
 ### grabTextFrom
@@ -723,8 +768,8 @@ Inserts record into the database.
 
 ``` php
 <?php
-$user_id = $I->haveRecord('Phosphorum\Models\Users', ['name' => 'Phalcon']);
-$I->haveRecord('Phosphorum\Models\Categories', ['name' => 'Testing']');
+$user_id = $I->haveRecord('App\Models\Users', ['name' => 'Phalcon']);
+$I->haveRecord('App\Models\Categories', ['name' => 'Testing']');
 ?>
 ```
 
@@ -735,20 +780,15 @@ $I->haveRecord('Phosphorum\Models\Categories', ['name' => 'Testing']');
 
 ### haveServiceInDi
  
-Registers a service in the services container and resolve it. This record will be erased after the test.
-Recommended to use for unit testing.
+Alias for `addServiceToContainer`.
 
-``` php
-<?php
-$filter = $I->haveServiceInDi('filter', ['className' => '\Phalcon\Filter']);
-?>
-```
+Note: Deprecated. Will be removed in Codeception 2.3.
 
  * `param string` $name
  * `param mixed` $definition
  * `param boolean` $shared
-
  * `return` mixed|null
+ * `[Part]` services
 
 
 ### moveBack
@@ -777,9 +817,10 @@ parameter to only search within that element.
 
 ``` php
 <?php
-$I->see('Logout');                 // I can suppose user is logged in
-$I->see('Sign Up', 'h1');          // I can suppose it's a signup page
-$I->see('Sign Up', '//body/h1');   // with XPath
+$I->see('Logout');                        // I can suppose user is logged in
+$I->see('Sign Up', 'h1');                 // I can suppose it's a signup page
+$I->see('Sign Up', '//body/h1');          // with XPath
+$I->see('Sign Up', ['css' => 'body h1']); // with strict CSS locator
 ```
 
 Note that the search is done after stripping all HTML tags from the body,
@@ -808,7 +849,7 @@ Checks that the specified checkbox is checked.
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-$I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]');` 
+$I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ?>
 ```
 
@@ -890,7 +931,7 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 
  * `param` $selector
  * `param array` $attributes
- * `return` 
+@return
 
 
 ### seeInCurrentUrl
@@ -920,7 +961,7 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInField('//form/*[@name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -982,9 +1023,9 @@ $form = [
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('//form[ * `id=my-form]',`  $form, 'submitButton');
+$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('//form[ * `id=my-form]',`  $form);
+$I->seeInFormFields('//form[@id=my-form]', $form);
 ?>
 ```
 
@@ -1093,12 +1134,13 @@ Checks that record exists in database.
 
 ``` php
 <?php
-$I->seeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
+$I->seeRecord('App\Models\Categories', ['name' => 'Testing']);
 ?>
 ```
 
  * `param string` $model Model name
- * `param array` $attributes Model attributes
+ * `param array`  $attributes Model attributes
+ * `[Part]` orm
 
 
 ### seeResponseCodeIs
@@ -1139,7 +1181,7 @@ Selects an option in a select tag or in radio button group.
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
-$I->selectOption('//form/select[ * `name=account]',`  'Monthly');
+$I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
 ```
 

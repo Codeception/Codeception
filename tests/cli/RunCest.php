@@ -182,6 +182,16 @@ class RunCest
         $I->seeInShellOutput("OK");
     }
 
+    public function runOneGroupWithDataProviders(\CliGuy $I)
+    {
+        $I->executeCommand('run unit -g data-providers');
+        $I->seeInShellOutput('Is triangle | "real triangle"');
+        $I->seeInShellOutput('Is triangle | #0');
+        $I->seeInShellOutput('Is triangle | #1');
+        $I->seeInShellOutput('DataProvidersTest');
+        $I->seeInShellOutput("OK");
+    }
+
     public function runTestWithFailFast(\CliGuy $I)
     {
         $I->executeCommand('run unit --skip-group error --no-exit');
@@ -192,7 +202,7 @@ class RunCest
         $I->dontSeeInShellOutput("PassingTest: Me");
     }
 
-    public function runWithCustomOuptutPath(\CliGuy $I)
+    public function runWithCustomOutputPath(\CliGuy $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
         $I->seeFileFound('myverycustom.xml', 'tests/_output');
@@ -344,6 +354,15 @@ EOF
         $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
     }
 
+    public function runGherkinScenarioWithMultipleStepDefinitions(CliGuy $I)
+    {
+        $I->executeCommand('run scenario "File.feature:Check file once more" --steps');
+        $I->seeInShellOutput('When there is a file "scenario.suite.yml"');
+        $I->seeInShellOutput('Then i see file "scenario.suite.yml"');
+        $I->dontSeeInShellOutput('Step definition for `I see file "scenario.suite.yml"` not found in contexts');
+        $I->seeInShellOutput('PASSED');
+    }
+
     public function runGherkinScenarioOutline(CliGuy $I)
     {
         $I->executeCommand('run scenario FileExamples.feature -v');
@@ -394,5 +413,45 @@ EOF
         $I->seeInShellOutput('I see file found "scenario.suite.yml"');
         $I->seeInShellOutput('I see file found "dummy.suite.yml"');
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
+    }
+
+    public function overrideConfigOptionsToChangeReporter(CliGuy $I)
+    {
+        if (!class_exists('PHPUnit_Util_Log_TeamCity')) {
+            throw new \Codeception\Exception\Skip('Reporter does not exist for this PHPUnit version');
+        }
+        $I->executeCommand('run scenario --report -o "reporters: report: PHPUnit_Util_Log_TeamCity" --no-exit');
+        $I->seeInShellOutput('##teamcity[testStarted');
+        $I->dontSeeInShellOutput('............Ok');
+    }
+
+    public function overrideModuleOptions(CliGuy $I)
+    {
+        $I->executeCommand('run powers --no-exit');
+        $I->seeInShellOutput('FAILURES');
+        $I->executeCommand('run powers -o "modules: config: PowerHelper: has_power: true" --no-exit');
+        $I->dontSeeInShellOutput('FAILURES');
+    }
+
+
+    public function runTestWithAnnotationExamplesFromGroupFileTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario -g groupFileTest1 --steps');
+        $I->seeInShellOutput('OK (3 tests');
+    }
+
+    public function testsWithConditionalFails(CliGuy $I)
+    {
+        $I->executeCommand('run scenario ConditionalCept --no-exit');
+        $I->seeInShellOutput('There were 3 failures');
+        $I->seeInShellOutput('Fail  File "not-a-file" not found');
+        $I->seeInShellOutput('Fail  File "not-a-dir" not found');
+        $I->seeInShellOutput('Fail  File "nothing" not found');
+    }
+
+    public function runTestWithAnnotationDataprovider(CliGuy $I)
+    {
+        $I->executeCommand('run scenario -g dataprovider --steps');
+        $I->seeInShellOutput('OK (15 tests');
     }
 }

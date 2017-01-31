@@ -27,21 +27,24 @@ use Codeception\Util\Template;
  *
  * ``` yaml
  * extensions:
- *     enabled: [Codeception\Extension\Recorder]
+ *     enabled:
+ *         - Codeception\Extension\Recorder
  * ```
  *
  * #### Configuration
  *
  * * `delete_successful` (default: true) - delete records for successfully passed tests (log only failed and errored)
- * * `module` (default: WebDriver) - which module for screenshots to use.
- * Module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
- * Currently only WebDriver or any its children can be used.
+ * * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+ *
+ *
+ * #### Examples:
  *
  * ``` yaml
  * extensions:
- *     config:
+ *     enabled:
  *         Codeception\Extension\Recorder:
- *             delete_successful: false
+ *             module: AngularJS # enable for Angular
+ *             delete_successful: false # show successful reports
  * ```
  *
  */
@@ -233,6 +236,7 @@ EOF;
     {
         $this->webDriverModule = null;
         if (!$this->hasModule($this->config['module'])) {
+            $this->writeln("Recorder is disabled, no available modules");
             return;
         }
         $this->seed = uniqid();
