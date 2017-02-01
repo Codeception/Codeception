@@ -21,6 +21,11 @@ class Configuration
     protected static $config = null;
 
     /**
+     * @var array params attached by user.
+     */
+    protected static $userParams = [];
+
+    /**
      * @var array environmental files configuration cache
      */
     protected static $envConfig = [];
@@ -564,6 +569,39 @@ class Configuration
     public static function append(array $config = [])
     {
         return self::$config = self::mergeConfigs(self::$config, $config);
+    }
+
+    public static function attachParams(array $params = [])
+    {
+        return self::$userParams = self::mergeParams(self::$userParams, $params);
+    }
+
+    protected static function mergeParams($current, $new)
+    {
+        if (!is_array($current)) {
+            return $new;
+        }
+
+        if (!is_array($new)) {
+            return $current;
+        }
+
+        $res = $current;
+        foreach ($new as $k => $param) {
+            if (!isset($res[$k]) || $param != $res[$k]) {
+                $res[$k] = $param;
+            }
+        }
+
+        return $res;
+    }
+
+    public static function getParam($key) {
+        if (isset(self::$userParams[$key])) {
+            return self::$userParams[$key];
+        }
+
+        return null;
     }
 
     public static function mergeConfigs($a1, $a2)
