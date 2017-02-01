@@ -596,7 +596,8 @@ class Configuration
         return $res;
     }
 
-    public static function getParam($key) {
+    public static function getParam($key)
+    {
         if (isset(self::$userParams[$key])) {
             return self::$userParams[$key];
         }

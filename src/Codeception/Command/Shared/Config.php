@@ -44,7 +44,7 @@ trait Config
         }
 
         return $updatedParams;
-     }
+    }
 
     protected function overrideConfig($configOptions)
     {
