@@ -750,6 +750,20 @@ interface Web
     public function seeNumberOfElements($selector, $expected);    
     
     /**
+     * Grab number of elements matched by the given locator on the page.
+     *
+     * ``` php
+     * <?php
+     * $I->grabNumberOfElements('tr');
+     * ?>
+     * ```
+     * @param string $selector selector
+     *
+     * @return int
+     */
+    public function grabNumberOfElements($selector);
+
+    /**
      * Checks that the given option is selected.
      *
      * ``` php
