@@ -54,6 +54,7 @@ if (class_exists('SebastianBergmann\CodeCoverage\CodeCoverage') and !class_exist
       class_alias('SebastianBergmann\CodeCoverage\Report\Text', 'PHP_CodeCoverage_Report_Text');
       class_alias('SebastianBergmann\CodeCoverage\Report\PHP', 'PHP_CodeCoverage_Report_PHP');
       class_alias('SebastianBergmann\CodeCoverage\Report\Clover', 'PHP_CodeCoverage_Report_Clover');
+      class_alias('SebastianBergmann\CodeCoverage\Report\Crap4j', 'PHP_CodeCoverage_Report_Crap4j');
       class_alias('SebastianBergmann\CodeCoverage\Report\Html\Facade', 'PHP_CodeCoverage_Report_HTML');
       class_alias('SebastianBergmann\CodeCoverage\Exception', 'PHP_CodeCoverage_Exception');
 }
@@ -153,6 +154,14 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.clover.xml';
     }
 
+    function __c3_build_crap4j_report(PHP_CodeCoverage $codeCoverage, $path)
+    {
+        $writer = new PHP_CodeCoverage_Report_Crap4j();
+        $writer->process($codeCoverage, $path . '.crap4j.xml');
+
+        return $path . '.crap4j.xml';
+    }
+
     function __c3_send_file($filename)
     {
         if (!headers_sent()) {
@@ -244,6 +253,13 @@ if ($requested_c3_report) {
         case 'clover':
             try {
                 __c3_send_file(__c3_build_clover_report($codeCoverage, $path));
+            } catch (Exception $e) {
+                __c3_error($e->getMessage());
+            }
+            return __c3_exit();
+        case 'crap4j':
+            try {
+                __c3_send_file(__c3_build_crap4j_report($codeCoverage, $path));
             } catch (Exception $e) {
                 __c3_error($e->getMessage());
             }
