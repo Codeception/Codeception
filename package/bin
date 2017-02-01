@@ -26,6 +26,7 @@ $app->add(new Codeception\Command\GenerateFeature('generate:feature'));
 $app->add(new Codeception\Command\GherkinSnippets('gherkin:snippets'));
 $app->add(new Codeception\Command\GherkinSteps('gherkin:steps'));
 $app->add(new Codeception\Command\DryRun('dry-run'));
+$app->add(new Codeception\Command\ConfigValidate('config:validate'));
 $app->registerCustomCommands();
 
  // add only if within a phar archive.

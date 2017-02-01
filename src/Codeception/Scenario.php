@@ -3,8 +3,6 @@ namespace Codeception;
 
 use Codeception\Event\StepEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
-use Codeception\Lib\Notification;
-use Codeception\Step;
 use Codeception\Test\Metadata;
 
 class Scenario
@@ -51,6 +49,11 @@ class Scenario
         return $this->metadata->getFeature();
     }
 
+    public function getGroups()
+    {
+        return $this->metadata->getGroups();
+    }
+
     public function current($key)
     {
         return $this->metadata->getCurrent($key);
@@ -69,7 +72,12 @@ class Scenario
             $result = $step->run($this->metadata->getService('modules'));
         } catch (ConditionalAssertionFailed $f) {
             $result = $this->test->getTestResultObject();
-            $result->addFailure(clone($this->test), $f, $result->time());
+            if (is_null($result)) {
+                $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+                throw $f;
+            } else {
+                $result->addFailure(clone($this->test), $f, $result->time());
+            }
         } catch (\Exception $e) {
             $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
             throw $e;

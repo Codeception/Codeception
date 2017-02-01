@@ -6,7 +6,6 @@
 
 namespace Jazz;
 use Codeception\Module\Filesystem;
-use Jazz\Codeception\Module\TestHelper;
 
 /**
  * Inherited Methods

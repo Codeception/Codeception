@@ -57,6 +57,16 @@ class LocatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(Locator::isID('hello'));
     }
 
+    public function testIsClass()
+    {
+        $this->assertTrue(Locator::isClass('.username'));
+        $this->assertTrue(Locator::isClass('.name'));
+        $this->assertTrue(Locator::isClass('.user-name'));
+        $this->assertFalse(Locator::isClass('.user-name .field'));
+        $this->assertFalse(Locator::isClass('#field'));
+        $this->assertFalse(Locator::isClass('hello'));
+    }
+
     public function testContains()
     {
         $this->assertEquals(

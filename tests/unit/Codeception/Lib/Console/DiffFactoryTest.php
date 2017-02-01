@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Console;
 
-use Codeception\Util\Stub;
 use SebastianBergmann\Comparator\ComparisonFailure;
 
 /**

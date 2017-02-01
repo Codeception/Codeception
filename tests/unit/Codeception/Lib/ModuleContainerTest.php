@@ -80,6 +80,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('amOnPage', $actions);
         $this->assertArrayNotHasKey('see', $actions);
         $this->assertArrayNotHasKey('click', $actions);
+        $this->assertArrayHasKey('useUniversalFramework', $actions);
     }
 
     /**

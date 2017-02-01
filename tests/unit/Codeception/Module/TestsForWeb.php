@@ -189,6 +189,13 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('val', $form['text']);
     }
 
+    public function testClickByLinkTitle()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click("Link Title");
+        $this->module->seeInCurrentUrl('/info');
+    }
+
     public function testClickOnContext()
     {
         $this->module->amOnPage('/');
@@ -204,6 +211,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/form/checkbox');
         $this->module->checkOption('#checkin');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('agree', $form['terms']);
+    }
+
+    public function testCheckboxByName()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption('terms');
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('agree', $form['terms']);
@@ -675,6 +691,23 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/form/select');
         $result = $this->module->grabValueFrom('#age');
         $this->assertEquals('oldfag', $result);
+    }
+
+    /**
+     * @see https://github.com/Codeception/Codeception/issues/3866
+     */
+    public function testGrabValueFromWithFillField()
+    {
+        $this->module->amOnPage('/form/bug3866');
+        $this->module->fillField('empty', 'new value');
+        $result = $this->module->grabValueFrom('#empty');
+        $this->assertEquals('new value', $result);
+        $this->module->fillField('empty_textarea', 'new value');
+        $result = $this->module->grabValueFrom('#empty_textarea');
+        $this->assertEquals('new value', $result);
+        $this->module->fillField('//textarea[@name="textarea[name][]"]', 'new value');
+        $result = $this->module->grabValueFrom('#textarea_with_square_bracket');
+        $this->assertEquals('new value', $result);
     }
 
     public function testGrabAttributeFrom()
@@ -1490,6 +1523,24 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->seeCurrentUrlEquals('/');
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/3528
+     */
+    public function testClickThrowsElementNotFoundExceptionWhenTextContainsNumber()
+    {
+        $this->setExpectedException('Codeception\Exception\ElementNotFound',
+            "'Link 2' is invalid CSS and XPath selector and Link or Button element with 'name=Link 2' was not found.");
+        $this->module->amOnPage('/info');
+        $this->module->click('Link 2');
+    }
+
+    public function testClickExistingLinkWithTextContainingNumber()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->click('Link 3');
+        $this->module->seeCurrentUrlEquals('/cookies');
+    }
+
     public function testSelectOptionValueSelector()
     {
         $this->module->amOnPage('/form/select_selectors');
@@ -1508,5 +1559,68 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
 
         $this->module->selectOption('age', ['text' => '21']);
         $this->module->seeOptionIsSelected('age', '21');
+    }
+
+    public function testClickButtonInLink()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click('More Info');
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickButtonInLinkAndSpan()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click('Span Info');
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickButtonInLinkUsingCssLocator()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click(['css' => 'input[value="More Info"]']);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickButtonInLinkAndSpanUsingCssLocator()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click(['css' => 'input[value="Span Info"]']);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickHashLink()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Link');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testClickHashButton()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Button');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testSubmitHashForm()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Form');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testClickingRelativeLinkHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Link');
+        $this->module->seeCurrentUrlEquals('/form/example7');
+    }
+
+    public function testSubmittingRelativeFormHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Form');
+        $this->module->seeCurrentUrlEquals('/form/example5');
     }
 }

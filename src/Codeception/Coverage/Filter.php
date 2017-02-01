@@ -2,6 +2,7 @@
 namespace Codeception\Coverage;
 
 use Codeception\Configuration;
+use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Symfony\Component\Finder\Finder;
 
@@ -71,9 +72,12 @@ class Filter
         }
 
         if (isset($coverage['whitelist']['include'])) {
+            if (!is_array($coverage['whitelist']['include'])) {
+                throw new ConfigurationException('Error parsing yaml. Config `whitelist: include:` should be an array');
+            }
             foreach ($coverage['whitelist']['include'] as $fileOrDir) {
                 $finder = strpos($fileOrDir, '*') === false
-                    ? [$fileOrDir]
+                    ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
                 foreach ($finder as $file) {
@@ -83,9 +87,12 @@ class Filter
         }
 
         if (isset($coverage['whitelist']['exclude'])) {
+            if (!is_array($coverage['whitelist']['exclude'])) {
+                throw new ConfigurationException('Error parsing yaml. Config `whitelist: exclude:` should be an array');
+            }
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 $finder = strpos($fileOrDir, '*') === false
-                    ? [$fileOrDir]
+                    ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
                 foreach ($finder as $file) {
@@ -116,7 +123,7 @@ class Filter
             if (isset($coverage['blacklist']['include'])) {
                 foreach ($coverage['blacklist']['include'] as $fileOrDir) {
                     $finder = strpos($fileOrDir, '*') === false
-                        ? [$fileOrDir]
+                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {
@@ -127,7 +134,7 @@ class Filter
             if (isset($coverage['blacklist']['exclude'])) {
                 foreach ($coverage['blacklist']['exclude'] as $fileOrDir) {
                     $finder = strpos($fileOrDir, '*') === false
-                        ? [$fileOrDir]
+                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {

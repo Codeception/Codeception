@@ -4,7 +4,6 @@ namespace Codeception;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
-use Codeception\Lib\Console\Message;
 
 abstract class Step
 {
@@ -42,16 +41,13 @@ abstract class Step
 
     public function saveTrace()
     {
-        if (!function_exists('xdebug_get_function_stack')) {
-            return;
-        }
-        ini_set('xdebug.collect_params', '1');
-        $stack = xdebug_get_function_stack();
-        ini_set('xdebug.collect_params', 0);
+        $stack = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
+
         if (count($stack) <= self::STACK_POSITION) {
             return;
         }
-        $traceLine = $stack[count($stack) - self::STACK_POSITION];
+
+        $traceLine = $stack[self::STACK_POSITION - 1];
 
         if (!isset($traceLine['file'])) {
             return;
@@ -103,7 +99,7 @@ abstract class Step
             $totalLength += mb_strlen($stringifiedArgument, 'utf-8');
         }
 
-        if ($totalLength > $maxLength) {
+        if ($totalLength > $maxLength && $maxLength > 0) {
             //sort arguments from shortest to longest
             uasort($arguments, function ($arg1, $arg2) {
                 $length1 = mb_strlen($arg1, 'utf-8');
@@ -294,7 +290,7 @@ abstract class Step
                 continue;
             }
 
-            $this->metaStep = new Step\Meta($step['function'], array_values($step['params']));
+            $this->metaStep = new Step\Meta($step['function'], array_values($step['args']));
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // pageobjects or other classes should not be included with "I"

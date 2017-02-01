@@ -46,6 +46,7 @@
         </select>
         
         <select name="select3">
+            <option value=""></option>
             <option value="not seen one">Nothing selected</option>
             <option value="not seen two">Not selected</option>
             <option value="not seen three">Not selected</option>

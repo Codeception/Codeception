@@ -130,7 +130,7 @@ class Loader
             $formatFinder = clone($finder);
             $testFiles = $formatFinder->name($format->getPattern());
             foreach ($testFiles as $test) {
-                $pathname = str_replace("//", "/", $test->getPathname());
+                $pathname = str_replace(["//", "\\\\"], ["/", "\\"], $test->getPathname());
                 $format->loadTests($pathname);
             }
             $this->tests = array_merge($this->tests, $format->getTests());

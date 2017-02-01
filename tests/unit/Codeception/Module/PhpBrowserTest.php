@@ -101,6 +101,28 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->dontSeeCookie($cookie_name_2);
     }
 
+    public function testSessionsHaveIndependentCookies()
+    {
+        $this->module->amOnPage('/');
+        $cookie_name_1  = 'test_cookie';
+        $cookie_value_1 = 'this is a test';
+        $this->module->setCookie($cookie_name_1, $cookie_value_1);
+
+        $session = $this->module->_backupSession();
+        $this->module->_initializeSession();
+
+        $this->module->dontSeeCookie($cookie_name_1);
+
+        $cookie_name_2  = '2_test_cookie';
+        $cookie_value_2 = '2 this is a test';
+        $this->module->setCookie($cookie_name_2, $cookie_value_2);
+
+        $this->module->_loadSession($session);
+
+        $this->module->dontSeeCookie($cookie_name_2);
+        $this->module->seeCookie($cookie_name_1);
+    }
+
     public function testSubmitFormGet()
     {
         $I = $this->module;
@@ -566,5 +588,57 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->fillField('#texty', 'thingshjere');
         $this->module->click('#submit-registration');
         $this->assertEmpty(data::get('query'), 'Query string is not empty');
+    }
+
+    public function testClickLinkAndFillField()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->click('Sign in!');
+        $this->module->seeCurrentUrlEquals('/login');
+        $this->module->fillField('email', 'email@example.org');
+    }
+
+    public function testClickSelectsClickableElementFromMatches()
+    {
+        $this->module->amOnPage('/form/multiple_matches');
+        $this->module->click('Press Me!');
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickSelectsClickableElementFromMatchesUsingCssLocator()
+    {
+        $this->module->amOnPage('/form/multiple_matches');
+        $this->module->click(['css' => '.link']);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    /**
+     * @expectedException PHPUnit_Framework_AssertionFailedError
+     */
+    public function testClickingOnButtonOutsideFormDoesNotCauseFatalError()
+    {
+        $this->module->amOnPage('/form/button-not-in-form');
+        $this->module->click('The Button');
+    }
+
+    public function testSubmitFormWithoutEmptyOptionsInSelect()
+    {
+        $this->module->amOnPage('/form/bug3824');
+        $this->module->submitForm('form', []);
+        $this->module->dontSee('ERROR');
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/3953
+     */
+    public function testFillFieldInGetFormWithoutId()
+    {
+        $this->module->amOnPage('/form/bug3953');
+        $this->module->selectOption('select_name', 'two');
+        $this->module->fillField('search_name', 'searchterm');
+        $this->module->click('Submit');
+        $params = data::get('query');
+        $this->assertEquals('two', $params['select_name']);
+        $this->assertEquals('searchterm', $params['search_name']);
     }
 }

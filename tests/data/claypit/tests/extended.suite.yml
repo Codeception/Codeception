@@ -1,0 +1,15 @@
+class_name: ExtendedGuy
+modules:
+    enabled:
+        - \Helper\Extended
+
+extensions:
+    enabled:
+        - SuiteExtension:
+            config1: value1
+env:
+    black:
+        extensions:
+            config:
+                SuiteExtension:
+                    config1: black_value

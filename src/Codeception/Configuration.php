@@ -3,10 +3,12 @@
 namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\ParamsLoader;
 use Codeception\Util\Autoload;
 use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 class Configuration
@@ -105,6 +107,10 @@ class Configuration
         'path'        => '',
         'groups'      => [],
         'shuffle'     => false,
+        'extensions'  => [ // suite extensions
+            'enabled' => [],
+            'config' => [],
+        ],
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     ];
 
@@ -151,18 +157,19 @@ class Configuration
         $distConfigContents = "";
         if (file_exists($configDistFile)) {
             $distConfigContents = file_get_contents($configDistFile);
-            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($distConfigContents));
+            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($distConfigContents, $configDistFile));
         }
 
         $configContents = "";
         if (file_exists($configFile)) {
             $configContents = file_get_contents($configFile);
-            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($configContents));
+            $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($configContents, $configFile));
         }
         self::prepareParams($tempConfig);
 
-        $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromContents($distConfigContents));
-        $config = self::mergeConfigs($config, self::getConfFromContents($configContents));
+        // load config using params
+        $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromContents($distConfigContents, $configDistFile));
+        $config = self::mergeConfigs($config, self::getConfFromContents($configContents, $configFile));
 
         if ($config == self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
@@ -266,7 +273,7 @@ class Configuration
 
         // load global config
         $globalConf = $config['settings'];
-        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'gherkin'] as $key) {
+        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'gherkin', 'extensions'] as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }
@@ -335,16 +342,29 @@ class Configuration
      * Loads configuration from Yaml data
      *
      * @param string $contents Yaml config file contents
+     * @param string $filename which is supposed to be loaded
      * @return array
+     * @throws ConfigurationException
      */
-    protected static function getConfFromContents($contents)
+    protected static function getConfFromContents($contents, $filename = '(.yml)')
     {
         if (self::$params) {
             $template = new Template($contents, '%', '%');
             $template->setVars(self::$params);
             $contents = $template->produce();
         }
-        return Yaml::parse($contents);
+
+        try {
+            return Yaml::parse($contents);
+        } catch (ParseException $exception) {
+            throw new ConfigurationException(
+                sprintf(
+                    "Error loading Yaml config from `%s`\n \n%s\nRead more about Yaml format https://goo.gl/9UPuEC",
+                    $filename,
+                    $exception->getMessage()
+                )
+            );
+        }
     }
 
     /**
@@ -358,7 +378,7 @@ class Configuration
     {
         if (file_exists($filename)) {
             $yaml = file_get_contents($filename);
-            return self::getConfFromContents($yaml);
+            return self::getConfFromContents($yaml, $filename);
         }
         return $nonExistentValue;
     }
@@ -498,6 +518,7 @@ class Configuration
     {
         return self::$dir . DIRECTORY_SEPARATOR;
     }
+
 
     /**
      * Returns path to tests directory
@@ -655,41 +676,10 @@ class Configuration
     private static function prepareParams($settings)
     {
         self::$params = [];
+        $paramsLoader = new ParamsLoader();
 
         foreach ($settings['params'] as $paramStorage) {
-            if (is_array($paramStorage)) {
-                static::$params = array_merge(self::$params, $paramStorage);
-                continue;
-            }
-
-            // environment
-            if ($paramStorage === 'env' || $paramStorage === 'environment') {
-                static::$params = array_merge(self::$params, $_SERVER);
-                continue;
-            }
-
-            $paramsFile = realpath(self::$dir . '/' . $paramStorage);
-            if (!file_exists($paramsFile)) {
-                throw new ConfigurationException("Params file $paramsFile not found");
-            }
-
-            // yaml parameters
-            if (preg_match('~\.yml$~', $paramStorage)) {
-                $params = Yaml::parse(file_get_contents($paramsFile));
-                if (isset($params['parameters'])) { // Symfony style
-                    $params = $params['parameters'];
-                }
-                static::$params = array_merge(self::$params, $params);
-                continue;
-            }
-
-            // .env and ini files
-            if (preg_match('~(\.ini$|\.env(\.|$))~', $paramStorage)) {
-                $params = parse_ini_file($paramsFile);
-                static::$params = array_merge(self::$params, $params);
-                continue;
-            }
-            throw new ConfigurationException("Params can't be loaded from `$paramStorage`.");
+            static::$params = array_merge(self::$params, $paramsLoader->load($paramStorage));
         }
     }
 }

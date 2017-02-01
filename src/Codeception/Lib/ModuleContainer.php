@@ -173,14 +173,11 @@ class ModuleContainer
         // Do not include inherited actions if the static $includeInheritedActions property is set to false.
         // However, if an inherited action is also specified in the static $onlyActions property
         // it should be included as an action.
-        if (!$module::$includeInheritedActions) {
-            if (!in_array($method->name, $module::$onlyActions)) {
-                return false;
-            }
-
-            if ($method->getDeclaringClass()->getName() == get_class($module)) {
-                return false;
-            }
+        if (!$module::$includeInheritedActions &&
+            !in_array($method->name, $module::$onlyActions) &&
+            $method->getDeclaringClass()->getName() != get_class($module)
+        ) {
+            return false;
         }
 
         // Do not include hidden methods, methods with a name starting with an underscore
@@ -469,8 +466,8 @@ class ModuleContainer
     /**
      * Check if the modules passed as arguments to this method conflict with each other.
      *
-     * @param \Codception\Module $module
-     * @param \Codception\Module $otherModule
+     * @param \Codeception\Module $module
+     * @param \Codeception\Module $otherModule
      * @throws \Codeception\Exception\ModuleConflictException
      */
     private function validateConflict($module, $otherModule)

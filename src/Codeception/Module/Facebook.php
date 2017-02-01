@@ -116,7 +116,7 @@ EOF;
 
     public function _requires()
     {
-        return ['Facebook\Facebook' => '"facebook/php-sdk-v4": "~5.0"'];
+        return ['Facebook\Facebook' => '"facebook/graph-sdk": "~5.3"'];
     }
 
     public function _depends()

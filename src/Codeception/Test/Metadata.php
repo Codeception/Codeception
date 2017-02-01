@@ -17,6 +17,7 @@ class Metadata
 
     protected $current = [];
     protected $services = [];
+    protected $reports = [];
 
     /**
      * @return mixed
@@ -190,5 +191,22 @@ class Metadata
     public function setServices($services)
     {
         $this->services = $services;
+    }
+
+    /**
+     * @return array
+     */
+    public function getReports()
+    {
+        return $this->reports;
+    }
+
+    /**
+     * @param $type
+     * @param $report
+     */
+    public function addReport($type, $report)
+    {
+        $this->reports[$type] = $report;
     }
 }

@@ -11,11 +11,11 @@ INSERT INTO "permissions" VALUES(5,3,2,'member');
 INSERT INTO "permissions" VALUES(7,4,2,'admin');
 
 DROP TABLE IF EXISTS "users";
-CREATE TABLE "users" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "name" VARCHAR, "email" VARCHAR, "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP);
-INSERT INTO "users" VALUES(1,'davert','davert@mail.ua','2012-02-01 21:17:04');
-INSERT INTO "users" VALUES(2,'nick','nick@mail.ua','2012-02-01 21:17:15');
-INSERT INTO "users" VALUES(3,'miles','miles@davis.com','2012-02-01 21:17:25');
-INSERT INTO "users" VALUES(4,'bird','charlie@parker.com','2012-02-01 21:17:39');
+CREATE TABLE "users" ("name" VARCHAR, "email" VARCHAR, "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP);
+INSERT INTO "users" VALUES('davert','davert@mail.ua','2012-02-01 21:17:04');
+INSERT INTO "users" VALUES('nick','nick@mail.ua','2012-02-01 21:17:15');
+INSERT INTO "users" VALUES('miles','miles@davis.com','2012-02-01 21:17:25');
+INSERT INTO "users" VALUES('bird','charlie@parker.com','2012-02-01 21:17:39');
 
 DROP TABLE IF EXISTS "empty_table";
 CREATE TABLE "empty_table" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "field" VARCHAR);
@@ -25,16 +25,16 @@ CREATE TABLE "composite_pk" (
   "id" INTEGER NOT NULL,
   "status" VARCHAR NOT NULL,
   PRIMARY KEY ("group_id", "id")
-);
+) WITHOUT ROWID;
 
 CREATE TABLE "no_pk" (
   "status" VARCHAR NOT NULL
 );
 
 CREATE TABLE "order" (
-  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER NOT NULL PRIMARY KEY,
   "name" VARCHAR NOT NULL,
   "status" VARCHAR NOT NULL
-);
+) WITHOUT ROWID;
 
 insert  into "order"("id","name","status") values (1,'main', 'open');

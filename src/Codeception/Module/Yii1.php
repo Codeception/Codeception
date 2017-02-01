@@ -224,8 +224,8 @@ class Yii1 extends Framework implements PartedModule
      */
     private function getDomainRegex($template, $parameters = [])
     {
-        if (preg_match('#https?://(.*?)/#', $template, $matches)) {
-            $template = $matches[1];
+        if ($host = parse_url($template, PHP_URL_HOST)) {
+            $template = $host;
         }
         if (strpos($template, '<') !== false) {
             $template = str_replace(['<', '>'], '#', $template);
@@ -247,7 +247,8 @@ class Yii1 extends Framework implements PartedModule
     {
         $domains = [$this->getDomainRegex(Yii::app()->request->getHostInfo())];
         if (Yii::app()->urlManager->urlFormat === 'path') {
-            $rules = ReflectionHelper::readPrivateProperty(Yii::app()->urlManager, '_rules');
+            $parent = Yii::app()->urlManager instanceof \CUrlManager ? '\CUrlManager' : null;
+            $rules = ReflectionHelper::readPrivateProperty(Yii::app()->urlManager, '_rules', $parent);
             foreach ($rules as $rule) {
                 if ($rule->hasHostInfo === true) {
                     $domains[] = $this->getDomainRegex($rule->template, $rule->params);

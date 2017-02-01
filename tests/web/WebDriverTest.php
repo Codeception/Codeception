@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Step;
 use Codeception\Util\Stub;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
@@ -132,6 +133,74 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertEquals('10', $form['description']);
         $this->assertEquals('agree', $form['terms']);
         $this->assertEquals('child', $form['age']);
+    }
+
+    /**
+     * @dataProvider strictSelectorProvider
+     */
+    public function testSubmitFormWithButtonAsStrictSelector(array $selector)
+    {
+        $this->module->amOnPage('/form/strict_selectors');
+        $this->module->submitForm('form', [
+                'name' => 'Davert',
+                'age' => 'child',
+                'terms' => 'agree',
+                'description' => 'My Bio'
+        ], $selector);
+
+        $form = data::get('form');
+
+        $this->assertEquals('Davert', $form['name']);
+        $this->assertEquals('kill_all', $form['action']);
+        $this->assertEquals('My Bio', $form['description']);
+        $this->assertEquals('agree', $form['terms']);
+        $this->assertEquals('child', $form['age']);
+    }
+
+    public function strictSelectorProvider()
+    {
+        return [
+            'by id' => [['id' => 'submit_button']],
+            'by name' => [['name' => 'submit_button_name']],
+            'by css' => [['css' => 'form #submit_button']],
+            'by xpath' => [['xpath' => '//*[@id="submit_button"]']],
+            'by link' => [['link' => 'Submit']],
+            'by class' => [['class' => 'button']],
+        ];
+    }
+
+    /**
+     * @dataProvider webDriverByProvider
+     */
+    public function testSubmitFormWithButtonAsWebDriverBy(WebDriverBy $selector)
+    {
+        $this->module->amOnPage('/form/strict_selectors');
+        $this->module->submitForm('form', [
+                'name' => 'Davert',
+                'age' => 'child',
+                'terms' => 'agree',
+                'description' => 'My Bio'
+        ], $selector);
+
+        $form = data::get('form');
+
+        $this->assertEquals('Davert', $form['name']);
+        $this->assertEquals('kill_all', $form['action']);
+        $this->assertEquals('My Bio', $form['description']);
+        $this->assertEquals('agree', $form['terms']);
+        $this->assertEquals('child', $form['age']);
+    }
+
+    public function webDriverByProvider()
+    {
+        return [
+            'by id' => [WebDriverBy::id('submit_button')],
+            'by name' => [WebDriverBy::name('submit_button_name')],
+            'by css selector' => [WebDriverBy::cssSelector('form #submit_button')],
+            'by xpath' => [WebDriverBy::xpath('//*[@id="submit_button"]')],
+            'by link text' => [WebDriverBy::linkText('Submit')],
+            'by class name' => [WebDriverBy::className('button')],
+        ];
     }
 
     public function testRadioButtonByValue()
@@ -582,10 +651,31 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/textarea');
         //make sure we see 'sunrise' which is the default text in the textarea
         $this->module->seeInField('#description', 'sunrise');
+
+        if ($this->notForSelenium()) {
+            $this->module->seeInField('#whitespaces', '        no_whitespaces    ');
+        }
+        $this->module->seeInField('#whitespaces', 'no_whitespaces');
+
         //fill in some new text and see if we can see it
         $textarea_value = 'test string';
         $this->module->fillField('#description', $textarea_value);
         $this->module->seeInField('#description', $textarea_value);
+    }
+
+    public function testSeeInFieldSelect()
+    {
+        $this->module->amOnPage('/form/select_second');
+
+        if ($this->notForSelenium()) {
+            $this->module->seeInField('#select2', '        no_whitespaces    ');
+        }
+        $this->module->seeInField('#select2', 'no_whitespaces');
+
+        // select new option and check it
+        $option_value = 'select2_value1';
+        $this->module->selectOption('#select2', $option_value);
+        $this->module->seeInField('#select2', $option_value);
     }
 
     public function testAppendFieldDiv()
@@ -635,6 +725,13 @@ class WebDriverTest extends TestsForBrowsers
         }
     }
 
+    protected function notForSelenium()
+    {
+        if ($this->module->_getConfig('browser') != 'phantom') {
+            $this->markTestSkipped('does not work for selenium');
+        }
+    }
+
     public function testScrollTo()
     {
         $this->module->amOnPage('/form/example18');
@@ -650,5 +747,163 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->module->amOnPage('/form/bug2921');
         $this->module->seeInField('foo', 'bar baz');
+    }
+
+    public function testClickHashLink()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Link');
+        $this->module->seeCurrentUrlEquals('/form/anchor#b');
+    }
+
+    /**
+     * @Issue 3865
+     */
+    public function testClickNumericLink()
+    {
+        $this->module->amOnPage('/form/bug3865');
+        $this->module->click('222');
+        $this->module->see('Welcome to test app');
+    }
+
+    public function testClickHashButton()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Button');
+        $this->module->seeCurrentUrlEquals('/form/anchor#c');
+    }
+
+    public function testSubmitHashForm()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Form');
+        $this->module->seeCurrentUrlEquals('/form/anchor#a');
+    }
+
+    public function testJSErrorLoggingPositive()
+    {
+        // arrange
+        $this->module->_setConfig(['log_js_errors' => true]);
+        $cept = new \Codeception\Test\Cept('foo', 'bar');
+
+        // act
+        $this->module->amOnPage('/jserroronload');
+        $this->module->_failed($cept, 'anyFailMessage');
+
+        // assert
+        /* @var $steps Step[]  */
+        $steps = $cept->getScenario()->getSteps();
+        $this->assertGreaterThan(0, count($steps));
+
+        $lastStep = end($steps);
+
+        $this->assertContains(
+            "TypeError",
+            $lastStep->getHtml()
+        );
+    }
+
+    public function testJSErrorLoggingNegative()
+    {
+        // arrange
+        $this->module->_setConfig(['log_js_errors' => false]);
+        $cept = new \Codeception\Test\Cept('foo', 'bar');
+
+        // act
+        $this->module->amOnPage('/jserroronload');
+        $this->module->_failed($cept, 'anyFailMessage');
+
+        // assert
+        /* @var $steps Step[]  */
+        $steps = $cept->getScenario()->getSteps();
+        $this->assertEquals(0, count($steps));
+    }
+
+    public function testMoveMouseOver()
+    {
+        $this->module->amOnPage('/form/click');
+
+        $this->module->moveMouseOver(null, 123, 88);
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 123 - offsetY: 88');
+
+        $this->module->moveMouseOver(null, 10, 10);
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 133 - offsetY: 98');
+
+        $this->module->moveMouseOver('#element2');
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 58 - offsetY: 158');
+
+        $this->module->moveMouseOver('#element2', 0, 0);
+        $this->module->clickWithLeftButton(null, 0, 0);
+        $this->module->see('click, offsetX: 8 - offsetY: 108');
+    }
+
+    public function testLeftClick()
+    {
+        $this->module->amOnPage('/form/click');
+
+        $this->module->clickWithLeftButton(null, 123, 88);
+        $this->module->see('click, offsetX: 123 - offsetY: 88');
+
+        $this->module->clickWithLeftButton('body');
+        $this->module->see('click, offsetX: 600 - offsetY: 384');
+
+        $this->module->clickWithLeftButton('body', 50, 75);
+        $this->module->see('click, offsetX: 58 - offsetY: 83');
+
+        $this->module->clickWithLeftButton('body div');
+        $this->module->see('click, offsetX: 58 - offsetY: 58');
+
+        $this->module->clickWithLeftButton('#element2', 70, 75);
+        $this->module->see('click, offsetX: 78 - offsetY: 183');
+    }
+
+    public function testRightClick()
+    {
+        // actually not supported in phantomjs see https://github.com/ariya/phantomjs/issues/14005
+        $this->notForPhantomJS();
+
+        $this->module->amOnPage('/form/click');
+
+        $this->module->clickWithRightButton(null, 123, 88);
+        $this->module->see('context, offsetX: 123 - offsetY: 88');
+
+        $this->module->clickWithRightButton('body');
+        $this->module->see('context, offsetX: 600 - offsetY: 384');
+
+        $this->module->clickWithRightButton('body', 50, 75);
+        $this->module->see('context, offsetX: 58 - offsetY: 83');
+
+        $this->module->clickWithRightButton('body div');
+        $this->module->see('context, offsetX: 58 - offsetY: 58');
+
+        $this->module->clickWithRightButton('#element2', 70, 75);
+        $this->module->see('context, offsetX: 78 - offsetY: 183');
+    }
+
+    public function testBrowserTabs()
+    {
+        $this->notForPhantomJS();
+        $this->module->amOnPage('/form/example1');
+        $this->module->openNewTab();
+        $this->module->amOnPage('/form/example2');
+        $this->module->openNewTab();
+        $this->module->amOnPage('/form/example3');
+        $this->module->openNewTab();
+        $this->module->amOnPage('/form/example4');
+        $this->module->openNewTab();
+        $this->module->amOnPage('/form/example5');
+        $this->module->closeTab();
+        $this->module->seeInCurrentUrl('example4');
+        $this->module->switchToPreviousTab(2);
+        $this->module->seeInCurrentUrl('example2');
+        $this->module->switchToNextTab();
+        $this->module->seeInCurrentUrl('example3');
+        $this->module->closeTab();
+        $this->module->seeInCurrentUrl('example2');
+        $this->module->switchToNextTab(2);
+        $this->module->seeInCurrentUrl('example1');
     }
 }

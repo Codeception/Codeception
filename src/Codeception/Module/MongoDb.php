@@ -27,6 +27,8 @@ use Codeception\TestInterface;
  * Connection is done by MongoDb driver, which is stored in Codeception\Lib\Driver namespace.
  * Check out the driver if you get problems loading dumps and cleaning databases.
  *
+ * HINT: This module can be used with [Mongofill](https://github.com/mongofill/mongofill) library which is Mongo client written in PHP without extension.
+ *
  * ## Status
  *
  * * Maintainer: **judgedim**, **davert**
@@ -74,6 +76,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
         'dump_type' => self::DUMP_TYPE_JS,
         'user'      => null,
         'password'  => null,
+        'quiet'     => false,
     ];
 
     protected $populated = false;
@@ -139,7 +142,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
                 $this->isDumpFileEmpty = true;
                 $dumpDir = dir($this->dumpFile);
                 while (false !== ($entry = $dumpDir->read())) {
-                    if ($entity !== '..' && $entity !== '.') {
+                    if ($entry !== '..' && $entry !== '.') {
                         $this->isDumpFileEmpty = false;
                         break;
                     }
@@ -206,18 +209,22 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
 
     protected function loadDump()
     {
+        $this->validateDump();
+
         if ($this->isDumpFileEmpty) {
             return;
         }
 
         try {
-            if ($this->config['dump_type'] === DUMP_TYPE_JS) {
+            if ($this->config['dump_type'] === self::DUMP_TYPE_JS) {
                 $this->driver->load($this->dumpFile);
             }
-            if ($this->config['dump_type'] === DUMP_TYPE_MONGODUMP) {
+            if ($this->config['dump_type'] === self::DUMP_TYPE_MONGODUMP) {
+                $this->driver->setQuiet($this->config['quiet']);
                 $this->driver->loadFromMongoDump($this->dumpFile);
             }
-            if ($this->config['dump_type'] === DUMP_TYPE_MONGODUMP_TAR_GZ) {
+            if ($this->config['dump_type'] === self::DUMP_TYPE_MONGODUMP_TAR_GZ) {
+                $this->driver->setQuiet($this->config['quiet']);
                 $this->driver->loadFromTarGzMongoDump($this->dumpFile);
             }
         } catch (\Exception $e) {
@@ -305,12 +312,12 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
      *
      * ``` php
      * <?php
-     * $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
+     * $user = $I->grabFromCollection('users', array('name' => 'miles'));
      * ```
      *
      * @param $collection
      * @param array $criteria
-     * @return \MongoCursor
+     * @return array
      */
     public function grabFromCollection($collection, $criteria = [])
     {

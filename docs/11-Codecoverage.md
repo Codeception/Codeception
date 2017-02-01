@@ -21,31 +21,7 @@ coverage:
     enabled: true
 ```
 
-That's ok for now. But what files should be present in final coverage report? You can filter files by providing blacklist and whitelist filters like this:
-
-``` yaml
-coverage:
-    enabled: true
-    whitelist:
-        include:
-            - app/*
-        exclude:
-            - app/cache/*
-    blacklist:
-        include:
-            - app/controllers/*
-        exclude:
-            - app/cache/CacheProvider.php
-
-```
-What are whitelists and blacklists?
-
-* A **whitelist** is a list of files that should be included in report even they were not touched.
-* A **blacklist** is a list of files that should be excluded from report even they were touched.
-
-<div class="alert alert-info">
-The blacklist functionality has been removed from PHPUnit 5, but it can still be used with PHPUnit 4.8.
-</div>
+That's ok for now. But what files should be present in final coverage report? 
 Pass an array of files or directory to include/exclude sections. The path ending with '\*' matches the directory.
 Also you can use '\*' mask in a file name, i.e. `app/models/*Model.php` to match all models.
 
@@ -59,10 +35,18 @@ coverage:
     exclude:
         - app/cache/*
 ```
+Include and exclude options can be redefined for each suite in corresponding config files.
 
-These `include` and `exclude` options are to add or remove files from a whitelist.
+By default, if coverage is reported to be < 35% it is marked as low, and >70% is high coverage.
+You can also define high and low boundaries with `low_limit` and `high_limit` config options:
+ 
+```yaml
+coverage:
+    enabled: true
+    low_limit: 30
+    high_limit: 60
+``` 
 
-All these settings can be redefined for each suite in their config files.
 
 ## Local CodeCoverage
 
