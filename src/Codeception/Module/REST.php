@@ -498,7 +498,13 @@ EOF;
             $this->debugSection("Request", "$method $url " . $requestData);
             $this->response = (string)$this->connectionModule->_request($method, $url, [], $files, [], $parameters);
         }
-        $this->debugSection("Response", $this->response);
+        $response = $this->response;
+        if (!ctype_print($response) && false === mb_detect_encoding($response, mb_detect_order(), true)) {
+            // if the response has non-printable bytes and it is not a valid unicode string, reformat the
+            // display string to signify the presence of a binary response
+            $response = '[binary-data length:' . strlen($response) . ' md5:' . md5($response) . ']';
+        }
+        $this->debugSection("Response", $response);
     }
 
     protected function encodeApplicationJson($method, $parameters)
