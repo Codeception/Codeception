@@ -1406,9 +1406,16 @@ class WebDriver extends CodeceptionModule implements
      *
      * @return string
      */
-    private function getVisibleText()
+    protected function getVisibleText()
     {
-        return $this->baseElement->getText();
+        if ($this->baseElement instanceof RemoteWebElement) {
+            return $this->baseElement->getText();
+        }
+        $els = $this->baseElement->findElements(WebDriverBy::cssSelector('body'));
+        if (isset($els[0])) {
+            return $els[0]->getText();
+        }
+        return '';
     }
 
     public function grabTextFrom($cssOrXPathOrRegex)
@@ -2922,17 +2929,10 @@ class WebDriver extends CodeceptionModule implements
         $this->setBaseElement();
     }
 
-    private function elementActionsToArray($actions)
-    {
-        if (is_array($actions)) {
-            return $actions;
-        }
-    }
-
     protected function setBaseElement($element = null)
     {
         if ($element === null) {
-            $this->baseElement = $this->webDriver->findElement(WebDriverBy::cssSelector('body'));
+            $this->baseElement = $this->webDriver;
             return;
         }
         $this->baseElement = $this->matchFirstOrFail($this->webDriver, $element);
