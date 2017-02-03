@@ -490,15 +490,39 @@ EOF;
             $this->response = (string)$this->connectionModule->_request($method, $url, $parameters, $files);
         } else {
             $requestData = $parameters;
-            if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
-                // if the request data has non-printable bytes and it is not a valid unicode string, reformat the
-                // display string to signify the presence of request data
-                $requestData = '[binary-data length:' . strlen($requestData) . ' md5:' . md5($requestData) . ']';
+            if ($this->isBinaryData($requestData)) {
+                $requestData = $this->binaryToDebugString($requestData);
             }
             $this->debugSection("Request", "$method $url " . $requestData);
             $this->response = (string)$this->connectionModule->_request($method, $url, [], $files, [], $parameters);
         }
-        $this->debugSection("Response", $this->response);
+        $printedResponse = $this->response;
+        if ($this->isBinaryData($printedResponse)) {
+            $printedResponse = $this->binaryToDebugString($printedResponse);
+        }
+        $this->debugSection("Response", $printedResponse);
+    }
+
+    /**
+     * Check if data has non-printable bytes and it is not a valid unicode string
+     * 
+     * @param string $data the text or binary data string
+     * @return boolean
+     */
+    protected function isBinaryData($data)
+    {
+        return !ctype_print($data) && false === mb_detect_encoding($data, mb_detect_order(), true);
+    }
+
+    /**
+     * Format a binary string for debug printing
+     * 
+     * @param string $data the binary data string
+     * @return string the debug string
+     */
+    protected function binaryToDebugString($data)
+    {
+        return '[binary-data length:' . strlen($data) . ' md5:' . md5($data) . ']';
     }
 
     protected function encodeApplicationJson($method, $parameters)
