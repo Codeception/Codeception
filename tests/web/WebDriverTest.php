@@ -906,4 +906,63 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->switchToNextTab(2);
         $this->module->seeInCurrentUrl('example1');
     }
+
+    public function testPerformOnWithArray()
+    {
+        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $this->module->amOnPage('/form/example1');
+        $this->module->performOn('.rememberMe', [
+            'see' => 'Remember me next time',
+            'seeElement' => '#LoginForm_rememberMe',
+            'dontSee' => 'Login'
+        ]);
+        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->module->see('Login');
+    }
+
+    public function testPerformOnWithCallback()
+    {
+        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $this->module->amOnPage('/form/example1');
+        $this->module->performOn('.rememberMe', function (\Codeception\Module\WebDriver $I) {
+            $I->see('Remember me next time');
+            $I->seeElement('#LoginForm_rememberMe');
+            $I->dontSee('Login');
+        });
+        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->module->see('Login');
+    }
+
+
+    public function testPerformOnWithBuiltArray()
+    {
+        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $this->module->amOnPage('/form/example1');
+        $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
+            ->see('Remember me next time')
+            ->seeElement('#LoginForm_rememberMe')
+            ->dontSee('Login')
+        );
+        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->module->see('Login');
+    }
+
+    public function testPerformOnFail()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/example1');
+        $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
+            ->seeElement('#LoginForm_rememberMe')
+            ->see('Remember me tomorrow')
+        );
+    }
+
+    public function testPerformOnFail2()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/example1');
+        $this->module->performOn('.rememberMe', ['see' => 'Login']);
+    }
+
+
 }
