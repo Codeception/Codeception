@@ -45,7 +45,7 @@ use Illuminate\Support\Collection;
  * * cleanup: `boolean`, default `true` - all database queries will be run in a transaction,
  *   which will be rolled back at the end of each test.
  * * run_database_migrations: `boolean`, default `false` - run database migrations before each test.
- * * database_migrations_path: `string`, default `` - path to the database migrations, relative to the root of the application.
+ * * database_migrations_path: `string`, default `database/migrations` - path to the database migrations, relative to the root of the application.
  * * run_database_seeder: `boolean`, default `false` - run database seeder before each test.
  * * database_seeder_class: `string`, default `` - database seeder class name.
  * * environment_file: `string`, default `.env` - the environment file to load for the tests.
@@ -114,7 +114,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             [
                 'cleanup' => true,
                 'run_database_migrations' => false,
-                'database_migrations_path' => '',
+                'database_migrations_path' => 'database/migrations',
                 'run_database_seeder' => false,
                 'database_seeder_class' => '',
                 'environment_file' => '.env',
