@@ -6,7 +6,6 @@
 
 namespace Jazz\Pianist;
 use Codeception\Module\Filesystem;
-use Jazz\Pianist\Codeception\Module\TestHelper;
 
 /**
  * Inherited Methods

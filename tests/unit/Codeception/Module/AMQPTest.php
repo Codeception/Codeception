@@ -1,6 +1,5 @@
 <?php
 
-use Codeception\Util\Stub as Stub;
 
 class AMQPTest extends \PHPUnit_Framework_TestCase
 {

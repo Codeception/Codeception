@@ -1,8 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Exception\ConfigurationException;
-use Codeception\Exception\ModuleConfigException;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\CookieJar;

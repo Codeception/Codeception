@@ -4,7 +4,6 @@ namespace Codeception;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
-use Codeception\Lib\Console\Message;
 
 abstract class Step
 {

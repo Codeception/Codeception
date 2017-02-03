@@ -6,7 +6,6 @@ use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
-use Codeception\Exception\TestParseException;
 use Codeception\Lib\Di;
 use Codeception\Scenario;
 use Codeception\Step\Comment;

@@ -2045,14 +2045,19 @@ class WebDriver extends CodeceptionModule implements
      */
     public function waitForText($text, $timeout = 10, $selector = null)
     {
+        $message = sprintf(
+            'Waited for %d secs but text %s still not found',
+            $timeout,
+            Locator::humanReadableString($text)
+        );
         if (!$selector) {
             $condition = WebDriverExpectedCondition::textToBePresentInElement(WebDriverBy::xpath('//body'), $text);
-            $this->webDriver->wait($timeout)->until($condition);
+            $this->webDriver->wait($timeout)->until($condition, $message);
             return;
         }
 
         $condition = WebDriverExpectedCondition::textToBePresentInElement($this->getLocator($selector), $text);
-        $this->webDriver->wait($timeout)->until($condition);
+        $this->webDriver->wait($timeout)->until($condition, $message);
     }
 
     /**
@@ -2184,7 +2189,12 @@ class WebDriver extends CodeceptionModule implements
         $condition = function ($wd) use ($script) {
             return $wd->executeScript($script);
         };
-        $this->webDriver->wait($timeout)->until($condition);
+        $message = sprintf(
+            'Waited for %d secs but script %s still not executed',
+            $timeout,
+            Locator::humanReadableString($script)
+        );
+        $this->webDriver->wait($timeout)->until($condition, $message);
     }
 
     /**

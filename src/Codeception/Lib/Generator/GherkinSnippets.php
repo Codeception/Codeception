@@ -6,7 +6,6 @@ use Codeception\Test\Loader\Gherkin;
 use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
 
-use Symfony\Component\Console\Output\OutputInterface;
 
 class GherkinSnippets
 {

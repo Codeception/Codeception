@@ -14,6 +14,14 @@ class RunCest
         $I->seeInShellOutput("OK (");
     }
 
+    public function runOneFileWithColors(\CliGuy $I)
+    {
+        $I->wantTo('execute one test');
+        $I->executeCommand('run --colors tests/dummy/FileExistsCept.php');
+        $I->seeInShellOutput("OK (");
+        $I->seeInShellOutput("\033[35;1mFileExistsCept:\033[39;22m Check config exists");
+    }
+
     /**
      * @group reports
      * @group core
