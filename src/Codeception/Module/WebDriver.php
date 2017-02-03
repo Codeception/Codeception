@@ -1951,16 +1951,15 @@ class WebDriver extends CodeceptionModule implements
      * @param $element
      * @param \Closure $callback
      * @param int $timeout seconds
-     * @param string $errorMessage
      * @throws \Codeception\Exception\ElementNotFound
      */
-    public function waitForElementChange($element, \Closure $callback, $timeout = 30, $errorMessage = '')
+    public function waitForElementChange($element, \Closure $callback, $timeout = 30)
     {
         $el = $this->matchFirstOrFail($this->webDriver, $element);
         $checker = function () use ($el, $callback) {
             return $callback($el);
         };
-        $this->webDriver->wait($timeout)->until($checker, $errorMessage);
+        $this->webDriver->wait($timeout)->until($checker);
     }
 
     /**
@@ -1976,13 +1975,12 @@ class WebDriver extends CodeceptionModule implements
      *
      * @param $element
      * @param int $timeout seconds
-     * @param string $errorMessage
      * @throws \Exception
      */
-    public function waitForElement($element, $timeout = 10, $errorMessage = '')
+    public function waitForElement($element, $timeout = 10)
     {
         $condition = WebDriverExpectedCondition::presenceOfElementLocated($this->getLocator($element));
-        $this->webDriver->wait($timeout)->until($condition, $errorMessage);
+        $this->webDriver->wait($timeout)->until($condition);
     }
 
     /**
@@ -1998,13 +1996,12 @@ class WebDriver extends CodeceptionModule implements
      *
      * @param $element
      * @param int $timeout seconds
-     * @param string $errorMessage
      * @throws \Exception
      */
-    public function waitForElementVisible($element, $timeout = 10, $errorMessage = '')
+    public function waitForElementVisible($element, $timeout = 10)
     {
         $condition = WebDriverExpectedCondition::visibilityOfElementLocated($this->getLocator($element));
-        $this->webDriver->wait($timeout)->until($condition, $errorMessage);
+        $this->webDriver->wait($timeout)->until($condition);
     }
 
     /**
@@ -2019,13 +2016,12 @@ class WebDriver extends CodeceptionModule implements
      *
      * @param $element
      * @param int $timeout seconds
-     * @param string $errorMessage
      * @throws \Exception
      */
-    public function waitForElementNotVisible($element, $timeout = 10, $errorMessage = '')
+    public function waitForElementNotVisible($element, $timeout = 10)
     {
         $condition = WebDriverExpectedCondition::invisibilityOfElementLocated($this->getLocator($element));
-        $this->webDriver->wait($timeout)->until($condition, $errorMessage);
+        $this->webDriver->wait($timeout)->until($condition);
     }
 
     /**
@@ -2045,19 +2041,22 @@ class WebDriver extends CodeceptionModule implements
      * @param string $text
      * @param int $timeout seconds
      * @param null $selector
-     * @param string $errorMessage
      * @throws \Exception
      */
-    public function waitForText($text, $timeout = 10, $selector = null, $errorMessage = '')
+    public function waitForText($text, $timeout = 10, $selector = null)
     {
+        $message = sprintf('Waited for %d secs but text %s still not found',
+            $timeout,
+            Locator::humanReadableString($text)
+        );
         if (!$selector) {
             $condition = WebDriverExpectedCondition::textToBePresentInElement(WebDriverBy::xpath('//body'), $text);
-            $this->webDriver->wait($timeout)->until($condition, $errorMessage);
+            $this->webDriver->wait($timeout)->until($condition, $message);
             return;
         }
 
         $condition = WebDriverExpectedCondition::textToBePresentInElement($this->getLocator($selector), $text);
-        $this->webDriver->wait($timeout)->until($condition, $errorMessage);
+        $this->webDriver->wait($timeout)->until($condition, $message);
     }
 
     /**
@@ -2183,14 +2182,17 @@ class WebDriver extends CodeceptionModule implements
      *
      * @param string $script
      * @param int $timeout seconds
-     * @param string $errorMessage
      */
-    public function waitForJS($script, $timeout = 5, $errorMessage = '')
+    public function waitForJS($script, $timeout = 5)
     {
         $condition = function ($wd) use ($script) {
             return $wd->executeScript($script);
         };
-        $this->webDriver->wait($timeout)->until($condition, $errorMessage);
+        $message = sprintf('Waited for %d secs but script %s still not executed',
+            $timeout,
+            Locator::humanReadableString($script)
+        );
+        $this->webDriver->wait($timeout)->until($condition, $message);
     }
 
     /**
