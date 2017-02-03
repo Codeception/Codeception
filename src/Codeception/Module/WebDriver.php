@@ -267,7 +267,7 @@ class WebDriver extends CodeceptionModule implements
         'http_proxy_port'    => null,
         'ssl_proxy'          => null,
         'ssl_proxy_port'     => null,
-        'debug_log_entries'  => null,
+        'debug_log_entries'  => 15,
         'log_js_errors'      => false
     ];
 
