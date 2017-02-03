@@ -377,7 +377,7 @@ Let's see how can you perform some actions inside an HTML popup:
 
 ```php
 <?php
-$I->performOn('.model', \Codeception\Util\ActionSequence::build()
+$I->performOn('.confirm', \Codeception\Util\ActionSequence::build()
     ->see('Warning')
     ->see('Are you sure you want to delete this?')
     ->click('Yes')
@@ -387,7 +387,7 @@ Alternatively, this can be executed using callback, in this case WebDriver modul
 
 ```php
 <?php
-$I->performOn('.model', function(\Codeception\Module\WebDriver $I) {
+$I->performOn('.confirm', function(\Codeception\Module\WebDriver $I) {
     $I->see('Warning');
     $I->see('Are you sure you want to delete this?');
     $I->click('Yes');
