@@ -370,14 +370,14 @@ If you don't know what exact element you need to wait for, you can simply pause 
 $I->wait(3); // wait for 3 secs
 ```
 
-#### PerformOn
+#### Wait and Act
 
 To combine `waitForElement` with actions inside that element you can use [performOn](http://codeception.com/docs/modules/WebDriver#performOn) method. 
 Let's see how can you perform some actions inside an HTML popup:
 
 ```php
 <?php
-$I->performOn('.model', ActionSequence::build()
+$I->performOn('.model', \Codeception\Util\ActionSequence::build()
     ->see('Warning')
     ->see('Are you sure you want to delete this?')
     ->click('Yes')

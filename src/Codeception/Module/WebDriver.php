@@ -34,6 +34,7 @@ use Facebook\WebDriver\Exception\InvalidSelectorException;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\UnknownServerException;
 use Facebook\WebDriver\Exception\WebDriverCurlException;
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
@@ -321,6 +322,8 @@ class WebDriver extends CodeceptionModule implements
         if (!isset($this->webDriver)) {
             $this->_initializeSession();
         }
+        $this->setBaseElement();
+
         $test->getMetadata()->setCurrent([
             'browser' => $this->config['browser'],
             'capabilities' => $this->config['capabilities']
@@ -2884,6 +2887,9 @@ class WebDriver extends CodeceptionModule implements
      * );
      * ```
      *
+     * Actions executed from array or ActionSequence will print debug output for actions, and adds an action name to
+     * exception on failure.
+     *
      * Whenever you need to define more actions a callback can be used. A WebDriver module is passed for argument:
      *
      * ```php
@@ -2923,8 +2929,16 @@ class WebDriver extends CodeceptionModule implements
             if (!is_array($value)) {
                 $value = [$value];
             }
-            $this->debugSection("Action", (string)(new Action($action, $value)));
-            call_user_func_array([$this, $action], $value);
+            $step = new Action($action, $value);
+            $this->debugSection("Action", (string)$step);
+
+            try {
+                call_user_func_array([$this, $action], $value);
+            } catch (WebDriverException $e) {
+                $class = get_class($e); // rethrow exception for a specific action
+                throw new $class($e->getMessage() . "\nat $step", $e->getResults());
+            }
+
         }
         $this->setBaseElement();
     }
