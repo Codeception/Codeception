@@ -155,6 +155,63 @@ class AMQP extends CodeceptionModule implements RequiresPackage
     }
 
     /**
+     * Declares an exchange
+     *
+     * This is an alias of method `exchange_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
+     *
+     * ```php
+     * <?php
+     * $I->declareExchange(
+     *     'nameOfMyExchange', // exchange name
+     *     'topic' // exchange type
+     *     //.. see the original method for more options
+     * )
+     * ```
+     */
+    public function declareExchange()
+    {
+        return call_user_func_array([$this->connection->channel(), 'exchange_declare'], func_get_args());
+    }
+
+    /**
+     * Declares a queue
+     *
+     * This is an alias of method `queue_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
+     *
+     * ```php
+     * <?php
+     * $I->declareQueue(
+     *     'nameOfMyQueue', // exchange name
+     *     //.. see the original method for more options
+     * )
+     * ```
+     */
+    public function declareQueue()
+    {
+        return call_user_func_array([$this->connection->channel(), 'queue_declare'], func_get_args());
+    }
+
+    /**
+     * Binds a queue to an exchange
+     *
+     * This is an alias of method `queue_bind` of `PhpAmqpLib\Channel\AMQPChannel`.
+     *
+     * ```php
+     * <?php
+     * $I->bindQueueToExchange(
+     *     'nameOfMyQueueToBind', // name of the queue
+     *     'transactionTracking.transaction', // exchange name to bind to
+     *     'your.routing.key' // Optionally, provide a binding key
+     *     //.. see the original method for more options
+     * )
+     * ```
+     */
+    public function bindQueueToExchange()
+    {
+        return call_user_func_array([$this->connection->channel(), 'queue_bind'], func_get_args());
+    }
+
+    /**
      * Checks if message containing text received.
      *
      * **This method drops message from queue**
