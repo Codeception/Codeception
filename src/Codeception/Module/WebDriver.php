@@ -2045,7 +2045,8 @@ class WebDriver extends CodeceptionModule implements
      */
     public function waitForText($text, $timeout = 10, $selector = null)
     {
-        $message = sprintf('Waited for %d secs but text %s still not found',
+        $message = sprintf(
+            'Waited for %d secs but text %s still not found',
             $timeout,
             Locator::humanReadableString($text)
         );
@@ -2188,7 +2189,8 @@ class WebDriver extends CodeceptionModule implements
         $condition = function ($wd) use ($script) {
             return $wd->executeScript($script);
         };
-        $message = sprintf('Waited for %d secs but script %s still not executed',
+        $message = sprintf(
+            'Waited for %d secs but script %s still not executed',
             $timeout,
             Locator::humanReadableString($script)
         );
