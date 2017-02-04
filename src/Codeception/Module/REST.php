@@ -1219,6 +1219,34 @@ EOF;
     }
 
     /**
+     * Checks if the hash of a binary response is exactly the same as provided.
+     *
+     * @param $hash the hashed data response expected
+     * @param $algo the hash algorithm to use. Default md5.
+     * @part json
+     * @part xml
+     */
+    public function seeBinaryResponseEquals($hash, $algo = 'md5')
+    {
+        $responseHash = hash($algo, $this->connectionModule->_getResponseContent());
+        $this->assertEquals($hash, $responseHash);
+    }
+
+    /**
+     * Checks if the hash of a binary response is not the same as provided.
+     *
+     * @param $hash the hashed data response expected
+     * @param $algo the hash algorithm to use. Default md5.
+     * @part json
+     * @part xml
+     */
+    public function dontSeeBinaryResponseEquals($hash, $algo = 'md5')
+    {
+        $responseHash = hash($algo, $this->connectionModule->_getResponseContent());
+        $this->assertNotEquals($hash, $responseHash);
+    }
+
+    /**
      * Deprecated since 2.0.9 and removed since 2.1.0
      *
      * @param $path
