@@ -1,5 +1,6 @@
 <?php
 namespace Codeception\Util;
+
 /**
  * Class for defining an array actions to be executed inside `performOn` of WebDriver
  *
@@ -46,7 +47,8 @@ class ActionSequence
      * Creates an instance
      * @return ActionSequence
      */
-    public static function build() {
+    public static function build()
+    {
         return new self;
     }
 

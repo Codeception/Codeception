@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Test\Interfaces;
 
-
 interface ScenarioDriven
 {
     public function getFeature();

@@ -2948,7 +2948,6 @@ class WebDriver extends CodeceptionModule implements
                 $class = get_class($e); // rethrow exception for a specific action
                 throw new $class($e->getMessage() . "\nat $step", $e->getResults());
             }
-
         }
         $this->setBaseElement();
     }
@@ -2961,5 +2960,4 @@ class WebDriver extends CodeceptionModule implements
         }
         $this->baseElement = $this->matchFirstOrFail($this->webDriver, $element);
     }
-
 }
