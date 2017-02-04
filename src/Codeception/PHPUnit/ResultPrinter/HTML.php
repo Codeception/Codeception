@@ -107,14 +107,12 @@ class HTML extends CodeceptionResultPrinter
 
         foreach ($steps as $step) {
             if ($step->getMetaStep()) {
-
                 if (! empty($subStepsRendered[$step->getMetaStep()->getAction()])) {
                     $subStepsBuffer = implode('', $subStepsRendered[$step->getMetaStep()->getAction()]);
                     unset($subStepsRendered[$step->getMetaStep()->getAction()]);
 
                     $stepsBuffer .= $this->renderSubsteps($step->getMetaStep(), $subStepsBuffer);
                 }
-
             } else {
                 $stepsBuffer .= $this->renderStep($step);
             }
@@ -148,7 +146,6 @@ class HTML extends CodeceptionResultPrinter
                 $localPath = PathResolver::getRelativeDir($reports['html'], codecept_output_dir());
                 $html = "<tr><td class='error'>See <a href='$localPath' target='_blank'>HTML snapshot</a> of a failed page</td></tr>";
             }
-
         }
 
         $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';

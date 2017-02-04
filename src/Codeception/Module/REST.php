@@ -505,7 +505,7 @@ EOF;
 
     /**
      * Check if data has non-printable bytes and it is not a valid unicode string
-     * 
+     *
      * @param string $data the text or binary data string
      * @return boolean
      */
@@ -516,7 +516,7 @@ EOF;
 
     /**
      * Format a binary string for debug printing
-     * 
+     *
      * @param string $data the binary data string
      * @return string the debug string
      */

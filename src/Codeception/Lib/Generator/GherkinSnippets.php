@@ -6,7 +6,6 @@ use Codeception\Test\Loader\Gherkin;
 use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
 
-
 class GherkinSnippets
 {
     protected $template = <<<EOF
