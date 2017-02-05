@@ -190,7 +190,7 @@ EOF;
     {
         $skipCleanup = array_key_exists('cleanup', $this->config) && $this->config['cleanup'] === false;
         if ($skipCleanup || $this->ormModule->_getConfig('cleanup')) {
-            return; // don't delete records if ORM is set with cleanup or set flag cleanup false
+            return;
         }
         $this->factoryMuffin->deleteSaved();
     }
