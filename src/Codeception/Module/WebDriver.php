@@ -2178,6 +2178,7 @@ class WebDriver extends CodeceptionModule implements
     {
         if (is_null($name)) {
             $this->webDriver->switchTo()->defaultContent();
+            return;
         }
         $this->webDriver->switchTo()->frame($name);
     }
