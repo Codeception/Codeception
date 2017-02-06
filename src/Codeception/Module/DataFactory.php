@@ -176,7 +176,7 @@ EOF;
      */
     protected function getStore()
     {
-        return $this->ormModule instanceof DataMappe
+        return $this->ormModule instanceof DataMapper
             ? new RepositoryStore($this->ormModule->_getEntityManager()) // for Doctrine
             : new ModelStore();
     }
