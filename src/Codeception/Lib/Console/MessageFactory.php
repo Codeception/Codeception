@@ -2,7 +2,6 @@
 namespace Codeception\Lib\Console;
 
 use SebastianBergmann\Comparator\ComparisonFailure;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * MessageFactory

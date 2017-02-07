@@ -13,9 +13,15 @@
 if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
     $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true);
 
+    // fix for improperly encoded JSON in Code Coverage cookie with WebDriver.
+    // @see https://github.com/Codeception/Codeception/issues/874
+    if (!is_array($cookie)) {
+        $cookie = json_decode($cookie, true);
+    }
+
     if ($cookie) {    
         foreach ($cookie as $key => $value) {
-            $_SERVER["HTTP_X_CODECEPTION_".strtoupper($key)] = $value;
+            $_SERVER["HTTP_X_CODECEPTION_" . strtoupper($key)] = $value;
         }
     }
 }
@@ -24,25 +30,65 @@ if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
     return;
 }
 
+if (!function_exists('__c3_error')) {
+    function __c3_error($message)
+    {
+        $errorLogFile = defined('C3_CODECOVERAGE_ERROR_LOG_FILE') ?
+            C3_CODECOVERAGE_ERROR_LOG_FILE :
+            C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt';
+        if (is_writable($errorLogFile)) {
+            file_put_contents($errorLogFile, $message);
+        } else {
+            $message = "Could not write error to log file ($errorLogFile), original message: $message";
+        }
+        if (!headers_sent()) {
+            header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
+        }
+        setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
+    }
+}
+
+// phpunit codecoverage shimming
+if (class_exists('SebastianBergmann\CodeCoverage\CodeCoverage') and !class_exists('PHP_CodeCoverage')) {
+      class_alias('SebastianBergmann\CodeCoverage\CodeCoverage', 'PHP_CodeCoverage');
+      class_alias('SebastianBergmann\CodeCoverage\Report\Text', 'PHP_CodeCoverage_Report_Text');
+      class_alias('SebastianBergmann\CodeCoverage\Report\PHP', 'PHP_CodeCoverage_Report_PHP');
+      class_alias('SebastianBergmann\CodeCoverage\Report\Clover', 'PHP_CodeCoverage_Report_Clover');
+      class_alias('SebastianBergmann\CodeCoverage\Report\Crap4j', 'PHP_CodeCoverage_Report_Crap4j');
+      class_alias('SebastianBergmann\CodeCoverage\Report\Html\Facade', 'PHP_CodeCoverage_Report_HTML');
+      class_alias('SebastianBergmann\CodeCoverage\Exception', 'PHP_CodeCoverage_Exception');
+}
+
 // Autoload Codeception classes
 if (!class_exists('\\Codeception\\Codecept')) {
-    if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
+    if (file_exists(__DIR__ . '/codecept.phar')) {
+        require_once 'phar://' . __DIR__ . '/codecept.phar/autoload.php';
+    } elseif (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
         require_once __DIR__ . '/vendor/autoload.php';
-    } elseif (file_exists(__DIR__ . '/codecept.phar')) {
-        require_once 'phar://'.__DIR__ . '/codecept.phar/autoload.php';
+        // Required to load some methods only available at codeception/autoload.php
+        if (stream_resolve_include_path(__DIR__ . '/vendor/codeception/codeception/autoload.php')) {
+            require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
+        }
     } elseif (stream_resolve_include_path('Codeception/autoload.php')) {
         require_once 'Codeception/autoload.php';
     } else {
-        __c3_error('Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used');
+        __c3_error('Codeception is not loaded. Please check that either PHAR or Composer package can be used');
     }
 }
 
 // Load Codeception Config
+$config_dist_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 $config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.yml';
-if (array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG', $_SERVER)) {
+
+if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'])) {
     $config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
 }
-if (!file_exists($config_file)) {
+if (file_exists($config_file)) {
+    // Use codeception.yml for configuration.
+} elseif (file_exists($config_dist_file)) {
+    // Use codeception.dist.yml for configuration.
+    $config_file = $config_dist_file;
+} else {
     __c3_error(sprintf("Codeception config file '%s' not found", $config_file));
 }
 try {
@@ -56,8 +102,13 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
     // workaround for 'zend_mm_heap corrupted' problem
     gc_disable();
 
-    if ((integer)ini_get('memory_limit') < 384) {
-        ini_set('memory_limit', '384M');
+    $memoryLimit = ini_get('memory_limit');
+    $requiredMemory = '384M';
+    if ((substr($memoryLimit, -1) === 'M' && (int)$memoryLimit < (int)$requiredMemory)
+        || (substr($memoryLimit, -1) === 'K' && (int)$memoryLimit < (int)$requiredMemory * 1024)
+        || (ctype_digit($memoryLimit) && (int)$memoryLimit < (int)$requiredMemory * 1024 * 1024)
+    ) {
+        ini_set('memory_limit', $requiredMemory);
     }
 
     define('C3_CODECOVERAGE_MEDIATE_STORAGE', Codeception\Configuration::logDir() . 'c3tmp');
@@ -101,6 +152,14 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         $writer->process($codeCoverage, $path . '.clover.xml');
 
         return $path . '.clover.xml';
+    }
+
+    function __c3_build_crap4j_report(PHP_CodeCoverage $codeCoverage, $path)
+    {
+        $writer = new PHP_CodeCoverage_Report_Crap4j();
+        $writer->process($codeCoverage, $path . '.crap4j.xml');
+
+        return $path . '.crap4j.xml';
     }
 
     function __c3_send_file($filename)
@@ -153,16 +212,6 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return null;
     }
 
-    function __c3_error($message)
-    {
-        file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt', $message);
-        if (!headers_sent()) {
-            header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
-        }
-        setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
-        __c3_exit();
-    }
-
     function __c3_clear()
     {
         \Codeception\Util\FileSystem::doEmptyDir(C3_CODECOVERAGE_MEDIATE_STORAGE);
@@ -208,6 +257,13 @@ if ($requested_c3_report) {
                 __c3_error($e->getMessage());
             }
             return __c3_exit();
+        case 'crap4j':
+            try {
+                __c3_send_file(__c3_build_crap4j_report($codeCoverage, $path));
+            } catch (Exception $e) {
+                __c3_error($e->getMessage());
+            }
+            return __c3_exit();
         case 'serialized':
             try {
                 __c3_send_file($complete_report);
@@ -220,15 +276,21 @@ if ($requested_c3_report) {
 } else {
     $codeCoverage = __c3_factory($current_report);
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
-    register_shutdown_function(
-        function () use ($codeCoverage, $current_report) {
-            $codeCoverage->stop();
-            if (!file_exists(dirname($current_report))) {
-                mkdir(dirname($current_report), 0777, true);
+    if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG', $_SERVER)) { 
+        register_shutdown_function(
+            function () use ($codeCoverage, $current_report) {
+
+                $codeCoverage->stop();
+                if (!file_exists(dirname($current_report))) { // verify directory exists
+                    if (!mkdir(dirname($current_report), 0777, true)) {
+                        __c3_error("Can't write CodeCoverage report into $current_report");
+                    }
+                }
+
+                file_put_contents($current_report, serialize($codeCoverage));
             }
-            file_put_contents($current_report, serialize($codeCoverage));
-        }
-    );
+        );
+    }
 }
 
 // @codeCoverageIgnoreEnd

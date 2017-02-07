@@ -3,7 +3,6 @@ namespace Codeception\Lib;
 
 use Codeception\Configuration;
 use Codeception\Test\Interfaces\Reported;
-use Codeception\Test\Interfaces\Configurable;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
 use Symfony\Component\Finder\Finder;

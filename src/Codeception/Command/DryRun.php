@@ -9,7 +9,6 @@ use Codeception\Subscriber\Bootstrap as BootstrapLoader;
 use Codeception\Subscriber\Console as ConsolePrinter;
 use Codeception\SuiteManager;
 use Codeception\Test\Interfaces\ScenarioDriven;
-use Codeception\Test\Loader;
 use Codeception\Test\Test;
 use Codeception\Util\Maybe;
 use Symfony\Component\Console\Command\Command;

@@ -4,7 +4,6 @@ namespace Codeception\Lib\Connector;
 use Codeception\Lib\Connector\Yii2\Logger;
 use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Util\Debug;
-use Codeception\Util\Stub;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Response;
@@ -58,9 +57,6 @@ class Yii2 extends Client
 
     public function resetApplication()
     {
-        if ($this->app->db !== null && $this->app->db->transaction !== null) {
-            $this->app->db->transaction->rollBack();
-        }
         $this->app = null;
     }
 

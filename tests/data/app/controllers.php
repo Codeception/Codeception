@@ -162,6 +162,7 @@ class facebookController {
 
 class form {
     function GET($matches) {
+        data::set('query', $_GET);
         $url = strtolower($matches[1]);
         if (empty($matches[1])) {
             $url = 'index';

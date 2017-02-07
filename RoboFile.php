@@ -2,7 +2,7 @@
 require_once __DIR__.'/vendor/autoload.php';
 
 use Symfony\Component\Finder\Finder;
-use \Robo\Task\Development\GenerateMarkdownDoc as Doc;
+use Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
@@ -869,17 +869,17 @@ class RoboFile extends \Robo\Tasks
 
         $this->taskGenDoc($file)
             ->docClass($className)
-            ->filterMethods(function(ReflectionMethod $r) use ($all, $className) {
+            ->filterMethods(function (ReflectionMethod $r) use ($all, $className) {
                 return $all || $r->isPublic();
             })
             ->append(
                 '<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. '
                 . '<a href="' . $source . '">Help us to improve documentation. Edit module reference</a></div>'
             )
-            ->processPropertySignature(function($r) {
+            ->processPropertySignature(function ($r) {
                 return "\n#### $" . $r->name. "\n\n";
             })
-            ->processPropertyDocBlock(function($r, $text) {
+            ->processPropertyDocBlock(function ($r, $text) {
                 $modifiers = implode(' ', \Reflection::getModifierNames($r->getModifiers()));
                 $text = ' *' . $modifiers . '* **$' . $r->name . "**\n" . $text;
                 $text = preg_replace("~@(.*?)\s(.*)~", 'type `$2`', $text);
@@ -890,7 +890,7 @@ class RoboFile extends \Robo\Tasks
                     return $text . "\n";
                 }
             )
-            ->processMethodSignature(function($r, $text) {
+            ->processMethodSignature(function ($r, $text) {
                 return "#### {$r->name}()\n\n" . ltrim($text, '#');
             })
             ->processMethodDocBlock(

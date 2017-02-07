@@ -814,14 +814,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * DOM wouldn't expect them.
      *
      * @param Crawler $form the form
-     * @param string $action the form's absolute URL action
      * @return Form
      */
-    private function getFormFromCrawler(Crawler $form, $action)
+    private function getFormFromCrawler(Crawler $form)
     {
         $fakeDom = new \DOMDocument();
         $fakeDom->appendChild($fakeDom->importNode($form->getNode(0), true));
         $node = $fakeDom->documentElement;
+        $action = (string)$this->getFormUrl($form);
         $cloned = new Crawler($node, $action, $this->getBaseUrl());
         $shouldDisable = $cloned->filter(
             'input:disabled:not([disabled]),select option:disabled,select optgroup:disabled option:not([disabled])'
@@ -849,10 +849,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$form) {
             $this->fail('The selected node is not a form and does not have a form ancestor.');
         }
-        $action = (string)$this->getFormUrl($form);
-        $identifier = $form->attr('id') ?: $action;
+
+        $identifier = $form->attr('id') ?: $form->attr('action');
         if (!isset($this->forms[$identifier])) {
-            $this->forms[$identifier] = $this->getFormFromCrawler($form, $action);
+            $this->forms[$identifier] = $this->getFormFromCrawler($form);
         }
         return $this->forms[$identifier];
     }
