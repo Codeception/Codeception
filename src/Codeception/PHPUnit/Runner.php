@@ -79,11 +79,11 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
         $result->convertErrorsToExceptions(false);
 
-        if ($arguments['report_useless_tests']) {
+        if (isset($arguments['report_useless_tests'])) {
             $result->beStrictAboutTestsThatDoNotTestAnything((bool)$arguments['report_useless_tests']);
         }
 
-        if ($arguments['disallow_test_output']) {
+        if (isset($arguments['disallow_test_output'])) {
             $result->beStrictAboutOutputDuringTests((bool)$arguments['disallow_test_output']);
         }
 
