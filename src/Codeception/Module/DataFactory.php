@@ -172,13 +172,13 @@ EOF;
     }
     
     /**
-     * @return StoreInterface
+     * @return StoreInterface|null
      */
     protected function getStore()
     {
         return $this->ormModule instanceof DataMapper
             ? new RepositoryStore($this->ormModule->_getEntityManager()) // for Doctrine
-            : new ModelStore();
+            : null;
     }
 
     public function _inject(ORM $orm)
