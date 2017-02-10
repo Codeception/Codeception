@@ -77,6 +77,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --ansi                Force ANSI output.
  *  --no-ansi             Disable ANSI output.
  *  --no-interaction (-n) Do not ask any interactive question.
+ *  --repeat (-r)         Runs the test(s) repeatedly.
  * ```
  *
  */
@@ -191,6 +192,7 @@ class Run extends Command
             ),
             new InputOption('fail-fast', 'f', InputOption::VALUE_NONE, 'Stop after first failure'),
             new InputOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start'),
+            new InputOption('repeat', 'r', InputOption::VALUE_REQUIRED, 'Runs the test(s) repeatedly'),
         ]);
 
         parent::configure();
@@ -261,6 +263,9 @@ class Run extends Command
         }
         if (!$userOptions['ansi'] && $input->getOption('colors')) {
             $userOptions['colors'] = true; // turn on colors even in non-ansi mode if strictly passed
+        }
+        if ($this->options['repeat']) {
+            $userOptions['repeat'] = (int)$this->options['repeat'];
         }
 
         $suite = $input->getArgument('suite');
