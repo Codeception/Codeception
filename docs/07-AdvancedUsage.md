@@ -664,6 +664,12 @@ groups:
 This will load all found `p*` files in `tests/_data` as groups. Group names will be as follows p1,p2,...,pN.
 
 
+## Shell autocompletion
+For bash and zsh shells, you can use auto completion by executing the following in your shell (or add it to your bash/zshrc):
+````bash
+source <([codecept location] _completion --generate-hook)
+````
+
 ## Conclusion
 
 Codeception is a framework which may look simple at first glance
