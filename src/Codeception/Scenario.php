@@ -151,10 +151,18 @@ class Scenario
     }
 
     /**
-     * @param null $metaStep
+     * @param Step\Meta $metaStep
      */
     public function setMetaStep($metaStep)
     {
         $this->metaStep = $metaStep;
+    }
+
+    /**
+     * @return Step\Meta
+     */
+    public function getMetaStep()
+    {
+        return $this->metaStep;
     }
 }
