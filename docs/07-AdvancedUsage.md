@@ -665,9 +665,9 @@ This will load all found `p*` files in `tests/_data` as groups. Group names will
 
 
 ## Shell autocompletion
-For bash and zsh shells, you can use auto completion by executing the following in your shell (or add it to your bash/zshrc):
+For bash and zsh shells, you can use autocompletion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
 ````bash
-source <([codecept location] _completion --generate-hook)
+source <([codecept location] _completion --generate-hook --program codecept --use-vendor-bin)
 ````
 
 ## Conclusion
