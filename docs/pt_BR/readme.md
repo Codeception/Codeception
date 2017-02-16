@@ -1,10 +1,10 @@
 # Codeception
 
-**Modern PHP Testing for everyone**
+**Moderno Framework de testes em PHP para qualquer um**
 
-Codeception is a modern full-stack testing framework for PHP.
-Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
-Powered by PHPUnit 3.7.
+
+Codeception é um moderno e completo framework de testes para PHP.
+Inspirando por BDD, ele provê uma forma totalmente nova de escrever testes de aceitação, funcionais e unitários. Powered by PHPUnit 3.7.
 
 
 | release |  branch  |  status  |
@@ -13,19 +13,18 @@ Powered by PHPUnit 3.7.
 | **Development** | **master** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/2880469)](http://depending.in/Codeception/Codeception)
 
 
-#### Contributions
+#### Contribuições
 
-**Bugfixes should be sent to to current stable branch, which is the same as major version number.**
-Breaking features and major improvements should be sent into `master`.
-When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
+**Bugfixes devem ser enviados para um branch corrente e estável, que é o mesmo número da versão major.**
+Features quebradas e melhorias maiores devem ser enviadas para o branch `master`.
+Quando você envia Pull Requests para o master, eles serão adicionados ao ciclo de release somente quando o próximo branch estável iniciar.
 
-### At a Glance
+### Em uma olhada
 
-Describe what you test and how you test it. Use PHP to write descriptions faster.
+Descreva o que você vai testar e como vai testá-lo. Use o próprio PHP para escrever descrições mais rápidamente.
+Execute os teste e veja as açoes que foram realizadas e os resultados produzidos por elas.
 
-Run tests and see what actions were taken and what results were seen.
-
-#### Sample acceptance test
+#### Exemplo de teste de aceitação
 
 ``` php
 <?php
@@ -44,29 +43,23 @@ $I->seeInDatabase('pages', array('title' => 'Tree of Life Movie Review')); // da
 ?>
 ```
 
-For unit testing you can stay on classic PHPUnit tests, as Codeception can run them too.
+Para testes unitários você pode seguir os testes clássicos de PHPUnit, Codeception pode roda-los também.
 
-## Documentation
+## Documentação
 
-[Documentation on Github](https://github.com/Codeception/Codeception/tree/master/docs)
+[Documentação no Github](https://github.com/Codeception/Codeception/tree/master/docs)
 
-Documentation is currently included within the project. Look for it in the 'docs' directory.
+A Documentação é incluida com o projeto. Olhe no diretório 'docs'.
 
-## Translations
-
-Below translations, arranged by language.
-
-[Português (Brasil)](https://github.com/giuseppelopes/Codeception/tree/docsinpt_br/docs/pt_BR)
-
-## Installation
+## Instalação
 
 ### Phar
 
 Download [codecept.phar](https://github.com/Codeception/Codeception/raw/master/package/codecept.phar)
 
-Copy it into your project.
+Copie para o seu projeto.
 
-Run CLI utility:
+Execute o utilitário CLI:
 
 ```
 php codecept.phar
@@ -74,21 +67,21 @@ php codecept.phar
 
 ## Getting Started
 
-If you successfully installed Codeception, run this command:
+Se você instalou com sucesso o Codeception, execute este comando:
 
 ```
 codecept bootstrap
 ```
 
-this will create a default directory structure and default test suites
+Ele vai criar uma estrutura padrão de diretórios e as suites de testes padrão.
 
 ```
 codecept build
 ```
 
-This will generate Guy-classes, in order to make autocomplete work.
+Este vai gerar as 'Guy-classes', em ordem para fazer o autocomplete funcionar.
 
-See Documentation for more information.
+Veja a Documentação para maiores informações.
 
 ### License
 MIT
