@@ -306,12 +306,12 @@ EOF;
      * Parameters and files (as array of filenames) can be provided.
      *
      * $files structure should be:
-     * ['file' => 
+     * ['file' =>
      *    [
-     *        'name' => 'example_img.jpg', 
-     *        'type' => 'image/jpeg', 
-     *        'error' => UPLOAD_ERR_OK, 
-     *        'size' => filesize(codecept_data_dir('example_img.jpg')), 
+     *        'name' => 'example_img.jpg',
+     *        'type' => 'image/jpeg',
+     *        'error' => UPLOAD_ERR_OK,
+     *        'size' => filesize(codecept_data_dir('example_img.jpg')),
      *        'tmp_name' => codecept_data_dir('example_img.jpg')
      *     ]
      * ]
