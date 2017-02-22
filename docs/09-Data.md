@@ -200,6 +200,7 @@ Doctrine2 also provides methods to create and check data:
 
 * `haveInRepository`
 * `grabFromRepository`
+* `grabEntitiesFromRepository`
 * `seeInRepository`
 * `dontSeeInRepository`
 
