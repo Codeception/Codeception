@@ -187,17 +187,23 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function _after(\Codeception\TestInterface $test)
     {
-        if (! $this->applicationUsesDatabase()) {
-            return;
-        }
+        if ($this->applicationUsesDatabase()) {
+            $db = $this->app['db'];
 
-        if (isset($this->app['db']) && $this->config['cleanup']) {
-            $this->app['db']->rollback();
-        }
+            if ($db instanceof \Illuminate\Database\DatabaseManager) {
+                if ($this->config['cleanup']) {
+                    $db->rollback();
+                }
 
-        // disconnect from DB to prevent "Too many connections" issue
-        if (isset($this->app['db'])) {
-            $this->app['db']->disconnect();
+                /**
+                 * Close all DB connections in order to prevent "Too many connections" issue
+                 *
+                 * @var \Illuminate\Database\Connection $connection
+                 */
+                foreach ($db->getConnections() as $connection) {
+                    $connection->disconnect();
+                }
+            }
         }
     }
 
