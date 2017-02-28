@@ -282,7 +282,7 @@ abstract class Step
         while (isset($stack[$i])) {
             $step = $stack[$i];
             $i--;
-            if (!isset($step['file']) or !isset($step['function'])) {
+            if (!isset($step['file']) or !isset($step['function']) or !isset($step['class'])) {
                 continue;
             }
 
