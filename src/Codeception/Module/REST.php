@@ -385,11 +385,11 @@ class REST extends \Codeception\Module
             }
             if($method === 'GET') {
                 $this->debugSection("Request", "$method $url");
+                $this->client->request($method, $url, $parameters, $files);
             } else {
                 $this->debugSection("Request", "$method $url ".json_encode($parameters));
+                $this->client->request($method, $url, array(), $files, array(), json_encode($parameters));
             }
-            $this->client->request($method, $url, $parameters, $files);
-
         } else {
             $requestData = $parameters;
             if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
