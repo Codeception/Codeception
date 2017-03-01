@@ -142,7 +142,8 @@ class Db extends CodeceptionModule implements DbInterface
         'populate' => true,
         'cleanup' => true,
         'reconnect' => false,
-        'dump' => null
+        'dump' => null,
+        'transactions' => false
     ];
 
     /**
@@ -237,6 +238,9 @@ class Db extends CodeceptionModule implements DbInterface
         if ($this->config['reconnect']) {
             $this->connect();
         }
+        if ($this->config['transactions']) {
+            $this->dbh->beginTransaction();
+        }
         if ($this->config['cleanup'] && !$this->populated) {
             $this->cleanup();
             $this->loadDump();
@@ -247,7 +251,11 @@ class Db extends CodeceptionModule implements DbInterface
     public function _after(TestInterface $test)
     {
         $this->populated = false;
-        $this->removeInserted();
+        if ($this->config['transactions']) {
+            $this->dbh->rollBack();
+        } else {
+            $this->removeInserted();
+        }
         if ($this->config['reconnect']) {
             $this->disconnect();
         }
