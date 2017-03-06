@@ -14,6 +14,14 @@ class RunCest
         $I->seeInShellOutput("OK (");
     }
 
+    public function runOneFileWithColors(\CliGuy $I)
+    {
+        $I->wantTo('execute one test');
+        $I->executeCommand('run --colors tests/dummy/FileExistsCept.php');
+        $I->seeInShellOutput("OK (");
+        $I->seeInShellOutput("\033[35;1mFileExistsCept:\033[39;22m Check config exists");
+    }
+
     /**
      * @group reports
      * @group core
@@ -347,11 +355,18 @@ EOF
         $I->seeInShellOutput('PASSED');
     }
 
-    public function runIncompleteGherkinTest(CliGuy $I)
+    public function reportsCorrectFailedStep(CliGuy $I)
     {
         $I->executeCommand('run scenario File.feature -v');
         $I->seeInShellOutput('OK, but incomplete');
         $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
+    }
+
+    public function runFailingGherkinTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario Fail.feature -v --no-exit');
+        $I->seeInShellOutput('Step  I see file "games.zip"');
+        $I->seeInShellOutput('Step  I see file "tools.zip"');
     }
 
     public function runGherkinScenarioWithMultipleStepDefinitions(CliGuy $I)

@@ -1,5 +1,5 @@
 <?php
-$scenario->group('core');
+// @group core
 
 $I = new CliGuy($scenario);
 $I->wantToTest('build command');

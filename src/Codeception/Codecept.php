@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "2.2.8";
+    const VERSION = "2.2.9";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -37,29 +37,30 @@ class Codecept
      * @var array
      */
     protected $options = [
-        'silent'        => false,
-        'debug'         => false,
-        'steps'         => false,
-        'html'          => false,
-        'xml'           => false,
-        'json'          => false,
-        'tap'           => false,
-        'report'        => false,
-        'colors'        => false,
-        'coverage'      => false,
-        'coverage-xml'  => false,
-        'coverage-html' => false,
-        'coverage-text' => false,
-        'groups'        => null,
-        'excludeGroups' => null,
-        'filter'        => null,
-        'env'           => null,
-        'fail-fast'     => false,
-        'ansi'          => true,
-        'verbosity'     => 1,
-        'interactive'   => true,
-        'no-rebuild'    => false,
-        'quiet'         => false,
+        'silent'          => false,
+        'debug'           => false,
+        'steps'           => false,
+        'html'            => false,
+        'xml'             => false,
+        'json'            => false,
+        'tap'             => false,
+        'report'          => false,
+        'colors'          => false,
+        'coverage'        => false,
+        'coverage-xml'    => false,
+        'coverage-html'   => false,
+        'coverage-text'   => false,
+        'coverage-crap4j' => false,
+        'groups'          => null,
+        'excludeGroups'   => null,
+        'filter'          => null,
+        'env'             => null,
+        'fail-fast'       => false,
+        'ansi'            => true,
+        'verbosity'       => 1,
+        'interactive'     => true,
+        'no-rebuild'      => false,
+        'quiet'           => false,
     ];
 
     protected $config = [];

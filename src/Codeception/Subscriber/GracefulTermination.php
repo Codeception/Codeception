@@ -6,7 +6,6 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-
 class GracefulTermination implements EventSubscriberInterface
 {
     const SIGNAL_FUNC = 'pcntl_signal';

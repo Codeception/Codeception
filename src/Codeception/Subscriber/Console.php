@@ -409,7 +409,7 @@ class Console implements EventSubscriberInterface
         if ($this->conditionalFails) {
             $failedStep = (string) array_shift($this->conditionalFails);
         } else {
-            $failedStep = (string) $this->failedStep;
+            $failedStep = (string) $failedTest->getScenario()->getMetaStep();
         }
 
         $this->printException($fail, $failedStep);
@@ -560,7 +560,7 @@ class Console implements EventSubscriberInterface
         $prefix = ($this->output->isInteractive() and !$this->isDetailed($test) and $inProgress) ? '- ' : '';
 
         $testString = Descriptor::getTestAsString($test);
-        $testString = preg_replace('~^([\s\w\\\]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
+        $testString = preg_replace('~^([^:]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
 
         $this
             ->message($testString)

@@ -4,6 +4,23 @@
 
 * Dropped support for PHP 5.4
 
+#### 2.2.9
+
+* [Laravel5] **Laravel 5.4 support** by @janhenkgerritsen
+* [WebDriver] Added `performOn` to wait for element, and run actions inside it. See [complete reference](http://codeception.com/docs/modules/WebDriver#performOn). #3986
+* [WebDriver] Improved error messages for `wait*` methods by @disc. See #3983
+* [REST] Binary responses support by @spikyjt #3993 #3985
+  * `seeBinaryResponseEquals` assert that binary response matches a hash
+  * `seeBinaryResponseEquals` assert that binary response doesn't match a hash
+  * hide binary response on debug
+* [Laravel5] module fix error for applications that do not use a database. See #3954 by @janhenkgerritsen. Fixed #3942  
+* [Laravel5] database seeders to be executed inside a transaction. See #3954 by @janhenkgerritsen. Fixed #3948 by @janhenkgerritsen
+* [Yii2] reverted #3834, closing transaction after each request. #3973 by @iRipVanWinkle. Fixes #3961
+* Added crap4j report support. Use `--coverage-crap4j` option and `codeception/c3` 2.0.10 
+* [PhpBrowser][Frameworks] If form has no id, use action attribute as identifier by @Naktibalda. Fixes #3953
+* Fixed test coloring output when a Feature title has some special chars in it like `/` or `-`
+* [REST] Added missing @part `json` and `xml` to `deleteHeader` by @freezy-sk 
+
 #### 2.2.8
 
 * [WebDriver] Added tab actions (not supported in PhantomJS):
@@ -174,7 +191,6 @@ extensions:
 * Handle deprecation messages according to `error_level` setting #3460. Fixes #3424. By @Naktibalda.
 
 #### 2.2.4 (August 2016)
->>>>>>> 2.2
 
 * Improved using complex params, nested params can be set using dot (`.`). See #3339
 * [Yii2] Mailer mock is now configured with options that make sense for it. Fixes #3382

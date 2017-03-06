@@ -297,6 +297,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             return;
         }
         $fixturesStore = new Yii2Connector\FixturesStore($fixtures);
+        $fixturesStore->unloadFixtures();
         $fixturesStore->loadFixtures();
         $this->loadedFixtures[] = $fixturesStore;
     }
@@ -473,7 +474,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         array_unshift($params, $route);
         $this->amOnPage($params);
     }
-    
+
     /**
      * To support to use the behavior of urlManager component
      * for the methods like this: amOnPage(), sendAjaxRequest() and etc.

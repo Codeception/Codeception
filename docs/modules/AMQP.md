@@ -114,6 +114,45 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
  * `param` $message string|AMQPMessage
 
 
+### declareExchange
+
+Declares an exchange. This is an alias of method `exchange_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
+
+```php
+<?php
+$I->declareExchange(
+   'nameOfMyExchange', // exchange name
+   'topic' // exchange type
+   //.. see the original method for more options
+)
+```
+
+### declareQueue
+
+Declares a queue. This is an alias of method `queue_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
+
+```php
+<?php
+$I->declareQueue(
+    'nameOfMyQueue', // exchange name
+    //.. see the original method for more options
+)
+```
+
+### bindQueueToExchange
+
+Binds a queue to an exchange. This is an alias of method `queue_bind` of `PhpAmqpLib\Channel\AMQPChannel`.
+
+```php
+<?php
+$I->bindQueueToExchange(
+    'nameOfMyQueueToBind', // name of the queue
+    'transactionTracking.transaction', // exchange name to bind to
+    'your.routing.key' // Optionally, provide a binding key
+  //.. see the original method for more options
+)
+```
+
 ### seeMessageInQueueContainsText
  
 Checks if message containing text received.

@@ -348,8 +348,8 @@ $I->seeElement('#modal');
 #### Wait
 
 While testing web application, you may need to wait for JavaScript events to occur. Due to its asynchronous nature,
-complex JavaScript interactions are hard to test. That's why you may need to use `wait` actions,
-which can be used to specify what event you expect to occur on a page, before continuing the test.
+complex JavaScript interactions are hard to test. That's why you may need to use waiters, actions with *wait* prefix. 
+They can be used to specify what event you expect to occur on a page, before continuing the test.
 
 For example:
 
@@ -360,9 +360,41 @@ $I->click('#agree_button');
 ```
 
 In this case we are waiting for the 'agree' button to appear and then clicking it. If it didn't appear after 30 seconds,
-the test will fail. There are other `wait` methods you may use.
+the test will fail. There are other `wait` methods you may use, like [waitForText](http://codeception.com/docs/modules/WebDriver#waitForText), 
+[waitForElementVisible](http://codeception.com/docs/modules/WebDriver#waitForElementVisible) and others.
 
-See Codeception's [WebDriver module documentation](http://codeception.com/docs/modules/WebDriver) for the full reference.
+If you don't know what exact element you need to wait for, you can simply pause execution with using `$I->wait()`
+
+```php
+<?php
+$I->wait(3); // wait for 3 secs
+```
+
+#### Wait and Act
+
+To combine `waitForElement` with actions inside that element you can use [performOn](http://codeception.com/docs/modules/WebDriver#performOn) method. 
+Let's see how can you perform some actions inside an HTML popup:
+
+```php
+<?php
+$I->performOn('.confirm', \Codeception\Util\ActionSequence::build()
+    ->see('Warning')
+    ->see('Are you sure you want to delete this?')
+    ->click('Yes')
+);
+```
+Alternatively, this can be executed using callback, in this case WebDriver module instance is passed as argument
+
+```php
+<?php
+$I->performOn('.confirm', function(\Codeception\Module\WebDriver $I) {
+    $I->see('Warning');
+    $I->see('Are you sure you want to delete this?');
+    $I->click('Yes');
+});
+```
+
+For more options see [`performOn` reference]([performOn](http://codeception.com/docs/modules/WebDriver#performOn) ).
 
 ### Multi Session Testing
 

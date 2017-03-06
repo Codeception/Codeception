@@ -45,7 +45,7 @@ use Illuminate\Support\Collection;
  * * cleanup: `boolean`, default `true` - all database queries will be run in a transaction,
  *   which will be rolled back at the end of each test.
  * * run_database_migrations: `boolean`, default `false` - run database migrations before each test.
- * * database_migrations_path: `string`, default `` - path to the database migrations, relative to the root of the application.
+ * * database_migrations_path: `string`, default `null` - path to the database migrations, relative to the root of the application.
  * * run_database_seeder: `boolean`, default `false` - run database seeder before each test.
  * * database_seeder_class: `string`, default `` - database seeder class name.
  * * environment_file: `string`, default `.env` - the environment file to load for the tests.
@@ -114,7 +114,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             [
                 'cleanup' => true,
                 'run_database_migrations' => false,
-                'database_migrations_path' => '',
+                'database_migrations_path' => null,
                 'run_database_seeder' => false,
                 'database_seeder_class' => '',
                 'environment_file' => '.env',
@@ -187,17 +187,23 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function _after(\Codeception\TestInterface $test)
     {
-        if (! $this->applicationUsesDatabase()) {
-            return;
-        }
+        if ($this->applicationUsesDatabase()) {
+            $db = $this->app['db'];
 
-        if (isset($this->app['db']) && $this->config['cleanup']) {
-            $this->app['db']->rollback();
-        }
+            if ($db instanceof \Illuminate\Database\DatabaseManager) {
+                if ($this->config['cleanup']) {
+                    $db->rollback();
+                }
 
-        // disconnect from DB to prevent "Too many connections" issue
-        if (isset($this->app['db'])) {
-            $this->app['db']->disconnect();
+                /**
+                 * Close all DB connections in order to prevent "Too many connections" issue
+                 *
+                 * @var \Illuminate\Database\Connection $connection
+                 */
+                foreach ($db->getConnections() as $connection) {
+                    $connection->disconnect();
+                }
+            }
         }
     }
 
