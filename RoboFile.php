@@ -526,6 +526,8 @@ class RoboFile extends \Robo\Tasks
                 '<div class="alert alert-warning">Download specific version at <a href="/builds">builds page</a></div>'
             )
             ->line('')
+            ->line('# Changelog')
+            ->line('')
             ->line($this->processChangelog())
             ->run();
 
@@ -700,7 +702,19 @@ class RoboFile extends \Robo\Tasks
 
     protected function processChangelog()
     {
-        $changelog = file_get_contents('CHANGELOG.md');
+        $sortByVersionDesc = function (\SplFileInfo $a, \SplFileInfo $b) {
+            $pattern = '/^CHANGELOG-(\d+\.\d+).md$/';
+            if (preg_match($pattern, $a->getBasename(), $matches1) && preg_match($pattern, $b->getBasename(), $matches2)) {
+                return version_compare($matches1[1], $matches2[1]) * -1;
+            }
+            return 0;
+        };
+
+        $changelogFiles = Finder::create()->name('CHANGELOG-*.md')->in('.')->depth(0)->sort($sortByVersionDesc);
+        $changelog = '';
+        foreach ($changelogFiles as $file) {
+            $changelog .= $file->getContents();
+        }
 
         //user
         $changelog = preg_replace('~\s@(\w+)~', ' **[$1](https://github.com/$1)**', $changelog);
