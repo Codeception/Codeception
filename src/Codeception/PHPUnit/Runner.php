@@ -3,6 +3,7 @@ namespace Codeception\PHPUnit;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
+use Codeception\Util\ReflectionHelper;
 
 class Runner extends \PHPUnit_TextUI_TestRunner
 {
@@ -87,8 +88,8 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             $result->beStrictAboutOutputDuringTests((bool)$arguments['disallow_test_output']);
         }
 
-
-
+        //early listeners (most likely it is only Codeception\PHPUnit\Listener #3653)
+        $earlyListeners = ReflectionHelper::readPrivateProperty($result, 'listeners');
 
         if (empty(self::$persistentListeners)) {
             $this->applyReporters($result, $arguments);
@@ -103,6 +104,12 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
         // clean up listeners between suites
         foreach ($arguments['listeners'] as $listener) {
+            $result->addListener($listener);
+        }
+
+        //move early listeners to the end of array to fix issue #3653
+        foreach ($earlyListeners as $listener) {
+            $result->removeListener($listener);
             $result->addListener($listener);
         }
 
