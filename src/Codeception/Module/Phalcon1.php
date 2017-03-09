@@ -187,6 +187,7 @@ class Phalcon1 extends Framework implements ActiveRecord
                     break;
                 }
             }
+            $this->di['db']->close();
         }
         $this->di = null;
         Di::reset();
