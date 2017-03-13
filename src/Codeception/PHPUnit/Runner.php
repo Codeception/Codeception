@@ -87,9 +87,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             $result->beStrictAboutOutputDuringTests((bool)$arguments['disallow_test_output']);
         }
 
-
-
-
         if (empty(self::$persistentListeners)) {
             $this->applyReporters($result, $arguments);
         }
