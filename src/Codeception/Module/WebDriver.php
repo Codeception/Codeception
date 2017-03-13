@@ -1652,7 +1652,13 @@ class WebDriver extends CodeceptionModule implements
         if ($this->isPhantom()) {
             throw new ModuleException($this, 'PhantomJS does not support working with popups');
         }
-        $this->assertContains($text, $this->webDriver->switchTo()->alert()->getText());
+        $alert = $this->webDriver->switchTo()->alert();
+        try {
+            $this->assertContains($text, $alert->getText());
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            $alert->dismiss();
+            throw $e;
+        }
     }
 
     /**
