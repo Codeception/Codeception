@@ -113,7 +113,7 @@ class Di
             $args = $this->prepareArgs($reflectedMethod, $defaults);
         } catch (\Exception $e) {
             $msg = $e->getMessage();
-            if($e->getPrevious()){ // injection failed because PHP code is invalid. See #3869
+            if ($e->getPrevious()) { // injection failed because PHP code is invalid. See #3869
                 $msg .= '; '. $e->getPrevious();
             }
             throw new InjectionException(

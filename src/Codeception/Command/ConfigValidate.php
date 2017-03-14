@@ -57,7 +57,6 @@ class ConfigValidate extends Command
         $this->addStyles($output);
 
         if ($suite = $input->getArgument('suite')) {
-
             $output->write("Validating <bold>$suite</bold> config... ");
             $config = $this->getSuiteConfig($suite, $input->getOption('config'));
             $output->writeln("Ok");

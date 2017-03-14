@@ -526,6 +526,8 @@ class RoboFile extends \Robo\Tasks
                 '<div class="alert alert-warning">Download specific version at <a href="/builds">builds page</a></div>'
             )
             ->line('')
+            ->line('# Changelog')
+            ->line('')
             ->line($this->processChangelog())
             ->run();
 
@@ -700,7 +702,19 @@ class RoboFile extends \Robo\Tasks
 
     protected function processChangelog()
     {
-        $changelog = file_get_contents('CHANGELOG.md');
+        $sortByVersionDesc = function (\SplFileInfo $a, \SplFileInfo $b) {
+            $pattern = '/^CHANGELOG-(\d+\.\d+).md$/';
+            if (preg_match($pattern, $a->getBasename(), $matches1) && preg_match($pattern, $b->getBasename(), $matches2)) {
+                return version_compare($matches1[1], $matches2[1]) * -1;
+            }
+            return 0;
+        };
+
+        $changelogFiles = Finder::create()->name('CHANGELOG-*.md')->in('.')->depth(0)->sort($sortByVersionDesc);
+        $changelog = '';
+        foreach ($changelogFiles as $file) {
+            $changelog .= $file->getContents();
+        }
 
         //user
         $changelog = preg_replace('~\s@(\w+)~', ' **[$1](https://github.com/$1)**', $changelog);
@@ -869,17 +883,17 @@ class RoboFile extends \Robo\Tasks
 
         $this->taskGenDoc($file)
             ->docClass($className)
-            ->filterMethods(function(ReflectionMethod $r) use ($all, $className) {
+            ->filterMethods(function (ReflectionMethod $r) use ($all, $className) {
                 return $all || $r->isPublic();
             })
             ->append(
                 '<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. '
                 . '<a href="' . $source . '">Help us to improve documentation. Edit module reference</a></div>'
             )
-            ->processPropertySignature(function($r) {
+            ->processPropertySignature(function ($r) {
                 return "\n#### $" . $r->name. "\n\n";
             })
-            ->processPropertyDocBlock(function($r, $text) {
+            ->processPropertyDocBlock(function ($r, $text) {
                 $modifiers = implode(' ', \Reflection::getModifierNames($r->getModifiers()));
                 $text = ' *' . $modifiers . '* **$' . $r->name . "**\n" . $text;
                 $text = preg_replace("~@(.*?)\s(.*)~", 'type `$2`', $text);
@@ -890,7 +904,7 @@ class RoboFile extends \Robo\Tasks
                     return $text . "\n";
                 }
             )
-            ->processMethodSignature(function($r, $text) {
+            ->processMethodSignature(function ($r, $text) {
                 return "#### {$r->name}()\n\n" . ltrim($text, '#');
             })
             ->processMethodDocBlock(

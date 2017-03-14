@@ -50,7 +50,7 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $this->suiteman->run(
             $this->runner,
             new \PHPUnit_Framework_TestResult,
-            ['colors' => false, 'steps' => true, 'debug' => false]
+            ['colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
         );
         $this->assertEquals($events, ['suite.before', 'suite.after']);
     }
@@ -115,7 +115,7 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $this->suiteman->run(
             $this->runner,
             $result,
-            ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]
+            ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
         );
         $this->assertContains('test.before', $events);
         $this->assertContains('test.before.admin', $events);
