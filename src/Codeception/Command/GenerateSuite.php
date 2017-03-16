@@ -50,7 +50,7 @@ class GenerateSuite extends Command
             return;
         }
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
+        $config = $this->getGlobalConfig();
         if (!$actor) {
             $actor = ucfirst($suite) . $config['actor'];
         }

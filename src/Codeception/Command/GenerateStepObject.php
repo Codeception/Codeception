@@ -40,7 +40,7 @@ class GenerateStepObject extends Command
     {
         $suite = $input->getArgument('suite');
         $step = $input->getArgument('step');
-        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite);
 
         $class = $this->getClassName($step);
 

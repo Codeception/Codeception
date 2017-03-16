@@ -32,7 +32,7 @@ class GenerateGroup extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = $this->getGlobalConfig($input->getOption('config'));
+        $config = $this->getGlobalConfig();
         $group = $input->getArgument('group');
 
         $class = ucfirst($group);

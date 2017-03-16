@@ -46,8 +46,8 @@ class GeneratePageObject extends Command
         }
 
         $conf = $suite
-            ? $this->getSuiteConfig($suite, $input->getOption('config'))
-            : $this->getGlobalConfig($input->getOption('config'));
+            ? $this->getSuiteConfig($suite)
+            : $this->getGlobalConfig();
 
         if ($suite) {
             $suite = DIRECTORY_SEPARATOR . ucfirst($suite);
