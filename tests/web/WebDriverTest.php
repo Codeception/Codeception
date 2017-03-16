@@ -87,6 +87,19 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->cancelPopup();
     }
 
+    /**
+     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedExceptionMessage Failed asserting that 'Really?' contains "Different text".
+     */
+    public function testFailedSeeInPopup()
+    {
+        $this->notForPhantomJS();
+        $this->module->amOnPage('/form/popup');
+        $this->module->click('Alert');
+        $this->module->seeInPopup('Different text');
+        $this->module->cancelPopup();
+    }
+
     public function testScreenshot()
     {
         $this->module->amOnPage('/');
@@ -964,5 +977,12 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->performOn('.rememberMe', ['see' => 'Login']);
     }
 
-
+    public function testSwitchToIframe()
+    {
+        $this->module->amOnPage('iframe');
+        $this->module->switchToIFrame('content');
+        $this->module->see('Lots of valuable data here');
+        $this->module->switchToIFrame();
+        $this->module->see('Iframe test');
+    }
 }

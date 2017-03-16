@@ -262,7 +262,7 @@ class Redis extends CodeceptionModule implements RequiresPackage
      * $I->haveInRedis('set', ['riri', 'fifi', 'loulou']);
      *
      * // ZSets: $value must be an associative array with scores
-     * $I->haveInRedis('set', ['riri' => 1, 'fifi' => 2, 'loulou' => 3]);
+     * $I->haveInRedis('zset', ['riri' => 1, 'fifi' => 2, 'loulou' => 3]);
      *
      * // Hashes: $value must be an associative array
      * $I->haveInRedis('hash', ['obladi' => 'oblada']);

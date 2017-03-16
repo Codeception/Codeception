@@ -26,6 +26,8 @@ tests/data/included_w/src/bar/Sub/EwokPack/tests/_support/_generated/UnitTesterA
 tests/data/included_w/src/bar/ToastPack/tests/_support/_generated/UnitTesterActions.php
 tests/data/included_w/src/foo/AcmePack/tests/_support/_generated/UnitTesterActions.php
 tests/data/params/tests/_support/_generated/DummyTesterActions.php
+tests/data/exception_in_before/tests/_support/_generated/UnitTesterActions.php
+tests/data/exception_in_before/tests/_output/
 .DS_Store
 robo.phar
 .env

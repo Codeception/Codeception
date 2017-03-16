@@ -32,8 +32,8 @@
         "symfony/dom-crawler": ">=2.7.5 <4.0",
         "behat/gherkin": "~4.4.0",
         "sebastian/comparator": "~1.1",
-        "sebastian/diff": "^1.4"
-
+        "sebastian/diff": "^1.4",
+        "stecman/symfony-console-completion": "^0.7.0"
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
