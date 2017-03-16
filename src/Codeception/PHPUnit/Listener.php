@@ -97,6 +97,8 @@ class Listener implements \PHPUnit_Framework_TestListener
             $test->getTestResultObject()->addFailure($test, $e, 0);
         } catch (\PHPUnit_Framework_SkippedTestError $e) {
             $test->getTestResultObject()->addFailure($test, $e, 0);
+        } catch (\Exception $e) {
+            $test->getTestResultObject()->addError($test, $e, 0);
         }
     }
 

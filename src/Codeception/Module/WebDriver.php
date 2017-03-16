@@ -1652,7 +1652,13 @@ class WebDriver extends CodeceptionModule implements
         if ($this->isPhantom()) {
             throw new ModuleException($this, 'PhantomJS does not support working with popups');
         }
-        $this->assertContains($text, $this->webDriver->switchTo()->alert()->getText());
+        $alert = $this->webDriver->switchTo()->alert();
+        try {
+            $this->assertContains($text, $alert->getText());
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            $alert->dismiss();
+            throw $e;
+        }
     }
 
     /**
@@ -2178,6 +2184,7 @@ class WebDriver extends CodeceptionModule implements
     {
         if (is_null($name)) {
             $this->webDriver->switchTo()->defaultContent();
+            return;
         }
         $this->webDriver->switchTo()->frame($name);
     }
@@ -2707,7 +2714,7 @@ class WebDriver extends CodeceptionModule implements
         $this->sessionSnapshots[$name] = [];
 
         foreach ($this->webDriver->manage()->getCookies() as $cookie) {
-            if (in_array(trim($cookie['name']), [LocalServer::COVERAGE_COOKIE, LocalServer::COVERAGE_COOKIE])) {
+            if (in_array(trim($cookie['name']), [LocalServer::COVERAGE_COOKIE, LocalServer::COVERAGE_COOKIE_ERROR])) {
                 continue;
             }
 
