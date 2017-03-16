@@ -1,0 +1,11 @@
+namespace: AcmePack
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_log
+    data: tests/_data
+    support: tests/_support
+settings:
+    bootstrap: _bootstrap.php
+    colors: false
+    memory_limit: 1024M
