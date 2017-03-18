@@ -33,9 +33,6 @@ class Build extends Command
         return 'Generates base classes for all suites';
     }
 
-    protected function configure()
-    {
-    }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -98,11 +95,11 @@ class Build extends Command
         $config = $this->getGlobalConfig($configFile);
         
         $dir = Configuration::projectDir();
+        $this->buildSuiteActors($configFile);
 
         foreach ($config['include'] as $subConfig) {
-            $this->output->writeln("<comment>Included Configuration: $subConfig</comment>");
+            $this->output->writeln("\n<comment>Included Configuration: $subConfig</comment>");
             $this->buildActorsForConfig($dir . DIRECTORY_SEPARATOR . $subConfig);
         }
-        $this->buildSuiteActors();
     }
 }
