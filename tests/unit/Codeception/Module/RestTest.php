@@ -413,6 +413,19 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseJsonMatchesXpath('//array/success');
     }
 
+    public function testSeeBinaryResponseEquals()
+    {
+        $data = base64_decode('/9j/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEAAD8A0s8g/9k=');
+        $this->setStubResponse($data);
+        $this->module->seeBinaryResponseEquals(md5($data));
+    }
+
+    public function testDontSeeBinaryResponseEquals()
+    {
+        $data = base64_decode('/9j/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEAAD8A0s8g/9k=');
+        $this->setStubResponse($data);
+        $this->module->dontSeeBinaryResponseEquals('024f615102cdb3c8c7cf75cdc5a83d15');
+    }
 
     protected function shouldFail()
     {
