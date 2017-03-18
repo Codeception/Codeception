@@ -95,7 +95,7 @@ class Build extends Command
         $config = $this->getGlobalConfig($configFile);
         
         $dir = Configuration::projectDir();
-        $this->buildSuiteActors($configFile);
+        $this->buildSuiteActors();
 
         foreach ($config['include'] as $subConfig) {
             $this->output->writeln("\n<comment>Included Configuration: $subConfig</comment>");

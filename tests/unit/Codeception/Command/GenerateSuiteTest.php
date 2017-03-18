@@ -12,7 +12,7 @@ class GenerateSuiteTest extends BaseCommandRunner
 
     public function testBasic()
     {
-        $this->execute(array('suite' => 'shire', 'actor' => 'Hobbit'));
+        $this->execute(array('suite' => 'shire', 'actor' => 'Hobbit'), false);
 
         $configFile = $this->log[2];
 
@@ -31,17 +31,11 @@ class GenerateSuiteTest extends BaseCommandRunner
         $this->assertEquals(\Codeception\Configuration::supportDir().'Helper/Hobbit.php', $helper['filename']);
         $this->assertContains('namespace Helper;', $helper['content']);
         $this->assertContains('class Hobbit extends \Codeception\Module', $helper['content']);
-
-        $bootstrap = $this->log[0];
-        $this->assertEquals(
-            \Codeception\Configuration::projectDir().'tests/shire/_bootstrap.php',
-            $bootstrap['filename']
-        );
     }
 
     public function testGuyWithSuffix()
     {
-        $this->execute(array('suite' => 'shire', 'actor' => 'HobbitGuy'));
+        $this->execute(array('suite' => 'shire', 'actor' => 'HobbitGuy'), false);
 
         $configFile = $this->log[2];
         $conf = \Symfony\Component\Yaml\Yaml::parse($configFile['content']);
