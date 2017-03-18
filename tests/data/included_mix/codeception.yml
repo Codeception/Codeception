@@ -1,0 +1,10 @@
+actor: Tester
+include:
+  - src/*/*Pack
+paths:
+  log: "_log"
+  tests: "tests"
+  data: "data"
+  support: "support"
+settings:
+  colors: false
