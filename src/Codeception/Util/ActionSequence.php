@@ -43,6 +43,8 @@ class ActionSequence
 {
     protected $actions = [];
 
+    private $counter = 1;
+
     /**
      * Creates an instance
      * @return ActionSequence
@@ -54,7 +56,9 @@ class ActionSequence
 
     public function __call($action, $arguments)
     {
-        $this->actions[$action] = $arguments;
+        $key = "{$this->counter}.$action";
+        $this->actions[$key] = $arguments;
+        $this->counter++;
         return $this;
     }
 

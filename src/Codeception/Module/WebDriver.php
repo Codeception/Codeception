@@ -2942,7 +2942,9 @@ class WebDriver extends CodeceptionModule implements
         if (!is_array($actions)) {
             throw new \InvalidArgumentException("2nd parameter, actions should be a valid callable or array");
         }
-        foreach ($actions as $action => $value) {
+        foreach ($actions as $actionDefinition => $value) {
+            $actionDefinition = explode('.', $actionDefinition);
+            $action = end($actionDefinition);
             if (!is_array($value)) {
                 $value = [$value];
             }
