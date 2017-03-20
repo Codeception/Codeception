@@ -908,6 +908,40 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Register a handler than can be used to modify the Laravel application object after it is initialized.
+     * The Laravel application object will be passed as an argument to the handler.
+     *
+     * ``` php
+     * <?php
+     * $I->haveApplicationHandler(function($app) {
+     *     $app->make('config')->set(['test_value' => '10']);
+     * });
+     * ?>
+     * ```
+     *
+     * @param $handler
+     */
+    public function haveApplicationHandler($handler)
+    {
+        $this->client->haveApplicationHandler($handler);
+    }
+
+    /**
+     * Clear the registered application handlers.
+     *
+     * ``` php
+     * <?php
+     * $I->clearApplicationHandlers();
+     * ?>
+     * ```
+     *
+     */
+    public function clearApplicationHandlers()
+    {
+        $this->client->clearApplicationHandlers();
+    }
+
+    /**
      * Inserts record into the database.
      * If you pass the name of a database table as the first argument, this method returns an integer ID.
      * You can also pass the class name of an Eloquent model, in that case this method returns an Eloquent model.
