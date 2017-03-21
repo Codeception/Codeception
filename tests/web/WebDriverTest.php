@@ -946,7 +946,6 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->see('Login');
     }
 
-
     public function testPerformOnWithBuiltArray()
     {
         $asserts = \PHPUnit\Framework\Assert::getCount();
@@ -954,6 +953,19 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
             ->see('Remember me next time')
             ->seeElement('#LoginForm_rememberMe')
+            ->dontSee('Login')
+        );
+        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->module->see('Login');
+    }
+
+    public function testPerformOnWithArrayAndSimilarActions()
+    {
+        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $this->module->amOnPage('/form/example1');
+        $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
+            ->see('Remember me')
+            ->see('next time')
             ->dontSee('Login')
         );
         $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);

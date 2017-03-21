@@ -86,6 +86,11 @@ abstract class Step
         return $this->failed;
     }
 
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
     public function getArgumentsAsString($maxLength = 200)
     {
         $arguments = $this->arguments;
