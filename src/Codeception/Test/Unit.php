@@ -3,6 +3,7 @@ namespace Codeception\Test;
 
 use Codeception\Configuration;
 use Codeception\Exception\ModuleException;
+use Codeception\Lib\Di;
 use Codeception\Scenario;
 use Codeception\TestInterface;
 
@@ -39,14 +40,18 @@ class Unit extends \PHPUnit_Framework_TestCase implements
             }
             return;
         }
-        $scenario = new Scenario($this);
-        $actorClass = $this->getMetadata()->getCurrent('actor');
-        if ($actorClass) {
-            $I = new $actorClass($scenario);
-            $property = lcfirst(Configuration::config()['actor']);
-            $this->$property = $I;
-        }
-        $this->getMetadata()->getService('di')->injectDependencies($this); // injecting dependencies
+
+        /** @var $di Di  **/
+        $di = $this->getMetadata()->getService('di');
+        $di->set(new Scenario($this));
+
+        // DEPRECATED: auto-inject int $tester property
+        // this will be removed from documentation but still can be used in old projects
+        $property = lcfirst(Configuration::config()['actor']);
+        $this->$property = $di->get($this->getMetadata()->getCurrent('actor'));
+
+        // Auto inject into the _inject method
+        $di->injectDependencies($this); // injecting dependencies
         $this->_before();
     }
 
