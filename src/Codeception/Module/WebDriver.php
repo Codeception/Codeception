@@ -2935,29 +2935,15 @@ class WebDriver extends CodeceptionModule implements
             $this->setBaseElement();
             return;
         }
-        if ($actions instanceof ActionSequence) {
-            $actions = $actions->toArray();
+        if (is_array($actions)) {
+            $actions = ActionSequence::build()->fromArray($actions);
         }
 
-        if (!is_array($actions)) {
-            throw new \InvalidArgumentException("2nd parameter, actions should be a valid callable or array");
+        if (!$actions instanceof ActionSequence) {
+            throw new \InvalidArgumentException("2nd parameter, actions should be callback, ActionSequence or array");
         }
-        foreach ($actions as $actionDefinition => $value) {
-            $actionDefinition = explode('.', $actionDefinition);
-            $action = end($actionDefinition);
-            if (!is_array($value)) {
-                $value = [$value];
-            }
-            $step = new Action($action, $value);
-            $this->debugSection("Action", (string)$step);
 
-            try {
-                call_user_func_array([$this, $action], $value);
-            } catch (WebDriverException $e) {
-                $class = get_class($e); // rethrow exception for a specific action
-                throw new $class($e->getMessage() . "\nat $step", $e->getResults());
-            }
-        }
+        $actions->run($this);
         $this->setBaseElement();
     }
 
