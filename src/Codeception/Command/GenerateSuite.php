@@ -67,7 +67,7 @@ class GenerateSuite extends Command
             // generate bootstrap
             $this->save(
                 $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
-                "<?php\n// Here you can initialize variables that will be available to your tests\n",
+                "<?php\n",
                 true
             );
         }
