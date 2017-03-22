@@ -125,8 +125,13 @@ class Db
             if (substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
                 $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
                 $this->sqlQuery($this->sqlToRun);
-                $query = "";
+                $query = '';
             }
+        }
+
+        if ($query !== '') {
+            $this->sqlToRun = $query;
+            $this->sqlQuery($this->sqlToRun);
         }
     }
 

@@ -10,6 +10,9 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
         'password' => ''
     );
 
+    /**
+     * @var \Codeception\Lib\Driver\Sqlite
+     */
     protected static $sqlite;
     protected static $sql;
     
@@ -123,5 +126,17 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
         );
 
         Db::create('sqlite::memory:', '', '');
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/4059
+     */
+    public function testLoadDumpEndingWithoutDelimiter()
+    {
+        $newDriver = new \Codeception\Lib\Driver\Sqlite(self::$config['dsn'], '', '');
+        $newDriver->load(['INSERT INTO empty_table VALUES(1, "test")']);
+        $res = $newDriver->getDbh()->query("select * from empty_table where field = 'test'");
+        $this->assertNotEquals(false, $res);
+        $this->assertNotEmpty($res->fetchAll());
     }
 }

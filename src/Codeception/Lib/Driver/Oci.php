@@ -74,6 +74,10 @@ class Oci extends Db
                 $query = "";
             }
         }
+
+        if ($query !== '') {
+            $this->sqlQuery($query);
+        }
     }
 
     /**

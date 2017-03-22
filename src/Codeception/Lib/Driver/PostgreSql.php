@@ -56,6 +56,10 @@ class PostgreSql extends Db
                 $query = '';
             }
         }
+
+        if ($query !== '') {
+            $this->sqlQuery($query);
+        }
     }
 
     public function cleanup()
