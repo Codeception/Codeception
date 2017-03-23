@@ -14,6 +14,7 @@
 * [PhpBrowser][Frameworks] If form has no id, use action attribute as identifier by @Naktibalda. Fixes #3953
 * Fixed test coloring output when a Feature title has some special chars in it like `/` or `-`
 * [REST] Added missing @part `json` and `xml` to `deleteHeader` by @freezy-sk 
+* [MEMCACHE] Fixed calling flush on null by @Jurigag
 
 #### 2.2.8
 
