@@ -1408,6 +1408,15 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->assertEquals($optionText, $value);
     }
 
+    public function seeOptionValueIsSelected($selector, $optionText)
+    {
+        $selected = $this->matchSelectedOption($selector);
+        $this->assertDomContains($selected, 'selected option');
+
+        $value = $selected->getNode(0)->getAttribute('value');
+        $this->assertEquals($optionText, $value);
+    }
+
     public function dontSeeOptionIsSelected($selector, $optionText)
     {
         $selected = $this->matchSelectedOption($selector);
@@ -1419,6 +1428,18 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $value = $selected->getNode(0)->tagName == 'option'
             ? $selected->text()
             : $selected->getNode(0)->getAttribute('value');
+        $this->assertNotEquals($optionText, $value);
+    }
+
+    public function dontseeOptionValueIsSelected($selector, $optionText)
+    {
+        $selected = $this->matchSelectedOption($selector);
+        if (!$selected->count()) {
+            $this->assertEquals(0, $selected->count());
+            return;
+        }
+
+        $value = $selected->getNode(0)->getAttribute('value');
         $this->assertNotEquals($optionText, $value);
     }
 

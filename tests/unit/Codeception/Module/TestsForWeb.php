@@ -296,8 +296,8 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     public function testSeeSelectedOptionValue()
     {
         $this->module->amOnPage('/form/select');
-        $this->module->seeOptionIsSelected('#age', 'oldfag');
-        $this->module->dontSeeOptionIsSelected('#age', 'child');
+        $this->module->seeOptionValueIsSelected('#age', 'oldfag');
+        $this->module->dontSeeOptionValueIsSelected('#age', 'child');
     }
 
     public function testSeeSelectedOptionForRadioButton()
