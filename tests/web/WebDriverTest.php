@@ -654,6 +654,7 @@ class WebDriverTest extends TestsForBrowsers
         $this->webDriver->manage()->deleteAllCookies();
         $this->module->dontSeeCookie('PHPSESSID');
         $this->module->dontSeeCookie('3rdParty');
+        $this->module->amOnPage('/');
         $this->module->loadSessionSnapshot('login');
         $this->module->seeCookie('PHPSESSID');
         $this->module->dontSeeCookie('3rdParty');
