@@ -21,7 +21,6 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
-use Codeception\Step\Action;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
@@ -29,12 +28,12 @@ use Codeception\Util\Debug;
 use Codeception\Util\ActionSequence;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
+use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\Exception\InvalidElementStateException;
 use Facebook\WebDriver\Exception\InvalidSelectorException;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\UnknownServerException;
 use Facebook\WebDriver\Exception\WebDriverCurlException;
-use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
@@ -2745,10 +2744,10 @@ class WebDriver extends CodeceptionModule implements
     /**
      * Check if the cookie domain matches the config URL.
      *
-     * @param array $cookie
+     * @param array|Cookie $cookie
      * @return bool
      */
-    private function cookieDomainMatchesConfigUrl(array $cookie)
+    private function cookieDomainMatchesConfigUrl($cookie)
     {
         if (!array_key_exists('domain', $cookie)) {
             return true;
