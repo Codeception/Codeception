@@ -147,4 +147,16 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         );
         $this->postgres->getPrimaryColumn('composite_pk');
     }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/4059
+     */
+    public function testLoadDumpEndingWithoutDelimiter()
+    {
+        $newDriver = new \Codeception\Lib\Driver\PostgreSql(self::$config['dsn'], self::$config['user'], self::$config['password']);
+        $newDriver->load(['INSERT INTO empty_table VALUES(1, \'test\')']);
+        $res = $newDriver->getDbh()->query("select * from empty_table where field = 'test'");
+        $this->assertNotEquals(false, $res);
+        $this->assertNotEmpty($res->fetchAll());
+    }
 }
