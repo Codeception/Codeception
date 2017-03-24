@@ -45,10 +45,10 @@ class Unit extends \PHPUnit_Framework_TestCase implements
         $di = $this->getMetadata()->getService('di');
         $di->set(new Scenario($this));
 
-        // DEPRECATED: auto-inject int $tester property
-        // this will be removed from documentation but still can be used in old projects
-        $property = lcfirst(Configuration::config()['actor']);
-        $this->$property = $di->get($this->getMetadata()->getCurrent('actor'));
+        // auto-inject $tester property
+        if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor']))) {
+            $this->$property = $di->instantiate($this->getMetadata()->getCurrent('actor'));
+        }
 
         // Auto inject into the _inject method
         $di->injectDependencies($this); // injecting dependencies
