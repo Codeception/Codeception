@@ -42,7 +42,7 @@ class GenerateSuite extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->addStyles($output);
-        $suite = lcfirst($input->getArgument('suite'));
+        $suite = $input->getArgument('suite');
         $actor = $input->getArgument('actor');
 
         if ($this->containsInvalidCharacters($suite)) {
