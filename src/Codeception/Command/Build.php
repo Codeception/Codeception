@@ -37,7 +37,7 @@ class Build extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
-        $this->buildActorsForConfig($input->getOption('config'));
+        $this->buildActorsForConfig();
     }
     
     private function buildActor(array $settings)
@@ -73,14 +73,14 @@ class Build extends Command
         return $this->save($file, $content, true);
     }
 
-    private function buildSuiteActors($configFile)
+    private function buildSuiteActors()
     {
-        $suites = $this->getSuites($configFile);
+        $suites = $this->getSuites();
         if (!empty($suites)) {
             $this->output->writeln("<info>Building Actor classes for suites: " . implode(', ', $suites) . '</info>');
         }
         foreach ($suites as $suite) {
-            $settings = $this->getSuiteConfig($suite, $configFile);
+            $settings = $this->getSuiteConfig($suite);
             $this->buildActions($settings);
             $actorBuilt = $this->buildActor($settings);
             
@@ -90,11 +90,12 @@ class Build extends Command
         }
     }
     
-    protected function buildActorsForConfig($configFile)
+    protected function buildActorsForConfig($configFile = null)
     {
         $config = $this->getGlobalConfig($configFile);
+        
         $dir = Configuration::projectDir();
-        $this->buildSuiteActors($configFile);
+        $this->buildSuiteActors();
 
         foreach ($config['include'] as $subConfig) {
             $this->output->writeln("\n<comment>Included Configuration: $subConfig</comment>");

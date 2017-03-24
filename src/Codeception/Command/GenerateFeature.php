@@ -40,7 +40,7 @@ class GenerateFeature extends Command
         $suite = $input->getArgument('suite');
         $filename = $input->getArgument('feature');
 
-        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite);
         $this->buildPath($config['path'], $filename);
 
         $gen = new Feature(basename($filename));

@@ -35,7 +35,7 @@ class GenerateHelper extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $name = ucfirst($input->getArgument('name'));
-        $config = Configuration::config($input->getOption('config'));
+        $config = $this->getGlobalConfig();
 
         $path = $this->buildPath(Configuration::supportDir() . 'Helper', $name);
         $filename = $path . $this->getClassName($name) . '.php';

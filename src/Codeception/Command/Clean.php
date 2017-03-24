@@ -23,13 +23,8 @@ class Clean extends Command
         return 'Cleans or creates _output directory';
     }
 
-    protected function configure()
-    {
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getGlobalConfig($input->getOption('config'));
         $output->writeln("<info>Cleaning up " . Configuration::outputDir() . "...</info>");
         FileSystem::doEmptyDir(Configuration::outputDir());
         $output->writeln("Done");

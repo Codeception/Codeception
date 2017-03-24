@@ -46,7 +46,7 @@ class GherkinSnippets extends Command
         $this->addStyles($output);
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
-        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite);
 
         $generator = new SnippetsGenerator($config, $test);
         $snippets = $generator->getSnippets();
