@@ -1,6 +1,49 @@
 #### 2.2.10
 
+* Prefer local composer installation if available. Solves issues with incompatibility between locally and globally installed or packaged in phar file Codeception dependencies. Fix by @Naktibalda See #3997
+* Added console completion by @gdscei. See [documentation](http://codeception.com/docs/07-AdvancedUsage#Shell-autocompletion)
+* [WebDriver] Fixed compatibility with `facebook/webdriver` 1.4.0 by @Naktibalda. See #4076 Fixes #4073
+* Run a suite by its path #4079
+   
+```
+codecept run tests/unit
+```   
+Improves recent [PHPStorm integration](https://blog.jetbrains.com/phpstorm/2017/03/codeception-support-comes-to-phpstorm-2017-1/). Codeception tests can be started by running a suite directory.
+   
+* [WebDriver] Fixed using `performOn` with `ActionSequence`; supporting multiple actions of same kind. #4066 by @davertmik. Fixes #4044
 * [Laravel5] Added `haveApplicationHandler` and `clearApplicationHandlers` methods. See #4068. By @janhenkgerritsen
+* [Laravel5] Close all Laravel DB connections after test execution. Fixes #4031 by @rmblstrp
+* [Laravel5] Update Laravel5 `database_migrations_path` to by null by default by @timbroder. Fixes #3990
+* [DataFactory] Add `cleanup` option to skip auto cleanup. By @alexpts. See #3996
+* Fixed printScenarioFail with multiple feature scenarios by @gimler. See #3868 
+* Fixed generating JUnit XML when Selenium server can’t be connected. Closes #3653 by @Naktibalda
+* Fixes running local suites (under tests folder) and included suite mixed (via include path). See #4063
+* [Db] Run the last statement in dump file even if it doesn't end with delimiter. #4071 by @Naktibalda. Fixes #4059
+* [Memcache] Fixed calling flush on null by @Jurigag. See #4074
+* [Yii2] Fixtures behavior compatibility with `yii2-codeception` by @leandrogehlen. See #4016
+* `g:suite` allows generate suites with uppercase names. Fixes #4072
+* Enabled incomplete/skipped/risky/warning settings for logger. See #3890. By @mario-naether 
+
+```yaml
+settings:
+    report_useless_tests: false
+    disallow_test_output: false
+    be_strict_about_changes_to_global_state: false
+    log_incomplete_skipped: false
+```
+* [WebDriver] Fixed double coverage cookie check by @boboldehampsink. See #2923 #4020
+* [WebDriver] Fixed `switchToIframe` regression from 2.2.9 by @lcobucci. PR #4000
+* Speed improvement for group lookup by @pitpit. See #4025
+* Added parse error to `TestParseException` in PHP7 by @Naktibalda. See #4007
+* Auto injection for `Codeception\Test\Unit` format #4070. Allows to customize injection of support objects into a testcase:  
+
+```php
+<?php
+public function _inject(UnitTester $unit)
+{
+    $this->i = $unit;
+}
+```
 
 #### 2.2.9
 
@@ -18,7 +61,6 @@
 * [PhpBrowser][Frameworks] If form has no id, use action attribute as identifier by @Naktibalda. Fixes #3953
 * Fixed test coloring output when a Feature title has some special chars in it like `/` or `-`
 * [REST] Added missing @part `json` and `xml` to `deleteHeader` by @freezy-sk 
-* [MEMCACHE] Fixed calling flush on null by @Jurigag
 
 #### 2.2.8
 

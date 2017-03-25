@@ -74,12 +74,12 @@ settings:
     
     # PHPUnit can be strict about tests that manipulate global state.
     # See https://phpunit.de/manual/current/en/risky-tests.html#risky-tests.global-state-manipulation
-    beStrictAboutChangesToGlobalState: false
+    be_strict_about_changes_to_global_state: false
     
     # Log the incomplete and skipped tests into junit report
     # See https://phpunit.de/manual/current/en/appendixes.configuration.html 
     # Section logging > junit
-    logIncompleteSkipped: false
+    log_incomplete_skipped: false
 ```
 
 * `modules`: allows to create shared module configuration for all included suites. By default sample configuration for Db module is included.
