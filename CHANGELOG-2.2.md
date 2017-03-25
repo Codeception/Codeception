@@ -1,3 +1,7 @@
+#### 2.2.10
+
+* [Laravel5] Added `haveApplicationHandler` and `clearApplicationHandlers` methods. See #4068. By @janhenkgerritsen
+
 #### 2.2.9
 
 * [Laravel5] **Laravel 5.4 support** by @janhenkgerritsen

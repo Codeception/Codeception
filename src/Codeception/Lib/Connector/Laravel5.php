@@ -68,6 +68,11 @@ class Laravel5 extends Client
     private $instances = [];
 
     /**
+     * @var array
+     */
+    private $applicationHandlers = [];
+
+    /**
      * @var object
      */
     private $oldDb;
@@ -116,6 +121,7 @@ class Laravel5 extends Client
         $this->applyBindings();
         $this->applyContextualBindings();
         $this->applyInstances();
+        $this->applyApplicationHandlers();
 
         $request = Request::createFromBase($request);
         $response = $this->kernel->handle($request);
@@ -298,6 +304,16 @@ class Laravel5 extends Client
     }
 
     /**
+     * Apply the registered application handlers.
+     */
+    private function applyApplicationHandlers()
+    {
+        foreach ($this->applicationHandlers as $handler) {
+            call_user_func($handler, $this->app);
+        }
+    }
+
+    /**
      * Apply the registered Laravel service container bindings.
      */
     private function applyBindings()
@@ -439,5 +455,24 @@ class Laravel5 extends Client
     public function haveInstance($abstract, $instance)
     {
         $this->instances[$abstract] = $instance;
+    }
+
+    /**
+     * Register a handler than can be used to modify the Laravel application object after it is initialized.
+     * The Laravel application object will be passed as an argument to the handler.
+     *
+     * @param $handler
+     */
+    public function haveApplicationHandler($handler)
+    {
+        $this->applicationHandlers[] = $handler;
+    }
+
+    /**
+     * Clear the registered application handlers.
+     */
+    public function clearApplicationHandlers()
+    {
+        $this->applicationHandlers = [];
     }
 }
