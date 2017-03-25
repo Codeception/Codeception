@@ -122,5 +122,4 @@ class ActionSequence
 
         return implode(', ', $actionsLog);
     }
-
 }
