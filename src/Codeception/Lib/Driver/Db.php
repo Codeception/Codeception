@@ -17,11 +17,6 @@ class Db
     protected $password;
 
     /**
-     * @var string
-     */
-    public $sqlToRun;
-
-    /**
      * associative array with table name => primary-key
      *
      * @var array
@@ -123,10 +118,13 @@ class Db
             $query .= "\n" . rtrim($sqlLine);
 
             if (substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
-                $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
-                $this->sqlQuery($this->sqlToRun);
-                $query = "";
+                $this->sqlQuery(substr($query, 0, -1 * $delimiterLength));
+                $query = '';
             }
+        }
+
+        if ($query !== '') {
+            $this->sqlQuery($query);
         }
     }
 

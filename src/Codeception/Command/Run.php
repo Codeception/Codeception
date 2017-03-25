@@ -216,7 +216,7 @@ class Run extends Command
         $this->output = $output;
 
         // load config
-        $config = $this->getGlobalConfig($this->options['config']);
+        $config = $this->getGlobalConfig();
 
         // update config from options
         if (count($this->options['override'])) {

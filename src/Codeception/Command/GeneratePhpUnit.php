@@ -39,7 +39,7 @@ class GeneratePhpUnit extends Command
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite);
 
         $path = $this->buildPath($config['path'], $class);
 

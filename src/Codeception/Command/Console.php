@@ -52,7 +52,7 @@ class Console extends Command
         $suiteName = $input->getArgument('suite');
         $this->output = $output;
 
-        $config = Configuration::config($input->getOption('config'));
+        $config = Configuration::config();
         $settings = Configuration::suiteSettings($suiteName, $config);
 
         $options = $input->getOptions();

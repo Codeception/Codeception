@@ -34,7 +34,7 @@ class GenerateEnvironment extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $conf = $this->getGlobalConfig($input->getOption('config'));
+        $conf = $this->getGlobalConfig();
         if (!Configuration::envsDir()) {
             throw new ConfigurationException(
                 "Path for environments configuration is not set.\n"

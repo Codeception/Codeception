@@ -140,16 +140,6 @@ class Bootstrap extends Command
             ],
             'extensions' => [
                 'enabled' => ['Codeception\Extension\RunFailed']
-            ],
-            'modules'  => [
-                'config' => [
-                    'Db' => [
-                        'dsn'      => '',
-                        'user'     => '',
-                        'password' => '',
-                        'dump'     => 'tests/_data/dump.sql'
-                    ]
-                ]
             ]
         ];
 

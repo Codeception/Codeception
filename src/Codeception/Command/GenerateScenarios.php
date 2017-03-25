@@ -44,7 +44,7 @@ class GenerateScenarios extends Command
     {
         $suite = $input->getArgument('suite');
 
-        $suiteConf = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $suiteConf = $this->getSuiteConfig($suite);
 
         $path = $input->getOption('path')
             ? $input->getOption('path')
