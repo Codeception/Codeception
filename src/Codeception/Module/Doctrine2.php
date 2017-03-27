@@ -436,7 +436,7 @@ EOF;
      *
      * ``` php
      * <?php
-     * $users = $I->grabEntityFromRepository('User', array('name' => 'davert'));
+     * $user = $I->grabEntityFromRepository('User', array('id' => '1234'));
      * ?>
      * ```
      *
@@ -458,7 +458,7 @@ EOF;
         return $qb->getQuery()->getSingleResult();
     }
 
-    //git commit -m "Remove grabEntitiesFromRepository from interface + Single result for grabEntityRepository"
+    
 
     /**
      * It's Fuckin Recursive!
