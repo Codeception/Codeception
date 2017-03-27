@@ -10,6 +10,4 @@ interface DataMapper extends ORM, DoctrineProvider
     public function dontSeeInRepository($entity, $params = []);
 
     public function grabFromRepository($entity, $field, $params = []);
-
-    public function grabEntitiesFromRepository($entity, $params = []);
 }
