@@ -134,20 +134,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
     public function _initialize()
     {
-        $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
-        if (!file_exists($cache)) {
-            throw new ModuleRequireException(
-                __CLASS__,
-                "Symfony bootstrap file not found in $cache\n \n" .
-                "Please specify path to bootstrap file using `var_path` config option\n \n" .
-                "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
-                "modules:\n    enabled:\n" .
-                "    - Symfony:\n" .
-                "        var_path: '../../app'\n" .
-                "        app_path: '../../app'"
-            );
-        }
-        require_once $cache;
+
+        $this->initializeSymfonyCache();
         $this->kernelClass = $this->getKernelClass();
         $maxNestingLevel = 200; // Symfony may have very long nesting level
         $xdebugMaxLevelKey = 'xdebug.max_nesting_level';
@@ -160,6 +148,31 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
         if ($this->config['cache_router'] === true) {
             $this->persistService('router', true);
+        }
+    }
+
+    /**
+     * Require Symfonys bootstrap.php.cache only for PHP Version < 7
+     *
+     * @throws ModuleRequireException
+     */
+    private function initializeSymfonyCache()
+    {
+        $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
+        if (PHP_VERSION_ID < 70000 && !file_exists($cache)) {
+            throw new ModuleRequireException(
+                __CLASS__,
+                "Symfony bootstrap file not found in $cache\n \n" .
+                "Please specify path to bootstrap file using `var_path` config option\n \n" .
+                "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
+                "modules:\n    enabled:\n" .
+                "    - Symfony:\n" .
+                "        var_path: '../../app'\n" .
+                "        app_path: '../../app'"
+            );
+        }
+        if (file_exists($cache)) {
+            require_once $cache;
         }
     }
 
