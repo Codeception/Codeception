@@ -7,7 +7,7 @@ use Codeception\Lib\Connector\Laravel5 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
-use Codeception\Lib\Laravel\Shared\Common;
+use Codeception\Lib\Shared\LaravelCommon;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
 use Codeception\Util\ReflectionHelper;
@@ -92,7 +92,7 @@ use Illuminate\Support\Collection;
  */
 class Laravel5 extends Framework implements ActiveRecord, PartedModule
 {
-    use Common;
+    use LaravelCommon;
 
     /**
      * @var \Illuminate\Foundation\Application

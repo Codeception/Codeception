@@ -1,12 +1,12 @@
 <?php
-namespace Codeception\Lib\Laravel\Shared;
+namespace Codeception\Lib\Shared;
 
 /**
  * Common functions for Laravel family
  *
- * @package Codeception\Lib\Laravel\Shared
+ * @package Codeception\Lib\Shared
  */
-trait Common
+trait LaravelCommon
 {
     /**
      * Add a binding to the Laravel service container.
