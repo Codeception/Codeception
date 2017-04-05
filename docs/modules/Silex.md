@@ -25,7 +25,7 @@ Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs
 <?
 $app = require __DIR__.'/path/to/app.php';
 $app['debug'] = true;
-$app['exception_handler']->disable();
+unset($app['exception_handler']);
 
 return $app; // optionally
 ?>
