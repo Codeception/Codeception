@@ -46,6 +46,6 @@ class GherkinCest
     {
         $I->executeCommand('gherkin:snippets scenario Utf8Example.feature');
         $I->seeInShellOutput('@Given я написал сценарий на русском языке');
-        $I->seeInShellOutput('public function ЯНаписалСценарийНаРусскомЯзыке');
+        $I->seeInShellOutput('public function яНаписалСценарийНаРусскомЯзыке');
     }
 }
