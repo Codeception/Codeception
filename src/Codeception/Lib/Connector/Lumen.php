@@ -2,6 +2,7 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\Lumen\DummyKernel;
+use Codeception\Lib\Connector\Shared\LaravelCommon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Facade;
@@ -11,6 +12,8 @@ use Symfony\Component\HttpKernel\Client;
 
 class Lumen extends Client
 {
+    use LaravelCommon;
+
     /**
      * @var \Laravel\Lumen\Application
      */
@@ -65,6 +68,11 @@ class Lumen extends Client
             $this->initialize($request);
         }
         $this->firstRequest = false;
+
+        $this->applyBindings();
+        $this->applyContextualBindings();
+        $this->applyInstances();
+        $this->applyApplicationHandlers();
 
         $request = Request::createFromBase($request);
         $response = $this->kernel->handle($request);

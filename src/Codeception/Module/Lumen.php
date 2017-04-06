@@ -8,6 +8,7 @@ use Codeception\Lib\Connector\Lumen as LumenConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
+use Codeception\Lib\Shared\LaravelCommon;
 use Codeception\Lib\ModuleContainer;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionHelper;
@@ -54,6 +55,8 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
  */
 class Lumen extends Framework implements ActiveRecord, PartedModule
 {
+    use LaravelCommon;
+
     /**
      * @var \Laravel\Lumen\Application
      */
