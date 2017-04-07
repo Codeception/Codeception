@@ -53,7 +53,7 @@ install:
   # Yii2
   - composer create-project "yiisoft/yii2-app-basic:@dev" frameworks-yii-basic --no-dev
   # Phalcon
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ -z "$PHALCON" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-phalcon $composer_parameters'
