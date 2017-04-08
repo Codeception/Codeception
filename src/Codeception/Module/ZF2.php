@@ -121,10 +121,6 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
             StaticEventManager::resetInstance();
         }
 
-        //Close the session, if any are open
-        if (session_status() == PHP_SESSION_ACTIVE) {
-            session_write_close();
-        }
         $this->queries = 0;
         $this->time = 0;
 
