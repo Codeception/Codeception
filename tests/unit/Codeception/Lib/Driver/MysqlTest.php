@@ -14,6 +14,9 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
     ];
 
     protected static $sql;
+    /**
+     * @var \Codeception\Lib\Driver\MySql
+     */
     protected $mysql;
     
     public static function setUpBeforeClass()
@@ -125,5 +128,15 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             [5,'insert.test','insert.test@mail.ua',false,'2012-02-01 21:17:47']
         );
         $this->assertEquals(1, $res->rowCount());
+    }
+
+    public function testLoadThrowsExceptionWhenDumpFileContainsSyntaxError()
+    {
+        $sql = "INSERT INTO `users` (`name`) VALS('')";
+        $expectedMessage = 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL ' .
+            'syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ' .
+            "'VALS('')' at line 1\nSQL query being executed: \n" . $sql;
+        $this->setExpectedException('Codeception\Exception\ModuleException', $expectedMessage);
+        $this->mysql->load([$sql]);
     }
 }
