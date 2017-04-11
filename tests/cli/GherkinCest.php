@@ -50,7 +50,8 @@ class GherkinCest
         $I->dontSeeInShellOutput('public function iSeeOutput($arg1)');
     }
 
-    public function runStepWithPyStringArgument(CliGuy $I) {
+    public function runStepWithPyStringArgument(CliGuy $I) 
+    {
         $I->executeCommand('run scenario PyStringArgumentExample.feature --steps');
         $I->seeInShellOutput('Step definition for `I have PyString argument ""` not found in contexts');
         $I->dontSeeInShellOutput('Step definition for `I see output` not found in contexts');
