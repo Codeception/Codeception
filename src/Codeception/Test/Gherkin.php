@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
 use Codeception\Lib\Di;
+use Codeception\Lib\Generator\GherkinSnippets;
 use Codeception\Scenario;
 use Codeception\Step\Comment;
 use Codeception\Step\Meta;
@@ -91,7 +92,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     protected function validateStep(StepNode $stepNode)
     {
         $stepText = $stepNode->getText();
-        if (\Codeception\Lib\Generator\GherkinSnippets::stepHasPyStringArgument($stepNode)) {
+        if (GherkinSnippets::stepHasPyStringArgument($stepNode)) {
             $stepText .= ' ""';
         }
         foreach ($this->steps as $pattern => $context) {
