@@ -91,6 +91,9 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     protected function validateStep(StepNode $stepNode)
     {
         $stepText = $stepNode->getText();
+        if (\Codeception\Lib\Generator\GherkinSnippets::stepHasPyStringArgument($stepNode)) {
+            $stepText .= ' ""';
+        }
         foreach ($this->steps as $pattern => $context) {
             $res = preg_match($pattern, $stepText);
             if (!$res) {

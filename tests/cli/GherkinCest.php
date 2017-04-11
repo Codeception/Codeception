@@ -41,4 +41,19 @@ class GherkinCest
         $I->dontSeeInShellOutput('@Given I have only idea of what\'s going on here');
         $I->dontSeeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
     }
+
+    public function snippetsPyStringArgument(CliGuy $I)
+    {
+        $I->executeCommand('gherkin:snippets scenario PyStringArgumentExample.feature');
+        $I->seeInShellOutput('@Given I have PyString argument :arg1');
+        $I->seeInShellOutput('public function iHavePyStringArgument($arg1)');
+        $I->dontSeeInShellOutput('public function iSeeOutput($arg1)');
+    }
+
+    public function runStepWithPyStringArgument(CliGuy $I) {
+        $I->executeCommand('run scenario PyStringArgumentExample.feature --steps');
+        $I->seeInShellOutput('Step definition for `I have PyString argument ""` not found in contexts');
+        $I->dontSeeInShellOutput('Step definition for `I see output` not found in contexts');
+    }
+
 }
