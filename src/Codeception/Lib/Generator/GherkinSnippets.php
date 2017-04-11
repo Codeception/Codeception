@@ -136,7 +136,7 @@ EOF;
         return $this->features;
     }
 
-    public static function stepHasPyStringArgument(StepNode $step) 
+    public static function stepHasPyStringArgument(StepNode $step)
     {
         if ($step->hasArguments()) {
             $stepArgs = $step->getArguments();
