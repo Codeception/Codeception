@@ -104,12 +104,14 @@ EOF;
             return;
         }
 
-        $methodName = preg_replace('~(\s+?|\'|\"|\W)~', '', ucwords(preg_replace('~"(.*?)"|\d+~', '', $step->getText())));
+        $stepTitle = mb_convert_case(preg_replace('~"(.*?)"|\d+~u', '', $step->getText()), MB_CASE_TITLE, 'utf-8');
+        $methodName = preg_replace('~(\s+?|\'|\"|\W)~u', '', $stepTitle);
+        $methodName = mb_strtolower(mb_substr($methodName, 0, 1, 'utf-8'), 'utf-8') . mb_substr($methodName, 1, null, 'utf-8');
 
         $this->snippets[] = (new Template($this->template))
             ->place('type', $step->getKeywordType())
             ->place('text', $pattern)
-            ->place('methodName', lcfirst($methodName))
+            ->place('methodName', $methodName)
             ->place('params', implode(', ', $args))
             ->produce();
 
