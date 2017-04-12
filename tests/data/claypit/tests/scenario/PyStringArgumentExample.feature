@@ -12,3 +12,10 @@ Feature: PyString argument example
       First line
       Second line
       """
+
+  Scenario: Running step with PyString argument
+    Given I print
+      """
+      First line
+      Second line
+      """

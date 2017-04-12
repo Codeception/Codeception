@@ -120,6 +120,11 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         $meta->setPrefix($stepNode->getKeyword());
         $this->scenario->setMetaStep($meta); // enable metastep
         $stepText = $stepNode->getText();
+        $hasPyStringArg = GherkinSnippets::stepHasPyStringArgument($stepNode);
+        if ($hasPyStringArg) {
+            // pretend it is inline argument
+            $stepText .= ' ""';
+        }
         $this->getScenario()->comment(null); // make metastep to be printed even if no steps in it
         foreach ($this->steps as $pattern => $context) {
             $matches = [];
@@ -127,6 +132,10 @@ class Gherkin extends Test implements ScenarioDriven, Reported
                 continue;
             }
             array_shift($matches);
+            if ($hasPyStringArg) {
+                // get rid off last fake argument
+                array_pop($matches);
+            }
             if ($stepNode->hasArguments()) {
                 $matches = array_merge($matches, $stepNode->getArguments());
             }
