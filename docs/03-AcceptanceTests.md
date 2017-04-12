@@ -315,9 +315,10 @@ $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 
 A nice feature of Codeception is that most scenarios can be easily ported between the testing backends.
 The PhpBrowser tests we wrote previously can be executed inside a real browser (or PhantomJS) with Selenium WebDriver.
+In this case we concentrate on **testing the UI**. Our tests aim to ensure that user can perform actions using the web interface we provided.
+Browser tests are executed just as regular user would do.
 
-The only thing we need to change is to reconfigure and rebuild the AcceptanceTester class,
-and to use **WebDriver** instead of PhpBrowser.
+To do that we need to change suite configuration to use **WebDriver** instead of PhpBrowser.
 
 Modify your `acceptance.suite.yml` file:
 
@@ -327,23 +328,23 @@ modules:
     enabled:
         - WebDriver:
             url: {{your site URL}}
-            browser: firefox
+            browser: chrome
         - \Helper\Acceptance
 ```
 
-In order to run Selenium tests you need to [download Selenium Server](http://seleniumhq.org/download/)
-and get it running. Alternatively you may use [PhantomJS](http://phantomjs.org/) headless browser in `ghostdriver` mode.
+In order to run browser tests you will need to start Selenium Server or PhantomJS. 
+[Learn how to start them](http://codeception.com/docs/modules/WebDriver#Local-Testing).
 
-If you run your acceptance tests with Selenium, Firefox will be started
-and all the actions will be performed step by step using the browser engine.
-
-In this case `seeElement` won't just check that the element exists on a page,
+Tests behavior will change once you execute them in a real browser. For instance, `seeElement` won't just check that the element exists on a page,
 but it will also check that element is actually visible to the user:
 
 ```php
 <?php
 $I->seeElement('#modal');
 ```
+
+While WebDriver duplicate the functionality of PhpBrowser it has its limitations: it can't check headers, perform HTTP requests, as browsers don't provide APIs for that. 
+WebDriver also adds browser-specific functionality which will be listed in next sections.
 
 #### Wait
 
@@ -471,27 +472,6 @@ we implemented [AngularJS module](http://codeception.com/docs/modules/AngularJS)
 before the previous actions are completed and uses the AngularJS API to check the application state.
 
 The AngularJS module extends WebDriver so that all the configuration options from it are available.
-
-### Cleaning Things Up
-
-While testing, your actions may change the data on the site. Tests will fail if trying to create
-or update the same data twice. To avoid this problem, your database should be repopulated for each test.
-Codeception provides a `Db` module for that purpose. It will load a database dump after each passed test.
-To make repopulation work, create an SQL dump of your database and put it into the `tests/_data` directory.
-Set the database connection and path to the dump in the global Codeception config.
-
-```yaml
-# in codeception.yml:
-modules:
-    config:
-        Db:
-            dsn: '[set PDO DSN here]'
-            user: '[set user]'
-            password: '[set password]'
-            dump: tests/_data/dump.sql
-```
-
-After we have configured the Db module, we should have it enabled in the `acceptance.suite.yml` configuration file.
 
 ### Debugging
 
