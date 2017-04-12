@@ -3,6 +3,9 @@ namespace Codeception\Module;
 
 /**
  * Wrapper for basic shell commands and shell output
+ * 
+ * Please note that as this module makes use of external PHP processes,
+ * code executed through this module will not show up in coverage reports.
  *
  * ## Responsibility
  * * Maintainer: **davert**
