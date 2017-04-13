@@ -1389,9 +1389,12 @@ class WebDriver extends CodeceptionModule implements
     {
         $el = $this->findField($field);
         // in order to be compatible on different OS
-        $filePath = realpath(codecept_data_dir() . $filename);
+        $filePath = codecept_data_dir() . $filename;
+        if (!file_exists($filePath)) {
+            throw new \InvalidArgumentException("File does not exist: $filePath");
+        }
         if (!is_readable($filePath)) {
-            throw new \InvalidArgumentException("file not found or not readable: $filePath");
+            throw new \InvalidArgumentException("File is not readable: $filePath");
         }
         // in order for remote upload to be enabled
         $el->setFileDetector(new LocalFileDetector());
@@ -1400,7 +1403,7 @@ class WebDriver extends CodeceptionModule implements
         if ($this->isPhantom()) {
             $el->setFileDetector(new UselessFileDetector());
         }
-        $el->sendKeys($filePath);
+        $el->sendKeys(realpath($filePath));
     }
 
     /**

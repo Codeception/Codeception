@@ -1,6 +1,6 @@
 # Behavior Driven Development
 
-Behavior Driven Development is a popular methodology of software development. It is considered to be an extension to TDD, and is much inspired by [Agile](http://agilemanifesto.org/) practices. The main reason for choosing BDD for development process is breaking communication barer between business and technical teams. BDD encourages usage of automated testing to make all documented features of a project to be tested from the very beginning. This is why it is common to talk about BDD in the context of a test frameworks (like Codeception). However, BDD is much beyond the testing at all, and is more about managing the development process.
+Behavior Driven Development (BDD) is a popular software development methodology. BDD is considered an extension of TDD, and is greatly inspired by [Agile](http://agilemanifesto.org/) practices. The primary reason to choose BDD as your development process is to break down communication barriers between business and technical teams. BDD encourages the use of automated testing to verify all documented features of a project from the very beginning. This is why it is common to talk about BDD in the context of test frameworks (like Codeception). The BDD approach, however, is about much more than testing - it is a common language for all team members to use during the development process.
 
 ## What is Behavior Driven Development
 
