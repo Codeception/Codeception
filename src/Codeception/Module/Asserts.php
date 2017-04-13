@@ -10,27 +10,57 @@ class Asserts extends CodeceptionModule
 {
 
     /**
-     * Checks that two variables are equal.
+     * Checks that two variables are equal. If you're comparing floating-point values,
+     * you can specify the optional "delta" parameter which dictates how great of a precision
+     * error are you willing to tolerate in order to consider the two values equal.
+     *
+     * Regular example:
+     * ```php
+     * <?php
+     * $I->assertEquals($element->getChildrenCount(), 5);
+     * ```
+     *
+     * Floating-point example:
+     * ```php
+     * <?php
+     * $I->assertEquals($calculator->add(0.1, 0.2), 0.3, 'Calculator should add the two numbers correctly.', 0.01);
+     * ```
      *
      * @param        $expected
      * @param        $actual
      * @param string $message
+     * @param float  $delta
      */
-    public function assertEquals($expected, $actual, $message = '')
+    public function assertEquals($expected, $actual, $message = '', $delta = 0.0)
     {
-        parent::assertEquals($expected, $actual, $message);
+        parent::assertEquals($expected, $actual, $message, $delta);
     }
 
     /**
-     * Checks that two variables are not equal
+     * Checks that two variables are not equal. If you're comparing floating-point values,
+     * you can specify the optional "delta" parameter which dictates how great of a precision
+     * error are you willing to tolerate in order to consider the two values not equal.
+     *
+     * Regular example:
+     * ```php
+     * <?php
+     * $I->assertNotEquals($element->getChildrenCount(), 0);
+     * ```
+     *
+     * Floating-point example:
+     * ```php
+     * <?php
+     * $I->assertNotEquals($calculator->add(0.1, 0.2), 0.4, 'Calculator should add the two numbers correctly.', 0.01);
+     * ```
      *
      * @param        $expected
      * @param        $actual
      * @param string $message
+     * @param float  $delta
      */
-    public function assertNotEquals($expected, $actual, $message = '')
+    public function assertNotEquals($expected, $actual, $message = '', $delta = 0.0)
     {
-        parent::assertNotEquals($expected, $actual, $message);
+        parent::assertNotEquals($expected, $actual, $message, $delta);
     }
 
     /**
@@ -39,7 +69,6 @@ class Asserts extends CodeceptionModule
      * @param        $expected
      * @param        $actual
      * @param string $message
-     * @return mixed|void
      */
     public function assertSame($expected, $actual, $message = '')
     {

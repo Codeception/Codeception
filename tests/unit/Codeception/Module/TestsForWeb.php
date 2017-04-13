@@ -1623,4 +1623,14 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->click('Relative Form');
         $this->module->seeCurrentUrlEquals('/form/example5');
     }
+
+    public function testAttachFileThrowsCorrectMessageWhenFileDoesNotExist()
+    {
+        $filename = 'does-not-exist.jpg';
+        $expectedMessage = 'File does not exist: ' . codecept_data_dir($filename);
+        $this->setExpectedException('InvalidArgumentException', $expectedMessage);
+
+        $this->module->amOnPage('/form/file');
+        $this->module->attachFile('Avatar', $filename);
+    }
 }

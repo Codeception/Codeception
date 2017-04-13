@@ -53,8 +53,13 @@ class Cest implements LoaderInterface
                     );
                 }
 
-                // dataprovider Annotation
-                $dataMethod = Annotation::forMethod($testClass, $method)->fetch('dataprovider');
+                // dataProvider Annotation
+                $dataMethod = Annotation::forMethod($testClass, $method)->fetch('dataProvider');
+                // lowercase for back compatible
+                if (empty($dataMethod)) {
+                    $dataMethod = Annotation::forMethod($testClass, $method)->fetch('dataprovider');
+                }
+
                 if (!empty($dataMethod)) {
                     try {
                         $data = ReflectionHelper::invokePrivateMethod($unit, $dataMethod);
