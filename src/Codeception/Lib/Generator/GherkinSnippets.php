@@ -105,6 +105,9 @@ EOF;
         }
 
         $methodName = preg_replace('~(\s+?|\'|\"|\W)~', '', ucwords(preg_replace('~"(.*?)"|\d+~', '', $step->getText())));
+        if (empty($methodName)) {
+            $methodName = 'step_' . substr(sha1($pattern), 0, 9);
+        }
 
         $this->snippets[] = (new Template($this->template))
             ->place('type', $step->getKeywordType())

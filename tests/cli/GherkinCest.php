@@ -41,4 +41,11 @@ class GherkinCest
         $I->dontSeeInShellOutput('@Given I have only idea of what\'s going on here');
         $I->dontSeeInShellOutput('public function iHaveOnlyIdeaOfWhatsGoingOnHere');
     }
+
+    public function snippetsScenarioUtf8(CliGuy $I)
+    {
+        $I->executeCommand('gherkin:snippets scenario Utf8Example.feature');
+        $I->seeInShellOutput('@Given я написал сценарий на языке :arg1');
+        $I->seeInShellOutput('public function step_62e20dc62($arg1)');
+    }
 }
