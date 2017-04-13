@@ -1243,6 +1243,7 @@ class WebDriver extends CodeceptionModule implements
         } catch (UnknownServerException $e) {
             // Session already closed so nothing to do
         }
+        $this->setBaseElement();
         unset($this->sessions[$key]);
     }
 
