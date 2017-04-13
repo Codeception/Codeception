@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Lib\Driver;
 
+use Codeception\Exception\ModuleException;
+
 class Db
 {
     /**
@@ -212,7 +214,14 @@ class Db
 
     protected function sqlQuery($query)
     {
-        $this->dbh->exec($query);
+        try {
+            $this->dbh->exec($query);
+        } catch (\PDOException $e) {
+            throw new ModuleException(
+                'Codeception\Module\Db',
+                $e->getMessage() . "\nSQL query being executed: " . $query
+            );
+        }
     }
 
     public function executeQuery($query, array $params)

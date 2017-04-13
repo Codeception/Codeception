@@ -291,14 +291,7 @@ class Db extends CodeceptionModule implements DbInterface
         if (!$this->sql) {
             return;
         }
-        try {
-            $this->driver->load($this->sql);
-        } catch (\PDOException $e) {
-            throw new ModuleException(
-                __CLASS__,
-                $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
-            );
-        }
+        $this->driver->load($this->sql);
     }
 
     /**
