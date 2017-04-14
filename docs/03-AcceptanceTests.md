@@ -313,12 +313,12 @@ $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 
 ## Selenium WebDriver
 
-A nice feature of Codeception is that most scenarios can be easily ported between the testing backends.
-The PhpBrowser tests we wrote previously can be executed inside a real browser (or PhantomJS) with Selenium WebDriver.
-In this case we concentrate on **testing the UI**. Our tests aim to ensure that user can perform actions using the web interface we provided.
-Browser tests are executed just as regular user would do.
+A nice feature of Codeception is that most scenarios are similar no matter of how they are executed.
+PhpBrowser was emulating browser requests but how to execute such test in a real browser like Chrome or Firefox? 
+Selenium WebDriver can drive them so in our acceptance tests we can automate scenarios we used to test manually.
+Such tests we should concentrate more on **testing the UI** than on testing functionality.
 
-To do that we need to change suite configuration to use **WebDriver** instead of PhpBrowser.
+To execute test in a browser we need to change suite configuration to use **WebDriver** instead of PhpBrowser.
 
 Modify your `acceptance.suite.yml` file:
 
@@ -332,10 +332,10 @@ modules:
         - \Helper\Acceptance
 ```
 
-In order to run browser tests you will need to start Selenium Server or PhantomJS. 
-[Learn how to start them](http://codeception.com/docs/modules/WebDriver#Local-Testing).
+In order to run browser tests you will need Selenium Server or PhantomJS. 
+WebDriver module contains a manual on [how to start them](http://codeception.com/docs/modules/WebDriver#Local-Testing).
 
-Tests behavior will change once you execute them in a real browser. For instance, `seeElement` won't just check that the element exists on a page,
+Please note that actions executed in a browser will behave differently. For instance, `seeElement` won't just check that the element exists on a page,
 but it will also check that element is actually visible to the user:
 
 ```php
