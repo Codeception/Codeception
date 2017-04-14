@@ -30,12 +30,11 @@ trait Asserts
      * @param        $expected
      * @param        $actual
      * @param string $message
-     *
-     * @return mixed
+     * @param float  $delta
      */
-    protected function assertEquals($expected, $actual, $message = '')
+    protected function assertEquals($expected, $actual, $message = '', $delta = 0.0)
     {
-        \PHPUnit_Framework_Assert::assertEquals($expected, $actual, $message);
+        \PHPUnit_Framework_Assert::assertEquals($expected, $actual, $message, $delta);
     }
 
     /**
@@ -44,10 +43,11 @@ trait Asserts
      * @param        $expected
      * @param        $actual
      * @param string $message
+     * @param float  $delta
      */
-    protected function assertNotEquals($expected, $actual, $message = '')
+    protected function assertNotEquals($expected, $actual, $message = '', $delta = 0.0)
     {
-        \PHPUnit_Framework_Assert::assertNotEquals($expected, $actual, $message);
+        \PHPUnit_Framework_Assert::assertNotEquals($expected, $actual, $message, $delta);
     }
 
     /**
@@ -56,8 +56,6 @@ trait Asserts
      * @param        $expected
      * @param        $actual
      * @param string $message
-     *
-     * @return mixed
      */
     protected function assertSame($expected, $actual, $message = '')
     {

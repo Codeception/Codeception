@@ -150,10 +150,10 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _initialize()
     {
-        if (!is_file(codecept_root_dir() . $this->config['configFile'])) {
+        if (!is_file(Configuration::projectDir() . $this->config['configFile'])) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "The application config file does not exist: " . codecept_root_dir() . $this->config['configFile']
+                "The application config file does not exist: " . Configuration::projectDir() . $this->config['configFile']
             );
         }
         $this->defineConstants();
@@ -201,7 +201,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         }
     }
 
-    public function _after(\Codeception\TestInterface $test)
+    public function _after(TestInterface $test)
     {
         $_SESSION = [];
         $_FILES = [];
