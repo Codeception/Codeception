@@ -9,7 +9,7 @@ build:
         code: |
           export DEBIAN_FRONTEND=noninteractive
     - install-packages:
-      packages: curl git mysql-server mysql-server-5.5 redis-server postgresql
+      packages: curl git mysql-server mysql-server-5.7 redis-server postgresql
     - script:
         name: start database servers
         code: |
