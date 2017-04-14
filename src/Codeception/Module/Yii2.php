@@ -302,20 +302,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      *     ];
      * }
      * ```
-     * instead of
-     * ```php
-     * <?php
-     * // inside Cest file or Codeception\TestCase\Unit
-     * public function _before(FunctionalTester $I)
-     * {
-     *     $I->haveFixtures([
-     *         'user' => [
-     *             'class' => UserFixture::className(),
-     *             'dataFile' => codecept_data_dir() . 'user.php'
-     *         ]
-     *     ]);
-     *  }
-     * ```
+     * instead of defining `haveFixtures` in Cest `_before`
      *
      * @param $fixtures
      * @part fixtures
