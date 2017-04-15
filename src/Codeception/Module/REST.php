@@ -463,6 +463,76 @@ class REST extends \Codeception\Module
     }
 
     /**
+     *
+     * Checks whether the last XML response contains provided xpath selector defined elements.
+     * The response is converted to SimpleXML with simplexml_load_string($response)
+     * Thus, XML is represented by a SimpleXML object, that may be recursive.
+     * This method matches that response element contains elements described in the xpath selector.
+     *
+     * Examples:
+     *
+     * ``` php
+     * <?php
+     * // response: <xml><name>John</name></xml>
+     * // checks to see if an element name exists in the response
+     * $I->seeResponseContainsXpath('//name');
+     *
+     * // response: <xml><email>john@example.com</email></xml>
+     * // checks to see if an element email exists in the response and has a value 'john@example.com'
+     * $I->seeResponseContainsXpath('//email[.="john@example.com"]');
+     *
+     * ?>
+     * ```
+     *
+     * This method checks if any elements described by the provided xpath selector can be found in the response
+     *
+     * @param string $xpath
+     */
+    public function seeResponseContainsXpath($xpath="")
+    {
+
+        libxml_use_internal_errors(true);
+        $doc = simplexml_load_string($this->response);
+
+        if ($doc===false) {
+            $this->fail('Response is not of xml format or is malformed');
+
+        }
+        libxml_use_internal_errors(false);
+
+        $result=@$doc->xpath($xpath);
+        if ($result===false) {
+            $this->fail('Provided xpath selector is not valid');
+
+        }
+        \PHPUnit_Framework_Assert::assertNotEmpty($result,"No elements were found for this xpath selector");
+    }
+    /**
+     * Opposite to seeResponseContainsXpath
+     *
+     * @param string $xpath
+     */
+    public function dontSeeResponseContainsXpath($xpath="")
+    {
+
+        libxml_use_internal_errors(true);
+        $doc = simplexml_load_string($this->response);
+
+        if ($doc===false) {
+            $this->fail('Response is not of xml format or is malformed');
+
+        }
+        libxml_use_internal_errors(false);
+
+        $result=@$doc->xpath($xpath);
+        if ($result===false) {
+            $this->fail('Provided xpath selector is not valid');
+
+        }
+        \PHPUnit_Framework_Assert::assertEmpty($result,"There were ".count($result)." elements found for this xpath selector");
+    }
+
+    /**
      * Returns current response so that it can be used in next scenario steps.
      *
      * Example:
