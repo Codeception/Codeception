@@ -172,4 +172,11 @@ class Scenario {
         return !$this->running;
     }
 
+    /**
+     * @return TestCase
+     */
+    public function getTest()
+    {
+        return $this->test;
+    }
 }
