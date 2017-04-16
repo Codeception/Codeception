@@ -141,7 +141,7 @@ In next example we will use `XmlBuilder` (created from SoapUtils factory) instea
 
 ``` php
 <?php
-use \Codeception\Utils\Soap;
+use \Codeception\Util\Soap;
 
 $I = new ApiGuy($scenario);
 $I->wantTo('create user');
