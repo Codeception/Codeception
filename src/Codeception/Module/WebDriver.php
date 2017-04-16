@@ -501,6 +501,11 @@ class WebDriver extends CodeceptionModule implements
         $this->sessions = [];
     }
 
+    public function amOnDomain($domain)
+    {
+        $this->_reconfigure(array('url' => $domain));
+    }
+
     public function amOnSubdomain($subdomain)
     {
         $url = $this->config['url'];
