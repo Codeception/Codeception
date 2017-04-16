@@ -517,8 +517,12 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertTrue(
             $jsonResponseArray->containsArray($json),
             "Response JSON contains provided\n"
-            ."- <info>".var_export($json, true)."</info>\n"
-            ."+ ".var_export($jsonResponseArray->toArray(), true)
+        );
+
+        $this->debugSection(
+            "Response JSON data",
+            "- <info>" . var_export($json, true) . "</info>\n"
+            . "+ " . var_export($jsonResponseArray->toArray(), true)
         );
     }
 
