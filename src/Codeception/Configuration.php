@@ -354,7 +354,7 @@ class Configuration
     {
         $settings = self::suiteSettings($suite, self::config());
 
-        if (!isset($settings['env']) || !is_array($settings['env'])) {
+        if (empty($settings['env']) || !is_array($settings['env'])) {
             return [];
         }
 
