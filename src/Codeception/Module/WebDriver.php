@@ -12,6 +12,7 @@ use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\PageSourceSaver;
+use Codeception\Lib\Interfaces\PageSourceViewer;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
 use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
@@ -253,6 +254,7 @@ class WebDriver extends CodeceptionModule implements
     MultiSessionInterface,
     SessionSnapshot,
     ScreenshotSaver,
+    PageSourceViewer,
     PageSourceSaver,
     ElementLocator,
     ConflictsWithModule,
@@ -587,6 +589,15 @@ class WebDriver extends CodeceptionModule implements
     public function _findElements($locator)
     {
         return $this->match($this->webDriver, $locator);
+    }
+
+    public function _getPageSource()
+    {
+        if (!isset($this->webDriver)) {
+            throw new \Exception('WebDriver::_getPageSource method has been called when webDriver is not set.');
+        }
+
+        return $this->webDriver->getPageSource();
     }
 
     /**

@@ -3,9 +3,8 @@ namespace Codeception\Module;
 
 use Exception;
 use stdClass;
+use Codeception\Lib\Interfaces\PageSourceViewer;
 use Codeception\Module;
-use Codeception\Module\PhpBrowser;
-use Codeception\Module\WebDriver;
 use GuzzleHttp\Client;
 
 /**
@@ -13,6 +12,7 @@ use GuzzleHttp\Client;
  * Requires either the `PhpBrowser` or the `WebDriver` module.
  *
  * Configuration options:
+ *  - pageSourceViewer
  *  - ignoreWarnings
  *  - ignoredErrors
  */
@@ -45,21 +45,27 @@ class MarkupValidator extends Module
      */
     protected function getCurrentPageMarkup()
     {
-        try {
-            $markup = $this->getMarkupFromPhpBrowser();
-            return $markup;
-        } catch (Exception $exception) {
-            // Wasn't able to get markup from the PhpBrowser.
+        $pageViewerConfigKey = 'pageSourceViewer';
+        if (!isset($this->config[$pageViewerConfigKey])) {
+            throw new Exception(sprintf(
+                'Missing mandatory configuration parameter "%s".',
+                $pageViewerConfigKey
+            ));
         }
 
-        try {
-            $markup = $this->getMarkupFromWebDriver();
-            return $markup;
-        } catch (Exception $exception) {
-            // Wasn't able to get markup from the WebDriver.
+        $pageViewerName = $this->config[$pageViewerConfigKey];
+        if (!$this->hasModule($pageViewerName)) {
+            throw new Exception(sprintf(
+                '"%s" page viewer was not found.',
+                $pageViewerName
+            ));
         }
 
-        throw new Exception('Unable to obtain current page markup.');
+        /* @var $pageViewer PageSourceViewer */
+        $pageViewer = $this->getModule($pageViewerName);
+        $pageMarkup = $pageViewer->_getPageSource();
+
+        return $pageMarkup;
     }
 
     /**
@@ -174,43 +180,5 @@ class MarkupValidator extends Module
         }
 
         return false;
-    }
-
-    /**
-     * Returns current page markup form the PhpBrowser.
-     *
-     * @return string Current page markup.
-     */
-    private function getMarkupFromPhpBrowser()
-    {
-        $moduleName = 'PhpBrowser';
-        if (!$this->hasModule($moduleName)) {
-            throw new Exception(sprintf('"%s" module is not enabled.'));
-        }
-
-        /* @var $phpBrowser PhpBrowser */
-        $phpBrowser = $this->getModule($moduleName);
-        $markup = $phpBrowser->_getResponseContent();
-
-        return $markup;
-    }
-
-    /**
-     * Returns current page markup form the WebDriver.
-     *
-     * @return string Current page markup.
-     */
-    private function getMarkupFromWebDriver()
-    {
-        $moduleName = 'WebDriver';
-        if (!$this->hasModule($moduleName)) {
-            throw new Exception(sprintf('"%s" module is not enabled.'));
-        }
-
-        /* @var $webDriver WebDriver */
-        $webDriver = $this->getModule($moduleName);
-        $markup = $webDriver->webDriver->getPageSource();
-
-        return $markup;
     }
 }

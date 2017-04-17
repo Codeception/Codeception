@@ -5,7 +5,7 @@ use Codeception\Module\MarkupValidator;
 class MarkupValidatorTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var W3CValidator
+     * @var MarkupValidator
      */
     protected $module;
 
@@ -47,12 +47,12 @@ class MarkupValidatorTest extends PHPUnit_Framework_TestCase
             ->getMockBuilder('\Codeception\Module\PhpBrowser')
             ->setConstructorArgs(array(make_container()))
             ->setMethods(array(
-                '_getResponseContent',
+                '_getPageSource',
             ))
             ->getMock()
         ;
         $phpBrowserMock
-            ->method('_getResponseContent')
+            ->method('_getPageSource')
             ->will($this->returnValue(
 <<<HTML
                 <!DOCTYPE HTML>
@@ -88,22 +88,25 @@ HTML
                 array('PhpBrowser', $phpBrowserMock)
             )))
         ;
+        $this->module->_reconfigure(array(
+            'pageSourceViewer' => 'PhpBrowser',
+        ));
 
         $this->assertValidMakup();
     }
 
     public function testGetCurrentPageMarkupOnlyWebDriver()
     {
-        $remoteWebDriverMock = $this
-            ->getMockBuilder('\Facebook\WebDriver\Remote\RemoteWebDriver')
-            ->disableOriginalConstructor()
+        $webDriverMock = $this
+            ->getMockBuilder('\Codeception\Module\WebDriver')
+            ->setConstructorArgs(array(make_container()))
             ->setMethods(array(
-                'getPageSource',
+                '_getPageSource',
             ))
             ->getMock()
         ;
-        $remoteWebDriverMock
-            ->method('getPageSource')
+        $webDriverMock
+            ->method('_getPageSource')
             ->will($this->returnValue(
 <<<HTML
                 <!DOCTYPE HTML>
@@ -117,13 +120,6 @@ HTML
 HTML
             ))
         ;
-
-        $webDriverMock = $this
-            ->getMockBuilder('\Codeception\Module\WebDriver')
-            ->setConstructorArgs(array(make_container()))
-            ->getMock()
-        ;
-        $webDriverMock->webDriver = $remoteWebDriverMock;
 
         $this->module = $this
             ->getMockBuilder('\Codeception\Module\MarkupValidator')
@@ -146,6 +142,9 @@ HTML
                 array('WebDriver', $webDriverMock)
             )))
         ;
+        $this->module->_reconfigure(array(
+            'pageSourceViewer' => 'WebDriver',
+        ));
 
         $this->assertValidMakup();
     }
