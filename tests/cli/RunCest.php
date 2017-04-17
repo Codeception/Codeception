@@ -473,8 +473,9 @@ EOF
     public function runFailedTestAndCheckOutput(CliGuy $I)
     {
         $I->executeCommand('run scenario FailedCept', false);
+        $testPath = implode(DIRECTORY_SEPARATOR, ['tests', 'scenario', 'FailedCept.php']);
         $I->seeInShellOutput('1) FailedCept: Fail when file is not found');
-        $I->seeInShellOutput('Test  tests/scenario/FailedCept.php');
+        $I->seeInShellOutput('Test  ' . $testPath);
         $I->seeInShellOutput('Step  See file found "games.zip"');
         $I->seeInShellOutput('Fail  File "games.zip" not found at ""');
     }
