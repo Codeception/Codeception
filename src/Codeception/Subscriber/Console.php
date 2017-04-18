@@ -410,6 +410,9 @@ class Console implements EventSubscriberInterface
             $failedStep = (string) array_shift($this->conditionalFails);
         } else {
             $failedStep = (string) $failedTest->getScenario()->getMetaStep();
+            if ($failedStep === '') {
+                $failedStep = (string)$this->failedStep;
+            }
         }
 
         $this->printException($fail, $failedStep);
