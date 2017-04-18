@@ -646,9 +646,5 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         defined('YII_DEBUG') or define('YII_DEBUG', true);
         defined('YII_ENV') or define('YII_ENV', 'test');
         defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
-
-        if (YII_ENV !== 'test') {
-            Notification::warning("YII_ENV is not set to `test`, please add \n\n`define(\'YII_ENV\', \'test\');`\n\nto bootstrap file", 'Yii Framework');
-        }
     }
 }
