@@ -5,11 +5,13 @@ use Codeception\Configuration;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Generator\Actions;
+use Codeception\Command\Shared\FileSystem;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AutoRebuild implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
+    use FileSystem;
 
     public static $events = [
         Events::SUITE_INIT => 'updateActor'
@@ -28,7 +30,7 @@ class AutoRebuild implements EventSubscriberInterface
             $this->generateActorActions($actorActionsFile, $settings);
             return;
         }
-        
+
         // load actor class to see hash
         $handle = @fopen($actorActionsFile, "r");
         if ($handle and is_writable($actorActionsFile)) {
@@ -51,11 +53,13 @@ class AutoRebuild implements EventSubscriberInterface
 
     protected function generateActorActions($actorActionsFile, $settings)
     {
-        if (!file_exists(Configuration::supportDir() . '_generated')) {
-            @mkdir(Configuration::supportDir() . '_generated');
-        }
         $actionsGenerator = new Actions($settings);
-        $generated = $actionsGenerator->produce();
-        @file_put_contents($actorActionsFile, $generated);
+
+        $content = $actionsGenerator->produce();
+
+        $file = $this->buildPath(Configuration::supportDir().'_generated', $settings['class_name']);
+        $file .= $this->getClassName($settings['class_name']).'Actions.php';
+
+        return $this->save($file, $content, true);
     }
 }

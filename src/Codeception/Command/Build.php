@@ -39,7 +39,7 @@ class Build extends Command
         $this->output = $output;
         $this->buildActorsForConfig();
     }
-    
+
     private function buildActor(array $settings)
     {
         $actorGenerator = new ActorGenerator($settings);
@@ -47,7 +47,7 @@ class Build extends Command
             '<info>' . Configuration::config()['namespace'] . '\\' . $actorGenerator->getActorName()
             . "</info> includes modules: " . implode(', ', $actorGenerator->getModules())
         );
-        
+
         $content = $actorGenerator->produce();
 
         $file = $this->buildPath(
@@ -57,7 +57,7 @@ class Build extends Command
         $file .=  '.php';
         return $this->save($file, $content);
     }
-    
+
     private function buildActions(array $settings)
     {
         $actionsGenerator = new ActionsGenerator($settings);
@@ -65,9 +65,9 @@ class Build extends Command
             " -> {$settings['class_name']}Actions.php generated successfully. "
             . $actionsGenerator->getNumMethods() . " methods added"
         );
-        
+
         $content = $actionsGenerator->produce();
-        
+
         $file = $this->buildPath(Configuration::supportDir() . '_generated', $settings['class_name']);
         $file .= $this->getClassName($settings['class_name']) . 'Actions.php';
         return $this->save($file, $content, true);
@@ -83,17 +83,17 @@ class Build extends Command
             $settings = $this->getSuiteConfig($suite);
             $this->buildActions($settings);
             $actorBuilt = $this->buildActor($settings);
-            
+
             if ($actorBuilt) {
                 $this->output->writeln("{$settings['class_name']}.php created.");
             }
         }
     }
-    
+
     protected function buildActorsForConfig($configFile = null)
     {
         $config = $this->getGlobalConfig($configFile);
-        
+
         $dir = Configuration::projectDir();
         $this->buildSuiteActors();
 
