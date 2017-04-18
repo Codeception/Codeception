@@ -1113,6 +1113,19 @@ EOF;
     }
 
     /**
+     * Switch automatic redirects to be followed by the client
+     *
+     * @part json
+     * @part xml
+     * @param $on
+     * @version 2.1.3
+     */
+    public function switchRedirect($on)
+    {
+        $this->client->followRedirects($on);
+    }
+
+    /**
      * Prevents automatic redirects to be followed by the client
      */
     public function stopFollowingRedirects()
