@@ -86,6 +86,21 @@ class RedisTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * If the method exists (PHPUnit 5) forward the call to the parent class, otherwise
+     * call `expectException` instead (PHPUnit 6)
+     */
+    public function setExpectedException($exception, $message = '', $code = null)
+    {
+        if (class_exists('PHPUnit\Framework\TestCase')) {
+            $this->expectException($exception);
+            $message !== '' && $this->expectExceptionMessage($message);
+            $code !== null && $this->expectExceptionCode($code);
+        } else {
+            parent::setExpectedException($exception, $message, $code);
+        }
+    }
+
+    /**
      * Indicates that the next test is expected to fail
      * @param null $exceptionClass The fully qualified class name of the
      * expected exception
