@@ -20,7 +20,7 @@
         "ext-mbstring": "*",
         "phpunit/phpunit": ">4.8.20 <6.1",
         "phpunit/php-code-coverage": ">=2.2.4 < 4.1 || ^5.0",
-        "phpunit/phpunit-mock-objects": ">3.4 <3.5 || ^4.0",
+        "phpunit/phpunit-mock-objects": ">2.3 <3.5 || ^4.0",
         "facebook/webdriver": ">=1.0.1 <2.0",
         "guzzlehttp/guzzle": ">=4.1.4 <7.0",
         "guzzlehttp/psr7": "~1.0",
