@@ -571,12 +571,20 @@ class Configuration
     public static function append(array $config = [])
     {
         self::$config = self::mergeConfigs(self::$config, $config);
-
-        self::$logDir = self::$config['paths']['log'];
-        self::$dataDir = self::$config['paths']['data'];
-        self::$supportDir = self::$config['paths']['support'];
-        self::$testsDir = self::$config['paths']['tests'];
-
+        
+        if (isset(self::$config['paths']['log'])) {
+            self::$logDir = self::$config['paths']['log'];
+        }
+        if (isset(self::$config['paths']['data'])) {
+            self::$dataDir = self::$config['paths']['data'];
+        }
+        if (isset(self::$config['paths']['support'])) {
+            self::$supportDir = self::$config['paths']['support'];
+        }
+        if (isset(self::$config['paths']['tests'])) {
+            self::$testsDir = self::$config['paths']['tests'];
+        }
+        
         return self::$config;
     }
 
