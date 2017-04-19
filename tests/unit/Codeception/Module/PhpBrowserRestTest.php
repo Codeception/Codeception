@@ -1,8 +1,9 @@
 <?php
 
+use Codeception\Test\Unit;
 use Codeception\Util\Stub as Stub;
 
-class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
+class PhpBrowserRestTest extends Unit
 {
     /**
      * @var \Codeception\Module\REST
@@ -26,21 +27,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
         $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
-    }
-
-    /**
-     * If the method exists (PHPUnit 5) forward the call to the parent class, otherwise
-     * call `expectException` instead (PHPUnit 6)
-     */
-    public function setExpectedException($exception, $message = '', $code = null)
-    {
-        if (class_exists('PHPUnit\Framework\TestCase')) {
-            $this->expectException($exception);
-            $message !== '' && $this->expectExceptionMessage($message);
-            $code !== null && $this->expectExceptionCode($code);
-        } else {
-            parent::setExpectedException($exception, $message, $code);
-        }
     }
 
     private function setStubResponse($response)

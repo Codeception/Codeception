@@ -1,11 +1,12 @@
 <?php
 
 use \Codeception\Lib\Driver\Db;
+use \Codeception\Test\Unit;
 
 /**
  * @group appveyor
  */
-class MysqlTest extends \PHPUnit_Framework_TestCase
+class MysqlTest extends Unit
 {
     protected static $config = [
         'dsn' => 'mysql:host=localhost;dbname=codeception_test',
@@ -48,21 +49,6 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
     {
         if (isset($this->mysql)) {
             $this->mysql->cleanup();
-        }
-    }
-
-    /**
-     * If the method exists (PHPUnit 5) forward the call to the parent class, otherwise
-     * call `expectException` instead (PHPUnit 6)
-     */
-    public function setExpectedException($exception, $message = '', $code = null)
-    {
-        if (class_exists('PHPUnit\Framework\TestCase')) {
-            $this->expectException($exception);
-            $message !== '' && $this->expectExceptionMessage($message);
-            $code !== null && $this->expectExceptionCode($code);
-        } else {
-            parent::setExpectedException($exception, $message, $code);
         }
     }
 

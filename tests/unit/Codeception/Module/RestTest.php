@@ -1,12 +1,13 @@
 <?php
 
+use Codeception\Test\Unit;
 use Codeception\Util\Stub as Stub;
 
 /**
  * Class RestTest
  * @group appveyor
  */
-class RestTest extends \PHPUnit_Framework_TestCase
+class RestTest extends Unit
 {
     /**
      * @var \Codeception\Module\REST
@@ -31,21 +32,6 @@ class RestTest extends \PHPUnit_Framework_TestCase
             'SERVER_NAME' => 'localhost',
             'SERVER_PROTOCOL' => 'http'
         ]);
-    }
-
-    /**
-     * If the method exists (PHPUnit 5) forward the call to the parent class, otherwise
-     * call `expectException` instead (PHPUnit 6)
-     */
-    public function setExpectedException($exception, $message = '', $code = null)
-    {
-        if (class_exists('PHPUnit\Framework\TestCase')) {
-            $this->expectException($exception);
-            $message !== '' && $this->expectExceptionMessage($message);
-            $code !== null && $this->expectExceptionCode($code);
-        } else {
-            parent::setExpectedException($exception, $message, $code);
-        }
     }
 
     public function testConflictsWithAPI()
