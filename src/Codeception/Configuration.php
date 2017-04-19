@@ -570,7 +570,14 @@ class Configuration
      */
     public static function append(array $config = [])
     {
-        return self::$config = self::mergeConfigs(self::$config, $config);
+        self::$config = self::mergeConfigs(self::$config, $config);
+
+        self::$logDir = self::$config['paths']['log'];
+        self::$dataDir = self::$config['paths']['data'];
+        self::$supportDir = self::$config['paths']['support'];
+        self::$testsDir = self::$config['paths']['tests'];
+
+        return self::$config;
     }
 
     public static function mergeConfigs($a1, $a2)
