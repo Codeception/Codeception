@@ -66,8 +66,8 @@ trait FileSystem
             return false;
         }
 
-        //writing in a temporary file in order to reduce time between the file acquisition
-        //and the wrting, it should recude risk to occur `Bus Error` when running tests in parallel.
+        //Write in a locked temporary file in order to reduce non thread-safe disk instructions,
+        //  and reduce risk of `Bus Errors` when running tests in parallel.
         //@see https://github.com/Codeception/Codeception/issues/2054#event-1046859271
         $tmpFilename = $filename . '.tmp';
         $success = @file_put_contents($tmpFilename, $contents, LOCK_EX);
