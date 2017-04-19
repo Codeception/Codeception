@@ -930,7 +930,7 @@ class WebDriverTest extends TestsForBrowsers
             'seeElement' => '#LoginForm_rememberMe',
             'dontSee' => 'Login'
         ]);
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
@@ -943,7 +943,7 @@ class WebDriverTest extends TestsForBrowsers
             $I->seeElement('#LoginForm_rememberMe');
             $I->dontSee('Login');
         });
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
@@ -956,7 +956,7 @@ class WebDriverTest extends TestsForBrowsers
             ->seeElement('#LoginForm_rememberMe')
             ->dontSee('Login')
         );
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
@@ -969,7 +969,7 @@ class WebDriverTest extends TestsForBrowsers
             ->see('next time')
             ->dontSee('Login')
         );
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
