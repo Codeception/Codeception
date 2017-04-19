@@ -70,8 +70,16 @@ trait FileSystem
         //and the wrting, it should recude risk to occur `Bus Error` when running tests in parallel.
         //@see https://github.com/Codeception/Codeception/issues/2054#event-1046859271
         $tmpFilename = $filename . '.tmp';
-        file_put_contents($tmpFilename, $contents, LOCK_EX);
+        $success = @file_put_contents($tmpFilename, $contents, LOCK_EX);
+        if (false === $success) {
+            throw new \RuntimeException(sprintf('Unable to generate temporary class %s', $tmpFilename));
+        }
 
-        return rename($tmpFilename, $filename);
+        $success = @rename($tmpFilename, $filename);
+        if (false === $success) {
+            throw new \RuntimeException(sprintf('Unable to generate class %s', $filename));
+        }
+
+        return true;
     }
 }
