@@ -923,7 +923,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testPerformOnWithArray()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', [
             'see' => 'Remember me next time',
@@ -936,7 +936,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testPerformOnWithCallback()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', function (\Codeception\Module\WebDriver $I) {
             $I->see('Remember me next time');
@@ -949,7 +949,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testPerformOnWithBuiltArray()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
             ->see('Remember me next time')
@@ -962,7 +962,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testPerformOnWithArrayAndSimilarActions()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
             ->see('Remember me')
