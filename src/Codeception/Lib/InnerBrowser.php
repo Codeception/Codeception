@@ -1332,6 +1332,18 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         return $cookies->getValue();
     }
 
+    /**
+     * Grabs current page source code.
+     *
+     * @throws ModuleException if no page was opened.
+     *
+     * @return string Current page source code.
+     */
+    public function grabPageSource()
+    {
+        return $this->_getResponseContent();
+    }
+
     public function seeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);

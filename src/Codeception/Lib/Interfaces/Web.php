@@ -975,4 +975,11 @@ interface Web
      * @return mixed
      */
     public function grabCookie($cookie, array $params = []);
+
+    /**
+     * Grabs current page source code.
+     *
+     * @return string Current page source code.
+     */
+    public function grabPageSource();
 }
