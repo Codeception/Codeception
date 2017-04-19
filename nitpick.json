@@ -2,6 +2,8 @@
     "ignore": [
         "tests/*",
         "RoboFile.php",
-        "shim.php"
+        "shim.php",
+        "phpunit5-loggers.php",
+        "src/Codeception/PHPUnit/Listener.php"
     ]
 }

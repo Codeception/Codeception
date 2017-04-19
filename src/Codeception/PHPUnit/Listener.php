@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreStart
 namespace Codeception\PHPUnit;
 
 use Codeception\Event\FailEvent;
@@ -252,3 +253,4 @@ if (interface_exists('PHPUnit\Framework\TestListener')) {
         }
     }
 }
+// @codingStandardsIgnoreEnd
