@@ -338,6 +338,14 @@ class WebDriver extends CodeceptionModule implements
         ]);
     }
 
+    public function _reconfigure($config)
+    {
+        parent::_reconfigure($config);
+        $this->webDriver->quit();
+        $this->_initialize();
+        $this->_initializeSession();
+    }
+
     protected function loadFirefoxProfile()
     {
         if (!array_key_exists('firefox_profile', $this->config['capabilities'])) {
