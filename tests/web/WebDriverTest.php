@@ -87,13 +87,13 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->cancelPopup();
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
-     * @expectedExceptionMessage Failed asserting that 'Really?' contains "Different text".
-     */
     public function testFailedSeeInPopup()
     {
         $this->notForPhantomJS();
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            'Failed asserting that \'Really?\' contains "Different text"'
+        );
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->seeInPopup('Different text');
