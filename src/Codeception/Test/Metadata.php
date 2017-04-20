@@ -94,7 +94,7 @@ class Metadata
                 return $this->current[$key];
             }
             if ($key === 'name') {
-               return $this->getName();
+                return $this->getName();
             }
             return null;
         }
