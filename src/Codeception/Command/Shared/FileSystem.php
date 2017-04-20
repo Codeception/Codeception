@@ -82,9 +82,6 @@ trait FileSystem
             for ($i = 0; ($i < 3 && !$success); $i++) {
                 usleep(500000);
                 $success = @rename($tmpFilename, $filename);
-                if ($success) {
-                    break;
-                }
             }
             if (false === $success) {
                 throw new \RuntimeException(sprintf('Unable to move class from %s to %s(tried 3 times)', $tmpFilename, $filename));
