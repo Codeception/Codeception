@@ -66,18 +66,29 @@ trait FileSystem
             return false;
         }
 
-        //Write in a locked temporary file in order to reduce non thread-safe disk instructions,
-        //  and reduce risk of `Bus Errors` when running tests in parallel.
+        //Write in a temporary file in order to reduce non thread-safe disk instructions,
+        //and reduce risk of `Bus Errors` when running tests in parallel.
         //@see https://github.com/Codeception/Codeception/issues/2054#event-1046859271
-        $tmpFilename = $filename . '.tmp';
-        $success = @file_put_contents($tmpFilename, $contents, LOCK_EX);
+        $tmpFilename = $filename . '.' . uniqid() . '.tmp';
+        $success = @file_put_contents($tmpFilename, $contents);
         if (false === $success) {
+            //no space left on device, IO errors...
             throw new \RuntimeException(sprintf('Unable to generate temporary class %s', $tmpFilename));
         }
 
         $success = @rename($tmpFilename, $filename);
         if (false === $success) {
-            throw new \RuntimeException(sprintf('Unable to generate class %s', $filename));
+            //wait 0,5s and try 3 times before throwing an excception
+            for ($i = 0; ($i < 3 && !$success); $i++) {
+                usleep(500000);
+                $success = @rename($tmpFilename, $filename);
+                if ($success) {
+                    break;
+                }
+            }
+            if (false === $success) {
+                throw new \RuntimeException(sprintf('Unable to move class from %s to %s(tried 3 times)', $tmpFilename, $filename));
+            }
         }
 
         return true;
