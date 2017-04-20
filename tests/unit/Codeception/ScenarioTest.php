@@ -24,4 +24,12 @@ class ScenarioTest extends \PHPUnit_Framework_TestCase
             $scenario->getHtml()
         );
     }
+
+    public function testScenarioCurrentNameReturnsTestName()
+    {
+        $cept = new \Codeception\Test\Cept('successfulLogin', 'successfulLoginCept.php');
+        $scenario = new \Codeception\Scenario($cept);
+
+        $this->assertSame('successfulLogin', $scenario->current('name'));
+    }
 }
