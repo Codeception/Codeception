@@ -343,6 +343,10 @@ class WebDriver extends CodeceptionModule implements
     public function _reconfigure($config)
     {
         parent::_reconfigure($config);
+        if (count($config) === 1 && array_key_exists('url', $config)) {
+            //don't restart browser if only url was changed
+            return;
+        }
         $this->reconfigured = true;
         $this->webDriver->quit();
         $this->_initialize();
