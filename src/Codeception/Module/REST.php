@@ -303,11 +303,14 @@ EOF;
     /**
      * Sends a POST request to given uri.
      *
-     * Parameters and files (as array of filenames) can be provided.
+     * Parameters and files can be provided separately.
      *
      * @param $url
      * @param array|\JsonSerializable $params
-     * @param array $files
+     * @param array $files A list of filenames or "mocks" of $_FILES (each entry being an array with the following
+     *                     keys: name, type, error, size, tmp_name (pointing to the real file path)
+     * @see http://php.net/manual/en/features.file-upload.post-method.php
+     * @see codecept_data_dir()
      * @part json
      * @part xml
      */
