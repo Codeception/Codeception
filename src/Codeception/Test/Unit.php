@@ -4,6 +4,7 @@ namespace Codeception\Test;
 use Codeception\Configuration;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Di;
+use Codeception\Lib\Notification;
 use Codeception\Scenario;
 use Codeception\TestInterface;
 
@@ -81,6 +82,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
     public function setExpectedException($exception, $message = '', $code = null)
     {
         if (method_exists($this, 'expectException')) {
+            Notification::deprecate('PHPUnit\Framework\TestCase::setExpectedException deprecated in favor of expectException, expectExceptionMessage, and expectExceptionCode');
             $this->expectException($exception);
             if ($message !== '') {
                 $this->expectExceptionMessage($message);
