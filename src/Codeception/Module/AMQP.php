@@ -164,17 +164,47 @@ class AMQP extends CodeceptionModule implements RequiresPackage
      * $I->declareExchange(
      *     'nameOfMyExchange', // exchange name
      *     'topic' // exchange type
-     *     //.. see the original method for more options
      * )
      * ```
+     *
+     * @param string $exchange
+     * @param string $type
+     * @param bool $passive
+     * @param bool $durable
+     * @param bool $auto_delete
+     * @param bool $internal
+     * @param bool $nowait
+     * @param array $arguments
+     * @param int $ticket
+     * @return mixed|null
      */
-    public function declareExchange()
+    public function declareExchange(
+        $exchange,
+        $type,
+        $passive = false,
+        $durable = false,
+        $auto_delete = true,
+        $internal = false,
+        $nowait = false,
+        $arguments = null,
+        $ticket = null
+    )
     {
-        return call_user_func_array([$this->connection->channel(), 'exchange_declare'], func_get_args());
+        return $this->connection->channel()->exchange_declare(
+            $exchange,
+            $type,
+            $passive,
+            $durable,
+            $auto_delete,
+            $internal,
+            $nowait,
+            $arguments,
+            $ticket
+        );
     }
 
     /**
-     * Declares a queue
+     * Declares queue, creates if needed
      *
      * This is an alias of method `queue_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
      *
@@ -182,13 +212,40 @@ class AMQP extends CodeceptionModule implements RequiresPackage
      * <?php
      * $I->declareQueue(
      *     'nameOfMyQueue', // exchange name
-     *     //.. see the original method for more options
      * )
      * ```
+     *
+     * @param string $queue
+     * @param bool $passive
+     * @param bool $durable
+     * @param bool $exclusive
+     * @param bool $auto_delete
+     * @param bool $nowait
+     * @param array $arguments
+     * @param int $ticket
+     * @return mixed|null
      */
-    public function declareQueue()
+    public function declareQueue(
+        $queue = '',
+        $passive = false,
+        $durable = false,
+        $exclusive = false,
+        $auto_delete = true,
+        $nowait = false,
+        $arguments = null,
+        $ticket = null
+    )
     {
-        return call_user_func_array([$this->connection->channel(), 'queue_declare'], func_get_args());
+        return $this->connection->channel()->queue_declare(
+            $queue,
+            $passive,
+            $durable,
+            $exclusive,
+            $auto_delete,
+            $nowait,
+            $arguments,
+            $ticket
+        );
     }
 
     /**
@@ -202,13 +259,27 @@ class AMQP extends CodeceptionModule implements RequiresPackage
      *     'nameOfMyQueueToBind', // name of the queue
      *     'transactionTracking.transaction', // exchange name to bind to
      *     'your.routing.key' // Optionally, provide a binding key
-     *     //.. see the original method for more options
      * )
      * ```
+     *
+     * @param string $queue
+     * @param string $exchange
+     * @param string $routing_key
+     * @param bool $nowait
+     * @param array $arguments
+     * @param int $ticket
+     * @return mixed|null
      */
-    public function bindQueueToExchange()
+    public function bindQueueToExchange($queue, $exchange, $routing_key = '', $nowait = false, $arguments = null, $ticket = null)
     {
-        return call_user_func_array([$this->connection->channel(), 'queue_bind'], func_get_args());
+        return $this->connection->channel()->queue_bind(
+            $queue,
+            $exchange,
+            $routing_key,
+            $nowait,
+            $arguments,
+            $ticket
+        );
     }
 
     /**
