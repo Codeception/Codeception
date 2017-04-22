@@ -188,8 +188,7 @@ class AMQP extends CodeceptionModule implements RequiresPackage
         $nowait = false,
         $arguments = null,
         $ticket = null
-    )
-    {
+    ) {
         return $this->connection->channel()->exchange_declare(
             $exchange,
             $type,
@@ -234,8 +233,7 @@ class AMQP extends CodeceptionModule implements RequiresPackage
         $nowait = false,
         $arguments = null,
         $ticket = null
-    )
-    {
+    ) {
         return $this->connection->channel()->queue_declare(
             $queue,
             $passive,
@@ -270,8 +268,14 @@ class AMQP extends CodeceptionModule implements RequiresPackage
      * @param int $ticket
      * @return mixed|null
      */
-    public function bindQueueToExchange($queue, $exchange, $routing_key = '', $nowait = false, $arguments = null, $ticket = null)
-    {
+    public function bindQueueToExchange(
+        $queue,
+        $exchange,
+        $routing_key = '',
+        $nowait = false,
+        $arguments = null,
+        $ticket = null
+    ) {
         return $this->connection->channel()->queue_bind(
             $queue,
             $exchange,
