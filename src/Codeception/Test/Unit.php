@@ -81,7 +81,9 @@ class Unit extends \PHPUnit_Framework_TestCase implements
      */
     public function setExpectedException($exception, $message = '', $code = null)
     {
-        if (method_exists($this, 'expectException')) {
+        if (is_callable('parent::setExpectedException')) {
+            parent::setExpectedException($exception, $message, $code);
+        } else {
             Notification::deprecate('PHPUnit\Framework\TestCase::setExpectedException deprecated in favor of expectException, expectExceptionMessage, and expectExceptionCode');
             $this->expectException($exception);
             if ($message !== '') {
@@ -90,8 +92,6 @@ class Unit extends \PHPUnit_Framework_TestCase implements
             if ($code !== null) {
                 $this->expectExceptionCode($code);
             }
-        } else {
-            parent::setExpectedException($exception, $message, $code);
         }
     }
 
