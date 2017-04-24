@@ -280,7 +280,7 @@ EOF;
         $this->dir = null;
         $this->stepNum = 0;
         $this->slides = [];
-        $testName = preg_replace('~\W~', '.', Descriptor::getTestAsString($e->getTest()));
+        $testName = preg_replace('~\W~', '_', Descriptor::getTestAsString($e->getTest()));
         $this->dir = codecept_output_dir() . "record_{$this->seed}_$testName";
         @mkdir($this->dir);
     }
