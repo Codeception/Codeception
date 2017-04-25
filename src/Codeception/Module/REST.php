@@ -301,16 +301,10 @@ EOF;
     }
 
     /**
-     * Sends a POST request to given uri.
+     * Sends a POST request to given uri. Parameters and files can be provided separately.
      *
-     * Parameters and files can be provided separately.
-     *
-     * @param $url
-     * @param array|\JsonSerializable $params
-     * @param array $files A list of filenames or "mocks" of $_FILES (each entry being an array with the following
-     *                     keys: name, type, error, size, tmp_name (pointing to the real file path). Each key works
-     *                     as the "name" attribute of a file input field.
-     * @example
+     * Example:
+     * ```php
      * <?php
      * //simple POST call
      * $I->sendPOST('/message', ['subject' => 'Read this!', 'to' => 'johndoe@example.com']);
@@ -326,7 +320,13 @@ EOF;
      *          'tmp_name' => codecept_data_dir('sample_file.pdf')
      *     ]
      * ]);
-     * ?>
+     * ```
+     *
+     * @param $url
+     * @param array|\JsonSerializable $params
+     * @param array $files A list of filenames or "mocks" of $_FILES (each entry being an array with the following
+     *                     keys: name, type, error, size, tmp_name (pointing to the real file path). Each key works
+     *                     as the "name" attribute of a file input field.
      *
      * @see http://php.net/manual/en/features.file-upload.post-method.php
      * @see codecept_data_dir()
