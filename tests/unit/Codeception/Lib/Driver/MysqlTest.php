@@ -1,11 +1,12 @@
 <?php
 
 use \Codeception\Lib\Driver\Db;
+use \Codeception\Test\Unit;
 
 /**
  * @group appveyor
  */
-class MysqlTest extends \PHPUnit_Framework_TestCase
+class MysqlTest extends Unit
 {
     protected static $config = [
         'dsn' => 'mysql:host=localhost;dbname=codeception_test',

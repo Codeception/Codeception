@@ -1,8 +1,9 @@
 <?php
 
+use Codeception\Test\Unit;
 use Codeception\Util\Stub as Stub;
 
-class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
+class PhpBrowserRestTest extends Unit
 {
     /**
      * @var \Codeception\Module\REST

@@ -1,11 +1,12 @@
 <?php
 
 use \Codeception\Lib\Driver\Db;
+use \Codeception\Test\Unit;
 
 /**
  * @group appveyor
  */
-class PostgresTest extends \PHPUnit_Framework_TestCase
+class PostgresTest extends Unit
 {
     protected static $config = [
         'dsn' => 'pgsql:host=localhost;dbname=codeception_test',

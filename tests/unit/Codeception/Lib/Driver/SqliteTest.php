@@ -1,8 +1,9 @@
 <?php
 
 use \Codeception\Lib\Driver\Db;
+use \Codeception\Test\Unit;
 
-class SqliteTest extends \PHPUnit_Framework_TestCase
+class SqliteTest extends Unit
 {
     protected static $config = array(
         'dsn' => 'sqlite:tests/data/sqlite.db',
@@ -48,7 +49,7 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
             self::$sqlite->cleanup();
         }
     }
-    
+
     public function testCleanupDatabase()
     {
         $this->assertGreaterThan(

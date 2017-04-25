@@ -87,13 +87,13 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->cancelPopup();
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
-     * @expectedExceptionMessage Failed asserting that 'Really?' contains "Different text".
-     */
     public function testFailedSeeInPopup()
     {
         $this->notForPhantomJS();
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            'Failed asserting that \'Really?\' contains "Different text"'
+        );
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->seeInPopup('Different text');
@@ -923,53 +923,53 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testPerformOnWithArray()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', [
             'see' => 'Remember me next time',
             'seeElement' => '#LoginForm_rememberMe',
             'dontSee' => 'Login'
         ]);
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
     public function testPerformOnWithCallback()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', function (\Codeception\Module\WebDriver $I) {
             $I->see('Remember me next time');
             $I->seeElement('#LoginForm_rememberMe');
             $I->dontSee('Login');
         });
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
     public function testPerformOnWithBuiltArray()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
             ->see('Remember me next time')
             ->seeElement('#LoginForm_rememberMe')
             ->dontSee('Login')
         );
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
     public function testPerformOnWithArrayAndSimilarActions()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
             ->see('Remember me')
             ->see('next time')
             ->dontSee('Login')
         );
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 

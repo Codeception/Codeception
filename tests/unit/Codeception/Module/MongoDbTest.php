@@ -2,8 +2,9 @@
 
 use Codeception\Module\MongoDb;
 use Codeception\Exception\ModuleException;
+use Codeception\Test\Unit;
 
-class MongoDbTest extends \PHPUnit_Framework_TestCase
+class MongoDbTest extends Unit
 {
     /**
      * @var array
