@@ -998,4 +998,40 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->switchToIFrame();
         $this->module->see('Iframe test');
     }
+
+    public function testGrabPageSourceWhenNotOnPage()
+    {
+        $this->setExpectedException(
+            '\Codeception\Exception\ModuleException',
+            'Current url is blank, no page was opened'
+        );
+        $this->module->grabPageSource();
+    }
+
+    public function testGrabPageSourceWhenOnPage()
+    {
+        $this->module->amOnPage('/minimal');
+        $sourceExpected =
+<<<HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Minimal page
+        </title>
+    </head>
+    <body>
+        <h1>
+            Minimal page
+        </h1>
+    </body>
+</html>
+
+HTML
+        ;
+        $sourceActualRaw = $this->module->grabPageSource();
+        // `Selenium` adds the `xmlns` attribute while `PhantomJS` does not do that.
+        $sourceActual = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $sourceActualRaw);
+        $this->assertXmlStringEqualsXmlString($sourceExpected, $sourceActual);
+    }
 }

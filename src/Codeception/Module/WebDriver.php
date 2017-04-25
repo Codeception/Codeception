@@ -707,6 +707,21 @@ class WebDriver extends CodeceptionModule implements
         return $cookie['value'];
     }
 
+    /**
+     * Grabs current page source code.
+     *
+     * @throws ModuleException if no page was opened.
+     *
+     * @return string Current page source code.
+     */
+    public function grabPageSource()
+    {
+        // Make sure that some page was opened.
+        $this->_getCurrentUri();
+
+        return $this->webDriver->getPageSource();
+    }
+
     protected function filterCookies($cookies, $params = [])
     {
         foreach (['domain', 'path', 'name'] as $filter) {

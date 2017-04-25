@@ -259,3 +259,9 @@ class jserroronload {
         include __DIR__.'/view/jserroronload.php';
     }
 }
+
+class minimal {
+    function GET() {
+        include __DIR__.'/view/minimal.php';
+    }
+}
