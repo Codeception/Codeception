@@ -6,7 +6,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
         'dsn' => 'sqlite:tests/data/dbtest.db',
         'user' => 'root',
         'password' => '',
-        'cleanup' => false
+        'cleanup' => true,
     ];
 
     /**
@@ -17,20 +17,26 @@ class DbTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         self::$module = new \Codeception\Module\Db(make_container());
-        self::$module->_setConfig(self::$config);
-        self::$module->_initialize();
-
-        $sqlite = self::$module->driver;
-        $sqlite->cleanup();
         if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $dumpFile = '/dumps/sqlite-54.sql';
+            $dumpFile = 'dumps/sqlite-54.sql';
         } else {
-            $dumpFile = '/dumps/sqlite.sql';
+            $dumpFile = 'dumps/sqlite.sql';
         }
-        $sql = file_get_contents(\Codeception\Configuration::dataDir() . $dumpFile);
-        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
-        $sql = explode("\n", $sql);
-        $sqlite->load($sql);
+        self::$module->_setConfig(
+            self::$config
+            + ['dump' => 'tests/data/' . $dumpFile]
+        );
+        self::$module->_beforeSuite();
+    }
+
+    protected function setUp()
+    {
+        self::$module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
+    }
+
+    protected function tearDown()
+    {
+        self::$module->_after(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
     }
 
     public function testSeeInDatabase()
@@ -112,30 +118,104 @@ class DbTest extends \PHPUnit_Framework_TestCase
         self::$module->dontSeeInDatabase('no_pk', $testData);
     }
 
-    public function testReconnectOption()
+    public function testConnectionIsKeptForTheWholeSuite()
+    {
+        $testCase1 = \Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface');
+        $testCase2 = \Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface');
+
+        self::$module->_reconfigure(['reconnect' => false]);
+        self::$module->_beforeSuite();
+
+        // Simulate a test that runs
+        self::$module->_before($testCase1);
+        // Save these object instances IDs
+        $driverAndConn1 = [
+            self::$module->driver,
+            self::$module->dbh
+        ];
+        self::$module->_after($testCase1);
+
+        // Simulate a second test that runs
+        self::$module->_before($testCase2);
+        $driverAndConn2 = [
+            self::$module->driver,
+            self::$module->dbh
+        ];
+        self::$module->_after($testCase2);
+        $this->assertEquals($driverAndConn2, $driverAndConn1);
+
+        self::$module->_afterSuite();
+    }
+
+    public function testConnectionIsResetOnEveryTestWhenReconnectIsTrue()
     {
         $testCase1 = \Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface');
         $testCase2 = \Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface');
 
         self::$module->_reconfigure(['reconnect' => true]);
+        self::$module->_beforeSuite();
 
-        self::$module->_initialize();
-
-        $this->assertNull(self::$module->driver, 'driver is not null after _initialize');
-        $this->assertNull(self::$module->dbh, 'dbh is not null after _initialize');
-
-        self::$module->_before($testCase2);
-
-        $this->assertNotNull(self::$module->driver, 'driver is not set by _before');
-        $this->assertNotNull(self::$module->dbh, 'dbh is not set by _before');
-
+        // Simulate a test that runs
+        self::$module->_before($testCase1);
+        // Save these object instances IDs
+        $driverAndConn1 = [
+            self::$module->driver,
+            self::$module->dbh
+        ];
         self::$module->_after($testCase1);
 
-        $this->assertNull(self::$module->driver, 'driver is not unset by _after');
-        $this->assertNull(self::$module->dbh, 'dbh is not unset by _after');
+        // Simulate a second test that runs
+        self::$module->_before($testCase2);
+        $driverAndConn2 = [
+            self::$module->driver,
+            self::$module->dbh
+        ];
+        self::$module->_after($testCase2);
+        $this->assertNotEquals($driverAndConn2, $driverAndConn1);
 
-        self::$module->_reconfigure(['reconnect' => false]);
-
-        self::$module->_initialize();
+        self::$module->_afterSuite();
     }
+
+    public function testDumpToolCommandInterpolatesVariables()
+    {
+        $ref = new \ReflectionObject(self::$module);
+        $buildDumpToolCommand = $ref->getMethod('buildDumpToolCommand');
+        $buildDumpToolCommand->setAccessible(true);
+
+        $commandBuilt = $buildDumpToolCommand->invokeArgs(
+            self::$module,
+            [
+                'mysql -u $user -h $host -D $dbname < $dump',
+                [
+                    'dsn' => 'mysql:host=127.0.0.1;dbname=my_db',
+                    'dump' => 'tests/data/dumps/sqlite.sql',
+                    'user' => 'root',
+                ]
+            ]
+        );
+        $this->assertEquals(
+            'mysql -u root -h 127.0.0.1 -D my_db < tests/data/dumps/sqlite.sql',
+            $commandBuilt
+        );
+    }
+
+    public function testDumpToolCommandWontTouchVariablesNotFound()
+    {
+        $ref = new \ReflectionObject(self::$module);
+        $buildDumpToolCommand = $ref->getMethod('buildDumpToolCommand');
+        $buildDumpToolCommand->setAccessible(true);
+
+        $commandBuilt = $buildDumpToolCommand->invokeArgs(
+            self::$module,
+            [
+                'dumb_tool -u $user -h $host -D $dbname < $dump',
+            ]
+        );
+        $this->assertEquals(
+            'dumb_tool -u root -h $host -D $dbname < tests/data/dumps/sqlite.sql',
+            $commandBuilt
+        );
+
+    }
+
 }
