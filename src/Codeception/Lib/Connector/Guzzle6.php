@@ -226,7 +226,7 @@ class Guzzle6 extends Client
 
     protected function extractFormData(BrowserKitRequest $request)
     {
-        if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH'])) {
+        if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             return null;
         }
 
