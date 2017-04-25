@@ -8,7 +8,6 @@ class Sqlite extends Db
 {
     protected $hasSnapshot = false;
     protected $filename = '';
-    protected $con = null;
 
     public function __construct($dsn, $user, $password)
     {
@@ -22,19 +21,24 @@ class Sqlite extends Db
         parent::__construct($this->dsn, $user, $password);
     }
 
+    public function __destruct()
+    {
+        file_put_contents($this->filename, '');
+    }
+
     public function cleanup()
     {
-        $this->dbh = null;
-        file_put_contents($this->filename, '');
-        $this->dbh = self::connect($this->dsn, $this->user, $this->password);
+        $this->dbh->exec('PRAGMA foreign_keys = OFF;');
+        $this->dbh->exec('PRAGMA writable_schema = 1;');
+        $this->dbh->exec('DELETE FROM sqlite_master WHERE type IN (\'table\', \'index\', \'trigger\');');
+        $this->dbh->exec('PRAGMA writable_schema = 0;');
+        $this->dbh->exec('PRAGMA foreign_keys = ON;');
     }
 
     public function load($sql)
     {
         if ($this->hasSnapshot) {
-            $this->dbh = null;
             file_put_contents($this->filename, file_get_contents($this->filename . '_snapshot'));
-            $this->dbh = new \PDO($this->dsn, $this->user, $this->password);
         } else {
             if (file_exists($this->filename . '_snapshot')) {
                 unlink($this->filename . '_snapshot');
