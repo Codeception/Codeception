@@ -292,6 +292,8 @@ class WebDriver extends CodeceptionModule implements
     protected $sslProxy;
     protected $sslProxyPort;
 
+    private $reconfigured = false;
+
     /**
      * @var RemoteWebDriver
      */
@@ -338,6 +340,19 @@ class WebDriver extends CodeceptionModule implements
         ]);
     }
 
+    public function _reconfigure($config)
+    {
+        parent::_reconfigure($config);
+        if (count($config) === 1 && array_key_exists('url', $config)) {
+            //don't restart browser if only url was changed
+            return;
+        }
+        $this->reconfigured = true;
+        $this->webDriver->quit();
+        $this->_initialize();
+        $this->_initializeSession();
+    }
+
     protected function loadFirefoxProfile()
     {
         if (!array_key_exists('firefox_profile', $this->config['capabilities'])) {
@@ -369,7 +384,8 @@ class WebDriver extends CodeceptionModule implements
 
     public function _after(TestInterface $test)
     {
-        if ($this->config['restart']) {
+        if ($this->config['restart'] || $this->reconfigured) {
+            $this->reconfigured = false;
             $this->cleanWebDriver();
             return;
         }
