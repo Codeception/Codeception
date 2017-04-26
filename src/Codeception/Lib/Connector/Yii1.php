@@ -67,7 +67,7 @@ class Yii1 extends Client
         }
 
         // Add script name to request if none
-        if (strpos($uriPath, $scriptName) === false) {
+        if ($scriptName AND strpos($uriPath, $scriptName) === false) {
             $uriPath = "/{$scriptName}/{$uriPath}";
         }
 
