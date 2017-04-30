@@ -7,6 +7,6 @@ class WebHelper extends \Codeception\Module
 {
     public function changeBrowser($browser)
     {
-        $this->getModule('WebDriver')->_reconfigure(['browser' => $browser]);
+        $this->getModule('WebDriver')->_restart(['browser' => $browser]);
     }
 }

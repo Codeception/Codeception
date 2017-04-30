@@ -292,8 +292,6 @@ class WebDriver extends CodeceptionModule implements
     protected $sslProxy;
     protected $sslProxyPort;
 
-    private $reconfigured = false;
-
     /**
      * @var RemoteWebDriver
      */
@@ -340,15 +338,25 @@ class WebDriver extends CodeceptionModule implements
         ]);
     }
 
-    public function _reconfigure($config)
+    /**
+     * Restarts a web browser.
+     * Can be used with `_reconfigure` to open browser with different configuration
+     *
+     * ```php
+     * <?php
+     * // inside Helper
+     * $this->getModule('WebDriver')->_restart(); // just restart
+     * $this->getModule('WebDriver')->_restart(['browser' => $browser]); // reconfigure + restart
+     * ```
+     *
+     * @param array $config
+     */
+    public function _restart($config = [])
     {
-        parent::_reconfigure($config);
-        if (count($config) === 1 && array_key_exists('url', $config)) {
-            //don't restart browser if only url was changed
-            return;
-        }
-        $this->reconfigured = true;
         $this->webDriver->quit();
+        if (!empty($config)) {
+            $this->_reconfigure($config);
+        }
         $this->_initialize();
         $this->_initializeSession();
     }
@@ -384,8 +392,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function _after(TestInterface $test)
     {
-        if ($this->config['restart'] || $this->reconfigured) {
-            $this->reconfigured = false;
+        if ($this->config['restart']) {
             $this->cleanWebDriver();
             return;
         }
