@@ -1004,10 +1004,6 @@ class WebDriver extends CodeceptionModule implements
     {
         $currentUrl = $this->_getCurrentUri();
         $absoluteCurrentUrl = Uri::mergeUrls($this->_getUrl(), $currentUrl);
-
-        if ($uri === '' || $uri[0] === '#') {
-            return $absoluteCurrentUrl;
-        }
         return Uri::mergeUrls($absoluteCurrentUrl, $uri);
     }
 
