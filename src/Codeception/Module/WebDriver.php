@@ -955,10 +955,12 @@ class WebDriver extends CodeceptionModule implements
             $this->fail("No links containing text '$text' were found in page " . $this->_getCurrentUri());
         }
         if ($url) {
+            $expectedUrl = $this->getAbsoluteUrlFor($url);
             $nodes = array_filter(
                 $nodes,
-                function (WebDriverElement $e) use ($url) {
-                    return trim($e->getAttribute('href')) == trim($url);
+                function (WebDriverElement $e) use ($expectedUrl) {
+                    $elementHref = $this->getAbsoluteUrlFor($e->getAttribute('href'));
+                    return $elementHref === $expectedUrl;
                 }
             );
             if (empty($nodes)) {
@@ -976,15 +978,37 @@ class WebDriver extends CodeceptionModule implements
             }
             return;
         }
+
+        $expectedUrl = $this->getAbsoluteUrlFor($url);
         $nodes = array_filter(
             $nodes,
-            function (WebDriverElement $e) use ($url) {
-                return trim($e->getAttribute('href')) == trim($url);
+            function (WebDriverElement $e) use ($expectedUrl) {
+                $elementHref = $this->getAbsoluteUrlFor($e->getAttribute('href'));
+                return $elementHref === $expectedUrl;
             }
         );
         if (!empty($nodes)) {
             $this->fail("Link containing text '$text' and URL '$url' was found in page " . $this->_getCurrentUri());
         }
+    }
+
+
+    /**
+     * Returns an absolute URL for the passed URI with the current URL
+     * as the base path.
+     *
+     * @param string $uri the absolute or relative URI
+     * @return string the absolute URL
+     */
+    private function getAbsoluteUrlFor($uri)
+    {
+        $currentUrl = $this->_getCurrentUri();
+        $absoluteCurrentUrl = Uri::mergeUrls($this->_getUrl(), $currentUrl);
+
+        if ($uri === '' || $uri[0] === '#') {
+            return $absoluteCurrentUrl;
+        }
+        return Uri::mergeUrls($absoluteCurrentUrl, $uri);
     }
 
     public function seeInCurrentUrl($uri)
