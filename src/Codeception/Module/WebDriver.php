@@ -951,60 +951,48 @@ class WebDriver extends CodeceptionModule implements
     public function seeLink($text, $url = null)
     {
         $nodes = $this->baseElement->findElements(WebDriverBy::partialLinkText($text));
+        $currentUri = $this->_getCurrentUri();
+
         if (empty($nodes)) {
-            $this->fail("No links containing text '$text' were found in page " . $this->_getCurrentUri());
+            $this->fail("No links containing text '$text' were found in page $currentUri");
         }
         if ($url) {
-            $expectedUrl = $this->getAbsoluteUrlFor($url);
-            $nodes = array_filter(
-                $nodes,
-                function (WebDriverElement $e) use ($expectedUrl) {
-                    $elementHref = $this->getAbsoluteUrlFor($e->getAttribute('href'));
-                    return $elementHref === $expectedUrl;
-                }
-            );
-            if (empty($nodes)) {
-                $this->fail("No links containing text '$text' and URL '$url' were found in page " . $this->_getCurrentUri());
-            }
+            $nodes = $this->filterNodesByHref($url, $nodes);
         }
+        $this->assertNotEmpty($nodes, "No links containing text '$text' and URL '$url' were found in page $currentUri");
     }
 
     public function dontSeeLink($text, $url = null)
     {
         $nodes = $this->baseElement->findElements(WebDriverBy::partialLinkText($text));
+        $currentUri = $this->_getCurrentUri();
         if (!$url) {
-            if (!empty($nodes)) {
-                $this->fail("Link containing text '$text' was found in page " . $this->_getCurrentUri());
-            }
-            return;
-        }
-
-        $expectedUrl = $this->getAbsoluteUrlFor($url);
-        $nodes = array_filter(
-            $nodes,
-            function (WebDriverElement $e) use ($expectedUrl) {
-                $elementHref = $this->getAbsoluteUrlFor($e->getAttribute('href'));
-                return $elementHref === $expectedUrl;
-            }
-        );
-        if (!empty($nodes)) {
-            $this->fail("Link containing text '$text' and URL '$url' was found in page " . $this->_getCurrentUri());
+            $this->assertEmpty($nodes, "Link containing text '$text' was found in page $currentUri");
+        } else {
+            $nodes = $this->filterNodesByHref($url, $nodes);
+            $this->assertEmpty($nodes, "Link containing text '$text' and URL '$url' was found in page $currentUri");
         }
     }
 
-
     /**
-     * Returns an absolute URL for the passed URI with the current URL
-     * as the base path.
-     *
-     * @param string $uri the absolute or relative URI
-     * @return string the absolute URL
+     * @param string $url
+     * @param $nodes
+     * @return array
      */
-    private function getAbsoluteUrlFor($uri)
+    private function filterNodesByHref($url, $nodes)
     {
-        $currentUrl = $this->_getCurrentUri();
-        $absoluteCurrentUrl = Uri::mergeUrls($this->_getUrl(), $currentUrl);
-        return Uri::mergeUrls($absoluteCurrentUrl, $uri);
+        //current uri can be relative, merging it with configured base url gives absolute url
+        $absoluteCurrentUrl = Uri::mergeUrls($this->_getUrl(), $this->_getCurrentUri());
+        $expectedUrl = Uri::mergeUrls($absoluteCurrentUrl, $url);
+
+        $nodes = array_filter(
+            $nodes,
+            function (WebDriverElement $e) use ($expectedUrl, $absoluteCurrentUrl) {
+                $elementHref = Uri::mergeUrls($absoluteCurrentUrl, $e->getAttribute('href'));
+                return $elementHref === $expectedUrl;
+            }
+        );
+        return $nodes;
     }
 
     public function seeInCurrentUrl($uri)
