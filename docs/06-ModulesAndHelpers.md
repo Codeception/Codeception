@@ -498,12 +498,26 @@ module:
 If you want to reconfigure a module at runtime, you can use the `_reconfigure` method of the module.
 You may call it from a helper class and pass in all the fields you want to change.
 
+In this case configuration will be changed instantly. In next example we change root URL for PhpBrowser to point to the admin area,
+ so next `amOnPage('/')` will open `/admin/` page.
+
 ```php
 <?php
-$this->getModule('WebDriver')->_reconfigure(array('browser' => 'chrome'));
+$this->getModule('PhpBrowser')->_reconfigure(array('url' => 'http://localhost/admin'));
 ```
 
-At the end of a test, all your changes will be rolled back to the original configuration values.
+However, in WebDriver configuration changes can't be applied that easily. For instance, if you change the browser you need to close the current browser session and start a new one.
+For that WebDriver module provides `_restart` method which takes an array with config and restarts the browser. 
+
+```php
+<?php
+// start chrome
+$this->getModule('WebDriver')->_restart(['browser' => 'chrome']);
+// or just restart browser
+$this->getModule('WebDriver')->_restart();
+```
+
+At the end of a test all configuration changes will be rolled back to the original configuration values.
 
 ## Conclusion
 
