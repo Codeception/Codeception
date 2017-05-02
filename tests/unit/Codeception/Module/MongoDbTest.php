@@ -10,7 +10,9 @@ class MongoDbTest extends Unit
      * @var array
      */
     private $mongoConfig = array(
-        'dsn' => 'mongodb://localhost:27017/test'
+        'dsn' => 'mongodb://localhost:27017/test?connectTimeoutMS=300',
+        'dump' => 'tests/data/dumps/mongo.js',
+        'populate' => true
     );
 
     /**
@@ -147,5 +149,14 @@ class MongoDbTest extends Unit
         $this->module->haveInCollection('stuff', array('name' => 'Ashley', 'email' => 'me@ashleyclarke.me'));
         $this->module->seeInCollection('stuff', array('name' => 'Ashley', 'email' => 'me@ashleyclarke.me'));
         $this->module->dontSeeInCollection('users', array('email' => 'miles@davis.com'));
+    }
+
+    public function testLoadDump()
+    {
+        $collection = $this->module->grabFromCollection('96_bulls');
+        $this->assertNotEmpty($collection);
+
+        $count = $this->module->grabCollectionCount('96_bulls');
+        $this->assertEquals($count, 7);
     }
 }
