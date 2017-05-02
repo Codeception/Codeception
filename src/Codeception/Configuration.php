@@ -249,7 +249,8 @@ class Configuration
             ->files()
             ->name('*.{suite,suite.dist}.yml')
             ->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)
-            ->depth('< 1');
+            ->depth('< 1')
+            ->sortByName();
         self::$suites = [];
 
         /** @var SplFileInfo $suite */
