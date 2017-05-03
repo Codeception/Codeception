@@ -37,6 +37,7 @@ $urls = array(
     '/somepath/info' => 'info',
     '/facebook\??.*' => 'facebookController',
     '/form/(.*?)(#|\?.*?)?' => 'form',
+    '/basehref/(.*?)(#|\?.*?)?' => 'basehref',
     '/articles\??.*' => 'articles',
     '/auth' => 'httpAuth',
     '/register' => 'register',

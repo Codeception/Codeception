@@ -51,6 +51,20 @@ class Uri
                 } else {
                     $path = '/' . ltrim($path, '/');
                 }
+
+                //process dot-segments in path if exists
+                if (strpos($path, '..') !== false || strpos($path, '.') !== false) {
+                    $segments = explode('/', $path);
+                    $buffer = [];
+                    foreach($segments as $segment){
+                        if ($segment === '..' && count($buffer) > 0) {
+                            array_pop($buffer);
+                        } elseif ($segment !== '.' && $segment !== '..') {
+                            $buffer[] = $segment;
+                        }
+                    }
+                    $path = implode('/', $buffer);
+                }
             }
             $base = $base->withPath($path);
             $base = $base->withQuery('');

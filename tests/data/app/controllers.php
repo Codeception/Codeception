@@ -183,6 +183,17 @@ class form {
     }
 }
 
+class basehref{
+    function GET($matches) {
+        $url = '/view/basehref/'.strtolower($matches[1]);
+        if(is_dir(__DIR__.$url)){
+            echo "folder indexing not supported";
+        } else {
+            include __DIR__.$url.'.php';
+        }
+    }
+}
+
 class articles {
     function DELETE() {
     }

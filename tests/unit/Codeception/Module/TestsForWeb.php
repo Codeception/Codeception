@@ -23,6 +23,11 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->_cleanup();
         $this->module->amOnPage('/info');
         $this->module->see('Information');
+
+        #base href tag tests
+        $this->module->_cleanup();
+        $this->module->amOnPage('/basehref/index');
+        $this->module->see('Welcome to test app base href section!');
     }
 
     public function testCurrentUrl()
@@ -179,6 +184,60 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/');
         $this->module->click("descendant-or-self::a[@id = 'link']");
         $this->module->seeInCurrentUrl('/info');
+    }
+
+    public function testClickOnPageWithBaseHrefTag()
+    {
+        $this->module->amOnPage('/basehref/index');
+        $this->module->click("Link Relative Path to self as '.'");
+        $this->module->seeCurrentUrlEquals('/basehref/');
+
+        $this->module->amOnPage('/basehref/index');
+        $this->module->click("Link Relative Path");
+        $this->module->seeCurrentUrlEquals('/basehref/info');
+
+        $this->module->amOnPage('/basehref/index');
+        $this->module->click("Link Root Relative Path");
+        $this->module->seeCurrentUrlEquals('/info');
+
+        $this->module->amOnPage('/basehref/index');
+        $this->module->click("Link Relative Path with '.'");
+        $this->module->seeCurrentUrlEquals('/basehref/info');
+
+        $this->module->amOnPage('/basehref/index');
+        $this->module->click("Link Root Relative Path with '..'");
+        $this->module->seeCurrentUrlEquals('/info');
+
+        $this->module->amOnPage('/basehref/index');
+        $this->module->click("Link Relative Path with both '.' and '..'");
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickOnPageWithBaseHrefTagInSubFolder()
+    {
+        $this->module->amOnPage('/basehref/subfolder/subindex');
+        $this->module->click("Link Relative Path to self as '.'");
+        $this->module->seeCurrentUrlEquals('/basehref/subfolder/');
+
+        $this->module->amOnPage('/basehref/subfolder/subindex');
+        $this->module->click("Link Relative Path");
+        $this->module->seeCurrentUrlEquals('/basehref/subfolder/info');
+
+        $this->module->amOnPage('/basehref/subfolder/subindex');
+        $this->module->click("Link Root Relative Path");
+        $this->module->seeCurrentUrlEquals('/info');
+
+        $this->module->amOnPage('/basehref/subfolder/subindex');
+        $this->module->click("Link Relative Path with '.'");
+        $this->module->seeCurrentUrlEquals('/basehref/subfolder/info');
+
+        $this->module->amOnPage('/basehref/subfolder/subindex');
+        $this->module->click("Link Root Relative Path with '..'");
+        $this->module->seeCurrentUrlEquals('/basehref/info');
+
+        $this->module->amOnPage('/basehref/subfolder/subindex');
+        $this->module->click("Link Relative Path with both '.' and '..'");
+        $this->module->seeCurrentUrlEquals('/basehref/info');
     }
 
     public function testClickByName()
@@ -1490,21 +1549,21 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->see('Is that interesting?');
         $this->module->click('Ссылочка');
     }
-    
+
     public function testGrabMultiple()
     {
         $this->module->amOnPage('/info');
-        
+
         $arr = $this->module->grabMultiple('#grab-multiple a:first-child');
         $this->assertCount(1, $arr);
         $this->assertEquals('First', $arr[0]);
-        
+
         $arr = $this->module->grabMultiple('#grab-multiple a');
         $this->assertCount(3, $arr);
         $this->assertEquals('First', $arr[0]);
         $this->assertEquals('Second', $arr[1]);
         $this->assertEquals('Third', $arr[2]);
-        
+
         // href for WebDriver with selenium returns a full link, so testing with ID
         $arr = $this->module->grabMultiple('#grab-multiple a', 'id');
         $this->assertCount(3, $arr);
