@@ -153,10 +153,18 @@ class MongoDbTest extends Unit
 
     public function testLoadDump()
     {
-        $collection = $this->module->grabFromCollection('96_bulls');
-        $this->assertNotEmpty($collection);
+        $testRecords = [
+            ['name' => 'Michael Jordan', 'position' => 'sg'],
+            ['name' => 'Ron Harper','position' => 'pg'],
+            ['name' => 'Steve Kerr','position' => 'pg'],
+            ['name' => 'Toni Kukoc','position' => 'sf'],
+            ['name' => 'Luc Longley','position' => 'c'],
+            ['name' => 'Scottie Pippen','position' => 'sf'],
+            ['name' => 'Dennis Rodman','position' => 'pf']
+        ];
 
-        $count = $this->module->grabCollectionCount('96_bulls');
-        $this->assertEquals($count, 7);
+        foreach ($testRecords as $testRecord) {
+            $this->module->haveInCollection('96_bulls', $testRecord);
+        }
     }
 }

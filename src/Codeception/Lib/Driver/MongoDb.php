@@ -4,6 +4,7 @@ namespace Codeception\Lib\Driver;
 
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
+use MongoDB\Database;
 
 class MongoDb
 {
