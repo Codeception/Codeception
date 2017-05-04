@@ -54,7 +54,7 @@ class Yii1 extends Client
         }
 
         // Parse url parts
-        $uriPath = trim(parse_url($request->getUri(), PHP_URL_PATH), '/');
+        $uriPath = ltrim(parse_url($request->getUri(), PHP_URL_PATH), '/');
         $uriQuery = ltrim(parse_url($request->getUri(), PHP_URL_QUERY), '?');
         $scriptName = trim(parse_url($this->url, PHP_URL_PATH), '/');
         if (!empty($uriQuery)) {
