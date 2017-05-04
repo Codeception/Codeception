@@ -230,12 +230,12 @@ These examples can be written using Doctrine-style annotation syntax as well:
   }
 ```
 
-You can also use the `@dataProvider` annotation for creating dynamic examples, using a protected method for providing example data:
+You can also use the `@dataprovider` annotation for creating dynamic examples, using a protected method for providing example data:
 
 ```php
 <?php
    /**
-    * @dataProvider pageProvider
+    * @dataprovider pageProvider
     */
     public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
     {
@@ -258,12 +258,12 @@ You can also use the `@dataProvider` annotation for creating dynamic examples, u
     }
 ```
 
-Alternatively, the `@dataProvider` can also be a public method starting with `_` prefix so it will not be considered as a test:
+Alternatively, the `@dataprovider` can also be a public method starting with `_` prefix so it will not be considered as a test:
 
 ```php
 <?php
    /**
-    * @dataProvider _pageProvider
+    * @dataprovider _pageProvider
     */
     public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
     {
