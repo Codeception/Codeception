@@ -10,7 +10,9 @@ class MongoDbTest extends Unit
      * @var array
      */
     private $mongoConfig = array(
-        'dsn' => 'mongodb://localhost:27017/test'
+        'dsn' => 'mongodb://localhost:27017/test?connectTimeoutMS=300',
+        'dump' => 'tests/data/dumps/mongo.js',
+        'populate' => true
     );
 
     /**
@@ -147,5 +149,22 @@ class MongoDbTest extends Unit
         $this->module->haveInCollection('stuff', array('name' => 'Ashley', 'email' => 'me@ashleyclarke.me'));
         $this->module->seeInCollection('stuff', array('name' => 'Ashley', 'email' => 'me@ashleyclarke.me'));
         $this->module->dontSeeInCollection('users', array('email' => 'miles@davis.com'));
+    }
+
+    public function testLoadDump()
+    {
+        $testRecords = [
+            ['name' => 'Michael Jordan', 'position' => 'sg'],
+            ['name' => 'Ron Harper','position' => 'pg'],
+            ['name' => 'Steve Kerr','position' => 'pg'],
+            ['name' => 'Toni Kukoc','position' => 'sf'],
+            ['name' => 'Luc Longley','position' => 'c'],
+            ['name' => 'Scottie Pippen','position' => 'sf'],
+            ['name' => 'Dennis Rodman','position' => 'pf']
+        ];
+
+        foreach ($testRecords as $testRecord) {
+            $this->module->haveInCollection('96_bulls', $testRecord);
+        }
     }
 }

@@ -120,5 +120,7 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
   - '[[ -z "$SYMFONY" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle '# Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
-  - php codecept run -c frameworks-zf2 functional,doctrine # ZF2 Tests
+  #ZF2 run doctrine tests on PHP 5.4 and 5.5 only
+  - '[[ "$TRAVIS_PHP_VERSION" > "5.5" ]] || php codecept run -c frameworks-zf2 functional,doctrine'
+  - '[[ "$TRAVIS_PHP_VERSION" < "5.6" ]] || php codecept run -c frameworks-zf2 functional'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run functional -c frameworks-zend-expressive' # Zend Expressive Tests
