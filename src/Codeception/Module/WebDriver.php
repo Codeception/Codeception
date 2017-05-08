@@ -821,6 +821,16 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
+     * Locates clickable element.
+     *
+     * Use it in Helpers or GroupObject or Extension classes:
+     *
+     * ```php
+     * <?php
+     * $module = $this->getModule('WebDriver');
+     * $page = $module->webDriver;
+     * $el = $module->_findClickable($page, 'Click Me');
+     *
      * @param $page
      * @param $link
      * @return WebDriverElement
