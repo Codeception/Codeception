@@ -338,6 +338,29 @@ class WebDriver extends CodeceptionModule implements
         ]);
     }
 
+    /**
+     * Restarts a web browser.
+     * Can be used with `_reconfigure` to open browser with different configuration
+     *
+     * ```php
+     * <?php
+     * // inside Helper
+     * $this->getModule('WebDriver')->_restart(); // just restart
+     * $this->getModule('WebDriver')->_restart(['browser' => $browser]); // reconfigure + restart
+     * ```
+     *
+     * @param array $config
+     */
+    public function _restart($config = [])
+    {
+        $this->webDriver->quit();
+        if (!empty($config)) {
+            $this->_reconfigure($config);
+        }
+        $this->_initialize();
+        $this->_initializeSession();
+    }
+
     protected function loadFirefoxProfile()
     {
         if (!array_key_exists('firefox_profile', $this->config['capabilities'])) {
