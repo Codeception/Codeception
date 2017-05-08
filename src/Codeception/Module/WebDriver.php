@@ -951,40 +951,48 @@ class WebDriver extends CodeceptionModule implements
     public function seeLink($text, $url = null)
     {
         $nodes = $this->baseElement->findElements(WebDriverBy::partialLinkText($text));
+        $currentUri = $this->_getCurrentUri();
+
         if (empty($nodes)) {
-            $this->fail("No links containing text '$text' were found in page " . $this->_getCurrentUri());
+            $this->fail("No links containing text '$text' were found in page $currentUri");
         }
         if ($url) {
-            $nodes = array_filter(
-                $nodes,
-                function (WebDriverElement $e) use ($url) {
-                    return trim($e->getAttribute('href')) == trim($url);
-                }
-            );
-            if (empty($nodes)) {
-                $this->fail("No links containing text '$text' and URL '$url' were found in page " . $this->_getCurrentUri());
-            }
+            $nodes = $this->filterNodesByHref($url, $nodes);
         }
+        $this->assertNotEmpty($nodes, "No links containing text '$text' and URL '$url' were found in page $currentUri");
     }
 
     public function dontSeeLink($text, $url = null)
     {
         $nodes = $this->baseElement->findElements(WebDriverBy::partialLinkText($text));
+        $currentUri = $this->_getCurrentUri();
         if (!$url) {
-            if (!empty($nodes)) {
-                $this->fail("Link containing text '$text' was found in page " . $this->_getCurrentUri());
-            }
-            return;
+            $this->assertEmpty($nodes, "Link containing text '$text' was found in page $currentUri");
+        } else {
+            $nodes = $this->filterNodesByHref($url, $nodes);
+            $this->assertEmpty($nodes, "Link containing text '$text' and URL '$url' was found in page $currentUri");
         }
+    }
+
+    /**
+     * @param string $url
+     * @param $nodes
+     * @return array
+     */
+    private function filterNodesByHref($url, $nodes)
+    {
+        //current uri can be relative, merging it with configured base url gives absolute url
+        $absoluteCurrentUrl = Uri::mergeUrls($this->_getUrl(), $this->_getCurrentUri());
+        $expectedUrl = Uri::mergeUrls($absoluteCurrentUrl, $url);
+
         $nodes = array_filter(
             $nodes,
-            function (WebDriverElement $e) use ($url) {
-                return trim($e->getAttribute('href')) == trim($url);
+            function (WebDriverElement $e) use ($expectedUrl, $absoluteCurrentUrl) {
+                $elementHref = Uri::mergeUrls($absoluteCurrentUrl, $e->getAttribute('href'));
+                return $elementHref === $expectedUrl;
             }
         );
-        if (!empty($nodes)) {
-            $this->fail("Link containing text '$text' and URL '$url' was found in page " . $this->_getCurrentUri());
-        }
+        return $nodes;
     }
 
     public function seeInCurrentUrl($uri)
