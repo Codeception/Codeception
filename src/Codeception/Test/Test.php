@@ -70,20 +70,18 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         $time = 0;
         $e = null;
         
-        try {
-            $result->startTest($this);
-        } catch (\Exception $er) {
-            // failure is created: not a user's test code error so we don't need detailed stacktrace
-            $this->testResult->addError($this, new \PHPUnit_Framework_AssertionFailedError($er->getMessage()), 0);
-            $this->ignored = true;
-        }
+        $result->startTest($this);
 
         foreach ($this->hooks as $hook) {
             if (method_exists($this, $hook.'Start')) {
                 $this->{$hook.'Start'}();
             }
         }
-        
+
+        if ($result->errorCount() > 0) {
+            return;
+        }
+
         if (!$this->ignored) {
             \PHP_Timer::start();
             try {
