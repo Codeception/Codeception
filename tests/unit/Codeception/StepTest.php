@@ -37,7 +37,7 @@ class StepTest extends \PHPUnit_Framework_TestCase
     public function testGetHtml()
     {
         $step = $this->getStep(['Do some testing', ['arg1', 'arg2']]);
-        $this->assertSame('I do some testing <span style="color: #732E81">"arg1","arg2"</span>', $step->getHtml());
+        $this->assertSame('I do some testing <span style="color: #732E81">&quot;arg1&quot;,&quot;arg2&quot;</span>', $step->getHtml());
 
         $step = $this->getStep(['Do some testing', []]);
         $this->assertSame('I do some testing', $step->getHtml());
