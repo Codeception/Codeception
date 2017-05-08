@@ -28,8 +28,8 @@ class FixturesStore
 
     public function globalFixtures()
     {
-       return [
-           InitDbFixture::className()
-       ];
+        return [
+            InitDbFixture::className()
+        ];
     }
 }
