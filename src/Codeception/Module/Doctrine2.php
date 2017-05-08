@@ -411,14 +411,14 @@ EOF;
             if (isset($data->associationMappings)) {
                 if ($map = array_key_exists($key, $data->associationMappings)) {
                     if (is_array($val)) {
-                        $qb->innerJoin("$alias.$key", $key);
+                        $qb->innerJoin("$alias.$key", "_$key");
                         foreach ($val as $column => $v) {
                             if (is_array($v)) {
                                 $this->buildAssociationQuery($qb, $map['targetEntity'], $column, $v);
                                 continue;
                             }
-                            $paramname = $key . '__' . $column;
-                            $qb->andWhere("$key.$column = :$paramname");
+                            $paramname = "_$key" . '__' . $column;
+                            $qb->andWhere("_$key.$column = :$paramname");
                             $qb->setParameter($paramname, $v);
                         }
                         continue;
