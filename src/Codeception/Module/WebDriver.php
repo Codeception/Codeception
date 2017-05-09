@@ -859,7 +859,7 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
-     * Locates clickable element.
+     * Locates a clickable element.
      *
      * Use it in Helpers or GroupObject or Extension classes:
      *
@@ -867,10 +867,18 @@ class WebDriver extends CodeceptionModule implements
      * <?php
      * $module = $this->getModule('WebDriver');
      * $page = $module->webDriver;
+     *
+     * // search a link or button on a page
      * $el = $module->_findClickable($page, 'Click Me');
      *
-     * @param $page
-     * @param $link
+     * // search a link or button within an element
+     * $topBar = $module->_findElements('.top-bar')[0];
+     * $el = $module->_findClickable($topBar, 'Click Me');
+     *
+     * ```
+     * @api
+     * @param $page WebDriver instance or an element to search within
+     * @param $link a link text or locator to click
      * @return WebDriverElement
      */
     public function _findClickable($page, $link)

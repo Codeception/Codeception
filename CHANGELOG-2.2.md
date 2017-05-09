@@ -1,3 +1,7 @@
+#### 2.2.11
+
+* [WebDriver] Added `_findClickable` to public API so can be used from helpers. By @tiger-seo
+
 #### 2.2.10
 
 * Prefer local composer installation if available. Solves issues with incompatibility between locally and globally installed or packaged in phar file Codeception dependencies. Fix by @Naktibalda See #3997
