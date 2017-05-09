@@ -843,7 +843,7 @@ class WebDriver extends CodeceptionModule implements
         if ($context) {
             $page = $this->matchFirstOrFail($this->webDriver, $context);
         }
-        $el = $this->findClickable($page, $link);
+        $el = $this->_findClickable($page, $link);
         if (!$el) {
             try {
                 $els = $this->match($page, $link);
@@ -859,11 +859,21 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
+     * Locates clickable element.
+     *
+     * Use it in Helpers or GroupObject or Extension classes:
+     *
+     * ```php
+     * <?php
+     * $module = $this->getModule('WebDriver');
+     * $page = $module->webDriver;
+     * $el = $module->_findClickable($page, 'Click Me');
+     *
      * @param $page
      * @param $link
      * @return WebDriverElement
      */
-    protected function findClickable($page, $link)
+    public function _findClickable($page, $link)
     {
         if (is_array($link) or ($link instanceof WebDriverBy)) {
             return $this->matchFirstOrFail($page, $link);
