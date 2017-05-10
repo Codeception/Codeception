@@ -288,6 +288,22 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * ]);
      * ```
      *
+     * Note: if you need to load fixtures before the test (probably before the cleanup transaction is started;
+     * `cleanup` options is `true` by default), you can specify fixtures with _fixtures method of a testcase
+     * ```php
+     * <?php
+     * // inside Cest file or Codeception\TestCase\Unit
+     * public function _fixtures(){
+     *     return [
+     *         'user' => [
+     *             'class' => UserFixture::className(),
+     *             'dataFile' => codecept_data_dir() . 'user.php'
+     *         ]
+     *     ];
+     * }
+     * ```
+     * instead of defining `haveFixtures` in Cest `_before`
+     *
      * @param $fixtures
      * @part fixtures
      */
