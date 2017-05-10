@@ -217,8 +217,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         if ($this->config['cleanup']) {
             foreach ($this->loadedFixtures as $fixture) {
-                $fixture->un
-                    ();
+                $fixture->unloadFixtures();
             }
             $this->loadedFixtures = [];
 
