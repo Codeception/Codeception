@@ -273,6 +273,31 @@ class PhpBrowserRestTest extends Unit
         $this->module->seeResponseContains('host: "www.example.com"');
     }
 
+    /**
+     * @Issue 4203 https://github.com/Codeception/Codeception/issues/4203
+     * @depends testHostHeader
+     */
+    public function testSessionHeaderBackup()
+    {
+        if (getenv('dependencies') === 'lowest') {
+            $this->markTestSkipped('This test can\'t pass with the lowest versions of dependencies');
+        }
+
+        $this->module->haveHttpHeader('Host', 'www.example.com');
+        $this->module->sendGET('/rest/http-host/');
+        $this->module->seeResponseContains('host: "www.example.com"');
+
+        $session = $this->phpBrowser->_backupSession();
+
+        $this->module->haveHttpHeader('Host', 'www.localhost.com');
+        $this->module->sendGET('/rest/http-host/');
+        $this->module->seeResponseContains('host: "www.localhost.com"');
+
+        $this->phpBrowser->_loadSession($session);
+        $this->module->sendGET('/rest/http-host/');
+        $this->module->seeResponseContains('host: "www.example.com"');
+    }
+
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
