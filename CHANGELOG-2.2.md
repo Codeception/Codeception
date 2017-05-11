@@ -13,7 +13,8 @@
 * [Mongo] Fixed parsing dbname. See #4186 by @retnek
 * [Mongo] Improved legacy driver check by @retnek. See #4178
 * [WebDriver][PhpBrowser][Frameworks] Added `grabPageSource` method by @Kolyunya 
-* [PhpBrowser][REST] Add DELETE method to supported form data request methods in Guzzle6 by 
+* [PhpBrowser][REST] Add DELETE method to supported form data request methods in Guzzle6 by
+* [PhpBrowser][REST] Restore request headers in multi-session testing. Fixes #4157 
 * Recorder Extension: Replace non-alphanumeric characters with underscores by @tiger-seo. Fixes Recorder on Windows
 * [REST] Documented different ways to upload files
 * Fixed `$scenario->current('name')` #4154 by @Naktibalda
@@ -28,11 +29,13 @@
 * [Db] loadDump reports sql statement which caused error, fixes regression from 2.2.10. See #4120. By @Naktibalda.
 * [Asserts] Add delta parameter to `assertEquals()` `assertNotEquals()` methods by @spideyfusion 
 * [Yii2] Removed check and notification for environment other than `test` by @samdark
+* [Yii2] Unload fixtures only if `cleanup` configuration equals true. #4207 by @Faryshta 
 * [ZF2] Removed `session_write_close()` from ZF2 module by @tasselchof. Fixes #4112
 * Fixed textual representation of can't steps by @Naktibalda
 * [Lumen] Added IoC methods from Laravel5 module: `haveBinding`, `haveSingleton`, `haveContextualBinding`, `haveInstance`, `haveApplicationHandler`, `clearApplicationHandlers`. By @kt81
 * [Lumen] Clear facade cache only when facade exists. Same change as #3124 for refactored Lumen module by @kt81
 * [ZendExpressive] Support Zend Expressive 2.0 by @Naktibalda
+* [Doctrine2] `haveFakeRepository` updated to work with Doctrine >= 2.5.7 by @laszlo-karpati #4212
 * Command `bootstrap` adds `support/_generated` to gitignore. By @Naktibalda
 
 #### 2.2.10
