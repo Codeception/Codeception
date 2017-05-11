@@ -107,6 +107,23 @@ Returns URL of a host.
 @throws ModuleConfigException
 
 
+### _restart
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Restarts a web browser.
+Can be used with `_reconfigure` to open browser with different configuration
+
+```php
+<?php
+// inside a Helper
+$this->getModule('WebDriver')->_restart(); // just restart
+$this->getModule('WebDriver')->_restart(['browser' => $browser]); // reconfigure + restart
+```
+
+ * `param array` $config
+
+
 ### _savePageSource
 
 *hidden API method, expected to be used from Helper classes*

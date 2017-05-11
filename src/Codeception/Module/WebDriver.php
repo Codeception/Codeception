@@ -344,12 +344,13 @@ class WebDriver extends CodeceptionModule implements
      *
      * ```php
      * <?php
-     * // inside Helper
+     * // inside a Helper
      * $this->getModule('WebDriver')->_restart(); // just restart
      * $this->getModule('WebDriver')->_restart(['browser' => $browser]); // reconfigure + restart
      * ```
      *
      * @param array $config
+     * @api
      */
     public function _restart($config = [])
     {
