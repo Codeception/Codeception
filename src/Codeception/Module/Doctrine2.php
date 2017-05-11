@@ -268,16 +268,47 @@ EOF;
                 $methods
             )
         );
+
         $em->clear();
         $reflectedEm = new \ReflectionClass($em);
+
+
         if ($reflectedEm->hasProperty('repositories')) {
+            //Support doctrine versions before 2.4.0
+
             $property = $reflectedEm->getProperty('repositories');
             $property->setAccessible(true);
             $property->setValue($em, array_merge($property->getValue($em), [$classname => $mock]));
+
+        } elseif ($reflectedEm->hasProperty('repositoryFactory')) {
+            //For doctrine 2.4.0+ versions
+
+            $repositoryFactoryProperty = $reflectedEm->getProperty('repositoryFactory');
+            $repositoryFactoryProperty->setAccessible(true);
+            $repositoryFactory = $repositoryFactoryProperty->getValue($em);
+
+            $reflectedRepositoryFactory = new \ReflectionClass($repositoryFactory);
+
+            if ($reflectedRepositoryFactory->hasProperty('repositoryList')) {
+                $repositoryListProperty = $reflectedRepositoryFactory->getProperty('repositoryList');
+                $repositoryListProperty->setAccessible(true);
+
+                $repositoryListProperty->setValue(
+                    $repositoryFactory,
+                    [$classname => $mock]
+                );
+
+                $repositoryFactoryProperty->setValue($em, $repositoryFactory);
+            } else {
+                $this->debugSection(
+                    'Warning',
+                    'Repository can\'t be mocked, the EventManager\'s repositoryFactory doesn\'t have "repositoryList" property'
+                );
+            }
         } else {
             $this->debugSection(
                 'Warning',
-                'Repository can\'t be mocked, the EventManager class doesn\'t have "repositories" property'
+                'Repository can\'t be mocked, the EventManager class doesn\'t have "repositoryFactory" or "repositories" property'
             );
         }
     }
