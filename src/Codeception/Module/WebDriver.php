@@ -89,7 +89,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *              browser: phantomjs
  * ```
  *
- * #### Headless Selenium in Docker
+ * ### Headless Selenium in Docker
  *
  * Docker can ship Selenium Server with all its dependencies and browsers inside a single container.
  * Running tests inside Docker is as easy as pulling [official selenium image](https://github.com/SeleniumHQ/docker-selenium) and starting a container with Chrome:
@@ -1292,6 +1292,7 @@ class WebDriver extends CodeceptionModule implements
     public function _loadSession($session)
     {
         $this->webDriver = $session;
+        $this->setBaseElement();
     }
 
     public function _backupSession()
