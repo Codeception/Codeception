@@ -184,7 +184,10 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->loadFixtures($test);
         }
 
-        if ($this->config['cleanup'] && $this->app->has('db') && $this->app->db instanceof \yii\db\Connection) {
+        if ($this->config['cleanup']
+            && $this->app->has('db')
+            && $this->app->db instanceof \yii\db\Connection
+        ) {
             $this->transaction = $this->app->db->beginTransaction();
         }
     }
@@ -196,7 +199,9 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     private function loadFixtures($test)
     {
-        if (method_exists($test, self::TEST_FIXTURES_METHOD)) {
+        if (empty($this->loadedFixtures)
+            && method_exists($test, self::TEST_FIXTURES_METHOD)
+        ) {
             $this->haveFixtures(call_user_func([$test, self::TEST_FIXTURES_METHOD]));
         }
     }
@@ -210,14 +215,17 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $_COOKIE = [];
         $_REQUEST = [];
 
-        foreach ($this->loadedFixtures as $fixture) {
-            $fixture->unloadFixtures();
-        }
-        $this->loadedFixtures = [];
+        if ($this->config['cleanup']) {
+            foreach ($this->loadedFixtures as $fixture) {
+                $fixture->unloadFixtures();
+            }
+            $this->loadedFixtures = [];
 
-        if ($this->transaction && $this->config['cleanup']) {
-            $this->transaction->rollback();
+            if ($this->transaction) {
+                $this->transaction->rollback();
+            }
         }
+        
 
         if ($this->client) {
             $this->client->resetPersistentVars();
