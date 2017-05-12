@@ -65,7 +65,7 @@ class Configuration
      * @var array Default config
      */
     public static $defaultConfig = [
-        'actorSuffix'=> 'Guy', // Codeception 1.x compatibility
+        'actor_suffix'=> 'Guy', // Codeception 1.x compatibility
         'namespace'  => '',
         'include'    => [],
         'paths'      => [
@@ -184,7 +184,7 @@ class Configuration
         self::$config = $config;
 
         if (isset(self::$config['actor'])) {
-            self::$config['actorSuffix'] = self::$config['actor']; // old compatibility
+            self::$config['actor_suffix'] = self::$config['actor']; // old compatibility
         }
 
         if (!isset($config['paths']['log'])) {

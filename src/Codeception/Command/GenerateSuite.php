@@ -52,7 +52,7 @@ class GenerateSuite extends Command
 
         $config = $this->getGlobalConfig();
         if (!$actor) {
-            $actor = ucfirst($suite) . $config['actorSuffix'];
+            $actor = ucfirst($suite) . $config['actor_suffix'];
         }
         $actorClass = $actor;
 
@@ -72,8 +72,8 @@ class GenerateSuite extends Command
             );
         }
 
-        $actorName = $this->removeSuffix($actor, $config['actorSuffix']);
-        $actorClass = $actorName . $config['actorSuffix'];
+        $actorName = $this->removeSuffix($actor, $config['actor_suffix']);
+        $actorClass = $actorName . $config['actor_suffix'];
 
         $file = $this->buildPath(
             Configuration::supportDir() . "Helper",
