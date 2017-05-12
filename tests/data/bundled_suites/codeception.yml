@@ -1,10 +1,9 @@
 actor: Tester
 paths:
-    tests: tests
-    log: tests/_output
-    data: tests/_data
-    support: tests/_support
-    envs: tests/_envs
+    tests: .
+    log: _output
+    data: _data
+    support: _support
 suites:
     unit:
         path: .

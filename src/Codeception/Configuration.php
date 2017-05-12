@@ -309,9 +309,13 @@ class Configuration
         }
 
         if (!$settings['path']) {
-            $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
-                . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+            // take a suite path from its name
+            $settings['path'] = $suite;
         }
+
+        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
+            . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
+
 
 
         return $settings;
@@ -635,8 +639,8 @@ class Configuration
      */
     protected static function loadSuiteConfig($suite, $path, $settings)
     {
-        // bundled config
         if (isset(self::$config['suites'][$suite])) {
+            // bundled config
             return self::mergeConfigs($settings, self::$config['suites'][$suite]);
         }
 
