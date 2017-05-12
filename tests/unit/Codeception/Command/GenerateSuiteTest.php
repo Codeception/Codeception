@@ -35,11 +35,11 @@ class GenerateSuiteTest extends BaseCommandRunner
 
     public function testGuyWithSuffix()
     {
-        $this->execute(array('suite' => 'shire', 'actor' => 'HobbitGuy'), false);
+        $this->execute(array('suite' => 'shire', 'actor' => 'HobbitTester'), false);
 
         $configFile = $this->log[1];
         $conf = \Symfony\Component\Yaml\Yaml::parse($configFile['content']);
-        $this->assertEquals('Hobbit', $conf['actor']);
+        $this->assertEquals('HobbitTester', $conf['actor']);
         $this->assertContains('\Helper\Shire', $conf['modules']['enabled']);
 
         $helper = $this->log[0];
