@@ -126,7 +126,7 @@ class Bootstrap extends Command
     public function createGlobalConfig()
     {
         $basicConfig = [
-            'actor'    => $this->actorSuffix,
+            'actorSuffix' => $this->actorSuffix,
             'paths'    => [
                 'tests'   => 'tests',
                 'log'     => $this->logDir,
@@ -161,7 +161,7 @@ class Bootstrap extends Command
 # Emulate web requests and make application process them
 # Include one of framework modules (Symfony2, Yii2, Laravel5) to use it
 
-actor: $actor{$this->actorSuffix}
+class_name: $actor{$this->actorSuffix}
 modules:
     enabled:
         # add framework module here
@@ -179,7 +179,7 @@ EOF;
 # Perform tests in browser using the WebDriver or PhpBrowser.
 # If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
-actor: $actor{$this->actorSuffix}
+class_name: $actor{$this->actorSuffix}
 modules:
     enabled:
         - PhpBrowser:
@@ -196,7 +196,7 @@ EOF;
 #
 # Suite for unit (internal) tests.
 
-actor: $actor{$this->actorSuffix}
+class_name: $actor{$this->actorSuffix}
 modules:
     enabled:
         - Asserts

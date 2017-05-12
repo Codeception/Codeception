@@ -65,7 +65,7 @@ class Configuration
      * @var array Default config
      */
     public static $defaultConfig = [
-        'actor'      => 'Guy', // codeception 1.x compatibility
+        'actorSuffix'=> 'Guy', // Codeception 1.x compatibility
         'namespace'  => '',
         'include'    => [],
         'paths'      => [
@@ -182,6 +182,10 @@ class Configuration
         }
 
         self::$config = $config;
+
+        if (isset(self::$config['actor'])) {
+            self::$config['actorSuffix'] = self::$config['actor']; // old compatibility
+        }
 
         if (!isset($config['paths']['log'])) {
             throw new ConfigurationException('Log path is not defined by key "paths: log"');
