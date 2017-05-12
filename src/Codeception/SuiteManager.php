@@ -79,9 +79,9 @@ class SuiteManager
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
-        if (!file_exists(Configuration::supportDir() . $this->settings['class_name'] . '.php')) {
+        if ($this->settings['actor'] && !file_exists(Configuration::supportDir() . $this->settings['actor'] . '.php')) {
             throw new Exception\ConfigurationException(
-                $this->settings['class_name']
+                $this->settings['actor']
                 . " class doesn't exist in suite folder.\nRun the 'build' command to generate it"
             );
         }
@@ -176,9 +176,12 @@ class SuiteManager
 
     protected function getActor()
     {
+        if (!$this->settings['actor']) {
+            return null;
+        }
         return $this->settings['namespace']
-            ? rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['class_name']
-            : $this->settings['class_name'];
+            ? rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['actor']
+            : $this->settings['actor'];
     }
 
     protected function checkEnvironmentExists(TestInterface $test)

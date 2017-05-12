@@ -70,6 +70,7 @@ class Configuration
         'include'    => [],
         'paths'      => [
         ],
+        'suites'     => [],
         'modules'    => [],
         'extensions' => [
             'enabled'  => [],
@@ -101,14 +102,15 @@ class Configuration
     ];
 
     public static $defaultSuiteSettings = [
-        'class_name'  => 'NoGuy',
+        'actor'       => null,
+        'class_name'  => null, // Codeception >2.3 compatibility
         'modules'     => [
             'enabled' => [],
             'config'  => [],
             'depends' => []
         ],
+        'path'        => null,
         'namespace'   => null,
-        'path'        => '',
         'groups'      => [],
         'shuffle'     => false,
         'extensions'  => [ // suite extensions
@@ -251,7 +253,12 @@ class Configuration
             ->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)
             ->depth('< 1')
             ->sortByName();
+
         self::$suites = [];
+
+        foreach (array_keys(self::$config['suites']) as $suite) {
+            self::$suites[$suite] = $suite;
+        }
 
         /** @var SplFileInfo $suite */
         foreach ($suites as $suite) {
@@ -296,8 +303,16 @@ class Configuration
             $settings = self::mergeConfigs($settings, $envConf);
         }
 
-        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
-            . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+        if (!$settings['actor']) {
+            // Codeception 2.2 compatibility
+            $settings['actor'] = $settings['class_name'];
+        }
+
+        if (!$settings['path']) {
+            $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
+                . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+        }
+
 
         return $settings;
     }
@@ -620,6 +635,11 @@ class Configuration
      */
     protected static function loadSuiteConfig($suite, $path, $settings)
     {
+        // bundled config
+        if (isset(self::$config['suites'][$suite])) {
+            return self::mergeConfigs($settings, self::$config['suites'][$suite]);
+        }
+
         $suiteDistConf = self::getConfFromFile(
             self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml"
         );

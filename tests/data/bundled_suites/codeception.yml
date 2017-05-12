@@ -1,0 +1,14 @@
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+suites:
+    unit:
+        path: .
+        class_name: UnitTester
+        modules:
+            enabled:
+                - Asserts

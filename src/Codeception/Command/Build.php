@@ -52,8 +52,8 @@ class Build extends Command
 
         $file = $this->buildPath(
             Configuration::supportDir(),
-            $settings['class_name']
-        ) . $this->getClassName($settings['class_name']);
+            $settings['actor']
+        ) . $this->getClassName($settings['actor']);
         $file .=  '.php';
         return $this->save($file, $content);
     }
@@ -62,14 +62,14 @@ class Build extends Command
     {
         $actionsGenerator = new ActionsGenerator($settings);
         $this->output->writeln(
-            " -> {$settings['class_name']}Actions.php generated successfully. "
+            " -> {$settings['actor']}Actions.php generated successfully. "
             . $actionsGenerator->getNumMethods() . " methods added"
         );
         
         $content = $actionsGenerator->produce();
         
-        $file = $this->buildPath(Configuration::supportDir() . '_generated', $settings['class_name']);
-        $file .= $this->getClassName($settings['class_name']) . 'Actions.php';
+        $file = $this->buildPath(Configuration::supportDir() . '_generated', $settings['actor']);
+        $file .= $this->getClassName($settings['actor']) . 'Actions.php';
         return $this->save($file, $content, true);
     }
 
@@ -81,11 +81,14 @@ class Build extends Command
         }
         foreach ($suites as $suite) {
             $settings = $this->getSuiteConfig($suite);
+            if (!$settings['actor']) {
+                continue; // no actor
+            }
             $this->buildActions($settings);
             $actorBuilt = $this->buildActor($settings);
             
             if ($actorBuilt) {
-                $this->output->writeln("{$settings['class_name']}.php created.");
+                $this->output->writeln("{$settings['actor']}.php created.");
             }
         }
     }
