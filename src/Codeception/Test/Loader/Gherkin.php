@@ -66,7 +66,7 @@ class Gherkin implements LoaderInterface
             $this->addSteps($roleContexts, "role:$role");
         }
 
-        if (empty($this->steps) and empty($contexts['default']) and $this->settings['actor']) { // if no context is set, actor to be a context
+        if (empty($this->steps) && empty($contexts['default']) && $this->settings['actor']) { // if no context is set, actor to be a context
             $actorContext = $this->settings['namespace']
                 ? rtrim($this->settings['namespace'] . '\\' . $this->settings['actor'], '\\')
                 : $this->settings['actor'];
