@@ -39,7 +39,7 @@ class GenerateCept extends Command
         $filename = $input->getArgument('test');
 
         $config = $this->getSuiteConfig($suite);
-        $this->buildPath($config['path'], $filename);
+        $this->createDirectory($config['path'], $filename);
 
         $filename = $this->completeSuffix($filename, 'Cept');
         $gen = new Cept($config);

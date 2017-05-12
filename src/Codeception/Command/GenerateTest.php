@@ -42,7 +42,7 @@ class GenerateTest extends Command
         $config = $this->getSuiteConfig($suite);
 
         $className = $this->getClassName($class);
-        $path = $this->buildPath($config['path'], $class);
+        $path = $this->createDirectory($config['path'], $class);
 
         $filename = $this->completeSuffix($className, 'Test');
         $filename = $path . $filename;

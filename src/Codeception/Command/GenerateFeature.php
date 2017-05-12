@@ -41,7 +41,7 @@ class GenerateFeature extends Command
         $filename = $input->getArgument('feature');
 
         $config = $this->getSuiteConfig($suite);
-        $this->buildPath($config['path'], $filename);
+        $this->createDirectory($config['path'], $filename);
 
         $gen = new Feature(basename($filename));
         if (!preg_match('~\.feature$~', $filename)) {

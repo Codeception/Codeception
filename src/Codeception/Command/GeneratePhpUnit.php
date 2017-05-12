@@ -41,7 +41,7 @@ class GeneratePhpUnit extends Command
 
         $config = $this->getSuiteConfig($suite);
 
-        $path = $this->buildPath($config['path'], $class);
+        $path = $this->createDirectory($config['path'], $class);
 
         $filename = $this->completeSuffix($this->getClassName($class), 'Test');
         $filename = $path . $filename;

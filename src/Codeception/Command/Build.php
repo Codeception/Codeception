@@ -50,7 +50,7 @@ class Build extends Command
         
         $content = $actorGenerator->produce();
 
-        $file = $this->buildPath(
+        $file = $this->createDirectory(
             Configuration::supportDir(),
             $settings['class_name']
         ) . $this->getClassName($settings['class_name']);
@@ -68,7 +68,7 @@ class Build extends Command
         
         $content = $actionsGenerator->produce();
         
-        $file = $this->buildPath(Configuration::supportDir() . '_generated', $settings['class_name']);
+        $file = $this->createDirectory(Configuration::supportDir() . '_generated', $settings['class_name']);
         $file .= $this->getClassName($settings['class_name']) . 'Actions.php';
         return $this->save($file, $content, true);
     }

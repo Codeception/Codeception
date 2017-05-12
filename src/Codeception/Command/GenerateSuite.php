@@ -62,7 +62,7 @@ class GenerateSuite extends Command
         }
 
         if ($config['settings']['bootstrap']) {
-            $this->buildPath($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
+            $this->createDirectory($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
 
             // generate bootstrap
             $this->save(
@@ -75,7 +75,7 @@ class GenerateSuite extends Command
         $actorName = $this->removeSuffix($actor, $config['actor']);
         $config['class_name'] = $actorName . $config['actor'];
 
-        $file = $this->buildPath(
+        $file = $this->createDirectory(
             Configuration::supportDir() . "Helper",
             "$actorName.php"
         ) . "$actorName.php";
@@ -109,7 +109,7 @@ EOF;
 
         $content = $actorGenerator->produce();
 
-        $file = $this->buildPath(
+        $file = $this->createDirectory(
             Configuration::supportDir(),
             $config['class_name']
         ) . $this->getClassName($config['class_name']);

@@ -46,7 +46,7 @@ class GenerateEnvironment extends Command
         $env = $input->getArgument('env');
         $file = "$env.yml";
 
-        $path = $this->buildPath($relativePath, $file);
+        $path = $this->createDirectory($relativePath, $file);
         $saved = $this->save($path . $file, "# `$env` environment config goes here");
 
         if ($saved) {

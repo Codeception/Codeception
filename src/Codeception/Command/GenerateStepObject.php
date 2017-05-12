@@ -44,7 +44,7 @@ class GenerateStepObject extends Command
 
         $class = $this->getClassName($step);
 
-        $path = $this->buildPath(Configuration::supportDir() . 'Step' . DIRECTORY_SEPARATOR . ucfirst($suite), $step);
+        $path = $this->createDirectory(Configuration::supportDir() . 'Step' . DIRECTORY_SEPARATOR . ucfirst($suite), $step);
 
         $dialog = $this->getHelperSet()->get('question');
         $filename = $path . $class . '.php';

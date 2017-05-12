@@ -7,11 +7,11 @@ trait FileSystem
 {
     use Namespaces;
 
-    protected function buildPath($basePath, $testName)
+    protected function createDirectory($basePath, $className = '')
     {
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR);
-        $testName = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $testName);
-        $path = $basePath . DIRECTORY_SEPARATOR . $testName;
+        $className = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $className);
+        $path = $basePath . DIRECTORY_SEPARATOR . $className;
         $path = pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
         if (!file_exists($path)) {
             // Second argument should be mode. Well, umask() doesn't seem to return any if not set. Config may fix this.

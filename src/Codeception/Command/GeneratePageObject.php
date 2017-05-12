@@ -53,7 +53,7 @@ class GeneratePageObject extends Command
             $suite = DIRECTORY_SEPARATOR . ucfirst($suite);
         }
 
-        $path = $this->buildPath(Configuration::supportDir() . 'Page' . $suite, $class);
+        $path = $this->createDirectory(Configuration::supportDir() . 'Page' . $suite, $class);
 
         $filename = $path . $this->getClassName($class) . '.php';
 

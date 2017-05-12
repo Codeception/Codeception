@@ -41,7 +41,7 @@ class GenerateCest extends Command
 
         $config = $this->getSuiteConfig($suite);
         $className = $this->getClassName($class);
-        $path = $this->buildPath($config['path'], $class);
+        $path = $this->createDirectory($config['path'], $class);
 
         $filename = $this->completeSuffix($className, 'Cest');
         $filename = $path . $filename;
