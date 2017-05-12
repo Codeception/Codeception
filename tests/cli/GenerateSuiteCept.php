@@ -8,7 +8,7 @@ $I->amInPath('tests/data/sandbox');
 $I->executeCommand('generate:suite house HouseGuy');
 $I->seeFileFound('house.suite.yml', 'tests');
 $I->expect('guy class is generated');
-$I->seeInThisFile('class_name: HouseGuy');
+$I->seeInThisFile('actor: HouseGuy');
 $I->seeInThisFile('- \Helper\House');
 $I->seeFileFound('House.php', 'tests/_support/Helper');
 $I->seeInThisFile('namespace Helper;');

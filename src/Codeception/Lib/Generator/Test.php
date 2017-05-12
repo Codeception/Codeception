@@ -48,7 +48,7 @@ EOF;
 
     public function produce()
     {
-        $actor = $this->settings['class_name'];
+        $actor = $this->settings['actor'];
         if ($this->settings['namespace']) {
             $actor = $this->settings['namespace'] . '\\' . $actor;
         }
