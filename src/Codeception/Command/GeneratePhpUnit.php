@@ -41,14 +41,14 @@ class GeneratePhpUnit extends Command
 
         $config = $this->getSuiteConfig($suite);
 
-        $path = $this->createDirectory($config['path'], $class);
+        $path = $this->createDirectoryFor($config['path'], $class);
 
-        $filename = $this->completeSuffix($this->getClassName($class), 'Test');
+        $filename = $this->completeSuffix($this->getShortClassName($class), 'Test');
         $filename = $path . $filename;
 
         $gen = new PhpUnitGenerator($config, $class);
 
-        $res = $this->save($filename, $gen->produce());
+        $res = $this->createFile($filename, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
             exit;

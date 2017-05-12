@@ -7,7 +7,7 @@ trait FileSystem
 {
     use Namespaces;
 
-    protected function createDirectory($basePath, $className = '')
+    protected function createDirectoryFor($basePath, $className = '')
     {
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR);
         $className = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $className);
@@ -18,25 +18,6 @@ trait FileSystem
             mkdir($path, 0775, true); // Third parameter commands to create directories recursively
         }
         return $path;
-    }
-
-    protected function getClassName($class)
-    {
-        $namespaces = $this->breakParts($class);
-        return array_pop($namespaces);
-    }
-
-    protected function breakParts($class)
-    {
-        $class      = str_replace('/', '\\', $class);
-        $namespaces = explode('\\', $class);
-        if (count($namespaces)) {
-            $namespaces[0] = ltrim($namespaces[0], '\\');
-        }
-        if (!$namespaces[0]) {
-            array_shift($namespaces);
-        } // remove empty namespace caused of \\
-        return $namespaces;
     }
 
     protected function completeSuffix($filename, $suffix)
@@ -60,7 +41,7 @@ trait FileSystem
         return preg_replace("~$suffix$~", '', $classname);
     }
 
-    protected function save($filename, $contents, $force = false, $flags = null)
+    protected function createFile($filename, $contents, $force = false, $flags = null)
     {
         if (file_exists($filename) && !$force) {
             return false;

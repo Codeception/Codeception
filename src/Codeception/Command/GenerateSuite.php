@@ -62,10 +62,10 @@ class GenerateSuite extends Command
         }
 
         if ($config['settings']['bootstrap']) {
-            $this->createDirectory($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
+            $this->createDirectoryFor($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
 
             // generate bootstrap
-            $this->save(
+            $this->createFile(
                 $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
                 "<?php\n",
                 true
@@ -75,14 +75,14 @@ class GenerateSuite extends Command
         $actorName = $this->removeSuffix($actor, $config['actor']);
         $config['class_name'] = $actorName . $config['actor'];
 
-        $file = $this->createDirectory(
+        $file = $this->createDirectoryFor(
             Configuration::supportDir() . "Helper",
             "$actorName.php"
         ) . "$actorName.php";
 
         $gen = new Helper($actorName, $config['namespace']);
         // generate helper
-        $this->save(
+        $this->createFile(
             $file,
             $gen->produce()
         );
@@ -96,7 +96,7 @@ modules:
         - {{helper}}
 EOF;
 
-        $this->save(
+        $this->createFile(
             $dir . $suite . '.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
                 ->place('actor', $config['class_name'])
@@ -109,13 +109,13 @@ EOF;
 
         $content = $actorGenerator->produce();
 
-        $file = $this->createDirectory(
+        $file = $this->createDirectoryFor(
             Configuration::supportDir(),
             $config['class_name']
-        ) . $this->getClassName($config['class_name']);
+        ) . $this->getShortClassName($config['class_name']);
         $file .=  '.php';
 
-        $this->save($file, $content);
+        $this->createFile($file, $content);
 
         $output->writeln("Actor <info>" . $config['class_name'] . "</info> was created in $file");
 
