@@ -8,7 +8,7 @@ class GenerateTestTest extends BaseCommandRunner
     {
         $this->makeCommand('\Codeception\Command\GenerateTest');
         $this->config = array(
-            'class_name' => 'HobbitGuy',
+            'actor' => 'HobbitGuy',
             'path' => 'tests/shire',
         );
     }
@@ -44,7 +44,7 @@ class GenerateTestTest extends BaseCommandRunner
         $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHillTest.php'));
         $this->assertEquals('tests/shire/HallUnderTheHillTest.php', $this->filename);
         $this->assertContains('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
-        $this->assertContains('protected $guy;', $this->content);
+        $this->assertContains('protected $tester;', $this->content);
         $this->assertContains('@var \HobbitGuy', $this->content);
         $this->assertContains('Test was created in tests/shire/HallUnderTheHillTest.php', $this->output);
     }

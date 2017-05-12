@@ -54,7 +54,6 @@ class GenerateSuite extends Command
         if (!$actor) {
             $actor = ucfirst($suite) . $config['actor_suffix'];
         }
-        $actorClass = $actor;
 
         $dir = Configuration::testsDir();
         if (file_exists($dir . $suite . '.suite.yml')) {
@@ -72,15 +71,14 @@ class GenerateSuite extends Command
             );
         }
 
-        $actorName = $this->removeSuffix($actor, $config['actor_suffix']);
-        $actorClass = $actorName . $config['actor_suffix'];
+        $helperName = ucfirst($suite);
 
         $file = $this->buildPath(
             Configuration::supportDir() . "Helper",
-            "$actorName.php"
-        ) . "$actorName.php";
+            "$helperName.php"
+        ) . "$helperName.php";
 
-        $gen = new Helper($actorName, $config['namespace']);
+        $gen = new Helper($helperName, $config['namespace']);
         // generate helper
         $this->save(
             $file,
@@ -99,7 +97,7 @@ EOF;
         $this->save(
             $dir . $suite . '.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
-                ->place('actor', $actorClass)
+                ->place('actor', $actor)
                 ->place('helper', $gen->getHelperName())
                 ->produce()
         );
@@ -111,13 +109,13 @@ EOF;
 
         $file = $this->buildPath(
             Configuration::supportDir(),
-            $actorClass
-        ) . $this->getClassName($actorClass);
+                $actor
+        ) . $this->getClassName($actor);
         $file .=  '.php';
 
         $this->save($file, $content);
 
-        $output->writeln("Actor <info>" . $actorClass . "</info> was created in $file");
+        $output->writeln("Actor <info>" . $actor . "</info> was created in $file");
 
         $output->writeln("Suite config <info>$suite.suite.yml</info> was created.");
         $output->writeln(' ');

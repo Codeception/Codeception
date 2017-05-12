@@ -65,11 +65,10 @@ class Configuration
      * @var array Default config
      */
     public static $defaultConfig = [
-        'actor_suffix'=> 'Guy', // Codeception 1.x compatibility
+        'actor_suffix'=> 'Tester',
         'namespace'  => '',
         'include'    => [],
-        'paths'      => [
-        ],
+        'paths'      => [],
         'suites'     => [],
         'modules'    => [],
         'extensions' => [
@@ -86,14 +85,14 @@ class Configuration
         ],
         'groups'     => [],
         'settings'   => [
-            'colors'     => false,
-            'bootstrap'  => false,
-            'strict_xml' => false,
-            'lint'       => true,
-            'backup_globals' => true,
-            'log_incomplete_skipped' => false,
-            'report_useless_tests' => false,
-            'disallow_test_output' => false,
+            'colors'                    => false,
+            'bootstrap'                 => false,
+            'strict_xml'                => false,
+            'lint'                      => true,
+            'backup_globals'            => true,
+            'log_incomplete_skipped'    => false,
+            'report_useless_tests'      => false,
+            'disallow_test_output'      => false,
             'be_strict_about_changes_to_global_state' => false
         ],
         'coverage'   => [],
@@ -103,7 +102,7 @@ class Configuration
 
     public static $defaultSuiteSettings = [
         'actor'       => null,
-        'class_name'  => null, // Codeception >2.3 compatibility
+        'class_name'  => null, // Codeception <2.3 compatibility
         'modules'     => [
             'enabled' => [],
             'config'  => [],

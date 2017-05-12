@@ -8,7 +8,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
     {
         $this->makeCommand('\Codeception\Command\GeneratePageObject');
         $this->config = array(
-            'class_name' => 'HobbitGuy',
+            'actor' => 'HobbitGuy',
             'path' => 'tests/shire',
             'paths' => array('tests' => 'tests'),
             'settings' => array('bootstrap' => '_bootstrap.php')

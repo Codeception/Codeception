@@ -59,7 +59,7 @@ EOF;
             ->place('namespace', $ns)
             ->place('name', $this->getShortClassName($this->name))
             ->place('actorClass', $actor)
-            ->place('actor', lcfirst(Configuration::config()['actor']))
+            ->place('actor', lcfirst(Configuration::config()['actor_suffix']))
             ->produce();
     }
 }
