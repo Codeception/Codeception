@@ -88,8 +88,8 @@ abstract class InitTemplate
     {
         $file = $this->createDirectoryFor(
                 $dir = $directory . DIRECTORY_SEPARATOR . "Helper",
-            "$name.php"
-        ) . "$name.php";
+                "$name.php"
+            ) . "$name.php";
 
         $gen = new Lib\Generator\Helper($name, $namespace);
         // generate helper
@@ -97,7 +97,7 @@ abstract class InitTemplate
             $file,
             $gen->produce()
         );
-        require_once  $file;
+        require_once $file;
         $this->sayInfo("$name helper has been created in $dir");
     }
 
@@ -119,10 +119,10 @@ abstract class InitTemplate
     protected function createActor($name, $directory, $suiteConfig)
     {
         $file = $this->createDirectoryFor(
-            $directory,
-            $name
-        ) . $this->getShortClassName($name);
-        $file .=  '.php';
+                $directory,
+                $name
+            ) . $this->getShortClassName($name);
+        $file .= '.php';
 
         $config = Configuration::mergeConfigs(Configuration::$defaultSuiteSettings, $suiteConfig);
 
