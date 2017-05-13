@@ -3,7 +3,6 @@
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
-use Codeception\Lib\Generator\Helper;
 use Symfony\Component\Yaml\Yaml;
 
 class Bootstrap extends InitTemplate
