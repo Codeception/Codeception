@@ -1,9 +1,9 @@
 <?php
+
 namespace Codeception\Command;
 
 use Codeception\InitTemplate;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,7 +34,7 @@ class Init extends Command
             chdir($input->getOption('dir'));
         }
         $template = $input->getArgument('template');
-        $className = 'Codeception\Template\\'.ucfirst($template);
+        $className = 'Codeception\Template\\' . ucfirst($template);
 
         if (!class_exists($className)) {
             throw new \Exception("Template from a $className can't be loaded; Init can't be executed");

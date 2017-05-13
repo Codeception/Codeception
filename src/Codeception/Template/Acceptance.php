@@ -62,7 +62,7 @@ class LoginCest
 }
 EOF;
 
-    
+
     public function setup()
     {
         $this->say("Let's prepare Codeception for acceptance testing");
