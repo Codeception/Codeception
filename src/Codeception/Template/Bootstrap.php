@@ -61,11 +61,10 @@ class Bootstrap extends InitTemplate
         $this->say("3. Create your first acceptance tests using <comment>codecept g:cest acceptance First</comment>");
         $this->say("4. Write first test in <bold>tests/acceptance/FirstCest.php</bold>");
         $this->say("5. Run tests using: <comment>codecept run</comment>");
-
     }
 
     protected function createDirs()
-     {
+    {
          $this->createDirectoryFor('tests');
          $this->createEmptyDirectory($this->outputDir);
          $this->createEmptyDirectory($this->dataDir);
@@ -73,8 +72,7 @@ class Bootstrap extends InitTemplate
          $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . "Helper");
          $this->gitIgnore('tests/_output');
          $this->gitIgnore('tests/_support/_generated');
-
-     }
+    }
 
     protected function createFunctionalSuite($actor = 'Functional')
     {
@@ -158,8 +156,7 @@ EOF;
     {
         $this->createDirectoryFor("tests/$suite", "$suite.suite.yml");
         $this->createHelper($actor, $this->supportDir);
-        $this->createActor($actor . $this->actorSuffix, $this->supportDir, Yaml::parse($config));
+        $this->createActor($actor . $this->actorSuffix1, $this->supportDir, Yaml::parse($config));
         $this->createFile('tests' . DIRECTORY_SEPARATOR . "$suite.suite.yml", $config);
     }
-
 }
