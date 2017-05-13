@@ -65,6 +65,7 @@ EOF;
 
     public function setup()
     {
+        $this->checkInstalled();
         $this->say("Let's prepare Codeception for acceptance testing");
         $this->say("Create your tests and run them in real browser");
         $this->say("");

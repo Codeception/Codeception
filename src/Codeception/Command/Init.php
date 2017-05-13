@@ -18,7 +18,9 @@ class Init extends Command
         $this->setDefinition(
             [
                 new InputArgument('template', InputArgument::REQUIRED, 'Init template for the setup'),
-                new InputOption('dir', null, InputOption::VALUE_REQUIRED, 'Change current directory', null),
+                new InputOption('path', null, InputOption::VALUE_REQUIRED, 'Change current directory', null),
+                new InputOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers\'', null),
+
             ]
         );
     }
@@ -30,9 +32,6 @@ class Init extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('dir')) {
-            chdir($input->getOption('dir'));
-        }
         $template = $input->getArgument('template');
         $className = 'Codeception\Template\\' . ucfirst($template);
 
@@ -43,6 +42,9 @@ class Init extends Command
         $initProcess = new $className($input, $output);
         if (!$initProcess instanceof InitTemplate) {
             throw new \Exception("$className is not a valid template");
+        }
+        if ($input->getOption('path')) {
+            $initProcess->initDir($input->getOption('path'));
         }
         $initProcess->setup();
     }

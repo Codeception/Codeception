@@ -16,14 +16,12 @@ class BootstrapCest
         $I->executeCommand('bootstrap');
         $I->seeFileFound('codeception.yml');
         $this->checkFilesCreated($I);
-        $I->seeInShellOutput('Building Actor classes for suites');
     }
 
     public function bootstrapWithNamespace(\CliGuy $I)
     {
         $I->executeCommand('bootstrap --namespace Generated');
 
-        $I->seeInShellOutput('Building Actor classes for suites');
         $I->seeFileFound('codeception.yml');
         $I->seeInThisFile('namespace: Generated');
         $I->dontSeeInThisFile('namespace Generated\\');
@@ -55,15 +53,10 @@ class BootstrapCest
         $I->seeDirFound('tests/_support');
         $I->seeDirFound('tests/_data');
         $I->seeDirFound('tests/_output');
-        $I->seeDirFound('tests/_envs');
 
         $I->seeFileFound('functional.suite.yml', 'tests');
         $I->seeFileFound('acceptance.suite.yml', 'tests');
         $I->seeFileFound('unit.suite.yml', 'tests');
-
-        $I->seeFileFound('_bootstrap.php', 'tests/acceptance');
-        $I->seeFileFound('_bootstrap.php', 'tests/functional');
-        $I->seeFileFound('_bootstrap.php', 'tests/unit');
 
         $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
         $I->seeFileFound('FunctionalTester.php', 'tests/_support');

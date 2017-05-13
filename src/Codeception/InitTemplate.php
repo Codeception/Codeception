@@ -18,6 +18,21 @@ abstract class InitTemplate
     const GIT_IGNORE = '.gitignore';
 
     /**
+     * @var string
+     */
+    protected $namespace = '';
+
+    /**
+     * @var string
+     */
+    protected $actorSuffix = 'Tester';
+
+    /**
+     * @var string
+     */
+    protected $workDir = '.';
+
+    /**
      * @var InputInterface
      */
     protected $input;
@@ -32,6 +47,15 @@ abstract class InitTemplate
         $this->input = $input;
         $this->addStyles($output);
         $this->output = $output;
+    }
+
+    public function initDir($workDir)
+    {
+        $this->checkInstalled($workDir);
+        $this->sayInfo("Initializing Codeception in $workDir");
+        $this->createDirectoryFor($workDir);
+        chdir($workDir);
+        $this->workDir = $workDir;
     }
 
     abstract public function setup();
@@ -84,14 +108,14 @@ abstract class InitTemplate
         $this->say("<debug>> $message</debug>");
     }
 
-    protected function createHelper($name, $directory, $namespace = null)
+    protected function createHelper($name, $directory)
     {
         $file = $this->createDirectoryFor(
                 $dir = $directory . DIRECTORY_SEPARATOR . "Helper",
                 "$name.php"
             ) . "$name.php";
 
-        $gen = new Lib\Generator\Helper($name, $namespace);
+        $gen = new Lib\Generator\Helper($name, $this->namespace);
         // generate helper
         $this->createFile(
             $file,
@@ -109,11 +133,16 @@ abstract class InitTemplate
 
     protected function gitIgnore($path)
     {
-        if (!file_exists(self::GIT_IGNORE)) {
-            return;
+        if (file_exists(self::GIT_IGNORE)) {
+            file_put_contents($path . DIRECTORY_SEPARATOR . self::GIT_IGNORE, "*\n!" . self::GIT_IGNORE);
         }
-        file_put_contents(self::GIT_IGNORE, $path . "\r\n", FILE_APPEND);
-        $this->sayInfo("Added $path to " . self::GIT_IGNORE);
+    }
+
+    protected function checkInstalled($dir = '.')
+    {
+        if (file_exists($dir . DIRECTORY_SEPARATOR . 'codeception.yml') || file_exists($dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml')) {
+            throw new \Exception("Codeception is already installed in this directory");
+        }
     }
 
     protected function createActor($name, $directory, $suiteConfig)
@@ -124,6 +153,7 @@ abstract class InitTemplate
             ) . $this->getShortClassName($name);
         $file .= '.php';
 
+        $suiteConfig['namespace'] = $this->namespace;
         $config = Configuration::mergeConfigs(Configuration::$defaultSuiteSettings, $suiteConfig);
 
         $actorGenerator = new Lib\Generator\Actor($config);
