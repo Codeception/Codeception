@@ -10,14 +10,16 @@ trait FileSystem
     protected function createDirectoryFor($basePath, $className = '')
     {
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR);
-        $className = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $className);
-        $path = $basePath . DIRECTORY_SEPARATOR . $className;
-        $path = pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
-        if (!file_exists($path)) {
-            // Second argument should be mode. Well, umask() doesn't seem to return any if not set. Config may fix this.
-            mkdir($path, 0775, true); // Third parameter commands to create directories recursively
+        if ($className) {
+            $className = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $className);
+            $path = $basePath . DIRECTORY_SEPARATOR . $className;
+            $basePath = pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
         }
-        return $path;
+        if (!file_exists($basePath)) {
+            // Second argument should be mode. Well, umask() doesn't seem to return any if not set. Config may fix this.
+            mkdir($basePath, 0775, true); // Third parameter commands to create directories recursively
+        }
+        return $basePath;
     }
 
     protected function completeSuffix($filename, $suffix)
