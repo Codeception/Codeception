@@ -156,7 +156,7 @@ EOF;
     {
         $this->createDirectoryFor("tests/$suite", "$suite.suite.yml");
         $this->createHelper($actor, $this->supportDir);
-        $this->createActor($actor . $this->actorSuffix1, $this->supportDir, Yaml::parse($config));
+        $this->createActor($actor . $this->actorSuffix, $this->supportDir, Yaml::parse($config));
         $this->createFile('tests' . DIRECTORY_SEPARATOR . "$suite.suite.yml", $config);
     }
 }
