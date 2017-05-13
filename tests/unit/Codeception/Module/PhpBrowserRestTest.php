@@ -124,6 +124,16 @@ class PhpBrowserRestTest extends Unit
         $this->module->seeResponseContainsJson(array('id' => 1));
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/4202
+     */
+    public function testSeeResponseContainsJsonFailsGracefullyWhenJsonResultIsNotArray()
+    {
+        $this->shouldFail();
+        $this->setStubResponse(json_encode('no_status'));
+        $this->module->seeResponseContainsJson(array('id' => 1));
+    }
+
     public function testDontSeeInJson()
     {
         $this->setStubResponse('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}}}');
