@@ -7,20 +7,18 @@ use Symfony\Component\Yaml\Yaml;
 
 trait Config
 {
-    protected function getSuiteConfig($suite, $conf)
+    protected function getSuiteConfig($suite)
     {
-        $config = Configuration::config($conf);
-        return Configuration::suiteSettings($suite, $config);
+        return Configuration::suiteSettings($suite, $this->getGlobalConfig());
     }
 
-    protected function getGlobalConfig($conf)
+    protected function getGlobalConfig($conf = null)
     {
         return Configuration::config($conf);
     }
 
-    protected function getSuites($conf)
+    protected function getSuites($conf = null)
     {
-        Configuration::config($conf);
         return Configuration::suites();
     }
 

@@ -166,6 +166,22 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->dontSeeLink('Next', 'http://codeception.com/');
     }
 
+    public function testSeeLinkMatchesRelativeLink()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->seeLink('Sign in!', '/login');
+    }
+
+    public function testDontSeeLinkMatchesRelativeLink()
+    {
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            "Link containing text 'Sign in!' and URL '/login' was found in page /info"
+        );
+        $this->module->amOnPage('/info');
+        $this->module->dontSeeLink('Sign in!', '/login');
+    }
+
     public function testClick()
     {
         $this->module->amOnPage('/');
@@ -1622,5 +1638,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/basehref');
         $this->module->click('Relative Form');
         $this->module->seeCurrentUrlEquals('/form/example5');
+    }
+
+    public function testAttachFileThrowsCorrectMessageWhenFileDoesNotExist()
+    {
+        $filename = 'does-not-exist.jpg';
+        $expectedMessage = 'File does not exist: ' . codecept_data_dir($filename);
+        $this->setExpectedException('InvalidArgumentException', $expectedMessage);
+
+        $this->module->amOnPage('/form/file');
+        $this->module->attachFile('Avatar', $filename);
     }
 }

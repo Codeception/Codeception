@@ -12,4 +12,8 @@ $I->seeInThisFile('<testcase name="testMe" class="PassingTest"');
 $I->seeInThisFile('<testcase name="testIsTriangle with data set #0" class="DataProvidersTest" '.
     'file="' . realpath($testsPath . '/data/sandbox/tests/unit/DataProvidersTest.php') .'" ');
 $I->seeInThisFile('<testcase name="testOne" class="DependsTest"');
-$I->seeInThisFile('<failure type="PHPUnit_Framework_ExpectationFailedException">FailingTest::testMe');
+if (class_exists('PHPUnit\Framework\ExpectationFailedException')) {
+    $I->seeInThisFile('<failure type="PHPUnit\Framework\ExpectationFailedException">FailingTest::testMe');
+} else {
+    $I->seeInThisFile('<failure type="PHPUnit_Framework_ExpectationFailedException">FailingTest::testMe');
+}

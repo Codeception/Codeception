@@ -36,6 +36,32 @@ $I->selectOption(['model' => 'customerId'], '3');
 
 ## Actions
 
+### _findClickable
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Locates a clickable element.
+
+Use it in Helpers or GroupObject or Extension classes:
+
+```php
+<?php
+$module = $this->getModule('WebDriver');
+$page = $module->webDriver;
+
+// search a link or button on a page
+$el = $module->_findClickable($page, 'Click Me');
+
+// search a link or button within an element
+$topBar = $module->_findElements('.top-bar')[0];
+$el = $module->_findClickable($topBar, 'Click Me');
+
+```
+ * `param` $page WebDriver instance or an element to search within
+ * `param` $link a link text or locator to click
+ * `return` WebDriverElement
+
+
 ### _findElements
 
 *hidden API method, expected to be used from Helper classes*
@@ -79,6 +105,23 @@ Uri of currently opened page.
  
 Returns URL of a host.
 @throws ModuleConfigException
+
+
+### _restart
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Restarts a web browser.
+Can be used with `_reconfigure` to open browser with different configuration
+
+```php
+<?php
+// inside a Helper
+$this->getModule('WebDriver')->_restart(); // just restart
+$this->getModule('WebDriver')->_restart(['browser' => $browser]); // reconfigure + restart
+```
+
+ * `param array` $config
 
 
 ### _savePageSource
@@ -298,6 +341,18 @@ $I->clickWithRightButton(['css' => '.checkout'], 20, 50);
 @throws \Codeception\Exception\ElementNotFound
 
 
+### closeTab
+ 
+Closes current browser tab and switches to previous active tab.
+
+```php
+<?php
+$I->closeTab();
+```
+
+Can't be used with PhantomJS
+
+
 ### debugWebDriverLogs
  
 Print out latest Selenium Logs in debug mode
@@ -412,6 +467,7 @@ $I->dontSeeElement('input', ['value' => '123456']);
 Opposite of `seeElementInDOM`.
 
  * `param` $selector
+ * `param array` $attributes
 
 
 ### dontSeeInCurrentUrl
@@ -620,13 +676,6 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
  * `param` $value
 
 
-### getVisibleText
- 
-Grabs all visible text from the current page.
-
- * `return` string
-
-
 ### grabAttributeFrom
  
 Grabs the value of the given attribute value from the given element.
@@ -694,6 +743,15 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `param` $cssOrXpath
  * `param` $attribute
  * `return` string[]
+
+
+### grabPageSource
+ 
+Grabs current page source code.
+
+@throws ModuleException if no page was opened.
+
+ * `return` string Current page source code.
 
 
 ### grabTextFrom
@@ -791,6 +849,21 @@ $I->moveMouseOver(['css' => '.checkout'], 20, 50);
 @throws \Codeception\Exception\ElementNotFound
 
 
+### openNewTab
+ 
+Opens a new browser tab (wherever it is possible) and switches to it.
+
+```php
+<?php
+$I->openNewTab();
+```
+Tab is opened by using `window.open` javascript in a browser.
+Please note, that adblock can restrict creating such tabs.
+
+Can't be used with PhantomJS
+
+
+
 ### pauseExecution
  
 Pauses test execution in debug mode.
@@ -798,6 +871,51 @@ To proceed test press "ENTER" in console.
 
 This method is useful while writing tests,
 since it allows you to inspect the current page in the middle of a test case.
+
+
+### performOn
+ 
+Waits for element and runs a sequence of actions inside its context.
+Actions can be defined with array, callback, or `Codeception\Util\ActionSequence` instance.
+
+Actions as array are recommended for simple to combine "waitForElement" with assertions;
+`waitForElement($el)` and `see('text', $el)` can be simplified to:
+
+```php
+<?php
+$I->performOn($el, ['see' => 'text']);
+```
+
+List of actions can be pragmatically build using `Codeception\Util\ActionSequence`:
+
+```php
+<?php
+$I->performOn('.model', ActionSequence::build()
+    ->see('Warning')
+    ->see('Are you sure you want to delete this?')
+    ->click('Yes')
+);
+```
+
+Actions executed from array or ActionSequence will print debug output for actions, and adds an action name to
+exception on failure.
+
+Whenever you need to define more actions a callback can be used. A WebDriver module is passed for argument:
+
+```php
+<?php
+$I->performOn('.rememberMe', function (WebDriver $I) {
+     $I->see('Remember me next time');
+     $I->seeElement('#LoginForm_rememberMe');
+     $I->dontSee('Login');
+});
+```
+
+In 3rd argument you can set number a seconds to wait for element to appear
+
+ * `param` $element
+ * `param` $actions
+ * `param int` $timeout
 
 
 ### pressKey
@@ -999,6 +1117,7 @@ $I->seeElementInDOM('//form/input[type=hidden]');
 ```
 
  * `param` $selector
+ * `param array` $attributes
 
 
 ### seeInCurrentUrl
@@ -1118,6 +1237,8 @@ Checks that the active JavaScript popup,
 as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
 
  * `param` $text
+
+@throws \Codeception\Exception\ModuleException
 
 
 ### seeInSource
@@ -1431,6 +1552,42 @@ $I->switchToIFrame();
  * `param string|null` $name
 
 
+### switchToNextTab
+ 
+Switches to next browser tab.
+An offset can be specified.
+
+```php
+<?php
+// switch to next tab
+$I->switchToNextTab();
+// switch to 2nd next tab
+$I->switchToNextTab(2);
+```
+
+Can't be used with PhantomJS
+
+ * `param int` $offset 1
+
+
+### switchToPreviousTab
+ 
+Switches to next browser tab.
+An offset can be specified.
+
+```php
+<?php
+// switch to previous tab
+$I->switchToNextTab();
+// switch to 2nd previous tab
+$I->switchToNextTab(-2);
+```
+
+Can't be used with PhantomJS
+
+ * `param int` $offset 1
+
+
 ### switchToWindow
  
 Switch to another window identified by name.
@@ -1452,7 +1609,9 @@ $I->switchToWindow();
 ?>
 ```
 
-If the window has no name, the only way to access it is via the `executeInSelenium()` method, like so:
+If the window has no name, match it by switching to next active tab using `switchToNextTab` method.
+
+Or use native Selenium functions to get access to all opened windows:
 
 ``` php
 <?php
@@ -1472,6 +1631,8 @@ $I->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webd
 Enters text into a native JavaScript prompt popup, as created by `window.prompt`.
 
  * `param` $keys
+
+@throws \Codeception\Exception\ModuleException
 
 
 ### uncheckOption

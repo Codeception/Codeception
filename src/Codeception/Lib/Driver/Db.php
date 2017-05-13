@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Lib\Driver;
 
+use Codeception\Exception\ModuleException;
+
 class Db
 {
     /**
@@ -15,11 +17,6 @@ class Db
 
     protected $user;
     protected $password;
-
-    /**
-     * @var string
-     */
-    public $sqlToRun;
 
     /**
      * associative array with table name => primary-key
@@ -123,10 +120,13 @@ class Db
             $query .= "\n" . rtrim($sqlLine);
 
             if (substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
-                $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
-                $this->sqlQuery($this->sqlToRun);
-                $query = "";
+                $this->sqlQuery(substr($query, 0, -1 * $delimiterLength));
+                $query = '';
             }
+        }
+
+        if ($query !== '') {
+            $this->sqlQuery($query);
         }
     }
 
@@ -214,7 +214,14 @@ class Db
 
     protected function sqlQuery($query)
     {
-        $this->dbh->exec($query);
+        try {
+            $this->dbh->exec($query);
+        } catch (\PDOException $e) {
+            throw new ModuleException(
+                'Codeception\Module\Db',
+                $e->getMessage() . "\nSQL query being executed: " . $query
+            );
+        }
     }
 
     public function executeQuery($query, array $params)

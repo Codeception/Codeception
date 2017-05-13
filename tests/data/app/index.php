@@ -37,6 +37,7 @@ $urls = array(
     '/somepath/info' => 'info',
     '/facebook\??.*' => 'facebookController',
     '/form/(.*?)(#|\?.*?)?' => 'form',
+    '/user-agent' => 'userAgent',
     '/articles\??.*' => 'articles',
     '/auth' => 'httpAuth',
     '/register' => 'register',
@@ -46,7 +47,8 @@ $urls = array(
     '/external_url' => 'external_url',
     '/iframe' => 'iframe',
     '/basehref' => 'basehref',
-    '/jserroronload' => 'jserroronload'
+    '/jserroronload' => 'jserroronload',
+    '/minimal' => 'minimal',
 );
 
 glue::stick($urls);

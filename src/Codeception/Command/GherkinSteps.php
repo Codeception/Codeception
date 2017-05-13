@@ -42,7 +42,7 @@ class GherkinSteps extends Command
     {
         $this->addStyles($output);
         $suite = $input->getArgument('suite');
-        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite);
         $config['describe_steps'] = true;
 
         $loader = new Gherkin($config);

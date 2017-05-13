@@ -53,10 +53,22 @@ class ZendExpressive extends Framework
     public function _initialize()
     {
         $cwd = getcwd();
-        chdir(Configuration::projectDir());
-        $this->container = require Configuration::projectDir() . $this->config['container'];
+        $projectDir = Configuration::projectDir();
+        chdir($projectDir);
+        $this->container = require $projectDir . $this->config['container'];
+        $app = $this->container->get('Zend\Expressive\Application');
+
+        $pipelineFile = $projectDir . 'config/pipeline.php';
+        if (file_exists($pipelineFile)) {
+            require $pipelineFile;
+        }
+        $routesFile = $projectDir . 'config/routes.php';
+        if (file_exists($routesFile)) {
+            require $routesFile;
+        }
         chdir($cwd);
-        $this->application = $this->container->get('Zend\Expressive\Application');
+
+        $this->application = $app;
         $this->initResponseCollector();
     }
 

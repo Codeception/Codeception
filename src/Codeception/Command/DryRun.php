@@ -38,7 +38,6 @@ class DryRun extends Command
             [
                 new InputArgument('suite', InputArgument::REQUIRED, 'suite to scan for feature files'),
                 new InputArgument('test', InputArgument::OPTIONAL, 'tests to be loaded'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
             ]
         );
         parent::configure();
@@ -55,11 +54,11 @@ class DryRun extends Command
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
 
-        $config = Configuration::config($input->getOption('config'));
+        $config = $this->getGlobalConfig();
         if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
             list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
-        $settings = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $settings = $this->getSuiteConfig($suite);
 
         $dispatcher = new EventDispatcher();
         $dispatcher->addSubscriber(new ConsolePrinter([

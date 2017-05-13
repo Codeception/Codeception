@@ -44,7 +44,6 @@ modules:
         - DataFactory:
             factories: tests/_support/factories
             depends: Yii2
-            cleanup: true
 ```
 
 (you can also use Laravel5 and Phalcon).

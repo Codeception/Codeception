@@ -42,7 +42,7 @@ class GenerateSuite extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->addStyles($output);
-        $suite = lcfirst($input->getArgument('suite'));
+        $suite = $input->getArgument('suite');
         $actor = $input->getArgument('actor');
 
         if ($this->containsInvalidCharacters($suite)) {
@@ -50,7 +50,7 @@ class GenerateSuite extends Command
             return;
         }
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
+        $config = $this->getGlobalConfig();
         if (!$actor) {
             $actor = ucfirst($suite) . $config['actor'];
         }
@@ -61,14 +61,17 @@ class GenerateSuite extends Command
             throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
 
-        $this->buildPath($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
+        if ($config['settings']['bootstrap']) {
+            $this->buildPath($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
 
-        // generate bootstrap
-        $this->save(
-            $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
-            "<?php\n// Here you can initialize variables that will be available to your tests\n",
-            true
-        );
+            // generate bootstrap
+            $this->save(
+                $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
+                "<?php\n",
+                true
+            );
+        }
+
         $actorName = $this->removeSuffix($actor, $config['actor']);
         $config['class_name'] = $actorName . $config['actor'];
 

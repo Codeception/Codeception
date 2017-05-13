@@ -216,7 +216,7 @@ class Run extends Command
         $this->output = $output;
 
         // load config
-        $config = $this->getGlobalConfig($this->options['config']);
+        $config = $this->getGlobalConfig();
 
         // update config from options
         if (count($this->options['override'])) {
@@ -373,9 +373,13 @@ class Run extends Command
     protected function matchTestFromFilename($filename, $tests_path)
     {
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
-        $res = preg_match("~^$tests_path/(.*?)/(.*)$~", $filename, $matches);
+        $res = preg_match("~^$tests_path/(.*?)(?>/(.*))?$~", $filename, $matches);
+
         if (!$res) {
             throw new \InvalidArgumentException("Test file can't be matched");
+        }
+        if (!isset($matches[2])) {
+            $matches[2] = null;
         }
 
         return $matches;

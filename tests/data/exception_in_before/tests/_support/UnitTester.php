@@ -23,4 +23,12 @@ class UnitTester extends \Codeception\Actor
    /**
     * Define custom actions here
     */
+
+    /**
+     * @When exception is thrown
+     */
+    public function exceptionIsThrown()
+    {
+        throw new \RuntimeException('in gherkin');
+    }
 }

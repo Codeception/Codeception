@@ -259,3 +259,14 @@ class jserroronload {
         include __DIR__.'/view/jserroronload.php';
     }
 }
+
+class userAgent {
+    function GET() {
+        echo $_SERVER['HTTP_USER_AGENT'];
+    }
+}
+class minimal {
+    function GET() {
+        include __DIR__.'/view/minimal.php';
+    }
+}

@@ -1,11 +1,12 @@
 <?php
 
 use \Codeception\Lib\Driver\Db;
+use \Codeception\Test\Unit;
 
 /**
  * @group appveyor
  */
-class PostgresTest extends \PHPUnit_Framework_TestCase
+class PostgresTest extends Unit
 {
     protected static $config = [
         'dsn' => 'pgsql:host=localhost;dbname=codeception_test',
@@ -146,5 +147,17 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
             'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
         );
         $this->postgres->getPrimaryColumn('composite_pk');
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/4059
+     */
+    public function testLoadDumpEndingWithoutDelimiter()
+    {
+        $newDriver = new \Codeception\Lib\Driver\PostgreSql(self::$config['dsn'], self::$config['user'], self::$config['password']);
+        $newDriver->load(['INSERT INTO empty_table VALUES(1, \'test\')']);
+        $res = $newDriver->getDbh()->query("select * from empty_table where field = 'test'");
+        $this->assertNotEquals(false, $res);
+        $this->assertNotEmpty($res->fetchAll());
     }
 }

@@ -265,8 +265,8 @@ Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
 
 Generates StepObject class. You will be asked for steps you want to implement.
 
-* `codecept g:stepobject acceptance AdminSteps`
-* `codecept g:stepobject acceptance UserSteps --silent` - skip action questions
+* `codecept g:step acceptance AdminSteps`
+* `codecept g:step acceptance UserSteps --silent` - skip action questions
 
 
 
@@ -289,6 +289,10 @@ Prints all steps from all Gherkin contexts for a specific suite
 codecept gherkin:steps acceptance
 ```
 
+
+
+
+## Completion
 
 
 

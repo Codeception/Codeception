@@ -1,3 +1,90 @@
+#### 2.2.11
+
+* [WebDriver] Added `_restart` method to restart browser with a new configuration. 
+* [WebDriver] Added `_findClickable` to public API so can be used from helpers. By @tiger-seo
+* [WebDriver] `seeLink` compares relative links correctly #4182
+* [Webdriver] fixed attachFile messages when the file does not exist by @Naktibalda
+* Fixed setting paths in environments and using `--override` options. By @kusnir. See #4143
+* [Yii1] Allow to set only host in `url` config. #4172 by @SG5. 
+* [Yii1] Allow to make requests end with slash. #4190 by @SG5
+* [Yii2] Allows use `InitDbFixture` feature #4201
+* [Yii2] Add missing YII2 lifecycle events. #4187
+* Don't run test if exception was thrown in `_before` of a module #4197 by @Naktibalda
+* [Mongo] Fixed parsing dbname. See #4186 by @retnek
+* [Mongo] Improved legacy driver check by @retnek. See #4178
+* [WebDriver][PhpBrowser][Frameworks] Added `grabPageSource` method by @Kolyunya 
+* [PhpBrowser][REST] Add DELETE method to supported form data request methods in Guzzle6 by
+* [PhpBrowser][REST] Restore request headers in multi-session testing. Fixes #4157 
+* Recorder Extension: Replace non-alphanumeric characters with underscores by @tiger-seo. Fixes Recorder on Windows
+* [REST] Documented different ways to upload files
+* Fixed `$scenario->current('name')` #4154 by @Naktibalda
+* [AMQP] Documented parameters of `declareQueue`, `declareExchange` by @Naktibalda
+* [Doctrine2] Safe prefix aliases for `buildAssociationQuery` by @jfxninja. See #4195
+* Fixed output of failed step by @Naktibalda #4135 http://phptest.club/t/seeelement-wierd-fail-message/1470
+* [WebDriver] fixed `friend->leave` method. Clearing base element on closing session. Fixes #4098
+* [Symfony] Make symfony bootstrap.php.cache optional for php version > 7 by @patrickjahns
+* Gherkin: Command `gherkin:snippets` to generate stub function name for non-english features. By @kuntashov 
+* Gherkin: Steps with PyString and with inline string argument considered the same. Fixes #4121 by @kuntashov
+* [Db] `Oci::cleanup()` should be able to drop objects with case sensitive name. By @pavelkovar 
+* [Db] loadDump reports sql statement which caused error, fixes regression from 2.2.10. See #4120. By @Naktibalda.
+* [Asserts] Add delta parameter to `assertEquals()` `assertNotEquals()` methods by @spideyfusion 
+* [Yii2] Removed check and notification for environment other than `test` by @samdark
+* [Yii2] Unload fixtures only if `cleanup` configuration equals true. #4207 by @Faryshta 
+* [ZF2] Removed `session_write_close()` from ZF2 module by @tasselchof. Fixes #4112
+* Fixed textual representation of can't steps by @Naktibalda
+* [Lumen] Added IoC methods from Laravel5 module: `haveBinding`, `haveSingleton`, `haveContextualBinding`, `haveInstance`, `haveApplicationHandler`, `clearApplicationHandlers`. By @kt81
+* [Lumen] Clear facade cache only when facade exists. Same change as #3124 for refactored Lumen module by @kt81
+* [ZendExpressive] Support Zend Expressive 2.0 by @Naktibalda
+* [Doctrine2] `haveFakeRepository` updated to work with Doctrine >= 2.5.7 by @laszlo-karpati #4212
+* Command `bootstrap` adds `support/_generated` to gitignore. By @Naktibalda
+
+#### 2.2.10
+
+* Prefer local composer installation if available. Solves issues with incompatibility between locally and globally installed or packaged in phar file Codeception dependencies. Fix by @Naktibalda See #3997
+* Added console completion by @gdscei. See [documentation](http://codeception.com/docs/07-AdvancedUsage#Shell-autocompletion)
+* [WebDriver] Fixed compatibility with `facebook/webdriver` 1.4.0 by @Naktibalda. See #4076 Fixes #4073
+* Run a suite by its path #4079
+   
+```
+codecept run tests/unit
+```   
+Improves recent [PHPStorm integration](https://blog.jetbrains.com/phpstorm/2017/03/codeception-support-comes-to-phpstorm-2017-1/). Codeception tests can be started by running a suite directory.
+   
+* [WebDriver] Fixed using `performOn` with `ActionSequence`; supporting multiple actions of same kind. #4066 by @davertmik. Fixes #4044
+* [Laravel5] Added `haveApplicationHandler` and `clearApplicationHandlers` methods. See #4068. By @janhenkgerritsen
+* [Laravel5] Close all Laravel DB connections after test execution. Fixes #4031 by @rmblstrp
+* [Laravel5] Update Laravel5 `database_migrations_path` to by null by default by @timbroder. Fixes #3990
+* [DataFactory] Add `cleanup` option to skip auto cleanup. By @alexpts. See #3996
+* Fixed printScenarioFail with multiple feature scenarios by @gimler. See #3868 
+* Fixed generating JUnit XML when Selenium server can’t be connected. Closes #3653 by @Naktibalda
+* Fixes running local suites (under tests folder) and included suite mixed (via include path). See #4063
+* [Db] Run the last statement in dump file even if it doesn't end with delimiter. #4071 by @Naktibalda. Fixes #4059
+* [Memcache] Fixed calling flush on null by @Jurigag. See #4074
+* [Yii2] Fixtures behavior compatibility with `yii2-codeception` by @leandrogehlen. See #4016
+* `g:suite` allows generate suites with uppercase names. Fixes #4072
+* Enabled incomplete/skipped/risky/warning settings for logger. See #3890. By @mario-naether 
+
+```yaml
+settings:
+    report_useless_tests: false
+    disallow_test_output: false
+    be_strict_about_changes_to_global_state: false
+    log_incomplete_skipped: false
+```
+* [WebDriver] Fixed double coverage cookie check by @boboldehampsink. See #2923 #4020
+* [WebDriver] Fixed `switchToIframe` regression from 2.2.9 by @lcobucci. PR #4000
+* Speed improvement for group lookup by @pitpit. See #4025
+* Added parse error to `TestParseException` in PHP7 by @Naktibalda. See #4007
+* Auto injection for `Codeception\Test\Unit` format #4070. Allows to customize injection of support objects into a testcase:  
+
+```php
+<?php
+public function _inject(UnitTester $unit)
+{
+    $this->i = $unit;
+}
+```
+
 #### 2.2.9
 
 * [Laravel5] **Laravel 5.4 support** by @janhenkgerritsen

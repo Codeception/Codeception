@@ -1,8 +1,9 @@
 <?php
 
 use \Codeception\Lib\Driver\Db;
+use \Codeception\Test\Unit;
 
-class SqliteTest extends \PHPUnit_Framework_TestCase
+class SqliteTest extends Unit
 {
     protected static $config = array(
         'dsn' => 'sqlite:tests/data/sqlite.db',
@@ -10,6 +11,9 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
         'password' => ''
     );
 
+    /**
+     * @var \Codeception\Lib\Driver\Sqlite
+     */
     protected static $sqlite;
     protected static $sql;
     
@@ -45,7 +49,7 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
             self::$sqlite->cleanup();
         }
     }
-    
+
     public function testCleanupDatabase()
     {
         $this->assertGreaterThan(
@@ -123,5 +127,17 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
         );
 
         Db::create('sqlite::memory:', '', '');
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/4059
+     */
+    public function testLoadDumpEndingWithoutDelimiter()
+    {
+        $newDriver = new \Codeception\Lib\Driver\Sqlite(self::$config['dsn'], '', '');
+        $newDriver->load(['INSERT INTO empty_table VALUES(1, "test")']);
+        $res = $newDriver->getDbh()->query("select * from empty_table where field = 'test'");
+        $this->assertNotEquals(false, $res);
+        $this->assertNotEmpty($res->fetchAll());
     }
 }

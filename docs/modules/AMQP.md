@@ -3,19 +3,10 @@
 
 This module interacts with message broker software that implements
 the Advanced Message Queuing Protocol (AMQP) standard. For example, RabbitMQ (tested).
-Use it to cleanup the queue between tests.
 
 <div class="alert alert-info">
-To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em> package.
+To use this module with Composer you need <em>"php-amqplib/php-amqplib": "~2.4"</em> package.
 </div>
-
-## Status
-* Maintainer: **davert**, **tiger-seo**
-* Stability: **alpha**
-* Contact: codecept@davert.mail.ua
-* Contact: tiger.seo@gmail.com
-
-*Please review the code of non-stable modules and provide patches if you have issues.*
 
 ## Config
 
@@ -42,20 +33,94 @@ To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em
 
 * connection - AMQPStreamConnection - current connection
 
-@since 1.1.2
-@author tiger.seo@gmail.com
-@author davert
-
 
 ## Actions
+
+### bindQueueToExchange
+ 
+Binds a queue to an exchange
+
+This is an alias of method `queue_bind` of `PhpAmqpLib\Channel\AMQPChannel`.
+
+```php
+<?php
+$I->bindQueueToExchange(
+    'nameOfMyQueueToBind', // name of the queue
+    'transactionTracking.transaction', // exchange name to bind to
+    'your.routing.key' // Optionally, provide a binding key
+)
+```
+
+ * `param string` $queue
+ * `param string` $exchange
+ * `param string` $routing_key
+ * `param bool` $nowait
+ * `param array` $arguments
+ * `param int` $ticket
+ * `return` mixed|null
+
+
+### declareExchange
+ 
+Declares an exchange
+
+This is an alias of method `exchange_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
+
+```php
+<?php
+$I->declareExchange(
+    'nameOfMyExchange', // exchange name
+    'topic' // exchange type
+)
+```
+
+ * `param string` $exchange
+ * `param string` $type
+ * `param bool` $passive
+ * `param bool` $durable
+ * `param bool` $auto_delete
+ * `param bool` $internal
+ * `param bool` $nowait
+ * `param array` $arguments
+ * `param int` $ticket
+ * `return` mixed|null
+
+
+### declareQueue
+ 
+Declares queue, creates if needed
+
+This is an alias of method `queue_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
+
+```php
+<?php
+$I->declareQueue(
+    'nameOfMyQueue', // exchange name
+)
+```
+
+ * `param string` $queue
+ * `param bool` $passive
+ * `param bool` $durable
+ * `param bool` $exclusive
+ * `param bool` $auto_delete
+ * `param bool` $nowait
+ * `param array` $arguments
+ * `param int` $ticket
+ * `return` mixed|null
+
 
 ### grabMessageFromQueue
  
 Takes last message from queue.
 
+``` php
+<?php
 $message = $I->grabMessageFromQueue('queue.emails');
+?>
+```
 
- * `param` $queue
+ * `param string` $queue
  * `return` AMQPMessage
 
 
@@ -80,6 +145,8 @@ $I->purgeQueue('queue.emails');
 ?>
 ```
 
+ * `param string` $queueName
+
 
 ### pushToExchange
  
@@ -94,9 +161,9 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'), 'severity');
 ?>
 ```
 
- * `param` $exchange
- * `param` $message string|AMQPMessage
- * `param` $routing_key
+ * `param string` $exchange
+ * `param string|AMQPMessage` $message
+ * `param string` $routing_key
 
 
 ### pushToQueue
@@ -110,48 +177,9 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
 ?>
 ```
 
- * `param` $queue
- * `param` $message string|AMQPMessage
+ * `param string` $queue
+ * `param string|AMQPMessage` $message
 
-
-### declareExchange
-
-Declares an exchange. This is an alias of method `exchange_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
-
-```php
-<?php
-$I->declareExchange(
-   'nameOfMyExchange', // exchange name
-   'topic' // exchange type
-   //.. see the original method for more options
-)
-```
-
-### declareQueue
-
-Declares a queue. This is an alias of method `queue_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
-
-```php
-<?php
-$I->declareQueue(
-    'nameOfMyQueue', // exchange name
-    //.. see the original method for more options
-)
-```
-
-### bindQueueToExchange
-
-Binds a queue to an exchange. This is an alias of method `queue_bind` of `PhpAmqpLib\Channel\AMQPChannel`.
-
-```php
-<?php
-$I->bindQueueToExchange(
-    'nameOfMyQueueToBind', // name of the queue
-    'transactionTracking.transaction', // exchange name to bind to
-    'your.routing.key' // Optionally, provide a binding key
-  //.. see the original method for more options
-)
-```
 
 ### seeMessageInQueueContainsText
  
@@ -167,7 +195,7 @@ $I->seeMessageInQueueContainsText('queue.emails','davert');
 ?>
 ```
 
- * `param` $queue
- * `param` $text
+ * `param string` $queue
+ * `param string` $text
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/AMQP.php">Help us to improve documentation. Edit module reference</a></div>

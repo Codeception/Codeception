@@ -9,7 +9,7 @@ php:
 matrix:
   include:
     - php: 5.4 # lowest versions of all dependencies
-      env: PHALCON=2.1.x SYMFONY=2.7.19 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.7.*
+      env: SYMFONY=2.7.19 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.7.*
     - php: 5.5
       env: dependencies=lowest SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.6
@@ -53,11 +53,10 @@ install:
   # Yii2
   - composer create-project "yiisoft/yii2-app-basic:@dev" frameworks-yii-basic --no-dev
   # Phalcon
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.1" ]] || [[ -z "$PHALCON" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b $PHALCON'
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.1" ]] || [[ ! -z "$PHALCON" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.1" ]] || (cd cphalcon/build; bash install &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null && cd ../..;)'
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.1" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.1" ]] || composer update -d frameworks-phalcon $composer_parameters'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-phalcon $composer_parameters'
   # Laravel 5
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-l5 $composer_parameters'
@@ -75,8 +74,8 @@ install:
   - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
   - composer update -d frameworks-zf2 $composer_parameters
   # Zend Expressive
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-zend-expressive $composer_parameters'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-zend-expressive $composer_parameters'
 
 before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
@@ -88,7 +87,7 @@ before_script:
   - 'php -S 127.0.0.1:8010 -t tests/data >/dev/null 2>&1 &'
   # Phalcon
   - mysql -e 'CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.1" ]] || cat frameworks-phalcon/schemas/phalcon_demo.sql | mysql phalcon_demo'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || cat frameworks-phalcon/schemas/phalcon_demo.sql | mysql phalcon_demo'
   # Laravel 5
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || touch frameworks-l5/storage/testing.sqlite'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php frameworks-l5/artisan migrate --env=testing --database=sqlite_testing --force'
@@ -104,13 +103,13 @@ before_script:
   - php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create
   # Build
   - php codecept build -c frameworks-yii-basic
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.1" ]] || php codecept build -c frameworks-phalcon'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-phalcon'
   - '[[ -z "$SYMFONY" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-lumen'
   - php codecept build -c frameworks-zf1
   - php codecept build -c frameworks-zf2
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-zend-expressive'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-zend-expressive'
 
 script:
   - php codecept run cli,unit # self tests
@@ -118,8 +117,10 @@ script:
   - php codecept run functional -c frameworks-yii-basic # Yii2 tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-l5 --skip=seeder' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.1" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
   - '[[ -z "$SYMFONY" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle '# Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
-  - php codecept run -c frameworks-zf2 functional,doctrine # ZF2 Tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-zend-expressive' # Zend Expressive Tests
+  #ZF2 run doctrine tests on PHP 5.4 and 5.5 only
+  - '[[ "$TRAVIS_PHP_VERSION" > "5.5" ]] || php codecept run -c frameworks-zf2 functional,doctrine'
+  - '[[ "$TRAVIS_PHP_VERSION" < "5.6" ]] || php codecept run -c frameworks-zf2 functional'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run functional -c frameworks-zend-expressive' # Zend Expressive Tests

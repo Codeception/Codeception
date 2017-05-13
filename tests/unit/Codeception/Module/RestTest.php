@@ -1,12 +1,13 @@
 <?php
 
+use Codeception\Test\Unit;
 use Codeception\Util\Stub as Stub;
 
 /**
  * Class RestTest
  * @group appveyor
  */
-class RestTest extends \PHPUnit_Framework_TestCase
+class RestTest extends Unit
 {
     /**
      * @var \Codeception\Module\REST

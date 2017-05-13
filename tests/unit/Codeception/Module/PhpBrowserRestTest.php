@@ -1,8 +1,9 @@
 <?php
 
+use Codeception\Test\Unit;
 use Codeception\Util\Stub as Stub;
 
-class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
+class PhpBrowserRestTest extends Unit
 {
     /**
      * @var \Codeception\Module\REST
@@ -268,6 +269,31 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseContains('host: "localhost:8010"');
 
         $this->module->haveHttpHeader('Host', 'www.example.com');
+        $this->module->sendGET('/rest/http-host/');
+        $this->module->seeResponseContains('host: "www.example.com"');
+    }
+
+    /**
+     * @Issue 4203 https://github.com/Codeception/Codeception/issues/4203
+     * @depends testHostHeader
+     */
+    public function testSessionHeaderBackup()
+    {
+        if (getenv('dependencies') === 'lowest') {
+            $this->markTestSkipped('This test can\'t pass with the lowest versions of dependencies');
+        }
+
+        $this->module->haveHttpHeader('Host', 'www.example.com');
+        $this->module->sendGET('/rest/http-host/');
+        $this->module->seeResponseContains('host: "www.example.com"');
+
+        $session = $this->phpBrowser->_backupSession();
+
+        $this->module->haveHttpHeader('Host', 'www.localhost.com');
+        $this->module->sendGET('/rest/http-host/');
+        $this->module->seeResponseContains('host: "www.localhost.com"');
+
+        $this->phpBrowser->_loadSession($session);
         $this->module->sendGET('/rest/http-host/');
         $this->module->seeResponseContains('host: "www.example.com"');
     }

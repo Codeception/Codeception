@@ -570,7 +570,7 @@ class RoboFile extends \Robo\Tasks
 
             copy($doc->getPathname(), 'package/site/' . $newfile);
 
-            $highlight_languages = implode('|', ['php', 'html', 'bash', 'yaml', 'json', 'xml', 'sql']);
+            $highlight_languages = implode('|', ['php', 'html', 'bash', 'yaml', 'json', 'xml', 'sql', 'gherkin']);
             $contents = preg_replace(
                 "~```\s?($highlight_languages)\b(.*?)```~ms",
                 "{% highlight $1 %}\n$2\n{% endhighlight %}",

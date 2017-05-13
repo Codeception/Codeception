@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
 use Codeception\Lib\Di;
+use Codeception\Lib\Generator\GherkinSnippets;
 use Codeception\Scenario;
 use Codeception\Step\Comment;
 use Codeception\Step\Meta;
@@ -91,6 +92,9 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     protected function validateStep(StepNode $stepNode)
     {
         $stepText = $stepNode->getText();
+        if (GherkinSnippets::stepHasPyStringArgument($stepNode)) {
+            $stepText .= ' ""';
+        }
         foreach ($this->steps as $pattern => $context) {
             $res = preg_match($pattern, $stepText);
             if (!$res) {
@@ -116,6 +120,11 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         $meta->setPrefix($stepNode->getKeyword());
         $this->scenario->setMetaStep($meta); // enable metastep
         $stepText = $stepNode->getText();
+        $hasPyStringArg = GherkinSnippets::stepHasPyStringArgument($stepNode);
+        if ($hasPyStringArg) {
+            // pretend it is inline argument
+            $stepText .= ' ""';
+        }
         $this->getScenario()->comment(null); // make metastep to be printed even if no steps in it
         foreach ($this->steps as $pattern => $context) {
             $matches = [];
@@ -123,6 +132,10 @@ class Gherkin extends Test implements ScenarioDriven, Reported
                 continue;
             }
             array_shift($matches);
+            if ($hasPyStringArg) {
+                // get rid off last fake argument
+                array_pop($matches);
+            }
             if ($stepNode->hasArguments()) {
                 $matches = array_merge($matches, $stepNode->getArguments());
             }

@@ -150,10 +150,10 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _initialize()
     {
-        if (!is_file(codecept_root_dir() . $this->config['configFile'])) {
+        if (!is_file(Configuration::projectDir() . $this->config['configFile'])) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "The application config file does not exist: " . codecept_root_dir() . $this->config['configFile']
+                "The application config file does not exist: " . Configuration::projectDir() . $this->config['configFile']
             );
         }
         $this->defineConstants();
@@ -184,7 +184,10 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->loadFixtures($test);
         }
 
-        if ($this->config['cleanup'] && $this->app->has('db') && $this->app->db instanceof \yii\db\Connection) {
+        if ($this->config['cleanup']
+            && $this->app->has('db')
+            && $this->app->db instanceof \yii\db\Connection
+        ) {
             $this->transaction = $this->app->db->beginTransaction();
         }
     }
@@ -196,12 +199,14 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     private function loadFixtures($test)
     {
-        if (method_exists($test, self::TEST_FIXTURES_METHOD)) {
+        if (empty($this->loadedFixtures)
+            && method_exists($test, self::TEST_FIXTURES_METHOD)
+        ) {
             $this->haveFixtures(call_user_func([$test, self::TEST_FIXTURES_METHOD]));
         }
     }
 
-    public function _after(\Codeception\TestInterface $test)
+    public function _after(TestInterface $test)
     {
         $_SESSION = [];
         $_FILES = [];
@@ -210,14 +215,17 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $_COOKIE = [];
         $_REQUEST = [];
 
-        foreach ($this->loadedFixtures as $fixture) {
-            $fixture->unloadFixtures();
-        }
-        $this->loadedFixtures = [];
+        if ($this->config['cleanup']) {
+            foreach ($this->loadedFixtures as $fixture) {
+                $fixture->unloadFixtures();
+            }
+            $this->loadedFixtures = [];
 
-        if ($this->transaction && $this->config['cleanup']) {
-            $this->transaction->rollback();
+            if ($this->transaction) {
+                $this->transaction->rollback();
+            }
         }
+        
 
         if ($this->client) {
             $this->client->resetPersistentVars();
@@ -287,6 +295,22 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      *      ],
      * ]);
      * ```
+     *
+     * Note: if you need to load fixtures before the test (probably before the cleanup transaction is started;
+     * `cleanup` options is `true` by default), you can specify fixtures with _fixtures method of a testcase
+     * ```php
+     * <?php
+     * // inside Cest file or Codeception\TestCase\Unit
+     * public function _fixtures(){
+     *     return [
+     *         'user' => [
+     *             'class' => UserFixture::className(),
+     *             'dataFile' => codecept_data_dir() . 'user.php'
+     *         ]
+     *     ];
+     * }
+     * ```
+     * instead of defining `haveFixtures` in Cest `_before`
      *
      * @param $fixtures
      * @part fixtures
@@ -646,9 +670,5 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         defined('YII_DEBUG') or define('YII_DEBUG', true);
         defined('YII_ENV') or define('YII_ENV', 'test');
         defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
-
-        if (YII_ENV !== 'test') {
-            Notification::warning("YII_ENV is not set to `test`, please add \n\n`define(\'YII_ENV\', \'test\');`\n\nto bootstrap file", 'Yii Framework');
-        }
     }
 }

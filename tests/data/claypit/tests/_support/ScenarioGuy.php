@@ -70,4 +70,19 @@ class ScenarioGuy extends \Codeception\Actor
             $this->seeThisFileMatches('~' . implode('.*?', $row) . '~');
         }
     }
+
+    /**
+     * @Then I see output :arg1
+     */
+     public function iSeeOutput($arg1)
+     {
+     }
+
+    /**
+     * @Then I print :arg1
+     */
+     public function iPrint($arg1)
+     {
+        echo "Argument: $arg1\n";
+     }
 }

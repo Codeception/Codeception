@@ -25,7 +25,7 @@ Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs
 <?
 $app = require __DIR__.'/path/to/app.php';
 $app['debug'] = true;
-$app['exception_handler']->disable();
+unset($app['exception_handler']);
 
 return $app; // optionally
 ?>
@@ -597,6 +597,15 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `param` $cssOrXpath
  * `param` $attribute
  * `return` string[]
+
+
+### grabPageSource
+ 
+Grabs current page source code.
+
+@throws ModuleException if no page was opened.
+
+ * `return` string Current page source code.
 
 
 ### grabService

@@ -109,6 +109,7 @@ class Bootstrap extends Command
 
         $output->writeln(" --- ");
         $this->ignoreFolderContent('tests/_output');
+        $this->ignoreFolderContent('tests/_support/_generated');
 
         file_put_contents('tests/_bootstrap.php', "<?php\n// This is global bootstrap for autoloading\n");
         $output->writeln("tests/_bootstrap.php written <- global bootstrap file");
@@ -140,16 +141,6 @@ class Bootstrap extends Command
             ],
             'extensions' => [
                 'enabled' => ['Codeception\Extension\RunFailed']
-            ],
-            'modules'  => [
-                'config' => [
-                    'Db' => [
-                        'dsn'      => '',
-                        'user'     => '',
-                        'password' => '',
-                        'dump'     => 'tests/_data/dump.sql'
-                    ]
-                ]
             ]
         ];
 
@@ -242,7 +233,7 @@ EOF;
         @mkdir('tests');
         @mkdir($this->logDir);
         @mkdir($this->dataDir);
-        @mkdir($this->supportDir);
+        @mkdir($this->supportDir . '/_generated', 0777, true);
         @mkdir($this->envsDir);
         file_put_contents(
             $this->dataDir . '/dump.sql',
