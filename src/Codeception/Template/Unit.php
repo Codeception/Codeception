@@ -9,15 +9,19 @@ use Symfony\Component\Yaml\Yaml;
 class Unit extends InitTemplate
 {
     protected $configTemplate = <<<EOF
+suites:
+    unit:
+        path: .
+{{tester}}
+settings:
+    shuffle: true
+    lint: true
 paths:
     tests: {{dir}}
     output: {{dir}}/_output
     support: {{dir}}/_support
     data: {{dir}}
-suites:
-    unit:
-        path: .
-{{tester}}        
+     
 EOF;
 
     protected $testerAndModules = <<<EOF
@@ -68,9 +72,12 @@ EOF;
 
         $this->say();
         $this->saySuccess("INSTALLATION COMPLETE");
+        $this->say();
+        $this->say('Unit tests will be executed in random order');
+        $this->say('Use @depends annotation to change the order of tests');
 
         if ($haveTester) {
-            $this->say('Enable more module in codeception.yml');
+            $this->say('Enable more modules in codeception.yml');
             $this->say('Access their methods via <bold>$this->tester</bold> object inside Codeception\Test\Unit');
         }
 
