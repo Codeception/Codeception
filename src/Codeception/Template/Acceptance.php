@@ -32,9 +32,9 @@ gherkin: []
 # additional paths
 paths:
     tests: {{baseDir}}
-    output: {{baseDir}}/output
-    data: {{baseDir}}/data
-    support: {{baseDir}}/support
+    output: {{baseDir}}/_output
+    data: {{baseDir}}/_data
+    support: {{baseDir}}/_support
 
 settings:
     shuffle: false
@@ -84,9 +84,9 @@ EOF;
         }
         $url = $this->ask("Start url for tests", "http://localhost");
 
-        $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . 'output');
-        $this->createEmptyDirectory($dir . DIRECTORY_SEPARATOR . 'data');
-        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . 'support');
+        $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
+        $this->createEmptyDirectory($dir . DIRECTORY_SEPARATOR . '_data');
+        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . '_support');
         $this->gitIgnore($outputDir);
         $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->sayInfo("Created test directories inside at $dir");
@@ -96,6 +96,11 @@ EOF;
             ->place('browser', $browser)
             ->place('baseDir', $dir)
             ->produce();
+
+        if ($this->namespace) {
+            $namespace = rtrim($this->namespace, '\\');
+            $configFile = "namespace: $namespace\n" . $configFile;
+        }
 
         $this->createFile('codeception.yml', $configFile);
         $this->createHelper('Acceptance', $supportDir);

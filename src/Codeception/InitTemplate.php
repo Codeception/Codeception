@@ -8,6 +8,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
 abstract class InitTemplate
@@ -82,10 +83,14 @@ abstract class InitTemplate
             $question .= " <info>(" . $answer[0] . ")</info> ";
             return $dialog->ask($this->input, $this->output, new ChoiceQuestion($question, $answer, 0));
         }
-        if ($answer) {
-            $question .= " <info>($answer)</info> ";
+        if (is_bool($answer)) {
+            $question .= " (y/n) ";
+            return $dialog->ask($this->input, $this->output, new ConfirmationQuestion($question, $answer));
         }
-        return $dialog->ask($this->input, $this->output, new Question($question, $answer));
+        if ($answer) {
+            $question .= " <info>($answer)</info>";
+        }
+        return $dialog->ask($this->input, $this->output, new Question("$question ", $answer));
     }
 
     protected function say($message = '')
