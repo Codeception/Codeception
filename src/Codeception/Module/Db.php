@@ -7,6 +7,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\Db as DbInterface;
 use Codeception\Lib\Driver\Db as Driver;
+use Codeception\Lib\DbPopulator;
 use Codeception\TestInterface;
 
 /**
@@ -330,22 +331,23 @@ class Db extends CodeceptionModule implements DbInterface
     protected function loadDump()
     {
         if ($this->config['populator']) {
-            $this->loadDumpUsingTool();
+            $this->loadDumpUsingPopulator();
         } else {
             $this->loadDumpUsingDriver();
         }
     }
 
-    protected function loadDumpUsingTool()
+    protected function loadDumpUsingPopulator()
     {
         if (!$this->config['dump']) {
             $this->debug("[Db] No dump file found. Skip loading the dump using the populator command.");
             return;
         }
         try {
-            $command = $this->buildDumpToolCommand($this->config['populator']);
+            $populator = new DbPopulator($this->config['populator'], $this);
+            $command = $populator->getBuiltCommand();
             $this->debug("[Db] Executing populator command: `$command`");
-            list($result, $output, $exitCode) = $this->execute($command);
+            list($result, $output, $exitCode) = $populator->execute();
             $this->debug("[Db] Done running populator command with result: `$result`");
             $this->debug("[Db] Exit code: `$exitCode`");
             $this->debug("[Db] ".count($output)." line/s of output:\n");

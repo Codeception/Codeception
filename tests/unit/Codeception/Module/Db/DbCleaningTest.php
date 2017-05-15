@@ -1,6 +1,6 @@
 <?php
 
-abstract class DbSeeingTest extends \PHPUnit_Framework_TestCase
+abstract class DbCleaningTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Codeception\Module\Db
@@ -22,25 +22,20 @@ abstract class DbSeeingTest extends \PHPUnit_Framework_TestCase
         $this->module->_after(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
     }
 
-    public function testSeeInDatabase()
+    public function testCleanupDatabase()
     {
         $this->module->seeInDatabase('users', ['name' => 'davert']);
+        $ref = new \ReflectionObject($this->module);
+        $cleanupMethod = $ref->getMethod('cleanup');
+        $cleanupMethod->setAccessible(true);
+        $cleanupMethod->invoke($this->module);
+
+        // Since table does not exist it should fail
+        // TODO: Catch this exception at the driver level and re-throw a general one
+        // just for "table not found" across all the drivers
+        $this->expectException(\PDOException::class);
+
+        $this->module->dontSeeInDatabase('users', ['name' => 'davert']);
     }
 
-    public function testCountInDatabase()
-    {
-        $this->module->seeNumRecords(1, 'users', ['name' => 'davert']);
-        $this->module->seeNumRecords(0, 'users', ['name' => 'davert', 'email' => 'xxx@yyy.zz']);
-        $this->module->seeNumRecords(0, 'users', ['name' => 'user1']);
-    }
-
-    public function testDontSeeInDatabase()
-    {
-        $this->module->dontSeeInDatabase('users', ['name' => 'user1']);
-    }
-
-    public function testDontSeeInDatabaseWithEmptyTable()
-    {
-        $this->module->dontSeeInDatabase('empty_table');
-    }
 }

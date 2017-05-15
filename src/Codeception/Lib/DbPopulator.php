@@ -93,4 +93,9 @@ class DbPopulator
         $ret = exec($command, $output, $exitCode);
         return [$ret, $output, $exitCode];
     }
+
+    public function getBuiltCommand()
+    {
+        return $this->builtCommand;
+    }
 }

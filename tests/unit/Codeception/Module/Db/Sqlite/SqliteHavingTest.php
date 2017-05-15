@@ -7,7 +7,7 @@ use \Codeception\Test\Unit;
 
 class SqliteHavingTest extends DbHavingTest
 {
-    public static function setUpBeforeClass()
+    public function getConfig()
     {
         if (version_compare(PHP_VERSION, '5.5.0', '<')) {
             $dumpFile = 'dumps/sqlite-54.sql';
@@ -15,7 +15,7 @@ class SqliteHavingTest extends DbHavingTest
             $dumpFile = 'dumps/sqlite.sql';
         }
 
-        self::$config = [
+        return [
             'dsn' => 'sqlite:tests/data/sqlite.db',
             'user' => 'root',
             'password' => '',
@@ -23,6 +23,5 @@ class SqliteHavingTest extends DbHavingTest
             'reconnect' => true,
             'cleanup' => true,
         ];
-        parent::setUpBeforeClass();
     }
 }

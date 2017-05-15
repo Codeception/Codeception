@@ -1,11 +1,11 @@
 <?php
 
-require_once \Codeception\Configuration::testsDir().'unit/Codeception/Module/Db/DbConnectionTest.php';
+require_once \Codeception\Configuration::testsDir().'unit/Codeception/Module/Db/DbCleaningTest.php';
 
 use \Codeception\Lib\Driver\Db;
 use \Codeception\Test\Unit;
 
-class SqliteConnectionTest extends DbConnectionTest
+class SqliteCleaningTest extends DbCleaningTest
 {
     public function getConfig()
     {
@@ -23,10 +23,5 @@ class SqliteConnectionTest extends DbConnectionTest
             'reconnect' => true,
             'cleanup' => true,
         ];
-    }
-
-    public function testConnectionIsKeptForTheWholeSuite()
-    {
-        $this->markTestSkipped('Sqlite will always have to reconnect when cleaning up.');
     }
 }
