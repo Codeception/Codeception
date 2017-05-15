@@ -71,24 +71,23 @@ use Codeception\TestInterface;
  *              populate: true
  *              cleanup: false
  *              reconnect: true
- *              dumptool: 'mysql -u $user -p $password -h $host -D $dbname < $dump'
+ *              populator: 'mysql -u root -h $host -D $dbname < $dump'
  *
  * ## SQL data dump
  *
- *  You now have two ways of loading the dump into your database. You could use the legacy way,
- *  where the codeception program reads the dump file and passes it to the specific driver so it populates the
- *  database (this method is usually slow in particular if your dump is "big") or you could now
- *  configure a dump tool command (e.g. using the mysql client binary) that, after parsing the PDO
- *  dsn string, gives you access to some placeholder variables for a very simple command completion
- *  template.
+ *  You now have two ways of loading the dump into your database. You could use the legacy method,
+ *  where codeception reads the dump file and passes it to the specific driver so it populates the
+ *  database (this method is usually slow in particular if your dump is "big") or you could
+ *  configure a populator command (e.g. using the mysql client binary) that, after parsing the PDO
+ *  dsn string and the module configuration, gives you access to some placeholder variables for a
+ *  very simple command completion template.
  *
- *  Usage of the `dumptool` is simple, just set the command that you want to use to load the dump
+ *  Usage of the `populator` is simple, just set the command that you want to use to load the dump
  *  into the database with the parsed variables from the config and/or dsn string. All the configuration
  *  options will also be available and take priority over the dsn.
- *  Most dsn have a `keyword=value` format, you should expect to have a variable named as the
+ *  Most dsn have a `keyword=value` format, so you should expect to have a variable named as the
  *  keyword with the full value inside it. If you need further parsing you could write your own
- *  script to wrap the real dump tool.
- *
+ *  script to wrap the real populator command/tool.
  *
  *  PDO dsn elements for the supported drivers:
  *  * MySQL: [PDO_MYSQL DSN](https://secure.php.net/manual/en/ref.pdo-mysql.connection.php)
@@ -167,7 +166,7 @@ class Db extends CodeceptionModule implements DbInterface
         'cleanup' => true,
         'reconnect' => false,
         'dump' => null,
-        'dumptool' => null,
+        'populator' => '',
     ];
 
     /**
@@ -195,6 +194,39 @@ class Db extends CodeceptionModule implements DbInterface
         $this->connect();
     }
 
+    public function _beforeSuite($settings = [])
+    {
+        if (!$this->config['populator']
+            && $this->config['dump']
+            &&  ($this->config['cleanup'] || ($this->config['populate']))
+        ) {
+            $this->readSql();
+        }
+
+        $this->connect();
+
+        // starting with loading dump
+        if ($this->config['populate']) {
+            if ($this->config['cleanup']) {
+                $this->cleanup();
+            }
+            $this->loadDump();
+        }
+
+        if ($this->config['reconnect']) {
+            $this->disconnect();
+        }
+    }
+
+    /**
+     * Whether or not the db was populated with the dump file.
+     * @return boolean True if the dump was loaded, false otherwise.
+     */
+    public function isPopulated()
+    {
+        return $this->populated;
+    }
+
     private function readSql()
     {
         if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
@@ -220,11 +252,7 @@ class Db extends CodeceptionModule implements DbInterface
     private function connect()
     {
         try {
-            $this->driver = $this->driver ?: Driver::create(
-                $this->config['dsn'],
-                $this->config['user'],
-                $this->config['password']
-            );
+            $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
@@ -234,6 +262,7 @@ class Db extends CodeceptionModule implements DbInterface
 
             throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
+
         $this->dbh = $this->driver->getDbh();
     }
 
@@ -243,56 +272,25 @@ class Db extends CodeceptionModule implements DbInterface
         $this->driver = null;
     }
 
-    public function _beforeSuite($settings = [])
-    {
-        $this->connect();
-
-        // FIXME: This needs proper structure to avoid cooking more spaghetti code
-        // since it only concerns to the "legacy" dump loading procedure.
-        // The db drivers should be revised to see if they are coupled on
-        // having the $sql variable loaded at this point in time of the execution or not...
-        if (!$this->config['dumptool']
-            && $this->config['dump']
-            && ($this->config['cleanup']
-                || ($this->config['populate']))
-        ) {
-            $this->readSql();
-        }
-
-        if ($this->config['populate']) {
-            if ($this->config['cleanup']) {
-                $this->cleanup();
-            }
-            $this->loadDump();
-            $this->populated = true;
-        }
-    }
-
     public function _before(TestInterface $test)
     {
-        parent::_before($test);
         if ($this->config['reconnect']) {
-            $this->disconnect();
+            $this->connect();
         }
-
-        $this->connect();
-
         if ($this->config['cleanup'] && !$this->populated) {
             $this->cleanup();
             $this->loadDump();
         }
+        parent::_before($test);
     }
 
     public function _after(TestInterface $test)
     {
         $this->removeInserted();
-        $this->populated = false;
+        if ($this->config['reconnect']) {
+            $this->disconnect();
+        }
         parent::_after($test);
-    }
-
-    public function _afterSuite()
-    {
-        $this->disconnect();
     }
 
     protected function removeInserted()
@@ -305,11 +303,11 @@ class Db extends CodeceptionModule implements DbInterface
             }
         }
         $this->insertedRows = [];
+        $this->populated = false;
     }
 
     protected function cleanup()
     {
-        $this->connect();
         $dbh = $this->driver->getDbh();
         if (!$dbh) {
             throw new ModuleConfigException(
@@ -323,6 +321,7 @@ class Db extends CodeceptionModule implements DbInterface
                 return;
             }
             $this->driver->cleanup();
+            $this->populated = false;
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
@@ -330,7 +329,7 @@ class Db extends CodeceptionModule implements DbInterface
 
     protected function loadDump()
     {
-        if ($this->config['dumptool']) {
+        if ($this->config['populator']) {
             $this->loadDumpUsingTool();
         } else {
             $this->loadDumpUsingDriver();
@@ -340,16 +339,14 @@ class Db extends CodeceptionModule implements DbInterface
     protected function loadDumpUsingTool()
     {
         if (!$this->config['dump']) {
-            $this->debug("[Db] No dump file found. Skip loading the dump using the dumptool.");
+            $this->debug("[Db] No dump file found. Skip loading the dump using the populator command.");
             return;
         }
         try {
-            $command = $this->buildDumpToolCommand($this->config['dumptool']);
-            $this->debug("[Db] Executing dumptool command: `$command`");
-
+            $command = $this->buildDumpToolCommand($this->config['populator']);
+            $this->debug("[Db] Executing populator command: `$command`");
             list($result, $output, $exitCode) = $this->execute($command);
-
-            $this->debug("[Db] Done running dumptool command with result: `$result`");
+            $this->debug("[Db] Done running populator command with result: `$result`");
             $this->debug("[Db] Exit code: `$exitCode`");
             $this->debug("[Db] ".count($output)." line/s of output:\n");
             foreach ($output as $l) {
@@ -361,7 +358,7 @@ class Db extends CodeceptionModule implements DbInterface
                     implode(
                         "\n",
                         [
-                            "The dump tool command did not end successfully: ",
+                            "The populator command did not end successfully: ",
                             "Exit code: $exitCode",
                             "Output:",
                             implode("\n", $output),
@@ -369,6 +366,8 @@ class Db extends CodeceptionModule implements DbInterface
                     )
                 );
             }
+
+            $this->populated = true;
         } catch (\Exception $e) {
             $this->debug(implode("\n", [get_class($e), $e->getMessage(), $e->getTraceAsString()]));
             throw new ModuleException(
@@ -378,41 +377,14 @@ class Db extends CodeceptionModule implements DbInterface
                     [
                         $e->getMessage(),
                         sprintf(
-                            'Attempted to load the dump `%1$s` using the tool `%2$s`',
+                            'Attempted to load the dump `%1$s` using the command `%2$s`',
                             $this->config['dump'],
-                            $this->config['dumptool']
+                            $this->config['populator']
                         ),
                     ]
                 )
             );
         }
-    }
-
-    protected function buildDumpToolCommand($dumptool, $config = [], $dsn = '')
-    {
-        $config = $config ?: $this->config;
-        $dsn = $dsn ?: isset($config['dsn']) ? $config['dsn'] : '';
-        $dsnVars = [];
-        $dsnWithoutDriver = preg_replace('/^[a-z]+:/i', '', $dsn);
-        foreach (explode(';', $dsnWithoutDriver) as $item) {
-            $i = explode('=', $item);
-            if (isset($i[1])) {
-                $dsnVars[$i[0]] = $i[1];
-            }
-        }
-
-        $vars = array_merge($dsnVars, $config);
-        foreach ($vars as $key => $value) {
-            $vars['$'.$key] = $value;
-            unset($vars[$key]);
-        }
-        return str_replace(array_keys($vars), array_values($vars), $dumptool);
-    }
-
-    protected function execute($command)
-    {
-        $ret = exec($command, $output, $exitCode);
-        return [$ret, $output, $exitCode];
     }
 
     protected function loadDumpUsingDriver()
@@ -421,6 +393,7 @@ class Db extends CodeceptionModule implements DbInterface
             return;
         }
         $this->driver->load($this->sql);
+        $this->populated = true;
     }
 
     /**
