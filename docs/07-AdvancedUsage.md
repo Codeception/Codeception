@@ -253,7 +253,7 @@ You can also use the `@dataprovider` annotation for creating dynamic examples, u
             ['url'=>"/", 'title'=>"Welcome"],
             ['url'=>"/info", 'title'=>"Info"],
             ['url'=>"/about", 'title'=>"About Us"],
-            ['url'="/contact", 'title'="Contact Us"]
+            ['url'=>"/contact", 'title'=>"Contact Us"]
         ];
     }
 ```
