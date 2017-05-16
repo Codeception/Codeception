@@ -47,19 +47,21 @@ trait Config
         return Configuration::append($updatedConfig);
     }
 
-    protected function withExtension($name)
+    protected function enableExtensions($extensions)
     {
-        $extensions = ['extensions' => []];
-        if (!class_exists($name)) {
-            $className = 'Codeception\\Extension\\' . ucfirst($name);
-            if (!class_exists($className)) {
-                throw new InvalidOptionException("Extension $name can't be loaded (by $className)");
+        $config = ['extensions' => ['enabled' => []]];
+        foreach ($extensions as $name) {
+            if (!class_exists($name)) {
+                $className = 'Codeception\\Extension\\' . ucfirst($name);
+                if (!class_exists($className)) {
+                    throw new InvalidOptionException("Extension $name can't be loaded (tried by $name and $className)");
+                }
+                $config['extensions']['enabled'][] = $className;
+                continue;
             }
-            $extensions['extensions']['enabled'][] = $className;
-            return Configuration::append($extensions);
+            $config['extensions']['enabled'][] = $name;
         }
-        $extensions['extensions']['enabled'][] = $name;
-        return Configuration::append($extensions);
+        return Configuration::append($config);
 
     }
 }
