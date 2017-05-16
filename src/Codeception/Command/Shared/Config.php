@@ -2,6 +2,7 @@
 namespace Codeception\Command\Shared;
 
 use Codeception\Configuration;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -44,5 +45,21 @@ trait Config
             $updatedConfig = array_merge_recursive($updatedConfig, $config);
         }
         return Configuration::append($updatedConfig);
+    }
+
+    protected function withExtension($name)
+    {
+        $extensions = ['extensions' => []];
+        if (!class_exists($name)) {
+            $className = 'Codeception\\Extension\\' . ucfirst($name);
+            if (!class_exists($className)) {
+                throw new InvalidOptionException("Extension $name can't be loaded (by $className)");
+            }
+            $extensions['extensions']['enabled'][] = $className;
+            return Configuration::append($extensions);
+        }
+        $extensions['extensions']['enabled'][] = $name;
+        return Configuration::append($extensions);
+
     }
 }
