@@ -347,7 +347,7 @@ WebDriver also adds browser-specific functionality which will be listed in next 
 #### Wait
 
 While testing web application, you may need to wait for JavaScript events to occur. Due to its asynchronous nature,
-complex JavaScript interactions are hard to test. That's why you may need to use waiters, actions with *wait* prefix. 
+complex JavaScript interactions are hard to test. That's why you may need to use waiters, actions with `wait` prefix. 
 They can be used to specify what event you expect to occur on a page, before continuing the test.
 
 For example:
@@ -371,8 +371,8 @@ $I->wait(3); // wait for 3 secs
 
 #### Wait and Act
 
-To combine `waitForElement` with actions inside that element you can use [performOn](http://codeception.com/docs/modules/WebDriver#performOn) method. 
-Let's see how can you perform some actions inside an HTML popup:
+To combine `waitForElement` with actions inside that element you can use the [performOn](http://codeception.com/docs/modules/WebDriver#performOn) method. 
+Let's see how you can perform some actions inside an HTML popup:
 
 ```php
 <?php
@@ -382,7 +382,7 @@ $I->performOn('.confirm', \Codeception\Util\ActionSequence::build()
     ->click('Yes')
 );
 ```
-Alternatively, this can be executed using callback, in this case WebDriver module instance is passed as argument
+Alternatively, this can be executed using a callback, in this case the `WebDriver` instance is passed as argument
 
 ```php
 <?php
@@ -393,13 +393,13 @@ $I->performOn('.confirm', function(\Codeception\Module\WebDriver $I) {
 });
 ```
 
-For more options see [`performOn` reference]([performOn](http://codeception.com/docs/modules/WebDriver#performOn) ).
+For more options see [`performOn()` reference]([performOn](http://codeception.com/docs/modules/WebDriver#performOn) ).
 
 ### Multi Session Testing
 
-Codeception allows you to execute actions in concurrent sessions. The most obvious case for it
+Codeception allows you to execute actions in concurrent sessions. The most obvious case for this
 is testing realtime messaging between users on a site. In order to do it, you will need to launch two browser windows
-at the same time for the same test. Codeception has very smart concept for doing this. It is called **Friends**:
+at the same time for the same test. Codeception has a very smart concept for doing this. It is called **Friends**:
 
 ```php
 <?php
@@ -415,9 +415,9 @@ $I->wait(3);
 $I->see('Hello all!', '.message');
 ```
 
-In this case we performed, or 'did', some actions in the second window with the `does` command on a friend object.
+In this case we performed, or 'did', some actions in the second window with the `does` method on a friend object.
 
-Sometimes you may want to close a web page before the end of the test. For such cases you may use leave().
+Sometimes you may want to close a web page before the end of the test. For such cases you may use `leave()`.
 You can also specify roles for a friend:
 
 ```php
@@ -440,7 +440,7 @@ and set up Selenium Server and the desired browser. Tests are executed on a remo
 to access local files cloud testing services provide a special application called **Tunnel**.
 Tunnel operates on a secured protocol and allows browsers executed in a cloud to connect to a local web server.
 
-Cloud Testing services work with the standard WebDriver protocol. This makes setting up cloud testing relly easy.
+Cloud Testing services work with the standard WebDriver protocol. This makes setting up cloud testing really easy.
 You just need to set the [WebDriver configuration](http://codeception.com/docs/modules/WebDriver#Cloud-Testing) to:
 
 * specify the host to connect to (depends on the cloud provider)
@@ -464,7 +464,7 @@ However, testing Single Page Applications can be a hard task.
 There could be no information of the application state: e.g. has it completed rendering or not?
 What is possible to do in this case is to use more `wait*` methods or execute JavaScript that checks the application state.
 
-For applications built with AngularJS v1.x framework
+For applications built with the AngularJS v1.x framework
 we implemented [AngularJS module](http://codeception.com/docs/modules/AngularJS) which is based on Protractor
 (an official tool for testing Angular apps). Under the hood, it pauses step execution
 before the previous actions are completed and uses the AngularJS API to check the application state.
@@ -485,7 +485,7 @@ On each failure, the snapshot of the last shown page will be stored in the `test
 PhpBrowser will store the HTML code and WebDriver will save a screenshot of the page.
 
 Sometimes you may want to inspect a web page opened by a running test. For such cases
-you may use the [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of WebDriver module.
+you may use the [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of the WebDriver module.
 
 You can also record your tests step by step and review the execution flow as a slideshow
 with the help of the [Recorder extension](http://codeception.com/addons#CodeceptionExtensionRecorder).
