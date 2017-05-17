@@ -1,10 +1,10 @@
 # Unit Tests
 
-Codeception uses PHPUnit as a backend for running its tests. Thus, any PHPUnit test can be added to Codeception test suite
+Codeception uses PHPUnit as a backend for running its tests. Thus, any PHPUnit test can be added to a Codeception test suite
 and then executed. If you ever wrote a PHPUnit test then do it just as you did before.
 Codeception adds some nice helpers to simplify common tasks.
 
-The basics of unit tests are skipped here, instead you will get a basic knowledge of what features Codeception adds
+The basics of unit tests are skipped here, instead you will get a basic knowledge of which features Codeception adds
 to unit tests.
 
 __To say it again: you don't need to install PHPUnit to run its tests. Codeception can run them too.__
@@ -19,7 +19,7 @@ php codecept generate:phpunit unit Example
 ```
 
 Codeception has its own addon features to extend standard unit tests, so let's try them.
-We need different command to create Codeception-powered unit tests:
+We need different a command to create Codeception-powered unit tests:
 
 ```bash
 php codecept generate:test unit Example
@@ -33,7 +33,7 @@ As always, you can run the newly created test with this command:
 php codecept run unit ExampleTest
 ```
 
-or simply run the whole set of unit tests with this:
+Or simply run the whole set of unit tests with:
 
 ```bash
 php codecept run unit
@@ -43,7 +43,6 @@ A test created by the `generate:test` command will look like this:
 
 ```php
 <?php
-
 
 class ExampleTest extends \Codeception\Test\Unit
 {
@@ -68,8 +67,8 @@ class ExampleTest extends \Codeception\Test\Unit
 }
 ```
 
-This class has predefined `_before` and `_after` methods to start with.
-You can use them to create a tested object before each test, and destroy it again afterwards.
+This class has predefined `_before` and `_after` methods.
+You can use them to create a tested object before each test, and destroy it afterwards.
 
 As you see, unlike in PHPUnit, the `setUp` and `tearDown` methods are replaced with their aliases: `_before`, `_after`.
 
@@ -92,7 +91,7 @@ modules:
 
 ## Classical Unit Testing
 
-Unit tests in Codeception are written in absolutely the same way as it is done in PHPUnit:
+Unit tests in Codeception are written in absolutely the same way as in PHPUnit:
 
 ```php
 <?php
@@ -118,7 +117,7 @@ class UserTest extends \Codeception\Test\Unit
 ### Using Modules
 
 As in scenario-driven functional or acceptance tests you can access Actor class methods.
-If you write integration tests, it may be useful to include `Db` module for database testing.
+If you write integration tests, it may be useful to include the `Db` module for database testing.
 
 ```yaml
 # Codeception Test Suite Configuration
@@ -151,16 +150,16 @@ function testSavingUser()
 }
 ```
 
-To enable the database functionality in the unit tests, make sure the `Db` module is included in the enabled module list
-in the unit.suite.yml configuration file.
+To enable the database functionality in unit tests, make sure the `Db` module is included
+in the `unit.suite.yml` configuration file.
 The database will be cleaned and populated after each test, the same way it happens for acceptance and functional tests.
-If it's not your required behavior, change the settings of the `Db` module for the current suite.
+If that's not your required behavior, change the settings of the `Db` module for the current suite.
 
 ### Interacting with the Framework
 
 You should probably not access your database directly if your project already uses ORM for database interactions.
-Why not use ORM directly inside your tests? Let's try to write a test using Laravel's ORM Eloquent,
-for this we need to configure the Laravel5 module. We won't need its web interaction methods like `amOnPage` or `see`,
+Why not use ORM directly inside your tests? Let's try to write a test using Laravel's ORM Eloquent.
+For this we need to configure the Laravel5 module. We won't need its web interaction methods like `amOnPage` or `see`,
 so let's enable only the ORM part of it:
 
 ```yaml
@@ -193,8 +192,8 @@ function testUserNameCanBeChanged()
 }
 ```
 
-A very similar approach can be used for all frameworks that have ORM implementing ActiveRecord pattern.
-They are Yii2 and Phalcon, and they have the methods `haveRecord`, `seeRecord`, `dontSeeRecord` which work in the same way.
+A very similar approach can be used for all frameworks that have an ORM implementing the ActiveRecord pattern.
+In Yii2 and Phalcon, the methods `haveRecord`, `seeRecord`, `dontSeeRecord` work in the same way.
 They also should be included by specifying `part: ORM` in order to not use the functional testing actions.
 
 If you are using Symfony with Doctrine, you don't need to enable Symfony itself but just Doctrine2:
