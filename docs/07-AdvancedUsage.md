@@ -42,7 +42,7 @@ and will receive an instance of the Actor class as the first parameter and the `
 In `_before` and `_after` methods you can use common setups and teardowns for the tests in the class.
 This actually makes Cest tests more flexible than Cepts, which rely only on similar methods in Helper classes.
 
-As you see, we are passing Actor object into `tryToTest` method. It allows us to write scenarios the way we did before:
+As you see, we are passing the Actor object into `tryToTest` method. This allows us to write scenarios the way we did before:
 
 ```php
 <?php
@@ -74,7 +74,7 @@ You can also define a `_failed` method in Cest classes which will be called if t
 Codeception supports simple dependency injection for Cest and \Codeception\TestCase\Test classes.
 It means that you can specify which classes you need as parameters of the special `_inject()` method,
 and Codeception will automatically create the respective objects and invoke this method,
-passing all dependencies as arguments. This may be useful when working with Helpers, for example:
+passing all dependencies as arguments. This may be useful when working with Helpers. Here's an example for Cest:
 
 ```php
 <?php
@@ -112,7 +112,7 @@ class SignUpCest
 }
 ```
 
-Example of the Test class:
+And for Test classes:
 
 ```php
 <?php
@@ -172,9 +172,9 @@ Of course, you are not allowed to have *cyclic dependencies*.
 
 ### Examples
 
-What if you want to execute one test scenario but with different data? In this case you can use examples
-to provide different data for test and inject them as `\Codeception\Example` instances.
-Data is defined via the `@example` annotation, using JSON or Doctrine-style notation (limited to a single line):
+What if you want to execute the same test scenario with different data? In this case you can inject examples
+as `\Codeception\Example` instances.
+Data is defined via the `@example` annotation, using JSON or Doctrine-style notation (limited to a single line). Doctrine-style:
 
 ```php
 <?php
@@ -191,14 +191,10 @@ Data is defined via the `@example` annotation, using JSON or Doctrine-style nota
   }
 ```
 
-<div class="alert alert-notice">
-If you use JSON notation please keep in mind that all string keys
-and values should be enclosed in double quotes " according to JSON standard.
-</div>
-
-You can pass key-value data as an example and use it in tests as well:
+JSON:
 
 ```php
+<?php
  /**
   * @example { "url": "/", "title": "Welcome" }
   * @example { "url": "/info", "title": "Info" }
@@ -213,9 +209,15 @@ You can pass key-value data as an example and use it in tests as well:
   }
 ```
 
-These examples can be written using Doctrine-style annotation syntax as well:
+<div class="alert alert-info">
+If you use JSON notation please keep in mind that all string keys
+and values should be enclosed in double quotes (`"`) according to JSON standard.
+</div>
+
+Key-value data in Doctrine-style annotation syntax:
 
 ```php
+<?php
  /**
   * @example(url="/", title="Welcome")
   * @example(url="/info", title="Info")
