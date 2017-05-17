@@ -2,8 +2,8 @@
 
 Let's take a look at Codeception's architecture. We'll assume that you have already [installed](http://codeception.com/install) it
 and bootstrapped your first test suites. Codeception has generated three of them: unit, functional, and acceptance.
-They are well described in the previous chapter. Inside your __/tests__ folder you will have three config files and three directories
-with names corresponding to these suites. Suites are independent groups of tests with a common purpose.
+They are well described in the [previous chapter](http://codeception.com/docs/01-Introduction). Inside your __/tests__ folder you will have three `.yml` config files and three directories
+with names corresponding to these suites: `unit`, `functional`, `acceptance`. Suites are independent groups of tests with a common purpose.
 
 ## Actors
 
@@ -12,7 +12,7 @@ We have a UnitTester, who executes functions and tests the code. We also have a 
 who tests the application as a whole, with knowledge of its internals. Lastly we have an AcceptanceTester, a user who works with our application
 through an interface that we provide.
 
-Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from Codeception Modules**.
+Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from [Codeception Modules](http://codeception.com/docs/06-ModulesAndHelpers)**.
 Each module provides predefined actions for different testing purposes, and they can be combined to fit the testing environment.
 Codeception tries to solve 90% of possible testing issues in its modules, so you don't have to reinvent the wheel.
 We think that you can spend more time on writing tests and less on writing support code to make those tests run.
@@ -53,19 +53,19 @@ and choosing a proper action from the auto-completion list. Let's log in to our 
 
 ```php
 <?php
-$I = new AcceptanceTester($scenario);
+$I = new AcceptanceTester($scenario); // actor class initialization
 $I->wantTo('login to website');
 
 ```
 
-The `wantTo` section describes your scenario in brief. There are additional comment methods that are useful to describe context of a scenario:
+The `wantTo` section describes your scenario in brief. There are additional comment methods that are useful to describe the context of a scenario:
 
 ```php
 <?php
 $I = new AcceptanceTester($scenario);
 $I->am('user'); // actor's role
 $I->wantTo('login to website'); // feature to test
-$I->lookForwardTo('access all website features'); // result to achieve
+$I->lookForwardTo('access website features for logged-in users'); // result to achieve
 ```
 
 After we have described the story background, let's start writing a scenario.
@@ -78,7 +78,7 @@ Then we are sent to a user page, where we see the text `Hello, %username%`. Let'
 $I = new AcceptanceTester($scenario);
 $I->am('user');
 $I->wantTo('login to website');
-$I->lookForwardTo('access all website features');
+$I->lookForwardTo('access website features for logged-in users');
 $I->amOnPage('/login');
 $I->fillField('Username','davert');
 $I->fillField('Password','qwerty');
@@ -92,7 +92,7 @@ this test transforms into plain English text:
 ```
 I am user
 I wantTo login to website
-I lookForwardTo access all website features
+I lookForwardTo access website features for logged-in users
 I amOnPage '/login'
 I fillField 'Username','davert'
 I fillField 'Password','qwerty'
