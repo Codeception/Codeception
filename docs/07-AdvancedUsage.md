@@ -260,7 +260,7 @@ You can also use the `@dataprovider` annotation for creating dynamic examples, u
     }
 ```
 
-Alternatively, the `@dataprovider` can also be a public method starting with `_` prefix so it will not be considered as a test:
+Alternatively, the `@dataprovider` can also be a public method starting with `_` prefix so it will not be considered a test:
 
 ```php
 <?php
@@ -269,20 +269,12 @@ Alternatively, the `@dataprovider` can also be a public method starting with `_`
     */
     public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
     {
-        $I->amOnPage($example['url']);
-        $I->see($example['title'], 'h1');
-        $I->seeInTitle($example['title']);
+        // ...
     }
 
-    /**
-     * @return array
-     */
     public function _pageProvider()
     {
-        return [
-            ['url'=>"/", 'title'=>"Welcome"],
-            ['url'=>"/info", 'title'=>"Info"],
-        ];
+        // ...
     }
 ```
 
