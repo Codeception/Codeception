@@ -228,8 +228,9 @@ $I->seeLink('Login');
 
 #### Conditional Assertions
 
-Sometimes you don't want the test to be stopped when an assertion fails. Maybe you have a long-running test
-and you want it to run to the end. In this case you can use conditional assertions.
+Usually, as soon as any assertion fails, further assertions of this test will be skipped.
+Sometimes you don't want this - maybe you have a long-running test and you want it to run to the end.
+In this case you can use conditional assertions.
 Each `see` method has a corresponding `canSee` method, and `dontSee` has a `cantSee` method:
 
 ```php
@@ -239,7 +240,7 @@ $I->canSeeCheckboxIsChecked('#agree');
 $I->cantSeeInField('user[name]', 'Miles');
 ```
 
-Each failed assertion will be shown in the test results. A failed assertion won't stop the test.
+Each failed assertion will be shown in the test results, but it won't stop the test.
 
 #### Comments
 
