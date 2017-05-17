@@ -103,7 +103,7 @@ this will create a default directory structure and default test suites
 
 See Documentation for more information.
 
-### License
+## License
 MIT
 
 (c) Michael Bodnarchuk "Davert"
