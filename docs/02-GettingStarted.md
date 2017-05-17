@@ -153,7 +153,7 @@ Signature: SigninCept.php
 Test: tests/acceptance/SigninCept.php
 Scenario --
  I am user
- I look forward to access all website features
+ I look forward to access website features for logged-in users
  I am on page "/login"
  I fill field "Username" "davert"
  I fill field "Password" "qwerty"
@@ -182,7 +182,7 @@ There is also a global bootstrap file located in the `tests` directory. It can b
 Codeception supports three test formats. Beside the previously described scenario-based Cept format,
 Codeception can also execute [PHPUnit test files for unit testing](http://codeception.com/docs/05-UnitTests), and Cest format.
 
-Cest combines scenario-driven test approach with OOP design. In case you want to group a few testing scenarios into one you should consider using Cest format.
+**Cest** combines scenario-driven test approach with OOP design. In case you want to group a few testing scenarios into one, you should consider using Cest format.
 In the example below we are testing CRUD actions within a single file but with several tests (one per operation):
 
 ```php
@@ -275,7 +275,7 @@ php codecept run tests/acceptance/backend
 ```
 
 Using regular expressions, you can even run many different test methods from the same directory or class.
-For example, this will execute all acceptance tests from the `backend` dir beginning with the word login:
+For example, this will execute all acceptance tests from the `backend` dir beginning with the word "login":
 
 ```bash
 php codecept run tests/acceptance/backend:^login
