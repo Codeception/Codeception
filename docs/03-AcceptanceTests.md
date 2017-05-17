@@ -341,7 +341,7 @@ but it will also check that element is actually visible to the user:
 $I->seeElement('#modal');
 ```
 
-While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: it can't check headers, perform HTTP requests, as browsers don't provide APIs for that. 
+While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: It can't check headers, since browsers don't provide APIs for that. 
 WebDriver also adds browser-specific functionality which will be listed in next sections.
 
 #### Wait
