@@ -8,11 +8,11 @@ as if they were recorded from the words of an actual acceptance tester.
 
 It makes no difference what CMS or Framework is used on the site. You can even test sites created on different platforms,
 like Java, .NET, etc. It's always a good idea to add tests to your web site.
-At least you will be sure that site features work after the last changes were made.
+At least you will be sure that site features work after the latest changes were made.
 
 ## Sample Scenario
 
-Probably the first test you would want to run would be signing in.
+Let's say the first test you would want to run would be signing in.
 In order to write such a test, we still require basic knowledge of PHP and HTML:
 
 ```php
@@ -31,8 +31,8 @@ We will start writing our first acceptance tests with a PhpBrowser.
 
 This is the fastest way to run acceptance tests, since it doesn't require running an actual browser.
 We use a PHP web scraper, which acts like a browser: it sends a request, then receives and parses the response.
-Codeception uses [Guzzle](http://guzzlephp.org) and Symfony BrowserKit to interact with HTML web pages.
-Please note that you can't test actual visibility of elements, or JavaScript interactions.
+Codeception uses [Guzzle](http://guzzlephp.org) and [Symfony BrowserKit](http://symfony.com/doc/current/components/browser_kit.html) to interact with HTML web pages.
+Please note that you can't test actual visibility of HTML elements, or JavaScript interactions.
 Good thing about PhpBrowser is that it can be run in any environment with just PHP and cURL required.
 
 Common PhpBrowser drawbacks:
