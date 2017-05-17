@@ -233,7 +233,7 @@ function testUserNameCanBeChanged()
 
 In both examples you should not be worried about the data persistence between tests.
 The Doctrine2 and Laravel5 modules will clean up the created data at the end of a test.
-This is done by wrapping a test in a transaction and rolling it back afterwards.
+This is done by wrapping each test in a transaction and rolling it back afterwards.
 
 ### Accessing Module
 
