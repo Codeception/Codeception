@@ -77,7 +77,7 @@ With the `PhpBrowser` you can click the links and fill in the forms. That will p
 
 #### Click
 
-Emulates a click on valid anchors. The page from the `href` parameter will be opened.
+Emulates a click on valid anchors. The URL referenced in the `href` attribute will be opened.
 As a parameter you can specify the link name or a valid CSS or XPath selector.
 
 ```php
@@ -119,8 +119,7 @@ $I->click('Edit' , \Codeception\Util\Locator::elementAt('//table/tr', -1));
 
 #### Forms
 
-Clicking links is not what takes the most time during the testing of a web site.
-If your site consists only of links you can skip test automation.
+Clicking links is probably not what takes the most time during the testing of a web site.
 The most routine waste of time goes into the testing of forms. Codeception provides several ways of testing forms.
 
 Let's submit this sample form inside the Codeception test:
@@ -140,7 +139,7 @@ Let's submit this sample form inside the Codeception test:
 </form>
 ```
 
-From a user's perspective, a form consists of fields which should be filled in, and then an update or submit button clicked:
+From a user's perspective, a form consists of fields which should be filled in, and then a submit button clicked:
 
 ```php
 <?php
@@ -152,9 +151,9 @@ $I->selectOption('Gender','Male');
 $I->click('Update');
 ```
 
-To match fields by their labels, you should write a `for` attribute in the label tag.
+To match fields by their labels, you should write a `for` attribute in the `label` tag.
 
-From the developer's perspective, submitting a form is just sending a valid post request to the server.
+From the developer's perspective, submitting a form is just sending a valid POST request to the server.
 Sometimes it's easier to fill in all of the fields at once and send the form without clicking a 'Submit' button.
 A similar scenario can be rewritten with only one command:
 
@@ -171,8 +170,8 @@ The `submitForm` is not emulating a user's actions, but it's quite useful
 in situations when the form is not formatted properly, for example to discover that labels aren't set
 or that fields have unclean names or badly written IDs, or the form is sent by a JavaScript call.
 
-By default, submitForm doesn't send values for buttons.  The last parameter allows specifying
-what button values should be sent, or button values can be implicitly specified in the second parameter:
+By default, `submitForm` doesn't send values for buttons.  The last parameter allows specifying
+what button values should be sent, or button values can be explicitly specified in the second parameter:
 
 ```php
 <?php
@@ -181,7 +180,7 @@ $I->submitForm('#update_form', array('user' => array(
      'email' => 'Davis',
      'gender' => 'm'
 )), 'submitButton');
-// this would have the same effect, but the value has to be implicitly specified
+// this would have the same effect, but the value has to be explicitly specified
 $I->submitForm('#update_form', array('user' => array(
      'name' => 'Miles',
      'email' => 'Davis',
@@ -192,25 +191,24 @@ $I->submitForm('#update_form', array('user' => array(
 
 #### Assertions
 
-In the PHP browser you can test the page contents.
+In the `PhpBrowser` you can test the page contents.
 In most cases you just need to check that the required text or element is on the page.
 
-The most useful command for this is `see`:
+The most useful method for this is `see()`:
 
 ```php
 <?php
-// We check that 'Thank you, Miles' is on page.
+// We check that 'Thank you, Miles' is on the page.
 $I->see('Thank you, Miles');
-// We check that 'Thank you Miles' is inside
-// the element with 'notice' class.
+// We check that 'Thank you, Miles' is inside an element with 'notice' class.
 $I->see('Thank you, Miles', '.notice');
 // Or using XPath locators
 $I->see('Thank you, Miles', "//table/tr[2]");
-// We check this message is not on page.
+// We check this message is *not* on the page.
 $I->dontSee('Form is filled incorrectly');
 ```
 
-You can check that a specific element exists (or doesn't) on a page:
+You can check that a specific HTML element exists (or doesn't) on a page:
 
 ```php
 <?php
@@ -246,7 +244,7 @@ Each failed assertion will be shown in the test results. A failed assertion won'
 #### Comments
 
 Within a long scenario you should describe what actions you are going to perform and what results should be achieved.
-Commands like `amGoingTo`, `expect`, `expectTo` help you in making tests more descriptive:
+Comment methods like `amGoingTo`, `expect`, `expectTo` help you in making tests more descriptive:
 
 ```php
 <?php
@@ -313,12 +311,12 @@ $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 
 ## Selenium WebDriver
 
-A nice feature of Codeception is that most scenarios are similar no matter of how they are executed.
-PhpBrowser was emulating browser requests but how to execute such test in a real browser like Chrome or Firefox? 
+A nice feature of Codeception is that most scenarios are similar, no matter of how they are executed.
+`PhpBrowser` was emulating browser requests but how to execute such test in a real browser like Chrome or Firefox? 
 Selenium WebDriver can drive them so in our acceptance tests we can automate scenarios we used to test manually.
-Such tests we should concentrate more on **testing the UI** than on testing functionality.
+In such tests we should concentrate more on **testing the UI** than on testing functionality.
 
-To execute test in a browser we need to change suite configuration to use **WebDriver** instead of PhpBrowser.
+To execute a test in a browser we need to change the suite configuration to use **WebDriver** instead of `PhpBrowser`.
 
 Modify your `acceptance.suite.yml` file:
 
@@ -343,7 +341,7 @@ but it will also check that element is actually visible to the user:
 $I->seeElement('#modal');
 ```
 
-While WebDriver duplicate the functionality of PhpBrowser it has its limitations: it can't check headers, perform HTTP requests, as browsers don't provide APIs for that. 
+While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: it can't check headers, perform HTTP requests, as browsers don't provide APIs for that. 
 WebDriver also adds browser-specific functionality which will be listed in next sections.
 
 #### Wait
