@@ -10,10 +10,10 @@ but with tests you can cover the most important parts of your app and at least b
 
 There are plenty of ways to test your application.
 The most popular paradigm is [Unit Testing](http://en.wikipedia.org/wiki/Unit_testing).
-For web applications, testing just the controller and / or the model doesn't prove that your application is working.
+For web applications, testing just the controller and/or the model doesn't prove that your application is working.
 To test the behavior of your application as a whole, you should write functional or acceptance tests.
 
-Codeception supports these testing types.
+Codeception supports all three testing types.
 Out of the box you have tools for writing unit, functional, and acceptance tests in a unified framework.
 
 Let's review the listed testing paradigms in reverse order.
@@ -22,7 +22,7 @@ Let's review the listed testing paradigms in reverse order.
 
 How does your client, manager, tester, or any other non-technical person know your website is working?
 By opening the browser, accessing a site, clicking on links, filling in the forms,
-and actually seeing the content on a web page. They has no idea of the framework, database, web-server,
+and actually seeing the content on a web page. They have no idea of the framework, database, web-server,
 or programming language you use or why the application did not behave as expected.
 
 Acceptance tests can cover standard but complex scenarios from a user's perspective.
@@ -137,9 +137,9 @@ not a pure unit test)
 
 ## Conclusion
 
-Despite the wide popularity of *TDD* (Test Driven Development), some PHP developers never write automated tests for their applications mostly because they think it's hard, slow or boring..
+Despite the wide popularity of *TDD* (Test Driven Development), some PHP developers never write automated tests for their applications mostly because they think it's hard, slow or boring.
 The Codeception framework was developed to actually make testing fun.
-It allows writing unit, functional, integration, and acceptance tests, in a single, coherent style.
+It allows writing unit, functional, integration, and acceptance tests in a single, coherent style.
 
 It can be called a *BDD* (Behavior Driven Development) framework. All Codeception tests are written in a descriptive manner.
 Just by looking at the test body, you can clearly understand what is being tested and how it is performed.
