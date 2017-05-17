@@ -372,10 +372,10 @@ It may look like the Cest format is too simple for writing tests. It doesn't pro
 methods to create mocks and stubs or even accessing the module with `getModule`, as we did in example above.
 However, the Cest format is better at separating concerns. Test code does not interfere with support code,
 provided by the `UnitTester` object. All additional actions you may need in your unit/integration tests
-you can implement in the `Helper\Unit` class.
+can be implemented in the `Helper\Unit` class.
 </div>
 
-To check your code for exceptions you can use the `expectException` method from `Asserts` module.
+To check your code for exceptions you can use the `expectException` method from the `Asserts` module.
 Unlike the similar method from PHPUnit, this method asserts that an exception was thrown inside a test.
 For this code, executing an exception is wrapped inside a closure:
 
@@ -404,11 +404,11 @@ Stubs are created with PHPUnit's mocking framework. Alternatively, you can use
 [Mockery](https://github.com/padraic/mockery) (with [Mockery module](https://github.com/Codeception/MockeryModule)),
 [AspectMock](https://github.com/Codeception/AspectMock) or others.
 
-Full reference on the Stub utility class can be found [here](/docs/reference/Stub).
+Here's the [full reference on the Stub utility class](/docs/reference/Stub).
 
 ## Conclusion
 
 PHPUnit tests are first-class citizens in test suites. Whenever you need to write and execute unit tests,
 you don't need to install PHPUnit seperately, but use Codeception directly to execute them.
 Some nice features can be added to common unit tests by integrating Codeception modules.
-For most unit and integration testing, PHPUnit tests are enough. They are fast, and easy to maintain.
+For most unit and integration testing, PHPUnit tests are enough. They run fast, and are easy to maintain.
