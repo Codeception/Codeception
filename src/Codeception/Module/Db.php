@@ -173,7 +173,7 @@ class Db extends CodeceptionModule implements DbInterface
     /**
      * @var bool
      */
-    protected $populated = false;
+    public $populated = false;
 
     /**
      * @var \Codeception\Lib\Driver\Db
@@ -211,21 +211,12 @@ class Db extends CodeceptionModule implements DbInterface
             if ($this->config['cleanup']) {
                 $this->cleanup();
             }
-            $this->loadDump();
+            $this->_loadDump();
         }
 
         if ($this->config['reconnect']) {
             $this->disconnect();
         }
-    }
-
-    /**
-     * Whether or not the db was populated with the dump file.
-     * @return boolean True if the dump was loaded, false otherwise.
-     */
-    public function isPopulated()
-    {
-        return $this->populated;
     }
 
     private function readSql()
@@ -280,7 +271,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
         if ($this->config['cleanup'] && !$this->populated) {
             $this->cleanup();
-            $this->loadDump();
+            $this->_loadDump();
         }
         parent::_before($test);
     }
@@ -328,7 +319,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
     }
 
-    protected function loadDump()
+    public function _loadDump()
     {
         if ($this->config['populator']) {
             $this->loadDumpUsingPopulator();
@@ -339,54 +330,8 @@ class Db extends CodeceptionModule implements DbInterface
 
     protected function loadDumpUsingPopulator()
     {
-        if (!$this->config['dump']) {
-            $this->debug("[Db] No dump file found. Skip loading the dump using the populator command.");
-            return;
-        }
-        try {
-            $populator = new DbPopulator($this->config['populator'], $this);
-            $command = $populator->getBuiltCommand();
-            $this->debug("[Db] Executing populator command: `$command`");
-            list($result, $output, $exitCode) = $populator->execute();
-            $this->debug("[Db] Done running populator command with result: `$result`");
-            $this->debug("[Db] Exit code: `$exitCode`");
-            $this->debug("[Db] ".count($output)." line/s of output:\n");
-            foreach ($output as $l) {
-                $this->debug("[Db] \t$l");
-            }
-
-            if (0 !== $exitCode) {
-                throw new \RuntimeException(
-                    implode(
-                        "\n",
-                        [
-                            "The populator command did not end successfully: ",
-                            "Exit code: $exitCode",
-                            "Output:",
-                            implode("\n", $output),
-                        ]
-                    )
-                );
-            }
-
-            $this->populated = true;
-        } catch (\Exception $e) {
-            $this->debug(implode("\n", [get_class($e), $e->getMessage(), $e->getTraceAsString()]));
-            throw new ModuleException(
-                __CLASS__,
-                implode(
-                    "\n",
-                    [
-                        $e->getMessage(),
-                        sprintf(
-                            'Attempted to load the dump `%1$s` using the command `%2$s`',
-                            $this->config['dump'],
-                            $this->config['populator']
-                        ),
-                    ]
-                )
-            );
-        }
+        $populator = new DbPopulator($this->config);
+        $this->populated = $populator->run();
     }
 
     protected function loadDumpUsingDriver()

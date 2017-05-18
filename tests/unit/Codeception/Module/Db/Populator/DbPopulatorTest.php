@@ -2,50 +2,36 @@
 
 use Codeception\Lib\DbPopulator;
 
-class DbPopulatorTest extends \PHPUnit_Framework_TestCase
+class DbPopulatorTest extends \Codeception\Test\Unit
 {
     public function testCommandBuilderInterpolatesVariables()
     {
-        $populator = new DbPopulator('');
-        $ref = new \ReflectionObject($populator);
-        $buildCommandMethod = $ref->getMethod('buildCommand');
-        $buildCommandMethod->setAccessible(true);
-        $commandBuilt = $buildCommandMethod->invokeArgs(
-            $populator,
+        $populator = new DbPopulator(
             [
-                'mysql -u $user -h $host -D $dbname < $dump',
-                [
-                    'dsn' => 'mysql:host=127.0.0.1;dbname=my_db',
-                    'dump' => 'tests/data/dumps/sqlite.sql',
-                    'user' => 'root',
-                ]
+                'populate'  => true,
+                'dsn'       => 'mysql:host=127.0.0.1;dbname=my_db',
+                'dump'      => 'tests/data/dumps/sqlite.sql',
+                'user'      => 'root',
+                'populator' => 'mysql -u $user -h $host -D $dbname < $dump'
+
             ]
         );
+
         $this->assertEquals(
             'mysql -u root -h 127.0.0.1 -D my_db < tests/data/dumps/sqlite.sql',
-            $commandBuilt
+            $populator->getBuiltCommand()
         );
     }
 
     public function testCommandBuilderWontTouchVariablesNotFound()
     {
-        $populator = new DbPopulator('');
-        $ref = new \ReflectionObject($populator);
-        $buildCommandMethod = $ref->getMethod('buildCommand');
-        $buildCommandMethod->setAccessible(true);
-
-        $commandBuilt = $buildCommandMethod->invokeArgs(
-            $populator,
-            [
-                'noop_tool -u $user -h $host -D $dbname < $dump',
-                [
-                    'user' => 'root',
-                ]
-            ]
-        );
+        $populator = new DbPopulator([
+            'populator' => 'noop_tool -u $user -h $host -D $dbname < $dump',
+            'user' => 'root',
+        ]);
         $this->assertEquals(
             'noop_tool -u root -h $host -D $dbname < $dump',
-            $commandBuilt
+            $populator->getBuiltCommand()
         );
 
     }

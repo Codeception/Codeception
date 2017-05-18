@@ -15,7 +15,7 @@ abstract class DbHavingTest extends \PHPUnit_Framework_TestCase
         $this->module = new \Codeception\Module\Db(make_container(), $this->getConfig());
         $this->module->_beforeSuite();
         $this->module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
-        $this->assertTrue($this->module->isPopulated());
+        $this->assertTrue($this->module->populated);
     }
 
     protected function tearDown()

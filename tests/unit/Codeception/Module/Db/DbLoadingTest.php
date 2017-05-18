@@ -18,7 +18,7 @@ abstract class DbLoadingTest extends \PHPUnit_Framework_TestCase
         );
         $this->module->_beforeSuite();
         $this->module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
-        $this->assertFalse($this->module->isPopulated());
+        $this->assertFalse($this->module->populated);
         $this->module->driver->cleanup();
     }
 
@@ -29,6 +29,7 @@ abstract class DbLoadingTest extends \PHPUnit_Framework_TestCase
 
     public function testCleanupDatabase()
     {
+
         try {
             $this->module->dontSeeInDatabase('users', ['name' => 'davert']);
         } catch(\PDOException $noTable) {
@@ -41,10 +42,7 @@ abstract class DbLoadingTest extends \PHPUnit_Framework_TestCase
             'populator' => $this->getPopulator(),
             'cleanup' => true,
         ]);
-        $ref = new \ReflectionObject($this->module);
-        $loadDumpMethod = $ref->getMethod('loadDump');
-        $loadDumpMethod->setAccessible(true);
-        $loadDumpMethod->invoke($this->module);
+        $this->module->_loadDump();
         $this->module->seeInDatabase('users', ['name' => 'davert']);
     }
 }

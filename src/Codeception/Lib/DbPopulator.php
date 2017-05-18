@@ -2,22 +2,11 @@
 
 namespace Codeception\Lib;
 
-use Codeception\Module\Db;
-
 /**
  * Populates a db using a parameterized command built from the Db module configuration.
  */
 class DbPopulator
 {
-    /**
-     * The Db module that will be populated by the command.
-     *
-     * Used to extract its configuration values to build the "populator" command.
-     *
-     * @var Codeception/Module/Db
-     */
-    protected $dbModule;
-
     /**
      * The command to be executed.
      *
@@ -26,18 +15,21 @@ class DbPopulator
     private $builtCommand;
 
     /**
+     * @var array
+     */
+    protected $config;
+
+    /**
      * Constructs a DbPopulator object for the given command and Db module.
      *
      * @param string  $command  The parameterized command to evaluate and execute later.
      * @param Codeception\Module\Db|null $dbModule The Db module used to build the populator command or null.
      */
-    public function __construct($command, Db $dbModule = null)
+    public function __construct($config)
     {
-        $this->dbModule = $dbModule;
-        $this->builtCommand = $this->buildCommand(
-            (string) $command,
-            $this->dbModule ? $this->dbModule->_getConfig() : []
-        );
+        $this->config = $config;
+        $command = $this->config['populator'];
+        $this->builtCommand = $this->buildCommand((string) $command);
     }
 
     /**
@@ -59,9 +51,9 @@ class DbPopulator
      * @param array $config The configuration values used to replace any found $keys with values from this array.
      * @return string The resulting command string after evaluating any configuration's key
      */
-    protected function buildCommand($command, $config = [])
+    protected function buildCommand($command)
     {
-        $dsn = isset($config['dsn']) ? $config['dsn'] : '';
+        $dsn = isset($this->config['dsn']) ? $this->config['dsn'] : '';
         $dsnVars = [];
         $dsnWithoutDriver = preg_replace('/^[a-z]+:/i', '', $dsn);
         foreach (explode(';', $dsnWithoutDriver) as $item) {
@@ -71,7 +63,7 @@ class DbPopulator
                 $dsnVars[$k] = $v;
             }
         }
-        $vars = array_merge($dsnVars, $config);
+        $vars = array_merge($dsnVars, $this->config);
         foreach ($vars as $key => $value) {
             $vars['$'.$key] = $value;
             unset($vars[$key]);
@@ -84,14 +76,59 @@ class DbPopulator
      *
      * Uses the PHP `exec` to spin off a child process for the built command.
      *
-     * @return array The resulting triple values (return output, full output text and exit code)
-     * out from executing the command.
+     * @return bool
      */
-    public function execute()
+    public function run()
     {
-        $command = $this->builtCommand;
-        $ret = exec($command, $output, $exitCode);
-        return [$ret, $output, $exitCode];
+        if (!$this->config['dump']) {
+            codecept_debug("[Db] No dump file found. Skip loading the dump using the populator command.");
+            return false;
+        }
+
+        try {
+            $command = $this->getBuiltCommand();
+            codecept_debug("[Db] Executing populator command: `$command`");
+
+            $result = exec($command, $output, $exitCode);
+            codecept_debug("[Db] Done running populator command with result: `$result`");
+            codecept_debug("[Db] Exit code: `$exitCode`");
+            codecept_debug("[Db] ".count($output)." line/s of output:\n");
+            foreach ($output as $l) {
+                codecept_debug("[Db] \t$l");
+            }
+
+            if (0 !== $exitCode) {
+                throw new \RuntimeException(
+                    implode(
+                        "\n",
+                        [
+                            "The populator command did not end successfully: ",
+                            "Exit code: $exitCode",
+                            "Output:",
+                            implode("\n", $output),
+                        ]
+                    )
+                );
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            codecept_debug(implode("\n", [get_class($e), $e->getMessage(), $e->getTraceAsString()]));
+            throw new ModuleException(
+                __CLASS__,
+                implode(
+                    "\n",
+                    [
+                        $e->getMessage(),
+                        sprintf(
+                            'Attempted to load the dump `%1$s` using the command `%2$s`',
+                            $this->config['dump'],
+                            $this->config['populator']
+                        ),
+                    ]
+                )
+            );
+        }
     }
 
     public function getBuiltCommand()

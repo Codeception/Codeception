@@ -27,7 +27,12 @@ class SqliteLoadingTest extends DbLoadingTest
     }
     public function getPopulator()
     {
+        if (getenv('WERCKER_ROOT')) {
+            $this->markTestSkipped('Disabled on Wercker CI');
+        }
+
         $config = $this->getConfig();
+        @chmod('tests/data/sqlite.db', 777);
         return 'cat '. $config['dump'] .' | sqlite3 tests/data/sqlite.db';
     }
 }
