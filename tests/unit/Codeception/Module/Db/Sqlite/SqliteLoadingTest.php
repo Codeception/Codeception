@@ -32,7 +32,7 @@ class SqliteLoadingTest extends DbLoadingTest
         }
 
         $config = $this->getConfig();
-        @chmod('tests/data/sqlite.db', 777);
+        @chmod('tests/data/sqlite.db', 0777);
         return 'cat '. $config['dump'] .' | sqlite3 tests/data/sqlite.db';
     }
 }
