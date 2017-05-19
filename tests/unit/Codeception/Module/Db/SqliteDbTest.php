@@ -38,6 +38,7 @@ class SqliteDbTest extends TestsForDb
             'dump' => 'tests/data/' . $dumpFile,
             'reconnect' => true,
             'cleanup' => true,
+            'populate' => true
         ];
     }
 

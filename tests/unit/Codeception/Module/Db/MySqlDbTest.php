@@ -31,6 +31,7 @@ class MySqlDbTest extends TestsForDb
             'dump' => 'tests/data/dumps/mysql.sql',
             'reconnect' => true,
             'cleanup' => true,
+            'populate' => true
         ];
     }
 

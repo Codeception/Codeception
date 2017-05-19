@@ -91,9 +91,9 @@ abstract class TestsForDb extends \Codeception\Test\Unit
 
     public function testHaveAndSeeInDatabase()
     {
-        $user_id = $this->module->haveInDatabase('users', ['name' => 'john', 'email' => 'john@jon.com']);
-        $group_id = $this->module->haveInDatabase('groups', ['name' => 'john', 'enabled' => false]);
-        $this->assertInternalType('integer', $user_id);
+        $userId = $this->module->haveInDatabase('users', ['name' => 'john', 'email' => 'john@jon.com']);
+        $this->module->haveInDatabase('groups', ['name' => 'john', 'enabled' => false]);
+        $this->assertInternalType('integer', $userId);
         $this->module->seeInDatabase('users', ['name' => 'john', 'email' => 'john@jon.com']);
         $this->module->dontSeeInDatabase('users', ['name' => 'john', 'email' => null]);
         $this->module->_after(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));

@@ -22,8 +22,9 @@ class DbPopulator
     /**
      * Constructs a DbPopulator object for the given command and Db module.
      *
-     * @param string  $command  The parameterized command to evaluate and execute later.
-     * @param Codeception\Module\Db|null $dbModule The Db module used to build the populator command or null.
+     * @param $config
+     * @internal param string $command The parameterized command to evaluate and execute later.
+     * @internal param Codeception\Module\Db|null $dbModule The Db module used to build the populator command or null.
      */
     public function __construct($config)
     {

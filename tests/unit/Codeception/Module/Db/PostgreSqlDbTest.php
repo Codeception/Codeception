@@ -31,6 +31,7 @@ class PostgreSqlDbTest extends TestsForDb
             'dump' => defined('HHVM_VERSION') ? 'dumps/postgres-hhvm.sql' : 'tests/data/dumps/postgres.sql',
             'reconnect' => true,
             'cleanup' => true,
+            'populate' => true
         ];
     }
 

@@ -35,7 +35,7 @@ use Codeception\TestInterface;
  * * Oracle
  *
  * Connection is done by database Drivers, which are stored in the `Codeception\Lib\Driver` namespace.
- * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Lib/Driver)
+ * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Lib/Driver)
  * if you run into problems loading dumps and cleaning databases.
  *
  * ## Config
@@ -58,9 +58,8 @@ use Codeception\TestInterface;
  *              password: ''
  *              dump: 'tests/_data/dump.sql'
  *              populate: true
- *              cleanup: false
+ *              cleanup: true
  *              reconnect: true
- *              populator: 'mysql -u root -h $host -D $dbname < $dump'
  *
  * ## SQL data dump
  *
@@ -81,7 +80,8 @@ use Codeception\TestInterface;
  *          user: 'root'
  *          password: ''
  *          dump: 'tests/_data/dump.sql'
- *          cleanup: true # run populator befor each test
+ *          populate: true # run populator before all tests
+ *          cleanup: true # run populator before each test
  *          populator: 'mysql -u $user -h $host $dbname < $dump'
  * ```
  *
@@ -94,8 +94,10 @@ use Codeception\TestInterface;
  *          dsn: 'pgsql:host=localhost;dbname=testdb'
  *          user: 'root'
  *          password: ''
- *          cleanup: true # run populator befor each test
- *          populator: 'pg_restore -u $user -h $host -D $dbname < tests/_data/db_backup.dump'
+ *          dump: 'tests/_data/db_backup.dump'
+ *          populate: true # run populator before all tests
+ *          cleanup: true # run populator before each test
+ *          populator: 'pg_restore -u $user -h $host -D $dbname < $dump'
  * ```
  *
  *  Variable names taken from config and DSN which have a `keyword=value` format, so you should expect to have a variable named as the
@@ -197,7 +199,7 @@ class Db extends CodeceptionModule implements DbInterface
         'cleanup' => false,
         'reconnect' => false,
         'dump' => null,
-        'populator' => '',
+        'populator' => null,
     ];
 
     /**
