@@ -4,6 +4,7 @@ require_once \Codeception\Configuration::testsDir().'unit/Codeception/Module/Db/
 
 /**
  * @group appveyor
+ * @group db
  * Class SqliteDbTest
  */
 class SqliteDbTest extends TestsForDb

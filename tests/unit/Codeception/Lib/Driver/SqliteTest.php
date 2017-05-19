@@ -3,6 +3,10 @@
 use \Codeception\Lib\Driver\Db;
 use \Codeception\Test\Unit;
 
+/**
+ * @group db
+ * Class SqliteTest
+ */
 class SqliteTest extends Unit
 {
     protected static $config = array(

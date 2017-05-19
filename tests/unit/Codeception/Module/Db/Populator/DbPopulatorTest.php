@@ -2,6 +2,10 @@
 
 use Codeception\Lib\DbPopulator;
 
+/**
+ * @group db
+ * Class DbPopulatorTest
+ */
 class DbPopulatorTest extends \Codeception\Test\Unit
 {
     public function testCommandBuilderInterpolatesVariables()

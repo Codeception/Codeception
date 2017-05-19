@@ -4,7 +4,7 @@ require_once \Codeception\Configuration::testsDir().'unit/Codeception/Module/Db/
 
 /**
  * @group appveyor
- * Class PostgreSqlDbTest
+ * @group db
  */
 class PostgreSqlDbTest extends TestsForDb
 {

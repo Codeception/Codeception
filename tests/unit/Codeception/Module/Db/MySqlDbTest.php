@@ -4,7 +4,7 @@ require_once \Codeception\Configuration::testsDir().'unit/Codeception/Module/Db/
 
 /**
  * @group appveyor
- * Class MySqlDbTest
+ * @group db
  */
 class MySqlDbTest extends TestsForDb
 {

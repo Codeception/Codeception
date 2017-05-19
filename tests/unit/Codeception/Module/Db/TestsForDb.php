@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Lib\Driver\Db;
+
 abstract class TestsForDb extends \Codeception\Test\Unit
 {
     /**
@@ -12,7 +14,10 @@ abstract class TestsForDb extends \Codeception\Test\Unit
 
     protected function setUp()
     {
-        $this->module = new \Codeception\Module\Db(make_container(), $this->getConfig());
+        $config = $this->getConfig();
+        Db::create($config['dsn'], $config['user'], $config['password'])->cleanup();
+
+        $this->module = new \Codeception\Module\Db(make_container(), $config);
         $this->module->_beforeSuite();
         $this->module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
         $this->assertTrue($this->module->isPopulated());

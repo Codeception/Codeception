@@ -5,6 +5,7 @@ use \Codeception\Test\Unit;
 
 /**
  * @group appveyor
+ * @group db
  */
 class PostgresTest extends Unit
 {
@@ -32,17 +33,13 @@ class PostgresTest extends Unit
         $sql = file_get_contents(codecept_data_dir($dumpFile));
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', '', $sql);
         self::$sql = explode("\n", $sql);
-        try {
-            $postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
-            $postgres->cleanup();
-        } catch (\Exception $e) {
-        }
     }
 
     public function setUp()
     {
         try {
             $this->postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
+            $this->postgres->cleanup();
         } catch (\Exception $e) {
             $this->markTestSkipped('Coudn\'t establish connection to database: ' . $e->getMessage());
         }
