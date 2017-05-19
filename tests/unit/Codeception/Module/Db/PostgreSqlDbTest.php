@@ -2,11 +2,17 @@
 
 require_once \Codeception\Configuration::testsDir().'unit/Codeception/Module/Db/TestsForDb.php';
 
-
+/**
+ * @group appveyor
+ * Class PostgreSqlDbTest
+ */
 class PostgreSqlDbTest extends TestsForDb
 {
     public function getPopulator()
     {
+        if (getenv('APPVEYOR')) {
+            $this->markTestSkipped('Disabled on Appveyor');
+        }
         if (getenv('WERCKER_ROOT')) {
             $this->markTestSkipped('Disabled on Wercker CI');
         }
