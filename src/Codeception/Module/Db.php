@@ -29,26 +29,14 @@ use Codeception\TestInterface;
  * * SQLite (only file)
  * * PostgreSQL
  *
- * Supported but not tested.
+ * Also available:
  *
  * * MSSQL
  * * Oracle
  *
  * Connection is done by database Drivers, which are stored in the `Codeception\Lib\Driver` namespace.
- * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Lib/Driver)
+ * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Lib/Driver)
  * if you run into problems loading dumps and cleaning databases.
- *
- * ## Status
- *
- * * Maintainer: **Gintautas Miselis**
- * * stability:
- *     - Mysql: **stable**
- *     - SQLite: **stable**
- *     - Postgres: **beta**
- *     - MSSQL: **alpha**
- *     - Oracle: **alpha**
- *
- * *Please review the code of non-stable modules and provide patches if you have issues.*
  *
  * ## Config
  *
@@ -56,8 +44,8 @@ use Codeception\TestInterface;
  * * user *required* - user to access database
  * * password *required* - password
  * * dump - path to database dump
- * * populate: true - whether the the dump should be loaded before the test suite is started
- * * cleanup: true - whether the dump should be reloaded before each test
+ * * populate: false - whether the the dump should be loaded before the test suite is started
+ * * cleanup: false - whether the dump should be reloaded before each test
  * * reconnect: false - whether the module should reconnect to the database before each test
  *
  * ## Example
@@ -76,19 +64,42 @@ use Codeception\TestInterface;
  *
  * ## SQL data dump
  *
- *  You now have two ways of loading the dump into your database. You could use the legacy method,
- *  where codeception reads the dump file and passes it to the specific driver so it populates the
- *  database (this method is usually slow in particular if your dump is "big") or you could
- *  configure a populator command (e.g. using the mysql client binary) that, after parsing the PDO
- *  dsn string and the module configuration, gives you access to some placeholder variables for a
- *  very simple command completion template.
+ * There are two ways of loading the dump into your database:
  *
- *  Usage of the `populator` is simple, just set the command that you want to use to load the dump
- *  into the database with the parsed variables from the config and/or dsn string. All the configuration
- *  options will also be available and take priority over the dsn.
- *  Most dsn have a `keyword=value` format, so you should expect to have a variable named as the
- *  keyword with the full value inside it. If you need further parsing you could write your own
- *  script to wrap the real populator command/tool.
+ * ### Populator
+ *
+ * The recommended approach is to configure a `populator`, an external command to load a dump. Command parameters like host, username, password, database
+ * can be obtained from the config and inserted into placeholders:
+ *
+ * For MySQL:
+ *
+ * ```yaml
+ * modules:
+ *    enabled:
+ *       - Db:
+ *          dsn: 'mysql:host=localhost;dbname=testdb'
+ *          user: 'root'
+ *          password: ''
+ *          dump: 'tests/_data/dump.sql'
+ *          cleanup: true # run populator befor each test
+ *          populator: 'mysql -u $user -h $host $dbname < $dump'
+ * ```
+ *
+ * For PostgreSQL (using pg_restore)
+ *
+ * ```
+ * modules:
+ *    enabled:
+ *       - Db:
+ *          dsn: 'pgsql:host=localhost;dbname=testdb'
+ *          user: 'root'
+ *          password: ''
+ *          cleanup: true # run populator befor each test
+ *          populator: 'pg_restore -u $user -h $host -D $dbname < tests/_data/db_backup.dump'
+ * ```
+ *
+ *  Variable names taken from config and DSN which have a `keyword=value` format, so you should expect to have a variable named as the
+ *  keyword with the full value inside it.
  *
  *  PDO dsn elements for the supported drivers:
  *  * MySQL: [PDO_MYSQL DSN](https://secure.php.net/manual/en/ref.pdo-mysql.connection.php)
@@ -97,7 +108,26 @@ use Codeception\TestInterface;
  *  * MSSQL: [PDO_SQLSRV DSN](https://secure.php.net/manual/en/ref.pdo-sqlsrv.connection.php)
  *  * Oracle: [PDO_OCI DSN](https://secure.php.net/manual/en/ref.pdo-oci.connection.php)
  *
- *  In the legacy dump mode:
+ * ### Dump
+ *
+ * Db module by itself can load SQL dump without external tools by using current database connection.
+ * This approach is system-independent, however, it is slower than using a populator and may have parsing issues (see below).
+ *
+ * Provide a path to SQL file in `dump` config option:
+ *
+ * ```yaml
+ * modules:
+ *    enabled:
+ *       - Db:
+ *          dsn: 'mysql:host=localhost;dbname=testdb'
+ *          user: 'root'
+ *          password: ''
+ *          populate: true # load dump before all tests
+ *          cleanup: true # load dump for each test
+ *          dump: 'tests/_data/dump.sql'
+ * ```
+ *
+ *  To parse SQL Db file, it should follow this specification:
  *  * Comments are permitted.
  *  * The `dump.sql` may contain multiline statements.
  *  * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
@@ -163,8 +193,8 @@ class Db extends CodeceptionModule implements DbInterface
      * @var array
      */
     protected $config = [
-        'populate' => true,
-        'cleanup' => true,
+        'populate' => false,
+        'cleanup' => false,
         'reconnect' => false,
         'dump' => null,
         'populator' => '',
@@ -209,7 +239,7 @@ class Db extends CodeceptionModule implements DbInterface
         // starting with loading dump
         if ($this->config['populate']) {
             if ($this->config['cleanup']) {
-                $this->cleanup();
+                $this->_cleanup();
             }
             $this->_loadDump();
         }
@@ -254,12 +284,13 @@ class Db extends CodeceptionModule implements DbInterface
 
             throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
-
+        $this->debugSection('Db', 'Connected to ' . $this->driver->getDb());
         $this->dbh = $this->driver->getDbh();
     }
 
     private function disconnect()
     {
+        $this->debugSection('Db', 'Disconnected');
         $this->dbh = null;
         $this->driver = null;
     }
@@ -270,7 +301,7 @@ class Db extends CodeceptionModule implements DbInterface
             $this->connect();
         }
         if ($this->config['cleanup'] && !$this->populated) {
-            $this->cleanup();
+            $this->_cleanup();
             $this->_loadDump();
         }
         parent::_before($test);
@@ -298,7 +329,7 @@ class Db extends CodeceptionModule implements DbInterface
         $this->populated = false;
     }
 
-    protected function cleanup()
+    public function _cleanup()
     {
         $dbh = $this->driver->getDbh();
         if (!$dbh) {
@@ -323,9 +354,9 @@ class Db extends CodeceptionModule implements DbInterface
     {
         if ($this->config['populator']) {
             $this->loadDumpUsingPopulator();
-        } else {
-            $this->loadDumpUsingDriver();
+            return;
         }
+        $this->loadDumpUsingDriver();
     }
 
     protected function loadDumpUsingPopulator()

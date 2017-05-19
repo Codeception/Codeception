@@ -85,50 +85,20 @@ class DbPopulator
             return false;
         }
 
-        try {
-            $command = $this->getBuiltCommand();
-            codecept_debug("[Db] Executing populator command: `$command`");
+        $command = $this->getBuiltCommand();
+        codecept_debug("[Db] Executing Populator: `$command`");
 
-            $result = exec($command, $output, $exitCode);
-            codecept_debug("[Db] Done running populator command with result: `$result`");
-            codecept_debug("[Db] Exit code: `$exitCode`");
-            codecept_debug("[Db] ".count($output)." line/s of output:\n");
-            foreach ($output as $l) {
-                codecept_debug("[Db] \t$l");
-            }
+        exec($command, $output, $exitCode);
+        codecept_debug("[Db] Populator Finished. Exit code: `$exitCode`");
 
-            if (0 !== $exitCode) {
-                throw new \RuntimeException(
-                    implode(
-                        "\n",
-                        [
-                            "The populator command did not end successfully: ",
-                            "Exit code: $exitCode",
-                            "Output:",
-                            implode("\n", $output),
-                        ]
-                    )
-                );
-            }
-
-            return true;
-        } catch (\Exception $e) {
-            codecept_debug(implode("\n", [get_class($e), $e->getMessage(), $e->getTraceAsString()]));
-            throw new ModuleException(
-                __CLASS__,
-                implode(
-                    "\n",
-                    [
-                        $e->getMessage(),
-                        sprintf(
-                            'Attempted to load the dump `%1$s` using the command `%2$s`',
-                            $this->config['dump'],
-                            $this->config['populator']
-                        ),
-                    ]
-                )
+        if (0 !== $exitCode) {
+            throw new \RuntimeException(
+                "The populator command did not end successfully: \n" .
+                "  Exit code: $exitCode \n" .
+                "  Output:" . implode("\n", $output)
             );
         }
+        return true;
     }
 
     public function getBuiltCommand()
