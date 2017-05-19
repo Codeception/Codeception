@@ -203,7 +203,7 @@ class Db extends CodeceptionModule implements DbInterface
     /**
      * @var bool
      */
-    public $populated = false;
+    protected $populated = false;
 
     /**
      * @var \Codeception\Lib\Driver\Db
@@ -348,6 +348,11 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
+    }
+
+    public function isPopulated()
+    {
+        return $this->populated;
     }
 
     public function _loadDump()

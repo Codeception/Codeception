@@ -15,7 +15,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         $this->module = new \Codeception\Module\Db(make_container(), $this->getConfig());
         $this->module->_beforeSuite();
         $this->module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
-        $this->assertTrue($this->module->populated);
+        $this->assertTrue($this->module->isPopulated());
     }
 
     protected function tearDown()
@@ -155,6 +155,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
     public function testLoadWithPopulator()
     {
         $this->module->_cleanup();
+        $this->assertFalse($this->module->isPopulated());
         try {
             $this->module->seeInDatabase('users', ['name' => 'davert']);
         } catch (\PDOException $noTable) {
@@ -169,6 +170,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
             ]
         );
         $this->module->_loadDump();
+        $this->assertTrue($this->module->isPopulated());
         $this->module->seeInDatabase('users', ['name' => 'davert']);
     }
 
