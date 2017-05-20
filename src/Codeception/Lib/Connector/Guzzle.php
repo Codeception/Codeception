@@ -159,7 +159,7 @@ class Guzzle extends Client
     public function getAbsoluteUri($uri)
     {
         $baseUri = $this->baseUri;
-        if (strpos($uri, '://') === false) {
+        if (strpos($uri, '://') === false && strpos($uri, '//') !== 0) {
             if (strpos($uri, '/') === 0) {
                 $baseUriPath = parse_url($baseUri, PHP_URL_PATH);
                 if (!empty($baseUriPath) && strpos($uri, $baseUriPath) === 0) {
