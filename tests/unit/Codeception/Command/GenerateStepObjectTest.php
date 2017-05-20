@@ -8,7 +8,7 @@ class GenerateStepObjectTest extends BaseCommandRunner
     {
         $this->makeCommand('\Codeception\Command\GenerateStepObject');
         $this->config = array(
-            'class_name' => 'HobbitGuy',
+            'actor' => 'HobbitGuy',
             'path' => 'tests/shire',
         );
     }

@@ -18,13 +18,18 @@ class AutoRebuild implements EventSubscriberInterface
     public function updateActor(SuiteEvent $e)
     {
         $settings = $e->getSettings();
+        if (!$settings['actor']) {
+            codecept_debug('actor is empty');
+            return; // no actor
+        }
+
         $modules = $e->getSuite()->getModules();
 
         $actorActionsFile = Configuration::supportDir() . '_generated' . DIRECTORY_SEPARATOR
-            . $settings['class_name'] . 'Actions.php';
+            . $settings['actor'] . 'Actions.php';
 
         if (!file_exists($actorActionsFile)) {
-            codecept_debug("Generating {$settings['class_name']}Actions...");
+            codecept_debug("Generating {$settings['actor']}Actions...");
             $this->generateActorActions($actorActionsFile, $settings);
             return;
         }
@@ -39,7 +44,7 @@ class AutoRebuild implements EventSubscriberInterface
 
                 // regenerate actor class when hashes do not match
                 if ($hash != $currentHash) {
-                    codecept_debug("Rebuilding {$settings['class_name']}...");
+                    codecept_debug("Rebuilding {$settings['actor']}...");
                     @fclose($handle);
                     $this->generateActorActions($actorActionsFile, $settings);
                     return;

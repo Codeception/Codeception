@@ -126,7 +126,7 @@ class Bootstrap extends Command
     public function createGlobalConfig()
     {
         $basicConfig = [
-            'actor'    => $this->actorSuffix,
+            'actor_suffix' => $this->actorSuffix,
             'paths'    => [
                 'tests'   => 'tests',
                 'log'     => $this->logDir,
