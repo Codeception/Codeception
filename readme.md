@@ -10,7 +10,7 @@
 **Modern PHP Testing for everyone** 
 
 Codeception is a modern full-stack testing framework for PHP.
-Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
+Inspired by BDD, it provides an absolutely new way of writing acceptance, functional and even unit tests.
 Powered by PHPUnit.
 
 | General |  Windows |  Webdriver  | Facebook | HHVM |
@@ -49,13 +49,13 @@ $I->seeInDatabase('pages', array('title' => 'Tree of Life Movie Review')); // da
 
 For unit testing you can stay on classic PHPUnit tests, as Codeception can run them too.
 
-## Documentation
-
-[Documentation on Github](https://github.com/Codeception/Codeception/tree/master/docs)
-
-Documentation is currently included within the project. Look for it in the 'docs' directory.
-
 ## Installation
+
+### Composer
+
+```
+php composer.phar require "codeception/codeception"
+```
 
 ### Phar
 
@@ -83,25 +83,23 @@ Run CLI utility:
 php codecept.phar
 ```
 
-### Composer
-
-```
-php composer.phar require "codeception/codeception"
-```
-
-Read Also [Installation](http://codeception.com/install) | **[QuickStart](http://codeception.com/quickstart)**
+See also [Installation](http://codeception.com/install) | **[QuickStart](http://codeception.com/quickstart)**
 
 ## Getting Started
 
-If you successfully installed Codeception, run this command:
+After you successfully installed Codeception, run this command:
 
 ```
 codecept bootstrap
 ```
 
-this will create a default directory structure and default test suites
+This will create a default directory structure and default test suites.
 
-See Documentation for more information.
+## Documentation
+
+[Documentation](http://codeception.com/docs/01-Introduction)
+
+Documentation is included within the project. Look for it in the ['docs' directory](https://github.com/Codeception/Codeception/tree/master/docs).
 
 ### License
 MIT
