@@ -35,6 +35,10 @@ class JsonArray
                 json_last_error()
             );
         }
+
+        if (!is_array($this->jsonArray)) {
+            throw new \PHPUnit_Framework_AssertionFailedError('JSON response is not an array: ' . $jsonString);
+        }
     }
 
     public function toXml()
