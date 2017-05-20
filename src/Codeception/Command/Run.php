@@ -41,6 +41,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  * * `codecept run -o "settings: lint: false"`: disable linting
  * * `codecept run -o "reporters: report: \Custom\Reporter" --report`: use custom reporter
  *
+ * Run with specific extension
+ *
+ * * `codecept run --ext Recorder` run with Recorder extension enabled
+ * * `codecept run --ext DotReporter` run with DotReporter printer
+ * * `codecept run --ext "My\Custom\Extension"` run with an extension loaded by class name
+ *
  * Full reference:
  * ```
  * Arguments:
@@ -114,6 +120,7 @@ class Run extends Command
             new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
             new InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
             new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY  | InputOption::VALUE_REQUIRED, 'Override config values'),
+            new InputOption('ext', 'e', InputOption::VALUE_IS_ARRAY  | InputOption::VALUE_REQUIRED, 'Run with extension enabled'),
             new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
             new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html'),
             new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
@@ -221,6 +228,9 @@ class Run extends Command
         // update config from options
         if (count($this->options['override'])) {
             $config = $this->overrideConfig($this->options['override']);
+        }
+        if ($this->options['ext']) {
+            $config = $this->enableExtensions($this->options['ext']);
         }
 
         if (!$this->options['colors']) {
