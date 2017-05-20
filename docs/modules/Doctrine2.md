@@ -90,6 +90,25 @@ $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
  * `param array` $params
  * `return` array
 
+ ### grabEntitiesFromRepository
+ 
+Selects entities from repository.
+It builds query based on array of parameters.
+You can use entity associations to build complex queries.
+
+Example:
+
+``` php
+<?php
+$users = $I->grabEntitiesFromRepository('User', array('name' => 'davert'));
+?>
+```
+
+ * `Available since` 1.1
+ * `param` $entity
+ * `param array` $params
+ * `return` array
+
 
 ### haveFakeRepository
  

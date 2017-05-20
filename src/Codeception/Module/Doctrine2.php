@@ -428,6 +428,70 @@ EOF;
     }
 
     /**
+     * Selects entities from repository.
+     * It builds query based on array of parameters.
+     * You can use entity associations to build complex queries.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $users = $I->grabEntitiesFromRepository('User', array('name' => 'davert'));
+     * ?>
+     * ```
+     *
+     * @version 1.1
+     * @param $entity
+     * @param array $params
+     * @return array
+     */
+    public function grabEntitiesFromRepository($entity, $params = [])
+    {
+        // we need to store to database...
+        $this->em->flush();
+        $data = $this->em->getClassMetadata($entity);
+        $qb = $this->em->getRepository($entity)->createQueryBuilder('s');
+        $qb->select('s');
+        $this->buildAssociationQuery($qb, $entity, 's', $params);
+        $this->debug($qb->getDQL());
+        
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Selects a single entity from repository.
+     * It builds query based on array of parameters.
+     * You can use entity associations to build complex queries.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $user = $I->grabEntityFromRepository('User', array('id' => '1234'));
+     * ?>
+     * ```
+     *
+     * @version 1.1
+     * @param $entity
+     * @param array $params
+     * @return array
+     */
+    public function grabEntityFromRepository($entity, $params = [])
+    {
+        // we need to store to database...
+        $this->em->flush();
+        $data = $this->em->getClassMetadata($entity);
+        $qb = $this->em->getRepository($entity)->createQueryBuilder('s');
+        $qb->select('s');
+        $this->buildAssociationQuery($qb, $entity, 's', $params);
+        $this->debug($qb->getDQL());
+        
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    
+
+    /**
      * It's Fuckin Recursive!
      *
      * @param $qb
