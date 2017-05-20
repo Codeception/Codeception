@@ -65,11 +65,11 @@ class Configuration
      * @var array Default config
      */
     public static $defaultConfig = [
-        'actor'      => 'Guy', // codeception 1.x compatibility
+        'actor_suffix'=> 'Tester',
         'namespace'  => '',
         'include'    => [],
-        'paths'      => [
-        ],
+        'paths'      => [],
+        'suites'     => [],
         'modules'    => [],
         'extensions' => [
             'enabled'  => [],
@@ -85,14 +85,14 @@ class Configuration
         ],
         'groups'     => [],
         'settings'   => [
-            'colors'     => false,
-            'bootstrap'  => false,
-            'strict_xml' => false,
-            'lint'       => true,
-            'backup_globals' => true,
-            'log_incomplete_skipped' => false,
-            'report_useless_tests' => false,
-            'disallow_test_output' => false,
+            'colors'                    => false,
+            'bootstrap'                 => false,
+            'strict_xml'                => false,
+            'lint'                      => true,
+            'backup_globals'            => true,
+            'log_incomplete_skipped'    => false,
+            'report_useless_tests'      => false,
+            'disallow_test_output'      => false,
             'be_strict_about_changes_to_global_state' => false
         ],
         'coverage'   => [],
@@ -101,14 +101,15 @@ class Configuration
     ];
 
     public static $defaultSuiteSettings = [
-        'class_name'  => 'NoGuy',
+        'actor'       => null,
+        'class_name'  => null, // Codeception <2.3 compatibility
         'modules'     => [
             'enabled' => [],
             'config'  => [],
             'depends' => []
         ],
+        'path'        => null,
         'namespace'   => null,
-        'path'        => '',
         'groups'      => [],
         'shuffle'     => false,
         'extensions'  => [ // suite extensions
@@ -186,6 +187,10 @@ class Configuration
             $config['paths']['output'] = $config['paths']['log'];
         }
 
+        if (isset(self::$config['actor'])) {
+            self::$config['actor_suffix'] = self::$config['actor']; // old compatibility
+        }
+
         if (!isset($config['paths']['support']) and isset($config['paths']['helpers'])) {
             $config['paths']['support'] = $config['paths']['helpers'];
         }
@@ -255,7 +260,12 @@ class Configuration
             ->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)
             ->depth('< 1')
             ->sortByName();
+
         self::$suites = [];
+
+        foreach (array_keys(self::$config['suites']) as $suite) {
+            self::$suites[$suite] = $suite;
+        }
 
         /** @var SplFileInfo $suite */
         foreach ($suites as $suite) {
@@ -300,8 +310,20 @@ class Configuration
             $settings = self::mergeConfigs($settings, $envConf);
         }
 
+        if (!$settings['actor']) {
+            // Codeception 2.2 compatibility
+            $settings['actor'] = $settings['class_name'];
+        }
+
+        if (!$settings['path']) {
+            // take a suite path from its name
+            $settings['path'] = $suite;
+        }
+
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
-            . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+            . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
+
+
 
         return $settings;
     }
@@ -639,6 +661,11 @@ class Configuration
      */
     protected static function loadSuiteConfig($suite, $path, $settings)
     {
+        if (isset(self::$config['suites'][$suite])) {
+            // bundled config
+            return self::mergeConfigs($settings, self::$config['suites'][$suite]);
+        }
+
         $suiteDistConf = self::getConfFromFile(
             self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml"
         );

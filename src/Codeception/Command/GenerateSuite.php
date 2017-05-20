@@ -52,9 +52,8 @@ class GenerateSuite extends Command
 
         $config = $this->getGlobalConfig();
         if (!$actor) {
-            $actor = ucfirst($suite) . $config['actor'];
+            $actor = ucfirst($suite) . $config['actor_suffix'];
         }
-        $config['class_name'] = $actor;
 
         $dir = Configuration::testsDir();
         if (file_exists($dir . $suite . '.suite.yml')) {
@@ -72,15 +71,14 @@ class GenerateSuite extends Command
             );
         }
 
-        $actorName = $this->removeSuffix($actor, $config['actor']);
-        $config['class_name'] = $actorName . $config['actor'];
+        $helperName = ucfirst($suite);
 
         $file = $this->createDirectoryFor(
             Configuration::supportDir() . "Helper",
-            "$actorName.php"
-        ) . "$actorName.php";
+            "$helperName.php"
+        ) . "$helperName.php";
 
-        $gen = new Helper($actorName, $config['namespace']);
+        $gen = new Helper($helperName, $config['namespace']);
         // generate helper
         $this->createFile(
             $file,
@@ -90,7 +88,7 @@ class GenerateSuite extends Command
         $output->writeln("Helper <info>" . $gen->getHelperName() . "</info> was created in $file");
 
         $yamlSuiteConfigTemplate = <<<EOF
-class_name: {{actor}}
+actor: {{actor}}
 modules:
     enabled:
         - {{helper}}
@@ -99,7 +97,7 @@ EOF;
         $this->createFile(
             $dir . $suite . '.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
-                ->place('actor', $config['class_name'])
+                ->place('actor', $actor)
                 ->place('helper', $gen->getHelperName())
                 ->produce()
         );
@@ -111,13 +109,13 @@ EOF;
 
         $file = $this->createDirectoryFor(
             Configuration::supportDir(),
-            $config['class_name']
-        ) . $this->getShortClassName($config['class_name']);
+                $actor
+        ) . $this->getShortClassName($actor);
         $file .=  '.php';
 
         $this->createFile($file, $content);
 
-        $output->writeln("Actor <info>" . $config['class_name'] . "</info> was created in $file");
+        $output->writeln("Actor <info>" . $actor . "</info> was created in $file");
 
         $output->writeln("Suite config <info>$suite.suite.yml</info> was created.");
         $output->writeln(' ');

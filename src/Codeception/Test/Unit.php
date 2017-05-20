@@ -47,7 +47,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
         $di->set(new Scenario($this));
 
         // auto-inject $tester property
-        if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor']))) {
+        if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor_suffix']))) {
             $this->$property = $di->instantiate($this->getMetadata()->getCurrent('actor'));
         }
 

@@ -54,7 +54,7 @@ EOF;
 
     public function __construct($settings)
     {
-        $this->name = $settings['class_name'];
+        $this->name = $settings['actor'];
         $this->settings = $settings;
         $this->di = new Di();
         $modules = Configuration::modules($this->settings);

@@ -78,11 +78,12 @@ class Bootstrap extends InitTemplate
         $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
 #
-# Suite for functional (integration) tests
+# Suite for functional tests
 # Emulate web requests and make application process them
 # Include one of framework modules (Symfony2, Yii2, Laravel5) to use it
+# Remove this suite if you don't use frameworks
 
-class_name: $actor{$this->actorSuffix}
+actor: $actor{$this->actorSuffix}
 modules:
     enabled:
         # add a framework module here
@@ -100,7 +101,7 @@ EOF;
 # Perform tests in browser using the WebDriver or PhpBrowser.
 # If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
-class_name: $actor{$this->actorSuffix}
+actor: $actor{$this->actorSuffix}
 modules:
     enabled:
         - PhpBrowser:
@@ -115,9 +116,9 @@ EOF;
         $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
 #
-# Suite for unit (internal) tests.
+# Suite for unit or integration tests.
 
-class_name: $actor{$this->actorSuffix}
+actor: $actor{$this->actorSuffix}
 modules:
     enabled:
         - Asserts
@@ -136,7 +137,7 @@ EOF;
                 'support' => $this->supportDir,
                 'envs'    => $this->envsDir,
             ],
-            'actor' => 'Tester',
+            'actor_suffix' => 'Tester',
             'extensions' => [
                 'enabled' => ['Codeception\Extension\RunFailed']
             ]
