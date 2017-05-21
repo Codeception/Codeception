@@ -12,7 +12,7 @@ class Api extends InitTemplate
 # suite config
 suites:
     api:
-        class_name: ApiTester
+        actor: ApiTester
         path: .
         modules:
             enabled:
@@ -74,7 +74,7 @@ EOF;
 
         $this->createFile('codeception.yml', $configFile);
         $this->createHelper('Api', $supportDir);
-        $this->createActor('Api', $supportDir, Yaml::parse($configFile)['suites']['api']);
+        $this->createActor('ApiTester', $supportDir, Yaml::parse($configFile)['suites']['api']);
 
         $this->sayInfo("Created global config codeception.yml inside the root directory");
         $this->createFile($dir . DIRECTORY_SEPARATOR . 'ApiCest.php', $this->firstTest);

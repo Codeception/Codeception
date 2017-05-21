@@ -32,10 +32,15 @@ class Init extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $template = $input->getArgument('template');
-        $className = 'Codeception\Template\\' . ucfirst($template);
 
-        if (!class_exists($className)) {
-            throw new \Exception("Template from a $className can't be loaded; Init can't be executed");
+        if (class_exists($template)) {
+            $className = $template;
+        } else {
+            $className = 'Codeception\Template\\' . ucfirst($template);
+
+            if (!class_exists($className)) {
+                throw new \Exception("Template from a $className can't be loaded; Init can't be executed");
+            }
         }
 
         $initProcess = new $className($input, $output);

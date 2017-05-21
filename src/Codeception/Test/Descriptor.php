@@ -48,7 +48,7 @@ class Descriptor
     public static function getTestFileName(\PHPUnit_Framework_SelfDescribing $testCase)
     {
         if ($testCase instanceof Descriptive) {
-            return $testCase->getFileName();
+            return realpath($testCase->getFileName());
         }
         return (new \ReflectionClass($testCase))->getFileName();
     }

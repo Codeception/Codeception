@@ -85,7 +85,7 @@ class Configuration
         ],
         'groups'     => [],
         'settings'   => [
-            'colors'                    => false,
+            'colors'                    => true,
             'bootstrap'                 => false,
             'strict_xml'                => false,
             'lint'                      => true,

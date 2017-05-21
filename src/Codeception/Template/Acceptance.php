@@ -12,7 +12,7 @@ class Acceptance extends InitTemplate
 # suite config
 suites:
     acceptance:
-        class_name: AcceptanceTester
+        actor: AcceptanceTester
         path: .
         modules:
             enabled:
@@ -35,6 +35,7 @@ paths:
     output: {{baseDir}}/_output
     data: {{baseDir}}/_data
     support: {{baseDir}}/_support
+    envs: {{baseDir}}/_envs
 
 settings:
     shuffle: false
@@ -55,7 +56,7 @@ class LoginCest
         // write a positive login test 
     }
     
-    public function loginWithBadCredentials(AcceptanceTester \$I)
+    public function loginWithInvalidPassword(AcceptanceTester \$I)
     {
         // write a negative login test
     }       
@@ -104,7 +105,7 @@ EOF;
 
         $this->createFile('codeception.yml', $configFile);
         $this->createHelper('Acceptance', $supportDir);
-        $this->createActor('Acceptance', $supportDir, Yaml::parse($configFile)['suites']['acceptance']);
+        $this->createActor('AcceptanceTester', $supportDir, Yaml::parse($configFile)['suites']['acceptance']);
 
         $this->sayInfo("Created global config codeception.yml inside the root directory");
         $this->createFile($dir . DIRECTORY_SEPARATOR . 'LoginCest.php', $this->firstTest);

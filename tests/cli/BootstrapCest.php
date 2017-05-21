@@ -47,7 +47,21 @@ class BootstrapCest
         $I->dontSeeFileFound('tests/acceptance');
         $I->seeFileFound('codeception.yml');
     }
-    
+
+    public function bootstrapFromInit(\CliGuy $I)
+    {
+        $I->executeCommand('init bootstrap');
+        $I->seeFileFound('tests/acceptance');
+        $I->seeFileFound('codeception.yml');
+    }
+
+    public function bootstrapFromInitUsingClassName(\CliGuy $I)
+    {
+        $I->executeCommand('init "Codeception\Template\Bootstrap"');
+        $I->seeFileFound('tests/acceptance');
+        $I->seeFileFound('codeception.yml');
+    }
+
     protected function checkFilesCreated(\CliGuy $I)
     {
         $I->seeDirFound('tests/_support');
@@ -66,4 +80,5 @@ class BootstrapCest
         $I->seeFileFound('Functional.php', 'tests/_support/Helper');
         $I->seeFileFound('Unit.php', 'tests/_support/Helper');
     }
+
 }
