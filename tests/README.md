@@ -1,7 +1,6 @@
 # Codeception Internal Tests
 
-In case you submit pull request you will be asking for writing a test.
-But it's pretty hard to figure out where to start and how to make all tests pass.
+In case you submit a pull request, you will be asked for writing a test.
 
 There are 3 suites for testing
 
@@ -11,7 +10,7 @@ There are 3 suites for testing
 
 ## Unit
 
-The most important tests in this suite are Module tests located in `test/unit/Codeception/Module`. Unlike you would expect most of tests there are integrational tests. For example, `WebDriverTest` require actual selenium server to be executed.
+The most important tests in this suite are Module tests located in `test/unit/Codeception/Module`. Unlike you would expect, most of tests there are integrational tests. For example, `WebDriverTest` requires an actual Selenium Server to be running.
 
 ### Testing a Module
 
@@ -31,7 +30,7 @@ Requirements:
 
 ### Demo Application
 
-When module require a web server with demo application running. You can find this app in `tests/data/app`. To execute tests for **PhpBrowser**, **WebDriver** you need to start a web server in this dir:
+When a module requires a web server with the demo application running, you can find this app in `tests/data/app`. To execute tests for **PhpBrowser** or **WebDriver** you need to start a web server for this dir:
 
 ```
 php -S 127.0.0.1:8000 -t tests/data/app
