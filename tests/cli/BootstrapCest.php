@@ -51,15 +51,13 @@ class BootstrapCest
     public function bootstrapFromInit(\CliGuy $I)
     {
         $I->executeCommand('init bootstrap');
-        $I->seeFileFound('tests/acceptance');
-        $I->seeFileFound('codeception.yml');
+        $this->checkFilesCreated($I);
     }
 
     public function bootstrapFromInitUsingClassName(\CliGuy $I)
     {
         $I->executeCommand('init "Codeception\Template\Bootstrap"');
-        $I->seeFileFound('tests/acceptance');
-        $I->seeFileFound('codeception.yml');
+        $this->checkFilesCreated($I);
     }
 
     protected function checkFilesCreated(\CliGuy $I)
