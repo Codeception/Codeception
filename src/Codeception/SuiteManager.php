@@ -75,7 +75,10 @@ class SuiteManager
 
     public function initialize()
     {
-        $this->dispatcher->dispatch(Events::MODULE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(
+            Events::MODULE_INIT,
+            new Event\SuiteEvent($this->suite, null, $this->settings)
+        );
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
@@ -85,8 +88,10 @@ class SuiteManager
                 . " class doesn't exist in suite folder.\nRun the 'build' command to generate it"
             );
         }
-        $this->dispatcher->dispatch(Events::SUITE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
-        ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
+        $this->dispatcher->dispatch(
+            Events::SUITE_INIT,
+            new Event\SuiteEvent($this->suite, null, $this->settings)
+        );
     }
 
     public function loadTests($path = null)
@@ -133,7 +138,8 @@ class SuiteManager
     protected function createSuite($name)
     {
         $suite = new Suite();
-        $suite->setBaseName(preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
+        // replace everything after space (env name)
+        $suite->setBaseName(preg_replace('~\s.+$~', '', $name));
         if ($this->settings['namespace']) {
             $name = $this->settings['namespace'] . ".$name";
         }
@@ -142,8 +148,12 @@ class SuiteManager
             $suite->setBackupGlobals((bool) $this->settings['backup_globals']);
         }
 
-        if (isset($this->settings['be_strict_about_changes_to_global_state']) && method_exists($suite, 'setbeStrictAboutChangesToGlobalState')) {
-            $suite->setbeStrictAboutChangesToGlobalState((bool)$this->settings['be_strict_about_changes_to_global_state']);
+        if (isset($this->settings['be_strict_about_changes_to_global_state'])
+            && method_exists($suite, 'setbeStrictAboutChangesToGlobalState')
+        ) {
+            $suite->setbeStrictAboutChangesToGlobalState(
+                (bool)$this->settings['be_strict_about_changes_to_global_state']
+            );
         }
         $suite->setModules($this->moduleContainer->all());
         return $suite;
@@ -153,9 +163,15 @@ class SuiteManager
     public function run(PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options)
     {
         $runner->prepareSuite($this->suite, $options);
-        $this->dispatcher->dispatch(Events::SUITE_BEFORE, new Event\SuiteEvent($this->suite, $result, $this->settings));
+        $this->dispatcher->dispatch(
+            Events::SUITE_BEFORE,
+            new Event\SuiteEvent($this->suite, $result, $this->settings)
+        );
         $runner->doEnhancedRun($this->suite, $result, $options);
-        $this->dispatcher->dispatch(Events::SUITE_AFTER, new Event\SuiteEvent($this->suite, $result, $this->settings));
+        $this->dispatcher->dispatch(
+            Events::SUITE_AFTER,
+            new Event\SuiteEvent($this->suite, $result, $this->settings)
+        );
     }
 
     /**
@@ -191,14 +207,20 @@ class SuiteManager
             return;
         }
         if (!isset($this->settings['env'])) {
-            Notification::warning("Environments are not configured", Descriptor::getTestFullName($test));
+            Notification::warning(
+                "Environments are not configured",
+                Descriptor::getTestFullName($test)
+            );
             return;
         }
         $availableEnvironments = array_keys($this->settings['env']);
         $listedEnvironments = explode(',', implode(',', $envs));
         foreach ($listedEnvironments as $env) {
             if (!in_array($env, $availableEnvironments)) {
-                Notification::warning("Environment $env was not configured but used in test", Descriptor::getTestFullName($test));
+                Notification::warning(
+                    "Environment $env was not configured but used in test",
+                    Descriptor::getTestFullName($test)
+                );
             }
         }
     }
