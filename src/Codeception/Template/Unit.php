@@ -25,7 +25,7 @@ paths:
 EOF;
 
     protected $testerAndModules = <<<EOF
-        class_name: UnitTester
+        actor: UnitTester
         modules:
             enabled:
                 # add more modules here
@@ -43,8 +43,9 @@ EOF;
             $this->namespace = $this->ask("Enter a default namespace for tests (or skip this step)");
         }
 
+        $this->say();
         $this->say("Codeception provides additional features for integration tests");
-        $this->say("You can access DI containers, ORM, Database.");
+        $this->say("Like accessing frameworks, ORM, Database.");
         $haveTester = $this->ask("Do you wish to enable them?", false);
 
         $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
@@ -64,7 +65,7 @@ EOF;
 
         if ($haveTester) {
             $this->createHelper('Unit', $supportDir);
-            $this->createActor('Unit', $supportDir, Yaml::parse($configFile)['suites']['unit']);
+            $this->createActor('UnitTester', $supportDir, Yaml::parse($configFile)['suites']['unit']);
         }
 
         $this->gitIgnore($outputDir);
@@ -77,8 +78,9 @@ EOF;
         $this->say('Use @depends annotation to change the order of tests');
 
         if ($haveTester) {
-            $this->say('Enable more modules in codeception.yml');
-            $this->say('Access their methods via <bold>$this->tester</bold> object inside Codeception\Test\Unit');
+            $this->say('To access DI, ORM, Database enable corresponding modules in codeception.yml');
+            $this->say('Use <bold>$this->tester</bold> object inside Codeception\Test\Unit to call their methods');
+            $this->say("For example: \$this->tester->seeInDatabase('users', ['name' => 'davert'])");
         }
 
         $this->say();
