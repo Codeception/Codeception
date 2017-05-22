@@ -7,6 +7,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\Db as DbInterface;
 use Codeception\Lib\Driver\Db as Driver;
+use Codeception\Lib\DbPopulator;
 use Codeception\TestInterface;
 
 /**
@@ -28,26 +29,14 @@ use Codeception\TestInterface;
  * * SQLite (only file)
  * * PostgreSQL
  *
- * Supported but not tested.
+ * Also available:
  *
  * * MSSQL
  * * Oracle
  *
  * Connection is done by database Drivers, which are stored in the `Codeception\Lib\Driver` namespace.
- * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Lib/Driver)
+ * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Lib/Driver)
  * if you run into problems loading dumps and cleaning databases.
- *
- * ## Status
- *
- * * Maintainer: **Gintautas Miselis**
- * * stability:
- *     - Mysql: **stable**
- *     - SQLite: **stable**
- *     - Postgres: **beta**
- *     - MSSQL: **alpha**
- *     - Oracle: **alpha**
- *
- * *Please review the code of non-stable modules and provide patches if you have issues.*
  *
  * ## Config
  *
@@ -55,8 +44,8 @@ use Codeception\TestInterface;
  * * user *required* - user to access database
  * * password *required* - password
  * * dump - path to database dump
- * * populate: true - whether the the dump should be loaded before the test suite is started
- * * cleanup: true - whether the dump should be reloaded before each test
+ * * populate: false - whether the the dump should be loaded before the test suite is started
+ * * cleanup: false - whether the dump should be reloaded before each test
  * * reconnect: false - whether the module should reconnect to the database before each test
  *
  * ## Example
@@ -69,11 +58,78 @@ use Codeception\TestInterface;
  *              password: ''
  *              dump: 'tests/_data/dump.sql'
  *              populate: true
- *              cleanup: false
+ *              cleanup: true
  *              reconnect: true
  *
  * ## SQL data dump
  *
+ * There are two ways of loading the dump into your database:
+ *
+ * ### Populator
+ *
+ * The recommended approach is to configure a `populator`, an external command to load a dump. Command parameters like host, username, password, database
+ * can be obtained from the config and inserted into placeholders:
+ *
+ * For MySQL:
+ *
+ * ```yaml
+ * modules:
+ *    enabled:
+ *       - Db:
+ *          dsn: 'mysql:host=localhost;dbname=testdb'
+ *          user: 'root'
+ *          password: ''
+ *          dump: 'tests/_data/dump.sql'
+ *          populate: true # run populator before all tests
+ *          cleanup: true # run populator before each test
+ *          populator: 'mysql -u $user -h $host $dbname < $dump'
+ * ```
+ *
+ * For PostgreSQL (using pg_restore)
+ *
+ * ```
+ * modules:
+ *    enabled:
+ *       - Db:
+ *          dsn: 'pgsql:host=localhost;dbname=testdb'
+ *          user: 'root'
+ *          password: ''
+ *          dump: 'tests/_data/db_backup.dump'
+ *          populate: true # run populator before all tests
+ *          cleanup: true # run populator before each test
+ *          populator: 'pg_restore -u $user -h $host -D $dbname < $dump'
+ * ```
+ *
+ *  Variable names are being taken from config and DSN which has a `keyword=value` format, so you should expect to have a variable named as the
+ *  keyword with the full value inside it.
+ *
+ *  PDO dsn elements for the supported drivers:
+ *  * MySQL: [PDO_MYSQL DSN](https://secure.php.net/manual/en/ref.pdo-mysql.connection.php)
+ *  * SQLite: [PDO_SQLITE DSN](https://secure.php.net/manual/en/ref.pdo-sqlite.connection.php)
+ *  * PostgreSQL: [PDO_PGSQL DSN](https://secure.php.net/manual/en/ref.pdo-pgsql.connection.php)
+ *  * MSSQL: [PDO_SQLSRV DSN](https://secure.php.net/manual/en/ref.pdo-sqlsrv.connection.php)
+ *  * Oracle: [PDO_OCI DSN](https://secure.php.net/manual/en/ref.pdo-oci.connection.php)
+ *
+ * ### Dump
+ *
+ * Db module by itself can load SQL dump without external tools by using current database connection.
+ * This approach is system-independent, however, it is slower than using a populator and may have parsing issues (see below).
+ *
+ * Provide a path to SQL file in `dump` config option:
+ *
+ * ```yaml
+ * modules:
+ *    enabled:
+ *       - Db:
+ *          dsn: 'mysql:host=localhost;dbname=testdb'
+ *          user: 'root'
+ *          password: ''
+ *          populate: true # load dump before all tests
+ *          cleanup: true # load dump for each test
+ *          dump: 'tests/_data/dump.sql'
+ * ```
+ *
+ *  To parse SQL Db file, it should follow this specification:
  *  * Comments are permitted.
  *  * The `dump.sql` may contain multiline statements.
  *  * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
@@ -139,10 +195,11 @@ class Db extends CodeceptionModule implements DbInterface
      * @var array
      */
     protected $config = [
-        'populate' => true,
-        'cleanup' => true,
+        'populate' => false,
+        'cleanup' => false,
         'reconnect' => false,
-        'dump' => null
+        'dump' => null,
+        'populator' => null,
     ];
 
     /**
@@ -167,7 +224,15 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function _initialize()
     {
-        if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
+        $this->connect();
+    }
+
+    public function _beforeSuite($settings = [])
+    {
+        if (!$this->config['populator']
+            && $this->config['dump']
+            &&  ($this->config['cleanup'] || ($this->config['populate']))
+        ) {
             $this->readSql();
         }
 
@@ -176,10 +241,9 @@ class Db extends CodeceptionModule implements DbInterface
         // starting with loading dump
         if ($this->config['populate']) {
             if ($this->config['cleanup']) {
-                $this->cleanup();
+                $this->_cleanup();
             }
-            $this->loadDump();
-            $this->populated = true;
+            $this->_loadDump();
         }
 
         if ($this->config['reconnect']) {
@@ -222,12 +286,13 @@ class Db extends CodeceptionModule implements DbInterface
 
             throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
-
+        $this->debugSection('Db', 'Connected to ' . $this->driver->getDb());
         $this->dbh = $this->driver->getDbh();
     }
 
     private function disconnect()
     {
+        $this->debugSection('Db', 'Disconnected');
         $this->dbh = null;
         $this->driver = null;
     }
@@ -238,15 +303,14 @@ class Db extends CodeceptionModule implements DbInterface
             $this->connect();
         }
         if ($this->config['cleanup'] && !$this->populated) {
-            $this->cleanup();
-            $this->loadDump();
+            $this->_cleanup();
+            $this->_loadDump();
         }
         parent::_before($test);
     }
 
     public function _after(TestInterface $test)
     {
-        $this->populated = false;
         $this->removeInserted();
         if ($this->config['reconnect']) {
             $this->disconnect();
@@ -264,9 +328,10 @@ class Db extends CodeceptionModule implements DbInterface
             }
         }
         $this->insertedRows = [];
+        $this->populated = false;
     }
 
-    protected function cleanup()
+    public function _cleanup()
     {
         $dbh = $this->driver->getDbh();
         if (!$dbh) {
@@ -281,17 +346,39 @@ class Db extends CodeceptionModule implements DbInterface
                 return;
             }
             $this->driver->cleanup();
+            $this->populated = false;
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
     }
 
-    protected function loadDump()
+    public function isPopulated()
+    {
+        return $this->populated;
+    }
+
+    public function _loadDump()
+    {
+        if ($this->config['populator']) {
+            $this->loadDumpUsingPopulator();
+            return;
+        }
+        $this->loadDumpUsingDriver();
+    }
+
+    protected function loadDumpUsingPopulator()
+    {
+        $populator = new DbPopulator($this->config);
+        $this->populated = $populator->run();
+    }
+
+    protected function loadDumpUsingDriver()
     {
         if (!$this->sql) {
             return;
         }
         $this->driver->load($this->sql);
+        $this->populated = true;
     }
 
     /**
