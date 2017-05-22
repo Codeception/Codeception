@@ -7,30 +7,30 @@ New generation Selenium WebDriver module.
 
 ### Selenium
 
-To run Selenium Server you will need Java and Chrome or Firefox browser installed.
+To run Selenium Server you need [Java](https://www.java.com/) as well as Chrome or Firefox browser installed.
 
-1. Download [Selenium Server](http://docs.seleniumhq.org/download/)
-2. For Chrome browser install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started), for Firefox browser install [GeckoDriver](https://github.com/mozilla/geckodriver).
-3. Launch the server: `java -jar selenium-server-standalone-3.xx.xxx.jar`. To locate Chromedriver binary use `-Dwebdriver.chrome.driver=./chromedriver` option. For Geckodriver use `-Dwebdriver.gecko.driver=./geckodriver`.
-4. Configure this module (in acceptance.suite.yml) by setting url and browser:
+1. Download [Selenium Standalone Server](http://docs.seleniumhq.org/download/)
+2. To use Chrome, install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started). To use Firefox, install [GeckoDriver](https://github.com/mozilla/geckodriver).
+3. Launch the Selenium Server: `java -jar selenium-server-standalone-3.xx.xxx.jar`. To locate Chromedriver binary use `-Dwebdriver.chrome.driver=./chromedriver` option. For Geckodriver use `-Dwebdriver.gecko.driver=./geckodriver`.
+4. Configure this module (in `acceptance.suite.yml`) by setting `url` and `browser`:
 
 ```yaml
     modules:
        enabled:
           - WebDriver:
              url: 'http://localhost/'
-             browser: chrome
+             browser: chrome # 'chrome' or 'firefox'
 ```
 
 ### PhantomJS
 
-PhantomJS is a headless alternative to Selenium Server that implements
+PhantomJS is a [headless browser](https://en.wikipedia.org/wiki/Headless_browser) alternative to Selenium Server that implements
 [the WebDriver protocol](https://code.google.com/p/selenium/wiki/JsonWireProtocol).
 It allows you to run Selenium tests on a server without a GUI installed.
 
 1. Download [PhantomJS](http://phantomjs.org/download.html)
 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
-3. Configure this module (in acceptance.suite.yml) by setting url and `phantomjs` as browser:
+3. Configure this module (in `acceptance.suite.yml`) by setting url and `phantomjs` as browser:
 
 ```yaml
     modules:
@@ -39,6 +39,8 @@ It allows you to run Selenium tests on a server without a GUI installed.
              url: 'http://localhost/'
              browser: phantomjs
 ```
+
+Since PhantomJS doesn't give you any visual feedback, it's probably a good idea to install [Codeception\Extension\Recorder](http://codeception.com/extensions#CodeceptionExtensionRecorder) which gives you screenshots of how PhantomJS "sees" your pages.
 
 ### Headless Selenium in Docker
 
@@ -121,7 +123,7 @@ you should use a tunnel application provided by a service.
 * `browser` *required* - Browser to launch.
 * `host` - Selenium server host (127.0.0.1 by default).
 * `port` - Selenium server port (4444 by default).
-* `restart` - Set to false (default) to share browser window between tests, or set to true to create a separate window for each test.
+* `restart` - Set to `false` (default) to use the same browser window for all tests, or set to `true` to create a new window for each test. In any case, when all tests are finished the browser window is closed.
 * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
 * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
 * `wait` - Implicit wait (default 0 seconds).

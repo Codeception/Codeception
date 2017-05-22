@@ -11,7 +11,7 @@ use Codeception\Lib\DbPopulator;
 use Codeception\TestInterface;
 
 /**
- * Works with SQL database.
+ * Access a database.
  *
  * The most important function of this module is to clean a database before each test.
  * That's why this module was added to the global configuration file `codeception.yml`.
@@ -26,12 +26,12 @@ use Codeception\TestInterface;
  * Supported and tested databases are:
  *
  * * MySQL
- * * SQLite (only file)
+ * * SQLite (i.e. just one file)
  * * PostgreSQL
  *
  * Also available:
  *
- * * MSSQL
+ * * MS SQL
  * * Oracle
  *
  * Connection is done by database Drivers, which are stored in the `Codeception\Lib\Driver` namespace.
@@ -41,7 +41,7 @@ use Codeception\TestInterface;
  * ## Config
  *
  * * dsn *required* - PDO DSN
- * * user *required* - user to access database
+ * * user *required* - username to access database
  * * password *required* - password
  * * dump - path to database dump
  * * populate: false - whether the the dump should be loaded before the test suite is started
@@ -145,7 +145,7 @@ use Codeception\TestInterface;
  * ```
  * ## Query generation
  *
- * seeInDatabase, dontSeeInDatabase, seeNumRecords, grabFromDatabase and grabNumRecords methods
+ * `seeInDatabase`, `dontSeeInDatabase`, `seeNumRecords`, `grabFromDatabase` and `grabNumRecords` methods
  * accept arrays as criteria. WHERE condition is generated using item key as a field name and
  * item value as a field value.
  *
@@ -160,9 +160,8 @@ use Codeception\TestInterface;
  * ```sql
  * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
  * ```
- * New addition to 2.1.9 is ability to use LIKE in condition. It is achieved by adding ' like' to column name.
+ * Since version 2.1.9 it's possible to use LIKE in a condition, as shown here:
  *
- * Example:
  * ```php
  * <?php
  * $I->seeInDatabase('users', array('name' => 'Davert', 'email like' => 'davert%'));

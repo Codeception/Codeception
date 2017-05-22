@@ -70,6 +70,46 @@ Flushes changes to database and performs ->findOneBy() call for current reposito
 Performs $em->flush();
 
 
+### grabEntitiesFromRepository
+ 
+Selects entities from repository.
+It builds query based on array of parameters.
+You can use entity associations to build complex queries.
+
+Example:
+
+``` php
+<?php
+$users = $I->grabEntitiesFromRepository('User', array('name' => 'davert'));
+?>
+```
+
+ * `Available since` 1.1
+ * `param` $entity
+ * `param array` $params
+ * `return` array
+
+
+### grabEntityFromRepository
+ 
+Selects a single entity from repository.
+It builds query based on array of parameters.
+You can use entity associations to build complex queries.
+
+Example:
+
+``` php
+<?php
+$user = $I->grabEntityFromRepository('User', array('id' => '1234'));
+?>
+```
+
+ * `Available since` 1.1
+ * `param` $entity
+ * `param array` $params
+ * `return` array
+
+
 ### grabFromRepository
  
 Selects field value from repository.
@@ -87,25 +127,6 @@ $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
  * `Available since` 1.1
  * `param` $entity
  * `param` $field
- * `param array` $params
- * `return` array
-
- ### grabEntitiesFromRepository
- 
-Selects entities from repository.
-It builds query based on array of parameters.
-You can use entity associations to build complex queries.
-
-Example:
-
-``` php
-<?php
-$users = $I->grabEntitiesFromRepository('User', array('name' => 'davert'));
-?>
-```
-
- * `Available since` 1.1
- * `param` $entity
  * `param array` $params
  * `return` array
 
