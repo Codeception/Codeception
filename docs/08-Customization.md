@@ -179,7 +179,23 @@ extensions:
     enabled: [MyCustomExtension]
 ```
 
-Extensions can also be enabled per suite inside suite configs (like `acceptance.suite.yml`) and for a specific environment. 
+Extensions can also be enabled per suite inside suite configs (like `acceptance.suite.yml`) and for a specific environment.
+ 
+To enable extension dynamically, execute the `run` command with `--ext` option.
+Provide a class name as a parameter:
+
+```bash
+codecept run --ext MyCustomExtension
+codecept run --ext "\My\Extension"
+```
+
+If a class is in a `Codeception\Extension` namespace you can skip it and provide only a shortname. 
+So Recorder extension can be started like this:
+
+```bash
+codecept run --ext Recorder
+```
+
 
 ### Configuring Extension
 
@@ -281,11 +297,20 @@ Now the Admin group class will listen for all events of tests that belong to the
 
 ## Custom Reporters
 
-In order to customize the output, you can use Extensions, the way it is done in
-[SimpleOutput Extension](https://github.com/Codeception/Codeception/blob/master/ext%2FSimpleOutput.php).
+Alternative reporters can be implemented as extension. 
+There are [DotReporter](http://codeception.com/extensions#DotReporter) and [SimpleReporter](http://codeception.com/extensions#SimpleReporter) extensions included. 
+Use them to change output or use them as an example to build your own reporter. They can be easily enabled with `--ext` option
+
+```bash
+codecept run --ext DotReporter
+```
+
+![](https://cloud.githubusercontent.com/assets/220264/26132800/4d23f336-3aab-11e7-81ba-2896a4c623d2.png)
+
+If you want to use it as default reporter enable it in `codeception.yml`.
+
 But what if you need to change the output format of the XML or JSON results triggered with the `--xml` or `--json` options?
-Codeception uses printers from PHPUnit and overrides some of them.
-If you need to customize one of the standard reporters you can override them too.
+Codeception uses PHPUnit printers and overrides them. If you need to customize one of the standard reporters you can override them too.
 If you are thinking on implementing your own reporter you should add a `reporters` section to `codeception.yml`
 and override one of the standard printer classes with one of your own:
 
@@ -293,12 +318,10 @@ and override one of the standard printer classes with one of your own:
 reporters:
     xml: Codeception\PHPUnit\Log\JUnit
     html: Codeception\PHPUnit\ResultPrinter\HTML
-    tap: PHPUnit_Util_Log_TAP
-    json: PHPUnit_Util_Log_JSON
     report: Codeception\PHPUnit\ResultPrinter\Report
 ```
 
-All reporters implement the
+All PHPUnit printers implement the
 [PHPUnit_Framework_TestListener](https://phpunit.de/manual/current/en/extending-phpunit.html#extending-phpunit.PHPUnit_Framework_TestListener)
 interface. It is recommended to read the code of the original reporter before overriding it.
 

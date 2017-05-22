@@ -31,6 +31,9 @@ class JsonContains extends \PHPUnit_Framework_Constraint
     protected function matches($other)
     {
         $jsonResponseArray = new JsonArray($other);
+        if (!is_array($jsonResponseArray->toArray())) {
+            throw new \PHPUnit_Framework_AssertionFailedError('JSON response is not an array: ' . $other);
+        }
 
         if ($jsonResponseArray->containsArray($this->expected)) {
             return true;
@@ -39,7 +42,6 @@ class JsonContains extends \PHPUnit_Framework_Constraint
         $comparator = new ArrayComparator();
         $comparator->setFactory(new Factory);
         try {
-            //$comparator->assertEquals(var_export($this->expected, true), var_export($jsonResponseArray->toArray(), true));
             $comparator->assertEquals($this->expected, $jsonResponseArray->toArray());
         } catch (ComparisonFailure $failure) {
             throw new \PHPUnit_Framework_ExpectationFailedException(

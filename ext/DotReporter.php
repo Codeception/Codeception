@@ -10,6 +10,8 @@ use Codeception\Subscriber\Console;
  * DotReporter provides less verbose output for test execution.
  * Like PHPUnit printer it prints dots "." for successful testes and "F" for failures.
  *
+ * ![](https://cloud.githubusercontent.com/assets/220264/26132800/4d23f336-3aab-11e7-81ba-2896a4c623d2.png)
+ *
  * ```bash
  *  ..........
  *  ..........

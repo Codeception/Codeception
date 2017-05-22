@@ -50,12 +50,12 @@ class Build extends Command
         
         $content = $actorGenerator->produce();
 
-        $file = $this->buildPath(
+        $file = $this->createDirectoryFor(
             Configuration::supportDir(),
             $settings['actor']
-        ) . $this->getClassName($settings['actor']);
+        ) . $this->getShortClassName($settings['actor']);
         $file .=  '.php';
-        return $this->save($file, $content);
+        return $this->createFile($file, $content);
     }
     
     private function buildActions(array $settings)
@@ -68,9 +68,9 @@ class Build extends Command
         
         $content = $actionsGenerator->produce();
         
-        $file = $this->buildPath(Configuration::supportDir() . '_generated', $settings['actor']);
-        $file .= $this->getClassName($settings['actor']) . 'Actions.php';
-        return $this->save($file, $content, true);
+        $file = $this->createDirectoryFor(Configuration::supportDir() . '_generated', $settings['actor']);
+        $file .= $this->getShortClassName($settings['actor']) . 'Actions.php';
+        return $this->createFile($file, $content, true);
     }
 
     private function buildSuiteActors()

@@ -19,7 +19,7 @@ We think that you can spend more time on writing tests and less on writing suppo
 By default, AcceptanceTester relies on PhpBrowser module, which is set in the `tests/acceptance.suite.yml` configuration file:
 
 ```yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
@@ -112,7 +112,7 @@ Before we execute this test, we should make sure that the website is running on 
 Let's open the `tests/acceptance.suite.yml` file and replace the URL with the URL of your web application:
 
 ```yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
@@ -171,11 +171,6 @@ This simple test can be extended to a complete scenario of site usage, therefore
 by emulating the user's actions, you can test any of your websites.
 
 Give it a try!
-
-## Bootstrap
-
-Each suite has its own bootstrap file. It's located in the suite directory and is named `_bootstrap.php`. It will be executed before the test suite.
-There is also a global bootstrap file located in the `tests` directory. It can be used to include additional files.
 
 ## Cept, Cest and Test Formats
 

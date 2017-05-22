@@ -104,7 +104,7 @@ modules:
 
 Each generated suite have its own configuration inside directory set by `paths: tests: ` configuration option in `codeception.yml`. Each suite configuration is named like `suitename.suite.yml`. It allows to enable and configure modules, and more.
 
-* `class_name`: name of the actor class for current suite. 
+* `actor`: name of the actor class for current suite. 
 * `modules`: list of enabled modules with their configuration.
 
 ```yaml

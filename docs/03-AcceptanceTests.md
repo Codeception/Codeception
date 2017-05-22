@@ -45,7 +45,7 @@ Before we start, we need a local copy of the site running on your host.
 We need to specify the `url` parameter in the acceptance suite config (`tests/acceptance.suite.yml`):
 
 ```yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
@@ -322,7 +322,7 @@ To execute a test in a browser we need to change the suite configuration to use 
 Modify your `acceptance.suite.yml` file:
 
 ```yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - WebDriver:

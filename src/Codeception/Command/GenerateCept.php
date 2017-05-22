@@ -39,13 +39,13 @@ class GenerateCept extends Command
         $filename = $input->getArgument('test');
 
         $config = $this->getSuiteConfig($suite);
-        $this->buildPath($config['path'], $filename);
+        $this->createDirectoryFor($config['path'], $filename);
 
         $filename = $this->completeSuffix($filename, 'Cept');
         $gen = new Cept($config);
 
         $full_path = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
-        $res = $this->save($full_path, $gen->produce());
+        $res = $this->createFile($full_path, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
             return;

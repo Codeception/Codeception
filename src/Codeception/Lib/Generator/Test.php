@@ -30,7 +30,7 @@ class {{name}}Test extends \Codeception\Test\Unit
     }
 
     // tests
-    public function testMe()
+    public function testSomeFeature()
     {
 
     }

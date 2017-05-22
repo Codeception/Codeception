@@ -17,7 +17,7 @@ The REST web service is accessed via HTTP with standard methods: `GET`, `POST`, 
 Configure modules in `api.suite.yml`:
 
 ``` yaml
-class_name: ApiTester
+actor: ApiTester
 modules:
     enabled:
         - REST:
@@ -28,7 +28,7 @@ modules:
 The REST module will connect to `PhpBrowser` according to this configuration. Depending on the web service we may deal with XML or JSON responses. Codeception handles both data formats well, however If you don't need one of them, you can explicitly specify that the JSON or XML parts of the module will be used:
 
 ``` yaml
-class_name: ApiTester
+actor: ApiTester
 modules:
     enabled:
         - REST:
@@ -41,7 +41,7 @@ API tests can be functional and be executed using Symfony, Laravel5, Zend, or an
 
 
 ``` yaml
-class_name: ApiTester
+actor: ApiTester
 modules:
     enabled:
         - REST:
@@ -188,7 +188,7 @@ SOAP web services are usually more complex. You will need PHP [configured with S
 Let's configure `SOAP` module to be used with `PhpBrowser`:
 
 ``` yaml
-class_name: ApiTester
+actor: ApiTester
 modules:
     enabled:
     - SOAP:

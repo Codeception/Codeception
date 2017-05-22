@@ -1,6 +1,44 @@
 # Official Extensions
 
-## Codeception\Extension\Logger
+## DotReporter
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/DotReporter.php)
+
+DotReporter provides less verbose output for test execution.
+Like PHPUnit printer it prints dots "." for successful testes and "F" for failures.
+
+![](https://cloud.githubusercontent.com/assets/220264/26132800/4d23f336-3aab-11e7-81ba-2896a4c623d2.png)
+
+```bash
+ ..........
+ ..........
+ ..........
+ ..........
+ ..........
+ ..........
+ ..........
+ ..........
+
+Time: 2.07 seconds, Memory: 20.00MB
+
+OK (80 tests, 124 assertions)
+```
+
+
+Enable this reporter with `--ext option`
+
+```
+codecept run --ext DotReporter
+```
+
+Failures and Errors are printed by a standard Codeception reporter.
+Use this extension as an example for building custom reporters.
+
+
+
+## Logger
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/Logger.php)
 
 Log suites/tests/steps using Monolog library.
 Monolog should be installed additionally by Composer.
@@ -25,7 +63,9 @@ extensions:
 
 
 
-## Codeception\Extension\Recorder
+## Recorder
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/Recorder.php)
 
 Saves screenshots of each step in acceptance tests and shows them as a slideshow.
 Activated only for suites with WebDriver module enabled.
@@ -64,7 +104,9 @@ extensions:
 
 
 
-## Codeception\Extension\RunFailed
+## RunFailed
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/RunFailed.php)
 
 Saves failed tests into tests/log/failed in order to rerun failed tests.
 
@@ -85,7 +127,9 @@ On each execution failed tests are logged and saved into `tests/_output/failed` 
 
 
 
-## Codeception\Extension\SimpleOutput
+## SimpleReporter
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/SimpleReporter.php)
 
 This extension demonstrates how you can implement console output of your own.
 Recommended to be used for development purposes only.

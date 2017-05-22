@@ -26,7 +26,7 @@ Modules are attached to Actor classes in the suite config.
 For example, in `tests/acceptance.suite.yml` we should see:
 
 ```yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:

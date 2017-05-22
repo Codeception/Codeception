@@ -23,7 +23,7 @@ Modules are attached to the Actor classes in the suite configuration.
 For example, in `tests/functional.suite.yml` we should see:
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - PhpBrowser:
@@ -114,7 +114,7 @@ The REST module has parts for `Xml` and `Json` in the same way. If you are testi
 you can enable just the JSON part of this module:
 
 ```yaml
-class_name: ApiTester
+actor: ApiTester
 modules:
     enabled:
         - REST:

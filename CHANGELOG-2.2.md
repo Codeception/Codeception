@@ -1,3 +1,10 @@
+#### 2.2.12
+
+* Don't skip other tests after a failed test #4226 by @Naktibalda
+* [REST] `seeResponseContainsJson` doesn't crash when json response is not an array by @Naktibalda
+* [PhpBrowser] Fixed redirecting to schemaless url by @Naktibalda #4218
+* [Doctrine2] Added `grabEntityFromRepository`, `grabEntitiesFromRepository` methods by @maximelebastard 
+
 #### 2.2.11
 
 * [WebDriver] Added `_restart` method to restart browser with a new configuration. 

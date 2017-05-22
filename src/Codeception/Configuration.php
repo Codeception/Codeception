@@ -34,7 +34,7 @@ class Configuration
     /**
      * @var string Current project logs directory.
      */
-    protected static $logDir = null;
+    protected static $outputDir = null;
 
     /**
      * @var string Current project data directory. This directory is used to hold
@@ -85,7 +85,7 @@ class Configuration
         ],
         'groups'     => [],
         'settings'   => [
-            'colors'                    => false,
+            'colors'                    => true,
             'bootstrap'                 => false,
             'strict_xml'                => false,
             'lint'                      => true,
@@ -182,15 +182,24 @@ class Configuration
 
         self::$config = $config;
 
+        // compatibility with 1.x, 2.0
+        if (!isset($config['paths']['output']) and isset($config['paths']['log'])) {
+            $config['paths']['output'] = $config['paths']['log'];
+        }
+
         if (isset(self::$config['actor'])) {
             self::$config['actor_suffix'] = self::$config['actor']; // old compatibility
         }
 
-        if (!isset($config['paths']['log'])) {
-            throw new ConfigurationException('Log path is not defined by key "paths: log"');
+        if (!isset($config['paths']['support']) and isset($config['paths']['helpers'])) {
+            $config['paths']['support'] = $config['paths']['helpers'];
         }
 
-        self::$logDir = $config['paths']['log'];
+        if (!isset($config['paths']['output'])) {
+            throw new ConfigurationException('Output path is not defined by key "paths: output"');
+        }
+
+        self::$outputDir = $config['paths']['output'];
 
         // fill up includes with wildcard expansions
         $config['include'] = self::expandWildcardedIncludes($config['include']);
@@ -211,11 +220,6 @@ class Configuration
 
         if (!isset($config['paths']['data'])) {
             throw new ConfigurationException('Data path is not defined Codeception config by key "paths: data"');
-        }
-
-        // compatibility with 1.x, 2.0
-        if (!isset($config['paths']['support']) and isset($config['paths']['helpers'])) {
-            $config['paths']['support'] = $config['paths']['helpers'];
         }
 
         if (!isset($config['paths']['support'])) {
@@ -506,12 +510,12 @@ class Configuration
      */
     public static function outputDir()
     {
-        if (!self::$logDir) {
+        if (!self::$outputDir) {
             throw new ConfigurationException("Path for output not specified. Please, set output path in global config");
         }
 
-        $dir = self::$logDir . DIRECTORY_SEPARATOR;
-        if (strcmp(self::$logDir[0], "/") !== 0) {
+        $dir = self::$outputDir . DIRECTORY_SEPARATOR;
+        if (strcmp(self::$outputDir[0], "/") !== 0) {
             $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
         }
 
@@ -595,8 +599,8 @@ class Configuration
     {
         self::$config = self::mergeConfigs(self::$config, $config);
 
-        if (isset(self::$config['paths']['log'])) {
-            self::$logDir = self::$config['paths']['log'];
+        if (isset(self::$config['paths']['output'])) {
+            self::$outputDir = self::$config['paths']['output'];
         }
         if (isset(self::$config['paths']['data'])) {
             self::$dataDir = self::$config['paths']['data'];
