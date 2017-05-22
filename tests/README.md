@@ -9,6 +9,22 @@ There are 3 suites for testing
 * coverage - acceptance tests of code coverage
 * unit - all unit/integration/etc tests.
 
+## Set up
+1. Clone the repository to your local machine
+1. Make sure you have the MongoDB extension enabled. It's not included in PHP by default, you can download it from http://pecl.php.net/package/mongodb
+1. Run `composer install` in the cloned project directory
+
+To run the web tests:
+1. Start PHP's internal webserver in the project directory:
+    ```
+    php -S 127.0.0.1:8000 -t tests/data/app
+    ```
+1. Start Selenium server
+1. Run:
+    ```
+    php codecept run web --env chrome
+    ```
+
 ## Unit
 
 The most important tests in this suite are Module tests located in `test/unit/Codeception/Module`. Unlike you would expect most of tests there are integrational tests. For example, `WebDriverTest` require actual selenium server to be executed.
