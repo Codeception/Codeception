@@ -30,11 +30,13 @@ extensions:
 Saves a screenshot of each step in acceptance tests and shows them as a slideshow on one HTML page.
 Activated only for suites with WebDriver module enabled.
 
+ ![recorder](http://codeception.com/images/recorder.gif)
+
 The screenshots are saved to `tests/_output/record_*` directories, open `index.html` to see them as a slideshow.
 
 #### Installation
 
-Add this to the list of enabled extensions in your `codeception.yml`:
+Add this to the list of enabled extensions in `codeception.yml` or `acceptance.suite.yml`:
 
 ``` yaml
 extensions:
@@ -44,7 +46,7 @@ extensions:
 
 #### Configuration
 
-* `delete_successful` (default: true) - delete screenshots for successfully passed tests (i.e. log only failed and errored tests)
+* `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
 * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
 
 

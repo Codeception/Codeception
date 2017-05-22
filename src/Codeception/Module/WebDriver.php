@@ -79,7 +79,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * 1. Download [PhantomJS](http://phantomjs.org/download.html)
  * 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
- * 3. Configure this module (in acceptance.suite.yml) by setting url and `phantomjs` as browser:
+ * 3. Configure this module (in `acceptance.suite.yml`) by setting url and `phantomjs` as browser:
  *
  * ```yaml
  *     modules:
