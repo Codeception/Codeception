@@ -13,7 +13,6 @@ $I->seeInThisFile('actor: HouseGuy');
 $I->seeInThisFile('- \FooBar\Helper\House');
 $I->seeFileFound('House.php', 'src/FooBar/tests/_support/Helper');
 $I->seeInThisFile('namespace FooBar\Helper;');
-$I->seeFileFound('_bootstrap.php', 'src/FooBar/tests/house');
 
 $I->expect('suite is not created due to dashes');
 $I->executeCommand('generate:suite invalid-dash-suite');

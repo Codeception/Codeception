@@ -41,14 +41,14 @@ class GenerateFeature extends Command
         $filename = $input->getArgument('feature');
 
         $config = $this->getSuiteConfig($suite);
-        $this->buildPath($config['path'], $filename);
+        $this->createDirectoryFor($config['path'], $filename);
 
         $gen = new Feature(basename($filename));
         if (!preg_match('~\.feature$~', $filename)) {
             $filename .= '.feature';
         }
         $full_path = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
-        $res = $this->save($full_path, $gen->produce());
+        $res = $this->createFile($full_path, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Feature $filename already exists</error>");
             return;
