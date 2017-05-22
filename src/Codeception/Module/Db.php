@@ -7,6 +7,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\Db as DbInterface;
 use Codeception\Lib\Driver\Db as Driver;
+use Codeception\Lib\DbPopulator;
 use Codeception\TestInterface;
 
 /**
@@ -71,9 +72,32 @@ use Codeception\TestInterface;
  *              populate: true
  *              cleanup: false
  *              reconnect: true
+ *              populator: 'mysql -u root -h $host -D $dbname < $dump'
  *
  * ## SQL data dump
  *
+ *  You now have two ways of loading the dump into your database. You could use the legacy method,
+ *  where codeception reads the dump file and passes it to the specific driver so it populates the
+ *  database (this method is usually slow in particular if your dump is "big") or you could
+ *  configure a populator command (e.g. using the mysql client binary) that, after parsing the PDO
+ *  dsn string and the module configuration, gives you access to some placeholder variables for a
+ *  very simple command completion template.
+ *
+ *  Usage of the `populator` is simple, just set the command that you want to use to load the dump
+ *  into the database with the parsed variables from the config and/or dsn string. All the configuration
+ *  options will also be available and take priority over the dsn.
+ *  Most dsn have a `keyword=value` format, so you should expect to have a variable named as the
+ *  keyword with the full value inside it. If you need further parsing you could write your own
+ *  script to wrap the real populator command/tool.
+ *
+ *  PDO dsn elements for the supported drivers:
+ *  * MySQL: [PDO_MYSQL DSN](https://secure.php.net/manual/en/ref.pdo-mysql.connection.php)
+ *  * SQLite: [PDO_SQLITE DSN](https://secure.php.net/manual/en/ref.pdo-sqlite.connection.php)
+ *  * PostgreSQL: [PDO_PGSQL DSN](https://secure.php.net/manual/en/ref.pdo-pgsql.connection.php)
+ *  * MSSQL: [PDO_SQLSRV DSN](https://secure.php.net/manual/en/ref.pdo-sqlsrv.connection.php)
+ *  * Oracle: [PDO_OCI DSN](https://secure.php.net/manual/en/ref.pdo-oci.connection.php)
+ *
+ *  In the legacy dump mode:
  *  * Comments are permitted.
  *  * The `dump.sql` may contain multiline statements.
  *  * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
@@ -142,7 +166,8 @@ class Db extends CodeceptionModule implements DbInterface
         'populate' => true,
         'cleanup' => true,
         'reconnect' => false,
-        'dump' => null
+        'dump' => null,
+        'populator' => '',
     ];
 
     /**
@@ -167,7 +192,15 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function _initialize()
     {
-        if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
+        $this->connect();
+    }
+
+    public function _beforeSuite($settings = [])
+    {
+        if (!$this->config['populator']
+            && $this->config['dump']
+            &&  ($this->config['cleanup'] || ($this->config['populate']))
+        ) {
             $this->readSql();
         }
 
@@ -179,12 +212,20 @@ class Db extends CodeceptionModule implements DbInterface
                 $this->cleanup();
             }
             $this->loadDump();
-            $this->populated = true;
         }
 
         if ($this->config['reconnect']) {
             $this->disconnect();
         }
+    }
+
+    /**
+     * Whether or not the db was populated with the dump file.
+     * @return boolean True if the dump was loaded, false otherwise.
+     */
+    public function isPopulated()
+    {
+        return $this->populated;
     }
 
     private function readSql()
@@ -246,7 +287,6 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function _after(TestInterface $test)
     {
-        $this->populated = false;
         $this->removeInserted();
         if ($this->config['reconnect']) {
             $this->disconnect();
@@ -264,6 +304,7 @@ class Db extends CodeceptionModule implements DbInterface
             }
         }
         $this->insertedRows = [];
+        $this->populated = false;
     }
 
     protected function cleanup()
@@ -281,6 +322,7 @@ class Db extends CodeceptionModule implements DbInterface
                 return;
             }
             $this->driver->cleanup();
+            $this->populated = false;
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
@@ -288,10 +330,72 @@ class Db extends CodeceptionModule implements DbInterface
 
     protected function loadDump()
     {
+        if ($this->config['populator']) {
+            $this->loadDumpUsingPopulator();
+        } else {
+            $this->loadDumpUsingDriver();
+        }
+    }
+
+    protected function loadDumpUsingPopulator()
+    {
+        if (!$this->config['dump']) {
+            $this->debug("[Db] No dump file found. Skip loading the dump using the populator command.");
+            return;
+        }
+        try {
+            $populator = new DbPopulator($this->config['populator'], $this);
+            $command = $populator->getBuiltCommand();
+            $this->debug("[Db] Executing populator command: `$command`");
+            list($result, $output, $exitCode) = $populator->execute();
+            $this->debug("[Db] Done running populator command with result: `$result`");
+            $this->debug("[Db] Exit code: `$exitCode`");
+            $this->debug("[Db] ".count($output)." line/s of output:\n");
+            foreach ($output as $l) {
+                $this->debug("[Db] \t$l");
+            }
+
+            if (0 !== $exitCode) {
+                throw new \RuntimeException(
+                    implode(
+                        "\n",
+                        [
+                            "The populator command did not end successfully: ",
+                            "Exit code: $exitCode",
+                            "Output:",
+                            implode("\n", $output),
+                        ]
+                    )
+                );
+            }
+
+            $this->populated = true;
+        } catch (\Exception $e) {
+            $this->debug(implode("\n", [get_class($e), $e->getMessage(), $e->getTraceAsString()]));
+            throw new ModuleException(
+                __CLASS__,
+                implode(
+                    "\n",
+                    [
+                        $e->getMessage(),
+                        sprintf(
+                            'Attempted to load the dump `%1$s` using the command `%2$s`',
+                            $this->config['dump'],
+                            $this->config['populator']
+                        ),
+                    ]
+                )
+            );
+        }
+    }
+
+    protected function loadDumpUsingDriver()
+    {
         if (!$this->sql) {
             return;
         }
         $this->driver->load($this->sql);
+        $this->populated = true;
     }
 
     /**
