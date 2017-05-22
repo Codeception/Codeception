@@ -55,7 +55,7 @@ php -S 127.0.0.1:8000 -t tests/data/app
 
 If you run `FrameworkTest` for various frameworks, you don't need a web server running.
 
-It is a very basic PHP application developed with `glue` microframework. There are various html pages in `view` subdir that are used in tests. To add a new html page, you should add a file into `tests/data/view`, then add it to routes of `tests/data/app/index.php` file:
+It is a very basic PHP application developed with `glue` microframework. There are various html pages in `view` subdir that are used in tests. To add a new html page, you should add a new file to the `tests/data/app/view` directory, then add a route in `tests/data/app/index.php`:
 
 ```
 $urls = array(
