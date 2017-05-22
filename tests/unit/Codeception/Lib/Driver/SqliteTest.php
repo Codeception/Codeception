@@ -3,6 +3,10 @@
 use \Codeception\Lib\Driver\Db;
 use \Codeception\Test\Unit;
 
+/**
+ * @group db
+ * Class SqliteTest
+ */
 class SqliteTest extends Unit
 {
     protected static $config = array(
@@ -16,7 +20,7 @@ class SqliteTest extends Unit
      */
     protected static $sqlite;
     protected static $sql;
-    
+
     public static function setUpBeforeClass()
     {
         if (version_compare(PHP_VERSION, '5.5.0', '<')) {
@@ -28,21 +32,15 @@ class SqliteTest extends Unit
         $sql = file_get_contents(\Codeception\Configuration::dataDir() . $dumpFile);
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         self::$sql = explode("\n", $sql);
-        try {
-            self::$sqlite = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
-            self::$sqlite->cleanup();
-        } catch (\Exception $e) {
-        }
     }
 
     public function setUp()
     {
-        if (!isset(self::$sqlite)) {
-            $this->markTestSkipped('Coudn\'t establish connection to database');
-        }
+        self::$sqlite = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
+        self::$sqlite->cleanup();
         self::$sqlite->load(self::$sql);
     }
-    
+
     public function tearDown()
     {
         if (isset(self::$sqlite)) {
@@ -50,18 +48,6 @@ class SqliteTest extends Unit
         }
     }
 
-    public function testCleanupDatabase()
-    {
-        $this->assertGreaterThan(
-            0,
-            count(self::$sqlite->getDbh()->query('SELECT name FROM sqlite_master WHERE type = "table";')->fetchAll())
-        );
-        self::$sqlite->cleanup();
-        $this->assertEmpty(
-            self::$sqlite->getDbh()->query('SELECT name FROM sqlite_master WHERE type = "table";')->fetchAll()
-        );
-    }
-    
     public function testLoadDump()
     {
         $res = self::$sqlite->getDbh()->query("select * from users where name = 'davert'");

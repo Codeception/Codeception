@@ -20,6 +20,7 @@ INSERT INTO "users" VALUES('bird','charlie@parker.com','2012-02-01 21:17:39');
 DROP TABLE IF EXISTS "empty_table";
 CREATE TABLE "empty_table" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "field" VARCHAR);
 
+DROP TABLE IF EXISTS "no_pk";
 CREATE TABLE "no_pk" (
   "status" VARCHAR NOT NULL
 );

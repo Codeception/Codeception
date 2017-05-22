@@ -20,6 +20,7 @@ INSERT INTO "users" VALUES('bird','charlie@parker.com','2012-02-01 21:17:39');
 DROP TABLE IF EXISTS "empty_table";
 CREATE TABLE "empty_table" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "field" VARCHAR);
 
+DROP TABLE IF EXISTS "composite_pk";
 CREATE TABLE "composite_pk" (
   "group_id" INTEGER NOT NULL,
   "id" INTEGER NOT NULL,
@@ -27,10 +28,12 @@ CREATE TABLE "composite_pk" (
   PRIMARY KEY ("group_id", "id")
 ) WITHOUT ROWID;
 
+DROP TABLE IF EXISTS "no_pk";
 CREATE TABLE "no_pk" (
   "status" VARCHAR NOT NULL
 );
 
+DROP TABLE IF EXISTS "order";
 CREATE TABLE "order" (
   "id" INTEGER NOT NULL PRIMARY KEY,
   "name" VARCHAR NOT NULL,

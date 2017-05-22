@@ -5,6 +5,7 @@ use \Codeception\Test\Unit;
 
 /**
  * @group appveyor
+ * @group db
  */
 class MysqlTest extends Unit
 {
@@ -42,6 +43,7 @@ class MysqlTest extends Unit
         } catch (\Exception $e) {
             $this->markTestSkipped('Couldn\'t establish connection to database');
         }
+        $this->mysql->cleanup();
         $this->mysql->load(self::$sql);
     }
     
@@ -134,6 +136,9 @@ class MysqlTest extends Unit
         $this->assertEquals(1, $res->rowCount());
     }
 
+    /**
+     * THis will fail if MariaDb is used
+     */
     public function testLoadThrowsExceptionWhenDumpFileContainsSyntaxError()
     {
         $sql = "INSERT INTO `users` (`name`) VALS('')";
