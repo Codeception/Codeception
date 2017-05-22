@@ -9,7 +9,7 @@ New generation Selenium WebDriver module.
 
 To run Selenium Server you will need Java and Chrome or Firefox browser installed.
 
-1. Download [Selenium Server](http://docs.seleniumhq.org/download/)
+1. Download [Selenium Standalone Server](http://docs.seleniumhq.org/download/)
 2. For Chrome browser install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started), for Firefox browser install [GeckoDriver](https://github.com/mozilla/geckodriver).
 3. Launch the server: `java -jar selenium-server-standalone-3.xx.xxx.jar`. To locate Chromedriver binary use `-Dwebdriver.chrome.driver=./chromedriver` option. For Geckodriver use `-Dwebdriver.gecko.driver=./geckodriver`.
 4. Configure this module (in acceptance.suite.yml) by setting url and browser:
@@ -24,13 +24,13 @@ To run Selenium Server you will need Java and Chrome or Firefox browser installe
 
 ### PhantomJS
 
-PhantomJS is a headless alternative to Selenium Server that implements
+PhantomJS is a [headless browser](https://en.wikipedia.org/wiki/Headless_browser) alternative to Selenium Server that implements
 [the WebDriver protocol](https://code.google.com/p/selenium/wiki/JsonWireProtocol).
 It allows you to run Selenium tests on a server without a GUI installed.
 
 1. Download [PhantomJS](http://phantomjs.org/download.html)
 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
-3. Configure this module (in acceptance.suite.yml) by setting url and `phantomjs` as browser:
+3. Configure this module (in `acceptance.suite.yml`) by setting url and `phantomjs` as browser:
 
 ```yaml
     modules:
@@ -39,6 +39,8 @@ It allows you to run Selenium tests on a server without a GUI installed.
              url: 'http://localhost/'
              browser: phantomjs
 ```
+
+Since PhantomJS doesn't give you any visual feedback, it's probably a good idea to install [Codeception\Extension\Recorder](http://codeception.com/extensions#CodeceptionExtensionRecorder) which gives you screenshots of how PhantomJS "sees" your pages.
 
 ### Headless Selenium in Docker
 
