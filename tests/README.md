@@ -61,7 +61,9 @@ It is a very basic PHP application developed with `glue` microframework. To add 
 1. Add a route in `tests/data/app/index.php`
 1. Add a class in `tests/data/app/controllers.php`
 
-Then run the test with `php codecept run web WebDriverTest::yourTest --env chrome`
+To see the page in the browser, open `http://localhost:8000/your-route`
+
+Then create a test in `tests/web/WebDriverTest.php`, and run it with `php codecept run web WebDriverTest::yourTest --env chrome`
 
 For regression testing, and real world HTML page examples that you can add a html page into `tests/data/app/view/form/exampleX.php` file and add its name to routes. 
 
