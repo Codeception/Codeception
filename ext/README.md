@@ -27,17 +27,14 @@ extensions:
 
 ## Codeception\Extension\Recorder
 
-Saves screenshots of each step in acceptance tests and shows them as a slideshow.
+Saves a screenshot of each step in acceptance tests and shows them as a slideshow on one HTML page.
 Activated only for suites with WebDriver module enabled.
 
- ![recorder](http://codeception.com/images/recorder.gif)
-
-Slideshows saves are saved into `tests/_output/record_*` directories.
-Open `index.html` to see the slideshow.
+The screenshots are saved to `tests/_output/record_*` directories, open `index.html` to see them as a slideshow.
 
 #### Installation
 
-Add to list of enabled extensions
+Add this to the list of enabled extensions in your `codeception.yml`:
 
 ``` yaml
 extensions:
@@ -47,8 +44,8 @@ extensions:
 
 #### Configuration
 
-* `delete_successful` (default: true) - delete records for successfully passed tests (log only failed and errored)
-* `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+* `delete_successful` (default: true) - delete screenshots for successfully passed tests (i.e. log only failed and errored tests)
+* `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
 
 
 #### Examples:
@@ -58,7 +55,7 @@ extensions:
     enabled:
         Codeception\Extension\Recorder:
             module: AngularJS # enable for Angular
-            delete_successful: false # show successful reports
+            delete_successful: false # keep screenshots of successful tests
 ```
 
 
