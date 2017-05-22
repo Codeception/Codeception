@@ -100,7 +100,7 @@ use Codeception\TestInterface;
  *          populator: 'pg_restore -u $user -h $host -D $dbname < $dump'
  * ```
  *
- *  Variable names taken from config and DSN which have a `keyword=value` format, so you should expect to have a variable named as the
+ *  Variable names are being taken from config and DSN which has a `keyword=value` format, so you should expect to have a variable named as the
  *  keyword with the full value inside it.
  *
  *  PDO dsn elements for the supported drivers:

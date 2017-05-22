@@ -90,7 +90,6 @@ class DbPopulator
         codecept_debug("[Db] Executing Populator: `$command`");
 
         exec($command, $output, $exitCode);
-        codecept_debug("[Db] Populator Finished. Exit code: `$exitCode`");
 
         if (0 !== $exitCode) {
             throw new \RuntimeException(
@@ -99,6 +98,8 @@ class DbPopulator
                 "  Output:" . implode("\n", $output)
             );
         }
+
+        codecept_debug("[Db] Populator Finished.");
         return true;
     }
 
