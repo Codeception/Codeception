@@ -496,4 +496,4 @@ with the help of the [Recorder extension](http://codeception.com/addons#Codecept
 Writing acceptance tests with Codeception and PhpBrowser is a good start.
 You can easily test your Joomla, Drupal, WordPress sites, as well as those made with frameworks.
 Writing acceptance tests is like describing a tester's actions in PHP. They are quite readable and very easy to write.
-Don't forget to repopulate the database on each test run.
+If you need to access the database, you can use the [Db Module](http://codeception.com/docs/modules/Db).
