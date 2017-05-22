@@ -11,21 +11,13 @@ __To say it again: you don't need to install PHPUnit to run its tests. Codecepti
 
 ## Creating Test
 
-Codeception has nice generators to simplify test creation. You can start by generating a classical PHPUnit test
-extending the `\PHPUnit_Framework_TestCase` class. This can be done by this command:
-
-```bash
-php codecept generate:phpunit unit Example
-```
-
-Codeception has its own addon features to extend standard unit tests, so let's try them.
-We need different a command to create Codeception-powered unit tests:
+Create a test using `geenrate:test` command with a suite and test names as parameters: 
 
 ```bash
 php codecept generate:test unit Example
 ```
 
-Both commands will create a new `ExampleTest` file located in the `tests/unit` directory.
+It create a new `ExampleTest` file located in the `tests/unit` directory.
 
 As always, you can run the newly created test with this command:
 
@@ -319,71 +311,6 @@ about which argument in `assert` calls is expected and which one is actual:
 ```php
 <?php
 verify($user->getName())->equals('john');
-```
-
-
-## Cest
-
-As an alternative to testcases extended from `PHPUnit_Framework_TestCase`, you can use the Codeception-specific Cest format.
-It does not need to be extended from any other class. All public methods of this class are tests.
-
-The example above can be rewritten in scenario-driven manner like this:
-
-```php
-<?php
-class UserCest
-{
-    public function validateUser(UnitTester $t)
-    {
-        $user = $t->createUser();
-        $user->username = null;
-        $t->assertFalse($user->validate(['username']);
-
-        $user->username = 'toolooooongnaaaaaaameeee';
-        $t->assertFalse($user->validate(['username']));
-
-        $user->username = 'davert';
-        $t->assertTrue($user->validate(['username']));
-
-        $t->seeInDatabase('users', ['name' => 'Miles', 'surname' => 'Davis']);
-    }
-}
-```
-
-For unit testing you may include the `Asserts` module, that adds regular assertions to UnitTester
-which you may access from the `$t` variable:
-
-```yaml
-# Codeception Test Suite Configuration
-
-# suite for unit (internal) tests.
-actor: UnitTester
-modules:
-    enabled:
-        - Asserts
-        - Db
-        - \Helper\Unit
-```
-
-[Learn more about Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes).
-
-<div class="alert alert-info">
-It may look like the Cest format is too simple for writing tests. It doesn't provide assertion methods,
-methods to create mocks and stubs or even accessing the module with `getModule`, as we did in example above.
-However, the Cest format is better at separating concerns. Test code does not interfere with support code,
-provided by the `UnitTester` object. All additional actions you may need in your unit/integration tests
-can be implemented in the `Helper\Unit` class.
-</div>
-
-To check your code for exceptions you can use the `expectException` method from the `Asserts` module.
-Unlike the similar method from PHPUnit, this method asserts that an exception was thrown inside a test.
-For this code, executing an exception is wrapped inside a closure:
-
-```php
-<?php
-$t->expectException(Exception::class, function() {
-   throw new Exception;
-});
 ```
 
 ## Stubs
