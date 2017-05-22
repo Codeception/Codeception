@@ -311,7 +311,6 @@ There are plenty of useful Codeception commands:
 * `generate:cept` *suite* *filename* - Generates a sample Cept scenario
 * `generate:cest` *suite* *filename* - Generates a sample Cest test
 * `generate:test` *suite* *filename* - Generates a sample PHPUnit Test with Codeception hooks
-* `generate:phpunit` *suite* *filename* - Generates a classic PHPUnit Test
 * `generate:feature` *suite* *filename* - Generates Gherkin feature file
 * `generate:suite` *suite* *actor* - Generates a new suite with the given Actor class name
 * `generate:scenarios` *suite* - Generates text files containing scenarios from tests
