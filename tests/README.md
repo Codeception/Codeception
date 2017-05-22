@@ -55,23 +55,13 @@ php -S 127.0.0.1:8000 -t tests/data/app
 
 If you run `FrameworkTest` for various frameworks, you don't need a web server running.
 
-It is a very basic PHP application developed with `glue` microframework. There are various html pages in `view` subdir that are used in tests. To add a new html page, you should add a new file to the `tests/data/app/view` directory, then add a route in `tests/data/app/index.php`:
+It is a very basic PHP application developed with `glue` microframework. To add a new html page for a test:
 
-```
-$urls = array(
-    '/' => 'index',
-    '/info' => 'info',
-    '/cookies' => 'cookies',
-    '/search.*' => 'search',
-    '/login' => 'login',
-    '/redirect' => 'redirect',
-    '/facebook\??.*' => 'facebookController',
-    '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|select_multiple|empty|popup|example1)(#)?' => 'form',
-    '/articles\??.*' => 'articles'
-)
-```
+1. Create a new file in `tests/data/app/view`
+1. Add a route in `tests/data/app/index.php`
+1. Add a class in `tests/data/app/controllers.php`
 
-And into `tests/data/app/controllers.php`.
+Then run the test with `php codecept run web WebDriverTest::yourTest --env chrome`
 
 For regression testing, and real world HTML page examples that you can add a html page into `tests/data/app/view/form/exampleX.php` file and add its name to routes. 
 
