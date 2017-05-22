@@ -8,6 +8,22 @@ There are 3 suites for testing
 * coverage - acceptance tests of code coverage
 * unit - all unit/integration/etc tests.
 
+## Set up
+1. Clone the repository to your local machine
+1. Make sure you have the MongoDB extension enabled. It's not included in PHP by default, you can download it from http://pecl.php.net/package/mongodb
+1. Run `composer install` in the cloned project directory
+
+To run the web tests:
+1. Start PHP's internal webserver in the project directory:
+    ```
+    php -S 127.0.0.1:8000 -t tests/data/app
+    ```
+1. Start Selenium server
+1. Run:
+    ```
+    php codecept run web --env chrome
+    ```
+
 ## Unit
 
 The most important tests in this suite are Module tests located in `test/unit/Codeception/Module`. Unlike you would expect, most of tests there are integrational tests. For example, `WebDriverTest` requires an actual Selenium Server to be running.
@@ -38,23 +54,15 @@ php -S 127.0.0.1:8000 -t tests/data/app
 
 If you run `FrameworkTest` for various frameworks, you don't need a web server running.
 
-It is a very basic PHP application developed with `glue` microframework. There are various html pages in `view` subdir that are used in tests. To add a new html page, you should add a file into `tests/data/view`, then add it to routes of `tests/data/app/index.php` file:
+It is a very basic PHP application developed with `glue` microframework. To add a new html page for a test:
 
-```
-$urls = array(
-    '/' => 'index',
-    '/info' => 'info',
-    '/cookies' => 'cookies',
-    '/search.*' => 'search',
-    '/login' => 'login',
-    '/redirect' => 'redirect',
-    '/facebook\??.*' => 'facebookController',
-    '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|select_multiple|empty|popup|example1)(#)?' => 'form',
-    '/articles\??.*' => 'articles'
-)
-```
+1. Create a new file in `tests/data/app/view`
+1. Add a route in `tests/data/app/index.php`
+1. Add a class in `tests/data/app/controllers.php`
 
-And into `tests/data/app/controllers.php`.
+To see the page in the browser, open `http://localhost:8000/your-route`
+
+Then create a test in `tests/web/WebDriverTest.php`, and run it with `php codecept run web WebDriverTest::yourTest --env chrome`
 
 For regression testing, and real world HTML page examples that you can add a html page into `tests/data/app/view/form/exampleX.php` file and add its name to routes. 
 
