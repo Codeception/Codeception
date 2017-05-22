@@ -88,6 +88,5 @@ EOF;
         $this->say("Create the first test using <comment>codecept g:test unit MyTest</comment>");
         $this->say("Run tests with <comment>codecept run</comment>");
         $this->say("<bold>Happy testing!</bold>");
-
     }
 }

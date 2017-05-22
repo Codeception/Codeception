@@ -62,6 +62,5 @@ trait Config
             $config['extensions']['enabled'][] = $name;
         }
         return Configuration::append($config);
-
     }
 }

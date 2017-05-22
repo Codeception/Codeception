@@ -279,7 +279,6 @@ EOF;
             $property = $reflectedEm->getProperty('repositories');
             $property->setAccessible(true);
             $property->setValue($em, array_merge($property->getValue($em), [$classname => $mock]));
-
         } elseif ($reflectedEm->hasProperty('repositoryFactory')) {
             //For doctrine 2.4.0+ versions
 

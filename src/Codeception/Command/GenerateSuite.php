@@ -109,7 +109,7 @@ EOF;
 
         $file = $this->createDirectoryFor(
             Configuration::supportDir(),
-                $actor
+            $actor
         ) . $this->getShortClassName($actor);
         $file .=  '.php';
 

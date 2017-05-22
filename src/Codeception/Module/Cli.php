@@ -113,5 +113,4 @@ class Cli extends CodeceptionModule
     {
         $this->assertNotEquals($this->result, $code, "result code is $code");
     }
-
 }

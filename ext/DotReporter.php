@@ -107,5 +107,4 @@ class DotReporter extends Extension
     {
         $this->standardReporter->printFail($event);
     }
-
 }
