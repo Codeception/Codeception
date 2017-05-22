@@ -331,8 +331,8 @@ modules:
         - \Helper\Acceptance
 ```
 
-In order to run browser tests you will need Selenium Server or PhantomJS. 
-WebDriver module contains a manual on [how to start them](http://codeception.com/docs/modules/WebDriver#Local-Testing).
+In order to run browser tests you will need Selenium Server or PhantomJS.
+See [WebDriver Module](http://codeception.com/docs/modules/WebDriver) for details.
 
 Please note that actions executed in a browser will behave differently. For instance, `seeElement` won't just check that the element exists on a page,
 but it will also check that element is actually visible to the user:
@@ -343,7 +343,7 @@ $I->seeElement('#modal');
 ```
 
 While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: It can't check headers, since browsers don't provide APIs for that. 
-WebDriver also adds browser-specific functionality which will be listed in next sections.
+WebDriver also adds browser-specific functionality:
 
 #### Wait
 
