@@ -41,7 +41,7 @@ use Codeception\Lib\Connector\ZF2 as ZF2Connector;
  * Usage example:
  *
  * ```yaml
- * class_name: AcceptanceTester
+ * actor: AcceptanceTester
  * modules:
  *     enabled:
  *         - ZF2:

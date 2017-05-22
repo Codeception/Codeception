@@ -6,7 +6,7 @@ use Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    const STABLE_BRANCH = '2.2';
+    const STABLE_BRANCH = '2.3';
     const REPO_BLOB_URL = 'https://github.com/Codeception/Codeception/blob';
 
     public function release()
@@ -15,9 +15,8 @@ class RoboFile extends \Robo\Tasks
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
-
-        $this->buildPhar54();
         $this->buildPhar();
+        $this->buildPhar5();
         $this->revertComposerJsonChanges();
         $this->publishPhar();
         $this->publishGit();
@@ -187,14 +186,13 @@ class RoboFile extends \Robo\Tasks
      * @desc creates codecept.phar with Guzzle 5.3 and Symfony 2.8
      * @throws Exception
      */
-    public function buildPhar54()
+    public function buildPhar5()
     {
         if (!file_exists('package/php54')) {
             mkdir('package/php54');
         }
         $this->installDependenciesForPhp54();
         $this->packPhar('package/php54/codecept.phar');
-        $this->installDependenciesForPhp56();
     }
 
     private function packPhar($pharFileName)
@@ -403,15 +401,16 @@ class RoboFile extends \Robo\Tasks
         $extensions = Finder::create()->files()->sortByName()->name('*.php')->in(__DIR__ . '/ext');
 
         $extGenerator= $this->taskGenDoc(__DIR__.'/ext/README.md');
-        foreach ($extensions as $command) {
-            $commandName = basename(substr($command, 0, -4));
-            $className = '\Codeception\Extension\\' . $commandName;
+        foreach ($extensions as $extension) {
+            $extensionName = basename(substr($extension, 0, -4));
+            $className = '\Codeception\Extension\\' . $extensionName;
             $extGenerator->docClass($className);
         }
         $extGenerator
             ->prepend("# Official Extensions\n")
-            ->processClassSignature(function ($r, $text) {
-                return "## ".$r->getName();
+            ->processClassSignature(function (ReflectionClass $r, $text) {
+                $name = $r->getShortName();
+                return "## $name\n\n[See Source](" . self::REPO_BLOB_URL."/".self::STABLE_BRANCH. "/ext/$name.php)";
             })
             ->filterMethods(function (ReflectionMethod $r) {
                 return false;
@@ -435,9 +434,9 @@ class RoboFile extends \Robo\Tasks
             if (!is_dir('php54')) {
                 mkdir('php54');
             }
-            copy('../php54/codecept.phar', 'php54/codecept.phar');
+            copy('../php54/codecept.phar', 'php5/codecept.phar');
             $this->taskExec('git add codecept.phar')->run();
-            $this->taskExec('git add php54/codecept.phar')->run();
+            $this->taskExec('git add php5/codecept.phar')->run();
         }
 
         $this->taskFileSystemStack()

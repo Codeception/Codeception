@@ -72,7 +72,7 @@ use Codeception\Lib\Connector\Phalcon as PhalconConnector;
  * ```
  *
  * ```yaml
- * class_name: AcceptanceTester
+ * actor: AcceptanceTester
  * modules:
  *     enabled:
  *         - Phalcon:

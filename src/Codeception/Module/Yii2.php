@@ -27,7 +27,7 @@ use yii\db\ActiveRecordInterface;
  * You can use this module by setting params in your functional.suite.yml:
  *
  * ```yaml
- * class_name: FunctionalTester
+ * actor: FunctionalTester
  * modules:
  *     enabled:
  *         - Yii2:
@@ -46,7 +46,7 @@ use yii\db\ActiveRecordInterface;
  * ### Example (`functional.suite.yml`)
  *
  * ```yaml
- * class_name: FunctionalTester
+ * actor: FunctionalTester
  * modules:
  *   enabled:
  *      - Yii2:
@@ -56,7 +56,7 @@ use yii\db\ActiveRecordInterface;
  * ### Example (`unit.suite.yml`)
  *
  * ```yaml
- * class_name: UnitTester
+ * actor: UnitTester
  * modules:
  *   enabled:
  *      - Asserts
@@ -68,7 +68,7 @@ use yii\db\ActiveRecordInterface;
  * ### Example (`acceptance.suite.yml`)
  *
  * ```yaml
- * class_name: AcceptanceTester
+ * actor: AcceptanceTester
  * modules:
  *     enabled:
  *         - WebDriver:

@@ -82,7 +82,7 @@ for the `UnitTester` class in the `unit.suite.yml` configuration file:
 # Codeception Test Suite Configuration
 
 # suite for unit (internal) tests.
-class_name: UnitTester
+actor: UnitTester
 modules:
     enabled:
         - Asserts
@@ -123,7 +123,7 @@ If you write integration tests, it may be useful to include the `Db` module for 
 # Codeception Test Suite Configuration
 
 # suite for unit (internal) tests.
-class_name: UnitTester
+actor: UnitTester
 modules:
     enabled:
         - Asserts
@@ -163,7 +163,7 @@ For this we need to configure the Laravel5 module. We won't need its web interac
 so let's enable only the ORM part of it:
 
 ```yaml
-class_name: UnitTester
+actor: UnitTester
 modules:
     enabled:
         - Asserts
@@ -199,7 +199,7 @@ They also should be included by specifying `part: ORM` in order to not use the f
 If you are using Symfony with Doctrine, you don't need to enable Symfony itself but just Doctrine2:
 
 ```yaml
-class_name: UnitTester
+actor: UnitTester
 modules:
     enabled:
         - Asserts
@@ -357,7 +357,7 @@ which you may access from the `$t` variable:
 # Codeception Test Suite Configuration
 
 # suite for unit (internal) tests.
-class_name: UnitTester
+actor: UnitTester
 modules:
     enabled:
         - Asserts

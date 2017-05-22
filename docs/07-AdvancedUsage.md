@@ -336,7 +336,7 @@ Let's demonstrate the usage of environments for the browsers case.
 We need to add some new lines to `acceptance.suite.yml`:
 
 ``` yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - WebDriver

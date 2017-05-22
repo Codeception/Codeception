@@ -61,7 +61,7 @@ you should specify the Symfony module as a dependency for Doctrine2:
 Example of `functional.suite.yml`
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - Symfony
@@ -82,7 +82,7 @@ The [Laravel5](http://codeception.com/docs/modules/Laravel5) module is included 
 
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - Laravel5
@@ -102,7 +102,7 @@ So Codeception is the first and the only functional testing framework for Yii.
 To use it with Yii include `Yii1` module into config:
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - Yii1
@@ -117,7 +117,7 @@ Please set them up following [the installation steps in the module reference](ht
 Use [the ZF2 module](http://codeception.com/docs/modules/ZF2) to run functional tests inside Zend Framework 2:
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - ZF2
@@ -133,7 +133,7 @@ To start using Zend Framework in your functional tests, include the `ZF1` module
 Example of `functional.suite.yml`
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - ZF1
@@ -149,7 +149,7 @@ To start writing functional tests with Phalcon support you should enable the `Ph
 and provide the path to this bootstrap file:
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - Phalcon:
@@ -240,7 +240,7 @@ In functional tests you might want to change this level depending on your framew
 The error reporting level can be set in the suite configuration file:
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - Yii1

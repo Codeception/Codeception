@@ -75,7 +75,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
  * Usage example:
  *
  * ```yaml
- * class_name: AcceptanceTester
+ * actor: AcceptanceTester
  * modules:
  *     enabled:
  *         - Symfony:
