@@ -134,6 +134,12 @@ class PhpBrowserRestTest extends Unit
         $this->module->seeResponseContainsJson(array('id' => 1));
     }
 
+    public function testDontSeeResponseJsonMatchesJsonPathPassesWhenJsonResultIsNotArray()
+    {
+        $this->setStubResponse(json_encode('no_status'));
+        $this->module->dontSeeResponseJsonMatchesJsonPath('$.error');
+    }
+
     public function testDontSeeInJson()
     {
         $this->setStubResponse('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}}}');
