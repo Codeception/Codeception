@@ -60,12 +60,34 @@ trait FileSystem
         return preg_replace("~$suffix$~", '', $classname);
     }
 
-    protected function save($filename, $contents, $force = false, $flags = null)
+    protected function save($filename, $contents, $force = false)
     {
         if (file_exists($filename) && !$force) {
             return false;
         }
-        file_put_contents($filename, $contents, $flags);
+
+        //Write in a temporary file in order to reduce non thread-safe disk instructions,
+        //and reduce risk of `Bus Errors` when running tests in parallel.
+        //@see https://github.com/Codeception/Codeception/issues/2054#event-1046859271
+        $tmpFilename = $filename . '.' . uniqid() . '.tmp';
+        $success = @file_put_contents($tmpFilename, $contents);
+        if (false === $success) {
+            //no space left on device, IO errors...
+            throw new \RuntimeException(sprintf('Unable to generate temporary class %s', $tmpFilename));
+        }
+
+        $success = @rename($tmpFilename, $filename);
+        if (false === $success) {
+            //wait 0,5s and try 3 times before throwing an excception
+            for ($i = 0; ($i < 3 && !$success); $i++) {
+                usleep(500000);
+                $success = @rename($tmpFilename, $filename);
+            }
+            if (false === $success) {
+                throw new \RuntimeException(sprintf('Unable to move class from %s to %s(tried 3 times)', $tmpFilename, $filename));
+            }
+        }
+
         return true;
     }
 }
