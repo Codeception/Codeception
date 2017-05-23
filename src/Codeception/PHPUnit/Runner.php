@@ -103,7 +103,13 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             $result->addListener($listener);
         }
 
-        $suite->run($result);
+        $repeatCount = isset($arguments['repeat']) && $arguments['repeat'] > 0
+            ? $arguments['repeat']
+            : 1;
+
+        foreach (range(1, $repeatCount) as $iteration) {
+            $suite->run($result);
+        }
         unset($suite);
 
         foreach ($arguments['listeners'] as $listener) {
