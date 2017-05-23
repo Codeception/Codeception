@@ -10,6 +10,7 @@ use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\PageSourceSaver;
+use Codeception\Lib\Interfaces\PageSourceViewer;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Module;
 use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
@@ -30,7 +31,7 @@ use Symfony\Component\DomCrawler\Field\TextareaFormField;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Link;
 
-class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocator, ConflictsWithModule
+class InnerBrowser extends Module implements Web, PageSourceViewer, PageSourceSaver, ElementLocator, ConflictsWithModule
 {
     /**
      * @var \Symfony\Component\DomCrawler\Crawler
@@ -261,6 +262,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             );
         }
         return $this->client;
+    }
+
+    public function _getPageSource()
+    {
+        return $this->_getResponseContent();
     }
 
     public function _savePageSource($filename)
@@ -1239,7 +1245,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $result = [];
         $nodes = $this->match($cssOrXpath);
-        
+
         foreach ($nodes as $node) {
             if ($attribute !== null) {
                 $result[] = $node->getAttribute($attribute);
