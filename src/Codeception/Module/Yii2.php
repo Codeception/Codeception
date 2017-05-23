@@ -167,10 +167,12 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         $this->client = new Yii2Connector();
         $this->client->defaultServerVars = [
-            'SCRIPT_FILENAME' => $entryFile,
-            'SCRIPT_NAME'     => $entryScript,
-            'SERVER_NAME'     => parse_url($entryUrl, PHP_URL_HOST),
-            'SERVER_PORT'     => parse_url($entryUrl, PHP_URL_PORT) ?: '80',
+            'SCRIPT_FILENAME'       => $entryFile,
+            'SCRIPT_NAME'           => $entryScript,
+            'SERVER_NAME'           => parse_url($entryUrl, PHP_URL_HOST),
+            'SERVER_PORT'           => parse_url($entryUrl, PHP_URL_PORT) ?: '80',
+            'REQUEST_TIME'          => time(),
+            'REQUEST_TIME_FLOAT'    => microtime(true),
         ];
         $this->client->defaultServerVars['HTTPS'] = parse_url($entryUrl, PHP_URL_SCHEME) === 'https';
         $this->client->restoreServerVars();
