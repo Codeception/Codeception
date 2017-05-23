@@ -129,6 +129,11 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
 
     public function _afterSuite()
     {
+        //Close the session, if any are open
+        if (session_status() == PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+
         unset($this->client);
     }
 
