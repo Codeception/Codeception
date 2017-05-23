@@ -515,6 +515,7 @@ class RoboFile extends \Robo\Tasks
 
         chdir('../..');
 
+        $this->say('building changelog');
         $this->taskWriteToFile('package/site/changelog.markdown')
             ->line('---')
             ->line('layout: page')
@@ -716,7 +717,7 @@ class RoboFile extends \Robo\Tasks
         }
 
         //user
-        $changelog = preg_replace('~\s@(\w+)~', ' **[$1](https://github.com/$1)**', $changelog);
+        $changelog = preg_replace('~\s@([\w-]+)~', ' **[$1](https://github.com/$1)**', $changelog);
 
         //issue
         $changelog = preg_replace(
@@ -781,8 +782,8 @@ class RoboFile extends \Robo\Tasks
 
         chdir('..');
         sleep(2);
-        $this->taskDeleteDir('site')->run();
-        chdir('..');
+//        $this->taskDeleteDir('site')->run();
+//        chdir('..');
         $this->say("Site build succesfully");
     }
 

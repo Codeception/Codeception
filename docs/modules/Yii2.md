@@ -14,7 +14,7 @@ It initializes Yii framework in test environment and provides actions for functi
 You can use this module by setting params in your functional.suite.yml:
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - Yii2:
@@ -33,7 +33,7 @@ By default all available methods are loaded, but you can specify parts to select
 ### Example (`functional.suite.yml`)
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
   enabled:
      - Yii2:
@@ -43,7 +43,7 @@ modules:
 ### Example (`unit.suite.yml`)
 
 ```yaml
-class_name: UnitTester
+actor: UnitTester
 modules:
   enabled:
      - Asserts
@@ -55,7 +55,7 @@ modules:
 ### Example (`acceptance.suite.yml`)
 
 ```yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - WebDriver:
@@ -1567,4 +1567,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Yii2.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Yii2.php">Help us to improve documentation. Edit module reference</a></div>

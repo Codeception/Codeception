@@ -1,3 +1,7 @@
+## 2.3.1
+
+* Fixed Composer constraints. Added `phpunit/phpunit < 7` as dependency.
+
 ## 2.3.0
 
 * **PHPUnit 6.x** support #4142 by @MontealegreLuis. Class aliases are used, so PHPUnit 4.x and 5.x (for PHP <7) are still supported as well.  
