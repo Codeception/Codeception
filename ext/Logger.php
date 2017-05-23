@@ -10,6 +10,8 @@ use Codeception\Exception\ConfigurationException;
 use Codeception\Extension;
 use Codeception\Test\Descriptor;
 use Monolog\Handler\RotatingFileHandler;
+use Codeception\Configuration as Config;
+use Psr\Log\LoggerInterface;
 
 /**
  * Log suites/tests/steps using Monolog library.
@@ -52,7 +54,7 @@ class Logger extends Extension
     /**
      * @var \Monolog\Logger
      */
-    protected $logger;
+    protected static $logger;
 
     protected $path;
 
@@ -63,26 +65,52 @@ class Logger extends Extension
         if (!class_exists('\Monolog\Logger')) {
             throw new ConfigurationException("Logger extension requires Monolog library to be installed");
         }
-        $this->path = $this->getLogDir();
+    }
 
-        // internal log
-        $logHandler = new RotatingFileHandler($this->path . 'codeception.log', $this->config['max_files']);
-        $this->logger = new \Monolog\Logger('Codeception');
-        $this->logger->pushHandler($logHandler);
+    public static function getLogger()
+    {
+        if (self::$logger) {
+            $logger = self::$logger;
+        } else {
+            $logger = self::getDefaultLogger();
+        }
+
+        return $logger;
+    }
+
+    public static function getConfig()
+    {
+        $vars = get_class_vars(get_class());
+        $config = $vars['config'];
+
+        return $config;
+    }
+
+    public static function getDefaultLogger()
+    {
+        $path = Config::outputDir();
+        $config = self::getConfig();
+
+        $logHandler = new RotatingFileHandler($path . 'codeception.log', $config['max_files']);
+        $logger = new \Monolog\Logger('Codeception');
+        $logger->pushHandler($logHandler);
+        return $logger;
     }
 
     public function beforeSuite(SuiteEvent $e)
     {
+        $config = self::getConfig();
         $suite = str_replace('\\', '_', $e->getSuite()->getName());
-        $this->logHandler = new RotatingFileHandler($this->path . $suite, $this->config['max_files']);
+        self::getLogger()->logHandler = new RotatingFileHandler($this->path . $suite, $config['max_files']);
     }
 
     public function beforeTest(TestEvent $e)
     {
-        $this->logger = new \Monolog\Logger(Descriptor::getTestFileName($e->getTest()));
-        $this->logger->pushHandler($this->logHandler);
-        $this->logger->info('------------------------------------');
-        $this->logger->info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
+        $descriptor = Descriptor::getTestFileName($e->getTest());
+        $newLogger = self::getLogger()->withName($descriptor);
+        self::$logger = $newLogger;
+        self::info('------------------------------------');
+        self::info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
     }
 
     public function afterTest(TestEvent $e)
@@ -91,33 +119,40 @@ class Logger extends Extension
 
     public function endTest(TestEvent $e)
     {
-        $this->logger->info("PASSED");
+        self::info("PASSED");
+        self::$logger = self::getDefaultLogger();
     }
 
     public function testFail(FailEvent $e)
     {
-        $this->logger->alert($e->getFail()->getMessage());
-        $this->logger->info("# FAILED #");
+        self::alert($e->getFail()->getMessage());
+        self::info("# FAILED #");
     }
 
     public function testError(FailEvent $e)
     {
-        $this->logger->alert($e->getFail()->getMessage());
-        $this->logger->info("# ERROR #");
+        self::alert($e->getFail()->getMessage());
+        self::info("# ERROR #");
     }
 
     public function testSkipped(FailEvent $e)
     {
-        $this->logger->info("# Skipped #");
+        self::info("# Skipped #");
     }
 
     public function testIncomplete(FailEvent $e)
     {
-        $this->logger->info("# Incomplete #");
+        self::info("# Incomplete #");
     }
 
     public function beforeStep(StepEvent $e)
     {
-        $this->logger->info((string) $e->getStep());
+        self::info((string)$e->getStep());
+    }
+
+    public static function __callStatic($name, $arguments)
+    {
+        $logger = self::getLogger();
+        call_user_func_array(array($logger, $name), $arguments);
     }
 }
