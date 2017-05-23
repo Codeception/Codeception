@@ -77,6 +77,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --ansi                Force ANSI output.
  *  --no-ansi             Disable ANSI output.
  *  --no-interaction (-n) Do not ask any interactive question.
+ *  --filter              Filter which tests to run.
  * ```
  *
  */
@@ -191,6 +192,7 @@ class Run extends Command
             ),
             new InputOption('fail-fast', 'f', InputOption::VALUE_NONE, 'Stop after first failure'),
             new InputOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start'),
+            new InputOption('filter', '', InputOption::VALUE_REQUIRED, 'Filter which tests to run'),
         ]);
 
         parent::configure();
