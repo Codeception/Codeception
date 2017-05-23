@@ -782,8 +782,8 @@ class RoboFile extends \Robo\Tasks
 
         chdir('..');
         sleep(2);
-//        $this->taskDeleteDir('site')->run();
-//        chdir('..');
+        $this->taskDeleteDir('site')->run();
+        chdir('..');
         $this->say("Site build succesfully");
     }
 
