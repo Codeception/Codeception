@@ -322,6 +322,19 @@ EOF;
      * ]);
      * ```
      *
+     * $files structure should be:
+     * ['file' =>
+     *    [
+     *        'name' => 'example_img.jpg',
+     *        'type' => 'image/jpeg',
+     *        'error' => UPLOAD_ERR_OK,
+     *        'size' => filesize(codecept_data_dir('example_img.jpg')),
+     *        'tmp_name' => codecept_data_dir('example_img.jpg')
+     *     ]
+     * ]
+     *
+     * File should be placed in the tests/_data dir.
+     *
      * @param $url
      * @param array|\JsonSerializable $params
      * @param array $files A list of filenames or "mocks" of $_FILES (each entry being an array with the following
