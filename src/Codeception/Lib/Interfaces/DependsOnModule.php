@@ -4,12 +4,10 @@ namespace Codeception\Lib\Interfaces;
 interface DependsOnModule
 {
     /**
-     * Specifies class or module which is required for current one.
+     * Specifies a list of modules which are required for another module.
      *
-     * THis method should return array with key as class name and value as error message
-     * [className => errorMessage
-     * ]
-     * @return mixed
+     * @return mixed array with class names as keys and
+     * error messages as values: [className => errorMessage]
      */
     public function _depends();
 }
