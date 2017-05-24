@@ -372,7 +372,7 @@ class Db extends CodeceptionModule implements DbInterface
     protected function loadDumpUsingDriver()
     {
         if (!$this->sql) {
-            $this->debugSection('Db','No SQL loaded, loading dump skipped');
+            $this->debugSection('Db', 'No SQL loaded, loading dump skipped');
             return;
         }
         $this->driver->load($this->sql);
