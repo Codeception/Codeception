@@ -293,4 +293,4 @@ $I->seeQueueHasTotalCount('default', 10);
  * `param string` $queue Queue Name
  * `param int` $expected Number of messages expected
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Queue.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Queue.php">Help us to improve documentation. Edit module reference</a></div>

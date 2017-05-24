@@ -34,7 +34,7 @@ $user->getName();
  * `param mixed` $params
  * `return` StubMarshaler
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L696)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L696)
 
 #### bindParameters()
 
@@ -43,13 +43,13 @@ $user->getName();
  * `param \PHPUnit_Framework_MockObject_MockObject` $mock
  * `param array` $params
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L516)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L516)
 
 #### closureIfNull()
 
  *private static* closureIfNull($params) 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L740)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L740)
 
 #### consecutive()
 
@@ -68,7 +68,7 @@ $user->getName(); //amy
 ```
  * `return` ConsecutiveMap
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L765)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L765)
 
 #### construct()
 
@@ -110,7 +110,7 @@ Stub::construct('User', array(), array('save' => true }));
  * `param bool|\PHPUnit_Framework_TestCase` $testCase
  * `return` object
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L287)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L287)
 
 #### constructEmpty()
 
@@ -152,7 +152,7 @@ Stub::constructEmpty('User', array(), array('save' => true }));
  * `param bool|\PHPUnit_Framework_TestCase` $testCase
  * `return` object
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L339)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L339)
 
 #### constructEmptyExcept()
 
@@ -195,7 +195,7 @@ Stub::constructEmptyExcept('User', 'save', array(), array('save' => true }));
  * `param bool|\PHPUnit_Framework_TestCase` $testCase
  * `return` object
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L396)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L396)
 
 #### copy()
 
@@ -207,13 +207,13 @@ Clones an object and redefines it's properties (even protected and private)
  * `param array` $params
  * `return` mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L241)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L241)
 
 #### doGenerateMock()
 
  *private static* doGenerateMock($args, $isAbstract = null) 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L459)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L459)
 
 #### exactly()
 
@@ -245,13 +245,13 @@ $user->getName();
  * `param mixed` $params
  * `return` StubMarshaler
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L732)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L732)
 
 #### extractTestCaseFromArgs()
 
  *private static* extractTestCaseFromArgs($args) 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L481)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L481)
 
 #### factory()
 
@@ -264,13 +264,13 @@ Creates $num instances of class through `Stub::make`.
  * `param array` $params
  * `return` array
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L95)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L95)
 
 #### generateMock()
 
  *private static* generateMock() 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L431)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L431)
 
 #### generateMockForAbstractClass()
 
@@ -292,14 +292,14 @@ the last parameter
  * `since`  Method available since Release 1.0.0
  * `throws` \InvalidArgumentException
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L454)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L454)
 
 #### getClassname()
 
  *protected static* getClassname($object) 
  * `todo` should be simplified
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L584)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L584)
 
 #### getMethodsToReplace()
 
@@ -309,7 +309,7 @@ the last parameter
  * `param` $params
  * `return` array
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L602)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L602)
 
 #### make()
 
@@ -350,7 +350,7 @@ Stub::make('User', array('save' => true }));
  * `return` object - mock
  * `throws` \RuntimeException when class does not exist
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L46)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L46)
 
 #### makeEmpty()
 
@@ -391,7 +391,7 @@ Stub::makeEmpty('User', array('save' => true }));
  * `param bool|\PHPUnit_Framework_TestCase` $testCase
  * `return` object
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L215)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L215)
 
 #### makeEmptyExcept()
 
@@ -433,7 +433,7 @@ Stub::makeEmptyExcept('User', 'save', array('isValid' => true }));
  * `param bool|\PHPUnit_Framework_TestCase` $testCase
  * `return` object
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L143)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L143)
 
 #### markAsMock()
 
@@ -445,7 +445,7 @@ Set __mock flag, if at all possible
  * `param \ReflectionClass` $reflection
  * `return` object
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L78)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L78)
 
 #### never()
 
@@ -466,7 +466,7 @@ $user->someMethod();
  * `param mixed` $params
  * `return` StubMarshaler
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L631)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L631)
 
 #### once()
 
@@ -495,7 +495,7 @@ $this->assertEquals('Davert', $userName);
  * `param mixed` $params
  * `return` StubMarshaler
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L664)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L664)
 
 #### update()
 
@@ -508,6 +508,6 @@ Replaces properties of current stub
  * `return` mixed
  * `throws` \LogicException
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Stub.php#L500)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L500)
 
-<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.2/src//Codeception/Util/Stub.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.3/src//Codeception/Util/Stub.php">Help us to improve documentation. Edit module reference</a></div>
