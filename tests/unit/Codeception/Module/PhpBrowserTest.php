@@ -21,7 +21,6 @@ class PhpBrowserTest extends TestsForBrowsers
         $url = 'http://localhost:8000';
         $this->module->_setConfig(array('url' => $url));
         $this->module->_initialize();
-        $this->module->_cleanup();
         $this->module->_before($this->makeTest());
         if (class_exists('GuzzleHttp\Url')) {
             $this->history = new \GuzzleHttp\Subscriber\History();
