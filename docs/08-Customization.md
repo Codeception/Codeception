@@ -17,7 +17,7 @@ include:
   - admin
   - api/rest
 paths:
-  log: log
+  output: _output
 settings:
   colors: false
 ```
@@ -324,6 +324,39 @@ reporters:
 All PHPUnit printers implement the
 [PHPUnit_Framework_TestListener](https://phpunit.de/manual/current/en/extending-phpunit.html#extending-phpunit.PHPUnit_Framework_TestListener)
 interface. It is recommended to read the code of the original reporter before overriding it.
+
+## Installation Templates
+
+Codeception setup can be customized for the needs of your application. 
+If you build a distributable application and you have a personalized configuration you can build an 
+Installation template which will help your users to start testing on their projects.
+ 
+Codeception has built-in installation templates for 
+
+* [Acceptance tests](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Template/Acceptance.php)
+* [Unit tests](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Template/Unit.php)
+* [REST API tests](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Template/Api.php)
+
+They can be executed with `init` command:
+
+```bash
+codecept init Acceptance
+```
+To init tests in specific folder use `--path` option:
+
+```bash
+codecept init Acceptance --path acceptance_tests
+```
+
+You will be asked several questions and then config files will be generated and all necessary directories will be created.
+Learn from the examples above to build a custom Installation Template. Here are the basic rules you should follow:
+
+* Templates should be inherited from [`Codeception\InitTemplate`](http://codeception.com/docs/reference/InitTemplate) class and implement `setup` method.
+* Template class should be placed in `Codeception\Template` namespace so Codeception could locate them by class name
+* Use methods like `say`, `saySuccess`, `sayWarning`, `sayError`, `ask`, to interact with a user.
+* Use `createDirectoryFor`, `createEmptyDirectory` methods to create directories
+* Use `createHelper`, `createActor` methods to create helpers and actors.
+* Use [Codeception generators](https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Lib/Generator) to create other support classes.
 
 ## Conclusion
 
