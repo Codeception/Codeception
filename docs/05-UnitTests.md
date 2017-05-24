@@ -145,7 +145,7 @@ function testSavingUser()
 To enable the database functionality in unit tests, make sure the `Db` module is included
 in the `unit.suite.yml` configuration file.
 The database will be cleaned and populated after each test, the same way it happens for acceptance and functional tests.
-If that's not your required behavior, change the settings of the `Db` module for the current suite.
+If that's not your required behavior, change the settings of the `Db` module for the current suite. See [Db Module](http://codeception.com/docs/modules/Db)
 
 ### Interacting with the Framework
 
