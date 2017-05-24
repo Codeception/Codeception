@@ -22,13 +22,35 @@ trait Config
         return Configuration::suites();
     }
 
+    protected function parseParams($params)
+    {
+        $updatedParams = [];
+
+        foreach ($params as $match) {
+            $match = explode(',', str_replace(array(', '), ',', $match));
+
+            if (is_array($match) && count($match) > 0) {
+                foreach ($match as $k => $param) {
+                    $keys = explode(': ', $param);
+                    if (count($keys) < 2) {
+                        throw new \InvalidArgumentException('--param option should have config passed as "key: value"');
+                    }
+
+                    $updatedParams[$keys[0]] = $keys[1];
+                }
+            }
+        }
+
+        return $updatedParams;
+    }
+
     protected function overrideConfig($configOptions)
     {
         $updatedConfig = [];
         foreach ($configOptions as $option) {
             $keys = explode(': ', $option);
             if (count($keys) < 2) {
-                throw new \InvalidArgumentException('--config-option should have config passed as "key:value"');
+                throw new \InvalidArgumentException('--config-option should have config passed as "key: value"');
             }
             $value = array_pop($keys);
             $yaml = '';

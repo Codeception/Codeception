@@ -114,6 +114,8 @@ class Run extends Command
             new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
             new InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
             new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY  | InputOption::VALUE_REQUIRED, 'Override config values'),
+            new InputOption('params', 'p', InputOption::VALUE_IS_ARRAY  | InputOption::VALUE_REQUIRED, 'Add custom 
+            params in tests'),
             new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
             new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html'),
             new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
@@ -221,6 +223,11 @@ class Run extends Command
         // update config from options
         if (count($this->options['override'])) {
             $config = $this->overrideConfig($this->options['override']);
+        }
+
+        if (count($this->options['params'])) {
+            $this->options['params'] = $this->parseParams($this->options['params']);
+            Configuration::attachParams($this->options['params']);
         }
 
         if (!$this->options['colors']) {
