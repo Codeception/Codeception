@@ -49,6 +49,8 @@ $urls = array(
     '/basehref' => 'basehref',
     '/jserroronload' => 'jserroronload',
     '/minimal' => 'minimal',
+    '/sticky-bar' => 'stickyBar',
+    '/sticky-bar/.*' => 'stickyBarLinktarget',
 );
 
 glue::stick($urls);

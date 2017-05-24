@@ -265,8 +265,33 @@ class userAgent {
         echo $_SERVER['HTTP_USER_AGENT'];
     }
 }
+
 class minimal {
     function GET() {
         include __DIR__.'/view/minimal.php';
+    }
+}
+
+class stickyBar {
+    function GET() {
+        include __DIR__.'/view/stickyBar.php';
+    }
+}
+
+class stickyBarLinktarget {
+    function GET($matches) {
+        if ($matches[0]==='/sticky-bar/link-in-header')
+        {
+            $notice = "<h1>You clicked the wrong link (in the page's header)</h1>\n";
+        }
+        if ($matches[0]==='/sticky-bar/link-in-footer')
+        {
+            $notice = "<h1>You clicked the wrong link (in the page's footer)</h1>\n";
+        }
+        if ($matches[0]==='/sticky-bar/good-link')
+        {
+            $notice = "<h1>You clicked the right link</h1>\n";
+        }
+        include __DIR__.'/view/index.php';
     }
 }

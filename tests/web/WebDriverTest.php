@@ -1034,4 +1034,39 @@ HTML
         $sourceActual = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $sourceActualRaw);
         $this->assertXmlStringEqualsXmlString($sourceExpected, $sourceActual);
     }
+    
+    // php codecept run web WebDriverTest::testStickyBarClick --env chrome
+    //    => [Facebook\WebDriver\Exception\UnknownServerException] unknown error: Element \<a id="good-link" href="/sticky-bar/good-link">...\</a> is not clickable at point (101, 618). Other element would receive the click:
+    // php codecept run web WebDriverTest::testStickyBarClick
+    //    => Test fails
+    public function testStickyBarClick ()
+    {
+        $this->module->amOnPage('/sticky-bar');
+        $this->module->click('Click this link!');
+        $this->module->see('You clicked the right link');
+    }
+    
+    // php codecept run web WebDriverTest::testStickyBarClickWithLeftButton --env chrome
+    //    => Test fails
+    // php codecept run web WebDriverTest::testStickyBarClickWithLeftButton
+    //    => [Facebook\WebDriver\Exception\UnknownCommandException] mouseMoveTo
+    public function testStickyBarClickWithLeftButton ()
+    {
+        $this->module->amOnPage('/sticky-bar');
+        $this->module->clickWithLeftButton('#good-link');
+        $this->module->see('You clicked the right link');
+    }
+    
+    // php codecept run web WebDriverTest::testStickyBarScrollToAndClick --env chrome
+    //    => [Facebook\WebDriver\Exception\UnknownServerException] unknown error: Element \<a id="good-link" href="/sticky-bar/good-link">...\</a> is not clickable at point (101, 42). Other element would receive the click:
+    // php codecept run web WebDriverTest::testStickyBarScrollToAndClick
+    //    => Test fails
+    public function testStickyBarScrollToAndClick ()
+    {
+        $this->module->amOnPage('/sticky-bar');
+        $this->module->scrollTo('#good-link');
+        $this->module->click('#good-link');
+        $this->module->see('You clicked the right link');
+    }
+    
 }
