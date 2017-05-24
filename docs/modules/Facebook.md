@@ -153,4 +153,4 @@ Please, note that you must have publish_actions permission to be able to publish
 
  * `param string` $message published post to be verified against the actual post on facebook
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Facebook.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Facebook.php">Help us to improve documentation. Edit module reference</a></div>

@@ -12,8 +12,8 @@ to interact with a Redis server.
 
 * **`host`** (`string`, default `'127.0.0.1'`) - The Redis host
 * **`port`** (`int`, default `6379`) - The Redis port
-* **`database`** (`int`, no default) - The Redis database. Needs to be explicitly specified.
-* **`cleanupBefore`**: (`string`, default `'suite'`) - Whether/when to flush the database:
+* **`database`** (`int`, no default) - The Redis database. Needs to be specified.
+* **`cleanupBefore`**: (`string`, default `'never'`) - Whether/when to flush the database:
     * `suite`: at the beginning of every suite
     * `test`: at the beginning of every test
     * Any other value: never
@@ -26,7 +26,7 @@ to interact with a Redis server.
            host: '127.0.0.1'
            port: 6379
            database: 0
-           cleanupBefore: 'test'
+           cleanupBefore: 'never'
 ```
 
 ## Public Properties
@@ -284,4 +284,4 @@ $I->sendCommandToRedis('flushdb');
  * `param string` $command The command name
 
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Redis.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Redis.php">Help us to improve documentation. Edit module reference</a></div>
