@@ -363,7 +363,7 @@ class RoboFile extends \Robo\Tasks
     public function buildDocsApi()
     {
         $this->say("API Classes");
-        $apiClasses = ['Codeception\Module'];
+        $apiClasses = ['Codeception\Module', 'Codeception\InitTemplate'];
 
         foreach ($apiClasses as $apiClass) {
             $name = (new ReflectionClass($apiClass))->getShortName();
