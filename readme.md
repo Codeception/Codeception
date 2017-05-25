@@ -101,7 +101,7 @@ This will create a default directory structure and default test suites.
 
 Documentation is included within the project. Look for it in the ['docs' directory](https://github.com/Codeception/Codeception/tree/master/docs).
 
-### License
+## License
 MIT
 
 (c) Michael Bodnarchuk "Davert"

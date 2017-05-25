@@ -106,7 +106,7 @@ Codeception generates this text representation from PHP code by executing:
 php codecept generate:scenarios
 ```
 
-Generated scenarios will be stored in your `_output` directory in text files.
+These generated scenarios will be stored in your `_data` directory in text files.
 
 Before we execute this test, we should make sure that the website is running on a local web server.
 Let's open the `tests/acceptance.suite.yml` file and replace the URL with the URL of your web application:
