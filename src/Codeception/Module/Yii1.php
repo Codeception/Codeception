@@ -194,7 +194,7 @@ class Yii1 extends Framework implements PartedModule
         $this->client->appPath = $this->config['appPath'];
         $this->client->url = $this->config['url'];
         $this->client->appSettings = [
-            'class'  => $this->appSettings['class'],
+            'class' => $this->appSettings['class'],
             'config' => $this->_appConfig,
         ];
     }
@@ -230,7 +230,11 @@ class Yii1 extends Framework implements PartedModule
         if (strpos($template, '<') !== false) {
             $template = str_replace(['<', '>'], '#', $template);
         }
+
+        $template = parse_url($template, PHP_URL_HOST);
+
         $template = preg_quote($template);
+
         foreach ($parameters as $name => $value) {
             $template = str_replace("#$name#", $value, $template);
         }
