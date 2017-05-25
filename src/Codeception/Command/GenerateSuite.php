@@ -60,10 +60,11 @@ class GenerateSuite extends Command
             throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
 
-        if ($config['settings']['bootstrap']) {
-            $this->createDirectoryFor($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
+        $this->createDirectoryFor($dir . $suite);
 
-            // generate bootstrap
+        if ($config['settings']['bootstrap']) {
+
+            // generate bootstrap file
             $this->createFile(
                 $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
                 "<?php\n",
