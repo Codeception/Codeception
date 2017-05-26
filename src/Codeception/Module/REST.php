@@ -489,6 +489,12 @@ EOF;
             $url = $this->config['url'] . $url;
         }
 
+        // allows for parameters to be preset
+        if (is_array($parameters)) {
+            $this->params = array_merge($parameters, $this->params);
+            $parameters = $this->params;
+        }
+
         $this->params = $parameters;
 
         $parameters = $this->encodeApplicationJson($method, $parameters);
