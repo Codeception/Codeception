@@ -5,6 +5,30 @@ and bootstrapped your first test suites. Codeception has generated three of them
 They are well described in the [previous chapter](http://codeception.com/docs/01-Introduction). Inside your __/tests__ folder you will have three `.yml` config files and three directories
 with names corresponding to these suites: `unit`, `functional`, `acceptance`. Suites are independent groups of tests with a common purpose.
 
+## The Codeception Syntax
+
+Codeception follows simple naming rules to make it easy to remember (as well as easy to understand) its method names.
+
+* **Actions** start with a plain english verb, like "click" or "fill". Examples:
+    ```php
+    $I->click('Login');
+    $I->fillFiled('#input-username', 'John Dough');
+    $i->pressKey('#input-remarks', 'foo');
+    ```
+* **Assertions** always start with "see" or "dontSee". Examples:
+    ```php
+    $I->see('Welcome');
+    $I->seeInTitle('My Company');
+    $i->seeElement('nav');
+    $i->dontSeeElement('#error-message');
+    $i->dontSeeInPageSource('<section class="foo">');
+    ```
+* Methods that just *grab* something off the page, but don't process it, start with "grab". The return value of those are meant to be saved as variables and used later. Example:
+    ```php
+    $method = $I->grabAttributeFrom('#login-form', 'method');
+    $I->assertEquals('post', $method);
+    ```
+
 ## Actors
 
 One of the main concepts of Codeception is representation of tests as actions of a person.
