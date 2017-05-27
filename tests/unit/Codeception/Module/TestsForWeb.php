@@ -20,7 +20,6 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
 
-        $this->module->_cleanup();
         $this->module->amOnPage('/info');
         $this->module->see('Information');
     }
