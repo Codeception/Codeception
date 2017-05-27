@@ -1,3 +1,10 @@
+#### 2.3.2
+
+* [Db] Fixed: Database has been cleaned up between tests even with `cleanup: false`.  
+* [Db] Made `dump` optional if `populator` is set. Fixes #4247
+* Fixed `generate:suite` command to create a directory for the suite. Fixes #4251
+* Fixed composer autoloading with PHPUnit 6 by @enumag. See #4262
+
 #### 2.3.1
 
 * Updated composer constraints to include PHPUnit 6.x

@@ -63,7 +63,6 @@ class GenerateSuite extends Command
         $this->createDirectoryFor($dir . $suite);
 
         if ($config['settings']['bootstrap']) {
-
             // generate bootstrap file
             $this->createFile(
                 $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
