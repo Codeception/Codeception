@@ -66,7 +66,8 @@
             "Codeception\\Extension\\": "ext"
         },
         "files": [
-            "shim.php"
+            "shim.php",
+            "phpunit5-loggers.php"
         ]
     },
     "extra": {
