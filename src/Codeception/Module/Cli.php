@@ -2,6 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
+use Codeception\TestInterface;
 
 /**
  * Wrapper for basic shell commands and shell output
@@ -19,7 +20,7 @@ class Cli extends CodeceptionModule
 
     public $result = null;
 
-    public function _cleanup()
+    public function _before(TestInterface $test)
     {
         $this->output = '';
     }
