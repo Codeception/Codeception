@@ -1,0 +1,86 @@
+---
+image: docker:latest
+services:
+  - docker:dind
+
+variables:
+  DOCKER_HUB_REGISTRY_IMAGE: codeception/codeception
+  ALPINE_TAG: $CI_BUILD_REF_NAME-alpine
+  ALPINE_IMAGE_TEST: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME-alpine-test
+
+stages:
+  - build
+  - test
+  - deploy
+
+.dind_before_script: &dind_before_script
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+
+composer_install:
+  image: php:7.0-alpine
+  stage: build
+  script:
+    - apk update --no-cache
+    - apk add --no-cache git zlib-dev openssl
+    - docker-php-ext-install zip
+    - curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin
+    - composer global require --optimize-autoloader "hirak/prestissimo"
+    - composer install --prefer-dist --optimize-autoloader --ignore-platform-reqs
+  artifacts:
+      expire_in: 1 hour
+      when: on_success
+      paths:
+        - vendor/
+
+docker_build:alpine:
+  <<: *dind_before_script
+  stage: build
+  script:
+    - >
+      docker build --rm
+      --tag $ALPINE_IMAGE_TEST
+      --file Dockerfile-alpine .
+    - docker push $ALPINE_IMAGE_TEST
+
+test_cli:alpine:
+  <<: *dind_before_script
+  stage: test
+  dependencies:
+    - composer_install
+  script:
+    - >
+      docker run --rm
+      --volume $(pwd):/project
+      $ALPINE_IMAGE_TEST run cli
+
+test_command:alpine:
+  <<: *dind_before_script
+  stage: test
+  dependencies:
+    - composer_install
+  script:
+    - >
+      docker run --rm
+      --volume $(pwd):/project
+      $ALPINE_IMAGE_TEST run unit Codeception/Command
+
+test_constraint:alpine:
+  <<: *dind_before_script
+  stage: test
+  dependencies:
+    - composer_install
+  script:
+    - >
+      docker run --rm
+      --volume $(pwd):/project
+      $ALPINE_IMAGE_TEST run unit Codeception/Constraints
+
+deploy:alpine:
+  <<: *dind_before_script
+  stage: deploy
+  script:
+    - docker pull $ALPINE_IMAGE_TEST
+    - docker tag $ALPINE_IMAGE_TEST $DOCKER_HUB_REGISTRY_IMAGE:$ALPINE_TAG
+    - docker login -u $DOCKER_HUB_USER -p "$DOCKER_HUB_PASSWORD"
+    - docker push $DOCKER_HUB_REGISTRY_IMAGE:$ALPINE_TAG
