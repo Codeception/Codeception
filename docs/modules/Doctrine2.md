@@ -1,35 +1,35 @@
 # Doctrine2
 
 
-Allows integration and testing for projects with Doctrine2 ORM.
-Doctrine2 uses EntityManager to perform all database operations.
+Access the database using [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/).
 
-When using with Zend Framework 2 or Symfony2 Doctrine connection is automatically retrieved from Service Locator.
-In this case you should include either **Symfony** or **ZF2** module and specify it as dependent for Doctrine:
+When used with Zend Framework 2 or Symfony2, Doctrine's Entity Manager is automatically retrieved from Service Locator.
+Set up your `functional.suite.yml` like this:
 
 ```
 modules:
     enabled:
-        - Symfony
+        - Symfony # 'ZF2' or 'Symfony'
         - Doctrine2:
             depends: Symfony
+            cleanup: true # All doctrine queries will be wrapped in a transaction, which will be rolled back at the end of each test
 ```
 
-If you don't use any of frameworks above, you should specify a callback function to receive entity manager:
+If you don't use Symfony or Zend Framework, you need to specify a callback function to retrieve the Entity Manager:
 
 ```
 modules:
     enabled:
         - Doctrine2:
             connection_callback: ['MyDb', 'createEntityManager']
+            cleanup: true # All doctrine queries will be wrapped in a transaction, which will be rolled back at the end of each test
 
 ```
 
-This will use static method of `MyDb::createEntityManager()` to establish EntityManager.
+This will use static method of `MyDb::createEntityManager()` to establish the Entity Manager.
 
-By default module will wrap everything into transaction for each test and rollback it afterwards. By doing this
-tests won't write anything to database, and so will run much faster and will be isolate dfrom each other.
-This behavior can be changed by specifying `cleanup: false` in config.
+By default, the module will wrap everything into a transaction for each test and roll it back afterwards. By doing this
+tests will run much faster and will be isolated from each other.
 
 ## Status
 
@@ -38,17 +38,6 @@ This behavior can be changed by specifying `cleanup: false` in config.
 * Contact: codecept@davert.mail.ua
 
 ## Config
-
-* cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
-* connection_callback: - callable that will return an instance of EntityManager. This is a must if you run Doctrine without Zend2 or Symfony2 frameworks
-
- ### Example (`functional.suite.yml`)
-
-     modules:
-        enabled: [Doctrine2]
-        config:
-           Doctrine2:
-              cleanup: false
 
 ## Public Properties
 
@@ -59,7 +48,7 @@ This behavior can be changed by specifying `cleanup: false` in config.
 
 ### dontSeeInRepository
  
-Flushes changes to database and performs ->findOneBy() call for current repository.
+Flushes changes to database and performs `findOneBy()` call for current repository.
 
  * `param` $entity
  * `param array` $params
@@ -80,7 +69,7 @@ Example:
 
 ``` php
 <?php
-$users = $I->grabEntitiesFromRepository('User', array('name' => 'davert'));
+$users = $I->grabEntitiesFromRepository('AppBundle:User', array('name' => 'davert'));
 ?>
 ```
 
@@ -184,15 +173,14 @@ $I->persistEntity($user, array('name' => 'Miles'));
 
 ### seeInRepository
  
-Flushes changes to database executes a query defined by array.
-It builds query based on array of parameters.
+Flushes changes to database, and executes a query with parameters defined in an array.
 You can use entity associations to build complex queries.
 
 Example:
 
 ``` php
 <?php
-$I->seeInRepository('User', array('name' => 'davert'));
+$I->seeInRepository('AppBundle:User', array('name' => 'davert'));
 $I->seeInRepository('User', array('name' => 'davert', 'Company' => array('name' => 'Codegyre')));
 $I->seeInRepository('Client', array('User' => array('Company' => array('name' => 'Codegyre')));
 ?>

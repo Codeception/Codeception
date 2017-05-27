@@ -259,6 +259,7 @@ class RoboFile extends \Robo\Tasks
         $pharTask->addFile('autoload.php', 'autoload.php')
             ->addFile('codecept', 'package/bin')
             ->addFile('shim.php', 'shim.php')
+            ->addFile('phpunit5-loggers.php', 'phpunit5-loggers.php')
             ->run();
         
         $code = $this->taskExec('php ' . $pharFileName)->run()->getExitCode();
