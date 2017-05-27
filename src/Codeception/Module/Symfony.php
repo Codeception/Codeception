@@ -22,6 +22,10 @@ use Symfony\Component\VarDumper\Cloner\Data;
  *
  * * Maintainer: **raistlin**
  * * Stability: **stable**
+ * 
+ * ## Compatibility
+ *
+ * This module is compatible with all other Codeception modules, except WebDriver and the modules for other PHP frameworks.
  *
  * ## Config
  *
