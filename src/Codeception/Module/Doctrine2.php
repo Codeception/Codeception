@@ -509,7 +509,7 @@ EOF;
                         $qb->innerJoin("$alias.$key", "_$key");
                         foreach ($val as $column => $v) {
                             if (is_array($v)) {
-                                $this->buildAssociationQuery($qb, $map['targetEntity'], $column, $v);
+                                $this->buildAssociationQuery($qb, $map['targetEntity'], '_'.$column, $v);
                                 continue;
                             }
                             $paramname = "_$key" . '__' . $column;
