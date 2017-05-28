@@ -25,6 +25,15 @@ $I->see('Welcome, Davert!');
 ```
 
 **This scenario can be performed either by a simple PHP Browser or by a browser with Selenium WebDriver**.
+
+| | PhpBrowser | WebDriver |
+| --- | --- | --- |
+| Browser Engine | Symfony BrowserKit | Firefox or Chrome |
+| JavaScript | No | Yes |
+| `see`/`seeElement` checks if… | …text is present in source code | …text is actually visible to the user |
+| Read HTTP response headers | Yes | No |
+| Speed | Fast | Slow |
+
 We will start writing our first acceptance tests with a PhpBrowser.
 
 ## PHP Browser
