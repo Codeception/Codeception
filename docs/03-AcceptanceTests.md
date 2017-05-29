@@ -28,7 +28,7 @@ $I->see('Welcome, Davert!');
 
 | | PhpBrowser | WebDriver |
 | --- | --- | --- |
-| Browser Engine | Guzzle + Symfony BrowserKit | Firefox or Chrome |
+| Browser Engine | Guzzle + Symfony BrowserKit | Chrome or Firefox |
 | JavaScript | No | Yes |
 | `see`/`seeElement` checks if… | …text is present in source code | …text is actually visible to the user |
 | Read HTTP response headers | Yes | No |
@@ -335,16 +335,17 @@ Selenium Server is a piece of software that "drives" (i.e. runs) your local brow
 
 Overview of components:
 ```
-Codeception -> facebook/php-webdriver -> Selenium Server -> Gecko/Chrome Driver -> Browser (Firefox or Chrome)
+Codeception -> facebook/php-webdriver -> Selenium Server -> Gecko/Chrome Driver -> Browser (Chrome or Firefox)
 ```
 
 Installation instructions:
 
-1. You need [Firefox](http://www.mozilla.com/) and/or [Chrome](https://www.google.com/chrome/browser/desktop/) :-)
+1. You need [Chrome](https://www.google.com/chrome/browser/desktop/) and/or [Firefox](http://www.mozilla.com/) :-)
 1. You need [Java](http://www.java.com/)
 1. Download [Selenium Standalone Server](http://www.seleniumhq.org/download/)
-1. Download [geckodriver](https://github.com/mozilla/geckodriver/releases) (for Firefox) and/or
-[ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/) and extract the executable to a folder where Selenium Server can find it
+1. Download [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/)
+and/or [geckodriver](https://github.com/mozilla/geckodriver/releases) (for Firefox)
+and extract the executable to a folder where Selenium Server can find it
 (best guess: just drop it in the same folder where `selenium-server-standalone-xxx.jar` lives)
 1. Start Selenium Server with:
     ```bash
