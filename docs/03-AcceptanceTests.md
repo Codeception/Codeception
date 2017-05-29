@@ -28,7 +28,7 @@ $I->see('Welcome, Davert!');
 
 | | PhpBrowser | WebDriver |
 | --- | --- | --- |
-| Browser Engine | Symfony BrowserKit | Firefox or Chrome |
+| Browser Engine | Guzzle + Symfony BrowserKit | Firefox or Chrome |
 | JavaScript | No | Yes |
 | `see`/`seeElement` checks if… | …text is present in source code | …text is actually visible to the user |
 | Read HTTP response headers | Yes | No |
