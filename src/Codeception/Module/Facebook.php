@@ -95,7 +95,7 @@ class Facebook extends BaseModule implements DependsOnModule, RequiresPackage
     protected $testUser = [];
 
     /**
-     * @var PhpBrowser
+     * @var WebDriver
      */
     protected $browserModule;
 
@@ -121,10 +121,10 @@ EOF;
 
     public function _depends()
     {
-        return ['Codeception\Module\PhpBrowser' => $this->dependencyMessage];
+        return ['Codeception\Module\WebDriver' => $this->dependencyMessage];
     }
 
-    public function _inject(PhpBrowser $browserModule)
+    public function _inject(WebDriver $browserModule)
     {
         $this->browserModule = $browserModule;
     }
