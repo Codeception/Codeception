@@ -13,6 +13,7 @@ Modules for all of these frameworks share the same interface, and thus your test
 This is a sample functional test:
 
 ```php
+<?php
 // LoginCest.php
 
 class LoginCest
@@ -272,6 +273,7 @@ error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
 [Guzzle](http://docs.guzzlephp.org/en/latest/) is a library for accessing URL's through PHP's [cURL library](http://php.net/manual/book.curl.php). Guzzle is automatically installed with Codeception. You can easily access it from any test file:
 
 ```php
+<?php
 // ExternalCest.php
 
 class ExternalCest
