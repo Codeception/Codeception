@@ -394,6 +394,7 @@ class Console implements EventSubscriberInterface
 
         if (!$isFailure) {
             $message->prepend("[$class] ")->block('error');
+            $message->append("\n" . OutputFormatter::escape($e->getFile()) . ":" . $e->getLine());
         }
 
         if ($isFailure && $cause) {
