@@ -461,7 +461,7 @@ EOF;
      * @version 1.1
      * @param $entity
      * @param array $params
-     * @return array
+     * @return object
      */
     public function grabEntityFromRepository($entity, $params = [])
     {
