@@ -6,7 +6,6 @@ use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\Remote;
-use Codeception\Lib\Interfaces\RemoteWeb;
 use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Module as BaseModule;
