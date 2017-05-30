@@ -649,7 +649,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function makeScreenshot($name = null)
     {
-        $name = ($name) ? $name : date("Y-m-d_H-i-s");
+        if (empty($name)) {
+            $name = uniqid(date("Y-m-d_H-i-s"));
+        }
         $debugDir = codecept_log_dir() . 'debug';
         if (!is_dir($debugDir)) {
             mkdir($debugDir, 0777);
