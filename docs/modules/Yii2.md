@@ -872,6 +872,42 @@ instead of defining `haveFixtures` in Cest `_before`
  * `param` $fixtures
  * `[Part]` fixtures
 
+Note: if you need to load fixtures before the test (probably before the cleanup transaction is started; `cleanup` options is `true` by default), you can specify fixtures with _fixtures method of a testcase
+
+Example:
+```php
+<?php
+    // inside Cest file or Codeception\TestCase\Unit
+    /**
+     * Load fixtures before db transaction begin
+     * Called in _before()
+     * @see \Codeception\Module\Yii2::_before()
+     * @see \Codeception\Module\Yii2::loadFixtures()
+     * @return array
+     */
+    public function _fixtures(){
+        return [
+            'user' => [
+                'class' => UserFixture::className(),
+                'dataFile' => codecept_data_dir() . 'user.php'
+            ]
+        ];
+    }
+```
+instead of 
+```php
+<?php
+    // inside Cest file or Codeception\TestCase\Unit
+    public function _before(FunctionalTester $I)
+    {
+        $I->haveFixtures([
+            'user' => [
+                'class' => UserFixture::className(),
+                'dataFile' => codecept_data_dir() . 'user.php'
+            ]
+        ]);
+    }
+```
 
 ### haveHttpHeader
  
@@ -1410,7 +1446,7 @@ $I->submitForm('#login', [
 For example, given this sample "Sign Up" form:
 
 ``` html
-<form action="/sign_up">
+<form action="/sign_up" id="userForm">
     Login:
     <input type="text" name="user[login]" /><br/>
     Password:
