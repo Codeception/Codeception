@@ -487,7 +487,11 @@ class RoboFile extends \Robo\Tasks
 
             if (file_exists("releases/$releaseName/php54/codecept.phar")) {
                 $downloadUrl = "http://codeception.com/releases/$releaseName/php54/codecept.phar";
-                $versionLine .= ", [for PHP 5.4 or 5.5]($downloadUrl)";
+                if (version_compare($releaseName, '2.3.0', '>=')) {
+                    $versionLine .= ", [for PHP 5.4 - 5.6]($downloadUrl)";
+                } else {
+                    $versionLine .= ", [for PHP 5.4 or 5.5]($downloadUrl)";
+                }
             }
 
             $releaseFile->line($versionLine);
