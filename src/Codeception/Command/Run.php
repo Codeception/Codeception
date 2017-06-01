@@ -448,6 +448,12 @@ class Run extends Command
         $request = (string)$input;
         foreach ($options as $option => $defaultValue) {
             if (strpos($request, "--$option")) {
+                if ($input->hasParameterOption($option)) {
+                    // Symfony < 3.3.0 compatibility
+                    $values[$option] = $input->getParameterOption($option);
+                    continue;
+                }
+
                 $values[$option] = $input->hasOption($option)
                     ? $input->getOption($option)
                     : $defaultValue;
