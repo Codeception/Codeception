@@ -318,39 +318,43 @@ All hooks are defined in [Codeception\Module](http://codeception.com/docs/refere
 <?php
 
     // HOOK: used after configuration is loaded
-    public function _initialize() {
-    }
-
-    // HOOK: on every Actor class initialization
-    public function _cleanup() {
+    public function _initialize() 
+    {
     }
 
     // HOOK: before each suite
-    public function _beforeSuite($settings = array()) {
+    public function _beforeSuite($settings = array()) 
+    {
     }
 
     // HOOK: after suite
-    public function _afterSuite() {
+    public function _afterSuite() 
+    {
     }
 
     // HOOK: before each step
-    public function _beforeStep(\Codeception\Step $step) {
+    public function _beforeStep(\Codeception\Step $step) 
+    {
     }
 
     // HOOK: after each step
-    public function _afterStep(\Codeception\Step $step) {
+    public function _afterStep(\Codeception\Step $step) 
+    {
     }
 
     // HOOK: before test
-    public function _before(\Codeception\TestInterface $test) {
+    public function _before(\Codeception\TestInterface $test) 
+    {
     }
 
     // HOOK: after test
-    public function _after(\Codeception\TestInterface $test) {
+    public function _after(\Codeception\TestInterface $test) 
+    {
     }
 
     // HOOK: on fail
-    public function _failed(\Codeception\TestInterface $test, $fail) {
+    public function _failed(\Codeception\TestInterface $test, $fail) 
+    {
     }
 ```
 
