@@ -251,7 +251,7 @@ class Run extends Command
                 'coverage' => 'coverage.serialized',
                 'coverage-xml' => 'coverage.xml',
                 'coverage-html' => 'coverage',
-                'coverage-text' => 'coverage.text',
+                'coverage-text' => 'coverage.txt',
                 'coverage-crap4j' => 'crap4j.xml'])
         );
         $userOptions['verbosity'] = $this->output->getVerbosity();
