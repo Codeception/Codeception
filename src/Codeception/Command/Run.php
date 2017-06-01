@@ -140,36 +140,31 @@ class Run extends Command
                 'coverage',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Run with code coverage',
-                'coverage.serialized'
+                'Run with code coverage'
             ),
             new InputOption(
                 'coverage-html',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage HTML report in path',
-                'coverage'
+                'Generate CodeCoverage HTML report in path'
             ),
             new InputOption(
                 'coverage-xml',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage XML report in file',
-                'coverage.xml'
+                'Generate CodeCoverage XML report in file'
             ),
             new InputOption(
                 'coverage-text',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage text report in file',
-                'coverage.txt'
+                'Generate CodeCoverage text report in file'
             ),
             new InputOption(
                 'coverage-crap4j',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage report in Crap4J XML format',
-                'crap4j.xml'
+                'Generate CodeCoverage report in Crap4J XML format'
             ),
             new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
             new InputOption(
@@ -248,7 +243,16 @@ class Run extends Command
         $userOptions = array_intersect_key($this->options, array_flip($this->passedOptionKeys($input)));
         $userOptions = array_merge(
             $userOptions,
-            $this->booleanOptions($input, ['xml', 'html', 'json', 'tap', 'coverage', 'coverage-xml', 'coverage-html', 'coverage-crap4j'])
+            $this->booleanOptions($input, [
+                'xml' => 'report.xml',
+                'html' => 'report.html',
+                'json' => 'report.json',
+                'tap' => 'report.tap.log',
+                'coverage' => 'coverage.serialized',
+                'coverage-xml' => 'coverage.xml',
+                'coverage-html' => 'coverage',
+                'coverage-text' => 'coverage.txt',
+                'coverage-crap4j' => 'crap4j.xml'])
         );
         $userOptions['verbosity'] = $this->output->getVerbosity();
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
@@ -442,15 +446,14 @@ class Run extends Command
     {
         $values = [];
         $request = (string)$input;
-        foreach ($options as $option) {
+        foreach ($options as $option => $defaultValue) {
             if (strpos($request, "--$option")) {
-                $values[$option] = $input->hasParameterOption($option)
-                    ? $input->getParameterOption($option)
-                    : $input->getOption($option);
+                $values[$option] = $input->getOption($option) ? $input->getOption($option) : $defaultValue;
             } else {
                 $values[$option] = false;
             }
         }
+
         return $values;
     }
 
