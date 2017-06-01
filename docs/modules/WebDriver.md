@@ -864,7 +864,7 @@ If no parameters are provided, the full URI is returned.
 
 ``` php
 <?php
-$user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
+$user_id = $I->grabFromCurrentUrl('~^/user/(\d+)/~');
 $uri = $I->grabFromCurrentUrl();
 ?>
 ```
