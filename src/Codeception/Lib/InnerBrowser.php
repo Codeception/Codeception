@@ -153,7 +153,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         foreach ($this->headers as $header => $val) { // moved from REST module
 
-            if (!$val) {
+            if ($val === null || $val === '') {
                 continue;
             }
 
