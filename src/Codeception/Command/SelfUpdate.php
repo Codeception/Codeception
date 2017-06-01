@@ -298,7 +298,7 @@ class SelfUpdate extends Command
     protected function getPharUrl($version)
     {
         $sourceUrl = self::PHAR_URL;
-        if (version_compare(PHP_VERSION, '5.6.0', '<')) {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
             $sourceUrl = self::PHAR_URL_PHP54;
         }
 

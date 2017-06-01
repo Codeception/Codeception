@@ -17,11 +17,11 @@ class RoboFile extends \Robo\Tasks
         $this->publishDocs();
         $this->buildPhar();
         $this->buildPhar5();
-        $this->revertComposerJsonChanges();
         $this->publishPhar();
         $this->publishGit();
         $this->publishBase(null, \Codeception\Codecept::VERSION);
         $this->versionBump();
+        $this->update(); //update dependencies after release, because buildPhar5 set them to old versions
     }
 
     public function versionBump($version = '')
@@ -154,11 +154,11 @@ class RoboFile extends \Robo\Tasks
         $this->taskComposerUpdate()->run();
     }
 
-    private function installDependenciesForPhp56()
+    private function installDependenciesForPhp70()
     {
         $this->taskReplaceInFile('composer.json')
             ->regex('/"platform": \{.*?\}/')
-            ->to('"platform": {"php": "5.6.0"}')
+            ->to('"platform": {"php": "7.0.0"}')
             ->run();
 
         $this->taskComposerUpdate()->run();
@@ -179,7 +179,9 @@ class RoboFile extends \Robo\Tasks
      */
     public function buildPhar()
     {
+        $this->installDependenciesForPhp70();
         $this->packPhar('package/codecept.phar');
+        $this->revertComposerJsonChanges();
     }
 
     /**
@@ -193,6 +195,7 @@ class RoboFile extends \Robo\Tasks
         }
         $this->installDependenciesForPhp54();
         $this->packPhar('package/php54/codecept.phar');
+        $this->revertComposerJsonChanges();
     }
 
     private function packPhar($pharFileName)
@@ -484,7 +487,11 @@ class RoboFile extends \Robo\Tasks
 
             if (file_exists("releases/$releaseName/php54/codecept.phar")) {
                 $downloadUrl = "http://codeception.com/releases/$releaseName/php54/codecept.phar";
-                $versionLine .= ", [for PHP 5.4 or 5.5]($downloadUrl)";
+                if (version_compare($releaseName, '2.3.0', '>=')) {
+                    $versionLine .= ", [for PHP 5.4 - 5.6]($downloadUrl)";
+                } else {
+                    $versionLine .= ", [for PHP 5.4 or 5.5]($downloadUrl)";
+                }
             }
 
             $releaseFile->line($versionLine);
