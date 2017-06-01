@@ -64,11 +64,7 @@
         "psr-4":{
             "Codeception\\": "src\\Codeception",
             "Codeception\\Extension\\": "ext"
-        },
-        "files": [
-            "shim.php",
-            "phpunit5-loggers.php"
-        ]
+        }
     },
     "extra": {
         "branch-alias": {
