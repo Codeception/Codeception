@@ -12,84 +12,67 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\VarDumper\Cloner\Data;
 
 /**
- * This module uses Symfony Crawler and HttpKernel to emulate requests and test response.
+ * This module makes it possible to access Symfony features. It can be loaded in two ways:
+ * * Complete: Requests are emulated through Symfony's [DomCrawler](http://symfony.com/doc/current/components/dom_crawler.html) and [HttpKernel](https://symfony.com/doc/2.7/components/http_kernel.html)
+ * * Certain parts only: [PhpBrowser Module](http://codeception.com/docs/modules/PhpBrowser) or [WebDriver Module](http://codeception.com/docs/modules/WebDriver) is used for requests
+ *
+ * ## Complete
+ *
+ * ### Config
+ *
+ * ```yml
+ * # functional.suite.yml
+ * modules:
+ *     enabled:
+ *         - Symfony:
+ *             app_path: 'app' # Path to AppKernel.php
+ *             var_path: 'app' # Required for Symfony 3 directory structure only
+ *             # Optional parameters:
+ *             environment: 'local_test'
+ *             debug: true
+ *             em_service: 'doctrine.orm.entity_manager' # Use a different than the standard EntityManager to pair with Doctrine Module
+ *             cache_router: 'false' # Enable router caching between tests in order to increase performance
+ *             rebootable_client: 'true' # Reboot kernel before each request
+ * ```
+ *
+ * ### Compatibility
+ *
+ * When loaded this way, this module is compatible with all other Codeception modules, except WebDriver and the modules for other PHP frameworks.
+ * 
+ * ## Certain Parts Only
+ * 
+ * ### Config
+ *
+ * ```yml
+ * # acceptance.suite.yml
+ * modules:
+ *     enabled:
+ *         - Symfony:
+ *             part: 'services' # 'orm' or 'services'
+ *         - Doctrine2:
+ *             depends: Symfony
+ *         - WebDriver:
+ *             url: http://www.example.com/
+ *             browser: chrome
+ * ```
+ *
+ * Available Parts:
+ * * `services`: Access Symfony's services
+ * * `orm`: Access Symfony's ORM
  *
  * ## Demo Project
  *
  * <https://github.com/Codeception/symfony-demo>
  *
- * ## Status
+ * ## Status of the Module
  *
  * * Maintainer: **raistlin**
  * * Stability: **stable**
- * 
- * ## Compatibility
- *
- * This module is compatible with all other Codeception modules, except WebDriver and the modules for other PHP frameworks.
- *
- * ## Config
- *
- * ### Symfony 2.x
- *
- * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
- * * environment: 'local' - environment used for load kernel
- * * debug: true - turn on/off debug mode
- * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
- * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
- * * rebootable_client: 'true' - reboot client's kernel before each request
- *
- * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
- *
- * ```
- *    modules:
- *        - Symfony:
- *            app_path: 'app/front'
- *            environment: 'local_test'
- * ```
- *
- * ### Symfony 3.x Directory Structure
- *
- * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
- * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
- * * environment: 'local' - environment used for load kernel
- * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
- * * debug: true - turn on/off debug mode
- * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
- * * rebootable_client: 'true' - reboot client's kernel before each request
- *
- * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
- *
- *     modules:
- *        enabled:
- *           - Symfony:
- *               app_path: 'app/front'
- *               var_path: 'var'
- *               environment: 'local_test'
- *
  *
  * ## Public Properties
  *
- * * kernel - HttpKernel instance
- * * client - current Crawler instance
- *
- * ## Parts
- *
- * * services - allows to use Symfony DIC only with WebDriver or PhpBrowser modules.
- *
- * Usage example:
- *
- * ```yaml
- * actor: AcceptanceTester
- * modules:
- *     enabled:
- *         - Symfony:
- *             part: SERVICES
- *         - Doctrine2:
- *             depends: Symfony
- *         - WebDriver:
- *             url: http://your-url.com
- *             browser: phantomjs
- * ```
+ * * `kernel`: HttpKernel instance
+ * * `client`: Current Crawler instance
  *
  */
 class Symfony extends Framework implements DoctrineProvider, PartedModule
