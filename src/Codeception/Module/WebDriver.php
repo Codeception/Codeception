@@ -640,13 +640,18 @@ class WebDriver extends CodeceptionModule implements
      * $I->amOnPage('/user/edit');
      * $I->makeScreenshot('edit_page');
      * // saved to: tests/_output/debug/edit_page.png
+     * $I->makeScreenshot();
+     * // saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.png
      * ?>
      * ```
      *
      * @param $name
      */
-    public function makeScreenshot($name)
+    public function makeScreenshot($name = null)
     {
+        if (empty($name)) {
+            $name = uniqid(date("Y-m-d_H-i-s_"));
+        }
         $debugDir = codecept_log_dir() . 'debug';
         if (!is_dir($debugDir)) {
             mkdir($debugDir, 0777);
