@@ -25,6 +25,15 @@ $I->see('Welcome, Davert!');
 ```
 
 **This scenario can be performed either by a simple PHP Browser or by a browser with Selenium WebDriver**.
+
+| | PhpBrowser | WebDriver |
+| --- | --- | --- |
+| Browser Engine | Guzzle + Symfony BrowserKit | Chrome or Firefox |
+| JavaScript | No | Yes |
+| `see`/`seeElement` checks if… | …text is present in source code | …text is actually visible to the user |
+| Read HTTP response headers | Yes | No |
+| Speed | Fast | Slow |
+
 We will start writing our first acceptance tests with a PhpBrowser.
 
 ## PHP Browser
@@ -310,12 +319,65 @@ $I->seeInCurrentUrl('user/1');
 $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 ```
 
-## Selenium WebDriver
+## WebDriver: Selenium Server or PhantomJS
 
 A nice feature of Codeception is that most scenarios are similar, no matter of how they are executed.
 `PhpBrowser` was emulating browser requests but how to execute such test in a real browser like Chrome or Firefox? 
 Selenium WebDriver can drive them so in our acceptance tests we can automate scenarios we used to test manually.
 In such tests we should concentrate more on **testing the UI** than on testing functionality.
+
+"[Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver/)" is the name of an API (specified by the Selenium project)
+to drive browsers automatically. Codeception supports two implementations of this API: Selenium Standalone Server and PhantomJS
+
+### Selenium Standalone Server
+
+Selenium Server is a piece of software that "drives" (i.e. runs) your local browser by sending commands (i.e. your test cases) to it.
+
+Overview of components:
+```
+Codeception -> facebook/php-webdriver -> Selenium Server -> Gecko/Chrome Driver -> Browser (Chrome or Firefox)
+```
+
+Installation instructions:
+
+1. You need [Chrome](https://www.google.com/chrome/browser/desktop/) and/or [Firefox](http://www.mozilla.com/) :-)
+1. You need [Java](http://www.java.com/)
+1. Download [Selenium Standalone Server](http://www.seleniumhq.org/download/)
+1. Download [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/)
+and/or [geckodriver](https://github.com/mozilla/geckodriver/releases) (for Firefox)
+and extract the executable to a folder where Selenium Server can find it
+(best guess: just drop it in the same folder where `selenium-server-standalone-xxx.jar` lives)
+1. Start Selenium Server with:
+    ```bash
+    java -jar "/path/to/selenium-server-standalone-xxx.jar"
+    ```
+
+[facebook/php-webdriver](https://github.com/facebook/php-webdriver) comes bundled with Codeception.
+
+### PhantomJS
+
+PhantomJS is a [headless browser](https://en.wikipedia.org/wiki/Headless_browser) based on the
+[WebKit](https://en.wikipedia.org/wiki/WebKit) rendering engine that renders your application like a real browser would.
+It just doesn't display the outcome to you.
+
+Overview of components:
+```
+Codeception -> facebook/php-webdriver -> PhantomJS
+```
+
+Installation instructions:
+
+1. Download [PhantomJS](http://phantomjs.org/download.html) and extract it.
+1. Start the executable (located in the `bin` folder) with:
+    ```bash
+    phantomjs --webdriver=4444
+    ```
+
+Full list of available [command line arguments for PhantomJS](http://phantomjs.org/api/command-line.html)
+
+[facebook/php-webdriver](https://github.com/facebook/php-webdriver) comes bundled with Codeception.
+
+### Codeception Configuration
 
 To execute a test in a browser we need to change the suite configuration to use **WebDriver** instead of `PhpBrowser`.
 
@@ -331,7 +393,6 @@ modules:
         - \Helper\Acceptance
 ```
 
-In order to run browser tests you will need Selenium Server or PhantomJS.
 See [WebDriver Module](http://codeception.com/docs/modules/WebDriver) for details.
 
 Please note that actions executed in a browser will behave differently. For instance, `seeElement` won't just check that the element exists on a page,
