@@ -16,7 +16,21 @@ To test the behavior of your application as a whole, you should write functional
 Codeception supports all three testing types.
 Out of the box you have tools for writing unit, functional, and acceptance tests in a unified framework.
 
-Let's review the listed testing paradigms in reverse order.
+| | Codeception Unit Tests | Codeception Functional Tests | Codeception Acceptance Tests
+| --- | --- | --- | --- |
+| Scope of the test | Single PHP class | PHP Framework (Routing, Controllers, etc.) | Page in real browser |
+| Testing computer needs access to PHP files | Yes | Yes | No |
+| JavaScript  | No | No | Yes |
+| Webserver required | No | No | Yes |
+| Separate installations required | None | None | Selenium Server or PhantomJS |
+| Test execution speed | High | High | Low |
+| Configuration file | `unit.suite.yml` | `functional.suite.yml` | `acceptance.suite.yml` |
+
+One of the main advantages of Codeception is that you don't have to decide on just *one* type of testing. You can have all three!
+And chances are, that you will (sooner or later) need all three. That's why Codeception consists of three so-called "suites":
+A "unit suite" for all unit tests, a "functional suite" for all functional tests, and an "acceptance suite" for all acceptance tests.
+
+Let's review those three testing types in reverse order.
 
 ### Acceptance Tests
 
