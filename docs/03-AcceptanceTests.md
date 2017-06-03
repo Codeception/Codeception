@@ -360,6 +360,8 @@ PhantomJS is a [headless browser](https://en.wikipedia.org/wiki/Headless_browser
 [WebKit](https://en.wikipedia.org/wiki/WebKit) rendering engine that renders your application like a real browser would.
 It just doesn't display the outcome to you.
 
+> Important notice: PhantomJS is not maintained anymore. Use it at your own risk.
+
 Overview of components:
 ```
 Codeception -> facebook/php-webdriver -> PhantomJS
@@ -376,6 +378,8 @@ Installation instructions:
 Full list of available [command line arguments for PhantomJS](http://phantomjs.org/api/command-line.html)
 
 [facebook/php-webdriver](https://github.com/facebook/php-webdriver) comes bundled with Codeception.
+
+
 
 ### Codeception Configuration
 
