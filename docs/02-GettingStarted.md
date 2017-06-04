@@ -11,20 +11,23 @@ Codeception follows simple naming rules to make it easy to remember (as well as 
 
 * **Actions** start with a plain english verb, like "click" or "fill". Examples:
     ```php
+    <?php
     $I->click('Login');
     $I->fillFiled('#input-username', 'John Dough');
     $i->pressKey('#input-remarks', 'foo');
     ```
 * **Assertions** always start with "see" or "dontSee". Examples:
     ```php
+    <?php
     $I->see('Welcome');
     $I->seeInTitle('My Company');
     $i->seeElement('nav');
     $i->dontSeeElement('#error-message');
     $i->dontSeeInPageSource('<section class="foo">');
     ```
-* Methods that just *grab* something off the page, but don't process it, start with "grab". The return value of those are meant to be saved as variables and used later. Example:
+* **Grabbers** just *read* something from the page, but don't process it. The return value of those are meant to be saved as variables and used later. Example:
     ```php
+    <?php
     $method = $I->grabAttributeFrom('#login-form', 'method');
     $I->assertEquals('post', $method);
     ```
