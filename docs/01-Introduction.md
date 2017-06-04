@@ -18,11 +18,11 @@ Out of the box you have tools for writing unit, functional, and acceptance tests
 
 | | Codeception Unit Tests | Codeception Functional Tests | Codeception Acceptance Tests
 | --- | --- | --- | --- |
-| Scope of the test | Single PHP class | PHP Framework (Routing, Controllers, etc.) | Page in real browser |
-| Testing computer needs access to PHP files | Yes | Yes | No |
-| JavaScript  | No | No | Yes |
+| Scope of the test | Single PHP class | PHP Framework (Routing, Controllers, etc.) | Page in browser (Chrome, Firefox, or PhpBrowser) |
+| Testing computer needs access to project's PHP files | Yes | Yes | No |
 | Webserver required | No | No | Yes |
-| Separate installations required | None | None | Selenium Server or PhantomJS |
+| JavaScript  | No | No | Yes |
+| Additional software required | None | None | <ul><li>For WebDriver: Selenium Server or PhantomJS (deprecated)</li><li>For PhpBrowser: None</li></ul> |
 | Test execution speed | High | High | Low |
 | Configuration file | `unit.suite.yml` | `functional.suite.yml` | `acceptance.suite.yml` |
 
@@ -35,14 +35,14 @@ Let's review those three testing types in reverse order.
 ### Acceptance Tests
 
 How does your client, manager, tester, or any other non-technical person know your website is working?
-By opening the browser, accessing a site, clicking on links, filling in the forms,
-and actually seeing the content on a web page. They have no idea of the framework, database, web-server,
-or programming language you use or why the application did not behave as expected.
+By opening the browser, accessing the site, clicking on links, filling in the forms,
+and actually seeing the content on a web page. They have no idea of the programming language, framework, database, web-server,
+or why the application did (or did not) behave as expected.
 
-Acceptance tests can cover standard but complex scenarios from a user's perspective.
+This is what acceptance tests are doing. They cover scenarios from a user's perspective.
 With acceptance tests, you can be confident that users, following all the defined scenarios, won't get errors.
 
-Please note that **any website** can be covered with acceptance tests, even if you use a very custom CMS or framework.
+**Any website** can be covered with acceptance tests, even if you use a very exotic CMS or framework.
 
 #### Sample acceptance test
 
