@@ -55,19 +55,6 @@ $I->submitForm('#signup', ['username' => 'MilesDavis', 'email' => 'miles@davis.c
 $I->see('Thank you for Signing Up!');
 ```
 
-#### Pros
-
-* can be run on any website
-* can test JavaScript and AJAX requests
-* can be shown to your clients and managers
-* most stable in support: less affected by changes in source code or technologies
-
-#### Cons
-* the slowest: requires running browser and database repopulation
-* fewer checks can lead to false-positive results
-* not stable in execution: rendering and JavaScript issues can lead to unpredictable results
-
-
 ### Functional Tests
 
 What if we could check our application without running it on a server?
@@ -93,19 +80,6 @@ $I->see('Thank you for Signing Up!');
 $I->seeEmailSent('miles@davis.com', 'Thank you for registration');
 $I->seeInDatabase('users', ['email' => 'miles@davis.com']);
 ```
-
-#### Pros
-
-* like acceptance tests, but much faster
-* can provide more detailed reports
-* you can still show this code to managers and clients
-* stable enough: only major code changes, or moving to other framework, can break them
-
-#### Cons
-
-* JavaScript and AJAX can't be tested
-* by emulating the browser you might get more false-positive results
-* requires a framework
 
 ### Unit Tests
 
@@ -135,19 +109,6 @@ function testSavingUser()
     $this->unitTester->seeInDatabase('users', ['name' => 'Miles', 'surname' => 'Davis']);
 }
 ```
-
-#### Pros
-
-* fastest (well, in the current example, you still need database repopulation because it's an integration test,
-not a pure unit test)
-* can cover rarely used features
-* can test the stability of the application core
-* fundamental for any developer
-
-#### Cons
-
-* doesn't test connections between units
-* unstable in support: very sensitive to code changes
 
 ## Conclusion
 
