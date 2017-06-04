@@ -39,7 +39,7 @@ We have a UnitTester, who executes functions and tests the code. We also have a 
 who tests the application as a whole, with knowledge of its internals. Lastly we have an AcceptanceTester, a user who works with our application
 through an interface that we provide.
 
-Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from [Codeception Modules](http://codeception.com/docs/06-ModulesAndHelpers)**.
+**Methods of actor classes are generally taken from [Codeception Modules](http://codeception.com/docs/06-ModulesAndHelpers)**.
 Each module provides predefined actions for different testing purposes, and they can be combined to fit the testing environment.
 Codeception tries to solve 90% of possible testing issues in its modules, so you don't have to reinvent the wheel.
 We think that you can spend more time on writing tests and less on writing support code to make those tests run.
