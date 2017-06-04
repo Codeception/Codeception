@@ -1,18 +1,18 @@
 # Acceptance Testing
 
 Acceptance testing can be performed by a non-technical person. That person can be your tester, manager or even client.
-If you are developing a web-application (and probably you are) the tester needs nothing more than a web browser
+If you are developing a web-application (and you probably are) the tester needs nothing more than a web browser
 to check that your site works correctly. You can reproduce an acceptance tester's actions in scenarios
-and run them automatically after each site change. Codeception keeps tests clean and simple,
+and run them automatically. Codeception keeps tests clean and simple,
 as if they were recorded from the words of an actual acceptance tester.
 
-It makes no difference what CMS or Framework is used on the site. You can even test sites created on different platforms,
-like Java, .NET, etc. It's always a good idea to add tests to your web site.
+It makes no difference what (if any) CMS or framework is used on the site. You can even test sites created with different
+languages, like Java, .NET, etc. It's always a good idea to add tests to your web site.
 At least you will be sure that site features work after the latest changes were made.
 
 ## Sample Scenario
 
-Let's say the first test you would want to run would be signing in.
+Let's say the first test you would want to run, would be signing in.
 In order to write such a test, we still require basic knowledge of PHP and HTML:
 
 ```php
@@ -24,55 +24,53 @@ $I->click('LOGIN');
 $I->see('Welcome, Davert!');
 ```
 
-**This scenario can be performed either by a simple PHP Browser or by a browser with Selenium WebDriver**.
+**This scenario can be performed either by PhpBrowser or by a "real" browser through Selenium WebDriver**.
 
 | | PhpBrowser | WebDriver |
 | --- | --- | --- |
 | Browser Engine | Guzzle + Symfony BrowserKit | Chrome or Firefox |
 | JavaScript | No | Yes |
-| `see`/`seeElement` checks if… | …text is present in source code | …text is actually visible to the user |
+| `see`/`seeElement` checks if… | …text is present in the HTML source | …text is actually visible to the user |
 | Read HTTP response headers | Yes | No |
+| System requirements | PHP with [cURL extension](http://php.net/manual/book.curl.php) | <ul><li>Selenium Standalone Server</li><li>Chrome or Firefox</li></ul> |
 | Speed | Fast | Slow |
 
-We will start writing our first acceptance tests with a PhpBrowser.
+We will start writing our first acceptance tests with PhpBrowser.
 
-## PHP Browser
+## PhpBrowser
 
 This is the fastest way to run acceptance tests, since it doesn't require running an actual browser.
-We use a PHP web scraper, which acts like a browser: it sends a request, then receives and parses the response.
+We use a PHP web scraper, which acts like a browser: It sends a request, then receives and parses the response.
 Codeception uses [Guzzle](http://guzzlephp.org) and [Symfony BrowserKit](http://symfony.com/doc/current/components/browser_kit.html) to interact with HTML web pages.
-Please note that you can't test actual visibility of HTML elements, or JavaScript interactions.
-Good thing about PhpBrowser is that it can be run in any environment with just PHP and cURL required.
 
 Common PhpBrowser drawbacks:
 
-* you can click only on links with valid URLs or form submit buttons
-* you can't fill in fields that are not inside a form
-* you can't work with JavaScript interactions: modal windows, datepickers, etc.
+* You can only click on links with valid URLs or form submit buttons
+* You can't fill in fields that are not inside a form
 
-Before we start, we need a local copy of the site running on your host.
-We need to specify the `url` parameter in the acceptance suite config (`tests/acceptance.suite.yml`):
+We need to specify the `url` parameter in the acceptance suite config:
 
 ```yaml
+# acceptance.suite.yml
 actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: {{your site URL}}
+            url: http://www.example.com/
         - \Helper\Acceptance
 ```
 
-We should start by creating a 'Cept' file in the `tests/acceptance` directory.
-Let's call it `SigninCept.php`. We will write the first lines into it:
+We should start by creating a 'Cept' file:
 
 ```php
 <?php
+// tests/acceptance/SigninCept.php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('sign in');
 ```
 
 The `$I` object is used to write all interactions.
-The methods of the `$I` object are taken from the `PhpBrowser` module. We will briefly describe them here:
+The methods of the `$I` object are taken from the [PhpBrowser Module](http://codeception.com/docs/modules/PhpBrowser). We will briefly describe them here:
 
 ```php
 <?php
@@ -332,6 +330,8 @@ to drive browsers automatically. Codeception supports two implementations of thi
 ### Selenium Standalone Server
 
 Selenium Server is a piece of software that "drives" (i.e. runs) your local browser by sending commands (i.e. your test cases) to it.
+
+PhantomJS is eventually going to be replaced by [Headless Chrome](https://developers.google.com/web/updates/2017/04/headless-chrome).
 
 Overview of components:
 ```
