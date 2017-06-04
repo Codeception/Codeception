@@ -20,7 +20,7 @@ In "Projects" window, right-click on your project > `Properties` > `Testing`, th
 1. `Codeception` > `Use Custom Codecept File`: Enter the path to your Codeception executable (`codecept`, `codecept.bar` or `codecept.phar`).  
 If you have Codeception installed globally on your machine, you may instead provide the path in `Tools` > `Options` > `PHP` > `Frameworks & Tools` > `Codeception` > `Codecept File`.
 1. `Codeception` > `Use Custom codeception.yml`: Enter the path to your `codeception.yml`
-1. `Codeception` > `Ask for Additional Parameters Before Running Tests`: If you check this, a dialogue box will appear every time you run the tests, allowing you to enter additional Codeception command-line parameters.
+1. `Codeception` > `Ask for Additional Parameters Before Running Tests`: If you check this, a dialogue box will appear every time you run the tests, allowing you to enter additional [Codeception command-line parameters](http://codeception.com/docs/reference/Commands#Run)
 
 ### Now You Can
 
