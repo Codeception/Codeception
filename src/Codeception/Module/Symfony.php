@@ -16,7 +16,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
  * * Complete: Requests are emulated through Symfony's [DomCrawler](http://symfony.com/doc/current/components/dom_crawler.html) and [HttpKernel](https://symfony.com/doc/2.7/components/http_kernel.html)
  * * Certain parts only: [PhpBrowser Module](http://codeception.com/docs/modules/PhpBrowser) or [WebDriver Module](http://codeception.com/docs/modules/WebDriver) is used for requests
  *
- * ## Complete
+ * ## Functional Tests
  *
  * ### Config
  *
@@ -37,9 +37,9 @@ use Symfony\Component\VarDumper\Cloner\Data;
  *
  * ### Compatibility
  *
- * When loaded this way, this module is compatible with all other Codeception modules, except WebDriver and the modules for other PHP frameworks.
+ * When used in a functional test, this module is compatible with all other Codeception modules, except WebDriver and the modules for other PHP frameworks.
  * 
- * ## Certain Parts Only
+ * ## Acceptance Tests
  * 
  * ### Config
  *
@@ -57,7 +57,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
  * ```
  *
  * Available Parts:
- * * `services`: Access Symfony's services
+ * * `services`: Access Symfony's services. Symfony parameters can be accessed with `$I->grabService('kernel')->getContainer()->getParameter('my_parameter');`
  * * `orm`: Access Symfony's ORM
  *
  * ## Demo Project
