@@ -268,41 +268,6 @@ error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
 
 `error_level` can also be set globally in `codeception.yml` file.
 
-## Accessing external URL's with Guzzle
-
-[Guzzle](http://docs.guzzlephp.org/en/latest/) is a library for accessing URL's through PHP's [cURL library](http://php.net/manual/book.curl.php). Guzzle is automatically installed with Codeception. You can easily access it from any test file:
-
-```php
-<?php
-// ExternalCest.php
-
-class ExternalCest
-{
-    public function tryExternalPage (FunctionalTester $I)
-    {
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', 'http://codeception.com/');
-        $I->assertEquals(200, $response->getStatusCode());
-        $I->assertContains(
-            'Quick Start',   
-            $response->getBody()->getContents() // gives you the raw HTML sourcecode
-        );
-    }
-}
-```
-
-To make `assertEquals()` and `assertContains()` work, you need to activate the [Asserts Module](http://codeception.com/docs/modules/Asserts) in your testing suite:
-
-```yml
-# functional.suite.yml
-
-class_name: FunctionalTester
-modules:
-    enabled:
-        # ...
-        - Asserts
-```
-
 ## Conclusion
 
 Functional tests are great if you are using powerful frameworks. By using functional tests you can access
