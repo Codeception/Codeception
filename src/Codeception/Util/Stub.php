@@ -714,7 +714,7 @@ class Stub
      * $user = Stub::make(
      *     'User',
      *     array(
-     *         'getName' => Stub::exactly(3, function() { return 'Davert';}),
+     *         'getName' => Stub::exactly(3, function($params) { return 'Davert';}),
      *         'someMethod' => function() {}
      *     )
      * );
