@@ -34,7 +34,7 @@ class LocalServer extends SuiteSubscriber
     protected $c3Access = [
         'http' => [
             'method' => "GET",
-            'header' => ''
+            'header' => "User-Agent:Codeception"
         ]
     ];
 
