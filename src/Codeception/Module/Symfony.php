@@ -524,8 +524,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         // prior to Symfony 3.3
         if (method_exists($data, 'getValue')) {
             $roles = $data->getValue();
-        }
-        else {
+        } else {
             $raw = $data->getRawData();
             $roles = isset($raw[1]) ? $raw[1] : [];
         }
