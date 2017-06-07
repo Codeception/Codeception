@@ -521,7 +521,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     private function extractRawRoles(Data $data)
     {
-        if ($this->dataIsFromSymfony33($data)) {
+        if ($this->dataRevealsValue($data)) {
             $roles = $data->getValue();
         } else {
             $raw = $data->getRawData();
@@ -586,7 +586,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      *
      * @return bool
      */
-    private function dataIsFromSymfony33(Data $data)
+    private function dataRevealsValue(Data $data)
     {
         return method_exists($data, 'getValue');
     }
