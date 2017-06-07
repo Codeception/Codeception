@@ -521,9 +521,16 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     private function extractRawRoles(Data $data)
     {
-        $raw = $data->getRawData();
+        // prior to Symfony 3.3
+        if (method_exists($data, 'getValue')) {
+            $roles = $data->getValue();
+        }
+        else {
+            $raw = $data->getRawData();
+            $roles = isset($raw[1]) ? $raw[1] : [];
+        }
 
-        return isset($raw[1]) ? $raw[1] : [];
+        return $roles;
     }
 
     /**
