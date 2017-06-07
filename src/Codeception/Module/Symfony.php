@@ -521,8 +521,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     private function extractRawRoles(Data $data)
     {
-        // prior to Symfony 3.3
-        if (method_exists($data, 'getValue')) {
+        if ($this->dataIsFromSymfony3_3($data)) {
             $roles = $data->getValue();
         } else {
             $raw = $data->getRawData();
@@ -578,5 +577,17 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if ($this->client) {
             $this->client->rebootKernel();
         }
+    }
+
+    /**
+     * Public API from Data changed from Symfony 3.2 to 3.3.
+     *
+     * @param \Symfony\Component\VarDumper\Cloner\Data $data
+     *
+     * @return bool
+     */
+    private function dataIsFromSymfony3_3(Data $data): bool
+    {
+        return method_exists($data, 'getValue');
     }
 }
