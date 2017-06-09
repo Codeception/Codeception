@@ -266,7 +266,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
     {
         if (!$user instanceof Authenticatable) {
             $this->fail(
-                'The user passed to amLoggedAs() should be an instance of \\Illuminate\\Contracts\\Auth\\Authenticable'
+                'The user passed to amLoggedAs() should be an instance of \\Illuminate\\Contracts\\Auth\\Authenticatable'
             );
         }
 

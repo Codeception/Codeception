@@ -247,7 +247,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Revert back to the Codeception error handler,
-     * becauses Laravel registers it's own error handler.
+     * because Laravel registers it's own error handler.
      */
     protected function revertErrorHandler()
     {

@@ -61,7 +61,7 @@ You should not perform validation if `url` was set. Module would perform it for 
 
 3. If you use low-level clients in your module (PDO driver, framework client, selenium client) you should allow developers to access them. That's why you should define their instances as `public` properties of method.
 
-Also you *may* provide a closure method to access low-leve API
+Also you *may* provide a closure method to access low-level API
 
 ```php
 <?php
