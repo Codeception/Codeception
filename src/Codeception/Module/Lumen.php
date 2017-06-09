@@ -76,13 +76,13 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
     public function __construct(ModuleContainer $container, $config = null)
     {
         $this->config = array_merge(
-            array(
+            [
                 'cleanup' => true,
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
                 'packages' => 'workbench',
                 'url' => 'http://localhost',
-            ),
+            ],
             (array)$config
         );
 

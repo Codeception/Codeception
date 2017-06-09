@@ -135,7 +135,7 @@ class Application extends BaseApplication
         }
 
         $argv = $_SERVER['argv'];
-        $argvWithoutConfig = array();
+        $argvWithoutConfig = [];
 
         for ($i = 0; $i < count($argv); $i++) {
             if (preg_match('/^(?:-([^c-]*)?c|--config(?:=|$))(.*)$/', $argv[$i], $match)) {

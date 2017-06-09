@@ -252,7 +252,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     protected function revertErrorHandler()
     {
         $handler = new ErrorHandler();
-        set_error_handler(array($handler, 'errorHandler'));
+        set_error_handler([$handler, 'errorHandler']);
     }
 
     /**
