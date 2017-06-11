@@ -153,7 +153,10 @@ abstract class TestsForDb extends \Codeception\Test\Unit
             'davert@mail.ua',
             'nick@mail.ua',
             'miles@davis.com',
-            'charlie@parker.com'],
+            'charlie@parker.com',
+            'user@example.org',
+            'user2@example.org'
+                                ],
             $emails);
     }
 
