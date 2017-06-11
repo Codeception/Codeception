@@ -146,6 +146,17 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         $this->assertEquals('davert@mail.ua', $email);
     }
 
+    public function testGrabColumnFromDatabase()
+    {
+        $emails = $this->module->grabColumnFromDatabase('users', 'email');
+        $this->assertEquals([
+            'davert@mail.ua',
+            'nick@mail.ua',
+            'miles@davis.com',
+            'charlie@parker.com'],
+            $emails);
+    }
+
     public function testGrabNumRecords()
     {
         $num = $this->module->grabNumRecords('users', ['name' => 'davert']);
