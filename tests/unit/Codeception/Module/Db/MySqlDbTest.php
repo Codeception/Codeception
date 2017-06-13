@@ -72,7 +72,8 @@ class MySqlDbTest extends TestsForDb
     {
         $emails = $this->module->grabColumnFromDatabase('users', 'email');
         $this->assertEquals(
-            ['davert@mail.ua',
+            [
+                'davert@mail.ua',
                 'nick@mail.ua',
                 'miles@davis.com',
                 'charlie@parker.com',
