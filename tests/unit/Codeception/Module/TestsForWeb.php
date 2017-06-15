@@ -1657,9 +1657,8 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     public function testClickingFormButtonInContextSubmitsOutOfContextFormElements()
     {
         $this->module->amOnPage('/basehref');
-        $this->module->fillField('rus', 'test value');
         $this->module->click('Relative Form', '#button-container');
-        $this->assertEquals('test value', data::get('rus'));
+        $this->assertArrayHasKey('rus', data::get('form'));
     }
 
     public function testAttachFileThrowsCorrectMessageWhenFileDoesNotExist()
