@@ -84,9 +84,15 @@ use Symfony\Component\DomCrawler\Crawler;
  *        enabled:
  *           - WebDriver:
  *              url: 'http://localhost/'
+ *              window_size: false # disabled in ChromeDriver
  *              port: 9515
  *              browser: chrome
+ *              capabilities:
+ *                  chromeOptions: # additional chrome options
  * ```
+ *
+ * Additional [Chrome options](https://sites.google.com/a/chromium.org/chromedriver/capabilities) can be set in `chromeOptions` capabilities.
+ *
  *
  * ### PhantomJS
  *
