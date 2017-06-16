@@ -489,8 +489,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             if ($crawler->count() === 0) {
                 $this->fail("No links containing text '$text' and URL '$url' were found in page " . $this->_getCurrentUri());
             }
-            $this->assertTrue(true);
         }
+        $this->assertTrue(true);
     }
 
     public function dontSeeLink($text, $url = null)
