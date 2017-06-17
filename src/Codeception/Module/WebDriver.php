@@ -196,6 +196,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `host` - Selenium server host (127.0.0.1 by default).
  * * `port` - Selenium server port (4444 by default).
  * * `restart` - Set to `false` (default) to use the same browser window for all tests, or set to `true` to create a new window for each test. In any case, when all tests are finished the browser window is closed.
+ * * `start` - Autostart a browser for tests. Can be disabled if browser session is started with `_initializeSession` inside a Helper.
  * * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
  * * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * `wait` - Implicit wait (default 0 seconds).
@@ -289,6 +290,7 @@ class WebDriver extends CodeceptionModule implements
         'host'               => '127.0.0.1',
         'port'               => '4444',
         'path'               => '/wd/hub',
+        'start'              => true,
         'restart'            => false,
         'wait'               => 0,
         'clear_cookies'      => true,
@@ -400,7 +402,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function _before(TestInterface $test)
     {
-        if (!isset($this->webDriver)) {
+        if (!isset($this->webDriver) && $this->config['start']) {
             $this->_initializeSession();
         }
         $this->setBaseElement();
