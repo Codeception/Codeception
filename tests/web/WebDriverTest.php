@@ -2,6 +2,7 @@
 
 use Codeception\Step;
 use Codeception\Util\Stub;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
@@ -1038,11 +1039,14 @@ HTML
     public function testChangingCapabilities()
     {
         $this->notForPhantomJS();
+        $this->assertFalse($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
         $this->module->_closeSession();
-        $this->module->_capabilities(['unexpectedAlertBehaviour' => 'accept']);
+        $this->module->_capabilities(function($current) {
+            $current['acceptInsecureCerts'] = true;
+            return new DesiredCapabilities($current);
+        });
+        $this->assertFalse($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
         $this->module->_initializeSession();
-        $this->module->amOnPage('/form/popup');
-        $this->module->click('Alert');
-
+        $this->assertTrue(true, $this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
     }
 }

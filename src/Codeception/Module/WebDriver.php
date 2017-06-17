@@ -35,7 +35,6 @@ use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\UnknownServerException;
 use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
-use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\UselessFileDetector;
@@ -48,7 +47,6 @@ use Facebook\WebDriver\WebDriverExpectedCondition;
 use Facebook\WebDriver\WebDriverKeys;
 use Facebook\WebDriver\WebDriverSelect;
 use GuzzleHttp\Cookie\SetCookie;
-use phpDocumentor\Reflection\Types\Callable_;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -289,8 +287,8 @@ class WebDriver extends CodeceptionModule implements
     protected $connectionTimeoutInMs;
     protected $requestTimeoutInMs;
     protected $test;
-    protected $sessionSnapshots = [];
     protected $sessions = [];
+    protected $sessionSnapshots = [];
     protected $httpProxy;
     protected $httpProxyPort;
     protected $sslProxy;
@@ -358,8 +356,9 @@ class WebDriver extends CodeceptionModule implements
      * public function _before(TestInterface $test)
      * {
      *      $name = \Codeception\Test\Descriptor::getTestAsString($test->toString());
-     *      $this->getModule('WebDriver')->_capabilities(function() use ($name) {
-     *          return new DesiredCapabilities(['name' => $name]);
+     *      $this->getModule('WebDriver')->_capabilities(function($currentCapabilities) use ($name) {
+     *          $currentCapabilities['name'] = $name;
+     *          return new DesiredCapabilities($currentCapabilities);
      *      });
      * }
      * ```
@@ -573,10 +572,10 @@ class WebDriver extends CodeceptionModule implements
     protected function stopAllSessions()
     {
         foreach ($this->sessions as $session) {
-            $this->_loadSession($session);
-            $this->_closeSession();
+            $this->_closeSession($session);
         }
-        $this->sessions = [];
+        $this->webDriver = null;
+        $this->baseElement = null;
     }
 
     public function amOnSubdomain($subdomain)
@@ -1328,11 +1327,11 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
-     * Manually starts browser session.
+     * Manually starts a new browser session.
      *
      * ```php
      * <?php
-     *
+     * $this->getModule('WebDriver')->_initializeSession();
      * ```
      *
      * @api
@@ -1340,6 +1339,7 @@ class WebDriver extends CodeceptionModule implements
     public function _initializeSession()
     {
         try {
+            $this->sessions[] = $this->webDriver;
             $this->webDriver = RemoteWebDriver::create(
                 $this->wdHost,
                 $this->capabilities,
@@ -1348,7 +1348,6 @@ class WebDriver extends CodeceptionModule implements
                 $this->httpProxy,
                 $this->httpProxyPort
             );
-            $this->sessions[] = $this->_backupSession();
             $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
             if (!is_null($this->config['pageload_timeout'])) {
                 $this->webDriver->manage()->timeouts()->pageLoadTimeout($this->config['pageload_timeout']);
@@ -1384,11 +1383,15 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
-     * Manually closes WebDriver session.
+     * Manually closes current WebDriver session.
      *
      * ```php
      * <?php
      * $this->getModule('WebDriver')->_closeSession();
+     *
+     * // close a specific session
+     * $webDriver = $this->getModule('WebDriver')->webDriver;
+     * $this->getModule('WebDriver')->_closeSession($webDriver);
      * ```
      *
      * @api
@@ -1396,21 +1399,18 @@ class WebDriver extends CodeceptionModule implements
      */
     public function _closeSession($webDriver = null)
     {
-        if (!$webDriver) {
+        if (!$webDriver and $this->webDriver) {
             $webDriver = $this->webDriver;
+        }
+        if (!$webDriver) {
+            return;
         }
         try {
             $webDriver->quit();
+            unset($webDriver);
         } catch (UnknownServerException $e) {
             // Session already closed so nothing to do
         }
-        $this->setBaseElement();
-        $keys = array_keys($this->sessions, $webDriver, true);
-        if (!empty($keys)) {
-            $key = array_shift($keys);
-            unset($this->sessions[$key]);
-        }
-        unset($webDriver);
     }
 
     /**
