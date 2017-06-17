@@ -1034,4 +1034,15 @@ HTML
         $sourceActual = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $sourceActualRaw);
         $this->assertXmlStringEqualsXmlString($sourceExpected, $sourceActual);
     }
+
+    public function testChangingCapabilities()
+    {
+        $this->notForPhantomJS();
+        $this->module->_closeSession();
+        $this->module->_capabilities(['unexpectedAlertBehaviour' => 'accept']);
+        $this->module->_initializeSession();
+        $this->module->amOnPage('/form/popup');
+        $this->module->click('Alert');
+
+    }
 }
