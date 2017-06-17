@@ -1,4 +1,4 @@
-box: hhvm/hhvm-proxygen:3.18-lts-latest
+box: hhvm/hhvm-proxygen:3.19.2
 # Build definition
 
 build:
