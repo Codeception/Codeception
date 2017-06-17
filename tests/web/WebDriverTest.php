@@ -1039,13 +1039,13 @@ HTML
     public function testChangingCapabilities()
     {
         $this->notForPhantomJS();
-        $this->assertFalse($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
+        $this->assertNotTrue($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
         $this->module->_closeSession();
         $this->module->_capabilities(function($current) {
             $current['acceptInsecureCerts'] = true;
             return new DesiredCapabilities($current);
         });
-        $this->assertFalse($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
+        $this->assertNotTrue($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
         $this->module->_initializeSession();
         $this->assertTrue(true, $this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
     }
