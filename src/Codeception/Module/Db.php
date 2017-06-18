@@ -517,6 +517,21 @@ class Db extends CodeceptionModule implements DbInterface
         return $sth->fetchColumn();
     }
 
+    /**
+     * Fetches all values from the column in database.
+     * Provide table name, desired column and criteria.
+     *
+     * ``` php
+     * <?php
+     * $mails = $I->grabColumnFromDatabase('users', 'name', array('name' => 'RebOOter'));
+     * ```
+     *
+     * @param string $table
+     * @param string $column
+     * @param array $criteria
+     *
+     * @return array
+     */
     public function grabColumnFromDatabase($table, $column, array $criteria = [])
     {
         $query      = $this->driver->select($column, $table, $criteria);
