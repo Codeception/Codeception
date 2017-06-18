@@ -363,7 +363,7 @@ class WebDriver extends CodeceptionModule implements
      * }
      * ```
      *
-     * to make this work load `\Helper\Acceptance` before WebDriver in `acceptance.suite.yml`:
+     * to make this work load `\Helper\Acceptance` before `WebDriver` in `acceptance.suite.yml`:
      *
      * ```yaml
      * modules:
@@ -372,7 +372,6 @@ class WebDriver extends CodeceptionModule implements
      *         - WebDriver
      * ```
      *
-     * To change capabilities before each test this should be added used by a helper loaded before the WebDriver module.
      * For instance, [**BrowserStack** cloud service](https://www.browserstack.com/automate/capabilities) may require a test name to be set in capabilities.
      * This is how it can be done via `_capabilities` method from `Helper\Acceptance`:
      *
@@ -408,8 +407,8 @@ class WebDriver extends CodeceptionModule implements
         $this->setBaseElement();
 
         $test->getMetadata()->setCurrent([
-            'browser' => $this->config['browser'],
-            'capabilities' => $this->config['capabilities']
+            'browser' => $this->webDriver->getCapabilities()->getBrowserName(),
+            'capabilities' => $this->webDriver->getCapabilities()->toArray()
         ]);
     }
 
@@ -711,7 +710,6 @@ class WebDriver extends CodeceptionModule implements
      * // saved to: tests/_output/debug/edit_page.png
      * $I->makeScreenshot();
      * // saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.png
-     * ?>
      * ```
      *
      * @param $name
