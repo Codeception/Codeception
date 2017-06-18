@@ -14,7 +14,7 @@ interface Web
      * $I->amOnPage('/register');
      * ```
      *
-     * @param $page
+     * @param string $page
      */
     public function amOnPage($page);
 
@@ -46,8 +46,8 @@ interface Web
      *
      * For checking the raw source code, use `seeInSource()`.
      *
-     * @param      $text
-     * @param null $selector
+     * @param string $text
+     * @param string $selector optional
      */
     public function see($text, $selector = null);
 
@@ -77,8 +77,8 @@ interface Web
      *
      * For checking the raw source code, use `seeInSource()`.
      *
-     * @param      $text
-     * @param null $selector
+     * @param string $text
+     * @param string $selector optional
      */
     public function dontSee($text, $selector = null);
     
@@ -325,8 +325,8 @@ interface Web
      * ?>
      * ```
      *
-     * @param      $text
-     * @param null $url
+     * @param string $text
+     * @param string $url optional
      */
     public function seeLink($text, $url = null);
 
@@ -341,8 +341,8 @@ interface Web
      * ?>
      * ```
      *
-     * @param $text
-     * @param null $url
+     * @param string $text
+     * @param string $url optional
      */
     public function dontSeeLink($text, $url = null);
 
@@ -358,7 +358,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function seeInCurrentUrl($uri);
 
@@ -373,7 +373,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function seeCurrentUrlEquals($uri);
 
@@ -387,7 +387,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function seeCurrentUrlMatches($uri);
 
@@ -400,7 +400,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function dontSeeInCurrentUrl($uri);
 
@@ -415,7 +415,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function dontSeeCurrentUrlEquals($uri);
 
@@ -429,7 +429,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param $uri
+     * @param string $uri
      */
     public function dontSeeCurrentUrlMatches($uri);
 
@@ -444,7 +444,7 @@ interface Web
      * ?>
      * ```
      *
-     * @param null $uri
+     * @param string $uri optional
      *
      * @return mixed
      */
