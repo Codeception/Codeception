@@ -67,7 +67,7 @@ abstract class Extension implements EventSubscriberInterface
     }
 
     /**
-     * You can do all preperations here. No need to override constructor.
+     * You can do all preparations here. No need to override constructor.
      * Also you can skip calling `_reconfigure` if you don't need to.
      */
     public function _initialize()

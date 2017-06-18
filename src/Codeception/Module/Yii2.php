@@ -225,7 +225,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                 $this->transaction->rollback();
             }
         }
-        
+
 
         if ($this->client) {
             $this->client->resetPersistentVars();
@@ -379,7 +379,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if ($fixture instanceof \yii\test\BaseActiveFixture) {
             return $fixture->getModel($index);
         }
-        throw new ModuleException($this, "Fixture $name is not an instance of ActiveFixture and can't be loaded with scond parameter");
+        throw new ModuleException($this, "Fixture $name is not an instance of ActiveFixture and can't be loaded with second parameter");
     }
 
     /**
@@ -534,7 +534,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     public function grabComponent($component)
     {
         if (!Yii::$app->has($component)) {
-            throw new ModuleException($this, "Component $component is not avilable in current application");
+            throw new ModuleException($this, "Component $component is not available in current application");
         }
         return Yii::$app->get($component);
     }

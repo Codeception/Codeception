@@ -364,7 +364,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
             $this->fail(sprintf('The "%s" url does not match with any route', $uri));
         }
-        $expected = array_merge(array('_route' => $routeName), $params);
+        $expected = array_merge(['_route' => $routeName], $params);
         $intersection = array_intersect_assoc($expected, $match);
 
         $this->assertEquals($expected, $intersection);
