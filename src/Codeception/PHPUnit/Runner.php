@@ -92,7 +92,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         }
 
         if (class_exists('\Symfony\Bridge\PhpUnit\SymfonyTestsListener')) {
-            $arguments['listeners'] = isset($arguments['listeners']) ? $arguments['listeners'] : array();
+            $arguments['listeners'] = isset($arguments['listeners']) ? $arguments['listeners'] : [];
             $arguments['listeners'][] = new \Symfony\Bridge\PhpUnit\SymfonyTestsListener();
         }
 
@@ -156,7 +156,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
                 [$this->absolutePath($arguments['json'])]
             );
         }
-        
+
         foreach (self::$persistentListeners as $listener) {
             if ($listener instanceof ConsolePrinter) {
                 $this->printer = $listener;

@@ -71,6 +71,29 @@ use Symfony\Component\DomCrawler\Crawler;
  *              browser: chrome # 'chrome' or 'firefox'
  * ```
  *
+ * ### ChromeDriver
+ *
+ * To run tests in Chrome browser you may connect to ChromeDriver directly, without using Selenium Server.
+ *
+ * 1. Install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started).
+ * 2. Launch ChromeDriver: `chromedriver --url-base=/wd/hub`
+ * 3. Configure this module to use ChromeDriver port:
+ *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: 'http://localhost/'
+ *              window_size: false # disabled in ChromeDriver
+ *              port: 9515
+ *              browser: chrome
+ *              capabilities:
+ *                  chromeOptions: # additional chrome options
+ * ```
+ *
+ * Additional [Chrome options](https://sites.google.com/a/chromium.org/chromedriver/capabilities) can be set in `chromeOptions` capabilities.
+ *
+ *
  * ### PhantomJS
  *
  * PhantomJS is a [headless browser](https://en.wikipedia.org/wiki/Headless_browser) alternative to Selenium Server that implements
