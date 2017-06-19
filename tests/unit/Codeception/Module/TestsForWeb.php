@@ -1639,6 +1639,28 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->seeCurrentUrlEquals('/form/example5');
     }
 
+    public function testClickingRelativeLinkInContextHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Link', 'p');
+        $this->module->seeCurrentUrlEquals('/form/example7');
+    }
+
+    public function testSubmittingRelativeForminContextHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->fillField('rus', 'test value');
+        $this->module->click('Relative Form', '#button-container');
+        $this->module->seeCurrentUrlEquals('/form/example5');
+    }
+
+    public function testClickingFormButtonInContextSubmitsOutOfContextFormElements()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Form', '#button-container');
+        $this->assertArrayHasKey('rus', data::get('form'));
+    }
+
     public function testAttachFileThrowsCorrectMessageWhenFileDoesNotExist()
     {
         $filename = 'does-not-exist.jpg';
