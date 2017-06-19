@@ -16,6 +16,7 @@ To use this module with Composer you need <em>"php-amqplib/php-amqplib": "~2.4"<
 * vhost: '/' - vhost to connect
 * cleanup: true - defined queues will be purged before running every test.
 * queues: [mail, twitter] - queues to cleanup
+* single_channel: false - create and use only one channel during test execution
 
 ### Example
 
@@ -28,6 +29,7 @@ To use this module with Composer you need <em>"php-amqplib/php-amqplib": "~2.4"<
                 password: 'guest'
                 vhost: '/'
                 queues: [queue1, queue2]
+                single_channel: false
 
 ## Public Properties
 
@@ -198,4 +200,4 @@ $I->seeMessageInQueueContainsText('queue.emails','davert');
  * `param string` $queue
  * `param string` $text
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/AMQP.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/AMQP.php">Help us to improve documentation. Edit module reference</a></div>

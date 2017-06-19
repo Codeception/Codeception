@@ -14,9 +14,7 @@ use Codeception\TestInterface;
  * Access a database.
  *
  * The most important function of this module is to clean a database before each test.
- * That's why this module was added to the global configuration file `codeception.yml`.
- * To have your database properly cleaned you should configure it to access the database.
- * This module also provides actions to perform checks in a database.
+ * This module also provides actions to perform checks in a database, e.g. [seeInDatabase()](http://codeception.com/docs/modules/Db#seeInDatabase)
  *
  * In order to have your database populated with data you need a raw SQL dump.
  * Simply put the dump in the `tests/_data` directory (by default) and specify the path in the config.
@@ -374,6 +372,7 @@ class Db extends CodeceptionModule implements DbInterface
     protected function loadDumpUsingDriver()
     {
         if (!$this->sql) {
+            $this->debugSection('Db', 'No SQL loaded, loading dump skipped');
             return;
         }
         $this->driver->load($this->sql);

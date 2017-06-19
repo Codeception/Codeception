@@ -49,7 +49,7 @@ As you see, we are passing the Actor object into `tryToTest` method. This allows
 class BasicCest
 {
     // test
-    public function checkLogin(\AcceptanceTester $I)
+    public function tryToTest(\AcceptanceTester $I)
     {
         $I->wantTo('log in to site');
         $I->amOnPage('/');

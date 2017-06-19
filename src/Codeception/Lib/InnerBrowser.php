@@ -153,7 +153,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         foreach ($this->headers as $header => $val) { // moved from REST module
 
-            if (!$val) {
+            if ($val === null || $val === '') {
                 continue;
             }
 
@@ -490,6 +490,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 $this->fail("No links containing text '$text' and URL '$url' were found in page " . $this->_getCurrentUri());
             }
         }
+        $this->assertTrue(true);
     }
 
     public function dontSeeLink($text, $url = null)
