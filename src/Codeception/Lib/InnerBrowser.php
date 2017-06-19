@@ -287,7 +287,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * Example:
      * ```php
      * <?php
-     * $I->setHeader('X-Requested-With', 'Codeception');
+     * $I->haveHttpHeader('X-Requested-With', 'Codeception');
      * $I->amOnPage('test-headers.php');
      * ?>
      * ```
