@@ -49,7 +49,7 @@
         "predis/predis": "^1.0",
         "squizlabs/php_codesniffer": "~2.0",
         "vlucas/phpdotenv": "^2.4.0",
-        "symfony/process": "^3.3"
+        "symfony/process": ">=2.7 <4.0"
     },
     "suggest": {
         "codeception/specify": "BDD-style code blocks",

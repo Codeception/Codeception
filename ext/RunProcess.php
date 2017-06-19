@@ -2,6 +2,7 @@
 
 namespace Codeception\Extension;
 
+use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Symfony\Component\Process\Process;
@@ -53,8 +54,8 @@ class RunProcess extends Extension
     public $config = ['sleep' => 0];
     
     static $events = [
-        'suite.before' => 'runProcess',
-        'suite.after' => 'stopProcess'
+        Events::SUITE_BEFORE => 'runProcess',
+        Events::SUITE_AFTER => 'stopProcess'
     ];
 
     protected $processes = [];
