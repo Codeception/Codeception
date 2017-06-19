@@ -8,6 +8,7 @@ use Codeception\Events;
 use Codeception\Exception\TestParseException;
 use Codeception\Suite;
 use Codeception\Test\Cest;
+use Codeception\Test\Unit;
 use Codeception\Util\ReflectionHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -55,7 +56,7 @@ class InitializeTest implements EventSubscriberInterface
                     if ($test instanceof Cest) {
                         ReflectionHelper::invokePrivateMethod($test->getTestClass(), $method, [$module]);
                     }
-                    if ($test instanceof \PHPUnit_Framework_TestCase) {
+                    if ($test instanceof Unit) {
                         ReflectionHelper::invokePrivateMethod($test, $method, [$module]);
                     }
                 }
