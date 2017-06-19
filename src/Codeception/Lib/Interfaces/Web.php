@@ -480,8 +480,8 @@ interface Web
     public function dontSeeCheckboxIsChecked($checkbox);
 
     /**
-     * Checks that the given input field or textarea contains the given value.
-     * For fuzzy locators, fields are matched by label text, the "name" attribute, CSS, and XPath.
+     * Checks that the given input field or textarea *equals* (i.e. not just contains) the given value.
+     * Fields are matched by label text, the "name" attribute, CSS, or XPath.
      *
      * ``` php
      * <?php
