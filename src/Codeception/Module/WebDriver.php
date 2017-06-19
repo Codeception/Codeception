@@ -2251,7 +2251,7 @@ class WebDriver extends CodeceptionModule implements
      *
      * @param string $text
      * @param int $timeout seconds
-     * @param null $selector
+     * @param string $selector optional
      * @throws \Exception
      */
     public function waitForText($text, $timeout = 10, $selector = null)
