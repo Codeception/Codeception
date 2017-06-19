@@ -269,6 +269,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
         return [
             'client' => $this->client,
             'guzzle' => $this->guzzle,
+            'originalCrawler' => $this->originalCrawler,
             'crawler' => $this->crawler,
             'headers' => $this->headers,
         ];

@@ -35,6 +35,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     /**
      * @var \Symfony\Component\DomCrawler\Crawler
      */
+    protected $originalCrawler;
+
+    /**
+     * @var \Symfony\Component\DomCrawler\Crawler
+     */
     protected $crawler;
 
     /**
@@ -68,6 +73,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     public function _after(TestInterface $test)
     {
         $this->client = null;
+        $this->originalCrawler = null;
         $this->crawler = null;
         $this->forms = [];
         $this->headers = [];
@@ -236,7 +242,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         array $server = [],
         $content = null
     ) {
-        $this->crawler = $this->clientRequest($method, $uri, $parameters, $files, $server, $content);
+        $this->originalCrawler = $this->crawler = $this->clientRequest($method, $uri, $parameters, $files, $server, $content);
         $this->forms = [];
     }
 
@@ -436,7 +442,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $baseUrl = '';
 
-        $baseHref = $this->crawler->filter('base');
+        $baseHref = $this->originalCrawler->filter('base');
         if (count($baseHref) > 0) {
             $baseUrl = $baseHref->getNode(0)->getAttribute('href');
         }
@@ -747,7 +753,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         $requestParams= $this->getFormPhpValues($requestParams);
 
-        $this->crawler = $this->clientRequest(
+        $this->originalCrawler = $this->crawler = $this->clientRequest(
             $form->getMethod(),
             $url,
             $requestParams,
