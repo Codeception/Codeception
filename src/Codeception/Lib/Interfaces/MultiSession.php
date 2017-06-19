@@ -9,7 +9,7 @@ interface MultiSession
 
     public function _backupSession();
 
-    public function _closeSession($session);
+    public function _closeSession($session = null);
 
     public function _getName();
 }
