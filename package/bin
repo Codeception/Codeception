@@ -13,7 +13,6 @@ $app->add(new Codeception\Command\Bootstrap('bootstrap'));
 $app->add(new Codeception\Command\GenerateCept('generate:cept'));
 $app->add(new Codeception\Command\GenerateCest('generate:cest'));
 $app->add(new Codeception\Command\GenerateTest('generate:test'));
-$app->add(new Codeception\Command\GeneratePhpUnit('generate:phpunit'));
 $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
 $app->add(new Codeception\Command\GenerateHelper('generate:helper'));
 $app->add(new Codeception\Command\GenerateScenarios('generate:scenarios'));

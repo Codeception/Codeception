@@ -10,7 +10,7 @@ use Codeception\Test\Descriptor;
  * This extension demonstrates how you can implement console output of your own.
  * Recommended to be used for development purposes only.
  */
-class SimpleOutput extends Extension
+class SimpleReporter extends Extension
 {
     public function _initialize()
     {

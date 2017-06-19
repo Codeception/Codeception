@@ -1,3 +1,51 @@
+
+#### 2.2.12
+
+* Don't skip other tests after a failed test #4226 by @Naktibalda
+* [REST] `seeResponseContainsJson` doesn't crash when json response is not an array by @Naktibalda
+* [PhpBrowser] Fixed redirecting to schemaless url by @Naktibalda #4218
+* [Doctrine2] Added `grabEntityFromRepository`, `grabEntitiesFromRepository` methods by @maximelebastard 
+
+#### 2.2.11
+
+* [WebDriver] Added `_restart` method to restart browser with a new configuration. 
+* [WebDriver] Added `_findClickable` to public API so can be used from helpers. By @tiger-seo
+* [WebDriver] `seeLink` compares relative links correctly #4182
+* [Webdriver] fixed attachFile messages when the file does not exist by @Naktibalda
+* Fixed setting paths in environments and using `--override` options. By @kusnir. See #4143
+* [Yii1] Allow to set only host in `url` config. #4172 by @SG5. 
+* [Yii1] Allow to make requests end with slash. #4190 by @SG5
+* [Yii2] Allows use `InitDbFixture` feature #4201
+* [Yii2] Add missing YII2 lifecycle events. #4187
+* Don't run test if exception was thrown in `_before` of a module #4197 by @Naktibalda
+* [Mongo] Fixed parsing dbname. See #4186 by @retnek
+* [Mongo] Improved legacy driver check by @retnek. See #4178
+* [WebDriver][PhpBrowser][Frameworks] Added `grabPageSource` method by @Kolyunya 
+* [PhpBrowser][REST] Add DELETE method to supported form data request methods in Guzzle6 by
+* [PhpBrowser][REST] Restore request headers in multi-session testing. Fixes #4157 
+* Recorder Extension: Replace non-alphanumeric characters with underscores by @tiger-seo. Fixes Recorder on Windows
+* [REST] Documented different ways to upload files
+* Fixed `$scenario->current('name')` #4154 by @Naktibalda
+* [AMQP] Documented parameters of `declareQueue`, `declareExchange` by @Naktibalda
+* [Doctrine2] Safe prefix aliases for `buildAssociationQuery` by @jfxninja. See #4195
+* Fixed output of failed step by @Naktibalda #4135 http://phptest.club/t/seeelement-wierd-fail-message/1470
+* [WebDriver] fixed `friend->leave` method. Clearing base element on closing session. Fixes #4098
+* [Symfony] Make symfony bootstrap.php.cache optional for php version > 7 by @patrickjahns
+* Gherkin: Command `gherkin:snippets` to generate stub function name for non-english features. By @kuntashov 
+* Gherkin: Steps with PyString and with inline string argument considered the same. Fixes #4121 by @kuntashov
+* [Db] `Oci::cleanup()` should be able to drop objects with case sensitive name. By @pavelkovar 
+* [Db] loadDump reports sql statement which caused error, fixes regression from 2.2.10. See #4120. By @Naktibalda.
+* [Asserts] Add delta parameter to `assertEquals()` `assertNotEquals()` methods by @spideyfusion 
+* [Yii2] Removed check and notification for environment other than `test` by @samdark
+* [Yii2] Unload fixtures only if `cleanup` configuration equals true. #4207 by @Faryshta 
+* [ZF2] Removed `session_write_close()` from ZF2 module by @tasselchof. Fixes #4112
+* Fixed textual representation of can't steps by @Naktibalda
+* [Lumen] Added IoC methods from Laravel5 module: `haveBinding`, `haveSingleton`, `haveContextualBinding`, `haveInstance`, `haveApplicationHandler`, `clearApplicationHandlers`. By @kt81
+* [Lumen] Clear facade cache only when facade exists. Same change as #3124 for refactored Lumen module by @kt81
+* [ZendExpressive] Support Zend Expressive 2.0 by @Naktibalda
+* [Doctrine2] `haveFakeRepository` updated to work with Doctrine >= 2.5.7 by @laszlo-karpati #4212
+* Command `bootstrap` adds `support/_generated` to gitignore. By @Naktibalda
+
 #### 2.2.10
 
 * Prefer local composer installation if available. Solves issues with incompatibility between locally and globally installed or packaged in phar file Codeception dependencies. Fix by @Naktibalda See #3997

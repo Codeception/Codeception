@@ -20,8 +20,8 @@ use Predis\Client as RedisDriver;
  *
  * * **`host`** (`string`, default `'127.0.0.1'`) - The Redis host
  * * **`port`** (`int`, default `6379`) - The Redis port
- * * **`database`** (`int`, no default) - The Redis database. Needs to be explicitly specified.
- * * **`cleanupBefore`**: (`string`, default `'suite'`) - Whether/when to flush the database:
+ * * **`database`** (`int`, no default) - The Redis database. Needs to be specified.
+ * * **`cleanupBefore`**: (`string`, default `'never'`) - Whether/when to flush the database:
  *     * `suite`: at the beginning of every suite
  *     * `test`: at the beginning of every test
  *     * Any other value: never
@@ -34,7 +34,7 @@ use Predis\Client as RedisDriver;
  *            host: '127.0.0.1'
  *            port: 6379
  *            database: 0
- *            cleanupBefore: 'test'
+ *            cleanupBefore: 'never'
  * ```
  *
  * ## Public Properties
@@ -48,13 +48,12 @@ class Redis extends CodeceptionModule implements RequiresPackage
     /**
      * {@inheritdoc}
      *
-     * No default value is set for the database, as this module will delete
-     * every data in it. The user is required to explicitly set this parameter.
+     * No default value is set for the database, using this parameter.
      */
     protected $config = [
         'host'          => '127.0.0.1',
         'port'          => 6379,
-        'cleanupBefore' => 'test'
+        'cleanupBefore' => 'never'
     ];
 
     /**

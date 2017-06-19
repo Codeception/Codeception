@@ -46,11 +46,26 @@ Checks that variable is empty.
 
 ### assertEquals
  
-Checks that two variables are equal.
+Checks that two variables are equal. If you're comparing floating-point values,
+you can specify the optional "delta" parameter which dictates how great of a precision
+error are you willing to tolerate in order to consider the two values equal.
+
+Regular example:
+```php
+<?php
+$I->assertEquals($element->getChildrenCount(), 5);
+```
+
+Floating-point example:
+```php
+<?php
+$I->assertEquals($calculator->add(0.1, 0.2), 0.3, 'Calculator should add the two numbers correctly.', 0.01);
+```
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
+ * `param float`  $delta
 
 
 ### assertFalse
@@ -166,11 +181,26 @@ Checks that variable is not empty.
 
 ### assertNotEquals
  
-Checks that two variables are not equal
+Checks that two variables are not equal. If you're comparing floating-point values,
+you can specify the optional "delta" parameter which dictates how great of a precision
+error are you willing to tolerate in order to consider the two values not equal.
+
+Regular example:
+```php
+<?php
+$I->assertNotEquals($element->getChildrenCount(), 0);
+```
+
+Floating-point example:
+```php
+<?php
+$I->assertNotEquals($calculator->add(0.1, 0.2), 0.4, 'Calculator should add the two numbers correctly.', 0.01);
+```
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
+ * `param float`  $delta
 
 
 ### assertNotInstanceOf
@@ -230,7 +260,6 @@ Checks that two variables are same
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
- * `return` mixed|void
 
 
 ### assertTrue
@@ -275,4 +304,4 @@ Fails the test with message.
 
  * `param` $message
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>

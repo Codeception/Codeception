@@ -109,7 +109,7 @@ interface Web
     public function dontSeeInSource($raw);
 
     /**
-     * Submits the given form on the page, optionally with the given form
+     * Submits the given form on the page, with the given form
      * values.  Pass the form field's values as an array in the second
      * parameter.
      *
@@ -975,4 +975,11 @@ interface Web
      * @return mixed
      */
     public function grabCookie($cookie, array $params = []);
+
+    /**
+     * Grabs current page source code.
+     *
+     * @return string Current page source code.
+     */
+    public function grabPageSource();
 }

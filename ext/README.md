@@ -1,6 +1,44 @@
 # Official Extensions
 
-## Codeception\Extension\Logger
+## DotReporter
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/DotReporter.php)
+
+DotReporter provides less verbose output for test execution.
+Like PHPUnit printer it prints dots "." for successful testes and "F" for failures.
+
+![](https://cloud.githubusercontent.com/assets/220264/26132800/4d23f336-3aab-11e7-81ba-2896a4c623d2.png)
+
+```bash
+ ..........
+ ..........
+ ..........
+ ..........
+ ..........
+ ..........
+ ..........
+ ..........
+
+Time: 2.07 seconds, Memory: 20.00MB
+
+OK (80 tests, 124 assertions)
+```
+
+
+Enable this reporter with `--ext option`
+
+```
+codecept run --ext DotReporter
+```
+
+Failures and Errors are printed by a standard Codeception reporter.
+Use this extension as an example for building custom reporters.
+
+
+
+## Logger
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/Logger.php)
 
 Log suites/tests/steps using Monolog library.
 Monolog should be installed additionally by Composer.
@@ -25,19 +63,18 @@ extensions:
 
 
 
-## Codeception\Extension\Recorder
+## Recorder
 
-Saves screenshots of each step in acceptance tests and shows them as a slideshow.
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/Recorder.php)
+
+Saves a screenshot of each step in acceptance tests and shows them as a slideshow on one HTML page (here's an [example](http://codeception.com/images/recorder.gif))
 Activated only for suites with WebDriver module enabled.
 
- ![recorder](http://codeception.com/images/recorder.gif)
-
-Slideshows saves are saved into `tests/_output/record_*` directories.
-Open `index.html` to see the slideshow.
+The screenshots are saved to `tests/_output/record_*` directories, open `index.html` to see them as a slideshow.
 
 #### Installation
 
-Add to list of enabled extensions
+Add this to the list of enabled extensions in `codeception.yml` or `acceptance.suite.yml`:
 
 ``` yaml
 extensions:
@@ -47,8 +84,8 @@ extensions:
 
 #### Configuration
 
-* `delete_successful` (default: true) - delete records for successfully passed tests (log only failed and errored)
-* `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+* `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
+* `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
 
 
 #### Examples:
@@ -58,13 +95,15 @@ extensions:
     enabled:
         Codeception\Extension\Recorder:
             module: AngularJS # enable for Angular
-            delete_successful: false # show successful reports
+            delete_successful: false # keep screenshots of successful tests
 ```
 
 
 
 
-## Codeception\Extension\RunFailed
+## RunFailed
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/RunFailed.php)
 
 Saves failed tests into tests/log/failed in order to rerun failed tests.
 
@@ -85,7 +124,9 @@ On each execution failed tests are logged and saved into `tests/_output/failed` 
 
 
 
-## Codeception\Extension\SimpleOutput
+## SimpleReporter
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/SimpleReporter.php)
 
 This extension demonstrates how you can implement console output of your own.
 Recommended to be used for development purposes only.

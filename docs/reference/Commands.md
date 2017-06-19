@@ -38,6 +38,10 @@ Usage:
 
 
 
+## Init
+
+
+
 ## Console
 
 Try to execute test commands in run-time. You may try commands before writing the test.
@@ -121,6 +125,12 @@ Override config values:
 * `codecept run -o "settings: shuffle: true"`: enable shuffle
 * `codecept run -o "settings: lint: false"`: disable linting
 * `codecept run -o "reporters: report: \Custom\Reporter" --report`: use custom reporter
+
+Run with specific extension
+
+* `codecept run --ext Recorder` run with Recorder extension enabled
+* `codecept run --ext DotReporter` run with DotReporter printer
+* `codecept run --ext "My\Custom\Extension"` run with an extension loaded by class name
 
 Full reference:
 ```
@@ -240,17 +250,6 @@ Generates Feature file (in Gherkin):
 
 
 
-## GeneratePhpUnit
-
-Generates skeleton for unit test as in classical PHPUnit.
-
-* `codecept g:phpunit unit UserTest`
-* `codecept g:phpunit unit User`
-* `codecept g:phpunit unit "App\User`
-
-
-
-
 ## GenerateScenarios
 
 Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
@@ -265,8 +264,8 @@ Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
 
 Generates StepObject class. You will be asked for steps you want to implement.
 
-* `codecept g:stepobject acceptance AdminSteps`
-* `codecept g:stepobject acceptance UserSteps --silent` - skip action questions
+* `codecept g:step acceptance AdminSteps`
+* `codecept g:step acceptance UserSteps --silent` - skip action questions
 
 
 
@@ -289,6 +288,10 @@ Prints all steps from all Gherkin contexts for a specific suite
 codecept gherkin:steps acceptance
 ```
 
+
+
+
+## Completion
 
 
 

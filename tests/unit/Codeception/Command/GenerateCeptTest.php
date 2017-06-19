@@ -8,7 +8,7 @@ class GenerateCeptTest extends BaseCommandRunner
     {
         $this->makeCommand('\Codeception\Command\GenerateCept');
         $this->config = array(
-            'class_name' => 'HobbitGuy',
+            'actor' => 'HobbitGuy',
             'path' => 'tests/shire',
         );
     }

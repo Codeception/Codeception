@@ -87,7 +87,7 @@ class Db
     public function getDb()
     {
         $matches = [];
-        $matched = preg_match('~dbname=(.*);~s', $this->dsn, $matches);
+        $matched = preg_match('~dbname=(\w+)~s', $this->dsn, $matches);
         if (!$matched) {
             return false;
         }

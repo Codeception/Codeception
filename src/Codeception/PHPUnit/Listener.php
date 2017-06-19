@@ -50,6 +50,11 @@ class Listener implements \PHPUnit_Framework_TestListener
         $this->fire(Events::TEST_ERROR, new FailEvent($test, $time, $e));
     }
 
+    // This method was added in PHPUnit 6
+    public function addWarning(\PhpUnit_Framework_Test $test, \PHPUnit_Framework_Warning $e, $time)
+    {
+    }
+
     public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
         if (in_array(spl_object_hash($test), $this->skippedTests)) {

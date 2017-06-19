@@ -353,5 +353,4 @@ class Laravel5 extends Client
         $this->middlewareDisabled = true;
         $this->app->instance('middleware.disable', true);
     }
-
 }

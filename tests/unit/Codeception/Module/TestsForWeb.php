@@ -20,7 +20,6 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
 
-        $this->module->_cleanup();
         $this->module->amOnPage('/info');
         $this->module->see('Information');
     }
@@ -164,6 +163,22 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         );
         $this->module->amOnPage('/external_url');
         $this->module->dontSeeLink('Next', 'http://codeception.com/');
+    }
+
+    public function testSeeLinkMatchesRelativeLink()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->seeLink('Sign in!', '/login');
+    }
+
+    public function testDontSeeLinkMatchesRelativeLink()
+    {
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            "Link containing text 'Sign in!' and URL '/login' was found in page /info"
+        );
+        $this->module->amOnPage('/info');
+        $this->module->dontSeeLink('Sign in!', '/login');
     }
 
     public function testClick()

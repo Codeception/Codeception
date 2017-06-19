@@ -21,7 +21,6 @@ class PhpBrowserTest extends TestsForBrowsers
         $url = 'http://localhost:8000';
         $this->module->_setConfig(array('url' => $url));
         $this->module->_initialize();
-        $this->module->_cleanup();
         $this->module->_before($this->makeTest());
         if (class_exists('GuzzleHttp\Url')) {
             $this->history = new \GuzzleHttp\Subscriber\History();
@@ -271,6 +270,13 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/location_201');
     }
 
+    public function testRedirectToAnotherDomainUsingSchemalessUrl()
+    {
+        $this->module->amOnUrl('http://httpbin.org/redirect-to?url=//codeception.com/');
+        $currentUrl = $this->module->client->getHistory()->current()->getUri();
+        $this->assertSame('http://codeception.com/', $currentUrl);
+    }
+
     public function testSetCookieByHeader()
     {
         $this->module->amOnPage('/cookies2');
@@ -278,14 +284,6 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCookie('a');
         $this->assertEquals('b', $this->module->grabCookie('a'));
         $this->module->seeCookie('c');
-    }
-
-    public function testUrlSlashesFormatting()
-    {
-        $this->module->amOnPage('somepage.php');
-        $this->module->seeCurrentUrlEquals('/somepage.php');
-        $this->module->amOnPage('///somepage.php');
-        $this->module->seeCurrentUrlEquals('/somepage.php');
     }
 
     public function testSettingContentTypeFromHtml()
@@ -640,5 +638,39 @@ class PhpBrowserTest extends TestsForBrowsers
         $params = data::get('query');
         $this->assertEquals('two', $params['select_name']);
         $this->assertEquals('searchterm', $params['search_name']);
+    }
+
+    public function testGrabPageSourceWhenNotOnPage()
+    {
+        $this->setExpectedException(
+            '\Codeception\Exception\ModuleException',
+            'Page not loaded. Use `$I->amOnPage` (or hidden API methods `_request` and `_loadPage`) to open it'
+        );
+        $this->module->grabPageSource();
+    }
+
+    public function testGrabPageSourceWhenOnPage()
+    {
+        $this->module->amOnPage('/minimal');
+        $sourceExpected =
+<<<HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Minimal page
+        </title>
+    </head>
+    <body>
+        <h1>
+            Minimal page
+        </h1>
+    </body>
+</html>
+
+HTML
+        ;
+        $sourceActual = $this->module->grabPageSource();
+        $this->assertXmlStringEqualsXmlString($sourceExpected, $sourceActual);
     }
 }

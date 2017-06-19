@@ -80,7 +80,7 @@ Whenever you start writing a story you are describing a specific feature of an a
 Feature file is written in Gherkin format. Codeception can generate a feature file for you. 
 We will assume that we will use scenarios in feature files for acceptance tests, so feature files to be placed in `acceptance` suite directory:
 
-```
+```bash
 php codecept g:feature acceptance checkout
 ```
 
@@ -97,7 +97,7 @@ Feature: checkout
 
 This template can be fulfilled by setting actor and goals:
 
-```
+```gherkin
 Feature: checkout
   In order to buy product
   As a customer
@@ -225,7 +225,7 @@ Steps are defined in Context files. Default context is an actor class, i.e. for 
 
 To list all defined steps run `gherkin:steps` command:
 
-```
+```bash
 codecept gherkin:steps
 ```
 
@@ -314,7 +314,7 @@ class AcceptanceTester extends \Codeception\Actor
      */
      public function iShouldSeeThatTotalNumberOfProductsIs($num1)
      {
-        $this->see($num2, '.products-count');
+        $this->see($num1, '.products-count');
      }
      
     /**
@@ -465,7 +465,7 @@ This string is passed as a standard PHP string parameter
 Gherkin scenarios and features can contain tags marked with `@`. Tags are equal to groups in Codeception.
 This way if you define a feature with `@important` tag, you can execute it inside `important` group by running:
 
-```
+```bash
 codecept run -g important
 ```
 

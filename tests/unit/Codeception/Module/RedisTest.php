@@ -2,8 +2,9 @@
 
 use Codeception\Lib\ModuleContainer;
 use Codeception\Module\Redis;
+use Codeception\Test\Unit;
 
-class RedisTest extends \PHPUnit_Framework_TestCase
+class RedisTest extends Unit
 {
     /**
      * @var array

@@ -1,11 +1,13 @@
 <?php
 
 use \Codeception\Lib\Driver\Db;
+use \Codeception\Test\Unit;
 
 /**
  * @group appveyor
+ * @group db
  */
-class MysqlTest extends \PHPUnit_Framework_TestCase
+class MysqlTest extends Unit
 {
     protected static $config = [
         'dsn' => 'mysql:host=localhost;dbname=codeception_test',
@@ -41,6 +43,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             $this->markTestSkipped('Couldn\'t establish connection to database');
         }
+        $this->mysql->cleanup();
         $this->mysql->load(self::$sql);
     }
     
@@ -133,6 +136,9 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $res->rowCount());
     }
 
+    /**
+     * THis will fail if MariaDb is used
+     */
     public function testLoadThrowsExceptionWhenDumpFileContainsSyntaxError()
     {
         $sql = "INSERT INTO `users` (`name`) VALS('')";

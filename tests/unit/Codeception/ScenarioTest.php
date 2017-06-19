@@ -19,9 +19,17 @@ class ScenarioTest extends \PHPUnit_Framework_TestCase
         $scenario->setFeature('Do some testing');
 
         $this->assertSame(
-            '<h3>I WANT TO DO SOME TESTING</h3>I do some testing <span style="color: #732E81">"arg1","arg2"</span>'
+            '<h3>I WANT TO DO SOME TESTING</h3>I do some testing <span style="color: #732E81">&quot;arg1&quot;,&quot;arg2&quot;</span>'
             . '<br/>I do even more testing without args<br/>',
             $scenario->getHtml()
         );
+    }
+
+    public function testScenarioCurrentNameReturnsTestName()
+    {
+        $cept = new \Codeception\Test\Cept('successfulLogin', 'successfulLoginCept.php');
+        $scenario = new \Codeception\Scenario($cept);
+
+        $this->assertSame('successfulLogin', $scenario->current('name'));
     }
 }

@@ -70,7 +70,6 @@ trait LaravelCommon
         foreach ($this->instances as $abstract => $instance) {
             $this->app->instance($abstract, $instance);
         }
-
     }
 
     //======================================================================

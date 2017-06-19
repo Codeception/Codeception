@@ -23,7 +23,7 @@ Modules are attached to the Actor classes in the suite configuration.
 For example, in `tests/functional.suite.yml` we should see:
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - PhpBrowser:
@@ -114,7 +114,7 @@ The REST module has parts for `Xml` and `Json` in the same way. If you are testi
 you can enable just the JSON part of this module:
 
 ```yaml
-class_name: ApiTester
+actor: ApiTester
 modules:
     enabled:
         - REST:
@@ -318,39 +318,43 @@ All hooks are defined in [Codeception\Module](http://codeception.com/docs/refere
 <?php
 
     // HOOK: used after configuration is loaded
-    public function _initialize() {
-    }
-
-    // HOOK: on every Actor class initialization
-    public function _cleanup() {
+    public function _initialize() 
+    {
     }
 
     // HOOK: before each suite
-    public function _beforeSuite($settings = array()) {
+    public function _beforeSuite($settings = array()) 
+    {
     }
 
     // HOOK: after suite
-    public function _afterSuite() {
+    public function _afterSuite() 
+    {
     }
 
     // HOOK: before each step
-    public function _beforeStep(\Codeception\Step $step) {
+    public function _beforeStep(\Codeception\Step $step) 
+    {
     }
 
     // HOOK: after each step
-    public function _afterStep(\Codeception\Step $step) {
+    public function _afterStep(\Codeception\Step $step) 
+    {
     }
 
     // HOOK: before test
-    public function _before(\Codeception\TestInterface $test) {
+    public function _before(\Codeception\TestInterface $test) 
+    {
     }
 
     // HOOK: after test
-    public function _after(\Codeception\TestInterface $test) {
+    public function _after(\Codeception\TestInterface $test) 
+    {
     }
 
     // HOOK: on fail
-    public function _failed(\Codeception\TestInterface $test, $fail) {
+    public function _failed(\Codeception\TestInterface $test, $fail) 
+    {
     }
 ```
 
@@ -498,12 +502,26 @@ module:
 If you want to reconfigure a module at runtime, you can use the `_reconfigure` method of the module.
 You may call it from a helper class and pass in all the fields you want to change.
 
+In this case configuration will be changed instantly. In next example we change root URL for PhpBrowser to point to the admin area,
+ so next `amOnPage('/')` will open `/admin/` page.
+
 ```php
 <?php
-$this->getModule('WebDriver')->_reconfigure(array('browser' => 'chrome'));
+$this->getModule('PhpBrowser')->_reconfigure(array('url' => 'http://localhost/admin'));
 ```
 
-At the end of a test, all your changes will be rolled back to the original configuration values.
+However, in WebDriver configuration changes can't be applied that easily. For instance, if you change the browser you need to close the current browser session and start a new one.
+For that WebDriver module provides `_restart` method which takes an array with config and restarts the browser. 
+
+```php
+<?php
+// start chrome
+$this->getModule('WebDriver')->_restart(['browser' => 'chrome']);
+// or just restart browser
+$this->getModule('WebDriver')->_restart();
+```
+
+At the end of a test all configuration changes will be rolled back to the original configuration values.
 
 ## Conclusion
 

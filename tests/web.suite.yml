@@ -6,7 +6,7 @@ modules:
       url: http://localhost:8000
       browser: firefox
       window_size: 1200x768
-      restart: true
+      restart: true # Use a new browser window for each test (to isolate test cases from each other)
 env:
   fast:
     modules:

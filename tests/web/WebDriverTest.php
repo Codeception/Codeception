@@ -87,13 +87,13 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->cancelPopup();
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
-     * @expectedExceptionMessage Failed asserting that 'Really?' contains "Different text".
-     */
     public function testFailedSeeInPopup()
     {
         $this->notForPhantomJS();
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            'Failed asserting that \'Really?\' contains "Different text"'
+        );
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->seeInPopup('Different text');
@@ -923,53 +923,53 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testPerformOnWithArray()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', [
             'see' => 'Remember me next time',
             'seeElement' => '#LoginForm_rememberMe',
             'dontSee' => 'Login'
         ]);
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
     public function testPerformOnWithCallback()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', function (\Codeception\Module\WebDriver $I) {
             $I->see('Remember me next time');
             $I->seeElement('#LoginForm_rememberMe');
             $I->dontSee('Login');
         });
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
     public function testPerformOnWithBuiltArray()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
             ->see('Remember me next time')
             ->seeElement('#LoginForm_rememberMe')
             ->dontSee('Login')
         );
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
     public function testPerformOnWithArrayAndSimilarActions()
     {
-        $asserts = \PHPUnit\Framework\Assert::getCount();
+        $asserts = PHPUnit_Framework_Assert::getCount();
         $this->module->amOnPage('/form/example1');
         $this->module->performOn('.rememberMe', \Codeception\Util\ActionSequence::build()
             ->see('Remember me')
             ->see('next time')
             ->dontSee('Login')
         );
-        $this->assertEquals(3, \PHPUnit\Framework\Assert::getCount() - $asserts);
+        $this->assertEquals(3, PHPUnit_Framework_Assert::getCount() - $asserts);
         $this->module->see('Login');
     }
 
@@ -997,5 +997,41 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->see('Lots of valuable data here');
         $this->module->switchToIFrame();
         $this->module->see('Iframe test');
+    }
+
+    public function testGrabPageSourceWhenNotOnPage()
+    {
+        $this->setExpectedException(
+            '\Codeception\Exception\ModuleException',
+            'Current url is blank, no page was opened'
+        );
+        $this->module->grabPageSource();
+    }
+
+    public function testGrabPageSourceWhenOnPage()
+    {
+        $this->module->amOnPage('/minimal');
+        $sourceExpected =
+<<<HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Minimal page
+        </title>
+    </head>
+    <body>
+        <h1>
+            Minimal page
+        </h1>
+    </body>
+</html>
+
+HTML
+        ;
+        $sourceActualRaw = $this->module->grabPageSource();
+        // `Selenium` adds the `xmlns` attribute while `PhantomJS` does not do that.
+        $sourceActual = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $sourceActualRaw);
+        $this->assertXmlStringEqualsXmlString($sourceExpected, $sourceActual);
     }
 }

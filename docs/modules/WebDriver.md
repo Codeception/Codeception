@@ -7,27 +7,30 @@ New generation Selenium WebDriver module.
 
 ### Selenium
 
-1. Download [Selenium Server](http://docs.seleniumhq.org/download/)
-2. Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
-3. Configure this module (in acceptance.suite.yml) by setting url and browser:
+To run Selenium Server you need [Java](https://www.java.com/) as well as Chrome or Firefox browser installed.
+
+1. Download [Selenium Standalone Server](http://docs.seleniumhq.org/download/)
+2. To use Chrome, install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started). To use Firefox, install [GeckoDriver](https://github.com/mozilla/geckodriver).
+3. Launch the Selenium Server: `java -jar selenium-server-standalone-3.xx.xxx.jar`. To locate Chromedriver binary use `-Dwebdriver.chrome.driver=./chromedriver` option. For Geckodriver use `-Dwebdriver.gecko.driver=./geckodriver`.
+4. Configure this module (in `acceptance.suite.yml`) by setting `url` and `browser`:
 
 ```yaml
     modules:
        enabled:
           - WebDriver:
              url: 'http://localhost/'
-             browser: firefox
+             browser: chrome # 'chrome' or 'firefox'
 ```
 
 ### PhantomJS
 
-PhantomJS is a headless alternative to Selenium Server that implements
+PhantomJS is a [headless browser](https://en.wikipedia.org/wiki/Headless_browser) alternative to Selenium Server that implements
 [the WebDriver protocol](https://code.google.com/p/selenium/wiki/JsonWireProtocol).
 It allows you to run Selenium tests on a server without a GUI installed.
 
 1. Download [PhantomJS](http://phantomjs.org/download.html)
 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
-3. Configure this module (in acceptance.suite.yml) by setting url and `phantomjs` as browser:
+3. Configure this module (in `acceptance.suite.yml`) by setting url and `phantomjs` as browser:
 
 ```yaml
     modules:
@@ -36,6 +39,19 @@ It allows you to run Selenium tests on a server without a GUI installed.
              url: 'http://localhost/'
              browser: phantomjs
 ```
+
+Since PhantomJS doesn't give you any visual feedback, it's probably a good idea to install [Codeception\Extension\Recorder](http://codeception.com/extensions#CodeceptionExtensionRecorder) which gives you screenshots of how PhantomJS "sees" your pages.
+
+### Headless Selenium in Docker
+
+Docker can ship Selenium Server with all its dependencies and browsers inside a single container.
+Running tests inside Docker is as easy as pulling [official selenium image](https://github.com/SeleniumHQ/docker-selenium) and starting a container with Chrome:
+
+```
+docker run --net=host selenium/standalone-chrome
+```
+
+By using `--net=host` we allow selenium to access local websites.
 
 ## Cloud Testing
 
@@ -107,11 +123,11 @@ you should use a tunnel application provided by a service.
 * `browser` *required* - Browser to launch.
 * `host` - Selenium server host (127.0.0.1 by default).
 * `port` - Selenium server port (4444 by default).
-* `restart` - Set to false (default) to share browser window between tests, or set to true to create a separate window for each test.
+* `restart` - Set to `false` (default) to use the same browser window for all tests, or set to `true` to create a new window for each test. In any case, when all tests are finished the browser window is closed.
 * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
 * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
 * `wait` - Implicit wait (default 0 seconds).
-* `capabilities` - Sets Selenium2 [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+* `capabilities` - Sets Selenium [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 * `connection_timeout` - timeout for opening a connection to remote selenium server (30 seconds by default).
 * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
 * `pageload_timeout` - amount of time to wait for a page load to complete before throwing an error (default 0 seconds).
@@ -133,11 +149,6 @@ Example (`acceptance.suite.yml`)
                  unexpectedAlertBehaviour: 'accept'
                  firefox_profile: '~/firefox-profiles/codeception-profile.zip.b64'
 ```
-
-### Status
-
-Stability: **stable**
-Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
 
 ## Usage
 
@@ -192,6 +203,32 @@ $this->getModule('WebDriver')->webDriver->getKeyboard()->sendKeys('hello, webdri
 
 ## Actions
 
+### _findClickable
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Locates a clickable element.
+
+Use it in Helpers or GroupObject or Extension classes:
+
+```php
+<?php
+$module = $this->getModule('WebDriver');
+$page = $module->webDriver;
+
+// search a link or button on a page
+$el = $module->_findClickable($page, 'Click Me');
+
+// search a link or button within an element
+$topBar = $module->_findElements('.top-bar')[0];
+$el = $module->_findClickable($topBar, 'Click Me');
+
+```
+ * `param` $page WebDriver instance or an element to search within
+ * `param` $link a link text or locator to click
+ * `return` WebDriverElement
+
+
 ### _findElements
 
 *hidden API method, expected to be used from Helper classes*
@@ -235,6 +272,23 @@ Uri of currently opened page.
  
 Returns URL of a host.
 @throws ModuleConfigException
+
+
+### _restart
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Restarts a web browser.
+Can be used with `_reconfigure` to open browser with different configuration
+
+```php
+<?php
+// inside a Helper
+$this->getModule('WebDriver')->_restart(); // just restart
+$this->getModule('WebDriver')->_restart(['browser' => $browser]); // reconfigure + restart
+```
+
+ * `param array` $config
 
 
 ### _savePageSource
@@ -810,7 +864,7 @@ If no parameters are provided, the full URI is returned.
 
 ``` php
 <?php
-$user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
+$user_id = $I->grabFromCurrentUrl('~^/user/(\d+)/~');
 $uri = $I->grabFromCurrentUrl();
 ?>
 ```
@@ -843,6 +897,15 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `param` $cssOrXpath
  * `param` $attribute
  * `return` string[]
+
+
+### grabPageSource
+ 
+Grabs current page source code.
+
+@throws ModuleException if no page was opened.
+
+ * `return` string Current page source code.
 
 
 ### grabTextFrom
@@ -1862,4 +1925,4 @@ $I->waitForText('foo', 30, '.title'); // secs
  * `param null` $selector
 @throws \Exception
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/WebDriver.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/WebDriver.php">Help us to improve documentation. Edit module reference</a></div>

@@ -94,13 +94,13 @@ class GenerateScenarios extends Command
                 $output->writeln("* $name rendered");
             } else {
                 $feature = $this->decorate($feature, $format);
-                $this->save($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
+                $this->createFile($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
                 $output->writeln("* $name generated");
             }
         }
 
         if ($input->getOption('single-file')) {
-            $this->save($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
+            $this->createFile($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
         }
     }
 

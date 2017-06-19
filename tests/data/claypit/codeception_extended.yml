@@ -9,7 +9,7 @@ settings:
     log: false
 extensions:
     enabled:
-      - Codeception\Extension\SimpleOutput
+      - Codeception\Extension\SimpleReporter
       - Codeception\Extension\RunFailed
       - VerbosityLevelOutput
 modules:

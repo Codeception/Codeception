@@ -56,27 +56,53 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * ### Selenium
  *
- * 1. Download [Selenium Server](http://docs.seleniumhq.org/download/)
- * 2. Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
- * 3. Configure this module (in acceptance.suite.yml) by setting url and browser:
+ * To run Selenium Server you need [Java](https://www.java.com/) as well as Chrome or Firefox browser installed.
+ *
+ * 1. Download [Selenium Standalone Server](http://docs.seleniumhq.org/download/)
+ * 2. To use Chrome, install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started). To use Firefox, install [GeckoDriver](https://github.com/mozilla/geckodriver).
+ * 3. Launch the Selenium Server: `java -jar selenium-server-standalone-3.xx.xxx.jar`. To locate Chromedriver binary use `-Dwebdriver.chrome.driver=./chromedriver` option. For Geckodriver use `-Dwebdriver.gecko.driver=./geckodriver`.
+ * 4. Configure this module (in `acceptance.suite.yml`) by setting `url` and `browser`:
  *
  * ```yaml
  *     modules:
  *        enabled:
  *           - WebDriver:
  *              url: 'http://localhost/'
- *              browser: firefox
+ *              browser: chrome # 'chrome' or 'firefox'
  * ```
+ *
+ * ### ChromeDriver
+ *
+ * To run tests in Chrome browser you may connect to ChromeDriver directly, without using Selenium Server.
+ *
+ * 1. Install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started).
+ * 2. Launch ChromeDriver: `chromedriver --url-base=/wd/hub`
+ * 3. Configure this module to use ChromeDriver port:
+ *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: 'http://localhost/'
+ *              window_size: false # disabled in ChromeDriver
+ *              port: 9515
+ *              browser: chrome
+ *              capabilities:
+ *                  chromeOptions: # additional chrome options
+ * ```
+ *
+ * Additional [Chrome options](https://sites.google.com/a/chromium.org/chromedriver/capabilities) can be set in `chromeOptions` capabilities.
+ *
  *
  * ### PhantomJS
  *
- * PhantomJS is a headless alternative to Selenium Server that implements
+ * PhantomJS is a [headless browser](https://en.wikipedia.org/wiki/Headless_browser) alternative to Selenium Server that implements
  * [the WebDriver protocol](https://code.google.com/p/selenium/wiki/JsonWireProtocol).
  * It allows you to run Selenium tests on a server without a GUI installed.
  *
  * 1. Download [PhantomJS](http://phantomjs.org/download.html)
  * 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
- * 3. Configure this module (in acceptance.suite.yml) by setting url and `phantomjs` as browser:
+ * 3. Configure this module (in `acceptance.suite.yml`) by setting url and `phantomjs` as browser:
  *
  * ```yaml
  *     modules:
@@ -85,6 +111,19 @@ use Symfony\Component\DomCrawler\Crawler;
  *              url: 'http://localhost/'
  *              browser: phantomjs
  * ```
+ *
+ * Since PhantomJS doesn't give you any visual feedback, it's probably a good idea to install [Codeception\Extension\Recorder](http://codeception.com/extensions#CodeceptionExtensionRecorder) which gives you screenshots of how PhantomJS "sees" your pages.
+ *
+ * ### Headless Selenium in Docker
+ *
+ * Docker can ship Selenium Server with all its dependencies and browsers inside a single container.
+ * Running tests inside Docker is as easy as pulling [official selenium image](https://github.com/SeleniumHQ/docker-selenium) and starting a container with Chrome:
+ *
+ * ```
+ * docker run --net=host selenium/standalone-chrome
+ * ```
+ *
+ * By using `--net=host` we allow selenium to access local websites.
  *
  * ## Cloud Testing
  *
@@ -156,11 +195,11 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `browser` *required* - Browser to launch.
  * * `host` - Selenium server host (127.0.0.1 by default).
  * * `port` - Selenium server port (4444 by default).
- * * `restart` - Set to false (default) to share browser window between tests, or set to true to create a separate window for each test.
+ * * `restart` - Set to `false` (default) to use the same browser window for all tests, or set to `true` to create a new window for each test. In any case, when all tests are finished the browser window is closed.
  * * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
  * * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * `wait` - Implicit wait (default 0 seconds).
- * * `capabilities` - Sets Selenium2 [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+ * * `capabilities` - Sets Selenium [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  * * `connection_timeout` - timeout for opening a connection to remote selenium server (30 seconds by default).
  * * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
  * * `pageload_timeout` - amount of time to wait for a page load to complete before throwing an error (default 0 seconds).
@@ -182,11 +221,6 @@ use Symfony\Component\DomCrawler\Crawler;
  *                  unexpectedAlertBehaviour: 'accept'
  *                  firefox_profile: '~/firefox-profiles/codeception-profile.zip.b64'
  * ```
- *
- * ### Status
- *
- * Stability: **stable**
- * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
  *
  * ## Usage
  *
@@ -327,6 +361,30 @@ class WebDriver extends CodeceptionModule implements
             'browser' => $this->config['browser'],
             'capabilities' => $this->config['capabilities']
         ]);
+    }
+
+    /**
+     * Restarts a web browser.
+     * Can be used with `_reconfigure` to open browser with different configuration
+     *
+     * ```php
+     * <?php
+     * // inside a Helper
+     * $this->getModule('WebDriver')->_restart(); // just restart
+     * $this->getModule('WebDriver')->_restart(['browser' => $browser]); // reconfigure + restart
+     * ```
+     *
+     * @param array $config
+     * @api
+     */
+    public function _restart($config = [])
+    {
+        $this->webDriver->quit();
+        if (!empty($config)) {
+            $this->_reconfigure($config);
+        }
+        $this->_initialize();
+        $this->_initializeSession();
     }
 
     protected function loadFirefoxProfile()
@@ -605,13 +663,18 @@ class WebDriver extends CodeceptionModule implements
      * $I->amOnPage('/user/edit');
      * $I->makeScreenshot('edit_page');
      * // saved to: tests/_output/debug/edit_page.png
+     * $I->makeScreenshot();
+     * // saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.png
      * ?>
      * ```
      *
      * @param $name
      */
-    public function makeScreenshot($name)
+    public function makeScreenshot($name = null)
     {
+        if (empty($name)) {
+            $name = uniqid(date("Y-m-d_H-i-s_"));
+        }
         $debugDir = codecept_log_dir() . 'debug';
         if (!is_dir($debugDir)) {
             mkdir($debugDir, 0777);
@@ -696,6 +759,21 @@ class WebDriver extends CodeceptionModule implements
         }
         $cookie = reset($cookies);
         return $cookie['value'];
+    }
+
+    /**
+     * Grabs current page source code.
+     *
+     * @throws ModuleException if no page was opened.
+     *
+     * @return string Current page source code.
+     */
+    public function grabPageSource()
+    {
+        // Make sure that some page was opened.
+        $this->_getCurrentUri();
+
+        return $this->webDriver->getPageSource();
     }
 
     protected function filterCookies($cookies, $params = [])
@@ -796,7 +874,7 @@ class WebDriver extends CodeceptionModule implements
         if ($context) {
             $page = $this->matchFirstOrFail($this->webDriver, $context);
         }
-        $el = $this->findClickable($page, $link);
+        $el = $this->_findClickable($page, $link);
         if (!$el) {
             try {
                 $els = $this->match($page, $link);
@@ -812,11 +890,29 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
-     * @param $page
-     * @param $link
+     * Locates a clickable element.
+     *
+     * Use it in Helpers or GroupObject or Extension classes:
+     *
+     * ```php
+     * <?php
+     * $module = $this->getModule('WebDriver');
+     * $page = $module->webDriver;
+     *
+     * // search a link or button on a page
+     * $el = $module->_findClickable($page, 'Click Me');
+     *
+     * // search a link or button within an element
+     * $topBar = $module->_findElements('.top-bar')[0];
+     * $el = $module->_findClickable($topBar, 'Click Me');
+     *
+     * ```
+     * @api
+     * @param $page WebDriver instance or an element to search within
+     * @param $link a link text or locator to click
      * @return WebDriverElement
      */
-    protected function findClickable($page, $link)
+    public function _findClickable($page, $link)
     {
         if (is_array($link) or ($link instanceof WebDriverBy)) {
             return $this->matchFirstOrFail($page, $link);
@@ -927,40 +1023,48 @@ class WebDriver extends CodeceptionModule implements
     public function seeLink($text, $url = null)
     {
         $nodes = $this->baseElement->findElements(WebDriverBy::partialLinkText($text));
+        $currentUri = $this->_getCurrentUri();
+
         if (empty($nodes)) {
-            $this->fail("No links containing text '$text' were found in page " . $this->_getCurrentUri());
+            $this->fail("No links containing text '$text' were found in page $currentUri");
         }
         if ($url) {
-            $nodes = array_filter(
-                $nodes,
-                function (WebDriverElement $e) use ($url) {
-                    return trim($e->getAttribute('href')) == trim($url);
-                }
-            );
-            if (empty($nodes)) {
-                $this->fail("No links containing text '$text' and URL '$url' were found in page " . $this->_getCurrentUri());
-            }
+            $nodes = $this->filterNodesByHref($url, $nodes);
         }
+        $this->assertNotEmpty($nodes, "No links containing text '$text' and URL '$url' were found in page $currentUri");
     }
 
     public function dontSeeLink($text, $url = null)
     {
         $nodes = $this->baseElement->findElements(WebDriverBy::partialLinkText($text));
+        $currentUri = $this->_getCurrentUri();
         if (!$url) {
-            if (!empty($nodes)) {
-                $this->fail("Link containing text '$text' was found in page " . $this->_getCurrentUri());
-            }
-            return;
+            $this->assertEmpty($nodes, "Link containing text '$text' was found in page $currentUri");
+        } else {
+            $nodes = $this->filterNodesByHref($url, $nodes);
+            $this->assertEmpty($nodes, "Link containing text '$text' and URL '$url' was found in page $currentUri");
         }
+    }
+
+    /**
+     * @param string $url
+     * @param $nodes
+     * @return array
+     */
+    private function filterNodesByHref($url, $nodes)
+    {
+        //current uri can be relative, merging it with configured base url gives absolute url
+        $absoluteCurrentUrl = Uri::mergeUrls($this->_getUrl(), $this->_getCurrentUri());
+        $expectedUrl = Uri::mergeUrls($absoluteCurrentUrl, $url);
+
         $nodes = array_filter(
             $nodes,
-            function (WebDriverElement $e) use ($url) {
-                return trim($e->getAttribute('href')) == trim($url);
+            function (WebDriverElement $e) use ($expectedUrl, $absoluteCurrentUrl) {
+                $elementHref = Uri::mergeUrls($absoluteCurrentUrl, $e->getAttribute('href'));
+                return $elementHref === $expectedUrl;
             }
         );
-        if (!empty($nodes)) {
-            $this->fail("Link containing text '$text' and URL '$url' was found in page " . $this->_getCurrentUri());
-        }
+        return $nodes;
     }
 
     public function seeInCurrentUrl($uri)
@@ -1227,6 +1331,7 @@ class WebDriver extends CodeceptionModule implements
     public function _loadSession($session)
     {
         $this->webDriver = $session;
+        $this->setBaseElement();
     }
 
     public function _backupSession()
@@ -1243,6 +1348,7 @@ class WebDriver extends CodeceptionModule implements
         } catch (UnknownServerException $e) {
             // Session already closed so nothing to do
         }
+        $this->setBaseElement();
         unset($this->sessions[$key]);
     }
 

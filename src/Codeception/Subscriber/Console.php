@@ -360,7 +360,7 @@ class Console implements EventSubscriberInterface
         $this->printExceptionTrace($fail);
     }
 
-    protected function printException($e, $cause = null)
+    public function printException($e, $cause = null)
     {
         if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
             if ($e->getMessage()) {
@@ -404,12 +404,15 @@ class Console implements EventSubscriberInterface
         $message->writeln();
     }
 
-    protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
+    public function printScenarioFail(ScenarioDriven $failedTest, $fail)
     {
         if ($this->conditionalFails) {
             $failedStep = (string) array_shift($this->conditionalFails);
         } else {
             $failedStep = (string) $failedTest->getScenario()->getMetaStep();
+            if ($failedStep === '') {
+                $failedStep = (string)$this->failedStep;
+            }
         }
 
         $this->printException($fail, $failedStep);
@@ -520,7 +523,7 @@ class Console implements EventSubscriberInterface
         $this->output->writeln("");
     }
 
-    protected function detectWidth()
+    public function detectWidth()
     {
         $this->width = 60;
         if (!$this->isWin()

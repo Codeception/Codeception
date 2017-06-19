@@ -2,8 +2,8 @@
 
 Let's take a look at Codeception's architecture. We'll assume that you have already [installed](http://codeception.com/install) it
 and bootstrapped your first test suites. Codeception has generated three of them: unit, functional, and acceptance.
-They are well described in the previous chapter. Inside your __/tests__ folder you will have three config files and three directories
-with names corresponding to these suites. Suites are independent groups of tests with a common purpose.
+They are well described in the [previous chapter](http://codeception.com/docs/01-Introduction). Inside your __/tests__ folder you will have three `.yml` config files and three directories
+with names corresponding to these suites: `unit`, `functional`, `acceptance`. Suites are independent groups of tests with a common purpose.
 
 ## Actors
 
@@ -12,14 +12,14 @@ We have a UnitTester, who executes functions and tests the code. We also have a 
 who tests the application as a whole, with knowledge of its internals. Lastly we have an AcceptanceTester, a user who works with our application
 through an interface that we provide.
 
-Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from Codeception Modules**.
+Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from [Codeception Modules](http://codeception.com/docs/06-ModulesAndHelpers)**.
 Each module provides predefined actions for different testing purposes, and they can be combined to fit the testing environment.
 Codeception tries to solve 90% of possible testing issues in its modules, so you don't have to reinvent the wheel.
 We think that you can spend more time on writing tests and less on writing support code to make those tests run.
 By default, AcceptanceTester relies on PhpBrowser module, which is set in the `tests/acceptance.suite.yml` configuration file:
 
 ```yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
@@ -53,19 +53,19 @@ and choosing a proper action from the auto-completion list. Let's log in to our 
 
 ```php
 <?php
-$I = new AcceptanceTester($scenario);
+$I = new AcceptanceTester($scenario); // actor class initialization
 $I->wantTo('login to website');
 
 ```
 
-The `wantTo` section describes your scenario in brief. There are additional comment methods that are useful to describe context of a scenario:
+The `wantTo` section describes your scenario in brief. There are additional comment methods that are useful to describe the context of a scenario:
 
 ```php
 <?php
 $I = new AcceptanceTester($scenario);
 $I->am('user'); // actor's role
 $I->wantTo('login to website'); // feature to test
-$I->lookForwardTo('access all website features'); // result to achieve
+$I->lookForwardTo('access website features for logged-in users'); // result to achieve
 ```
 
 After we have described the story background, let's start writing a scenario.
@@ -78,7 +78,7 @@ Then we are sent to a user page, where we see the text `Hello, %username%`. Let'
 $I = new AcceptanceTester($scenario);
 $I->am('user');
 $I->wantTo('login to website');
-$I->lookForwardTo('access all website features');
+$I->lookForwardTo('access website features for logged-in users');
 $I->amOnPage('/login');
 $I->fillField('Username','davert');
 $I->fillField('Password','qwerty');
@@ -92,7 +92,7 @@ this test transforms into plain English text:
 ```
 I am user
 I wantTo login to website
-I lookForwardTo access all website features
+I lookForwardTo access website features for logged-in users
 I amOnPage '/login'
 I fillField 'Username','davert'
 I fillField 'Password','qwerty'
@@ -106,13 +106,13 @@ Codeception generates this text representation from PHP code by executing:
 php codecept generate:scenarios
 ```
 
-Generated scenarios will be stored in your `_output` directory in text files.
+These generated scenarios will be stored in your `_data` directory in text files.
 
 Before we execute this test, we should make sure that the website is running on a local web server.
 Let's open the `tests/acceptance.suite.yml` file and replace the URL with the URL of your web application:
 
 ```yaml
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
@@ -153,7 +153,7 @@ Signature: SigninCept.php
 Test: tests/acceptance/SigninCept.php
 Scenario --
  I am user
- I look forward to access all website features
+ I look forward to access website features for logged-in users
  I am on page "/login"
  I fill field "Username" "davert"
  I fill field "Password" "qwerty"
@@ -172,17 +172,12 @@ by emulating the user's actions, you can test any of your websites.
 
 Give it a try!
 
-## Bootstrap
-
-Each suite has its own bootstrap file. It's located in the suite directory and is named `_bootstrap.php`. It will be executed before the test suite.
-There is also a global bootstrap file located in the `tests` directory. It can be used to include additional files.
-
 ## Cept, Cest and Test Formats
 
 Codeception supports three test formats. Beside the previously described scenario-based Cept format,
 Codeception can also execute [PHPUnit test files for unit testing](http://codeception.com/docs/05-UnitTests), and Cest format.
 
-Cest combines scenario-driven test approach with OOP design. In case you want to group a few testing scenarios into one you should consider using Cest format.
+**Cest** combines scenario-driven test approach with OOP design. In case you want to group a few testing scenarios into one, you should consider using Cest format.
 In the example below we are testing CRUD actions within a single file but with several tests (one per operation):
 
 ```php
@@ -275,7 +270,7 @@ php codecept run tests/acceptance/backend
 ```
 
 Using regular expressions, you can even run many different test methods from the same directory or class.
-For example, this will execute all acceptance tests from the `backend` dir beginning with the word login:
+For example, this will execute all acceptance tests from the `backend` dir beginning with the word "login":
 
 ```bash
 php codecept run tests/acceptance/backend:^login
@@ -311,7 +306,6 @@ There are plenty of useful Codeception commands:
 * `generate:cept` *suite* *filename* - Generates a sample Cept scenario
 * `generate:cest` *suite* *filename* - Generates a sample Cest test
 * `generate:test` *suite* *filename* - Generates a sample PHPUnit Test with Codeception hooks
-* `generate:phpunit` *suite* *filename* - Generates a classic PHPUnit Test
 * `generate:feature` *suite* *filename* - Generates Gherkin feature file
 * `generate:suite` *suite* *actor* - Generates a new suite with the given Actor class name
 * `generate:scenarios` *suite* - Generates text files containing scenarios from tests

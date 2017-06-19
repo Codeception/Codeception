@@ -17,7 +17,7 @@ include:
   - admin
   - api/rest
 paths:
-  log: log
+  output: _output
 settings:
   colors: false
 ```
@@ -179,7 +179,23 @@ extensions:
     enabled: [MyCustomExtension]
 ```
 
-Extensions can also be enabled per suite inside suite configs (like `acceptance.suite.yml`) and for a specific environment. 
+Extensions can also be enabled per suite inside suite configs (like `acceptance.suite.yml`) and for a specific environment.
+ 
+To enable extension dynamically, execute the `run` command with `--ext` option.
+Provide a class name as a parameter:
+
+```bash
+codecept run --ext MyCustomExtension
+codecept run --ext "\My\Extension"
+```
+
+If a class is in a `Codeception\Extension` namespace you can skip it and provide only a shortname. 
+So Recorder extension can be started like this:
+
+```bash
+codecept run --ext Recorder
+```
+
 
 ### Configuring Extension
 
@@ -281,11 +297,20 @@ Now the Admin group class will listen for all events of tests that belong to the
 
 ## Custom Reporters
 
-In order to customize the output, you can use Extensions, the way it is done in
-[SimpleOutput Extension](https://github.com/Codeception/Codeception/blob/master/ext%2FSimpleOutput.php).
+Alternative reporters can be implemented as extension. 
+There are [DotReporter](http://codeception.com/extensions#DotReporter) and [SimpleReporter](http://codeception.com/extensions#SimpleReporter) extensions included. 
+Use them to change output or use them as an example to build your own reporter. They can be easily enabled with `--ext` option
+
+```bash
+codecept run --ext DotReporter
+```
+
+![](https://cloud.githubusercontent.com/assets/220264/26132800/4d23f336-3aab-11e7-81ba-2896a4c623d2.png)
+
+If you want to use it as default reporter enable it in `codeception.yml`.
+
 But what if you need to change the output format of the XML or JSON results triggered with the `--xml` or `--json` options?
-Codeception uses printers from PHPUnit and overrides some of them.
-If you need to customize one of the standard reporters you can override them too.
+Codeception uses PHPUnit printers and overrides them. If you need to customize one of the standard reporters you can override them too.
 If you are thinking on implementing your own reporter you should add a `reporters` section to `codeception.yml`
 and override one of the standard printer classes with one of your own:
 
@@ -293,14 +318,45 @@ and override one of the standard printer classes with one of your own:
 reporters:
     xml: Codeception\PHPUnit\Log\JUnit
     html: Codeception\PHPUnit\ResultPrinter\HTML
-    tap: PHPUnit_Util_Log_TAP
-    json: PHPUnit_Util_Log_JSON
     report: Codeception\PHPUnit\ResultPrinter\Report
 ```
 
-All reporters implement the
+All PHPUnit printers implement the
 [PHPUnit_Framework_TestListener](https://phpunit.de/manual/current/en/extending-phpunit.html#extending-phpunit.PHPUnit_Framework_TestListener)
 interface. It is recommended to read the code of the original reporter before overriding it.
+
+## Installation Templates
+
+Codeception setup can be customized for the needs of your application. 
+If you build a distributable application and you have a personalized configuration you can build an 
+Installation template which will help your users to start testing on their projects.
+ 
+Codeception has built-in installation templates for 
+
+* [Acceptance tests](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Template/Acceptance.php)
+* [Unit tests](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Template/Unit.php)
+* [REST API tests](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Template/Api.php)
+
+They can be executed with `init` command:
+
+```bash
+codecept init Acceptance
+```
+To init tests in specific folder use `--path` option:
+
+```bash
+codecept init Acceptance --path acceptance_tests
+```
+
+You will be asked several questions and then config files will be generated and all necessary directories will be created.
+Learn from the examples above to build a custom Installation Template. Here are the basic rules you should follow:
+
+* Templates should be inherited from [`Codeception\InitTemplate`](http://codeception.com/docs/reference/InitTemplate) class and implement `setup` method.
+* Template class should be placed in `Codeception\Template` namespace so Codeception could locate them by class name
+* Use methods like `say`, `saySuccess`, `sayWarning`, `sayError`, `ask`, to interact with a user.
+* Use `createDirectoryFor`, `createEmptyDirectory` methods to create directories
+* Use `createHelper`, `createActor` methods to create helpers and actors.
+* Use [Codeception generators](https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Lib/Generator) to create other support classes.
 
 ## Conclusion
 

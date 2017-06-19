@@ -30,7 +30,7 @@ class {{name}}Test extends \Codeception\Test\Unit
     }
 
     // tests
-    public function testMe()
+    public function testSomeFeature()
     {
 
     }
@@ -48,7 +48,7 @@ EOF;
 
     public function produce()
     {
-        $actor = $this->settings['class_name'];
+        $actor = $this->settings['actor'];
         if ($this->settings['namespace']) {
             $actor = $this->settings['namespace'] . '\\' . $actor;
         }
@@ -59,7 +59,7 @@ EOF;
             ->place('namespace', $ns)
             ->place('name', $this->getShortClassName($this->name))
             ->place('actorClass', $actor)
-            ->place('actor', lcfirst(Configuration::config()['actor']))
+            ->place('actor', lcfirst(Configuration::config()['actor_suffix']))
             ->produce();
     }
 }

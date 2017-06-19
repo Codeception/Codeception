@@ -41,7 +41,7 @@ use Yii;
  * You can use this module by setting params in your `functional.suite.yml`:
  *
  * ```yaml
- * class_name: FunctionalTester
+ * actor: FunctionalTester
  * modules:
  *     enabled:
  *         - Yii1:
