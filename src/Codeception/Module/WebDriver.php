@@ -71,6 +71,29 @@ use Symfony\Component\DomCrawler\Crawler;
  *              browser: chrome # 'chrome' or 'firefox'
  * ```
  *
+ * ### ChromeDriver
+ *
+ * To run tests in Chrome browser you may connect to ChromeDriver directly, without using Selenium Server.
+ *
+ * 1. Install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started).
+ * 2. Launch ChromeDriver: `chromedriver --url-base=/wd/hub`
+ * 3. Configure this module to use ChromeDriver port:
+ *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: 'http://localhost/'
+ *              window_size: false # disabled in ChromeDriver
+ *              port: 9515
+ *              browser: chrome
+ *              capabilities:
+ *                  chromeOptions: # additional chrome options
+ * ```
+ *
+ * Additional [Chrome options](https://sites.google.com/a/chromium.org/chromedriver/capabilities) can be set in `chromeOptions` capabilities.
+ *
+ *
  * ### PhantomJS
  *
  * PhantomJS is a [headless browser](https://en.wikipedia.org/wiki/Headless_browser) alternative to Selenium Server that implements
@@ -173,6 +196,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `host` - Selenium server host (127.0.0.1 by default).
  * * `port` - Selenium server port (4444 by default).
  * * `restart` - Set to `false` (default) to use the same browser window for all tests, or set to `true` to create a new window for each test. In any case, when all tests are finished the browser window is closed.
+ * * `start` - Autostart a browser for tests. Can be disabled if browser session is started with `_initializeSession` inside a Helper.
  * * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
  * * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * `wait` - Implicit wait (default 0 seconds).
@@ -266,6 +290,7 @@ class WebDriver extends CodeceptionModule implements
         'host'               => '127.0.0.1',
         'port'               => '4444',
         'path'               => '/wd/hub',
+        'start'              => true,
         'restart'            => false,
         'wait'               => 0,
         'clear_cookies'      => true,
@@ -282,13 +307,13 @@ class WebDriver extends CodeceptionModule implements
         'log_js_errors'      => false
     ];
 
-    protected $wd_host;
+    protected $wdHost;
     protected $capabilities;
     protected $connectionTimeoutInMs;
     protected $requestTimeoutInMs;
     protected $test;
-    protected $sessionSnapshots = [];
     protected $sessions = [];
+    protected $sessionSnapshots = [];
     protected $httpProxy;
     protected $httpProxyPort;
     protected $sslProxy;
@@ -311,7 +336,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function _initialize()
     {
-        $this->wd_host = sprintf('%s://%s:%s%s', $this->config['protocol'], $this->config['host'], $this->config['port'], $this->config['path']);
+        $this->wdHost = sprintf('%s://%s:%s%s', $this->config['protocol'], $this->config['host'], $this->config['port'], $this->config['path']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
         if ($proxy = $this->getProxy()) {
@@ -322,6 +347,53 @@ class WebDriver extends CodeceptionModule implements
         $this->loadFirefoxProfile();
     }
 
+    /**
+     * Change capabilities of WebDriver. Should be executed before starting a new browser session.
+     * This method expects a function to be passed which returns array or [WebDriver Desired Capabilities](https://github.com/facebook/php-webdriver/blob/community/lib/Remote/DesiredCapabilities.php) object.
+     * Additional [Chrome options](https://github.com/facebook/php-webdriver/wiki/ChromeOptions) (like adding extensions) can be passed as well.
+     *
+     * ```php
+     * <?php // in helper
+     * public function _before(TestInterface $test)
+     * {
+     *     $this->getModule('WebDriver')->_capabilities(function($currentCapabilities) {
+     *         // or new \Facebook\WebDriver\Remote\DesiredCapabilities();
+     *         return \Facebook\WebDriver\Remote\DesiredCapabilities::firefox();
+     *     });
+     * }
+     * ```
+     *
+     * to make this work load `\Helper\Acceptance` before `WebDriver` in `acceptance.suite.yml`:
+     *
+     * ```yaml
+     * modules:
+     *     enabled:
+     *         - \Helper\Acceptance
+     *         - WebDriver
+     * ```
+     *
+     * For instance, [**BrowserStack** cloud service](https://www.browserstack.com/automate/capabilities) may require a test name to be set in capabilities.
+     * This is how it can be done via `_capabilities` method from `Helper\Acceptance`:
+     *
+     * ```php
+     * <?php // inside Helper\Acceptance
+     * public function _before(TestInterface $test)
+     * {
+     *      $name = \Codeception\Test\Descriptor::getTestAsString($test->toString());
+     *      $this->getModule('WebDriver')->_capabilities(function($currentCapabilities) use ($name) {
+     *          $currentCapabilities['name'] = $name;
+     *          return new DesiredCapabilities($currentCapabilities);
+     *      });
+     * }
+     * ```
+     *
+     * @param \Closure $capabilityFunction
+     */
+    public function _capabilities(\Closure $capabilityFunction)
+    {
+        $this->capabilities = $capabilityFunction($this->capabilities);
+    }
+
     public function _conflicts()
     {
         return 'Codeception\Lib\Interfaces\Web';
@@ -329,14 +401,14 @@ class WebDriver extends CodeceptionModule implements
 
     public function _before(TestInterface $test)
     {
-        if (!isset($this->webDriver)) {
+        if (!isset($this->webDriver) && $this->config['start']) {
             $this->_initializeSession();
         }
         $this->setBaseElement();
 
         $test->getMetadata()->setCurrent([
-            'browser' => $this->config['browser'],
-            'capabilities' => $this->config['capabilities']
+            'browser' => $this->webDriver->getCapabilities()->getBrowserName(),
+            'capabilities' => $this->webDriver->getCapabilities()->toArray()
         ]);
     }
 
@@ -396,7 +468,7 @@ class WebDriver extends CodeceptionModule implements
     public function _after(TestInterface $test)
     {
         if ($this->config['restart']) {
-            $this->cleanWebDriver();
+            $this->stopAllSessions();
             return;
         }
         if ($this->config['clear_cookies'] && isset($this->webDriver)) {
@@ -518,21 +590,16 @@ class WebDriver extends CodeceptionModule implements
     public function _afterSuite()
     {
         // this is just to make sure webDriver is cleared after suite
-        $this->cleanWebDriver();
+        $this->stopAllSessions();
     }
 
-    protected function cleanWebDriver()
+    protected function stopAllSessions()
     {
         foreach ($this->sessions as $session) {
-            $this->_loadSession($session);
-            try {
-                $this->webDriver->quit();
-            } catch (\Exception $e) {
-                // Session already closed so nothing to do
-            }
-            unset($this->webDriver);
+            $this->_closeSession($session);
         }
-        $this->sessions = [];
+        $this->webDriver = null;
+        $this->baseElement = null;
     }
 
     public function amOnSubdomain($subdomain)
@@ -545,6 +612,7 @@ class WebDriver extends CodeceptionModule implements
 
     /**
      * Returns URL of a host.
+     *
      * @api
      * @return mixed
      * @throws ModuleConfigException
@@ -642,7 +710,6 @@ class WebDriver extends CodeceptionModule implements
      * // saved to: tests/_output/debug/edit_page.png
      * $I->makeScreenshot();
      * // saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.png
-     * ?>
      * ```
      *
      * @param $name
@@ -1282,18 +1349,28 @@ class WebDriver extends CodeceptionModule implements
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
 
+    /**
+     * Manually starts a new browser session.
+     *
+     * ```php
+     * <?php
+     * $this->getModule('WebDriver')->_initializeSession();
+     * ```
+     *
+     * @api
+     */
     public function _initializeSession()
     {
         try {
+            $this->sessions[] = $this->webDriver;
             $this->webDriver = RemoteWebDriver::create(
-                $this->wd_host,
+                $this->wdHost,
                 $this->capabilities,
                 $this->connectionTimeoutInMs,
                 $this->requestTimeoutInMs,
                 $this->httpProxy,
                 $this->httpProxyPort
             );
-            $this->sessions[] = $this->_backupSession();
             $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
             if (!is_null($this->config['pageload_timeout'])) {
                 $this->webDriver->manage()->timeouts()->pageLoadTimeout($this->config['pageload_timeout']);
@@ -1301,32 +1378,62 @@ class WebDriver extends CodeceptionModule implements
             $this->setBaseElement();
             $this->initialWindowSize();
         } catch (WebDriverCurlException $e) {
-            throw new ConnectionException("Can't connect to Webdriver at {$this->wd_host}. Please make sure that Selenium Server or PhantomJS is running.");
+            throw new ConnectionException("Can't connect to Webdriver at {$this->wdHost}. Please make sure that Selenium Server or PhantomJS is running.");
         }
     }
 
+    /**
+     * Loads current RemoteWebDriver instance as a session
+     *
+     * @api
+     * @param RemoteWebDriver $session
+     */
     public function _loadSession($session)
     {
         $this->webDriver = $session;
         $this->setBaseElement();
     }
 
+    /**
+     * Returns current WebDriver session for saving
+     *
+     * @api
+     * @return RemoteWebDriver
+     */
     public function _backupSession()
     {
         return $this->webDriver;
     }
 
-    public function _closeSession($webDriver)
+    /**
+     * Manually closes current WebDriver session.
+     *
+     * ```php
+     * <?php
+     * $this->getModule('WebDriver')->_closeSession();
+     *
+     * // close a specific session
+     * $webDriver = $this->getModule('WebDriver')->webDriver;
+     * $this->getModule('WebDriver')->_closeSession($webDriver);
+     * ```
+     *
+     * @api
+     * @param $webDriver (optional) a specific webdriver session instance
+     */
+    public function _closeSession($webDriver = null)
     {
-        $keys = array_keys($this->sessions, $webDriver, true);
-        $key = array_shift($keys);
+        if (!$webDriver and $this->webDriver) {
+            $webDriver = $this->webDriver;
+        }
+        if (!$webDriver) {
+            return;
+        }
         try {
             $webDriver->quit();
+            unset($webDriver);
         } catch (UnknownServerException $e) {
             // Session already closed so nothing to do
         }
-        $this->setBaseElement();
-        unset($this->sessions[$key]);
     }
 
     /**
