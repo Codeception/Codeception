@@ -8,7 +8,7 @@ class Template
 {
     protected $template;
     protected $vars = [];
-    protected $placehodlerStart;
+    protected $placeholderStart;
     protected $placeholderEnd;
 
     /**
@@ -18,9 +18,9 @@ class Template
      */
     public function __construct($template, $placeholderStart = '{{', $placeholderEnd = '}}')
     {
-        $this->template = $template;
-        $this->placehodlerStart = $placeholderStart;
-        $this->placeholderEnd = $placeholderEnd;
+        $this->template         = $template;
+        $this->placeholderStart = $placeholderStart;
+        $this->placeholderEnd   = $placeholderEnd;
     }
 
     /**
@@ -54,7 +54,7 @@ class Template
     public function produce()
     {
         $result = $this->template;
-        $regex = sprintf('~%s([\w\.]+)%s~m', $this->placehodlerStart, $this->placeholderEnd);
+        $regex = sprintf('~%s([\w\.]+)%s~m', $this->placeholderStart, $this->placeholderEnd);
 
         $matched = preg_match_all($regex, $result, $matches, PREG_SET_ORDER);
         if (!$matched) {
@@ -72,7 +72,7 @@ class Template
                 }
             }
 
-            $result = str_replace($this->placehodlerStart . $placeholder . $this->placeholderEnd, $value, $result);
+            $result = str_replace($this->placeholderStart . $placeholder . $this->placeholderEnd, $value, $result);
         }
         return $result;
     }

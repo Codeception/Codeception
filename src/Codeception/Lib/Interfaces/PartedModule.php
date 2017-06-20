@@ -6,7 +6,7 @@ namespace Codeception\Lib\Interfaces;
  *
  * Module implementing this interface can be loaded partly.
  * Parts can be defined by marking methods with `@part` annotations.
- * Part of modules can be loaded by specifing part (or several parts) in config:
+ * Part of modules can be loaded by specifying part (or several parts) in config:
  *
  * ```
  * modules:

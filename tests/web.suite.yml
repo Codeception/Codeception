@@ -24,3 +24,24 @@ env:
       config:
         WebDriver:
           browser: chrome
+  headless:
+    modules:
+      config:
+        WebDriver:
+          browser: chrome
+          window_size: false
+          capabilities:
+            chromeOptions:
+              args: ["--headless", "--disable-gpu", "--disable-extensions"]
+              binary: "/usr/bin/google-chrome"
+  chromedriver:
+    modules:
+      config:
+        WebDriver:
+          browser: chrome
+          port: 9515 # ChromeDriver port
+          window_size: false
+          capabilities:
+            chromeOptions:
+              args: ["--headless", "--disable-gpu"]
+              binary: "/usr/bin/google-chrome"

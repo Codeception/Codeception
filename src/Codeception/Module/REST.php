@@ -959,7 +959,7 @@ EOF;
      * ?>
      * ```
      *
-     * You can also apply filters to check values. Filter can be applied with `:` char after the type declatation.
+     * You can also apply filters to check values. Filter can be applied with `:` char after the type declaration.
      *
      * Here is the list of possible filters:
      *
@@ -1103,7 +1103,7 @@ EOF;
     }
 
     /**
-     * Checks wheather XML response matches XPath
+     * Checks whether XML response matches XPath
      *
      * ```php
      * <?php
@@ -1119,7 +1119,7 @@ EOF;
     }
 
     /**
-     * Checks wheather XML response does not match XPath
+     * Checks whether XML response does not match XPath
      *
      * ```php
      * <?php
@@ -1261,7 +1261,7 @@ EOF;
      * $I->seeBinaryResponseEquals(md5($fileData));
      * ?>
      * ```
-     * Example: Using sha256 hsah
+     * Example: Using sha256 hash
      *
      * ```php
      * <?php

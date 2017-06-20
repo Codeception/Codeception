@@ -281,7 +281,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
         }
     }
 
-    public function _closeSession($session)
+    public function _closeSession($session = null)
     {
         unset($session);
     }
