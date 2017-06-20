@@ -189,6 +189,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             && $this->app->db instanceof \yii\db\Connection
         ) {
             $this->transaction = $this->app->db->beginTransaction();
+            $this->debugSection('Transaction', 'Started');
         }
     }
 
@@ -223,6 +224,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
             if ($this->transaction) {
                 $this->transaction->rollback();
+                $this->debugSection('Transaction', 'Stopped. Changes reverted');
             }
         }
 

@@ -175,6 +175,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
         if ($this->applicationUsesDatabase() && $this->config['cleanup']) {
             $this->app['db']->beginTransaction();
+            $this->debugSection('Transaction', 'Started');
+
         }
 
         if ($this->config['run_database_seeder']) {
@@ -195,6 +197,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             if ($db instanceof \Illuminate\Database\DatabaseManager) {
                 if ($this->config['cleanup']) {
                     $db->rollback();
+                    $this->debugSection('Transaction', 'Stopped. Changes reverted');
                 }
 
                 /**

@@ -111,6 +111,7 @@ EOF;
         $this->retrieveEntityManager();
         if ($this->config['cleanup']) {
             $this->em->getConnection()->beginTransaction();
+            $this->debugSection('Transaction', 'Started');
         }
     }
 
@@ -155,6 +156,7 @@ EOF;
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
                 $this->em->getConnection()->rollback();
+                $this->debugSection('Transaction', 'Stopped. Changes reverted');
             } catch (\PDOException $e) {
             }
         }
