@@ -843,13 +843,11 @@ interface Web
      * ``` php
      * <?php
      * $I->seeNumberOfElements('tr', 10);
-     * $I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
+     * $I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
      * ?>
      * ```
      * @param $selector
-     * @param mixed $expected :
-     * - string: strict number
-     * - array: range of numbers [0,10]
+     * @param mixed $expected int or int[]
      */
     public function seeNumberOfElements($selector, $expected);
 
