@@ -555,7 +555,7 @@ To start a browser you will need to write corresponding methods in Acceptance [H
 WebDriver module provides advanced methods for the browser session, however, they can only be used from Helpers.
      
 * [_initializeSession](http://codeception.com/docs/modules/WebDriver#_initializeSession) - starts a new browser session
-* [_closeSession](http://codeception.com/docs/modules/WebDriver#_closeSession) - starts a new browser session
+* [_closeSession](http://codeception.com/docs/modules/WebDriver#_closeSession) - stops the browser session
 * [_restart](http://codeception.com/docs/modules/WebDriver#_restart) - updates configuration and restarts browser
 * [_capabilities](http://codeception.com/docs/modules/WebDriver#_capabilities) - set [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities) programmatically.
 
