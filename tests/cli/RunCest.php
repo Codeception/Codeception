@@ -442,9 +442,9 @@ EOF
 
     public function overrideModuleOptions(CliGuy $I)
     {
-        $I->executeCommand('run powers --no-exit');
+        $I->executeCommand('run powers PowerIsRisingCept --no-exit');
         $I->seeInShellOutput('FAILURES');
-        $I->executeCommand('run powers -o "modules: config: PowerHelper: has_power: true" --no-exit');
+        $I->executeCommand('run powers PowerIsRisingCept -o "modules: config: PowerHelper: has_power: true" --no-exit');
         $I->dontSeeInShellOutput('FAILURES');
     }
 
