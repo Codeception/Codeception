@@ -71,6 +71,12 @@ use Symfony\Component\DomCrawler\Crawler;
  *              browser: chrome # 'chrome' or 'firefox'
  * ```
  *
+ * Launch Selenium Server before executing tests.
+ *
+ * ```
+ * java -jar "/path/to/selenium-server-standalone-xxx.jar"
+ * ```
+ *
  * ### ChromeDriver
  *
  * To run tests in Chrome browser you may connect to ChromeDriver directly, without using Selenium Server.
