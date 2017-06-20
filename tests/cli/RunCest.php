@@ -479,4 +479,10 @@ EOF
         $I->seeInShellOutput('Step  See file found "games.zip"');
         $I->seeInShellOutput('Fail  File "games.zip" not found at ""');
     }
+
+    public function runTestWithCustomSetupMethod(CliGuy $I)
+    {
+        $I->executeCommand('run powers PowerUpCest');
+        $I->dontSeeInShellOutput('FAILURES');
+    }
 }
