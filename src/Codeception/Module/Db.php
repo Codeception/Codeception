@@ -523,7 +523,7 @@ class Db extends CodeceptionModule implements DbInterface
      *
      * ``` php
      * <?php
-     * $mails = $I->grabColumnFromDatabase('users', 'name', array('name' => 'RebOOter'));
+     * $mails = $I->grabColumnFromDatabase('users', 'email', array('name' => 'RebOOter'));
      * ```
      *
      * @param string $table
