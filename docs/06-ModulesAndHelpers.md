@@ -264,46 +264,6 @@ In this helper you can replace the parent's methods with your own implementation
 You can also replace the `_before` and `_after` hooks, which might be an option
 when you need to customize starting and stopping of a testing session.
 
-If some of the methods of the parent class should not be used in a child module, you can disable them.
-Codeception has several options for this:
-
-```php
-<?php
-namespace Helper;
-
-class MyExtendedSelenium extends \Codeception\Module\WebDriver
-{
-    // disable all inherited actions
-    public static $includeInheritedActions = false;
-
-    // include only "see" and "click" actions
-    public static $onlyActions = ['see','click'];
-
-    // exclude "seeElement" action
-    public static $excludeActions = ['seeElement'];
-}
-```
-
-Setting `$includeInheritedActions` to `false` adds the ability to create aliases for parent methods.
-It also allows you to resolve conflicts between modules. Let's say we want to use the `Db` module with our `SecondDbHelper`
-that actually inherits from `Db`. How can we use the `seeInDatabase` methods from both modules? Let's find out:
-
-```php
-<?php
-namespace Helper;
-
-class SecondDb extends \Codeception\Module\Db
-{
-    public static $includeInheritedActions = false;
-
-    public function seeInSecondDb($table, $data)
-    {
-        $this->seeInDatabase($table, $data);
-    }
-}
-```
-
-Setting `$includeInheritedActions` to false won't include the methods from parent classes into the generated Actor.
 
 ### Hooks
 
@@ -523,6 +483,37 @@ $this->getModule('WebDriver')->_restart();
 
 At the end of a test all configuration changes will be rolled back to the original configuration values.
 
+### Runtime Configuration of a Test
+
+Sometimes it is needed to set custom configuration for a specific test only.
+For [Cest](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes) and [Test\Unit](http://codeception.com/docs/05-UnitTests) 
+formats you can use `@prepare` annotation which can execute the code before other hooks are executed. This allows `@prepare`
+to change the module configuration in runtime. `@prepare` uses [dependency injection](http://codeception.com/docs/07-AdvancedUsage#Dependency-Injection)
+to automatically inject required modules into a method.
+
+To run a specific test only in Chrome browser, you can call `_reconfigure` from WebDriver module for a test itself using `@prepare`. 
+
+```php
+<?php
+/**
+ * @prepare useChrome
+ */
+public function chromeSpecificTest()
+{
+    // ...    
+}
+
+protected function useChrome(\Codeception\Module\WebDriver $webdriver)
+{
+    // WebDriver was injected by the class name
+    $webdriver->_reconfigure(['browser' => 'chrome']);
+}
+```
+
+Prepare methods can invoke all methods of a module, as well as hidden API methods (starting with `_`). Use them to customize the module setup for a specific test.
+
+To change module configuration for a specific group of tests use [GroupObjects](http://codeception.com/docs/08-Customization#Group-Objects).
+ 
 ## Conclusion
 
 

@@ -42,6 +42,36 @@ class AnnotationTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetAnnotationsFromDocBlock()
+    {
+        $docblock = <<<EOF
+@user davert
+@param key1
+@param key2
+EOF;
+
+        $this->assertEquals(['davert'], Annotation::fetchAnnotationsFromDocblock('user', $docblock));
+        $this->assertEquals(['key1', 'key2'], Annotation::fetchAnnotationsFromDocblock('param', $docblock));
+    }
+
+
+    public function testGetAllAnnotationsFromDocBlock()
+    {
+        $docblock = <<<EOF
+@user davert
+@param key1
+@param key2
+EOF;
+
+        $all = Annotation::fetchAllAnnotationsFromDocblock($docblock);
+        codecept_debug($all);
+        $this->assertEquals([
+            'user' => ['davert'],
+            'param' => ['key1', 'key2']
+        ], Annotation::fetchAllAnnotationsFromDocblock($docblock));
+
+    }
+
     public function testValueToSupportJson()
     {
         $values = Annotation::arrayValue('{ "code": "200", "user": "davert", "email": "davert@gmail.com" }');

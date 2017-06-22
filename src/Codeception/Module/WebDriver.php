@@ -438,8 +438,12 @@ class WebDriver extends CodeceptionModule implements
         if (!empty($config)) {
             $this->_reconfigure($config);
         }
-        $this->_initialize();
         $this->_initializeSession();
+    }
+
+    protected function onReconfigure()
+    {
+        $this->_initialize();
     }
 
     protected function loadFirefoxProfile()
