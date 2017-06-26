@@ -1831,7 +1831,7 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
-     * Dismisses the active JavaScript popup, as created by `window.alert`|`window.confirm`|`window.prompt`.
+     * Dismisses the active JavaScript popup, as created by `window.alert`, `window.confirm`, or `window.prompt`.
      */
     public function cancelPopup()
     {
