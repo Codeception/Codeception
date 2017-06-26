@@ -700,7 +700,7 @@ interface Web
     public function fillField($field, $value);
 
     /**
-     * Attaches a file relative to the Codeception data directory to the given file upload field.
+     * Attaches a file relative to the Codeception `_data` directory to the given file upload field.
      *
      * ``` php
      * <?php
