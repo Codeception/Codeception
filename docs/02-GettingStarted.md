@@ -13,7 +13,7 @@ Codeception follows simple naming rules to make it easy to remember (as well as 
     ```php
     <?php
     $I->click('Login');
-    $I->fillFiled('#input-username', 'John Dough');
+    $I->fillField('#input-username', 'John Dough');
     $i->pressKey('#input-remarks', 'foo');
     ```
 * **Assertions** always start with "see" or "dontSee". Examples:
