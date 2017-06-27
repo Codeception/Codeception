@@ -170,7 +170,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
                 $this->di['db']->setNestedTransactionsWithSavepoints(true);
             }
             $this->di['db']->begin();
-            $this->debugSection('Transaction', 'Started');
+            $this->debugSection('Database', 'Transaction started');
         }
 
         // localize
@@ -205,7 +205,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
                 $level = $this->di['db']->getTransactionLevel();
                 try {
                     $this->di['db']->rollback(true);
-                    $this->debugSection('Transaction', 'Stopped. Changes reverted');
+                    $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
                 } catch (PDOException $e) {
                 }
                 if ($level == $this->di['db']->getTransactionLevel()) {
