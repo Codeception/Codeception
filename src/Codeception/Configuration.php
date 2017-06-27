@@ -520,8 +520,7 @@ class Configuration
         }
 
         if (!is_writable($dir)) {
-            @mkdir($dir);
-            @chmod($dir, 0777);
+            @mkdir($dir, 0777, true);
         }
 
         if (!is_writable($dir)) {
