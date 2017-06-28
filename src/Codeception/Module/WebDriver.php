@@ -205,7 +205,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `start` - Autostart a browser for tests. Can be disabled if browser session is started with `_initializeSession` inside a Helper.
  * * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
  * * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
- * * `wait` - Implicit wait (default 0 seconds).
+ * * `wait` (default: 0 seconds) - Whenever element is required and is not on page, wait for n seconds to find it before fail.
  * * `capabilities` - Sets Selenium [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  * * `connection_timeout` - timeout for opening a connection to remote selenium server (30 seconds by default).
  * * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
@@ -866,7 +866,9 @@ class WebDriver extends CodeceptionModule implements
         if (!$selector) {
             return $this->assertPageContains($text);
         }
+        $this->enableImplicitWait(true);
         $nodes = $this->matchVisible($selector);
+        $this->enableImplicitWait(false);
         $this->assertNodesContain($text, $nodes, $selector);
     }
 
@@ -1076,7 +1078,9 @@ class WebDriver extends CodeceptionModule implements
 
     public function seeLink($text, $url = null)
     {
+        $this->enableImplicitWait(true);
         $nodes = $this->baseElement->findElements(WebDriverBy::partialLinkText($text));
+        $this->enableImplicitWait(false);
         $currentUri = $this->_getCurrentUri();
 
         if (empty($nodes)) {
@@ -1381,7 +1385,6 @@ class WebDriver extends CodeceptionModule implements
                 $this->httpProxy,
                 $this->httpProxyPort
             );
-            $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
             if (!is_null($this->config['pageload_timeout'])) {
                 $this->webDriver->manage()->timeouts()->pageLoadTimeout($this->config['pageload_timeout']);
             }
@@ -1497,6 +1500,7 @@ class WebDriver extends CodeceptionModule implements
         if ($radioOrCheckbox instanceof WebDriverElement) {
             return $radioOrCheckbox;
         }
+
         if (is_array($radioOrCheckbox) or ($radioOrCheckbox instanceof WebDriverBy)) {
             return $this->matchFirstOrFail($this->baseElement, $radioOrCheckbox);
         }
@@ -1682,7 +1686,9 @@ class WebDriver extends CodeceptionModule implements
 
     public function seeElement($selector, $attributes = [])
     {
+        $this->enableImplicitWait(true);
         $els = $this->matchVisible($selector);
+        $this->enableImplicitWait(false);
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertNotEmpty($els);
     }
@@ -1708,8 +1714,10 @@ class WebDriver extends CodeceptionModule implements
      */
     public function seeElementInDOM($selector, $attributes = [])
     {
+        $this->enableImplicitWait(true);
         $els = $this->match($this->baseElement, $selector);
         $els = $this->filterByAttributes($els, $attributes);
+        $this->enableImplicitWait(false);
         $this->assertNotEmpty($els);
     }
 
@@ -2073,11 +2081,7 @@ class WebDriver extends CodeceptionModule implements
      */
     public function submitForm($selector, array $params, $button = null)
     {
-        $form = $this->match($this->baseElement, $selector);
-        if (empty($form)) {
-            throw new ElementNotFound($selector, "Form via CSS or XPath");
-        }
-        $form = reset($form);
+        $form = $this->matchFirstOrFail($this->baseElement, $selector);
 
         $fields = $form->findElements(
             WebDriverBy::cssSelector('input:enabled,textarea:enabled,select:enabled,input[type=hidden]')
@@ -2151,7 +2155,6 @@ class WebDriver extends CodeceptionModule implements
         if (!$submitted) {
             $form->submit();
         }
-
         $this->debugSection('Page', $this->_getCurrentUri());
     }
 
@@ -2318,7 +2321,8 @@ class WebDriver extends CodeceptionModule implements
      */
     public function executeInSelenium(\Closure $function)
     {
-        return $function($this->webDriver);
+        $result = $function($this->webDriver);
+        return $result;
     }
 
     /**
@@ -2681,7 +2685,9 @@ class WebDriver extends CodeceptionModule implements
      */
     protected function matchFirstOrFail($page, $selector)
     {
+        $this->enableImplicitWait(true);
         $els = $this->match($page, $selector);
+        $this->enableImplicitWait(false);
         if (!count($els)) {
             throw new ElementNotFound($selector, "CSS or XPath");
         }
@@ -3156,5 +3162,17 @@ class WebDriver extends CodeceptionModule implements
             return;
         }
         $this->baseElement = $this->matchFirstOrFail($this->webDriver, $element);
+    }
+
+    protected function enableImplicitWait($enable)
+    {
+        if (!$this->config['wait']) {
+            return;
+        }
+        if ($enable) {
+            $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+            return;
+        }
+        $this->webDriver->manage()->timeouts()->implicitlyWait(0);
     }
 }

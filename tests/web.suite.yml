@@ -38,6 +38,7 @@ env:
     modules:
       config:
         WebDriver:
+          wait: 10
           browser: chrome
           port: 9515 # ChromeDriver port
           window_size: false
