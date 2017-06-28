@@ -866,9 +866,9 @@ class WebDriver extends CodeceptionModule implements
         if (!$selector) {
             return $this->assertPageContains($text);
         }
-        $this->enableImplicitWait(true);
+        $this->enableImplicitWait();
         $nodes = $this->matchVisible($selector);
-        $this->enableImplicitWait(false);
+        $this->disableImplicitWait();
         $this->assertNodesContain($text, $nodes, $selector);
     }
 
@@ -1073,9 +1073,9 @@ class WebDriver extends CodeceptionModule implements
 
     public function seeLink($text, $url = null)
     {
-        $this->enableImplicitWait(true);
+        $this->enableImplicitWait();
         $nodes = $this->baseElement->findElements(WebDriverBy::partialLinkText($text));
-        $this->enableImplicitWait(false);
+        $this->disableImplicitWait();
         $currentUri = $this->_getCurrentUri();
 
         if (empty($nodes)) {
@@ -1681,9 +1681,9 @@ class WebDriver extends CodeceptionModule implements
 
     public function seeElement($selector, $attributes = [])
     {
-        $this->enableImplicitWait(true);
+        $this->enableImplicitWait();
         $els = $this->matchVisible($selector);
-        $this->enableImplicitWait(false);
+        $this->disableImplicitWait();
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertNotEmpty($els);
     }
@@ -1709,10 +1709,10 @@ class WebDriver extends CodeceptionModule implements
      */
     public function seeElementInDOM($selector, $attributes = [])
     {
-        $this->enableImplicitWait(true);
+        $this->enableImplicitWait();
         $els = $this->match($this->baseElement, $selector);
         $els = $this->filterByAttributes($els, $attributes);
-        $this->enableImplicitWait(false);
+        $this->disableImplicitWait();
         $this->assertNotEmpty($els);
     }
 
@@ -2316,8 +2316,7 @@ class WebDriver extends CodeceptionModule implements
      */
     public function executeInSelenium(\Closure $function)
     {
-        $result = $function($this->webDriver);
-        return $result;
+        return $function($this->webDriver);
     }
 
     /**
@@ -2680,9 +2679,9 @@ class WebDriver extends CodeceptionModule implements
      */
     protected function matchFirstOrFail($page, $selector)
     {
-        $this->enableImplicitWait(true);
+        $this->enableImplicitWait();
         $els = $this->match($page, $selector);
-        $this->enableImplicitWait(false);
+        $this->disableImplicitWait();
         if (!count($els)) {
             throw new ElementNotFound($selector, "CSS or XPath");
         }
@@ -3159,15 +3158,20 @@ class WebDriver extends CodeceptionModule implements
         $this->baseElement = $this->matchFirstOrFail($this->webDriver, $element);
     }
 
-    protected function enableImplicitWait($enable)
+    protected function enableImplicitWait()
     {
         if (!$this->config['wait']) {
             return;
         }
-        if ($enable) {
-            $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+    }
+
+    protected function disableImplicitWait()
+    {
+        if (!$this->config['wait']) {
             return;
         }
         $this->webDriver->manage()->timeouts()->implicitlyWait(0);
+
     }
 }
