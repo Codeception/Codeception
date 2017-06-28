@@ -368,6 +368,9 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testCurlSslOptions()
     {
+        if (getenv('WERCKER_ROOT')) {
+            $this->markTestSkipped('Disabled on Wercker CI');
+        }
         $this->module->_setConfig(array(
             'url' => 'https://google.com',
             'curl' => array(
