@@ -931,7 +931,7 @@ class WebDriver extends CodeceptionModule implements
             $page = $this->matchFirstOrFail($this->webDriver, $context);
         }
         $el = $this->_findClickable($page, $link);
-        if (!$el) {
+        if (!$el) { // check one more time if this was a CSS selector we didn't match
             try {
                 $els = $this->match($page, $link);
             } catch (MalformedLocatorException $e) {
@@ -974,14 +974,9 @@ class WebDriver extends CodeceptionModule implements
             return $this->matchFirstOrFail($page, $link);
         }
 
-        // try to match by CSS or XPath
-        try {
-            $els = $this->match($page, $link, false);
-            if (!empty($els)) {
-                return reset($els);
-            }
-        } catch (MalformedLocatorException $e) {
-            //ignore exception, link could still match on of the things below
+        // try to match by strict locators, CSS Ids or XPath
+        if (Locator::isPrecise($link)) {
+            return $this->matchFirstOrFail($page, $link);
         }
 
         $locator = Crawler::xpathLiteral(trim($link));

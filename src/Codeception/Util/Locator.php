@@ -214,6 +214,23 @@ class Locator
         return @$xpath->evaluate($locator, $document) !== false;
     }
 
+    public static function isPrecise($locator)
+    {
+        if (is_array($locator)) {
+            return true;
+        }
+        if ($locator instanceof WebDriverBy) {
+            return true;
+        }
+        if (Locator::isID($locator)) {
+            return true;
+        }
+        if (strpos($locator, '//') === 0) {
+            return true; // simple xpath check
+        }
+        return false;
+    }
+
     /**
      * Checks that a string is valid CSS ID
      *
