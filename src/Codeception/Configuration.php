@@ -519,8 +519,11 @@ class Configuration
             $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
         }
 
+        if (!file_exists($dir)) {
+            @mkdir($dir, 0777, true);
+        }
+
         if (!is_writable($dir)) {
-            @mkdir($dir);
             @chmod($dir, 0777);
         }
 
