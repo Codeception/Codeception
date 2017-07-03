@@ -3060,7 +3060,7 @@ class WebDriver extends CodeceptionModule implements
      * // switch to previous tab
      * $I->switchToPreviousTab();
      * // switch to 2nd previous tab
-     * $I->switchToPreviousTab(-2);
+     * $I->switchToPreviousTab(2);
      * ```
      *
      * Can't be used with PhantomJS
