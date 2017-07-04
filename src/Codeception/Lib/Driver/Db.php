@@ -288,4 +288,17 @@ class Db
 
         return empty($this->primaryKeys);
     }
+    
+    public function update($table, array $data, array $criteria)
+    {
+
+        $set = [];
+        foreach ($data as $column => $value) {
+            $set[] = "{$column} = {$value}";
+        }
+
+        $where = $this->generateWhereClause($criteria);
+
+        return sprintf('UPDATE %s SET %s %s', $this->getQuotedName($table), implode(', ', $set), $where);
+    }
 }
