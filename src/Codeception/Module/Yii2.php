@@ -133,7 +133,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     protected $config = [
         'cleanup'     => true,
-        'transaction' => true,
+        'transaction' => null,
         'entryScript' => '',
         'entryUrl'    => 'http://localhost/index-test.php',
     ];
@@ -153,6 +153,10 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _initialize()
     {
+        if ($this->config['transaction'] == null) {
+            $this->config['transaction'] = $this->config['cleanup'];            
+        }
+
         if (!is_file(Configuration::projectDir() . $this->config['configFile'])) {
             throw new ModuleConfigException(
                 __CLASS__,
