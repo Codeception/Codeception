@@ -343,7 +343,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         return call_user_func_array(
             'array_merge',
-            array_map(// merge all fixtures from all fixture stores
+            array_map( // merge all fixtures from all fixture stores
                 function ($fixturesStore) {
                     return $fixturesStore->getFixtures();
                 },
