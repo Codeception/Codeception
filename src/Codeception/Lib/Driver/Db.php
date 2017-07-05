@@ -299,7 +299,7 @@ class Db
         
         $set = [];
         foreach ($data as $column => $value) {
-            $set[] = $this->getQuotedName($column)." = '{$value}'";
+            $set[] = $this->getQuotedName($column)." = ?";
         }
 
         $where = $this->generateWhereClause($criteria);
