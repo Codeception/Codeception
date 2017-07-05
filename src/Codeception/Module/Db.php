@@ -537,7 +537,6 @@ class Db extends CodeceptionModule implements DbInterface
     
     public function updateInDatabase($table, array $data, array $criteria = [])
     {
-
         $query = $this->driver->update($table, $data, $criteria);
         $parameters = array_merge(array_values($data), array_values($criteria));
         $this->debugSection('Query', $query);
