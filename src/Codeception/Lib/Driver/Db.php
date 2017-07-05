@@ -291,7 +291,12 @@ class Db
     
     public function update($table, array $data, array $criteria)
     {
-
+        if (empty($data)) {
+            throw new \Exception(
+                "Query update can't be prepared without data."
+            );
+        }
+        
         $set = [];
         foreach ($data as $column => $value) {
             $set[] = "{$column} = {$value}";
