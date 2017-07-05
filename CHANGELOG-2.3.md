@@ -1,3 +1,7 @@
+#### 2.3.4
+
+* [Laravel5] Fixed bug with `disable_exception_handling` functionality. See #4370. By @janhenkgerritsen
+
 #### 2.3.3
 
 * Fixed running with `--coverage`, `--xml`, `--html` options without parameters (Symfony Console 3.3 compatibility).
