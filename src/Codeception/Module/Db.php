@@ -539,7 +539,7 @@ class Db extends CodeceptionModule implements DbInterface
     {
 
         $query = $this->driver->update($table, $data, $criteria);
-        $parameters = array_values($criteria);
+        $parameters = array_merge(array_values($data), array_values($criteria));
         $this->debugSection('Query', $query);
         if (!empty($parameters)) {
             $this->debugSection('Parameters', $parameters);
