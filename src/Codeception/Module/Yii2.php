@@ -153,8 +153,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _initialize()
     {
-        if ($this->config['transaction'] == null) {
-            $this->config['transaction'] = $this->config['cleanup'];            
+        if ($this->config['transaction'] === null) {
+            $this->config['transaction'] = $this->config['cleanup'];
         }
 
         if (!is_file(Configuration::projectDir() . $this->config['configFile'])) {
@@ -343,7 +343,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         return call_user_func_array(
             'array_merge',
-            array_map( // merge all fixtures from all fixture stores
+            array_map(// merge all fixtures from all fixture stores
                 function ($fixturesStore) {
                     return $fixturesStore->getFixtures();
                 },
