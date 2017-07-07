@@ -68,4 +68,17 @@ class MySqlDbTest extends TestsForDb
         $this->assertNotEquals($connection3, $connection2);
     }
 
+    public function testGrabColumnFromDatabase()
+    {
+        $emails = $this->module->grabColumnFromDatabase('users', 'email');
+        $this->assertEquals(
+            [
+                'davert@mail.ua',
+                'nick@mail.ua',
+                'miles@davis.com',
+                'charlie@parker.com',
+            ],
+            $emails);
+    }
+
 }
