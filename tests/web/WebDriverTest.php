@@ -552,6 +552,23 @@ class WebDriverTest extends TestsForBrowsers
         $module->waitForElementNotVisible('//xpath');
     }
 
+    public function testWaitForElement()
+    {
+        $this->module->amOnPage('/form/timeout');
+        $this->module->waitForElement('#btn');
+        $this->module->click('Click');
+        $this->module->see('Hello');
+    }
+
+    public function testImplicitWait()
+    {
+        $this->module->_reconfigure(['wait' => 5]);
+        $this->module->amOnPage('/form/timeout');
+        $this->module->click('#btn');
+        $this->module->see('Hello');
+    }
+
+
     public function testBug1467()
     {
         $this->module->amOnPage('/form/bug1467');

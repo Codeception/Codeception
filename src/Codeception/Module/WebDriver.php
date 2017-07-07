@@ -205,7 +205,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `start` - Autostart a browser for tests. Can be disabled if browser session is started with `_initializeSession` inside a Helper.
  * * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
  * * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
- * * `wait` - Implicit wait (default 0 seconds).
+ * * `wait` (default: 0 seconds) - Whenever element is required and is not on page, wait for n seconds to find it before fail.
  * * `capabilities` - Sets Selenium [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  * * `connection_timeout` - timeout for opening a connection to remote selenium server (30 seconds by default).
  * * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
@@ -866,7 +866,9 @@ class WebDriver extends CodeceptionModule implements
         if (!$selector) {
             return $this->assertPageContains($text);
         }
+        $this->enableImplicitWait();
         $nodes = $this->matchVisible($selector);
+        $this->disableImplicitWait();
         $this->assertNodesContain($text, $nodes, $selector);
     }
 
@@ -929,7 +931,7 @@ class WebDriver extends CodeceptionModule implements
             $page = $this->matchFirstOrFail($this->webDriver, $context);
         }
         $el = $this->_findClickable($page, $link);
-        if (!$el) {
+        if (!$el) { // check one more time if this was a CSS selector we didn't match
             try {
                 $els = $this->match($page, $link);
             } catch (MalformedLocatorException $e) {
@@ -972,14 +974,9 @@ class WebDriver extends CodeceptionModule implements
             return $this->matchFirstOrFail($page, $link);
         }
 
-        // try to match by CSS or XPath
-        try {
-            $els = $this->match($page, $link, false);
-            if (!empty($els)) {
-                return reset($els);
-            }
-        } catch (MalformedLocatorException $e) {
-            //ignore exception, link could still match on of the things below
+        // try to match by strict locators, CSS Ids or XPath
+        if (Locator::isPrecise($link)) {
+            return $this->matchFirstOrFail($page, $link);
         }
 
         $locator = Crawler::xpathLiteral(trim($link));
@@ -1076,7 +1073,9 @@ class WebDriver extends CodeceptionModule implements
 
     public function seeLink($text, $url = null)
     {
+        $this->enableImplicitWait();
         $nodes = $this->baseElement->findElements(WebDriverBy::partialLinkText($text));
+        $this->disableImplicitWait();
         $currentUri = $this->_getCurrentUri();
 
         if (empty($nodes)) {
@@ -1381,7 +1380,6 @@ class WebDriver extends CodeceptionModule implements
                 $this->httpProxy,
                 $this->httpProxyPort
             );
-            $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
             if (!is_null($this->config['pageload_timeout'])) {
                 $this->webDriver->manage()->timeouts()->pageLoadTimeout($this->config['pageload_timeout']);
             }
@@ -1497,6 +1495,7 @@ class WebDriver extends CodeceptionModule implements
         if ($radioOrCheckbox instanceof WebDriverElement) {
             return $radioOrCheckbox;
         }
+
         if (is_array($radioOrCheckbox) or ($radioOrCheckbox instanceof WebDriverBy)) {
             return $this->matchFirstOrFail($this->baseElement, $radioOrCheckbox);
         }
@@ -1682,7 +1681,9 @@ class WebDriver extends CodeceptionModule implements
 
     public function seeElement($selector, $attributes = [])
     {
+        $this->enableImplicitWait();
         $els = $this->matchVisible($selector);
+        $this->disableImplicitWait();
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertNotEmpty($els);
     }
@@ -1708,8 +1709,10 @@ class WebDriver extends CodeceptionModule implements
      */
     public function seeElementInDOM($selector, $attributes = [])
     {
+        $this->enableImplicitWait();
         $els = $this->match($this->baseElement, $selector);
         $els = $this->filterByAttributes($els, $attributes);
+        $this->disableImplicitWait();
         $this->assertNotEmpty($els);
     }
 
@@ -2073,11 +2076,7 @@ class WebDriver extends CodeceptionModule implements
      */
     public function submitForm($selector, array $params, $button = null)
     {
-        $form = $this->match($this->baseElement, $selector);
-        if (empty($form)) {
-            throw new ElementNotFound($selector, "Form via CSS or XPath");
-        }
-        $form = reset($form);
+        $form = $this->matchFirstOrFail($this->baseElement, $selector);
 
         $fields = $form->findElements(
             WebDriverBy::cssSelector('input:enabled,textarea:enabled,select:enabled,input[type=hidden]')
@@ -2151,7 +2150,6 @@ class WebDriver extends CodeceptionModule implements
         if (!$submitted) {
             $form->submit();
         }
-
         $this->debugSection('Page', $this->_getCurrentUri());
     }
 
@@ -2681,7 +2679,9 @@ class WebDriver extends CodeceptionModule implements
      */
     protected function matchFirstOrFail($page, $selector)
     {
+        $this->enableImplicitWait();
         $els = $this->match($page, $selector);
+        $this->disableImplicitWait();
         if (!count($els)) {
             throw new ElementNotFound($selector, "CSS or XPath");
         }
@@ -3156,5 +3156,22 @@ class WebDriver extends CodeceptionModule implements
             return;
         }
         $this->baseElement = $this->matchFirstOrFail($this->webDriver, $element);
+    }
+
+    protected function enableImplicitWait()
+    {
+        if (!$this->config['wait']) {
+            return;
+        }
+        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+    }
+
+    protected function disableImplicitWait()
+    {
+        if (!$this->config['wait']) {
+            return;
+        }
+        $this->webDriver->manage()->timeouts()->implicitlyWait(0);
+
     }
 }
