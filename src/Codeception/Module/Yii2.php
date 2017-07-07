@@ -230,7 +230,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         }
 
         if ($this->config['transaction'] && $this->transaction) {
-            $this->transaction->rollback();
+            $this->transaction->rollBack();
         }
 
         if ($this->client) {
