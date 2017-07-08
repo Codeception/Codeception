@@ -161,7 +161,7 @@ class ModuleContainer
     private function includeMethodAsAction($module, $method, $configuredParts = null)
     {
         // Filter out excluded actions
-        if (in_array($method->name, $module::$excludeActions)) {
+        if ($module::$excludeActions && in_array($method->name, $module::$excludeActions)) {
             return false;
         }
 
