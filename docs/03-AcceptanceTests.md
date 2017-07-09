@@ -423,6 +423,52 @@ If you don't know what exact element you need to wait for, you can simply pause 
 $I->wait(3); // wait for 3 secs
 ```
 
+#### SmartWait
+
+*since 2.3.4 version*
+
+It is possible to wait for elements pragmatically. 
+If a test uses element which is not on a page yet, Codeception will wait for few extra seconds before failing.
+This feature is based on [Implicit Wait](http://www.seleniumhq.org/docs/04_webdriver_advanced.jsp#implicit-waits) of Selenium.
+Codeception enables implicit wait only when searching for a specific element and disables in all other cases. Thus, the performance of a test is not affected.
+
+SmartWait can be enabled by setting `wait` option in WebDriver config. It expects the number of seconds to wait. Example:
+
+```yaml
+wait: 5
+```
+
+With this config we have the following test:
+
+```php
+<?php
+// we use wait: 5 instead of 
+// $I->waitForElement(['css' => '#click-me'], 5);
+// to wait for element on page
+$I->click(['css' => '#click-me']);
+```
+
+It is important to understand that SmartWait works only with a specific locators:
+
+* `#locator` - CSS ID locator, works
+* `//locator` - general XPath locator, works
+* `['css' => 'button'']` - strict locator, works
+
+But it won't be executed for all other locator types.
+See the example:
+
+```php
+<?php
+$I->click('Login'); // DISABLED, not a specific locator
+$I->fillField('user', 'davert'); // DISABLED, not a specific locator
+$I->fillField(['name' => 'password'], '123456'); // ENABLED, strict locator
+$I->click('#login'); // ENABLED, locator is CSS ID
+$I->see('Hello, Davert'); // DISABLED, Not a locator
+$I->seeElement('#userbar'); // ENABLED
+$I->dontSeeElement('#login'); // DISABLED, can't wait for element to hide
+$I->seeNumberOfElements(['css' => 'button.link'], 5); // DISABLED, can wait only for one element
+```
+
 #### Wait and Act
 
 To combine `waitForElement` with actions inside that element you can use the [performOn](http://codeception.com/docs/modules/WebDriver#performOn) method. 
