@@ -10,6 +10,8 @@ class AssertsTest extends PHPUnit_Framework_TestCase
         $module->assertNotSame(1, '1');
         $module->assertRegExp('/^[\d]$/', '1');
         $module->assertNotRegExp('/^[a-z]$/', '1');
+        $module->assertStringStartsWith('fo', 'foo');
+        $module->assertStringStartsNotWith('ba', 'foo');
         $module->assertEmpty([]);
         $module->assertNotEmpty([1]);
         $module->assertNull(null);
