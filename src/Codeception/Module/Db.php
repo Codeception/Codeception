@@ -537,9 +537,7 @@ class Db extends CodeceptionModule implements DbInterface
         $query      = $this->driver->select($column, $table, $criteria);
         $parameters = array_values($criteria);
         $this->debugSection('Query', $query);
-        if (!empty($parameters)) {
-            $this->debugSection('Parameters', $parameters);
-        }
+        $this->debugSection('Parameters', $parameters);
         $sth = $this->driver->executeQuery($query, $parameters);
         
         return $sth->fetchAll(\PDO::FETCH_COLUMN, 0);

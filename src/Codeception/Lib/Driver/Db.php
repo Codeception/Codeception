@@ -292,7 +292,7 @@ class Db
     public function update($table, array $data, array $criteria)
     {
         if (empty($data)) {
-            throw new \Exception(
+            throw new \InvalidArgumentException(
                 "Query update can't be prepared without data."
             );
         }
