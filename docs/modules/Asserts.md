@@ -262,6 +262,24 @@ Checks that two variables are same
  * `param string` $message
 
 
+### assertStringStartsNotWith
+
+Checks that a string doesn't start with the given prefix.
+
+ * `param string` $prefix
+ * `param string` $string
+ * `param string` $message
+
+
+### assertStringStartsWith
+
+Checks that a string starts with the given prefix.
+
+ * `param string` $prefix
+ * `param string` $string
+ * `param string` $message
+
+
 ### assertTrue
  
 Checks that condition is positive.

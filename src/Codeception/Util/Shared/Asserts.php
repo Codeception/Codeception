@@ -186,8 +186,32 @@ trait Asserts
     {
         \PHPUnit_Framework_Assert::assertNotRegExp($pattern, $string, $message);
     }
-        
-    
+
+    /**
+     * Checks that a string starts with the given prefix.
+     *
+     * @param string $prefix
+     * @param string $string
+     * @param string $message
+     */
+    protected function assertStringStartsWith($prefix, $string, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertStringStartsWith($prefix, $string, $message);
+    }
+
+    /**
+     * Checks that a string doesn't start with the given prefix.
+     *
+     * @param string $prefix
+     * @param string $string
+     * @param string $message
+     */
+    protected function assertStringStartsNotWith($prefix, $string, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertStringStartsNotWith($prefix, $string, $message);
+    }
+
+
     /**
      * Checks that variable is empty.
      *

@@ -183,6 +183,30 @@ class Asserts extends CodeceptionModule
         parent::assertNotRegExp($pattern, $string, $message);
     }
 
+    /**
+     * Checks that a string starts with the given prefix.
+     *
+     * @param string $prefix
+     * @param string $string
+     * @param string $message
+     */
+    public function assertStringStartsWith($prefix, $string, $message = '')
+    {
+        parent::assertStringStartsWith($prefix, $string, $message);
+    }
+
+    /**
+     * Checks that a string doesn't start with the given prefix.
+     *
+     * @param string $prefix
+     * @param string $string
+     * @param string $message
+     */
+    public function assertStringStartsNotWith($prefix, $string, $message = '')
+    {
+        parent::assertStringStartsNotWith($prefix, $string, $message);
+    }
+
 
     /**
      * Checks that variable is empty.
