@@ -37,7 +37,8 @@ class IncludedCest
      */
     public function runTestsFromIncludedConfigs(\CliGuy $I)
     {
-        $I->executeCommand('run jazz/tests/functional/DemoCept.php');
+        $ds = DIRECTORY_SEPARATOR;
+        $I->executeCommand("run jazz{$ds}tests{$ds}functional{$ds}DemoCept.php", false);
 
         // Suite is not run
         $I->dontSeeInShellOutput('[Jazz]');
@@ -59,7 +60,7 @@ class IncludedCest
      */
     public function runTestsFromIncludedConfigsNested(\CliGuy $I)
     {
-        $I->executeCommand('run jazz/pianist/tests/functional/PianistCept.php');
+        $I->executeCommand('run jazz/pianist/tests/functional/PianistCept.php', false);
 
         // Suite is not run
         $I->dontSeeInShellOutput('[Jazz\Pianist]');
@@ -81,7 +82,8 @@ class IncludedCest
      */
     public function runTestsFromIncludedConfigsSingleTest(\CliGuy $I)
     {
-        $I->executeCommand('run jazz/tests/unit/SimpleTest.php:testSimple');
+        $ds = DIRECTORY_SEPARATOR;
+        $I->executeCommand("run jazz{$ds}tests{$ds}unit{$ds}SimpleTest.php:testSimple", false);
 
         // Suite is not run
         $I->dontSeeInShellOutput('[Jazz]');
