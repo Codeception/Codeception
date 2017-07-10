@@ -346,6 +346,19 @@ class Asserts extends CodeceptionModule
     }
 
     /**
+     * Checks that array contains subset.
+     *
+     * @param array  $subset
+     * @param array  $array
+     * @param bool   $strict
+     * @param string $message
+     */
+    public function assertArraySubset($subset, $array, $strict = false, $message = '')
+    {
+        parent::assertArraySubset($subset, $array, $strict, $message);
+    }
+
+    /**
      * @param $expectedCount
      * @param $actual
      * @param $description
