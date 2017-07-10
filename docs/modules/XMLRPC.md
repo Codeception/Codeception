@@ -35,6 +35,16 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 
 ## Actions
 
+### assertArraySubset
+ 
+Checks that array contains subset.
+
+ * `param array`  $subset
+ * `param array`  $array
+ * `param bool`   $strict
+ * `param string` $message
+
+
 ### haveHttpHeader
  
 Sets HTTP header

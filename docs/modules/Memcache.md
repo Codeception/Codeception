@@ -35,6 +35,16 @@ Be sure you don't use the production server to connect.
 
 ## Actions
 
+### assertArraySubset
+ 
+Checks that array contains subset.
+
+ * `param array`  $subset
+ * `param array`  $array
+ * `param bool`   $strict
+ * `param string` $message
+
+
 ### clearMemcache
  
 Flushes all Memcached data.

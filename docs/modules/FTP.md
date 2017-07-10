@@ -94,6 +94,16 @@ Enters a directory on the ftp system - FTP root directory is used by default
  * `param` $path
 
 
+### assertArraySubset
+ 
+Checks that array contains subset.
+
+ * `param array`  $subset
+ * `param array`  $array
+ * `param bool`   $strict
+ * `param string` $message
+
+
 ### cleanDir
  
 Erases directory contents on the FTP/SFTP server
