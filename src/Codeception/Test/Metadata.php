@@ -242,5 +242,4 @@ class Metadata
     {
         $this->params = array_merge_recursive($this->params, $params);
     }
-
 }
