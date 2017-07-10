@@ -104,7 +104,7 @@ service.
              'profile' => 'project1', //see documentation
              'region' => 'us-west-2'
 
-#### Example AWS SQS running on Anazon EC2 instance
+#### Example AWS SQS running on Amazon EC2 instance
 
     modules:
        enabled: [Queue]
@@ -129,6 +129,16 @@ $I->addMessageToQueue('this is a messages', 'default');
 
  * `param string` $message Message Body
  * `param string` $queue Queue Name
+
+
+### assertArraySubset
+ 
+Checks that array contains subset.
+
+ * `param array`  $subset
+ * `param array`  $array
+ * `param bool`   $strict
+ * `param string` $message
 
 
 ### clearQueue

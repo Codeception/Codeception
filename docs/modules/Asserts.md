@@ -21,7 +21,7 @@ Special module for using asserts in your tests.
 
 
 ### assertArraySubset
-
+ 
 Checks that array contains subset.
 
  * `param array`  $subset
@@ -273,7 +273,7 @@ Checks that two variables are same
 
 
 ### assertStringStartsNotWith
-
+ 
 Checks that a string doesn't start with the given prefix.
 
  * `param string` $prefix
@@ -282,7 +282,7 @@ Checks that a string doesn't start with the given prefix.
 
 
 ### assertStringStartsWith
-
+ 
 Checks that a string starts with the given prefix.
 
  * `param string` $prefix

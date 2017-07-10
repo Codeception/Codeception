@@ -38,6 +38,16 @@ to interact with a Redis server.
 
 ## Actions
 
+### assertArraySubset
+ 
+Checks that array contains subset.
+
+ * `param array`  $subset
+ * `param array`  $array
+ * `param bool`   $strict
+ * `param string` $message
+
+
 ### cleanup
  
 Delete all the keys in the Redis database
@@ -47,7 +57,7 @@ Delete all the keys in the Redis database
 
 ### dontSeeInRedis
  
-Asserts that a key does not exist or, optionaly, that it doesn't have the
+Asserts that a key does not exist or, optionally, that it doesn't have the
 provided $value
 
 Examples:

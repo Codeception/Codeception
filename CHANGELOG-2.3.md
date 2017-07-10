@@ -6,16 +6,14 @@
 
 ```php
 <?php
-/*
- * @prepare disableTransactions
- */
+/**@prepare disableTransactions */
 function testDoctrine()
 {
 }
 
 protected function disableTransactions(Doctrine2 $module)
 {
-   $module->_reconfigure(['cleanup' => false);
+   $module->_reconfigure(['cleanup' => false]);
 }
 ```
 * [WebDriver] **SmartWait**. Automatically waits for a few extra seconds for element to appear on a page before failing. Can reduce high usage of `wait*` methods. [See Documentation](http://codeception.com/docs/03-AcceptanceTests#SmartWait)
