@@ -26,7 +26,12 @@ protected function disableTransactions(Doctrine2 $module)
     * `_initializeSession` and `_closeSession` can be used in Helpers to start and stop browser manually (combine with `start: false` config)
 * Fixed running a single test from a global config when using included configs. See #4366 by @zebraf1 (improves PhpStorm integration)
 * [Doctrine2][Laravel5][Yii2][Phalcon] Print debug information for started/stopped transactions in tests. See #4352
-* [PhpBrowser][Frameworks] click with context respects base tag #4330 by @Naktibalda. 
+* [PhpBrowser][Frameworks] click with context respects base tag #4330 by @Naktibalda.
+* [Yii2] Split `cleanup` configuration option (backward-compatible): (#4379 by @leandrogehlen) 
+  * `cleanup` - to cleanup loaded fixtures
+  * `transaction` - wrap tes into transaction
+* [Asserts] Added `assertStringStartsWith` and `assertArraySubset` by @guidocella
+* [Db] Added `updateInDatabase` method by @eXorus. See #4385
 * In helpers and modules to check `$module::$excludeActions` property for existence before accessing it. Fixes #4381 by @CactusCoder
 * [Symfony] Fixed printing debug response when `Symfony::extractRawRoles()` failed on security collector (Symfony >= 3.3) #4309 by @Basster
 * [Laravel5] Fixed bug with `disable_exception_handling` functionality. See #4370. By @janhenkgerritsen
