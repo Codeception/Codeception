@@ -3172,6 +3172,5 @@ class WebDriver extends CodeceptionModule implements
             return;
         }
         $this->webDriver->manage()->timeouts()->implicitlyWait(0);
-
     }
 }
