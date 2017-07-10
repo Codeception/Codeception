@@ -31,6 +31,8 @@ install:
   - SET PATH=C:\Program Files\OpenSSL;%PATH%
   - cinst -y curl
   - SET PATH=C:\Program Files\curl;%PATH%
+  - sc config wuauserv start= auto
+  - net start wuauserv
   - IF %PHP%==1 cinst -y php
   - IF %PHP%==1 cd c:\tools\php71
   - IF %PHP%==1 cd ext
