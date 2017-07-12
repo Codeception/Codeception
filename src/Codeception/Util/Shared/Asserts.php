@@ -383,7 +383,7 @@ trait Asserts
      * @param bool   $strict
      * @param string $message
      */
-    public function assertArraySubset($subset, $array, $strict = false, $message = '')
+    protected function assertArraySubset($subset, $array, $strict = false, $message = '')
     {
         \PHPUnit_Framework_Assert::assertArraySubset($subset, $array, $strict, $message);
     }
