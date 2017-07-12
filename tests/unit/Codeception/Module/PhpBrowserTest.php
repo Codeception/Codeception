@@ -682,9 +682,9 @@ HTML
      */
     public function testSecondAmOnUrlWithEmptyPath()
     {
-        $this->module->amOnUrl('https://www.example.com/');
-        $this->module->see('Example Domain');
-        $this->module->amOnUrl('http://www.codeception.com');
-        $this->module->dontSee('Example Domain');
+        $this->module->amOnUrl('http://localhost:8000/info');
+        $this->module->see('Lots of valuable data here');
+        $this->module->amOnUrl('http://localhost:8000');
+        $this->module->dontSee('Lots of valuable data here');
     }
 }
