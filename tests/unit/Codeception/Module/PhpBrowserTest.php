@@ -629,6 +629,13 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->dontSee('ERROR');
     }
 
+    public function testSubmitFormSubmitsDefaultCheckboxValues()
+    {
+        $this->module->amOnPage('/form/checkbox_default_value');
+        $this->module->submitForm('form', ['checkbox1' => true]);
+        $this->assertSame('on', data::get('query')['checkbox1']);
+    }
+
     /**
      * @issue https://github.com/Codeception/Codeception/issues/3953
      */

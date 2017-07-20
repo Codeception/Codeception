@@ -701,10 +701,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
             $values = $params[$fieldName];
             if ($values === true) {
-                $params[$fieldName] = $box->getAttribute('value');
+                $params[$fieldName] = $box->hasAttribute('value') ? $box->getAttribute('value') : 'on';
                 $chFoundByName[$fieldName] = $pos + 1;
             } elseif ($values[$pos] === true) {
-                $params[$fieldName][$pos] = $box->getAttribute('value');
+                $params[$fieldName][$pos] = $box->hasAttribute('value') ? $box->getAttribute('value') : 'on';
                 $chFoundByName[$fieldName] = $pos + 1;
             } elseif (is_array($values)) {
                 array_splice($params[$fieldName], $pos, 1);
