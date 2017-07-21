@@ -1205,22 +1205,52 @@ class WebDriver extends CodeceptionModule implements
             throw new ElementNotFound($formSelector, "Form via CSS or XPath");
         }
         $form = reset($form);
+
+        $els = [];
         foreach ($params as $name => $values) {
-            $els = $form->findElements(WebDriverBy::name($name));
-            if (empty($els)) {
-                throw new ElementNotFound($name);
-            }
+            $this->pushFormField($els, $form, $name, $values);
+        }
+
+        foreach ($els as $arrayElement) {
+            list($el, $values) = $arrayElement;
+
             if (!is_array($values)) {
                 $values = [$values];
             }
+
             foreach ($values as $value) {
-                $ret = $this->proceedSeeInField($els, $value);
+                $ret = $this->proceedSeeInField($el, $value);
                 if ($assertNot) {
                     $this->assertNot($ret);
                 } else {
                     $this->assert($ret);
                 }
             }
+        }
+    }
+
+    /**
+     * Map an array element passed to seeInFormFields to its corresponding WebDriver element,
+     * recursing through array values if the field is not found.
+     *
+     * @param array $els The previously found elements.
+     * @param RemoteWebElement $form The form in which to search for fields.
+     * @param string $name The field's name.
+     * @param mixed $values
+     * @return void
+     */
+    protected function pushFormField(&$els, $form, $name, $values)
+    {
+        $el = $form->findElements(WebDriverBy::name($name));
+
+        if ($el) {
+            $els[] = [$el, $values];
+        } elseif (is_array($values)) {
+            foreach ($values as $key => $value) {
+                $this->pushFormField($els, $form, "{$name}[$key]", $value);
+            }
+        } else {
+            throw new ElementNotFound($name);
         }
     }
 
