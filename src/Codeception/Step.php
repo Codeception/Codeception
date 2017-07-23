@@ -298,7 +298,7 @@ abstract class Step
             // in case arguments were passed by reference, copy args array to ensure dereference.  array_values() does not dereference values
             $args=[];
             if (is_array($step['args'])) {
-                foreach($step['args'] as $a) {
+                foreach ($step['args'] as $a) {
                     $args[]=$a;
                 }
             }
