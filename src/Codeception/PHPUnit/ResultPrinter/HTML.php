@@ -150,6 +150,7 @@ class HTML extends CodeceptionResultPrinter
 
         $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';
 
+        $testString = htmlspecialchars(ucfirst(Descriptor::getTestAsString($test)));
         $testString = preg_replace('~^([\s\w\\\]+):\s~', '<span class="quiet">$1 &raquo;</span> ', ucfirst(Descriptor::getTestAsString($test)));
 
         $scenarioTemplate->setVar(
