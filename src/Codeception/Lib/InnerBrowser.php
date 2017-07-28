@@ -863,7 +863,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $action = (string)$this->getFormUrl($form);
         $cloned = new Crawler($node, $action, $this->getBaseUrl());
         $shouldDisable = $cloned->filter(
-            'input:disabled:not([disabled]),select option:disabled,select optgroup:disabled option:not([disabled])'
+            'input:disabled:not([disabled]),select option:disabled,select optgroup:disabled option:not([disabled]),textarea:disabled:not([disabled])'
         );
         foreach ($shouldDisable as $field) {
             $field->parentNode->removeChild($field);
