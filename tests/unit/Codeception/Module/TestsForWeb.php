@@ -541,9 +541,11 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/form/field_values');
         $this->module->seeInField('select1', 'see test one');
+        $this->module->seeInField('select1', 'Selected');
         $this->module->dontSeeInField('select1', 'not seen one');
         $this->module->dontSeeInField('select1', 'not seen two');
         $this->module->dontSeeInField('select1', 'not seen three');
+        $this->module->dontSeeInField('select1', 'Not selected');
     }
 
     public function testSeeInFieldEmptyValueForUnselectedSelect()

@@ -634,7 +634,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected function proceedSeeInField(Crawler $fields, $value)
     {
-        $testValues = $this->proceedGetValueFromField($fields);
+        $testValues = $this->proceedGetValueFromField($fields, true);
         if (!is_array($testValues)) {
             $testValues = [$testValues];
         }
@@ -1270,14 +1270,15 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$nodes->count()) {
             throw new ElementNotFound($field, 'Field');
         }
-        return $this->proceedGetValueFromField($nodes);
+        return $this->proceedGetValueFromField($nodes, false);
     }
 
     /**
      * @param Crawler $nodes
+     * @param bool $getOptionTexts
      * @return array|mixed|string
      */
-    protected function proceedGetValueFromField(Crawler $nodes)
+    protected function proceedGetValueFromField(Crawler $nodes, $getOptionTexts)
     {
         $values = [];
         if ($nodes->filter('textarea')->count()) {
@@ -1301,10 +1302,17 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $options = $nodes->filter('option[selected]');
             foreach ($options as $option) {
                 $values[] = $option->getAttribute('value');
+
+                if ($getOptionTexts) {
+                    $values[] = $option->textContent;
+                    $values[] = trim($option->textContent);
+                }
             }
-            if (!$field->isMultiple()) {
+
+            if (!$getOptionTexts && !$field->isMultiple()) {
                 return reset($values);
             }
+
             return $values;
         }
 
