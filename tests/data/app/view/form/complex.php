@@ -6,6 +6,10 @@
     <fieldset disabled="disabled">
         <input type="text" id="disabled_fieldset" name="disabled_fieldset" value="disabled_fieldset" />
         <textarea id="disabled_fieldset_textarea" name="disabled_fieldset_textarea"></textarea>
+        <select id="disabled_fieldset_select" name="disabled_fieldset_select">
+            <option value="alpha">Alpha</option>
+            <option value="bravo">Bravo</option>
+        </select>
     </fieldset>
     <input  type="text" id="disabled_field" name="disabled_field" value="disabled_field" disabled="disabled" />
     <label for="description">Description</label>
