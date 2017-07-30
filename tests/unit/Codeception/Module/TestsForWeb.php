@@ -1279,6 +1279,13 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertFalse(isset($form['checkbox1']), 'Checkbox value sent');
     }
 
+    public function testSubmitFormWithCheckboxesWithoutValue()
+    {
+        $this->module->amOnPage('/form/checkbox_default_value');
+        $this->module->submitForm('form', ['checkbox1' => true]);
+        $this->assertSame('on', data::get('query')['checkbox1']);
+    }
+
     public function testSubmitFormWithButtons()
     {
         $this->module->amOnPage('/form/form_with_buttons');
