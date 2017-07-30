@@ -661,6 +661,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->dontSeeInFormFields('form', $params);
     }
 
+    public function testSeeInFormFieldsWithAssociativeArrays()
+    {
+        $this->module->amOnPage('/form/example17');
+        $this->module->seeInFormFields('form', [
+            'FooBar' => ['bar' => 'baz'],
+            'Food'   => ['beer' => ['yum' => ['yeah' => 'mmhm']]],
+        ]);
+    }
+
     public function testSeeInFieldWithNonLatin()
     {
         $this->module->amOnPage('/info');
