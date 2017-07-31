@@ -676,4 +676,15 @@ HTML
         $sourceActual = $this->module->grabPageSource();
         $this->assertXmlStringEqualsXmlString($sourceExpected, $sourceActual);
     }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/4383
+     */
+    public function testSecondAmOnUrlWithEmptyPath()
+    {
+        $this->module->amOnUrl('http://localhost:8000/info');
+        $this->module->see('Lots of valuable data here');
+        $this->module->amOnUrl('http://localhost:8000');
+        $this->module->dontSee('Lots of valuable data here');
+    }
 }
