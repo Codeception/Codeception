@@ -1041,6 +1041,8 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('Davert', $form['name']);
         $this->assertEquals('Is Codeception maintainer', $form['description']);
         $this->assertFalse(isset($form['disabled_fieldset']));
+        $this->assertFalse(isset($form['disabled_fieldset_textarea']));
+        $this->assertFalse(isset($form['disabled_fieldset_select']));
         $this->assertFalse(isset($form['disabled_field']));
         $this->assertEquals('kill_all', $form['action']);
     }
