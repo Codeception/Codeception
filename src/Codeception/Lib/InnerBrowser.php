@@ -1706,6 +1706,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         foreach ($requestParams as $name => $value) {
             $qs = http_build_query([$name => $value], '', '&');
             if (!empty($qs)) {
+                // If the field's name is of the form of "array[key]",
+                // we'll remove it from the request parameters
+                // and set the "array" key instead which will contain the actual array.
+                if (strpos($name, '[') && strpos($name, ']') > strpos($name, '[')) {
+                    unset($requestParams[$name]);
+                }
+
                 parse_str($qs, $expandedValue);
                 $varName = substr($name, 0, strlen(key($expandedValue)));
                 $requestParams = array_replace_recursive($requestParams, [$varName => current($expandedValue)]);

@@ -1080,6 +1080,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('this & that', $form['test']);
     }
 
+    public function testSubmitFormWithArrayField()
+    {
+        $this->module->amOnPage('/form/example17');
+        $this->module->submitForm('form', []);
+        $data = data::get('form');
+        $this->assertSame('baz', $data['FooBar']['bar']);
+        $this->assertArrayNotHasKey('FooBar[bar]', $data);
+    }
+
     public function testSubmitFormMultiSelectWithArrayParameter()
     {
         $this->module->amOnPage('/form/submitform_multiple');
