@@ -664,7 +664,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected function proceedSeeInField(Crawler $fields, $value)
     {
-        $testValues = $this->proceedGetValueFromField($fields);
+        $testValues = $this->getValueAndTextFromField($fields);
         if (!is_array($testValues)) {
             $testValues = [$testValues];
         }
@@ -684,6 +684,60 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 var_export($testValues, true)
             )
         ];
+    }
+
+    /**
+     * Get the values of a set of fields and also the texts of selected options.
+     *
+     * @param Crawler $nodes
+     * @return array|mixed|string
+     */
+    protected function getValueAndTextFromField(Crawler $nodes)
+    {
+        if ($nodes->filter('textarea')->count()) {
+            return (new TextareaFormField($nodes->filter('textarea')->getNode(0)))->getValue();
+        }
+
+        $input = $nodes->filter('input');
+        if ($input->count()) {
+            return $this->getInputValue($input);
+        }
+
+        if ($nodes->filter('select')->count()) {
+            $options = $nodes->filter('option[selected]');
+            $values = [];
+
+            foreach ($options as $option) {
+                $values[] = $option->getAttribute('value');
+                $values[] = $option->textContent;
+                $values[] = trim($option->textContent);
+            }
+
+            return $values;
+        }
+
+        $this->fail("Element $nodes is not a form field or does not contain a form field");
+    }
+
+    /**
+     * Get the values of a set of input fields.
+     *
+     * @param Crawler $input
+     * @return array|string
+     */
+    protected function getInputValue($input)
+    {
+        if ($input->attr('type') == 'checkbox' or $input->attr('type') == 'radio') {
+            $values = [];
+
+            foreach ($input->filter(':checked') as $checkbox) {
+                $values[] = $checkbox->getAttribute('value');
+            }
+
+            return $values;
+        }
+
+        return (new InputFormField($input->getNode(0)))->getValue();
     }
 
     /**
@@ -1300,41 +1354,29 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$nodes->count()) {
             throw new ElementNotFound($field, 'Field');
         }
-        return $this->proceedGetValueFromField($nodes);
-    }
 
-    /**
-     * @param Crawler $nodes
-     * @return array|mixed|string
-     */
-    protected function proceedGetValueFromField(Crawler $nodes)
-    {
-        $values = [];
         if ($nodes->filter('textarea')->count()) {
             return (new TextareaFormField($nodes->filter('textarea')->getNode(0)))->getValue();
         }
 
-        if ($nodes->filter('input')->count()) {
-            $input = $nodes->filter('input');
-            if ($input->attr('type') == 'checkbox' or $input->attr('type') == 'radio') {
-                $values = [];
-                $input = $nodes->filter('input:checked');
-                foreach ($input as $checkbox) {
-                    $values[] = $checkbox->getAttribute('value');
-                }
-                return $values;
-            }
-            return (new InputFormField($nodes->filter('input')->getNode(0)))->getValue();
+        $input = $nodes->filter('input');
+        if ($input->count()) {
+            return $this->getInputValue($input);
         }
+
         if ($nodes->filter('select')->count()) {
             $field = new ChoiceFormField($nodes->filter('select')->getNode(0));
             $options = $nodes->filter('option[selected]');
+            $values = [];
+
             foreach ($options as $option) {
                 $values[] = $option->getAttribute('value');
             }
+
             if (!$field->isMultiple()) {
                 return reset($values);
             }
+
             return $values;
         }
 
