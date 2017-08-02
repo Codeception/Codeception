@@ -11,7 +11,7 @@ To run Selenium Server you need [Java](https://www.java.com/) as well as Chrome 
 
 1. Download [Selenium Standalone Server](http://docs.seleniumhq.org/download/)
 2. To use Chrome, install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started). To use Firefox, install [GeckoDriver](https://github.com/mozilla/geckodriver).
-3. Launch the Selenium Server: `java -jar selenium-server-standalone-3.xx.xxx.jar`. To locate Chromedriver binary use `-Dwebdriver.chrome.driver=./chromedriver` option. For Geckodriver use `-Dwebdriver.gecko.driver=./geckodriver`.
+3. Launch the Selenium Server: `java -jar selenium-server-standalone-3.xx.xxx.jar`. Selenium will automatically find the drivers if they are in the PATH or in the current working directory. If you need to specify a different path to the Chromedriver binary, prepend `-Dwebdriver.chrome.driver=./chromedriver` before the -jar option. For Geckodriver use `-Dwebdriver.gecko.driver=./geckodriver`.
 4. Configure this module (in `acceptance.suite.yml`) by setting `url` and `browser`:
 
 ```yaml
