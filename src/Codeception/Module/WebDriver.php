@@ -388,7 +388,7 @@ class WebDriver extends CodeceptionModule implements
      *      $name = \Codeception\Test\Descriptor::getTestAsString($test->toString());
      *      $this->getModule('WebDriver')->_capabilities(function($currentCapabilities) use ($name) {
      *          $currentCapabilities['name'] = $name;
-     *          return new DesiredCapabilities($currentCapabilities);
+     *          return $currentCapabilities;
      *      });
      * }
      * ```
