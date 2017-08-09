@@ -296,14 +296,9 @@ abstract class Step
             }
 
             // in case arguments were passed by reference, copy args array to ensure dereference.  array_values() does not dereference values
-            $args=[];
-            if (is_array($step['args'])) {
-                foreach ($step['args'] as $a) {
-                    $args[]=$a;
-                }
-            }
-
-            $this->metaStep = new Step\Meta($step['function'], $args);
+            $this->metaStep = new Step\Meta($step['function'], array_map(function ($i) {
+                return $i;
+            }, array_values($step['args'])));
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // pageobjects or other classes should not be included with "I"
