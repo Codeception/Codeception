@@ -69,7 +69,7 @@ class Cest implements LoaderInterface
                         $additionalMessage = null;
                         if ($e->getFile() && $e->getLine() &&  $e->getMessage()) {
                             $additionalMessage = "\n{$e->getFile()}:{$e->getLine()}:{$e->getMessage()}";
-                        }                        
+                        }
                         throw new TestParseException(
                             $file,
                             "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable.\n" .
