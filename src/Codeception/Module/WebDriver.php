@@ -2322,7 +2322,7 @@ class WebDriver extends CodeceptionModule implements
     /**
      * Wait for $timeout seconds.
      *
-     * @param int $timeout secs
+     * @param int|float $timeout secs
      * @throws \Codeception\Exception\TestRuntimeException
      */
     public function wait($timeout)
@@ -2334,7 +2334,7 @@ class WebDriver extends CodeceptionModule implements
                 Please note that wait method accepts number of seconds as parameter."
             );
         }
-        sleep($timeout);
+        usleep($timeout * 1000000);
     }
 
     /**
