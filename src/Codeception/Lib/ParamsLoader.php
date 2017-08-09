@@ -84,7 +84,7 @@ class ParamsLoader
         }
         $dotEnv = new \Dotenv\Dotenv(codecept_root_dir(), $this->paramStorage);
         $dotEnv->load();
-        return $_ENV;
+        return $_SERVER;
     }
 
     protected function loadEnvironmentVars()
