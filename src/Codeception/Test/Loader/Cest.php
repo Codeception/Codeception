@@ -66,10 +66,15 @@ class Cest implements LoaderInterface
                         // allow to mix example and dataprovider annotations
                         $examples = array_merge($examples, $data);
                     } catch (\Exception $e) {
+                        $additionalMessage = null;
+                        if ($e->getFile() && $e->getLine() &&  $e->getMessage()) {
+                            $additionalMessage = "\n{$e->getFile()}:{$e->getLine()}:{$e->getMessage()}";
+                        }                        
                         throw new TestParseException(
                             $file,
                             "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable.\n" .
-                            "Make sure that the dataprovider exist within the test class."
+                            "Make sure that the dataprovider exist within the test class.".
+                            $additionalMessage
                         );
                     }
                 }
