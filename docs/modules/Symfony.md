@@ -22,6 +22,7 @@ This module uses Symfony Crawler and HttpKernel to emulate requests and test res
 * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
 * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
 * rebootable_client: 'true' - reboot client's kernel before each request
+* domain_regex: '["/localhost/"]' - List of domains that the app is tested against. This elements of this list are regular expressions.
 
 ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
 
@@ -41,6 +42,7 @@ This module uses Symfony Crawler and HttpKernel to emulate requests and test res
 * debug: true - turn on/off debug mode
 * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
 * rebootable_client: 'true' - reboot client's kernel before each request
+* domain_regex: '["/localhost/"]' - List of domains that the app is tested against. This elements of this list are regular expressions.
 
 ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
 
