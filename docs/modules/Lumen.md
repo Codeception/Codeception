@@ -205,16 +205,6 @@ $I->amOnRoute('homepage');
  * `param array` $params
 
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
-
 ### attachFile
  
 Attaches a file relative to the Codeception `_data` directory to the given file upload field.

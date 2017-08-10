@@ -114,16 +114,6 @@ In case your ORM expects a related record itself (Doctrine) then you should use 
 
 ## Actions
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
-
 ### have
  
 Generates and saves a record,.

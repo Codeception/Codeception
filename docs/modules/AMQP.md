@@ -38,16 +38,6 @@ To use this module with Composer you need <em>"php-amqplib/php-amqplib": "~2.4"<
 
 ## Actions
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
-
 ### bindQueueToExchange
  
 Binds a queue to an exchange

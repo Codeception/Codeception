@@ -44,16 +44,6 @@ HINT: This module can be used with [Mongofill](https://github.com/mongofill/mong
 
 ## Actions
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
-
 ### dontSeeInCollection
  
 Checks if collection doesn't contain an item.

@@ -95,13 +95,4 @@ Sequence:
 
 ## Actions
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Sequence.php">Help us to improve documentation. Edit module reference</a></div>

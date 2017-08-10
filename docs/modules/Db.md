@@ -168,16 +168,6 @@ SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` LIKE 'davert%'
 
 ## Actions
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
-
 ### dontSeeInDatabase
  
 Effect is opposite to ->seeInDatabase
