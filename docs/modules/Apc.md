@@ -25,16 +25,6 @@ Be sure you don't use the production server to connect.
 
 ## Actions
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
-
 ### dontSeeInApc
  
 Checks item in APC(u) doesn't exist or is the same as expected.

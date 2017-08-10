@@ -27,7 +27,7 @@ Create new test suite. Requires suite name and actor name
 ## GherkinSnippets
 
 Generates code snippets for matched feature files in a suite.
-Code snuppets are expected to be implemtned in Actor or PageOjects
+Code snippets are expected to be implemented in Actor or PageObjects
 
 Usage:
 
@@ -235,7 +235,7 @@ Generates empty environment configuration file into envs dir:
 
  * `codecept g:env firefox`
 
-Required to have `envs` path to be specifed in `codeception.yml`
+Required to have `envs` path to be specified in `codeception.yml`
 
 
 

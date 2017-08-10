@@ -13,16 +13,6 @@ Wrapper for basic shell commands and shell output
 
 ## Actions
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
-
 ### dontSeeInShellOutput
  
 Checks that output from latest command doesn't contain text

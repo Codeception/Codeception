@@ -34,16 +34,6 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 
 ## Actions
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
-
 ### dontSeeSoapResponseContainsStructure
  
 Opposite to `seeSoapResponseContainsStructure`
