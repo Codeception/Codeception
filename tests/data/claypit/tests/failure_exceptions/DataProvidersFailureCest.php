@@ -1,12 +1,12 @@
 <?php
 
-class DataProvidersFailureTest extends \Codeception\Test\Unit
+class DataProvidersFailureCest
 {
 
     /**
      * @dataProvider rectangle
      */
-    public function testIsTriangle(DumbGuy $I)
+    public function testIsTriangle(Failure_exceptionsTester $I)
     {
         $I->amGoingTo("Fail before I get here.");
     }

@@ -6,7 +6,7 @@ class DataProvidersExceptionCest
     /**
      * @dataProvider triangles
      */
-    public function testIsTriangle(DumbGuy $I)
+    public function testIsTriangle(Failure_exceptionsTester $I)
     {
         $I->amGoingTo("Fail with an exception before I even get here");
     }
