@@ -190,93 +190,141 @@ class RunCest
         $I->seeInShellOutput("OK");
     }
 
+    /**
+     * This looks at only the contents of stdout when there is a failure in parsing a dataProvider annotation.
+     * When there is a failure all the useful information should go to stderr, so stdout is left with
+     * nothing.
+     *
+     * @param CliGuy $I
+     */
     public function runTestWithDataProvidersFailureStdout(\CliGuy $I)
     {
         $I->executeCommand('run tests/failure_exceptions/DataProvidersFailureCest.php 2> /dev/null',false);
-        $I->dontSeeInShellOutput('[Codeception\Exception\TestParseException]');
-        $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
-        $I->dontSeeInShellOutput('Couldn\'t parse test');
-        $I->dontSeeInShellOutput('DataProvider \'rectangle\' for DataProvidersFailureCest->testIsTriangle is invalid or not callable.');
-        $I->dontSeeInShellOutput('Make sure that the dataprovider exist within the test class.');
-        $I->dontSeeInShellOutput('The data provider specified for DataProvidersFailureCest::testIsTriangle is invalid.');
-        $I->dontSeeInShellOutput('Method rectangle does not exist');
-        $I->dontSeeInShellOutput('WARNINGS!');
-        $I->dontSeeInShellOutput('Tests: 1, Assertions: 0, Warnings: 1.');
-        $I->dontSeeInShellOutput('OK');
+        $I->canSeeShellOutputMatches('/^$/');
+        $I->seeResultCodeIs(1);
     }
 
+    /**
+     * This redirects stderr to stdout so that we can test the contents of stderr. Stderr is where all the interesting
+     * information should be when there is a failure.
+     *
+     * @param CliGuy $I
+     */
     public function runTestWithDataProvidersFailureStderr(\CliGuy $I)
     {
         $I->executeCommand('run tests/failure_exceptions/DataProvidersFailureCest.php 2>&1',false);
         $I->seeInShellOutput('[Codeception\Exception\TestParseException]');
-        $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->seeInShellOutput('Couldn\'t parse test');
         $I->seeInShellOutput('DataProvider \'rectangle\' for DataProvidersFailureCest->testIsTriangle is invalid or not callable.');
         $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
+        // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
+        $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->dontSeeInShellOutput('The data provider specified for DataProvidersFailureCest::testIsTriangle is invalid.');
         $I->dontSeeInShellOutput('Method rectangle does not exist');
         $I->dontSeeInShellOutput('WARNINGS!');
         $I->dontSeeInShellOutput('OK');
         $I->dontSeeInShellOutput('Tests: 1, Assertions: 0, Warnings: 1.');
+        // In normal mode the Exception trace should not appear.
         $I->dontSeeInShellOutput('Exception trace');
         $I->dontSeeInShellOutput('Test\Loader\Cest.php:');
+        $I->seeResultCodeIs(1);
     }
 
-    public function runTestWithDataProvidersFailureStderrVerbose(\CliGuy $I)
+
+    /**
+     * This adds the -v to the stderr test which should just add the Exception Trace to the output.
+     *
+     * @param CliGuy $I
+     */
+    public function runTestWithDataProvidersFailureStderrVerbos(\CliGuy $I)
     {
         $I->executeCommand('run tests/failure_exceptions/DataProvidersFailureCest.php -v 2>&1',false);
         $I->seeInShellOutput('[Codeception\Exception\TestParseException]');
-        $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->seeInShellOutput('Couldn\'t parse test');
         $I->seeInShellOutput('DataProvider \'rectangle\' for DataProvidersFailureCest->testIsTriangle is invalid or not callable.');
         $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
+        // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
+        $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->dontSeeInShellOutput('The data provider specified for DataProvidersFailureCest::testIsTriangle is invalid.');
         $I->dontSeeInShellOutput('Method rectangle does not exist');
         $I->dontSeeInShellOutput('WARNINGS!');
         $I->dontSeeInShellOutput('OK');
         $I->dontSeeInShellOutput('Tests: 1, Assertions: 0, Warnings: 1.');
+        // In verbose mode the Exception trace should be output.
         $I->seeInShellOutput('Exception trace');
         $I->seeInShellOutput('Test\Loader\Cest.php:');
+        $I->seeResultCodeIs(1);
     }
 
+    /**
+     * This looks at only the contents of stdout when there is an exception thrown when executing a dataProvider
+     * function.
+     * When exception thrown all the useful information should go to stderr, so stdout is left with nothing.
+     *
+     * @param CliGuy $I
+     */
     public function runTestWithDataProvidersExceptionStdout(\CliGuy $I)
     {
         $I->executeCommand('run tests/failure_exceptions/DataProvidersExceptionCest.php 2> /dev/null', false);
-        $I->dontSeeInShellOutput('There was 1 warning');
-        $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
-        $I->dontSeeInShellOutput('The data provider specified for DataProvidersExceptionTest::testIsTriangle is invalid.');
-        $I->dontSeeInShellOutput('WARNINGS!');
-        $I->dontSeeInShellOutput('OK');
-        $I->dontSeeInShellOutput('[Exception]');
-        $I->dontSeeInShellOutput('Something went wrong!!!');
+        $I->canSeeShellOutputMatches('/^$/');
+        $I->seeResultCodeIs(1);
     }
 
+    /**
+     * This redirects stderr to stdout so that we can test the contents of stderr. Stderr is where all the interesting
+     * information should be when there is a failure.
+     *
+     * @param CliGuy $I
+     */
     public function runTestWithDataProvidersExceptionStderr(\CliGuy $I)
     {
         $I->executeCommand('run tests/failure_exceptions/DataProvidersExceptionCest.php 2>&1', false);
+        // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
         $I->dontSeeInShellOutput('There was 1 warning');
         $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->dontSeeInShellOutput('The data provider specified for DataProvidersExceptionTest::testIsTriangle is invalid.');
         $I->dontSeeInShellOutput('WARNINGS!');
         $I->dontSeeInShellOutput('OK');
+        // We should not see the messages related to a failure to parse the dataProvider function
+        $I->dontSeeInShellOutput('[Codeception\Exception\TestParseException]');
+        $I->dontSeeInShellOutput('Couldn\'t parse test');
+        $I->dontSeeInShellOutput('DataProvider \'rectangle\' for DataProvidersFailureCest->testIsTriangle is invalid or not callable.');
+
+        // We should just see the exception and the message
         $I->seeInShellOutput('[Exception]');
         $I->seeInShellOutput('Something went wrong!!!');
+        // We don't have the verbose flag set, so there should be no trace.
         $I->dontSeeInShellOutput('Exception trace:');
         $I->dontSeeInShellOutput('DataProvidersExceptionCest');
+        $I->seeResultCodeIs(1);
     }
 
+    /**
+     * This adds the -v to the stderr test which should just add the Exception Trace to the output.
+     *
+     * @param CliGuy $I
+     */
     public function runTestWithDataProvidersExceptionStderrVerbose(\CliGuy $I)
     {
         $I->executeCommand('run tests/failure_exceptions/DataProvidersExceptionCest.php -v 2>&1', false);
+        // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
         $I->dontSeeInShellOutput('There was 1 warning');
         $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->dontSeeInShellOutput('The data provider specified for DataProvidersExceptionTest::testIsTriangle is invalid.');
         $I->dontSeeInShellOutput('WARNINGS!');
         $I->dontSeeInShellOutput('OK');
+        // We should not see the messages related to a failure to parse the dataProvider function
+        $I->dontSeeInShellOutput('[Codeception\Exception\TestParseException]');
+        $I->dontSeeInShellOutput('Couldn\'t parse test');
+        $I->dontSeeInShellOutput('DataProvider \'rectangle\' for DataProvidersFailureCest->testIsTriangle is invalid or not callable.');
+
+        // We should just see the exception and the message
         $I->seeInShellOutput('[Exception]');
         $I->seeInShellOutput('Something went wrong!!!');
-        $I->seeInShellOutput('tests\failure_exceptions\DataProvidersExceptionCest.php:19');
-        $I->seeInShellOutput('DataProvidersExceptionCest->triangles()');
+        // We have the verbose flag set, so there should be a trace.
+        $I->seeInShellOutput('Exception trace:');
+        $I->seeInShellOutput('DataProvidersExceptionCest');
+        $I->seeResultCodeIs(1);
     }
 
     public function runOneGroupWithDataProviders(\CliGuy $I)
