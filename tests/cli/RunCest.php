@@ -229,7 +229,7 @@ class RunCest
         $I->dontSeeInShellOutput('Tests: 1, Assertions: 0, Warnings: 1.');
         // In normal mode the Exception trace should not appear.
         $I->dontSeeInShellOutput('Exception trace');
-        $I->dontSeeInShellOutput('Test\Loader\Cest.php:');
+        $I->dontSeeInShellOutput('Test'.DIRECTORY_SEPARATOR.'Loader'.DIRECTORY_SEPARATOR.'Cest.php:');
         $I->seeResultCodeIs(1);
         // Ensure that nothing is left behind to be picked up by later tests.
         $I->executeCommand("clean");
@@ -257,7 +257,7 @@ class RunCest
         $I->dontSeeInShellOutput('Tests: 1, Assertions: 0, Warnings: 1.');
         // In verbose mode the Exception trace should be output.
         $I->seeInShellOutput('Exception trace');
-        $I->seeInShellOutput('Test\Loader\Cest.php:');
+        $I->seeInShellOutput('Test'.DIRECTORY_SEPARATOR.'Loader'.DIRECTORY_SEPARATOR.'Cest.php:');
         $I->seeResultCodeIs(1);
         // Ensure that nothing is left behind to be picked up by later tests.
         $I->executeCommand("clean");
