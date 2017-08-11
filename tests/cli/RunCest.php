@@ -200,7 +200,8 @@ class RunCest
     public function runTestWithDataProvidersFailureStdout(\CliGuy $I)
     {
         $I->executeCommand('run tests/failure_exceptions/DataProvidersFailureCest.php 2> /dev/null',false);
-        $I->canSeeShellOutputMatches('/^$|/');
+        // Depending on the test environment, we either see nothing or just the headers here.
+        $I->canSeeShellOutputMatches('/^$|Codeception PHP Testing Framework v[0-9\.]+\nPowered by PHPUnit [0-9\.]+ by Sebastian Bergmann and contributors\./');
         $I->seeResultCodeIs(1);
         // Ensure that nothing is left behind to be picked up by later tests.
         $I->executeCommand("clean");
@@ -273,7 +274,8 @@ class RunCest
     public function runTestWithDataProvidersExceptionStdout(\CliGuy $I)
     {
         $I->executeCommand('run tests/failure_exceptions/DataProvidersExceptionCest.php 2> /dev/null', false);
-        $I->canSeeShellOutputMatches('/^$/');
+        // Depending on the test environment, we either see nothing or just the headers here.
+        $I->canSeeShellOutputMatches('/^$|Codeception PHP Testing Framework v[0-9\.]+\nPowered by PHPUnit [0-9\.]+ by Sebastian Bergmann and contributors\./');
         $I->seeResultCodeIs(1);
         // Ensure that nothing is left behind to be picked up by later tests.
         $I->executeCommand("clean");
