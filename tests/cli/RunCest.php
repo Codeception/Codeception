@@ -190,6 +190,57 @@ class RunCest
         $I->seeInShellOutput("OK");
     }
 
+    public function runTestWithDataProvidersFailure(\CliGuy $I)
+    {
+        $I->executeCommand('run tests/dummy/DataProvidersFailureTest.php --no-exit -v');
+        $I->seeInShellOutput('There was 1 warning');
+        $I->seeInShellOutput('PHPUnit_Framework_Warning');
+        $I->seeInShellOutput('The data provider specified for DataProvidersFailureTest::testIsTriangle is invalid.');
+        $I->seeInShellOutput('Method rectangle does not exist');
+        $I->seeInShellOutput("WARNINGS!");
+        $I->seeInShellOutput("Tests: 1, Assertions: 0, Warnings: 1.");
+    }
+
+    public function runTestWithDataProvidersExceptionStdout(\CliGuy $I)
+    {
+        $I->executeCommand('run tests/dummy/DataProvidersExceptionCest.php 2> /dev/null', false);
+        $I->dontSeeInShellOutput('There was 1 warning');
+        $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
+        $I->dontSeeInShellOutput('The data provider specified for DataProvidersExceptionTest::testIsTriangle is invalid.');
+        $I->dontSeeInShellOutput("WARNINGS!");
+        $I->dontSeeInShellOutput("OK");
+        $I->dontSeeInShellOutput("[Exception]");
+        $I->dontSeeInShellOutput("Something went wrong!!!");
+    }
+
+    public function runTestWithDataProvidersExceptionStderr(\CliGuy $I)
+    {
+        $I->executeCommand('run tests/dummy/DataProvidersExceptionCest.php 2>&1', false);
+        $I->dontSeeInShellOutput('There was 1 warning');
+        $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
+        $I->dontSeeInShellOutput('The data provider specified for DataProvidersExceptionTest::testIsTriangle is invalid.');
+        $I->dontSeeInShellOutput("WARNINGS!");
+        $I->dontSeeInShellOutput("OK");
+        $I->seeInShellOutput("[Exception]");
+        $I->seeInShellOutput("Something went wrong!!!");
+        $I->dontSeeInShellOutput("Exception trace:");
+        $I->dontSeeInShellOutput("DataProvidersExceptionCest");
+    }
+
+    public function runTestWithDataProvidersExceptionStderrVerbose(\CliGuy $I)
+    {
+        $I->executeCommand('run tests/dummy/DataProvidersExceptionCest.php -v 2>&1', false);
+        $I->dontSeeInShellOutput('There was 1 warning');
+        $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
+        $I->dontSeeInShellOutput('The data provider specified for DataProvidersExceptionTest::testIsTriangle is invalid.');
+        $I->dontSeeInShellOutput("WARNINGS!");
+        $I->dontSeeInShellOutput("OK");
+        $I->seeInShellOutput("[Exception]");
+        $I->seeInShellOutput("Something went wrong!!!");
+        $I->seeInShellOutput("tests\dummy\DataProvidersExceptionCest.php:18");
+        $I->seeInShellOutput("DataProvidersExceptionCest->triangles()");
+    }
+
     public function runOneGroupWithDataProviders(\CliGuy $I)
     {
         $I->executeCommand('run unit -g data-providers');
