@@ -2,9 +2,5 @@ actor: Failure_exceptionsTester
 modules:
     enabled:
         - \Helper\Failure_exceptions
-
-extensions:
-    disabled: [Codeception\Extension\RunFailed]
-
 env:
     dev: []
