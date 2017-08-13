@@ -41,7 +41,7 @@ class ExtensionsCest
 tests{$ds}unit{$ds}FailingTest.php:testMe
 EOF
         );
-        $I->executeCommand('run -g failed -c codeception_extended.yml --no-exit --skip=failure_exceptions');
+        $I->executeCommand('run -g failed -c codeception_extended.yml --no-exit');
         $I->seeInShellOutput('Tests: 1, Assertions: 1, Failures: 1');
     }
 
