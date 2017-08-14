@@ -32,7 +32,7 @@ $I->see('Welcome, Davert!');
 | JavaScript | No | Yes |
 | `see`/`seeElement` checks if… | …text is present in the HTML source | …text is actually visible to the user |
 | Read HTTP response headers | Yes | No |
-| System requirements | PHP with [cURL extension](http://php.net/manual/book.curl.php) | <ul><li>Selenium Standalone Server</li><li>Chrome or Firefox</li></ul> |
+| System requirements | PHP with [cURL extension](http://php.net/manual/book.curl.php) | Selenium Standalone Server, Chrome or Firefox |
 | Speed | Fast | Slow |
 
 We will start writing our first acceptance tests with PhpBrowser.
@@ -397,6 +397,8 @@ $I->seeElement('#modal');
 
 While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: It can't check headers since browsers don't provide APIs for that. 
 WebDriver also adds browser-specific functionality:
+
+
 
 #### Wait
 

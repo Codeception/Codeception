@@ -185,6 +185,23 @@ Fails if such user was found.
  * `param array` $criteria
 
 
+### grabColumnFromDatabase
+ 
+Fetches all values from the column in database.
+Provide table name, desired column and criteria.
+
+``` php
+<?php
+$mails = $I->grabColumnFromDatabase('users', 'email', array('name' => 'RebOOter'));
+```
+
+ * `param string` $table
+ * `param string` $column
+ * `param array` $criteria
+
+ * `return` array
+
+
 ### grabFromDatabase
  
 Fetches a single column value from a database.
@@ -259,5 +276,9 @@ $I->seeNumRecords(1, 'users', ['name' => 'davert'])
  * `param int` $expectedNumber Expected number
  * `param string` $table Table name
  * `param array` $criteria Search criteria [Optional]
+
+
+### updateInDatabase
+__not documented__
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Db.php">Help us to improve documentation. Edit module reference</a></div>

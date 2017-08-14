@@ -47,7 +47,7 @@ Delete all the keys in the Redis database
 
 ### dontSeeInRedis
  
-Asserts that a key does not exist or, optionaly, that it doesn't have the
+Asserts that a key does not exist or, optionally, that it doesn't have the
 provided $value
 
 Examples:

@@ -16,7 +16,7 @@ To use this module with Composer you need <em>"php-amqplib/php-amqplib": "~2.4"<
 * vhost: '/' - vhost to connect
 * cleanup: true - defined queues will be purged before running every test.
 * queues: [mail, twitter] - queues to cleanup
-* single_channel: false - create and use only one channel during test execution
+* single_channel - create and use only one channel during test execution
 
 ### Example
 

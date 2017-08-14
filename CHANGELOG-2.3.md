@@ -1,3 +1,21 @@
+#### 2.3.5
+
+* Fixed HTML report with unencoded HTML code by @mpgo13. See #3819 #4423
+* Made `assertArraySubset` protected across all modules by @guidocella
+* [WebDriver][PhpBrowser][Frameworks] Added support for associative arrays in `seeInFormFields` by @guidocella
+* [PhpBrowser][Frameworks] Submit default values of checkboxes. See #4411 by @guidocella 
+* [PhpBrowser][Frameworks] Make `seeInField` check options' texts and trimmed texts. By @guidocella 
+* [PhpBrowser] Prevents `submitForm` to submit inputs in disabled fieldsets. Fixes #4426 by @moebrowne
+* [PhpBrowser] Fixed `amOnUrl` with empty path component. If path component was empty, it used previous url. Fixes #4383 by @Naktibalda
+* [Db] Improved postgres cleanup (recreate schema) by @samusenkoiv
+* [Laravel5] Don't duplicate associative array fields on form submission. See #4414 by @guidocella
+* [WebDriver] Fixed `webDriver->getCapabilities()` for `facebook/php-webdriver` < 1.3 (could happen on PHP 5.4, 5.5). Fixes #4435
+* [WebDriver] Make `wait` accept fractional amount of seconds to wait for less than a second. By @gvlasov
+* [Laravel5] Changing params loader to use `$_SERVER` global instead of `$_ENV`. See #4401 by @EricTendian
+* [Mongo] Fixes `haveInCollection` using `__toString`. See #4442 by @samusenkoiv
+* Dereferencing vairables for Steps output. Fixes #4402 by @alambe
+* [Symfony] Load persistent services before loading profiler. See #4437 by @samusenkoiv
+
 #### 2.3.4
 
 * Added `@prepare` annotation to make realtime configuration for tests in Cest and Test classes. [See documentation](http://codeception.com/docs/06-ModulesAndHelpers#Runtime-Configuration-of-a-Test).
@@ -6,16 +24,14 @@
 
 ```php
 <?php
-/*
- * @prepare disableTransactions
- */
+/**@prepare disableTransactions */
 function testDoctrine()
 {
 }
 
 protected function disableTransactions(Doctrine2 $module)
 {
-   $module->_reconfigure(['cleanup' => false);
+   $module->_reconfigure(['cleanup' => false]);
 }
 ```
 * [WebDriver] **SmartWait**. Automatically waits for a few extra seconds for element to appear on a page before failing. Can reduce high usage of `wait*` methods. [See Documentation](http://codeception.com/docs/03-AcceptanceTests#SmartWait)
