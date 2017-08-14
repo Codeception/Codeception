@@ -150,7 +150,8 @@ class HTML extends CodeceptionResultPrinter
 
         $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';
 
-        $testString = preg_replace('~^([\s\w\\\]+):\s~', '<span class="quiet">$1 &raquo;</span> ', ucfirst(Descriptor::getTestAsString($test)));
+        $testString = htmlspecialchars(ucfirst(Descriptor::getTestAsString($test)));
+        $testString = preg_replace('~^([\s\w\\\]+):\s~', '<span class="quiet">$1 &raquo;</span> ', $testString);
 
         $scenarioTemplate->setVar(
             [
@@ -271,7 +272,7 @@ class HTML extends CodeceptionResultPrinter
     protected function renderSubsteps(Meta $metaStep, $substepsBuffer)
     {
         $metaTemplate = new \Text_Template($this->templatePath . 'substeps.html');
-        $metaTemplate->setVar(['metaStep' => $metaStep, 'error' => $metaStep->hasFailed() ? 'failedStep' : '', 'steps' => $substepsBuffer, 'id' => uniqid()]);
+        $metaTemplate->setVar(['metaStep' => $metaStep->getHtml(), 'error' => $metaStep->hasFailed() ? 'failedStep' : '', 'steps' => $substepsBuffer, 'id' => uniqid()]);
         return $metaTemplate->render();
     }
 

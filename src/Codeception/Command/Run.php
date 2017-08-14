@@ -280,15 +280,54 @@ class Run extends Command
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
 
-        if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
-            list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
-        }
-
         if ($this->options['group']) {
             $this->output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $this->options['group'])));
         }
         if ($input->getArgument('test')) {
             $this->options['steps'] = true;
+        }
+
+        if (!$test) {
+            // Check if suite is given and is in an included path
+            if (!empty($suite) && !empty($config['include'])) {
+                $isIncludeTest = false;
+                // Remember original projectDir
+                $projectDir = Configuration::projectDir();
+
+                foreach ($config['include'] as $include) {
+                    // Find if the suite begins with an include path
+                    if (strpos($suite, $include) === 0) {
+                        // Use include config
+                        $config = Configuration::config($projectDir.$include);
+
+                        if (!isset($config['paths']['tests'])) {
+                            throw new \RuntimeException(
+                                sprintf("Included '%s' has no tests path configured", $include)
+                            );
+                        }
+
+                        $testsPath = $include . DIRECTORY_SEPARATOR.  $config['paths']['tests'];
+
+                        try {
+                            list(, $suite, $test) = $this->matchTestFromFilename($suite, $testsPath);
+                            $isIncludeTest = true;
+                        } catch (\InvalidArgumentException $e) {
+                            // Incorrect include match, continue trying to find one
+                            continue;
+                        }
+                    }
+                }
+
+                // Restore main config
+                if (!$isIncludeTest) {
+                    $config = Configuration::config($projectDir);
+                }
+            } elseif (!empty($suite)) {
+                // Run single test without included tests
+                if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
+                    list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
+                }
+            }
         }
 
         if ($test) {
@@ -299,9 +338,10 @@ class Run extends Command
         $this->codecept = new Codecept($userOptions);
 
         if ($suite and $test) {
-            $this->codecept->run($suite, $test);
+            $this->codecept->run($suite, $test, $config);
         }
 
+        // Run all tests of given suite or all suites
         if (!$test) {
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
             $this->executed = $this->runSuites($suites, $this->options['skip']);
@@ -384,10 +424,11 @@ class Run extends Command
         return $executed;
     }
 
-    protected function matchTestFromFilename($filename, $tests_path)
+    protected function matchTestFromFilename($filename, $testsPath)
     {
+        $testsPath = str_replace(['//', '\/', '\\'], '/', $testsPath);
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
-        $res = preg_match("~^$tests_path/(.*?)(?>/(.*))?$~", $filename, $matches);
+        $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
 
         if (!$res) {
             throw new \InvalidArgumentException("Test file can't be matched");

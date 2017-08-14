@@ -5,6 +5,33 @@ and bootstrapped your first test suites. Codeception has generated three of them
 They are well described in the [previous chapter](http://codeception.com/docs/01-Introduction). Inside your __/tests__ folder you will have three `.yml` config files and three directories
 with names corresponding to these suites: `unit`, `functional`, `acceptance`. Suites are independent groups of tests with a common purpose.
 
+## The Codeception Syntax
+
+Codeception follows simple naming rules to make it easy to remember (as well as easy to understand) its method names.
+
+* **Actions** start with a plain english verb, like "click" or "fill". Examples:
+    ```php
+    <?php
+    $I->click('Login');
+    $I->fillField('#input-username', 'John Dough');
+    $i->pressKey('#input-remarks', 'foo');
+    ```
+* **Assertions** always start with "see" or "dontSee". Examples:
+    ```php
+    <?php
+    $I->see('Welcome');
+    $I->seeInTitle('My Company');
+    $i->seeElement('nav');
+    $i->dontSeeElement('#error-message');
+    $i->dontSeeInPageSource('<section class="foo">');
+    ```
+* **Grabbers** just *read* something from the page, but don't process it. The return value of those are meant to be saved as variables and used later. Example:
+    ```php
+    <?php
+    $method = $I->grabAttributeFrom('#login-form', 'method');
+    $I->assertEquals('post', $method);
+    ```
+
 ## Actors
 
 One of the main concepts of Codeception is representation of tests as actions of a person.
@@ -12,7 +39,7 @@ We have a UnitTester, who executes functions and tests the code. We also have a 
 who tests the application as a whole, with knowledge of its internals. Lastly we have an AcceptanceTester, a user who works with our application
 through an interface that we provide.
 
-Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from [Codeception Modules](http://codeception.com/docs/06-ModulesAndHelpers)**.
+**Methods of actor classes are generally taken from [Codeception Modules](http://codeception.com/docs/06-ModulesAndHelpers)**.
 Each module provides predefined actions for different testing purposes, and they can be combined to fit the testing environment.
 Codeception tries to solve 90% of possible testing issues in its modules, so you don't have to reinvent the wheel.
 We think that you can spend more time on writing tests and less on writing support code to make those tests run.

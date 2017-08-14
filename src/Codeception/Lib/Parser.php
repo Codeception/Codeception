@@ -6,7 +6,6 @@ use Codeception\Exception\TestParseException;
 use Codeception\Scenario;
 use Codeception\Step;
 use Codeception\Test\Metadata;
-use Codeception\Util\Annotation;
 
 class Parser
 {
@@ -50,25 +49,7 @@ class Parser
 
     public function parseScenarioOptions($code)
     {
-        $comments = $this->matchComments($code);
-        $this->attachMetadata($comments);
-    }
-
-    public function attachMetadata($comments)
-    {
-        $this->metadata->setGroups(Annotation::fetchAllFromComment('group', $comments));
-        $this->metadata->setEnv(Annotation::fetchAllFromComment('env', $comments));
-        $this->metadata->setDependencies(Annotation::fetchAllFromComment('depends', $comments));
-        $this->metadata->setSkip($this->firstOrNull(Annotation::fetchAllFromComment('skip', $comments)));
-        $this->metadata->setIncomplete($this->firstOrNull(Annotation::fetchAllFromComment('incomplete', $comments)));
-    }
-
-    private function firstOrNull($array)
-    {
-        if (empty($array)) {
-            return null;
-        }
-        return (string)$array[0];
+        $this->metadata->setParamsFromAnnotations($this->matchComments($code));
     }
 
     public function parseSteps($code)

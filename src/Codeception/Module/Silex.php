@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Client;
  * Module for testing Silex applications like you would regularly do with Silex\WebTestCase.
  * This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
  *
- * This module may be considered experimental and require feedback and pull requests from you )
+ * This module may be considered experimental and require feedback and pull requests from you.
  *
  * ## Status
  *
@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\Client;
  * Bootstrap is the same as [WebTestCase.createApplication](http://silex.sensiolabs.org/doc/testing.html#webtestcase).
  *
  * ``` php
- * <?
+ * <?php
  * $app = require __DIR__.'/path/to/app.php';
  * $app['debug'] = true;
  * unset($app['exception_handler']);
@@ -100,7 +100,7 @@ class Silex extends Framework implements DoctrineProvider
             });
         }
 
-        // some silex apps (like bolt) may rely on global $app variable
+        // some Silex apps (like Bolt) may rely on global $app variable
         $GLOBALS['app'] = $this->app;
     }
 
