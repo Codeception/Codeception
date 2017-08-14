@@ -58,6 +58,7 @@ EOF;
         $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
         $this->createEmptyDirectory($dir . DIRECTORY_SEPARATOR . '_data');
         $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . '_support');
+        $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->gitIgnore($outputDir);
         $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->sayInfo("Created test directories inside at $dir");
