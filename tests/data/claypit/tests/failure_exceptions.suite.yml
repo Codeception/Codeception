@@ -1,6 +1,0 @@
-actor: Failure_exceptionsTester
-modules:
-    enabled:
-        - \Helper\Failure_exceptions
-env:
-    dev: []
