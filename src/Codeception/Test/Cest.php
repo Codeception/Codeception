@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Test;
 
 use Codeception\Example;
@@ -26,6 +27,7 @@ class Cest extends Test implements
     protected $parser;
     protected $testClassInstance;
     protected $testMethod;
+    private $tries = 0;
 
     public function __construct($testClass, $methodName, $fileName)
     {
@@ -34,7 +36,7 @@ class Cest extends Test implements
         $metadata->setFilename($fileName);
         $this->setMetadata($metadata);
         $this->testClassInstance = $testClass;
-        $this->testMethod = $methodName;
+        $this->testMethod        = $methodName;
         $this->createScenario();
         $this->parser = new Parser($this->getScenario(), $this->getMetadata());
     }
@@ -50,16 +52,17 @@ class Cest extends Test implements
         // add example params to feature
         if ($this->getMetadata()->getCurrent('example')) {
             $step = new Comment('', $this->getMetadata()->getCurrent('example'));
-            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | '. $step->getArgumentsAsString(100));
+            $this->getScenario()->setFeature($this->getScenario()->getFeature().' | '.$step->getArgumentsAsString(100));
         }
     }
 
     public function getSourceCode()
     {
-        $method = new \ReflectionMethod($this->testClassInstance, $this->testMethod);
+        $method     = new \ReflectionMethod($this->testClassInstance, $this->testMethod);
         $start_line = $method->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
-        $end_line = $method->getEndLine();
-        $source = file($method->getFileName());
+        $end_line   = $method->getEndLine();
+        $source     = file($method->getFileName());
+
         return implode("", array_slice($source, $start_line, $end_line - $start_line));
     }
 
@@ -69,13 +72,14 @@ class Cest extends Test implements
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
         $text = strtolower($text);
+
         return $text;
     }
 
     public function test()
     {
         $actorClass = $this->getMetadata()->getCurrent('actor');
-        $I = new $actorClass($this->getScenario());
+        $I          = new $actorClass($this->getScenario());
         try {
             $this->executeHook($I, 'before');
             $this->executeBeforeMethods($this->testMethod, $I);
@@ -83,9 +87,16 @@ class Cest extends Test implements
             $this->executeAfterMethods($this->testMethod, $I);
             $this->executeHook($I, 'after');
         } catch (\Exception $e) {
-            $this->executeHook($I, 'failed');
-            // fails and errors are now handled by Codeception\PHPUnit\Listener
-            throw $e;
+            $modules = $this->getMetadata()->getService('modules');
+            $retries = $modules->getConfig('retries', 0);
+            if ($retries > $this->tries) {
+                $this->tries++;
+                $this->test();
+            } else {
+                $this->executeHook($I, 'failed');
+                // fails and errors are now handled by Codeception\PHPUnit\Listener
+                throw $e;
+            }
         }
     }
 
@@ -105,6 +116,7 @@ class Cest extends Test implements
             }
         }
     }
+
     protected function executeAfterMethods($testMethod, $I)
     {
         $annotations = \PHPUnit_Util_Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
@@ -121,10 +133,11 @@ class Cest extends Test implements
             $this->executeBeforeMethods($context, $I);
             $this->invoke($context, [$I, $this->scenario]);
             $this->executeAfterMethods($context, $I);
+
             return;
         }
         throw new \LogicException(
-            "Method $context defined in annotation but does not exist in " . get_class($this->testClassInstance)
+            "Method $context defined in annotation but does not exist in ".get_class($this->testClassInstance)
         );
     }
 
@@ -135,6 +148,7 @@ class Cest extends Test implements
         }
         $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance, $methodName, $context);
     }
+
     protected function executeTestMethod($I)
     {
         if (!method_exists($this->testClassInstance, $this->testMethod)) {
@@ -143,6 +157,7 @@ class Cest extends Test implements
 
         if ($this->getMetadata()->getCurrent('example')) {
             $this->invoke($this->testMethod, [$I, $this->scenario, new Example($this->getMetadata()->getCurrent('example'))]);
+
             return;
         }
         $this->invoke($this->testMethod, [$I, $this->scenario]);
@@ -155,7 +170,7 @@ class Cest extends Test implements
 
     public function getSignature()
     {
-        return get_class($this->getTestClass()) . ":" . $this->getTestMethod();
+        return get_class($this->getTestClass()).":".$this->getTestMethod();
     }
 
     public function getTestClass()
@@ -191,10 +206,11 @@ class Cest extends Test implements
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
             if ((strpos($required, ':') === false) and method_exists($this->getTestClass(), $required)) {
-                $required = get_class($this->getTestClass()) . ":$required";
+                $required = get_class($this->getTestClass()).":$required";
             }
             $names[] = $required;
         }
+
         return $names;
     }
 

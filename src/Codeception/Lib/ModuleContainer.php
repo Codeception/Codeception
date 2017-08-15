@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Lib;
 
 use Codeception\Configuration;
@@ -13,6 +14,7 @@ use Codeception\Util\Annotation;
 
 /**
  * Class ModuleContainer
+ *
  * @package Codeception\Lib
  */
 class ModuleContainer
@@ -50,7 +52,7 @@ class ModuleContainer
     /**
      * Constructor.
      *
-     * @param Di $di
+     * @param Di    $di
      * @param array $config
      */
     public function __construct(Di $di, $config)
@@ -64,7 +66,7 @@ class ModuleContainer
      * Create a module.
      *
      * @param string $moduleName
-     * @param bool $active
+     * @param bool   $active
      * @return \Codeception\Module
      * @throws \Codeception\Exception\ConfigurationException
      * @throws \Codeception\Exception\ModuleException
@@ -117,14 +119,14 @@ class ModuleContainer
             return false;
         }
 
-        return (bool) $module->_depends();
+        return (bool)$module->_depends();
     }
 
     /**
      * Get the actions of a module.
      *
      * @param \Codeception\Module $module
-     * @param array $config
+     * @param array               $config
      * @return array
      */
     private function getActionsForModule($module, $config)
@@ -154,8 +156,8 @@ class ModuleContainer
      * Should a method be included as an action?
      *
      * @param \Codeception\Module $module
-     * @param \ReflectionMethod $method
-     * @param array|null $configuredParts
+     * @param \ReflectionMethod   $method
+     * @param array|null          $configuredParts
      * @return bool
      */
     private function includeMethodAsAction($module, $method, $configuredParts = null)
@@ -219,7 +221,7 @@ class ModuleContainer
             return $moduleName;
         }
 
-        return self::MODULE_NAMESPACE . $moduleName;
+        return self::MODULE_NAMESPACE.$moduleName;
     }
 
     /**
@@ -298,7 +300,7 @@ class ModuleContainer
     /**
      * Inject the dependencies of a module.
      *
-     * @param string $moduleName
+     * @param string                                      $moduleName
      * @param \Codeception\Lib\Interfaces\DependsOnModule $module
      * @throws \Codeception\Exception\ModuleException
      * @throws \Codeception\Exception\ModuleRequireException
@@ -312,7 +314,7 @@ class ModuleContainer
         }
 
         $dependencies = array_map(function ($dependency) {
-            return $this->create($dependency, false);
+                return $this->create($dependency, false);
         }, $this->getConfiguredDependencies($moduleName));
 
         call_user_func_array([$module, '_inject'], $dependencies);
@@ -321,14 +323,14 @@ class ModuleContainer
     /**
      * Check for missing dependencies.
      *
-     * @param string $moduleName
+     * @param string                                      $moduleName
      * @param \Codeception\Lib\Interfaces\DependsOnModule $module
      * @throws \Codeception\Exception\ModuleException
      * @throws \Codeception\Exception\ModuleRequireException
      */
     private function checkForMissingDependencies($moduleName, DependsOnModule $module)
     {
-        $dependencies = $this->getModuleDependencies($module);
+        $dependencies                = $this->getModuleDependencies($module);
         $configuredDependenciesCount = count($this->getConfiguredDependencies($moduleName));
 
         if ($configuredDependenciesCount < count($dependencies)) {
@@ -388,7 +390,7 @@ class ModuleContainer
      * Get the error message for a module dependency that is missing.
      *
      * @param \Codeception\Module $module
-     * @param string $missingDependency
+     * @param string              $missingDependency
      * @return string
      */
     private function getErrorMessageForDependency($module, $missingDependency)
@@ -500,5 +502,15 @@ class ModuleContainer
         }
 
         return $conflicts;
+    }
+
+    /**
+     * @param      $name
+     * @param null $default
+     * @return mixed|null
+     */
+    public function getConfig($name, $default = null)
+    {
+        return (isset($this->config[$name]) ? $this->config[$name] : $default);
     }
 }
