@@ -236,7 +236,7 @@ Tasks from `\Codeception\Task\SplitTestsByGroups` will generate non-intersecting
 <?php
     function parallelSplitTests()
     {
-        // Slip your tests by files
+        // Split your tests by files
         $this->taskSplitTestFilesByGroups(5)
             ->projectRoot('.')
             ->testsFrom('tests/acceptance')
@@ -244,7 +244,7 @@ Tasks from `\Codeception\Task\SplitTestsByGroups` will generate non-intersecting
             ->run();
             
         /*
-        // Slip your tests by single tests (alternatively)
+        // Split your tests by single tests (alternatively)
         $this->taskSplitTestsByGroups(5)
             ->projectRoot('.')
             ->testsFrom('tests/acceptance')
