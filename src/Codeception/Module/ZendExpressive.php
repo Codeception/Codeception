@@ -1,10 +1,12 @@
 <?php
+
 namespace Codeception\Module;
 
 use Codeception\Lib\Framework;
 use Codeception\TestInterface;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\ZendExpressive as ZendExpressiveConnector;
+use Codeception\Lib\Interfaces\DoctrineProvider;
 
 /**
  * This module allows you to run tests inside Zend Expressive.
@@ -27,7 +29,7 @@ use Codeception\Lib\Connector\ZendExpressive as ZendExpressiveConnector;
  * * client - BrowserKit client
  *
  */
-class ZendExpressive extends Framework
+class ZendExpressive extends Framework implements DoctrineProvider
 {
     protected $config = [
         'container' => 'config/container.php',
@@ -48,7 +50,45 @@ class ZendExpressive extends Framework
      */
     public $application;
 
+
     protected $responseCollector;
+
+    /**
+     * Grabs a service from Interop container.
+     * Recommended to use for unit testing.
+     *
+     * ``` php
+     * <?php
+     * $em = $I->grabServiceFromContainer('doctrine.entity_manager.orm_default');
+     * ?>
+     * ```
+     *
+     * @param $service
+     * @return mixed
+     * @part services
+     * @throws PHPUnit_Framework_AssertionFailedError
+     */
+    public function grabServiceFromContainer($service)
+    {
+        if (!$this->container->has($service)) {
+            throw new \PHPUnit_Framework_AssertionFailedError("Service $service is not available in container");
+        }
+
+        return $this->container->get($service);
+    }
+
+    /**
+     * Retrieve Entity Manager or throw Exception
+     */
+    public function _getEntityManager()
+    {
+        if ($this->container->has('doctrine.entity_manager.orm_default')) {
+            return $this->grabServiceFromContainer('doctrine.entity_manager.orm_default');
+        }
+
+        return $this->grabServiceFromContainer('Doctrine\ORM\EntityManager');
+    }
+
 
     public function _initialize()
     {
