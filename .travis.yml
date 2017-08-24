@@ -118,7 +118,7 @@ before_script:
 
 script:
   - php codecept run cli,unit # self tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run coverage'  # run coverage tests on php only
+  - '[[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept run coverage'  # run coverage tests on php only
   - php codecept run functional -c frameworks-yii-basic # Yii2 tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-l5 --skip=seeder' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
