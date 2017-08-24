@@ -153,22 +153,47 @@ class Db
         return sprintf($query, $column, $this->getQuotedName($table), $where);
     }
 
+    private function getSupportedOperators(){
+      return [
+        'like' => 'LIKE',
+        '<=' => '<=',
+        '>=' => '>=',
+        '<' => '<',
+        '>' => '>'
+      ];
+    }
+
     protected function generateWhereClause(array &$criteria)
     {
         if (empty($criteria)) {
             return '';
         }
 
+        $operands = $this->getSupportedOperators();
+
         $params = [];
         foreach ($criteria as $k => $v) {
-            if ($v === null) {
-                $params[] = $this->getQuotedName($k) . " IS NULL ";
-                unset($criteria[$k]);
-            } elseif (strpos(strtolower($k), ' like') > 0) {
-                $k = str_replace(' like', '', strtolower($k));
-                $params[] = $this->getQuotedName($k) . " LIKE ? ";
-            } else {
-                $params[] = $this->getQuotedName($k) . " = ? ";
+            if ($v === null)
+            {
+              $params[] = $this->getQuotedName( $k ) . " IS NULL ";
+              unset( $criteria[ $k ] );
+              continue;
+            }
+
+            $bHasOperand = false;
+            foreach ($operands as $operand => $sql){
+              if (!strpos(strtolower($k), " $operand") > 0){
+                continue;
+              }
+
+              $bHasOperand = true;
+              $k = str_replace(" $operand", '', strtolower($k));
+              $params[] = $this->getQuotedName($k) . " $sql ? ";
+              break;
+            }
+
+            if (!$bHasOperand){
+              $params[] = $this->getQuotedName($k) . " = ? ";
             }
         }
 
