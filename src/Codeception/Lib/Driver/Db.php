@@ -90,7 +90,7 @@ class Db
         $matches = [];
         $matched = preg_match('~dbname=(\w+)~s', $this->dsn, $matches);
         if (!$matched) {
-            return FALSE;
+            return false;
         }
 
         return $matches[1];
@@ -175,20 +175,20 @@ class Db
 
         $params = [];
         foreach ($criteria as $k => $v) {
-            if ($v === NULL) {
+            if ($v === null) {
                 $params[] = $this->getQuotedName($k) . " IS NULL ";
                 unset($criteria[$k]);
                 continue;
             }
 
-            $hasOperand = FALSE; // search for equals - no additional operand given
-            
+            $hasOperand = false; // search for equals - no additional operand given
+
             foreach ($operands as $operand) {
                 if (!stripos($k, " $operand") > 0) {
                     continue;
                 }
 
-                $hasOperand = TRUE;
+                $hasOperand = true;
                 $k = str_ireplace(" $operand", '', $k);
                 $params[] = $this->getQuotedName($k) . ' ' . strtoupper($k) . ' ? ';
                 break;
@@ -286,7 +286,7 @@ class Db
     {
         $primaryKey = $this->getPrimaryKey($tableName);
         if (empty($primaryKey)) {
-            return NULL;
+            return null;
         } elseif (count($primaryKey) > 1) {
             throw new \Exception(
                 'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
