@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Lib\Driver;
 
 use Codeception\Exception\ModuleException;
@@ -89,7 +90,7 @@ class Db
         $matches = [];
         $matched = preg_match('~dbname=(\w+)~s', $this->dsn, $matches);
         if (!$matched) {
-            return false;
+            return FALSE;
         }
 
         return $matches[1];
@@ -153,14 +154,15 @@ class Db
         return sprintf($query, $column, $this->getQuotedName($table), $where);
     }
 
-    private function getSupportedOperators(){
-      return [
-        'like',
-        '<=',
-        '>=',
-        '<',
-        '>'
-      ];
+    private function getSupportedOperators()
+    {
+        return [
+            'like',
+            '<=',
+            '>=',
+            '<',
+            '>',
+        ];
     }
 
     protected function generateWhereClause(array &$criteria)
@@ -173,28 +175,27 @@ class Db
 
         $params = [];
         foreach ($criteria as $k => $v) {
-            if ($v === null)
-            {
-              $params[] = $this->getQuotedName( $k ) . " IS NULL ";
-              unset( $criteria[ $k ] );
-              continue;
-            }
-
-            $hasOperand = false; // search for equals - no additional operand given
-            
-            foreach ($operands as $operand){
-              if (!stripos($k, " $operand") > 0){
+            if ($v === NULL) {
+                $params[] = $this->getQuotedName($k) . " IS NULL ";
+                unset($criteria[$k]);
                 continue;
-              }
-
-              $hasOperand = true;
-              $k = str_ireplace(" $operand", '', $k);
-              $params[] = $this->getQuotedName($k) . ' ' . strtoupper($k) . ' ? ';
-              break;
             }
 
-            if (!$hasOperand){
-              $params[] = $this->getQuotedName($k) . " = ? ";
+            $hasOperand = FALSE; // search for equals - no additional operand given
+            
+            foreach ($operands as $operand) {
+                if (!stripos($k, " $operand") > 0) {
+                    continue;
+                }
+
+                $hasOperand = TRUE;
+                $k = str_ireplace(" $operand", '', $k);
+                $params[] = $this->getQuotedName($k) . ' ' . strtoupper($k) . ' ? ';
+                break;
+            }
+
+            if (!$hasOperand) {
+                $params[] = $this->getQuotedName($k) . " = ? ";
             }
         }
 
@@ -285,7 +286,7 @@ class Db
     {
         $primaryKey = $this->getPrimaryKey($tableName);
         if (empty($primaryKey)) {
-            return null;
+            return NULL;
         } elseif (count($primaryKey) > 1) {
             throw new \Exception(
                 'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
@@ -314,7 +315,7 @@ class Db
 
         return empty($this->primaryKeys);
     }
-    
+
     public function update($table, array $data, array $criteria)
     {
         if (empty($data)) {
@@ -322,10 +323,10 @@ class Db
                 "Query update can't be prepared without data."
             );
         }
-        
+
         $set = [];
         foreach ($data as $column => $value) {
-            $set[] = $this->getQuotedName($column)." = ?";
+            $set[] = $this->getQuotedName($column) . " = ?";
         }
 
         $where = $this->generateWhereClause($criteria);
