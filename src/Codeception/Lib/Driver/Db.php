@@ -155,11 +155,11 @@ class Db
 
     private function getSupportedOperators(){
       return [
-        'like' => 'LIKE',
-        '<=' => '<=',
-        '>=' => '>=',
-        '<' => '<',
-        '>' => '>'
+        'like',
+        '<=',
+        '>=',
+        '<',
+        '>'
       ];
     }
 
@@ -180,19 +180,19 @@ class Db
               continue;
             }
 
-            $bHasOperand = false;
-            foreach ($operands as $operand => $sql){
-              if (!strpos(strtolower($k), " $operand") > 0){
+            $hasOperand = false;
+            foreach ($operands as $operand){
+              if (!stripos($k, " $operand") > 0){
                 continue;
               }
 
-              $bHasOperand = true;
-              $k = str_replace(" $operand", '', strtolower($k));
-              $params[] = $this->getQuotedName($k) . " $sql ? ";
+              $hasOperand = true;
+              $k = str_ireplace(" $operand", '', $k);
+              $params[] = $this->getQuotedName($k) . ' ' . strtoupper($k) . ' ? ';
               break;
             }
 
-            if (!$bHasOperand){
+            if (!$hasOperand){
               $params[] = $this->getQuotedName($k) . " = ? ";
             }
         }
