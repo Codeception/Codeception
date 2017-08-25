@@ -180,7 +180,8 @@ class Db
               continue;
             }
 
-            $hasOperand = false;
+            $hasOperand = false; // search for equals - no additional operand given
+            
             foreach ($operands as $operand){
               if (!stripos($k, " $operand") > 0){
                 continue;
