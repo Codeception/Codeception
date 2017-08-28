@@ -30,17 +30,19 @@ class RunFailed extends Extension
         Events::RESULT_PRINT_AFTER => 'saveFailed'
     ];
 
-    protected $config = ['file' => 'failed'];
+    /** @var string filename/groupname for failed tests */
+    protected $group;
 
     public function _initialize()
     {
+        $this->group = $this->options['fail-group'];
         $logPath = str_replace($this->getRootDir(), '', $this->getLogDir()); // get local path to logs
-        $this->_reconfigure(['groups' => ['failed' => $logPath . $this->config['file']]]);
+        $this->_reconfigure(['groups' => [$this->group => $logPath . $this->group]]);
     }
 
     public function saveFailed(PrintResultEvent $e)
     {
-        $file = $this->getLogDir() . $this->config['file'];
+        $file = $this->getLogDir() . $this->group;
         $result = $e->getResult();
         if ($result->wasSuccessful()) {
             if (is_file($file)) {

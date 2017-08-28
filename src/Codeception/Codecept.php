@@ -61,6 +61,7 @@ class Codecept
         'interactive'     => true,
         'no-rebuild'      => false,
         'quiet'           => false,
+        'fail-group'      => false,
     ];
 
     protected $config = [];
