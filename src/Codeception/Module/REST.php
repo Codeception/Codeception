@@ -312,7 +312,7 @@ EOF;
      */
     public function amNTLMAuthenticated($username, $password)
     {
-        if (\GuzzleHttp\Client::VERSION < '6.2.1') {
+        if (strnatcmp(\GuzzleHttp\Client::VERSION, '6.2.1')) {
             throw new ModuleException(__METHOD__, 'Requires Guzzle >=6.3.0 for NTLM auth option.');
         }
         if ($this->isFunctional) {
