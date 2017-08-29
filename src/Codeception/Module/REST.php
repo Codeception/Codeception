@@ -302,15 +302,21 @@ EOF;
 
     /**
      * Adds NTLM authentication via username/password.
+     * Requires Guzzle >=6.3.0 for NTLM auth option otherwise response code will always be 401.
      *
      * @param $username
      * @param $password
+     * @throws ModuleException
      * @part json
      * @part xml
      */
     public function amNTLMAuthenticated($username, $password)
     {
-        $this->client->setAuth($username, $password, 'ntlm');
+        if ($this->isFunctional) {
+            throw new ModuleException($this, 'NTLM authentication is out of scope for functional modules.');
+        } else {
+            $this->client->setAuth($username, $password, 'ntlm');
+        }
     }
 
     /**
