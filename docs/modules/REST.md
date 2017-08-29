@@ -69,16 +69,6 @@ Adds HTTP authentication via username/password.
  * `[Part]` xml
 
 
-### amNTLMAuthenticated
-
-Adds Microsoft NTLM authentication via username/password.
-
- * `param` $username
- * `param` $password
- * `[Part]` json
- * `[Part]` xml
-
-
 ### deleteHeader
  
 Deletes the header with the passed name.  Subsequent requests
