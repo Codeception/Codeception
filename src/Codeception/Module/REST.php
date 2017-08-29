@@ -312,8 +312,11 @@ EOF;
      */
     public function amNTLMAuthenticated($username, $password)
     {
+        if (\GuzzleHttp\Client::VERSION < '6.2.1') {
+            throw new ModuleException(__METHOD__, 'Requires Guzzle >=6.3.0 for NTLM auth option.');
+        }
         if ($this->isFunctional) {
-            throw new ModuleException($this, 'NTLM authentication is out of scope for functional modules.');
+            throw new ModuleException(__METHOD__, 'NTLM authentication is out of scope for functional modules.');
         } else {
             $this->client->setAuth($username, $password, 'ntlm');
         }
