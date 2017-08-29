@@ -301,6 +301,19 @@ EOF;
     }
 
     /**
+     * Adds NTLM authentication via username/password.
+     *
+     * @param $username
+     * @param $password
+     * @part json
+     * @part xml
+     */
+    public function amNTLMAuthenticated($username, $password)
+    {
+        $this->client->setAuth($username, $password, 'ntlm');
+    }
+
+    /**
      * Sends a POST request to given uri. Parameters and files can be provided separately.
      *
      * Example:
