@@ -499,7 +499,20 @@ class WebDriver extends CodeceptionModule implements
     public function _failed(TestInterface $test, $fail)
     {
         $this->debugWebDriverLogs($test);
-        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
+        $example = $test->getMetadata()->getCurrent('example');
+        $name = Descriptor::getTestSignature($test);
+        if ($example) {
+            if (isset($this->failedTests[$name])) {
+                $this->failedTests[$name][] = sizeof($this->failedTests[$name]) + 1;
+            } else {
+                $this->failedTests[$name][] = 1;
+            }
+            $filename = preg_replace('~\W~', '.', $name) . '.example.' .
+                $this->failedTests[$name][sizeof($this->failedTests[$name]) - 1];
+        } else {
+            $filename = preg_replace('~\W~', '.', $name);
+        }
+
         $outputDir = codecept_output_dir();
         $this->_saveScreenshot($report = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
         $test->getMetadata()->addReport('png', $report);

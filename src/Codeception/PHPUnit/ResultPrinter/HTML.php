@@ -128,9 +128,20 @@ class HTML extends CodeceptionResultPrinter
             $failTemplate = new \Text_Template(
                 $this->templatePath . 'fail.html'
             );
-            foreach ($this->failures[$name] as $failure) {
-                $failTemplate->setVar(['fail' => nl2br($failure)]);
-                $failures .= $failTemplate->render() . PHP_EOL;
+            $example = $test->getMetadata()->getCurrent('example');
+            if ($example) {
+                $exampleKey = md5(serialize($example));
+                if (isset($this->failures[$name][$exampleKey])) {
+                    foreach ($this->failures[$name][$exampleKey] as $failure) {
+                        $failTemplate->setVar(['fail' => nl2br($failure)]);
+                        $failures .= $failTemplate->render() . PHP_EOL;
+                    }
+                }
+            } else {
+                foreach ($this->failures[$name] as $failure) {
+                    $failTemplate->setVar(['fail' => nl2br($failure)]);
+                    $failures .= $failTemplate->render() . PHP_EOL;
+                }
             }
         }
 
@@ -235,7 +246,14 @@ class HTML extends CodeceptionResultPrinter
      */
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
-        $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
+        $example = $test->getScenario()->current('example');
+        $name = Descriptor::getTestSignature($test);
+        if ($example) {
+            #TODO: add test index through to support few identical examples
+            $this->failures[$name][md5(serialize($example))][] = $this->cleanMessage($e);
+        } else {
+            $this->failures[$name][] = $this->cleanMessage($e);
+        }
         parent::addError($test, $e, $time);
     }
 
