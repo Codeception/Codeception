@@ -401,22 +401,8 @@ class Db extends CodeceptionModule implements DbInterface
 
         return $lastInsertId;
     }
-
-    /**
-     * Inserts an SQL record into a database.
-     *
-     * ```php
-     * <?php
-     * $I->insertInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
-     * ?>
-     * ```
-     *
-     * @param string $table
-     * @param array $data
-     *
-     * @return integer $id
-     */
-    public function insertInDatabase($table, array $data)
+    
+    public function _insertInDatabase($table, array $data)
     {
         $query = $this->driver->insert($table, $data);
         $parameters = array_values($data);
