@@ -193,7 +193,6 @@ class Run extends Command
             ),
             new InputOption('fail-fast', 'f', InputOption::VALUE_NONE, 'Stop after first failure'),
             new InputOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start'),
-            new InputOption('fail-group', '', InputOption::VALUE_OPTIONAL, 'Fail group name', 'failed'),
         ]);
 
         parent::configure();

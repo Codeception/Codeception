@@ -15,6 +15,12 @@ use Codeception\Test\Descriptor;
  * php codecept run -g failed
  * ```
  *
+ * To change failed group name add:
+ * ```
+ * --override "settings: fail-group: another-group1"
+ * ```
+ * Remember: if you run tests and they generated custom-named fail group, to run this group, you should add override too
+ *
  * Starting from Codeception 2.1 **this extension is enabled by default**.
  *
  * ``` yaml
@@ -35,7 +41,7 @@ class RunFailed extends Extension
 
     public function _initialize()
     {
-        $this->group = $this->options['fail-group'];
+        $this->group = array_key_exists('fail-group', $this->options) ? $this->options['fail-group'] : 'failed';
         $logPath = str_replace($this->getRootDir(), '', $this->getLogDir()); // get local path to logs
         $this->_reconfigure(['groups' => [$this->group => $logPath . $this->group]]);
     }
