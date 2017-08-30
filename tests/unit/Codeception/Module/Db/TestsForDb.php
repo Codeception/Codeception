@@ -195,7 +195,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
     public function testInsertInDatabase()
     {
         $testData = ['status' => 'test'];
-        $this->module->insertInDatabase('no_pk', $testData);
+        $this->module->_insertInDatabase('no_pk', $testData);
         $this->module->seeInDatabase('no_pk', $testData);
         $this->module->_reconfigure(['cleanup' => false]);
         $this->module->_after(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
