@@ -395,6 +395,29 @@ class Db extends CodeceptionModule implements DbInterface
      */
     public function haveInDatabase($table, array $data)
     {
+        $lastInsertId = $this->insertInDatabase($table, $data);
+
+        $this->addInsertedRow($table, $data, $lastInsertId);
+
+        return $lastInsertId;
+    }
+
+    /**
+     * Inserts an SQL record into a database.
+     *
+     * ```php
+     * <?php
+     * $I->insertInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
+     * ?>
+     * ```
+     *
+     * @param string $table
+     * @param array $data
+     *
+     * @return integer $id
+     */
+    public function insertInDatabase($table, array $data)
+    {
         $query = $this->driver->insert($table, $data);
         $parameters = array_values($data);
         $this->debugSection('Query', $query);
@@ -408,9 +431,6 @@ class Db extends CodeceptionModule implements DbInterface
             // such as tables without _id_seq in PGSQL
             $lastInsertId = 0;
         }
-
-        $this->addInsertedRow($table, $data, $lastInsertId);
-
         return $lastInsertId;
     }
 
