@@ -560,7 +560,20 @@ class Db extends CodeceptionModule implements DbInterface
     {
         return $this->countInDatabase($table, $criteria);
     }
-    
+
+    /**
+     * Update an SQL record into a database.
+     *
+     * ```php
+     * <?php
+     * $I->updateInDatabase('users', array('isAdmin' => true), array('email' => 'miles@davis.com'));
+     * ?>
+     * ```
+     *
+     * @param string $table
+     * @param array $data
+     * @param array $criteria
+     */
     public function updateInDatabase($table, array $data, array $criteria = [])
     {
         $query = $this->driver->update($table, $data, $criteria);
