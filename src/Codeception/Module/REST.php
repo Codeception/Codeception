@@ -305,6 +305,13 @@ EOF;
      * Requires client to be Guzzle >=6.3.0
      * Out of scope for functional modules.
      *
+     * Example:
+     * ```php
+     * <?php
+     * $I->amNTLMAuthenticated('jon_snow', 'targaryen');
+     * ?>
+     * ```
+     *
      * @param $username
      * @param $password
      * @throws ModuleException
