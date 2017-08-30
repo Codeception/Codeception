@@ -395,7 +395,7 @@ class Db extends CodeceptionModule implements DbInterface
      */
     public function haveInDatabase($table, array $data)
     {
-        $lastInsertId = $this->insertInDatabase($table, $data);
+        $lastInsertId = $this->_insertInDatabase($table, $data);
 
         $this->addInsertedRow($table, $data, $lastInsertId);
 
