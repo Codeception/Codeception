@@ -469,7 +469,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         $this->getModelRecord($model);
         return call_user_func([$model, 'find'])
-            ->where($attributes)
+            ->andWhere($attributes)
             ->one();
     }
 
