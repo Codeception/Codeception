@@ -103,7 +103,7 @@ class ErrorHandler implements EventSubscriberInterface
 
     private function registerDeprecationErrorHandler()
     {
-        if (class_exists('\Symfony\Bridge\PhpUnit\DeprecationErrorHandler')) {
+        if (class_exists('\Symfony\Bridge\PhpUnit\DeprecationErrorHandler') && 'disabled' !== getenv('SYMFONY_DEPRECATIONS_HELPER')) {
             // DeprecationErrorHandler only will be installed if array('PHPUnit_Util_ErrorHandler', 'handleError')
             // is installed or no other error handlers are installed.
             // So we will remove Symfony\Component\Debug\ErrorHandler if it's installed.

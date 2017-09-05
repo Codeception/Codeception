@@ -11,7 +11,7 @@ use Facebook\WebDriver\WebDriverBy;
  * Performs **synchronization to ensure that page content is fully rendered**.
  * Uses Angular's and Protractor internals methods to synchronize with the page.
  *
- * ## Configurarion
+ * ## Configuration
  *
  * The same as for [WebDriver](http://codeception.com/docs/modules/WebDriver#Configuration), but few new options added:
  *

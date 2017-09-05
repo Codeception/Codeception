@@ -49,7 +49,7 @@ As you see, we are passing the Actor object into `tryToTest` method. This allows
 class BasicCest
 {
     // test
-    public function checkLogin(\AcceptanceTester $I)
+    public function tryToTest(\AcceptanceTester $I)
     {
         $I->wantTo('log in to site');
         $I->amOnPage('/');
@@ -303,9 +303,6 @@ class ModeratorCest {
     }
 }
 ```
-
-You can also use `@before` and `@after` for included functions. But you can't have multiple annotations of the same kind
-for single method - one method can have only one `@before` and only one `@after` annotation of the same kind.
 
 ## Environments
 
@@ -640,6 +637,7 @@ This will load all found `p*` files in `tests/_data` as groups. Group names will
 
 
 ## Shell autocompletion
+
 For bash and zsh shells, you can use autocompletion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
 ```bash
 # BASH ~4.x, ZSH
@@ -653,6 +651,7 @@ eval $([codecept location] _completion --generate-hook --program codecept --use-
 ```
 
 ### Explanation
+
 By using the above code in your shell, Codeception will try to autocomplete the following:
 * Commands
 * Suites

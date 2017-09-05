@@ -80,7 +80,7 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
     protected $time = 0;
 
     /**
-     * @var array Used to collect domains while recusively traversing route tree
+     * @var array Used to collect domains while recursively traversing route tree
      */
     private $domainCollector = [];
 

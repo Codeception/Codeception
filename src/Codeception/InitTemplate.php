@@ -11,6 +11,25 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * Codeception templates allow creating a customized setup and configuration for your project.
+ * An abstract class for installation template. Each init template should extend it and implement a `setup` method.
+ * Use it to build a custom setup class which can be started with `codecept init` command.
+ *
+ *
+ * ```php
+ * <?php
+ * namespace Codeception\Template; // it is important to use this namespace so codecept init could locate this template
+ * class CustomInstall extends \Codeception\InitTemplate
+ * {
+ *      public function setup()
+ *      {
+ *         // implement this
+ *      }
+ * }
+ * ```
+ * This class provides various helper methods for building customized setup
+ */
 abstract class InitTemplate
 {
     use FileSystem;
@@ -50,6 +69,9 @@ abstract class InitTemplate
         $this->output = $output;
     }
 
+    /**
+     * Change the directory where Codeception should be installed.
+     */
     public function initDir($workDir)
     {
         $this->checkInstalled($workDir);
@@ -59,6 +81,10 @@ abstract class InitTemplate
         $this->workDir = $workDir;
     }
 
+    /**
+     * Override this class to create customized setup.
+     * @return mixed
+     */
     abstract public function setup();
 
     /**
@@ -69,6 +95,9 @@ abstract class InitTemplate
      *
      * // propose firefox or chrome possible options
      * $this->ask('select the browser of your choice', ['firefox', 'chrome']);
+     *
+     * // ask true/false question
+     * $this->ask('do you want to proceed (y/n)', true);
      * ```
      *
      * @param $question
@@ -93,26 +122,55 @@ abstract class InitTemplate
         return $dialog->ask($this->input, $this->output, new Question("$question ", $answer));
     }
 
+    /**
+     * Print a message to console.
+     *
+     * ```php
+     * <?php
+     * $this->say('Welcome to Setup');
+     * ```
+     *
+     *
+     * @param string $message
+     */
     protected function say($message = '')
     {
         $this->output->writeln($message);
     }
 
+    /**
+     * Print a successful message
+     * @param $message
+     */
     protected function saySuccess($message)
     {
         $this->say("<notice> $message </notice>");
     }
 
+    /**
+     * Print warning message
+     * @param $message
+     */
     protected function sayWarning($message)
     {
         $this->say("<warning> $message </warning>");
     }
 
+    /**
+     * Print info message
+     * @param $message
+     */
     protected function sayInfo($message)
     {
         $this->say("<debug>> $message</debug>");
     }
 
+    /**
+     * Create a helper class inside a directory
+     *
+     * @param $name
+     * @param $directory
+     */
     protected function createHelper($name, $directory)
     {
         $file = $this->createDirectoryFor(
@@ -130,6 +188,10 @@ abstract class InitTemplate
         $this->sayInfo("$name helper has been created in $dir");
     }
 
+    /**
+     * Create an empty directory and add a placeholder file into it
+     * @param $dir
+     */
     protected function createEmptyDirectory($dir)
     {
         $this->createDirectoryFor($dir);
@@ -150,6 +212,14 @@ abstract class InitTemplate
         }
     }
 
+    /**
+     * Create an Actor class and generate actions for it.
+     * Requires a suite config as array in 3rd parameter.
+     *
+     * @param $name
+     * @param $directory
+     * @param $suiteConfig
+     */
     protected function createActor($name, $directory, $suiteConfig)
     {
         $file = $this->createDirectoryFor(

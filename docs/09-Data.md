@@ -63,7 +63,7 @@ modules:
           populator: 'mysql -u $user $dbname < tests/_data/dump.sql'
 ```
 
-See the []Db module reference](http://codeception.com/docs/modules/Db#SQL-data-dump) for more examples.
+See the [Db module reference](http://codeception.com/docs/modules/Db#SQL-data-dump) for more examples.
 
 To ensure database dump is loaded before all tests add `populate: true`. To clean current database and reload dump between tests use `cleanup: true`.
 

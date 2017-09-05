@@ -1,18 +1,18 @@
 # Acceptance Testing
 
 Acceptance testing can be performed by a non-technical person. That person can be your tester, manager or even client.
-If you are developing a web-application (and probably you are) the tester needs nothing more than a web browser
+If you are developing a web-application (and you probably are) the tester needs nothing more than a web browser
 to check that your site works correctly. You can reproduce an acceptance tester's actions in scenarios
-and run them automatically after each site change. Codeception keeps tests clean and simple,
+and run them automatically. Codeception keeps tests clean and simple
 as if they were recorded from the words of an actual acceptance tester.
 
-It makes no difference what CMS or Framework is used on the site. You can even test sites created on different platforms,
-like Java, .NET, etc. It's always a good idea to add tests to your web site.
+It makes no difference what (if any) CMS or framework is used on the site. You can even test sites created with different
+languages, like Java, .NET, etc. It's always a good idea to add tests to your website.
 At least you will be sure that site features work after the latest changes were made.
 
 ## Sample Scenario
 
-Let's say the first test you would want to run would be signing in.
+Let's say the first test you would want to run, would be signing in.
 In order to write such a test, we still require basic knowledge of PHP and HTML:
 
 ```php
@@ -24,46 +24,53 @@ $I->click('LOGIN');
 $I->see('Welcome, Davert!');
 ```
 
-**This scenario can be performed either by a simple PHP Browser or by a browser with Selenium WebDriver**.
-We will start writing our first acceptance tests with a PhpBrowser.
+**This scenario can be performed either by PhpBrowser or by a "real" browser through Selenium WebDriver**.
 
-## PHP Browser
+| | PhpBrowser | WebDriver |
+| --- | --- | --- |
+| Browser Engine | Guzzle + Symfony BrowserKit | Chrome or Firefox |
+| JavaScript | No | Yes |
+| `see`/`seeElement` checks if… | …text is present in the HTML source | …text is actually visible to the user |
+| Read HTTP response headers | Yes | No |
+| System requirements | PHP with [cURL extension](http://php.net/manual/book.curl.php) | Selenium Standalone Server, Chrome or Firefox |
+| Speed | Fast | Slow |
 
-This is the fastest way to run acceptance tests, since it doesn't require running an actual browser.
-We use a PHP web scraper, which acts like a browser: it sends a request, then receives and parses the response.
+We will start writing our first acceptance tests with PhpBrowser.
+
+## PhpBrowser
+
+This is the fastest way to run acceptance tests since it doesn't require running an actual browser.
+We use a PHP web scraper, which acts like a browser: It sends a request, then receives and parses the response.
 Codeception uses [Guzzle](http://guzzlephp.org) and [Symfony BrowserKit](http://symfony.com/doc/current/components/browser_kit.html) to interact with HTML web pages.
-Please note that you can't test actual visibility of HTML elements, or JavaScript interactions.
-Good thing about PhpBrowser is that it can be run in any environment with just PHP and cURL required.
 
 Common PhpBrowser drawbacks:
 
-* you can click only on links with valid URLs or form submit buttons
-* you can't fill in fields that are not inside a form
-* you can't work with JavaScript interactions: modal windows, datepickers, etc.
+* You can only click on links with valid URLs or form submit buttons
+* You can't fill in fields that are not inside a form
 
-Before we start, we need a local copy of the site running on your host.
-We need to specify the `url` parameter in the acceptance suite config (`tests/acceptance.suite.yml`):
+We need to specify the `url` parameter in the acceptance suite config:
 
 ```yaml
+# acceptance.suite.yml
 actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: {{your site URL}}
+            url: http://www.example.com/
         - \Helper\Acceptance
 ```
 
-We should start by creating a 'Cept' file in the `tests/acceptance` directory.
-Let's call it `SigninCept.php`. We will write the first lines into it:
+We should start by creating a 'Cept' file:
 
 ```php
 <?php
+// tests/acceptance/SigninCept.php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('sign in');
 ```
 
 The `$I` object is used to write all interactions.
-The methods of the `$I` object are taken from the `PhpBrowser` module. We will briefly describe them here:
+The methods of the `$I` object are taken from the [PhpBrowser Module](http://codeception.com/docs/modules/PhpBrowser). We will briefly describe them here:
 
 ```php
 <?php
@@ -78,7 +85,7 @@ With the `PhpBrowser` you can click the links and fill in the forms. That will p
 #### Click
 
 Emulates a click on valid anchors. The URL referenced in the `href` attribute will be opened.
-As a parameter you can specify the link name or a valid CSS or XPath selector.
+As a parameter, you can specify the link name or a valid CSS or XPath selector.
 
 ```php
 <?php
@@ -119,7 +126,7 @@ $I->click('Edit' , \Codeception\Util\Locator::elementAt('//table/tr', -1));
 
 #### Forms
 
-Clicking links is probably not what takes the most time during the testing of a web site.
+Clicking links is probably not what takes the most time during the testing of a website.
 The most routine waste of time goes into the testing of forms. Codeception provides several ways of testing forms.
 
 Let's submit this sample form inside the Codeception test:
@@ -167,7 +174,7 @@ $I->submitForm('#update_form', array('user' => array(
 ```
 
 The `submitForm` is not emulating a user's actions, but it's quite useful
-in situations when the form is not formatted properly, for example to discover that labels aren't set
+in situations when the form is not formatted properly, for example, to discover that labels aren't set
 or that fields have unclean names or badly written IDs, or the form is sent by a JavaScript call.
 
 By default, `submitForm` doesn't send values for buttons.  The last parameter allows specifying
@@ -192,7 +199,7 @@ $I->submitForm('#update_form', array('user' => array(
 #### Assertions
 
 In the `PhpBrowser` you can test the page contents.
-In most cases you just need to check that the required text or element is on the page.
+In most cases, you just need to check that the required text or element is on the page.
 
 The most useful method for this is `see()`:
 
@@ -230,7 +237,7 @@ $I->seeLink('Login');
 
 Usually, as soon as any assertion fails, further assertions of this test will be skipped.
 Sometimes you don't want this - maybe you have a long-running test and you want it to run to the end.
-In this case you can use conditional assertions.
+In this case, you can use conditional assertions.
 Each `see` method has a corresponding `canSee` method, and `dontSee` has a `cantSee` method:
 
 ```php
@@ -244,7 +251,7 @@ Each failed assertion will be shown in the test results, but it won't stop the t
 
 #### Comments
 
-Within a long scenario you should describe what actions you are going to perform and what results should be achieved.
+Within a long scenario, you should describe what actions you are going to perform and what results should be achieved.
 Comment methods like `amGoingTo`, `expect`, `expectTo` help you in making tests more descriptive:
 
 ```php
@@ -310,12 +317,59 @@ $I->seeInCurrentUrl('user/1');
 $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 ```
 
-## Selenium WebDriver
+## WebDriver
 
 A nice feature of Codeception is that most scenarios are similar, no matter of how they are executed.
 `PhpBrowser` was emulating browser requests but how to execute such test in a real browser like Chrome or Firefox? 
 Selenium WebDriver can drive them so in our acceptance tests we can automate scenarios we used to test manually.
-In such tests we should concentrate more on **testing the UI** than on testing functionality.
+In such tests, we should concentrate more on **testing the UI** than on testing functionality.
+
+"[WebDriver](https://www.w3.org/TR/webdriver/)" is the name of a protocol (specified by W3C)
+to drive browsers automatically. This specification is implemented for all modern desktop and mobile browsers. 
+Codeception uses [facebook/php-webdriver](https://github.com/facebook/php-webdriver) library from Facebook as PHP implementation of WebDriver protocol.
+
+To control the browsers you need to use a program or a service to start/stop browser sessions. 
+In the next section, we will overview the most popular solutions.
+
+### Local Setup   
+   
+#### Selenium Server
+
+[Selenium Server](http://www.seleniumhq.org/) is a de-facto standard for automated web and mobile testing. 
+It is a server that can launch and drive different browsers locally or remotely.
+WebDriver protocol was initially created by Selenium before becoming a W3C standard. 
+This makes Selenium server the most stable complete implementation of WebDriver for today.  
+Selenium Server is also recommended by Codeception team.
+
+To control browsers Selenium Server uses official tools maintained by browser vendors, like [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver) for Chrome or [GeckoDriver](https://github.com/mozilla/geckodriver) for Firefox.
+This makes Selenium quite heavy to install, as it requires Java, browsers, Chrome or GeckoDriver and GUI (display server) to run browsers in.
+
+* Follow [Installation Instructions](http://codeception.com/docs/modules/WebDriver#Selenium)
+* Enable [RunProcess](http://codeception.com/extensions#RunProcess) extension to start/stop Selenium automatically *(optional)*.
+
+#### PhantomJS
+
+PhantomJS is a customized WebKit-based [headless browser](https://en.wikipedia.org/wiki/Headless_browser)
+built for programmatic usage only. It doesn't display a browser window and doesn't require GUI (display server) to be installed.
+This makes PhantomJS highly popular for Continuous Integration systems.
+PhantomJS needs only one binary with no extra dependencies which make it the simplest WebDriver tool to install.
+
+However, it should be noted that PhantomJS is not a real browser, so the behavior and output in real browsers may differ from PhantomJS.
+And the most important: **PhantomJS is not maintained** anymore. So use it at your own risk.
+
+* Follow [Installation Instructions](http://codeception.com/docs/modules/WebDriver#PhantomJS)
+* Enable [RunProcess](http://codeception.com/extensions#RunProcess) extension to start/stop PhantomJS automatically *(optional)*.
+
+#### ChromeDriver
+
+ChromeDriver was created by Google to control Chrome and Chromium browsers programmatically. 
+It can be paired with [Selenium Server](http://codeception.com/docs/03-AcceptanceTests#Selenium-Server) or used as a standalone tool to drive Chrome browser.
+It is simpler to set up than Selenium Server, however, it has limited support for WebDriver protocol.
+
+* Follow [Installation Instructions](http://codeception.com/docs/modules/WebDriver#ChromeDriver)
+* Enable [RunProcess](http://codeception.com/extensions#RunProcess) extension to start/stop ChromeDriver automatically *(optional)*. 
+
+### Configuration
 
 To execute a test in a browser we need to change the suite configuration to use **WebDriver** instead of `PhpBrowser`.
 
@@ -331,7 +385,6 @@ modules:
         - \Helper\Acceptance
 ```
 
-In order to run browser tests you will need Selenium Server or PhantomJS.
 See [WebDriver Module](http://codeception.com/docs/modules/WebDriver) for details.
 
 Please note that actions executed in a browser will behave differently. For instance, `seeElement` won't just check that the element exists on a page,
@@ -342,8 +395,10 @@ but it will also check that element is actually visible to the user:
 $I->seeElement('#modal');
 ```
 
-While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: It can't check headers, since browsers don't provide APIs for that. 
+While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: It can't check headers since browsers don't provide APIs for that. 
 WebDriver also adds browser-specific functionality:
+
+
 
 #### Wait
 
@@ -359,7 +414,7 @@ $I->waitForElement('#agree_button', 30); // secs
 $I->click('#agree_button');
 ```
 
-In this case we are waiting for the 'agree' button to appear and then clicking it. If it didn't appear after 30 seconds,
+In this case, we are waiting for the 'agree' button to appear and then click it. If it didn't appear after 30 seconds,
 the test will fail. There are other `wait` methods you may use, like [waitForText](http://codeception.com/docs/modules/WebDriver#waitForText), 
 [waitForElementVisible](http://codeception.com/docs/modules/WebDriver#waitForElementVisible) and others.
 
@@ -368,6 +423,52 @@ If you don't know what exact element you need to wait for, you can simply pause 
 ```php
 <?php
 $I->wait(3); // wait for 3 secs
+```
+
+#### SmartWait
+
+*since 2.3.4 version*
+
+It is possible to wait for elements pragmatically. 
+If a test uses element which is not on a page yet, Codeception will wait for few extra seconds before failing.
+This feature is based on [Implicit Wait](http://www.seleniumhq.org/docs/04_webdriver_advanced.jsp#implicit-waits) of Selenium.
+Codeception enables implicit wait only when searching for a specific element and disables in all other cases. Thus, the performance of a test is not affected.
+
+SmartWait can be enabled by setting `wait` option in WebDriver config. It expects the number of seconds to wait. Example:
+
+```yaml
+wait: 5
+```
+
+With this config we have the following test:
+
+```php
+<?php
+// we use wait: 5 instead of 
+// $I->waitForElement(['css' => '#click-me'], 5);
+// to wait for element on page
+$I->click(['css' => '#click-me']);
+```
+
+It is important to understand that SmartWait works only with a specific locators:
+
+* `#locator` - CSS ID locator, works
+* `//locator` - general XPath locator, works
+* `['css' => 'button'']` - strict locator, works
+
+But it won't be executed for all other locator types.
+See the example:
+
+```php
+<?php
+$I->click('Login'); // DISABLED, not a specific locator
+$I->fillField('user', 'davert'); // DISABLED, not a specific locator
+$I->fillField(['name' => 'password'], '123456'); // ENABLED, strict locator
+$I->click('#login'); // ENABLED, locator is CSS ID
+$I->see('Hello, Davert'); // DISABLED, Not a locator
+$I->seeElement('#userbar'); // ENABLED
+$I->dontSeeElement('#login'); // DISABLED, can't wait for element to hide
+$I->seeNumberOfElements(['css' => 'button.link'], 5); // DISABLED, can wait only for one element
 ```
 
 #### Wait and Act
@@ -416,9 +517,9 @@ $I->wait(3);
 $I->see('Hello all!', '.message');
 ```
 
-In this case we performed, or 'did', some actions in the second window with the `does` method on a friend object.
+In this case, we performed, or 'did', some actions in the second window with the `does` method on a friend object.
 
-Sometimes you may want to close a web page before the end of the test. For such cases you may use `leave()`.
+Sometimes you may want to close a webpage before the end of the test. For such cases, you may use `leave()`.
 You can also specify roles for a friend:
 
 ```php
@@ -432,7 +533,6 @@ $nickAdmin->leave();
 
 ### Cloud Testing
 
-Selenium WebDriver allows us to execute tests in real browsers on different platforms.
 Some environments are hard to be reproduced manually, testing Internet Explorer 6-8 on Windows XP may be a hard thing,
 especially if you don't have Windows XP installed. This is where Cloud Testing services come to help you.
 Services such as [SauceLabs](https://saucelabs.com), [BrowserStack](https://www.browserstack.com/)
@@ -449,6 +549,7 @@ You just need to set the [WebDriver configuration](http://codeception.com/docs/m
 * browser
 * OS
 
+
 We recommend using [params](http://codeception.com/docs/06-ModulesAndHelpers#Dynamic-Configuration-With-Params)
 to provide authorization credentials.
 
@@ -456,19 +557,20 @@ It should be mentioned that Cloud Testing services are not free. You should inve
 and choose one that fits your needs. They also may work painfully slowly if ping times between the local server
 and the cloud is too high. This may lead to random failures in acceptance tests.
 
+
 ### AngularJS Testing
 
 In the modern era of Single Page Applications, the browser replaces the server in creating the user interface.
 Unlike traditional web applications, web pages are not reloaded on user actions.
-All interactions with the server is done in JavaScript with XHR requests.
+All interactions with the server are done in JavaScript with XHR requests.
 However, testing Single Page Applications can be a hard task.
 There could be no information of the application state: e.g. has it completed rendering or not?
 What is possible to do in this case is to use more `wait*` methods or execute JavaScript that checks the application state.
 
-For applications built with the AngularJS v1.x framework
+For applications built with the AngularJS v1.x framework,
 we implemented [AngularJS module](http://codeception.com/docs/modules/AngularJS) which is based on Protractor
 (an official tool for testing Angular apps). Under the hood, it pauses step execution
-before the previous actions are completed and uses the AngularJS API to check the application state.
+before the previous actions are completed and use the AngularJS API to check the application state.
 
 The AngularJS module extends WebDriver so that all the configuration options from it are available.
 
@@ -485,11 +587,27 @@ codecept_debug($I->grabTextFrom('#name'));
 On each failure, the snapshot of the last shown page will be stored in the `tests/_output` directory.
 PhpBrowser will store the HTML code and WebDriver will save a screenshot of the page.
 
-Sometimes you may want to inspect a web page opened by a running test. For such cases
-you may use the [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of the WebDriver module.
+Additional debugging features by Codeception:
 
-You can also record your tests step by step and review the execution flow as a slideshow
-with the help of the [Recorder extension](http://codeception.com/addons#CodeceptionExtensionRecorder).
+* [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of WebDriver module allows pausing the test.
+* [Recorder extension](http://codeception.com/addons#CodeceptionExtensionRecorder) allows to record tests step-by-steps and show them in slideshow
+* [Interactive Console](http://codeception.com/docs/07-AdvancedUsage#Interactive-Console) is a REPL that allows to type and check commands for instant feedback. 
+
+
+### Custom Browser Sessions
+
+By default, WebDriver module is configured to automatically start browser before the test and stop afterward.
+However, this can be switched off with `start: false` module configuration. 
+To start a browser you will need to write corresponding methods in Acceptance [Helper](http://codeception.com/docs/06-ModulesAndHelpers#Helpers).
+
+WebDriver module provides advanced methods for the browser session, however, they can only be used from Helpers.
+     
+* [_initializeSession](http://codeception.com/docs/modules/WebDriver#_initializeSession) - starts a new browser session
+* [_closeSession](http://codeception.com/docs/modules/WebDriver#_closeSession) - stops the browser session
+* [_restart](http://codeception.com/docs/modules/WebDriver#_restart) - updates configuration and restarts browser
+* [_capabilities](http://codeception.com/docs/modules/WebDriver#_capabilities) - set [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities) programmatically.
+
+Those methods can be used to create custom commands like `$I->startBrowser()` or used in [before/after](http://codeception.com/docs/06-ModulesAndHelpers#Hooks) hooks. 
 
 ## Conclusion
 

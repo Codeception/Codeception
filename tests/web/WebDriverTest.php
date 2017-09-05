@@ -2,6 +2,7 @@
 
 use Codeception\Step;
 use Codeception\Util\Stub;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
@@ -551,6 +552,23 @@ class WebDriverTest extends TestsForBrowsers
         $module->waitForElementNotVisible('//xpath');
     }
 
+    public function testWaitForElement()
+    {
+        $this->module->amOnPage('/form/timeout');
+        $this->module->waitForElement('#btn');
+        $this->module->click('Click');
+        $this->module->see('Hello');
+    }
+
+    public function testImplicitWait()
+    {
+        $this->module->_reconfigure(['wait' => 5]);
+        $this->module->amOnPage('/form/timeout');
+        $this->module->click('#btn');
+        $this->module->see('Hello');
+    }
+
+
     public function testBug1467()
     {
         $this->module->amOnPage('/form/bug1467');
@@ -1033,5 +1051,19 @@ HTML
         // `Selenium` adds the `xmlns` attribute while `PhantomJS` does not do that.
         $sourceActual = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $sourceActualRaw);
         $this->assertXmlStringEqualsXmlString($sourceExpected, $sourceActual);
+    }
+
+    public function testChangingCapabilities()
+    {
+        $this->notForPhantomJS();
+        $this->assertNotTrue($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
+        $this->module->_closeSession();
+        $this->module->_capabilities(function($current) {
+            $current['acceptInsecureCerts'] = true;
+            return new DesiredCapabilities($current);
+        });
+        $this->assertNotTrue($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
+        $this->module->_initializeSession();
+        $this->assertTrue(true, $this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
     }
 }

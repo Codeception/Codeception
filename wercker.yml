@@ -1,4 +1,4 @@
-box: hhvm/hhvm-proxygen
+box: hhvm/hhvm-proxygen:3.18-lts-latest
 # Build definition
 
 build:
@@ -9,7 +9,7 @@ build:
         code: |
           export DEBIAN_FRONTEND=noninteractive
     - install-packages:
-      packages: curl git mysql-server mysql-server-5.7 redis-server postgresql
+      packages: curl git mysql-server redis-server postgresql
     - script:
         name: start database servers
         code: |
@@ -45,6 +45,11 @@ build:
     # A custom script step, name value is used in the UI
     # and the code value contains the command that get executed
     - script:
-        name: codeception tests
+        name: codeception CLI tests
         code: |
-          php codecept run cli,unit
+          php codecept run cli RunCest
+
+    - script:
+        name: codeception unit tests
+        code: |
+          php codecept run unit

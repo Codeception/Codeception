@@ -364,7 +364,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
             $this->fail(sprintf('The "%s" url does not match with any route', $uri));
         }
-        $expected = array_merge(array('_route' => $routeName), $params);
+        $expected = array_merge(['_route' => $routeName], $params);
         $intersection = array_intersect_assoc($expected, $match);
 
         $this->assertEquals($expected, $intersection);
@@ -521,9 +521,14 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     private function extractRawRoles(Data $data)
     {
-        $raw = $data->getRawData();
+        if ($this->dataRevealsValue($data)) {
+            $roles = $data->getValue();
+        } else {
+            $raw = $data->getRawData();
+            $roles = isset($raw[1]) ? $raw[1] : [];
+        }
 
-        return isset($raw[1]) ? $raw[1] : [];
+        return $roles;
     }
 
     /**
@@ -572,5 +577,17 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if ($this->client) {
             $this->client->rebootKernel();
         }
+    }
+
+    /**
+     * Public API from Data changed from Symfony 3.2 to 3.3.
+     *
+     * @param \Symfony\Component\VarDumper\Cloner\Data $data
+     *
+     * @return bool
+     */
+    private function dataRevealsValue(Data $data)
+    {
+        return method_exists($data, 'getValue');
     }
 }

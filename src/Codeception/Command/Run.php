@@ -140,36 +140,31 @@ class Run extends Command
                 'coverage',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Run with code coverage',
-                'coverage.serialized'
+                'Run with code coverage'
             ),
             new InputOption(
                 'coverage-html',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage HTML report in path',
-                'coverage'
+                'Generate CodeCoverage HTML report in path'
             ),
             new InputOption(
                 'coverage-xml',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage XML report in file',
-                'coverage.xml'
+                'Generate CodeCoverage XML report in file'
             ),
             new InputOption(
                 'coverage-text',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage text report in file',
-                'coverage.txt'
+                'Generate CodeCoverage text report in file'
             ),
             new InputOption(
                 'coverage-crap4j',
                 '',
                 InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage report in Crap4J XML format',
-                'crap4j.xml'
+                'Generate CodeCoverage report in Crap4J XML format'
             ),
             new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
             new InputOption(
@@ -248,7 +243,16 @@ class Run extends Command
         $userOptions = array_intersect_key($this->options, array_flip($this->passedOptionKeys($input)));
         $userOptions = array_merge(
             $userOptions,
-            $this->booleanOptions($input, ['xml', 'html', 'json', 'tap', 'coverage', 'coverage-xml', 'coverage-html', 'coverage-crap4j'])
+            $this->booleanOptions($input, [
+                'xml' => 'report.xml',
+                'html' => 'report.html',
+                'json' => 'report.json',
+                'tap' => 'report.tap.log',
+                'coverage' => 'coverage.serialized',
+                'coverage-xml' => 'coverage.xml',
+                'coverage-html' => 'coverage',
+                'coverage-text' => 'coverage.txt',
+                'coverage-crap4j' => 'crap4j.xml'])
         );
         $userOptions['verbosity'] = $this->output->getVerbosity();
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
@@ -276,15 +280,54 @@ class Run extends Command
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
 
-        if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
-            list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
-        }
-
         if ($this->options['group']) {
             $this->output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $this->options['group'])));
         }
         if ($input->getArgument('test')) {
             $this->options['steps'] = true;
+        }
+
+        if (!$test) {
+            // Check if suite is given and is in an included path
+            if (!empty($suite) && !empty($config['include'])) {
+                $isIncludeTest = false;
+                // Remember original projectDir
+                $projectDir = Configuration::projectDir();
+
+                foreach ($config['include'] as $include) {
+                    // Find if the suite begins with an include path
+                    if (strpos($suite, $include) === 0) {
+                        // Use include config
+                        $config = Configuration::config($projectDir.$include);
+
+                        if (!isset($config['paths']['tests'])) {
+                            throw new \RuntimeException(
+                                sprintf("Included '%s' has no tests path configured", $include)
+                            );
+                        }
+
+                        $testsPath = $include . DIRECTORY_SEPARATOR.  $config['paths']['tests'];
+
+                        try {
+                            list(, $suite, $test) = $this->matchTestFromFilename($suite, $testsPath);
+                            $isIncludeTest = true;
+                        } catch (\InvalidArgumentException $e) {
+                            // Incorrect include match, continue trying to find one
+                            continue;
+                        }
+                    }
+                }
+
+                // Restore main config
+                if (!$isIncludeTest) {
+                    $config = Configuration::config($projectDir);
+                }
+            } elseif (!empty($suite)) {
+                // Run single test without included tests
+                if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
+                    list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
+                }
+            }
         }
 
         if ($test) {
@@ -295,9 +338,10 @@ class Run extends Command
         $this->codecept = new Codecept($userOptions);
 
         if ($suite and $test) {
-            $this->codecept->run($suite, $test);
+            $this->codecept->run($suite, $test, $config);
         }
 
+        // Run all tests of given suite or all suites
         if (!$test) {
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
             $this->executed = $this->runSuites($suites, $this->options['skip']);
@@ -380,10 +424,11 @@ class Run extends Command
         return $executed;
     }
 
-    protected function matchTestFromFilename($filename, $tests_path)
+    protected function matchTestFromFilename($filename, $testsPath)
     {
+        $testsPath = str_replace(['//', '\/', '\\'], '/', $testsPath);
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
-        $res = preg_match("~^$tests_path/(.*?)(?>/(.*))?$~", $filename, $matches);
+        $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
 
         if (!$res) {
             throw new \InvalidArgumentException("Test file can't be matched");
@@ -442,15 +487,14 @@ class Run extends Command
     {
         $values = [];
         $request = (string)$input;
-        foreach ($options as $option) {
+        foreach ($options as $option => $defaultValue) {
             if (strpos($request, "--$option")) {
-                $values[$option] = $input->hasParameterOption($option)
-                    ? $input->getParameterOption($option)
-                    : $input->getOption($option);
+                $values[$option] = $input->getOption($option) ? $input->getOption($option) : $defaultValue;
             } else {
                 $values[$option] = false;
             }
         }
+
         return $values;
     }
 

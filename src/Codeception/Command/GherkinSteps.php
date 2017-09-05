@@ -51,7 +51,7 @@ class GherkinSteps extends Command
         foreach ($steps as $name => $context) {
             /** @var $table Table  **/
             $table = new Table($output);
-            $table->setHeaders(array('Step', 'Implementation'));
+            $table->setHeaders(['Step', 'Implementation']);
             $output->writeln("Steps from <bold>$name</bold> context:");
 
             foreach ($context as $step => $callable) {

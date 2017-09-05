@@ -14,9 +14,7 @@ use Codeception\TestInterface;
  * Access a database.
  *
  * The most important function of this module is to clean a database before each test.
- * That's why this module was added to the global configuration file `codeception.yml`.
- * To have your database properly cleaned you should configure it to access the database.
- * This module also provides actions to perform checks in a database.
+ * This module also provides actions to perform checks in a database, e.g. [seeInDatabase()](http://codeception.com/docs/modules/Db#seeInDatabase)
  *
  * In order to have your database populated with data you need a raw SQL dump.
  * Simply put the dump in the `tests/_data` directory (by default) and specify the path in the config.
@@ -374,6 +372,7 @@ class Db extends CodeceptionModule implements DbInterface
     protected function loadDumpUsingDriver()
     {
         if (!$this->sql) {
+            $this->debugSection('Db', 'No SQL loaded, loading dump skipped');
             return;
         }
         $this->driver->load($this->sql);
@@ -518,6 +517,32 @@ class Db extends CodeceptionModule implements DbInterface
         return $sth->fetchColumn();
     }
 
+    /**
+     * Fetches all values from the column in database.
+     * Provide table name, desired column and criteria.
+     *
+     * ``` php
+     * <?php
+     * $mails = $I->grabColumnFromDatabase('users', 'email', array('name' => 'RebOOter'));
+     * ```
+     *
+     * @param string $table
+     * @param string $column
+     * @param array $criteria
+     *
+     * @return array
+     */
+    public function grabColumnFromDatabase($table, $column, array $criteria = [])
+    {
+        $query      = $this->driver->select($column, $table, $criteria);
+        $parameters = array_values($criteria);
+        $this->debugSection('Query', $query);
+        $this->debugSection('Parameters', $parameters);
+        $sth = $this->driver->executeQuery($query, $parameters);
+        
+        return $sth->fetchAll(\PDO::FETCH_COLUMN, 0);
+    }
+
     public function grabFromDatabase($table, $column, $criteria = [])
     {
         return $this->proceedSeeInDatabase($table, $column, $criteria);
@@ -534,5 +559,16 @@ class Db extends CodeceptionModule implements DbInterface
     public function grabNumRecords($table, array $criteria = [])
     {
         return $this->countInDatabase($table, $criteria);
+    }
+    
+    public function updateInDatabase($table, array $data, array $criteria = [])
+    {
+        $query = $this->driver->update($table, $data, $criteria);
+        $parameters = array_merge(array_values($data), array_values($criteria));
+        $this->debugSection('Query', $query);
+        if (!empty($parameters)) {
+            $this->debugSection('Parameters', $parameters);
+        }
+        $this->driver->executeQuery($query, $parameters);
     }
 }

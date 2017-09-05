@@ -186,8 +186,32 @@ trait Asserts
     {
         \PHPUnit_Framework_Assert::assertNotRegExp($pattern, $string, $message);
     }
-        
-    
+
+    /**
+     * Checks that a string starts with the given prefix.
+     *
+     * @param string $prefix
+     * @param string $string
+     * @param string $message
+     */
+    protected function assertStringStartsWith($prefix, $string, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertStringStartsWith($prefix, $string, $message);
+    }
+
+    /**
+     * Checks that a string doesn't start with the given prefix.
+     *
+     * @param string $prefix
+     * @param string $string
+     * @param string $message
+     */
+    protected function assertStringStartsNotWith($prefix, $string, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertStringStartsNotWith($prefix, $string, $message);
+    }
+
+
     /**
      * Checks that variable is empty.
      *
@@ -349,6 +373,19 @@ trait Asserts
     protected function assertArrayNotHasKey($key, $actual, $description = '')
     {
         \PHPUnit_Framework_Assert::assertArrayNotHasKey($key, $actual, $description);
+    }
+
+    /**
+     * Checks that array contains subset.
+     *
+     * @param array  $subset
+     * @param array  $array
+     * @param bool   $strict
+     * @param string $message
+     */
+    protected function assertArraySubset($subset, $array, $strict = false, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertArraySubset($subset, $array, $strict, $message);
     }
 
     /**

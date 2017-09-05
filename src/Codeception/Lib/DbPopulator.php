@@ -81,11 +81,6 @@ class DbPopulator
      */
     public function run()
     {
-        if (!$this->config['dump']) {
-            codecept_debug("[Db] No dump file found. Skip loading the dump using the populator command.");
-            return false;
-        }
-
         $command = $this->getBuiltCommand();
         codecept_debug("[Db] Executing Populator: `$command`");
 

@@ -62,17 +62,39 @@ class Annotation
     /**
      * Parses raw comment for annotations
      *
-     * @param $comment
+     * @param $docblock
      * @param $annotation
      * @return array
      */
-    public static function fetchAllFromComment($annotation, $comment)
+    public static function fetchAnnotationsFromDocblock($annotation, $docblock)
     {
-        if (preg_match_all(sprintf(self::$regex, $annotation), $comment, $matched)) {
+        if (preg_match_all(sprintf(self::$regex, $annotation), $docblock, $matched)) {
             return $matched[1];
         }
         return [];
     }
+
+    /**
+     * Fetches all available annotations
+     *
+     * @param $docblock
+     * @return array
+     */
+    public static function fetchAllAnnotationsFromDocblock($docblock)
+    {
+        $annotations = [];
+        if (!preg_match_all(sprintf(self::$regex, '(\w+)'), $docblock, $matched)) {
+            return $annotations;
+        }
+        foreach ($matched[1] as $k => $annotation) {
+            if (!isset($annotations[$annotation])) {
+                $annotations[$annotation] = [];
+            }
+            $annotations[$annotation][] = $matched[2][$k];
+        };
+        return $annotations;
+    }
+
 
     public function __construct(\ReflectionClass $class)
     {

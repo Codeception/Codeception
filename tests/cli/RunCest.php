@@ -442,9 +442,9 @@ EOF
 
     public function overrideModuleOptions(CliGuy $I)
     {
-        $I->executeCommand('run powers --no-exit');
+        $I->executeCommand('run powers PowerIsRisingCept --no-exit');
         $I->seeInShellOutput('FAILURES');
-        $I->executeCommand('run powers -o "modules: config: PowerHelper: has_power: true" --no-exit');
+        $I->executeCommand('run powers PowerIsRisingCept -o "modules: config: PowerHelper: has_power: true" --no-exit');
         $I->dontSeeInShellOutput('FAILURES');
     }
 
@@ -478,5 +478,11 @@ EOF
         $I->seeInShellOutput('Test  ' . $testPath);
         $I->seeInShellOutput('Step  See file found "games.zip"');
         $I->seeInShellOutput('Fail  File "games.zip" not found at ""');
+    }
+
+    public function runTestWithCustomSetupMethod(CliGuy $I)
+    {
+        $I->executeCommand('run powers PowerUpCest');
+        $I->dontSeeInShellOutput('FAILURES');
     }
 }

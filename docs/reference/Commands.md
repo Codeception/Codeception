@@ -27,7 +27,7 @@ Create new test suite. Requires suite name and actor name
 ## GherkinSnippets
 
 Generates code snippets for matched feature files in a suite.
-Code snuppets are expected to be implemtned in Actor or PageOjects
+Code snippets are expected to be implemented in Actor or PageObjects
 
 Usage:
 
@@ -35,6 +35,10 @@ Usage:
 * `codecept gherkin:snippets acceptance/feature/users` - snippets from `feature/users` dir of acceptance tests
 * `codecept gherkin:snippets acceptance user_account.feature` - snippets from a single feature file
 * `codecept gherkin:snippets acceptance/feature/users/user_accout.feature` - snippets from feature file in a dir
+
+
+
+## Init
 
 
 
@@ -121,6 +125,12 @@ Override config values:
 * `codecept run -o "settings: shuffle: true"`: enable shuffle
 * `codecept run -o "settings: lint: false"`: disable linting
 * `codecept run -o "reporters: report: \Custom\Reporter" --report`: use custom reporter
+
+Run with specific extension
+
+* `codecept run --ext Recorder` run with Recorder extension enabled
+* `codecept run --ext DotReporter` run with DotReporter printer
+* `codecept run --ext "My\Custom\Extension"` run with an extension loaded by class name
 
 Full reference:
 ```
@@ -225,7 +235,7 @@ Generates empty environment configuration file into envs dir:
 
  * `codecept g:env firefox`
 
-Required to have `envs` path to be specifed in `codeception.yml`
+Required to have `envs` path to be specified in `codeception.yml`
 
 
 
@@ -236,17 +246,6 @@ Generates Feature file (in Gherkin):
 * `codecept generate:feature suite Login`
 * `codecept g:feature suite subdir/subdir/login.feature`
 * `codecept g:feature suite login.feature -c path/to/project`
-
-
-
-
-## GeneratePhpUnit
-
-Generates skeleton for unit test as in classical PHPUnit.
-
-* `codecept g:phpunit unit UserTest`
-* `codecept g:phpunit unit User`
-* `codecept g:phpunit unit "App\User`
 
 
 

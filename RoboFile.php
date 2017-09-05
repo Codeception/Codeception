@@ -17,11 +17,11 @@ class RoboFile extends \Robo\Tasks
         $this->publishDocs();
         $this->buildPhar();
         $this->buildPhar5();
-        $this->revertComposerJsonChanges();
         $this->publishPhar();
         $this->publishGit();
         $this->publishBase(null, \Codeception\Codecept::VERSION);
         $this->versionBump();
+        $this->update(); //update dependencies after release, because buildPhar5 set them to old versions
     }
 
     public function versionBump($version = '')
@@ -154,11 +154,11 @@ class RoboFile extends \Robo\Tasks
         $this->taskComposerUpdate()->run();
     }
 
-    private function installDependenciesForPhp56()
+    private function installDependenciesForPhp70()
     {
         $this->taskReplaceInFile('composer.json')
             ->regex('/"platform": \{.*?\}/')
-            ->to('"platform": {"php": "5.6.0"}')
+            ->to('"platform": {"php": "7.0.0"}')
             ->run();
 
         $this->taskComposerUpdate()->run();
@@ -179,7 +179,9 @@ class RoboFile extends \Robo\Tasks
      */
     public function buildPhar()
     {
+        $this->installDependenciesForPhp70();
         $this->packPhar('package/codecept.phar');
+        $this->revertComposerJsonChanges();
     }
 
     /**
@@ -193,6 +195,7 @@ class RoboFile extends \Robo\Tasks
         }
         $this->installDependenciesForPhp54();
         $this->packPhar('package/php54/codecept.phar');
+        $this->revertComposerJsonChanges();
     }
 
     private function packPhar($pharFileName)
@@ -259,6 +262,7 @@ class RoboFile extends \Robo\Tasks
         $pharTask->addFile('autoload.php', 'autoload.php')
             ->addFile('codecept', 'package/bin')
             ->addFile('shim.php', 'shim.php')
+            ->addFile('phpunit5-loggers.php', 'phpunit5-loggers.php')
             ->run();
         
         $code = $this->taskExec('php ' . $pharFileName)->run()->getExitCode();
@@ -363,7 +367,7 @@ class RoboFile extends \Robo\Tasks
     public function buildDocsApi()
     {
         $this->say("API Classes");
-        $apiClasses = ['Codeception\Module'];
+        $apiClasses = ['Codeception\Module', 'Codeception\InitTemplate'];
 
         foreach ($apiClasses as $apiClass) {
             $name = (new ReflectionClass($apiClass))->getShortName();
@@ -483,7 +487,11 @@ class RoboFile extends \Robo\Tasks
 
             if (file_exists("releases/$releaseName/php54/codecept.phar")) {
                 $downloadUrl = "http://codeception.com/releases/$releaseName/php54/codecept.phar";
-                $versionLine .= ", [for PHP 5.4 or 5.5]($downloadUrl)";
+                if (version_compare($releaseName, '2.3.0', '>=')) {
+                    $versionLine .= ", [for PHP 5.4 - 5.6]($downloadUrl)";
+                } else {
+                    $versionLine .= ", [for PHP 5.4 or 5.5]($downloadUrl)";
+                }
             }
 
             $releaseFile->line($versionLine);
@@ -515,6 +523,7 @@ class RoboFile extends \Robo\Tasks
 
         chdir('../..');
 
+        $this->say('building changelog');
         $this->taskWriteToFile('package/site/changelog.markdown')
             ->line('---')
             ->line('layout: page')
@@ -716,7 +725,7 @@ class RoboFile extends \Robo\Tasks
         }
 
         //user
-        $changelog = preg_replace('~\s@(\w+)~', ' **[$1](https://github.com/$1)**', $changelog);
+        $changelog = preg_replace('~\s@([\w-]+)~', ' **[$1](https://github.com/$1)**', $changelog);
 
         //issue
         $changelog = preg_replace(
