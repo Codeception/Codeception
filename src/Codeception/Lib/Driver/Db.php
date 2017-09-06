@@ -158,6 +158,7 @@ class Db
     {
         return [
             'like',
+            '!=',
             '<=',
             '>=',
             '<',
@@ -190,7 +191,8 @@ class Db
 
                 $hasOperand = true;
                 $k = str_ireplace(" $operand", '', $k);
-                $params[] = $this->getQuotedName($k) . ' ' . strtoupper($k) . ' ? ';
+                $operand = strtoupper($operand);
+                $params[] = $this->getQuotedName($k) . " $operand ? ";
                 break;
             }
 
@@ -201,7 +203,7 @@ class Db
 
         return 'WHERE ' . implode('AND ', $params);
     }
-
+    
     /**
      * @deprecated use deleteQueryByCriteria instead
      */
