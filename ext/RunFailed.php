@@ -41,7 +41,7 @@ class RunFailed extends Extension
 
     public function _initialize()
     {
-        if (array_key_exists('fail-group', $this->config) && $this->config['fail-group']){
+        if (array_key_exists('fail-group', $this->config) && $this->config['fail-group']) {
             $this->group = $this->config['fail-group'];
         }
         $logPath = str_replace($this->getRootDir(), '', $this->getLogDir()); // get local path to logs
