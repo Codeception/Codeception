@@ -29,6 +29,9 @@ modules:
 
 extensions:
     enabled: [Codeception\Extension\RunFailed]
+    config:
+        Codeception\Extension\RunFailed:
+            fail-group: failed
 
 coverage:
     enabled: true
