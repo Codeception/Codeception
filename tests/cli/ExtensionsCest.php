@@ -43,11 +43,11 @@ class ExtensionsCest
         $I->seeInShellOutput('Tests: 1, Assertions: 1, Failures: 1');
 
         $failGroup = "some-failed";
-        $I->executeCommand("run unit FailingTest.php -c codeception_extended.yml --no-exit --override \"settings: fail-group: {$failGroup}\"");
+        $I->executeCommand("run unit FailingTest.php -c codeception_extended.yml --no-exit --override \"extensions: config: Codeception\\Extension\\RunFailed: fail-group: {$failGroup}\"");
         $I->seeInShellOutput('FAILURES');
         $I->seeFileFound($failGroup, 'tests/_output');
         $I->seeFileContentsEqual("tests{$ds}unit{$ds}FailingTest.php:testMe");
-        $I->executeCommand("run -g {$failGroup} -c codeception_extended.yml --no-exit --override \"settings: fail-group: {$failGroup}\"");
+        $I->executeCommand("run -g {$failGroup} -c codeception_extended.yml --no-exit --override \"extensions: config: Codeception\\Extension\\RunFailed: fail-group: {$failGroup}\"");
         $I->seeInShellOutput('Tests: 1, Assertions: 1, Failures: 1');
     }
 
