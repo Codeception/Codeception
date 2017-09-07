@@ -37,11 +37,13 @@ class RunFailed extends Extension
     ];
 
     /** @var string filename/groupname for failed tests */
-    protected $group;
+    protected $group = 'failed';
 
     public function _initialize()
     {
-        $this->group = $this->config['fail-group'];
+        if (array_key_exists('fail-group', $this->config) && $this->config['fail-group']){
+            $this->group = $this->config['fail-group'];
+        }
         $logPath = str_replace($this->getRootDir(), '', $this->getLogDir()); // get local path to logs
         $this->_reconfigure(['groups' => [$this->group => $logPath . $this->group]]);
     }
