@@ -216,16 +216,15 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $_REQUEST = [];
 
         if ($this->config['cleanup']) {
-            foreach ($this->loadedFixtures as $fixture) {
-                $fixture->unloadFixtures();
-            }
-            $this->loadedFixtures = [];
-
             if ($this->transaction) {
                 $this->transaction->rollback();
             }
         }
         
+        foreach ($this->loadedFixtures as $fixture) {
+            $fixture->unloadFixtures();
+        }
+        $this->loadedFixtures = [];
 
         if ($this->client) {
             $this->client->resetPersistentVars();
