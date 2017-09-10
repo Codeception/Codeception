@@ -156,6 +156,123 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         $this->assertEquals($num, 0);
     }
 
+    public function testGenerateWhereClauseWithLikeOperator()
+    {
+        $testData = [
+            ['name' => 'davert', 'number_of_logins' => 1],
+            ['name' => 'david', 'number_of_logins' => 2],
+            ['name' => 'susi', 'number_of_logins' => 3],
+        ];
+
+        foreach ($testData as $data){
+            $this->module->haveInDatabase('users', $data);
+        }
+
+        $num = $this->module->grabNumRecords('users', ['name like' => 'dav']);
+        $this->assertEquals($num, 2);
+
+        $num = $this->module->grabNumRecords('users', ['name like' => 'dave']);
+        $this->assertEquals($num, 1);
+
+        $num = $this->module->grabNumRecords('users', ['name like' => 'albr']);
+        $this->assertEquals($num, 0);
+    }
+
+    public function testGenerateWhereClauseWithGreaterThanOperator()
+    {
+        $testData = [
+            ['name' => 'davert', 'number_of_logins' => 1],
+            ['name' => 'david', 'number_of_logins' => 2],
+            ['name' => 'susi', 'number_of_logins' => 3],
+        ];
+
+        foreach ($testData as $data){
+            $this->module->haveInDatabase('users', $data);
+        }
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins >' => 2]);
+        $this->assertEquals($num, 1);
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins >' => 3]);
+        $this->assertEquals($num, 0);
+    }
+
+    public function testGenerateWhereClauseWithLessThanOperator()
+    {
+        $testData = [
+            ['name' => 'davert', 'number_of_logins' => 1],
+            ['name' => 'david', 'number_of_logins' => 2],
+            ['name' => 'susi', 'number_of_logins' => 3],
+        ];
+
+        foreach ($testData as $data){
+            $this->module->haveInDatabase('users', $data);
+        }
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins <' => 2]);
+        $this->assertEquals($num, 1);
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins <' => 1]);
+        $this->assertEquals($num, 0);
+    }
+
+    public function testGenerateWhereClauseWithGreaterOrEqualThanOperator()
+    {
+        $testData = [
+            ['name' => 'davert', 'number_of_logins' => 1],
+            ['name' => 'david', 'number_of_logins' => 2],
+            ['name' => 'susi', 'number_of_logins' => 3],
+        ];
+
+        foreach ($testData as $data){
+            $this->module->haveInDatabase('users', $data);
+        }
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins >=' => 2]);
+        $this->assertEquals($num, 2);
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins >=' => 3]);
+        $this->assertEquals($num, 1);
+    }
+
+    public function testGenerateWhereClauseWithLessOrEqualThanOperator()
+    {
+        $testData = [
+            ['name' => 'davert', 'number_of_logins' => 1],
+            ['name' => 'david', 'number_of_logins' => 2],
+            ['name' => 'susi', 'number_of_logins' => 3],
+        ];
+
+        foreach ($testData as $data){
+            $this->module->haveInDatabase('users', $data);
+        }
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins <=' => 2]);
+        $this->assertEquals($num, 2);
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins <=' => 1]);
+        $this->assertEquals($num, 1);
+    }
+
+    public function testGenerateWhereClauseWithNotEqualThanOperator()
+    {
+        $testData = [
+            ['name' => 'davert', 'number_of_logins' => 1],
+            ['name' => 'david', 'number_of_logins' => 2],
+            ['name' => 'susi', 'number_of_logins' => 3],
+        ];
+
+        foreach ($testData as $data){
+            $this->module->haveInDatabase('users', $data);
+        }
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins !=' => 2]);
+        $this->assertEquals($num, 2);
+
+        $num = $this->module->grabNumRecords('users', ['number_of_logins !=' => 4]);
+        $this->assertEquals($num, 3);
+    }
+
 
     public function testLoadWithPopulator()
     {
