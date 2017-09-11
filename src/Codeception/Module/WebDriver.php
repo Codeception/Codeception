@@ -2977,6 +2977,7 @@ class WebDriver extends CodeceptionModule implements
         if (!isset($this->sessionSnapshots[$name])) {
             return false;
         }
+        $this->webDriver->manage()->deleteAllCookies();
         foreach ($this->sessionSnapshots[$name] as $cookie) {
             $this->webDriver->manage()->addCookie($cookie);
         }
