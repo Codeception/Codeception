@@ -13,8 +13,10 @@ if (!class_exists('Symfony\Component\CssSelector\CssSelectorConverter')) {
 // Add aliases for PHPUnit 6
 
 namespace {
-    if (!class_exists('PHPUnit_Framework_TestCase') && class_exists('PHPUnit\Framework\TestCase')) {
+    if (!class_exists('PHPUnit_Framework_Assert') && class_exists('PHPUnit\Framework\Assert')) {
         class_alias('PHPUnit\Framework\Assert', 'PHPUnit_Framework_Assert');
+    }
+    if (!class_exists('PHPUnit_Framework_TestCase') && class_exists('PHPUnit\Framework\TestCase')) {
         class_alias('PHPUnit\Framework\AssertionFailedError', 'PHPUnit_Framework_AssertionFailedError');
         class_alias('PHPUnit\Framework\Constraint\Constraint', 'PHPUnit_Framework_Constraint');
         class_alias('PHPUnit\Framework\Constraint\LogicalNot', 'PHPUnit_Framework_Constraint_Not');
