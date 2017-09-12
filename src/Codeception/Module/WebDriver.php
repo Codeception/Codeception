@@ -1617,10 +1617,12 @@ class WebDriver extends CodeceptionModule implements
         $field->click();
     }
 
-    public function fillField($field, $value)
+    public function fillField($field, $value, $clearField = true)
     {
         $el = $this->findField($field);
-        $el->clear();
+        if ($clearField) {
+            $el->clear();
+        }
         $el->sendKeys($value);
     }
 
