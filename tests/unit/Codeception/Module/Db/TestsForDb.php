@@ -158,119 +158,59 @@ abstract class TestsForDb extends \Codeception\Test\Unit
 
     public function testGenerateWhereClauseWithLikeOperator()
     {
-        $testData = [
-            ['name' => 'davert', 'number_of_logins' => 1],
-            ['name' => 'david', 'number_of_logins' => 2],
-            ['name' => 'susi', 'number_of_logins' => 3],
-        ];
-
-        foreach ($testData as $data){
-            $this->module->haveInDatabase('users', $data);
-        }
-
-        $num = $this->module->grabNumRecords('users', ['name like' => 'dav']);
+        $num = $this->module->grabNumRecords('users', ['email like' => 'mail.ua']);
         $this->assertEquals($num, 2);
 
-        $num = $this->module->grabNumRecords('users', ['name like' => 'dave']);
+        $num = $this->module->grabNumRecords('users', ['email like' => 'miles@davis.com']);
         $this->assertEquals($num, 1);
 
-        $num = $this->module->grabNumRecords('users', ['name like' => 'albr']);
+        $num = $this->module->grabNumRecords('users', ['email like' => 'albr']);
         $this->assertEquals($num, 0);
     }
 
     public function testGenerateWhereClauseWithGreaterThanOperator()
     {
-        $testData = [
-            ['name' => 'davert', 'number_of_logins' => 1],
-            ['name' => 'david', 'number_of_logins' => 2],
-            ['name' => 'susi', 'number_of_logins' => 3],
-        ];
+        $num = $this->module->grabNumRecords('users', ['id >' => 2]);
+        $this->assertEquals($num, 2);
 
-        foreach ($testData as $data){
-            $this->module->haveInDatabase('users', $data);
-        }
-
-        $num = $this->module->grabNumRecords('users', ['number_of_logins >' => 2]);
+        $num = $this->module->grabNumRecords('users', ['id >' => 3]);
         $this->assertEquals($num, 1);
-
-        $num = $this->module->grabNumRecords('users', ['number_of_logins >' => 3]);
-        $this->assertEquals($num, 0);
     }
 
     public function testGenerateWhereClauseWithLessThanOperator()
     {
-        $testData = [
-            ['name' => 'davert', 'number_of_logins' => 1],
-            ['name' => 'david', 'number_of_logins' => 2],
-            ['name' => 'susi', 'number_of_logins' => 3],
-        ];
-
-        foreach ($testData as $data){
-            $this->module->haveInDatabase('users', $data);
-        }
-
-        $num = $this->module->grabNumRecords('users', ['number_of_logins <' => 2]);
+        $num = $this->module->grabNumRecords('users', ['id <' => 2]);
         $this->assertEquals($num, 1);
 
-        $num = $this->module->grabNumRecords('users', ['number_of_logins <' => 1]);
+        $num = $this->module->grabNumRecords('users', ['id <' => 1]);
         $this->assertEquals($num, 0);
     }
 
     public function testGenerateWhereClauseWithGreaterOrEqualThanOperator()
     {
-        $testData = [
-            ['name' => 'davert', 'number_of_logins' => 1],
-            ['name' => 'david', 'number_of_logins' => 2],
-            ['name' => 'susi', 'number_of_logins' => 3],
-        ];
+        $num = $this->module->grabNumRecords('users', ['id >=' => 2]);
+        $this->assertEquals($num, 3);
 
-        foreach ($testData as $data){
-            $this->module->haveInDatabase('users', $data);
-        }
-
-        $num = $this->module->grabNumRecords('users', ['number_of_logins >=' => 2]);
+        $num = $this->module->grabNumRecords('users', ['id >=' => 3]);
         $this->assertEquals($num, 2);
-
-        $num = $this->module->grabNumRecords('users', ['number_of_logins >=' => 3]);
-        $this->assertEquals($num, 1);
     }
 
     public function testGenerateWhereClauseWithLessOrEqualThanOperator()
     {
-        $testData = [
-            ['name' => 'davert', 'number_of_logins' => 1],
-            ['name' => 'david', 'number_of_logins' => 2],
-            ['name' => 'susi', 'number_of_logins' => 3],
-        ];
-
-        foreach ($testData as $data){
-            $this->module->haveInDatabase('users', $data);
-        }
-
-        $num = $this->module->grabNumRecords('users', ['number_of_logins <=' => 2]);
+        $num = $this->module->grabNumRecords('users', ['id <=' => 2]);
         $this->assertEquals($num, 2);
 
-        $num = $this->module->grabNumRecords('users', ['number_of_logins <=' => 1]);
+        $num = $this->module->grabNumRecords('users', ['id <=' => 1]);
         $this->assertEquals($num, 1);
     }
 
     public function testGenerateWhereClauseWithNotEqualThanOperator()
     {
-        $testData = [
-            ['name' => 'davert', 'number_of_logins' => 1],
-            ['name' => 'david', 'number_of_logins' => 2],
-            ['name' => 'susi', 'number_of_logins' => 3],
-        ];
-
-        foreach ($testData as $data){
-            $this->module->haveInDatabase('users', $data);
-        }
-
-        $num = $this->module->grabNumRecords('users', ['number_of_logins !=' => 2]);
-        $this->assertEquals($num, 2);
-
-        $num = $this->module->grabNumRecords('users', ['number_of_logins !=' => 4]);
+        $num = $this->module->grabNumRecords('users', ['id !=' => 2]);
         $this->assertEquals($num, 3);
+
+        $num = $this->module->grabNumRecords('users', ['id !=' => 0]);
+        $this->assertEquals($num, 4);
     }
 
 
