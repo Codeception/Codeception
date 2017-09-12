@@ -237,7 +237,7 @@ You can also use the `@dataprovider` annotation for creating dynamic examples, u
 ```php
 <?php
    /**
-    * @dataprovider pageProvider
+    * @dataProvider pageProvider
     */
     public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
     {
@@ -249,7 +249,7 @@ You can also use the `@dataprovider` annotation for creating dynamic examples, u
     /**
      * @return array
      */
-    protected function pageProvider() // alternatively, if you want the function to be public, be sure to prefix it with `_`
+    public function pageProvider() // alternatively, if you want the function to be public, be sure to prefix it with `_`
     {
         return [
             ['url'=>"/", 'title'=>"Welcome"],
