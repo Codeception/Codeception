@@ -71,6 +71,14 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->click('Ссылочка');
     }
 
+    /**
+     * @see https://github.com/Codeception/Codeception/issues/4509
+     */
+    public function testSeeTextAfterJSComparisionOperator()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->see('Text behind JS comparision');
+    }
 
     public function testSetMultipleCookies()
     {

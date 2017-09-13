@@ -44,5 +44,14 @@
     <a id="third-link">Third</a>
 </div>
 
+<script>
+    var a = 2;
+    var b = 3;
+    if (a <= b) {
+        console.log('a is less than b!');
+    }
+</script>
+<p>Text behind JS comparision</p>
+
 </body>
 </html>
