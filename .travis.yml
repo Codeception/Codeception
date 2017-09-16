@@ -14,6 +14,8 @@ matrix:
       env: SYMFONY=3.2.9 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.2.*
     - php: 7.1
       env: SYMFONY=3.3.2 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.3.*
+    - php: 7.2
+      env: SYMFONY=3.3.2 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.3.*
 
 addons:
   postgresql: "9.2"
