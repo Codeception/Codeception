@@ -36,7 +36,7 @@ services:
   - redis
 
 install:
-  - 'pecl install mongodb'
+  - 'pecl install -f mongodb'
   - yes '' | pecl install imagick
   #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer self-update && composer --version
