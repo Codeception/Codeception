@@ -50,14 +50,18 @@ EOF;
 
         $namespace = rtrim($this->settings['namespace'], '\\');
         $ns = $this->getNamespaceHeader($namespace.'\\'.$this->name);
-        if ($ns) {
+
+        $actorHasNamespace = strpos($actor, '\\') !== false;
+		if ($actorHasNamespace) {
+			$ns .= "use ".ltrim($actor, '\\').";";
+		} elseif ($ns) {
             $ns .= "use ".$this->settings['namespace'].'\\'.$actor.";";
         }
 
         return (new Template($this->template))
             ->place('name', $this->getShortClassName($this->name))
             ->place('namespace', $ns)
-            ->place('actor', $actor)
+            ->place('actor', $this->getShortClassName($actor))
             ->produce();
     }
 }
