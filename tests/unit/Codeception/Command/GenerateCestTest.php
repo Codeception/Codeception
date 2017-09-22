@@ -79,7 +79,7 @@ class GenerateCestTest extends BaseCommandRunner
         $this->assertContains('Test was created in tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->output);
     }
 
-    public function testGenerateWithDifferentNamedspacedActor()
+    public function testGenerateWithSuiteNamespace()
 	{
         $this->config['suite_namespace'] = 'MiddleEarth\\Bosses\\';
         $this->config['namespace'] = 'MiddleEarth';
