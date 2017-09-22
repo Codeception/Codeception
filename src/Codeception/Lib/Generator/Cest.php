@@ -48,20 +48,22 @@ EOF;
             throw new ConfigurationException("Cept can't be created for suite without an actor. Add `actor: SomeTester` to suite config");
         }
 
-        $namespace = rtrim($this->settings['namespace'], '\\');
+        if (array_key_exists('suite_namespace', $this->settings)) {
+            $namespace = rtrim($this->settings['suite_namespace'], '\\');
+        } else {
+            $namespace = rtrim($this->settings['namespace'], '\\');
+        }
+
         $ns = $this->getNamespaceHeader($namespace.'\\'.$this->name);
 
-        $actorHasNamespace = strpos($actor, '\\') !== false;
-		if ($actorHasNamespace) {
-			$ns .= "use ".ltrim($actor, '\\').";";
-		} elseif ($ns) {
+        if ($namespace) {
             $ns .= "use ".$this->settings['namespace'].'\\'.$actor.";";
         }
 
         return (new Template($this->template))
             ->place('name', $this->getShortClassName($this->name))
             ->place('namespace', $ns)
-            ->place('actor', $this->getShortClassName($actor))
+            ->place('actor', $actor)
             ->produce();
     }
 }

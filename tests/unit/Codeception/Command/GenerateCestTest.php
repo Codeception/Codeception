@@ -81,14 +81,14 @@ class GenerateCestTest extends BaseCommandRunner
 
     public function testGenerateWithDifferentNamedspacedActor()
 	{
+        $this->config['suite_namespace'] = 'MiddleEarth\\Bosses\\';
         $this->config['namespace'] = 'MiddleEarth';
-        $this->config['actor'] = '\\Mordor\\Bosses\\SauronGuy';
+        $this->config['actor'] = 'HobbitGuy';
         $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHillCest'));
         $this->assertEquals($this->filename, 'tests/shire/HallUnderTheHillCest.php');
-        $this->assertContains('namespace MiddleEarth;', $this->content);
-        $this->assertContains('use Mordor\\Bosses\\SauronGuy', $this->content);
-        $this->assertNotContains('use MiddleEarth\\HobbitGuy;', $this->content);
-        $this->assertContains('public function tryToTest(SauronGuy $I)', $this->content);
+        $this->assertContains('namespace MiddleEarth\\Bosses;', $this->content);
+        $this->assertContains('use MiddleEarth\\HobbitGuy', $this->content);
+        $this->assertContains('public function tryToTest(HobbitGuy $I)', $this->content);
         $this->assertIsValidPhp($this->content);
 	}
 }
