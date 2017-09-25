@@ -33,8 +33,8 @@ tests/data/included_w/src/foo/AcmePack/tests/_support/_generated/UnitTesterActio
 tests/data/params/tests/_support/_generated/DummyTesterActions.php
 tests/data/exception_in_before/tests/_support/_generated/UnitTesterActions.php
 tests/data/exception_in_before/tests/_output/
-tests/data/bundled_suites/tests/_support/_generated/UnitTesterActions.php
-tests/data/bundled_suites/tests/_output/
+tests/data/bundled_suites/_support/_generated/UnitTesterActions.php
+tests/data/bundled_suites/_output/
 .DS_Store
 robo.phar
 .env

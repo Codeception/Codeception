@@ -301,6 +301,38 @@ EOF;
     }
 
     /**
+     * Adds NTLM authentication via username/password.
+     * Requires client to be Guzzle >=6.3.0
+     * Out of scope for functional modules.
+     *
+     * Example:
+     * ```php
+     * <?php
+     * $I->amNTLMAuthenticated('jon_snow', 'targaryen');
+     * ?>
+     * ```
+     *
+     * @param $username
+     * @param $password
+     * @throws ModuleException
+     * @part json
+     * @part xml
+     */
+    public function amNTLMAuthenticated($username, $password)
+    {
+        if ($this->isFunctional) {
+            throw new ModuleException(__METHOD__, 'Out of scope for functional modules.');
+        }
+        if (!defined('\GuzzleHttp\Client::VERSION')) {
+            throw new ModuleException(__METHOD__, 'Out of scope if not using a Guzzle client.');
+        }
+        if (version_compare(\GuzzleHttp\Client::VERSION, '6.2.1', 'lt')) {
+            throw new ModuleException(__METHOD__, 'Guzzle '.\GuzzleHttp\Client::VERSION.' found. Requires Guzzle >=6.3.0 for NTLM auth option.');
+        }
+        $this->client->setAuth($username, $password, 'ntlm');
+    }
+
+    /**
      * Sends a POST request to given uri. Parameters and files can be provided separately.
      *
      * Example:
