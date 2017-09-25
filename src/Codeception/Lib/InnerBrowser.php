@@ -778,7 +778,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $pos = (!isset($chFoundByName[$fieldName])) ? 0 : $chFoundByName[$fieldName];
             $skip = (!isset($params[$fieldName]))
                 || (!is_array($params[$fieldName]) && !is_bool($params[$fieldName]))
-                || ($pos >= count($params[$fieldName])
+                || (is_array($params[$fieldName]) && $pos >= count($params[$fieldName])
                 || (is_array($params[$fieldName]) && !is_bool($params[$fieldName][$pos])));
             if ($skip) {
                 continue;

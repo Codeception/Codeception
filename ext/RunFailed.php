@@ -15,6 +15,12 @@ use Codeception\Test\Descriptor;
  * php codecept run -g failed
  * ```
  *
+ * To change failed group name add:
+ * ```
+ * --override "extensions: config: Codeception\Extension\RunFailed: fail-group: another_group1"
+ * ```
+ * Remember: if you run tests and they generated custom-named fail group, to run this group, you should add override too
+ *
  * Starting from Codeception 2.1 **this extension is enabled by default**.
  *
  * ``` yaml
@@ -30,17 +36,21 @@ class RunFailed extends Extension
         Events::RESULT_PRINT_AFTER => 'saveFailed'
     ];
 
-    protected $config = ['file' => 'failed'];
+    /** @var string filename/groupname for failed tests */
+    protected $group = 'failed';
 
     public function _initialize()
     {
+        if (array_key_exists('fail-group', $this->config) && $this->config['fail-group']) {
+            $this->group = $this->config['fail-group'];
+        }
         $logPath = str_replace($this->getRootDir(), '', $this->getLogDir()); // get local path to logs
-        $this->_reconfigure(['groups' => ['failed' => $logPath . $this->config['file']]]);
+        $this->_reconfigure(['groups' => [$this->group => $logPath . $this->group]]);
     }
 
     public function saveFailed(PrintResultEvent $e)
     {
-        $file = $this->getLogDir() . $this->config['file'];
+        $file = $this->getLogDir() . $this->group;
         $result = $e->getResult();
         if ($result->wasSuccessful()) {
             if (is_file($file)) {

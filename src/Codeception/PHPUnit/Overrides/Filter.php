@@ -19,6 +19,16 @@ class PHPUnit_Util_Filter
             $trace = $e->getSerializableTrace();
         }
 
+        $eFile = $e->getFile();
+        $eLine = $e->getLine();
+
+        if (!self::frameExists($trace, $eFile, $eLine)) {
+            array_unshift(
+                $trace,
+                ['file' => $eFile, 'line' => $eLine]
+            );
+        }
+
         foreach ($trace as $step) {
             if (self::classIsFiltered($step) and $filter) {
                 continue;
@@ -81,6 +91,25 @@ class PHPUnit_Util_Filter
 
         if (strpos($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR) !== false) {
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array  $trace
+     * @param string $file
+     * @param int    $line
+     *
+     * @return bool
+     */
+    private static function frameExists(array $trace, $file, $line)
+    {
+        foreach ($trace as $frame) {
+            if (isset($frame['file']) && $frame['file'] == $file &&
+                isset($frame['line']) && $frame['line'] == $line) {
+                return true;
+            }
         }
 
         return false;

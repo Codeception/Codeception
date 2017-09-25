@@ -154,7 +154,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     public function _initialize()
     {
         if ($this->config['transaction'] === null) {
-            $this->config['transaction'] = $this->config['cleanup'];
+            $this->config['transaction'] = $this->backupConfig['transaction'] = $this->config['cleanup'];
         }
 
         if (!is_file(Configuration::projectDir() . $this->config['configFile'])) {
@@ -477,7 +477,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         $this->getModelRecord($model);
         return call_user_func([$model, 'find'])
-            ->where($attributes)
+            ->andWhere($attributes)
             ->one();
     }
 
