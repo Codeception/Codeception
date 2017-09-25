@@ -82,7 +82,7 @@ settings:
     log_incomplete_skipped: false
 ```
 
-* `modules`: allows to create shared module configuration for all included suites. By default sample configuration for Db module is included.
+* `modules`: allows to create shared module configuration for all included suites.
 
 ```yaml
 modules:
