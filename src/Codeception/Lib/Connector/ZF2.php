@@ -67,7 +67,7 @@ class ZF2 extends Client
         if ($queryString) {
             parse_str($queryString, $query);
         }
-        
+
         if ($method !== HttpRequest::METHOD_GET) {
             $post = $request->getParameters();
         }
@@ -84,7 +84,7 @@ class ZF2 extends Client
         }
 
         $zendRequest->setRequestUri($requestUri);
-        
+
         $zendRequest->setHeaders($this->extractHeaders($request));
         $this->application->run();
 
@@ -122,7 +122,7 @@ class ZF2 extends Client
         $headers = [];
         $server = $request->getServer();
 
-        $contentHeaders = array('Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true);
+        $contentHeaders = ['Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true];
         foreach ($server as $header => $val) {
             $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
 

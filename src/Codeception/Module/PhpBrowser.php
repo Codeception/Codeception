@@ -176,6 +176,9 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
         $host = Uri::retrieveHost($url);
         $this->_reconfigure(['url' => $host]);
         $page = substr($url, strlen($host));
+        if ($page === '') {
+            $page = '/';
+        }
         $this->debugSection('Host', $host);
         $this->amOnPage($page);
     }
@@ -281,7 +284,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
         }
     }
 
-    public function _closeSession($session)
+    public function _closeSession($session = null)
     {
         unset($session);
     }

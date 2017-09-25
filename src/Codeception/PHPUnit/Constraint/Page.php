@@ -71,7 +71,7 @@ class Page extends \PHPUnit_Framework_Constraint
     protected function uriMessage($onPage = "")
     {
         if (!$this->uri) {
-            return "";
+            return new Message('');
         }
         $message = new Message($this->uri);
         $message->prepend(" $onPage ");

@@ -175,6 +175,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
         if ($this->applicationUsesDatabase() && $this->config['cleanup']) {
             $this->app['db']->beginTransaction();
+            $this->debugSection('Database', 'Transaction started');
         }
 
         if ($this->config['run_database_seeder']) {
@@ -195,6 +196,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             if ($db instanceof \Illuminate\Database\DatabaseManager) {
                 if ($this->config['cleanup']) {
                     $db->rollback();
+                    $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
                 }
 
                 /**
@@ -247,12 +249,12 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Revert back to the Codeception error handler,
-     * becauses Laravel registers it's own error handler.
+     * because Laravel registers it's own error handler.
      */
     protected function revertErrorHandler()
     {
         $handler = new ErrorHandler();
-        set_error_handler(array($handler, 'errorHandler'));
+        set_error_handler([$handler, 'errorHandler']);
     }
 
     /**

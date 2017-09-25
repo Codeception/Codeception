@@ -112,7 +112,7 @@ use Codeception\Lib\Driver\Iron;
  *              'profile' => 'project1', //see documentation
  *              'region' => 'us-west-2'
  *
- * #### Example AWS SQS running on Anazon EC2 instance
+ * #### Example AWS SQS running on Amazon EC2 instance
  *
  *     modules:
  *        enabled: [Queue]

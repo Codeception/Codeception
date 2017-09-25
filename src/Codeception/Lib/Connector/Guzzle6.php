@@ -54,7 +54,7 @@ class Guzzle6 extends Client
      * Sets the request header to the passed value.  The header will be
      * sent along with the next request.
      *
-     * Passing an empty value clears the header, which is the equivelant
+     * Passing an empty value clears the header, which is the equivalent
      * of calling deleteHeader.
      *
      * @param string $name the name of the header
@@ -321,7 +321,7 @@ class Guzzle6 extends Client
         }
         return new CookieJar(false, $jar);
     }
-    
+
     public static function createHandler($handler)
     {
         if ($handler === 'curl') {

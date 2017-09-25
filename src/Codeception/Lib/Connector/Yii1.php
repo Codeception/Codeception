@@ -40,12 +40,12 @@ class Yii1 extends Client
      */
     public function doRequest($request)
     {
-        $this->headers = array();
+        $this->headers = [];
         $_COOKIE        = array_merge($_COOKIE, $request->getCookies());
         $_SERVER        = array_merge($_SERVER, $request->getServer());
         $_FILES         = $this->remapFiles($request->getFiles());
         $_REQUEST       = $this->remapRequestParameters($request->getParameters());
-        $_POST          = $_GET = array();
+        $_POST          = $_GET = [];
 
         if (strtoupper($request->getMethod()) == 'GET') {
             $_GET = $_REQUEST;

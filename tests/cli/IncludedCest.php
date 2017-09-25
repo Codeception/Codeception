@@ -35,6 +35,78 @@ class IncludedCest
      * @before moveToIncluded
      * @param CliGuy $I
      */
+    public function runTestsFromIncludedConfigs(\CliGuy $I)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $I->executeCommand("run jazz{$ds}tests{$ds}functional{$ds}DemoCept.php", false);
+
+        // Suite is not run
+        $I->dontSeeInShellOutput('[Jazz]');
+
+        // DemoCept tests are run
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('DemoCept');
+
+        // Other include tests are not run
+        $I->dontSeeInShellOutput('[Shire]');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
+        $I->dontSeeInShellOutput('[Jazz\Pianist]');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional Tests');
+    }
+
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function runTestsFromIncludedConfigsNested(\CliGuy $I)
+    {
+        $I->executeCommand('run jazz/pianist/tests/functional/PianistCept.php', false);
+
+        // Suite is not run
+        $I->dontSeeInShellOutput('[Jazz\Pianist]');
+
+        // DemoCept tests are run
+        $I->seeInShellOutput('Jazz\Pianist.functional Tests');
+        $I->seeInShellOutput('PianistCept');
+
+        // Other include tests are not run
+        $I->dontSeeInShellOutput('[Shire]');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
+        $I->dontSeeInShellOutput('[Jazz]');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+    }
+
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function runTestsFromIncludedConfigsSingleTest(\CliGuy $I)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $I->executeCommand("run jazz{$ds}tests{$ds}unit{$ds}SimpleTest.php:testSimple", false);
+
+        // Suite is not run
+        $I->dontSeeInShellOutput('[Jazz]');
+
+        // SimpleTest:testSimple is run
+        $I->seeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('SimpleTest');
+
+        //  SimpleTest:testSimpler is not run
+        $I->dontSeeInShellOutput('SimplerTest');
+
+        // Other include tests are not run
+        $I->dontSeeInShellOutput('[Shire]');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
+        $I->dontSeeInShellOutput('[Jazz\Pianist]');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional Tests');
+    }
+
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
     public function runIncludedWithXmlOutput(\CliGuy $I)
     {
         $I->executeCommand('run --xml');

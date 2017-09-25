@@ -10,6 +10,8 @@ class AssertsTest extends PHPUnit_Framework_TestCase
         $module->assertNotSame(1, '1');
         $module->assertRegExp('/^[\d]$/', '1');
         $module->assertNotRegExp('/^[a-z]$/', '1');
+        $module->assertStringStartsWith('fo', 'foo');
+        $module->assertStringStartsNotWith('ba', 'foo');
         $module->assertEmpty([]);
         $module->assertNotEmpty([1]);
         $module->assertNull(null);
@@ -23,6 +25,7 @@ class AssertsTest extends PHPUnit_Framework_TestCase
         $module->assertInstanceOf('Exception', new Exception());
         $module->assertInternalType('integer', 5);
         $module->assertArrayHasKey('one', ['one' => 1, 'two' => 2]);
+        $module->assertArraySubset(['foo' => [1]], ['foo' => [1, 2]]);
         $module->assertCount(3, [1, 2, 3]);
     }
 
