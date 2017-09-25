@@ -521,6 +521,9 @@ EOF;
 
     public function _getEntityManager()
     {
+        if (is_null($this->em)) {
+            $this->retrieveEntityManager();
+        }
         return $this->em;
     }
 }
