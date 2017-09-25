@@ -216,7 +216,7 @@ class Guzzle6 extends Client
         foreach ($server as $header => $val) {
             $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
             if (strpos($header, 'Http-') === 0) {
-                $headers[substr($header, 5)] = $val;
+                $headers[str_replace('-', '_', substr($header, 5))] = $val;
             } elseif (isset($contentHeaders[$header])) {
                 $headers[$header] = $val;
             }
