@@ -186,4 +186,22 @@ class JsonTypeTest extends \Codeception\Test\Unit
         $this->assertContains('3` is of type `integer:<3', $res);
         $this->assertContains('5` is of type `integer:<3', $res);
     }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/4517
+     */
+    public function testMatchesArrayReturnedByFetchBoth()
+    {
+        $jsonType = new JsonType([
+            '0' => 10,
+            'a' => 10,
+            '1' => 11,
+            'b' => 11,
+        ]);
+
+        $this->assertTrue($jsonType->matches([
+            'a' => 'integer',
+            'b' => 'integer',
+        ]));
+    }
 }
