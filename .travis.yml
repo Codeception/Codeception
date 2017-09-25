@@ -34,7 +34,7 @@ services:
   - redis
 
 install:
-  - 'pecl install mongodb'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || pecl install mongodb'
   #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer self-update && composer --version
   - if [ -n "$CI_USER_TOKEN" ]; then composer config github-oauth.github.com ${CI_USER_TOKEN}; echo "Configured Github token"; fi;
