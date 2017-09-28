@@ -123,7 +123,7 @@ $message = $I->grabMessageFromQueue('queue.emails');
 ```
 
  * `param string` $queue
- * `return` AMQPMessage
+ * `return` \PhpAmqpLib\Message\AMQPMessage
 
 
 ### purgeAllQueues
@@ -164,7 +164,7 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'), 'severity');
 ```
 
  * `param string` $exchange
- * `param string|AMQPMessage` $message
+ * `param string|\PhpAmqpLib\Message\AMQPMessage` $message
  * `param string` $routing_key
 
 
@@ -180,7 +180,7 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
 ```
 
  * `param string` $queue
- * `param string|AMQPMessage` $message
+ * `param string|\PhpAmqpLib\Message\AMQPMessage` $message
 
 
 ### seeMessageInQueueContainsText

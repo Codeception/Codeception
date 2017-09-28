@@ -136,6 +136,7 @@ modules:
 
 
 * `namespace`: default namespace of actor, support classes and tests.
+* `suite_namespace`: default namespace for new tests of this suite (ignores `namespace` option)
 * `env`: override any configuration per [environment](http://codeception.com/docs/07-AdvancedUsage#Environments).
 * `groups`: [groups](http://codeception.com/docs/07-AdvancedUsage#Groups) with the list of tests of for corresponding group.
 * `coverage`: pre suite [CodeCoverage](http://codeception.com/docs/11-Codecoverage#Configuration) settings.

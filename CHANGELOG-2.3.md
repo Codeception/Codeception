@@ -1,3 +1,26 @@
+#### 2.3.6
+
+* **Laravel 5.5 compatibility**. Laravel5 module documentation updated.
+* [Doctrine2][DataFactory] Fixes using Doctrine2 with DataFactory module. See #4529. Fix by @samusenkoiv
+* [REST] Fixed JsonType crash when key 0 is not an array. Fixes #4517 by @Naktibalda  
+* [PhpBrowser][Frameworks] `haveHttpHeader` enhanced to handle special characters. #4541 by @bnpatel1990
+* [WebDriver] Delete all cookies before loading session snapshot. Fix by @eXorus. See #4487
+* Added `suite_namespace` config option to suite config. Allows to set custom namespace for tests per suite. #4525 by @pohnean
+* [Db] Module enhancements by @eXorus:
+  * added `updateInDatabase` method
+  * added hidden `_insertInDatabase` to insert record without cleanup  
+* [Yii2] Set transaction also in `backupConfig` when initializing yii2 module
+* [Yii2] Unload fixtures after rolling back database transaction. By @devonliu02  (#4497)
+* [Yii2] Use `andWhere` instead of `where` in Yii module's `findRecord()` by @SamMousa. See #4482
+* [REST] Added `amNTLMAuthenticated` for NTLM authentication using PhpBrowser. By @Tenzian 
+* Inject exception file and line number frame into stack trace in case it is missing. By @rhl-jfm at #4491)
+* `Extension\RunFailed`. Added `fail-group` parameter to customize name of a failed group. By @ maxgorovenko
+* Added `\Codeception\Util\Fixtures::exists()` method by @eXorus
+* Added line number to `TestParseException` exception message by @gaainf. See #4446
+* Fixed `init` command: create the `_generated` folder before writing a `.gitignore` file there by @nstapelbroek. See #4449
+* Better failure messages for `@dataProvider` by @sh41. See #4439
+* Fixed aliasing issue with `Codeception/Verify` by @ddinchev
+
 #### 2.3.5
 
 * Fixed HTML report with unencoded HTML code by @mpgo13. See #3819 #4423
@@ -13,7 +36,7 @@
 * [WebDriver] Make `wait` accept fractional amount of seconds to wait for less than a second. By @gvlasov
 * [Laravel5] Changing params loader to use `$_SERVER` global instead of `$_ENV`. See #4401 by @EricTendian
 * [Mongo] Fixes `haveInCollection` using `__toString`. See #4442 by @samusenkoiv
-* Dereferencing vairables for Steps output. Fixes #4402 by @alambe
+* Dereferencing variables for Steps output. Fixes #4402 by @alambe
 * [Symfony] Load persistent services before loading profiler. See #4437 by @samusenkoiv
 
 #### 2.3.4
