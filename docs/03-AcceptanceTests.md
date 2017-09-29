@@ -495,7 +495,7 @@ $I->performOn('.confirm', function(\Codeception\Module\WebDriver $I) {
 });
 ```
 
-For more options see [`performOn()` reference]([performOn](http://codeception.com/docs/modules/WebDriver#performOn) ).
+For more options see [`performOn()` reference](http://codeception.com/docs/modules/WebDriver#performOn).
 
 ### Multi Session Testing
 
