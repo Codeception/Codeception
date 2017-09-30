@@ -156,64 +156,6 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         $this->assertEquals($num, 0);
     }
 
-    public function testGenerateWhereClauseWithLikeOperator()
-    {
-        $num = $this->module->grabNumRecords('users', ['email like' => 'mail.ua']);
-        $this->assertEquals($num, 2);
-
-        $num = $this->module->grabNumRecords('users', ['email like' => 'miles@davis.com']);
-        $this->assertEquals($num, 1);
-
-        $num = $this->module->grabNumRecords('users', ['email like' => 'albr']);
-        $this->assertEquals($num, 0);
-    }
-
-    public function testGenerateWhereClauseWithGreaterThanOperator()
-    {
-        $num = $this->module->grabNumRecords('users', ['id >' => 2]);
-        $this->assertEquals($num, 2);
-
-        $num = $this->module->grabNumRecords('users', ['id >' => 3]);
-        $this->assertEquals($num, 1);
-    }
-
-    public function testGenerateWhereClauseWithLessThanOperator()
-    {
-        $num = $this->module->grabNumRecords('users', ['id <' => 2]);
-        $this->assertEquals($num, 1);
-
-        $num = $this->module->grabNumRecords('users', ['id <' => 1]);
-        $this->assertEquals($num, 0);
-    }
-
-    public function testGenerateWhereClauseWithGreaterOrEqualThanOperator()
-    {
-        $num = $this->module->grabNumRecords('users', ['id >=' => 2]);
-        $this->assertEquals($num, 3);
-
-        $num = $this->module->grabNumRecords('users', ['id >=' => 3]);
-        $this->assertEquals($num, 2);
-    }
-
-    public function testGenerateWhereClauseWithLessOrEqualThanOperator()
-    {
-        $num = $this->module->grabNumRecords('users', ['id <=' => 2]);
-        $this->assertEquals($num, 2);
-
-        $num = $this->module->grabNumRecords('users', ['id <=' => 1]);
-        $this->assertEquals($num, 1);
-    }
-
-    public function testGenerateWhereClauseWithNotEqualThanOperator()
-    {
-        $num = $this->module->grabNumRecords('users', ['id !=' => 2]);
-        $this->assertEquals($num, 3);
-
-        $num = $this->module->grabNumRecords('users', ['id !=' => 0]);
-        $this->assertEquals($num, 4);
-    }
-
-
     public function testLoadWithPopulator()
     {
         $this->module->_cleanup();
