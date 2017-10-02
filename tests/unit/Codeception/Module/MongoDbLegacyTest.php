@@ -31,6 +31,9 @@ class MongoDbLegacyTest extends \PHPUnit_Framework_TestCase
         if (!class_exists('Mongo')) {
             $this->markTestSkipped('Mongo is not installed');
         }
+        if (!class_exists('MongoDB\Client')) {
+            $this->markTestSkipped('MongoDb\Client is not installed');
+        }
 
         $mongo = new \MongoClient();
 

@@ -385,14 +385,16 @@ class WebDriver extends CodeceptionModule implements
      * <?php // inside Helper\Acceptance
      * public function _before(TestInterface $test)
      * {
-     *      $name = \Codeception\Test\Descriptor::getTestAsString($test->toString());
+     *      $name = $test->getMetadata()->getName();
      *      $this->getModule('WebDriver')->_capabilities(function($currentCapabilities) use ($name) {
      *          $currentCapabilities['name'] = $name;
      *          return $currentCapabilities;
      *      });
      * }
      * ```
+     * In this case, please ensure that `\Helper\Acceptance` is loaded before WebDriver so new capabilities could be applied.
      *
+     * @api
      * @param \Closure $capabilityFunction
      */
     public function _capabilities(\Closure $capabilityFunction)
@@ -2975,6 +2977,7 @@ class WebDriver extends CodeceptionModule implements
         if (!isset($this->sessionSnapshots[$name])) {
             return false;
         }
+        $this->webDriver->manage()->deleteAllCookies();
         foreach ($this->sessionSnapshots[$name] as $cookie) {
             $this->webDriver->manage()->addCookie($cookie);
         }

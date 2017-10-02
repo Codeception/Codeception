@@ -67,7 +67,7 @@ Feature: checkout process
 ```
 
 Cucumber, Behat, and sure, **Codeception** can execute this scenario step by step as an automated test. 
-Every step in this scenario requires a code which defines .
+Every step in this scenario requires a code which defines it.
 
 ## Gherkin
 

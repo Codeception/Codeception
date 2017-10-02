@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Lib\Driver;
 
 use Codeception\Exception\ModuleException;
@@ -153,28 +154,56 @@ class Db
         return sprintf($query, $column, $this->getQuotedName($table), $where);
     }
 
+    private function getSupportedOperators()
+    {
+        return [
+            'like',
+            '!=',
+            '<=',
+            '>=',
+            '<',
+            '>',
+        ];
+    }
+
     protected function generateWhereClause(array &$criteria)
     {
         if (empty($criteria)) {
             return '';
         }
 
+        $operands = $this->getSupportedOperators();
+
         $params = [];
         foreach ($criteria as $k => $v) {
             if ($v === null) {
                 $params[] = $this->getQuotedName($k) . " IS NULL ";
                 unset($criteria[$k]);
-            } elseif (strpos(strtolower($k), ' like') > 0) {
-                $k = str_replace(' like', '', strtolower($k));
-                $params[] = $this->getQuotedName($k) . " LIKE ? ";
-            } else {
+                continue;
+            }
+
+            $hasOperand = false; // search for equals - no additional operand given
+
+            foreach ($operands as $operand) {
+                if (!stripos($k, " $operand") > 0) {
+                    continue;
+                }
+
+                $hasOperand = true;
+                $k = str_ireplace(" $operand", '', $k);
+                $operand = strtoupper($operand);
+                $params[] = $this->getQuotedName($k) . " $operand ? ";
+                break;
+            }
+
+            if (!$hasOperand) {
                 $params[] = $this->getQuotedName($k) . " = ? ";
             }
         }
 
         return 'WHERE ' . implode('AND ', $params);
     }
-
+    
     /**
      * @deprecated use deleteQueryByCriteria instead
      */
@@ -288,7 +317,7 @@ class Db
 
         return empty($this->primaryKeys);
     }
-    
+
     public function update($table, array $data, array $criteria)
     {
         if (empty($data)) {
@@ -296,10 +325,10 @@ class Db
                 "Query update can't be prepared without data."
             );
         }
-        
+
         $set = [];
         foreach ($data as $column => $value) {
-            $set[] = $this->getQuotedName($column)." = ?";
+            $set[] = $this->getQuotedName($column) . " = ?";
         }
 
         $where = $this->generateWhereClause($criteria);

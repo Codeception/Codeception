@@ -2,29 +2,12 @@
 
 
 
-This module allows you to run functional tests for Laravel 5.
+This module allows you to run functional tests for Laravel 5.1+
 It should **not** be used for acceptance tests.
 See the Acceptance tests section below for more details.
 
-As of Codeception 2.2 this module only works for Laravel 5.1 and later releases.
-If you want to test a Laravel 5.0 application you have to use Codeception 2.1.
-You can also upgrade your Laravel application to 5.1, for more details check the Laravel Upgrade Guide
-at <https://laravel.com/docs/master/upgrade>.
-
 ## Demo project
-<https://github.com/janhenkgerritsen/codeception-laravel5-sample>
-
-## Status
-
-* Maintainer: **Jan-Henk Gerritsen**
-* Stability: **stable**
-
-## Example
-
-    modules:
-        enabled:
-            - Laravel5:
-                environment_file: .env.testing
+<https://github.com/codeception/codeception-laravel5-sample>
 
 ## Config
 
@@ -45,6 +28,27 @@ at <https://laravel.com/docs/master/upgrade>.
 * disable_model_events: `boolean`, default `false` - disable model events.
 * url: `string`, default `` - the application URL.
 
+### Example #1 (`functional.suite.yml`)
+
+Enabling module:
+
+```yml
+modules:
+    enabled:
+        - Laravel5
+```
+
+### Example #2 (`functional.suite.yml`)
+
+Enabling module with custom .env file
+
+```yml
+modules:
+    enabled:
+        - Laravel5:
+            environment_file: .env.testing
+```
+
 ## API
 
 * app - `Illuminate\Foundation\Application`
@@ -63,17 +67,21 @@ at <https://laravel.com/docs/master/upgrade>.
 ## Acceptance tests
 
 You should not use this module for acceptance tests.
-If you want to use Laravel functionality with your acceptance tests,
-for example to do test setup, you can initialize the Laravel functionality
-by adding the following lines of code to the `_bootstrap.php` file of your test suite:
+If you want to use Eloquent within your acceptance tests (paired with WebDriver) enable only
+ORM part of this module:
 
-    require 'bootstrap/autoload.php';
-    $app = require 'bootstrap/app.php';
-    $app->loadEnvironmentFrom('.env.testing');
-    $app->instance('request', new \Illuminate\Http\Request);
-    $app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
+### Example (`acceptance.suite.yml`)
 
-
+```yaml
+modules:
+    enabled:
+        - WebDriver:
+            browser: chrome
+            url: http://127.0.0.1:8000
+        - Laravel5:
+            part: ORM
+            environment_file: .env.testing
+```
 
 
 ## Actions
@@ -251,7 +259,7 @@ $I->amOnPage('/');
 $I->amOnPage('/register');
 ```
 
- * `param` $page
+ * `param string` $page
 
 
 ### amOnRoute
@@ -270,7 +278,7 @@ $I->amOnRoute('posts.create');
 
 ### attachFile
  
-Attaches a file relative to the Codeception data directory to the given file upload field.
+Attaches a file relative to the Codeception `_data` directory to the given file upload field.
 
 ``` php
 <?php
@@ -448,8 +456,8 @@ But will ignore strings like:
 
 For checking the raw source code, use `seeInSource()`.
 
- * `param`      $text
- * `param null` $selector
+ * `param string` $text
+ * `param string` $selector optional
 
 
 ### dontSeeAuthentication
@@ -495,7 +503,7 @@ $I->dontSeeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param` $uri
+ * `param string` $uri
 
 
 ### dontSeeCurrentUrlMatches
@@ -509,7 +517,7 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param` $uri
+ * `param string` $uri
 
 
 ### dontSeeElement
@@ -568,7 +576,7 @@ $I->dontSeeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param` $uri
+ * `param string` $uri
 
 
 ### dontSeeInField
@@ -667,8 +675,8 @@ $I->dontSeeLink('Checkout now', '/store/cart.php');
 ?>
 ```
 
- * `param` $text
- * `param null` $url
+ * `param string` $text
+ * `param string` $url optional
 
 
 ### dontSeeOptionIsSelected
@@ -779,7 +787,7 @@ You can set additional cookie params like `domain`, `path` in array passed as la
 
 ### grabFromCurrentUrl
  
-Executes the given regular expression against the current URI and returns the first match.
+Executes the given regular expression against the current URI and returns the first capturing group.
 If no parameters are provided, the full URI is returned.
 
 ``` php
@@ -789,7 +797,7 @@ $uri = $I->grabFromCurrentUrl();
 ?>
 ```
 
- * `param null` $uri
+ * `param string` $uri optional
 
 
 
@@ -993,8 +1001,19 @@ subsequent HTTP requests through PhpBrowser.
 Example:
 ```php
 <?php
-$I->setHeader('X-Requested-With', 'Codeception');
+$I->haveHttpHeader('X-Requested-With', 'Codeception');
 $I->amOnPage('test-headers.php');
+?>
+```
+
+To use special chars in Header Key use HTML Character Entities:
+Example:
+Header with underscore - 'Client_Id'
+should be represented as - 'Client&#x0005F;Id' or 'Client&#95;Id'
+
+```php
+<?php
+$I->haveHttpHeader('Client&#95;Id', 'Codeception');
 ?>
 ```
 
@@ -1124,8 +1143,8 @@ But will *not* be true for strings like:
 
 For checking the raw source code, use `seeInSource()`.
 
- * `param`      $text
- * `param null` $selector
+ * `param string` $text
+ * `param string` $selector optional
 
 
 ### seeAuthentication
@@ -1202,7 +1221,7 @@ $I->seeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param` $uri
+ * `param string` $uri
 
 
 ### seeCurrentUrlMatches
@@ -1216,7 +1235,7 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param` $uri
+ * `param string` $uri
 
 
 ### seeElement
@@ -1319,13 +1338,13 @@ $I->seeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param` $uri
+ * `param string` $uri
 
 
 ### seeInField
  
-Checks that the given input field or textarea contains the given value.
-For fuzzy locators, fields are matched by label text, the "name" attribute, CSS, and XPath.
+Checks that the given input field or textarea *equals* (i.e. not just contains) the given value.
+Fields are matched by label text, the "name" attribute, CSS, or XPath.
 
 ``` php
 <?php
@@ -1460,8 +1479,8 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 ?>
 ```
 
- * `param`      $text
- * `param null` $url
+ * `param string` $text
+ * `param string` $url optional
 
 
 ### seeNumRecords
@@ -1489,13 +1508,11 @@ Checks that there are a certain number of elements matched by the given locator 
 ``` php
 <?php
 $I->seeNumberOfElements('tr', 10);
-$I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
+$I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
 ?>
 ```
  * `param` $selector
- * `param mixed` $expected :
-- string: strict number
-- array: range of numbers [0,10]
+ * `param mixed` $expected int or int[]
 
 
 ### seeOptionIsSelected
@@ -1675,7 +1692,7 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
 
 ### submitForm
  
-Submits the given form on the page, optionally with the given form
+Submits the given form on the page, with the given form
 values.  Pass the form field's values as an array in the second
 parameter.
 

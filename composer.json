@@ -33,7 +33,7 @@
         "symfony/dom-crawler": ">=2.7.5 <4.0",
         "behat/gherkin": "~4.4.0",
         "sebastian/comparator": ">1.1 <3.0",
-        "sebastian/diff": "^1.4",
+        "sebastian/diff": ">=1.4 <3.0",
         "stecman/symfony-console-completion": "^0.7.0"
     },
     "require-dev": {
@@ -45,7 +45,6 @@
         "flow/jsonpath": "~0.2",
         "league/factory-muffin": "^3.0",
         "league/factory-muffin-faker": "^1.0",
-        "mongodb/mongodb": "^1.0",
         "predis/predis": "^1.0",
         "squizlabs/php_codesniffer": "~2.0",
         "vlucas/phpdotenv": "^2.4.0",

@@ -267,7 +267,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
             return $data['_id'];
         } else {
             $response = $collection->insertOne($data);
-            return $response->getInsertedId()->__toString();
+            return (string) $response->getInsertedId();
         }
     }
 

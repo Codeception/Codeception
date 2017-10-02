@@ -82,7 +82,7 @@ settings:
     log_incomplete_skipped: false
 ```
 
-* `modules`: allows to create shared module configuration for all included suites. By default sample configuration for Db module is included.
+* `modules`: allows to create shared module configuration for all included suites.
 
 ```yaml
 modules:
@@ -136,6 +136,7 @@ modules:
 
 
 * `namespace`: default namespace of actor, support classes and tests.
+* `suite_namespace`: default namespace for new tests of this suite (ignores `namespace` option)
 * `env`: override any configuration per [environment](http://codeception.com/docs/07-AdvancedUsage#Environments).
 * `groups`: [groups](http://codeception.com/docs/07-AdvancedUsage#Groups) with the list of tests of for corresponding group.
 * `coverage`: pre suite [CodeCoverage](http://codeception.com/docs/11-Codecoverage#Configuration) settings.
@@ -145,10 +146,9 @@ modules:
 
 ## Config Templates (dist)
 
-To provide same configuration templates for development team you can creare `codeception.dist.yml` config which will be loaded before `codeception.yml`. Dist config will provide shared options whil local `codeception.yml` will override them per user basis. This way `codeception.yml` should be ignored by VCS system.
+To provide the same configuration template for your development team, you can create a `codeception.dist.yml` config file, which will be loaded before `codeception.yml`. The dist config provides shared options, while local `codeception.yml` files override them on a per-installation basis. Therefore, `codeception.yml` should be ignored by your VCS system.
 
-For suite configuration template configs are also availble. Rename `suitename.suite.yml` to `suitename.dist.yml` to make a dist config.
-
+Config templates can also be used for suite configuration, by creating a `suitename.suite.dist.yml` file.
 
 Configuration loading order:
 

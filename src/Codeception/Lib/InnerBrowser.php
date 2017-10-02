@@ -295,6 +295,17 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * ?>
      * ```
      *
+     * To use special chars in Header Key use HTML Character Entities:
+     * Example:
+     * Header with underscore - 'Client_Id'
+     * should be represented as - 'Client&#x0005F;Id' or 'Client&#95;Id'
+     *
+     * ```php
+     * <?php
+     * $I->haveHttpHeader('Client&#95;Id', 'Codeception');
+     * ?>
+     * ```
+     *
      * @param string $name the name of the request header
      * @param string $value the value to set it to for subsequent
      *        requests
@@ -778,7 +789,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $pos = (!isset($chFoundByName[$fieldName])) ? 0 : $chFoundByName[$fieldName];
             $skip = (!isset($params[$fieldName]))
                 || (!is_array($params[$fieldName]) && !is_bool($params[$fieldName]))
-                || ($pos >= count($params[$fieldName])
+                || (is_array($params[$fieldName]) && $pos >= count($params[$fieldName])
                 || (is_array($params[$fieldName]) && !is_bool($params[$fieldName][$pos])));
             if ($skip) {
                 continue;

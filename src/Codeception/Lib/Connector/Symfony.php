@@ -75,12 +75,12 @@ class Symfony extends \Symfony\Component\HttpKernel\Client
         $this->kernel->boot();
         $this->container = $this->kernel->getContainer();
 
-        if ($this->container->has('profiler')) {
-            $this->container->get('profiler')->enable();
-        }
-
         foreach ($this->persistentServices as $serviceName => $service) {
             $this->container->set($serviceName, $service);
+        }
+
+        if ($this->container->has('profiler')) {
+            $this->container->get('profiler')->enable();
         }
     }
 }

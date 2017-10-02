@@ -113,6 +113,12 @@ To rerun failed tests just run the `failed` group:
 php codecept run -g failed
 ```
 
+To change failed group name add:
+```
+--override "extensions: config: Codeception\Extension\RunFailed: fail-group: another_group1"
+```
+Remember: if you run tests and they generated custom-named fail group, to run this group, you should add override too
+
 Starting from Codeception 2.1 **this extension is enabled by default**.
 
 ``` yaml
@@ -121,6 +127,53 @@ extensions:
 ```
 
 On each execution failed tests are logged and saved into `tests/_output/failed` file.
+
+
+
+## RunProcess
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.3/ext/RunProcess.php)
+
+Extension to start and stop processes per suite.
+Can be used to start/stop selenium server, chromedriver, phantomjs, mailcatcher, etc.
+
+Can be configured in suite config:
+
+```yaml
+# acceptance.suite.yml
+extensions:
+    enabled:
+        - Codeception\Extension\RunProcess:
+            - chromedriver
+```
+
+Multiple parameters can be passed as array:
+
+```yaml
+# acceptance.suite.yml
+
+extensions:
+    enabled:
+        - Codeception\Extension\RunProcess:
+            - php -S 127.0.0.1:8000 -t tests/data/app
+            - java -jar ~/selenium-server.jar
+```
+
+In the end of a suite all launched processes will be stopped.
+
+To wait for the process to be launched use `sleep` option.
+In this case you need configuration to be specified as object:
+
+```yaml
+extensions:
+    enabled:
+        - Codeception\Extension\RunProcess:
+            0: java -jar ~/selenium-server.jar
+            1: mailcatcher
+            sleep: 5 # wait 5 seconds for processes to boot
+```
+
+HINT: you can use different configurations per environment.
 
 
 

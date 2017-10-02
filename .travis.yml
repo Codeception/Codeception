@@ -14,6 +14,8 @@ matrix:
       env: SYMFONY=3.2.9 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.2.*
     - php: 7.1
       env: SYMFONY=3.3.2 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.3.*
+    - php: 7.2
+      env: SYMFONY=3.3.2 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.3.*
 
 addons:
   postgresql: "9.2"
@@ -34,11 +36,13 @@ services:
   - redis
 
 install:
-  - 'pecl install mongodb'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || pecl install mongodb'
+  - yes '' | pecl install imagick
   #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer self-update && composer --version
   - if [ -n "$CI_USER_TOKEN" ]; then composer config github-oauth.github.com ${CI_USER_TOKEN}; echo "Configured Github token"; fi;
-  - composer global require "fxp/composer-asset-plugin:~1.3.1"
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer require mongodb/mongodb --no-update'
+  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || composer global require "fxp/composer-asset-plugin:~1.3.1"'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/finder=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/yaml=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/console=~$SYMFONY --no-update --ignore-platform-reqs'
@@ -51,14 +55,14 @@ install:
   - composer update $composer_parameters
   - composer_parameters="$composer_parameters --no-dev" # Codeception needs dev dependencies, but frameworks don't
   # Yii2
-  - composer create-project "yiisoft/yii2-app-basic" frameworks-yii-basic --no-dev
+  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || composer create-project "yiisoft/yii2-app-basic" frameworks-yii-basic --no-dev'
   # Phalcon
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-phalcon $composer_parameters'
   # Laravel 5
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.3 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-l5 $composer_parameters'
   # Lumen
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-lumen-sample.git frameworks-lumen'
@@ -105,7 +109,7 @@ before_script:
   - "mysql -e 'create database zf2_test;'"
   - php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create
   # Build
-  - php codecept build -c frameworks-yii-basic
+  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept build -c frameworks-yii-basic'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-phalcon'
   - '[[ "$SYMFONY" > "3.0.0" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
   - '[[ "$SYMFONY" < "3.0.0" ]] || php codecept build -c frameworks-symfony'
@@ -117,8 +121,8 @@ before_script:
 
 script:
   - php codecept run cli,unit # self tests
-  - 'php codecept run coverage'  # run coverage tests on php only
-  - php codecept run functional -c frameworks-yii-basic # Yii2 tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept run coverage'  # run coverage tests on php only
+  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept run functional -c frameworks-yii-basic' # Yii2 tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-l5 --skip=seeder' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
