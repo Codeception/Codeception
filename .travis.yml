@@ -36,7 +36,7 @@ services:
   - redis
 
 install:
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || pecl install mongodb'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || pecl install -f mongodb'
   - yes '' | pecl install imagick
   #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer self-update && composer --version
