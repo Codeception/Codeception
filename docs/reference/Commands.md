@@ -155,6 +155,7 @@ Options:
  --coverage-html       Generate CodeCoverage HTML report in path (default: "coverage")
  --coverage-xml        Generate CodeCoverage XML report in file (default: "coverage.xml")
  --coverage-text       Generate CodeCoverage text report in file (default: "coverage.txt")
+ --coverage-phpunit    Generate CodeCoverage PHPUnit report in path (default: "coverage-phpunit")
  --no-exit             Don't finish with exit code
  --group (-g)          Groups of tests to be executed (multiple values allowed)
  --skip (-s)           Skip selected suites (multiple values allowed)
