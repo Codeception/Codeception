@@ -1,4 +1,4 @@
-# Continous Integration
+# Continuous Integration
 
 Once you get testing suite up and running you are interested in running your tests regularly. If you ensure that tests are running on every code change or at least once a day you can be sure that no regression is introduced. This allows to keep you system stable. But developers are not so passionate about running all tests manually, they also can forget to execute tests before pushing code to production... The solution is simple, test execution should be automated. Instead of running them locally it is better to have dedicated server responsible for running tests for a team. This way we can ensure that everyone's tests executed, which commit made a regression in codebase, and that we can deploy only once tests pass. 
 
@@ -82,7 +82,7 @@ Jenkins should locate `report.html` at `tests/_output/`. Now Jenkins will displa
 
 ![TeamCity](http://codeception.com/images/teamcity/logo.jpg)
 
-TeamCity is a hotsed solution from JetBrains. The setup of it can be a bit tricky as TeamCity uses its own reporter format for parsing test results. PHPUnit since verison 5.x has integrated support for this format, so does Codeception. What we need to do is to configure Codeception to use custom reporter. By default there is `--report` option which provides an alternative output. You can change the reporter class in `codeception.yml` configuration:
+TeamCity is a hosted solution from JetBrains. The setup of it can be a bit tricky as TeamCity uses its own reporter format for parsing test results. PHPUnit since version 5.x has integrated support for this format, so does Codeception. What we need to do is to configure Codeception to use custom reporter. By default there is `--report` option which provides an alternative output. You can change the reporter class in `codeception.yml` configuration:
 
 ```yaml
 reporters:
@@ -107,7 +107,7 @@ Once you execute your first build you should see detailed report inside TeamCity
 
 ![Travis CI](http://codeception.com/images/travis.png)
 
-Travis CI is popular service CI with good GitHub integration. Codeception is self-tested with Travis CI. There nothing specifal about configuration. Just add to the bottom line of travis configuration:
+Travis CI is popular service CI with good GitHub integration. Codeception is self-tested with Travis CI. There nothing special about configuration. Just add to the bottom line of travis configuration:
 
 ```yaml
 php codecept run 
@@ -154,4 +154,4 @@ For acceptance testing you can use `codeception/codeception` docker image as bas
 
 ## Conclusion
 
-It is tringly recommended to use Continuous Integration system in development. Codeception is easy to install and run in any CI systems. However, each of them has their differences you should take into account. You can use different repoters to provide output in format expected by CI system.
+It is highly recommended to use Continuous Integration system in development. Codeception is easy to install and run in any CI systems. However, each of them has their differences you should take into account. You can use different reporters to provide output in format expected by CI system.
