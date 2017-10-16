@@ -79,14 +79,14 @@ class Unit extends \PHPUnit_Framework_TestCase implements
      * If the method exists (PHPUnit 5) forward the call to the parent class, otherwise
      * call `expectException` instead (PHPUnit 6)
      */
-    public function setExpectedException($exception, $message = '', $code = null)
+    public function setExpectedException($exception, $message = null, $code = null)
     {
         if (is_callable('parent::setExpectedException')) {
             parent::setExpectedException($exception, $message, $code);
         } else {
             Notification::deprecate('PHPUnit\Framework\TestCase::setExpectedException deprecated in favor of expectException, expectExceptionMessage, and expectExceptionCode');
             $this->expectException($exception);
-            if ($message !== '') {
+            if ($message !== null) {
                 $this->expectExceptionMessage($message);
             }
             if ($code !== null) {
