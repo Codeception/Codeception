@@ -156,7 +156,6 @@ class LocalServer extends SuiteSubscriber
         ];
         $value = json_encode($value);
 
-        $this->module->amOnPage('/');
         $this->module->setCookie(self::COVERAGE_COOKIE, $value);
 
         // putting in configuration ensures the cookie is used for all sessions of a MultiSession test
