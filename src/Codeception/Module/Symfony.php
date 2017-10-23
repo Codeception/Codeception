@@ -104,7 +104,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         'cache_router' => false,
         'em_service' => 'doctrine.orm.entity_manager',
         'rebootable_client' => true,
-        'domain_regex' => ['/localhost/'],
+        'domain_regex' => null,
     ];
 
     /**
@@ -555,7 +555,21 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     protected function getInternalDomains()
     {
-        return $this->config['domain_regex'];
+        if (null !== $this->config['domain_regex']) {
+            return $this->config['domain_regex'];
+        }
+        $internalDomains = [];
+        $routes = $this->grabService('router')->getRouteCollection();
+        /* @var \Symfony\Component\Routing\Route $route */
+        foreach ($routes as $route) {
+            if (!is_null($route->getHost())) {
+                $compiled = $route->compile();
+                if (!is_null($compiled->getHostRegex())) {
+                    $internalDomains[] = $compiled->getHostRegex();
+                }
+            }
+        }
+        return array_unique($internalDomains);
     }
 
     /**
