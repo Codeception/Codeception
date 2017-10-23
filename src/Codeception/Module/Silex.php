@@ -46,12 +46,20 @@ use Symfony\Component\HttpKernel\Client;
  *           - Silex:
  *              app: 'app/bootstrap.php'
  *
+ * ## Public Properties
+ *
+ * * app - `Silex\Application` instance received from bootstrap file
+ *
  * Class Silex
  * @package Codeception\Module
  */
 class Silex extends Framework implements DoctrineProvider
 {
-    protected $app;
+    /**
+     * @var \Silex\Application
+     */
+    public $app;
+
     protected $requiredFields = ['app'];
     protected $config = [
         'em_service' => 'db.orm.em'

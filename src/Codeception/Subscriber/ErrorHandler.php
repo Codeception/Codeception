@@ -56,7 +56,7 @@ class ErrorHandler implements EventSubscriberInterface
         $this->initialized = true;
     }
 
-    public function errorHandler($errno, $errstr, $errfile, $errline, $context)
+    public function errorHandler($errno, $errstr, $errfile, $errline, $context = array())
     {
         if (E_USER_DEPRECATED === $errno) {
             $this->handleDeprecationError($errno, $errstr, $errfile, $errline, $context);
