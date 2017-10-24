@@ -101,6 +101,28 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->cancelPopup();
     }
 
+    public function testDontSeeInPopup()
+    {
+        $this->notForPhantomJS();
+        $this->module->amOnPage('/form/popup');
+        $this->module->click('Alert');
+        $this->module->dontSeeInPopup('Not Really?');
+        $this->module->cancelPopup();
+    }
+
+    public function testFailedDontSeeInPopup()
+    {
+        $this->notForPhantomJS();
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            'Failed asserting that \'Not Really?\' contains "Different text"'
+        );
+        $this->module->amOnPage('/form/popup');
+        $this->module->click('Alert');
+        $this->module->dontSeeInPopup('Really?');
+        $this->module->cancelPopup();
+    }
+
     public function testScreenshot()
     {
         $this->module->amOnPage('/');
