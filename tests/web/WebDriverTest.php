@@ -115,7 +115,7 @@ class WebDriverTest extends TestsForBrowsers
         $this->notForPhantomJS();
         $this->setExpectedException(
             'PHPUnit_Framework_AssertionFailedError',
-            'Failed asserting that \'Not Really?\' contains "Different text"'
+            'Failed asserting that \'Really?\' contains "Really?"'
         );
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
