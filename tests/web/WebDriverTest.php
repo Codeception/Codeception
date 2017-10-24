@@ -106,7 +106,7 @@ class WebDriverTest extends TestsForBrowsers
         $this->notForPhantomJS();
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
-        $this->module->dontSeeInPopup('Not Really?');
+        $this->module->dontSeeInPopup('Different text');
         $this->module->cancelPopup();
     }
 
@@ -115,7 +115,7 @@ class WebDriverTest extends TestsForBrowsers
         $this->notForPhantomJS();
         $this->setExpectedException(
             'PHPUnit_Framework_AssertionFailedError',
-            'Failed asserting that \'Really?\' contains "Really?"'
+            'Failed asserting that \'Really?\' does not contain "Really?"'
         );
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
