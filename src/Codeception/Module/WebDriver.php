@@ -1011,7 +1011,7 @@ class WebDriver extends CodeceptionModule implements
             ".//input[./@type = 'image'][contains(./@alt, $locator)]",
             ".//button[contains(normalize-space(string(.)), $locator)]",
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][./@name = $locator]",
-            ".//button[./@name = $locator]"
+            ".//button[./@name = $locator or ./@title = $locator]"
         );
 
         $els = $page->findElements(WebDriverBy::xpath($xpath));
