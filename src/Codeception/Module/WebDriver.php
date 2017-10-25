@@ -1907,6 +1907,28 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
+     * Checks that the active JavaScript popup,
+     * as created by `window.alert`|`window.confirm`|`window.prompt`, does NOT contain the given string.
+     *
+     * @param $text
+     *
+     * @throws \Codeception\Exception\ModuleException
+     */
+    public function dontSeeInPopup($text)
+    {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
+        $alert = $this->webDriver->switchTo()->alert();
+        try {
+            $this->assertNotContains($text, $alert->getText());
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            $alert->dismiss();
+            throw $e;
+        }
+    }
+
+    /**
      * Enters text into a native JavaScript prompt popup, as created by `window.prompt`.
      *
      * @param $keys
