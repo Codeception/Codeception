@@ -1923,6 +1923,7 @@ class WebDriver extends CodeceptionModule implements
         try {
             $this->assertNotContains($text, $alert->getText());
         } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            $alert->dismiss();
             throw $e;
         }
     }
