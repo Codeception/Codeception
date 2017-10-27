@@ -315,20 +315,6 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/form/example3?validate=yes');
     }
 
-    public function testHeadersByConfig()
-    {
-        $this->module->_setConfig(['headers' => ['xxx' => 'yyyy']]);
-        $this->module->_initialize();
-        $this->module->amOnPage('/form1');
-
-        if (method_exists($this->module->guzzle, 'getConfig')) {
-            $headers = $this->module->guzzle->getConfig('headers');
-        } else {
-            $headers = $this->module->guzzle->getDefaultOption('headers');
-        }
-        $this->assertArrayHasKey('xxx', $headers);
-    }
-
     public function testHeadersBySetHeader()
     {
         $this->module->setHeader('xxx', 'yyyy');
@@ -686,5 +672,15 @@ HTML
         $this->module->see('Lots of valuable data here');
         $this->module->amOnUrl('http://localhost:8000');
         $this->module->dontSee('Lots of valuable data here');
+    }
+
+    public function testSetUserAgentUsingConfig()
+    {
+        $this->module->_setConfig(['headers' => ['User-Agent' => 'Codeception User Agent Test 1.0']]);
+        $this->module->_initialize();
+
+        $this->module->amOnPage('/user-agent');
+        $response = $this->module->grabPageSource();
+        $this->assertEquals('Codeception User Agent Test 1.0', $response, 'Incorrect user agent');
     }
 }

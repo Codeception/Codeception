@@ -9,6 +9,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\Lib\Interfaces\PartedModule;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\VarDumper\Cloner\Data;
 
 /**
@@ -257,17 +258,32 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if (!count($results)) {
             throw new ModuleRequireException(
                 __CLASS__,
-                "AppKernel was not found at $path. "
-                . "Specify directory where Kernel class for your application is located with `app_path` parameter."
+                "File with Kernel class was not found at $path. "
+                . "Specify directory where file with Kernel class for your application is located with `app_path` parameter."
             );
         }
-
         $file = current($results);
-        $class = $file->getBasename('.php');
 
         require_once $file;
 
-        return $class;
+        $possibleKernelClasses = [
+            'AppKernel', // Symfony Standard
+            'App\Kernel', // Symfony Flex
+        ];
+        foreach ($possibleKernelClasses as $class) {
+            if (class_exists($class)) {
+                $refClass = new \ReflectionClass($class);
+                if ($refClass->getFileName() === $file->getRealpath()) {
+                    return $class;
+                }
+            }
+        }
+
+        throw new ModuleRequireException(
+            __CLASS__,
+            "Kernel class was not found in $file. "
+            . "Specify directory where file with Kernel class for your application is located with `app_path` parameter."
+        );
     }
 
     /**

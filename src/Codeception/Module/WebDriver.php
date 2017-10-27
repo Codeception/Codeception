@@ -1011,7 +1011,7 @@ class WebDriver extends CodeceptionModule implements
             ".//input[./@type = 'image'][contains(./@alt, $locator)]",
             ".//button[contains(normalize-space(string(.)), $locator)]",
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][./@name = $locator]",
-            ".//button[./@name = $locator]"
+            ".//button[./@name = $locator or ./@title = $locator]"
         );
 
         $els = $page->findElements(WebDriverBy::xpath($xpath));
@@ -1900,6 +1900,28 @@ class WebDriver extends CodeceptionModule implements
         $alert = $this->webDriver->switchTo()->alert();
         try {
             $this->assertContains($text, $alert->getText());
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            $alert->dismiss();
+            throw $e;
+        }
+    }
+
+    /**
+     * Checks that the active JavaScript popup,
+     * as created by `window.alert`|`window.confirm`|`window.prompt`, does NOT contain the given string.
+     *
+     * @param $text
+     *
+     * @throws \Codeception\Exception\ModuleException
+     */
+    public function dontSeeInPopup($text)
+    {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
+        $alert = $this->webDriver->switchTo()->alert();
+        try {
+            $this->assertNotContains($text, $alert->getText());
         } catch (\PHPUnit_Framework_AssertionFailedError $e) {
             $alert->dismiss();
             throw $e;
