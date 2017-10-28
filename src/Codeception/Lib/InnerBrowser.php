@@ -1888,6 +1888,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected function getNormalizedResponseContent()
     {
         $content = $this->_getResponseContent();
+        // Since strip_tags has problems with JS code that contains
+        // an <= operator the script tags have to be removed manually first.
+        $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+        
         $content = strip_tags($content);
         $content = html_entity_decode($content, ENT_QUOTES);
         $content = str_replace("\n", ' ', $content);
