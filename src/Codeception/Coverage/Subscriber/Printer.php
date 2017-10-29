@@ -145,7 +145,7 @@ class Printer implements EventSubscriberInterface
 
     protected function printPHPUnit()
     {
-        $writer = new \PHP_CodeCoverage_Report_PHPUnit(\PHPUnit_Runner_Version::id());
+        $writer = new \PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-phpunit']));
     }
 }
