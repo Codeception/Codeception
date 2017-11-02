@@ -66,6 +66,11 @@ class Yii2 extends Client
         if (!isset($config['class'])) {
             $config['class'] = 'yii\web\Application';
         }
+        if (static::$db) {
+            // If the DB conection already exists, make sure to pass it as early as possible
+            // to prevent application from new connection creating during bootstrap
+            $config['components']['db'] = static::$db;
+        }
         /** @var \yii\web\Application $app */
         $this->app = Yii::createObject($config);
         $this->persistDb();
