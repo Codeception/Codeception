@@ -27,14 +27,16 @@ class Suite extends \PHPUnit_Framework_TestSuite
         }
         $this->tests = $queue;
     }
+
     protected function getDependencies($test)
     {
         if (!$test instanceof Dependent) {
             return [$test];
         }
+        $forTest = Descriptor::getTestSignature($test);
         $tests = [];
         foreach ($test->getDependencies() as $requiredTestName) {
-            $required = $this->findMatchedTest($requiredTestName);
+            $required = $this->findMatchedTest($requiredTestName, $forTest);
             if (!$required) {
                 continue;
             }
@@ -43,7 +45,8 @@ class Suite extends \PHPUnit_Framework_TestSuite
         $tests[] = $test;
         return $tests;
     }
-    protected function findMatchedTest($testSignature)
+
+    protected function findMatchedTest($testSignature, $forTest)
     {
         foreach ($this->tests as $test) {
             $signature = Descriptor::getTestSignature($test);
@@ -51,9 +54,8 @@ class Suite extends \PHPUnit_Framework_TestSuite
                 return $test;
             }
         }
-        if ($test instanceof TestInterface) {
-            $test->getMetadata()->setSkip("Dependent test for $testSignature not found");
-        }
+
+        throw new \Exception("Dependent test $testSignature for $forTest not found");
     }
 
     /**
