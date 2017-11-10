@@ -76,14 +76,20 @@ class ParamsLoader
 
     protected function loadDotEnvFile()
     {
-        if (!class_exists('Dotenv\Dotenv')) {
+        if (class_exists('Dotenv\Dotenv')) {
+            $dotEnv = new \Dotenv\Dotenv(codecept_root_dir(), $this->paramStorage);
+            $dotEnv->load();
+        } elseif (class_exists('Dotenv')) {
+            // dotenv version 1.1 does not have namespace
+            $dotEnv = new \Dotenv(codecept_root_dir(), $this->paramStorage);
+            $dotEnv->load(codecept_root_dir());
+        } else {
             throw new ConfigurationException(
                 "`vlucas/phpdotenv` library is required to parse .env files.\n" .
                 "Please install it via composer: composer require vlucas/phpdotenv"
             );
         }
-        $dotEnv = new \Dotenv\Dotenv(codecept_root_dir(), $this->paramStorage);
-        $dotEnv->load();
+        
         return $_SERVER;
     }
 
