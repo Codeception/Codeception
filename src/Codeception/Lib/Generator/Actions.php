@@ -18,8 +18,6 @@ namespace {{namespace}}_generated;
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
-{{use}}
-
 trait {{name}}Actions
 {
     /**
@@ -70,11 +68,6 @@ EOF;
     {
         $namespace = rtrim($this->settings['namespace'], '\\');
 
-        $uses = [];
-        foreach ($this->modules as $module) {
-            $uses[] = "use " . get_class($module) . ";";
-        }
-
         $methods = [];
         $code = [];
         foreach ($this->actions as $action => $moduleName) {
@@ -92,7 +85,6 @@ EOF;
             ->place('namespace', $namespace ? $namespace . '\\' : '')
             ->place('hash', self::genHash($this->modules, $this->settings))
             ->place('name', $this->name)
-            ->place('use', implode("\n", $uses))
             ->place('methods', implode("\n\n ", $code))
             ->produce();
     }
