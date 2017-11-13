@@ -20,15 +20,20 @@ class Db
     protected $password;
 
     /**
+     * @var array
+     */
+    protected $options;
+
+    /**
      * associative array with table name => primary-key
      *
      * @var array
      */
     protected $primaryKeys = [];
 
-    public static function connect($dsn, $user, $password)
+    public static function connect($dsn, $user, $password, $options=null)
     {
-        $dbh = new \PDO($dsn, $user, $password);
+        $dbh = new \PDO($dsn, $user, $password, $options);
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         return $dbh;
@@ -43,25 +48,25 @@ class Db
      *
      * @return Db|SqlSrv|MySql|Oci|PostgreSql|Sqlite
      */
-    public static function create($dsn, $user, $password)
+    public static function create($dsn, $user, $password, $options=null)
     {
         $provider = self::getProvider($dsn);
 
         switch ($provider) {
             case 'sqlite':
-                return new Sqlite($dsn, $user, $password);
+                return new Sqlite($dsn, $user, $password, $options);
             case 'mysql':
-                return new MySql($dsn, $user, $password);
+                return new MySql($dsn, $user, $password, $options);
             case 'pgsql':
-                return new PostgreSql($dsn, $user, $password);
+                return new PostgreSql($dsn, $user, $password, $options);
             case 'mssql':
             case 'dblib':
             case 'sqlsrv':
-                return new SqlSrv($dsn, $user, $password);
+                return new SqlSrv($dsn, $user, $password, $options);
             case 'oci':
-                return new Oci($dsn, $user, $password);
+                return new Oci($dsn, $user, $password, $options);
             default:
-                return new Db($dsn, $user, $password);
+                return new Db($dsn, $user, $password, $options);
         }
     }
 
@@ -70,14 +75,15 @@ class Db
         return substr($dsn, 0, strpos($dsn, ':'));
     }
 
-    public function __construct($dsn, $user, $password)
+    public function __construct($dsn, $user, $password, $options=null)
     {
-        $this->dbh = new \PDO($dsn, $user, $password);
+        $this->dbh = new \PDO($dsn, $user, $password, $options);
         $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $this->dsn = $dsn;
         $this->user = $user;
         $this->password = $password;
+        $this->options = $options;
     }
 
     public function getDbh()
@@ -334,5 +340,10 @@ class Db
         $where = $this->generateWhereClause($criteria);
 
         return sprintf('UPDATE %s SET %s %s', $this->getQuotedName($table), implode(', ', $set), $where);
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

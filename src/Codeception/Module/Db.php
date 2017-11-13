@@ -272,8 +272,25 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function connect()
     {
+        $options = [];
+ 
+        if( array_key_exists('ssl_key', $this->config)
+            AND !empty($this->config['ssl_key'])) {
+                $options[\PDO::MYSQL_ATTR_SSL_KEY] = $this->config['ssl_key'];
+        }
+ 
+        if( array_key_exists('ssl_cert', $this->config)
+            AND !empty($this->config['ssl_cert'])) {
+                $options[\PDO::MYSQL_ATTR_SSL_CERT] = $this->config['ssl_cert'];
+        }
+ 
+        if( array_key_exists('ssl_ca', $this->config)
+            AND !empty($this->config['ssl_ca'])) {
+                $options[\PDO::MYSQL_ATTR_SSL_CA] = $this->config['ssl_ca'];
+        }
+
         try {
-            $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
+            $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password'], $options);
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
