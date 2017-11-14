@@ -1,9 +1,11 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Util\Uri;
 use Aws\Credentials\Credentials;
+use Aws\Exception\CredentialsException;
+use Aws\Exception\UnresolvedSignatureException;
 use Aws\Signature\SignatureV4;
+use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
@@ -348,9 +350,15 @@ class Guzzle6 extends Client
         return HandlerStack::create();
     }
 
-    public function setAwsAuth($key, $secret, $service, $region)
+    public function setAwsAuth($config)
     {
-        $this->awsCredentials = new Credentials($key, $secret);
-        $this->awsSignature = new SignatureV4($service, $region);
+        try {
+            $this->awsCredentials = new Credentials($config['key'], $config['secret']);
+            $this->awsSignature = new SignatureV4($config['service'], $config['region']);
+        } catch ( CredentialsException $e) {
+            throw $e;
+        } catch ( UnresolvedSignatureException $e) {
+            throw $e;
+        }
     }
 }

@@ -57,7 +57,8 @@ use Codeception\Util\Soap as XmlUtils;
 class REST extends CodeceptionModule implements DependsOnModule, PartedModule, API, ConflictsWithModule
 {
     protected $config = [
-        'url' => ''
+        'url' => '',
+        'aws' => ''
     ];
 
     protected $dependencyMessage = <<<EOF
@@ -333,15 +334,35 @@ EOF;
     }
 
     /**
-     * Adds AWS Authentication via key, secret, service and region
-     * @param $key
-     * @param $secret
-     * @param $service
-     * @param $region
+     * Allows to send REST request using AWS Authorization
+     * Requires client to by Guzzle
+     * Example
+     * Config -
+     *
+     * modules:
+     *      enabled:
+     *          - REST:
+     *              aws:
+     *                  key: accessKey
+     *                  secret: accessSecret
+     *                  service: awsService
+     *                  region: awsRegion
+     *
+     * ```php
+     * <?php
+     * $I->amAWSAuthenticated();
+     * ?>
+     * ```
+     * @param array $additionalAWSConfig
+     * @throws ModuleException
      */
-    public function amAWSAuthenticated($key, $secret, $service, $region)
+    public function amAWSAuthenticated($additionalAWSConfig = [])
     {
-        $this->client->setAwsAuth($key, $secret, $service, $region);
+        if (!defined('\GuzzleHttp\Client::VERSION')) {
+            throw new ModuleException(__METHOD__, 'Out of scope if not using a Guzzle client.');
+        }
+        $config = array_merge($this->config['aws'], $additionalAWSConfig);
+        $this->client->setAwsAuth($config);
     }
 
     /**

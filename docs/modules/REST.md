@@ -89,19 +89,6 @@ $I->amNTLMAuthenticated('jon_snow', 'targaryen');
  * `[Part]` xml
 
 
-### amAWSAuthenticated
-Allows to send REST request using AWS Authorization
-```php
-<?php
-$I->amAWSAuthenticated('awsKey', 'awsSecret', 'awsService', 'awsRegion');
-?>
-```
- * `param` $key
- * `param` $secret
- * `param` $service
- * `param` $region
-
-
 ### deleteHeader
  
 Deletes the header with the passed name.  Subsequent requests
