@@ -16,6 +16,7 @@
 
     "require": {
         "php": ">=5.4.0 <8.0",
+        "aws/aws-sdk-php": "^3.8",
         "ext-json": "*",
         "ext-mbstring": "*",
         "phpunit/phpunit": ">4.8.20 <7.0",

@@ -275,6 +275,11 @@ EOF;
         }
     }
 
+    public function amAwsAuthenticated($key, $secret, $service, $region)
+    {
+        $this->client->setAwsAuth($key, $secret, $service, $region);
+    }
+
     /**
      * Adds Digest authentication via username/password.
      *
