@@ -275,11 +275,6 @@ EOF;
         }
     }
 
-    public function amAwsAuthenticated($key, $secret, $service, $region)
-    {
-        $this->client->setAwsAuth($key, $secret, $service, $region);
-    }
-
     /**
      * Adds Digest authentication via username/password.
      *
@@ -335,6 +330,18 @@ EOF;
             throw new ModuleException(__METHOD__, 'Guzzle '.\GuzzleHttp\Client::VERSION.' found. Requires Guzzle >=6.3.0 for NTLM auth option.');
         }
         $this->client->setAuth($username, $password, 'ntlm');
+    }
+
+    /**
+     * Adds AWS Authentication via key, secret, service and region
+     * @param $key
+     * @param $secret
+     * @param $service
+     * @param $region
+     */
+    public function amAWSAuthenticated($key, $secret, $service, $region)
+    {
+        $this->client->setAwsAuth($key, $secret, $service, $region);
     }
 
     /**
