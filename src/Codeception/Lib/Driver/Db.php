@@ -21,6 +21,8 @@ class Db
 
     /**
      * @var array
+     * 
+     * @see http://php.net/manual/de/pdo.construct.php
      */
     protected $options;
 
@@ -45,6 +47,10 @@ class Db
      * @param $dsn
      * @param $user
      * @param $password
+     * @param [optional] $options
+     *
+     * @see http://php.net/manual/en/pdo.construct.php
+     * @see http://php.net/manual/de/ref.pdo-mysql.php#pdo-mysql.constants
      *
      * @return Db|SqlSrv|MySql|Oci|PostgreSql|Sqlite
      */
@@ -75,6 +81,15 @@ class Db
         return substr($dsn, 0, strpos($dsn, ':'));
     }
 
+    /**
+     * @param $dsn
+     * @param $user
+     * @param $password
+     * @param [optional] $options
+     *
+     * @see http://php.net/manual/en/pdo.construct.php
+     * @see http://php.net/manual/de/ref.pdo-mysql.php#pdo-mysql.constants
+     */
     public function __construct($dsn, $user, $password, $options=null)
     {
         $this->dbh = new \PDO($dsn, $user, $password, $options);

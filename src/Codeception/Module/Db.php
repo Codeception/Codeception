@@ -274,19 +274,23 @@ class Db extends CodeceptionModule implements DbInterface
     {
         $options = [];
  
-        if( array_key_exists('ssl_key', $this->config)
-            AND !empty($this->config['ssl_key'])) {
-                $options[\PDO::MYSQL_ATTR_SSL_KEY] = $this->config['ssl_key'];
+        /**
+         * @see http://php.net/manual/en/pdo.construct.php
+         * @see http://php.net/manual/de/ref.pdo-mysql.php#pdo-mysql.constants
+         */
+        if (array_key_exists('ssl_key', $this->config) && !empty($this->config['ssl_key']))
+        {
+            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $this->config['ssl_key'];
         }
  
-        if( array_key_exists('ssl_cert', $this->config)
-            AND !empty($this->config['ssl_cert'])) {
-                $options[\PDO::MYSQL_ATTR_SSL_CERT] = $this->config['ssl_cert'];
+        if (array_key_exists('ssl_cert', $this->config) && !empty($this->config['ssl_cert']))
+        {
+            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $this->config['ssl_cert'];
         }
  
-        if( array_key_exists('ssl_ca', $this->config)
-            AND !empty($this->config['ssl_ca'])) {
-                $options[\PDO::MYSQL_ATTR_SSL_CA] = $this->config['ssl_ca'];
+        if (array_key_exists('ssl_ca', $this->config) && !empty($this->config['ssl_ca']))
+        {
+            $options[\PDO::MYSQL_ATTR_SSL_CA] = $this->config['ssl_ca'];
         }
 
         try {
