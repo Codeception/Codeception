@@ -40,6 +40,7 @@
         "monolog/monolog": "~1.8",
         "facebook/graph-sdk": "~5.3",
         "php-amqplib/php-amqplib": "~2.4",
+        "queue-interop/amqp-interop": "^0.7",
         "codeception/specify": "~0.3",
         "pda/pheanstalk": "~3.0",
         "flow/jsonpath": "~0.2",
