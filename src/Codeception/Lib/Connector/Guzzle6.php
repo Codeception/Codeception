@@ -202,7 +202,7 @@ class Guzzle6 extends Client
         }
 
         try {
-            if ( null !== $this->awsCredentials) {
+            if (null !== $this->awsCredentials) {
                 $response = $this->client->send($this->awsSignature->signRequest($guzzleRequest, $this->awsCredentials), $options);
             } else {
                 $response = $this->client->send($guzzleRequest, $options);
