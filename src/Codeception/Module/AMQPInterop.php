@@ -74,8 +74,7 @@ class AMQPInterop extends CodeceptionModule
     public function _initialize()
     {
         $factoryClass = $this->config['factory_class'];
-        if (
-            false === class_exists($factoryClass) ||
+        if (false === class_exists($factoryClass) ||
             false === (new \ReflectionClass($factoryClass))->implementsInterface(AmqpConnectionFactory::class)
         ) {
             throw new \LogicException(sprintf('The factory_class option has to be valid class that implements "%s"', AmqpConnectionFactory::class));
@@ -91,7 +90,7 @@ class AMQPInterop extends CodeceptionModule
                 'vhost' => $this->config['vhost'],
             ]);
 
-            $this->context = $factory->createContext();;
+            $this->context = $factory->createContext();
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage() . ' while establishing connection to MQ server');
         }
