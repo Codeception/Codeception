@@ -358,11 +358,10 @@ EOF;
      */
     public function amAWSAuthenticated($additionalAWSConfig = [])
     {
-        if (!defined('\GuzzleHttp\Client::VERSION')) {
-            throw new ModuleException(__METHOD__, 'Out of scope if not using a Guzzle client.');
+        if (method_exists($this->client, 'setAwsAuth')) {
+            $config = array_merge($this->config['aws'], $additionalAWSConfig);
+            $this->client->setAwsAuth($config);
         }
-        $config = array_merge($this->config['aws'], $additionalAWSConfig);
-        $this->client->setAwsAuth($config);
     }
 
     /**

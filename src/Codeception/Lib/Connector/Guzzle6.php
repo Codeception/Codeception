@@ -355,9 +355,9 @@ class Guzzle6 extends Client
         try {
             $this->awsCredentials = new Credentials($config['key'], $config['secret']);
             $this->awsSignature = new SignatureV4($config['service'], $config['region']);
-        } catch ( CredentialsException $e) {
+        } catch (CredentialsException $e) {
             throw $e;
-        } catch ( UnresolvedSignatureException $e) {
+        } catch (UnresolvedSignatureException $e) {
             throw $e;
         }
     }
