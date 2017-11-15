@@ -10,7 +10,7 @@ class Sqlite extends Db
     protected $filename = '';
     protected $con = null;
 
-    public function __construct($dsn, $user, $password, $options=null)
+    public function __construct($dsn, $user, $password, $options = null)
     {
         $filename = substr($dsn, 7);
         if ($filename === ':memory:') {
