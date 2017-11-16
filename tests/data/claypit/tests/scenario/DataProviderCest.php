@@ -47,9 +47,7 @@ class DataProviderCest
 
        /**
         * @group dataprovider
-        * @depends DataProviderCest:testDependsWithDataProvider:1
-        * @depends DataProviderCest:testDependsWithDataProvider:2
-        * @depends DataProviderCest:testDependsWithDataProvider:3
+        * @depends DataProviderCest:testDependsWithDataProvider
         */
        public function testDependsOnTestWithDataProvider()
        {
