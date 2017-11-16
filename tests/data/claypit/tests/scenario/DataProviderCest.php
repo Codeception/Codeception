@@ -86,6 +86,7 @@ class DataProviderCest
        /**
         * @group dataprovider
         * @depends DataProviderCest:testDependsWithFailingDataProvider:2
+        * @depends DataProviderCest:testDependsWithFailingDataProvider:3
         */
        public function testDependsOnTestWithDiscreteFailingDataProviderExample()
        {
