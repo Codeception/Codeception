@@ -469,10 +469,14 @@ EOF
         $I->executeCommand('run scenario -g dataprovider --steps', false);
         $I->seeInShellOutput('Tests: 23');
         $I->seeInShellOutput('Failures: 2, Skipped: 1');
-        $I->seeInShellOutput('Step  See file found "i.do.not.exist.either.yml"');
-        $I->seeInShellOutput('Fail  File "i.do.not.exist.either.yml" not found at ""');
-        $I->seeInShellOutput('SKIPPED: This test depends on DataProviderCest:testDependsWithFailingDataProvider:1,');
-        $I->seeInShellOutput('DataProviderCest:testDependsWithFailingDataProvider:4 to pass');
+        $I->seeInShellOutput('1) DataProviderCest: Test depends with failing data provider');
+        $I->seeInShellOutput('Test  tests/scenario/DataProviderCest.php:testDependsWithFailingDataProvider:1');
+        $I->seeInShellOutput('2) DataProviderCest: Test depends with failing data provider');
+        $I->seeInShellOutput('Test  tests/scenario/DataProviderCest.php:testDependsWithFailingDataProvider:4');
+        $I->seeInShellOutput(
+            'SKIPPED: This test depends on DataProviderCest:testDependsWithFailingDataProvider:1, '
+            . 'DataProviderCest:testDependsWithFailingDataProvider:4 to pass'
+        );
     }
 
     public function runFailedTestAndCheckOutput(CliGuy $I)
