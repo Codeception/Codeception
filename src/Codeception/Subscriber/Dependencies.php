@@ -28,7 +28,7 @@ class Dependencies implements EventSubscriberInterface
 
         $testSignatures = $test->getDependencies();
         foreach ($testSignatures as $signature) {
-            $matches = preg_grep('/'.addslashes($signature).'(?::\d+)?/', $this->successfulTests);
+            $matches = preg_grep('/' . preg_quote($signature) . '(?::\d+)?/', $this->successfulTests);
             if (empty($matches)) {
                 $test->getMetadata()->setSkip("This test depends on $signature to pass");
                 return;
