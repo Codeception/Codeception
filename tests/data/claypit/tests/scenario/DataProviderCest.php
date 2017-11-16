@@ -54,6 +54,15 @@ class DataProviderCest
            return true;
        }
 
+       /**
+        * @group dataprovider
+        * @depends DataProviderCest:testDependsWithDataProvider:1
+        */
+       public function testDependsOnTestWithDiscreteDataProviderExample()
+       {
+           return true;
+       }
+
       /**
        * @return array
        */
