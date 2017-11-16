@@ -466,8 +466,34 @@ EOF
 
     public function runTestWithAnnotationDataprovider(CliGuy $I)
     {
-        $I->executeCommand('run scenario -g dataprovider --steps');
-        $I->seeInShellOutput('OK (15 tests');
+        $I->executeCommand('run scenario -g dataprovider --steps', false);
+        $I->seeInShellOutput('Tests: 24');
+        $I->seeInShellOutput('Failures: 2, Skipped: 2');
+        $I->seeInShellOutput('1) DataProviderCest: Test depends with failing data provider');
+        $testPath = implode(
+            DIRECTORY_SEPARATOR,
+            [
+                'tests',
+                'scenario',
+                'DataProviderCest.php:testDependsWithFailingDataProvider:1'
+            ]
+        );
+        $I->seeInShellOutput('Test  ' . $testPath);
+        $I->seeInShellOutput('2) DataProviderCest: Test depends with failing data provider');
+        $testPath = implode(
+            DIRECTORY_SEPARATOR,
+            [
+                'tests',
+                'scenario',
+                'DataProviderCest.php:testDependsWithFailingDataProvider:4'
+            ]
+        );
+        $I->seeInShellOutput('Test  ' . $testPath);
+        $I->seeInShellOutput(
+            'SKIPPED: This test depends on DataProviderCest:testDependsWithFailingDataProvider:1, '
+            . 'DataProviderCest:testDependsWithFailingDataProvider:4 to pass'
+        );
+        $I->seeInShellOutput('SKIPPED: This test depends on DataProviderCest:testThatDoesNotExist to pass');
     }
 
     public function runFailedTestAndCheckOutput(CliGuy $I)

@@ -13,11 +13,16 @@ class Dependencies implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     static $events = [
-        Events::TEST_START => 'testStart',
-        Events::TEST_SUCCESS => 'testSuccess'
+        Events::TEST_START      => 'testStart',
+        Events::TEST_SUCCESS    => 'testSuccessful',
+        Events::TEST_FAIL       => 'testUnsuccessful',
+        Events::TEST_ERROR      => 'testUnsuccessful',
+        Events::TEST_INCOMPLETE => 'testUnsuccessful',
+        Events::TEST_SKIPPED    => 'testUnsuccessful'
     ];
 
     protected $successfulTests = [];
+    protected $unsuccessfulTests = [];
 
     public function testStart(TestEvent $event)
     {
@@ -28,19 +33,35 @@ class Dependencies implements EventSubscriberInterface
 
         $testSignatures = $test->getDependencies();
         foreach ($testSignatures as $signature) {
-            if (!in_array($signature, $this->successfulTests)) {
+            $sucessful = preg_grep('/' . preg_quote($signature) . '(?::.+)?/', $this->successfulTests);
+            if (empty($sucessful)) {
                 $test->getMetadata()->setSkip("This test depends on $signature to pass");
+                return;
+            }
+            $unsuccessful = preg_grep('/' . preg_quote($signature) . '(?::.+)?/', $this->unsuccessfulTests);
+            if (!empty($unsuccessful)) {
+                $failures = implode(', ', array_unique($unsuccessful));
+                $test->getMetadata()->setSkip("This test depends on $failures to pass");
                 return;
             }
         }
     }
 
-    public function testSuccess(TestEvent $event)
+    public function testSuccessful(TestEvent $event)
     {
         $test = $event->getTest();
         if (!$test instanceof TestInterface) {
             return;
         }
         $this->successfulTests[] = Descriptor::getTestSignature($test);
+    }
+
+    public function testUnsuccessful(TestEvent $event)
+    {
+        $test = $event->getTest();
+        if (!$test instanceof TestInterface) {
+            return;
+        }
+        $this->unsuccessfulTests[] = Descriptor::getTestSignature($test);
     }
 }
