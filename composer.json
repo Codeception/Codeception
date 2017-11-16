@@ -51,6 +51,7 @@
         "symfony/process": ">=2.7 <4.0"
     },
     "suggest": {
+        "aws/aws-sdk-php": "For using AWS Auth in REST module",
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
         "flow/jsonpath": "For using JSONPath in REST module",
