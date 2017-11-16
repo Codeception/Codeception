@@ -63,6 +63,36 @@ class DataProviderCest
            return true;
        }
 
+       /**
+        * @group dataprovider
+        * @depends Codeception\Demo\Depends\DependencyForCest:forTestPurpose
+        * @dataprovider protectedFailingDataSource
+        */
+       public function testDependsWithFailingDataProvider(ScenarioGuy $I, Example $example)
+       {
+           $I->amInPath($example['path']);
+           $I->seeFileFound($example['file']);
+       }
+
+       /**
+        * @group dataprovider
+        * @depends DataProviderCest:testDependsWithFailingDataProvider
+        */
+       public function testDependsOnTestWithFailingDataProvider()
+       {
+           return true;
+       }
+
+       /**
+        * @group dataprovider
+        * @depends DataProviderCest:testDependsWithFailingDataProvider:2
+        */
+       public function testDependsOnTestWithDiscreteFailingDataProviderExample()
+       {
+           return true;
+       }
+
+
       /**
        * @return array
        */
@@ -84,6 +114,20 @@ class DataProviderCest
               ['path' => ".", 'file' => "scenario.suite.yml"],
               ['path' => ".",  'file' => "dummy.suite.yml"],
               ['path' => ".",  'file' => "unit.suite.yml"]
+          ];
+      }
+
+      /**
+       * @return array
+       */
+      protected function protectedFailingDataSource()
+      {
+          return[
+              ['path' => ".", 'file' => "scenario.suite.yml"],
+              ['path' => ".", 'file' => "i.do.not.exist.yml"],
+              ['path' => ".", 'file' => "dummy.suite.yml"],
+              ['path' => ".", 'file' => "unit.suite.yml"],
+              ['path' => ".", 'file' => "i.do.not.exist.either.yml"]
           ];
       }
 }

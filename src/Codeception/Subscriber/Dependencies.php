@@ -13,11 +13,14 @@ class Dependencies implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     static $events = [
-        Events::TEST_START => 'testStart',
-        Events::TEST_SUCCESS => 'testSuccess'
+        Events::TEST_START      => 'testStart',
+        Events::TEST_FAIL       => 'testUnuccessful',
+        Events::TEST_ERROR      => 'testUnuccessful',
+        Events::TEST_INCOMPLETE => 'testUnuccessful',
+        Events::TEST_SKIPPED    => 'testUnuccessful'
     ];
 
-    protected $successfulTests = [];
+    protected $unsuccessfulTests = [];
 
     public function testStart(TestEvent $event)
     {
@@ -28,20 +31,21 @@ class Dependencies implements EventSubscriberInterface
 
         $testSignatures = $test->getDependencies();
         foreach ($testSignatures as $signature) {
-            $matches = preg_grep('/' . preg_quote($signature) . '(?::.+)?/', $this->successfulTests);
-            if (empty($matches)) {
-                $test->getMetadata()->setSkip("This test depends on $signature to pass");
+            $matches = preg_grep('/' . preg_quote($signature) . '(?::.+)?/', $this->unsuccessfulTests);
+            if (!empty($matches)) {
+                $failures = implode(', ', array_unique($matches));
+                $test->getMetadata()->setSkip("This test depends on $failures to pass");
                 return;
             }
         }
     }
 
-    public function testSuccess(TestEvent $event)
+    public function testUnuccessful(TestEvent $event)
     {
         $test = $event->getTest();
         if (!$test instanceof TestInterface) {
             return;
         }
-        $this->successfulTests[] = Descriptor::getTestSignature($test);
+        $this->unsuccessfulTests[] = Descriptor::getTestSignature($test);
     }
 }

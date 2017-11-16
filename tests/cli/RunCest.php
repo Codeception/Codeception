@@ -466,8 +466,12 @@ EOF
 
     public function runTestWithAnnotationDataprovider(CliGuy $I)
     {
-        $I->executeCommand('run scenario -g dataprovider --steps');
-        $I->seeInShellOutput('OK (16 tests');
+        $I->executeCommand('run scenario -g dataprovider --steps', false);
+        $I->seeInShellOutput('Tests: 23, Assertions: 18, Failures: 2, Skipped: 1');
+        $I->seeInShellOutput('Step  See file found "i.do.not.exist.either.yml"');
+        $I->seeInShellOutput('Fail  File "i.do.not.exist.either.yml" not found at ""');
+        $I->seeInShellOutput('SKIPPED: This test depends on DataProviderCest:testDependsWithFailingDataProvider:1,');
+        $I->seeInShellOutput('DataProviderCest:testDependsWithFailingDataProvider:4 to pass');
     }
 
     public function runFailedTestAndCheckOutput(CliGuy $I)
