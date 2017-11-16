@@ -155,11 +155,11 @@ class Cest extends Test implements
 
     public function getSignature()
     {
-        $signature = get_class($this->getTestClass()) . ":" . $this->getTestMethod();
-        if (!empty($this->getMetadata()->getCurrent('iteration'))) {
-            $signature .= ':' . $this->getMetadata()->getCurrent('iteration');
+        $iteration = $this->getMetadata()->getCurrent('iteration');
+        if ($iteration !== null) {
+            $iteration = ':' . $iteration;
         }
-        return $signature;
+        return get_class($this->getTestClass()) . ":" . $this->getTestMethod() . $iteration;
     }
 
     public function getTestClass()
