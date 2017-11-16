@@ -87,7 +87,7 @@ class Cest implements LoaderInterface
                         }
                         $test = new CestFormat($unit, $method, $file);
                         $test->getMetadata()->setCurrent(['example' => $example]);
-                        $test->getMetadata()->setCurrent(['iteration' => ($k + 1)]);
+                        $test->getMetadata()->setCurrent(['iteration' => $k]);
                         $dataProvider->addTest($test);
                     }
                     $this->tests[] = $dataProvider;
