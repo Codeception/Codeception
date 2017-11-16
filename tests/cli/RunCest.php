@@ -470,9 +470,25 @@ EOF
         $I->seeInShellOutput('Tests: 23');
         $I->seeInShellOutput('Failures: 2, Skipped: 1');
         $I->seeInShellOutput('1) DataProviderCest: Test depends with failing data provider');
-        $I->seeInShellOutput('Test  tests/scenario/DataProviderCest.php:testDependsWithFailingDataProvider:1');
+        $testPath = implode(
+            DIRECTORY_SEPARATOR,
+            [
+                'tests',
+                'scenario',
+                'DataProviderCest.php:testDependsWithFailingDataProvider:1'
+            ]
+        );
+        $I->seeInShellOutput('Test  ' . $testPath);
         $I->seeInShellOutput('2) DataProviderCest: Test depends with failing data provider');
-        $I->seeInShellOutput('Test  tests/scenario/DataProviderCest.php:testDependsWithFailingDataProvider:4');
+        $testPath = implode(
+            DIRECTORY_SEPARATOR,
+            [
+                'tests',
+                'scenario',
+                'DataProviderCest.php:testDependsWithFailingDataProvider:4'
+            ]
+        );
+        $I->seeInShellOutput('Test  ' . $testPath);
         $I->seeInShellOutput(
             'SKIPPED: This test depends on DataProviderCest:testDependsWithFailingDataProvider:1, '
             . 'DataProviderCest:testDependsWithFailingDataProvider:4 to pass'
