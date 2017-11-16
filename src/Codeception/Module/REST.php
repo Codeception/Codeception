@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
@@ -335,7 +336,7 @@ EOF;
 
     /**
      * Allows to send REST request using AWS Authorization
-     * Requires client to by Guzzle
+     * Only works with PhpBrowser
      * Example
      * Config -
      *
@@ -360,6 +361,20 @@ EOF;
     {
         if (method_exists($this->client, 'setAwsAuth')) {
             $config = array_merge($this->config['aws'], $additionalAWSConfig);
+
+            if (!isset($this->config['key'])) {
+                throw new ConfigurationException('AWS Key is not set');
+            }
+            if (!isset($this->config['secret'])) {
+                throw new ConfigurationException('AWS Secret is not set');
+            }
+            if (!isset($this->config['service'])) {
+                throw new ConfigurationException('AWS Service is not set');
+            }
+            if (!isset($this->config['region'])) {
+                throw new ConfigurationException('AWS Region is not set');
+            }
+
             $this->client->setAwsAuth($config);
         }
     }
