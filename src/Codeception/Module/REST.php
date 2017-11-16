@@ -362,16 +362,16 @@ EOF;
         if (method_exists($this->client, 'setAwsAuth')) {
             $config = array_merge($this->config['aws'], $additionalAWSConfig);
 
-            if (!isset($this->config['key'])) {
+            if (!isset($config['key'])) {
                 throw new ConfigurationException('AWS Key is not set');
             }
-            if (!isset($this->config['secret'])) {
+            if (!isset($config['secret'])) {
                 throw new ConfigurationException('AWS Secret is not set');
             }
-            if (!isset($this->config['service'])) {
+            if (!isset($config['service'])) {
                 throw new ConfigurationException('AWS Service is not set');
             }
-            if (!isset($this->config['region'])) {
+            if (!isset($config['region'])) {
                 throw new ConfigurationException('AWS Region is not set');
             }
 
