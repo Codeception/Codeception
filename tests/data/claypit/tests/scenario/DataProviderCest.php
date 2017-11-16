@@ -93,6 +93,15 @@ class DataProviderCest
            return true;
        }
 
+       /**
+        * @group dataprovider
+        * @depends DataProviderCest:testDependsWithDataProvider
+        * @depends DataProviderCest:testThatDoesNotExist
+        */
+       public function testDependsOnTestWithDataProviderAndTestThatDoesNotExist()
+       {
+           return true;
+       }
 
       /**
        * @return array
