@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Aws\Credentials\Credentials;
+use Aws\Signature\SignatureV4;
 use Codeception\Util\Uri;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
@@ -19,6 +21,8 @@ class Guzzle extends Client
     ];
     protected $refreshMaxInterval = 0;
 
+    protected $awsCredentials = null;
+    protected $awsSignature = null;
 
     /** @var \GuzzleHttp\Client */
     protected $client;
@@ -198,7 +202,11 @@ class Guzzle extends Client
 
         // Let BrowserKit handle redirects
         try {
-            $response = $this->client->send($guzzleRequest);
+            if (null !== $this->awsCredentials) {
+                $response = $this->client->send($this->awsSignature->signRequest($guzzleRequest, $this->awsCredentials));
+            } else {
+                $response = $this->client->send($guzzleRequest);
+            }
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $response = $e->getResponse();
@@ -277,5 +285,11 @@ class Guzzle extends Client
     protected function extractCookies(BrowserKitRequest $request)
     {
         return $this->getCookieJar()->allRawValues($request->getUri());
+    }
+
+    public function setAwsAuth($config)
+    {
+        $this->awsCredentials = new Credentials($config['key'], $config['secret']);
+        $this->awsSignature = new SignatureV4($config['service'], $config['region']);
     }
 }

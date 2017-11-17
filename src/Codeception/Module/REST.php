@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
@@ -57,7 +58,8 @@ use Codeception\Util\Soap as XmlUtils;
 class REST extends CodeceptionModule implements DependsOnModule, PartedModule, API, ConflictsWithModule
 {
     protected $config = [
-        'url' => ''
+        'url' => '',
+        'aws' => ''
     ];
 
     protected $dependencyMessage = <<<EOF
@@ -330,6 +332,51 @@ EOF;
             throw new ModuleException(__METHOD__, 'Guzzle '.\GuzzleHttp\Client::VERSION.' found. Requires Guzzle >=6.3.0 for NTLM auth option.');
         }
         $this->client->setAuth($username, $password, 'ntlm');
+    }
+
+    /**
+     * Allows to send REST request using AWS Authorization
+     * Only works with PhpBrowser
+     * Example
+     * Config -
+     *
+     * modules:
+     *      enabled:
+     *          - REST:
+     *              aws:
+     *                  key: accessKey
+     *                  secret: accessSecret
+     *                  service: awsService
+     *                  region: awsRegion
+     *
+     * ```php
+     * <?php
+     * $I->amAWSAuthenticated();
+     * ?>
+     * ```
+     * @param array $additionalAWSConfig
+     * @throws ModuleException
+     */
+    public function amAWSAuthenticated($additionalAWSConfig = [])
+    {
+        if (method_exists($this->client, 'setAwsAuth')) {
+            $config = array_merge($this->config['aws'], $additionalAWSConfig);
+
+            if (!isset($this->config['key'])) {
+                throw new ConfigurationException('AWS Key is not set');
+            }
+            if (!isset($this->config['secret'])) {
+                throw new ConfigurationException('AWS Secret is not set');
+            }
+            if (!isset($this->config['service'])) {
+                throw new ConfigurationException('AWS Service is not set');
+            }
+            if (!isset($this->config['region'])) {
+                throw new ConfigurationException('AWS Region is not set');
+            }
+
+            $this->client->setAwsAuth($config);
+        }
     }
 
     /**
