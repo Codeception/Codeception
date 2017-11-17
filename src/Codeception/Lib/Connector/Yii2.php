@@ -83,7 +83,7 @@ class Yii2 extends Client
         static::$db = null;
         static::$mailer = null;
         \yii\web\UploadedFile::reset();
-        if (method_exists(yii\base\Event::className(), 'offAll')) {
+        if (method_exists(\yii\base\Event::className(), 'offAll')) {
             \yii\base\Event::offAll();
         }
     }
