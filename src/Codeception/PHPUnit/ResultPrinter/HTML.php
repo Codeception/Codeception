@@ -132,6 +132,7 @@ class HTML extends CodeceptionResultPrinter
                 $failTemplate->setVar(['fail' => nl2br($failure)]);
                 $failures .= $failTemplate->render() . PHP_EOL;
             }
+            $this->failures[$name] = [];
         }
 
         $png = '';
