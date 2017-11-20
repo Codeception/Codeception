@@ -49,6 +49,7 @@ use Codeception\Lib\Driver\Iron;
  * * token - Iron.io access token.
  * * project - Iron.io project ID.
  * * key - AWS access key ID.
+ * * version - AWS version (e.g. latest)
  * * secret - AWS secret access key.
  *      Warning:
  *          Hard-coding your credentials can be dangerous, because it is easy to accidentally commit your credentials
@@ -86,10 +87,10 @@ use Codeception\Lib\Driver\Iron;
  *        enabled: [Queue]
  *        config:
  *           Queue:
- *              'type' => 'iron',
- *              'host' => 'mq-aws-us-east-1.iron.io',
- *              'token' => 'your-token',
- *              'project' => 'your-project-id'
+ *              'type': 'iron',
+ *              'host': 'mq-aws-us-east-1.iron.io',
+ *              'token': 'your-token',
+ *              'project': 'your-project-id'
  *
  * #### Example (AWS SQS)
  *
@@ -97,10 +98,10 @@ use Codeception\Lib\Driver\Iron;
  *        enabled: [Queue]
  *        config:
  *           Queue:
- *              'type' => 'aws',
- *              'key' => 'your-public-key',
- *              'secret' => 'your-secret-key',
- *              'region' => 'us-west-2'
+ *              'type': 'aws',
+ *              'key': 'your-public-key',
+ *              'secret': 'your-secret-key',
+ *              'region': 'us-west-2'
  *
  * #### Example AWS SQS using profile credentials
  *
@@ -108,9 +109,9 @@ use Codeception\Lib\Driver\Iron;
  *        enabled: [Queue]
  *        config:
  *           Queue:
- *              'type' => 'aws',
- *              'profile' => 'project1', //see documentation
- *              'region' => 'us-west-2'
+ *              'type': 'aws',
+ *              'profile': 'project1', //see documentation
+ *              'region': 'us-west-2'
  *
  * #### Example AWS SQS running on Amazon EC2 instance
  *
@@ -118,8 +119,8 @@ use Codeception\Lib\Driver\Iron;
  *        enabled: [Queue]
  *        config:
  *           Queue:
- *              'type' => 'aws',
- *              'region' => 'us-west-2'
+ *              'type': 'aws',
+ *              'region': 'us-west-2'
  *
  */
 class Queue extends CodeceptionModule
