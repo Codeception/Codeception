@@ -45,8 +45,8 @@ use Codeception\TestInterface;
  * * populate: false - whether the the dump should be loaded before the test suite is started
  * * cleanup: false - whether the dump should be reloaded before each test
  * * reconnect: false - whether the module should reconnect to the database before each test
- * * ssl_key - path to the SSL key 
- * * ssl_cert - path to the SSL certificate 
+ * * ssl_key - path to the SSL key
+ * * ssl_cert - path to the SSL certificate
  * * ssl_ca - path to the SSL certificate authority
  *
  * ## Example
@@ -61,9 +61,9 @@ use Codeception\TestInterface;
  *              populate: true
  *              cleanup: true
  *              reconnect: true
- *              ssl_key: '/path/to/client-key.pem' 
- *              ssl_cert: '/path/to/client-cert.pem' 
- *              ssl_ca: '/path/to/ca-cert.pem' 
+ *              ssl_key: '/path/to/client-key.pem'
+ *              ssl_cert: '/path/to/client-cert.pem'
+ *              ssl_ca: '/path/to/ca-cert.pem'
  *
  * ## SQL data dump
  *
