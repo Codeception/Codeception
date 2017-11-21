@@ -45,9 +45,9 @@ use Codeception\TestInterface;
  * * populate: false - whether the the dump should be loaded before the test suite is started
  * * cleanup: false - whether the dump should be reloaded before each test
  * * reconnect: false - whether the module should reconnect to the database before each test
- * * ssl_key - path to the SSL key
- * * ssl_cert - path to the SSL certificate
- * * ssl_ca - path to the SSL certificate authority
+ * * ssl_key - path to the SSL key (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-key)
+ * * ssl_cert - path to the SSL certificate (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-cert)
+ * * ssl_ca - path to the SSL certificate authority (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-ca)
  *
  * ## Example
  *
