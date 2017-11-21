@@ -323,6 +323,12 @@ class Run extends Command
                     $config = Configuration::config($projectDir);
                 }
             } elseif (!empty($suite)) {
+                // Workaround when codeception.yml is inside tests directory and tests path is set to "."
+                // @see https://github.com/Codeception/Codeception/issues/4432
+                if ($config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
+                    $suite = './' . $suite;
+                }
+                
                 // Run single test without included tests
                 if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
                     list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
