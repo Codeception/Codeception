@@ -45,6 +45,9 @@ use Codeception\TestInterface;
  * * populate: false - whether the the dump should be loaded before the test suite is started
  * * cleanup: false - whether the dump should be reloaded before each test
  * * reconnect: false - whether the module should reconnect to the database before each test
+ * * ssl_key - path to the SSL key (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-key)
+ * * ssl_cert - path to the SSL certificate (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-cert)
+ * * ssl_ca - path to the SSL certificate authority (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-ca)
  *
  * ## Example
  *
@@ -58,6 +61,9 @@ use Codeception\TestInterface;
  *              populate: true
  *              cleanup: true
  *              reconnect: true
+ *              ssl_key: '/path/to/client-key.pem'
+ *              ssl_cert: '/path/to/client-cert.pem'
+ *              ssl_ca: '/path/to/ca-cert.pem'
  *
  * ## SQL data dump
  *
@@ -272,8 +278,26 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function connect()
     {
+        $options = [];
+ 
+        /**
+         * @see http://php.net/manual/en/pdo.construct.php
+         * @see http://php.net/manual/de/ref.pdo-mysql.php#pdo-mysql.constants
+         */
+        if (array_key_exists('ssl_key', $this->config) && !empty($this->config['ssl_key'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $this->config['ssl_key'];
+        }
+ 
+        if (array_key_exists('ssl_cert', $this->config) && !empty($this->config['ssl_cert'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $this->config['ssl_cert'];
+        }
+ 
+        if (array_key_exists('ssl_ca', $this->config) && !empty($this->config['ssl_ca'])) {
+            $options[\PDO::MYSQL_ATTR_SSL_CA] = $this->config['ssl_ca'];
+        }
+
         try {
-            $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
+            $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password'], $options);
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
