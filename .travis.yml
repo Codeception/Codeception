@@ -16,6 +16,10 @@ matrix:
       env: SYMFONY=3.3.2 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.3.*
     - php: 7.2
       env: SYMFONY=3.3.2 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.3.*
+    - php: 7.1
+      env: SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 4.0.*
+    - php: 7.2
+      env: SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 4.0.*
 
 addons:
   postgresql: "9.2"
@@ -68,8 +72,8 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-lumen-sample.git frameworks-lumen'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-lumen $composer_parameters'
   # Symfony
-  - '[[ "$SYMFONY" > "3.0.0" ]] || (git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 2 site")'
-  - '[[ "$SYMFONY" < "3.0.0" ]] || (git clone -q -b master --recursive https://github.com/Naktibalda/codeception-symfony-tests frameworks-symfony && echo "Cloned Symfony 3 site")'
+  - '[[ "${SYMFONY:-4.0.0}" > "3.0.0" ]] || (git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 2 site")'
+  - '[[ "${SYMFONY:-4.0.0}" < "3.0.0" ]] || (git clone -q -b master --recursive https://github.com/Naktibalda/codeception-symfony-tests frameworks-symfony && echo "Cloned Symfony 3 site")'
   - '[[ -z "$SYMFONY" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
   - "mysql -e 'create database symfony_test;'"
   - 'composer update -d frameworks-symfony $composer_parameters'
@@ -102,17 +106,17 @@ before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || touch frameworks-lumen/storage/testing.sqlite'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php frameworks-lumen/artisan migrate --database=testing --force'
   # Symfony
-  - '[[ "$SYMFONY" > "3.0.0" ]] || php frameworks-symfony/app/console doctrine:schema:create -n --env test'
-  - '[[ "$SYMFONY" > "3.0.0" ]] || php frameworks-symfony/app/console doctrine:fixtures:load -n --env test'
-  - '[[ "$SYMFONY" < "3.0.0" ]] || php frameworks-symfony/bin/console doctrine:schema:update --force -n'
+  - '[[ "${SYMFONY:-4.0.0}" > "3.0.0" ]] || php frameworks-symfony/app/console doctrine:schema:create -n --env test'
+  - '[[ "${SYMFONY:-4.0.0}" > "3.0.0" ]] || php frameworks-symfony/app/console doctrine:fixtures:load -n --env test'
+  - '[[ "${SYMFONY:-4.0.0}" < "3.0.0" ]] || php frameworks-symfony/bin/console doctrine:schema:update --force -n'
   # ZF2
   - "mysql -e 'create database zf2_test;'"
   - php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create
   # Build
   - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept build -c frameworks-yii-basic'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-phalcon'
-  - '[[ "$SYMFONY" > "3.0.0" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
-  - '[[ "$SYMFONY" < "3.0.0" ]] || php codecept build -c frameworks-symfony'
+  - '[[ "${SYMFONY:-4.0.0}" > "3.0.0" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
+  - '[[ "${SYMFONY:-4.0.0}" < "3.0.0" ]] || php codecept build -c frameworks-symfony'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-lumen'
   - php codecept build -c frameworks-zf1
@@ -126,8 +130,8 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-l5 --skip=seeder' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
-  - '[[ "$SYMFONY" > "3.0.0" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle' # Symfony Tests
-  - '[[ "$SYMFONY" < "3.0.0" ]] || php codecept run -c frameworks-symfony' # Symfony Tests
+  - '[[ "${SYMFONY:-4.0.0}" > "3.0.0" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle' # Symfony Tests
+  - '[[ "${SYMFONY:-4.0.0}" < "3.0.0" ]] || php codecept run -c frameworks-symfony' # Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
   #ZF2 run doctrine tests on PHP 5.4 and 5.5 only
   - '[[ "$TRAVIS_PHP_VERSION" > "5.5" ]] || php codecept run -c frameworks-zf2 functional,doctrine'
