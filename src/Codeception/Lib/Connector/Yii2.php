@@ -122,7 +122,6 @@ class Yii2 extends Client
         }
 
         $app = $this->getApplication();
-        
         $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, [$this, 'processResponse']);
 
         // disabling logging. Logs are slowing test execution down
@@ -144,9 +143,7 @@ class Yii2 extends Client
         $cookiesProperty = (new \ReflectionClass(Request::class))->getProperty('_cookies');
         $cookiesProperty->setAccessible(true);
         $cookiesProperty->setValue(\Yii::$app->request, null);
-        
 
-        
         if ($request->getContent() !== null) {
             $yiiRequest->setRawBody($request->getContent());
             $yiiRequest->setBodyParams(null);
