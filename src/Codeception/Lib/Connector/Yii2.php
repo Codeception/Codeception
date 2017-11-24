@@ -11,6 +11,7 @@ use Yii;
 use yii\base\ExitException;
 use yii\web\HttpException;
 use yii\web\Response as YiiResponse;
+use yii\web\Request;
 
 class Yii2 extends Client
 {
