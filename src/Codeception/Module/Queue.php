@@ -50,6 +50,7 @@ use Codeception\Lib\Driver\Iron;
  * * project - Iron.io project ID.
  * * key - AWS access key ID.
  * * version - AWS version (e.g. latest)
+ * * endpoint - The full URI of the webservice. This is only required when connecting to a custom endpoint (e.g., a local version of SQS).
  * * secret - AWS secret access key.
  *      Warning:
  *          Hard-coding your credentials can be dangerous, because it is easy to accidentally commit your credentials
