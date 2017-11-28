@@ -11,6 +11,7 @@ use Yii;
 use yii\base\ExitException;
 use yii\web\HttpException;
 use yii\web\Response as YiiResponse;
+use yii\web\Request;
 
 class Yii2 extends Client
 {
@@ -122,7 +123,6 @@ class Yii2 extends Client
         }
 
         $app = $this->getApplication();
-
         $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, [$this, 'processResponse']);
 
         // disabling logging. Logs are slowing test execution down
@@ -136,6 +136,15 @@ class Yii2 extends Client
         ob_start();
 
         $yiiRequest = $app->getRequest();
+        
+        // Clear the private caches.
+        $headersProperty = (new \ReflectionClass(Request::class))->getProperty('_headers');
+        $headersProperty->setAccessible(true);
+        $headersProperty->setValue(\Yii::$app->request, null);
+        $cookiesProperty = (new \ReflectionClass(Request::class))->getProperty('_cookies');
+        $cookiesProperty->setAccessible(true);
+        $cookiesProperty->setValue(\Yii::$app->request, null);
+
         if ($request->getContent() !== null) {
             $yiiRequest->setRawBody($request->getContent());
             $yiiRequest->setBodyParams(null);
