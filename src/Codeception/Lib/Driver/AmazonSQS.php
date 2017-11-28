@@ -33,6 +33,10 @@ class AmazonSQS implements Queue
             $params['version'] = $config['version'];
         }
 
+        if (! empty($config['endpoint'])) {
+            $params['endpoint'] = $config['endpoint'];
+        }
+
         $this->queue = new SqsClient($params);
         if (!$this->queue) {
             throw new TestRuntimeException('connection failed or timed-out.');
