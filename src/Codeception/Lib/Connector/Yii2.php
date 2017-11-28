@@ -121,6 +121,7 @@ class Yii2 extends Client
             $_GET[$k] = $v;
         }
 
+        $this->resetApplication();
         $app = $this->getApplication();
 
         $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, [$this, 'processResponse']);
@@ -159,7 +160,6 @@ class Yii2 extends Client
                 $app->errorHandler->handleException($e);
             } elseif (!$e instanceof ExitException) {
                 // for exceptions not related to Http, we pass them to Codeception
-                $this->resetApplication();
                 throw $e;
             }
         }
@@ -171,8 +171,6 @@ class Yii2 extends Client
         if (isset($this->headers['location'])) {
             Debug::debug("[Headers] " . json_encode($this->headers));
         }
-
-        $this->resetApplication();
 
         return new Response($content, $this->statusCode, $this->headers);
     }
