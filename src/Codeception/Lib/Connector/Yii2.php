@@ -10,6 +10,7 @@ use Symfony\Component\BrowserKit\Response;
 use Yii;
 use yii\base\ExitException;
 use yii\web\HttpException;
+use yii\web\Request as YiiRequest;
 use yii\web\Response as YiiResponse;
 
 class Yii2 extends Client
@@ -121,7 +122,6 @@ class Yii2 extends Client
             $_GET[$k] = $v;
         }
 
-        $this->resetApplication();
         $app = $this->getApplication();
 
         $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, [$this, 'processResponse']);
@@ -136,7 +136,7 @@ class Yii2 extends Client
 
         ob_start();
 
-        $yiiRequest = $app->getRequest();
+        $yiiRequest = new YiiRequest();
         if ($request->getContent() !== null) {
             $yiiRequest->setRawBody($request->getContent());
             $yiiRequest->setBodyParams(null);
@@ -160,6 +160,7 @@ class Yii2 extends Client
                 $app->errorHandler->handleException($e);
             } elseif (!$e instanceof ExitException) {
                 // for exceptions not related to Http, we pass them to Codeception
+                $this->resetApplication();
                 throw $e;
             }
         }
@@ -171,6 +172,8 @@ class Yii2 extends Client
         if (isset($this->headers['location'])) {
             Debug::debug("[Headers] " . json_encode($this->headers));
         }
+
+        $this->resetApplication();
 
         return new Response($content, $this->statusCode, $this->headers);
     }
