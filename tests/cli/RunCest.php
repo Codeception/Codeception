@@ -491,6 +491,7 @@ EOF
         $I->executeCommand('run scenario PartialFailedCest', false);
         $I->seeInShellOutput('See file found "testcasetwo.txt"');
         $I->seeInShellOutput('See file found "testcasethree.txt"');
-        $I->seeInShellOutput('Tests: 3, Assertions: 3, Failures: 2.');
+        $I->seeInShellOutput('Tests: 3,');
+        $I->seeInShellOutput('Failures: 2.');
     }
 }
