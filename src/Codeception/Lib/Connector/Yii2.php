@@ -10,7 +10,6 @@ use Symfony\Component\BrowserKit\Response;
 use Yii;
 use yii\base\ExitException;
 use yii\web\HttpException;
-use yii\web\Request as YiiRequest;
 use yii\web\Response as YiiResponse;
 
 class Yii2 extends Client
@@ -136,7 +135,9 @@ class Yii2 extends Client
 
         ob_start();
 
-        $yiiRequest = new YiiRequest();
+        // recreating request object to reset headers and cookies collections
+        $app->set('request', $app->getComponents()['request']);
+        $yiiRequest = $app->getRequest();
         if ($request->getContent() !== null) {
             $yiiRequest->setRawBody($request->getContent());
             $yiiRequest->setBodyParams(null);
