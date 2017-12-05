@@ -11,7 +11,8 @@ class ErrorHandler implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     public static $events = [
-        Events::SUITE_BEFORE => 'handle'
+        Events::SUITE_BEFORE => 'handle',
+        Events::SUITE_AFTER  => 'onFinish'
     ];
 
     /**
@@ -27,6 +28,8 @@ class ErrorHandler implements EventSubscriberInterface
     private $deprecationsInstalled = false;
     private $oldHandler;
 
+    private $suiteFinished = false;
+
     /**
      * @var int stores bitmask for errors
      */
@@ -35,6 +38,11 @@ class ErrorHandler implements EventSubscriberInterface
     public function __construct()
     {
         $this->errorLevel = E_ALL & ~E_STRICT & ~E_DEPRECATED;
+    }
+
+    public function onFinish(SuiteEvent $e)
+    {
+        $this->suiteFinished = true;
     }
 
     public function handle(SuiteEvent $e)
@@ -86,7 +94,12 @@ class ErrorHandler implements EventSubscriberInterface
         }
         $this->stopped = true;
         $error = error_get_last();
-        if (!is_array($error)) {
+
+        if (!$this->suiteFinished && (
+            $error === null || !in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR])
+        )) {
+            throw new \RuntimeException('Command Did Not Finish Properly');
+        } elseif (!is_array($error)) {
             return;
         }
         if (error_reporting() === 0) {
