@@ -53,6 +53,7 @@
         "aws/aws-sdk-php": "For using AWS Auth in REST module and Queue module",
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
+        "codeception/phpbuiltinserver": "Start and stop PHP built-in web server for your tests",
         "flow/jsonpath": "For using JSONPath in REST module",
         "phpseclib/phpseclib": "for SFTP option in FTP Module",
         "league/factory-muffin": "For DataFactory module",
