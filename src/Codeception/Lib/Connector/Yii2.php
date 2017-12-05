@@ -135,6 +135,8 @@ class Yii2 extends Client
 
         ob_start();
 
+        // recreating request object to reset headers and cookies collections
+        $app->set('request', $app->getComponents()['request']);
         $yiiRequest = $app->getRequest();
         if ($request->getContent() !== null) {
             $yiiRequest->setRawBody($request->getContent());

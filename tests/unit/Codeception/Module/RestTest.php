@@ -428,6 +428,12 @@ class RestTest extends Unit
         $this->module->dontSeeBinaryResponseEquals('024f615102cdb3c8c7cf75cdc5a83d15');
     }
 
+    public function testAmDigestAuthenticatedThrowsExceptionWithFunctionalModules()
+    {
+        $this->setExpectedException('\Codeception\Exception\ModuleException', 'Not supported by functional modules');
+        $this->module->amDigestAuthenticated('username', 'password');
+    }
+
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');

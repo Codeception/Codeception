@@ -287,6 +287,9 @@ EOF;
      */
     public function amDigestAuthenticated($username, $password)
     {
+        if ($this->isFunctional) {
+            throw new ModuleException(__METHOD__, 'Not supported by functional modules');
+        }
         $this->client->setAuth($username, $password, 'digest');
     }
 
@@ -323,13 +326,13 @@ EOF;
     public function amNTLMAuthenticated($username, $password)
     {
         if ($this->isFunctional) {
-            throw new ModuleException(__METHOD__, 'Out of scope for functional modules.');
+            throw new ModuleException(__METHOD__, 'Not supported by functional modules');
         }
         if (!defined('\GuzzleHttp\Client::VERSION')) {
-            throw new ModuleException(__METHOD__, 'Out of scope if not using a Guzzle client.');
+            throw new ModuleException(__METHOD__, 'Not supported if not using a Guzzle client');
         }
         if (version_compare(\GuzzleHttp\Client::VERSION, '6.2.1', 'lt')) {
-            throw new ModuleException(__METHOD__, 'Guzzle '.\GuzzleHttp\Client::VERSION.' found. Requires Guzzle >=6.3.0 for NTLM auth option.');
+            throw new ModuleException(__METHOD__, 'Guzzle '.\GuzzleHttp\Client::VERSION.' found. Requires Guzzle >=6.3.0 for NTLM auth option');
         }
         $this->client->setAuth($username, $password, 'ntlm');
     }

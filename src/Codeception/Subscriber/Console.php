@@ -68,7 +68,7 @@ class Console implements EventSubscriberInterface
      */
     protected $output;
     protected $conditionalFails = [];
-    protected $failedStep;
+    protected $failedStep = [];
     protected $reports = [];
     protected $namespace = '';
     protected $chars = ['success' => '+', 'fail' => 'x', 'of' => ':'];
@@ -194,7 +194,7 @@ class Console implements EventSubscriberInterface
             $this->conditionalFails[] = $step;
             return;
         }
-        $this->failedStep = $step;
+        $this->failedStep[] = $step;
     }
 
     /**
@@ -411,7 +411,7 @@ class Console implements EventSubscriberInterface
         } else {
             $failedStep = (string) $failedTest->getScenario()->getMetaStep();
             if ($failedStep === '') {
-                $failedStep = (string)$this->failedStep;
+                $failedStep = (string) array_shift($this->failedStep);
             }
         }
 

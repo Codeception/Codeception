@@ -1,10 +1,10 @@
 <?php
 namespace Codeception\Lib\Driver;
 
-use Codeception\Exception\TestRuntime;
+use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\Queue;
 use Aws\Sqs\SqsClient;
-use Aws\Common\Credentials\Credentials;
+use Aws\Credentials\Credentials;
 
 class AmazonSQS implements Queue
 {
@@ -18,7 +18,7 @@ class AmazonSQS implements Queue
     public function openConnection($config)
     {
         $params = [
-            'region' => $config['region']
+            'region' => $config['region'],
         ];
 
         if (! empty($config['key']) && ! empty($config['secret'])) {
@@ -29,9 +29,17 @@ class AmazonSQS implements Queue
             $params['profile'] = $config['profile'];
         }
 
-        $this->queue = SqsClient::factory($params);
+        if (! empty($config['version'])) {
+            $params['version'] = $config['version'];
+        }
+
+        if (! empty($config['endpoint'])) {
+            $params['endpoint'] = $config['endpoint'];
+        }
+
+        $this->queue = new SqsClient($params);
         if (!$this->queue) {
-            throw new TestRuntime('connection failed or timed-out.');
+            throw new TestRuntimeException('connection failed or timed-out.');
         }
     }
 
@@ -129,7 +137,7 @@ class AmazonSQS implements Queue
                 return $queueURL;
             }
         }
-        throw new TestRuntime('queue [' . $queue . '] not found');
+        throw new TestRuntimeException('queue [' . $queue . '] not found');
     }
 
     public function getRequiredConfig()
