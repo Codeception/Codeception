@@ -7,7 +7,7 @@ class DummyCodeCoverage extends \PHP_CodeCoverage
     {
     }
 
-    public function stop($append = true, $linesToBeCovered = [], array $linesToBeUsed = [])
+    public function stop($append = true, $linesToBeCovered = [], array $linesToBeUsed = [], $ignoreForceCoversAnnotation = false)
     {
     }
 }
