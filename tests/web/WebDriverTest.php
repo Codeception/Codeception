@@ -877,7 +877,7 @@ class WebDriverTest extends TestsForBrowsers
         // assert
         /* @var $steps Step[]  */
         $steps = $cept->getScenario()->getSteps();
-        $this->assertEquals(0, count($steps));
+        $this->assertCount(0, $steps);
     }
 
     public function testMoveMouseOver()
