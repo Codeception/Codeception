@@ -24,6 +24,25 @@ class Descriptor
         return $testCase->toString();
     }
 
+    /**
+     * Provides a test name which is unique for individual iterations of tests using examples
+     *
+     * @param \PHPUnit_Framework_SelfDescribing $testCase
+     * @return string
+     */
+    public static function getTestSignatureUnique(\PHPUnit_Framework_SelfDescribing $testCase)
+    {
+        $example = null;
+
+        if (is_callable([$testCase, 'getMetadata'])
+            && $example = $testCase->getMetadata()->getCurrent('example')
+        ) {
+            $example = ':' . substr(sha1(json_encode($example)), 0, 7);
+        }
+
+        return self::getTestSignature($testCase) . $example;
+    }
+
     public static function getTestAsString(\PHPUnit_Framework_SelfDescribing $testCase)
     {
         if ($testCase instanceof \PHPUnit_Framework_TestCase) {
