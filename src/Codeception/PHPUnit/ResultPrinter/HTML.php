@@ -255,7 +255,7 @@ class HTML extends CodeceptionResultPrinter
     
     /**
      * Starts test.
-     * 
+     *
      * @param \PHPUnit_Framework_Test $test
      */
     public function startTest(\PHPUnit_Framework_Test $test)
