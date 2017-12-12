@@ -17,9 +17,9 @@ matrix:
     - php: 7.2
       env: SYMFONY=3.3.2 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.3.*
     - php: 7.1
-      env: SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 4.0.*
+      env: SYMFONY=4.0.1 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 4.0.*
     - php: 7.2
-      env: SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 4.0.*
+      env: SYMFONY=4.0.1 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 4.0.*
 
 addons:
   postgresql: "9.2"
@@ -66,14 +66,15 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-phalcon $composer_parameters'
   # Laravel 5
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git frameworks-l5'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q --depth=1 -b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-l5 $composer_parameters'
   # Lumen
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-lumen-sample.git frameworks-lumen'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q --depth=1 -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-lumen-sample.git frameworks-lumen'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-lumen $composer_parameters'
   # Symfony
-  - '[[ "${SYMFONY:-4.0.0}" > "3.0.0" ]] || (git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 2 site")'
-  - '[[ "${SYMFONY:-4.0.0}" < "3.0.0" ]] || (git clone -q -b master --recursive https://github.com/Naktibalda/codeception-symfony-tests frameworks-symfony && echo "Cloned Symfony 3 site")'
+  - '[[ "SF_VERSION" == "2" ]] && (git clone -q --depth=1 -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 2 site")'
+  - '[[ "SF_VERSION" == "3" ]] && (git clone -q --depth=1 -b master --recursive https://github.com/Naktibalda/codeception-symfony-tests frameworks-symfony && echo "Cloned Symfony 3 site")'
+  - '[[ "SF_VERSION" == "4" ]] && (git clone -q --depth=1 -b master https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 4 site")'
   - '[[ -z "$SYMFONY" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
   - "mysql -e 'create database symfony_test;'"
   - 'composer update -d frameworks-symfony $composer_parameters'
@@ -88,6 +89,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-zend-expressive $composer_parameters'
 
 before_script:
+  - export SF_VERSION=$(echo $SYMFONY | head -c 1)
   - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # preparing databases
   - "mysql -e 'create database codeception_test;'"
@@ -115,8 +117,8 @@ before_script:
   # Build
   - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept build -c frameworks-yii-basic'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-phalcon'
-  - '[[ "${SYMFONY:-4.0.0}" > "3.0.0" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
-  - '[[ "${SYMFONY:-4.0.0}" < "3.0.0" ]] || php codecept build -c frameworks-symfony'
+  - '[[ "SF_VERSION" == "2" ]] && php codecept build -c frameworks-symfony/src/AppBundle'
+  - '[[ "SF_VERSION" == "2" ]] || php codecept build -c frameworks-symfony'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-lumen'
   - php codecept build -c frameworks-zf1
@@ -130,8 +132,8 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-l5 --skip=seeder' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
-  - '[[ "${SYMFONY:-4.0.0}" > "3.0.0" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle' # Symfony Tests
-  - '[[ "${SYMFONY:-4.0.0}" < "3.0.0" ]] || php codecept run -c frameworks-symfony' # Symfony Tests
+  - '[[ "SF_VERSION" == "2" ]] && php codecept run functional -c frameworks-symfony/src/AppBundle' # Symfony 2 Tests
+  - '[[ "SF_VERSION" == "2" ]] || php codecept run -c frameworks-symfony' # Symfony 3,4 Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
   #ZF2 run doctrine tests on PHP 5.4 and 5.5 only
   - '[[ "$TRAVIS_PHP_VERSION" > "5.5" ]] || php codecept run -c frameworks-zf2 functional,doctrine'
