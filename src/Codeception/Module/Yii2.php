@@ -679,4 +679,13 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         defined('YII_ENV') or define('YII_ENV', 'test');
         defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
     }
+
+    public function setCookie($name, $val, array $params = [])
+    {
+        // Sign the cookie.
+        if ($this->app->request->enableCookieValidation) {
+            $val = $this->app->security->hashData(serialize([$name, $val]), $this->app->request->cookieValidationKey);
+        }
+        parent::setCookie($name, $val, $params);
+    }
 }
