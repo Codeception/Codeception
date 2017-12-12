@@ -6,7 +6,7 @@ class SqlSrv extends Db
     public function getDb()
     {
         $matches = [];
-        $matched = preg_match('~Database=(.*);~s', $this->dsn, $matches);
+        $matched = preg_match('~Database=(.*);?~s', $this->dsn, $matches);
 
         if (!$matched) {
             return false;
