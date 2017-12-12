@@ -251,6 +251,25 @@ $container = $this->getModule('Symfony')->container;
 
 The same can be done for all public properties of an enabled module. Accessible properties are listed in the module reference.
 
+### Scenario Driven Testing
+
+[Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes) can also be used for integration testing.
+In some cases it makes tests cleaner as it simplifies module access by using common `$I->` syntax: 
+
+```php
+<?php
+public function buildShouldHaveSequence(\UnitTester $I)
+{
+    $build = $I->have(Build::class, ['project_id' => $this->project->id]);
+    $I->assertEquals(1, $build->sequence);
+    $build = $I->have(Build::class, ['project_id' => $this->project->id]);
+    $I->assertEquals(2, $build->sequence);
+    $this->project->refresh();
+    $I->assertEquals(3, $this->project->build_sequence);
+}
+```
+This format can be recommended for testing domain and database interactions. 
+
 ## BDD Specification Testing
 
 When writing tests you should prepare them for constant changes in your application.
@@ -270,6 +289,7 @@ class UserTest extends \Codeception\Test\Unit
 {
     use \Codeception\Specify;
 
+    /** @specify */
     private $user;
 
     public function testValidation()
@@ -298,11 +318,7 @@ By using `specify` codeblocks, you can describe any piece of a test.
 This makes tests much cleaner and comprehensible for everyone in your team.
 
 Code inside `specify` blocks is isolated. In the example above, any changes to `$this->user`
-(as with any other object property),
-will not be reflected in other code blocks. Specify uses deep and shallow cloning strategies to save objects
-between isolated scopes. The downsides of this approach is increased memory consumption (on deep cloning)
-or incomplete isolation when shallow cloning is used. Please make sure you understand
-how [Specify](https://github.com/Codeception/Specify) works and how to configure it before using it in your tests.
+will not be reflected in other code blocks as it is marked with `@specify` annotation. 
 
 Also, you may add [Codeception\Verify](https://github.com/Codeception/Verify) for BDD-style assertions.
 This tiny library adds more readable assertions, which is quite nice, if you are always confused
@@ -312,6 +328,32 @@ about which argument in `assert` calls is expected and which one is actual:
 <?php
 verify($user->getName())->equals('john');
 ```
+
+## Domain Assertions
+
+The more complicated your domain is the more explicit your tests should be. With [DomainAssert](https://github.com/Codeception/DomainAssert) 
+library you can easily create custom assertion methods for unit and integration tests.
+
+It allows to reuse business rules inside assertion methods:
+
+```php
+<?php
+$user = new User;
+
+// simple custom assertions below:
+$this->assertUserIsValid($user);
+$this->assertUserIsAdmin($user);
+
+// use combined explicit assertion
+// to tell what you expect to check
+$this->assertUserCanPostToBlog($user, $blog);
+// instead of just calling a bunch of assertions 
+$this->assertNotNull($user);
+$this->assertNotNull($blog);
+$this->assertContain($user, $blog->getOwners());
+```
+
+With custom assertion methods you can improve readability of your tests and keep them focused around the specification.
 
 ## Stubs
 
