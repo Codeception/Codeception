@@ -1,3 +1,37 @@
+#### 2.3.7
+
+* **Symfony 4 support** implemented by @VolCh.
+  * Dependencies updated to support Symfony 4.x components.
+  * [Symfony] Support for Symfony Flex directory and namespace structure
+  * [Demo application](https://github.com/Codeception/symfony-demo) updated to Symfony 4.0
+* [Db] `seeInDatabse`, `dontSeeInDatabase`, `grabFromDatabase` and other methods to support SQL comparison operators: `<`, `>`, `>=`, `<=`, `!=`, `like`. Thanks @susgo and @Naktibalda.
+* [Db] Fixed quoting around schema identifiers in MSSQL by @Naktibalda. See #4542.
+* [Db] Added SSL options for connection. Thanks @kossi84
+* [PhpBrowser] Fixed setting `User-Agent` in config via `headers`. Fixed #4576 by @Naktibalda.
+* [WebDriver] Implemented `dontSeeInPopup` by @kpascal.
+* [WebDriver] Allow to click a button located by its `title` attribute. See #4586 by @gimler.
+* [Silex] `app` property added to public API. Thanks @sky003
+* [Yii2] Pass DB to Yii application as early as possible to reuse old connection. By @SilverFire. See #4601
+* [Yii2] Resetting global event handlers after a test. See #4621 by @SamMousa
+* [Yii2] Recreate request object to reset headers and cookies before each request. Fixes #4587 by @erickskrauch 
+* [MongoDb] Allowing `.tgz` files to be accepted for database dumps. #4611 by @Lukazar
+* [PhpBrowser][Frameworks] Fixed usage of `see` when source code contains `<=` JS operator. By @tobias-kuendig Fixes #4509.
+* [Queue] Added configuration parameter `endpoint` for AmazonSQS by @gitis.
+* Fixed signature error in `DummyCodeCoverage::stop` See #4665 by @network-spy
+* Throw exception if `exit(0)` was accidentally called. Fixes false-positive test reports. See #4604 by Fenikkusu. 
+* Fixed using `path: tests: .` in configuration. Fixes #4432 by @marcovtwout
+* Fixed suite name containing slash in remote code coverage. #4612 by @bscheshirwork
+* Improved generated actions file by removing redundant `use` section. #4614 by @bscheshirwork
+* Don't skip last test if some test has missing dependency by @Naktibalda. Fixes #4598
+* Improved PHP 7.2 compatibility by @FanchTheSystem. See #4557
+* Implemented `Descriptor::getTestSignatureUnique` to create unique names for tests. See #4673 by @Tenzian. Fixes #4672
+* Fixed `setExpectedException()` default value for PHPUnit 5.7.23 by @MilesChou. See #4566 
+* Fixed printing wrong failed step by @eXorus. See #4654
+* Fixed undefined `argv` warnings, added check for `register_argc_argv`. Fixes #4595 by @Naktibalda
+
+And many thanks to our awesome contributors! **Thanks to @VolCh for upgrading to Symfony 4**, thanks @Naktibalda for edgecase patches and reviews and
+thanks to @carusogabriel for tests refactoring. 
+
 #### 2.3.6
 
 * **Laravel 5.5 compatibility**. Laravel5 module documentation updated.
