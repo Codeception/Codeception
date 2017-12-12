@@ -295,9 +295,6 @@ codecept gherkin:steps acceptance
 
 
 
-## Completion
-
-
 
 ## GenerateCest
 
