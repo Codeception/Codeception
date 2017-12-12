@@ -31,8 +31,8 @@
 * Fixed undefined `argv` warnings, added check for `register_argc_argv`. Fixes #4595 by @Naktibalda
 * Added `init` command to `codecept.phar` by @Naktibalda.
 
-And many thanks to our awesome contributors! **Thanks to @VolCh for upgrading to Symfony 4**, thanks @Naktibalda for edgecase patches and reviews and
-thanks to @carusogabriel for tests refactoring. 
+And many thanks to our awesome contributors! Thanks to @VolCh for upgrading to Symfony 4, thanks @Naktibalda for patches and reviews and
+thanks to @carusogabriel for refactoring tests. 
 
 #### 2.3.6
 
