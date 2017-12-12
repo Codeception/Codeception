@@ -650,6 +650,16 @@ Checks that the page source doesn't contain the given string.
  * `param` $text
 
 
+### dontSeeInPopup
+ 
+Checks that the active JavaScript popup,
+as created by `window.alert`|`window.confirm`|`window.prompt`, does NOT contain the given string.
+
+ * `param` $text
+
+@throws \Codeception\Exception\ModuleException
+
+
 ### dontSeeInSource
  
 Checks that the current page contains the given string in its

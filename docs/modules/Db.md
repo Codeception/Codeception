@@ -35,6 +35,9 @@ if you run into problems loading dumps and cleaning databases.
 * populate: false - whether the the dump should be loaded before the test suite is started
 * cleanup: false - whether the dump should be reloaded before each test
 * reconnect: false - whether the module should reconnect to the database before each test
+* ssl_key - path to the SSL key (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-key)
+* ssl_cert - path to the SSL certificate (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-cert)
+* ssl_ca - path to the SSL certificate authority (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-ca)
 
 ## Example
 
@@ -48,6 +51,9 @@ if you run into problems loading dumps and cleaning databases.
              populate: true
              cleanup: true
              reconnect: true
+�             ssl_key: '/path/to/client-key.pem'
+�             ssl_cert: '/path/to/client-cert.pem'
+�             ssl_ca: '/path/to/ca-cert.pem'
 
 ## SQL data dump
 
@@ -177,9 +183,19 @@ Provide table name and column values.
 
 ``` php
 <?php
-$I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
+$I->dontSeeInDatabase('users', ['name' => 'Davert', 'email' => 'davert@mail.com']);
 ```
 Fails if such user was found.
+
+Comparison expressions can be used as well:
+
+```php
+<?php
+$I->dontSeeInDatabase('posts', ['num_comments >=' => '0']);
+$I->dontSeeInDatabase('users', ['email like' => 'miles%']);
+```
+
+Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
 
  * `param string` $table
  * `param array` $criteria
@@ -211,6 +227,15 @@ Provide table name, desired column and criteria.
 <?php
 $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
 ```
+Comparison expressions can be used as well:
+
+```php
+<?php
+$post = $I->grabFromDatabase('posts', ['num_comments >=' => 100']);
+$user = $I->grabFromDatabase('users', ['email like' => 'miles%']);
+```
+
+Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
 
  * `param string` $table
  * `param string` $column
@@ -253,11 +278,22 @@ __not documented__
 Asserts that a row with the given column values exists.
 Provide table name and column values.
 
-``` php
+```php
 <?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
+$I->seeInDatabase('users', ['name' => 'Davert', 'email' => 'davert@mail.com']);
 ```
 Fails if no such user found.
+
+Comparison expressions can be used as well:
+
+```php
+<?php
+$I->seeInDatabase('posts', ['num_comments >=' => '0']);
+$I->seeInDatabase('users', ['email like' => 'miles@davis.com']);
+```
+
+Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
+
 
  * `param string` $table
  * `param array` $criteria

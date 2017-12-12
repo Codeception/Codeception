@@ -3,10 +3,11 @@
 * **Symfony 4 support** implemented by @VolCh.
   * Dependencies updated to support Symfony 4.x components.
   * [Symfony] Support for Symfony Flex directory and namespace structure
-  * [Demo application](https://github.com/Codeception/symfony-demo) updated to Symfony 4.0
+  * [Demo application](https://github.com/Codeception/symfony-demo) was updated to Symfony 4.0
 * [Db] `seeInDatabse`, `dontSeeInDatabase`, `grabFromDatabase` and other methods to support SQL comparison operators: `<`, `>`, `>=`, `<=`, `!=`, `like`. Thanks @susgo and @Naktibalda.
 * [Db] Fixed quoting around schema identifiers in MSSQL by @Naktibalda. See #4542.
 * [Db] Added SSL options for connection. Thanks @kossi84
+* [Db] Fix getting Database name from DSN in MSSQL by @yesdevnull.
 * [PhpBrowser] Fixed setting `User-Agent` in config via `headers`. Fixed #4576 by @Naktibalda.
 * [WebDriver] Implemented `dontSeeInPopup` by @kpascal.
 * [WebDriver] Allow to click a button located by its `title` attribute. See #4586 by @gimler.
@@ -28,6 +29,7 @@
 * Fixed `setExpectedException()` default value for PHPUnit 5.7.23 by @MilesChou. See #4566 
 * Fixed printing wrong failed step by @eXorus. See #4654
 * Fixed undefined `argv` warnings, added check for `register_argc_argv`. Fixes #4595 by @Naktibalda
+* Added `init` command to `codecept.phar` by @Naktibalda.
 
 And many thanks to our awesome contributors! **Thanks to @VolCh for upgrading to Symfony 4**, thanks @Naktibalda for edgecase patches and reviews and
 thanks to @carusogabriel for tests refactoring. 
