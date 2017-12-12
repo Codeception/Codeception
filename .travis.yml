@@ -133,7 +133,8 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
   - '[[ "$SF_VERSION" != "2" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle' # Symfony 2 Tests
-  - '[[ "$SF_VERSION" == "2" ]] || php codecept run -c frameworks-symfony' # Symfony 3,4 Tests
+  - '[[ "$SF_VERSION" != "3" ]] || php codecept run -c frameworks-symfony' # Symfony 3 Tests
+  - '[[ "$SF_VERSION" != "4" ]] || php codecept run -c frameworks-symfony functional,unit' # Symfony 4 Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
   #ZF2 run doctrine tests on PHP 5.4 and 5.5 only
   - '[[ "$TRAVIS_PHP_VERSION" > "5.5" ]] || php codecept run -c frameworks-zf2 functional,doctrine'
