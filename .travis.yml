@@ -76,7 +76,7 @@ install:
   - '[[ "$SF_VERSION" != "2" ]] || (git clone -q --depth=1 -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 2 site")'
   - '[[ "$SF_VERSION" != "3" ]] || (git clone -q --depth=1 -b master --recursive https://github.com/Naktibalda/codeception-symfony-tests frameworks-symfony && echo "Cloned Symfony 3 site")'
   - '[[ "$SF_VERSION" != "4" ]] || (git clone -q --depth=1 -b master https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 4 site")'
-  - '[[ -z "$SYMFONY" ]] || "$SF_VERSION" == "4" || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
+  - '[[ -z "$SYMFONY" ]] || [["$SF_VERSION" == "4"]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
   - "mysql -e 'create database symfony_test;'"
   - 'composer update -d frameworks-symfony $composer_parameters'
   # ZF1
