@@ -138,12 +138,6 @@ class Yii2 extends Client
         // recreating request object to reset headers and cookies collections
         $app->set('request', $app->getComponents()['request']);
         $yiiRequest = $app->getRequest();
-
-        // Fix CSRF validation by injection header.
-        if ($yiiRequest->enableCsrfValidation) {
-            $_SERVER['HTTP_' . \yii\web\Request::CSRF_HEADER] = $yiiRequest->getCsrfToken();
-        }
-
         if ($request->getContent() !== null) {
             $yiiRequest->setRawBody($request->getContent());
             $yiiRequest->setBodyParams(null);
