@@ -679,4 +679,32 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         defined('YII_ENV') or define('YII_ENV', 'test');
         defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
     }
+
+    /**
+     * Sets a cookie and, if validation is enabled, signs it.
+     * @param string $name The name of the cookie
+     * @param string $value The value of the cookie
+     * @param array $params Additional cookie params like `domain`, `path`, `expires` and `secure`.
+     */
+    public function setCookie($name, $val, array $params = [])
+    {
+        // Sign the cookie.
+        if ($this->app->request->enableCookieValidation) {
+            $val = $this->app->security->hashData(serialize([$name, $val]), $this->app->request->cookieValidationKey);
+        }
+        parent::setCookie($name, $val, $params);
+    }
+
+    /**
+     * This function creates the CSRF Cookie.
+     * @param string $val The value of the CSRF token
+     * @return string[] Returns an array containing the name of the CSRF param and the masked CSRF token.
+     */
+    public function createAndSetCsrfCookie($val)
+    {
+        $masked = $this->app->security->maskToken($val);
+        $name = $this->app->request->csrfParam;
+        $this->setCookie($name, $val);
+        return [$name, $masked];
+    }
 }
