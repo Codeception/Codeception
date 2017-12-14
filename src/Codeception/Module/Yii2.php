@@ -688,4 +688,17 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         }
         parent::setCookie($name, $val, $params);
     }
+
+    /**
+     * This function creates the CSRF Cookie.
+     * @param string $val The value of the CSRF token
+     * @return string[] Returns an array containing the name of the CSRF param and the masked CSRF token.
+     */
+    public function createAndSetCsrfCookie($val)
+    {
+        $masked = $this->app->security->maskToken($val);
+        $name = $this->app->request->csrfParam;
+        $this->setCookie($name, $val);
+        return [$name, $masked];
+    }
 }
