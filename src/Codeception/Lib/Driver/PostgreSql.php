@@ -65,8 +65,7 @@ class PostgreSql extends Db
     {
         $schema = "public";
 
-        if ( $this->searchPath )
-        {
+        if ($this->searchPath) {
             $schema = $this->searchPath;
         }
 
