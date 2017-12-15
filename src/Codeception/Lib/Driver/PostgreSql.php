@@ -64,7 +64,7 @@ class PostgreSql extends Db
     public function cleanup()
     {
         $schema = "public";
-        
+
         if ( $this->searchPath )
         {
             $schema = $this->searchPath;
