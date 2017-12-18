@@ -743,7 +743,7 @@ Returns last sent email:
 <?php
 $I->seeEmailIsSent();
 $message = $I->grabLastSentEmail();
-$I->assertEquals('admin@site,com', $message->getTo());
+$I->assertEquals('admin@site.com', $message->getTo());
 ```
  * `[Part]` email
 
@@ -806,7 +806,7 @@ Useful to perform additional checks using `Asserts` module:
 <?php
 $I->seeEmailIsSent();
 $messages = $I->grabSentEmails();
-$I->assertEquals('admin@site,com', $messages[0]->getTo());
+$I->assertEquals('admin@site.com', $messages[0]->getTo());
 ```
 
  * `[Part]` email
