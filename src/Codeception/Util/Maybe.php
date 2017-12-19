@@ -166,9 +166,9 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if ($this->assocArray) {
             $keys = array_keys($this->val);
             return $this->val[$keys[$this->position]];
-        } else {
-            return $this->val[$this->position];
         }
+
+        return $this->val[$this->position];
     }
 
     /**
@@ -193,9 +193,9 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if ($this->assocArray) {
             $keys = array_keys($this->val);
             return $keys[$this->position];
-        } else {
-            return $this->position;
         }
+
+        return $this->position;
     }
 
     /**
@@ -213,9 +213,9 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if ($this->assocArray) {
             $keys = array_keys($this->val);
             return isset($keys[$this->position]);
-        } else {
-            return isset($this->val[$this->position]);
         }
+
+        return isset($this->val[$this->position]);
     }
 
     /**

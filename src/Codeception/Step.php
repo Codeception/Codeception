@@ -171,9 +171,9 @@ abstract class Step
             return 'Closure';
         } elseif ((isset($argument->__mocked))) {
             return $this->formatClassName($argument->__mocked);
-        } else {
-            return $this->formatClassName(get_class($argument));
         }
+
+        return $this->formatClassName(get_class($argument));
     }
 
     protected function formatClassName($classname)

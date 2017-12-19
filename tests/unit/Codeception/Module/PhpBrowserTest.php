@@ -34,11 +34,11 @@ class PhpBrowserTest extends TestsForBrowsers
     {
         if (is_array($this->history)) {
             return end($this->history)['request'];
-        } else {
-            return $this->history->getLastRequest();
         }
+
+        return $this->history->getLastRequest();
     }
-    
+
     protected function tearDown()
     {
         if ($this->module) {
@@ -143,7 +143,7 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->amOnPage('/redirect2');
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCurrentUrlEquals('/info');
-        
+
         $this->module->amOnPage('/redirect_interval');
         $this->module->seeCurrentUrlEquals('/redirect_interval');
     }
@@ -172,13 +172,13 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCurrentUrlEquals('/redirect_meta_refresh');
     }
-    
+
     public function testRefreshRedirect()
     {
         $this->module->amOnPage('/redirect3');
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCurrentUrlEquals('/info');
-        
+
         $this->module->amOnPage('/redirect_header_interval');
         $this->module->seeCurrentUrlEquals('/redirect_header_interval');
         $this->module->see('Welcome to test app!');
@@ -439,7 +439,7 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->attachFile('foo[bar]', 'app/avatar.jpg');
         $this->module->click('Submit');
     }
-    
+
     public function testDoubleSlash()
     {
         $I = $this->module;
@@ -455,7 +455,7 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->setExpectedException("\\Codeception\\Exception\\ModuleException");
         $this->module->fillField('#name', 'Nothing special');
     }
-    
+
     public function testArrayFieldSubmitForm()
     {
         $this->skipForOldGuzzle();

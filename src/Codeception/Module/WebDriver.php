@@ -2920,10 +2920,10 @@ class WebDriver extends CodeceptionModule implements
                 } elseif ($type == 'radio') {
                     $this->selectOption($field, $value);
                     return;
-                } else {
-                    $el->sendKeys($value);
-                    return;
                 }
+
+                $el->sendKeys($value);
+                return;
         }
 
         throw new ElementNotFound($field, "Field by name, label, CSS or XPath");

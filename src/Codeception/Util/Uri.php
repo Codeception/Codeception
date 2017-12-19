@@ -101,8 +101,8 @@ class Uri
 
         if ($path === '' || $path[0] === '#') {
             return $cutUrl . $path;
-        } else {
-            return rtrim($cutUrl, '/') . '/'  . ltrim($path, '/');
         }
+
+        return rtrim($cutUrl, '/') . '/'  . ltrim($path, '/');
     }
 }

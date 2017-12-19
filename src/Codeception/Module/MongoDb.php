@@ -265,10 +265,10 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
         if ($this->driver->isLegacy()) {
             $collection->insert($data);
             return $data['_id'];
-        } else {
-            $response = $collection->insertOne($data);
-            return (string) $response->getInsertedId();
         }
+
+        $response = $collection->insertOne($data);
+        return (string) $response->getInsertedId();
     }
 
     /**

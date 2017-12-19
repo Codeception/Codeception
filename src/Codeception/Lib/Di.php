@@ -46,14 +46,14 @@ class Di
     ) {
         // normalize namespace
         $className = ltrim($className, '\\');
-        
+
         // get class from container
         if (isset($this->container[$className])) {
             if ($this->container[$className] instanceof $className) {
                 return $this->container[$className];
-            } else {
-                throw new InjectionException("Failed to resolve cyclic dependencies for class '$className'");
             }
+
+            throw new InjectionException("Failed to resolve cyclic dependencies for class '$className'");
         }
 
         // get class from parent container
