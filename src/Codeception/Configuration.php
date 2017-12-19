@@ -474,8 +474,7 @@ class Configuration
 
     public static function isExtensionEnabled($extensionName)
     {
-        return isset(self::$config['extensions'])
-        && isset(self::$config['extensions']['enabled'])
+        return isset(self::$config['extensions'], self::$config['extensions']['enabled'])
         && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
@@ -631,7 +630,7 @@ class Configuration
         $res = [];
 
         // for sequential arrays
-        if (isset($a1[0]) && isset($a2[0])) {
+        if (isset($a1[0], $a2[0])) {
             return array_merge_recursive($a2, $a1);
         }
 
