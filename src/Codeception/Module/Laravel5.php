@@ -217,6 +217,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 }
             }
         }
+
+        $this->app->flush();
     }
 
     /**
