@@ -9,7 +9,6 @@ This module requires packages installed:
 ```json
 {
  "league/factory-muffin": "^3.0",
- "league/factory-muffin-faker": "^1.0"
 }
 ```
 
