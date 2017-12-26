@@ -32,7 +32,7 @@ class Configuration
     protected static $dir = null;
 
     /**
-     * @var string Current project logs directory.
+     * @var string Current project output directory.
      */
     protected static $outputDir = null;
 
@@ -182,7 +182,7 @@ class Configuration
 
         self::$config = $config;
 
-        // compatibility with 1.x, 2.0
+        // compatibility with suites created by Codeception < 2.3.0
         if (!isset($config['paths']['output']) and isset($config['paths']['log'])) {
             $config['paths']['output'] = $config['paths']['log'];
         }

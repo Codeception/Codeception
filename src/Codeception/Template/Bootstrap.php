@@ -132,7 +132,7 @@ EOF;
         $basicConfig = [
             'paths'    => [
                 'tests'   => 'tests',
-                'output'     => $this->outputDir,
+                'output'  => $this->outputDir,
                 'data'    => $this->dataDir,
                 'support' => $this->supportDir,
                 'envs'    => $this->envsDir,
