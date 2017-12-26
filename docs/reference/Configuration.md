@@ -23,7 +23,7 @@ paths:
     support: tests/_support
 
     # directory for output
-    log: tests/_output
+    output: tests/_output
     
     # directory for environment configuration
     envs: tests/_envs
