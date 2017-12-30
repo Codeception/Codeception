@@ -19,7 +19,6 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  * ```json
  * {
  *  "league/factory-muffin": "^3.0",
- *  "league/factory-muffin-faker": "^1.0"
  * }
  * ```
  *
@@ -151,7 +150,6 @@ EOF;
     {
         return [
             'League\FactoryMuffin\FactoryMuffin' => '"league/factory-muffin": "^3.0"',
-            'League\FactoryMuffin\Faker\Facade' => '"league/factory-muffin-faker": "^1.0"'
         ];
     }
 
