@@ -1,6 +1,5 @@
 # Redis
 
-
 This module uses the [Predis](https://github.com/nrk/predis) library
 to interact with a Redis server.
 
@@ -35,7 +34,6 @@ to interact with a Redis server.
 
 @author Marc Verney <marc@marcverney.net>
 
-
 ## Actions
 
 ### cleanup
@@ -43,7 +41,6 @@ to interact with a Redis server.
 Delete all the keys in the Redis database
 
 @throws ModuleException
-
 
 ### dontSeeInRedis
 
@@ -76,7 +73,6 @@ $I->dontSeeInRedis('example:hash', ['riri' => true, 'fifi' => 'Dewey', 'loulou' 
  * `param string` $key   The key name
  * `param mixed`  $value Optional. If specified, also checks the key has this
 value. Booleans will be converted to 1 and 0 (even inside arrays)
-
 
 ### dontSeeRedisKeyContains
 
@@ -114,7 +110,6 @@ $I->dontSeeRedisKeyContains('example:hash', 'magic', 32);
 specified, the method will also check that the $item has this value/score
 
  * `return` bool
-
 
 ### grabFromRedis
 
@@ -154,9 +149,7 @@ $I->grabFromRedis('example:hash', 'foo');
 
  * `param string` $key The key name
 
-
 @throws ModuleException if the key does not exist
-
 
 ### haveInRedis
 
@@ -193,7 +186,6 @@ $I->haveInRedis('hash', ['obladi' => 'oblada']);
 
 @throws ModuleException
 
-
 ### seeInRedis
 
 Asserts that a key exists, and optionally that it has the provided $value
@@ -224,7 +216,6 @@ $I->seeInRedis('example:hash', ['riri' => true, 'fifi' => 'Dewey', 'loulou' => 2
  * `param string` $key   The key name
  * `param mixed`  $value Optional. If specified, also checks the key has this
 value. Booleans will be converted to 1 and 0 (even inside arrays)
-
 
 ### seeRedisKeyContains
 
@@ -263,7 +254,6 @@ specified, the method will also check that the $item has this value/score
 
  * `return` bool
 
-
 ### sendCommandToRedis
 
 Sends a command directly to the Redis driver. See documentation at
@@ -282,6 +272,5 @@ $I->sendCommandToRedis('flushdb');
 ```
 
  * `param string` $command The command name
-
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Redis.php">Help us to improve documentation. Edit module reference</a></div>

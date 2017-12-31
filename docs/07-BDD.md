@@ -426,7 +426,6 @@ In case scenarios represent the same logic but differ on data, we can use *Scena
       | 50    | 45    |
 ```
 
-
 ### Long Strings
 
 Text values inside a scenarios can be set inside a `"""` block:
@@ -525,7 +524,6 @@ gherkin:
             fastlogin:
                 - "Step\FastLogin"
 ```
-
 
 ## Migrating From Behat
 

@@ -1,8 +1,6 @@
 
 ## Codeception\Util\JsonType
 
-
-
 JsonType matches JSON structures against templates.
 You can specify the type of fields in JSON or add additional validation rules.
 
@@ -26,7 +24,6 @@ $jsonType->matches([
 
 Class JsonType
 @package Codeception\Util
-
 
 #### __construct()
 
@@ -55,7 +52,6 @@ JsonType::addCustomFilter('slug', function($value) {
     return strpos(' ', $value) !== false;
 });
 // => use it as 'string:slug'
-
 
 // add custom function to matcher with `len($val)` syntax
 // parameter matching patterns should be valid regex and start with `/` char

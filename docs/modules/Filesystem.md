@@ -1,6 +1,5 @@
 # Filesystem
 
-
 Module for testing local filesystem.
 Fork it to extend the module for FTP, Amazon S3, others.
 
@@ -12,7 +11,6 @@ Fork it to extend the module for FTP, Amazon S3, others.
 
 Module was developed to test Codeception itself.
 
-
 ## Actions
 
 ### amInPath
@@ -21,7 +19,6 @@ Enters a directory In local filesystem.
 Project root directory is used by default
 
  * `param string` $path
-
 
 ### cleanDir
 
@@ -34,7 +31,6 @@ $I->cleanDir('logs');
 ```
 
  * `param string` $dirname
-
 
 ### copyDir
 
@@ -49,7 +45,6 @@ $I->copyDir('vendor','old_vendor');
  * `param string` $src
  * `param string` $dst
 
-
 ### deleteDir
 
 Deletes directory with all subdirectories
@@ -61,7 +56,6 @@ $I->deleteDir('vendor');
 ```
 
  * `param string` $dirname
-
 
 ### deleteFile
 
@@ -75,11 +69,9 @@ $I->deleteFile('composer.lock');
 
  * `param string` $filename
 
-
 ### deleteThisFile
 
 Deletes a file
-
 
 ### dontSeeFileFound
 
@@ -87,7 +79,6 @@ Checks if file does not exist in path
 
  * `param string` $filename
  * `param string` $path
-
 
 ### dontSeeInThisFile
 
@@ -101,7 +92,6 @@ $I->dontSeeInThisFile('codeception/codeception');
 ```
 
  * `param string` $text
-
 
 ### openFile
 
@@ -117,7 +107,6 @@ $I->seeInThisFile('codeception/codeception');
 ```
 
  * `param string` $filename
-
 
 ### seeFileContentsEqual
 
@@ -135,7 +124,6 @@ $I->seeFileContentsEqual('3192');
 
  * `param string` $text
 
-
 ### seeFileFound
 
 Checks if file exists in path.
@@ -149,7 +137,6 @@ $I->seeFileFound('UserModel.php','app/models');
 
  * `param string` $filename
  * `param string` $path
-
 
 ### seeInThisFile
 
@@ -166,7 +153,6 @@ $I->seeInThisFile('codeception/codeception');
 
  * `param string` $text
 
-
 ### seeNumberNewLines
 
 Checks If opened file has the `number` of new lines.
@@ -182,13 +168,11 @@ $I->seeNumberNewLines(5);
 
  * `param int` $number New lines
 
-
 ### seeThisFileMatches
 
 Checks that contents of currently opened file matches $regex
 
  * `param string` $regex
-
 
 ### writeToFile
 

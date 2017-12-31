@@ -88,7 +88,6 @@ Run suite
 docker-compose run --rm codecept run acceptance
 ```
 
-
 ```
 docker-compose run --rm codecept run acceptance LoginCest
 ```
@@ -98,7 +97,6 @@ Development bash
 ```
 docker-compose run --rm --entrypoint bash codecept
 ```
-
 
 And finally to execute testing in parallel you should define how you split your tests and run parallel processes for `docker-compose`. Here we split tests by suites, but you can use different groups to split your tests. In section below you will learn how to do that with Robo.
 
@@ -144,7 +142,6 @@ You need to install Codeception after, if codeception is already installed it wi
 ```bash
 $ composer require codeception/codeception
 ```
-
 
 ### Preparing Robo
 
@@ -289,7 +286,6 @@ Robo has `ParallelExec` task to spawn background processes.
 
 If you are using [Docker](#docker)  containers you can launch multiple Codeception containers for different groups:
 
-
 ```php
 public function parallelRun()
 {
@@ -325,7 +321,6 @@ public function parallelRun()
     return $parallel->run();
 }
 ```
-
 
 In case you don't use containers you can isolate processes by starting different web servers and databases per each test process.
 
@@ -381,7 +376,6 @@ env:
                     url: 'http://test5.localhost/'
 ```
 
-
 ----
 
 After the `parallelRun` method is defined you can execute tests with
@@ -427,7 +421,6 @@ To create one command to rule them all we can define new public method `parallel
     }
 
 ```
-
 
 ## Conclusion
 

@@ -1,12 +1,9 @@
 
 ## Codeception\Util\XmlBuilder
 
-
-
 That's a pretty simple yet powerful class to build XML structures in jQuery-like style.
 With no XML line actually written!
 Uses DOM extension to manipulate XML data.
-
 
 ```php
 <?php
@@ -64,7 +61,6 @@ Export:
  * `$xml->__toString` - get a string representation of XML.
 
 [Source code](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php)
-
 
 #### __construct()
 

@@ -1,13 +1,11 @@
 
 ## Codeception\InitTemplate
 
-
 * *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Style`
 
 Codeception templates allow creating a customized setup and configuration for your project.
 An abstract class for installation template. Each init template should extend it and implement a `setup` method.
 Use it to build a custom setup class which can be started with `codecept init` command.
-
 
 ```php
 <?php
@@ -21,7 +19,6 @@ class CustomInstall extends \Codeception\InitTemplate
 }
 ```
 This class provides various helper methods for building customized setup
-
 
 #### __construct()
 
@@ -174,7 +171,6 @@ Print a message to console.
 <?php
 $this->say('Welcome to Setup');
 ```
-
 
  * `param string` $message
 

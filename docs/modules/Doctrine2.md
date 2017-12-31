@@ -1,6 +1,5 @@
 # Doctrine2
 
-
 Access the database using [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/).
 
 When used with Zend Framework 2 or Symfony2, Doctrine's Entity Manager is automatically retrieved from Service Locator.
@@ -43,7 +42,6 @@ tests will run much faster and will be isolated from each other.
 
 * `em` - Entity Manager
 
-
 ## Actions
 
 ### dontSeeInRepository
@@ -53,11 +51,9 @@ Flushes changes to database and performs `findOneBy()` call for current reposito
  * `param` $entity
  * `param array` $params
 
-
 ### flushToDatabase
 
 Performs $em->flush();
-
 
 ### grabEntitiesFromRepository
 
@@ -78,7 +74,6 @@ $users = $I->grabEntitiesFromRepository('AppBundle:User', array('name' => 'daver
  * `param array` $params
  * `return` array
 
-
 ### grabEntityFromRepository
 
 Selects a single entity from repository.
@@ -97,7 +92,6 @@ $user = $I->grabEntityFromRepository('User', array('id' => '1234'));
  * `param` $entity
  * `param array` $params
  * `return` object
-
 
 ### grabFromRepository
 
@@ -118,7 +112,6 @@ $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
  * `param` $field
  * `param array` $params
  * `return` array
-
 
 ### haveFakeRepository
 
@@ -142,7 +135,6 @@ which will always return the NULL value.
  * `param` $classname
  * `param array` $methods
 
-
 ### haveInRepository
 
 Persists record into repository.
@@ -153,7 +145,6 @@ Returns id using `getId` of newly created entity.
 ```php
 $I->haveInRepository('Entity\User', array('name' => 'davert'));
 ```
-
 
 ### persistEntity
 
@@ -169,7 +160,6 @@ $I->persistEntity($user, array('name' => 'Miles'));
 
  * `param` $obj
  * `param array` $values
-
 
 ### seeInRepository
 

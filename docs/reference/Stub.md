@@ -1,10 +1,6 @@
 
 ## Codeception\Util\Stub
 
-
-
-
-
 #### $magicMethods
 
 *public static* **$magicMethods**

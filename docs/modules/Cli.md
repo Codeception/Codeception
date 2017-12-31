@@ -1,6 +1,5 @@
 # Cli
 
-
 Wrapper for basic shell commands and shell output
 
 ## Responsibility
@@ -10,7 +9,6 @@ Wrapper for basic shell commands and shell output
 
 *Please review the code of non-stable modules and provide patches if you have issues.*
 
-
 ## Actions
 
 ### dontSeeInShellOutput
@@ -18,8 +16,6 @@ Wrapper for basic shell commands and shell output
 Checks that output from latest command doesn't contain text
 
  * `param` $text
-
-
 
 ### runShellCommand
 
@@ -37,13 +33,11 @@ $I->runShellCommand('phpunit', false);
  * `param` $command
  * `param bool` $failNonZero
 
-
 ### seeInShellOutput
 
 Checks that output from last executed command contains text
 
  * `param` $text
-
 
 ### seeResultCodeIs
 
@@ -56,7 +50,6 @@ $I->seeResultCodeIs(0);
 
  * `param` $code
 
-
 ### seeResultCodeIsNot
 
 Checks result code
@@ -67,7 +60,6 @@ $I->seeResultCodeIsNot(0);
 ```
 
  * `param` $code
-
 
 ### seeShellOutputMatches
 

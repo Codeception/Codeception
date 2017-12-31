@@ -426,7 +426,6 @@ For Cept you should use simple comments:
 // @env phantom
 ```
 
-
 This way you can easily control which tests will be executed for each environment.
 
 ### Current values
@@ -471,7 +470,6 @@ public function myTest(\AcceptanceTester $I, \Codeception\Scenario $scenario)
 
 `Codeception\Scenario` is also availble in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
 
-
 ### Dependencies
 
 With the `@depends` annotation you can specify a test that should be passed before the current one.
@@ -495,7 +493,6 @@ class ModeratorCest {
     }
 }
 ```
-
 
 `@depends` applies to the `Cest` and `Codeception\Test\Unit` formats. Dependencies can be set across different classes.
 To specify a dependent test from another file you should provide a *test signature*.
@@ -634,7 +631,6 @@ groups:
 ```
 
 This will load all found `p*` files in `tests/_data` as groups. Group names will be as follows p1,p2,...,pN.
-
 
 ## Shell autocompletion
 

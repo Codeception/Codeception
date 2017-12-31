@@ -398,8 +398,6 @@ $I->seeElement('#modal');
 While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: It can't check headers since browsers don't provide APIs for that.
 WebDriver also adds browser-specific functionality:
 
-
-
 #### Wait
 
 While testing web application, you may need to wait for JavaScript events to occur. Due to its asynchronous nature,
@@ -549,14 +547,12 @@ You just need to set the [WebDriver configuration](http://codeception.com/docs/m
 * browser
 * OS
 
-
 We recommend using [params](http://codeception.com/docs/06-ModulesAndHelpers#Dynamic-Configuration-With-Params)
 to provide authorization credentials.
 
 It should be mentioned that Cloud Testing services are not free. You should investigate their pricing models
 and choose one that fits your needs. They also may work painfully slowly if ping times between the local server
 and the cloud is too high. This may lead to random failures in acceptance tests.
-
 
 ### AngularJS Testing
 
@@ -592,7 +588,6 @@ Additional debugging features by Codeception:
 * [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of WebDriver module allows pausing the test.
 * [Recorder extension](http://codeception.com/addons#CodeceptionExtensionRecorder) allows to record tests step-by-steps and show them in slideshow
 * [Interactive Console](http://codeception.com/docs/07-AdvancedUsage#Interactive-Console) is a REPL that allows to type and check commands for instant feedback.
-
 
 ### Custom Browser Sessions
 

@@ -1,6 +1,5 @@
 # DataFactory
 
-
 DataFactory allows you to easily generate and create test data using [**FactoryMuffin**](https://github.com/thephpleague/factory-muffin).
 DataFactory uses an ORM of your application to define, save and cleanup data. Thus, should be used with ORM or Framework modules.
 
@@ -111,7 +110,6 @@ In case your ORM expects a related record itself (Doctrine) then you should use 
 'user' => 'entity|User'
 ```
 
-
 ## Actions
 
 ### have
@@ -129,7 +127,6 @@ Returns an instance of created user.
  * `param array` $extraAttrs
 
  * `return` object
-
 
 ### haveMultiple
 

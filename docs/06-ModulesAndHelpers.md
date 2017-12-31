@@ -130,8 +130,6 @@ Your project might need your own actions added to the test suite. By running the
 Codeception generates three dummy modules for you, one for each of the newly created suites.
 These custom modules are called 'Helpers', and they can be found in the `tests/_support` directory.
 
-
-
 ```php
 <?php
 namespace Helper;
@@ -144,7 +142,6 @@ class Functional extends \Codeception\Module
 
 Actions are also quite simple. Every action you define is a public function. Write a public method,
 then run the `build` command, and you will see the new function added into the FunctionalTester class.
-
 
 <div class="alert alert-info">
 Public methods prefixed by `_` are treated as hidden and won't be added to your Actor class.
@@ -264,7 +261,6 @@ In this helper you can replace the parent's methods with your own implementation
 You can also replace the `_before` and `_after` hooks, which might be an option
 when you need to customize starting and stopping of a testing session.
 
-
 ### Hooks
 
 Each module can handle events from the running test. A module can be executed before the test starts,
@@ -348,7 +344,6 @@ I click "All pages"
 * Request (GET) http://localhost/pages {}
 * Response code: 200
 ```
-
 
 ## Configuration
 
@@ -515,7 +510,6 @@ Prepare methods can invoke all methods of a module, as well as hidden API method
 To change module configuration for a specific group of tests use [GroupObjects](http://codeception.com/docs/08-Customization#Group-Objects).
 
 ## Conclusion
-
 
 Modules are the real power of Codeception. They are used to emulate multiple inheritances for Actor classes
 (UnitTester, FunctionalTester, AcceptanceTester, etc). Codeception provides modules to emulate web requests,

@@ -39,7 +39,6 @@ modules:
 
 API tests can be functional and be executed using Symfony, Laravel5, Zend, or any other framework module. You will need slightly update configuration for it:
 
-
 ``` yaml
 actor: ApiTester
 modules:
@@ -179,7 +178,6 @@ We are using XmlUtils class which allows us to build XML structures in a clean m
 <div class="alert alert-info">
 Use `\Codeception\Util\Xml::build()` to create XmlBuilder instance.
 </div>
-
 
 ## SOAP
 

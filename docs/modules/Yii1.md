@@ -1,6 +1,5 @@
 # Yii1
 
-
 This module provides integration with [Yii Framework 1.1](http://www.yiiframework.com/doc/guide/).
 
 The following configurations are available for this module:
@@ -107,7 +106,6 @@ modules:
         - \Helper\Acceptance
 ```
 
-
 ## Actions
 
 ### _findElements
@@ -137,7 +135,6 @@ PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` i
  * `param` $locator
  * `return` array of interactive elements
 
-
 ### _getResponseContent
 
 *hidden API method, expected to be used from Helper classes*
@@ -157,7 +154,6 @@ public function seeResponseContains($text)
 
  * `return` string
 @throws ModuleException
-
 
 ### _loadPage
 
@@ -181,7 +177,6 @@ public function openCheckoutFormStep2($orderId) {
  * `param array` $files
  * `param array` $server
  * `param null` $content
-
 
 ### _request
 
@@ -214,7 +209,6 @@ To load arbitrary page for interaction, use `_loadPage` method.
 @throws ExternalUrlException
 @see `_loadPage`
 
-
 ### _savePageSource
 
 *hidden API method, expected to be used from Helper classes*
@@ -226,14 +220,12 @@ $this->getModule('Yii1')->_savePageSource(codecept_output_dir().'page.html');
 ```
  * `param` $filename
 
-
 ### amHttpAuthenticated
 
 Authenticates user for HTTP_AUTH
 
  * `param` $username
  * `param` $password
-
 
 ### amOnPage
 
@@ -249,7 +241,6 @@ $I->amOnPage('/register');
 
  * `param string` $page
 
-
 ### attachFile
 
 Attaches a file relative to the Codeception `_data` directory to the given file upload field.
@@ -264,7 +255,6 @@ $I->attachFile('input[@type="file"]', 'prices.xls');
  * `param` $field
  * `param` $filename
 
-
 ### checkOption
 
 Ticks a checkbox. For radio buttons, use the `selectOption` method instead.
@@ -276,7 +266,6 @@ $I->checkOption('#agree');
 ```
 
  * `param` $option
-
 
 ### click
 
@@ -310,7 +299,6 @@ $I->click(['link' => 'Login']);
  * `param` $link
  * `param` $context
 
-
 ### deleteHeader
 
 Deletes the header with the passed name.  Subsequent requests
@@ -328,7 +316,6 @@ $I->amOnPage('some-other-page.php');
 ```
 
  * `param string` $name the name of the header to delete.
-
 
 ### dontSee
 
@@ -360,7 +347,6 @@ For checking the raw source code, use `seeInSource()`.
  * `param string` $text
  * `param string` $selector optional
 
-
 ### dontSeeCheckboxIsChecked
 
 Check that the specified checkbox is unchecked.
@@ -374,7 +360,6 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
  * `param` $checkbox
 
-
 ### dontSeeCookie
 
 Checks that there isn't a cookie with the given name.
@@ -383,7 +368,6 @@ You can set additional cookie params like `domain`, `path` as array passed in la
  * `param` $cookie
 
  * `param array` $params
-
 
 ### dontSeeCurrentUrlEquals
 
@@ -399,7 +383,6 @@ $I->dontSeeCurrentUrlEquals('/');
 
  * `param string` $uri
 
-
 ### dontSeeCurrentUrlMatches
 
 Checks that current url doesn't match the given regular expression.
@@ -412,7 +395,6 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ```
 
  * `param string` $uri
-
 
 ### dontSeeElement
 
@@ -431,7 +413,6 @@ $I->dontSeeElement('input', ['value' => '123456']);
  * `param` $selector
  * `param array` $attributes
 
-
 ### dontSeeInCurrentUrl
 
 Checks that the current URI doesn't contain the given string.
@@ -443,7 +424,6 @@ $I->dontSeeInCurrentUrl('/users/');
 ```
 
  * `param string` $uri
-
 
 ### dontSeeInField
 
@@ -463,7 +443,6 @@ $I->dontSeeInField(['name' => 'search'], 'Search');
 
  * `param` $field
  * `param` $value
-
 
 ### dontSeeInFormFields
 
@@ -507,7 +486,6 @@ $I->dontSeeInFormFields('#form-id', [
  * `param` $formSelector
  * `param` $params
 
-
 ### dontSeeInSource
 
 Checks that the current page contains the given string in its
@@ -520,14 +498,11 @@ $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
 
  * `param`      $raw
 
-
 ### dontSeeInTitle
 
 Checks that the page title does not contain the given string.
 
  * `param` $title
-
-
 
 ### dontSeeLink
 
@@ -544,7 +519,6 @@ $I->dontSeeLink('Checkout now', '/store/cart.php');
  * `param string` $text
  * `param string` $url optional
 
-
 ### dontSeeOptionIsSelected
 
 Checks that the given option is not selected.
@@ -558,8 +532,6 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-
-
 ### dontSeeResponseCodeIs
 
 Checks that response code is equal to value provided.
@@ -572,7 +544,6 @@ $I->dontSeeResponseCodeIs(200);
 $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
 ```
  * `param` $code
-
 
 ### fillField
 
@@ -588,13 +559,11 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
  * `param` $field
  * `param` $value
 
-
 ### getInternalDomains
 
 Returns a list of regex patterns for recognized domain names
 
  * `return` array
-
 
 ### grabAttributeFrom
 
@@ -607,11 +576,8 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ?>
 ```
 
-
  * `param` $cssOrXpath
  * `param` $attribute
-
-
 
 ### grabCookie
 
@@ -621,7 +587,6 @@ You can set additional cookie params like `domain`, `path` in array passed as la
  * `param` $cookie
 
  * `param array` $params
-
 
 ### grabFromCurrentUrl
 
@@ -636,8 +601,6 @@ $uri = $I->grabFromCurrentUrl();
 ```
 
  * `param string` $uri optional
-
-
 
 ### grabMultiple
 
@@ -664,7 +627,6 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `param` $attribute
  * `return` string[]
 
-
 ### grabPageSource
 
 Grabs current page source code.
@@ -672,7 +634,6 @@ Grabs current page source code.
 @throws ModuleException if no page was opened.
 
  * `return` string Current page source code.
-
 
 ### grabTextFrom
 
@@ -690,14 +651,11 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
 
  * `param` $cssOrXPathOrRegex
 
-
-
 ### grabValueFrom
 
  * `param` $field
 
  * `return` array|mixed|null|string
-
 
 ### haveHttpHeader
 
@@ -727,13 +685,11 @@ $I->haveHttpHeader('Client&#95;Id', 'Codeception');
  * `param string` $value the value to set it to for subsequent
        requests
 
-
 ### moveBack
 
 Moves back in history.
 
  * `param int` $numberOfSteps (default value 1)
-
 
 ### resetCookie
 
@@ -743,7 +699,6 @@ You can set additional cookie params like `domain`, `path` in array passed as la
  * `param` $cookie
 
  * `param array` $params
-
 
 ### see
 
@@ -777,7 +732,6 @@ For checking the raw source code, use `seeInSource()`.
  * `param string` $text
  * `param string` $selector optional
 
-
 ### seeCheckboxIsChecked
 
 Checks that the specified checkbox is checked.
@@ -791,7 +745,6 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ```
 
  * `param` $checkbox
-
 
 ### seeCookie
 
@@ -807,7 +760,6 @@ $I->seeCookie('PHPSESSID');
  * `param` $cookie
  * `param array` $params
 
-
 ### seeCurrentUrlEquals
 
 Checks that the current URL is equal to the given string.
@@ -822,7 +774,6 @@ $I->seeCurrentUrlEquals('/');
 
  * `param string` $uri
 
-
 ### seeCurrentUrlMatches
 
 Checks that the current URL matches the given regular expression.
@@ -835,7 +786,6 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ```
 
  * `param string` $uri
-
 
 ### seeElement
 
@@ -858,7 +808,6 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
  * `param array` $attributes
 @return
 
-
 ### seeInCurrentUrl
 
 Checks that current URI contains the given string.
@@ -873,7 +822,6 @@ $I->seeInCurrentUrl('/users/');
 ```
 
  * `param string` $uri
-
 
 ### seeInField
 
@@ -893,7 +841,6 @@ $I->seeInField(['name' => 'search'], 'Search');
 
  * `param` $field
  * `param` $value
-
 
 ### seeInFormFields
 
@@ -957,7 +904,6 @@ $I->seeInFormFields('//form[@id=my-form]', $form);
  * `param` $formSelector
  * `param` $params
 
-
 ### seeInSource
 
 Checks that the current page contains the given string in its
@@ -970,7 +916,6 @@ $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
 
  * `param`      $raw
 
-
 ### seeInTitle
 
 Checks that the page title contains the given string.
@@ -982,8 +927,6 @@ $I->seeInTitle('Blog - Post #1');
 ```
 
  * `param` $title
-
-
 
 ### seeLink
 
@@ -1000,7 +943,6 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
  * `param string` $text
  * `param string` $url optional
 
-
 ### seeNumberOfElements
 
 Checks that there are a certain number of elements matched by the given locator on the page.
@@ -1013,7 +955,6 @@ $I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
 ```
  * `param` $selector
  * `param mixed` $expected int or int[]
-
 
 ### seeOptionIsSelected
 
@@ -1028,12 +969,9 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-
-
 ### seePageNotFound
 
 Asserts that current page has 404 response status code.
-
 
 ### seeResponseCodeIs
 
@@ -1048,7 +986,6 @@ $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
 ```
 
  * `param` $code
-
 
 ### selectOption
 
@@ -1082,7 +1019,6 @@ $I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only s
  * `param` $select
  * `param` $option
 
-
 ### sendAjaxGetRequest
 
 If your page triggers an ajax request, you can perform it manually.
@@ -1092,7 +1028,6 @@ See ->sendAjaxPostRequest for examples.
 
  * `param` $uri
  * `param` $params
-
 
 ### sendAjaxPostRequest
 
@@ -1115,7 +1050,6 @@ $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GE
  * `param` $uri
  * `param` $params
 
-
 ### sendAjaxRequest
 
 If your page triggers an ajax request, you can perform it manually.
@@ -1135,7 +1069,6 @@ $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
  * `param` $uri
  * `param` $params
 
-
 ### setCookie
 
 Sets a cookie with the given name and value.
@@ -1150,8 +1083,6 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
  * `param` $name
  * `param` $val
  * `param array` $params
-
-
 
 ### submitForm
 
@@ -1325,7 +1256,6 @@ $I->submitForm('#my-form', [
  * `param` $params
  * `param` $button
 
-
 ### switchToIframe
 
 Switch to iframe or frame on the page.
@@ -1342,7 +1272,6 @@ $I->switchToIframe("another_frame");
 ```
 
  * `param string` $name
-
 
 ### uncheckOption
 

@@ -1,6 +1,5 @@
 # Db
 
-
 Access a database.
 
 The most important function of this module is to clean a database before each test.
@@ -170,8 +169,6 @@ SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` LIKE 'davert%'
 * dbh - contains the PDO connection
 * driver - contains the Connection Driver
 
-
-
 ## Actions
 
 ### dontSeeInDatabase
@@ -200,7 +197,6 @@ Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
  * `param string` $table
  * `param array` $criteria
 
-
 ### grabColumnFromDatabase
 
 Fetches all values from the column in database.
@@ -216,7 +212,6 @@ $mails = $I->grabColumnFromDatabase('users', 'email', array('name' => 'RebOOter'
  * `param array` $criteria
 
  * `return` array
-
 
 ### grabFromDatabase
 
@@ -241,8 +236,6 @@ Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
  * `param string` $column
  * `param array` $criteria
 
-
-
 ### grabNumRecords
 
 Returns the number of rows in a database
@@ -251,7 +244,6 @@ Returns the number of rows in a database
  * `param array`  $criteria Search criteria [Optional]
 
  * `return` int
-
 
 ### haveInDatabase
 
@@ -268,10 +260,8 @@ $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com
 
  * `return integer` $id
 
-
 ### isPopulated
 __not documented__
-
 
 ### seeInDatabase
 
@@ -294,10 +284,8 @@ $I->seeInDatabase('users', ['email like' => 'miles@davis.com']);
 
 Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
 
-
  * `param string` $table
  * `param array` $criteria
-
 
 ### seeNumRecords
 
@@ -312,7 +300,6 @@ $I->seeNumRecords(1, 'users', ['name' => 'davert'])
  * `param int` $expectedNumber Expected number
  * `param string` $table Table name
  * `param array` $criteria Search criteria [Optional]
-
 
 ### updateInDatabase
 

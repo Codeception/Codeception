@@ -230,7 +230,6 @@ If you have a complex interaction scenario, you may use several step objects in 
 If you feel like adding too many actions into your Actor class
 (which is AcceptanceTester in this case) consider moving some of them into separate StepObjects.
 
-
 ## PageObjects
 
 For acceptance and functional testing, we will not only need to have common actions being reused across different tests,
@@ -362,7 +361,6 @@ For instance, `Page\Login` required `AcceptanceTester`, and so it was injected i
 and PageObject was created and passed into method arguments. You should explicitly specify
 the types of required objects for Codeception to know what objects should be created for a test.
 Dependency Injection will be described in the next chapter.
-
 
 ## Conclusion
 

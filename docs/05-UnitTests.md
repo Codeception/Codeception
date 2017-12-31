@@ -69,7 +69,6 @@ and set the UnitTester class up to have all the cool actions from Cept-files to 
 Just like in the acceptance and functional tests, you can choose the proper modules
 for the `UnitTester` class in the `unit.suite.yml` configuration file:
 
-
 ```yaml
 # Codeception Test Suite Configuration
 
@@ -104,7 +103,6 @@ class UserTest extends \Codeception\Test\Unit
     }
 }
 ```
-
 
 ### Using Modules
 

@@ -1,11 +1,8 @@
 
 ## Codeception\Util\Autoload
 
-
-
 Autoloader, which is fully compatible with PSR-4,
 and can be used to autoload your `Helper`, `Page`, and `Step` classes.
-
 
 #### __construct()
 

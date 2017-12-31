@@ -1,6 +1,5 @@
 # Memcache
 
-
 Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
 
 Performs a cleanup by flushing all values after each test run.
@@ -31,14 +30,11 @@ Be sure you don't use the production server to connect.
 
 * **memcache** - instance of _Memcache_ or _Memcached_ object
 
-
-
 ## Actions
 
 ### clearMemcache
 
 Flushes all Memcached data.
-
 
 ### dontSeeInMemcached
 
@@ -59,7 +55,6 @@ $I->dontSeeInMemcached('users_count', 200);
  * `param` $key
  * `param` $value
 
-
 ### grabValueFromMemcached
 
 Grabs value from memcached by key.
@@ -75,7 +70,6 @@ $users_count = $I->grabValueFromMemcached('users_count');
  * `param` $key
  * `return` array|string
 
-
 ### haveInMemcached
 
 Stores an item `$value` with `$key` on the Memcached server.
@@ -83,7 +77,6 @@ Stores an item `$value` with `$key` on the Memcached server.
  * `param string` $key
  * `param mixed` $value
  * `param int` $expiration
-
 
 ### seeInMemcached
 

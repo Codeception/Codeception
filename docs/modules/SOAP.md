@@ -1,6 +1,5 @@
 # SOAP
 
-
 Module for testing SOAP WSDL web services.
 Send requests and check if response matches the pattern.
 
@@ -30,15 +29,12 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 * xmlRequest - last SOAP request (DOMDocument)
 * xmlResponse - last SOAP response (DOMDocument)
 
-
-
 ## Actions
 
 ### dontSeeSoapResponseContainsStructure
 
 Opposite to `seeSoapResponseContainsStructure`
  * `param` $xml
-
 
 ### dontSeeSoapResponseContainsXPath
 
@@ -52,7 +48,6 @@ $I->dontSeeSoapResponseContainsXPath('//root/user[@id=1]');
 
  * `param` $xpath
 
-
 ### dontSeeSoapResponseEquals
 
 Checks XML response equals provided XML.
@@ -62,7 +57,6 @@ Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, 
 
  * `param` $xml
 
-
 ### dontSeeSoapResponseIncludes
 
 Checks XML response does not include provided XML.
@@ -70,7 +64,6 @@ Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
  * `param` $xml
-
 
 ### grabAttributeFrom
 
@@ -82,7 +75,6 @@ Element is matched by either CSS or XPath
  * `param` $attribute
  * `return` string
 
-
 ### grabTextContentFrom
 
 Finds and returns text contents of element.
@@ -91,7 +83,6 @@ Element is matched by either CSS or XPath
  * `Available since` 1.1
  * `param` $cssOrXPath
  * `return` string
-
 
 ### haveSoapHeader
 
@@ -120,18 +111,15 @@ Will produce header:
  * `param` $header
  * `param array` $params
 
-
 ### seeResponseCodeIs
 
 @deprecated use seeSoapResponseCodeIs instead
-
 
 ### seeSoapResponseCodeIs
 
 Checks response code from server.
 
  * `param` $code
-
 
 ### seeSoapResponseContainsStructure
 
@@ -154,7 +142,6 @@ This method does not require path from root to match the structure.
 
  * `param` $xml
 
-
 ### seeSoapResponseContainsXPath
 
 Checks XML response with XPath locator
@@ -166,7 +153,6 @@ $I->seeSoapResponseContainsXPath('//root/user[@id=1]');
 ```
 
  * `param` $xpath
-
 
 ### seeSoapResponseEquals
 
@@ -189,7 +175,6 @@ $I->seeSoapRequestIncludes($dom);
 
  * `param` $xml
 
-
 ### seeSoapResponseIncludes
 
 Checks XML response includes provided XML.
@@ -210,7 +195,6 @@ $I->seeSoapRequestIncludes($dom);
 ```
 
  * `param` $xml
-
 
 ### sendSoapRequest
 

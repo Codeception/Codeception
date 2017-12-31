@@ -22,7 +22,6 @@ settings:
   colors: false
 ```
 
-
 You should also specify the path to the `log` directory, where the reports and logs will be saved.
 
 <div class="alert alert-notice">
@@ -62,7 +61,6 @@ Where `unit` is the name of suite and the `-c` option specifies the path to the 
 In this example we will assume that there is `frontend/codeception.yml` configuration file
 and that we will execute the unit tests for only that app.
 
-
 ## Extension
 
 Codeception has limited capabilities to extend its core features.
@@ -95,7 +93,6 @@ based on the [Symfony Event Dispatcher](http://symfony.com/doc/current/component
 Here are the events and event classes. The events are listed in the order in which they happen during execution.
 All listed events are available as constants in `Codeception\Events` class.
 
-
 |    Event             |    When?                                |    Triggered by
 |:--------------------:| --------------------------------------- | --------------------------:
 | `suite.before`       | Before suite is executed                | [Suite, Settings](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/SuiteEvent.php)
@@ -114,7 +111,6 @@ All listed events are available as constants in `Codeception\Events` class.
 | `suite.after`        | After suite was executed                | [Suite, Result, Settings](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/SuiteEvent.php)
 | `test.fail.print`    | When test fails are printed             | [Test, Fail](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/FailEvent.php)
 | `result.print.after` | After result was printed                | [Result, Printer](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/PrintResultEvent.php)
-
 
 There may be some confusion between `test.start`/`test.before` and `test.after`/`test.end`.
 The start and end events are triggered by PHPUnit, but the before and after events are triggered by Codeception.
@@ -194,7 +190,6 @@ So Recorder extension can be started like this:
 ```bash
 codecept run --ext Recorder
 ```
-
 
 ### Configuring Extension
 

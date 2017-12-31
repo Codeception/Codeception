@@ -1,7 +1,5 @@
 # Queue
 
-
-
 Works with Queue servers.
 
 Testing with a selection of remote/local queueing services, including Amazon's SQS service
@@ -115,8 +113,6 @@ service.
              'type': 'aws',
              'region': 'us-west-2'
 
-
-
 ## Actions
 
 ### addMessageToQueue
@@ -132,7 +128,6 @@ $I->addMessageToQueue('this is a messages', 'default');
  * `param string` $message Message Body
  * `param string` $queue Queue Name
 
-
 ### clearQueue
 
 Clear all messages of the queue/tube
@@ -144,7 +139,6 @@ $I->clearQueue('default');
 ```
 
  * `param string` $queue Queue Name
-
 
 ### dontSeeEmptyQueue
 
@@ -158,7 +152,6 @@ $I->dontSeeEmptyQueue('default');
 
  * `param string` $queue Queue Name
 
-
 ### dontSeeQueueExists
 
 Check if a queue/tube does NOT exist on the queueing server.
@@ -170,7 +163,6 @@ $I->dontSeeQueueExists('default');
 ```
 
  * `param string` $queue Queue Name
-
 
 ### dontSeeQueueHasCurrentCount
 
@@ -185,7 +177,6 @@ $I->dontSeeQueueHasCurrentCount('default', 10);
  * `param string` $queue Queue Name
  * `param int` $expected Number of messages expected
 
-
 ### dontSeeQueueHasTotalCount
 
 Check if a queue/tube does NOT have a given total number of messages
@@ -199,7 +190,6 @@ $I->dontSeeQueueHasTotalCount('default', 10);
  * `param string` $queue Queue Name
  * `param int` $expected Number of messages expected
 
-
 ### grabQueueCurrentCount
 
 Grabber method to get the current number of messages on the queue/tube (pending/ready)
@@ -212,7 +202,6 @@ Grabber method to get the current number of messages on the queue/tube (pending/
  * `param string` $queue Queue Name
 
  * `return` int Count
-
 
 ### grabQueueTotalCount
 
@@ -228,7 +217,6 @@ Grabber method to get the total number of messages on the queue/tube
 
  * `return` int Count
 
-
 ### grabQueues
 
 Grabber method to get the list of queues/tubes on the server
@@ -240,7 +228,6 @@ $queues = $I->grabQueues();
 ```
 
  * `return` array List of Queues/Tubes
-
 
 ### seeEmptyQueue
 
@@ -254,7 +241,6 @@ $I->seeEmptyQueue('default');
 
  * `param string` $queue Queue Name
 
-
 ### seeQueueExists
 
 Check if a queue/tube exists on the queueing server.
@@ -266,7 +252,6 @@ $I->seeQueueExists('default');
 ```
 
  * `param string` $queue Queue Name
-
 
 ### seeQueueHasCurrentCount
 
@@ -280,7 +265,6 @@ $I->seeQueueHasCurrentCount('default', 10);
 
  * `param string` $queue Queue Name
  * `param int` $expected Number of messages expected
-
 
 ### seeQueueHasTotalCount
 

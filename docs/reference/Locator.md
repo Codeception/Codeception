@@ -1,12 +1,8 @@
 
 ## Codeception\Util\Locator
 
-
-
 Set of useful functions for using CSS and XPath locators.
 Please check them before writing complex functional or acceptance tests.
-
-
 
 #### combine()
 

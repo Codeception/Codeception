@@ -60,7 +60,6 @@ Now we should specify path to PHPUnit style XML reports. In case of standard Cod
 
 Now for all builds we will see results trend graph that shows us percentage of passing and failing tests. We also will see a **Latest Test Result** link which will lead to to the page where all executed tests and their stats listed in a table.
 
-
 ### HTML Reports
 
 To get more details on steps executed you can generate HTML report and use Jenkins to display them.

@@ -1,8 +1,6 @@
 # Asserts
 
-
 Special module for using asserts in your tests.
-
 
 ## Actions
 
@@ -12,13 +10,11 @@ Special module for using asserts in your tests.
  * `param` $actual
  * `param` $description
 
-
 ### assertArrayNotHasKey
 
  * `param` $key
  * `param` $actual
  * `param` $description
-
 
 ### assertArraySubset
 
@@ -29,7 +25,6 @@ Checks that array contains subset.
  * `param bool`   $strict
  * `param string` $message
 
-
 ### assertContains
 
 Checks that haystack contains needle
@@ -38,13 +33,11 @@ Checks that haystack contains needle
  * `param`        $haystack
  * `param string` $message
 
-
 ### assertCount
 
  * `param` $expectedCount
  * `param` $actual
  * `param` $description
-
 
 ### assertEmpty
 
@@ -52,7 +45,6 @@ Checks that variable is empty.
 
  * `param`        $actual
  * `param string` $message
-
 
 ### assertEquals
 
@@ -77,14 +69,12 @@ $I->assertEquals($calculator->add(0.1, 0.2), 0.3, 'Calculator should add the two
  * `param string` $message
  * `param float`  $delta
 
-
 ### assertFalse
 
 Checks that condition is negative.
 
  * `param`        $condition
  * `param string` $message
-
 
 ### assertFileExists
 
@@ -93,7 +83,6 @@ Checks if file exists
  * `param string` $filename
  * `param string` $message
 
-
 ### assertFileNotExists
 
 Checks if file doesn't exist
@@ -101,13 +90,11 @@ Checks if file doesn't exist
  * `param string` $filename
  * `param string` $message
 
-
 ### assertGreaterOrEquals
 
  * `param` $expected
  * `param` $actual
  * `param` $description
-
 
 ### assertGreaterThan
 
@@ -117,7 +104,6 @@ Checks that actual is greater than expected
  * `param`        $actual
  * `param string` $message
 
-
 ### assertGreaterThanOrEqual
 
 Checks that actual is greater or equal than expected
@@ -126,13 +112,11 @@ Checks that actual is greater or equal than expected
  * `param`        $actual
  * `param string` $message
 
-
 ### assertInstanceOf
 
  * `param` $class
  * `param` $actual
  * `param` $description
-
 
 ### assertInternalType
 
@@ -140,19 +124,16 @@ Checks that actual is greater or equal than expected
  * `param` $actual
  * `param` $description
 
-
 ### assertIsEmpty
 
  * `param` $actual
  * `param` $description
-
 
 ### assertLessOrEquals
 
  * `param` $expected
  * `param` $actual
  * `param` $description
-
 
 ### assertLessThan
 
@@ -162,7 +143,6 @@ Checks that actual is less than expected
  * `param`        $actual
  * `param string` $message
 
-
 ### assertLessThanOrEqual
 
 Checks that actual is less or equal than expected
@@ -170,7 +150,6 @@ Checks that actual is less or equal than expected
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
-
 
 ### assertNotContains
 
@@ -180,14 +159,12 @@ Checks that haystack doesn't contain needle.
  * `param`        $haystack
  * `param string` $message
 
-
 ### assertNotEmpty
 
 Checks that variable is not empty.
 
  * `param`        $actual
  * `param string` $message
-
 
 ### assertNotEquals
 
@@ -212,13 +189,11 @@ $I->assertNotEquals($calculator->add(0.1, 0.2), 0.4, 'Calculator should add the 
  * `param string` $message
  * `param float`  $delta
 
-
 ### assertNotInstanceOf
 
  * `param` $class
  * `param` $actual
  * `param` $description
-
 
 ### assertNotNull
 
@@ -226,7 +201,6 @@ Checks that variable is not NULL
 
  * `param`        $actual
  * `param string` $message
-
 
 ### assertNotRegExp
 
@@ -236,7 +210,6 @@ Checks that string not match with pattern
  * `param string` $string
  * `param string` $message
 
-
 ### assertNotSame
 
 Checks that two variables are not same
@@ -245,14 +218,12 @@ Checks that two variables are not same
  * `param`        $actual
  * `param string` $message
 
-
 ### assertNull
 
 Checks that variable is NULL
 
  * `param`        $actual
  * `param string` $message
-
 
 ### assertRegExp
 
@@ -262,7 +233,6 @@ Checks that string match with pattern
  * `param string` $string
  * `param string` $message
 
-
 ### assertSame
 
 Checks that two variables are same
@@ -270,7 +240,6 @@ Checks that two variables are same
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
-
 
 ### assertStringStartsNotWith
 
@@ -280,7 +249,6 @@ Checks that a string doesn't start with the given prefix.
  * `param string` $string
  * `param string` $message
 
-
 ### assertStringStartsWith
 
 Checks that a string starts with the given prefix.
@@ -289,14 +257,12 @@ Checks that a string starts with the given prefix.
  * `param string` $string
  * `param string` $message
 
-
 ### assertTrue
 
 Checks that condition is positive.
 
  * `param`        $condition
  * `param string` $message
-
 
 ### expectException
 
@@ -324,7 +290,6 @@ $I->expectException(new MyException("Don't do bad things"), function() {
 
  * `param` $exception string or \Exception
  * `param` $callback
-
 
 ### fail
 

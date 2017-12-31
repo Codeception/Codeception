@@ -1,6 +1,5 @@
 # Apc
 
-
 This module interacts with the [Alternative PHP Cache (APC)](http://php.net/manual/en/intro.apcu.php)
 using either _APCu_ or _APC_ extension.
 
@@ -20,8 +19,6 @@ Performs a cleanup by flushing all values after each test run.
 ```
 
 Be sure you don't use the production server to connect.
-
-
 
 ## Actions
 
@@ -44,11 +41,9 @@ $I->dontSeeInApc('users_count', 200);
  * `param string|string[]` $key
  * `param mixed` $value
 
-
 ### flushApc
 
 Clears the APC(u) cache
-
 
 ### grabValueFromApc
 
@@ -63,7 +58,6 @@ $users_count = $I->grabValueFromApc('users_count');
 ```
 
  * `param string|string[]` $key
-
 
 ### haveInApc
 
@@ -92,7 +86,6 @@ $I->haveInApc($entries, null);
  * `param string|array` $key
  * `param mixed` $value
  * `param int` $expiration
-
 
 ### seeInApc
 

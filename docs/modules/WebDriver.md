@@ -1,6 +1,5 @@
 # WebDriver
 
-
 New generation Selenium WebDriver module.
 
 ## Local Testing
@@ -49,7 +48,6 @@ To run tests in Chrome browser you may connect to ChromeDriver directly, without
 ```
 
 Additional [Chrome options](https://sites.google.com/a/chromium.org/chromedriver/capabilities) can be set in `chromeOptions` capabilities.
-
 
 ### PhantomJS
 
@@ -229,8 +227,6 @@ If speed is a concern, it's recommended you stick with explicitly specifying the
 $this->getModule('WebDriver')->webDriver->getKeyboard()->sendKeys('hello, webdriver');
 ```
 
-
-
 ## Actions
 
 ### _backupSession
@@ -240,7 +236,6 @@ $this->getModule('WebDriver')->webDriver->getKeyboard()->sendKeys('hello, webdri
 Returns current WebDriver session for saving
 
  * `return` RemoteWebDriver
-
 
 ### _capabilities
 
@@ -288,7 +283,6 @@ In this case, please ensure that `\Helper\Acceptance` is loaded before WebDriver
 
  * `param \Closure` $capabilityFunction
 
-
 ### _closeSession
 
 *hidden API method, expected to be used from Helper classes*
@@ -305,7 +299,6 @@ $this->getModule('WebDriver')->_closeSession($webDriver);
 ```
 
  * `param` $webDriver (optional) a specific webdriver session instance
-
 
 ### _findClickable
 
@@ -331,7 +324,6 @@ $el = $module->_findClickable($topBar, 'Click Me');
  * `param` $page WebDriver instance or an element to search within
  * `param` $link a link text or locator to click
  * `return` WebDriverElement
-
 
 ### _findElements
 
@@ -360,7 +352,6 @@ PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` i
  * `param` $locator
  * `return` array of interactive elements
 
-
 ### _getCurrentUri
 
 *hidden API method, expected to be used from Helper classes*
@@ -369,7 +360,6 @@ Uri of currently opened page.
  * `return` string
 @throws ModuleException
 
-
 ### _getUrl
 
 *hidden API method, expected to be used from Helper classes*
@@ -377,7 +367,6 @@ Uri of currently opened page.
 Returns URL of a host.
 
 @throws ModuleConfigException
-
 
 ### _initializeSession
 
@@ -390,8 +379,6 @@ Manually starts a new browser session.
 $this->getModule('WebDriver')->_initializeSession();
 ```
 
-
-
 ### _loadSession
 
 *hidden API method, expected to be used from Helper classes*
@@ -399,7 +386,6 @@ $this->getModule('WebDriver')->_initializeSession();
 Loads current RemoteWebDriver instance as a session
 
  * `param RemoteWebDriver` $session
-
 
 ### _restart
 
@@ -417,14 +403,12 @@ $this->getModule('WebDriver')->_restart(['browser' => $browser]); // reconfigure
 
  * `param array` $config
 
-
 ### _savePageSource
 
 *hidden API method, expected to be used from Helper classes*
 
 Saves HTML source of a page to a file
  * `param` $filename
-
 
 ### _saveScreenshot
 
@@ -437,13 +421,11 @@ $this->getModule('WebDriver')->_saveScreenshot(codecept_output_dir().'screenshot
 ```
  * `param` $filename
 
-
 ### acceptPopup
 
 Accepts the active JavaScript native popup window, as created by `window.alert`|`window.confirm`|`window.prompt`.
 Don't confuse popups with modal windows,
 as created by [various libraries](http://jster.net/category/windows-modals-popups).
-
 
 ### amOnPage
 
@@ -458,7 +440,6 @@ $I->amOnPage('/register');
 ```
 
  * `param string` $page
-
 
 ### amOnSubdomain
 
@@ -479,8 +460,6 @@ $I->amOnPage('/');
 
  * `param` $subdomain
 
-
-
 ### amOnUrl
 
 Open web page at the given absolute URL and sets its hostname as the base host.
@@ -491,7 +470,6 @@ $I->amOnUrl('http://codeception.com');
 $I->amOnPage('/quickstart'); // moves to http://codeception.com/quickstart
 ?>
 ```
-
 
 ### appendField
 
@@ -509,7 +487,6 @@ $I->appendField('#myTextField', 'appended');
  * `param string` $value
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### attachFile
 
 Attaches a file relative to the Codeception `_data` directory to the given file upload field.
@@ -524,11 +501,9 @@ $I->attachFile('input[@type="file"]', 'prices.xls');
  * `param` $field
  * `param` $filename
 
-
 ### cancelPopup
 
 Dismisses the active JavaScript popup, as created by `window.alert`, `window.confirm`, or `window.prompt`.
-
 
 ### checkOption
 
@@ -541,7 +516,6 @@ $I->checkOption('#agree');
 ```
 
  * `param` $option
-
 
 ### click
 
@@ -575,7 +549,6 @@ $I->click(['link' => 'Login']);
  * `param` $link
  * `param` $context
 
-
 ### clickWithLeftButton
 
 Performs click with the left mouse button on an element.
@@ -597,7 +570,6 @@ $I->clickWithLeftButton(['css' => '.checkout'], 20, 50);
  * `param int` $offsetY
 
 @throws \Codeception\Exception\ElementNotFound
-
 
 ### clickWithRightButton
 
@@ -621,7 +593,6 @@ $I->clickWithRightButton(['css' => '.checkout'], 20, 50);
 
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### closeTab
 
 Closes current browser tab and switches to previous active tab.
@@ -633,13 +604,11 @@ $I->closeTab();
 
 Can't be used with PhantomJS
 
-
 ### debugWebDriverLogs
 
 Print out latest Selenium Logs in debug mode
 
  * `param TestInterface` $test
-
 
 ### dontSee
 
@@ -671,7 +640,6 @@ For checking the raw source code, use `seeInSource()`.
  * `param string` $text
  * `param string` $selector optional
 
-
 ### dontSeeCheckboxIsChecked
 
 Check that the specified checkbox is unchecked.
@@ -685,7 +653,6 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
  * `param` $checkbox
 
-
 ### dontSeeCookie
 
 Checks that there isn't a cookie with the given name.
@@ -694,7 +661,6 @@ You can set additional cookie params like `domain`, `path` as array passed in la
  * `param` $cookie
 
  * `param array` $params
-
 
 ### dontSeeCurrentUrlEquals
 
@@ -710,7 +676,6 @@ $I->dontSeeCurrentUrlEquals('/');
 
  * `param string` $uri
 
-
 ### dontSeeCurrentUrlMatches
 
 Checks that current url doesn't match the given regular expression.
@@ -723,7 +688,6 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ```
 
  * `param string` $uri
-
 
 ### dontSeeElement
 
@@ -742,14 +706,12 @@ $I->dontSeeElement('input', ['value' => '123456']);
  * `param` $selector
  * `param array` $attributes
 
-
 ### dontSeeElementInDOM
 
 Opposite of `seeElementInDOM`.
 
  * `param` $selector
  * `param array` $attributes
-
 
 ### dontSeeInCurrentUrl
 
@@ -762,7 +724,6 @@ $I->dontSeeInCurrentUrl('/users/');
 ```
 
  * `param string` $uri
-
 
 ### dontSeeInField
 
@@ -782,7 +743,6 @@ $I->dontSeeInField(['name' => 'search'], 'Search');
 
  * `param` $field
  * `param` $value
-
 
 ### dontSeeInFormFields
 
@@ -826,13 +786,11 @@ $I->dontSeeInFormFields('#form-id', [
  * `param` $formSelector
  * `param` $params
 
-
 ### dontSeeInPageSource
 
 Checks that the page source doesn't contain the given string.
 
  * `param` $text
-
 
 ### dontSeeInPopup
 
@@ -842,7 +800,6 @@ as created by `window.alert`|`window.confirm`|`window.prompt`, does NOT contain 
  * `param` $text
 
 @throws \Codeception\Exception\ModuleException
-
 
 ### dontSeeInSource
 
@@ -856,14 +813,11 @@ $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
 
  * `param`      $raw
 
-
 ### dontSeeInTitle
 
 Checks that the page title does not contain the given string.
 
  * `param` $title
-
-
 
 ### dontSeeLink
 
@@ -880,7 +834,6 @@ $I->dontSeeLink('Checkout now', '/store/cart.php');
  * `param string` $text
  * `param string` $url optional
 
-
 ### dontSeeOptionIsSelected
 
 Checks that the given option is not selected.
@@ -894,15 +847,12 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-
-
 ### doubleClick
 
 Performs a double-click on an element matched by CSS or XPath.
 
  * `param` $cssOrXPath
 @throws \Codeception\Exception\ElementNotFound
-
 
 ### dragAndDrop
 
@@ -916,7 +866,6 @@ $I->dragAndDrop('#drag', '#drop');
 
  * `param string` $source (CSS ID or XPath)
  * `param string` $target (CSS ID or XPath)
-
 
 ### executeInSelenium
 
@@ -936,7 +885,6 @@ If Codeception lacks a feature you need, please implement it and submit a patch.
 
  * `param callable` $function
 
-
 ### executeJS
 
 Executes custom JavaScript.
@@ -950,7 +898,6 @@ $myVar = $I->executeJS('return $("#myField").val()');
 ```
 
  * `param` $script
-
 
 ### fillField
 
@@ -966,7 +913,6 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
  * `param` $field
  * `param` $value
 
-
 ### grabAttributeFrom
 
 Grabs the value of the given attribute value from the given element.
@@ -978,11 +924,8 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ?>
 ```
 
-
  * `param` $cssOrXpath
  * `param` $attribute
-
-
 
 ### grabCookie
 
@@ -992,7 +935,6 @@ You can set additional cookie params like `domain`, `path` in array passed as la
  * `param` $cookie
 
  * `param array` $params
-
 
 ### grabFromCurrentUrl
 
@@ -1007,8 +949,6 @@ $uri = $I->grabFromCurrentUrl();
 ```
 
  * `param string` $uri optional
-
-
 
 ### grabMultiple
 
@@ -1035,7 +975,6 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `param` $attribute
  * `return` string[]
 
-
 ### grabPageSource
 
 Grabs current page source code.
@@ -1043,7 +982,6 @@ Grabs current page source code.
 @throws ModuleException if no page was opened.
 
  * `return` string Current page source code.
-
 
 ### grabTextFrom
 
@@ -1061,8 +999,6 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
 
  * `param` $cssOrXPathOrRegex
 
-
-
 ### grabValueFrom
 
 Finds the value for the given form field.
@@ -1079,13 +1015,10 @@ $name = $I->grabValueFrom(['name' => 'username']);
 
  * `param` $field
 
-
-
 ### loadSessionSnapshot
 
  * `param string` $name
  * `return` bool
-
 
 ### makeScreenshot
 
@@ -1102,21 +1035,17 @@ $I->makeScreenshot();
 
  * `param` $name
 
-
 ### maximizeWindow
 
 Maximizes the current window.
-
 
 ### moveBack
 
 Moves back in history.
 
-
 ### moveForward
 
 Moves forward in history.
-
 
 ### moveMouseOver
 
@@ -1140,7 +1069,6 @@ $I->moveMouseOver(['css' => '.checkout'], 20, 50);
 
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### openNewTab
 
 Opens a new browser tab (wherever it is possible) and switches to it.
@@ -1154,8 +1082,6 @@ Please note, that adblock can restrict creating such tabs.
 
 Can't be used with PhantomJS
 
-
-
 ### pauseExecution
 
 Pauses test execution in debug mode.
@@ -1163,7 +1089,6 @@ To proceed test press "ENTER" in console.
 
 This method is useful while writing tests,
 since it allows you to inspect the current page in the middle of a test case.
-
 
 ### performOn
 
@@ -1209,7 +1134,6 @@ In 3rd argument you can set number a seconds to wait for element to appear
  * `param` $actions
  * `param int` $timeout
 
-
 ### pressKey
 
 Presses the given key on the given element.
@@ -1232,11 +1156,9 @@ $I->pressKey('#name', array('ctrl', 'a'), \Facebook\WebDriver\WebDriverKeys::DEL
  * `param` $char string|array Can be char or array with modifier. You can provide several chars.
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### reloadPage
 
 Reloads the current page.
-
 
 ### resetCookie
 
@@ -1246,7 +1168,6 @@ You can set additional cookie params like `domain`, `path` in array passed as la
  * `param` $cookie
 
  * `param array` $params
-
 
 ### resizeWindow
 
@@ -1261,11 +1182,9 @@ $I->resizeWindow(800, 600);
  * `param int` $width
  * `param int` $height
 
-
 ### saveSessionSnapshot
 
  * `param string` $name
-
 
 ### scrollTo
 
@@ -1282,7 +1201,6 @@ $I->scrollTo(['css' => '.checkout'], 20, 50);
  * `param` $selector
  * `param int` $offsetX
  * `param int` $offsetY
-
 
 ### see
 
@@ -1316,7 +1234,6 @@ For checking the raw source code, use `seeInSource()`.
  * `param string` $text
  * `param string` $selector optional
 
-
 ### seeCheckboxIsChecked
 
 Checks that the specified checkbox is checked.
@@ -1330,7 +1247,6 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ```
 
  * `param` $checkbox
-
 
 ### seeCookie
 
@@ -1346,7 +1262,6 @@ $I->seeCookie('PHPSESSID');
  * `param` $cookie
  * `param array` $params
 
-
 ### seeCurrentUrlEquals
 
 Checks that the current URL is equal to the given string.
@@ -1361,7 +1276,6 @@ $I->seeCurrentUrlEquals('/');
 
  * `param string` $uri
 
-
 ### seeCurrentUrlMatches
 
 Checks that the current URL matches the given regular expression.
@@ -1374,7 +1288,6 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ```
 
  * `param string` $uri
-
 
 ### seeElement
 
@@ -1397,7 +1310,6 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
  * `param array` $attributes
 @return
 
-
 ### seeElementInDOM
 
 Checks that the given element exists on the page, even it is invisible.
@@ -1410,7 +1322,6 @@ $I->seeElementInDOM('//form/input[type=hidden]');
 
  * `param` $selector
  * `param array` $attributes
-
 
 ### seeInCurrentUrl
 
@@ -1426,7 +1337,6 @@ $I->seeInCurrentUrl('/users/');
 ```
 
  * `param string` $uri
-
 
 ### seeInField
 
@@ -1446,7 +1356,6 @@ $I->seeInField(['name' => 'search'], 'Search');
 
  * `param` $field
  * `param` $value
-
 
 ### seeInFormFields
 
@@ -1510,7 +1419,6 @@ $I->seeInFormFields('//form[@id=my-form]', $form);
  * `param` $formSelector
  * `param` $params
 
-
 ### seeInPageSource
 
 Checks that the page source contains the given string.
@@ -1522,7 +1430,6 @@ $I->seeInPageSource('<link rel="apple-touch-icon"');
 
  * `param` $text
 
-
 ### seeInPopup
 
 Checks that the active JavaScript popup,
@@ -1531,7 +1438,6 @@ as created by `window.alert`|`window.confirm`|`window.prompt`, contains the give
  * `param` $text
 
 @throws \Codeception\Exception\ModuleException
-
 
 ### seeInSource
 
@@ -1545,7 +1451,6 @@ $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
 
  * `param`      $raw
 
-
 ### seeInTitle
 
 Checks that the page title contains the given string.
@@ -1557,8 +1462,6 @@ $I->seeInTitle('Blog - Post #1');
 ```
 
  * `param` $title
-
-
 
 ### seeLink
 
@@ -1575,7 +1478,6 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
  * `param string` $text
  * `param string` $url optional
 
-
 ### seeNumberOfElements
 
 Checks that there are a certain number of elements matched by the given locator on the page.
@@ -1589,10 +1491,8 @@ $I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
  * `param` $selector
  * `param mixed` $expected int or int[]
 
-
 ### seeNumberOfElementsInDOM
 __not documented__
-
 
 ### seeOptionIsSelected
 
@@ -1606,8 +1506,6 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 
  * `param` $selector
  * `param` $optionText
-
-
 
 ### selectOption
 
@@ -1641,7 +1539,6 @@ $I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only s
  * `param` $select
  * `param` $option
 
-
 ### setCookie
 
 Sets a cookie with the given name and value.
@@ -1656,8 +1553,6 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
  * `param` $name
  * `param` $val
  * `param array` $params
-
-
 
 ### submitForm
 
@@ -1819,7 +1714,6 @@ For example, given the following HTML:
  * `param` $params
  * `param` $button
 
-
 ### switchToIFrame
 
 Switch to another frame on the page.
@@ -1841,7 +1735,6 @@ $I->switchToIFrame();
 
  * `param string|null` $name
 
-
 ### switchToNextTab
 
 Switches to next browser tab.
@@ -1859,7 +1752,6 @@ Can't be used with PhantomJS
 
  * `param int` $offset 1
 
-
 ### switchToPreviousTab
 
 Switches to previous browser tab.
@@ -1876,7 +1768,6 @@ $I->switchToPreviousTab(2);
 Can't be used with PhantomJS
 
  * `param int` $offset 1
-
 
 ### switchToWindow
 
@@ -1915,7 +1806,6 @@ $I->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webd
 
  * `param string|null` $name
 
-
 ### typeInPopup
 
 Enters text into a native JavaScript prompt popup, as created by `window.prompt`.
@@ -1923,7 +1813,6 @@ Enters text into a native JavaScript prompt popup, as created by `window.prompt`
  * `param` $keys
 
 @throws \Codeception\Exception\ModuleException
-
 
 ### uncheckOption
 
@@ -1937,7 +1826,6 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-
 ### unselectOption
 
 Unselect an option in the given select box.
@@ -1945,14 +1833,12 @@ Unselect an option in the given select box.
  * `param` $select
  * `param` $option
 
-
 ### wait
 
 Wait for $timeout seconds.
 
  * `param int|float` $timeout secs
 @throws \Codeception\Exception\TestRuntimeException
-
 
 ### waitForElement
 
@@ -1969,7 +1855,6 @@ $I->click('#agree_button');
  * `param` $element
  * `param int` $timeout seconds
 @throws \Exception
-
 
 ### waitForElementChange
 
@@ -1991,7 +1876,6 @@ $I->waitForElementChange('#menu', function(WebDriverElement $el) {
  * `param int` $timeout seconds
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### waitForElementNotVisible
 
 Waits up to $timeout seconds for the given element to become invisible.
@@ -2006,7 +1890,6 @@ $I->waitForElementNotVisible('#agree_button', 30); // secs
  * `param` $element
  * `param int` $timeout seconds
 @throws \Exception
-
 
 ### waitForElementVisible
 
@@ -2024,7 +1907,6 @@ $I->click('#agree_button');
  * `param int` $timeout seconds
 @throws \Exception
 
-
 ### waitForJS
 
 Executes JavaScript and waits up to $timeout seconds for it to return true.
@@ -2039,7 +1921,6 @@ $I->waitForJS("return $.active == 0;", 60);
 
  * `param string` $script
  * `param int` $timeout seconds
-
 
 ### waitForText
 

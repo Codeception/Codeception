@@ -1,7 +1,6 @@
 
 ## Codeception\Module
 
-
 * *Uses* `Codeception\Util\Shared\Asserts`
 
 Basic class for Modules and Helpers.
@@ -9,9 +8,6 @@ You must extend from it while implementing own helpers.
 
 Public methods of this class start with `_` prefix in order to ignore them in actor classes.
 Module contains **HOOKS** which allow to handle test execution routine.
-
-
-
 
 #### $includeInheritedActions
 
@@ -21,7 +17,6 @@ By setting it to false module wan't inherit methods of parent class.
 
 type `bool`
 
-
 #### $onlyActions
 
 *public static* **$onlyActions**
@@ -30,7 +25,6 @@ Allows to explicitly set what methods have this class.
 
 type `array`
 
-
 #### $excludeActions
 
 *public static* **$excludeActions**
@@ -38,7 +32,6 @@ type `array`
 Allows to explicitly exclude actions from module.
 
 type `array`
-
 
 #### $aliases
 
@@ -593,7 +586,6 @@ Checks that a string starts with the given prefix.
 #### assertThat()
 
  *protected* assertThat($haystack, $constraint, $message = null)
-
 
  * `param`        $haystack
  * `param`        $constraint

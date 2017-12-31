@@ -1,6 +1,5 @@
 # AMQP
 
-
 This module interacts with message broker software that implements
 the Advanced Message Queuing Protocol (AMQP) standard. For example, RabbitMQ (tested).
 
@@ -35,7 +34,6 @@ To use this module with Composer you need <em>"php-amqplib/php-amqplib": "~2.4"<
 
 * connection - AMQPStreamConnection - current connection
 
-
 ## Actions
 
 ### bindQueueToExchange
@@ -60,7 +58,6 @@ $I->bindQueueToExchange(
  * `param array` $arguments
  * `param int` $ticket
  * `return` mixed|null
-
 
 ### declareExchange
 
@@ -87,7 +84,6 @@ $I->declareExchange(
  * `param int` $ticket
  * `return` mixed|null
 
-
 ### declareQueue
 
 Declares queue, creates if needed
@@ -111,7 +107,6 @@ $I->declareQueue(
  * `param int` $ticket
  * `return` mixed|null
 
-
 ### grabMessageFromQueue
 
 Takes last message from queue.
@@ -125,7 +120,6 @@ $message = $I->grabMessageFromQueue('queue.emails');
  * `param string` $queue
  * `return` \PhpAmqpLib\Message\AMQPMessage
 
-
 ### purgeAllQueues
 
 Purge all queues defined in config.
@@ -135,7 +129,6 @@ Purge all queues defined in config.
 $I->purgeAllQueues();
 ?>
 ```
-
 
 ### purgeQueue
 
@@ -148,7 +141,6 @@ $I->purgeQueue('queue.emails');
 ```
 
  * `param string` $queueName
-
 
 ### pushToExchange
 
@@ -167,7 +159,6 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'), 'severity');
  * `param string|\PhpAmqpLib\Message\AMQPMessage` $message
  * `param string` $routing_key
 
-
 ### pushToQueue
 
 Sends message to queue
@@ -181,7 +172,6 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
 
  * `param string` $queue
  * `param string|\PhpAmqpLib\Message\AMQPMessage` $message
-
 
 ### seeMessageInQueueContainsText
 

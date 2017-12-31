@@ -1,8 +1,6 @@
 
 ## Codeception\Util\Fixtures
 
-
-
 Really basic class to store data in global array and use it in Cests/Tests.
 
 ```php
@@ -13,8 +11,6 @@ Fixtures::exists('user1');
 
 ?>
 ```
-
-
 
 #### add()
 

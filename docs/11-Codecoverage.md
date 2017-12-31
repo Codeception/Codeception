@@ -47,7 +47,6 @@ coverage:
     high_limit: 60
 ```
 
-
 ## Local CodeCoverage
 
 The basic codecoverage can be collected for functional and unit tests.
@@ -83,13 +82,11 @@ Please, follow installation instructions described in a [readme file](https://gi
 To connect to `c3` Codeception uses url config from PhpBrowser or WebDriver module.
 But URL of index with `c3.php` included can be specified explicitly with `c3_url` parameter defined:
 
-
 ``` yaml
 coverage:
     # url of file which includes c3 router.
     c3_url: 'http://127.0.0.1:8000/index-test.php/'
 ```
-
 
 After the `c3.php` file is included in application you can start gather coverage.
 In case you execute your application locally there is nothing to be changed in config.

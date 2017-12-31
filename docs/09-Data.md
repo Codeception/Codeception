@@ -26,7 +26,6 @@ modules:
             password:
 ```
 
-
 <div class="alert alert-notice">
 Use <a href="http://codeception.com/docs/06-ModulesAndHelpers#Dynamic-Configuration-With-Params">module parameters</a>
 to set the database credentials from environment variables or from application configuration files.
@@ -197,7 +196,6 @@ modules:
         - Db
 ```
 
-
 ### DataMapper
 
 Doctrine is also a popular ORM, unlike some others it implements the DataMapper pattern and is not bound to any framework.
@@ -219,7 +217,6 @@ modules:
         - Doctrine2:
             depends: ZF2
 ```
-
 
 If no framework is used with Doctrine you should provide the `connection_callback` option
 with a valid callback to a function which returns an `EntityManager` instance.
