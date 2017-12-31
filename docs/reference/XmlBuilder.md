@@ -68,13 +68,13 @@ Export:
 
 #### __construct()
 
- *public* __construct() 
+ *public* __construct()
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L80)
 
 #### __get()
 
- *public* __get($tag) 
+ *public* __get($tag)
 
 Appends child node
 
@@ -85,13 +85,13 @@ Appends child node
 
 #### __toString()
 
- *public* __toString() 
+ *public* __toString()
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L165)
 
 #### attr()
 
- *public* attr($attr, $val) 
+ *public* attr($attr, $val)
 
 Sets attribute for current node
 
@@ -103,14 +103,14 @@ Sets attribute for current node
 
 #### getDom()
 
- *public* getDom() 
+ *public* getDom()
  * `return` \DOMDocument
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/XmlBuilder.php#L173)
 
 #### parent()
 
- *public* parent() 
+ *public* parent()
 
 Traverses to parent
  * `return` XmlBuilder
@@ -119,7 +119,7 @@ Traverses to parent
 
 #### parents()
 
- *public* parents($tag) 
+ *public* parents($tag)
 
 Traverses to parent with $name
 
@@ -131,7 +131,7 @@ Traverses to parent with $name
 
 #### val()
 
- *public* val($val) 
+ *public* val($val)
 
  * `param` $val
  * `return` XmlBuilder

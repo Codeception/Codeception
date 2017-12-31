@@ -120,7 +120,7 @@ service.
 ## Actions
 
 ### addMessageToQueue
- 
+
 Add a message to a queue/tube
 
 ```php
@@ -134,7 +134,7 @@ $I->addMessageToQueue('this is a messages', 'default');
 
 
 ### clearQueue
- 
+
 Clear all messages of the queue/tube
 
 ```php
@@ -147,7 +147,7 @@ $I->clearQueue('default');
 
 
 ### dontSeeEmptyQueue
- 
+
 Check if a queue/tube is NOT empty of all messages
 
 ```php
@@ -160,7 +160,7 @@ $I->dontSeeEmptyQueue('default');
 
 
 ### dontSeeQueueExists
- 
+
 Check if a queue/tube does NOT exist on the queueing server.
 
 ```php
@@ -173,7 +173,7 @@ $I->dontSeeQueueExists('default');
 
 
 ### dontSeeQueueHasCurrentCount
- 
+
 Check if a queue/tube does NOT have a given current number of messages
 
 ```php
@@ -187,7 +187,7 @@ $I->dontSeeQueueHasCurrentCount('default', 10);
 
 
 ### dontSeeQueueHasTotalCount
- 
+
 Check if a queue/tube does NOT have a given total number of messages
 
 ```php
@@ -201,7 +201,7 @@ $I->dontSeeQueueHasTotalCount('default', 10);
 
 
 ### grabQueueCurrentCount
- 
+
 Grabber method to get the current number of messages on the queue/tube (pending/ready)
 
 ```php
@@ -215,7 +215,7 @@ Grabber method to get the current number of messages on the queue/tube (pending/
 
 
 ### grabQueueTotalCount
- 
+
 Grabber method to get the total number of messages on the queue/tube
 
 ```php
@@ -230,7 +230,7 @@ Grabber method to get the total number of messages on the queue/tube
 
 
 ### grabQueues
- 
+
 Grabber method to get the list of queues/tubes on the server
 
 ```php
@@ -243,7 +243,7 @@ $queues = $I->grabQueues();
 
 
 ### seeEmptyQueue
- 
+
 Check if a queue/tube is empty of all messages
 
 ```php
@@ -256,7 +256,7 @@ $I->seeEmptyQueue('default');
 
 
 ### seeQueueExists
- 
+
 Check if a queue/tube exists on the queueing server.
 
 ```php
@@ -269,7 +269,7 @@ $I->seeQueueExists('default');
 
 
 ### seeQueueHasCurrentCount
- 
+
 Check if a queue/tube has a given current number of messages
 
 ```php
@@ -283,7 +283,7 @@ $I->seeQueueHasCurrentCount('default', 10);
 
 
 ### seeQueueHasTotalCount
- 
+
 Check if a queue/tube has a given total number of messages
 
 ```php

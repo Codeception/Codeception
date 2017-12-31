@@ -115,7 +115,7 @@ In case your ORM expects a related record itself (Doctrine) then you should use 
 ## Actions
 
 ### have
- 
+
 Generates and saves a record,.
 
 ```php
@@ -132,7 +132,7 @@ Returns an instance of created user.
 
 
 ### haveMultiple
- 
+
 Generates and saves a record multiple times.
 
 ```php

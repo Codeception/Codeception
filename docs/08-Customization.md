@@ -133,7 +133,7 @@ class MyCustomExtension extends \Codeception\Extension
 {
     // list events to listen to
     // Codeception\Events constants used to set the event
-    
+
     public static $events = array(
         Events::SUITE_AFTER  => 'afterSuite',
         Events::SUITE_BEFORE => 'beforeTest',
@@ -179,7 +179,7 @@ extensions:
 ```
 
 Extensions can also be enabled per suite inside suite configs (like `acceptance.suite.yml`) and for a specific environment.
- 
+
 To enable extension dynamically, execute the `run` command with `--ext` option.
 Provide a class name as a parameter:
 
@@ -188,7 +188,7 @@ codecept run --ext MyCustomExtension
 codecept run --ext "\My\Extension"
 ```
 
-If a class is in a `Codeception\Extension` namespace you can skip it and provide only a shortname. 
+If a class is in a `Codeception\Extension` namespace you can skip it and provide only a shortname.
 So Recorder extension can be started like this:
 
 ```bash
@@ -241,10 +241,10 @@ When a test is added to a group:
 ```php
 <?php
 /**
- * @group admin 
+ * @group admin
  */
 public function testAdminCreatingNewBlogPost(\AcceptanceTester $I)
-{    
+{
 }
 ```
 
@@ -286,7 +286,7 @@ class Admin extends \Codeception\GroupObject
 ```
 
 GroupObjects can also be used to update the module configuration before running a test.
-For instance, for `nocleanup` group we prevent Doctrine2 module from wrapping test into transaction: 
+For instance, for `nocleanup` group we prevent Doctrine2 module from wrapping test into transaction:
 
 ```php
 <?php
@@ -312,8 +312,8 @@ Now the Admin group class will listen for all events of tests that belong to the
 
 ## Custom Reporters
 
-Alternative reporters can be implemented as extension. 
-There are [DotReporter](http://codeception.com/extensions#DotReporter) and [SimpleReporter](http://codeception.com/extensions#SimpleReporter) extensions included. 
+Alternative reporters can be implemented as extension.
+There are [DotReporter](http://codeception.com/extensions#DotReporter) and [SimpleReporter](http://codeception.com/extensions#SimpleReporter) extensions included.
 Use them to change output or use them as an example to build your own reporter. They can be easily enabled with `--ext` option
 
 ```bash
@@ -342,11 +342,11 @@ interface. It is recommended to read the code of the original reporter before ov
 
 ## Installation Templates
 
-Codeception setup can be customized for the needs of your application. 
-If you build a distributable application and you have a personalized configuration you can build an 
+Codeception setup can be customized for the needs of your application.
+If you build a distributable application and you have a personalized configuration you can build an
 Installation template which will help your users to start testing on their projects.
- 
-Codeception has built-in installation templates for 
+
+Codeception has built-in installation templates for
 
 * [Acceptance tests](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Template/Acceptance.php)
 * [Unit tests](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Template/Unit.php)

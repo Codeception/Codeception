@@ -278,42 +278,42 @@ All hooks are defined in [Codeception\Module](http://codeception.com/docs/refere
 <?php
 
     // HOOK: used after configuration is loaded
-    public function _initialize() 
+    public function _initialize()
     {
     }
 
     // HOOK: before each suite
-    public function _beforeSuite($settings = array()) 
+    public function _beforeSuite($settings = array())
     {
     }
 
     // HOOK: after suite
-    public function _afterSuite() 
+    public function _afterSuite()
     {
     }
 
     // HOOK: before each step
-    public function _beforeStep(\Codeception\Step $step) 
+    public function _beforeStep(\Codeception\Step $step)
     {
     }
 
     // HOOK: after each step
-    public function _afterStep(\Codeception\Step $step) 
+    public function _afterStep(\Codeception\Step $step)
     {
     }
 
     // HOOK: before test
-    public function _before(\Codeception\TestInterface $test) 
+    public function _before(\Codeception\TestInterface $test)
     {
     }
 
     // HOOK: after test
-    public function _after(\Codeception\TestInterface $test) 
+    public function _after(\Codeception\TestInterface $test)
     {
     }
 
     // HOOK: on fail
-    public function _failed(\Codeception\TestInterface $test, $fail) 
+    public function _failed(\Codeception\TestInterface $test, $fail)
     {
     }
 ```
@@ -471,7 +471,7 @@ $this->getModule('PhpBrowser')->_reconfigure(array('url' => 'http://localhost/ad
 ```
 
 However, in WebDriver configuration changes can't be applied that easily. For instance, if you change the browser you need to close the current browser session and start a new one.
-For that WebDriver module provides `_restart` method which takes an array with config and restarts the browser. 
+For that WebDriver module provides `_restart` method which takes an array with config and restarts the browser.
 
 ```php
 <?php
@@ -486,12 +486,12 @@ At the end of a test all configuration changes will be rolled back to the origin
 ### Runtime Configuration of a Test
 
 Sometimes it is needed to set custom configuration for a specific test only.
-For [Cest](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes) and [Test\Unit](http://codeception.com/docs/05-UnitTests) 
+For [Cest](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes) and [Test\Unit](http://codeception.com/docs/05-UnitTests)
 formats you can use `@prepare` annotation which can execute the code before other hooks are executed. This allows `@prepare`
 to change the module configuration in runtime. `@prepare` uses [dependency injection](http://codeception.com/docs/07-AdvancedUsage#Dependency-Injection)
 to automatically inject required modules into a method.
 
-To run a specific test only in Chrome browser, you can call `_reconfigure` from WebDriver module for a test itself using `@prepare`. 
+To run a specific test only in Chrome browser, you can call `_reconfigure` from WebDriver module for a test itself using `@prepare`.
 
 ```php
 <?php
@@ -500,7 +500,7 @@ To run a specific test only in Chrome browser, you can call `_reconfigure` from 
  */
 public function chromeSpecificTest()
 {
-    // ...    
+    // ...
 }
 
 protected function useChrome(\Codeception\Module\WebDriver $webdriver)
@@ -513,7 +513,7 @@ protected function useChrome(\Codeception\Module\WebDriver $webdriver)
 Prepare methods can invoke all methods of a module, as well as hidden API methods (starting with `_`). Use them to customize the module setup for a specific test.
 
 To change module configuration for a specific group of tests use [GroupObjects](http://codeception.com/docs/08-Customization#Group-Objects).
- 
+
 ## Conclusion
 
 

@@ -36,7 +36,7 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 ## Actions
 
 ### haveHttpHeader
- 
+
 Sets HTTP header
 
  * `param string` $name
@@ -44,21 +44,21 @@ Sets HTTP header
 
 
 ### seeResponseCodeIs
- 
+
 Checks response code.
 
  * `param` $num
 
 
 ### seeResponseIsXMLRPC
- 
+
 Checks weather last response was valid XMLRPC.
 This is done with xmlrpc_decode function.
 
 
 
 ### sendXMLRPCMethodCall
- 
+
 Sends a XMLRPC method call to remote XMLRPC-server.
 
  * `param string` $methodName

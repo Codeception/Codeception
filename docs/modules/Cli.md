@@ -14,7 +14,7 @@ Wrapper for basic shell commands and shell output
 ## Actions
 
 ### dontSeeInShellOutput
- 
+
 Checks that output from latest command doesn't contain text
 
  * `param` $text
@@ -22,7 +22,7 @@ Checks that output from latest command doesn't contain text
 
 
 ### runShellCommand
- 
+
 Executes a shell command.
 Fails If exit code is > 0. You can disable this by setting second parameter to false
 
@@ -39,14 +39,14 @@ $I->runShellCommand('phpunit', false);
 
 
 ### seeInShellOutput
- 
+
 Checks that output from last executed command contains text
 
  * `param` $text
 
 
 ### seeResultCodeIs
- 
+
 Checks result code
 
 ```php
@@ -58,7 +58,7 @@ $I->seeResultCodeIs(0);
 
 
 ### seeResultCodeIsNot
- 
+
 Checks result code
 
 ```php
@@ -70,7 +70,7 @@ $I->seeResultCodeIsNot(0);
 
 
 ### seeShellOutputMatches
- 
+
  * `param` $regex
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Cli.php">Help us to improve documentation. Edit module reference</a></div>

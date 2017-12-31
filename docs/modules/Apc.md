@@ -26,7 +26,7 @@ Be sure you don't use the production server to connect.
 ## Actions
 
 ### dontSeeInApc
- 
+
 Checks item in APC(u) doesn't exist or is the same as expected.
 
 Examples:
@@ -46,12 +46,12 @@ $I->dontSeeInApc('users_count', 200);
 
 
 ### flushApc
- 
+
 Clears the APC(u) cache
 
 
 ### grabValueFromApc
- 
+
 Grabs value from APC(u) by key.
 
 Example:
@@ -66,7 +66,7 @@ $users_count = $I->grabValueFromApc('users_count');
 
 
 ### haveInApc
- 
+
 Stores an item `$value` with `$key` on the APC(u).
 
 Examples:
@@ -95,7 +95,7 @@ $I->haveInApc($entries, null);
 
 
 ### seeInApc
- 
+
 Checks item in APC(u) exists and the same as expected.
 
 Examples:

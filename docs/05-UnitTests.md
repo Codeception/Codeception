@@ -11,7 +11,7 @@ __To say it again: you don't need to install PHPUnit to run its tests. Codecepti
 
 ## Creating Test
 
-Create a test using `generate:test` command with a suite and test names as parameters: 
+Create a test using `generate:test` command with a suite and test names as parameters:
 
 ```bash
 php codecept generate:test unit Example
@@ -254,7 +254,7 @@ The same can be done for all public properties of an enabled module. Accessible 
 ### Scenario Driven Testing
 
 [Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes) can also be used for integration testing.
-In some cases it makes tests cleaner as it simplifies module access by using common `$I->` syntax: 
+In some cases it makes tests cleaner as it simplifies module access by using common `$I->` syntax:
 
 ```php
 <?php
@@ -268,7 +268,7 @@ public function buildShouldHaveSequence(\UnitTester $I)
     $I->assertEquals(3, $this->project->build_sequence);
 }
 ```
-This format can be recommended for testing domain and database interactions. 
+This format can be recommended for testing domain and database interactions.
 
 ## BDD Specification Testing
 
@@ -318,7 +318,7 @@ By using `specify` codeblocks, you can describe any piece of a test.
 This makes tests much cleaner and comprehensible for everyone in your team.
 
 Code inside `specify` blocks is isolated. In the example above, any changes to `$this->user`
-will not be reflected in other code blocks as it is marked with `@specify` annotation. 
+will not be reflected in other code blocks as it is marked with `@specify` annotation.
 
 Also, you may add [Codeception\Verify](https://github.com/Codeception/Verify) for BDD-style assertions.
 This tiny library adds more readable assertions, which is quite nice, if you are always confused
@@ -331,7 +331,7 @@ verify($user->getName())->equals('john');
 
 ## Domain Assertions
 
-The more complicated your domain is the more explicit your tests should be. With [DomainAssert](https://github.com/Codeception/DomainAssert) 
+The more complicated your domain is the more explicit your tests should be. With [DomainAssert](https://github.com/Codeception/DomainAssert)
 library you can easily create custom assertion methods for unit and integration tests.
 
 It allows to reuse business rules inside assertion methods:
@@ -347,7 +347,7 @@ $this->assertUserIsAdmin($user);
 // use combined explicit assertion
 // to tell what you expect to check
 $this->assertUserCanPostToBlog($user, $blog);
-// instead of just calling a bunch of assertions 
+// instead of just calling a bunch of assertions
 $this->assertNotNull($user);
 $this->assertNotNull($blog);
 $this->assertContain($user, $blog->getOwners());

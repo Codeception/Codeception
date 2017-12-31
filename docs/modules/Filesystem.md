@@ -16,7 +16,7 @@ Module was developed to test Codeception itself.
 ## Actions
 
 ### amInPath
- 
+
 Enters a directory In local filesystem.
 Project root directory is used by default
 
@@ -24,7 +24,7 @@ Project root directory is used by default
 
 
 ### cleanDir
- 
+
 Erases directory contents
 
 ``` php
@@ -37,7 +37,7 @@ $I->cleanDir('logs');
 
 
 ### copyDir
- 
+
 Copies directory with all contents
 
 ``` php
@@ -51,7 +51,7 @@ $I->copyDir('vendor','old_vendor');
 
 
 ### deleteDir
- 
+
 Deletes directory with all subdirectories
 
 ``` php
@@ -64,7 +64,7 @@ $I->deleteDir('vendor');
 
 
 ### deleteFile
- 
+
 Deletes a file
 
 ``` php
@@ -77,12 +77,12 @@ $I->deleteFile('composer.lock');
 
 
 ### deleteThisFile
- 
+
 Deletes a file
 
 
 ### dontSeeFileFound
- 
+
 Checks if file does not exist in path
 
  * `param string` $filename
@@ -90,7 +90,7 @@ Checks if file does not exist in path
 
 
 ### dontSeeInThisFile
- 
+
 Checks If opened file doesn't contain `text` in it
 
 ``` php
@@ -104,7 +104,7 @@ $I->dontSeeInThisFile('codeception/codeception');
 
 
 ### openFile
- 
+
 Opens a file and stores it's content.
 
 Usage:
@@ -120,7 +120,7 @@ $I->seeInThisFile('codeception/codeception');
 
 
 ### seeFileContentsEqual
- 
+
 Checks the strict matching of file contents.
 Unlike `seeInThisFile` will fail if file has something more than expected lines.
 Better to use with HEREDOC strings.
@@ -137,7 +137,7 @@ $I->seeFileContentsEqual('3192');
 
 
 ### seeFileFound
- 
+
 Checks if file exists in path.
 Opens a file when it's exists
 
@@ -152,7 +152,7 @@ $I->seeFileFound('UserModel.php','app/models');
 
 
 ### seeInThisFile
- 
+
 Checks If opened file has `text` in it.
 
 Usage:
@@ -168,7 +168,7 @@ $I->seeInThisFile('codeception/codeception');
 
 
 ### seeNumberNewLines
- 
+
 Checks If opened file has the `number` of new lines.
 
 Usage:
@@ -184,14 +184,14 @@ $I->seeNumberNewLines(5);
 
 
 ### seeThisFileMatches
- 
+
 Checks that contents of currently opened file matches $regex
 
  * `param string` $regex
 
 
 ### writeToFile
- 
+
 Saves contents to file
 
  * `param string` $filename

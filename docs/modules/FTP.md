@@ -88,14 +88,14 @@ This module extends the Filesystem module, file contents methods are inherited f
 ## Actions
 
 ### amInPath
- 
+
 Enters a directory on the ftp system - FTP root directory is used by default
 
  * `param` $path
 
 
 ### cleanDir
- 
+
 Erases directory contents on the FTP/SFTP server
 
 ``` php
@@ -108,7 +108,7 @@ $I->cleanDir('logs');
 
 
 ### copyDir
- 
+
 Currently not supported in this module, overwrite inherited method
 
  * `param` $src
@@ -116,7 +116,7 @@ Currently not supported in this module, overwrite inherited method
 
 
 ### deleteDir
- 
+
 Deletes directory with all subdirectories on the remote FTP/SFTP server
 
 ``` php
@@ -129,7 +129,7 @@ $I->deleteDir('vendor');
 
 
 ### deleteFile
- 
+
 Deletes a file on the remote FTP/SFTP system
 
 ``` php
@@ -142,12 +142,12 @@ $I->deleteFile('composer.lock');
 
 
 ### deleteThisFile
- 
+
 Deletes a file
 
 
 ### dontSeeFileFound
- 
+
 Checks if file does not exist in path on the remote FTP/SFTP system
 
  * `param` $filename
@@ -155,7 +155,7 @@ Checks if file does not exist in path on the remote FTP/SFTP system
 
 
 ### dontSeeFileFoundMatches
- 
+
 Checks if file does not exist in path on the remote FTP/SFTP system, using regular expression as filename.
 DOES NOT OPEN the file when it's exists
 
@@ -164,7 +164,7 @@ DOES NOT OPEN the file when it's exists
 
 
 ### dontSeeInThisFile
- 
+
 Checks If opened file doesn't contain `text` in it
 
 ``` php
@@ -178,7 +178,7 @@ $I->dontSeeInThisFile('codeception/codeception');
 
 
 ### grabDirectory
- 
+
 Grabber method to return current working directory
 
 ```php
@@ -191,7 +191,7 @@ $pwd = $I->grabDirectory();
 
 
 ### grabFileCount
- 
+
 Grabber method for returning file/folders count in directory
 
 ```php
@@ -207,7 +207,7 @@ $count = $I->grabFileCount('TEST', false); // Include . .. .thumbs.db
 
 
 ### grabFileList
- 
+
 Grabber method for returning file/folders listing in an array
 
 ```php
@@ -223,7 +223,7 @@ $count = $I->grabFileList('TEST', false); // Include . .. .thumbs.db
 
 
 ### grabFileModified
- 
+
 Grabber method to return last modified timestamp
 
 ```php
@@ -237,7 +237,7 @@ $time = $I->grabFileModified('test.txt');
 
 
 ### grabFileSize
- 
+
 Grabber method to return file size
 
 ```php
@@ -251,7 +251,7 @@ $size = $I->grabFileSize('test.txt');
 
 
 ### loginAs
- 
+
 Change the logged in user mid-way through your test, this closes the
 current connection to the server and initialises and new connection.
 
@@ -270,7 +270,7 @@ $I->loginAs('user','password');
 
 
 ### makeDir
- 
+
 Create a directory on the server
 
 ``` php
@@ -283,7 +283,7 @@ $I->makeDir('vendor');
 
 
 ### openFile
- 
+
 Opens a file (downloads from the remote FTP/SFTP system to a tmp directory for processing)
 and stores it's content.
 
@@ -300,7 +300,7 @@ $I->seeInThisFile('codeception/codeception');
 
 
 ### renameDir
- 
+
 Rename/Move directory on the FTP/SFTP server
 
 ``` php
@@ -314,7 +314,7 @@ $I->renameDir('vendor', 'vendor_old');
 
 
 ### renameFile
- 
+
 Rename/Move file on the FTP/SFTP server
 
 ``` php
@@ -328,7 +328,7 @@ $I->renameFile('composer.lock', 'composer_old.lock');
 
 
 ### seeFileContentsEqual
- 
+
 Checks the strict matching of file contents.
 Unlike `seeInThisFile` will fail if file has something more than expected lines.
 Better to use with HEREDOC strings.
@@ -345,7 +345,7 @@ $I->seeFileContentsEqual('3192');
 
 
 ### seeFileFound
- 
+
 Checks if file exists in path on the remote FTP/SFTP system.
 DOES NOT OPEN the file when it's exists
 
@@ -360,7 +360,7 @@ $I->seeFileFound('UserModel.php','app/models');
 
 
 ### seeFileFoundMatches
- 
+
 Checks if file exists in path on the remote FTP/SFTP system, using regular expression as filename.
 DOES NOT OPEN the file when it's exists
 
@@ -375,7 +375,7 @@ $I->seeFileFoundMatches('/^UserModel_([0-9]{6}).php$/','app/models');
 
 
 ### seeInThisFile
- 
+
 Checks If opened file has `text` in it.
 
 Usage:
@@ -391,7 +391,7 @@ $I->seeInThisFile('codeception/codeception');
 
 
 ### seeNumberNewLines
- 
+
 Checks If opened file has the `number` of new lines.
 
 Usage:
@@ -407,14 +407,14 @@ $I->seeNumberNewLines(5);
 
 
 ### seeThisFileMatches
- 
+
 Checks that contents of currently opened file matches $regex
 
  * `param string` $regex
 
 
 ### writeToFile
- 
+
 Saves contents to tmp file and uploads the FTP/SFTP system.
 Overwrites current file on server if exists.
 

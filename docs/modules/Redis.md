@@ -39,14 +39,14 @@ to interact with a Redis server.
 ## Actions
 
 ### cleanup
- 
+
 Delete all the keys in the Redis database
 
 @throws ModuleException
 
 
 ### dontSeeInRedis
- 
+
 Asserts that a key does not exist or, optionally, that it doesn't have the
 provided $value
 
@@ -79,7 +79,7 @@ value. Booleans will be converted to 1 and 0 (even inside arrays)
 
 
 ### dontSeeRedisKeyContains
- 
+
 Asserts that a given key does not contain a given item
 
 Examples:
@@ -117,7 +117,7 @@ specified, the method will also check that the $item has this value/score
 
 
 ### grabFromRedis
- 
+
 Returns the value of a given key
 
 Examples:
@@ -159,7 +159,7 @@ $I->grabFromRedis('example:hash', 'foo');
 
 
 ### haveInRedis
- 
+
 Creates or modifies keys
 
 If $key already exists:
@@ -195,7 +195,7 @@ $I->haveInRedis('hash', ['obladi' => 'oblada']);
 
 
 ### seeInRedis
- 
+
 Asserts that a key exists, and optionally that it has the provided $value
 
 Examples:
@@ -227,7 +227,7 @@ value. Booleans will be converted to 1 and 0 (even inside arrays)
 
 
 ### seeRedisKeyContains
- 
+
 Asserts that a given key contains a given item
 
 Examples:
@@ -265,7 +265,7 @@ specified, the method will also check that the $item has this value/score
 
 
 ### sendCommandToRedis
- 
+
 Sends a command directly to the Redis driver. See documentation at
 https://github.com/nrk/predis
 Every argument that follows the $command name will be passed to it.

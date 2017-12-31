@@ -22,7 +22,7 @@ $I->dontSeeResponseCodeIs(HttpCode::NOT_FOUND);
 
 #### getDescription()
 
- *public static* getDescription($code) 
+ *public static* getDescription($code)
 
 Returns string with HTTP code and its description
 

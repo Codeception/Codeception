@@ -39,7 +39,7 @@ To use this module with Composer you need <em>"php-amqplib/php-amqplib": "~2.4"<
 ## Actions
 
 ### bindQueueToExchange
- 
+
 Binds a queue to an exchange
 
 This is an alias of method `queue_bind` of `PhpAmqpLib\Channel\AMQPChannel`.
@@ -63,7 +63,7 @@ $I->bindQueueToExchange(
 
 
 ### declareExchange
- 
+
 Declares an exchange
 
 This is an alias of method `exchange_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
@@ -89,7 +89,7 @@ $I->declareExchange(
 
 
 ### declareQueue
- 
+
 Declares queue, creates if needed
 
 This is an alias of method `queue_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
@@ -113,7 +113,7 @@ $I->declareQueue(
 
 
 ### grabMessageFromQueue
- 
+
 Takes last message from queue.
 
 ``` php
@@ -127,7 +127,7 @@ $message = $I->grabMessageFromQueue('queue.emails');
 
 
 ### purgeAllQueues
- 
+
 Purge all queues defined in config.
 
 ``` php
@@ -138,7 +138,7 @@ $I->purgeAllQueues();
 
 
 ### purgeQueue
- 
+
 Purge a specific queue defined in config.
 
 ``` php
@@ -151,7 +151,7 @@ $I->purgeQueue('queue.emails');
 
 
 ### pushToExchange
- 
+
 Sends message to exchange by sending exchange name, message
 and (optionally) a routing key
 
@@ -169,7 +169,7 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'), 'severity');
 
 
 ### pushToQueue
- 
+
 Sends message to queue
 
 ``` php
@@ -184,7 +184,7 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
 
 
 ### seeMessageInQueueContainsText
- 
+
 Checks if message containing text received.
 
 **This method drops message from queue**

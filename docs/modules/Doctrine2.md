@@ -47,7 +47,7 @@ tests will run much faster and will be isolated from each other.
 ## Actions
 
 ### dontSeeInRepository
- 
+
 Flushes changes to database and performs `findOneBy()` call for current repository.
 
  * `param` $entity
@@ -55,12 +55,12 @@ Flushes changes to database and performs `findOneBy()` call for current reposito
 
 
 ### flushToDatabase
- 
+
 Performs $em->flush();
 
 
 ### grabEntitiesFromRepository
- 
+
 Selects entities from repository.
 It builds query based on array of parameters.
 You can use entity associations to build complex queries.
@@ -80,7 +80,7 @@ $users = $I->grabEntitiesFromRepository('AppBundle:User', array('name' => 'daver
 
 
 ### grabEntityFromRepository
- 
+
 Selects a single entity from repository.
 It builds query based on array of parameters.
 You can use entity associations to build complex queries.
@@ -100,7 +100,7 @@ $user = $I->grabEntityFromRepository('User', array('id' => '1234'));
 
 
 ### grabFromRepository
- 
+
 Selects field value from repository.
 It builds query based on array of parameters.
 You can use entity associations to build complex queries.
@@ -121,7 +121,7 @@ $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
 
 
 ### haveFakeRepository
- 
+
 Mocks the repository.
 
 With this action you can redefine any method of any repository.
@@ -144,7 +144,7 @@ which will always return the NULL value.
 
 
 ### haveInRepository
- 
+
 Persists record into repository.
 This method crates an entity, and sets its properties directly (via reflection).
 Setters of entity won't be executed, but you can create almost any entity and save it to database.
@@ -156,7 +156,7 @@ $I->haveInRepository('Entity\User', array('name' => 'davert'));
 
 
 ### persistEntity
- 
+
 Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
 
 Example:
@@ -172,7 +172,7 @@ $I->persistEntity($user, array('name' => 'Miles'));
 
 
 ### seeInRepository
- 
+
 Flushes changes to database, and executes a query with parameters defined in an array.
 You can use entity associations to build complex queries.
 

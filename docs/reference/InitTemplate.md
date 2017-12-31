@@ -25,19 +25,19 @@ This class provides various helper methods for building customized setup
 
 #### __construct()
 
- *public* __construct($input, $output) 
+ *public* __construct($input, $output)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/InitTemplate.php#L65)
 
 #### addStyles()
 
- *public* addStyles($output) 
+ *public* addStyles($output)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Command/Shared/Style.php#L9)
 
 #### ask()
 
- *protected* ask($question, $answer = null) 
+ *protected* ask($question, $answer = null)
 
 ```php
 <?php
@@ -59,25 +59,25 @@ $this->ask('do you want to proceed (y/n)', true);
 
 #### breakParts()
 
- *protected* breakParts($class) 
+ *protected* breakParts($class)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Namespaces.php#L6)
 
 #### checkInstalled()
 
- *protected* checkInstalled($dir = null) 
+ *protected* checkInstalled($dir = null)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/InitTemplate.php#L208)
 
 #### completeSuffix()
 
- *protected* completeSuffix($filename, $suffix) 
+ *protected* completeSuffix($filename, $suffix)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Command/Shared/FileSystem.php#L25)
 
 #### createActor()
 
- *protected* createActor($name, $directory, $suiteConfig) 
+ *protected* createActor($name, $directory, $suiteConfig)
 
 Create an Actor class and generate actions for it.
 Requires a suite config as array in 3rd parameter.
@@ -90,13 +90,13 @@ Requires a suite config as array in 3rd parameter.
 
 #### createDirectoryFor()
 
- *protected* createDirectoryFor($basePath, $className = null) 
+ *protected* createDirectoryFor($basePath, $className = null)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Command/Shared/FileSystem.php#L10)
 
 #### createEmptyDirectory()
 
- *protected* createEmptyDirectory($dir) 
+ *protected* createEmptyDirectory($dir)
 
 Create an empty directory and add a placeholder file into it
  * `param` $dir
@@ -105,13 +105,13 @@ Create an empty directory and add a placeholder file into it
 
 #### createFile()
 
- *protected* createFile($filename, $contents, $force = null, $flags = null) 
+ *protected* createFile($filename, $contents, $force = null, $flags = null)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Command/Shared/FileSystem.php#L46)
 
 #### createHelper()
 
- *protected* createHelper($name, $directory) 
+ *protected* createHelper($name, $directory)
 
 Create a helper class inside a directory
 
@@ -122,37 +122,37 @@ Create a helper class inside a directory
 
 #### getNamespaceHeader()
 
- *protected* getNamespaceHeader($class) 
+ *protected* getNamespaceHeader($class)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Namespaces.php#L31)
 
 #### getNamespaceString()
 
- *protected* getNamespaceString($class) 
+ *protected* getNamespaceString($class)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Namespaces.php#L25)
 
 #### getNamespaces()
 
- *protected* getNamespaces($class) 
+ *protected* getNamespaces($class)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Namespaces.php#L40)
 
 #### getShortClassName()
 
- *protected* getShortClassName($class) 
+ *protected* getShortClassName($class)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Namespaces.php#L19)
 
 #### gitIgnore()
 
- *protected* gitIgnore($path) 
+ *protected* gitIgnore($path)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/InitTemplate.php#L201)
 
 #### initDir()
 
- *public* initDir($workDir) 
+ *public* initDir($workDir)
 
 Change the directory where Codeception should be installed.
 
@@ -160,13 +160,13 @@ Change the directory where Codeception should be installed.
 
 #### removeSuffix()
 
- *protected* removeSuffix($classname, $suffix) 
+ *protected* removeSuffix($classname, $suffix)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Command/Shared/FileSystem.php#L40)
 
 #### say()
 
- *protected* say($message = null) 
+ *protected* say($message = null)
 
 Print a message to console.
 
@@ -182,7 +182,7 @@ $this->say('Welcome to Setup');
 
 #### sayInfo()
 
- *protected* sayInfo($message) 
+ *protected* sayInfo($message)
 
 Print info message
  * `param` $message
@@ -191,7 +191,7 @@ Print info message
 
 #### saySuccess()
 
- *protected* saySuccess($message) 
+ *protected* saySuccess($message)
 
 Print a successful message
  * `param` $message
@@ -200,7 +200,7 @@ Print a successful message
 
 #### sayWarning()
 
- *protected* sayWarning($message) 
+ *protected* sayWarning($message)
 
 Print warning message
  * `param` $message
@@ -209,7 +209,7 @@ Print warning message
 
 #### setup()
 
- *abstract public* setup() 
+ *abstract public* setup()
 
 Override this class to create customized setup.
  * `return` mixed

@@ -175,7 +175,7 @@ SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` LIKE 'davert%'
 ## Actions
 
 ### dontSeeInDatabase
- 
+
 Effect is opposite to ->seeInDatabase
 
 Asserts that there is no record with the given column values in a database.
@@ -202,7 +202,7 @@ Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
 
 
 ### grabColumnFromDatabase
- 
+
 Fetches all values from the column in database.
 Provide table name, desired column and criteria.
 
@@ -219,7 +219,7 @@ $mails = $I->grabColumnFromDatabase('users', 'email', array('name' => 'RebOOter'
 
 
 ### grabFromDatabase
- 
+
 Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
@@ -244,7 +244,7 @@ Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
 
 
 ### grabNumRecords
- 
+
 Returns the number of rows in a database
 
  * `param string` $table    Table name
@@ -254,7 +254,7 @@ Returns the number of rows in a database
 
 
 ### haveInDatabase
- 
+
 Inserts an SQL record into a database. This record will be erased after the test.
 
 ```php
@@ -274,7 +274,7 @@ __not documented__
 
 
 ### seeInDatabase
- 
+
 Asserts that a row with the given column values exists.
 Provide table name and column values.
 
@@ -300,7 +300,7 @@ Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
 
 
 ### seeNumRecords
- 
+
 Asserts that the given number of records were found in the database.
 
 ```php
@@ -315,7 +315,7 @@ $I->seeNumRecords(1, 'users', ['name' => 'davert'])
 
 
 ### updateInDatabase
- 
+
 Update an SQL record into a database.
 
 ```php

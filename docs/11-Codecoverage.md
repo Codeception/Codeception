@@ -21,7 +21,7 @@ coverage:
     enabled: true
 ```
 
-That's ok for now. But what files should be present in final coverage report? 
+That's ok for now. But what files should be present in final coverage report?
 Pass an array of files or directory to include/exclude sections. The path ending with '\*' matches the directory.
 Also you can use '\*' mask in a file name, i.e. `app/models/*Model.php` to match all models.
 
@@ -39,13 +39,13 @@ Include and exclude options can be redefined for each suite in corresponding con
 
 By default, if coverage is reported to be < 35% it is marked as low, and >70% is high coverage.
 You can also define high and low boundaries with `low_limit` and `high_limit` config options:
- 
+
 ```yaml
 coverage:
     enabled: true
     low_limit: 30
     high_limit: 60
-``` 
+```
 
 
 ## Local CodeCoverage
@@ -110,7 +110,7 @@ In this case remote Code Coverage results won't be merged with local ones, if th
 Merging is possible only in case a remote and local files have the same path.
 But in case of running tests on a remote server we are not sure of it.
 
-CodeCoverage results from remote server will be saved to `tests/_output` directory. Please note that remote codecoverage results won't be displayed in console by the reason mentioned above: local and remote results can't be merged, and console displays results for local codecoverage. 
+CodeCoverage results from remote server will be saved to `tests/_output` directory. Please note that remote codecoverage results won't be displayed in console by the reason mentioned above: local and remote results can't be merged, and console displays results for local codecoverage.
 
 ### Remote Context Options
 

@@ -36,12 +36,12 @@ Be sure you don't use the production server to connect.
 ## Actions
 
 ### clearMemcache
- 
+
 Flushes all Memcached data.
 
 
 ### dontSeeInMemcached
- 
+
 Checks item in Memcached doesn't exist or is the same as expected.
 
 Examples:
@@ -61,7 +61,7 @@ $I->dontSeeInMemcached('users_count', 200);
 
 
 ### grabValueFromMemcached
- 
+
 Grabs value from memcached by key.
 
 Example:
@@ -77,7 +77,7 @@ $users_count = $I->grabValueFromMemcached('users_count');
 
 
 ### haveInMemcached
- 
+
 Stores an item `$value` with `$key` on the Memcached server.
 
  * `param string` $key
@@ -86,7 +86,7 @@ Stores an item `$value` with `$key` on the Memcached server.
 
 
 ### seeInMemcached
- 
+
 Checks item in Memcached exists and the same as expected.
 
 Examples:

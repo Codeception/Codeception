@@ -76,35 +76,35 @@ $I->see('Welcome, ' . $fbUserFirstName);
 ## Actions
 
 ### grabFacebookTestUserAccessToken
- 
+
 Returns the test user access token.
 
  * `return` string
 
 
 ### grabFacebookTestUserEmail
- 
+
 Returns the test user email.
 
  * `return` string
 
 
 ### grabFacebookTestUserId
- 
+
 Returns the test user id.
 
  * `return` string
 
 
 ### grabFacebookTestUserLoginUrl
- 
+
 Returns URL for test user auto-login.
 
  * `return` string
 
 
 ### grabFacebookTestUserName
- 
+
 Returns the test user name.
 
  * `return` string
@@ -115,7 +115,7 @@ __not documented__
 
 
 ### haveFacebookTestUserAccount
- 
+
 Get facebook test user be created.
 
 *Please, note that the test user is created only at first invoke, unless $renew arguments is true.*
@@ -124,7 +124,7 @@ Get facebook test user be created.
 
 
 ### haveTestUserLoggedInOnFacebook
- 
+
 Get facebook test user be logged in on facebook.
 This is done by going to facebook.com
 
@@ -132,14 +132,14 @@ This is done by going to facebook.com
 
 
 ### postToFacebookAsTestUser
- 
+
 Please, note that you must have publish_actions permission to be able to publish to user's feed.
 
  * `param array` $params
 
 
 ### seePostOnFacebookWithAttachedPlace
- 
+
 
 Please, note that you must have publish_actions permission to be able to publish to user's feed.
 
@@ -147,7 +147,7 @@ Please, note that you must have publish_actions permission to be able to publish
 
 
 ### seePostOnFacebookWithMessage
- 
+
 
 Please, note that you must have publish_actions permission to be able to publish to user's feed.
 

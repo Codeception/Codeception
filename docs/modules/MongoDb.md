@@ -45,7 +45,7 @@ HINT: This module can be used with [Mongofill](https://github.com/mongofill/mong
 ## Actions
 
 ### dontSeeInCollection
- 
+
 Checks if collection doesn't contain an item.
 
 ``` php
@@ -58,7 +58,7 @@ $I->dontSeeInCollection('users', array('name' => 'miles'));
 
 
 ### grabCollectionCount
- 
+
 Grabs the documents count from a collection
 
 ``` php
@@ -74,7 +74,7 @@ $count = $I->grabCollectionCount('users', array('isAdmin' => true));
 
 
 ### grabFromCollection
- 
+
 Grabs a data from collection
 
 ``` php
@@ -88,7 +88,7 @@ $user = $I->grabFromCollection('users', array('name' => 'miles'));
 
 
 ### haveInCollection
- 
+
 Inserts data into collection
 
 ``` php
@@ -102,7 +102,7 @@ $user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
 
 
 ### seeElementIsArray
- 
+
 Asserts that an element in a collection exists and is an Array
 
 ``` php
@@ -116,7 +116,7 @@ $I->seeElementIsArray('users', array('name' => 'John Doe') , 'data.skills');
 
 
 ### seeElementIsObject
- 
+
 Asserts that an element in a collection exists and is an Object
 
 ``` php
@@ -130,7 +130,7 @@ $I->seeElementIsObject('users', array('name' => 'John Doe') , 'data');
 
 
 ### seeInCollection
- 
+
 Checks if collection contains an item.
 
 ``` php
@@ -143,7 +143,7 @@ $I->seeInCollection('users', array('name' => 'miles'));
 
 
 ### seeNumElementsInCollection
- 
+
 Count number of records in a collection
 
 ``` php
@@ -158,7 +158,7 @@ $I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
 
 
 ### useDatabase
- 
+
 Specify the database to use
 
 ``` php
