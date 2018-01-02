@@ -25,7 +25,6 @@ The core principles:
 
 1. Public methods of modules are actions of an actor inside a test. That's why they should be named in proper format:
 
-
 ```
 doSomeStuff() => $I->doSomeStuff() => I do some stuff
 doSomeStuffWith($a, $b) => $I->doSomeStuffWith("vodka", "gin"); => I do some stuff with "vodka", "gin"
@@ -57,7 +56,6 @@ protected $requiredFields = ['url'];
 ```
 
 You should not perform validation if `url` was set. Module would perform it for you, so you could access `$this->config['url']` inside a module.
-
 
 3. If you use low-level clients in your module (PDO driver, framework client, selenium client) you should allow developers to access them. That's why you should define their instances as `public` properties of method.
 

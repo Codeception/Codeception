@@ -17,7 +17,6 @@ Powered by PHPUnit.
 | ------- | -------- | -------- | -------- | -------- |
 | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.3)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.3) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/master/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) | [ ![Facebook Status for Codeception/Codeception](https://codeship.com/projects/e4bc90d0-1ed5-0134-566c-1ed679ae6c9d/status?branch=2.3)](https://codeship.com/projects/160201) | [![wercker status](https://app.wercker.com/status/b4eecd0596bedb65333ff7ab7836bc7f/s/ "wercker status")](https://app.wercker.com/project/byKey/b4eecd0596bedb65333ff7ab7836bc7f) |
 
-
 #### Contributions
 
 At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/2.0/CONTRIBUTING.md).
@@ -75,7 +74,6 @@ sudo mv codecept.phar /usr/local/bin/codecept
 ```
 
 You can then run Codecept in the command line using: `codecept bootstrap`, `codecept run`, etc
-
 
 Run CLI utility:
 

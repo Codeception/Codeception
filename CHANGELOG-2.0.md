@@ -83,7 +83,6 @@
 * [PhpBrowser] added deleteHeader method by @zbateson *2015-04-03*
 * Disabling loading of bootstrap files by setting `bootstrap: false` in globall settings or inside suite config. Fixes #1813 *2015-04-03*
 
-
 #### 2.0.11
 
 * Updated to PHPUnit 4.5 *2015-02-23*
@@ -106,11 +105,9 @@ Modifications to ensure multiple values get sent correctly.
 * [PhpBrowser][Frameworks] Fix quiet crash when crawler is null by @aivus. See #1714 *2015-02-23*
 * [Yii2] Fixed usage of PUT method by @miroslav-chandler *2015-02-23*
 
-
 #### 2.1.0
 
 * [WebDriver] Saving and restoring session snapshots implemented *2015-03-16*
-
 
 #### 2.0.10
 
@@ -138,7 +135,6 @@ Modifications to ensure multiple values get sent correctly.
 * [PhpBrowser][Frameworks] Fix double slashes in certain forms submitted by `submitForm` by @Revisor. See #1625
 * [Facebook] `grabFacebookTestUserId` method added by @ipalaus
 * Always eval error level settings passed from config file.
-
 
 #### 2.0.9
 
@@ -183,7 +179,6 @@ It converts JSON structure into valid XML document and executes XPath for it.
 * [REST] `grabDataFromJsonResponse` deprecated in favor of `grabDataFromResponseByJsonPath` *2014-12-19*
 * [PhpBrowser][Frameworks] fixed `Unreachable field` error while filling [] fields in input and textarea fields. Issues #1585 #1602 *2014-12-18*
 
-
 #### 2.0.8
 
 * Dependencies updated: facebook/php-webdriver 0.5.x and guzzle 5 *2014-11-17*
@@ -204,7 +199,6 @@ It converts JSON structure into valid XML document and executes XPath for it.
 * [PhpBrowser][Frameworks] submitForm sends default values for radio buttons and checkboxes by @zbateson. Fixes #1507 *2014-11-3*
 * [ZF2] Close any open ZF2 sessions by @FnTm. See #1486 *2014-10-24*
 
-
 #### 2.0.7
 
 * [Db] Made the postgresql loader load $$ syntax correctly by @rtuin. See #1450 *2014-10-12*
@@ -212,7 +206,6 @@ It converts JSON structure into valid XML document and executes XPath for it.
 * [PhpBrowser][WebDriver] amOnUrl method added for opening absolute urls. This behavior taken from amOnPage method, initially introduced in 2.0.6 *2014-10-12*
 * Fixed usage of whitespaces in wantTo. See #1456 *2014-10-12*
 * [WebDriver][PhpBrowser][Frameworks] fillField is matching element by name, then by CSS. Fixes #1454 *2014-10-12*
-
 
 #### 2.0.6
 
@@ -247,7 +240,6 @@ settings:
 * [WebDriver] Don't check for xpath if css selector is set, by @Danielss89 #1367 *2014-09-27*
 * Specify actor class for friends by @tomykaira. See #1394 *2014-09-27*
 
-
 #### 2.0.5
 
 * [Queue] module added with AWS, Iron.io, and Beanstalkd support. Thanks to @nathanmac *2014-08-21*
@@ -260,7 +252,6 @@ settings:
 * [WebDriver][PhpBrowser][Frameworks] seeNumberOfElements method added by @dynasource *2014-08-21*
 * recursive runner for included suites by @dynasource *2014-08-21*
 * Disabled skipped/incomplete tests logging in jUnit logger for smooth Bamboo integration by @ayastreb *2014-08-21*
-
 
 #### 2.0.4
 
@@ -329,19 +320,16 @@ settings:
 * Bootstrap command got 3 installation modes: default, compat, setup
 * added --coverage-text option
 
-
 #### 2.0.0-RC2
 
 * removed fabpot/goutte, added Guzzle4 connector
 * group configuration can accept groups by patterns
-
 
 #### 2.0.0-RC
 
 * [WebDriver] makeScreenshot does not use filename of a test
 * added `grabAttributeFrom`
 * seeElement to accept attributes in second parameter: seeElement('input',['name'=>'login'])
-
 
 #### 2.0.0-beta
 

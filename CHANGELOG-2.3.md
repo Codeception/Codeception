@@ -149,4 +149,3 @@ codecept run --ext DotReporter
 * Configuration changes: `actor` replaced with `actor_suffix` in global config
 * Configuration changes: `class_name` replaced with `actor` in suite config
 
-

@@ -104,7 +104,6 @@ protected function shouldFail()
     $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
 }
 
-
 public function testAppendFieldRadioButtonByValueFails()
 {
     $this->shouldFail();
@@ -208,7 +207,6 @@ In parallel
     docker-compose --project-name test-cli run -d --rm codecept run --html report-cli.html cli & \
     docker-compose --project-name test-unit-command run -d --rm codecept run --html report-unit-command.html unit Codeception/Command & \
     docker-compose --project-name test-unit-constraints run -d --rm codecept run --html report-unit-constraints.html unit Codeception/Constraints
-
 
 ### Adding services
 
