@@ -114,7 +114,7 @@ class RoboFile extends \Robo\Tasks
             ->test('tests/web/WebDriverTest.php'.$test)
             ->args($args)
             ->run();
-        
+
         $this->taskDockerStop($container)->run();
     }
 
@@ -264,7 +264,7 @@ class RoboFile extends \Robo\Tasks
             ->addFile('shim.php', 'shim.php')
             ->addFile('phpunit5-loggers.php', 'phpunit5-loggers.php')
             ->run();
-        
+
         $code = $this->taskExec('php ' . $pharFileName)->run()->getExitCode();
         if ($code !== 0) {
             throw new Exception("There was problem compiling phar");
@@ -302,7 +302,7 @@ class RoboFile extends \Robo\Tasks
                 ->append('<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a></div>')
                 ->processClassSignature(false)
                 ->processClassDocBlock(function (\ReflectionClass $c, $text) {
-                    return "$text\n\n## Actions";
+                    return "$text\n## Actions";
                 })->processProperty(false)
                 ->filterMethods(function (\ReflectionMethod $method) use ($className) {
                     if ($method->isConstructor() or $method->isDestructor()) {
@@ -344,7 +344,8 @@ class RoboFile extends \Robo\Tasks
                     $text = str_replace("@return mixed\n", '', $text);
                     $text = preg_replace('~@return (.*?)~', ' * `return` $1', $text);
                     $text = preg_replace("~^@(.*?)([$\s])~", ' * `$1` $2', $text);
-                    return $title . $text;
+                    $result = $title . $text;
+                    return preg_replace('/\n(\s*\n){2,}/', "\n\n", $result);
                 })->processMethodSignature(false)
                 ->reorderMethods('ksort')
                 ->run();
@@ -471,7 +472,7 @@ class RoboFile extends \Robo\Tasks
         foreach ($releases as $release) {
             $releaseName = $release->getBasename();
             $downloadUrl = "http://codeception.com/releases/$releaseName/codecept.phar";
-            
+
             list($major, $minor) = explode('.', $releaseName);
             if ("$major.$minor" != $branch) {
                 $branch = "$major.$minor";
@@ -919,7 +920,7 @@ class RoboFile extends \Robo\Tasks
                 function (ReflectionMethod $r, $text) use ($file) {
                     $file = str_replace(__DIR__, '', $r->getFileName());
                     $source = self::REPO_BLOB_URL."/".self::STABLE_BRANCH. $file;
-                    
+
                     $line = $r->getStartLine();
                     $text = preg_replace("~^\s?@(.*?)\s~m", ' * `$1` $2', $text);
                     $text .= "\n[See source]($source#L$line)";
