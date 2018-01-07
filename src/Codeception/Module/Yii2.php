@@ -584,7 +584,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Returns array of all sent email messages.
-     * Each message implements `yii\mail\Message` interface.
+     * Each message implements `yii\mail\MessageInterface` interface.
      * Useful to perform additional checks using `Asserts` module:
      *
      * ```php
