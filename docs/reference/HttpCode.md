@@ -1,8 +1,6 @@
 
 ## Codeception\Util\HttpCode
 
-
-
 Class containing constants of HTTP Status Codes
 and method to print HTTP code with its description.
 
@@ -17,12 +15,9 @@ $I->seeResponseCodeIs(HttpCode::OK);
 $I->dontSeeResponseCodeIs(HttpCode::NOT_FOUND);
 ```
 
-
-
-
 #### getDescription()
 
- *public static* getDescription($code) 
+ *public static* getDescription($code)
 
 Returns string with HTTP code and its description
 

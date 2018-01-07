@@ -62,7 +62,6 @@ try to generate them manually with the `build` command:
 php codecept build
 ```
 
-
 ## Writing a Sample Scenario
 
 By default tests are written as narrative scenarios. To make a PHP file a valid scenario, its name should have a `Cept` suffix.
@@ -341,7 +340,6 @@ There are plenty of useful Codeception commands:
 * `generate:stepobject` *suite* *filename* - Generates a sample Step object
 * `generate:environment` *env* - Generates a sample Environment configuration
 * `generate:groupobject` *group* - Generates a sample Group Extension
-
 
 ## Conclusion
 

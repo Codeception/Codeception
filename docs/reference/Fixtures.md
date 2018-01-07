@@ -1,8 +1,6 @@
 
 ## Codeception\Util\Fixtures
 
-
-
 Really basic class to store data in global array and use it in Cests/Tests.
 
 ```php
@@ -14,29 +12,27 @@ Fixtures::exists('user1');
 ?>
 ```
 
-
-
 #### add()
 
- *public static* add($name, $data) 
+ *public static* add($name, $data)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Fixtures.php#L21)
 
 #### cleanup()
 
- *public static* cleanup() 
+ *public static* cleanup()
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Fixtures.php#L35)
 
 #### exists()
 
- *public static* exists($name) 
+ *public static* exists($name)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Fixtures.php#L40)
 
 #### get()
 
- *public static* get($name) 
+ *public static* get($name)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Fixtures.php#L26)
 

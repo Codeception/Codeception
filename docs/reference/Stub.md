@@ -1,16 +1,12 @@
 
 ## Codeception\Util\Stub
 
-
-
-
-
 #### $magicMethods
 
 *public static* **$magicMethods**
 #### atLeastOnce()
 
- *public static* atLeastOnce($params = null) 
+ *public static* atLeastOnce($params = null)
 
 Checks if a method has been invoked at least one
 time.
@@ -38,7 +34,7 @@ $user->getName();
 
 #### bindParameters()
 
- *protected static* bindParameters($mock, $params) 
+ *protected static* bindParameters($mock, $params)
 
  * `param \PHPUnit_Framework_MockObject_MockObject` $mock
  * `param array` $params
@@ -47,13 +43,13 @@ $user->getName();
 
 #### closureIfNull()
 
- *private static* closureIfNull($params) 
+ *private static* closureIfNull($params)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L740)
 
 #### consecutive()
 
- *public static* consecutive() 
+ *public static* consecutive()
 
 Stubbing a method call to return a list of values in the specified order.
 
@@ -72,7 +68,7 @@ $user->getName(); //amy
 
 #### construct()
 
- *public static* construct($class, $constructorParams = null, $params = null, $testCase = null) 
+ *public static* construct($class, $constructorParams = null, $params = null, $testCase = null)
 
 Instantiates a class instance by running constructor.
 Parameters for constructor passed as second argument
@@ -114,7 +110,7 @@ Stub::construct('User', array(), array('save' => true));
 
 #### constructEmpty()
 
- *public static* constructEmpty($class, $constructorParams = null, $params = null, $testCase = null) 
+ *public static* constructEmpty($class, $constructorParams = null, $params = null, $testCase = null)
 
 Instantiates a class instance by running constructor with all methods replaced with dummies.
 Parameters for constructor passed as second argument
@@ -156,7 +152,7 @@ Stub::constructEmpty('User', array(), array('save' => true));
 
 #### constructEmptyExcept()
 
- *public static* constructEmptyExcept($class, $method, $constructorParams = null, $params = null, $testCase = null) 
+ *public static* constructEmptyExcept($class, $method, $constructorParams = null, $params = null, $testCase = null)
 
 Instantiates a class instance by running constructor with all methods replaced with dummies, except one.
 Parameters for constructor passed as second argument
@@ -199,7 +195,7 @@ Stub::constructEmptyExcept('User', 'save', array(), array('save' => true));
 
 #### copy()
 
- *public static* copy($obj, $params = null) 
+ *public static* copy($obj, $params = null)
 
 Clones an object and redefines it's properties (even protected and private)
 
@@ -211,13 +207,13 @@ Clones an object and redefines it's properties (even protected and private)
 
 #### doGenerateMock()
 
- *private static* doGenerateMock($args, $isAbstract = null) 
+ *private static* doGenerateMock($args, $isAbstract = null)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L459)
 
 #### exactly()
 
- *public static* exactly($count, $params = null) 
+ *public static* exactly($count, $params = null)
 
 Checks if a method has been invoked a certain amount
 of times.
@@ -249,13 +245,13 @@ $user->getName();
 
 #### extractTestCaseFromArgs()
 
- *private static* extractTestCaseFromArgs($args) 
+ *private static* extractTestCaseFromArgs($args)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L481)
 
 #### factory()
 
- *public static* factory($class, $num = null, $params = null) 
+ *public static* factory($class, $num = null, $params = null)
 
 Creates $num instances of class through `Stub::make`.
 
@@ -268,13 +264,13 @@ Creates $num instances of class through `Stub::make`.
 
 #### generateMock()
 
- *private static* generateMock() 
+ *private static* generateMock()
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L431)
 
 #### generateMockForAbstractClass()
 
- *private static* generateMockForAbstractClass() 
+ *private static* generateMockForAbstractClass()
 
 Returns a mock object for the specified abstract class with all abstract
 methods of the class mocked. Concrete methods to mock can be specified with
@@ -296,14 +292,14 @@ the last parameter
 
 #### getClassname()
 
- *protected static* getClassname($object) 
+ *protected static* getClassname($object)
  * `todo` should be simplified
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Stub.php#L584)
 
 #### getMethodsToReplace()
 
- *protected static* getMethodsToReplace($reflection, $params) 
+ *protected static* getMethodsToReplace($reflection, $params)
 
  * `param \ReflectionClass` $reflection
  * `param` $params
@@ -313,7 +309,7 @@ the last parameter
 
 #### make()
 
- *public static* make($class, $params = null, $testCase = null) 
+ *public static* make($class, $params = null, $testCase = null)
 
 Instantiates a class without executing a constructor.
 Properties and methods can be set as a second parameter.
@@ -354,7 +350,7 @@ Stub::make('User', array('save' => true));
 
 #### makeEmpty()
 
- *public static* makeEmpty($class, $params = null, $testCase = null) 
+ *public static* makeEmpty($class, $params = null, $testCase = null)
 
 Instantiates class having all methods replaced with dummies.
 Constructor is not triggered.
@@ -395,7 +391,7 @@ Stub::makeEmpty('User', array('save' => true));
 
 #### makeEmptyExcept()
 
- *public static* makeEmptyExcept($class, $method, $params = null, $testCase = null) 
+ *public static* makeEmptyExcept($class, $method, $params = null, $testCase = null)
 
 Instantiates class having all methods replaced with dummies except one.
 Constructor is not triggered.
@@ -437,7 +433,7 @@ Stub::makeEmptyExcept('User', 'save', array('isValid' => true));
 
 #### markAsMock()
 
- *private static* markAsMock($mock, $reflection) 
+ *private static* markAsMock($mock, $reflection)
 
 Set __mock flag, if at all possible
 
@@ -449,7 +445,7 @@ Set __mock flag, if at all possible
 
 #### never()
 
- *public static* never($params = null) 
+ *public static* never($params = null)
 
 Checks if a method never has been invoked
 
@@ -470,7 +466,7 @@ $user->someMethod();
 
 #### once()
 
- *public static* once($params = null) 
+ *public static* once($params = null)
 
 Checks if a method has been invoked exactly one
 time.
@@ -499,7 +495,7 @@ $this->assertEquals('Davert', $userName);
 
 #### update()
 
- *public static* update($mock, array $params) 
+ *public static* update($mock, array $params)
 
 Replaces properties of current stub
 
