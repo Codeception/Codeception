@@ -297,7 +297,7 @@ public function parallelRun()
     for ($i = 1; $i <= 5; $i++) {            
         $parallel->process(
             $this->taskExec('docker-compose run --rm codecept run')
-                ->opt('group', "p$i") // run for groups p*
+                ->opt('group', "paracept_$i") // run for groups paracept_*
                 ->opt('xml', "tests/_log/result_$i.xml"); // provide xml report
         );
     }
@@ -318,7 +318,7 @@ public function parallelRun()
         $parallel->process(
             $this->taskCodecept() // use built-in Codecept task
             ->suite('acceptance') // run acceptance tests
-            ->group("p$i")        // for all p* groups
+            ->group("paracept_$i") // for all paracept_* groups
             ->xml("tests/_log/result_$i.xml") // save XML results
         );
     }
