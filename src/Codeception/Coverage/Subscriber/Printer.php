@@ -80,6 +80,10 @@ class Printer implements EventSubscriberInterface
             $this->printCrap4j();
             $printer->write("Crap4j report generated in {$this->options['coverage-crap4j']}\n");
         }
+        if ($this->options['coverage-phpunit']) {
+            $this->printPHPUnit();
+            $printer->write("PHPUnit report generated in {$this->options['coverage-phpunit']}\n");
+        }
     }
 
     protected function printConsole(\PHPUnit_Util_Printer $printer)
@@ -137,5 +141,11 @@ class Printer implements EventSubscriberInterface
     {
         $writer = new \PHP_CodeCoverage_Report_Crap4j;
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-crap4j']));
+    }
+
+    protected function printPHPUnit()
+    {
+        $writer = new \PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
+        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-phpunit']));
     }
 }
