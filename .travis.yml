@@ -69,7 +69,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-l5 $composer_parameters'
   # Lumen
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.2 https://github.com/janhenkgerritsen/codeception-lumen-sample.git frameworks-lumen'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git frameworks-lumen'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-lumen $composer_parameters'
   # Symfony
   - '[[ "${SYMFONY:-4.0.0}" > "3.0.0" ]] || (git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 2 site")'

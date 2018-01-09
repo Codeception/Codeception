@@ -42,8 +42,6 @@
         "codeception/specify": "~0.3",
         "pda/pheanstalk": "~3.0",
         "flow/jsonpath": "~0.2",
-        "league/factory-muffin": "^3.0",
-        "league/factory-muffin-faker": "^1.0",
         "predis/predis": "^1.0",
         "squizlabs/php_codesniffer": "~2.0",
         "vlucas/phpdotenv": "^2.4.0",
