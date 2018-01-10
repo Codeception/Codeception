@@ -316,7 +316,10 @@ class Run extends Command
                             continue;
                         }
                     } else {
-                        list(, $suite, $test) = $this->matchSingleTest($suite, $config);
+                        $result = $this->matchSingleTest($suite, $config);
+                        if ($result) {
+                            list(, $suite, $test) = $result;
+                        }
                     }
                 }
 
@@ -325,7 +328,10 @@ class Run extends Command
                     $config = Configuration::config($projectDir);
                 }
             } elseif (!empty($suite)) {
-                list(, $suite, $test) = $this->matchSingleTest($suite, $config);
+                $result = $this->matchSingleTest($suite, $config);
+                if ($result) {
+                    list(, $suite, $test) = $result;
+                }
             }
         }
 
