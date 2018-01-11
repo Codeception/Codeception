@@ -109,6 +109,18 @@ Alternatively, [Mockery](https://github.com/Codeception/MockeryModule) can be us
 
 #### Stubs
 
+Stubs can be created with a static methods of `Codeception\Stub`.
+
+```php
+<?php
+$user = \Codeception\Stub::make('User', ['getName' => 'john']);
+$name = $user->getName(); // 'john'
+```
+
+[See complete reference](http://codeception.com/docs/reference/Mock)
+
+Inside unit tests (`Codeception\Test\Unit`) it is recommended to use alternative API:
+
 ```php
 <?php
 // create a stub with find method replaced
@@ -134,9 +146,17 @@ $user->getName(); // => davert
 $user->setName('jane'); // => this method is empty
 ```
 
-[See complete reference](http://codeception.com/docs/reference/Stub)
+[See complete reference](http://codeception.com/docs/reference/Mock)
 
 Stubs can also be created using static methods from `Codeception\Stub` class.
+In this 
+
+```php
+<?php
+\Codeception\Stub::make(UserRepository::class, ['find' => new User]);
+```
+
+See a reference for static Stub API  
 
 #### Mocks
 
@@ -332,6 +352,10 @@ public function buildShouldHaveSequence(\UnitTester $I)
 }
 ```
 This format can be recommended for testing domain and database interactions.
+
+In Cest format you don't have native support for test doubles so it's recommended 
+to include a trait `\Codeception\Test\Feature\Stub` to enable mocks inside a test.
+Alternatively, install and enable [Mockery module](https://github.com/Codeception/MockeryModule).
 
 ## Advanced Tools
 
