@@ -78,7 +78,8 @@ install:
   - '[[ "$SF_VERSION" != "4" ]] || (git clone -q --depth=1 -b master https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 4 site")'
   - '[[ "$SF_VERSION" == "4" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
   - "mysql -e 'create database symfony_test;'"
-  - 'composer update -d frameworks-symfony'
+  - 'composer update -d frameworks-symfony' # dev dependencies needed for symfony installations
+  - 'composer remove codeception/codeception -d frameworks-symfony' # but without Codeception
   # ZF1
   - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
   - composer update -d frameworks-zf1 $composer_parameters
