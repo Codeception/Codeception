@@ -16,6 +16,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
     Interfaces\Dependent,
     TestInterface
 {
+    use \Codeception\Test\Feature\Stub;
 
     /**
      * @var Metadata

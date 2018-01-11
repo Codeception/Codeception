@@ -280,6 +280,7 @@ class RoboFile extends \Robo\Tasks
         $this->buildDocsModules();
         $this->buildDocsUtils();
         $this->buildDocsCommands();
+        $this->buildDocsStub();
         $this->buildDocsApi();
         $this->buildDocsExtensions();
     }
@@ -355,7 +356,7 @@ class RoboFile extends \Robo\Tasks
     public function buildDocsUtils()
     {
         $this->say("Util Classes");
-        $utils = ['Autoload', 'Fixtures', 'Stub', 'Locator', 'XmlBuilder', 'JsonType', 'HttpCode'];
+        $utils = ['Autoload', 'Fixtures', 'Locator', 'XmlBuilder', 'JsonType', 'HttpCode'];
 
         foreach ($utils as $utilName) {
             $className = '\Codeception\Util\\' . $utilName;
@@ -363,6 +364,50 @@ class RoboFile extends \Robo\Tasks
 
             $this->documentApiClass('docs/reference/' . $utilName . '.md', $className, $source);
         }
+    }
+
+    public function buildDocsStub()
+    {
+        $this->say("Stub Classes");
+
+        $this->taskGenDoc('docs/reference/Stub.md')
+            ->docClass('Codeception\Stub')
+            ->filterMethods(function(\ReflectionMethod $method) {
+                if ($method->isConstructor() or $method->isDestructor()) return false;
+                if (!$method->isPublic()) return false;
+                if (strpos($method->name, '_') === 0) return false;
+                return true;
+            })
+            ->processMethodDocBlock(
+                function (\ReflectionMethod $m, $doc) {
+                    $doc = str_replace(array('@since'), array(' * available since version'), $doc);
+                    $doc = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $doc);
+                    return $doc;
+                })
+            ->processProperty(false)
+            ->run();
+
+        $mocksDocumentation = <<<EOF
+# Mocks
+
+Declare mocks inside `Codeception\Test\Unit` class.
+If you want to use mocks outside it, check the reference for [Codeception/Stub](https://github.com/Codeception/Stub) library.      
+EOF;
+
+        $this->taskGenDoc('docs/reference/Mock.md')
+            ->docClass('Codeception\Test\Feature\Stub')
+            ->docClass('Codeception\Stub\Expected')
+            ->processClassDocBlock(false)
+            ->processClassSignature(false)
+            ->prepend($mocksDocumentation)
+            ->filterMethods(function(\ReflectionMethod $method) {
+                if ($method->isConstructor() or $method->isDestructor()) return false;
+                if (!$method->isPublic()) return false;
+                if (strpos($method->name, '_') === 0) return false;
+                if (strpos($method->name, 'stub') === 0) return false;
+                return true;
+            })
+            ->run();
     }
 
     public function buildDocsApi()
