@@ -1624,6 +1624,12 @@ class WebDriver extends CodeceptionModule implements
         $el->sendKeys($value);
     }
 
+    public function clearField($field)
+    {
+        $el = $this->findField($field);
+        $el->clear();
+    }
+        
     public function attachFile($field, $filename)
     {
         $el = $this->findField($field);
