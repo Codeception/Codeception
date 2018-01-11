@@ -742,9 +742,9 @@ class Stub
         if ($params == null) {
             return function () {
             };
-        } else {
-            return $params;
         }
+
+        return $params;
     }
 
     /**

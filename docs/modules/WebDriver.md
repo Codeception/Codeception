@@ -1,6 +1,5 @@
 # WebDriver
 
-
 New generation Selenium WebDriver module.
 
 ## Local Testing
@@ -49,7 +48,6 @@ To run tests in Chrome browser you may connect to ChromeDriver directly, without
 ```
 
 Additional [Chrome options](https://sites.google.com/a/chromium.org/chromedriver/capabilities) can be set in `chromeOptions` capabilities.
-
 
 ### PhantomJS
 
@@ -229,23 +227,20 @@ If speed is a concern, it's recommended you stick with explicitly specifying the
 $this->getModule('WebDriver')->webDriver->getKeyboard()->sendKeys('hello, webdriver');
 ```
 
-
-
 ## Actions
 
 ### _backupSession
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Returns current WebDriver session for saving
 
  * `return` RemoteWebDriver
 
-
 ### _capabilities
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Change capabilities of WebDriver. Should be executed before starting a new browser session.
 This method expects a function to be passed which returns array or [WebDriver Desired Capabilities](https://github.com/facebook/php-webdriver/blob/community/lib/Remote/DesiredCapabilities.php) object.
 Additional [Chrome options](https://github.com/facebook/php-webdriver/wiki/ChromeOptions) (like adding extensions) can be passed as well.
@@ -288,11 +283,10 @@ In this case, please ensure that `\Helper\Acceptance` is loaded before WebDriver
 
  * `param \Closure` $capabilityFunction
 
-
 ### _closeSession
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Manually closes current WebDriver session.
 
 ```php
@@ -306,11 +300,10 @@ $this->getModule('WebDriver')->_closeSession($webDriver);
 
  * `param` $webDriver (optional) a specific webdriver session instance
 
-
 ### _findClickable
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Locates a clickable element.
 
 Use it in Helpers or GroupObject or Extension classes:
@@ -332,11 +325,10 @@ $el = $module->_findClickable($topBar, 'Click Me');
  * `param` $link a link text or locator to click
  * `return` WebDriverElement
 
-
 ### _findElements
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Locates element using available Codeception locator types:
 
 * XPath
@@ -360,29 +352,26 @@ PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` i
  * `param` $locator
  * `return` array of interactive elements
 
-
 ### _getCurrentUri
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Uri of currently opened page.
  * `return` string
 @throws ModuleException
 
-
 ### _getUrl
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Returns URL of a host.
 
 @throws ModuleConfigException
 
-
 ### _initializeSession
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Manually starts a new browser session.
 
 ```php
@@ -390,21 +379,18 @@ Manually starts a new browser session.
 $this->getModule('WebDriver')->_initializeSession();
 ```
 
-
-
 ### _loadSession
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Loads current RemoteWebDriver instance as a session
 
  * `param RemoteWebDriver` $session
 
-
 ### _restart
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Restarts a web browser.
 Can be used with `_reconfigure` to open browser with different configuration
 
@@ -417,19 +403,17 @@ $this->getModule('WebDriver')->_restart(['browser' => $browser]); // reconfigure
 
  * `param array` $config
 
-
 ### _savePageSource
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Saves HTML source of a page to a file
  * `param` $filename
-
 
 ### _saveScreenshot
 
 *hidden API method, expected to be used from Helper classes*
- 
+
 Saves screenshot of current page to a file
 
 ```php
@@ -437,16 +421,14 @@ $this->getModule('WebDriver')->_saveScreenshot(codecept_output_dir().'screenshot
 ```
  * `param` $filename
 
-
 ### acceptPopup
- 
+
 Accepts the active JavaScript native popup window, as created by `window.alert`|`window.confirm`|`window.prompt`.
 Don't confuse popups with modal windows,
 as created by [various libraries](http://jster.net/category/windows-modals-popups).
 
-
 ### amOnPage
- 
+
 Opens the page for the given relative URI.
 
 ``` php
@@ -459,9 +441,8 @@ $I->amOnPage('/register');
 
  * `param string` $page
 
-
 ### amOnSubdomain
- 
+
 Changes the subdomain for the 'url' configuration parameter.
 Does not open a page; use `amOnPage` for that.
 
@@ -479,10 +460,8 @@ $I->amOnPage('/');
 
  * `param` $subdomain
 
-
-
 ### amOnUrl
- 
+
 Open web page at the given absolute URL and sets its hostname as the base host.
 
 ``` php
@@ -492,9 +471,8 @@ $I->amOnPage('/quickstart'); // moves to http://codeception.com/quickstart
 ?>
 ```
 
-
 ### appendField
- 
+
 Append the given text to the given element.
 Can also add a selection to a select box.
 
@@ -509,9 +487,8 @@ $I->appendField('#myTextField', 'appended');
  * `param string` $value
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### attachFile
- 
+
 Attaches a file relative to the Codeception `_data` directory to the given file upload field.
 
 ``` php
@@ -524,14 +501,12 @@ $I->attachFile('input[@type="file"]', 'prices.xls');
  * `param` $field
  * `param` $filename
 
-
 ### cancelPopup
- 
+
 Dismisses the active JavaScript popup, as created by `window.alert`, `window.confirm`, or `window.prompt`.
 
-
 ### checkOption
- 
+
 Ticks a checkbox. For radio buttons, use the `selectOption` method instead.
 
 ``` php
@@ -542,9 +517,8 @@ $I->checkOption('#agree');
 
  * `param` $option
 
-
 ### click
- 
+
 Perform a click on a link or a button, given by a locator.
 If a fuzzy locator is given, the page will be searched for a button, link, or image matching the locator string.
 For buttons, the "value" attribute, "name" attribute, and inner text are searched.
@@ -575,9 +549,8 @@ $I->click(['link' => 'Login']);
  * `param` $link
  * `param` $context
 
-
 ### clickWithLeftButton
- 
+
 Performs click with the left mouse button on an element.
 If the first parameter `null` then the offset is relative to the actual mouse position.
 If the second and third parameters are given,
@@ -598,9 +571,8 @@ $I->clickWithLeftButton(['css' => '.checkout'], 20, 50);
 
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### clickWithRightButton
- 
+
 Performs contextual click with the right mouse button on an element.
 If the first parameter `null` then the offset is relative to the actual mouse position.
 If the second and third parameters are given,
@@ -621,9 +593,8 @@ $I->clickWithRightButton(['css' => '.checkout'], 20, 50);
 
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### closeTab
- 
+
 Closes current browser tab and switches to previous active tab.
 
 ```php
@@ -633,16 +604,14 @@ $I->closeTab();
 
 Can't be used with PhantomJS
 
-
 ### debugWebDriverLogs
- 
+
 Print out latest Selenium Logs in debug mode
 
  * `param TestInterface` $test
 
-
 ### dontSee
- 
+
 Checks that the current page doesn't contain the text specified (case insensitive).
 Give a locator as the second parameter to match a specific region.
 
@@ -671,9 +640,8 @@ For checking the raw source code, use `seeInSource()`.
  * `param string` $text
  * `param string` $selector optional
 
-
 ### dontSeeCheckboxIsChecked
- 
+
 Check that the specified checkbox is unchecked.
 
 ``` php
@@ -685,9 +653,8 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
  * `param` $checkbox
 
-
 ### dontSeeCookie
- 
+
 Checks that there isn't a cookie with the given name.
 You can set additional cookie params like `domain`, `path` as array passed in last argument.
 
@@ -695,9 +662,8 @@ You can set additional cookie params like `domain`, `path` as array passed in la
 
  * `param array` $params
 
-
 ### dontSeeCurrentUrlEquals
- 
+
 Checks that the current URL doesn't equal the given string.
 Unlike `dontSeeInCurrentUrl`, this only matches the full URL.
 
@@ -710,9 +676,8 @@ $I->dontSeeCurrentUrlEquals('/');
 
  * `param string` $uri
 
-
 ### dontSeeCurrentUrlMatches
- 
+
 Checks that current url doesn't match the given regular expression.
 
 ``` php
@@ -724,9 +689,8 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 
  * `param string` $uri
 
-
 ### dontSeeElement
- 
+
 Checks that the given element is invisible or not present on the page.
 You can also specify expected attributes of this element.
 
@@ -742,17 +706,15 @@ $I->dontSeeElement('input', ['value' => '123456']);
  * `param` $selector
  * `param array` $attributes
 
-
 ### dontSeeElementInDOM
- 
+
 Opposite of `seeElementInDOM`.
 
  * `param` $selector
  * `param array` $attributes
 
-
 ### dontSeeInCurrentUrl
- 
+
 Checks that the current URI doesn't contain the given string.
 
 ``` php
@@ -763,9 +725,8 @@ $I->dontSeeInCurrentUrl('/users/');
 
  * `param string` $uri
 
-
 ### dontSeeInField
- 
+
 Checks that an input field or textarea doesn't contain the given value.
 For fuzzy locators, the field is matched by label text, CSS and XPath.
 
@@ -783,9 +744,8 @@ $I->dontSeeInField(['name' => 'search'], 'Search');
  * `param` $field
  * `param` $value
 
-
 ### dontSeeInFormFields
- 
+
 Checks if the array of form parameters (name => value) are not set on the form matched with
 the passed selector.
 
@@ -826,16 +786,23 @@ $I->dontSeeInFormFields('#form-id', [
  * `param` $formSelector
  * `param` $params
 
-
 ### dontSeeInPageSource
- 
+
 Checks that the page source doesn't contain the given string.
 
  * `param` $text
 
+### dontSeeInPopup
+
+Checks that the active JavaScript popup,
+as created by `window.alert`|`window.confirm`|`window.prompt`, does NOT contain the given string.
+
+ * `param` $text
+
+@throws \Codeception\Exception\ModuleException
 
 ### dontSeeInSource
- 
+
 Checks that the current page contains the given string in its
 raw source code.
 
@@ -846,17 +813,14 @@ $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
 
  * `param`      $raw
 
-
 ### dontSeeInTitle
- 
+
 Checks that the page title does not contain the given string.
 
  * `param` $title
 
-
-
 ### dontSeeLink
- 
+
 Checks that the page doesn't contain a link with the given string.
 If the second parameter is given, only links with a matching "href" attribute will be checked.
 
@@ -870,9 +834,8 @@ $I->dontSeeLink('Checkout now', '/store/cart.php');
  * `param string` $text
  * `param string` $url optional
 
-
 ### dontSeeOptionIsSelected
- 
+
 Checks that the given option is not selected.
 
 ``` php
@@ -884,18 +847,15 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-
-
 ### doubleClick
- 
+
 Performs a double-click on an element matched by CSS or XPath.
 
  * `param` $cssOrXPath
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### dragAndDrop
- 
+
 Performs a simple mouse drag-and-drop operation.
 
 ``` php
@@ -907,9 +867,8 @@ $I->dragAndDrop('#drag', '#drop');
  * `param string` $source (CSS ID or XPath)
  * `param string` $target (CSS ID or XPath)
 
-
 ### executeInSelenium
- 
+
 Low-level API method.
 If Codeception commands are not enough, this allows you to use Selenium WebDriver methods directly:
 
@@ -926,9 +885,8 @@ If Codeception lacks a feature you need, please implement it and submit a patch.
 
  * `param callable` $function
 
-
 ### executeJS
- 
+
 Executes custom JavaScript.
 
 This example uses jQuery to get a value and assigns that value to a PHP variable:
@@ -941,9 +899,8 @@ $myVar = $I->executeJS('return $("#myField").val()');
 
  * `param` $script
 
-
 ### fillField
- 
+
 Fills a text field or textarea with the given string.
 
 ``` php
@@ -956,9 +913,8 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
  * `param` $field
  * `param` $value
 
-
 ### grabAttributeFrom
- 
+
 Grabs the value of the given attribute value from the given element.
 Fails if element is not found.
 
@@ -968,14 +924,11 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ?>
 ```
 
-
  * `param` $cssOrXpath
  * `param` $attribute
 
-
-
 ### grabCookie
- 
+
 Grabs a cookie value.
 You can set additional cookie params like `domain`, `path` in array passed as last argument.
 
@@ -983,9 +936,8 @@ You can set additional cookie params like `domain`, `path` in array passed as la
 
  * `param array` $params
 
-
 ### grabFromCurrentUrl
- 
+
 Executes the given regular expression against the current URI and returns the first capturing group.
 If no parameters are provided, the full URI is returned.
 
@@ -998,10 +950,8 @@ $uri = $I->grabFromCurrentUrl();
 
  * `param string` $uri optional
 
-
-
 ### grabMultiple
- 
+
 Grabs either the text content, or attribute values, of nodes
 matched by $cssOrXpath and returns them as an array.
 
@@ -1025,18 +975,16 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `param` $attribute
  * `return` string[]
 
-
 ### grabPageSource
- 
+
 Grabs current page source code.
 
 @throws ModuleException if no page was opened.
 
  * `return` string Current page source code.
 
-
 ### grabTextFrom
- 
+
 Finds and returns the text contents of the given element.
 If a fuzzy locator is used, the element is found using CSS, XPath,
 and by matching the full page source by regular expression.
@@ -1051,10 +999,8 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
 
  * `param` $cssOrXPathOrRegex
 
-
-
 ### grabValueFrom
- 
+
 Finds the value for the given form field.
 If a fuzzy locator is used, the field is found by field name, CSS, and XPath.
 
@@ -1069,16 +1015,13 @@ $name = $I->grabValueFrom(['name' => 'username']);
 
  * `param` $field
 
-
-
 ### loadSessionSnapshot
- 
+
  * `param string` $name
  * `return` bool
 
-
 ### makeScreenshot
- 
+
 Takes a screenshot of the current window and saves it to `tests/_output/debug`.
 
 ``` php
@@ -1092,24 +1035,20 @@ $I->makeScreenshot();
 
  * `param` $name
 
-
 ### maximizeWindow
- 
+
 Maximizes the current window.
 
-
 ### moveBack
- 
+
 Moves back in history.
 
-
 ### moveForward
- 
+
 Moves forward in history.
 
-
 ### moveMouseOver
- 
+
 Move mouse over the first element matched by the given locator.
 If the first parameter null then the page is used.
 If the second and third parameters are given,
@@ -1130,9 +1069,8 @@ $I->moveMouseOver(['css' => '.checkout'], 20, 50);
 
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### openNewTab
- 
+
 Opens a new browser tab (wherever it is possible) and switches to it.
 
 ```php
@@ -1144,19 +1082,16 @@ Please note, that adblock can restrict creating such tabs.
 
 Can't be used with PhantomJS
 
-
-
 ### pauseExecution
- 
+
 Pauses test execution in debug mode.
 To proceed test press "ENTER" in console.
 
 This method is useful while writing tests,
 since it allows you to inspect the current page in the middle of a test case.
 
-
 ### performOn
- 
+
 Waits for element and runs a sequence of actions inside its context.
 Actions can be defined with array, callback, or `Codeception\Util\ActionSequence` instance.
 
@@ -1199,9 +1134,8 @@ In 3rd argument you can set number a seconds to wait for element to appear
  * `param` $actions
  * `param int` $timeout
 
-
 ### pressKey
- 
+
 Presses the given key on the given element.
 To specify a character and modifier (e.g. ctrl, alt, shift, meta), pass an array for $char with
 the modifier as the first element and the character as the second.
@@ -1222,14 +1156,12 @@ $I->pressKey('#name', array('ctrl', 'a'), \Facebook\WebDriver\WebDriverKeys::DEL
  * `param` $char string|array Can be char or array with modifier. You can provide several chars.
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### reloadPage
- 
+
 Reloads the current page.
 
-
 ### resetCookie
- 
+
 Unsets cookie with the given name.
 You can set additional cookie params like `domain`, `path` in array passed as last argument.
 
@@ -1237,9 +1169,8 @@ You can set additional cookie params like `domain`, `path` in array passed as la
 
  * `param array` $params
 
-
 ### resizeWindow
- 
+
 Resize the current window.
 
 ``` php
@@ -1251,14 +1182,12 @@ $I->resizeWindow(800, 600);
  * `param int` $width
  * `param int` $height
 
-
 ### saveSessionSnapshot
- 
+
  * `param string` $name
 
-
 ### scrollTo
- 
+
 Move to the middle of the given element matched by the given locator.
 Extra shift, calculated from the top-left corner of the element,
 can be set by passing $offsetX and $offsetY parameters.
@@ -1273,9 +1202,8 @@ $I->scrollTo(['css' => '.checkout'], 20, 50);
  * `param int` $offsetX
  * `param int` $offsetY
 
-
 ### see
- 
+
 Checks that the current page contains the given string (case insensitive).
 
 You can specify a specific HTML element (via CSS or XPath) as the second
@@ -1306,9 +1234,8 @@ For checking the raw source code, use `seeInSource()`.
  * `param string` $text
  * `param string` $selector optional
 
-
 ### seeCheckboxIsChecked
- 
+
 Checks that the specified checkbox is checked.
 
 ``` php
@@ -1321,9 +1248,8 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 
  * `param` $checkbox
 
-
 ### seeCookie
- 
+
 Checks that a cookie with the given name is set.
 You can set additional cookie params like `domain`, `path` as array passed in last argument.
 
@@ -1336,9 +1262,8 @@ $I->seeCookie('PHPSESSID');
  * `param` $cookie
  * `param array` $params
 
-
 ### seeCurrentUrlEquals
- 
+
 Checks that the current URL is equal to the given string.
 Unlike `seeInCurrentUrl`, this only matches the full URL.
 
@@ -1351,9 +1276,8 @@ $I->seeCurrentUrlEquals('/');
 
  * `param string` $uri
 
-
 ### seeCurrentUrlMatches
- 
+
 Checks that the current URL matches the given regular expression.
 
 ``` php
@@ -1365,9 +1289,8 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 
  * `param string` $uri
 
-
 ### seeElement
- 
+
 Checks that the given element exists on the page and is visible.
 You can also specify expected attributes of this element.
 
@@ -1387,9 +1310,8 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
  * `param array` $attributes
 @return
 
-
 ### seeElementInDOM
- 
+
 Checks that the given element exists on the page, even it is invisible.
 
 ``` php
@@ -1401,9 +1323,8 @@ $I->seeElementInDOM('//form/input[type=hidden]');
  * `param` $selector
  * `param array` $attributes
 
-
 ### seeInCurrentUrl
- 
+
 Checks that current URI contains the given string.
 
 ``` php
@@ -1417,9 +1338,8 @@ $I->seeInCurrentUrl('/users/');
 
  * `param string` $uri
 
-
 ### seeInField
- 
+
 Checks that the given input field or textarea *equals* (i.e. not just contains) the given value.
 Fields are matched by label text, the "name" attribute, CSS, or XPath.
 
@@ -1437,9 +1357,8 @@ $I->seeInField(['name' => 'search'], 'Search');
  * `param` $field
  * `param` $value
 
-
 ### seeInFormFields
- 
+
 Checks if the array of form parameters (name => value) are set on the form matched with the
 passed selector.
 
@@ -1500,9 +1419,8 @@ $I->seeInFormFields('//form[@id=my-form]', $form);
  * `param` $formSelector
  * `param` $params
 
-
 ### seeInPageSource
- 
+
 Checks that the page source contains the given string.
 
 ```php
@@ -1512,9 +1430,8 @@ $I->seeInPageSource('<link rel="apple-touch-icon"');
 
  * `param` $text
 
-
 ### seeInPopup
- 
+
 Checks that the active JavaScript popup,
 as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
 
@@ -1522,9 +1439,8 @@ as created by `window.alert`|`window.confirm`|`window.prompt`, contains the give
 
 @throws \Codeception\Exception\ModuleException
 
-
 ### seeInSource
- 
+
 Checks that the current page contains the given string in its
 raw source code.
 
@@ -1535,9 +1451,8 @@ $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
 
  * `param`      $raw
 
-
 ### seeInTitle
- 
+
 Checks that the page title contains the given string.
 
 ``` php
@@ -1548,10 +1463,8 @@ $I->seeInTitle('Blog - Post #1');
 
  * `param` $title
 
-
-
 ### seeLink
- 
+
 Checks that there's a link with the specified text.
 Give a full URL as the second parameter to match links with that exact URL.
 
@@ -1565,9 +1478,8 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
  * `param string` $text
  * `param string` $url optional
 
-
 ### seeNumberOfElements
- 
+
 Checks that there are a certain number of elements matched by the given locator on the page.
 
 ``` php
@@ -1579,13 +1491,11 @@ $I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
  * `param` $selector
  * `param mixed` $expected int or int[]
 
-
 ### seeNumberOfElementsInDOM
 __not documented__
 
-
 ### seeOptionIsSelected
- 
+
 Checks that the given option is selected.
 
 ``` php
@@ -1597,10 +1507,8 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-
-
 ### selectOption
- 
+
 Selects an option in a select tag or in radio button group.
 
 ``` php
@@ -1631,9 +1539,8 @@ $I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only s
  * `param` $select
  * `param` $option
 
-
 ### setCookie
- 
+
 Sets a cookie with the given name and value.
 You can set additional cookie params like `domain`, `path`, `expires`, `secure` in array passed as last argument.
 
@@ -1647,10 +1554,8 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
  * `param` $val
  * `param array` $params
 
-
-
 ### submitForm
- 
+
 Submits the given form on the page, optionally with the given form
 values.  Give the form fields values as an array. Note that hidden fields
 can't be accessed.
@@ -1809,9 +1714,8 @@ For example, given the following HTML:
  * `param` $params
  * `param` $button
 
-
 ### switchToIFrame
- 
+
 Switch to another frame on the page.
 
 Example:
@@ -1831,9 +1735,8 @@ $I->switchToIFrame();
 
  * `param string|null` $name
 
-
 ### switchToNextTab
- 
+
 Switches to next browser tab.
 An offset can be specified.
 
@@ -1849,9 +1752,8 @@ Can't be used with PhantomJS
 
  * `param int` $offset 1
 
-
 ### switchToPreviousTab
- 
+
 Switches to previous browser tab.
 An offset can be specified.
 
@@ -1867,9 +1769,8 @@ Can't be used with PhantomJS
 
  * `param int` $offset 1
 
-
 ### switchToWindow
- 
+
 Switch to another window identified by name.
 
 The window can only be identified by name. If the $name parameter is blank, the parent window will be used.
@@ -1905,18 +1806,16 @@ $I->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webd
 
  * `param string|null` $name
 
-
 ### typeInPopup
- 
+
 Enters text into a native JavaScript prompt popup, as created by `window.prompt`.
 
  * `param` $keys
 
 @throws \Codeception\Exception\ModuleException
 
-
 ### uncheckOption
- 
+
 Unticks a checkbox.
 
 ``` php
@@ -1927,25 +1826,22 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-
 ### unselectOption
- 
+
 Unselect an option in the given select box.
 
  * `param` $select
  * `param` $option
 
-
 ### wait
- 
+
 Wait for $timeout seconds.
 
  * `param int|float` $timeout secs
 @throws \Codeception\Exception\TestRuntimeException
 
-
 ### waitForElement
- 
+
 Waits up to $timeout seconds for an element to appear on the page.
 If the element doesn't appear, a timeout exception is thrown.
 
@@ -1960,9 +1856,8 @@ $I->click('#agree_button');
  * `param int` $timeout seconds
 @throws \Exception
 
-
 ### waitForElementChange
- 
+
 Waits up to $timeout seconds for the given element to change.
 Element "change" is determined by a callback function which is called repeatedly
 until the return value evaluates to true.
@@ -1981,9 +1876,8 @@ $I->waitForElementChange('#menu', function(WebDriverElement $el) {
  * `param int` $timeout seconds
 @throws \Codeception\Exception\ElementNotFound
 
-
 ### waitForElementNotVisible
- 
+
 Waits up to $timeout seconds for the given element to become invisible.
 If element stays visible, a timeout exception is thrown.
 
@@ -1997,9 +1891,8 @@ $I->waitForElementNotVisible('#agree_button', 30); // secs
  * `param int` $timeout seconds
 @throws \Exception
 
-
 ### waitForElementVisible
- 
+
 Waits up to $timeout seconds for the given element to be visible on the page.
 If element doesn't appear, a timeout exception is thrown.
 
@@ -2014,9 +1907,8 @@ $I->click('#agree_button');
  * `param int` $timeout seconds
 @throws \Exception
 
-
 ### waitForJS
- 
+
 Executes JavaScript and waits up to $timeout seconds for it to return true.
 
 In this example we will wait up to 60 seconds for all jQuery AJAX requests to finish.
@@ -2030,9 +1922,8 @@ $I->waitForJS("return $.active == 0;", 60);
  * `param string` $script
  * `param int` $timeout seconds
 
-
 ### waitForText
- 
+
 Waits up to $timeout seconds for the given string to appear on the page.
 
 Can also be passed a selector to search in, be as specific as possible when using selectors.

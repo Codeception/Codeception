@@ -104,16 +104,16 @@
 * [REST] JsonType improved URL filter to use `filter_var($value, FILTER_VALIDATE_URL)`
 * [REST] JsonType to support collections: all items in an array will be validates against JsonType. By @davertmik
 * [REST] Various fixes to JsonType: #2555 #2548 #2542
-* [REST] Hides binary request data in debug by @codemedic. Fixed #1884, See #2552 
+* [REST] Hides binary request data in debug by @codemedic. Fixed #1884, See #2552
 * [WebDriver] Allow `appendField` to work with content editable div by @nsanden #2588
 * [WebDriver] Allows adding ssl proxy settings by @mjntan35.
 * [Symfony2] Config option `cache_router` added (disabled by default) by @raistlin.
 * [Doctrine] Fixed #2060: Too many connections error by @dranzd
 * [Symfony2] `services` part added to allow access Symfony DIC while wokring with WebDriver or PhpBrowser by @laszlo-karpati See #2629
 * [WebDriver][PhpBrowser] Unified setCookie "expires" param name by @davertmik. See #2582
-* [Memcache] add adaptive close call on `_after` by @pfz. See #2572 
-* [Symfony2] Move kernel booting and container set up into _initialize() method by @Franua  #2491 
-* [WebDriver] Fixed `seeInField` for textareas by @nsanden 
+* [Memcache] add adaptive close call on `_after` by @pfz. See #2572
+* [Symfony2] Move kernel booting and container set up into _initialize() method by @Franua  #2491
+* [WebDriver] Fixed `seeInField` for textareas by @nsanden
 * [Yii2][REST] Fixed using Yii2 as dependency for REST by @Naktibalda. See #2562
 * [Laravel5] Removed `enableMiddleware` and `enableEvents` methods. See #2602. By @janhenkgerritsen
 * [Laravel] Refactored modules. See #2602. By @janhenkgerritsen

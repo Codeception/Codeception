@@ -39,7 +39,6 @@ modules:
 
 API tests can be functional and be executed using Symfony, Laravel5, Zend, or any other framework module. You will need slightly update configuration for it:
 
-
 ``` yaml
 actor: ApiTester
 modules:
@@ -70,7 +69,7 @@ $I->seeResponseContains('{"result":"ok"}');
 
 ```
 
-We can use HTTP code constants from `Codeception\Util\HttpCode` instead of numeric values to check response code in `seeResponseCodeIs` and `dontSeeResponseCodeIs` methods. 
+We can use HTTP code constants from `Codeception\Util\HttpCode` instead of numeric values to check response code in `seeResponseCodeIs` and `dontSeeResponseCodeIs` methods.
 
 ### Testing JSON Responses
 
@@ -112,7 +111,7 @@ The same way you can receive request parameters and headers.
 
 ### Validate JSON structures
 
-It is pretty common for API tests to not only validate the received data but to check the structure of the response. Response data is not usually considered to be consistent, and may change on each request, however the JSON/XML structure should be kept the same for an API version. In order to check response structure the REST module has some useful methods. 
+It is pretty common for API tests to not only validate the received data but to check the structure of the response. Response data is not usually considered to be consistent, and may change on each request, however the JSON/XML structure should be kept the same for an API version. In order to check response structure the REST module has some useful methods.
 
 If we expect a JSON response to be received we can check its structure with [JSONPath](http://goessner.net/articles/JsonPath/). It looks and sounds like XPath but is designed to work with JSON data, however we can convert JSON into XML and use XPath to validate the structure. Both approaches are valid and can be used in the REST module:
 
@@ -151,7 +150,7 @@ Codeception uses this simple and lightweight definitions format which can be [ea
 
 ### Testing XML Responses
 
-In case your REST API works with XML format you can use similar methods to test its data and structure. 
+In case your REST API works with XML format you can use similar methods to test its data and structure.
 There is `seeXmlResponseIncludes` method to match inclusion of XML parts in response, and `seeXmlResponseMatchesXpath` to validate its structure.
 
 ```php
@@ -179,7 +178,6 @@ We are using XmlUtils class which allows us to build XML structures in a clean m
 <div class="alert alert-info">
 Use `\Codeception\Util\Xml::build()` to create XmlBuilder instance.
 </div>
-
 
 ## SOAP
 

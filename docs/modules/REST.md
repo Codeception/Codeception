@@ -1,6 +1,5 @@
 # REST
 
-
 Module for testing REST WebService.
 
 This module can be used either with frameworks or PHPBrowser.
@@ -36,21 +35,42 @@ This module requires PHPBrowser or any of Framework modules enabled.
 
 Conflicts with SOAP module
 
-
-
 ## Actions
 
+### amAWSAuthenticated
+
+Allows to send REST request using AWS Authorization
+Only works with PhpBrowser
+Example
+Config -
+
+modules:
+     enabled:
+         - REST:
+             aws:
+                 key: accessKey
+                 secret: accessSecret
+                 service: awsService
+                 region: awsRegion
+
+```php
+<?php
+$I->amAWSAuthenticated();
+?>
+```
+ * `param array` $additionalAWSConfig
+@throws ModuleException
+
 ### amBearerAuthenticated
- 
+
 Adds Bearer authentication via access token.
 
  * `param` $accessToken
  * `[Part]` json
  * `[Part]` xml
 
-
 ### amDigestAuthenticated
- 
+
 Adds Digest authentication via username/password.
 
  * `param` $username
@@ -58,9 +78,8 @@ Adds Digest authentication via username/password.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### amHttpAuthenticated
- 
+
 Adds HTTP authentication via username/password.
 
  * `param` $username
@@ -68,9 +87,8 @@ Adds HTTP authentication via username/password.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### amNTLMAuthenticated
- 
+
 Adds NTLM authentication via username/password.
 Requires client to be Guzzle >=6.3.0
 Out of scope for functional modules.
@@ -88,9 +106,8 @@ $I->amNTLMAuthenticated('jon_snow', 'targaryen');
  * `[Part]` json
  * `[Part]` xml
 
-
 ### deleteHeader
- 
+
 Deletes the header with the passed name.  Subsequent requests
 will not have the deleted header in its request.
 
@@ -109,9 +126,8 @@ $I->sendPOST('some-other-page.php');
  * `[Part]` json
  * `[Part]` xml
 
-
 ### dontSeeBinaryResponseEquals
- 
+
 Checks if the hash of a binary response is not the same as provided.
 
 ```php
@@ -126,9 +142,8 @@ Opposite to `seeBinaryResponseEquals`
  * `[Part]` json
  * `[Part]` xml
 
-
 ### dontSeeHttpHeader
- 
+
 Checks over the given HTTP header and (optionally)
 its value, asserting that are not there
 
@@ -137,9 +152,8 @@ its value, asserting that are not there
  * `[Part]` json
  * `[Part]` xml
 
-
 ### dontSeeResponseCodeIs
- 
+
 Checks that response code is not equal to provided value.
 
 ```php
@@ -154,42 +168,37 @@ $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::OK);
  * `[Part]` xml
  * `param` $code
 
-
 ### dontSeeResponseContains
- 
+
 Checks whether last response do not contain text.
 
  * `param` $text
  * `[Part]` json
  * `[Part]` xml
 
-
 ### dontSeeResponseContainsJson
- 
+
 Opposite to seeResponseContainsJson
 
  * `[Part]` json
  * `param array` $json
 
-
 ### dontSeeResponseJsonMatchesJsonPath
- 
+
 Opposite to seeResponseJsonMatchesJsonPath
 
  * `param string` $jsonPath
  * `[Part]` json
 
-
 ### dontSeeResponseJsonMatchesXpath
- 
+
 Opposite to seeResponseJsonMatchesXpath
 
  * `param string` $xpath
  * `[Part]` json
 
-
 ### dontSeeResponseMatchesJsonType
- 
+
 Opposite to `seeResponseMatchesJsonType`.
 
  * `[Part]` json
@@ -198,9 +207,8 @@ Opposite to `seeResponseMatchesJsonType`.
  * `param null` $jsonPath optionally set specific path to structure with JsonPath
  * `Available since` 2.1.3
 
-
 ### dontSeeXmlResponseEquals
- 
+
 Checks XML response does not equal to provided XML.
 Comparison is done by canonicalizing both xml`s.
 
@@ -209,9 +217,8 @@ Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, 
  * `param` $xml
  * `[Part]` xml
 
-
 ### dontSeeXmlResponseIncludes
- 
+
 Checks XML response does not include provided XML.
 Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
@@ -219,9 +226,8 @@ Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, 
  * `param` $xml
  * `[Part]` xml
 
-
 ### dontSeeXmlResponseMatchesXpath
- 
+
 Checks whether XML response does not match XPath
 
 ```php
@@ -231,9 +237,8 @@ $I->dontSeeXmlResponseMatchesXpath('//root/user[@id=1]');
  * `[Part]` xml
  * `param` $xpath
 
-
 ### grabAttributeFromXmlElement
- 
+
 Finds and returns attribute of element.
 Element is matched by either CSS or XPath
 
@@ -242,18 +247,16 @@ Element is matched by either CSS or XPath
  * `return` string
  * `[Part]` xml
 
-
 ### grabDataFromJsonResponse
- 
+
 Deprecated since 2.0.9 and removed since 2.1.0
 
  * `param` $path
 @throws ModuleException
 @deprecated
 
-
 ### grabDataFromResponseByJsonPath
- 
+
 Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
 JsonPath is XPath equivalent for querying Json structures.
 Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
@@ -277,9 +280,8 @@ $I->sendPUT('/user', array('id' => $firstUserId[0], 'name' => 'davert'));
 @throws \Exception
  * `[Part]` json
 
-
 ### grabHttpHeader
- 
+
 Returns the value of the specified header name
 
  * `param` $name
@@ -289,9 +291,8 @@ Returns the value of the specified header name
  * `[Part]` json
  * `[Part]` xml
 
-
 ### grabResponse
- 
+
 Returns current response so that it can be used in next scenario steps.
 
 Example:
@@ -308,9 +309,8 @@ $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
  * `[Part]` json
  * `[Part]` xml
 
-
 ### grabTextContentFromXmlElement
- 
+
 Finds and returns text contents of element.
 Element is matched by either CSS or XPath
 
@@ -318,9 +318,8 @@ Element is matched by either CSS or XPath
  * `return` string
  * `[Part]` xml
 
-
 ### haveHttpHeader
- 
+
 Sets HTTP header valid for all next requests. Use `deleteHeader` to unset it
 
 ```php
@@ -335,9 +334,8 @@ $I->haveHttpHeader('Content-Type', 'application/json');
  * `[Part]` json
  * `[Part]` xml
 
-
 ### seeBinaryResponseEquals
- 
+
 Checks if the hash of a binary response is exactly the same as provided.
 Parameter can be passed as any hash string supported by hash(), with an
 optional second parameter to specify the hash type, which defaults to md5.
@@ -372,9 +370,8 @@ $I->seeBinaryResponseEquals(hash("sha256", base64_decode($fileData)), 'sha256');
  * `[Part]` json
  * `[Part]` xml
 
-
 ### seeHttpHeader
- 
+
 Checks over the given HTTP header and (optionally)
 its value, asserting that are there
 
@@ -383,9 +380,8 @@ its value, asserting that are there
  * `[Part]` json
  * `[Part]` xml
 
-
 ### seeHttpHeaderOnce
- 
+
 Checks that http response header is received only once.
 HTTP RFC2616 allows multiple response headers with the same name.
 You can check that you didn't accidentally sent the same header twice.
@@ -400,9 +396,8 @@ $I->seeHttpHeaderOnce('Cache-Control');
  * `[Part]` json
  * `[Part]` xml
 
-
 ### seeResponseCodeIs
- 
+
 Checks response code equals to provided value.
 
 ```php
@@ -417,18 +412,16 @@ $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
  * `[Part]` xml
  * `param` $code
 
-
 ### seeResponseContains
- 
+
 Checks whether the last response contains text.
 
  * `param` $text
  * `[Part]` json
  * `[Part]` xml
 
-
 ### seeResponseContainsJson
- 
+
 Checks whether the last JSON response contains provided array.
 The response is converted to array with json_decode($response, true)
 Thus, JSON is represented by associative array.
@@ -452,34 +445,30 @@ This method recursively checks if one array can be found inside of another.
  * `param array` $json
  * `[Part]` json
 
-
 ### seeResponseEquals
- 
+
 Checks if response is exactly the same as provided.
 
  * `[Part]` json
  * `[Part]` xml
  * `param` $response
 
-
 ### seeResponseIsJson
- 
+
 Checks whether last response was valid JSON.
 This is done with json_last_error function.
 
  * `[Part]` json
 
-
 ### seeResponseIsXml
- 
+
 Checks whether last response was valid XML.
 This is done with libxml_get_last_error function.
 
  * `[Part]` xml
 
-
 ### seeResponseJsonMatchesJsonPath
- 
+
 Checks if json structure in response matches [JsonPath](http://goessner.net/articles/JsonPath/).
 JsonPath is XPath equivalent for querying Json structures.
 Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
@@ -524,9 +513,8 @@ $I->seeResponseJsonMatchesJsonPath('$.store..price');
  * `[Part]` json
  * `Available since` 2.0.9
 
-
 ### seeResponseJsonMatchesXpath
- 
+
 Checks if json structure in response matches the xpath provided.
 JSON is not supposed to be checked against XPath, yet it can be converted to xml and used with XPath.
 This assertion allows you to check the structure of response json.
@@ -567,9 +555,8 @@ $I->seeResponseJsonMatchesXpath('/store//price');
  * `[Part]` json
  * `Available since` 2.0.9
 
-
 ### seeResponseMatchesJsonType
- 
+
 Checks that Json matches provided types.
 In case you don't know the actual values of JSON data returned you can match them by type.
 Starts check with a root element. If JSON data is array it will check the first element of an array.
@@ -649,9 +636,8 @@ See [JsonType reference](http://codeception.com/docs/reference/JsonType).
  * `param array` $jsonType
  * `param string` $jsonPath
 
-
 ### seeXmlResponseEquals
- 
+
 Checks XML response equals provided XML.
 Comparison is done by canonicalizing both xml`s.
 
@@ -660,9 +646,8 @@ Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (i
  * `param` $xml
  * `[Part]` xml
 
-
 ### seeXmlResponseIncludes
- 
+
 Checks XML response includes provided XML.
 Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
@@ -678,9 +663,8 @@ $I->seeXmlResponseIncludes("<result>1</result>");
  * `param` $xml
  * `[Part]` xml
 
-
 ### seeXmlResponseMatchesXpath
- 
+
 Checks whether XML response matches XPath
 
 ```php
@@ -690,9 +674,8 @@ $I->seeXmlResponseMatchesXpath('//root/user[@id=1]');
  * `[Part]` xml
  * `param` $xpath
 
-
 ### sendDELETE
- 
+
 Sends DELETE request to given uri.
 
  * `param` $url
@@ -701,9 +684,8 @@ Sends DELETE request to given uri.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### sendGET
- 
+
 Sends a GET request to given uri.
 
  * `param` $url
@@ -711,9 +693,8 @@ Sends a GET request to given uri.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### sendHEAD
- 
+
 Sends a HEAD request to given uri.
 
  * `param` $url
@@ -721,9 +702,8 @@ Sends a HEAD request to given uri.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### sendLINK
- 
+
 Sends LINK request to given uri.
 
  * `param`       $url
@@ -735,9 +715,8 @@ Sends LINK request to given uri.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### sendOPTIONS
- 
+
 Sends an OPTIONS request to given uri.
 
  * `param` $url
@@ -745,9 +724,8 @@ Sends an OPTIONS request to given uri.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### sendPATCH
- 
+
 Sends PATCH request to given uri.
 
  * `param`       $url
@@ -756,9 +734,8 @@ Sends PATCH request to given uri.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### sendPOST
- 
+
 Sends a POST request to given uri. Parameters and files can be provided separately.
 
 Example:
@@ -791,9 +768,8 @@ $I->sendPOST('/message/24', ['inline' => 0], [
  * `[Part]` json
  * `[Part]` xml
 
-
 ### sendPUT
- 
+
 Sends PUT request to given uri.
 
  * `param` $url
@@ -802,9 +778,8 @@ Sends PUT request to given uri.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### sendUNLINK
- 
+
 Sends UNLINK request to given uri.
 
  * `param`       $url
@@ -814,9 +789,8 @@ Sends UNLINK request to given uri.
  * `[Part]` json
  * `[Part]` xml
 
-
 ### startFollowingRedirects
- 
+
 Enables automatic redirects to be followed by the client
 
 ```php
@@ -827,9 +801,8 @@ $I->startFollowingRedirects();
  * `[Part]` xml
  * `[Part]` json
 
-
 ### stopFollowingRedirects
- 
+
 Prevents automatic redirects to be followed by the client
 
 ```php

@@ -1,6 +1,11 @@
 <?php
 namespace Codeception\Command;
 
+if (!class_exists('Stecman\Component\Symfony\Console\BashCompletion\Completion')) {
+    echo "Please install `stecman/symfony-console-completion\n` to enable auto completion";
+    return;
+}
+
 use Codeception\Configuration;
 use Stecman\Component\Symfony\Console\BashCompletion\Completion as ConsoleCompletion;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand;

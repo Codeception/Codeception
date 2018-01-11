@@ -155,7 +155,7 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
 
         if (!file_exists($bootstrapFile)) {
             throw new ModuleConfigException(
-                $this->module,
+                $this,
                 "Lumen bootstrap file not found in $bootstrapFile.\n"
                 . "Please provide a valid path using the 'bootstrap' config param. "
             );

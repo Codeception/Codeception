@@ -61,9 +61,9 @@ use Codeception\TestInterface;
  *              populate: true
  *              cleanup: true
  *              reconnect: true
- *              ssl_key: '/path/to/client-key.pem'
- *              ssl_cert: '/path/to/client-cert.pem'
- *              ssl_ca: '/path/to/ca-cert.pem'
+ *              ssl_key: '/path/to/client-key.pem'
+ *              ssl_cert: '/path/to/client-cert.pem'
+ *              ssl_ca: '/path/to/ca-cert.pem'
  *
  * ## SQL data dump
  *

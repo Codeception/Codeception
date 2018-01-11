@@ -156,8 +156,13 @@ class LocalServer extends SuiteSubscriber
         ];
         $value = json_encode($value);
 
-        $this->module->amOnPage('/');
-        $this->module->setCookie(self::COVERAGE_COOKIE, $value);
+        $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
+        $c3Host = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
+        if (isset($c3Url['port'])) {
+            $c3Host .= ':' . $c3Url['port'];
+        }
+
+        $this->module->setCookie(self::COVERAGE_COOKIE, $value, ['domain' => $c3Host]);
 
         // putting in configuration ensures the cookie is used for all sessions of a MultiSession test
 

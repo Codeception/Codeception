@@ -1,6 +1,5 @@
 # Redis
 
-
 This module uses the [Predis](https://github.com/nrk/predis) library
 to interact with a Redis server.
 
@@ -35,18 +34,16 @@ to interact with a Redis server.
 
 @author Marc Verney <marc@marcverney.net>
 
-
 ## Actions
 
 ### cleanup
- 
+
 Delete all the keys in the Redis database
 
 @throws ModuleException
 
-
 ### dontSeeInRedis
- 
+
 Asserts that a key does not exist or, optionally, that it doesn't have the
 provided $value
 
@@ -77,9 +74,8 @@ $I->dontSeeInRedis('example:hash', ['riri' => true, 'fifi' => 'Dewey', 'loulou' 
  * `param mixed`  $value Optional. If specified, also checks the key has this
 value. Booleans will be converted to 1 and 0 (even inside arrays)
 
-
 ### dontSeeRedisKeyContains
- 
+
 Asserts that a given key does not contain a given item
 
 Examples:
@@ -115,9 +111,8 @@ specified, the method will also check that the $item has this value/score
 
  * `return` bool
 
-
 ### grabFromRedis
- 
+
 Returns the value of a given key
 
 Examples:
@@ -154,12 +149,10 @@ $I->grabFromRedis('example:hash', 'foo');
 
  * `param string` $key The key name
 
-
 @throws ModuleException if the key does not exist
 
-
 ### haveInRedis
- 
+
 Creates or modifies keys
 
 If $key already exists:
@@ -193,9 +186,8 @@ $I->haveInRedis('hash', ['obladi' => 'oblada']);
 
 @throws ModuleException
 
-
 ### seeInRedis
- 
+
 Asserts that a key exists, and optionally that it has the provided $value
 
 Examples:
@@ -225,9 +217,8 @@ $I->seeInRedis('example:hash', ['riri' => true, 'fifi' => 'Dewey', 'loulou' => 2
  * `param mixed`  $value Optional. If specified, also checks the key has this
 value. Booleans will be converted to 1 and 0 (even inside arrays)
 
-
 ### seeRedisKeyContains
- 
+
 Asserts that a given key contains a given item
 
 Examples:
@@ -263,9 +254,8 @@ specified, the method will also check that the $item has this value/score
 
  * `return` bool
 
-
 ### sendCommandToRedis
- 
+
 Sends a command directly to the Redis driver. See documentation at
 https://github.com/nrk/predis
 Every argument that follows the $command name will be passed to it.
@@ -282,6 +272,5 @@ $I->sendCommandToRedis('flushdb');
 ```
 
  * `param string` $command The command name
-
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Redis.php">Help us to improve documentation. Edit module reference</a></div>

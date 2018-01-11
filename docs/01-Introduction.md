@@ -61,7 +61,7 @@ What if we could check our application without running it on a server?
 That way we could see detailed exceptions on errors, have our tests run faster,
 and check the database against predictable and expected results. That's what functional tests are for.
 
-For functional tests, you emulate a web request (`$_GET` and `$_POST` variables) 
+For functional tests, you emulate a web request (`$_GET` and `$_POST` variables)
 which returns the HTML response. Inside a test, you can make assertions about the response,
 and you can check if the data was successfully stored in the database.
 

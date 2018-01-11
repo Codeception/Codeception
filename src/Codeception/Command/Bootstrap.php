@@ -1,15 +1,12 @@
 <?php
 namespace Codeception\Command;
 
-use Codeception\Lib\Generator\Helper;
 use Codeception\Template\Bootstrap as BootstrapTemplate;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Creates default config, tests directory and sample suites for current project.
