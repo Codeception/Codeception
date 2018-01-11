@@ -1,21 +1,18 @@
 
 ## Codeception\Util\Autoload
 
-
-
 Autoloader, which is fully compatible with PSR-4,
 and can be used to autoload your `Helper`, `Page`, and `Step` classes.
 
-
 #### __construct()
 
- *private* __construct() 
+ *private* __construct()
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Autoload.php#L18)
 
 #### addNamespace()
 
- *public static* addNamespace($prefix, $base_dir, $prepend = null) 
+ *public static* addNamespace($prefix, $base_dir, $prepend = null)
 
 Adds a base directory for a namespace prefix.
 
@@ -43,13 +40,13 @@ Autoload::addNamespace('app\Codeception', '/path/to/controllers');
 
 #### load()
 
- *public static* load($class) 
+ *public static* load($class)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Autoload.php#L88)
 
 #### loadMappedFile()
 
- *protected static* loadMappedFile($prefix, $relative_class) 
+ *protected static* loadMappedFile($prefix, $relative_class)
 
 Load the mapped file for a namespace prefix and relative class.
 
@@ -61,21 +58,21 @@ Load the mapped file for a namespace prefix and relative class.
 
 #### register()
 
- *public static* register($namespace, $suffix, $path) 
+ *public static* register($namespace, $suffix, $path)
  * `deprecated` Use self::addNamespace() instead.
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Autoload.php#L75)
 
 #### registerSuffix()
 
- *public static* registerSuffix($suffix, $path) 
+ *public static* registerSuffix($suffix, $path)
  * `deprecated` Use self::addNamespace() instead.
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Autoload.php#L83)
 
 #### requireFile()
 
- *protected static* requireFile($file) 
+ *protected static* requireFile($file)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Autoload.php#L156)
 

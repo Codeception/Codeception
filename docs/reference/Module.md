@@ -1,7 +1,6 @@
 
 ## Codeception\Module
 
-
 * *Uses* `Codeception\Util\Shared\Asserts`
 
 Basic class for Modules and Helpers.
@@ -9,9 +8,6 @@ You must extend from it while implementing own helpers.
 
 Public methods of this class start with `_` prefix in order to ignore them in actor classes.
 Module contains **HOOKS** which allow to handle test execution routine.
-
-
-
 
 #### $includeInheritedActions
 
@@ -21,7 +17,6 @@ By setting it to false module wan't inherit methods of parent class.
 
 type `bool`
 
-
 #### $onlyActions
 
 *public static* **$onlyActions**
@@ -30,7 +25,6 @@ Allows to explicitly set what methods have this class.
 
 type `array`
 
-
 #### $excludeActions
 
 *public static* **$excludeActions**
@@ -38,7 +32,6 @@ type `array`
 Allows to explicitly exclude actions from module.
 
 type `array`
-
 
 #### $aliases
 
@@ -49,7 +42,7 @@ Allows to rename actions
 type `array`
 #### __construct()
 
- *public* __construct($moduleContainer, $config = null) 
+ *public* __construct($moduleContainer, $config = null)
 
 Module constructor.
 
@@ -62,7 +55,7 @@ Requires module container (to provide access between modules of suite) and confi
 
 #### _after()
 
- *public* _after($test) 
+ *public* _after($test)
 
 **HOOK** executed after test
 
@@ -72,7 +65,7 @@ Requires module container (to provide access between modules of suite) and confi
 
 #### _afterStep()
 
- *public* _afterStep($step) 
+ *public* _afterStep($step)
 
 **HOOK** executed after step
 
@@ -82,7 +75,7 @@ Requires module container (to provide access between modules of suite) and confi
 
 #### _afterSuite()
 
- *public* _afterSuite() 
+ *public* _afterSuite()
 
 **HOOK** executed after suite
 
@@ -90,7 +83,7 @@ Requires module container (to provide access between modules of suite) and confi
 
 #### _before()
 
- *public* _before($test) 
+ *public* _before($test)
 
 **HOOK** executed before test
 
@@ -100,7 +93,7 @@ Requires module container (to provide access between modules of suite) and confi
 
 #### _beforeStep()
 
- *public* _beforeStep($step) 
+ *public* _beforeStep($step)
 
 **HOOK** executed before step
 
@@ -110,7 +103,7 @@ Requires module container (to provide access between modules of suite) and confi
 
 #### _beforeSuite()
 
- *public* _beforeSuite($settings = null) 
+ *public* _beforeSuite($settings = null)
 
 **HOOK** executed before suite
 
@@ -120,7 +113,7 @@ Requires module container (to provide access between modules of suite) and confi
 
 #### _failed()
 
- *public* _failed($test, $fail) 
+ *public* _failed($test, $fail)
 
 **HOOK** executed when test fails but before `_after`
 
@@ -131,7 +124,7 @@ Requires module container (to provide access between modules of suite) and confi
 
 #### _getConfig()
 
- *public* _getConfig($key = null) 
+ *public* _getConfig($key = null)
 
 Get config values or specific config item.
 
@@ -142,7 +135,7 @@ Get config values or specific config item.
 
 #### _getName()
 
- *public* _getName() 
+ *public* _getName()
 
 Returns a module name for a Module, a class name for Helper
  * `return` string
@@ -151,7 +144,7 @@ Returns a module name for a Module, a class name for Helper
 
 #### _hasRequiredFields()
 
- *public* _hasRequiredFields() 
+ *public* _hasRequiredFields()
 
 Checks if a module has required fields
  * `return` bool
@@ -160,7 +153,7 @@ Checks if a module has required fields
 
 #### _initialize()
 
- *public* _initialize() 
+ *public* _initialize()
 
 **HOOK** triggered after module is created and configuration is loaded
 
@@ -168,7 +161,7 @@ Checks if a module has required fields
 
 #### _reconfigure()
 
- *public* _reconfigure($config) 
+ *public* _reconfigure($config)
 
 Allows to redefine config for a specific test.
 Config is restored at the end of a test.
@@ -191,7 +184,7 @@ public function _before(Test $test) {
 
 #### _resetConfig()
 
- *public* _resetConfig() 
+ *public* _resetConfig()
 
 Reverts config changed by `_reconfigure`
 
@@ -199,7 +192,7 @@ Reverts config changed by `_reconfigure`
 
 #### _setConfig()
 
- *public* _setConfig($config) 
+ *public* _setConfig($config)
 
 Allows to define initial module config.
 Can be used in `_beforeSuite` hook of Helpers or Extensions
@@ -219,13 +212,13 @@ public function _beforeSuite($settings = []) {
 
 #### assert()
 
- *protected* assert($arguments, $not = null) 
+ *protected* assert($arguments, $not = null)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L6)
 
 #### assertArrayHasKey()
 
- *protected* assertArrayHasKey($key, $actual, $description = null) 
+ *protected* assertArrayHasKey($key, $actual, $description = null)
 
  * `param` $key
  * `param` $actual
@@ -235,7 +228,7 @@ public function _beforeSuite($settings = []) {
 
 #### assertArrayNotHasKey()
 
- *protected* assertArrayNotHasKey($key, $actual, $description = null) 
+ *protected* assertArrayNotHasKey($key, $actual, $description = null)
 
  * `param` $key
  * `param` $actual
@@ -245,7 +238,7 @@ public function _beforeSuite($settings = []) {
 
 #### assertArraySubset()
 
- *protected* assertArraySubset($subset, $array, $strict = null, $message = null) 
+ *protected* assertArraySubset($subset, $array, $strict = null, $message = null)
 
 Checks that array contains subset.
 
@@ -258,7 +251,7 @@ Checks that array contains subset.
 
 #### assertContains()
 
- *protected* assertContains($needle, $haystack, $message = null) 
+ *protected* assertContains($needle, $haystack, $message = null)
 
 Checks that haystack contains needle
 
@@ -270,7 +263,7 @@ Checks that haystack contains needle
 
 #### assertCount()
 
- *protected* assertCount($expectedCount, $actual, $description = null) 
+ *protected* assertCount($expectedCount, $actual, $description = null)
 
  * `param` $expectedCount
  * `param` $actual
@@ -280,7 +273,7 @@ Checks that haystack contains needle
 
 #### assertEmpty()
 
- *protected* assertEmpty($actual, $message = null) 
+ *protected* assertEmpty($actual, $message = null)
 
 Checks that variable is empty.
 
@@ -291,7 +284,7 @@ Checks that variable is empty.
 
 #### assertEquals()
 
- *protected* assertEquals($expected, $actual, $message = null, $delta = null) 
+ *protected* assertEquals($expected, $actual, $message = null, $delta = null)
 
 Checks that two variables are equal.
 
@@ -304,7 +297,7 @@ Checks that two variables are equal.
 
 #### assertFalse()
 
- *protected* assertFalse($condition, $message = null) 
+ *protected* assertFalse($condition, $message = null)
 
 Checks that condition is negative.
 
@@ -315,7 +308,7 @@ Checks that condition is negative.
 
 #### assertFileExists()
 
- *protected* assertFileExists($filename, $message = null) 
+ *protected* assertFileExists($filename, $message = null)
 
 Checks if file exists
 
@@ -326,7 +319,7 @@ Checks if file exists
 
 #### assertFileNotExists()
 
- *protected* assertFileNotExists($filename, $message = null) 
+ *protected* assertFileNotExists($filename, $message = null)
 
 Checks if file doesn't exist
 
@@ -337,7 +330,7 @@ Checks if file doesn't exist
 
 #### assertGreaterOrEquals()
 
- *protected* assertGreaterOrEquals($expected, $actual, $description = null) 
+ *protected* assertGreaterOrEquals($expected, $actual, $description = null)
 
  * `param` $expected
  * `param` $actual
@@ -347,7 +340,7 @@ Checks if file doesn't exist
 
 #### assertGreaterThan()
 
- *protected* assertGreaterThan($expected, $actual, $message = null) 
+ *protected* assertGreaterThan($expected, $actual, $message = null)
 
 Checks that actual is greater than expected
 
@@ -359,7 +352,7 @@ Checks that actual is greater than expected
 
 #### assertGreaterThanOrEqual()
 
- *protected* assertGreaterThanOrEqual($expected, $actual, $message = null) 
+ *protected* assertGreaterThanOrEqual($expected, $actual, $message = null)
 
 Checks that actual is greater or equal than expected
 
@@ -371,19 +364,19 @@ Checks that actual is greater or equal than expected
 
 #### assertGreaterThen()
 
- *protected* assertGreaterThen($expected, $actual, $message = null) 
- * `deprecated` 
+ *protected* assertGreaterThen($expected, $actual, $message = null)
+ * `deprecated`
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L92)
 
 #### assertGreaterThenOrEqual()
 
- *protected* assertGreaterThenOrEqual($expected, $actual, $message = null) 
- * `deprecated` 
+ *protected* assertGreaterThenOrEqual($expected, $actual, $message = null)
+ * `deprecated`
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L112)
 
 #### assertInstanceOf()
 
- *protected* assertInstanceOf($class, $actual, $description = null) 
+ *protected* assertInstanceOf($class, $actual, $description = null)
 
  * `param` $class
  * `param` $actual
@@ -393,7 +386,7 @@ Checks that actual is greater or equal than expected
 
 #### assertInternalType()
 
- *protected* assertInternalType($type, $actual, $description = null) 
+ *protected* assertInternalType($type, $actual, $description = null)
 
  * `param` $type
  * `param` $actual
@@ -403,7 +396,7 @@ Checks that actual is greater or equal than expected
 
 #### assertIsEmpty()
 
- *protected* assertIsEmpty($actual, $description = null) 
+ *protected* assertIsEmpty($actual, $description = null)
 
  * `param` $actual
  * `param` $description
@@ -412,7 +405,7 @@ Checks that actual is greater or equal than expected
 
 #### assertLessOrEquals()
 
- *protected* assertLessOrEquals($expected, $actual, $description = null) 
+ *protected* assertLessOrEquals($expected, $actual, $description = null)
 
  * `param` $expected
  * `param` $actual
@@ -422,7 +415,7 @@ Checks that actual is greater or equal than expected
 
 #### assertLessThan()
 
- *protected* assertLessThan($expected, $actual, $message = null) 
+ *protected* assertLessThan($expected, $actual, $message = null)
 
 Checks that actual is less than expected
 
@@ -434,7 +427,7 @@ Checks that actual is less than expected
 
 #### assertLessThanOrEqual()
 
- *protected* assertLessThanOrEqual($expected, $actual, $message = null) 
+ *protected* assertLessThanOrEqual($expected, $actual, $message = null)
 
 Checks that actual is less or equal than expected
 
@@ -446,13 +439,13 @@ Checks that actual is less or equal than expected
 
 #### assertNot()
 
- *protected* assertNot($arguments) 
+ *protected* assertNot($arguments)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L22)
 
 #### assertNotContains()
 
- *protected* assertNotContains($needle, $haystack, $message = null) 
+ *protected* assertNotContains($needle, $haystack, $message = null)
 
 Checks that haystack doesn't contain needle.
 
@@ -464,7 +457,7 @@ Checks that haystack doesn't contain needle.
 
 #### assertNotEmpty()
 
- *protected* assertNotEmpty($actual, $message = null) 
+ *protected* assertNotEmpty($actual, $message = null)
 
 Checks that variable is not empty.
 
@@ -475,7 +468,7 @@ Checks that variable is not empty.
 
 #### assertNotEquals()
 
- *protected* assertNotEquals($expected, $actual, $message = null, $delta = null) 
+ *protected* assertNotEquals($expected, $actual, $message = null, $delta = null)
 
 Checks that two variables are not equal
 
@@ -488,7 +481,7 @@ Checks that two variables are not equal
 
 #### assertNotInstanceOf()
 
- *protected* assertNotInstanceOf($class, $actual, $description = null) 
+ *protected* assertNotInstanceOf($class, $actual, $description = null)
 
  * `param` $class
  * `param` $actual
@@ -498,7 +491,7 @@ Checks that two variables are not equal
 
 #### assertNotNull()
 
- *protected* assertNotNull($actual, $message = null) 
+ *protected* assertNotNull($actual, $message = null)
 
 Checks that variable is not NULL
 
@@ -509,7 +502,7 @@ Checks that variable is not NULL
 
 #### assertNotRegExp()
 
- *protected* assertNotRegExp($pattern, $string, $message = null) 
+ *protected* assertNotRegExp($pattern, $string, $message = null)
 
 Checks that string not match with pattern
 
@@ -521,7 +514,7 @@ Checks that string not match with pattern
 
 #### assertNotSame()
 
- *protected* assertNotSame($expected, $actual, $message = null) 
+ *protected* assertNotSame($expected, $actual, $message = null)
 
 Checks that two variables are not same
 
@@ -533,7 +526,7 @@ Checks that two variables are not same
 
 #### assertNull()
 
- *protected* assertNull($actual, $message = null) 
+ *protected* assertNull($actual, $message = null)
 
 Checks that variable is NULL
 
@@ -544,7 +537,7 @@ Checks that variable is NULL
 
 #### assertRegExp()
 
- *protected* assertRegExp($pattern, $string, $message = null) 
+ *protected* assertRegExp($pattern, $string, $message = null)
 
 Checks that string match with pattern
 
@@ -556,7 +549,7 @@ Checks that string match with pattern
 
 #### assertSame()
 
- *protected* assertSame($expected, $actual, $message = null) 
+ *protected* assertSame($expected, $actual, $message = null)
 
 Checks that two variables are same
 
@@ -568,7 +561,7 @@ Checks that two variables are same
 
 #### assertStringStartsNotWith()
 
- *protected* assertStringStartsNotWith($prefix, $string, $message = null) 
+ *protected* assertStringStartsNotWith($prefix, $string, $message = null)
 
 Checks that a string doesn't start with the given prefix.
 
@@ -580,7 +573,7 @@ Checks that a string doesn't start with the given prefix.
 
 #### assertStringStartsWith()
 
- *protected* assertStringStartsWith($prefix, $string, $message = null) 
+ *protected* assertStringStartsWith($prefix, $string, $message = null)
 
 Checks that a string starts with the given prefix.
 
@@ -592,8 +585,7 @@ Checks that a string starts with the given prefix.
 
 #### assertThat()
 
- *protected* assertThat($haystack, $constraint, $message = null) 
-
+ *protected* assertThat($haystack, $constraint, $message = null)
 
  * `param`        $haystack
  * `param`        $constraint
@@ -603,7 +595,7 @@ Checks that a string starts with the given prefix.
 
 #### assertThatItsNot()
 
- *protected* assertThatItsNot($haystack, $constraint, $message = null) 
+ *protected* assertThatItsNot($haystack, $constraint, $message = null)
 
 Checks that haystack doesn't attend
 
@@ -615,7 +607,7 @@ Checks that haystack doesn't attend
 
 #### assertTrue()
 
- *protected* assertTrue($condition, $message = null) 
+ *protected* assertTrue($condition, $message = null)
 
 Checks that condition is positive.
 
@@ -626,7 +618,7 @@ Checks that condition is positive.
 
 #### debug()
 
- *protected* debug($message) 
+ *protected* debug($message)
 
 Print debug message to the screen.
 
@@ -636,7 +628,7 @@ Print debug message to the screen.
 
 #### debugSection()
 
- *protected* debugSection($title, $message) 
+ *protected* debugSection($title, $message)
 
 Print debug message with a title
 
@@ -647,7 +639,7 @@ Print debug message with a title
 
 #### fail()
 
- *protected* fail($message) 
+ *protected* fail($message)
 
 Fails the test with message.
 
@@ -657,7 +649,7 @@ Fails the test with message.
 
 #### getModule()
 
- *protected* getModule($name) 
+ *protected* getModule($name)
 
 Get another module by its name:
 
@@ -674,7 +666,7 @@ $this->getModule('WebDriver')->_findElements('.items');
 
 #### getModules()
 
- *protected* getModules() 
+ *protected* getModules()
 
 Get all enabled modules
  * `return` array
@@ -683,7 +675,7 @@ Get all enabled modules
 
 #### hasModule()
 
- *protected* hasModule($name) 
+ *protected* hasModule($name)
 
 Checks that module is enabled.
 
@@ -694,7 +686,7 @@ Checks that module is enabled.
 
 #### onReconfigure()
 
- *protected* onReconfigure() 
+ *protected* onReconfigure()
 
 HOOK to be executed when config changes with `_reconfigure`.
 
@@ -702,13 +694,13 @@ HOOK to be executed when config changes with `_reconfigure`.
 
 #### scalarizeArray()
 
- *protected* scalarizeArray($array) 
+ *protected* scalarizeArray($array)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L349)
 
 #### validateConfig()
 
- *protected* validateConfig() 
+ *protected* validateConfig()
 
 Validates current config for required fields and required packages.
  * `throws` Exception\ModuleConfigException

@@ -1,16 +1,12 @@
 
 ## Codeception\Util\Locator
 
-
-
 Set of useful functions for using CSS and XPath locators.
 Please check them before writing complex functional or acceptance tests.
 
-
-
 #### combine()
 
- *public static* combine($selector1, $selector2) 
+ *public static* combine($selector1, $selector2)
 
 Applies OR operator to any number of CSS or XPath selectors.
 You can mix up CSS and XPath selectors here.
@@ -35,7 +31,7 @@ $I->fillField(Locator::combine('form input[type=text]','//form/textarea[2]'), 'q
 ```
 
 As a result the Locator will produce a mixed XPath value that will be used in fillField action.
- * `static` 
+ * `static`
  * `param` $selector1
  * `param` $selector2
  * `throws` \Exception
@@ -45,7 +41,7 @@ As a result the Locator will produce a mixed XPath value that will be used in fi
 
 #### contains()
 
- *public static* contains($element, $text) 
+ *public static* contains($element, $text)
 
 Locates an element containing a text inside.
 Either CSS or XPath locator can be passed, however they will be converted to XPath.
@@ -66,7 +62,7 @@ Locator::contains('div[@contenteditable=true]', 'hello world');
 
 #### elementAt()
 
- *public static* elementAt($element, $position) 
+ *public static* elementAt($element, $position)
 
 Locates element at position.
 Either CSS or XPath locator can be passed as locator,
@@ -90,7 +86,7 @@ Locator::elementAt('table#grind>tr', -2); // previous than last row
 
 #### find()
 
- *public static* find($element, array $attributes) 
+ *public static* find($element, array $attributes)
 
 Finds element by it's attribute(s)
 
@@ -100,7 +96,7 @@ use \Codeception\Util\Locator;
 
 $I->seeElement(Locator::find('img', ['title' => 'diagram']));
 ```
- * `static` 
+ * `static`
  * `param` $element
  * `param` $attributes
  * `return` string
@@ -109,7 +105,7 @@ $I->seeElement(Locator::find('img', ['title' => 'diagram']));
 
 #### firstElement()
 
- *public static* firstElement($element) 
+ *public static* firstElement($element)
 
 Locates first element of group elements.
 Either CSS or XPath locator can be passed as locator,
@@ -129,7 +125,7 @@ Locator::firstElement('//table/tr');
 
 #### href()
 
- *public static* href($url) 
+ *public static* href($url)
 
 Matches the *a* element with given URL
 
@@ -140,7 +136,7 @@ use \Codeception\Util\Locator;
 $I->see('Log In', Locator::href('/login.php'));
 ?>
 ```
- * `static` 
+ * `static`
  * `param` $url
  * `return` string
 
@@ -148,7 +144,7 @@ $I->see('Log In', Locator::href('/login.php'));
 
 #### humanReadableString()
 
- *public static* humanReadableString($selector) 
+ *public static* humanReadableString($selector)
 
 Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string represenation
 
@@ -159,7 +155,7 @@ Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string represe
 
 #### isCSS()
 
- *public static* isCSS($selector) 
+ *public static* isCSS($selector)
 
 Checks that provided string is CSS selector
 
@@ -177,7 +173,7 @@ Locator::isCSS('//body/p/user') => false
 
 #### isClass()
 
- *public static* isClass($class) 
+ *public static* isClass($class)
 
 Checks that a string is valid CSS class
 
@@ -195,7 +191,7 @@ Locator::isClass('//body/p/user') => false
 
 #### isID()
 
- *public static* isID($id) 
+ *public static* isID($id)
 
 Checks that a string is valid CSS ID
 
@@ -213,7 +209,7 @@ Locator::isID('//body/p/user') => false
 
 #### isPrecise()
 
- *public static* isPrecise($locator) 
+ *public static* isPrecise($locator)
 
  * `param` $locator
  * `return` bool
@@ -222,7 +218,7 @@ Locator::isID('//body/p/user') => false
 
 #### isXPath()
 
- *public static* isXPath($locator) 
+ *public static* isXPath($locator)
 
 Checks that locator is an XPath
 
@@ -240,7 +236,7 @@ Locator::isXPath('//body/p/user') => true
 
 #### lastElement()
 
- *public static* lastElement($element) 
+ *public static* lastElement($element)
 
 Locates last element of group elements.
 Either CSS or XPath locator can be passed as locator,
@@ -260,7 +256,7 @@ Locator::lastElement('//table/tr');
 
 #### option()
 
- *public static* option($value) 
+ *public static* option($value)
 
 Matches option by text:
 
@@ -278,7 +274,7 @@ $I->seeElement(Locator::option('Male'), '#select-gender');
 
 #### tabIndex()
 
- *public static* tabIndex($index) 
+ *public static* tabIndex($index)
 
 Matches the element with given tab index
 
@@ -293,7 +289,7 @@ $I->fillField(Locator::tabIndex(2) , 'qwerty');
 $I->click('Login');
 ?>
 ```
- * `static` 
+ * `static`
  * `param` $index
  * `return` string
 
@@ -301,7 +297,7 @@ $I->click('Login');
 
 #### toXPath()
 
- *protected static* toXPath($selector) 
+ *protected static* toXPath($selector)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Locator.php#L129)
 

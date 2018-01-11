@@ -562,9 +562,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
         if ($rootNamespace && !(strpos($action, '\\') === 0)) {
             return $rootNamespace . '\\' . $action;
-        } else {
-            return trim($action, '\\');
         }
+
+        return trim($action, '\\');
     }
 
     /**

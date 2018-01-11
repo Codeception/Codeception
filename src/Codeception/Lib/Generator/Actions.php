@@ -58,8 +58,9 @@ EOF;
         $modules = Configuration::modules($this->settings);
         $this->moduleContainer = new ModuleContainer($this->di, $settings);
         foreach ($modules as $moduleName) {
-            $this->modules[$moduleName] = $this->moduleContainer->create($moduleName);
+            $this->moduleContainer->create($moduleName);
         }
+        $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
     }
 

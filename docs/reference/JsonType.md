@@ -1,8 +1,6 @@
 
 ## Codeception\Util\JsonType
 
-
-
 JsonType matches JSON structures against templates.
 You can specify the type of fields in JSON or add additional validation rules.
 
@@ -27,10 +25,9 @@ $jsonType->matches([
 Class JsonType
 @package Codeception\Util
 
-
 #### __construct()
 
- *public* __construct($jsonArray) 
+ *public* __construct($jsonArray)
 
 Creates instance of JsonType
 Pass an array or `\Codeception\Util\JsonArray` with data.
@@ -42,7 +39,7 @@ If non-associative array is passed - the very first element of it will be used f
 
 #### addCustomFilter()
 
- *public static* addCustomFilter($name, callable $callable) 
+ *public static* addCustomFilter($name, callable $callable)
 
 Adds custom filter to JsonType list.
 You should specify a name and parameters of a filter.
@@ -55,7 +52,6 @@ JsonType::addCustomFilter('slug', function($value) {
     return strpos(' ', $value) !== false;
 });
 // => use it as 'string:slug'
-
 
 // add custom function to matcher with `len($val)` syntax
 // parameter matching patterns should be valid regex and start with `/` char
@@ -73,7 +69,7 @@ JsonType::addCustomFilter('/len\((.*?)\)/', function($value, $len) {
 
 #### cleanCustomFilters()
 
- *public static* cleanCustomFilters() 
+ *public static* cleanCustomFilters()
 
 Removes all custom filters
 
@@ -81,13 +77,13 @@ Removes all custom filters
 
 #### matchFilter()
 
- *protected* matchFilter($filter, $value) 
+ *protected* matchFilter($filter, $value)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/JsonType.php#L158)
 
 #### matches()
 
- *public* matches(array $jsonType) 
+ *public* matches(array $jsonType)
 
 Checks data against passed JsonType.
 If matching fails function returns a string with a message describing failure.
@@ -100,7 +96,7 @@ On success returns `true`.
 
 #### typeComparison()
 
- *protected* typeComparison($data, $jsonType) 
+ *protected* typeComparison($data, $jsonType)
 
 [See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/JsonType.php#L116)
 

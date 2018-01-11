@@ -426,7 +426,6 @@ For Cept you should use simple comments:
 // @env phantom
 ```
 
-
 This way you can easily control which tests will be executed for each environment.
 
 ### Current values
@@ -471,7 +470,6 @@ public function myTest(\AcceptanceTester $I, \Codeception\Scenario $scenario)
 
 `Codeception\Scenario` is also availble in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
 
-
 ### Dependencies
 
 With the `@depends` annotation you can specify a test that should be passed before the current one.
@@ -495,7 +493,6 @@ class ModeratorCest {
     }
 }
 ```
-
 
 `@depends` applies to the `Cest` and `Codeception\Test\Unit` formats. Dependencies can be set across different classes.
 To specify a dependent test from another file you should provide a *test signature*.
@@ -603,7 +600,7 @@ Tests for groups can be specified as an array of file names or directories conta
 groups:
   # add 2 tests to db group
   db: [tests/unit/PersistTest.php, tests/unit/DataTest.php]
-  
+
   # add all tests from a directory to api group
   api: [tests/functional/api]
 ```
@@ -635,7 +632,6 @@ groups:
 
 This will load all found `p*` files in `tests/_data` as groups. Group names will be as follows p1,p2,...,pN.
 
-
 ## Shell autocompletion
 
 For bash and zsh shells, you can use autocompletion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
@@ -657,10 +653,10 @@ By using the above code in your shell, Codeception will try to autocomplete the 
 * Suites
 * Test paths
 
-Usage of `-use-vendor-bin` is optional. This option will work for most Codeception projects, where Codeception is located in your `vendor/bin` folder. 
-But in case you are using a global Codeception installation for example, you wouldn't use this option. 
+Usage of `-use-vendor-bin` is optional. This option will work for most Codeception projects, where Codeception is located in your `vendor/bin` folder.
+But in case you are using a global Codeception installation for example, you wouldn't use this option.
 
-Note that with the `-use-vendor-bin` option, your commands will be completed using the Codeception binary located in your project's root. 
+Note that with the `-use-vendor-bin` option, your commands will be completed using the Codeception binary located in your project's root.
 Without the option, it will use whatever Codeception binary you originally used to generate the completion script ('codecept location' in the above examples)
 
 ## Conclusion
