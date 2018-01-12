@@ -117,7 +117,7 @@ class StepTest extends \PHPUnit_Framework_TestCase
 
     public function testFormattedOutput()
     {
-        $argument = $this->createMock('\Codeception\Step\Argument\FormattedOutput');
+        $argument = Codeception\Util\Stub::makeEmpty('\Codeception\Step\Argument\FormattedOutput');
         $argument->method('getOutput')->willReturn('some formatted output');
 
         $step = $this->getStep(['argument', [$argument]]);
