@@ -24,6 +24,7 @@ use yii\db\ActiveRecordInterface;
  * * `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
  * * `transaction` - (default: true) wrap all database connection inside a transaction and roll it back after the test. Should be disabled for acceptance testing..
  * * `cleanup` - (default: true) cleanup fixtures after the test
+ * * `forceLoadFixtures` - (default: false) force reload fixtures before the test and insert data into database. Set `true` if we use `cleanup` of Db codeception module first
  *
  * You can use this module by setting params in your functional.suite.yml:
  *
@@ -133,6 +134,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     protected $config = [
         'cleanup'     => true,
+        'forceLoadFixtures' => false,
         'transaction' => null,
         'entryScript' => '',
         'entryUrl'    => 'http://localhost/index-test.php',
@@ -169,6 +171,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     public function _before(TestInterface $test)
     {
         $entryUrl = $this->config['entryUrl'];
+        $forceLoadFixtures = $this->config['forceLoadFixtures'];
         $entryFile = $this->config['entryScript'] ?: basename($entryUrl);
         $entryScript = $this->config['entryScript'] ?: parse_url($entryUrl, PHP_URL_PATH);
 
@@ -186,9 +189,9 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         // load fixtures before db transaction
         if ($test instanceof \Codeception\Test\Cest) {
-            $this->loadFixtures($test->getTestClass());
+            $this->loadFixtures($test->getTestClass(), $forceLoadFixtures);
         } else {
-            $this->loadFixtures($test);
+            $this->loadFixtures($test, $forceLoadFixtures);
         }
 
         if ($this->config['transaction']
@@ -204,10 +207,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * load fixtures before db transaction
      *
      * @param mixed $test instance of test class
+     * @param bool $force force load fixtures. This option can be true if you use Codeception Db module both
      */
-    private function loadFixtures($test)
+    private function loadFixtures($test, $force = false)
     {
-        if (empty($this->loadedFixtures)
+        if (($force || empty($this->loadedFixtures))
             && method_exists($test, self::TEST_FIXTURES_METHOD)
         ) {
             $this->haveFixtures(call_user_func([$test, self::TEST_FIXTURES_METHOD]));
