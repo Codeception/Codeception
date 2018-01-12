@@ -1244,7 +1244,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->debugSection('Response Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
     }
 
-    public function getResponseStatusCode()
+    public function _getResponseStatusCode()
+    {
+        return $this->getResponseStatusCode();
+    }
+
+    protected function getResponseStatusCode()
     {
         // depending on Symfony version
         $response = $this->getRunningClient()->getInternalResponse();
