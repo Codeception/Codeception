@@ -154,7 +154,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->debugSection("Request Headers", $this->headers);
 
         foreach ($this->headers as $header => $val) { // moved from REST module
-
             if ($val === null || $val === '') {
                 continue;
             }
@@ -1244,7 +1243,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->debugSection('Response Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
     }
 
-    protected function getResponseStatusCode()
+    public function getResponseStatusCode()
     {
         // depending on Symfony version
         $response = $this->getRunningClient()->getInternalResponse();
