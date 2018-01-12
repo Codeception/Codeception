@@ -1,4 +1,4 @@
-FROM php:7.0-cli
+FROM php:7.2-cli
 
 MAINTAINER Tobias Munk tobias@diemeisterei.de
 
@@ -18,9 +18,12 @@ RUN docker-php-ext-install \
     zip
 
 # Install pecl extensions
-RUN pecl install mongodb xdebug && \
-    docker-php-ext-enable mongodb && \
-    docker-php-ext-enable xdebug
+RUN pecl install \
+        mongodb \
+        xdebug-2.6.0beta1 && \
+    docker-php-ext-enable \
+        mongodb.so \
+        xdebug
 
 # Configure php
 RUN echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini
