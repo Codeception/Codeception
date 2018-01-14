@@ -14,7 +14,7 @@
 ```
 ### Details
 
-* Codeception version: 
+* Codeception version:
 * PHP Version:
 * Operating System:
 * Installation type: Phar || Composer

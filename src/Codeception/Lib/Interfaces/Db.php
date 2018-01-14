@@ -68,7 +68,7 @@ interface Db
      *
      * ```php
      * <?php
-     * $post = $I->grabFromDatabase('posts', ['num_comments >=' => 100']);
+     * $post = $I->grabFromDatabase('posts', ['num_comments >=' => 100]);
      * $user = $I->grabFromDatabase('users', ['email like' => 'miles%']);
      * ```
      *

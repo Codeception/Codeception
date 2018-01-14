@@ -70,6 +70,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --coverage-html       Generate CodeCoverage HTML report in path (default: "coverage")
  *  --coverage-xml        Generate CodeCoverage XML report in file (default: "coverage.xml")
  *  --coverage-text       Generate CodeCoverage text report in file (default: "coverage.txt")
+ *  --coverage-phpunit    Generate CodeCoverage PHPUnit report in file (default: "coverage-phpunit")
  *  --no-exit             Don't finish with exit code
  *  --group (-g)          Groups of tests to be executed (multiple values allowed)
  *  --skip (-s)           Skip selected suites (multiple values allowed)
@@ -166,6 +167,12 @@ class Run extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Generate CodeCoverage report in Crap4J XML format'
             ),
+            new InputOption(
+                'coverage-phpunit',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Generate CodeCoverage PHPUnit report in path'
+            ),
             new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
             new InputOption(
                 'group',
@@ -252,7 +259,8 @@ class Run extends Command
                 'coverage-xml' => 'coverage.xml',
                 'coverage-html' => 'coverage',
                 'coverage-text' => 'coverage.txt',
-                'coverage-crap4j' => 'crap4j.xml'])
+                'coverage-crap4j' => 'crap4j.xml',
+                'coverage-phpunit' => 'coverage-phpunit'])
         );
         $userOptions['verbosity'] = $this->output->getVerbosity();
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
@@ -270,7 +278,7 @@ class Run extends Command
         if ($this->options['report']) {
             $userOptions['silent'] = true;
         }
-        if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text'] or $this->options['coverage-crap4j']) {
+        if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text'] or $this->options['coverage-crap4j'] or $this->options['coverage-phpunit']) {
             $this->options['coverage'] = true;
         }
         if (!$userOptions['ansi'] && $input->getOption('colors')) {

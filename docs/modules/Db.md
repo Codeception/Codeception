@@ -1,6 +1,5 @@
 # Db
 
-
 Access a database.
 
 The most important function of this module is to clean a database before each test.
@@ -170,12 +169,10 @@ SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` LIKE 'davert%'
 * dbh - contains the PDO connection
 * driver - contains the Connection Driver
 
-
-
 ## Actions
 
 ### dontSeeInDatabase
- 
+
 Effect is opposite to ->seeInDatabase
 
 Asserts that there is no record with the given column values in a database.
@@ -200,9 +197,8 @@ Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
  * `param string` $table
  * `param array` $criteria
 
-
 ### grabColumnFromDatabase
- 
+
 Fetches all values from the column in database.
 Provide table name, desired column and criteria.
 
@@ -217,9 +213,8 @@ $mails = $I->grabColumnFromDatabase('users', 'email', array('name' => 'RebOOter'
 
  * `return` array
 
-
 ### grabFromDatabase
- 
+
 Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
@@ -241,10 +236,8 @@ Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
  * `param string` $column
  * `param array` $criteria
 
-
-
 ### grabNumRecords
- 
+
 Returns the number of rows in a database
 
  * `param string` $table    Table name
@@ -252,9 +245,8 @@ Returns the number of rows in a database
 
  * `return` int
 
-
 ### haveInDatabase
- 
+
 Inserts an SQL record into a database. This record will be erased after the test.
 
 ```php
@@ -268,13 +260,11 @@ $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com
 
  * `return integer` $id
 
-
 ### isPopulated
 __not documented__
 
-
 ### seeInDatabase
- 
+
 Asserts that a row with the given column values exists.
 Provide table name and column values.
 
@@ -294,13 +284,11 @@ $I->seeInDatabase('users', ['email like' => 'miles@davis.com']);
 
 Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
 
-
  * `param string` $table
  * `param array` $criteria
 
-
 ### seeNumRecords
- 
+
 Asserts that the given number of records were found in the database.
 
 ```php
@@ -313,9 +301,8 @@ $I->seeNumRecords(1, 'users', ['name' => 'davert'])
  * `param string` $table Table name
  * `param array` $criteria Search criteria [Optional]
 
-
 ### updateInDatabase
- 
+
 Update an SQL record into a database.
 
 ```php

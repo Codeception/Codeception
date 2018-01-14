@@ -56,6 +56,7 @@ if (class_exists('SebastianBergmann\CodeCoverage\CodeCoverage') and !class_exist
       class_alias('SebastianBergmann\CodeCoverage\Report\Clover', 'PHP_CodeCoverage_Report_Clover');
       class_alias('SebastianBergmann\CodeCoverage\Report\Crap4j', 'PHP_CodeCoverage_Report_Crap4j');
       class_alias('SebastianBergmann\CodeCoverage\Report\Html\Facade', 'PHP_CodeCoverage_Report_HTML');
+      class_alias('SebastianBergmann\CodeCoverage\Report\Xml\Facade', 'PHP_CodeCoverage_Report_XML');
       class_alias('SebastianBergmann\CodeCoverage\Exception', 'PHP_CodeCoverage_Exception');
 }
 
@@ -160,6 +161,37 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         $writer->process($codeCoverage, $path . '.crap4j.xml');
 
         return $path . '.crap4j.xml';
+    }
+
+    function __c3_build_phpunit_report(PHP_CodeCoverage $codeCoverage, $path)
+    {
+        $writer = new PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
+        $writer->process($codeCoverage, $path . 'phpunit');
+
+        if (file_exists($path . '.tar')) {
+            unlink($path . '.tar');
+        }
+
+        $phar = new PharData($path . '.tar');
+        $phar->setSignatureAlgorithm(Phar::SHA1);
+        $files = $phar->buildFromDirectory($path . 'phpunit');
+        array_map('unlink', $files);
+
+        if (in_array('GZ', Phar::getSupportedCompression())) {
+            if (file_exists($path . '.tar.gz')) {
+                unlink($path . '.tar.gz');
+            }
+
+            $phar->compress(\Phar::GZ);
+
+            // close the file so that we can rename it
+            unset($phar);
+
+            unlink($path . '.tar');
+            rename($path . '.tar.gz', $path . '.tar');
+        }
+
+        return $path . '.tar';
     }
 
     function __c3_send_file($filename)
@@ -267,6 +299,13 @@ if ($requested_c3_report) {
         case 'serialized':
             try {
                 __c3_send_file($complete_report);
+            } catch (Exception $e) {
+                __c3_error($e->getMessage());
+            }
+            return __c3_exit();
+        case 'phpunit':
+            try {
+                __c3_send_file(__c3_build_phpunit_report($codeCoverage, $path));
             } catch (Exception $e) {
                 __c3_error($e->getMessage());
             }

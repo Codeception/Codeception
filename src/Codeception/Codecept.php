@@ -51,6 +51,7 @@ class Codecept
         'coverage-html'   => false,
         'coverage-text'   => false,
         'coverage-crap4j' => false,
+        'coverage-phpunit'=> false,
         'groups'          => null,
         'excludeGroups'   => null,
         'filter'          => null,
