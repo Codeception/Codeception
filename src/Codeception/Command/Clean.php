@@ -8,10 +8,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Cleans `output` directory
+ * Recursively cleans `output` directory and generated code.
  *
  * * `codecept clean`
- * * `codecept clean -c path/to/project`
  *
  */
 class Clean extends Command
@@ -20,13 +19,33 @@ class Clean extends Command
 
     public function getDescription()
     {
-        return 'Cleans or creates _output directory';
+        return 'Recursively cleans log and generated code';
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("<info>Cleaning up " . Configuration::outputDir() . "...</info>");
-        FileSystem::doEmptyDir(Configuration::outputDir());
+        $projectDir = Configuration::projectDir();
+        $this->cleanProjectsRecursively($output, $projectDir);
         $output->writeln("Done");
+    }
+
+    private function cleanProjectsRecursively(OutputInterface $output, $projectDir) {
+        $config = Configuration::config($projectDir);
+
+        $logDir = $projectDir . DIRECTORY_SEPARATOR . $config['paths']['log'];
+        $output->writeln("<info>Cleaning up log " . $logDir . "...</info>");
+        FileSystem::doEmptyDir($logDir);
+
+        if (!empty($config['paths']['helpers'])) {
+            $generatedDir = $projectDir . DIRECTORY_SEPARATOR . $config['paths']['helpers'] . DIRECTORY_SEPARATOR . "_generated";
+            $output->writeln("<info>Cleaning up generated code " . $generatedDir . "...</info>");
+            FileSystem::doEmptyDir($generatedDir);
+        }
+
+        $subProjects = $config['include'];
+        foreach ($subProjects as $subProject) {
+            $subProjectDir = $projectDir . $subProject;
+            $this->cleanProjectsRecursively($output, $subProjectDir);
+        }
     }
 }
