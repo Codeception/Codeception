@@ -802,6 +802,16 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/bug2921');
         $this->module->seeInField('foo', 'bar baz');
     }
+    
+    /**
+    * @Issue 4726
+    */
+    public function testClearField()
+    {
+        $this->module->fillField('#username', 'username');
+        $this->module->clearField('#username');
+        $this->module->dontSee('username');        
+    } 
 
     public function testClickHashLink()
     {
