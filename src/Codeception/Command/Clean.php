@@ -29,7 +29,8 @@ class Clean extends Command
         $output->writeln("Done");
     }
 
-    private function cleanProjectsRecursively(OutputInterface $output, $projectDir) {
+    private function cleanProjectsRecursively(OutputInterface $output, $projectDir)
+    {
         $config = Configuration::config($projectDir);
 
         $logDir = $projectDir . DIRECTORY_SEPARATOR . $config['paths']['log'];
