@@ -256,8 +256,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     protected function getKernelClass()
     {
-        $path = \Codeception\Configuration::projectDir() . $this->config['app_path'];
-        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['app_path'])) {
+        $path = codecept_root_dir() . $this->config['app_path'];
+        if (!file_exists(codecept_root_dir() . $this->config['app_path'])) {
             throw new ModuleRequireException(
                 __CLASS__,
                 "Can't load Kernel from $path.\n"
@@ -276,6 +276,11 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             );
         }
         $file = current($results);
+
+        if (file_exists(codecept_root_dir() . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) {
+            // ensure autoloader from this dir is loaded
+            require_once codecept_root_dir() . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+        }
 
         require_once $file;
 
