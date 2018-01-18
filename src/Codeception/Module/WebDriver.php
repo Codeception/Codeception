@@ -1624,6 +1624,17 @@ class WebDriver extends CodeceptionModule implements
         $el->sendKeys($value);
     }
 
+    /**
+    * Clears given field which isn't empty.
+    *
+    * ``` php
+    * <?php
+    * $I->clearField('#username');
+    * ?>
+    * ```
+    *
+    * @param $field
+    */    
     public function clearField($field)
     {
         $el = $this->findField($field);
