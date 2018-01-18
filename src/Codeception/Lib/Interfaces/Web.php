@@ -698,34 +698,20 @@ interface Web
      * @param $value
      */
     public function fillField($field, $value);
-
+    
     /**
-     * Fills field with the given value.
+     * Attaches a file relative to the Codeception `_data` directory to the given file upload field.
      *
      * ``` php
      * <?php
-     * $I->fillField('#username', 'username');
+     * // file is stored in 'tests/_data/prices.xls'
+     * $I->attachFile('input[@type="file"]', 'prices.xls');
      * ?>
      * ```
      *
      * @param $field
-     * @param $value
+     * @param $filename
      */
-    
-    public function clearField($field);
-
-    /**
-     * Clears given field which isn't empty.
-     *
-     * ``` php
-     * <?php
-     * $I->clearField('#username');
-     * ?>
-     * ```
-     *
-     * @param $field
-     */
-    
     public function attachFile($field, $filename);
 
     /**
