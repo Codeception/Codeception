@@ -87,6 +87,8 @@ coverage:
     # url of file which includes c3 router.
     c3_url: 'http://127.0.0.1:8000/index-test.php/'
 ```
+> note: we can't have multiple `c3_url` on same host difference only by port. Please, use alias of domain 
+(i.e. `frontend.dev:8000`,`backend.dev:8080`) instead.
 
 After the `c3.php` file is included in application you can start gather coverage.
 In case you execute your application locally there is nothing to be changed in config.
