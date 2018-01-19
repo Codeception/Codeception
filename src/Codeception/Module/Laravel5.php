@@ -206,17 +206,17 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
     }
     
-    private function usesExplicitDatabases() : bool
+    private function usesExplicitDatabases()
     {
         return $this->config['databases'] !== '';
     }
     
-    private function usesDatabase() : bool
+    private function usesDatabase()
     {
         return $this->applicationUsesDatabase() || $this->config['databases'] !== '';
     }
     
-    protected function getStartedConnections() : string
+    protected function getStartedConnections()
     {
         return implode(',', array_keys($this->app['db']->getConnections()));
     }
