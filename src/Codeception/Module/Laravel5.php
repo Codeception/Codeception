@@ -201,7 +201,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     
     private function startTransactions(array $databases)
     {
-        foreach ($databases AS $database) {
+        foreach ($databases as $database) {
             $this->app['db']->connection($database)->beginTransaction();
         }
     }
