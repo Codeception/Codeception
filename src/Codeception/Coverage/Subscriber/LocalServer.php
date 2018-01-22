@@ -156,7 +156,9 @@ class LocalServer extends SuiteSubscriber
         ];
         $value = json_encode($value);
 
-        $this->module->amOnPage('/');
+        if ($this->module instanceof \Codeception\Module\WebDriver) {
+            $this->module->amOnPage('/');
+        }
 
         $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
 
