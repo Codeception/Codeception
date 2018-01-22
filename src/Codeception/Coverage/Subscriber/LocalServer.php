@@ -156,6 +156,8 @@ class LocalServer extends SuiteSubscriber
         ];
         $value = json_encode($value);
 
+        $this->module->amOnPage('/');
+
         $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
 
         // we need to separate coverage cookies by host; we can't separate cookies by port.
