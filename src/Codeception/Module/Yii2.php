@@ -486,7 +486,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (!class_exists($model)) {
             throw new \RuntimeException("Model $model does not exist");
         }
-        $record = new $model;
+        $record = Yii::createObject($model);
         if (!$record instanceof ActiveRecordInterface) {
             throw new \RuntimeException("Model $model is not implement interface \\yii\\db\\ActiveRecordInterface");
         }
