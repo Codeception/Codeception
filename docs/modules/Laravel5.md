@@ -15,6 +15,7 @@ See the Acceptance tests section below for more details.
 * database_migrations_path: `string`, default `null` - path to the database migrations, relative to the root of the application.
 * run_database_seeder: `boolean`, default `false` - run database seeder before each test.
 * database_seeder_class: `string`, default `` - database seeder class name.
+* databases: `string`, default `` - database connection(s) used in test fx "default,testing".
 * environment_file: `string`, default `.env` - the environment file to load for the tests.
 * bootstrap: `string`, default `bootstrap/app.php` - relative path to app.php config file.
 * root: `string`, default `` - root path of the application.
