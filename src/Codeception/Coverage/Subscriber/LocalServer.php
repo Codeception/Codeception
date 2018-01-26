@@ -156,11 +156,14 @@ class LocalServer extends SuiteSubscriber
         ];
         $value = json_encode($value);
 
-        $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
-        $c3Host = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
-        if (isset($c3Url['port'])) {
-            $c3Host .= ':' . $c3Url['port'];
+        if ($this->module instanceof \Codeception\Module\WebDriver) {
+            $this->module->amOnPage('/');
         }
+
+        $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
+
+        // we need to separate coverage cookies by host; we can't separate cookies by port.
+        $c3Host = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
 
         $this->module->setCookie(self::COVERAGE_COOKIE, $value, ['domain' => $c3Host]);
 
