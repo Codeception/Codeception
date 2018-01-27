@@ -2486,15 +2486,42 @@ class WebDriver extends CodeceptionModule implements
      * ```php
      * <?php
      * $myVar = $I->executeJS('return $("#myField").val()');
-     * ?>
+     *
+     * // additional arguments can be passed as array
+     * // Example shows `Hello World` alert:
+     * $I->executeJS("window.alert(arguments[0])", ['Hello world']);
      * ```
      *
      * @param $script
+     * @param array $arguments
      * @return mixed
      */
-    public function executeJS($script)
+    public function executeJS($script, array $arguments = [])
     {
-        return $this->webDriver->executeScript($script);
+        return $this->webDriver->executeScript($script, $arguments);
+    }
+
+    /**
+     * Executes asynchronous JavaScript.
+     * A callback should be executed by JavaScript to exit from a script.
+     * Callback is passed as a last element in `arguments` array.
+     * Additional arguments can be passed as array in second parameter.
+     *
+     * ```js
+     * // wait for 1200 milliseconds my running `setTimeout`
+     * * $I->executeAsyncJS('setTimeout(arguments[0], 1200)');
+     *
+     * $seconds = 1200; // or seconds are passed as argument
+     * $I->executeAsyncJS('setTimeout(arguments[1], arguments[0])', [$seconds]);
+     * ```
+     *
+     * @param $script
+     * @param array $arguments
+     * @return mixed
+     */
+    public function executeAsyncJS($script, array $arguments = [])
+    {
+        return $this->webDriver->executeAsyncScript($script, $arguments);
     }
 
     /**

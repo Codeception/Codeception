@@ -5,6 +5,8 @@
   * Mocking methods `::once`, `::never`, etc moved to `Codeception\Stub\Expected` class
   * Calling mocking methods from `Codeception\Util\Stub` provides deprecation warning.
   * Non-static API is [recommended to use for mocking](http://codeception.com/docs/05-UnitTests) 
+* [WebDriver] Added `executeAsyncJS` action to run asynchronous scripts.
+* [WebDriver] Added second parameter to `executeJS` to pass additional arguments into JavaScript function. 
 * [Yii2] `setCookie` signs cookies when signing enabled. #4656 By @SamMousa
 * [Yii2] Method `createAndSetCsrfCookie` added. #4656 By @SamMousa
 * Compatibility with phpunit-mock-objects 5.* by @Naktibalda
