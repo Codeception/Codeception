@@ -98,5 +98,5 @@ Documentation is included within the project. Look for it in the ['docs' directo
 ## License
 MIT
 
-(c) Codeception Team
+(c) [Codeception Team](http://codeception.com/credits)
 2011-2018
