@@ -10,6 +10,13 @@ class ConfigBundledSuitesCest
         $I->seeInShellOutput('OK (1 test');
     }
 
+    public function runTestByPath(CliGuy $I)
+    {
+        $I->amInPath('tests/data/bundled_suites');
+        $I->executeCommand('run BasicTest.php');
+        $I->seeInShellOutput('OK (1 test');
+    }
+
     public function generateTestsForBundledSuite(CliGuy $I)
     {
         $I->amInPath('tests/data/bundled_suites');

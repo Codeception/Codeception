@@ -3,6 +3,7 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
+use Codeception\Util\PathResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -387,6 +388,24 @@ class Run extends Command
         // @see https://github.com/Codeception/Codeception/issues/4432
         if ($config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
             $suite = './' . $suite;
+        }
+
+        // running a single test when suite has a configured path
+        if (isset($config['suites'])) {
+            foreach ($config['suites'] as $s => $suiteConfig) {
+                if (!isset($suiteConfig['path'])) {
+                    continue;
+                }
+                $testsPath = $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suiteConfig['path'];
+                if ($suiteConfig['path'] === '.') {
+                    $testsPath = $config['paths']['tests'];
+                }
+                if (preg_match("~^$testsPath/(.*?)$~", $suite, $matches)) {
+                    $matches[2] = $matches[1];
+                    $matches[1] = $s;
+                    return $matches;
+                }
+            }
         }
 
         // Run single test without included tests

@@ -21,6 +21,7 @@
   * Remove `:port` for cookie domain; 
   * `->amOnPage('/');` executed when running code coverage with WebDriver
 * Fixed running single test with `include` config parameter. Fixes #4733 by @ppetpadriew
+* Fixed running single test when a custom suite path is configured (For instance, in single-suite setups).
 * `generate:test` command won't include `tester` property if actor is not set for this config.
 
 
