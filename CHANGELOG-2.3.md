@@ -21,6 +21,7 @@
   * Remove `:port` for cookie domain; 
   * `->amOnPage('/');` executed when running code coverage with WebDriver
 * Fixed running single test with `include` config parameter. Fixes #4733 by @ppetpadriew
+* `generate:test` command won't include `tester` property if actor is not set for this config.
 
 
 #### 2.3.7
