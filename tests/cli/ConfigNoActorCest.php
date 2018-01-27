@@ -33,6 +33,8 @@ class ConfigNoActorCest
         $I->executeFailCommand('generate:test unit Some');
         $I->seeResultCodeIs(0);
         $I->seeFileFound('SomeTest.php', 'tests');
+        $I->seeInThisFile('class SomeTest extends \Codeception\Test\Unit');
+        $I->dontSeeInThisFile('$tester');
         $I->deleteFile('tests/SomeTest.php');
     }
 
