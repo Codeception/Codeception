@@ -5,7 +5,9 @@ use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Lib\Interfaces\DependsOnModule;
+use Codeception\Lib\Interfaces\Remote;
 use Codeception\Lib\Interfaces\RequiresPackage;
+use Codeception\Lib\Interfaces\Web;
 use Codeception\Module as BaseModule;
 
 /**
@@ -95,7 +97,7 @@ class Facebook extends BaseModule implements DependsOnModule, RequiresPackage
     protected $testUser = [];
 
     /**
-     * @var PhpBrowser
+     * @var Remote|Web
      */
     protected $browserModule;
 
@@ -121,11 +123,17 @@ EOF;
 
     public function _depends()
     {
-        return ['Codeception\Module\PhpBrowser' => $this->dependencyMessage];
+        return ['Codeception\Lib\Interfaces\Remote|Codeception\Lib\Interfaces\Remote' => $this->dependencyMessage];
     }
 
-    public function _inject(PhpBrowser $browserModule)
+    public function _inject($browserModule)
     {
+        if (!$browserModule instanceof Remote || !$browserModule instanceof Web) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                sprintf('Dependency must implement %s and %s', Remote::class, Web::class)
+            );
+        }
         $this->browserModule = $browserModule;
     }
 
