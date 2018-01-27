@@ -140,6 +140,7 @@ EOF;
 
     public function _initialize()
     {
+        Notification::deprecate('Facebook module is not maintained and will be deprecated. Contact Codeception team if you are interested in maintaining it');
         if (!array_key_exists('test_user', $this->config)) {
             $this->config['test_user'] = [
                 'permissions' => [],
