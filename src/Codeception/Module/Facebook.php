@@ -6,7 +6,7 @@ use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\RequiresPackage;
-use Codeception\Module\Notification;
+use Codeception\Lib\Notification;
 use Codeception\Module as BaseModule;
 
 /**
