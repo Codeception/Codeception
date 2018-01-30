@@ -252,6 +252,23 @@ class HTML extends CodeceptionResultPrinter
         $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addFailure($test, $e, $time);
     }
+    
+    /**
+     * Starts test.
+     *
+     * @param \PHPUnit_Framework_Test $test
+     */
+    public function startTest(\PHPUnit_Framework_Test $test)
+    {
+        $name = Descriptor::getTestSignature($test);
+        if (isset($this->failures[$name])) {
+            // test failed in before hook
+            return;
+        }
+
+        // start test and mark initialize as passed
+        parent::startTest($test);
+    }
 
 
     /**
