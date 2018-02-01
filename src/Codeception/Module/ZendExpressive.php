@@ -32,6 +32,7 @@ class ZendExpressive extends Framework implements DoctrineProvider
 {
     protected $config = [
         'container' => 'config/container.php',
+        'doctrineEntityManager' => 'Doctrine\ORM\EntityManager',
     ];
 
     /**
@@ -106,11 +107,11 @@ class ZendExpressive extends Framework implements DoctrineProvider
 
     public function _getEntityManager()
     {
-        $service = 'Doctrine\ORM\EntityManager';
+        $service = $this->config['doctrineEntityManager'];
         if (!$this->container->has($service)) {
             throw new \PHPUnit_Framework_AssertionFailedError("Service $service is not available in container");
         }
 
-        return $this->container->get('Doctrine\ORM\EntityManager');
+        return $this->container->get($service);
     }
 }
