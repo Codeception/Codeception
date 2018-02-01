@@ -20,6 +20,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
  * ## Config
  *
  * * container: relative path to file which returns Container (default: `config/container.php`)
+ * * doctrineEntityManager: the service name for `Doctrine\ORM\EntityManager` within container (default: `Doctrine\ORM\EntityManager`)
  *
  * ## API
  *
