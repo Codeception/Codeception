@@ -808,9 +808,10 @@ class WebDriverTest extends TestsForBrowsers
     */
     public function testClearField()
     {
-        $this->module->fillField('#username', 'username');
-        $this->module->clearField('#username');
-        $this->module->dontSeeInField('#username', 'username');        
+        $this->module->amOnPage('/form/textarea');
+        $this->module->fillField('#description', 'description');
+        $this->module->clearField('#description');
+        $this->module->dontSeeInField('#description', 'description');        
     } 
 
     public function testClickHashLink()
