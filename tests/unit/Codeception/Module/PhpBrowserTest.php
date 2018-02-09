@@ -282,7 +282,7 @@ class PhpBrowserTest extends TestsForBrowsers
     {
         $this->module->amOnUrl('http://httpbin.org/redirect-to?url=//codeception.com/');
         $currentUrl = $this->module->client->getHistory()->current()->getUri();
-        $this->assertSame('http://codeception.com/', $currentUrl);
+        $this->assertSame('https://codeception.com/', $currentUrl);
     }
 
     public function testSetCookieByHeader()
