@@ -2985,6 +2985,17 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
+     * @param string $name
+     */
+    public function deleteSessionSnapshot($name)
+    {
+        if (isset($this->sessionSnapshots[$name])) {
+            unset($this->sessionSnapshots[$name]);
+        }
+        $this->debugSection('Snapshot', "Deleted \"$name\" session snapshot");
+    }
+
+    /**
      * Check if the cookie domain matches the config URL.
      *
      * @param array|Cookie $cookie
