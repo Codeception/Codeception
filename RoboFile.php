@@ -181,6 +181,10 @@ class RoboFile extends \Robo\Tasks
     {
         $this->installDependenciesForPhp70();
         $this->packPhar('package/codecept.phar');
+        $code = $this->taskExec('php codecept.phar')->dir('package')->run()->getExitCode();
+        if ($code !== 0) {
+            throw new Exception("There was problem compiling phar");
+        }
         $this->revertComposerJsonChanges();
     }
 
@@ -194,7 +198,12 @@ class RoboFile extends \Robo\Tasks
             mkdir('package/php54');
         }
         $this->installDependenciesForPhp54();
-        $this->packPhar('package/php54/codecept.phar');
+        $this->packPhar('package/codecept5.phar');
+        $this->_copy('package/codecept5.phar', 'package/php54/codecept.phar');
+        $code = $this->taskExec('php codecept.phar')->dir('package/php54')->run()->getExitCode();
+        if ($code !== 0) {
+            throw new Exception("There was problem compiling phar");
+        }
         $this->revertComposerJsonChanges();
     }
 
@@ -265,10 +274,6 @@ class RoboFile extends \Robo\Tasks
             ->addFile('phpunit5-loggers.php', 'phpunit5-loggers.php')
             ->run();
 
-        $code = $this->taskExec('php ' . $pharFileName)->run()->getExitCode();
-        if ($code !== 0) {
-            throw new Exception("There was problem compiling phar");
-        }
     }
 
     /**
