@@ -569,6 +569,9 @@ EOF;
         // allow full url to be requested
         if (strpos($url, '://') === false) {
             $url = $this->config['url'] . $url;
+            if ($this->config['url'] && strpos($url, '://') === false && $this->config['url'][0] !== '/') {
+                $url = '/' . $url;
+            }
         }
 
         $this->params = $parameters;
