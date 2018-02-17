@@ -668,13 +668,13 @@ EOF;
                 if (isset($value['tmp_name'])) {
                     $this->checkFileBeforeUpload($value['tmp_name']);
                     if (!isset($value['name'])) {
-                        $value['name'] = basename($value);
+                        $value['name'] = basename($value['tmp_name']);
                     }
                     if (!isset($value['size'])) {
-                        $value['size'] = filesize($value);
+                        $value['size'] = filesize($value['tmp_name']);
                     }
                     if (!isset($value['type'])) {
-                        $value['type'] = $this->getFileType($value);
+                        $value['type'] = $this->getFileType($value['tmp_name']);
                     }
                     if (!isset($value['error'])) {
                         $value['error'] = 0;
