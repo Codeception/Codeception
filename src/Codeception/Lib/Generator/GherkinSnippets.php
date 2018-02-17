@@ -14,7 +14,7 @@ class GherkinSnippets
      */
      public function {{methodName}}({{params}})
      {
-        throw new \Codeception\Exception\Incomplete("Step `{{text}}` is not defined");
+         throw new \Codeception\Exception\Incomplete("Step `{{text}}` is not defined");
      }
 
 EOF;
