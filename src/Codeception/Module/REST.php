@@ -1262,7 +1262,7 @@ EOF;
      */
     public function seeXmlResponseEquals($xml)
     {
-        \PHPUnit\Framework\Assert::assertXmlStringEqualsXmlString($this->connectionModule->\getResponseContent(), $xml);
+        \PHPUnit\Framework\Assert::assertXmlStringEqualsXmlString($this->connectionModule->getResponseContent(), $xml);
     }
 
 
