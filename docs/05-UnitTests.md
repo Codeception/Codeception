@@ -89,7 +89,7 @@ class UserTest extends \Codeception\Test\Unit
 
 ### Assertions
 
-There are pretty much assertions you can use inside tests. The most common are:
+There are pretty many assertions you can use inside tests. The most common are:
 
 * `$this->assertEquals()`
 * `$this->assertContains()`

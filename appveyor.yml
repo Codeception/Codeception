@@ -33,7 +33,7 @@ install:
   - SET PATH=C:\Program Files\curl;%PATH%
   - sc config wuauserv start= auto
   - net start wuauserv
-  - IF %PHP%==1 cinst -y php
+  - IF %PHP%==1 cinst -y php --version 7.1.14
   - IF %PHP%==1 cd c:\tools\php71
   - IF %PHP%==1 cd ext
   - IF %PHP%==1 appveyor DownloadFile http://windows.php.net/downloads/pecl/releases/mongodb/1.2.0/php_mongodb-1.2.0-7.1-nts-vc14-x64.zip
