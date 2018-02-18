@@ -2,7 +2,7 @@
 // @codingStandardsIgnoreStart
 
 namespace {
-    require __DIR__ . '/../projects/phpunit-wrapper/src/shim.php';
+    \Codeception\PHPUnit\Init::init();
 }
 
 namespace Symfony\Component\CssSelector {
