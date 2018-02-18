@@ -5,7 +5,7 @@ namespace Codeception\PHPUnit\Constraint;
 use Codeception\Util\JsonType as JsonTypeUtil;
 use Codeception\Util\JsonArray;
 
-class JsonType extends \PHPUnit\Framework\Constraint
+class JsonType extends \PHPUnit\Framework\Constraint\Constraint
 {
     protected $jsonType;
     private $match;

@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\PHPUnit\ResultPrinter;
 
+use Codeception\Lib\Console\Output;
 use Codeception\PHPUnit\ConsolePrinter;
 use Codeception\PHPUnit\ResultPrinter;
 use Codeception\Test\Descriptor;
@@ -54,5 +55,10 @@ class Report extends ResultPrinter implements ConsolePrinter
 
     public function printResult(\PHPUnit\Framework\TestResult $result)
     {
+    }
+
+    public function write($buffer)
+    {
+
     }
 }

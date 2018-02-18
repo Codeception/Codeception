@@ -7,7 +7,7 @@ use SebastianBergmann\Comparator\ArrayComparator;
 use SebastianBergmann\Comparator\Factory;
 use Codeception\Util\JsonArray;
 
-class JsonContains extends \PHPUnit\Framework\Constraint
+class JsonContains extends \PHPUnit\Framework\Constraint\Constraint
 {
     /**
      * @var
