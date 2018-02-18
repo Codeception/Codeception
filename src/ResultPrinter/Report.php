@@ -8,24 +8,24 @@ use Codeception\Test\Descriptor;
 class Report extends ResultPrinter implements ConsolePrinter
 {
     /**
-     * @param \PHPUnit_Framework_Test $test
+     * @param \PHPUnit\Framework\Test $test
      * @param float $time
      */
-    public function endTest(\PHPUnit_Framework_Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, $time)
     {
         $name = Descriptor::getTestAsString($test);
-        $success = ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_PASSED);
+        $success = ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_PASSED);
         if ($success) {
             $this->successful++;
         }
 
-        if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE) {
+        if ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE) {
             $status = "\033[41;37mFAIL\033[0m";
-        } elseif ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
+        } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_SKIPPED) {
             $status = 'Skipped';
-        } elseif ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
+        } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_INCOMPLETE) {
             $status = 'Incomplete';
-        } elseif ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR) {
+        } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_ERROR) {
             $status = 'ERROR';
         } else {
             $status = 'Ok';
@@ -52,7 +52,7 @@ class Report extends ResultPrinter implements ConsolePrinter
         ) . "\n");
     }
 
-    public function printResult(\PHPUnit_Framework_TestResult $result)
+    public function printResult(\PHPUnit\Framework\TestResult $result)
     {
     }
 }

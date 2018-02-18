@@ -9,13 +9,13 @@ use Codeception\Test\Descriptor;
  * Class FilterTest
  * @package Codeception\PHPUnit
  */
-class FilterTest extends \PHPUnit_Runner_Filter_Test
+class FilterTest extends \PHPUnit\Runner\Filter\NameFilterIterator
 {
     public function accept()
     {
         $test = $this->getInnerIterator()->current();
 
-        if ($test instanceof \PHPUnit_Framework_TestSuite) {
+        if ($test instanceof \PHPUnit\Framework\TestSuite) {
             return true;
         }
 

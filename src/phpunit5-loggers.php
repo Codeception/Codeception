@@ -1,16 +1,17 @@
 <?php
 // @codingStandardsIgnoreStart
-namespace {
-    /*
-     * This file is part of PHPUnit.
-     *
-     * (c) Sebastian Bergmann <sebastian@phpunit.de>
-     *
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+/*
+ * This file is part of PHPUnit.
+ *
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
+namespace {
     if (!class_exists('PHPUnit_Util_String')) {
+
         /**
          * String helpers.
          */
@@ -63,6 +64,10 @@ namespace {
             }
         }
     }
+}
+
+
+namespace PHPUnit\Util\Log {
 
     /*
      * This file is part of PHPUnit.
@@ -76,8 +81,8 @@ namespace {
     /**
      * A TestListener that generates JSON messages.
      */
-    if (!class_exists('PHPUnit_Util_Log_JSON')) {
-        class PHPUnit_Util_Log_JSON extends PHPUnit_Util_Printer implements PHPUnit_Framework_TestListener
+    if (!class_exists('\PHPUnit\Util\Log\JSON')) {
+        class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListener
         {
             /**
              * @var string
@@ -97,17 +102,17 @@ namespace {
             /**
              * An error occurred.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param Exception $e
              * @param float $time
              */
-            public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
+            public function addError(\PHPUnit\Framework\Test $test, \Exception $e, $time)
             {
                 $this->writeCase(
                     'error',
                     $time,
-                    PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
-                    PHPUnit_Framework_TestFailure::exceptionToString($e),
+                    \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
+                    \PHPUnit\Framework\TestFailure::exceptionToString($e),
                     $test
                 );
 
@@ -117,17 +122,17 @@ namespace {
             /**
              * A warning occurred.
              *
-             * @param PHPUnit_Framework_Test $test
-             * @param PHPUnit_Framework_Warning $e
+             * @param \PHPUnit\Framework\Test $test
+             * @param \PHPUnit\Framework\Warning $e
              * @param float $time
              */
-            public function addWarning(PHPUnit_Framework_Test $test, PHPUnit_Framework_Warning $e, $time)
+            public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, $time)
             {
                 $this->writeCase(
                     'warning',
                     $time,
-                    PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
-                    PHPUnit_Framework_TestFailure::exceptionToString($e),
+                    \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
+                    \PHPUnit\Framework\TestFailure::exceptionToString($e),
                     $test
                 );
 
@@ -137,17 +142,17 @@ namespace {
             /**
              * A failure occurred.
              *
-             * @param PHPUnit_Framework_Test $test
-             * @param PHPUnit_Framework_AssertionFailedError $e
+             * @param \PHPUnit\Framework\Test $test
+             * @param \PHPUnit\Framework\AssertionFailedError $e
              * @param float $time
              */
-            public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
+            public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, $time)
             {
                 $this->writeCase(
                     'fail',
                     $time,
-                    PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
-                    PHPUnit_Framework_TestFailure::exceptionToString($e),
+                    \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
+                    \PHPUnit\Framework\TestFailure::exceptionToString($e),
                     $test
                 );
 
@@ -157,16 +162,16 @@ namespace {
             /**
              * Incomplete test.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param Exception $e
              * @param float $time
              */
-            public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+            public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
             {
                 $this->writeCase(
                     'error',
                     $time,
-                    PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
+                    \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
                     'Incomplete Test: ' . $e->getMessage(),
                     $test
                 );
@@ -177,16 +182,16 @@ namespace {
             /**
              * Risky test.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param Exception $e
              * @param float $time
              */
-            public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+            public function addRiskyTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
             {
                 $this->writeCase(
                     'error',
                     $time,
-                    PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
+                    \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
                     'Risky Test: ' . $e->getMessage(),
                     $test
                 );
@@ -197,16 +202,16 @@ namespace {
             /**
              * Skipped test.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param Exception $e
              * @param float $time
              */
-            public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+            public function addSkippedTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
             {
                 $this->writeCase(
                     'error',
                     $time,
-                    PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
+                    \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
                     'Skipped Test: ' . $e->getMessage(),
                     $test
                 );
@@ -217,9 +222,9 @@ namespace {
             /**
              * A testsuite started.
              *
-             * @param PHPUnit_Framework_TestSuite $suite
+             * @param \PHPUnit\Framework\TestSuite $suite
              */
-            public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
+            public function startTestSuite(\PHPUnit\Framework\TestSuite $suite)
             {
                 $this->currentTestSuiteName = $suite->getName();
                 $this->currentTestName = '';
@@ -236,9 +241,9 @@ namespace {
             /**
              * A testsuite ended.
              *
-             * @param PHPUnit_Framework_TestSuite $suite
+             * @param \PHPUnit\Framework\TestSuite $suite
              */
-            public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
+            public function endTestSuite(\PHPUnit\Framework\TestSuite $suite)
             {
                 $this->currentTestSuiteName = '';
                 $this->currentTestName = '';
@@ -247,11 +252,11 @@ namespace {
             /**
              * A test started.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              */
-            public function startTest(PHPUnit_Framework_Test $test)
+            public function startTest(\PHPUnit\Framework\Test $test)
             {
-                $this->currentTestName = PHPUnit_Util_Test::describe($test);
+                $this->currentTestName = \PHPUnit\Util\Test::describe($test);
                 $this->currentTestPass = true;
 
                 $this->write(
@@ -266,10 +271,10 @@ namespace {
             /**
              * A test ended.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param float $time
              */
-            public function endTest(PHPUnit_Framework_Test $test, $time)
+            public function endTest(\PHPUnit\Framework\Test $test, $time)
             {
                 if ($this->currentTestPass) {
                     $this->writeCase('pass', $time, [], '', $test);
@@ -281,7 +286,7 @@ namespace {
              * @param float $time
              * @param array $trace
              * @param string $message
-             * @param PHPUnit_Framework_TestCase|null $test
+             * @param \PHPUnit\Framework\TestCase|null $test
              */
             protected function writeCase($status, $time, array $trace = [], $message = '', $test = null)
             {
@@ -298,7 +303,7 @@ namespace {
                         'status'  => $status,
                         'time'    => $time,
                         'trace'   => $trace,
-                        'message' => PHPUnit_Util_String::convertToUtf8($message),
+                        'message' => \PHPUnit_Util_String::convertToUtf8($message),
                         'output'  => $output,
                     ]
                 );
@@ -312,7 +317,7 @@ namespace {
                 array_walk_recursive(
                     $buffer, function (&$input) {
                     if (is_string($input)) {
-                        $input = PHPUnit_Util_String::convertToUtf8($input);
+                        $input = \PHPUnit_Util_String::convertToUtf8($input);
                     }
                 }
                 );
@@ -331,13 +336,13 @@ namespace {
      * file that was distributed with this source code.
      */
 
-    if (!class_exists('PHPUnit_Util_Log_TAP')) {
+    if (!class_exists('\PHPUnit\Util\Log\TAP')) {
 
         /**
          * A TestListener that generates a logfile of the
          * test execution using the Test Anything Protocol (TAP).
          */
-        class PHPUnit_Util_Log_TAP extends PHPUnit_Util_Printer implements PHPUnit_Framework_TestListener
+        class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListener
         {
             /**
              * @var int
@@ -359,7 +364,7 @@ namespace {
              *
              * @param mixed $out
              *
-             * @throws PHPUnit_Framework_Exception
+             * @throws \PHPUnit\Framework\Exception
              */
             public function __construct($out = null)
             {
@@ -370,11 +375,11 @@ namespace {
             /**
              * An error occurred.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param Exception $e
              * @param float $time
              */
-            public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
+            public function addError(\PHPUnit\Framework\Test $test, \Exception $e, $time)
             {
                 $this->writeNotOk($test, 'Error');
             }
@@ -382,11 +387,11 @@ namespace {
             /**
              * A warning occurred.
              *
-             * @param PHPUnit_Framework_Test $test
-             * @param PHPUnit_Framework_Warning $e
+             * @param \PHPUnit\Framework\Test $test
+             * @param \PHPUnit\Framework\Warning $e
              * @param float $time
              */
-            public function addWarning(PHPUnit_Framework_Test $test, PHPUnit_Framework_Warning $e, $time)
+            public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, $time)
             {
                 $this->writeNotOk($test, 'Warning');
             }
@@ -394,17 +399,17 @@ namespace {
             /**
              * A failure occurred.
              *
-             * @param PHPUnit_Framework_Test $test
-             * @param PHPUnit_Framework_AssertionFailedError $e
+             * @param \PHPUnit\Framework\Test $test
+             * @param \PHPUnit\Framework\AssertionFailedError $e
              * @param float $time
              */
-            public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
+            public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, $time)
             {
                 $this->writeNotOk($test, 'Failure');
 
                 $message = explode(
                     "\n",
-                    PHPUnit_Framework_TestFailure::exceptionToString($e)
+                    \PHPUnit\Framework\TestFailure::exceptionToString($e)
                 );
 
                 $diagnostic = [
@@ -412,7 +417,7 @@ namespace {
                     'severity' => 'fail'
                 ];
 
-                if ($e instanceof PHPUnit_Framework_ExpectationFailedException) {
+                if ($e instanceof \PHPUnit\Framework\ExpectationFailedException) {
                     $cf = $e->getComparisonFailure();
 
                     if ($cf !== null) {
@@ -436,11 +441,11 @@ namespace {
             /**
              * Incomplete test.
              *
-             * @param PHPUnit_Framework_Test $test
-             * @param Exception $e
+             * @param \PHPUnit\Framework\Test $test
+             * @param \Exception $e
              * @param float $time
              */
-            public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+            public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
             {
                 $this->writeNotOk($test, '', 'TODO Incomplete Test');
             }
@@ -448,11 +453,11 @@ namespace {
             /**
              * Risky test.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param Exception $e
              * @param float $time
              */
-            public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+            public function addRiskyTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
             {
                 $this->write(
                     sprintf(
@@ -468,11 +473,11 @@ namespace {
             /**
              * Skipped test.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param Exception $e
              * @param float $time
              */
-            public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+            public function addSkippedTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
             {
                 $this->write(
                     sprintf(
@@ -488,9 +493,9 @@ namespace {
             /**
              * A testsuite started.
              *
-             * @param PHPUnit_Framework_TestSuite $suite
+             * @param \PHPUnit\Framework\TestSuite $suite
              */
-            public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
+            public function startTestSuite(\PHPUnit\Framework\TestSuite $suite)
             {
                 $this->testSuiteLevel++;
             }
@@ -498,9 +503,9 @@ namespace {
             /**
              * A testsuite ended.
              *
-             * @param PHPUnit_Framework_TestSuite $suite
+             * @param \PHPUnit\Framework\TestSuite $suite
              */
-            public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
+            public function endTestSuite(\PHPUnit\Framework\TestSuite $suite)
             {
                 $this->testSuiteLevel--;
 
@@ -512,9 +517,9 @@ namespace {
             /**
              * A test started.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              */
-            public function startTest(PHPUnit_Framework_Test $test)
+            public function startTest(\PHPUnit\Framework\Test $test)
             {
                 $this->testNumber++;
                 $this->testSuccessful = true;
@@ -523,17 +528,17 @@ namespace {
             /**
              * A test ended.
              *
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param float $time
              */
-            public function endTest(PHPUnit_Framework_Test $test, $time)
+            public function endTest(\PHPUnit\Framework\Test $test, $time)
             {
                 if ($this->testSuccessful === true) {
                     $this->write(
                         sprintf(
                             "ok %d - %s\n",
                             $this->testNumber,
-                            PHPUnit_Util_Test::describe($test)
+                            \PHPUnit\Util\Test::describe($test)
                         )
                     );
                 }
@@ -542,18 +547,18 @@ namespace {
             }
 
             /**
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              * @param string $prefix
              * @param string $directive
              */
-            protected function writeNotOk(PHPUnit_Framework_Test $test, $prefix = '', $directive = '')
+            protected function writeNotOk(\PHPUnit\Framework\Test $test, $prefix = '', $directive = '')
             {
                 $this->write(
                     sprintf(
                         "not ok %d - %s%s%s\n",
                         $this->testNumber,
                         $prefix != '' ? $prefix . ': ' : '',
-                        PHPUnit_Util_Test::describe($test),
+                        \PHPUnit\Util\Test::describe($test),
                         $directive != '' ? ' # ' . $directive : ''
                     )
                 );
@@ -562,11 +567,11 @@ namespace {
             }
 
             /**
-             * @param PHPUnit_Framework_Test $test
+             * @param \PHPUnit\Framework\Test $test
              */
-            private function writeDiagnostics(PHPUnit_Framework_Test $test)
+            private function writeDiagnostics(\PHPUnit\Framework\Test $test)
             {
-                if (!$test instanceof PHPUnit_Framework_TestCase) {
+                if (!$test instanceof \PHPUnit\Framework\TestCase) {
                     return;
                 }
 

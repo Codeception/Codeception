@@ -5,11 +5,11 @@ use Codeception\Configuration;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Test;
 
-class JUnit extends \PHPUnit_Util_Log_JUnit
+class JUnit extends \PHPUnit\Util\Log\JUnit
 {
     protected $strictAttributes = ['file', 'name', 'class'];
 
-    public function startTest(\PHPUnit_Framework_Test $test)
+    public function startTest(\PHPUnit\Framework\Test $test)
     {
         if (!$test instanceof Reported) {
             return parent::startTest($test);
@@ -27,7 +27,7 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
         }
     }
 
-    public function endTest(\PHPUnit_Framework_Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, $time)
     {
         if ($this->currentTestCase !== null and $test instanceof Test) {
             $numAssertions = $test->getNumAssertions();

@@ -48,7 +48,7 @@ class WebDriver extends Page
         }
         $output .= "\ncontains text '" . $this->string . "'";
 
-        throw new \PHPUnit_Framework_ExpectationFailedException(
+        throw new \PHPUnit\Framework\ExpectationFailedException(
             $output,
             $comparisonFailure
         );

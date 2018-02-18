@@ -7,7 +7,7 @@ use Codeception\Test\Unit;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class UI extends \PHPUnit_TextUI_ResultPrinter
+class UI extends \PHPUnit\TextUI\ResultPrinter
 {
     /**
      * @var EventDispatcher
@@ -20,7 +20,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
         $this->dispatcher = $dispatcher;
     }
 
-    protected function printDefect(\PHPUnit_Framework_TestFailure $defect, $count)
+    protected function printDefect(\PHPUnit\Framework\TestFailure $defect, $count)
     {
         $this->write("\n---------\n");
         $this->dispatcher->dispatch(
@@ -30,14 +30,14 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
     }
 
     /**
-     * @param \PHPUnit_Framework_TestFailure $defect
+     * @param \PHPUnit\Framework\TestFailure $defect
      */
-    protected function printDefectTrace(\PHPUnit_Framework_TestFailure $defect)
+    protected function printDefectTrace(\PHPUnit\Framework\TestFailure $defect)
     {
         $this->write($defect->getExceptionAsString());
         $this->writeNewLine();
 
-        $stackTrace = \PHPUnit_Util_Filter::getFilteredStacktrace($defect->thrownException(), false);
+        $stackTrace = \PHPUnit\Util\Filter::getFilteredStacktrace($defect->thrownException(), false);
 
         foreach ($stackTrace as $i => $frame) {
             if (!isset($frame['file'])) {
@@ -57,38 +57,38 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
         }
     }
 
-    public function startTest(\PHPUnit_Framework_Test $test)
+    public function startTest(\PHPUnit\Framework\Test $test)
     {
         if ($test instanceof Unit) {
             parent::startTest($test);
         }
     }
 
-    public function endTest(\PHPUnit_Framework_Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, $time)
     {
-        if ($test instanceof \PHPUnit_Framework_TestCase or $test instanceof \Codeception\Test\Test) {
+        if ($test instanceof \PHPUnit\Framework\TestCase or $test instanceof \Codeception\Test\Test) {
             $this->numAssertions += $test->getNumAssertions();
         }
 
         $this->lastTestFailed = false;
     }
 
-    public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    public function addError(\PHPUnit\Framework\Test $test, \Exception $e, $time)
     {
         $this->lastTestFailed = true;
     }
 
-    public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
+    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, $time)
     {
         $this->lastTestFailed = true;
     }
 
-    public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
     {
         $this->lastTestFailed = true;
     }
 
-    public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    public function addSkippedTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
     {
         $this->lastTestFailed = true;
     }

@@ -13,7 +13,7 @@ class CrawlerNot extends Crawler
     protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null)
     {
         if (!$this->string) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
+            throw new \PHPUnit\Framework\ExpectationFailedException(
                 "Element '$selector' was found",
                 $comparisonFailure
             );
@@ -25,7 +25,7 @@ class CrawlerNot extends Crawler
         $output .= $this->nodesList($nodes, $this->string);
         $output .= "\ncontaining '{$this->string}'";
 
-        throw new \PHPUnit_Framework_ExpectationFailedException(
+        throw new \PHPUnit\Framework\ExpectationFailedException(
             $output,
             $comparisonFailure
         );

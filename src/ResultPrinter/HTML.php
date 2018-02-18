@@ -65,10 +65,10 @@ class HTML extends CodeceptionResultPrinter
     {
     }
 
-    public function endTest(\PHPUnit_Framework_Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, $time)
     {
         $steps = [];
-        $success = ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_PASSED);
+        $success = ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_PASSED);
         if ($success) {
             $this->successful++;
         }
@@ -79,16 +79,16 @@ class HTML extends CodeceptionResultPrinter
         $this->timeTaken += $time;
 
         switch ($this->testStatus) {
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE:
+            case \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE:
                 $scenarioStatus = 'scenarioFailed';
                 break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED:
+            case \PHPUnit\Runner\BaseTestRunner::STATUS_SKIPPED:
                 $scenarioStatus = 'scenarioSkipped';
                 break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE:
+            case \PHPUnit\Runner\BaseTestRunner::STATUS_INCOMPLETE:
                 $scenarioStatus = 'scenarioIncomplete';
                 break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR:
+            case \PHPUnit\Runner\BaseTestRunner::STATUS_ERROR:
                 $scenarioStatus = 'scenarioFailed';
                 break;
             default:
@@ -171,7 +171,7 @@ class HTML extends CodeceptionResultPrinter
         $this->scenarios .= $scenarioTemplate->render();
     }
 
-    public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
+    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite)
     {
         $suiteTemplate = new \Text_Template(
             $this->templatePath . 'suite.html'
@@ -230,11 +230,11 @@ class HTML extends CodeceptionResultPrinter
     /**
      * An error occurred.
      *
-     * @param \PHPUnit_Framework_Test $test
+     * @param \PHPUnit\Framework\Test $test
      * @param \Exception $e
      * @param float $time
      */
-    public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    public function addError(\PHPUnit\Framework\Test $test, \Exception $e, $time)
     {
         $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addError($test, $e, $time);
@@ -243,11 +243,11 @@ class HTML extends CodeceptionResultPrinter
     /**
      * A failure occurred.
      *
-     * @param \PHPUnit_Framework_Test                 $test
-     * @param \PHPUnit_Framework_AssertionFailedError $e
+     * @param \PHPUnit\Framework\Test                 $test
+     * @param \PHPUnit\Framework\AssertionFailedError $e
      * @param float                                  $time
      */
-    public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
+    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, $time)
     {
         $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addFailure($test, $e, $time);
@@ -256,9 +256,9 @@ class HTML extends CodeceptionResultPrinter
     /**
      * Starts test.
      *
-     * @param \PHPUnit_Framework_Test $test
+     * @param \PHPUnit\Framework\Test $test
      */
-    public function startTest(\PHPUnit_Framework_Test $test)
+    public function startTest(\PHPUnit\Framework\Test $test)
     {
         $name = Descriptor::getTestSignature($test);
         if (isset($this->failures[$name])) {

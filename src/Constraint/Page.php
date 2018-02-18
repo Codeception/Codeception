@@ -3,7 +3,7 @@ namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Lib\Console\Message;
 
-class Page extends \PHPUnit_Framework_Constraint
+class Page extends \PHPUnit\Framework\Constraint
 {
     protected $uri;
 

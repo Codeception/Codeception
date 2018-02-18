@@ -15,7 +15,7 @@ class WebDriverNot extends WebDriver
     {
         $selectorString = Locator::humanReadableString($selector);
         if (!$this->string) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
+            throw new \PHPUnit\Framework\ExpectationFailedException(
                 "Element $selectorString was found",
                 $comparisonFailure
             );
@@ -26,7 +26,7 @@ class WebDriverNot extends WebDriver
         $output .= $this->nodesList($nodes, $this->string);
         $output .= "\ncontaining '{$this->string}'";
 
-        throw new \PHPUnit_Framework_ExpectationFailedException(
+        throw new \PHPUnit\Framework\ExpectationFailedException(
             $output,
             $comparisonFailure
         );

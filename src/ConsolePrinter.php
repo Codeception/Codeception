@@ -11,5 +11,5 @@ interface ConsolePrinter
 {
     public function write($buffer);
 
-    public function printResult(\PHPUnit_Framework_TestResult $result);
+    public function printResult(\PHPUnit\Framework\TestResult $result);
 }

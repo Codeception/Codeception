@@ -4,7 +4,7 @@ namespace Codeception\PHPUnit;
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 
-class Runner extends \PHPUnit_TextUI_TestRunner
+class Runner extends \PHPUnit\TextUI\TestRunner
 {
     public static $persistentListeners = [];
 
@@ -34,28 +34,28 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     }
 
     /**
-     * @return null|\PHPUnit_TextUI_ResultPrinter
+     * @return null|\PHPUnit\TextUI\ResultPrinter
      */
     public function getPrinter()
     {
         return $this->printer;
     }
 
-    public function prepareSuite(\PHPUnit_Framework_Test $suite, array &$arguments)
+    public function prepareSuite(\PHPUnit\Framework\Test $suite, array &$arguments)
     {
         $this->handleConfiguration($arguments);
 
-        $filterFactory = new \PHPUnit_Runner_Filter_Factory();
+        $filterFactory = new \PHPUnit\Runner\Filter\Factory();
         if ($arguments['groups']) {
             $filterFactory->addFilter(
-                new \ReflectionClass('PHPUnit_Runner_Filter_Group_Include'),
+                new \ReflectionClass('PHPUnit\Runner\Filter\IncludeGroupFilterIterator'),
                 $arguments['groups']
             );
         }
 
         if ($arguments['excludeGroups']) {
             $filterFactory->addFilter(
-                new \ReflectionClass('PHPUnit_Runner_Filter_Group_Exclude'),
+                new \ReflectionClass('PHPUnit\Runner\Filter\ExcludeGroupFilterIterator'),
                 $arguments['excludeGroups']
             );
         }
@@ -71,8 +71,8 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     }
 
     public function doEnhancedRun(
-        \PHPUnit_Framework_Test $suite,
-        \PHPUnit_Framework_TestResult $result,
+        \PHPUnit\Framework\Test $suite,
+        \PHPUnit\Framework\TestResult $result,
         array $arguments = []
     ) {
         unset($GLOBALS['app']); // hook for not to serialize globals
@@ -114,12 +114,12 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     }
 
     /**
-     * @param \PHPUnit_Framework_TestResult $result
+     * @param \PHPUnit\Framework\TestResult $result
      * @param array $arguments
      *
      * @return array
      */
-    protected function applyReporters(\PHPUnit_Framework_TestResult $result, array $arguments)
+    protected function applyReporters(\PHPUnit\Framework\TestResult $result, array $arguments)
     {
         foreach ($this->defaultListeners as $listener => $value) {
             if (!isset($arguments[$listener])) {

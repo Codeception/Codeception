@@ -5,7 +5,7 @@ namespace Codeception\PHPUnit\Constraint;
 use Codeception\Util\JsonType as JsonTypeUtil;
 use Codeception\Util\JsonArray;
 
-class JsonType extends \PHPUnit_Framework_Constraint
+class JsonType extends \PHPUnit\Framework\Constraint
 {
     protected $jsonType;
     private $match;
@@ -35,11 +35,11 @@ class JsonType extends \PHPUnit_Framework_Constraint
 
         if ($this->match) {
             if ($matched !== true) {
-                throw new \PHPUnit_Framework_ExpectationFailedException($matched);
+                throw new \PHPUnit\Framework\ExpectationFailedException($matched);
             }
         } else {
             if ($matched === true) {
-                throw new \PHPUnit_Framework_ExpectationFailedException('Unexpectedly response matched: ' . json_encode($jsonArray));
+                throw new \PHPUnit\Framework\ExpectationFailedException('Unexpectedly response matched: ' . json\encode($jsonArray));
             }
         }
         return true;

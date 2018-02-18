@@ -7,7 +7,7 @@ use SebastianBergmann\Comparator\ArrayComparator;
 use SebastianBergmann\Comparator\Factory;
 use Codeception\Util\JsonArray;
 
-class JsonContains extends \PHPUnit_Framework_Constraint
+class JsonContains extends \PHPUnit\Framework\Constraint
 {
     /**
      * @var
@@ -32,7 +32,7 @@ class JsonContains extends \PHPUnit_Framework_Constraint
     {
         $jsonResponseArray = new JsonArray($other);
         if (!is_array($jsonResponseArray->toArray())) {
-            throw new \PHPUnit_Framework_AssertionFailedError('JSON response is not an array: ' . $other);
+            throw new \PHPUnit\Framework\AssertionFailedError('JSON response is not an array: ' . $other);
         }
 
         if ($jsonResponseArray->containsArray($this->expected)) {
@@ -44,7 +44,7 @@ class JsonContains extends \PHPUnit_Framework_Constraint
         try {
             $comparator->assertEquals($this->expected, $jsonResponseArray->toArray());
         } catch (ComparisonFailure $failure) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
+            throw new \PHPUnit\Framework\ExpectationFailedException(
                 "Response JSON does not contain the provided JSON\n",
                 $failure
             );

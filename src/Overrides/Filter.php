@@ -1,7 +1,7 @@
 <?php
-
+namespace PHPUnit\Util;
 // @codingStandardsIgnoreStart
-class PHPUnit_Util_Filter
+class Filter
 {
     // @codingStandardsIgnoreEnd
     protected static $filteredClassesPattern = [
@@ -15,7 +15,7 @@ class PHPUnit_Util_Filter
         $stackTrace = $asString ? '' : [];
 
         $trace = $e->getPrevious() ? $e->getPrevious()->getTrace() : $e->getTrace();
-        if ($e instanceof \PHPUnit_Framework_ExceptionWrapper) {
+        if ($e instanceof \PHPUnit\Framework\ExceptionWrapper) {
             $trace = $e->getSerializableTrace();
         }
 
