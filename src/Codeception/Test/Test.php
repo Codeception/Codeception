@@ -60,10 +60,10 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      * Runs a test and collects its result in a TestResult instance.
      * Executes before/after hooks coming from traits.
      *
-     * @param  \PHPUnit_Framework_TestResult $result
-     * @return \PHPUnit_Framework_TestResult
+     * @param  \PHPUnit\Framework\TestResult $result
+     * @return \PHPUnit\Framework\TestResult
      */
-    final public function run(\PHPUnit_Framework_TestResult $result = null)
+    final public function run(\PHPUnit\Framework\TestResult $result = null)
     {
         $this->testResult = $result;
 
@@ -86,15 +86,15 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
             try {
                 $this->test();
                 $status = self::STATUS_OK;
-            } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            } catch (\PHPUnit\Framework\AssertionFailedError $e) {
                 $status = self::STATUS_FAIL;
-            } catch (\PHPUnit_Framework_Exception $e) {
+            } catch (\PHPUnit\Framework\Exception $e) {
                 $status = self::STATUS_ERROR;
             } catch (\Throwable $e) {
-                $e     = new \PHPUnit_Framework_ExceptionWrapper($e);
+                $e     = new \PHPUnit\Framework\ExceptionWrapper($e);
                 $status = self::STATUS_ERROR;
             } catch (\Exception $e) {
-                $e     = new \PHPUnit_Framework_ExceptionWrapper($e);
+                $e     = new \PHPUnit\Framework\ExceptionWrapper($e);
                 $status = self::STATUS_ERROR;
             }
             $time = \PHP_Timer::stop();

@@ -12,7 +12,7 @@ use Codeception\Util\Stub;
  * Contact: nathan.macnamara@outlook.com
  *
  */
-class FTPTest extends \PHPUnit_Framework_TestCase
+class FTPTest extends \PHPUnit\Framework\TestCase
 {
     protected $config = array(
         'host' => '127.0.0.1',

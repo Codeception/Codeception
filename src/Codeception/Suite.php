@@ -4,7 +4,7 @@ namespace Codeception;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\Dependent;
 
-class Suite extends \PHPUnit_Framework_TestSuite
+class Suite extends \PHPUnit\Framework\TestSuite
 {
     protected $modules;
     protected $baseName;

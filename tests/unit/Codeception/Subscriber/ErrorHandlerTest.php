@@ -5,7 +5,7 @@ use Codeception\Lib\Notification;
 use Codeception\Subscriber\ErrorHandler;
 use Codeception\Suite;
 
-class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
+class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testDeprecationMessagesRespectErrorLevelSetting()

@@ -7,7 +7,7 @@ use Codeception\Test\Interfaces\StrictCoverage;
 trait CodeCoverage
 {
     /**
-     * @return \PHPUnit_Framework_TestResult
+     * @return \PHPUnit\Framework\TestResult
      */
     abstract public function getTestResultObject();
 

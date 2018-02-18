@@ -3,7 +3,7 @@
 use Codeception\Module\Filesystem;
 use Codeception\Util\Stub;
 
-class FilesystemTest extends \PHPUnit_Framework_TestCase
+class FilesystemTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

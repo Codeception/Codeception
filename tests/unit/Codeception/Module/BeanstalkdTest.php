@@ -3,7 +3,7 @@
 use Codeception\Util\Stub;
 use Pheanstalk\Exception\ConnectionException;
 
-class BeanstalkdTest extends \PHPUnit_Framework_TestCase
+class BeanstalkdTest extends \PHPUnit\Framework\TestCase
 {
     protected $config = array(
         'type' => 'beanstalkq',

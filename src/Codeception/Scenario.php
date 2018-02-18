@@ -136,12 +136,12 @@ class Scenario
 
     public function skip($message = '')
     {
-        throw new \PHPUnit_Framework_SkippedTestError($message);
+        throw new \PHPUnit\Framework\SkippedTestError($message);
     }
 
     public function incomplete($message = '')
     {
-        throw new \PHPUnit_Framework_IncompleteTestError($message);
+        throw new \PHPUnit\Framework\IncompleteTestError($message);
     }
 
     public function __call($method, $args)

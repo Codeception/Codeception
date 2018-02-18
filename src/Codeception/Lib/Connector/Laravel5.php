@@ -241,7 +241,7 @@ class Laravel5 extends Client
      */
     private function mockEventDispatcher()
     {
-        $mockGenerator = new \PHPUnit_Framework_MockObject_Generator;
+        $mockGenerator = new \PHPUnit\Framework\MockObject\Generator;
         $mock = $mockGenerator->getMock('Illuminate\Contracts\Events\Dispatcher');
 
         // Even if events are disabled we still want to record the triggered events.
@@ -257,9 +257,9 @@ class Laravel5 extends Client
         // the 'fire' method was renamed to 'dispatch'. This code determines the correct method to mock.
         $method = method_exists($this->app['events'], 'dispatch') ? 'dispatch' : 'fire';
 
-        $mock->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
+        $mock->expects(new \PHPUnit\Framework\MockObject\Matcher_AnyInvokedCount)
             ->method($method)
-            ->will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($callback));
+            ->will(new \PHPUnit\Framework\MockObject\Stub_ReturnCallback($callback));
 
         $this->app->instance('events', $mock);
     }

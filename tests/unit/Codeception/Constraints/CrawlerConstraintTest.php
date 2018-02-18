@@ -1,5 +1,5 @@
 <?php
-class CrawlerConstraintTest extends PHPUnit_Framework_TestCase
+class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

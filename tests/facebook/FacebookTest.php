@@ -8,7 +8,7 @@ use Codeception\Module\PhpBrowser;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Util\Stub;
 
-class FacebookTest extends \PHPUnit_Framework_TestCase
+class FacebookTest extends \PHPUnit\Framework\TestCase
 {
     protected $config = array(
         'app_id' => '460287924057084',

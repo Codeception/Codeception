@@ -8,7 +8,7 @@ class Skip extends CodeceptionStep
 {
     public function run(ModuleContainer $container = null)
     {
-        throw new \PHPUnit_Framework_SkippedTestError($this->getAction());
+        throw new \PHPUnit\Framework\SkippedTestError($this->getAction());
     }
 
     public function __toString()

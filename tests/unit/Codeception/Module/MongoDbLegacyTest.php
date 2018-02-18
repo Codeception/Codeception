@@ -2,7 +2,7 @@
 
 use Codeception\Module\MongoDb;
 
-class MongoDbLegacyTest extends \PHPUnit_Framework_TestCase
+class MongoDbLegacyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var array

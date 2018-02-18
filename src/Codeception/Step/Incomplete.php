@@ -8,7 +8,7 @@ class Incomplete extends CodeceptionStep
 {
     public function run(ModuleContainer $container = null)
     {
-        throw new \PHPUnit_Framework_IncompleteTestError($this->getAction());
+        throw new \PHPUnit\Framework\IncompleteTestError($this->getAction());
     }
 
     public function __toString()

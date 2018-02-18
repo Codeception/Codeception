@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/mocked_webelement.php';
 
-class WebDriverConstraintTest extends PHPUnit_Framework_TestCase
+class WebDriverConstraintTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

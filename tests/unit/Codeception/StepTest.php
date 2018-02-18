@@ -3,7 +3,7 @@
 use Facebook\WebDriver\WebDriverBy;
 use Codeception\Util\Locator;
 
-class StepTest extends \PHPUnit_Framework_TestCase
+class StepTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param $args

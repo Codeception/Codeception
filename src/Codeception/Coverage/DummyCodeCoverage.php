@@ -1,7 +1,9 @@
 <?php
 namespace Codeception\Coverage;
 
-class DummyCodeCoverage extends \PHP_CodeCoverage
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+
+class DummyCodeCoverage extends CodeCoverage
 {
     public function start($id, $clear = false)
     {

@@ -1,6 +1,6 @@
 <?php
 
-class ExecutorTest extends \PHPUnit_Framework_TestCase
+class ExecutorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider valuesProvider
