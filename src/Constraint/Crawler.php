@@ -8,7 +8,7 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 
 class Crawler extends Page
 {
-    protected function matches($nodes)
+    protected function matches($nodes) : bool
     {
         /** @var $nodes DomCrawler  * */
         if (!$nodes->count()) {
@@ -26,7 +26,7 @@ class Crawler extends Page
         return false;
     }
 
-    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null)
+    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null):void
     {
         /** @var $nodes DomCrawler  * */
         if (!$nodes->count()) {
@@ -51,7 +51,7 @@ class Crawler extends Page
         );
     }
 
-    protected function failureDescription($other)
+    protected function failureDescription($other) : string
     {
         $desc = '';
         foreach ($other as $o) {

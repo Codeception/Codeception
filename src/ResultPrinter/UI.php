@@ -20,7 +20,7 @@ class UI extends \PHPUnit\TextUI\ResultPrinter
         $this->dispatcher = $dispatcher;
     }
 
-    protected function printDefect(\PHPUnit\Framework\TestFailure $defect, $count)
+    protected function printDefect(\PHPUnit\Framework\TestFailure $defect, $count): void
     {
         $this->write("\n---------\n");
         $this->dispatcher->dispatch(
@@ -32,7 +32,7 @@ class UI extends \PHPUnit\TextUI\ResultPrinter
     /**
      * @param \PHPUnit\Framework\TestFailure $defect
      */
-    protected function printDefectTrace(\PHPUnit\Framework\TestFailure $defect)
+    protected function printDefectTrace(\PHPUnit\Framework\TestFailure $defect): void
     {
         $this->write($defect->getExceptionAsString());
         $this->writeNewLine();
@@ -57,14 +57,14 @@ class UI extends \PHPUnit\TextUI\ResultPrinter
         }
     }
 
-    public function startTest(\PHPUnit\Framework\Test $test)
+    public function startTest(\PHPUnit\Framework\Test $test) : void
     {
         if ($test instanceof Unit) {
             parent::startTest($test);
         }
     }
 
-    public function endTest(\PHPUnit\Framework\Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
         if ($test instanceof \PHPUnit\Framework\TestCase or $test instanceof \Codeception\Test\Test) {
             $this->numAssertions += $test->getNumAssertions();
@@ -73,22 +73,22 @@ class UI extends \PHPUnit\TextUI\ResultPrinter
         $this->lastTestFailed = false;
     }
 
-    public function addError(\PHPUnit\Framework\Test $test, \Exception $e, $time)
+    public function addError(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
         $this->lastTestFailed = true;
     }
 
-    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, $time)
+    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time) : void
     {
         $this->lastTestFailed = true;
     }
 
-    public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
+    public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
         $this->lastTestFailed = true;
     }
 
-    public function addSkippedTest(\PHPUnit\Framework\Test $test, \Exception $e, $time)
+    public function addSkippedTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
         $this->lastTestFailed = true;
     }
