@@ -63,6 +63,9 @@ namespace {
         class_alias('PHP_Timer', 'SebastianBergmann\Timer\Timer');
     }
 
+    if (!class_exists('\PHPUnit\Framework\Constraint\LogicalNot') && class_exists('\PHPUnit\Framework\Constraint\Not')) {
+        class_alias('\PHPUnit\Framework\Constraint\Not', '\PHPUnit\Framework\Constraint\LogicalNot');
+    }
 }
 
 // @codingStandardsIgnoreEnd
