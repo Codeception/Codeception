@@ -3,6 +3,7 @@ namespace Codeception\Test;
 
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionHelper;
+use SebastianBergmann\Timer\Timer;
 
 /**
  * The most simple testcase (with only one test in it) which can be executed by PHPUnit/Codeception.
@@ -82,7 +83,8 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         $failedToStart = ReflectionHelper::readPrivateProperty($result, 'lastTestFailed');
 
         if (!$this->ignored && !$failedToStart) {
-            \PHP_Timer::start();
+
+            Timer::start();
             try {
                 $this->test();
                 $status = self::STATUS_OK;
@@ -97,7 +99,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
                 $e     = new \PHPUnit\Framework\ExceptionWrapper($e);
                 $status = self::STATUS_ERROR;
             }
-            $time = \PHP_Timer::stop();
+            $time = Timer::stop();
         }
 
         foreach (array_reverse($this->hooks) as $hook) {

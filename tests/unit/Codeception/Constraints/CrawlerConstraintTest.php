@@ -23,7 +23,7 @@ class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
         $nodes = new Symfony\Component\DomCrawler\Crawler('<p>Bye world</p><p>Bye warcraft</p>');
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
-        } catch (PHPUnit_Framework_AssertionFailedError $fail) {
+        } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertContains(
                 "Failed asserting that any element by 'selector' on page /user",
                 $fail->getMessage()
@@ -44,7 +44,7 @@ class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
         $nodes = new Symfony\Component\DomCrawler\Crawler($html);
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
-        } catch (PHPUnit_Framework_AssertionFailedError $fail) {
+        } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertContains(
                 "Failed asserting that any element by 'selector' on page /user",
                 $fail->getMessage()
@@ -63,7 +63,7 @@ class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
         $nodes = new Symfony\Component\DomCrawler\Crawler('<p>Bye world</p><p>Bye warcraft</p>');
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
-        } catch (PHPUnit_Framework_AssertionFailedError $fail) {
+        } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertContains("Failed asserting that any element by 'selector'", $fail->getMessage());
             $this->assertNotContains("Failed asserting that any element by 'selector' on page", $fail->getMessage());
             return;

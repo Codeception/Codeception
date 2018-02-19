@@ -4,8 +4,10 @@ namespace Codeception\Coverage;
 use Codeception\Configuration;
 use Codeception\Coverage\Subscriber\Printer;
 use Codeception\Lib\Interfaces\Remote;
+use Codeception\Stub;
 use Codeception\Subscriber\Shared\StaticEvents;
 use PHPUnit\Framework\CodeCoverageException;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface
@@ -76,7 +78,8 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
 
     public function applyFilter(\PHPUnit\Framework\TestResult $result)
     {
-        $result->setCodeCoverage(new DummyCodeCoverage());
+        $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
+        $result->setCodeCoverage(new CodeCoverage($driver));
 
         Filter::setup($this->coverage)
             ->whiteList($this->filters)
