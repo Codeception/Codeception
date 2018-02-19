@@ -255,7 +255,7 @@ class Laravel5 extends Client
         // the 'fire' method was renamed to 'dispatch'. This code determines the correct method to mock.
         $method = method_exists($this->app['events'], 'dispatch') ? 'dispatch' : 'fire';
 
-        $mock = Stub::make('Illuminate\Contracts\Events\Dispatcher', [
+        $mock = Stub::makeEmpty('Illuminate\Contracts\Events\Dispatcher', [
            $method => $callback
         ]);
 
