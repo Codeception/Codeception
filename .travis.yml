@@ -66,17 +66,17 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-phalcon $composer_parameters'
   # Laravel 5
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q --depth=1 -b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git frameworks-l5'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-l5 $composer_parameters'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-l5 $composer_parameters --no-dev'
   # Lumen
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q --depth=1 -b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git frameworks-lumen'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-lumen $composer_parameters'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-lumen $composer_parameters --no-dev'
   # Symfony
   - '[[ "$SF_VERSION" != "2" ]] || (git clone -q --depth=1 -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 2 site")'
   - '[[ "$SF_VERSION" != "3" ]] || (git clone -q --depth=1 -b master --recursive https://github.com/Naktibalda/codeception-symfony-tests frameworks-symfony && echo "Cloned Symfony 3 site")'
   - '[[ "$SF_VERSION" != "4" ]] || (git clone -q --depth=1 -b master https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 4 site")'
   - '[[ "$SF_VERSION" == "4" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
   - "mysql -e 'create database symfony_test;'"
-  - 'composer update -d frameworks-symfony $composer_parameters'  
+  - 'composer update -d frameworks-symfony $composer_parameters --no-dev'
   # ZF1
   - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
   - composer update -d frameworks-zf1 $composer_parameters --no-dev
