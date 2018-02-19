@@ -47,7 +47,7 @@ namespace {
     }
 
     // phpunit codecoverage updates
-    if (class_exists('PHP_CodeCoverage' && !class_exists('SebastianBergmann\CodeCoverage\CodeCoverage'))) {
+    if (class_exists('PHP_CodeCoverage') && !class_exists('SebastianBergmann\CodeCoverage\CodeCoverage')) {
         class_alias('PHP_CodeCoverage', 'SebastianBergmann\CodeCoverage\CodeCoverage');
         class_alias('PHP_CodeCoverage_Report_Text', 'SebastianBergmann\CodeCoverage\Report\Text');
         class_alias('PHP_CodeCoverage_Report_PHP', 'SebastianBergmann\CodeCoverage\Report\PHP');
@@ -56,6 +56,7 @@ namespace {
         class_alias('PHP_CodeCoverage_Report_HTML', 'SebastianBergmann\CodeCoverage\Report\Html\Facade');
         class_alias('PHP_CodeCoverage_Report_XML', 'SebastianBergmann\CodeCoverage\Report\Xml\Facade');
         class_alias('PHP_CodeCoverage_Exception', 'SebastianBergmann\CodeCoverage\Exception');
+        class_alias('PHP_CodeCoverage_Driver', 'SebastianBergmann\CodeCoverage\Driver\Driver');
     }
 
     if (class_exists('PHP_Timer') && !class_exists('SebastianBergmann\Timer\Timer')) {
