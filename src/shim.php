@@ -1,8 +1,7 @@
 <?php
 // @codingStandardsIgnoreStart
 // Add aliases for PHPUnit 6
-namespace {
-    require_once __DIR__ . '/../vendor/autoload.php';
+namespace {    
 
     if (!class_exists('PHPUnit\Framework\Assert') && class_exists('PHPUnit_Framework_Assert')) {
         class_alias('PHPUnit_Framework_Assert', 'PHPUnit\Framework\Assert');
