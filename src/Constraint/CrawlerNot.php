@@ -5,12 +5,12 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 
 class CrawlerNot extends Crawler
 {
-    protected function matches($nodes)
+    protected function matches($nodes) : bool
     {
         return !parent::matches($nodes);
     }
 
-    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null)
+    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null) : void
     {
         if (!$this->string) {
             throw new \PHPUnit\Framework\ExpectationFailedException(

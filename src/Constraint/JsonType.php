@@ -25,7 +25,7 @@ class JsonType extends \PHPUnit\Framework\Constraint\Constraint
      *
      * @return bool
      */
-    protected function matches($jsonArray)
+    protected function matches($jsonArray) : bool
     {
         if ($jsonArray instanceof JsonArray) {
             $jsonArray = $jsonArray->toArray();
@@ -56,7 +56,7 @@ class JsonType extends \PHPUnit\Framework\Constraint\Constraint
         return '';
     }
 
-    protected function failureDescription($other)
+    protected function failureDescription($other) : string
     {
         //unused
         return '';

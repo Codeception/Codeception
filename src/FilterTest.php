@@ -11,7 +11,7 @@ use Codeception\Test\Descriptor;
  */
 class FilterTest extends \PHPUnit\Runner\Filter\NameFilterIterator
 {
-    public function accept()
+    public function accept():bool
     {
         $test = $this->getInnerIterator()->current();
 

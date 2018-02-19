@@ -61,11 +61,11 @@ class HTML extends CodeceptionResultPrinter
      *
      * @param  string $name
      */
-    protected function startClass($name)
+    protected function startClass(string $name):void
     {
     }
 
-    public function endTest(\PHPUnit\Framework\Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
         $steps = [];
         $success = ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_PASSED);
@@ -171,7 +171,7 @@ class HTML extends CodeceptionResultPrinter
         $this->scenarios .= $scenarioTemplate->render();
     }
 
-    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite)
+    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
     {
         $suiteTemplate = new \Text_Template(
             $this->templatePath . 'suite.html'
@@ -188,7 +188,7 @@ class HTML extends CodeceptionResultPrinter
     /**
      * Handler for 'end run' event.
      */
-    protected function endRun()
+    protected function endRun():void
     {
         $scenarioHeaderTemplate = new \Text_Template(
             $this->templatePath . 'scenario_header.html'
@@ -234,7 +234,7 @@ class HTML extends CodeceptionResultPrinter
      * @param \Exception $e
      * @param float $time
      */
-    public function addError(\PHPUnit\Framework\Test $test, \Exception $e, $time)
+    public function addError(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
         $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addError($test, $e, $time);
@@ -247,18 +247,18 @@ class HTML extends CodeceptionResultPrinter
      * @param \PHPUnit\Framework\AssertionFailedError $e
      * @param float                                  $time
      */
-    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, $time)
+    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time) : void
     {
         $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addFailure($test, $e, $time);
     }
     
     /**
-     * Starts test.
+     * Starts test
      *
      * @param \PHPUnit\Framework\Test $test
      */
-    public function startTest(\PHPUnit\Framework\Test $test)
+    public function startTest(\PHPUnit\Framework\Test $test):void
     {
         $name = Descriptor::getTestSignature($test);
         if (isset($this->failures[$name])) {
