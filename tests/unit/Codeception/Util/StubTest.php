@@ -248,7 +248,7 @@ class StubTest extends \PHPUnit\Framework\TestCase
             } else {
                 $this->thenWeDontCallAnyMethodForExceptionJustVerify($mock);
             }
-        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        } catch (PHPUnit\Framework\ExpectationFailedException $e) {
             $this->assertSame($failMessage, $e->getMessage());
         }
 

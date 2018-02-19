@@ -34,7 +34,7 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedException PHPUnit\Framework\AssertionFailedError
      * @expectedExceptionMessage File "does-not-exist" not found at
      */
     public function testSeeFileFoundFailsWhenFileDoesNotExist()
@@ -43,7 +43,7 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedException PHPUnit\Framework\AssertionFailedError
      * @expectedExceptionMessageRegExp  /Directory does not exist: .*does-not-exist/
      */
     public function testSeeFileFoundFailsWhenPathDoesNotExist()
@@ -62,7 +62,7 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedException PHPUnit\Framework\AssertionFailedError
      * @expectedExceptionMessage Failed asserting that file "tests/data/dumps/mysql.sql" does not exist.
      */
     public function testDontSeeFileFoundFailsWhenFileExists()
@@ -71,7 +71,7 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedException PHPUnit\Framework\AssertionFailedError
      * @expectedExceptionMessageRegExp  /Directory does not exist: .*does-not-exist/
      */
     public function testDontSeeFileFoundFailsWhenPathDoesNotExist()
@@ -80,7 +80,7 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedException PHPUnit\Framework\AssertionFailedError
      * @expectedExceptionMessageRegExp /Failed asserting that file ".*tests\/data\/dumps\/mysql.sql" does not exist/
      */
     public function testDontSeeFileFoundFailsWhenFileExistsInSubdirectoryOfPath()

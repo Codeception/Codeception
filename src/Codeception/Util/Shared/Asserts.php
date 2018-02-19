@@ -298,7 +298,7 @@ trait Asserts
      */
     protected function assertThatItsNot($haystack, $constraint, $message = '')
     {
-        $constraint = new \PHPUnit\Framework\Constraint\Not($constraint);
+        $constraint = new \PHPUnit\Framework\Constraint\LogicalNot($constraint);
         \PHPUnit\Framework\Assert::assertThat($haystack, $constraint, $message);
     }
 

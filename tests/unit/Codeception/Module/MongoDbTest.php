@@ -107,7 +107,7 @@ class MongoDbTest extends Unit
 
     public function testSeeElementIsArrayThrowsError()
     {
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
 
         $this->userCollection->insertOne(array('id' => 5, 'trumpets' => array('piccolo', 'bass', 'slide')));
         $this->userCollection->insertOne(array('id' => 6, 'trumpets' => array('piccolo', 'bass', 'slide')));
@@ -135,7 +135,7 @@ class MongoDbTest extends Unit
         $trumpet->pitch = 'B♭';
         $trumpet->price = array('min' => 458, 'max' => 891);
 
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
 
         $this->userCollection->insertOne(array('id' => 5, 'trumpet' => $trumpet));
         $this->userCollection->insertOne(array('id' => 6, 'trumpet' => $trumpet));

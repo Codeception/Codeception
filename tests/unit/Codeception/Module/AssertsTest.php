@@ -44,7 +44,7 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedException PHPUnit\Framework\AssertionFailedError
      */
     public function testExceptionFails()
     {
