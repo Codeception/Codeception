@@ -8,10 +8,12 @@ namespace PHPUnit\Framework {
             public function run(TestResult $result = null);
         }
 
-        interface SelfDescribing {
+    }
+    if (!interface_exists(SelfDescribing::class, false)) {
+        interface SelfDescribing
+        {
             public function toString();
         }
-
     }
 
 }
