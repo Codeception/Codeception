@@ -40,7 +40,7 @@ namespace {
 
     }
     if (!class_exists('\PHPUnit\Util\Log\JSON') || !class_exists('\PHPUnit\Util\Log\TAP')) {
-        if (class_exists('\PHPUnit\Util\Printer')) {
+        if (class_exists('PHPUnit\Util\Printer')) {
             require_once __DIR__ . '/phpunit5-loggers.php'; // TAP and JSON loggers were removed in PHPUnit 6
         }
     }
@@ -55,6 +55,10 @@ namespace {
         class_alias('PHP_CodeCoverage_Report_HTML', 'SebastianBergmann\CodeCoverage\Report\Html\Facade');
         class_alias('PHP_CodeCoverage_Report_XML', 'SebastianBergmann\CodeCoverage\Report\Xml\Facade');
         class_alias('PHP_CodeCoverage_Exception', 'SebastianBergmann\CodeCoverage\Exception');
+    }
+
+    if (class_exists('PHP_Timer') && !class_exists('SebastianBergmann\Timer\Timer')) {
+        class_alias('PHP_Timer', 'SebastianBergmann\Timer\Timer');
     }
 
     if (!class_exists('\PHPUnit\Framework\Constraint\LogicalNot') && class_exists('\PHPUnit\Framework\Constraint\Not')) {
