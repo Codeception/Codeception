@@ -4,7 +4,7 @@
 
 namespace PHPUnit\Framework {
     if (!interface_exists(Test::class, false)) {
-        interface Test {
+        interface Test extends \Countable {
             public function run(TestResult $result = null);
         }
 
