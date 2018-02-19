@@ -99,7 +99,7 @@ class Printer implements EventSubscriberInterface
 
     protected function printHtml()
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\HTML(
+        $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade(
             $this->settings['low_limit'],
             $this->settings['high_limit'],
             sprintf(
@@ -113,7 +113,7 @@ class Printer implements EventSubscriberInterface
 
     protected function printXml()
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Clover;
+        $writer = new \SebastianBergmann\CodeCoverage\Report\Clover();
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-xml']));
     }
 
@@ -145,7 +145,7 @@ class Printer implements EventSubscriberInterface
 
     protected function printPHPUnit()
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\XML(\PHPUnit\Runner\Version::id());
+        $writer = new \SebastianBergmann\CodeCoverage\Report\Xml\Facade(\PHPUnit\Runner\Version::id());
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-phpunit']));
     }
 }
