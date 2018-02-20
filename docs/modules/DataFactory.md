@@ -30,7 +30,7 @@ $fm->define(User::class)->setDefinitions([
 
    // generate a profile and return its Id
    'profile_id' => 'factory|Profile'
-);
+]);
 ```
 
 Configure this module to load factory definitions from a directory.
