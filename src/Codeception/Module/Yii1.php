@@ -113,6 +113,8 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
         defined('YII_ENABLE_EXCEPTION_HANDLER') or define('YII_ENABLE_EXCEPTION_HANDLER', false);
         defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
 
+        $_SERVER['SERVER_NAME'] = parse_url($this->config['url'], PHP_URL_HOST);
+        $_SERVER['SERVER_PORT'] = parse_url($this->config['url'], PHP_URL_PORT);
 		$_SERVER['SCRIPT_NAME'] = parse_url($this->config['url'], PHP_URL_PATH);
 		$_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
 
