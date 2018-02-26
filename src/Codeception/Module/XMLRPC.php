@@ -118,7 +118,7 @@ class XMLRPC extends CodeceptionModule implements API
      */
     public function seeResponseCodeIs($num)
     {
-        \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getInternalResponse()->getStatus());
+        \PHPUnit\Framework\Assert::assertEquals($num, $this->client->getInternalResponse()->getStatus());
     }
 
     /**
@@ -129,7 +129,7 @@ class XMLRPC extends CodeceptionModule implements API
     public function seeResponseIsXMLRPC()
     {
         $result = xmlrpc_decode($this->response);
-        \PHPUnit_Framework_Assert::assertNotNull($result, 'Invalid response document returned from XmlRpc server');
+        \PHPUnit\Framework\Assert::assertNotNull($result, 'Invalid response document returned from XmlRpc server');
     }
 
     /**

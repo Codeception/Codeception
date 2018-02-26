@@ -2,7 +2,7 @@
 
 use Codeception\Module\MongoDb;
 
-class MongoDbLegacyTest extends \PHPUnit_Framework_TestCase
+class MongoDbLegacyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var array
@@ -102,7 +102,7 @@ class MongoDbLegacyTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeElementIsArrayThrowsError()
     {
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
 
         $this->userCollection->insert(array('id' => 5, 'trumpets' => array('piccolo', 'bass', 'slide')));
         $this->userCollection->insert(array('id' => 6, 'trumpets' => array('piccolo', 'bass', 'slide')));
@@ -130,7 +130,7 @@ class MongoDbLegacyTest extends \PHPUnit_Framework_TestCase
         $trumpet->pitch = 'B♭';
         $trumpet->price = array('min' => 458, 'max' => 891);
 
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
 
         $this->userCollection->insert(array('id' => 5, 'trumpet' => $trumpet));
         $this->userCollection->insert(array('id' => 6, 'trumpet' => $trumpet));

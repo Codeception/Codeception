@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\Event;
 class TestEvent extends Event
 {
     /**
-     * @var \PHPUnit_Framework_Test
+     * @var \PHPUnit\Framework\Test
      */
     protected $test;
 
@@ -15,7 +15,7 @@ class TestEvent extends Event
      */
     protected $time;
 
-    public function __construct(\PHPUnit_Framework_Test $test, $time = 0)
+    public function __construct(\PHPUnit\Framework\Test $test, $time = 0)
     {
         $this->test = $test;
         $this->time = $time;

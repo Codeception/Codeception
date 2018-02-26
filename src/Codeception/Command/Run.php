@@ -241,7 +241,7 @@ class Run extends Command
         }
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString()
+                Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
             );
         }
         if ($this->options['debug']) {

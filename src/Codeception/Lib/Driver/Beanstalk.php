@@ -41,7 +41,7 @@ class Beanstalk implements Queue
         try {
             return $this->queue->statsTube($queue)['total-jobs'];
         } catch (ConnectionException $ex) {
-            \PHPUnit_Framework_Assert::fail("queue [$queue] not found");
+            \PHPUnit\Framework\Assert::fail("queue [$queue] not found");
         }
     }
 
@@ -74,7 +74,7 @@ class Beanstalk implements Queue
         try {
             return $this->queue->statsTube($queue)['current-jobs-ready'];
         } catch (ConnectionException $e) {
-            \PHPUnit_Framework_Assert::fail("queue [$queue] not found");
+            \PHPUnit\Framework\Assert::fail("queue [$queue] not found");
         }
     }
 

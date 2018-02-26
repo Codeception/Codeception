@@ -3,6 +3,7 @@ namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\Laravel5\ExceptionHandlerDecorator;
 use Codeception\Lib\Connector\Shared\LaravelCommon;
+use Codeception\Stub;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -241,9 +242,6 @@ class Laravel5 extends Client
      */
     private function mockEventDispatcher()
     {
-        $mockGenerator = new \PHPUnit_Framework_MockObject_Generator;
-        $mock = $mockGenerator->getMock('Illuminate\Contracts\Events\Dispatcher');
-
         // Even if events are disabled we still want to record the triggered events.
         // But by mocking the event dispatcher the wildcard listener registered in the initialize method is removed.
         // So to record the triggered events we have to catch the calls to the fire method of the event dispatcher mock.
@@ -257,9 +255,9 @@ class Laravel5 extends Client
         // the 'fire' method was renamed to 'dispatch'. This code determines the correct method to mock.
         $method = method_exists($this->app['events'], 'dispatch') ? 'dispatch' : 'fire';
 
-        $mock->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
-            ->method($method)
-            ->will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($callback));
+        $mock = Stub::makeEmpty('Illuminate\Contracts\Events\Dispatcher', [
+           $method => $callback
+        ]);
 
         $this->app->instance('events', $mock);
     }

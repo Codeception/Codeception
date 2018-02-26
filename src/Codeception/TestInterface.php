@@ -4,7 +4,7 @@ namespace Codeception;
 
 use Codeception\Test\Metadata;
 
-interface TestInterface extends \PHPUnit_Framework_Test
+interface TestInterface extends \PHPUnit\Framework\Test
 {
     /**
      * @return Metadata

@@ -97,22 +97,11 @@ class RunCest
      *
      * @param CliGuy $I
      */
-    public function runReportMode(\CliGuy $I)
-    {
-        $I->wantTo('try the reporting mode');
-        $I->executeCommand('run dummy --report');
-        $I->seeInShellOutput('FileExistsCept');
-        $I->seeInShellOutput('........Ok');
-    }
-
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
     public function runCustomReport(\CliGuy $I)
     {
-        $I->wantTo('try the reporting mode');
+        if (\PHPUnit\Runner\Version::series() >= 7) {
+            throw new \Codeception\Exception\Skip('Not for PHPUnit 7');
+        }
         $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
         $I->seeInShellOutput('FileExistsCept: Check config exists');
         $I->dontSeeInShellOutput('Ok');

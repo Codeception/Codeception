@@ -98,7 +98,7 @@ class Cest extends Test implements
 
     protected function executeBeforeMethods($testMethod, $I)
     {
-        $annotations = \PHPUnit_Util_Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
+        $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['before'])) {
             foreach ($annotations['method']['before'] as $m) {
                 $this->executeContextMethod(trim($m), $I);
@@ -107,7 +107,7 @@ class Cest extends Test implements
     }
     protected function executeAfterMethods($testMethod, $I)
     {
-        $annotations = \PHPUnit_Util_Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
+        $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['after'])) {
             foreach ($annotations['method']['after'] as $m) {
                 $this->executeContextMethod(trim($m), $I);
@@ -203,7 +203,7 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        return \PHPUnit_Util_Test::getLinesToBeCovered($class, $method);
+        return \PHPUnit\Util\Test::getLinesToBeCovered($class, $method);
     }
 
     public function getLinesToBeUsed()
@@ -211,6 +211,6 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        return \PHPUnit_Util_Test::getLinesToBeUsed($class, $method);
+        return \PHPUnit\Util\Test::getLinesToBeUsed($class, $method);
     }
 }

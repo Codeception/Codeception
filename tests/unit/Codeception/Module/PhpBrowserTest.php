@@ -608,7 +608,7 @@ class PhpBrowserTest extends TestsForBrowsers
     }
 
     /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedException PHPUnit\Framework\AssertionFailedError
      */
     public function testClickingOnButtonOutsideFormDoesNotCauseFatalError()
     {

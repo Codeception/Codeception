@@ -41,7 +41,7 @@ class Example implements \ArrayAccess, \Countable, \IteratorAggregate
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
-            throw new \PHPUnit_Framework_AssertionFailedError("Example $offset doesn't exist");
+            throw new \PHPUnit\Framework\AssertionFailedError("Example $offset doesn't exist");
         };
         return $this->data[$offset];
     }

@@ -4,19 +4,19 @@ use Codeception\PHPUnit\ResultPrinter;
 
 class MyReportPrinter extends ResultPrinter implements ConsolePrinter
 {
-    public function endTest(PHPUnit_Framework_Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, $time)
     {
         $name = \Codeception\Test\Descriptor::getTestAsString($test);
-        if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE) {
+        if ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE) {
             $this->write('×');
         } else {
-            if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
+            if ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_SKIPPED) {
                 $this->write('S');
             } else {
-                if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
+                if ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_INCOMPLETE) {
                     $this->write('I');
                 } else {
-                    if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR) {
+                    if ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_ERROR) {
                         $this->write('E');
                     } else {
                         $this->write('✔');
@@ -31,7 +31,7 @@ class MyReportPrinter extends ResultPrinter implements ConsolePrinter
         $this->write(" $name \n");
     }
 
-    public function printResult(\PHPUnit_Framework_TestResult $result)
+    public function printResult(\PHPUnit\Framework\TestResult $result)
     {
         
     }

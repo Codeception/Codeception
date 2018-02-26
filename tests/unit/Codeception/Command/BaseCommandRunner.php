@@ -3,7 +3,7 @@ use Codeception\Util\Stub;
 use Codeception\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class BaseCommandRunner extends \PHPUnit_Framework_TestCase
+class BaseCommandRunner extends \PHPUnit\Framework\TestCase
 {
 
     /**
