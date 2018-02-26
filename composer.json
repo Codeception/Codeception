@@ -28,10 +28,9 @@
         "symfony/browser-kit": ">=2.7 <5.0",
         "symfony/css-selector": ">=2.7 <5.0",
         "symfony/dom-crawler": ">=2.7 <5.0",
-        "behat/gherkin": "~4.4.0",
+        "behat/gherkin": "^4.4.0",
         "codeception/phpunit-wrapper": "^6.0|^7.0",
         "codeception/stub": "^1.0"
-
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
