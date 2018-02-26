@@ -63,8 +63,14 @@ class PostgreSql extends Db
 
     public function cleanup()
     {
-        $this->dbh->exec('DROP SCHEMA IF EXISTS public CASCADE;');
-        $this->dbh->exec('CREATE SCHEMA public;');
+        $schema = "public";
+
+        if ($this->searchPath) {
+            $schema = $this->searchPath;
+        }
+
+        $this->dbh->exec(sprintf('DROP SCHEMA IF EXISTS "%s" CASCADE;', $schema));
+        $this->dbh->exec(sprintf('CREATE SCHEMA "%s";', $schema));
     }
 
     public function sqlLine($sql)
