@@ -39,7 +39,7 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  *
  *    // generate a profile and return its Id
  *    'profile_id' => 'factory|Profile'
- *]);
+ * ]);
  * ```
  *
  * Configure this module to load factory definitions from a directory.
@@ -58,7 +58,7 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  * (you can also use Laravel5 and Phalcon).
  *
  * In this example factories are loaded from `tests/_support/factories` directory. Please note that this directory is relative from the codeception.yml file (so for Yii2 it would be codeception/_support/factories).
-gst * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
+ * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
  *
  * In cases you want to use data from database inside your factory definitions you can define them in Helper.
  * For instance, if you use Doctrine, this allows you to access `EntityManager` inside a definition.
