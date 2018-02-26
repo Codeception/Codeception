@@ -7,7 +7,7 @@ use Codeception\Util\Soap as SoapUtil;
  * Class SoapTest
  * @group appveyor
  */
-class SoapTest extends \PHPUnit_Framework_TestCase
+class SoapTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

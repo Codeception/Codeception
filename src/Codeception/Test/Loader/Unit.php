@@ -43,12 +43,12 @@ class Unit implements LoaderInterface
 
     protected function createTestFromPhpUnitMethod(\ReflectionClass $class, \ReflectionMethod $method)
     {
-        if (!\PHPUnit_Framework_TestSuite::isTestMethod($method)) {
+        if (!\PHPUnit\Framework\TestSuite::isTestMethod($method)) {
             return;
         }
-        $test = \PHPUnit_Framework_TestSuite::createTest($class, $method->name);
+        $test = \PHPUnit\Framework\TestSuite::createTest($class, $method->name);
 
-        if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+        if ($test instanceof \PHPUnit\Framework\DataProviderTestSuite) {
             foreach ($test->tests() as $t) {
                 $this->enhancePhpunitTest($t);
             }
@@ -59,11 +59,11 @@ class Unit implements LoaderInterface
         return $test;
     }
 
-    protected function enhancePhpunitTest(\PHPUnit_Framework_TestCase $test)
+    protected function enhancePhpunitTest(\PHPUnit\Framework\Test $test)
     {
         $className = get_class($test);
         $methodName = $test->getName(false);
-        $dependencies = \PHPUnit_Util_Test::getDependencies($className, $methodName);
+        $dependencies = \PHPUnit\Util\Test::getDependencies($className, $methodName);
         $test->setDependencies($dependencies);
         if ($test instanceof UnitFormat) {
             $test->getMetadata()->setParamsFromAnnotations(Annotation::forMethod($test, $methodName)->raw());

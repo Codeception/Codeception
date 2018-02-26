@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Exception;
 
-class Incomplete extends \PHPUnit_Framework_IncompleteTestError
+class Incomplete extends \PHPUnit\Framework\IncompleteTestError
 {
 
 }

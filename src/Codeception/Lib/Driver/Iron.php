@@ -23,7 +23,7 @@ class Iron implements Queue
             "host"       => $config['host']
         ]);
         if (!$this->queue) {
-            \PHPUnit_Framework_Assert::fail('connection failed or timed-out.');
+            \PHPUnit\Framework\Assert::fail('connection failed or timed-out.');
         }
     }
 
@@ -65,7 +65,7 @@ class Iron implements Queue
         try {
             return $this->queue->getQueue($queue)->size;
         } catch (\Http_Exception $ex) {
-            \PHPUnit_Framework_Assert::fail("queue [$queue] not found");
+            \PHPUnit\Framework\Assert::fail("queue [$queue] not found");
         }
     }
 
@@ -81,7 +81,7 @@ class Iron implements Queue
         try {
             return $this->queue->getQueue($queue)->total_messages;
         } catch (\Http_Exception $e) {
-            \PHPUnit_Framework_Assert::fail("queue [$queue] not found");
+            \PHPUnit\Framework\Assert::fail("queue [$queue] not found");
         }
     }
 
@@ -90,7 +90,7 @@ class Iron implements Queue
         try {
             $this->queue->clearQueue($queue);
         } catch (\Http_Exception $ex) {
-            \PHPUnit_Framework_Assert::fail("queue [$queue] not found");
+            \PHPUnit\Framework\Assert::fail("queue [$queue] not found");
         }
     }
 

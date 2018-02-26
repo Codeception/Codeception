@@ -4,7 +4,10 @@ namespace Codeception\Coverage;
 use Codeception\Configuration;
 use Codeception\Coverage\Subscriber\Printer;
 use Codeception\Lib\Interfaces\Remote;
+use Codeception\Stub;
 use Codeception\Subscriber\Shared\StaticEvents;
+use PHPUnit\Framework\CodeCoverageException;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface
@@ -41,8 +44,8 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     protected function applySettings($settings)
     {
         try {
-            $this->coverage = new \PHP_CodeCoverage();
-        } catch (\PHP_CodeCoverage_Exception $e) {
+            $this->coverage = new \SebastianBergmann\CodeCoverage\CodeCoverage();
+        } catch (CodeCoverageException $e) {
             throw new \Exception(
                 'XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini'
             );
@@ -73,9 +76,10 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         return null;
     }
 
-    public function applyFilter(\PHPUnit_Framework_TestResult $result)
+    public function applyFilter(\PHPUnit\Framework\TestResult $result)
     {
-        $result->setCodeCoverage(new DummyCodeCoverage());
+        $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
+        $result->setCodeCoverage(new CodeCoverage($driver));
 
         Filter::setup($this->coverage)
             ->whiteList($this->filters)

@@ -79,7 +79,7 @@ class DryRun extends Command
         $dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($suiteManager->getSuite(), null, $settings));
         $dispatcher->dispatch(Events::SUITE_BEFORE, new SuiteEvent($suiteManager->getSuite(), null, $settings));
         foreach ($tests as $test) {
-            if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+            if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
                 foreach ($test as $t) {
                     if ($t instanceof Test) {
                         $this->dryRunTest($output, $dispatcher, $t);

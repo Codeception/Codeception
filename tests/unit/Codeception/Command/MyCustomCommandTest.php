@@ -1,7 +1,7 @@
 <?php
 namespace Project\Command;
 
-class MyCustomCommandTest extends \PHPUnit_Framework_TestCase
+class MyCustomCommandTest extends \PHPUnit\Framework\TestCase
 {
     public static function setUpBeforeClass()
     {

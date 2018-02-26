@@ -79,9 +79,9 @@ class Configuration
         'reporters'  => [
             'xml'    => 'Codeception\PHPUnit\Log\JUnit',
             'html'   => 'Codeception\PHPUnit\ResultPrinter\HTML',
-            'tap'    => 'PHPUnit_Util_Log_TAP',
-            'json'   => 'PHPUnit_Util_Log_JSON',
             'report' => 'Codeception\PHPUnit\ResultPrinter\Report',
+            'tap'    => 'PHPUnit\Util\Log\TAP',
+            'json'   => 'PHPUnit\Util\Log\JSON',
         ],
         'groups'     => [],
         'settings'   => [
