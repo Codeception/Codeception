@@ -41,7 +41,7 @@ We prepared a sample config with codeception, web server, database, and selenium
 ```yaml
 version: '2'
 services:
-  codeception:
+  codecept:
     image: codeception/codeception
     depends_on:
       - firefox
