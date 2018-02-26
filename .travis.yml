@@ -81,8 +81,8 @@ install:
   - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
   - composer update -d frameworks-zf1 $composer_parameters
   # ZF2
-  - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
-  - composer update -d frameworks-zf2 $composer_parameters
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || (git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2)'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] ||  [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || (composer update -d frameworks-zf2 $composer_parameters)'
   # Zend Expressive
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-zend-expressive $composer_parameters'
@@ -134,7 +134,5 @@ script:
   - '[[ "$SF_VERSION" != "3" ]] || php codecept run -c frameworks-symfony' # Symfony 3 Tests
   - '[[ "$SF_VERSION" != "4" ]] || php codecept run -c frameworks-symfony functional,unit' # Symfony 4 Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
-  #ZF2 run doctrine tests on PHP 5.4 and 5.5 only
-  - '[[ "$TRAVIS_PHP_VERSION" > "5.5" ]] || php codecept run -c frameworks-zf2 functional,doctrine'
   - '[[ "$TRAVIS_PHP_VERSION" < "5.6" ]] || php codecept run -c frameworks-zf2 functional'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run functional -c frameworks-zend-expressive' # Zend Expressive Tests

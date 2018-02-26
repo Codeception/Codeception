@@ -33,15 +33,9 @@ class Clean extends Command
     {
         $config = Configuration::config($projectDir);
 
-        $logDir = $projectDir . DIRECTORY_SEPARATOR . $config['paths']['log'];
-        $output->writeln("<info>Cleaning up log " . $logDir . "...</info>");
+        $logDir = $projectDir . DIRECTORY_SEPARATOR . $config['paths']['output'];
+        $output->writeln("<info>Cleaning up output " . $logDir . "...</info>");
         FileSystem::doEmptyDir($logDir);
-
-        if (!empty($config['paths']['helpers'])) {
-            $generatedDir = $projectDir . DIRECTORY_SEPARATOR . $config['paths']['helpers'] . DIRECTORY_SEPARATOR . "_generated";
-            $output->writeln("<info>Cleaning up generated code " . $generatedDir . "...</info>");
-            FileSystem::doEmptyDir($generatedDir);
-        }
 
         $subProjects = $config['include'];
         foreach ($subProjects as $subProject) {
