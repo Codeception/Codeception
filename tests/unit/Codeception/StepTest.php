@@ -114,4 +114,14 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $output = $step->toString(200);
         $this->assertEquals('see "aaaa\nbbbb\nc"', $output);
     }
+
+    public function testFormattedOutput()
+    {
+        $argument = Codeception\Util\Stub::makeEmpty('\Codeception\Step\Argument\FormattedOutput');
+        $argument->method('getOutput')->willReturn('some formatted output');
+
+        $step = $this->getStep(['argument', [$argument]]);
+        $output = $step->toString(200);
+        $this->assertEquals('argument "some formatted output"', $output);
+    }
 }

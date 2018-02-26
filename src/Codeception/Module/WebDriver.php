@@ -1621,7 +1621,7 @@ class WebDriver extends CodeceptionModule implements
     {
         $el = $this->findField($field);
         $el->clear();
-        $el->sendKeys($value);
+        $el->sendKeys((string) $value);
     }
 
     /**

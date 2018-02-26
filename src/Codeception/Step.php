@@ -2,6 +2,7 @@
 namespace Codeception;
 
 use Codeception\Lib\ModuleContainer;
+use Codeception\Step\Argument\FormattedOutput;
 use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
 
@@ -153,7 +154,9 @@ abstract class Step
                 }
             }
         } elseif (is_object($argument)) {
-            if (method_exists($argument, '__toString')) {
+            if ($argument instanceof FormattedOutput) {
+                $argument = $argument->getOutput();
+            } elseif (method_exists($argument, '__toString')) {
                 $argument = (string)$argument;
             } elseif (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
                 $argument = Locator::humanReadableString($argument);
