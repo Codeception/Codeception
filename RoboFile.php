@@ -6,7 +6,7 @@ use Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    const STABLE_BRANCH = '2.3';
+    const STABLE_BRANCH = '2.4';
     const REPO_BLOB_URL = 'https://github.com/Codeception/Codeception/blob';
 
     public function release()
@@ -144,11 +144,11 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
-    private function installDependenciesForPhp54()
+    private function installDependenciesForPhp5()
     {
         $this->taskReplaceInFile('composer.json')
             ->regex('/"platform": \{.*?\}/')
-            ->to('"platform": {"php": "5.4.0"}')
+            ->to('"platform": {"php": "5.6.0"}')
             ->run();
 
         $this->taskComposerUpdate()->run();
@@ -197,7 +197,7 @@ class RoboFile extends \Robo\Tasks
         if (!file_exists('package/php54')) {
             mkdir('package/php54');
         }
-        $this->installDependenciesForPhp54();
+        $this->installDependenciesForPhp5();
         $this->packPhar('package/codecept5.phar');
         $this->_copy('package/codecept5.phar', 'package/php54/codecept.phar');
         $code = $this->taskExec('php codecept.phar')->dir('package/php54')->run()->getExitCode();
@@ -270,10 +270,13 @@ class RoboFile extends \Robo\Tasks
 
         $pharTask->addFile('autoload.php', 'autoload.php')
             ->addFile('codecept', 'package/bin')
-            ->addFile('shim.php', 'shim.php')
-            ->addFile('phpunit5-loggers.php', 'phpunit5-loggers.php')
-            ->run();
+            ->addFile('shim.php', 'shim.php');
 
+        if (file_exists(__DIR__ .'phpunit5-loggers.php')) {
+            $pharTask->addFile('phpunit5-loggers.php', 'phpunit5-loggers.php');
+        }
+
+        $pharTask->run();
     }
 
     /**
@@ -538,7 +541,9 @@ EOF;
 
             if (file_exists("releases/$releaseName/php54/codecept.phar")) {
                 $downloadUrl = "http://codeception.com/releases/$releaseName/php54/codecept.phar";
-                if (version_compare($releaseName, '2.3.0', '>=')) {
+                if (version_compare($releaseName, '2.4.0', '>=')) {
+                    $versionLine .= ", [for PHP 5.6]($downloadUrl)";
+                } elseif (version_compare($releaseName, '2.3.0', '>=')) {
                     $versionLine .= ", [for PHP 5.4 - 5.6]($downloadUrl)";
                 } else {
                     $versionLine .= ", [for PHP 5.4 or 5.5]($downloadUrl)";
