@@ -81,6 +81,7 @@ class Cest extends Test implements
             $this->executeBeforeMethods($this->testMethod, $I);
             $this->executeTestMethod($I);
             $this->executeAfterMethods($this->testMethod, $I);
+            $this->executeHook($I, 'passed');
         } catch (\Exception $e) {
             $this->executeHook($I, 'failed');
             // fails and errors are now handled by Codeception\PHPUnit\Listener

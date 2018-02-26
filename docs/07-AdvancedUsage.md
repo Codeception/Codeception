@@ -40,7 +40,6 @@ class BasicCest
 and will receive an instance of the Actor class as the first parameter and the `$scenario` variable as the second one.
 
 In `_before` and `_after` methods you can use common setups and teardowns for the tests in the class.
-This actually makes Cest tests more flexible than Cepts, which rely only on similar methods in Helper classes.
 
 As you see, we are passing the Actor object into `tryToTest` method. This allows us to write scenarios the way we did before:
 
@@ -51,7 +50,6 @@ class BasicCest
     // test
     public function tryToTest(\AcceptanceTester $I)
     {
-        $I->wantTo('log in to site');
         $I->amOnPage('/');
         $I->click('Login');
         $I->fillField('username', 'john');
@@ -63,11 +61,27 @@ class BasicCest
 }
 ```
 
-As you see, Cest classes have no parents like `\Codeception\Test\Unit` or `PHPUnit_Framework_TestCase`.
+As you see, Cest classes have no parents. 
 This is done intentionally. It allows you to extend your classes with common behaviors and workarounds
 that may be used in child classes. But don't forget to make these methods `protected` so they won't be executed as tests.
 
-You can also define a `_failed` method in Cest classes which will be called if test finishes with `error` or fails.
+Cest format also can contain hooks based on test results: 
+
+* `_failed` will be executed on failed test
+* `_passed` will be executed on passed test
+
+```php
+<?php
+public function _failed(\AcceptanceTester $I) 
+{
+    // will be executed on test failure
+}
+
+public function _passed(\AcceptanceTester $I)
+{
+    // will be executed when test is successful
+}
+```
 
 ## Dependency Injection
 
@@ -98,8 +112,6 @@ class SignUpCest
 
     public function signUp(\AcceptanceTester $I)
     {
-        $I->wantTo('sign up');
-
         $this->navBar->click('Sign up');
         $this->signUp->register([
             'first_name'            => 'Joe',
