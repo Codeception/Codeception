@@ -1,3 +1,23 @@
+#### 2.3.9
+
+* Added `Codeception\Step\Argument\PasswordArgument` to pass sensitive data into tests:
+
+```php
+<?php
+use \Codeception\Step\Argument\PasswordArgument;
+
+$I->amOnPage('/form/password_argument');
+$I->fillField('password', new PasswordArgument('thisissecret'));
+```
+
+* [WebDriver] added `clearField` method to clean up input fields by @eknej 
+* [DataFactory] added `make` method to create instances without saving them to database. But @ibpavlov 
+* [REST] Fixed passing a file to `sendPOST()` without name, size or type parameter. BY @zebraf1
+* [REST] Add missing / to relative url from config by @bscheshirwork 
+* Fixed HTML Report marks tests as succeeded by @mpgo13
+* `clean` command works recursively with included setups. By @davidnewcomb 
+
+
 #### 2.3.8
 
 * `Codeception\Util\Stub` moved to standalone package [Codeception\Stub](https://github.com/Codeception/Stub):
