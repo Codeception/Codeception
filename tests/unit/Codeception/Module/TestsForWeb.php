@@ -1699,4 +1699,13 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/form/file');
         $this->module->attachFile('Avatar', $filename);
     }
+
+    public function testPasswordArgument()
+    {
+        $this->module->amOnPage('/form/password_argument');
+        $this->module->fillField('password', new \Codeception\Step\Argument\PasswordArgument('thisissecret'));
+        $this->module->click('Submit');
+        $data = data::get('form');
+        $this->assertEquals('thisissecret', $data['password']);
+    }
 }
