@@ -209,8 +209,8 @@ EOF;
      *
      * ```
      *
-     * @param $model
-     * @param $fields
+     * @param string $model
+     * @param array $fields
      *
      * @return \League\FactoryMuffin\Definition
      *
@@ -231,7 +231,7 @@ EOF;
      *
      * Returns an instance of created user.
      *
-     * @param $name
+     * @param string $name
      * @param array $extraAttrs
      *
      * @return object
@@ -242,6 +242,28 @@ EOF;
     }
 
     /**
+     * Generates a record instance.
+     *
+     * This does not save it in the database. Use `have` for that.
+     *
+     * ```php
+     * $user = $I->make('User'); // return User instance
+     * $activeUser = $I->make('User', ['is_active' => true]); // return active user instance
+     * ```
+     *
+     * Returns an instance of created user without creating a record in database.
+     *
+     * @param string $name
+     * @param array $extraAttrs
+     *
+     * @return object
+     */
+    public function make($name, array $extraAttrs = [])
+    {
+        return $this->factoryMuffin->instance($name, $extraAttrs);
+    }
+
+    /**
      * Generates and saves a record multiple times.
      *
      * ```php
@@ -249,8 +271,8 @@ EOF;
      * $I->haveMultiple('User', 10, ['is_active' => true]); // create 10 active users
      * ```
      *
-     * @param $name
-     * @param $times
+     * @param string $name
+     * @param int $times
      * @param array $extraAttrs
      *
      * @return \object[]
