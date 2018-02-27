@@ -612,7 +612,7 @@ EOF;
                     'source' => self::REPO_BLOB_URL."/".self::STABLE_BRANCH."/src/Codeception/Module/$name.php"
                 ];
                 // building version switcher
-                foreach (['master', '2.2', '2.1', '2.0', '1.8'] as $branch) {
+                foreach (['master', '2.3', '2.2', '2.1', '2.0', '1.8'] as $branch) {
                     $buttons[$branch] = self::REPO_BLOB_URL."/$branch/docs/modules/$name.md";
                 }
                 $buttonHtml = "\n\n".'<div class="btn-group" role="group" style="float: right" aria-label="...">';

@@ -1,6 +1,7 @@
 
 ## Codeception\Module
 
+
 * *Uses* `Codeception\Util\Shared\Asserts`
 
 Basic class for Modules and Helpers.
@@ -8,6 +9,9 @@ You must extend from it while implementing own helpers.
 
 Public methods of this class start with `_` prefix in order to ignore them in actor classes.
 Module contains **HOOKS** which allow to handle test execution routine.
+
+
+
 
 #### $includeInheritedActions
 
@@ -17,6 +21,7 @@ By setting it to false module wan't inherit methods of parent class.
 
 type `bool`
 
+
 #### $onlyActions
 
 *public static* **$onlyActions**
@@ -25,6 +30,7 @@ Allows to explicitly set what methods have this class.
 
 type `array`
 
+
 #### $excludeActions
 
 *public static* **$excludeActions**
@@ -32,6 +38,7 @@ type `array`
 Allows to explicitly exclude actions from module.
 
 type `array`
+
 
 #### $aliases
 
@@ -42,7 +49,7 @@ Allows to rename actions
 type `array`
 #### __construct()
 
- *public* __construct($moduleContainer, $config = null)
+ *public* __construct($moduleContainer, $config = null) 
 
 Module constructor.
 
@@ -51,117 +58,117 @@ Requires module container (to provide access between modules of suite) and confi
  * `param ModuleContainer` $moduleContainer
  * `param null` $config
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L70)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L70)
 
 #### _after()
 
- *public* _after($test)
+ *public* _after($test) 
 
 **HOOK** executed after test
 
  * `param TestInterface` $test
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L253)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L253)
 
 #### _afterStep()
 
- *public* _afterStep($step)
+ *public* _afterStep($step) 
 
 **HOOK** executed after step
 
  * `param Step` $step
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L235)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L235)
 
 #### _afterSuite()
 
- *public* _afterSuite()
+ *public* _afterSuite() 
 
 **HOOK** executed after suite
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L217)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L217)
 
 #### _before()
 
- *public* _before($test)
+ *public* _before($test) 
 
 **HOOK** executed before test
 
  * `param TestInterface` $test
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L244)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L244)
 
 #### _beforeStep()
 
- *public* _beforeStep($step)
+ *public* _beforeStep($step) 
 
 **HOOK** executed before step
 
  * `param Step` $step
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L226)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L226)
 
 #### _beforeSuite()
 
- *public* _beforeSuite($settings = null)
+ *public* _beforeSuite($settings = null) 
 
 **HOOK** executed before suite
 
  * `param array` $settings
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L210)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L210)
 
 #### _failed()
 
- *public* _failed($test, $fail)
+ *public* _failed($test, $fail) 
 
 **HOOK** executed when test fails but before `_after`
 
  * `param TestInterface` $test
  * `param \Exception` $fail
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L263)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L263)
 
 #### _getConfig()
 
- *public* _getConfig($key = null)
+ *public* _getConfig($key = null) 
 
 Get config values or specific config item.
 
  * `param null` $key
  * `return` array|mixed|null
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L338)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L338)
 
 #### _getName()
 
- *public* _getName()
+ *public* _getName() 
 
 Returns a module name for a Module, a class name for Helper
  * `return` string
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L177)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L177)
 
 #### _hasRequiredFields()
 
- *public* _hasRequiredFields()
+ *public* _hasRequiredFields() 
 
 Checks if a module has required fields
  * `return` bool
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L193)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L193)
 
 #### _initialize()
 
- *public* _initialize()
+ *public* _initialize() 
 
 **HOOK** triggered after module is created and configuration is loaded
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L201)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L201)
 
 #### _reconfigure()
 
- *public* _reconfigure($config)
+ *public* _reconfigure($config) 
 
 Allows to redefine config for a specific test.
 Config is restored at the end of a test.
@@ -180,19 +187,19 @@ public function _before(Test $test) {
  * `throws` Exception\ModuleConfigException
  * `throws` ModuleException
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L119)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L119)
 
 #### _resetConfig()
 
- *public* _resetConfig()
+ *public* _resetConfig() 
 
 Reverts config changed by `_reconfigure`
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L137)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L137)
 
 #### _setConfig()
 
- *public* _setConfig($config)
+ *public* _setConfig($config) 
 
 Allows to define initial module config.
 Can be used in `_beforeSuite` hook of Helpers or Extensions
@@ -208,37 +215,37 @@ public function _beforeSuite($settings = []) {
  * `throws` Exception\ModuleConfigException
  * `throws` ModuleException
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L95)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L95)
 
 #### assert()
 
- *protected* assert($arguments, $not = null)
+ *protected* assert($arguments, $not = null) 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L6)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L6)
 
 #### assertArrayHasKey()
 
- *protected* assertArrayHasKey($key, $actual, $description = null)
+ *protected* assertArrayHasKey($key, $actual, $description = null) 
 
  * `param` $key
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L363)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L363)
 
 #### assertArrayNotHasKey()
 
- *protected* assertArrayNotHasKey($key, $actual, $description = null)
+ *protected* assertArrayNotHasKey($key, $actual, $description = null) 
 
  * `param` $key
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L373)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L373)
 
 #### assertArraySubset()
 
- *protected* assertArraySubset($subset, $array, $strict = null, $message = null)
+ *protected* assertArraySubset($subset, $array, $strict = null, $message = null) 
 
 Checks that array contains subset.
 
@@ -247,11 +254,11 @@ Checks that array contains subset.
  * `param bool`   $strict
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L386)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L386)
 
 #### assertContains()
 
- *protected* assertContains($needle, $haystack, $message = null)
+ *protected* assertContains($needle, $haystack, $message = null) 
 
 Checks that haystack contains needle
 
@@ -259,32 +266,32 @@ Checks that haystack contains needle
  * `param`        $haystack
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L149)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L149)
 
 #### assertCount()
 
- *protected* assertCount($expectedCount, $actual, $description = null)
+ *protected* assertCount($expectedCount, $actual, $description = null) 
 
  * `param` $expectedCount
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L396)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L396)
 
 #### assertEmpty()
 
- *protected* assertEmpty($actual, $message = null)
+ *protected* assertEmpty($actual, $message = null) 
 
 Checks that variable is empty.
 
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L221)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L221)
 
 #### assertEquals()
 
- *protected* assertEquals($expected, $actual, $message = null, $delta = null)
+ *protected* assertEquals($expected, $actual, $message = null, $delta = null) 
 
 Checks that two variables are equal.
 
@@ -293,54 +300,54 @@ Checks that two variables are equal.
  * `param string` $message
  * `param float`  $delta
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L35)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L35)
 
 #### assertFalse()
 
- *protected* assertFalse($condition, $message = null)
+ *protected* assertFalse($condition, $message = null) 
 
 Checks that condition is negative.
 
  * `param`        $condition
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L276)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L276)
 
 #### assertFileExists()
 
- *protected* assertFileExists($filename, $message = null)
+ *protected* assertFileExists($filename, $message = null) 
 
 Checks if file exists
 
  * `param string` $filename
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L312)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L312)
 
 #### assertFileNotExists()
 
- *protected* assertFileNotExists($filename, $message = null)
+ *protected* assertFileNotExists($filename, $message = null) 
 
 Checks if file doesn't exist
 
  * `param string` $filename
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L324)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L324)
 
 #### assertGreaterOrEquals()
 
- *protected* assertGreaterOrEquals($expected, $actual, $description = null)
+ *protected* assertGreaterOrEquals($expected, $actual, $description = null) 
 
  * `param` $expected
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L334)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L334)
 
 #### assertGreaterThan()
 
- *protected* assertGreaterThan($expected, $actual, $message = null)
+ *protected* assertGreaterThan($expected, $actual, $message = null) 
 
 Checks that actual is greater than expected
 
@@ -348,11 +355,11 @@ Checks that actual is greater than expected
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L84)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L84)
 
 #### assertGreaterThanOrEqual()
 
- *protected* assertGreaterThanOrEqual($expected, $actual, $message = null)
+ *protected* assertGreaterThanOrEqual($expected, $actual, $message = null) 
 
 Checks that actual is greater or equal than expected
 
@@ -360,62 +367,62 @@ Checks that actual is greater or equal than expected
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L104)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L104)
 
 #### assertGreaterThen()
 
- *protected* assertGreaterThen($expected, $actual, $message = null)
- * `deprecated`
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L92)
+ *protected* assertGreaterThen($expected, $actual, $message = null) 
+ * `deprecated` 
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L92)
 
 #### assertGreaterThenOrEqual()
 
- *protected* assertGreaterThenOrEqual($expected, $actual, $message = null)
- * `deprecated`
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L112)
+ *protected* assertGreaterThenOrEqual($expected, $actual, $message = null) 
+ * `deprecated` 
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L112)
 
 #### assertInstanceOf()
 
- *protected* assertInstanceOf($class, $actual, $description = null)
+ *protected* assertInstanceOf($class, $actual, $description = null) 
 
  * `param` $class
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L406)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L406)
 
 #### assertInternalType()
 
- *protected* assertInternalType($type, $actual, $description = null)
+ *protected* assertInternalType($type, $actual, $description = null) 
 
  * `param` $type
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L426)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L426)
 
 #### assertIsEmpty()
 
- *protected* assertIsEmpty($actual, $description = null)
+ *protected* assertIsEmpty($actual, $description = null) 
 
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L353)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L353)
 
 #### assertLessOrEquals()
 
- *protected* assertLessOrEquals($expected, $actual, $description = null)
+ *protected* assertLessOrEquals($expected, $actual, $description = null) 
 
  * `param` $expected
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L344)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L344)
 
 #### assertLessThan()
 
- *protected* assertLessThan($expected, $actual, $message = null)
+ *protected* assertLessThan($expected, $actual, $message = null) 
 
 Checks that actual is less than expected
 
@@ -423,11 +430,11 @@ Checks that actual is less than expected
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L124)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L124)
 
 #### assertLessThanOrEqual()
 
- *protected* assertLessThanOrEqual($expected, $actual, $message = null)
+ *protected* assertLessThanOrEqual($expected, $actual, $message = null) 
 
 Checks that actual is less or equal than expected
 
@@ -435,17 +442,17 @@ Checks that actual is less or equal than expected
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L136)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L136)
 
 #### assertNot()
 
- *protected* assertNot($arguments)
+ *protected* assertNot($arguments) 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L22)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L22)
 
 #### assertNotContains()
 
- *protected* assertNotContains($needle, $haystack, $message = null)
+ *protected* assertNotContains($needle, $haystack, $message = null) 
 
 Checks that haystack doesn't contain needle.
 
@@ -453,22 +460,22 @@ Checks that haystack doesn't contain needle.
  * `param`        $haystack
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L161)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L161)
 
 #### assertNotEmpty()
 
- *protected* assertNotEmpty($actual, $message = null)
+ *protected* assertNotEmpty($actual, $message = null) 
 
 Checks that variable is not empty.
 
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L232)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L232)
 
 #### assertNotEquals()
 
- *protected* assertNotEquals($expected, $actual, $message = null, $delta = null)
+ *protected* assertNotEquals($expected, $actual, $message = null, $delta = null) 
 
 Checks that two variables are not equal
 
@@ -477,32 +484,32 @@ Checks that two variables are not equal
  * `param string` $message
  * `param float`  $delta
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L48)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L48)
 
 #### assertNotInstanceOf()
 
- *protected* assertNotInstanceOf($class, $actual, $description = null)
+ *protected* assertNotInstanceOf($class, $actual, $description = null) 
 
  * `param` $class
  * `param` $actual
  * `param` $description
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L416)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L416)
 
 #### assertNotNull()
 
- *protected* assertNotNull($actual, $message = null)
+ *protected* assertNotNull($actual, $message = null) 
 
 Checks that variable is not NULL
 
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L254)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L254)
 
 #### assertNotRegExp()
 
- *protected* assertNotRegExp($pattern, $string, $message = null)
+ *protected* assertNotRegExp($pattern, $string, $message = null) 
 
 Checks that string not match with pattern
 
@@ -510,11 +517,11 @@ Checks that string not match with pattern
  * `param string` $string
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L185)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L185)
 
 #### assertNotSame()
 
- *protected* assertNotSame($expected, $actual, $message = null)
+ *protected* assertNotSame($expected, $actual, $message = null) 
 
 Checks that two variables are not same
 
@@ -522,22 +529,22 @@ Checks that two variables are not same
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L72)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L72)
 
 #### assertNull()
 
- *protected* assertNull($actual, $message = null)
+ *protected* assertNull($actual, $message = null) 
 
 Checks that variable is NULL
 
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L243)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L243)
 
 #### assertRegExp()
 
- *protected* assertRegExp($pattern, $string, $message = null)
+ *protected* assertRegExp($pattern, $string, $message = null) 
 
 Checks that string match with pattern
 
@@ -545,11 +552,11 @@ Checks that string match with pattern
  * `param string` $string
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L173)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L173)
 
 #### assertSame()
 
- *protected* assertSame($expected, $actual, $message = null)
+ *protected* assertSame($expected, $actual, $message = null) 
 
 Checks that two variables are same
 
@@ -557,11 +564,11 @@ Checks that two variables are same
  * `param`        $actual
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L60)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L60)
 
 #### assertStringStartsNotWith()
 
- *protected* assertStringStartsNotWith($prefix, $string, $message = null)
+ *protected* assertStringStartsNotWith($prefix, $string, $message = null) 
 
 Checks that a string doesn't start with the given prefix.
 
@@ -569,11 +576,11 @@ Checks that a string doesn't start with the given prefix.
  * `param string` $string
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L209)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L209)
 
 #### assertStringStartsWith()
 
- *protected* assertStringStartsWith($prefix, $string, $message = null)
+ *protected* assertStringStartsWith($prefix, $string, $message = null) 
 
 Checks that a string starts with the given prefix.
 
@@ -581,21 +588,22 @@ Checks that a string starts with the given prefix.
  * `param string` $string
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L197)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L197)
 
 #### assertThat()
 
- *protected* assertThat($haystack, $constraint, $message = null)
+ *protected* assertThat($haystack, $constraint, $message = null) 
+
 
  * `param`        $haystack
  * `param`        $constraint
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L287)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L287)
 
 #### assertThatItsNot()
 
- *protected* assertThatItsNot($haystack, $constraint, $message = null)
+ *protected* assertThatItsNot($haystack, $constraint, $message = null) 
 
 Checks that haystack doesn't attend
 
@@ -603,53 +611,53 @@ Checks that haystack doesn't attend
  * `param`        $constraint
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L299)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L299)
 
 #### assertTrue()
 
- *protected* assertTrue($condition, $message = null)
+ *protected* assertTrue($condition, $message = null) 
 
 Checks that condition is positive.
 
  * `param`        $condition
  * `param string` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L265)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L265)
 
 #### debug()
 
- *protected* debug($message)
+ *protected* debug($message) 
 
 Print debug message to the screen.
 
  * `param` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L272)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L272)
 
 #### debugSection()
 
- *protected* debugSection($title, $message)
+ *protected* debugSection($title, $message) 
 
 Print debug message with a title
 
  * `param` $title
  * `param` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L283)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L283)
 
 #### fail()
 
- *protected* fail($message)
+ *protected* fail($message) 
 
 Fails the test with message.
 
  * `param` $message
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Shared/Asserts.php#L436)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Util/Shared/Asserts.php#L436)
 
 #### getModule()
 
- *protected* getModule($name)
+ *protected* getModule($name) 
 
 Get another module by its name:
 
@@ -662,50 +670,50 @@ $this->getModule('WebDriver')->_findElements('.items');
  * `return` Module
  * `throws` ModuleException
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L324)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L324)
 
 #### getModules()
 
- *protected* getModules()
+ *protected* getModules() 
 
 Get all enabled modules
  * `return` array
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L307)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L307)
 
 #### hasModule()
 
- *protected* hasModule($name)
+ *protected* hasModule($name) 
 
 Checks that module is enabled.
 
  * `param` $name
  * `return` bool
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L297)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L297)
 
 #### onReconfigure()
 
- *protected* onReconfigure()
+ *protected* onReconfigure() 
 
 HOOK to be executed when config changes with `_reconfigure`.
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L129)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L129)
 
 #### scalarizeArray()
 
- *protected* scalarizeArray($array)
+ *protected* scalarizeArray($array) 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L349)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L349)
 
 #### validateConfig()
 
- *protected* validateConfig()
+ *protected* validateConfig() 
 
 Validates current config for required fields and required packages.
  * `throws` Exception\ModuleConfigException
  * `throws` ModuleException
 
-[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php#L148)
+[See source](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php#L148)
 
-<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Module.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Module.php">Help us to improve documentation. Edit module reference</a></div>

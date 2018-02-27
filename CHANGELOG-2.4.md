@@ -8,5 +8,5 @@
 * Cest hooks behavior changed (by @fffilimonov):
   * `_failed` called when test fails
   * `_passed` called when tests is successful
-  * `_after` is called for failing and successful tests
-   
+  * `_after` is called for failing and successful tests   
+

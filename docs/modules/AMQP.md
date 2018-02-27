@@ -1,5 +1,6 @@
 # AMQP
 
+
 This module interacts with message broker software that implements
 the Advanced Message Queuing Protocol (AMQP) standard. For example, RabbitMQ (tested).
 
@@ -37,7 +38,7 @@ To use this module with Composer you need <em>"php-amqplib/php-amqplib": "~2.4"<
 ## Actions
 
 ### bindQueueToExchange
-
+ 
 Binds a queue to an exchange
 
 This is an alias of method `queue_bind` of `PhpAmqpLib\Channel\AMQPChannel`.
@@ -59,8 +60,9 @@ $I->bindQueueToExchange(
  * `param int` $ticket
  * `return` mixed|null
 
-### declareExchange
 
+### declareExchange
+ 
 Declares an exchange
 
 This is an alias of method `exchange_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
@@ -84,8 +86,9 @@ $I->declareExchange(
  * `param int` $ticket
  * `return` mixed|null
 
-### declareQueue
 
+### declareQueue
+ 
 Declares queue, creates if needed
 
 This is an alias of method `queue_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
@@ -107,8 +110,9 @@ $I->declareQueue(
  * `param int` $ticket
  * `return` mixed|null
 
-### grabMessageFromQueue
 
+### grabMessageFromQueue
+ 
 Takes last message from queue.
 
 ``` php
@@ -120,8 +124,9 @@ $message = $I->grabMessageFromQueue('queue.emails');
  * `param string` $queue
  * `return` \PhpAmqpLib\Message\AMQPMessage
 
-### purgeAllQueues
 
+### purgeAllQueues
+ 
 Purge all queues defined in config.
 
 ``` php
@@ -130,8 +135,9 @@ $I->purgeAllQueues();
 ?>
 ```
 
-### purgeQueue
 
+### purgeQueue
+ 
 Purge a specific queue defined in config.
 
 ``` php
@@ -142,8 +148,9 @@ $I->purgeQueue('queue.emails');
 
  * `param string` $queueName
 
-### pushToExchange
 
+### pushToExchange
+ 
 Sends message to exchange by sending exchange name, message
 and (optionally) a routing key
 
@@ -159,8 +166,9 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'), 'severity');
  * `param string|\PhpAmqpLib\Message\AMQPMessage` $message
  * `param string` $routing_key
 
-### pushToQueue
 
+### pushToQueue
+ 
 Sends message to queue
 
 ``` php
@@ -173,8 +181,9 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
  * `param string` $queue
  * `param string|\PhpAmqpLib\Message\AMQPMessage` $message
 
-### seeMessageInQueueContainsText
 
+### seeMessageInQueueContainsText
+ 
 Checks if message containing text received.
 
 **This method drops message from queue**
@@ -190,4 +199,4 @@ $I->seeMessageInQueueContainsText('queue.emails','davert');
  * `param string` $queue
  * `param string` $text
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/AMQP.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/AMQP.php">Help us to improve documentation. Edit module reference</a></div>

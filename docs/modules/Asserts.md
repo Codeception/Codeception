@@ -1,23 +1,26 @@
 # Asserts
 
+
 Special module for using asserts in your tests.
 
 ## Actions
 
 ### assertArrayHasKey
-
+ 
  * `param` $key
  * `param` $actual
  * `param` $description
+
 
 ### assertArrayNotHasKey
-
+ 
  * `param` $key
  * `param` $actual
  * `param` $description
 
-### assertArraySubset
 
+### assertArraySubset
+ 
 Checks that array contains subset.
 
  * `param array`  $subset
@@ -25,29 +28,33 @@ Checks that array contains subset.
  * `param bool`   $strict
  * `param string` $message
 
-### assertContains
 
+### assertContains
+ 
 Checks that haystack contains needle
 
  * `param`        $needle
  * `param`        $haystack
  * `param string` $message
 
-### assertCount
 
+### assertCount
+ 
  * `param` $expectedCount
  * `param` $actual
  * `param` $description
 
-### assertEmpty
 
+### assertEmpty
+ 
 Checks that variable is empty.
 
  * `param`        $actual
  * `param string` $message
 
-### assertEquals
 
+### assertEquals
+ 
 Checks that two variables are equal. If you're comparing floating-point values,
 you can specify the optional "delta" parameter which dictates how great of a precision
 error are you willing to tolerate in order to consider the two values equal.
@@ -69,105 +76,120 @@ $I->assertEquals($calculator->add(0.1, 0.2), 0.3, 'Calculator should add the two
  * `param string` $message
  * `param float`  $delta
 
-### assertFalse
 
+### assertFalse
+ 
 Checks that condition is negative.
 
  * `param`        $condition
  * `param string` $message
 
-### assertFileExists
 
+### assertFileExists
+ 
 Checks if file exists
 
  * `param string` $filename
  * `param string` $message
 
-### assertFileNotExists
 
+### assertFileNotExists
+ 
 Checks if file doesn't exist
 
  * `param string` $filename
  * `param string` $message
 
-### assertGreaterOrEquals
 
+### assertGreaterOrEquals
+ 
  * `param` $expected
  * `param` $actual
  * `param` $description
 
-### assertGreaterThan
 
+### assertGreaterThan
+ 
 Checks that actual is greater than expected
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
 
-### assertGreaterThanOrEqual
 
+### assertGreaterThanOrEqual
+ 
 Checks that actual is greater or equal than expected
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
 
-### assertInstanceOf
 
+### assertInstanceOf
+ 
  * `param` $class
  * `param` $actual
  * `param` $description
 
-### assertInternalType
 
+### assertInternalType
+ 
  * `param` $type
  * `param` $actual
  * `param` $description
 
-### assertIsEmpty
 
+### assertIsEmpty
+ 
  * `param` $actual
  * `param` $description
 
-### assertLessOrEquals
 
+### assertLessOrEquals
+ 
  * `param` $expected
  * `param` $actual
  * `param` $description
 
-### assertLessThan
 
+### assertLessThan
+ 
 Checks that actual is less than expected
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
 
-### assertLessThanOrEqual
 
+### assertLessThanOrEqual
+ 
 Checks that actual is less or equal than expected
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
 
-### assertNotContains
 
+### assertNotContains
+ 
 Checks that haystack doesn't contain needle.
 
  * `param`        $needle
  * `param`        $haystack
  * `param string` $message
 
-### assertNotEmpty
 
+### assertNotEmpty
+ 
 Checks that variable is not empty.
 
  * `param`        $actual
  * `param string` $message
 
-### assertNotEquals
 
+### assertNotEquals
+ 
 Checks that two variables are not equal. If you're comparing floating-point values,
 you can specify the optional "delta" parameter which dictates how great of a precision
 error are you willing to tolerate in order to consider the two values not equal.
@@ -189,83 +211,94 @@ $I->assertNotEquals($calculator->add(0.1, 0.2), 0.4, 'Calculator should add the 
  * `param string` $message
  * `param float`  $delta
 
-### assertNotInstanceOf
 
+### assertNotInstanceOf
+ 
  * `param` $class
  * `param` $actual
  * `param` $description
 
-### assertNotNull
 
+### assertNotNull
+ 
 Checks that variable is not NULL
 
  * `param`        $actual
  * `param string` $message
 
-### assertNotRegExp
 
+### assertNotRegExp
+ 
 Checks that string not match with pattern
 
  * `param string` $pattern
  * `param string` $string
  * `param string` $message
 
-### assertNotSame
 
+### assertNotSame
+ 
 Checks that two variables are not same
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
 
-### assertNull
 
+### assertNull
+ 
 Checks that variable is NULL
 
  * `param`        $actual
  * `param string` $message
 
-### assertRegExp
 
+### assertRegExp
+ 
 Checks that string match with pattern
 
  * `param string` $pattern
  * `param string` $string
  * `param string` $message
 
-### assertSame
 
+### assertSame
+ 
 Checks that two variables are same
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
 
-### assertStringStartsNotWith
 
+### assertStringStartsNotWith
+ 
 Checks that a string doesn't start with the given prefix.
 
  * `param string` $prefix
  * `param string` $string
  * `param string` $message
 
-### assertStringStartsWith
 
+### assertStringStartsWith
+ 
 Checks that a string starts with the given prefix.
 
  * `param string` $prefix
  * `param string` $string
  * `param string` $message
 
-### assertTrue
 
+### assertTrue
+ 
 Checks that condition is positive.
 
  * `param`        $condition
  * `param string` $message
 
-### expectException
 
+### expectException
+ 
 Handles and checks exception called inside callback function.
 Either exception class name or exception instance should be provided.
 
@@ -291,10 +324,11 @@ $I->expectException(new MyException("Don't do bad things"), function() {
  * `param` $exception string or \Exception
  * `param` $callback
 
-### fail
 
+### fail
+ 
 Fails the test with message.
 
  * `param` $message
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>
