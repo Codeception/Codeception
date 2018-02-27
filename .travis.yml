@@ -111,7 +111,7 @@ before_script:
   - '[[ "$SF_VERSION" != "3" ]] || php frameworks-symfony/bin/console doctrine:schema:update --force -n'
   # ZF2
   - "mysql -e 'create database zf2_test;'"
-  - php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] ||  [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create'
   # Build
   - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept build -c frameworks-yii-basic'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-phalcon'
