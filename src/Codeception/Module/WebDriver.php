@@ -774,7 +774,7 @@ class WebDriver extends CodeceptionModule implements
             },
             $cookies
         );
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugSection('Cookies', json_encode($this->getCookiesAsArray($this->webDriver->manage()->getCookies())));
         $this->assertContains($cookie, $cookies);
     }
 
@@ -787,7 +787,7 @@ class WebDriver extends CodeceptionModule implements
             },
             $cookies
         );
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugSection('Cookies', json_encode($this->getCookiesAsArray($this->webDriver->manage()->getCookies())));
         $this->assertNotContains($cookie, $cookies);
     }
 
@@ -805,13 +805,13 @@ class WebDriver extends CodeceptionModule implements
             }
         }
         $this->webDriver->manage()->addCookie($params);
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugSection('Cookies', json_encode($this->getCookiesAsArray($this->webDriver->manage()->getCookies())));
     }
 
     public function resetCookie($cookie, array $params = [])
     {
         $this->webDriver->manage()->deleteCookieNamed($cookie);
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugSection('Cookies', json_encode($this->getCookiesAsArray($this->webDriver->manage()->getCookies())));
     }
 
     public function grabCookie($cookie, array $params = [])
@@ -838,6 +838,23 @@ class WebDriver extends CodeceptionModule implements
         $this->_getCurrentUri();
 
         return $this->webDriver->getPageSource();
+    }
+
+    /**
+     * Maps an array of cookie objects into an array of cookie arrays.
+     * 
+     * @param array $cookies Array of cookie objects.
+     *
+     * @return array Array of cookies in array form.
+     */
+    protected function getCookiesAsArray(array $cookies)
+    {
+        return array_map(
+            function (Cookie $cookie) {
+                return $cookie->toArray();
+            },
+            $cookies
+        );
     }
 
     protected function filterCookies($cookies, $params = [])
@@ -1634,13 +1651,13 @@ class WebDriver extends CodeceptionModule implements
     * ```
     *
     * @param $field
-    */    
+    */
     public function clearField($field)
     {
         $el = $this->findField($field);
         $el->clear();
     }
-        
+
     public function attachFile($field, $filename)
     {
         $el = $this->findField($field);
