@@ -31,12 +31,11 @@ class Clean extends Command
 
     private function cleanProjectsRecursively(OutputInterface $output, $projectDir)
     {
-        $config = Configuration::config($projectDir);
-
-        $logDir = $projectDir . DIRECTORY_SEPARATOR . $config['paths']['output'];
+        $logDir = Configuration::logDir();
         $output->writeln("<info>Cleaning up output " . $logDir . "...</info>");
         FileSystem::doEmptyDir($logDir);
 
+        $config = Configuration::config($projectDir);
         $subProjects = $config['include'];
         foreach ($subProjects as $subProject) {
             $subProjectDir = $projectDir . $subProject;
