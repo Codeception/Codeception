@@ -95,13 +95,13 @@ class Descriptor
      * Provides a test data set index
      *
      * @param \PHPUnit\Framework\SelfDescribing $testCase
-     * @return int
+     * @return int|null
      */
     public static function getTestDataSetIndex(\PHPUnit\Framework\SelfDescribing $testCase)
     {
         if ($testCase instanceof Descriptive) {
             return $testCase->getMetadata()->getIndex();
         }
-        return 0;
+        return null;
     }
 }
