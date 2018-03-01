@@ -1,5 +1,6 @@
 # Memcache
 
+
 Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
 
 Performs a cleanup by flushing all values after each test run.
@@ -30,14 +31,16 @@ Be sure you don't use the production server to connect.
 
 * **memcache** - instance of _Memcache_ or _Memcached_ object
 
+
 ## Actions
 
 ### clearMemcache
-
+ 
 Flushes all Memcached data.
 
-### dontSeeInMemcached
 
+### dontSeeInMemcached
+ 
 Checks item in Memcached doesn't exist or is the same as expected.
 
 Examples:
@@ -55,8 +58,9 @@ $I->dontSeeInMemcached('users_count', 200);
  * `param` $key
  * `param` $value
 
-### grabValueFromMemcached
 
+### grabValueFromMemcached
+ 
 Grabs value from memcached by key.
 
 Example:
@@ -70,16 +74,18 @@ $users_count = $I->grabValueFromMemcached('users_count');
  * `param` $key
  * `return` array|string
 
-### haveInMemcached
 
+### haveInMemcached
+ 
 Stores an item `$value` with `$key` on the Memcached server.
 
  * `param string` $key
  * `param mixed` $value
  * `param int` $expiration
 
-### seeInMemcached
 
+### seeInMemcached
+ 
 Checks item in Memcached exists and the same as expected.
 
 Examples:
@@ -97,4 +103,4 @@ $I->seeInMemcached('users_count', 200);
  * `param` $key
  * `param` $value
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Memcache.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/Memcache.php">Help us to improve documentation. Edit module reference</a></div>

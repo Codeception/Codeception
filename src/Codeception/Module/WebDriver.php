@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Module;
 
 use Codeception\Coverage\Subscriber\LocalServer;
@@ -24,8 +25,8 @@ use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
-use Codeception\Util\Debug;
 use Codeception\Util\ActionSequence;
+use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
 use Facebook\WebDriver\Cookie;
@@ -37,8 +38,8 @@ use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\Remote\UselessFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebElement;
+use Facebook\WebDriver\Remote\UselessFileDetector;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
@@ -422,10 +423,12 @@ class WebDriver extends CodeceptionModule implements
             $browser = $this->config['browser'];
             $capabilities = $this->config['capabilities'];
         }
-        $test->getMetadata()->setCurrent([
-            'browser' => $browser,
-            'capabilities' => $capabilities,
-        ]);
+        $test->getMetadata()->setCurrent(
+            [
+                'browser'      => $browser,
+                'capabilities' => $capabilities,
+            ]
+        );
     }
 
     /**
@@ -600,11 +603,11 @@ class WebDriver extends CodeceptionModule implements
     protected function isJSError($logEntryLevel, $message)
     {
         return
-        (
-            ($this->isPhantom() && $logEntryLevel != 'INFO')          // phantomjs logs errors as "WARNING"
-            || $logEntryLevel === 'SEVERE'                            // other browsers log errors as "SEVERE"
-        )
-        && strpos($message, 'ERR_PROXY_CONNECTION_FAILED') === false;  // ignore blackhole proxy
+            (
+                ($this->isPhantom() && $logEntryLevel != 'INFO')          // phantomjs logs errors as "WARNING"
+                || $logEntryLevel === 'SEVERE'                            // other browsers log errors as "SEVERE"
+            )
+            && strpos($message, 'ERR_PROXY_CONNECTION_FAILED') === false;  // ignore blackhole proxy
     }
 
     public function _afterSuite()
@@ -1044,10 +1047,10 @@ class WebDriver extends CodeceptionModule implements
         $locator = Crawler::xpathLiteral(trim($selector));
         // by text or label
         $xpath = Locator::combine(
-            // @codingStandardsIgnoreStart
+        // @codingStandardsIgnoreStart
             ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')][(((./@name = $locator) or ./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator)]",
             ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]"
-            // @codingStandardsIgnoreEnd
+        // @codingStandardsIgnoreEnd
         );
         $fields = $this->webDriver->findElements(WebDriverBy::xpath($xpath));
         if (!empty($fields)) {
@@ -1550,7 +1553,7 @@ class WebDriver extends CodeceptionModule implements
             $typeLiteral = Crawler::xPathLiteral($contextType);
             $inputLocatorFragment = "input[@type = $typeLiteral][@name = $nameLiteral]";
             $xpath = Locator::combine(
-                // @codingStandardsIgnoreStart
+            // @codingStandardsIgnoreStart
                 "ancestor::form//{$inputLocatorFragment}[(@id = ancestor::form//label[contains(normalize-space(string(.)), $locator)]/@for) or @placeholder = $locator]",
                 // @codingStandardsIgnoreEnd
                 "ancestor::form//label[contains(normalize-space(string(.)), $locator)]//{$inputLocatorFragment}"
@@ -1560,7 +1563,7 @@ class WebDriver extends CodeceptionModule implements
             }
         } else {
             $xpath = Locator::combine(
-                // @codingStandardsIgnoreStart
+            // @codingStandardsIgnoreStart
                 "//input[@type = 'checkbox' or @type = 'radio'][(@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or @placeholder = $locator or @name = $locator]",
                 // @codingStandardsIgnoreEnd
                 "//label[contains(normalize-space(string(.)), $locator)]//input[@type = 'radio' or @type = 'checkbox']"
@@ -1621,26 +1624,25 @@ class WebDriver extends CodeceptionModule implements
     {
         $el = $this->findField($field);
         $el->clear();
-        $el->sendKeys((string) $value);
+        $el->sendKeys((string)$value);
     }
 
     /**
-    * Clears given field which isn't empty.
-    *
-    * ``` php
-    * <?php
-    * $I->clearField('#username');
-    * ?>
-    * ```
-    *
-    * @param $field
-    */    
+     * Clears given field which isn't empty.
+     *
+     * ``` php
+     * <?php
+     * $I->clearField('#username');
+     * ```
+     *
+     * @param $field
+     */
     public function clearField($field)
     {
         $el = $this->findField($field);
         $el->clear();
     }
-        
+
     public function attachFile($field, $filename)
     {
         $el = $this->findField($field);
@@ -2645,8 +2647,8 @@ class WebDriver extends CodeceptionModule implements
      * ```
      *
      * @param string $cssOrXPath css or xpath of the web element (body by default).
-     * @param int    $offsetX
-     * @param int    $offsetY
+     * @param int $offsetX
+     * @param int $offsetY
      *
      * @throws \Codeception\Exception\ElementNotFound
      */
@@ -2697,7 +2699,7 @@ class WebDriver extends CodeceptionModule implements
                 if ($this->isPhantom() and $e->getResults()['status'] == 12) {
                     throw new MalformedLocatorException(
                         key($selector) . ' => ' . reset($selector),
-                        "Strict locator ".$e->getCode()
+                        "Strict locator " . $e->getCode()
                     );
                 }
             }

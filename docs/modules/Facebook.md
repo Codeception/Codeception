@@ -1,5 +1,6 @@
 # Facebook
 
+
 Provides testing for projects integrated with Facebook API.
 Relies on Facebook's tool Test User API.
 
@@ -74,58 +75,67 @@ $I->see('Welcome, ' . $fbUserFirstName);
 ## Actions
 
 ### grabFacebookTestUserAccessToken
-
+ 
 Returns the test user access token.
 
  * `return` string
 
-### grabFacebookTestUserEmail
 
+### grabFacebookTestUserEmail
+ 
 Returns the test user email.
 
  * `return` string
 
-### grabFacebookTestUserId
 
+### grabFacebookTestUserId
+ 
 Returns the test user id.
 
  * `return` string
 
-### grabFacebookTestUserLoginUrl
 
+### grabFacebookTestUserLoginUrl
+ 
 Returns URL for test user auto-login.
 
  * `return` string
 
-### grabFacebookTestUserName
 
+### grabFacebookTestUserName
+ 
 Returns the test user name.
 
  * `return` string
 
+
 ### grabFacebookTestUserPassword
 __not documented__
 
-### haveFacebookTestUserAccount
 
+### haveFacebookTestUserAccount
+ 
 Get facebook test user be created.
 
 *Please, note that the test user is created only at first invoke, unless $renew arguments is true.*
 
  * `param bool` $renew true if the test user should be recreated
 
-### haveTestUserLoggedInOnFacebook
 
+### haveTestUserLoggedInOnFacebook
+ 
 Get facebook test user be logged in on facebook.
 This is done by going to facebook.com
 
 @throws ModuleConfigException
 
-### postToFacebookAsTestUser
 
+### postToFacebookAsTestUser
+ 
 Please, note that you must have publish_actions permission to be able to publish to user's feed.
 
  * `param array` $params
+
 
 ### seePostOnFacebookWithAttachedPlace
 
@@ -133,10 +143,11 @@ Please, note that you must have publish_actions permission to be able to publish
 
  * `param string` $placeId Place identifier to be verified against user published posts
 
+
 ### seePostOnFacebookWithMessage
 
 Please, note that you must have publish_actions permission to be able to publish to user's feed.
 
  * `param string` $message published post to be verified against the actual post on facebook
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Facebook.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/Facebook.php">Help us to improve documentation. Edit module reference</a></div>

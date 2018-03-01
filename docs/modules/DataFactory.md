@@ -1,5 +1,6 @@
 # DataFactory
 
+
 DataFactory allows you to easily generate and create test data using [**FactoryMuffin**](https://github.com/thephpleague/factory-muffin).
 DataFactory uses an ORM of your application to define, save and cleanup data. Thus, should be used with ORM or Framework modules.
 
@@ -8,7 +9,6 @@ This module requires packages installed:
 ```json
 {
  "league/factory-muffin": "^3.0",
- "league/factory-muffin-faker": "^1.0"
 }
 ```
 
@@ -29,7 +29,7 @@ $fm->define(User::class)->setDefinitions([
 
    // generate a profile and return its Id
    'profile_id' => 'factory|Profile'
-);
+]);
 ```
 
 Configure this module to load factory definitions from a directory.
@@ -48,7 +48,7 @@ modules:
 (you can also use Laravel5 and Phalcon).
 
 In this example factories are loaded from `tests/_support/factories` directory. Please note that this directory is relative from the codeception.yml file (so for Yii2 it would be codeception/_support/factories).
- * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
+You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
 
 In cases you want to use data from database inside your factory definitions you can define them in Helper.
 For instance, if you use Doctrine, this allows you to access `EntityManager` inside a definition.
@@ -113,7 +113,7 @@ In case your ORM expects a related record itself (Doctrine) then you should use 
 ## Actions
 
 ### have
-
+ 
 Generates and saves a record,.
 
 ```php
@@ -123,13 +123,14 @@ $I->have('User', ['is_active' => true]); // creates active user
 
 Returns an instance of created user.
 
- * `param` $name
+ * `param string` $name
  * `param array` $extraAttrs
 
  * `return` object
 
-### haveMultiple
 
+### haveMultiple
+ 
 Generates and saves a record multiple times.
 
 ```php
@@ -137,10 +138,29 @@ $I->haveMultiple('User', 10); // create 10 users
 $I->haveMultiple('User', 10, ['is_active' => true]); // create 10 active users
 ```
 
- * `param` $name
- * `param` $times
+ * `param string` $name
+ * `param int` $times
  * `param array` $extraAttrs
 
  * `return` \object[]
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/DataFactory.php">Help us to improve documentation. Edit module reference</a></div>
+
+### make
+ 
+Generates a record instance.
+
+This does not save it in the database. Use `have` for that.
+
+```php
+$user = $I->make('User'); // return User instance
+$activeUser = $I->make('User', ['is_active' => true]); // return active user instance
+```
+
+Returns an instance of created user without creating a record in database.
+
+ * `param string` $name
+ * `param array` $extraAttrs
+
+ * `return` object
+
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/DataFactory.php">Help us to improve documentation. Edit module reference</a></div>
