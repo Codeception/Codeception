@@ -25,6 +25,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
  *
  * * app_path: 'src' - in Symfony 4 Kernel is located inside `src`
  * * environment: 'local' - environment used for load kernel
+ * * app_kernel:  null - specify custom full qualified kernel className
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * debug: true - turn on/off debug mode
  * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
@@ -110,12 +111,13 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     public $kernel;
 
     public $config = [
-        'app_path' => 'app',
-        'var_path' => 'app',
-        'environment' => 'test',
-        'debug' => true,
-        'cache_router' => false,
-        'em_service' => 'doctrine.orm.entity_manager',
+        'app_path'          => 'app',
+        'var_path'          => 'app',
+        'environment'       => 'test',
+        'debug'             => true,
+        'cache_router'      => false,
+        'app_kernel'        => null,
+        'em_service'        => 'doctrine.orm.entity_manager',
         'rebootable_client' => true,
     ];
 
@@ -145,6 +147,11 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      * @var array
      */
     protected $persistentServices = [];
+
+    private $kernelClasses = [
+        'AppKernel', // Symfony Standard
+        'App\Kernel', // Symfony Flex
+    ];
 
     public function _initialize()
     {
@@ -196,7 +203,11 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     public function _before(\Codeception\TestInterface $test)
     {
         $this->persistentServices = array_merge($this->persistentServices, $this->permanentServices);
-        $this->client = new SymfonyConnector($this->kernel, $this->persistentServices, $this->config['rebootable_client']);
+        $this->client = new SymfonyConnector(
+            $this->kernel,
+            $this->persistentServices,
+            $this->config['rebootable_client']
+        );
     }
 
     /**
@@ -234,6 +245,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
                 $this->persistService('doctrine.dbal.backend_connection', true);
             }
         }
+
         return $this->permanentServices[$this->config['em_service']];
     }
 
@@ -284,11 +296,13 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
         require_once $file;
 
-        $possibleKernelClasses = [
-            'AppKernel', // Symfony Standard
-            'App\Kernel', // Symfony Flex
-        ];
-        foreach ($possibleKernelClasses as $class) {
+        // mixing default kernel classes and class with changed namespace
+
+        if ($this->config['app_kernel']) {
+            $this->kernelClasses = array_merge($this->kernelClasses, [$this->config['app_kernel']]);
+        }
+
+        foreach ($this->kernelClasses as $class) {
             if (class_exists($class)) {
                 $refClass = new \ReflectionClass($class);
                 if ($refClass->getFileName() === $file->getRealpath()) {
@@ -359,7 +373,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      * ?>
      * ```
      *
-     * @param $routeName
+     * @param       $routeName
      * @param array $params
      */
     public function amOnRoute($routeName, array $params = [])
@@ -382,7 +396,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      * ?>
      * ```
      *
-     * @param $routeName
+     * @param       $routeName
      * @param array $params
      */
     public function seeCurrentRouteIs($routeName, array $params = [])
@@ -462,8 +476,9 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      * ```
      *
      * @param $service
+     *
      * @return mixed
-     * @part services
+     * @part       services
      * @deprecated Use grabService instead
      */
     public function grabServiceFromContainer($service)
@@ -482,6 +497,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      * ```
      *
      * @param $service
+     *
      * @return mixed
      * @part services
      */
@@ -491,6 +507,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if (!$container->has($service)) {
             $this->fail("Service $service is not available in container");
         }
+
         return $container->get($service);
     }
 
@@ -509,6 +526,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if (null === $response) {
             $this->fail("You must perform a request before using this method.");
         }
+
         return $profiler->loadProfileFromResponse($response);
     }
 
@@ -551,6 +569,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
     /**
      * @param Data $data
+     *
      * @return array
      */
     private function extractRawRoles(Data $data)
