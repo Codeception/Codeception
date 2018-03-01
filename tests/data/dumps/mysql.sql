@@ -13,6 +13,8 @@ insert  into `groups`(`id`,`name`,`enabled`,`created_at`) values (1,'coders',1,'
 
 insert  into `groups`(`id`,`name`,`enabled`,`created_at`) values (2,'jazzman',0,'2012-02-01 21:18:40');
 
+insert  into `groups`(`id`,`name`,`enabled`,`created_at`) values (2,'A /* Z a \\|`~!\"£$%&/()=\'<>[]{}@#,.;:-_§*+ z',0,'2012-02-01 21:18:40');
+
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
