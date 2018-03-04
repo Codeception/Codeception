@@ -320,6 +320,8 @@ class Configuration
             $settings['path'] = $suite;
         }
 
+        $config['paths']['tests'] = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['tests']);
+
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
             . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
 
