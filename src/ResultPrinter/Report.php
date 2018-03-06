@@ -12,7 +12,7 @@ class Report extends ResultPrinter implements ConsolePrinter
      * @param \PHPUnit\Framework\Test $test
      * @param float $time
      */
-    public function endTest(\PHPUnit\Framework\Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
         $name = Descriptor::getTestAsString($test);
         $success = ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_PASSED);
