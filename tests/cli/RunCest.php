@@ -228,7 +228,7 @@ class RunCest
         $I->executeCommand('run unit ErrorTest --no-exit');
         $I->seeInShellOutput('There was 1 error');
         $I->seeInShellOutput('Array to string conversion');
-        $I->seeInShellOutput('ErrorTest.php:9');
+        $I->seeInShellOutput('ErrorTest.php');
     }
 
     public function runTestWithException(\CliGuy $I)
