@@ -19,5 +19,9 @@
         "psr-4":{
             "Codeception\\PHPUnit\\": "src\\"
         }
+    },
+    "require-dev": {
+        "vlucas/phpdotenv": "^2.4",
+        "codeception/specify": "*"
     }
 }

@@ -1,0 +1,17 @@
+language: php
+
+env:
+  CODECEPTION_VERSION: '2.4.x-dev'
+
+php:
+  - 7.1
+  - 7.2
+
+before_script:
+  - wget https://robo.li/robo.phar
+  - php robo.phar prepare
+  - composer update
+
+script:
+  - php robo.phar test cli
+  - php robo.phar test "unit -g core"
