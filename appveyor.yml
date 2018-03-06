@@ -34,7 +34,6 @@ install:
   - sc config wuauserv start= auto
   - net start wuauserv
   - IF %PHP%==1 cinst -y php --version 7.1.14
-  - IF %PHP%==1 copy php.ini-production php.ini
   - IF %PHP%==1 echo extension_dir=ext >> php.ini
   - IF %PHP%==1 echo extension=php_openssl.dll >> php.ini
   - IF %PHP%==1 echo date.timezone="UTC" >> php.ini
