@@ -36,7 +36,6 @@ services:
 
 before_install:
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - phpenv config-rm xdebug.ini || echo "xdebug not available"
   - echo memory_limit = -1 >> $INI
 
 install:
