@@ -33,6 +33,11 @@ services:
   - postgresql
   - redis
 
+
+before_install:
+  - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo memory_limit = -1 >> $INI
+
 install:
   - export SF_VERSION=$(echo $SYMFONY | head -c 1)
   - 'pecl install -f mongodb'
