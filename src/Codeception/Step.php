@@ -244,11 +244,7 @@ abstract class Step
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
         $text = preg_replace('~\bdont\b~', 'don\'t', $text);
-        if (!preg_match('!!u', $text)) {
-            return strtolower($text);
-        } else {
-            return mb_strtolower($text);
-        }
+        return mb_strtolower($text, 'UTF-8');
     }
 
     public function run(ModuleContainer $container = null)
