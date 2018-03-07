@@ -23,7 +23,10 @@ class Uri
 
         //If the relative URL does not parse, attempt to parse the entire URL.
         //PHP Known bug ( https://bugs.php.net/bug.php?id=70942 )
-        $parts = ($parts === false)?parse_url($baseUri):$parts;
+        if ($parts === false) {
+            $parts = parse_url($base.$uri);
+        }
+        
         if ($parts === false) {
             throw new \InvalidArgumentException("Invalid URI $uri");
         }
