@@ -48,9 +48,9 @@ class Phalcon extends Client
         } elseif (is_string($application)) {
             /** @noinspection PhpIncludeInspection */
             return require $application;
-        } else {
-            return $application;
         }
+
+        return $application;
     }
 
     /**

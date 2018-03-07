@@ -72,7 +72,6 @@ $I->see('Welcome, ' . $fbUserFirstName);
 @since 1.6.3
 @author tiger.seo@gmail.com
 
-
 ## Actions
 
 ### grabFacebookTestUserAccessToken
@@ -139,7 +138,6 @@ Please, note that you must have publish_actions permission to be able to publish
 
 
 ### seePostOnFacebookWithAttachedPlace
- 
 
 Please, note that you must have publish_actions permission to be able to publish to user's feed.
 
@@ -147,10 +145,9 @@ Please, note that you must have publish_actions permission to be able to publish
 
 
 ### seePostOnFacebookWithMessage
- 
 
 Please, note that you must have publish_actions permission to be able to publish to user's feed.
 
  * `param string` $message published post to be verified against the actual post on facebook
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Facebook.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/Facebook.php">Help us to improve documentation. Edit module reference</a></div>

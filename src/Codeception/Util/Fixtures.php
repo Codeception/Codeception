@@ -8,6 +8,7 @@ namespace Codeception\Util;
  * <?php
  * Fixtures::add('user1', ['name' => 'davert']);
  * Fixtures::get('user1');
+ * Fixtures::exists('user1');
  *
  * ?>
  * ```
@@ -24,7 +25,7 @@ class Fixtures
 
     public static function get($name)
     {
-        if (!isset(self::$fixtures[$name])) {
+        if (!self::exists($name)) {
             throw new \RuntimeException("$name not found in fixtures");
         }
 
@@ -34,5 +35,10 @@ class Fixtures
     public static function cleanup()
     {
         self::$fixtures = [];
+    }
+
+    public static function exists($name)
+    {
+        return isset(self::$fixtures[$name]);
     }
 }

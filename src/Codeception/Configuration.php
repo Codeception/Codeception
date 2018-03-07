@@ -32,7 +32,7 @@ class Configuration
     protected static $dir = null;
 
     /**
-     * @var string Current project logs directory.
+     * @var string Current project output directory.
      */
     protected static $outputDir = null;
 
@@ -79,9 +79,9 @@ class Configuration
         'reporters'  => [
             'xml'    => 'Codeception\PHPUnit\Log\JUnit',
             'html'   => 'Codeception\PHPUnit\ResultPrinter\HTML',
-            'tap'    => 'PHPUnit_Util_Log_TAP',
-            'json'   => 'PHPUnit_Util_Log_JSON',
             'report' => 'Codeception\PHPUnit\ResultPrinter\Report',
+            'tap'    => 'PHPUnit\Util\Log\TAP',
+            'json'   => 'PHPUnit\Util\Log\JSON',
         ],
         'groups'     => [],
         'settings'   => [
@@ -182,7 +182,7 @@ class Configuration
 
         self::$config = $config;
 
-        // compatibility with 1.x, 2.0
+        // compatibility with suites created by Codeception < 2.3.0
         if (!isset($config['paths']['output']) and isset($config['paths']['log'])) {
             $config['paths']['output'] = $config['paths']['log'];
         }
@@ -474,8 +474,7 @@ class Configuration
 
     public static function isExtensionEnabled($extensionName)
     {
-        return isset(self::$config['extensions'])
-        && isset(self::$config['extensions']['enabled'])
+        return isset(self::$config['extensions'], self::$config['extensions']['enabled'])
         && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
@@ -631,7 +630,7 @@ class Configuration
         $res = [];
 
         // for sequential arrays
-        if (isset($a1[0]) && isset($a2[0])) {
+        if (isset($a1[0], $a2[0])) {
             return array_merge_recursive($a2, $a1);
         }
 

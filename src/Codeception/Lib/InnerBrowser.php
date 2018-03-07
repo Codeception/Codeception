@@ -61,7 +61,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
+        $filename = preg_replace('~\W~', '.', Descriptor::getTestSignatureUnique($test));
         $filename = mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html';
         $this->_savePageSource($report = codecept_output_dir() . $filename);
         $test->getMetadata()->addReport('html', $report);
@@ -292,6 +292,17 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * <?php
      * $I->haveHttpHeader('X-Requested-With', 'Codeception');
      * $I->amOnPage('test-headers.php');
+     * ?>
+     * ```
+     *
+     * To use special chars in Header Key use HTML Character Entities:
+     * Example:
+     * Header with underscore - 'Client_Id'
+     * should be represented as - 'Client&#x0005F;Id' or 'Client&#95;Id'
+     *
+     * ```php
+     * <?php
+     * $I->haveHttpHeader('Client&#95;Id', 'Codeception');
      * ?>
      * ```
      *
@@ -546,12 +557,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeCurrentUrlMatches($uri)
     {
-        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->_getCurrentUri());
+        \PHPUnit\Framework\Assert::assertRegExp($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeCurrentUrlMatches($uri)
     {
-        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
+        \PHPUnit\Framework\Assert::assertNotRegExp($uri, $this->_getCurrentUri());
     }
 
     public function grabFromCurrentUrl($uri = null)
@@ -778,7 +789,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $pos = (!isset($chFoundByName[$fieldName])) ? 0 : $chFoundByName[$fieldName];
             $skip = (!isset($params[$fieldName]))
                 || (!is_array($params[$fieldName]) && !is_bool($params[$fieldName]))
-                || ($pos >= count($params[$fieldName])
+                || (is_array($params[$fieldName]) && $pos >= count($params[$fieldName])
                 || (is_array($params[$fieldName]) && !is_bool($params[$fieldName][$pos])));
             if ($skip) {
                 continue;
@@ -1233,6 +1244,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->debugSection('Response Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
     }
 
+    public function _getResponseStatusCode()
+    {
+        return $this->getResponseStatusCode();
+    }
+
     protected function getResponseStatusCode()
     {
         // depending on Symfony version
@@ -1332,7 +1348,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $result = [];
         $nodes = $this->match($cssOrXpath);
-        
+
         foreach ($nodes as $node) {
             if ($attribute !== null) {
                 $result[] = $node->getAttribute($attribute);
@@ -1877,6 +1893,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected function getNormalizedResponseContent()
     {
         $content = $this->_getResponseContent();
+        // Since strip_tags has problems with JS code that contains
+        // an <= operator the script tags have to be removed manually first.
+        $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+
         $content = strip_tags($content);
         $content = html_entity_decode($content, ENT_QUOTES);
         $content = str_replace("\n", ' ', $content);

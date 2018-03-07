@@ -110,7 +110,6 @@ Maintainer: **samdark**
 Stability: **stable**
 
 
-
 ## Actions
 
 ### _findElements
@@ -342,6 +341,13 @@ $I->click(['link' => 'Login']);
 
  * `param` $link
  * `param` $context
+
+
+### createAndSetCsrfCookie
+ 
+This function creates the CSRF Cookie.
+ * `param string` $val The value of the CSRF token
+ * `return` string[] Returns an array containing the name of the CSRF param and the masked CSRF token.
 
 
 ### deleteHeader
@@ -660,7 +666,6 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ?>
 ```
 
-
  * `param` $cssOrXpath
  * `param` $attribute
 
@@ -721,7 +726,7 @@ Array of fixture instances
 
 ### grabFromCurrentUrl
  
-Executes the given regular expression against the current URI and returns the first match.
+Executes the given regular expression against the current URI and returns the first capturing group.
 If no parameters are provided, the full URI is returned.
 
 ``` php
@@ -799,7 +804,7 @@ $category = $I->grabRecord('app\models\User', array('name' => 'davert'));
 ### grabSentEmails
  
 Returns array of all sent email messages.
-Each message implements `yii\mail\Message` interface.
+Each message implements `yii\mail\MessageInterface` interface.
 Useful to perform additional checks using `Asserts` module:
 
 ```php
@@ -885,6 +890,17 @@ Example:
 <?php
 $I->haveHttpHeader('X-Requested-With', 'Codeception');
 $I->amOnPage('test-headers.php');
+?>
+```
+
+To use special chars in Header Key use HTML Character Entities:
+Example:
+Header with underscore - 'Client_Id'
+should be represented as - 'Client&#x0005F;Id' or 'Client&#95;Id'
+
+```php
+<?php
+$I->haveHttpHeader('Client&#95;Id', 'Codeception');
 ?>
 ```
 
@@ -1349,19 +1365,10 @@ $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
 
 ### setCookie
  
-Sets a cookie with the given name and value.
-You can set additional cookie params like `domain`, `path`, `expires`, `secure` in array passed as last argument.
-
-``` php
-<?php
-$I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
-?>
-```
-
- * `param` $name
- * `param` $val
- * `param array` $params
-
+Sets a cookie and, if validation is enabled, signs it.
+ * `param string` $name The name of the cookie
+ * `param string` $value The value of the cookie
+ * `param array` $params Additional cookie params like `domain`, `path`, `expires` and `secure`.
 
 
 ### submitForm
@@ -1567,4 +1574,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Yii2.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/Yii2.php">Help us to improve documentation. Edit module reference</a></div>

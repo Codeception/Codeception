@@ -158,7 +158,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
                         "Tar gunzip archives are not supported for Windows systems"
                     );
                 }
-                if (strlen($this->dumpFile) <= 7 || substr($this->dumpFile, -7) !== '.tar.gz') {
+                if (!preg_match('/(\.tar\.gz|\.tgz)$/', $this->dumpFile)) {
                     throw new ModuleConfigException(
                         __CLASS__,
                         "Dump file must be a valid tar gunzip archive.\n
@@ -265,10 +265,10 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
         if ($this->driver->isLegacy()) {
             $collection->insert($data);
             return $data['_id'];
-        } else {
-            $response = $collection->insertOne($data);
-            return (string) $response->getInsertedId();
         }
+
+        $response = $collection->insertOne($data);
+        return (string) $response->getInsertedId();
     }
 
     /**
@@ -286,7 +286,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
         $res = $collection->count($criteria);
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $res);
+        \PHPUnit\Framework\Assert::assertGreaterThan(0, $res);
     }
 
     /**
@@ -304,7 +304,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
         $res = $collection->count($criteria);
-        \PHPUnit_Framework_Assert::assertLessThan(1, $res);
+        \PHPUnit\Framework\Assert::assertLessThan(1, $res);
     }
 
     /**
@@ -371,11 +371,11 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
             )
         );
         if ($res > 1) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
+            throw new \PHPUnit\Framework\ExpectationFailedException(
                 'Error: you should test against a single element criteria when asserting that elementIsArray'
             );
         }
-        \PHPUnit_Framework_Assert::assertEquals(1, $res, 'Specified element is not a Mongo Object');
+        \PHPUnit\Framework\Assert::assertEquals(1, $res, 'Specified element is not a Mongo Object');
     }
 
     /**
@@ -404,11 +404,11 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
             )
         );
         if ($res > 1) {
-            throw new \PHPUnit_Framework_ExpectationFailedException(
+            throw new \PHPUnit\Framework\ExpectationFailedException(
                 'Error: you should test against a single element criteria when asserting that elementIsObject'
             );
         }
-        \PHPUnit_Framework_Assert::assertEquals(1, $res, 'Specified element is not a Mongo Object');
+        \PHPUnit\Framework\Assert::assertEquals(1, $res, 'Specified element is not a Mongo Object');
     }
 
     /**
@@ -428,7 +428,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
         $res = $collection->count($criteria);
-        \PHPUnit_Framework_Assert::assertSame($expected, $res);
+        \PHPUnit\Framework\Assert::assertSame($expected, $res);
     }
 
     /**

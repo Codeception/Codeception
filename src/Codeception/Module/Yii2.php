@@ -223,16 +223,16 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $_COOKIE = [];
         $_REQUEST = [];
 
+        if ($this->config['transaction'] && $this->transaction) {
+            $this->transaction->rollBack();
+            $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
+        }
+
         if ($this->config['cleanup']) {
             foreach ($this->loadedFixtures as $fixture) {
                 $fixture->unloadFixtures();
             }
             $this->loadedFixtures = [];
-        }
-      
-        if ($this->config['transaction'] && $this->transaction) {
-            $this->transaction->rollBack();
-            $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
         }
 
         if ($this->client) {
@@ -477,7 +477,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         $this->getModelRecord($model);
         return call_user_func([$model, 'find'])
-            ->where($attributes)
+            ->andWhere($attributes)
             ->one();
     }
 
@@ -486,7 +486,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (!class_exists($model)) {
             throw new \RuntimeException("Model $model does not exist");
         }
-        $record = new $model;
+        $record = Yii::createObject($model);
         if (!$record instanceof ActiveRecordInterface) {
             throw new \RuntimeException("Model $model is not implement interface \\yii\\db\\ActiveRecordInterface");
         }
@@ -584,7 +584,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Returns array of all sent email messages.
-     * Each message implements `yii\mail\Message` interface.
+     * Each message implements `yii\mail\MessageInterface` interface.
      * Useful to perform additional checks using `Asserts` module:
      *
      * ```php
@@ -678,5 +678,33 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         defined('YII_DEBUG') or define('YII_DEBUG', true);
         defined('YII_ENV') or define('YII_ENV', 'test');
         defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
+    }
+
+    /**
+     * Sets a cookie and, if validation is enabled, signs it.
+     * @param string $name The name of the cookie
+     * @param string $value The value of the cookie
+     * @param array $params Additional cookie params like `domain`, `path`, `expires` and `secure`.
+     */
+    public function setCookie($name, $val, array $params = [])
+    {
+        // Sign the cookie.
+        if ($this->app->request->enableCookieValidation) {
+            $val = $this->app->security->hashData(serialize([$name, $val]), $this->app->request->cookieValidationKey);
+        }
+        parent::setCookie($name, $val, $params);
+    }
+
+    /**
+     * This function creates the CSRF Cookie.
+     * @param string $val The value of the CSRF token
+     * @return string[] Returns an array containing the name of the CSRF param and the masked CSRF token.
+     */
+    public function createAndSetCsrfCookie($val)
+    {
+        $masked = $this->app->security->maskToken($val);
+        $name = $this->app->request->csrfParam;
+        $this->setCookie($name, $val);
+        return [$name, $masked];
     }
 }

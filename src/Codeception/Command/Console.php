@@ -140,7 +140,7 @@ class Console extends Command
                 if ($value && !is_object($value)) {
                     codecept_debug($value);
                 }
-            } catch (\PHPUnit_Framework_AssertionFailedError $fail) {
+            } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
                 $output->writeln("<error>fail</error> " . $fail->getMessage());
             } catch (\Exception $e) {
                 $output->writeln("<error>error</error> " . $e->getMessage());

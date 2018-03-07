@@ -17,7 +17,7 @@ $I->seeInDatabase(); // => Db
 ?>
 ```
 
-Each module is extending `Codeception\Module` class and defined in `Codeception\Module` namespace. All Codeception modules are autoloaded by searching in this particular namespace: `PhpBrowser` => `Codeception\Module\PhpBrowser`. 
+Each module is extending `Codeception\Module` class and defined in `Codeception\Module` namespace. All Codeception modules are autoloaded by searching in this particular namespace: `PhpBrowser` => `Codeception\Module\PhpBrowser`.
 
 ## What you should know before developing a module
 
@@ -25,14 +25,13 @@ The core principles:
 
 1. Public methods of modules are actions of an actor inside a test. That's why they should be named in proper format:
 
-
 ```
-doSomeStuff() => $I->doSomeStuff() => I do some stuff 
+doSomeStuff() => $I->doSomeStuff() => I do some stuff
 doSomeStuffWith($a, $b) => $I->doSomeStuffWith("vodka", "gin"); => I do some stuff with "vodka", "gin"
 seeIsGreat() =>  $I->seeIsGreat() => I see is great
 ```
 
-* Each method that define environment should start with `am` or `have` 
+* Each method that define environment should start with `am` or `have`
 * Each assertion should start with `see` prefix
 * Each method that returns values should start with `grab` (grabbers) or `have` (definitions)
 
@@ -47,17 +46,16 @@ $I->seePrice('gin', '9.9');
 $price = $I->grabPriceFor('gin');
 ```
 
-2. Configuration parameters are set in `.suite.yml` config and stored in `config` property array of a module. All default values can be set there as well. Required parameters should be set in `requiredFields` property. 
+2. Configuration parameters are set in `.suite.yml` config and stored in `config` property array of a module. All default values can be set there as well. Required parameters should be set in `requiredFields` property.
 
 ```php
 <?php
 protected $config = ['browser' => 'firefox'];
-protected $requiredFields = ['url']; 
+protected $requiredFields = ['url'];
 ?>
 ```
 
 You should not perform validation if `url` was set. Module would perform it for you, so you could access `$this->config['url']` inside a module.
-
 
 3. If you use low-level clients in your module (PDO driver, framework client, selenium client) you should allow developers to access them. That's why you should define their instances as `public` properties of method.
 

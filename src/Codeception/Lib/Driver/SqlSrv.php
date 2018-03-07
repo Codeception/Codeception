@@ -6,7 +6,7 @@ class SqlSrv extends Db
     public function getDb()
     {
         $matches = [];
-        $matched = preg_match('~Database=(.*);~s', $this->dsn, $matches);
+        $matched = preg_match('~Database=(.*);?~s', $this->dsn, $matches);
 
         if (!$matched) {
             return false;
@@ -69,7 +69,7 @@ class SqlSrv extends Db
 
     public function getQuotedName($name)
     {
-        return '[' . $name . ']';
+        return '[' . str_replace('.', '].[', $name) . ']';
     }
 
     /**

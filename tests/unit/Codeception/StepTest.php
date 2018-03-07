@@ -3,7 +3,7 @@
 use Facebook\WebDriver\WebDriverBy;
 use Codeception\Util\Locator;
 
-class StepTest extends \PHPUnit_Framework_TestCase
+class StepTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param $args
@@ -113,5 +113,15 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $step = $this->getStep(['see', ["aaaa\nbbbb\nc"]]);
         $output = $step->toString(200);
         $this->assertEquals('see "aaaa\nbbbb\nc"', $output);
+    }
+
+    public function testFormattedOutput()
+    {
+        $argument = Codeception\Util\Stub::makeEmpty('\Codeception\Step\Argument\FormattedOutput');
+        $argument->method('getOutput')->willReturn('some formatted output');
+
+        $step = $this->getStep(['argument', [$argument]]);
+        $output = $step->toString(200);
+        $this->assertEquals('argument "some formatted output"', $output);
     }
 }

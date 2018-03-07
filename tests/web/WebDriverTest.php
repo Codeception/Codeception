@@ -101,6 +101,28 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->cancelPopup();
     }
 
+    public function testDontSeeInPopup()
+    {
+        $this->notForPhantomJS();
+        $this->module->amOnPage('/form/popup');
+        $this->module->click('Alert');
+        $this->module->dontSeeInPopup('Different text');
+        $this->module->cancelPopup();
+    }
+
+    public function testFailedDontSeeInPopup()
+    {
+        $this->notForPhantomJS();
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            'Failed asserting that \'Really?\' does not contain "Really?"'
+        );
+        $this->module->amOnPage('/form/popup');
+        $this->module->click('Alert');
+        $this->module->dontSeeInPopup('Really?');
+        $this->module->cancelPopup();
+    }
+
     public function testScreenshot()
     {
         $this->module->amOnPage('/');
@@ -780,6 +802,17 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/bug2921');
         $this->module->seeInField('foo', 'bar baz');
     }
+    
+    /**
+    * @Issue 4726
+    */
+    public function testClearField()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->fillField('#description', 'description');
+        $this->module->clearField('#description');
+        $this->module->dontSeeInField('#description', 'description');        
+    } 
 
     public function testClickHashLink()
     {
@@ -809,6 +842,13 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->module->amOnPage('/form/anchor');
         $this->module->click('Hash Form');
+        $this->module->seeCurrentUrlEquals('/form/anchor#a');
+    }
+
+    public function testSubmitHashButtonForm()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Button Form');
         $this->module->seeCurrentUrlEquals('/form/anchor#a');
     }
 
@@ -848,7 +888,7 @@ class WebDriverTest extends TestsForBrowsers
         // assert
         /* @var $steps Step[]  */
         $steps = $cept->getScenario()->getSteps();
-        $this->assertEquals(0, count($steps));
+        $this->assertCount(0, $steps);
     }
 
     public function testMoveMouseOver()

@@ -9,6 +9,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\Lib\Interfaces\PartedModule;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\VarDumper\Cloner\Data;
 
 /**
@@ -18,12 +19,45 @@ use Symfony\Component\VarDumper\Cloner\Data;
  *
  * <https://github.com/Codeception/symfony-demo>
  *
- * ## Status
- *
- * * Maintainer: **raistlin**
- * * Stability: **stable**
- *
  * ## Config
+ *
+ * ### Symfony 4.x
+ *
+ * * app_path: 'src' - in Symfony 4 Kernel is located inside `src`
+ * * environment: 'local' - environment used for load kernel
+ * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
+ * * debug: true - turn on/off debug mode
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
+ * * rebootable_client: 'true' - reboot client's kernel before each request
+ *
+ * #### Example (`functional.suite.yml`) - Symfony 4 Directory Structure
+ *
+ *     modules:
+ *        enabled:
+ *           - Symfony:
+ *               app_path: 'src'
+ *               environment: 'test'
+ *
+ *
+ * ### Symfony 3.x
+ *
+ * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
+ * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
+ * * environment: 'local' - environment used for load kernel
+ * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
+ * * debug: true - turn on/off debug mode
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
+ * * rebootable_client: 'true' - reboot client's kernel before each request
+ *
+ * #### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
+ *
+ *     modules:
+ *        enabled:
+ *           - Symfony:
+ *               app_path: 'app/front'
+ *               var_path: 'var'
+ *               environment: 'local_test'
+ *
  *
  * ### Symfony 2.x
  *
@@ -42,26 +76,6 @@ use Symfony\Component\VarDumper\Cloner\Data;
  *            app_path: 'app/front'
  *            environment: 'local_test'
  * ```
- *
- * ### Symfony 3.x Directory Structure
- *
- * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
- * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
- * * environment: 'local' - environment used for load kernel
- * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
- * * debug: true - turn on/off debug mode
- * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
- * * rebootable_client: 'true' - reboot client's kernel before each request
- *
- * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
- *
- *     modules:
- *        enabled:
- *           - Symfony:
- *               app_path: 'app/front'
- *               var_path: 'var'
- *               environment: 'local_test'
- *
  *
  * ## Public Properties
  *
@@ -242,8 +256,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     protected function getKernelClass()
     {
-        $path = \Codeception\Configuration::projectDir() . $this->config['app_path'];
-        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['app_path'])) {
+        $path = codecept_root_dir() . $this->config['app_path'];
+        if (!file_exists(codecept_root_dir() . $this->config['app_path'])) {
             throw new ModuleRequireException(
                 __CLASS__,
                 "Can't load Kernel from $path.\n"
@@ -257,17 +271,37 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if (!count($results)) {
             throw new ModuleRequireException(
                 __CLASS__,
-                "AppKernel was not found at $path. "
-                . "Specify directory where Kernel class for your application is located with `app_path` parameter."
+                "File with Kernel class was not found at $path. "
+                . "Specify directory where file with Kernel class for your application is located with `app_path` parameter."
             );
         }
-
         $file = current($results);
-        $class = $file->getBasename('.php');
+
+        if (file_exists(codecept_root_dir() . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) {
+            // ensure autoloader from this dir is loaded
+            require_once codecept_root_dir() . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+        }
 
         require_once $file;
 
-        return $class;
+        $possibleKernelClasses = [
+            'AppKernel', // Symfony Standard
+            'App\Kernel', // Symfony Flex
+        ];
+        foreach ($possibleKernelClasses as $class) {
+            if (class_exists($class)) {
+                $refClass = new \ReflectionClass($class);
+                if ($refClass->getFileName() === $file->getRealpath()) {
+                    return $class;
+                }
+            }
+        }
+
+        throw new ModuleRequireException(
+            __CLASS__,
+            "Kernel class was not found in $file. "
+            . "Specify directory where file with Kernel class for your application is located with `app_path` parameter."
+        );
     }
 
     /**

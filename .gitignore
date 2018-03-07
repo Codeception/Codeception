@@ -4,6 +4,7 @@ composer.phar
 composer.lock
 vendor
 package/codecept.phar
+package/codecept5.phar
 package/php54/codecept.phar
 tests/support/_generated
 tests/data/app/db

@@ -35,7 +35,6 @@ To use this module with Composer you need <em>"php-amqplib/php-amqplib": "~2.4"<
 
 * connection - AMQPStreamConnection - current connection
 
-
 ## Actions
 
 ### bindQueueToExchange
@@ -123,7 +122,7 @@ $message = $I->grabMessageFromQueue('queue.emails');
 ```
 
  * `param string` $queue
- * `return` AMQPMessage
+ * `return` \PhpAmqpLib\Message\AMQPMessage
 
 
 ### purgeAllQueues
@@ -164,7 +163,7 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'), 'severity');
 ```
 
  * `param string` $exchange
- * `param string|AMQPMessage` $message
+ * `param string|\PhpAmqpLib\Message\AMQPMessage` $message
  * `param string` $routing_key
 
 
@@ -180,7 +179,7 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
 ```
 
  * `param string` $queue
- * `param string|AMQPMessage` $message
+ * `param string|\PhpAmqpLib\Message\AMQPMessage` $message
 
 
 ### seeMessageInQueueContainsText
@@ -200,4 +199,4 @@ $I->seeMessageInQueueContainsText('queue.emails','davert');
  * `param string` $queue
  * `param string` $text
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/AMQP.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/AMQP.php">Help us to improve documentation. Edit module reference</a></div>

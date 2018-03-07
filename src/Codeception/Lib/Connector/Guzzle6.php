@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Aws\Credentials\Credentials;
+use Aws\Signature\SignatureV4;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\CookieJar;
@@ -25,6 +27,9 @@ class Guzzle6 extends Client
         'headers'         => [],
     ];
     protected $refreshMaxInterval = 0;
+
+    protected $awsCredentials = null;
+    protected $awsSignature = null;
 
     /** @var \GuzzleHttp\Client */
     protected $client;
@@ -197,7 +202,11 @@ class Guzzle6 extends Client
         }
 
         try {
-            $response = $this->client->send($guzzleRequest, $options);
+            if (null !== $this->awsCredentials) {
+                $response = $this->client->send($this->awsSignature->signRequest($guzzleRequest, $this->awsCredentials), $options);
+            } else {
+                $response = $this->client->send($guzzleRequest, $options);
+            }
         } catch (RequestException $e) {
             if (!$e->hasResponse()) {
                 throw $e;
@@ -214,7 +223,7 @@ class Guzzle6 extends Client
 
         $contentHeaders = ['Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true];
         foreach ($server as $header => $val) {
-            $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
+            $header = html_entity_decode(implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header))))), ENT_NOQUOTES);
             if (strpos($header, 'Http-') === 0) {
                 $headers[substr($header, 5)] = $val;
             } elseif (isset($contentHeaders[$header])) {
@@ -337,5 +346,11 @@ class Guzzle6 extends Client
             return HandlerStack::create($handler);
         }
         return HandlerStack::create();
+    }
+
+    public function setAwsAuth($config)
+    {
+        $this->awsCredentials = new Credentials($config['key'], $config['secret']);
+        $this->awsSignature = new SignatureV4($config['service'], $config['region']);
     }
 }

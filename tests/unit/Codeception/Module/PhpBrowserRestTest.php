@@ -71,7 +71,7 @@ class PhpBrowserRestTest extends Unit
 
     public function testInvalidJson()
     {
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
         $this->setStubResponse('{xxx = yyy}');
         $this->module->seeResponseIsJson();
     }
@@ -87,7 +87,7 @@ class PhpBrowserRestTest extends Unit
 
     public function testInvalidXml()
     {
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
         $this->setStubResponse('<xml><name>John</surname></xml>');
         $this->module->seeResponseIsXml();
     }
@@ -315,7 +315,7 @@ class PhpBrowserRestTest extends Unit
 
     protected function shouldFail()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->setExpectedException('PHPUnit\Framework\AssertionFailedError');
     }
 
     public function testGrabFromCurrentUrl()

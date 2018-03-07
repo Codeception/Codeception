@@ -5,6 +5,7 @@ use Codeception\Lib\Framework;
 use Codeception\TestInterface;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\ZendExpressive as ZendExpressiveConnector;
+use Codeception\Lib\Interfaces\DoctrineProvider;
 
 /**
  * This module allows you to run tests inside Zend Expressive.
@@ -27,7 +28,7 @@ use Codeception\Lib\Connector\ZendExpressive as ZendExpressiveConnector;
  * * client - BrowserKit client
  *
  */
-class ZendExpressive extends Framework
+class ZendExpressive extends Framework implements DoctrineProvider
 {
     protected $config = [
         'container' => 'config/container.php',
@@ -101,5 +102,15 @@ class ZendExpressive extends Framework
 
         $this->responseCollector = new ZendExpressiveConnector\ResponseCollector;
         $emitterStack->unshift($this->responseCollector);
+    }
+
+    public function _getEntityManager()
+    {
+        $service = 'Doctrine\ORM\EntityManager';
+        if (!$this->container->has($service)) {
+            throw new \PHPUnit\Framework\AssertionFailedError("Service $service is not available in container");
+        }
+
+        return $this->container->get('Doctrine\ORM\EntityManager');
     }
 }

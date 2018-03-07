@@ -19,7 +19,6 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  * ```json
  * {
  *  "league/factory-muffin": "^3.0",
- *  "league/factory-muffin-faker": "^1.0"
  * }
  * ```
  *
@@ -40,7 +39,7 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  *
  *    // generate a profile and return its Id
  *    'profile_id' => 'factory|Profile'
- *]);
+ * ]);
  * ```
  *
  * Configure this module to load factory definitions from a directory.
@@ -59,7 +58,7 @@ use League\FactoryMuffin\Stores\RepositoryStore;
  * (you can also use Laravel5 and Phalcon).
  *
  * In this example factories are loaded from `tests/_support/factories` directory. Please note that this directory is relative from the codeception.yml file (so for Yii2 it would be codeception/_support/factories).
-gst * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
+ * You should create this directory manually and create PHP files in it with factories definitions following [official documentation](https://github.com/thephpleague/factory-muffin#usage).
  *
  * In cases you want to use data from database inside your factory definitions you can define them in Helper.
  * For instance, if you use Doctrine, this allows you to access `EntityManager` inside a definition.
@@ -151,7 +150,6 @@ EOF;
     {
         return [
             'League\FactoryMuffin\FactoryMuffin' => '"league/factory-muffin": "^3.0"',
-            'League\FactoryMuffin\Faker\Facade' => '"league/factory-muffin-faker": "^1.0"'
         ];
     }
 
@@ -211,8 +209,8 @@ EOF;
      *
      * ```
      *
-     * @param $model
-     * @param $fields
+     * @param string $model
+     * @param array $fields
      *
      * @return \League\FactoryMuffin\Definition
      *
@@ -233,7 +231,7 @@ EOF;
      *
      * Returns an instance of created user.
      *
-     * @param $name
+     * @param string $name
      * @param array $extraAttrs
      *
      * @return object
@@ -244,6 +242,28 @@ EOF;
     }
 
     /**
+     * Generates a record instance.
+     *
+     * This does not save it in the database. Use `have` for that.
+     *
+     * ```php
+     * $user = $I->make('User'); // return User instance
+     * $activeUser = $I->make('User', ['is_active' => true]); // return active user instance
+     * ```
+     *
+     * Returns an instance of created user without creating a record in database.
+     *
+     * @param string $name
+     * @param array $extraAttrs
+     *
+     * @return object
+     */
+    public function make($name, array $extraAttrs = [])
+    {
+        return $this->factoryMuffin->instance($name, $extraAttrs);
+    }
+
+    /**
      * Generates and saves a record multiple times.
      *
      * ```php
@@ -251,8 +271,8 @@ EOF;
      * $I->haveMultiple('User', 10, ['is_active' => true]); // create 10 active users
      * ```
      *
-     * @param $name
-     * @param $times
+     * @param string $name
+     * @param int $times
      * @param array $extraAttrs
      *
      * @return \object[]

@@ -147,22 +147,6 @@ class PostgreSql extends Db
     }
 
     /**
-     * Gets a quoted name of a variable.
-     */
-    public function getQuotedName($name)
-    {
-        $name = explode('.', $name);
-        $name = array_map(
-            function ($data) {
-                return '"' . $data . '"';
-            },
-            $name
-        );
-
-        return implode('.', $name);
-    }
-
-    /**
      * Returns the primary key(s) of the table, based on:
      * https://wiki.postgresql.org/wiki/Retrieve_primary_key_columns.
      *

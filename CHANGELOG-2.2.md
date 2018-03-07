@@ -4,25 +4,25 @@
 * Don't skip other tests after a failed test #4226 by @Naktibalda
 * [REST] `seeResponseContainsJson` doesn't crash when json response is not an array by @Naktibalda
 * [PhpBrowser] Fixed redirecting to schemaless url by @Naktibalda #4218
-* [Doctrine2] Added `grabEntityFromRepository`, `grabEntitiesFromRepository` methods by @maximelebastard 
+* [Doctrine2] Added `grabEntityFromRepository`, `grabEntitiesFromRepository` methods by @maximelebastard
 
 #### 2.2.11
 
-* [WebDriver] Added `_restart` method to restart browser with a new configuration. 
+* [WebDriver] Added `_restart` method to restart browser with a new configuration.
 * [WebDriver] Added `_findClickable` to public API so can be used from helpers. By @tiger-seo
 * [WebDriver] `seeLink` compares relative links correctly #4182
 * [Webdriver] fixed attachFile messages when the file does not exist by @Naktibalda
 * Fixed setting paths in environments and using `--override` options. By @kusnir. See #4143
-* [Yii1] Allow to set only host in `url` config. #4172 by @SG5. 
+* [Yii1] Allow to set only host in `url` config. #4172 by @SG5.
 * [Yii1] Allow to make requests end with slash. #4190 by @SG5
 * [Yii2] Allows use `InitDbFixture` feature #4201
 * [Yii2] Add missing YII2 lifecycle events. #4187
 * Don't run test if exception was thrown in `_before` of a module #4197 by @Naktibalda
 * [Mongo] Fixed parsing dbname. See #4186 by @retnek
 * [Mongo] Improved legacy driver check by @retnek. See #4178
-* [WebDriver][PhpBrowser][Frameworks] Added `grabPageSource` method by @Kolyunya 
+* [WebDriver][PhpBrowser][Frameworks] Added `grabPageSource` method by @Kolyunya
 * [PhpBrowser][REST] Add DELETE method to supported form data request methods in Guzzle6 by
-* [PhpBrowser][REST] Restore request headers in multi-session testing. Fixes #4157 
+* [PhpBrowser][REST] Restore request headers in multi-session testing. Fixes #4157
 * Recorder Extension: Replace non-alphanumeric characters with underscores by @tiger-seo. Fixes Recorder on Windows
 * [REST] Documented different ways to upload files
 * Fixed `$scenario->current('name')` #4154 by @Naktibalda
@@ -31,13 +31,13 @@
 * Fixed output of failed step by @Naktibalda #4135 http://phptest.club/t/seeelement-wierd-fail-message/1470
 * [WebDriver] fixed `friend->leave` method. Clearing base element on closing session. Fixes #4098
 * [Symfony] Make symfony bootstrap.php.cache optional for php version > 7 by @patrickjahns
-* Gherkin: Command `gherkin:snippets` to generate stub function name for non-english features. By @kuntashov 
+* Gherkin: Command `gherkin:snippets` to generate stub function name for non-english features. By @kuntashov
 * Gherkin: Steps with PyString and with inline string argument considered the same. Fixes #4121 by @kuntashov
-* [Db] `Oci::cleanup()` should be able to drop objects with case sensitive name. By @pavelkovar 
+* [Db] `Oci::cleanup()` should be able to drop objects with case sensitive name. By @pavelkovar
 * [Db] loadDump reports sql statement which caused error, fixes regression from 2.2.10. See #4120. By @Naktibalda.
-* [Asserts] Add delta parameter to `assertEquals()` `assertNotEquals()` methods by @spideyfusion 
+* [Asserts] Add delta parameter to `assertEquals()` `assertNotEquals()` methods by @spideyfusion
 * [Yii2] Removed check and notification for environment other than `test` by @samdark
-* [Yii2] Unload fixtures only if `cleanup` configuration equals true. #4207 by @Faryshta 
+* [Yii2] Unload fixtures only if `cleanup` configuration equals true. #4207 by @Faryshta
 * [ZF2] Removed `session_write_close()` from ZF2 module by @tasselchof. Fixes #4112
 * Fixed textual representation of can't steps by @Naktibalda
 * [Lumen] Added IoC methods from Laravel5 module: `haveBinding`, `haveSingleton`, `haveContextualBinding`, `haveInstance`, `haveApplicationHandler`, `clearApplicationHandlers`. By @kt81
@@ -52,25 +52,25 @@
 * Added console completion by @gdscei. See [documentation](http://codeception.com/docs/07-AdvancedUsage#Shell-autocompletion)
 * [WebDriver] Fixed compatibility with `facebook/webdriver` 1.4.0 by @Naktibalda. See #4076 Fixes #4073
 * Run a suite by its path #4079
-   
+
 ```
 codecept run tests/unit
-```   
+```
 Improves recent [PHPStorm integration](https://blog.jetbrains.com/phpstorm/2017/03/codeception-support-comes-to-phpstorm-2017-1/). Codeception tests can be started by running a suite directory.
-   
+
 * [WebDriver] Fixed using `performOn` with `ActionSequence`; supporting multiple actions of same kind. #4066 by @davertmik. Fixes #4044
 * [Laravel5] Added `haveApplicationHandler` and `clearApplicationHandlers` methods. See #4068. By @janhenkgerritsen
 * [Laravel5] Close all Laravel DB connections after test execution. Fixes #4031 by @rmblstrp
 * [Laravel5] Update Laravel5 `database_migrations_path` to by null by default by @timbroder. Fixes #3990
 * [DataFactory] Add `cleanup` option to skip auto cleanup. By @alexpts. See #3996
-* Fixed printScenarioFail with multiple feature scenarios by @gimler. See #3868 
+* Fixed printScenarioFail with multiple feature scenarios by @gimler. See #3868
 * Fixed generating JUnit XML when Selenium server can’t be connected. Closes #3653 by @Naktibalda
 * Fixes running local suites (under tests folder) and included suite mixed (via include path). See #4063
 * [Db] Run the last statement in dump file even if it doesn't end with delimiter. #4071 by @Naktibalda. Fixes #4059
 * [Memcache] Fixed calling flush on null by @Jurigag. See #4074
 * [Yii2] Fixtures behavior compatibility with `yii2-codeception` by @leandrogehlen. See #4016
 * `g:suite` allows generate suites with uppercase names. Fixes #4072
-* Enabled incomplete/skipped/risky/warning settings for logger. See #3890. By @mario-naether 
+* Enabled incomplete/skipped/risky/warning settings for logger. See #3890. By @mario-naether
 
 ```yaml
 settings:
@@ -83,7 +83,7 @@ settings:
 * [WebDriver] Fixed `switchToIframe` regression from 2.2.9 by @lcobucci. PR #4000
 * Speed improvement for group lookup by @pitpit. See #4025
 * Added parse error to `TestParseException` in PHP7 by @Naktibalda. See #4007
-* Auto injection for `Codeception\Test\Unit` format #4070. Allows to customize injection of support objects into a testcase:  
+* Auto injection for `Codeception\Test\Unit` format #4070. Allows to customize injection of support objects into a testcase:
 
 ```php
 <?php
@@ -102,24 +102,24 @@ public function _inject(UnitTester $unit)
   * `seeBinaryResponseEquals` assert that binary response matches a hash
   * `seeBinaryResponseEquals` assert that binary response doesn't match a hash
   * hide binary response on debug
-* [Laravel5] module fix error for applications that do not use a database. See #3954 by @janhenkgerritsen. Fixed #3942  
+* [Laravel5] module fix error for applications that do not use a database. See #3954 by @janhenkgerritsen. Fixed #3942
 * [Laravel5] database seeders to be executed inside a transaction. See #3954 by @janhenkgerritsen. Fixed #3948 by @janhenkgerritsen
 * [Yii2] reverted #3834, closing transaction after each request. #3973 by @iRipVanWinkle. Fixes #3961
-* Added crap4j report support. Use `--coverage-crap4j` option and `codeception/c3` 2.0.10 
+* Added crap4j report support. Use `--coverage-crap4j` option and `codeception/c3` 2.0.10
 * [PhpBrowser][Frameworks] If form has no id, use action attribute as identifier by @Naktibalda. Fixes #3953
 * Fixed test coloring output when a Feature title has some special chars in it like `/` or `-`
-* [REST] Added missing @part `json` and `xml` to `deleteHeader` by @freezy-sk 
+* [REST] Added missing @part `json` and `xml` to `deleteHeader` by @freezy-sk
 
 #### 2.2.8
 
 * [WebDriver] Added tab actions (not supported in PhantomJS):
   * `openNewTab` opens a new tab and switches to it
   * `closeTab` closes a tab and switches to previous
-  * `switchToNextTab` switches to next tab 
+  * `switchToNextTab` switches to next tab
   * `switchToPreviousTab` switches to previous tab
 * [WebDriver] Added actions to click element by coordinates. Via @gimler
   * `clickWithLeftButton` clicks element with offset
-  * `clickWithRightButton` right clicks on element with offset 
+  * `clickWithRightButton` right clicks on element with offset
 * [WebDriver] Added `js_error_logging` option to print JS logs in console and in HTML report by @ngraf. See #3821
 * [WebDriver] Improvements to `seeInField` by @gimler. See #3905
   * support option text in seeInField not only value
@@ -152,8 +152,8 @@ public function _inject(UnitTester $unit)
 * [REST] Convert array having single element to XML correctly. Fixes #3827 by @Naktibalda
 * Linter to check `exec` function to be enabled before using it. By @Naktibalda. See #3886
 * Fixed #3922: division by zero in steps output on small terminal windows.
-* Improved getting terminal width from ENV variable (bash). Fixes #3788 by @schmunk42 
- 
+* Improved getting terminal width from ENV variable (bash). Fixes #3788 by @schmunk42
+
 #### 2.2.7
 
 * **Config validation** with `codecept config:validate` command. Use it:
@@ -166,8 +166,8 @@ codecept config:validate acceptance
 This should help you next time you get messed with YAML formatting.
 
 * Gherkin improvements:
-  * multiple step definitions per method allowed (Fixes #3670).  
-  * regex validation for Gherkin steps; throws exception if invalid regex passed. Fixes #3676  
+  * multiple step definitions per method allowed (Fixes #3670).
+  * regex validation for Gherkin steps; throws exception if invalid regex passed. Fixes #3676
   * currency chars supported in placeholders:
 
   $,€,£ and other signs can be used before or after a number inside Gherkin scenario. This char will be ignored inside a PHP variable, so you receive only number.
@@ -198,7 +198,7 @@ extensions:
 * HTML reporter: snapshot and screenshots paths made relative to make them accessible on CI. Fixes #3702
 * [WebDriver] added `protocol` and `path` config options by @sven-carstens-udg. See #3717
 * [PhpBrowser][Frameworks] Honour `<base href="">` meta tag by @Naktibalda. See #3764
-* [Yii2] Removed mockAssetManager by @githubjeka 
+* [Yii2] Removed mockAssetManager by @githubjeka
 * [Yii2] Added procesing for native url formats of Yii2 #3725 by @githubjeka
 * [Yii2] Fixed unintentional DB connection drop during exception logging, #3696 by @ivokund
 * [Yii2] Fixed calling `_fixtures()` method of Cest class. See #3655, fixes #3612 by @primipilus

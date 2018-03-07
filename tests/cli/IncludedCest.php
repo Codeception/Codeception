@@ -147,9 +147,9 @@ class IncludedCest
         $I->executeCommand('run --coverage-xml');
         $I->amInPath('_log');
         $I->seeFileFound('coverage.xml');
-        $I->seeInThisFile('<class name="BillEvans" namespace="Jazz\Pianist">');
-        $I->seeInThisFile('<class name="Musician" namespace="Jazz">');
-        $I->seeInThisFile('<class name="Hobbit" namespace="Shire">');
+        $I->seeInThisFile('BillEvans" namespace="Jazz\Pianist">');
+        $I->seeInThisFile('Musician" namespace="Jazz">');
+        $I->seeInThisFile('Hobbit" namespace="Shire">');
     }
 
     /**

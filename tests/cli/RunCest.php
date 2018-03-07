@@ -97,22 +97,11 @@ class RunCest
      *
      * @param CliGuy $I
      */
-    public function runReportMode(\CliGuy $I)
-    {
-        $I->wantTo('try the reporting mode');
-        $I->executeCommand('run dummy --report');
-        $I->seeInShellOutput('FileExistsCept');
-        $I->seeInShellOutput('........Ok');
-    }
-
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
     public function runCustomReport(\CliGuy $I)
     {
-        $I->wantTo('try the reporting mode');
+        if (\PHPUnit\Runner\Version::series() >= 7) {
+            throw new \Codeception\Exception\Skip('Not for PHPUnit 7');
+        }
         $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
         $I->seeInShellOutput('FileExistsCept: Check config exists');
         $I->dontSeeInShellOutput('Ok');
@@ -239,7 +228,7 @@ class RunCest
         $I->executeCommand('run unit ErrorTest --no-exit');
         $I->seeInShellOutput('There was 1 error');
         $I->seeInShellOutput('Array to string conversion');
-        $I->seeInShellOutput('ErrorTest.php:9');
+        $I->seeInShellOutput('ErrorTest.php');
     }
 
     public function runTestWithException(\CliGuy $I)
@@ -484,5 +473,14 @@ EOF
     {
         $I->executeCommand('run powers PowerUpCest');
         $I->dontSeeInShellOutput('FAILURES');
+    }
+    
+    public function runCestWithTwoFailedTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario PartialFailedCest', false);
+        $I->seeInShellOutput('See file found "testcasetwo.txt"');
+        $I->seeInShellOutput('See file found "testcasethree.txt"');
+        $I->seeInShellOutput('Tests: 3,');
+        $I->seeInShellOutput('Failures: 2.');
     }
 }

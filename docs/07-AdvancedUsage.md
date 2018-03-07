@@ -40,7 +40,6 @@ class BasicCest
 and will receive an instance of the Actor class as the first parameter and the `$scenario` variable as the second one.
 
 In `_before` and `_after` methods you can use common setups and teardowns for the tests in the class.
-This actually makes Cest tests more flexible than Cepts, which rely only on similar methods in Helper classes.
 
 As you see, we are passing the Actor object into `tryToTest` method. This allows us to write scenarios the way we did before:
 
@@ -51,7 +50,6 @@ class BasicCest
     // test
     public function tryToTest(\AcceptanceTester $I)
     {
-        $I->wantTo('log in to site');
         $I->amOnPage('/');
         $I->click('Login');
         $I->fillField('username', 'john');
@@ -63,11 +61,27 @@ class BasicCest
 }
 ```
 
-As you see, Cest classes have no parents like `\Codeception\Test\Unit` or `PHPUnit_Framework_TestCase`.
+As you see, Cest classes have no parents. 
 This is done intentionally. It allows you to extend your classes with common behaviors and workarounds
 that may be used in child classes. But don't forget to make these methods `protected` so they won't be executed as tests.
 
-You can also define a `_failed` method in Cest classes which will be called if test finishes with `error` or fails.
+Cest format also can contain hooks based on test results: 
+
+* `_failed` will be executed on failed test
+* `_passed` will be executed on passed test
+
+```php
+<?php
+public function _failed(\AcceptanceTester $I) 
+{
+    // will be executed on test failure
+}
+
+public function _passed(\AcceptanceTester $I)
+{
+    // will be executed when test is successful
+}
+```
 
 ## Dependency Injection
 
@@ -98,8 +112,6 @@ class SignUpCest
 
     public function signUp(\AcceptanceTester $I)
     {
-        $I->wantTo('sign up');
-
         $this->navBar->click('Sign up');
         $this->signUp->register([
             'first_name'            => 'Joe',
@@ -426,7 +438,6 @@ For Cept you should use simple comments:
 // @env phantom
 ```
 
-
 This way you can easily control which tests will be executed for each environment.
 
 ### Current values
@@ -471,7 +482,6 @@ public function myTest(\AcceptanceTester $I, \Codeception\Scenario $scenario)
 
 `Codeception\Scenario` is also availble in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
 
-
 ### Dependencies
 
 With the `@depends` annotation you can specify a test that should be passed before the current one.
@@ -495,7 +505,6 @@ class ModeratorCest {
     }
 }
 ```
-
 
 `@depends` applies to the `Cest` and `Codeception\Test\Unit` formats. Dependencies can be set across different classes.
 To specify a dependent test from another file you should provide a *test signature*.
@@ -603,7 +612,7 @@ Tests for groups can be specified as an array of file names or directories conta
 groups:
   # add 2 tests to db group
   db: [tests/unit/PersistTest.php, tests/unit/DataTest.php]
-  
+
   # add all tests from a directory to api group
   api: [tests/functional/api]
 ```
@@ -635,7 +644,6 @@ groups:
 
 This will load all found `p*` files in `tests/_data` as groups. Group names will be as follows p1,p2,...,pN.
 
-
 ## Shell autocompletion
 
 For bash and zsh shells, you can use autocompletion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
@@ -657,10 +665,10 @@ By using the above code in your shell, Codeception will try to autocomplete the 
 * Suites
 * Test paths
 
-Usage of `-use-vendor-bin` is optional. This option will work for most Codeception projects, where Codeception is located in your `vendor/bin` folder. 
-But in case you are using a global Codeception installation for example, you wouldn't use this option. 
+Usage of `-use-vendor-bin` is optional. This option will work for most Codeception projects, where Codeception is located in your `vendor/bin` folder.
+But in case you are using a global Codeception installation for example, you wouldn't use this option.
 
-Note that with the `-use-vendor-bin` option, your commands will be completed using the Codeception binary located in your project's root. 
+Note that with the `-use-vendor-bin` option, your commands will be completed using the Codeception binary located in your project's root.
 Without the option, it will use whatever Codeception binary you originally used to generate the completion script ('codecept location' in the above examples)
 
 ## Conclusion

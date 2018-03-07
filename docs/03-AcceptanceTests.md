@@ -196,6 +196,22 @@ $I->submitForm('#update_form', array('user' => array(
 )));
 ```
 
+##### Hiding Sensitive Data
+
+If you need to fill in sensitive data (like passwords) and hide it in logs, 
+you can pass instance `\Codeception\Step\Argument\PasswordArgument` with the data which needs to be hidden.
+
+```php
+<?php
+<?php
+use \Codeception\Step\Argument\PasswordArgument;
+
+$I->amOnPage('/form/password_argument');
+$I->fillField('password', new PasswordArgument('thisissecret'));
+```  
+
+`thisissecret` will be filled into a form but it won't be shown in output and logs.
+
 #### Assertions
 
 In the `PhpBrowser` you can test the page contents.
@@ -320,25 +336,25 @@ $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 ## WebDriver
 
 A nice feature of Codeception is that most scenarios are similar, no matter of how they are executed.
-`PhpBrowser` was emulating browser requests but how to execute such test in a real browser like Chrome or Firefox? 
+`PhpBrowser` was emulating browser requests but how to execute such test in a real browser like Chrome or Firefox?
 Selenium WebDriver can drive them so in our acceptance tests we can automate scenarios we used to test manually.
 In such tests, we should concentrate more on **testing the UI** than on testing functionality.
 
 "[WebDriver](https://www.w3.org/TR/webdriver/)" is the name of a protocol (specified by W3C)
-to drive browsers automatically. This specification is implemented for all modern desktop and mobile browsers. 
+to drive browsers automatically. This specification is implemented for all modern desktop and mobile browsers.
 Codeception uses [facebook/php-webdriver](https://github.com/facebook/php-webdriver) library from Facebook as PHP implementation of WebDriver protocol.
 
-To control the browsers you need to use a program or a service to start/stop browser sessions. 
+To control the browsers you need to use a program or a service to start/stop browser sessions.
 In the next section, we will overview the most popular solutions.
 
-### Local Setup   
-   
+### Local Setup
+
 #### Selenium Server
 
-[Selenium Server](http://www.seleniumhq.org/) is a de-facto standard for automated web and mobile testing. 
+[Selenium Server](http://www.seleniumhq.org/) is a de-facto standard for automated web and mobile testing.
 It is a server that can launch and drive different browsers locally or remotely.
-WebDriver protocol was initially created by Selenium before becoming a W3C standard. 
-This makes Selenium server the most stable complete implementation of WebDriver for today.  
+WebDriver protocol was initially created by Selenium before becoming a W3C standard.
+This makes Selenium server the most stable complete implementation of WebDriver for today.
 Selenium Server is also recommended by Codeception team.
 
 To control browsers Selenium Server uses official tools maintained by browser vendors, like [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver) for Chrome or [GeckoDriver](https://github.com/mozilla/geckodriver) for Firefox.
@@ -362,12 +378,12 @@ And the most important: **PhantomJS is not maintained** anymore. So use it at yo
 
 #### ChromeDriver
 
-ChromeDriver was created by Google to control Chrome and Chromium browsers programmatically. 
+ChromeDriver was created by Google to control Chrome and Chromium browsers programmatically.
 It can be paired with [Selenium Server](http://codeception.com/docs/03-AcceptanceTests#Selenium-Server) or used as a standalone tool to drive Chrome browser.
 It is simpler to set up than Selenium Server, however, it has limited support for WebDriver protocol.
 
 * Follow [Installation Instructions](http://codeception.com/docs/modules/WebDriver#ChromeDriver)
-* Enable [RunProcess](http://codeception.com/extensions#RunProcess) extension to start/stop ChromeDriver automatically *(optional)*. 
+* Enable [RunProcess](http://codeception.com/extensions#RunProcess) extension to start/stop ChromeDriver automatically *(optional)*.
 
 ### Configuration
 
@@ -395,15 +411,13 @@ but it will also check that element is actually visible to the user:
 $I->seeElement('#modal');
 ```
 
-While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: It can't check headers since browsers don't provide APIs for that. 
+While WebDriver duplicates the functionality of PhpBrowser, it has its limitations: It can't check headers since browsers don't provide APIs for that.
 WebDriver also adds browser-specific functionality:
-
-
 
 #### Wait
 
 While testing web application, you may need to wait for JavaScript events to occur. Due to its asynchronous nature,
-complex JavaScript interactions are hard to test. That's why you may need to use waiters, actions with `wait` prefix. 
+complex JavaScript interactions are hard to test. That's why you may need to use waiters, actions with `wait` prefix.
 They can be used to specify what event you expect to occur on a page, before continuing the test.
 
 For example:
@@ -415,7 +429,7 @@ $I->click('#agree_button');
 ```
 
 In this case, we are waiting for the 'agree' button to appear and then click it. If it didn't appear after 30 seconds,
-the test will fail. There are other `wait` methods you may use, like [waitForText](http://codeception.com/docs/modules/WebDriver#waitForText), 
+the test will fail. There are other `wait` methods you may use, like [waitForText](http://codeception.com/docs/modules/WebDriver#waitForText),
 [waitForElementVisible](http://codeception.com/docs/modules/WebDriver#waitForElementVisible) and others.
 
 If you don't know what exact element you need to wait for, you can simply pause execution with using `$I->wait()`
@@ -429,7 +443,7 @@ $I->wait(3); // wait for 3 secs
 
 *since 2.3.4 version*
 
-It is possible to wait for elements pragmatically. 
+It is possible to wait for elements pragmatically.
 If a test uses element which is not on a page yet, Codeception will wait for few extra seconds before failing.
 This feature is based on [Implicit Wait](http://www.seleniumhq.org/docs/04_webdriver_advanced.jsp#implicit-waits) of Selenium.
 Codeception enables implicit wait only when searching for a specific element and disables in all other cases. Thus, the performance of a test is not affected.
@@ -444,7 +458,7 @@ With this config we have the following test:
 
 ```php
 <?php
-// we use wait: 5 instead of 
+// we use wait: 5 instead of
 // $I->waitForElement(['css' => '#click-me'], 5);
 // to wait for element on page
 $I->click(['css' => '#click-me']);
@@ -473,7 +487,7 @@ $I->seeNumberOfElements(['css' => 'button.link'], 5); // DISABLED, can wait only
 
 #### Wait and Act
 
-To combine `waitForElement` with actions inside that element you can use the [performOn](http://codeception.com/docs/modules/WebDriver#performOn) method. 
+To combine `waitForElement` with actions inside that element you can use the [performOn](http://codeception.com/docs/modules/WebDriver#performOn) method.
 Let's see how you can perform some actions inside an HTML popup:
 
 ```php
@@ -495,7 +509,7 @@ $I->performOn('.confirm', function(\Codeception\Module\WebDriver $I) {
 });
 ```
 
-For more options see [`performOn()` reference]([performOn](http://codeception.com/docs/modules/WebDriver#performOn) ).
+For more options see [`performOn()` reference](http://codeception.com/docs/modules/WebDriver#performOn).
 
 ### Multi Session Testing
 
@@ -549,14 +563,12 @@ You just need to set the [WebDriver configuration](http://codeception.com/docs/m
 * browser
 * OS
 
-
 We recommend using [params](http://codeception.com/docs/06-ModulesAndHelpers#Dynamic-Configuration-With-Params)
 to provide authorization credentials.
 
 It should be mentioned that Cloud Testing services are not free. You should investigate their pricing models
 and choose one that fits your needs. They also may work painfully slowly if ping times between the local server
 and the cloud is too high. This may lead to random failures in acceptance tests.
-
 
 ### AngularJS Testing
 
@@ -591,23 +603,22 @@ Additional debugging features by Codeception:
 
 * [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of WebDriver module allows pausing the test.
 * [Recorder extension](http://codeception.com/addons#CodeceptionExtensionRecorder) allows to record tests step-by-steps and show them in slideshow
-* [Interactive Console](http://codeception.com/docs/07-AdvancedUsage#Interactive-Console) is a REPL that allows to type and check commands for instant feedback. 
-
+* [Interactive Console](http://codeception.com/docs/07-AdvancedUsage#Interactive-Console) is a REPL that allows to type and check commands for instant feedback.
 
 ### Custom Browser Sessions
 
 By default, WebDriver module is configured to automatically start browser before the test and stop afterward.
-However, this can be switched off with `start: false` module configuration. 
+However, this can be switched off with `start: false` module configuration.
 To start a browser you will need to write corresponding methods in Acceptance [Helper](http://codeception.com/docs/06-ModulesAndHelpers#Helpers).
 
 WebDriver module provides advanced methods for the browser session, however, they can only be used from Helpers.
-     
+
 * [_initializeSession](http://codeception.com/docs/modules/WebDriver#_initializeSession) - starts a new browser session
 * [_closeSession](http://codeception.com/docs/modules/WebDriver#_closeSession) - stops the browser session
 * [_restart](http://codeception.com/docs/modules/WebDriver#_restart) - updates configuration and restarts browser
 * [_capabilities](http://codeception.com/docs/modules/WebDriver#_capabilities) - set [desired capabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities) programmatically.
 
-Those methods can be used to create custom commands like `$I->startBrowser()` or used in [before/after](http://codeception.com/docs/06-ModulesAndHelpers#Hooks) hooks. 
+Those methods can be used to create custom commands like `$I->startBrowser()` or used in [before/after](http://codeception.com/docs/06-ModulesAndHelpers#Hooks) hooks.
 
 ## Conclusion
 

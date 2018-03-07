@@ -3,6 +3,7 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
+use Codeception\Util\PathResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -70,6 +71,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --coverage-html       Generate CodeCoverage HTML report in path (default: "coverage")
  *  --coverage-xml        Generate CodeCoverage XML report in file (default: "coverage.xml")
  *  --coverage-text       Generate CodeCoverage text report in file (default: "coverage.txt")
+ *  --coverage-phpunit    Generate CodeCoverage PHPUnit report in file (default: "coverage-phpunit")
  *  --no-exit             Don't finish with exit code
  *  --group (-g)          Groups of tests to be executed (multiple values allowed)
  *  --skip (-s)           Skip selected suites (multiple values allowed)
@@ -166,6 +168,12 @@ class Run extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Generate CodeCoverage report in Crap4J XML format'
             ),
+            new InputOption(
+                'coverage-phpunit',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Generate CodeCoverage PHPUnit report in path'
+            ),
             new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
             new InputOption(
                 'group',
@@ -233,7 +241,7 @@ class Run extends Command
         }
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString()
+                Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
             );
         }
         if ($this->options['debug']) {
@@ -252,7 +260,8 @@ class Run extends Command
                 'coverage-xml' => 'coverage.xml',
                 'coverage-html' => 'coverage',
                 'coverage-text' => 'coverage.txt',
-                'coverage-crap4j' => 'crap4j.xml'])
+                'coverage-crap4j' => 'crap4j.xml',
+                'coverage-phpunit' => 'coverage-phpunit'])
         );
         $userOptions['verbosity'] = $this->output->getVerbosity();
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
@@ -270,7 +279,7 @@ class Run extends Command
         if ($this->options['report']) {
             $userOptions['silent'] = true;
         }
-        if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text'] or $this->options['coverage-crap4j']) {
+        if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text'] or $this->options['coverage-crap4j'] or $this->options['coverage-phpunit']) {
             $this->options['coverage'] = true;
         }
         if (!$userOptions['ansi'] && $input->getOption('colors')) {
@@ -315,6 +324,11 @@ class Run extends Command
                             // Incorrect include match, continue trying to find one
                             continue;
                         }
+                    } else {
+                        $result = $this->matchSingleTest($suite, $config);
+                        if ($result) {
+                            list(, $suite, $test) = $result;
+                        }
                     }
                 }
 
@@ -323,9 +337,9 @@ class Run extends Command
                     $config = Configuration::config($projectDir);
                 }
             } elseif (!empty($suite)) {
-                // Run single test without included tests
-                if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
-                    list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
+                $result = $this->matchSingleTest($suite, $config);
+                if ($result) {
+                    list(, $suite, $test) = $result;
                 }
             }
         }
@@ -365,6 +379,38 @@ class Run extends Command
             if (!$this->codecept->getResult()->wasSuccessful()) {
                 exit(1);
             }
+        }
+    }
+
+    protected function matchSingleTest($suite, $config)
+    {
+        // Workaround when codeception.yml is inside tests directory and tests path is set to "."
+        // @see https://github.com/Codeception/Codeception/issues/4432
+        if ($config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
+            $suite = './' . $suite;
+        }
+
+        // running a single test when suite has a configured path
+        if (isset($config['suites'])) {
+            foreach ($config['suites'] as $s => $suiteConfig) {
+                if (!isset($suiteConfig['path'])) {
+                    continue;
+                }
+                $testsPath = $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suiteConfig['path'];
+                if ($suiteConfig['path'] === '.') {
+                    $testsPath = $config['paths']['tests'];
+                }
+                if (preg_match("~^$testsPath/(.*?)$~", $suite, $matches)) {
+                    $matches[2] = $matches[1];
+                    $matches[1] = $s;
+                    return $matches;
+                }
+            }
+        }
+
+        // Run single test without included tests
+        if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
+            return $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
     }
 
@@ -464,11 +510,11 @@ class Run extends Command
         $tokens = explode(' ', $request);
         foreach ($tokens as $token) {
             $token = preg_replace('~=.*~', '', $token); // strip = from options
-            
+
             if (empty($token)) {
                 continue;
             }
-            
+
             if ($token == '--') {
                 break; // there should be no options after ' -- ', only arguments
             }

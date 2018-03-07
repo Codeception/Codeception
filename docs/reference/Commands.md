@@ -155,6 +155,7 @@ Options:
  --coverage-html       Generate CodeCoverage HTML report in path (default: "coverage")
  --coverage-xml        Generate CodeCoverage XML report in file (default: "coverage.xml")
  --coverage-text       Generate CodeCoverage text report in file (default: "coverage.txt")
+ --coverage-phpunit    Generate CodeCoverage PHPUnit report in file (default: "coverage-phpunit")
  --no-exit             Don't finish with exit code
  --group (-g)          Groups of tests to be executed (multiple values allowed)
  --skip (-s)           Skip selected suites (multiple values allowed)
@@ -180,6 +181,10 @@ Auto-updates phar archive from official site: 'http://codeception.com/codecept.p
 * `php codecept.phar self-update`
 
 @author Franck Cassedanne <franck@cassedanne.com>
+
+
+
+## CompletionFallback
 
 
 
@@ -264,18 +269,17 @@ Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
 
 Generates StepObject class. You will be asked for steps you want to implement.
 
-* `codecept g:step acceptance AdminSteps`
-* `codecept g:step acceptance UserSteps --silent` - skip action questions
+* `codecept g:stepobject acceptance AdminSteps`
+* `codecept g:stepobject acceptance UserSteps --silent` - skip action questions
 
 
 
 
 ## Clean
 
-Cleans `output` directory
+Recursively cleans `output` directory and generated code.
 
 * `codecept clean`
-* `codecept clean -c path/to/project`
 
 
 
@@ -289,9 +293,6 @@ codecept gherkin:steps acceptance
 ```
 
 
-
-
-## Completion
 
 
 

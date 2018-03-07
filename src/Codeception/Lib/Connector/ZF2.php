@@ -124,7 +124,7 @@ class ZF2 extends Client
 
         $contentHeaders = ['Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true];
         foreach ($server as $header => $val) {
-            $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
+            $header = html_entity_decode(implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header))))), ENT_NOQUOTES);
 
             if (strpos($header, 'Http-') === 0) {
                 $headers[substr($header, 5)] = $val;
@@ -142,7 +142,7 @@ class ZF2 extends Client
         $serviceManager = $this->application->getServiceManager();
 
         if (!$serviceManager->has($service)) {
-            throw new \PHPUnit_Framework_AssertionFailedError("Service $service is not available in container");
+            throw new \PHPUnit\Framework\AssertionFailedError("Service $service is not available in container");
         }
 
         if ($service === 'Doctrine\ORM\EntityManager' && !isset($this->persistentServiceManager)) {

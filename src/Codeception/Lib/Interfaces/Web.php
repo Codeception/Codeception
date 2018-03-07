@@ -434,7 +434,7 @@ interface Web
     public function dontSeeCurrentUrlMatches($uri);
 
     /**
-     * Executes the given regular expression against the current URI and returns the first match.
+     * Executes the given regular expression against the current URI and returns the first capturing group.
      * If no parameters are provided, the full URI is returned.
      *
      * ``` php
@@ -698,7 +698,7 @@ interface Web
      * @param $value
      */
     public function fillField($field, $value);
-
+    
     /**
      * Attaches a file relative to the Codeception `_data` directory to the given file upload field.
      *

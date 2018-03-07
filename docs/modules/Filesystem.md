@@ -12,7 +12,6 @@ Fork it to extend the module for FTP, Amazon S3, others.
 
 Module was developed to test Codeception itself.
 
-
 ## Actions
 
 ### amInPath
@@ -197,4 +196,4 @@ Saves contents to file
  * `param string` $filename
  * `param string` $contents
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Filesystem.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/Filesystem.php">Help us to improve documentation. Edit module reference</a></div>
