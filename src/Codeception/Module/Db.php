@@ -65,6 +65,23 @@ use Codeception\TestInterface;
  *              ssl_cert: '/path/to/client-cert.pem'
  *              ssl_ca: '/path/to/ca-cert.pem'
  *
+ * ## Multi Database Example
+ *
+ * You can use multiple databases, db1 is the default and db2 will be accessible using $I->amConnectedToDb('db2').
+ * At the beginning of each test, the default database is back.
+ *
+ *     modules:
+ *        enabled:
+ *           - Db:
+ *              dsn: 'mysql:host=localhost;dbname=db1'
+ *              user: 'db1user'
+ *              password: ''
+ *              connections:
+ *                 db2:
+ *                    dsn: 'mysql:host=localhost;dbname=db2'
+ *                    user: 'db2user'
+ *                    password: ''
+ *
  * ## SQL data dump
  *
  * There are two ways of loading the dump into your database:
@@ -225,6 +242,11 @@ class Db extends CodeceptionModule implements DbInterface
      */
     protected $requiredFields = ['dsn', 'user', 'password'];
 
+    /**
+     * @var string
+     */
+    protected $currentConnection = null;
+
     public function _initialize()
     {
         $this->connect();
@@ -326,6 +348,10 @@ class Db extends CodeceptionModule implements DbInterface
         if ($this->config['cleanup'] && !$this->populated) {
             $this->_cleanup();
             $this->_loadDump();
+        }
+        if ($this->currentConnection) {
+            $this->connect();
+            $this->currentConnection = null;
         }
         parent::_before($test);
     }
@@ -613,5 +639,21 @@ class Db extends CodeceptionModule implements DbInterface
             $this->debugSection('Parameters', $parameters);
         }
         $this->driver->executeQuery($query, $parameters);
+    }
+
+    /**
+     * Switch to another connection
+     *
+     * @param string $connection connection name
+     */
+    public function amConnectedToDb($connection)
+    {
+        $this->_reconfigure($this->config['connections'][$connection]);
+        $this->currentConnection = $connection;
+    }
+
+    protected function onReconfigure()
+    {
+        $this->connect();
     }
 }
