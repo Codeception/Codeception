@@ -6,7 +6,7 @@ use Codeception\Lib\Console\Message;
 class Page extends \PHPUnit\Framework\Constraint\Constraint
 {
     protected $uri;
-    private $string;
+    protected $string;
 
     public function __construct($string, $uri = '')
     {
