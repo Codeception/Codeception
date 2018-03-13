@@ -3,8 +3,12 @@
 // Add aliases for PHPUnit 6
 namespace {    
 
-    if (!class_exists('PHPUnit\Framework\Assert') && class_exists('PHPUnit_Framework_Assert')) {
-        class_alias('PHPUnit_Framework_Assert', 'PHPUnit\Framework\Assert');
+    if (!class_exists('PHPUnit_Framework_Assert')) {
+        class_alias('PHPUnit\Framework\Assert', 'PHPUnit_Framework_Assert');
+    }
+    
+    if (!class_exists('PHPUnit_Framework_TestCase')) {
+        class_alias('PHPUnit\Framework\TestCase', 'PHPUnit_Framework_TestCase');
     }
 
     if (!class_exists('PHPUnit\Util\Log\JSON') || !class_exists('PHPUnit\Util\Log\TAP')) {
