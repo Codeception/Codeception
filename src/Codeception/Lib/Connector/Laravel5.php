@@ -171,8 +171,7 @@ class Laravel5 extends Client
 
         // Set the request instance for the application,
         if (is_null($request)) {
-            $appConfig = require $this->module->config['project_dir'] . 'config/app.php';
-            $request = SymfonyRequest::create($appConfig['url']);
+            $request = SymfonyRequest::create($this->getUrl());
         }
         $this->app->instance('request', Request::createFromBase($request));
 
@@ -221,6 +220,28 @@ class Laravel5 extends Client
         }
 
         $this->module->setApplication($this->app);
+    }
+
+    /**
+     * Get the Laravel app url.
+     * @return string
+     * @throws ModuleConfig
+     */
+    private function getUrl()
+    {
+        return (isset($this->module->config['url'])) ? $this->module->config['url'] :  $this->getUrlFromApp();
+    }
+    
+    /**
+     * Get the Laravel app url from app config file.
+     * @return string
+     * @throws ModuleConfig
+     */
+    private function getUrlFromApp()
+    {
+        $appConfig = require $this->module->config['project_dir'] . 'config/app.php';
+        
+        return $appConfig['url'];
     }
 
     /**
