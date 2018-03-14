@@ -76,6 +76,7 @@ class Cest implements LoaderInterface
 
                 if (count($examples)) {
                     $dataProvider = new \PHPUnit\Framework\DataProviderTestSuite();
+                    $index = 0;
                     foreach ($examples as $k => $example) {
                         if ($example === null) {
                             throw new TestParseException(
@@ -87,7 +88,9 @@ class Cest implements LoaderInterface
                         }
                         $test = new CestFormat($unit, $method, $file);
                         $test->getMetadata()->setCurrent(['example' => $example]);
+                        $test->getMetadata()->setIndex($index);
                         $dataProvider->addTest($test);
+                        $index++;
                     }
                     $this->tests[] = $dataProvider;
                     continue;

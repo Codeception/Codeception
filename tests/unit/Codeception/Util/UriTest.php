@@ -50,6 +50,14 @@ class UriTest extends \Codeception\Test\Unit
         $this->assertEquals('/form/?param=1#anchor2', Uri::mergeUrls('/form/?param=1#anchor1', '#anchor2'));
         $this->assertEquals('/form/?param=2', Uri::mergeUrls('/form/?param=1#anchor', '?param=2'));
         $this->assertEquals('/page/', Uri::mergeUrls('/form/?param=1#anchor', '/page/'));
+    }   
+
+    /**
+     * @Issue https://github.com/Codeception/Codeception/pull/4847
+     */
+    public function testMergingNonParsingPath()
+    {
+        $this->assertEquals('/3.0/en/index/page:5', Uri::mergeUrls('https://cakephp.org/', '/3.0/en/index/page:5'));
     }
 
     /**

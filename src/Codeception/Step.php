@@ -164,8 +164,9 @@ abstract class Step
                 $argument = $this->getClassName($argument);
             }
         }
-
-        return json_encode($argument, JSON_UNESCAPED_UNICODE);
+        $arg_str = json_encode($argument, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $arg_str = str_replace('\"', '"', $arg_str);
+        return $arg_str;
     }
 
     protected function getClassName($argument)
@@ -244,7 +245,7 @@ abstract class Step
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
         $text = preg_replace('~\bdont\b~', 'don\'t', $text);
-        return strtolower($text);
+        return mb_strtolower($text, 'UTF-8');
     }
 
     public function run(ModuleContainer $container = null)
