@@ -297,7 +297,7 @@ class HTML extends CodeceptionResultPrinter
     private function cleanMessage($exception)
     {
         $msg = $exception->getMessage();
-        if ($exception instanceof \PHPUnit\Framework\AssertionFailedError && $exception->getComparisonFailure()) {
+        if ($exception instanceof \PHPUnit\Framework\ExpectationFailedException && $exception->getComparisonFailure()) {
             $msg .= $exception->getComparisonFailure()->getDiff();
         }
         $msg = str_replace(['<info>','</info>','<bold>','</bold>'], ['','','',''], $msg);
