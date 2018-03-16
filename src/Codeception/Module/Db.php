@@ -254,14 +254,28 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function _beforeSuite($settings = [])
     {
+        $this->prepareConnections();
+    }
+
+    public function prepareConnections()
+    {
+        $this->connect();
+        $this->prepareConnection();
+        foreach ($this->getConnections() as $key => $value) {
+            $this->amConnectedToDb($key);
+            $this->prepareConnection();
+        }
+        $this->sql = [];
+        $this->_resetConfig();
+    }
+    public function prepareConnection()
+    {
         if (!$this->config['populator']
             && $this->config['dump']
             &&  ($this->config['cleanup'] || ($this->config['populate']))
         ) {
             $this->readSql();
         }
-
-        $this->connect();
 
         // starting with loading dump
         if ($this->config['populate']) {
@@ -274,6 +288,12 @@ class Db extends CodeceptionModule implements DbInterface
         if ($this->config['reconnect']) {
             $this->disconnect();
         }
+        $this->sql = null;
+    }
+
+    public function getConnections()
+    {
+        return (empty($this->config['connections'])) ? [] : $this->config['connections'];
     }
 
     private function readSql()
