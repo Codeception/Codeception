@@ -101,7 +101,7 @@ This commands allows input like:
 $I->amOnPage(['site/view','page'=>'about']);
 $I->amOnPage('index-test.php?site/index');
 $I->amOnPage('http://localhost/index-test.php?site/index');
-$I->sendAjaxPostRequest(['/user/update', 'id' => 1], ['UserForm[name]' => 'G.Hopper');
+$I->sendAjaxPostRequest(['/user/update', 'id' => 1], ['UserForm[name]' => 'G.Hopper']);
 ```
 
 ## Status
