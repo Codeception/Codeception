@@ -77,7 +77,7 @@ before_script:
 #  - php -S 127.0.0.1:8010 -t tests/data >/dev/null 2>&1 &
   # Phalcon
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || mysql -e "CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"'
-  - '[[ "$FRAMEWORK" != "Phalcon" ]] || cat frameworks-phalcon/schemas/phalcon_demo.sql | mysql phalcon_demo'
+  - '[[ "$FRAMEWORK" != "Phalcon" ]] || cat framework-tests/schemas/phalcon_demo.sql | mysql phalcon_demo'
   # Laravel 5
   - '[[ "$FRAMEWORK" != "Laravel" ]] || touch framework-tests/storage/testing.sqlite'
   - '[[ "$FRAMEWORK" != "Laravel" ]] || php framework-tests/artisan migrate --env=testing --database=sqlite_testing --force'
