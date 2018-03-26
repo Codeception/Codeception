@@ -19,7 +19,7 @@ env:
 #  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
   - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests'
   - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests'
-  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 -recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
+  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
 
 addons:
   postgresql: "9.2"
@@ -80,8 +80,8 @@ before_script:
 #  - '[[ "$FRAMEWORK" != "Phalcon" ]] || mysql -e "CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"'
 #  - '[[ "$FRAMEWORK" != "Phalcon" ]] || cat frameworks-phalcon/schemas/phalcon_demo.sql | mysql phalcon_demo'
   # Laravel 5
-#  - '[[ "$FRAMEWORK" != "Laravel" ]] || touch framework-tests/storage/testing.sqlite'
-#  - '[[ "$FRAMEWORK" != "Laravel" ]] || php framework-tests/artisan migrate --env=testing --database=sqlite_testing --force'
+  - '[[ "$FRAMEWORK" != "Laravel" ]] || touch framework-tests/storage/testing.sqlite'
+  - '[[ "$FRAMEWORK" != "Laravel" ]] || php framework-tests/artisan migrate --env=testing --database=sqlite_testing --force'
   # Lumen
   - '[[ "$FRAMEWORK" != "Lumen" ]] || cp framework-tests/.env.testing framework-tests/.env'
   - '[[ "$FRAMEWORK" != "Lumen" ]] || touch framework-tests/storage/testing.sqlite'
@@ -91,8 +91,8 @@ before_script:
 #  - '[[ "$VERSION" != "2" ]] || php framework-tests/app/console doctrine:fixtures:load -n --env test'
 #  - '[[ "$VERSION" != "3" ]] || php framework-tests/bin/console doctrine:schema:update --force -n'
   # ZF2
-#  - '[[ $FRAMEWORK -eq "Zend2" ]] || mysql -e "create database zf2_test;"'
-#  - '[[ $FRAMEWORK -eq "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
+  - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
+  - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
   # Build
 #  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept build -c framework-tests'
 #  - '[[ "$VERSION" != "2" ]] || php codecept build -c framework-tests/src/AppBundle'
