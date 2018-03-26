@@ -277,7 +277,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         Event::offAll();
         // Close all connections so they get properly reopened after the transaction handler has been attached.
-        foreach($connections as $connection) {
+        foreach ($connections as $connection) {
             $connection->close();
         }
     }
