@@ -48,7 +48,7 @@ install:
   - '[[ -z "$PECL" ]] || (yes "" | pecl install $PECL)'
   # Clone test repository
   - git clone -q --depth=1 $TEST_REPO framework-tests
-  - git log -n 1 --git-dir framework-tests/.git
+  - git --git-dir framework-tests/.git log -n 1
   - composer install
   - composer update -d framework-tests $composer_parameters --no-dev --prefer-dist --prefer-lowest
 #  - 'composer require mongodb/mongodb --no-update'
@@ -96,7 +96,7 @@ before_script:
   # Build
 #  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept build -c framework-tests'
 #  - '[[ "$VERSION" != "2" ]] || php codecept build -c framework-tests/src/AppBundle'
-#  - '[[ -f "framework-tests/codeception.yml" || -f "framework-tests/codeception.dist.yml" ]] && php codecept build -c framework-tests'
+  - '[[ -f "framework-tests/codeception.yml" || -f "framework-tests/codeception.dist.yml" ]] && php codecept build -c framework-tests'
 script:
 #  - '[[ $FRAMEWORK -q "CodeCeption" ]] || php codecept run cli,unit'
 #  - '[[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept run coverage'  # run coverage tests on php only
