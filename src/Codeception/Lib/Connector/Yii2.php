@@ -24,8 +24,6 @@ class Yii2 extends Client
      */
     public $configFile;
 
-//    public $defaultServerVars = [];
-
     /**
      * @return \yii\web\Application
      */

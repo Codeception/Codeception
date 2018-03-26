@@ -127,7 +127,7 @@ use yii\db\Transaction;
  * Maintainer: **samdark**
  * Stability: **stable**
  *
-// * @property \Codeception\Lib\Connector\Yii2 $client
+ * @property \Codeception\Lib\Connector\Yii2 $client
  */
 class Yii2 extends Framework implements ActiveRecord, PartedModule
 {
