@@ -4,23 +4,22 @@ language: php
 
 php:
   - 5.6
-#  - 7.0
+  - 7.0
 #  - 7.1
 #  - 7.2
 env:
 #  - FRAMEWORK=CodeCeption
-  - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests" PECL=
-#  - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git'
+  - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests" PECL= SUITES=
+#  - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=
 #  - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
 #  - FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git'
 #  - FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git'
-  - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git'
-  - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git'
-#  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
-  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests'
-  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests'
-  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests'
-
+  - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git' SUITES=
+  - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git' SUITES=
+  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git SUITES=
+  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests' SUITES=
+  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests' SUITES=
+  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' SUITES=functional
 addons:
   postgresql: "9.2"
 
@@ -61,9 +60,9 @@ install:
 #  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
 #  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
 #  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
-  # Phalcon
-#  - '[[ "$FRAMEWORK" != "Phalcon" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
-#  - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
+   Phalcon
+  - '[[ "$FRAMEWORK" != "Phalcon" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
+  - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   # Symfony
   #- '[[ "$SF_VERSION" != "4" ]] || (git clone -q --depth=1 -b master https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 4 site")'
   #- '[[ "$SF_VERSION" == "4" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
@@ -94,7 +93,6 @@ before_script:
   - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
   - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
   # Build
-#  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept build -c framework-tests'
 #  - '[[ "$VERSION" != "2" ]] || php codecept build -c framework-tests/src/AppBundle'
   - '[[ -f "framework-tests/codeception.yml" || -f "framework-tests/codeception.dist.yml" ]] && php codecept build -c framework-tests'
 script:
@@ -103,4 +101,4 @@ script:
 #  - '[[ "$VERSION" != "2" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle' # Symfony 2 Tests
 #  - '[[ "$VERSION" != "3" ]] || php codecept run -c framework-tests' # Symfony 3 Tests
 #  - '[[ "$VERSION" != "4" ]] || php codecept run -c framework-tests functional,unit' # Symfony 4 Tests
-  - '[[ -f "framework-tests/codeception.yml" || -f "framework-tests/codeception.dist.yml" ]] && php codecept run -c framework-tests'
+  - '[[ -f "framework-tests/codeception.yml" || -f "framework-tests/codeception.dist.yml" ]] && php codecept run -c framework-tests --debug $SUITES'
