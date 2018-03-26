@@ -18,7 +18,7 @@ env:
   - FRAMEWORK=Laravel5 TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git'
 #  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
   - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests'
-  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 -recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests'
+  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests'
   - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 -recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
 
 addons:
