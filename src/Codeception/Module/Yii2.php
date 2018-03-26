@@ -315,7 +315,6 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                         && $this->dsnCache[$connection->dsn] !== $key
                         && !$this->config['ignoreCollidingDSN']
                     ) {
-
                         $this->debugSection('WARNING', <<<TEXT
 You use multiple connections to the same DSN ({$connection->dsn}) with different configuration.
 These connections will not see the same database state since we cannot share a transaction between different PDO
@@ -341,7 +340,7 @@ TEXT
     protected function rollbackTransactions()
     {
         /** @var Transaction $transaction */
-        foreach($this->transactions as $transaction) {
+        foreach ($this->transactions as $transaction) {
             $transaction->rollBack();
             $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
         }
