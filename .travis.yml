@@ -15,11 +15,11 @@ env:
 #  - FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git'
 #  - FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git'
   - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git'
-#  - FRAMEWORK=Laravel5 TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git'
+  - FRAMEWORK=Laravel5 TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git'
 #  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
-#  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests'
-#  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 -recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests'
-#  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 -recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
+  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests'
+  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 -recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests'
+  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 -recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
 
 addons:
   postgresql: "9.2"
@@ -83,9 +83,9 @@ before_script:
 #  - '[[ $FRAMEWORK -eq "Laravel" ]] || touch framework-tests/storage/testing.sqlite'
 #  - '[[ $FRAMEWORK -eq "Laravel" ]] || php framework-tests/artisan migrate --env=testing --database=sqlite_testing --force'
   # Lumen
-#  - '[[ $FRAMEWORK -eq "Lumen" ]] || cp framework-tests/.env.testing framework-tests/.env'
-#  - '[[ $FRAMEWORK -eq "Lumen" ]] || touch framework-tests/storage/testing.sqlite'
-#  - '[[ $FRAMEWORK -eq "Lumen" ]] || frameworks-tests/artisan migrate --database=testing --force'
+  - '[[ $FRAMEWORK -eq "Lumen" ]] || cp framework-tests/.env.testing framework-tests/.env'
+  - '[[ $FRAMEWORK -eq "Lumen" ]] || touch framework-tests/storage/testing.sqlite'
+  - '[[ $FRAMEWORK -eq "Lumen" ]] || frameworks-tests/artisan migrate --database=testing --force'
   # Symfony
 #  - '[[ "$VERSION" != "2" ]] || php framework-tests/app/console doctrine:schema:create -n --env test'
 #  - '[[ "$VERSION" != "2" ]] || php framework-tests/app/console doctrine:fixtures:load -n --env test'
