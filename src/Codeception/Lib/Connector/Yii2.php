@@ -256,4 +256,10 @@ class Yii2 extends Client
     {
         $this->resetApplication();
     }
+
+    public function restart()
+    {
+        parent::restart();
+        $this->resetApplication();
+    }
 }

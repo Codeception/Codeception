@@ -179,8 +179,21 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $this->defineConstants();
         $this->server = $_SERVER;
         $this->initServerGlobal();
-        $this->initClient();
     }
+
+
+    /**
+     * Module configuration changed inside a test.
+     * We might need to re-create the application.
+     */
+    protected function onReconfigure()
+    {
+        parent::onReconfigure();
+        if (isset(\Yii::$app)) {
+            $this->client->restart();
+        }
+    }
+
 
     /**
      * Adds the required server params.
