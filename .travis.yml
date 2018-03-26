@@ -105,4 +105,4 @@ script:
   - '[[ "$VERSION" != "2" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle' # Symfony 2 Tests
   - '[[ "$VERSION" != "3" ]] || php codecept run -c framework-tests' # Symfony 3 Tests
   - '[[ "$VERSION" != "4" ]] || php codecept run -c framework-tests functional,unit' # Symfony 4 Tests
-- '[[ -f "framework-tests/codeception.yml" || -f "framework-tests/codeception.dist.yml" ]] && php codecept run -c framework-tests'
+  - '[[ -f "framework-tests/codeception.yml" || -f "framework-tests/codeception.dist.yml" ]] && php codecept run -c framework-tests'
