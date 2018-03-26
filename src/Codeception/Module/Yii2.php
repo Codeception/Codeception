@@ -14,9 +14,9 @@ use Codeception\Util\Debug;
 use Yii;
 use yii\base\Event;
 use yii\db\ActiveRecordInterface;
-use yii\db\Connection;
 use yii\db\QueryInterface;
 use yii\db\Transaction;
+use yii\db\Connection;
 
 /**
  * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
@@ -263,10 +263,22 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     private function loadFixtures($test)
     {
+        /** @var Connection[] $connections */
+        $connections = [];
+        // Register event handler.
+        Event::on(Connection::class, Connection::EVENT_AFTER_OPEN, function (Event $event) use (&$connections) {
+            $connections[] = $event->sender;
+        });
         if (empty($this->loadedFixtures)
             && method_exists($test, $this->_getConfig('fixturesMethod'))
         ) {
             $this->haveFixtures(call_user_func([$test, $this->_getConfig('fixturesMethod')]));
+        }
+
+        Event::offAll();
+        // Close all connections so they get properly reopened after the transaction handler has been attached.
+        foreach($connections as $connection) {
+            $connection->close();
         }
     }
 

@@ -2,7 +2,6 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\Yii2\Logger;
-use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Util\Debug;
 use Symfony\Component\BrowserKit\Client;
