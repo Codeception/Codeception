@@ -355,8 +355,8 @@ TEXT
                         return;
                     }
 
-                    $this->debugSection('Database', 'Transaction started');
-                    $this->transactions[$key] = $event->sender->beginTransaction();
+                    $this->debugSection('Database', 'Transaction started for: ' . $connection->dsn);
+                    $this->transactions[$key] = $connection->beginTransaction();
                 }
             });
         }
