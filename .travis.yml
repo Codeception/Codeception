@@ -112,7 +112,7 @@ before_script:
   # Symfony
   - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "2.8") ]] || php $TEST_PATH/app/console doctrine:schema:create -n --env test'
   - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "2.8") ]] || php $TEST_PATH/app/console doctrine:fixtures:load -n --env test'
-  - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "3") ]] || php $TEST_PATH/bin/console doctrine:schema:update --force -n'
+  - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "3.4") ]] || php $TEST_PATH/bin/console doctrine:schema:update --force -n'
   # ZF2
   - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
   - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
