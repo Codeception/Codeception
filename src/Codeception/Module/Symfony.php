@@ -299,7 +299,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         // mixing default kernel classes and class with changed namespace
 
         if ($this->config['app_kernel']) {
-            $this->kernelClasses = array_merge($this->kernelClasses, [$this->config['app_kernel']]);
+            $this->kernelClasses = [$this->config['app_kernel']];
         }
 
         foreach ($this->kernelClasses as $class) {
