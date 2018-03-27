@@ -95,7 +95,7 @@ before_script:
   - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
   # Build
   - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" != "2" ]] || php codecept build -c framework-tests/src/AppBundle'
-  - '[[ -f "framework-tests/codeception.yml" || -f "framework-tests/codeception.dist.yml" ]] && php codecept build -c framework-tests'
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || php codecept build -c framework-tests'
 script:
   - '[[ "$FRAMEWORK" != "Codeception" ]] || php codecept run cli,unit'
   - '[[ "$FRAMEWORK" != "Codeception" ]] || [[ "$TRAVIS_PHP_VERSION" != "7.1" ]] || php codecept run coverage'  # run coverage tests on php only
