@@ -63,7 +63,7 @@ services:
   - redis
 
 before_install:
-  - '[[ -z "$XDEBUG" ]] || phpenv config-rm xdebug.ini'
+  - '[[ !(-z "$XDEBUG") ]] || phpenv config-rm xdebug.ini'
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
 install:
