@@ -73,7 +73,6 @@ install:
   # Clone test repository
   - '[[ "$FRAMEWORK" == "Codeception" ]] || git clone -q --depth=1 $TEST_REPO framework-tests'
   - '[[ "$FRAMEWORK" == "Codeception" ]] || git --git-dir framework-tests/.git log -n 1'
-  - composer install
   - '[[ "$FRAMEWORK" != "Codeception" ]] || composer require mongodb/mongodb --no-update'
   - '[[ -z "$FXP" ]] || composer global require "fxp/composer-asset-plugin:~1.3.1"'
   - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/finder=~$VERSION --no-update --ignore-platform-reqs'
@@ -89,6 +88,7 @@ install:
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   # Symfony
   - '[[ !("$FRAMEWORK" == "Symfony" && ("$VERSION" == "4.0" || "$VERSION" == "4.1")) ]] || composer require -d framework-tests symfony/symfony=~$VERSION --no-update'
+  - composer install
   - '[[ "$FRAMEWORK" == "Codeception" ]] || composer update -d framework-tests --no-dev --prefer-dist'
 before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
