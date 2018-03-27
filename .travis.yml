@@ -44,6 +44,10 @@ matrix:
     env: FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
   - php: 7.0
     env: FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
+#  - php: 7.1
+#    env: FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' functional
+#  - php: 7.2
+#    env: FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' functional
 addons:
   postgresql: "9.2"
 
@@ -110,9 +114,9 @@ before_script:
   - '[[ "$FRAMEWORK" != "Lumen" ]] || touch framework-tests/storage/testing.sqlite'
   - '[[ "$FRAMEWORK" != "Lumen" ]] || php framework-tests/artisan migrate --database=testing --force'
   # Symfony
-  - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "2.8") ]] || php framework-tests/app/console doctrine:schema:create -n --env test'
-  - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "2.8") ]] || php framework-tests/app/console doctrine:fixtures:load -n --env test'
-  - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "3.4") ]] || php framework-tests/bin/console doctrine:schema:update --force -n'
+  - '[[ "$FRAMEWORK$VERSION" != "Symfony2.8" ]] || php framework-tests/app/console doctrine:schema:create -n --env test'
+  - '[[ "$FRAMEWORK$VERSION" != "Symfony2.8" ]] || php framework-tests/app/console doctrine:fixtures:load -n --env test'
+  - '[[ "$FRAMEWORK$VERSION" != "Symfony3.4" ]] || php framework-tests/bin/console doctrine:schema:update --force -n'
   # ZF2
   - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
   - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
