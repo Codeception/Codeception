@@ -52,21 +52,21 @@ install:
   - composer install
 #  - 'composer require mongodb/mongodb --no-update'
   - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || composer global require "fxp/composer-asset-plugin:~1.3.1"'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/finder=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/yaml=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/console=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/event-dispatcher=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/finder=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/yaml=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/console=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/event-dispatcher=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/css-selector=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/dom-crawler=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$VERSION --no-update --ignore-platform-reqs'
   # Phalcon
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   # Symfony
   - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" != "4" ]] || (git clone -q --depth=1 -b master https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 4 site")'
   - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" == "4" ]] || composer require -d frameworks-symfony symfony/symfony=~$VERSION --no-update'
-  - composer update -d framework-tests --no-dev --prefer-dist --prefer-lowest
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || composer update -d framework-tests --no-dev --prefer-dist --prefer-lowest
 before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # preparing databases
