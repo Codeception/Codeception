@@ -19,8 +19,8 @@ env:
   - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
   - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
-  - FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' functional,unit
-  - FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' functional,unit
+  - FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
+  - FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
   - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git'
   - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git'
   - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
