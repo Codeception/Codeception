@@ -64,7 +64,7 @@ install:
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   # Symfony
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" >= "4" ]] || composer require -d framework-tests symfony/symfony=~$VERSION --no-update'
+  - '[[ "$FRAMEWORK" == "Symfony" && ("$VERSION" == "4.0" || "$VERSION" == "4.1") ]] && composer require -d framework-tests symfony/symfony=~$VERSION --no-update'
   - '[[ "$FRAMEWORK" == "Codeception" ]] || composer update -d framework-tests --no-dev --prefer-dist --prefer-lowest'
 before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
