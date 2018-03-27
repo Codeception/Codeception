@@ -119,4 +119,4 @@ before_script:
   - php codecept build -c $TEST_PATH
 script:
   #- '[[ !("$FRAMEWORK" == "Codeception" && "$TRAVIS_PHP_VERSION" == "7.1") ]] || php codecept run coverage'  # run coverage tests on php only
-  - php codecept run $SUITES -c $TEST_PATH --debug
+  - php codecept run $SUITES -c $TEST_PATH
