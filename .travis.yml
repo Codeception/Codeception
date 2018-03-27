@@ -66,7 +66,7 @@ install:
   # Symfony
   - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" != "4" ]] || (git clone -q --depth=1 -b master https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 4 site")'
   - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" == "4" ]] || composer require -d frameworks-symfony symfony/symfony=~$VERSION --no-update'
-  - '[[ "$FRAMEWORK" == "Codeception" ]] || composer update -d framework-tests --no-dev --prefer-dist --prefer-lowest
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || composer update -d framework-tests --no-dev --prefer-dist --prefer-lowest'
 before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # preparing databases
