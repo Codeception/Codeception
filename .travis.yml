@@ -42,12 +42,12 @@ before_install:
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
 install:
-  - '[[ -z "$CI_USER_TOKEN" ]] || composer config github-oauth.github.com ${CI_USER_TOKEN};'
+  - 'composer config github-oauth.github.com ${CI_USER_TOKEN};'
   # Add extensions
   - '[[ -z "$PECL" ]] || (yes "" | pecl install $PECL)'
   # Clone test repository
-  - git clone -q --depth=1 $TEST_REPO framework-tests
-  - git --git-dir framework-tests/.git log -n 1
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || git clone -q --depth=1 $TEST_REPO framework-tests'
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || git --git-dir framework-tests/.git log -n 1'
   - composer install
 #  - 'composer require mongodb/mongodb --no-update'
   - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || composer global require "fxp/composer-asset-plugin:~1.3.1"'
@@ -93,9 +93,9 @@ before_script:
   - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
   - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
   # Build
-#  - '[[ "$VERSION" != "2" ]] || php codecept build -c framework-tests/src/AppBundle'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" != "2" ]] || php codecept build -c framework-tests/src/AppBundle'
   - '[[ -f "framework-tests/codeception.yml" || -f "framework-tests/codeception.dist.yml" ]] && php codecept build -c framework-tests'
 script:
   - '[[ "$FRAMEWORK" != "Codeception" ]] || php codecept run cli,unit'
-  - '[[ "$FRAMEWORK" != "Codeception"]] || [[ "$TRAVIS_PHP_VERSION" != "7.1" ]] || php codecept run coverage'  # run coverage tests on php only
-  - '[[ "$FRAMEWORK" == "Codeception"]] || php codecept run $SUITES -c framework-tests --debug'
+  - '[[ "$FRAMEWORK" != "Codeception" ]] || [[ "$TRAVIS_PHP_VERSION" != "7.1" ]] || php codecept run coverage'  # run coverage tests on php only
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || php codecept run $SUITES -c framework-tests --debug'
