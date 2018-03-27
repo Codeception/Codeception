@@ -14,6 +14,7 @@ env:
     - FXP=
     - PECL=
     - TEST_PATH='framework-tests'
+    - SYMFONY_DEPRECATIONS_HELPER=weak
   matrix:
   - FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=.
   - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
