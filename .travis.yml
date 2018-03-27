@@ -99,7 +99,7 @@ before_script:
   - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
   - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
   # Build
-  - php codecept build -c $TEST_PATH'
+  - php codecept build -c $TEST_PATH
 script:
   - '[[ !("$FRAMEWORK" == "Codeception" && "$TRAVIS_PHP_VERSION" == "7.1") ]] || php codecept run coverage'  # run coverage tests on php only
   - php codecept run $SUITES -c $TEST_PATH --debug
