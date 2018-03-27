@@ -9,18 +9,18 @@ php:
 #  - 7.1
 #  - 7.2
 env:
-  - FRAMEWORK=Codeception SUITES=
-  - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests" PECL= SUITES=
-  - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES='functional -c framework-tests/src/AppBundle'
-  - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests' SUITES=
-  - FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-  - FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-  - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git' SUITES=
-  - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git' SUITES=
-  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git SUITES=
-  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests' SUITES=
-  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests' SUITES=
-  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' SUITES=functional
+  - FRAMEWORK=Codeception SUITES= FXP=
+  - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests" PECL= SUITES= FXP=
+  - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES='functional -c framework-tests/src/AppBundle' FXP=
+  - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests' SUITES= FXP=
+  - FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit FXP=
+  - FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit FXP=
+  - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git' SUITES= FXP=
+  - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git' SUITES= FXP=
+  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git SUITES= FXP=
+  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests' SUITES= FXP=
+  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests' SUITES= FXP=
+  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' SUITES=functional FXP=
 addons:
   postgresql: "9.2"
 
@@ -51,7 +51,7 @@ install:
   - '[[ "$FRAMEWORK" == "Codeception" ]] || git --git-dir framework-tests/.git log -n 1'
   - composer install
 #  - 'composer require mongodb/mongodb --no-update'
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || composer global require "fxp/composer-asset-plugin:~1.3.1"'
+  - '[[ -z "$FXP" ]] || composer global require "fxp/composer-asset-plugin:~1.3.1"'
   - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/finder=~$VERSION --no-update --ignore-platform-reqs'
   - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/yaml=~$VERSION --no-update --ignore-platform-reqs'
   - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/console=~$VERSION --no-update --ignore-platform-reqs'
