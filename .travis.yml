@@ -21,8 +21,7 @@ env:
   - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
   - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
-  - FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-  - FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
+  - FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
   - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git'
   - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git'
   - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
@@ -42,13 +41,9 @@ matrix:
   - php: 7.0
     env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
   - php: 5.6
-    env: FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
+    env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
   - php: 7.0
-    env: FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-  - php: 5.6
-    env: FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-  - php: 7.0
-    env: FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
+    env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
 #  - php: 7.1
 #    env: FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' functional
 #  - php: 7.2
@@ -96,7 +91,7 @@ install:
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   # Symfony
-  - '[[ !("$FRAMEWORK" == "Symfony" && ("$VERSION" == "4.0" || "$VERSION" == "4.1")) ]] || composer require -d framework-tests symfony/symfony=~$VERSION --no-update'
+  - '[[ "$FRAMEWORK$VERSION" != "Symfony4" ]] || composer require -d framework-tests symfony/symfony=~$VERSION --no-update'
   - composer install
   - '[[ "$FRAMEWORK" == "Codeception" ]] || composer update -d framework-tests --no-dev --prefer-dist'
 before_script:
