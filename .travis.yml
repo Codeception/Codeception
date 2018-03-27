@@ -31,16 +31,22 @@ env:
   - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' SUITES=functional
 matrix:
   exclude:
+  - php: 7.0
+    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
+  - php: 7.1
+    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
+  - php: 7.2
+    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - php: 5.6
     env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
+  - php: 7.0
+    env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
   - php: 5.6
+    env: FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
+  - php: 7.0
     env: FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
   - php: 5.6
     env: FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-  - php: 7.0
-    env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
-  - php: 7.0
-    env: FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
   - php: 7.0
     env: FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
 #  - php: 7.1
