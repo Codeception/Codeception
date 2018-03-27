@@ -1,12 +1,13 @@
 sudo: false
 
 language: php
-
+matrix:
+  fast_finish: true
 php:
   - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
+#  - 7.0
+#  - 7.1
+#  - 7.2
 env:
   - FRAMEWORK=Codeception
   - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests" PECL= SUITES=
@@ -42,7 +43,7 @@ before_install:
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
 install:
-  - 'composer config github-oauth.github.com ${CI_USER_TOKEN};'
+  - '[[ -z "$CI_USER_TOKEN" ]] || composer config github-oauth.github.com ${CI_USER_TOKEN};'
   # Add extensions
   - '[[ -z "$PECL" ]] || (yes "" | pecl install $PECL)'
   # Clone test repository
