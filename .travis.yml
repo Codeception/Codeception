@@ -5,9 +5,9 @@ matrix:
   fast_finish: true
 php:
   - 5.6
-#  - 7.0
-#  - 7.1
-#  - 7.2
+  - 7.0
+  - 7.1
+  - 7.2
 env:
   global:
     - XDEBUG=
@@ -29,7 +29,6 @@ env:
   - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests'
   - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests' SUITES=functional
   - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' SUITES=functional
-
 matrix:
   exclude:
   - php: 5.6
