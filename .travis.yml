@@ -9,18 +9,24 @@ php:
 #  - 7.1
 #  - 7.2
 env:
-  - FRAMEWORK=Codeception SUITES= FXP=
-  - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests" PECL= SUITES= FXP=
-  - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES='functional -c framework-tests/src/AppBundle' FXP=
-  - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests' SUITES= FXP=
-  - FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit FXP=
-  - FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit FXP=
-  - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git' SUITES= FXP=
-  - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git' SUITES= FXP=
-  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git SUITES= FXP=
-  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests' SUITES= FXP=
-  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests' SUITES= FXP=
-  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' SUITES=functional FXP=
+  global:
+    - SUITES=
+    - FXP=
+    - PECL=
+    - TEST_PATH=framework-tests
+  matrix:
+  - FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=""
+  - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
+  - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
+  - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
+  - FRAMEWORK=Symfony VERSION=4.0 TEST_REPO='https://github.com/Codeception/symfony-demo.git' functional,unit
+  - FRAMEWORK=Symfony VERSION=4.1 TEST_REPO='https://github.com/Codeception/symfony-demo.git' functional,unit
+  - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git'
+  - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git'
+  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
+  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests'
+  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests'
+  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' functional
 addons:
   postgresql: "9.2"
 
@@ -77,25 +83,23 @@ before_script:
   - '[[ "$FRAMEWORK" != "Codeception" ]] || php -S 127.0.0.1:8010 -t tests/data >/dev/null 2>&1 &'
   # Phalcon
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || mysql -e "CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"'
-  - '[[ "$FRAMEWORK" != "Phalcon" ]] || cat framework-tests/schemas/phalcon_demo.sql | mysql phalcon_demo'
+  - '[[ "$FRAMEWORK" != "Phalcon" ]] || cat $TEST_PATH/schemas/phalcon_demo.sql | mysql phalcon_demo'
   # Laravel 5
-  - '[[ "$FRAMEWORK" != "Laravel" ]] || touch framework-tests/storage/testing.sqlite'
-  - '[[ "$FRAMEWORK" != "Laravel" ]] || php framework-tests/artisan migrate --env=testing --database=sqlite_testing --force'
+  - '[[ "$FRAMEWORK" != "Laravel" ]] || touch $TEST_PATH/storage/testing.sqlite'
+  - '[[ "$FRAMEWORK" != "Laravel" ]] || php $TEST_PATH/artisan migrate --env=testing --database=sqlite_testing --force'
   # Lumen
-  - '[[ "$FRAMEWORK" != "Lumen" ]] || cp framework-tests/.env.testing framework-tests/.env'
-  - '[[ "$FRAMEWORK" != "Lumen" ]] || touch framework-tests/storage/testing.sqlite'
-  - '[[ "$FRAMEWORK" != "Lumen" ]] || php framework-tests/artisan migrate --database=testing --force'
+  - '[[ "$FRAMEWORK" != "Lumen" ]] || cp f$TEST_PATH/.env.testing framework-tests/.env'
+  - '[[ "$FRAMEWORK" != "Lumen" ]] || touch $TEST_PATH/storage/testing.sqlite'
+  - '[[ "$FRAMEWORK" != "Lumen" ]] || php $TEST_PATH/artisan migrate --database=testing --force'
   # Symfony
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" != "2" ]] || php framework-tests/app/console doctrine:schema:create -n --env test'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" != "2" ]] || php framework-tests/app/console doctrine:fixtures:load -n --env test'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" != "3" ]] || php framework-tests/bin/console doctrine:schema:update --force -n'
+  - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "2") ]] || php $TEST_PATH/app/console doctrine:schema:create -n --env test'
+  - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "2") ]] || php $TEST_PATH/app/console doctrine:fixtures:load -n --env test'
+  - '[[ !("$FRAMEWORK" == "Symfony" && "$VERSION" == "3") ]] || php $TEST_PATH/bin/console doctrine:schema:update --force -n'
   # ZF2
   - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
   - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
   # Build
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || [[ "$VERSION" != "2" ]] || php codecept build -c framework-tests/src/AppBundle'
-  - '[[ "$FRAMEWORK" == "Codeception" ]] || php codecept build -c framework-tests'
+  - php codecept build -c $TEST_PATH'
 script:
-  - '[[ "$FRAMEWORK" != "Codeception" ]] || php codecept run cli,unit'
-  - '[[ "$FRAMEWORK" != "Codeception" ]] || [[ "$TRAVIS_PHP_VERSION" != "7.1" ]] || php codecept run coverage'  # run coverage tests on php only
-  - '[[ "$FRAMEWORK" == "Codeception" ]] || php codecept run $SUITES -c framework-tests --debug'
+  - '[[ !("$FRAMEWORK" == "Codeception" && "$TRAVIS_PHP_VERSION" == "7.1") ]] || php codecept run coverage'  # run coverage tests on php only
+  - php codecept run $SUITES -c $TEST_PATH --debug
