@@ -229,7 +229,7 @@ class Laravel5 extends Client
      */
     private function getUrl()
     {
-        return (isset($this->module->config['url'])) ? $this->module->config['url'] :  $this->getUrlFromApp();
+        return ($this->module->config['url']) ? $this->module->config['url'] :  $this->getUrlFromApp();
     }
     
     /**
