@@ -18,7 +18,7 @@ env:
     - SYMFONY_DEPRECATIONS_HELPER=weak
   matrix:
   - FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. XDEBUG=1 PECL=mongodb
-  - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
+  #- FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
   - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
   - FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
