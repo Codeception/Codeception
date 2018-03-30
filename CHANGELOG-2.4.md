@@ -15,6 +15,7 @@
   * More reliable application state before and during test execution
   * Fixtures method is now configurable
   * Subset of misconfigurations are now detected and create informative messages
+  * Application no longer available via the `$module->app`, now you must use `\Yii::$app` everywhere
 **Upgrade Notice**: If you face issues with underscore PHPUnit class names (like PHPUnit_Framework_Assert) you have two options:
 
 * Lock version for PHPUnit in composer.json: "phpunit/phpunit":"^5.0.0"
