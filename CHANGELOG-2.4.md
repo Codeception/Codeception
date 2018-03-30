@@ -10,8 +10,13 @@
   * `_failed` called when test fails
   * `_passed` called when tests is successful
   * `_after` is called for failing and successful tests   
-
+* Yii2 Module request flow and database transactions refactored (by @sammousa):
+  * Multiple databases are now supported
+  * More reliable application state before and during test execution
+  * Fixtures method is now configurable
+  * Subset of misconfigurations are now detected and create informative messages
 **Upgrade Notice**: If you face issues with underscore PHPUnit class names (like PHPUnit_Framework_Assert) you have two options:
 
 * Lock version for PHPUnit in composer.json: "phpunit/phpunit":"^5.0.0"
-* Update your codebase and replace underscore PHPUnit class names to namespaced (PHPUnit 6+ API) 
+* Update your codebase and replace underscore PHPUnit class names to namespaced (PHPUnit 6+ API)
+
