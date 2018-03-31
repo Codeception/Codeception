@@ -40,6 +40,7 @@ class Console implements EventSubscriberInterface
         Events::TEST_ERROR         => 'testError',
         Events::TEST_INCOMPLETE    => 'testIncomplete',
         Events::TEST_SKIPPED       => 'testSkipped',
+        Events::TEST_WARNING       => 'testWarning',
         Events::TEST_FAIL_PRINT    => 'printFail',
         Events::RESULT_PRINT_AFTER => 'afterResult',
     ];
@@ -234,6 +235,16 @@ class Console implements EventSubscriberInterface
     {
         $this->metaStep = null;
         $this->printedTest = null;
+    }
+
+    public function testWarning(TestEvent $e)
+    {
+        if ($this->isDetailed($e->getTest())) {
+            $this->message('WARNING')->center(' ')->style('pending')->append("\n")->writeln();
+
+            return;
+        }
+        $this->writelnFinishedTest($e, $this->message('W')->style('pending'));
     }
 
     public function testFail(FailEvent $e)
