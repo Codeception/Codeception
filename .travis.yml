@@ -78,7 +78,7 @@ before_install:
 install:
   - '[[ -z "$CI_USER_TOKEN" ]] || composer config github-oauth.github.com ${CI_USER_TOKEN};'
   # Add extensions
-  - '[[ -z "$PECL" ]] || (yes "" | pecl install -f $PECL)
+  - '[[ -z "$PECL" ]] || (yes "" | pecl install -f $PECL)'
   # Clone test repository
   - '[[ "$FRAMEWORK" == "Codeception" ]] || git clone -q --depth=1 $TEST_REPO framework-tests'
   - '[[ "$FRAMEWORK" == "Codeception" ]] || git --git-dir framework-tests/.git log -n 1'
