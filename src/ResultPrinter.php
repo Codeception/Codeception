@@ -34,6 +34,19 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
     }
 
     /**
+     * A warning occurred.
+     *
+     * @param \PHPUnit\Framework\Test $test
+     * @param \PHPUnit\Framework\Warning $e
+     * @param float $time
+     */
+    public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, float $time): void
+    {
+        $this->testStatus = \PHPUnit\Runner\BaseTestRunner::STATUS_WARNING;
+        $this->warned++;
+    }
+
+    /**
      * Incomplete test.
      *
      * @param \PHPUnit\Framework\Test $test

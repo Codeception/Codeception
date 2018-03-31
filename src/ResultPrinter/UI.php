@@ -83,6 +83,11 @@ class UI extends \PHPUnit\TextUI\ResultPrinter
         $this->lastTestFailed = true;
     }
 
+    public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, float $time) : void
+    {
+        $this->lastTestFailed = true;
+    }
+
     public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
         $this->lastTestFailed = true;
