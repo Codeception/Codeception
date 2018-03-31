@@ -487,7 +487,7 @@ EOF
 
     public function runWarningTests(CliGuy $I)
     {
-        $I->executeCommand('run unit WarningTest.php:testWarningInvalidDataProvider', false);
+        $I->executeCommand('run unit WarningTest.php', false);
         $I->seeInShellOutput('There was 1 warning');
         $I->seeInShellOutput('WarningTest::testWarningInvalidDataProvider');
         $I->seeInShellOutput('Tests: 1,');
