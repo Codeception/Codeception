@@ -61,18 +61,18 @@ class BasicCest
 }
 ```
 
-As you see, Cest classes have no parents. 
+As you see, Cest classes have no parents.
 This is done intentionally. It allows you to extend your classes with common behaviors and workarounds
 that may be used in child classes. But don't forget to make these methods `protected` so they won't be executed as tests.
 
-Cest format also can contain hooks based on test results: 
+Cest format also can contain hooks based on test results:
 
 * `_failed` will be executed on failed test
 * `_passed` will be executed on passed test
 
 ```php
 <?php
-public function _failed(\AcceptanceTester $I) 
+public function _failed(\AcceptanceTester $I)
 {
     // will be executed on test failure
 }
@@ -182,7 +182,7 @@ Moreover, Codeception can resolve dependencies recursively (when `A` depends on 
 and handle parameters of primitive types with default values (like `$param = 'default'`).
 Of course, you are not allowed to have *cyclic dependencies*.
 
-### Examples
+## Example Annotation
 
 What if you want to execute the same test scenario with different data? In this case you can inject examples
 as `\Codeception\Example` instances.
@@ -190,6 +190,8 @@ Data is defined via the `@example` annotation, using JSON or Doctrine-style nota
 
 ```php
 <?php
+class EndpointCest
+{
  /**
   * @example ["/api/", 200]
   * @example ["/api/protected", 401]
@@ -201,12 +203,15 @@ Data is defined via the `@example` annotation, using JSON or Doctrine-style nota
     $I->sendGET($example[0]);
     $I->seeResponseCodeIs($example[1]);
   }
+}
 ```
 
 JSON:
 
 ```php
 <?php
+class PageCest
+{
  /**
   * @example { "url": "/", "title": "Welcome" }
   * @example { "url": "/info", "title": "Info" }
@@ -219,6 +224,7 @@ JSON:
     $I->see($example['title'], 'h1');
     $I->seeInTitle($example['title']);
   }
+}
 ```
 
 <div class="alert alert-info">
@@ -230,6 +236,8 @@ Key-value data in Doctrine-style annotation syntax:
 
 ```php
 <?php
+class PageCest
+{
  /**
   * @example(url="/", title="Welcome")
   * @example(url="/info", title="Info")
@@ -242,14 +250,19 @@ Key-value data in Doctrine-style annotation syntax:
     $I->see($example['title'], 'h1');
     $I->seeInTitle($example['title']);
   }
+}
 ```
 
-You can also use the `@dataprovider` annotation for creating dynamic examples, using a protected method for providing example data:
+## DataProvider Annotations
+
+You can also use the `@dataProvider` annotation for creating dynamic examples for [Cest classes](#Cest-Classes), using a **protected method** for providing example data:
 
 ```php
 <?php
+class PageCest
+{
    /**
-    * @dataprovider pageProvider
+    * @dataProvider pageProvider
     */
     public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
     {
@@ -270,9 +283,13 @@ You can also use the `@dataprovider` annotation for creating dynamic examples, u
             ['url'=>"/contact", 'title'=>"Contact Us"]
         ];
     }
+}
 ```
 
-### Before/After Annotations
+`@dataprovider` annotation is also available for [unit tests](https://codeception.com/docs/05-UnitTests), in this case the data provider **method must be public**.
+For more details about how to use data provider for unit tests, please refer to [PHPUnit documentation](https://phpunit.de/manual/current/en/writing-tests-for-phpunit.html#writing-tests-for-phpunit.data-providers).
+
+## Before/After Annotations
 
 You can control execution flow with `@before` and `@after` annotations. You may move common actions
 into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
