@@ -12,7 +12,7 @@ and you want to split it, you can easily move it into classes.
 You can create a Cest file by running the command:
 
 ```bash
-$ php codecept generate:cest suitename CestName
+$ php vendor/bin/codecept generate:cest suitename CestName
 ```
 
 The generated file will look like this:
@@ -387,7 +387,7 @@ The names of these files are used as environments names
 You can generate a new file with this environment configuration by using the `generate:environment` command:
 
 ```bash
-$ php codecept g:env chrome
+$ php vendor/bin/codecept g:env chrome
 ```
 
 In that file you can specify just the options you wish to override:
@@ -405,13 +405,13 @@ You can easily switch between those configs by running tests with `--env` option
 To run the tests only for PhantomJS you just need to pass `--env phantom` as an option:
 
 ```bash
-$ php codecept run acceptance --env phantom
+$ php vendor/bin/codecept run acceptance --env phantom
 ```
 
 To run the tests in all 3 browsers, list all the environments:
 
 ```bash
-$ php codecept run acceptance --env phantom --env chrome --env firefox
+$ php vendor/bin/codecept run acceptance --env phantom --env chrome --env firefox
 ```
 
 The tests will be executed 3 times, each time in a different browser.
@@ -419,7 +419,7 @@ The tests will be executed 3 times, each time in a different browser.
 It's also possible to merge multiple environments into a single configuration by separating them with a comma:
 
 ```bash
-$ php codecept run acceptance --env dev,phantom --env dev,chrome --env dev,firefox
+$ php vendor/bin/codecept run acceptance --env dev,phantom --env dev,chrome --env dev,firefox
 ```
 
 The configuration is merged in the order given.
@@ -543,7 +543,7 @@ The interactive console was added to try Codeception commands before executing t
 You can run the console with the following command:
 
 ``` bash
-$ php codecept console suitename
+$ php vendor/bin/codecept console suitename
 ```
 
 Now you can execute all the commands of an appropriate Actor class and see the results immediately.
@@ -560,15 +560,15 @@ If you have several projects with Codeception tests, you can use a single `codec
 You can pass the `-c` option to any Codeception command (except `bootstrap`), to execute Codeception in another directory:
 
 ```bash
-$ php codecept run -c ~/projects/ecommerce/
-$ php codecept run -c ~/projects/drupal/
-$ php codecept generate:cept acceptance CreateArticle -c ~/projects/drupal/
+$ php vendor/bin/codecept run -c ~/projects/ecommerce/
+$ php vendor/bin/codecept run -c ~/projects/drupal/
+$ php vendor/bin/codecept generate:cept acceptance CreateArticle -c ~/projects/drupal/
 ```
 
 To create a project in directory different from the current one, just provide its path as a parameter:
 
 ```bash
-$ php codecept bootstrap ~/projects/drupal/
+$ php vendor/bin/codecept bootstrap ~/projects/drupal/
 ```
 
 Also, the `-c` option allows you to specify another config file to be used.
@@ -580,13 +580,13 @@ and settings). Just pass the `.yml` filename as the `-c` parameter to execute te
 There are several ways to execute a bunch of tests. You can run tests from a specific directory:
 
 ```bash
-$ php codecept run tests/acceptance/admin
+$ php vendor/bin/codecept run tests/acceptance/admin
 ```
 
 You can execute one (or several) specific groups of tests:
 
 ```bash
-$ php codecept run -g admin -g editor
+$ php vendor/bin/codecept run -g admin -g editor
 ```
 
 The concept of groups was taken from PHPUnit and behave in the same way.

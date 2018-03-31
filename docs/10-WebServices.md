@@ -5,7 +5,7 @@ The same way we tested a web site, Codeception allows you to test web services. 
 You should start by creating a new test suite, (which was not provided by the `bootstrap` command). We recommend calling it **api** and using the `ApiTester` class for it.
 
 ```bash
-$ php codecept generate:suite api
+$ php vendor/bin/codecept generate:suite api
 ```
 
 We will put all the api tests there.
@@ -51,22 +51,36 @@ modules:
 Once we have configured our new testing suite, we can create the first sample test:
 
 ```bash
-$ php codecept generate:cept api CreateUser
+$ codecept generate:cest api CreateUser
 ```
 
-It will be called `CreateUserCept.php`. We can use it to test the creation of a user via the REST API.
+It will be called `CreateUserCest.php`. 
+We need to implement a public method for each test. Let's make `createUserViaAPI` to test creation of a user via the REST API.
 
 ```php
 <?php
-$I = new ApiTester($scenario);
-$I->wantTo('create a user via API');
-$I->amHttpAuthenticated('service_user', '123456');
-$I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-$I->sendPOST('/users', ['name' => 'davert', 'email' => 'davert@codeception.com']);
-$I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK); // 200
-$I->seeResponseIsJson();
-$I->seeResponseContains('{"result":"ok"}');
+class CreateUserCest
+{
+    public function _before(\ApiTester $I)
+    {
+    }
 
+    public function _after(\ApiTester $I)
+    {
+    }
+
+    // tests
+    public function createUserViaAPI(\ApiTester $I)
+    {
+        $I->amHttpAuthenticated('service_user', '123456');
+        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
+        $I->sendPOST('/users', ['name' => 'davert', 'email' => 'davert@codeception.com']);
+        $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK); // 200
+        $I->seeResponseIsJson();
+        $I->seeResponseContains('{"result":"ok"}');
+        
+    }
+}
 ```
 
 We can use HTTP code constants from `Codeception\Util\HttpCode` instead of numeric values to check response code in `seeResponseCodeIs` and `dontSeeResponseCodeIs` methods.
@@ -117,14 +131,11 @@ If we expect a JSON response to be received we can check its structure with [JSO
 
 ```php
 <?php
-$I = new ApiTester($scenario);
-$I->wantTo('validate structure of GitHub api responses');
 $I->sendGET('/users');
 $I->seeResponseCodeIs(HttpCode::OK); // 200
 $I->seeResponseIsJson();
 $I->seeResponseJsonMatchesJsonPath('$[0].user.login');
 $I->seeResponseJsonMatchesXpath('//user/login');
-
 ```
 
 More detailed check can be applied if you need to validate the type of fields in a response.
@@ -155,25 +166,21 @@ There is `seeXmlResponseIncludes` method to match inclusion of XML parts in resp
 
 ```php
 <?php
-use Codeception\Util\Xml as XmlUtils;
-
-$I = new ApiTester($scenario);
-$I->wantTo('validate structure of GitHub api responses');
 $I->sendGET('/users.xml');
 $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK); // 200
 $I->seeResponseIsXml();
 $I->seeXmlResponseMatchesXpath('//user/login');
-$I->seeXmlResponseIncludes(XmlUtils::toXml(
+$I->seeXmlResponseIncludes(\Codeception\Util\Xml::toXml([
     'user' => [
       'name' => 'davert',
       'email' => 'davert@codeception.com',
       'status' => 'inactive'
   ]
-));
+]));
 
 ```
 
-We are using XmlUtils class which allows us to build XML structures in a clean manner. The `toXml` method may accept a string or array and returns \DOMDocument instance. If your XML contains attributes and so can't be represented as a PHP array you can create XML using the [XmlBuilder](http://codeception.com/docs/reference/XmlBuilder) class. We will take a look at it a bit more in next section.
+We are using `Codeception\Util\Xml` class which allows us to build XML structures in a clean manner. The `toXml` method may accept a string or array and returns \DOMDocument instance. If your XML contains attributes and so can't be represented as a PHP array you can create XML using the [XmlBuilder](http://codeception.com/docs/reference/XmlBuilder) class. We will take a look at it a bit more in next section.
 
 <div class="alert alert-info">
 Use `\Codeception\Util\Xml::build()` to create XmlBuilder instance.
@@ -247,14 +254,10 @@ In the next example we will use `XmlBuilder` instead of regular XML.
 
 ```php
 <?php
-use \Codeception\Util\Xml;
-
-$I = new ApiTester($scenario);
-$I->wantTo('create user');
 $I->haveSoapHeader('Session', array('token' => '123456'));
 $I->sendSoapRequest('CreateUser', Xml::build()
   ->user->email->val('miles@davis.com'));
-$I->seeSoapResponseIncludes(Xml::build()
+$I->seeSoapResponseIncludes(\Codeception\Util\Xml::build()
   ->result->val('Ok')
     ->user->attr('id', 1)
 );

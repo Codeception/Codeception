@@ -9,7 +9,7 @@ Codeception adds some nice helpers to simplify common tasks.
 Create a test using `generate:test` command with a suite and test names as parameters:
 
 ```bash
-php codecept generate:test unit Example
+php vendor/bin/codecept generate:test unit Example
 ```
 
 It creates a new `ExampleTest` file located in the `tests/unit` directory.
@@ -17,13 +17,13 @@ It creates a new `ExampleTest` file located in the `tests/unit` directory.
 As always, you can run the newly created test with this command:
 
 ```bash
-php codecept run unit ExampleTest
+php vendor/bin/codecept run unit ExampleTest
 ```
 
 Or simply run the whole set of unit tests with:
 
 ```bash
-php codecept run unit
+php vendor/bin/codecept run unit
 ```
 
 A test created by the `generate:test` command will look like this:
@@ -73,15 +73,15 @@ class UserTest extends \Codeception\Test\Unit
 {
     public function testValidation()
     {
-        $user = User::create();
+        $user = new User();
 
-        $user->username = null;
+        $user->setName(null);
         $this->assertFalse($user->validate(['username']));
 
-        $user->username = 'toolooooongnaaaaaaameeee';
+        $user->setName('toolooooongnaaaaaaameeee');
         $this->assertFalse($user->validate(['username']));
 
-        $user->username = 'davert';
+        $user->setName('davert');
         $this->assertTrue($user->validate(['username']));
     }
 }
