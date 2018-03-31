@@ -96,11 +96,6 @@ class RoboFile extends \Robo\Tasks
     public function testWebdriver($args = '', $opt = ['test|t' => null])
     {
         $test = $opt['test'] ? ':'.$opt['test'] : '';
-        $container = $this->taskDockerRun('davert/selenium-env')
-            ->detached()
-            ->publish(4444, 4444)
-            ->env('APP_PORT', 8000)
-            ->run();
 
         $this->taskServer(8000)
             ->dir('tests/data/app')
@@ -108,22 +103,14 @@ class RoboFile extends \Robo\Tasks
             ->host('0.0.0.0')
             ->run();
 
-        sleep(3); // wait for selenium to launch
-
         $this->taskCodecept('./codecept')
-            ->test('tests/web/WebDriverTest.php'.$test)
+            ->suite('web')
             ->args($args)
             ->run();
-
-        $this->taskDockerStop($container)->run();
     }
 
-    public function testLaunchServer($pathToSelenium = '~/selenium-server.jar ')
+    public function testLaunchServer()
     {
-        $this->taskExec('java -jar '.$pathToSelenium)
-            ->background()
-            ->run();
-
         $this->taskServer(8010)
             ->background()
             ->dir('tests/data/rest')
