@@ -298,11 +298,13 @@ Call an Artisan command.
 <?php
 $I->callArtisan('command:name');
 $I->callArtisan('command:name', ['parameter' => 'value']);
-?>
 ```
+Use 3rd parameter to pass in custom `OutputInterface`
 
  * `param string` $command
  * `param array` $parameters
+ * `param OutputInterface` $output
+ * `return` string
 
 
 ### checkOption
