@@ -1,5 +1,6 @@
 #### 2.4.1
 
+* Fixed `PHP Fatal error:  Uncaught Error: Call to undefined method Codeception\Test\Descriptor::getTestDataSetIndex()` when filtering tests
 * Better support of PHPUnit warning status by @edno:
   * support PHPUnit addWarning()
   * display 'W' instead of success for warning test cases
@@ -10,7 +11,11 @@
   * More reliable application state before and during test execution
   * Fixtures method is now configurable
   * Subset of misconfigurations are now detected and informative messages created
-
+* Fixed using `$settings['path']` in `Codeception\Configuration::suiteSettings()` on Windows by @olegpro 
+* [Laravel5] Added Laravel 5.4+ (5.1+ backward compatible) support for `callArtisan` method in Laravel5 module. See #4860 by @mohamed-aiman 
+* Fixed #4854: unnecessary escaping in operation arguments logging by @nicholascus
+* Fixed humanizing steps for utf8 strings by @nicholascus. See #4850
+* Fixed parsing relative urls in `parse_url`. See #4853 by @quantum-x
 
 #### 2.4.0
 
