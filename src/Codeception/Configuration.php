@@ -112,6 +112,7 @@ class Configuration
         'namespace'   => null,
         'groups'      => [],
         'shuffle'     => false,
+        'seed'        => null,
         'extensions'  => [ // suite extensions
             'enabled' => [],
             'config' => [],
@@ -738,6 +739,13 @@ class Configuration
 
         foreach ($settings['params'] as $paramStorage) {
             static::$params = array_merge(self::$params, $paramsLoader->load($paramStorage));
+        }
+    }
+
+    public static function setSuffleSeed($value)
+    {
+        if (self::$config['shuffle']) {
+            self::$config['seed'] = $value;
         }
     }
 }

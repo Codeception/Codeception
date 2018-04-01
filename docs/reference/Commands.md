@@ -169,6 +169,7 @@ Options:
  --ansi                Force ANSI output.
  --no-ansi             Disable ANSI output.
  --no-interaction (-n) Do not ask any interactive question.
+ --seed                Define random number generator seed for shuffle setting
 ```
 
 
@@ -316,6 +317,3 @@ If PageObject is generated globally it will act as UIMap, without any logic in i
 * `codecept g:page Login`
 * `codecept g:page Registration`
 * `codecept g:page acceptance Login`
-
-
-
