@@ -74,4 +74,27 @@ class SqliteDbTest extends TestsForDb
         $this->assertEquals($connection1, $connection2);
         $this->assertNotEquals($connection3, $connection2);
     }
+
+    public function testMultiDatabase()
+    {
+        $config = array_merge($this->getConfig(), ['dsn' => 'sqlite:tests/data/sqlite1.db']);
+        $this->module->_reconfigure(
+            [
+                'databases'   => ['db2' => $config],
+            ]
+        );
+        $this->module->_beforeSuite();
+        
+        $testDataInDb1 = ['name' => 'userdb1', 'email' => 'userdb1@example.org'];
+        $testDataInDb2 = ['name' => 'userdb2', 'email' => 'userdb2@example.org'];
+
+        $this->module->_insertInDatabase('users', $testDataInDb1);
+        $this->module->seeInDatabase('users', $testDataInDb1);
+
+        $this->module->amConnectedToDatabase('db2');
+
+        $this->module->_insertInDatabase('users', $testDataInDb2);
+        $this->module->seeInDatabase('users', $testDataInDb2);
+        $this->module->dontSeeInDatabase('users', $testDataInDb1);
+    }
 }
