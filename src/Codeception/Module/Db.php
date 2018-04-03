@@ -285,9 +285,17 @@ class Db extends CodeceptionModule implements DbInterface
         return $this->dbhs[$this->currentDatabase];
     }
 
-    public function amConnectedToDatabase($databaseKey)
+    public function amConnectedToDatabase($databaseKey, $callback = null)
     {
-        $this->currentDatabase = $databaseKey;
+        if (is_callable($callback)) {
+            $backupDatabase = $this->currentDatabase;
+            $this->currentDatabase = $databaseKey;
+            call_user_func($callback, $this);
+            $this->currentDatabase = $backupDatabase;
+        }
+        else {
+            $this->currentDatabase = $databaseKey;
+        }
     }
 
     public function _initialize()
@@ -308,9 +316,6 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function readSql($databaseKey = null, $databaseConfig = null)
     {
-        $databaseKey = $databaseKey ?? $this->DEFAULT_DATABASE;
-        $databaseConfig = $databaseConfig ?? $this->config;
-
         if ($databaseConfig['populator']) {
             return;
         }
@@ -343,8 +348,6 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function connect($databaseKey = null, $databaseConfig = null)
     {
-        $databaseKey = $databaseKey ?? $this->DEFAULT_DATABASE;
-        $databaseConfig = $databaseConfig ?? $this->config;
         $options = [];
  
         /**
@@ -380,9 +383,6 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function disconnect($databaseKey = null, $databaseConfig = null)
     {
-        $databaseKey = $databaseKey ?? $this->DEFAULT_DATABASE;
-        $databaseConfig = $databaseConfig ?? $this->config;
-
         if (!$databaseConfig['reconnect']) {
             $return;
         }
@@ -395,6 +395,7 @@ class Db extends CodeceptionModule implements DbInterface
     public function _before(TestInterface $test)
     {
         $this->reconnectDatabases();
+        $this->amConnectedToDatabase($this->DEFAULT_DATABASE);
 
         $this->cleanUpDatabases();
 
@@ -427,8 +428,8 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function _cleanup($databaseKey = null, $databaseConfig = null)
     {
-        $databaseKey = $databaseKey ?? $this->DEFAULT_DATABASE;
-        $databaseConfig = $databaseConfig ?? $this->config;
+        $databaseKey = empty($databaseKey) ?  $this->DEFAULT_DATABASE : $databaseKey;
+        $databaseConfig = empty($databaseConfig) ?  $this->config : $databaseConfig;
 
         if (!$databaseConfig['populate']) {
             return;
@@ -465,8 +466,8 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function _loadDump($databaseKey = null, $databaseConfig = null)
     {
-        $databaseKey = $databaseKey ?? $this->DEFAULT_DATABASE;
-        $databaseConfig = $databaseConfig ?? $this->config;
+        $databaseKey = empty($databaseKey) ?  $this->DEFAULT_DATABASE : $databaseKey;
+        $databaseConfig = empty($databaseConfig) ?  $this->config : $databaseConfig;
 
         if (!$databaseConfig['populate']) {
             return;
