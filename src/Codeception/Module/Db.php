@@ -239,7 +239,7 @@ class Db extends CodeceptionModule implements DbInterface
     public function populateDatabases($configKey)
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
-            if($databaseConfig[$configKey]) {
+            if ($databaseConfig[$configKey]) {
                 $this->_loadDump($databaseKey, $databaseConfig);
             }
         }
@@ -268,10 +268,10 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function __get($name)
     {
-        if($name == 'driver'){
+        if ($name == 'driver') {
             return $this->getDriver();
         }
-        if($name == 'dbh'){
+        if ($name == 'dbh') {
             return $this->getDbh();
         }
     }
@@ -423,7 +423,6 @@ class Db extends CodeceptionModule implements DbInterface
             }
         }
         $this->insertedRows[$this->DEFAULT_DATABASE] = [];
-        $this->databasesPopulated[$this->DEFAULT_DATABASE] = false;
     }
 
     public function _cleanup($databaseKey = null, $databaseConfig = null)
