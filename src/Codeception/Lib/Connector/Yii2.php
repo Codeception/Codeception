@@ -20,7 +20,7 @@ class Yii2 extends Client
 {
     use Shared\PhpSuperGlobalsConverter;
 
-    public const CLEAN_METHODS = [
+    const CLEAN_METHODS = [
         self::CLEAN_RECREATE,
         self::CLEAN_CLEAR,
         self::CLEAN_FORCE_RECREATE,
@@ -30,23 +30,23 @@ class Yii2 extends Client
      * Clean the response object by recreating it.
      * This might lose behaviors / event handlers / other changes that are done in the application bootstrap phase.
      */
-    public const CLEAN_RECREATE = 'recreate';
+    const CLEAN_RECREATE = 'recreate';
     /**
      * Same as recreate but will not warn when behaviors / event handlers are lost.
      */
-    public const CLEAN_FORCE_RECREATE = 'force_recreate';
+    const CLEAN_FORCE_RECREATE = 'force_recreate';
     /**
      * Clean the response object by resetting specific properties via its' `clear()` method.
      * This will keep behaviors / event handlers, but could inadvertently leave some changes intact.
      * @see \Yii\web\Response::clear()
      */
-    public const CLEAN_CLEAR = 'clear';
+    const CLEAN_CLEAR = 'clear';
 
     /**
      * Do not clean the response, instead the test writer will be responsible for manually resetting the response in
      * between requests during one test
      */
-    public const CLEAN_MANUAL = 'manual';
+    const CLEAN_MANUAL = 'manual';
 
 
     /**
