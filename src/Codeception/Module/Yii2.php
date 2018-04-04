@@ -257,7 +257,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         $settings['configFile'] = Configuration::projectDir() . $settings['configFile'];
 
-        foreach($settings as $key => $value) {
+        foreach ($settings as $key => $value) {
             if (property_exists($this->client, $key)) {
                 $this->client->$key = $value;
             }
@@ -384,7 +384,6 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                 && $this->dsnCache[$connection->dsn] !== $key
                 && !$this->config['ignoreCollidingDSN']
             ) {
-
                 $this->debugSection('WARNING', <<<TEXT
 You use multiple connections to the same DSN ({$connection->dsn}) with different configuration.
 These connections will not see the same database state since we cannot share a transaction between different PDO
