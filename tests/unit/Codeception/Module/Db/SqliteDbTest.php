@@ -158,4 +158,10 @@ class SqliteDbTest extends TestsForDb
         $this->module->seeInDatabase('users', $testDataInDb1);
         $this->module->dontSeeInDatabase('users', $testDataInDb2);
     }
+
+    public function testMultiDatabaseWithUnknowDatabase()
+    {
+        $this->expectException(Codeception\Exception\ModuleConfigException::class);
+        $this->module->amConnectedToDatabase('db2');
+    }
 }
