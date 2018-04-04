@@ -37,7 +37,10 @@ use yii\db\Transaction;
  * * `cleanup` - (default: true) cleanup fixtures after the test
  * * `ignoreCollidingDSN` - (default: false) When 2 database connections use the same DSN but different settings an exception will be thrown, set this to true to disable this behavior.
  * * `fixturesMethod` - (default: _fixtures) Name of the method used for creating fixtures.
- *
+ * * `responseCleanMethod` - (default: clear) Method for cleaning the response object. Note that this is only for multiple requests inside a single test case.
+ * Between test casesthe whole application is always recreated
+ * * `requestCleanMethod` - (default: clear) Method for cleaning the request object. Note that this is only for multiple requests inside a single test case.
+ * Between test cases the whole application is always recreated
  * You can use this module by setting params in your functional.suite.yml:
  *
  * ```yaml
@@ -150,6 +153,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         'transaction' => null,
         'entryScript' => '',
         'entryUrl'    => 'http://localhost/index-test.php',
+        'responseCleanMethod' => Yii2Connector::CLEAN_CLEAR,
+        'requestCleanMethod' => Yii2Connector::CLEAN_RECREATE
     ];
 
     protected $requiredFields = ['configFile'];
@@ -178,6 +183,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * It MUST not be used anywhere else.
      */
     private $server;
+
     public function _initialize()
     {
         if ($this->config['transaction'] === null) {
@@ -232,6 +238,20 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                 "The application config file does not exist: " . Configuration::projectDir() . $this->config['configFile']
             );
         }
+
+        if (!in_array($this->config['responseCleanMethod'], Yii2Connector::CLEAN_METHODS)) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "The response clean method must be one of: " . implode(", ", Yii2Connector::CLEAN_METHODS)
+            );
+        }
+
+        if (!in_array($this->config['requestCleanMethod'], Yii2Connector::CLEAN_METHODS)) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "The response clean method must be one of: " . implode(", ", Yii2Connector::CLEAN_METHODS)
+            );
+        }
     }
 
 
@@ -250,6 +270,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         ]);
 
         $this->client->configFile = Configuration::projectDir() . $this->config['configFile'];
+        $this->client->responseCleanMethod = $this->config['responseCleanMethod'];
 
         $this->client->resetApplication();
         $app = $this->client->getApplication();
@@ -352,6 +373,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                         && $this->dsnCache[$connection->dsn] !== $key
                         && !$this->config['ignoreCollidingDSN']
                     ) {
+
                         $this->debugSection('WARNING', <<<TEXT
 You use multiple connections to the same DSN ({$connection->dsn}) with different configuration.
 These connections will not see the same database state since we cannot share a transaction between different PDO
