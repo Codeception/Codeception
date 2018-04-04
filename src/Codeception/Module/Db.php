@@ -198,14 +198,14 @@ class Db extends CodeceptionModule implements DbInterface
      * @var array
      */
     protected $requiredFields = ['dsn', 'user', 'password'];
+    const DEFAULT_DATABASE = 'default';
 
-    protected $DEFAULT_DATABASE = 'default';
     public $drivers = [];
     public $dbhs = [];
     public $databasesPopulated = [];
     public $databasesSql = [];
     protected $insertedRows = [];
-    public $currentDatabase = 'default';
+    public $currentDatabase = self::DEFAULT_DATABASE;
 
     public function getDatabases()
     {
@@ -287,6 +287,12 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function amConnectedToDatabase($databaseKey, $callback = null)
     {
+        if (empty($this->getDatabases()[$databaseKey]) && $databaseKey != self::DEFAULT_DATABASE) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "\nNo database $databaseKey in the key databases.\n"
+            );
+        }
         if (is_callable($callback)) {
             $backupDatabase = $this->currentDatabase;
             $this->currentDatabase = $databaseKey;
@@ -394,7 +400,7 @@ class Db extends CodeceptionModule implements DbInterface
     public function _before(TestInterface $test)
     {
         $this->reconnectDatabases();
-        $this->amConnectedToDatabase($this->DEFAULT_DATABASE);
+        $this->amConnectedToDatabase(self::DEFAULT_DATABASE);
 
         $this->cleanUpDatabases();
 
@@ -411,23 +417,23 @@ class Db extends CodeceptionModule implements DbInterface
 
     protected function removeInserted()
     {
-        if (empty($this->insertedRows[$this->DEFAULT_DATABASE])) {
+        if (empty($this->insertedRows[self::DEFAULT_DATABASE])) {
             return;
         }
 
-        foreach (array_reverse($this->insertedRows[$this->DEFAULT_DATABASE]) as $row) {
+        foreach (array_reverse($this->insertedRows[self::DEFAULT_DATABASE]) as $row) {
             try {
                 $this->driver->deleteQueryByCriteria($row['table'], $row['primary']);
             } catch (\Exception $e) {
                 $this->debug("couldn't delete record " . json_encode($row['primary']) ." from {$row['table']}");
             }
         }
-        $this->insertedRows[$this->DEFAULT_DATABASE] = [];
+        $this->insertedRows[self::DEFAULT_DATABASE] = [];
     }
 
     public function _cleanup($databaseKey = null, $databaseConfig = null)
     {
-        $databaseKey = empty($databaseKey) ?  $this->DEFAULT_DATABASE : $databaseKey;
+        $databaseKey = empty($databaseKey) ?  self::DEFAULT_DATABASE : $databaseKey;
         $databaseConfig = empty($databaseConfig) ?  $this->config : $databaseConfig;
 
         if (!$databaseConfig['populate']) {
@@ -460,12 +466,12 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function isPopulated()
     {
-        return $this->databasesPopulated[$this->DEFAULT_DATABASE];
+        return $this->databasesPopulated[self::DEFAULT_DATABASE];
     }
 
     public function _loadDump($databaseKey = null, $databaseConfig = null)
     {
-        $databaseKey = empty($databaseKey) ?  $this->DEFAULT_DATABASE : $databaseKey;
+        $databaseKey = empty($databaseKey) ?  self::DEFAULT_DATABASE : $databaseKey;
         $databaseConfig = empty($databaseConfig) ?  $this->config : $databaseConfig;
 
         if (!$databaseConfig['populate']) {
@@ -567,7 +573,7 @@ class Db extends CodeceptionModule implements DbInterface
             $primary = $row;
         }
 
-        $this->insertedRows[$this->DEFAULT_DATABASE][] = [
+        $this->insertedRows[self::DEFAULT_DATABASE][] = [
             'table' => $table,
             'primary' => $primary,
         ];
