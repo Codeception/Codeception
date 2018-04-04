@@ -10,6 +10,8 @@ use Symfony\Component\BrowserKit\Response;
 use Yii;
 use yii\base\ExitException;
 use yii\base\Security;
+use yii\web\Application;
+use yii\web\ErrorHandler;
 use yii\web\HttpException;
 use yii\web\Request;
 use yii\web\Response as YiiResponse;
@@ -18,10 +20,49 @@ class Yii2 extends Client
 {
     use Shared\PhpSuperGlobalsConverter;
 
+    const CLEAN_METHODS = [
+        self::CLEAN_RECREATE,
+        self::CLEAN_CLEAR,
+        self::CLEAN_FORCE_RECREATE,
+        self::CLEAN_MANUAL
+    ];
+    /**
+     * Clean the response object by recreating it.
+     * This might lose behaviors / event handlers / other changes that are done in the application bootstrap phase.
+     */
+    const CLEAN_RECREATE = 'recreate';
+    /**
+     * Same as recreate but will not warn when behaviors / event handlers are lost.
+     */
+    const CLEAN_FORCE_RECREATE = 'force_recreate';
+    /**
+     * Clean the response object by resetting specific properties via its' `clear()` method.
+     * This will keep behaviors / event handlers, but could inadvertently leave some changes intact.
+     * @see \Yii\web\Response::clear()
+     */
+    const CLEAN_CLEAR = 'clear';
+
+    /**
+     * Do not clean the response, instead the test writer will be responsible for manually resetting the response in
+     * between requests during one test
+     */
+    const CLEAN_MANUAL = 'manual';
+
+
     /**
      * @var string application config file
      */
     public $configFile;
+
+    /**
+     * @var string method for cleaning the response object before each request
+     */
+    public $responseCleanMethod;
+
+    /**
+     * @var string method for cleaning the request object before each request
+     */
+    public $requestCleanMethod;
 
     /**
      * @return \yii\web\Application
@@ -99,7 +140,9 @@ class Yii2 extends Client
          * @todo Implement some kind of check to see if someone tried to change the objects' properties and expects
          * those changes to be reflected in the reponse.
          */
-        $app->set('response', $app->getComponents()['response']);
+        $this->resetResponse($app);
+
+
 
         // disabling logging. Logs are slowing test execution down
         foreach ($app->log->targets as $target) {
@@ -114,7 +157,7 @@ class Yii2 extends Client
          * @todo Implement some kind of check to see if someone tried to change the objects' properties and expects
          * those changes to be reflected in the reponse.
          */
-        $app->set('request', $app->getComponents()['request']);
+        $this->resetRequest($app);
 
         $yiiRequest = $app->getRequest();
         if ($request->getContent() !== null) {
@@ -134,7 +177,6 @@ class Yii2 extends Client
             $app->trigger($app::EVENT_BEFORE_REQUEST);
             $response = $app->handleRequest($yiiRequest);
             $app->trigger($app::EVENT_AFTER_REQUEST);
-            codecept_debug($response->isSent);
             $response->send();
         } catch (\Exception $e) {
             if ($e instanceof HttpException) {
@@ -258,5 +300,84 @@ class Yii2 extends Client
     {
         parent::restart();
         $this->resetApplication();
+    }
+
+    /**
+     * Resets the applications' response object.
+     * The method used depends on the module configuration.
+     */
+    protected function resetResponse(Application $app)
+    {
+        $method = $this->responseCleanMethod;
+        // First check the current response object.
+        if (($app->response->hasEventHandlers(\yii\web\Response::EVENT_BEFORE_SEND)
+                || $app->response->hasEventHandlers(\yii\web\Response::EVENT_AFTER_SEND)
+                || $app->response->hasEventHandlers(\yii\web\Response::EVENT_AFTER_PREPARE)
+                || count($app->response->getBehaviors()) > 0
+            ) && $method === self::CLEAN_RECREATE
+        ) {
+            Debug::debug(<<<TEXT
+[WARNING] You are attaching event handlers or behaviors to the response object. But the Yii2 module is configured to recreate
+the response object, this means any behaviors or events that are not attached in the component config will be lost.
+We will fall back to clearing the response. If you are certain you want to recreate it, please configure 
+responseCleanMethod = 'force_recreate' in the module.  
+TEXT
+            );
+            $method = self::CLEAN_CLEAR;
+        }
+
+        switch ($method) {
+            case self::CLEAN_FORCE_RECREATE:
+            case self::CLEAN_RECREATE:
+                $app->set('response', $app->getComponents()['response']);
+                break;
+            case self::CLEAN_CLEAR:
+                $app->response->clear();
+                break;
+            case self::CLEAN_MANUAL:
+                break;
+        }
+    }
+
+    protected function resetRequest(Application $app)
+    {
+        $method = $this->requestCleanMethod;
+        $request = $app->request;
+
+        // First check the current request object.
+        if (count($request->getBehaviors()) > 0 && $method === self::CLEAN_RECREATE) {
+            Debug::debug(<<<TEXT
+[WARNING] You are attaching event handlers or behaviors to the request object. But the Yii2 module is configured to recreate
+the request object, this means any behaviors or events that are not attached in the component config will be lost.
+We will fall back to clearing the request. If you are certain you want to recreate it, please configure 
+requestCleanMethod = 'force_recreate' in the module.  
+TEXT
+            );
+            $method = self::CLEAN_CLEAR;
+        }
+
+        switch ($method) {
+            case self::CLEAN_FORCE_RECREATE:
+            case self::CLEAN_RECREATE:
+                $app->set('request', $app->getComponents()['request']);
+                break;
+            case self::CLEAN_CLEAR:
+                $request->getHeaders()->removeAll();
+                $request->getCookies()->removeAll();
+                $request->setBaseUrl(null);
+                $request->setHostInfo(null);
+                $request->setPathInfo(null);
+                $request->setScriptFile(null);
+                $request->setScriptUrl(null);
+                $request->setUrl(null);
+                $request->setPort(null);
+                $request->setSecurePort(null);
+                $request->setAcceptableContentTypes(null);
+                $request->setAcceptableLanguages(null);
+
+                break;
+            case self::CLEAN_MANUAL:
+                break;
+        }
     }
 }
