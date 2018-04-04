@@ -326,7 +326,7 @@ TEXT
             $method = self::CLEAN_CLEAR;
         }
 
-        switch($method) {
+        switch ($method) {
             case self::CLEAN_FORCE_RECREATE:
             case self::CLEAN_RECREATE:
                 $app->set('response', $app->getComponents()['response']);
@@ -356,7 +356,7 @@ TEXT
             $method = self::CLEAN_CLEAR;
         }
 
-        switch($method) {
+        switch ($method) {
             case self::CLEAN_FORCE_RECREATE:
             case self::CLEAN_RECREATE:
                 $app->set('request', $app->getComponents()['request']);
