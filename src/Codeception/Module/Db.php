@@ -292,8 +292,7 @@ class Db extends CodeceptionModule implements DbInterface
             $this->currentDatabase = $databaseKey;
             call_user_func($callback, $this);
             $this->currentDatabase = $backupDatabase;
-        }
-        else {
+        } else {
             $this->currentDatabase = $databaseKey;
         }
     }
