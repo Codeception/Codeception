@@ -129,4 +129,5 @@ before_script:
   # Build
   - '[[ -z "$FRAMEWORK" ]] || php codecept build -c $TEST_PATH'
 script:
+  # Run tests if $FRAMEWORK is not empty
   - '[[ -z "$FRAMEWORK" ]] || php codecept run $SUITES -c $TEST_PATH'
