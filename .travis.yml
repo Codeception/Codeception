@@ -72,6 +72,7 @@ services:
   - redis
 
 before_install:
+  - '$(php PruneTest.php)'
   - '[[ !(-z "$XDEBUG") ]] || phpenv config-rm xdebug.ini'
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
@@ -126,6 +127,6 @@ before_script:
   - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
   - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
   # Build
-  - php codecept build -c $TEST_PATH
+  - '[[ -z "$FRAMEWORK" ]] || php codecept build -c $TEST_PATH'
 script:
-  - php codecept run $SUITES -c $TEST_PATH
+  - '[[ -z "$FRAMEWORK" ]] || php codecept run $SUITES -c $TEST_PATH'
