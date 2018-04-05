@@ -98,8 +98,8 @@ install:
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   # Symfony
   #- '[[ "$FRAMEWORK$VERSION" != "Symfony3" ]] || composer require -d framework-tests symfony/symfony=~$VERSION --no-update'
-  - composer install
-  - '[[ "$FRAMEWORK" == "Codeception" ]] || composer update -d framework-tests --no-dev --prefer-dist'
+  - '[[ -z "$FRAMEWORK" ]] composer install'
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || [[ -z "$FRAMEWORK" ]] || composer update -d framework-tests --no-dev --prefer-dist'
 before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # preparing databases
