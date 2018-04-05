@@ -51,12 +51,12 @@ foreach ($files as $file) {
 
 if ($frameworkOnly) {
     stderr('Changes limited to frameworks: ' . implode(', ', $frameworks));
+    if (!isset($frameworks[$currentFramework])) {
+        stderr("Skipping test for framework: $currentFramework");
+        echo "export FRAMEWORK=\n";
+        echo "export PECL=\n";
+        echo "export FXP=\n";
+        echo "export CI_USER_TOKEN=\n";
+    }
 }
 
-if (!isset($frameworks[$currentFramework])) {
-    stderr("Skipping test for framework: $currentFramework");
-    echo "export FRAMEWORK=\n";
-    echo "export PECL=\n";
-    echo "export FXP=\n";
-    echo "export CI_USER_TOKEN=\n";
-}
