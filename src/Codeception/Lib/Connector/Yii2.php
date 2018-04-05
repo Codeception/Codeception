@@ -363,7 +363,6 @@ TEXT
                 break;
             case self::CLEAN_CLEAR:
                 $request->getHeaders()->removeAll();
-                $request->getCookies()->removeAll();
                 $request->setBaseUrl(null);
                 $request->setHostInfo(null);
                 $request->setPathInfo(null);
