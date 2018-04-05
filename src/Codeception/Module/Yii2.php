@@ -39,7 +39,7 @@ use yii\db\Transaction;
  * * `fixturesMethod` - (default: _fixtures) Name of the method used for creating fixtures.
  * * `responseCleanMethod` - (default: clear) Method for cleaning the response object. Note that this is only for multiple requests inside a single test case.
  * Between test casesthe whole application is always recreated
- * * `requestCleanMethod` - (default: clear) Method for cleaning the request object. Note that this is only for multiple requests inside a single test case.
+ * * `requestCleanMethod` - (default: recreate) Method for cleaning the request object. Note that this is only for multiple requests inside a single test case.
  * Between test cases the whole application is always recreated
  * You can use this module by setting params in your functional.suite.yml:
  *
