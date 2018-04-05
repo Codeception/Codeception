@@ -59,4 +59,3 @@ if ($frameworkOnly) {
         echo "export CI_USER_TOKEN=\n";
     }
 }
-
