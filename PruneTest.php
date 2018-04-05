@@ -9,9 +9,11 @@
 $branch ="2.4";
 
 
-function stderr($message) {
+function stderr($message)
+{
     fwrite(STDERR, $message . "\n");
 }
+
 $currentFramework = getenv('FRAMEWORK');
 $files = [];
 exec("git diff --name-only $branch", $files);
@@ -32,9 +34,9 @@ $regexes = [
 // First check if changes include files that are not framework files.
 $frameworkOnly = true;
 $frameworks = [];
-foreach($files as $file) {
+foreach ($files as $file) {
     $match = false;
-    foreach($regexes as $framework =>  $regex) {
+    foreach ($regexes as $framework => $regex) {
         if (preg_match($regex, $file)) {
             $match = true;
             $frameworks[$framework] = $framework;
