@@ -184,13 +184,12 @@ class Yii2 extends Client
                 // to expect error response codes in tests.
                 $app->errorHandler->discardExistingOutput = false;
                 $app->errorHandler->handleException($e);
-                $response = $app->response;
-
             } elseif (!$e instanceof ExitException) {
                 // for exceptions not related to Http, we pass them to Codeception
                 $this->resetApplication();
                 throw $e;
             }
+            $response = $app->response;
         }
 
         $this->encodeCookies($response, $yiiRequest, $app->security);
