@@ -72,7 +72,7 @@ services:
   - redis
 
 before_install:
-  - '$(php PruneTest.php'
+  - '$(php PruneTest.php)'
   - '[[ !(-z "$XDEBUG") ]] || phpenv config-rm xdebug.ini'
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
