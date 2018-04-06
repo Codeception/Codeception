@@ -479,7 +479,7 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function isPopulated()
     {
-        return $this->databasesPopulated[self::DEFAULT_DATABASE];
+        return $this->databasesPopulated[$this->currentDatabase];
     }
 
     public function _loadDump($databaseKey = null, $databaseConfig = null)
