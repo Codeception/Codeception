@@ -65,6 +65,18 @@ class Yii2 extends Client
     public $requestCleanMethod;
 
     /**
+     * @var string[] List of component names that must be recreated before each request
+     */
+    public $recreateComponents = [];
+
+    /**
+     * This option is there primarily for backwards compatibility.
+     * It means you cannot make any modification to application state inside your app, since they will get discarded.
+     * @var bool whether to recreate the whole application before each request
+     */
+    public $recreateApplication = false;
+
+    /**
      * @return \yii\web\Application
      */
     public function getApplication()
@@ -133,31 +145,19 @@ class Yii2 extends Client
             $_GET[$k] = $v;
         }
 
+        ob_start();
+
+        $this->beforeRequest();
+
         $app = $this->getApplication();
-
-        /**
-         * Just before the request we set the response object so it is always fresh.
-         * @todo Implement some kind of check to see if someone tried to change the objects' properties and expects
-         * those changes to be reflected in the reponse.
-         */
-        $this->resetResponse($app);
-
-
 
         // disabling logging. Logs are slowing test execution down
         foreach ($app->log->targets as $target) {
             $target->enabled = false;
         }
 
-        ob_start();
 
-        // recreating request object to reset headers and cookies collections
-        /**
-         * Just before the request we set the request object so it is always fresh.
-         * @todo Implement some kind of check to see if someone tried to change the objects' properties and expects
-         * those changes to be reflected in the reponse.
-         */
-        $this->resetRequest($app);
+
 
         $yiiRequest = $app->getRequest();
         if ($request->getContent() !== null) {
@@ -186,7 +186,6 @@ class Yii2 extends Client
                 $app->errorHandler->handleException($e);
             } elseif (!$e instanceof ExitException) {
                 // for exceptions not related to Http, we pass them to Codeception
-                $this->resetApplication();
                 throw $e;
             }
             $response = $app->response;
@@ -376,6 +375,30 @@ TEXT
                 break;
             case self::CLEAN_MANUAL:
                 break;
+        }
+    }
+
+    /**
+     * Called before each request, preparation happens here.
+     */
+    protected function beforeRequest()
+    {
+        if ($this->recreateApplication) {
+            $this->resetApplication();
+            return;
+        }
+
+        $application = $this->getApplication();
+
+        $this->resetResponse($application);
+        $this->resetRequest($application);
+
+        $definitions = $application->getComponents(true);
+        foreach ($this->recreateComponents as $component) {
+            // Only recreate if it has actually been instantiated.
+            if ($application->has($component, true)) {
+                $application->set($component, $definitions[$component]);
+            }
         }
     }
 }
