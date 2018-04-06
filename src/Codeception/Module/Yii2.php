@@ -41,6 +41,9 @@ use yii\db\Transaction;
  * Between test casesthe whole application is always recreated
  * * `requestCleanMethod` - (default: recreate) Method for cleaning the request object. Note that this is only for multiple requests inside a single test case.
  * Between test cases the whole application is always recreated
+ * * `recreateComponents` - (default: []) Some components change their state making them unsuitable for processing multiple requests. In production this is usually
+ * not a problem since web apps tend to die and start over after each request. This allows you to list application components that need to be recreated before each request.
+ * As a consequence, any components specified here should not be changed inside a test since those changes will get regarded.
  * You can use this module by setting params in your functional.suite.yml:
  *
  * ```yaml
@@ -154,7 +157,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         'entryScript' => '',
         'entryUrl'    => 'http://localhost/index-test.php',
         'responseCleanMethod' => Yii2Connector::CLEAN_CLEAR,
-        'requestCleanMethod' => Yii2Connector::CLEAN_RECREATE
+        'requestCleanMethod' => Yii2Connector::CLEAN_RECREATE,
+        'recreateComponents' => []
     ];
 
     protected $requiredFields = ['configFile'];

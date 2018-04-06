@@ -65,6 +65,10 @@ class Yii2 extends Client
     public $requestCleanMethod;
 
     /**
+     * @var string[] List of component names that must be recreated before each request
+     */
+    public $recreateComponents = [];
+    /**
      * @return \yii\web\Application
      */
     public function getApplication()
@@ -140,7 +144,7 @@ class Yii2 extends Client
          * @todo Implement some kind of check to see if someone tried to change the objects' properties and expects
          * those changes to be reflected in the reponse.
          */
-        $this->resetResponse($app);
+
 
 
 
@@ -152,12 +156,7 @@ class Yii2 extends Client
         ob_start();
 
         // recreating request object to reset headers and cookies collections
-        /**
-         * Just before the request we set the request object so it is always fresh.
-         * @todo Implement some kind of check to see if someone tried to change the objects' properties and expects
-         * those changes to be reflected in the reponse.
-         */
-        $this->resetRequest($app);
+        $this->beforeRequest($app);
 
         $yiiRequest = $app->getRequest();
         if ($request->getContent() !== null) {
@@ -376,6 +375,21 @@ TEXT
                 break;
             case self::CLEAN_MANUAL:
                 break;
+        }
+    }
+
+    /**
+     * Called before each request, preparation happens here
+     * @param Application $application
+     */
+    protected function beforeRequest(Application $application)
+    {
+        $this->resetResponse($application);
+        $this->resetRequest($application);
+
+        $definitions = $application->getComponents(true);
+        foreach($this->recreateComponents as $component) {
+            $application->set($component, $definitions[$component]);
         }
     }
 }
