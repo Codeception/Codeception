@@ -160,7 +160,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         'entryUrl'    => 'http://localhost/index-test.php',
         'responseCleanMethod' => Yii2Connector::CLEAN_CLEAR,
         'requestCleanMethod' => Yii2Connector::CLEAN_RECREATE,
-        'recreateComponents' => []
+        'recreateComponents' => [],
+        'recreateApplication' => false
     ];
 
     protected $requiredFields = ['configFile'];
