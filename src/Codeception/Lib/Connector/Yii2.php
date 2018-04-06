@@ -175,7 +175,6 @@ class Yii2 extends Client
                 $app->errorHandler->handleException($e);
             } elseif (!$e instanceof ExitException) {
                 // for exceptions not related to Http, we pass them to Codeception
-                $this->resetApplication();
                 throw $e;
             }
             $response = $app->response;
