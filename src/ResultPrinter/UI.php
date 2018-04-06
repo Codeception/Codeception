@@ -20,7 +20,7 @@ class UI extends \PHPUnit\TextUI\ResultPrinter
         $this->dispatcher = $dispatcher;
     }
 
-    protected function printDefect(\PHPUnit\Framework\TestFailure $defect, $count): void
+    protected function printDefect(\PHPUnit\Framework\TestFailure $defect, int $count): void
     {
         $this->write("\n---------\n");
         $this->dispatcher->dispatch(
