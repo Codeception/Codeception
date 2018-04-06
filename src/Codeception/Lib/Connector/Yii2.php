@@ -284,16 +284,6 @@ class Yii2 extends Client
         return $config;
     }
 
-    /**
-     * A new client is created for every test, it is destroyed after every test.
-     * @see InnerBrowser::_after()
-     *
-     */
-    public function __destruct()
-    {
-        $this->resetApplication();
-    }
-
     public function restart()
     {
         parent::restart();

@@ -358,6 +358,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if ($this->client->getApplication()->has('session', true)) {
             $this->client->getApplication()->session->close();
         }
+
+        $this->client->resetApplication();
         parent::_after($test);
     }
 
