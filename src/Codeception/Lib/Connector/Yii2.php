@@ -139,15 +139,6 @@ class Yii2 extends Client
 
         $app = $this->getApplication();
 
-        /**
-         * Just before the request we set the response object so it is always fresh.
-         * @todo Implement some kind of check to see if someone tried to change the objects' properties and expects
-         * those changes to be reflected in the reponse.
-         */
-
-
-
-
         // disabling logging. Logs are slowing test execution down
         foreach ($app->log->targets as $target) {
             $target->enabled = false;
@@ -155,7 +146,6 @@ class Yii2 extends Client
 
         ob_start();
 
-        // recreating request object to reset headers and cookies collections
         $this->beforeRequest($app);
 
         $yiiRequest = $app->getRequest();
@@ -388,7 +378,7 @@ TEXT
         $this->resetRequest($application);
 
         $definitions = $application->getComponents(true);
-        foreach($this->recreateComponents as $component) {
+        foreach ($this->recreateComponents as $component) {
             $application->set($component, $definitions[$component]);
         }
     }

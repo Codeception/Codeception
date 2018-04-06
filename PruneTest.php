@@ -15,6 +15,11 @@ function stderr($message)
 }
 
 $currentFramework = getenv('FRAMEWORK');
+
+if ($currentFramework === 'Codeception') {
+    stderr('Codeception tests are always executed');
+    die();
+}
 $files = [];
 exec("git diff --name-only $branch", $files);
 
