@@ -164,4 +164,39 @@ class SqliteDbTest extends TestsForDb
         $this->expectException(Codeception\Exception\ModuleConfigException::class);
         $this->module->amConnectedToDatabase('db2');
     }
+
+    public function testMultiDatabaseWithRemoveInserted()
+    {
+        $testCase1 = \Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface');
+        $testCase2 = \Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface');
+        $config = array_merge($this->getConfig(), [
+            'dsn' => 'sqlite:tests/data/sqlite1.db',
+            'cleanup' => false
+        ]);
+        $this->module->_reconfigure(
+            [
+                'databases'   => ['db2' => $config],
+            ]
+        );
+        $this->module->_beforeSuite();
+        $this->module->_before($testCase1);
+        
+        $testDataInDb1 = ['name' => 'userdb1', 'email' => 'userdb1@example.org'];
+        $testDataInDb2 = ['name' => 'userdb2', 'email' => 'userdb2@example.org'];
+
+        $this->module->haveInDatabase('users', $testDataInDb1);
+        $this->module->seeInDatabase('users', $testDataInDb1);
+        $this->module->amConnectedToDatabase('db2', function ($module) use ($testDataInDb2) {
+            $module->haveInDatabase('users', $testDataInDb2);
+            $module->seeInDatabase('users', $testDataInDb2);
+        });
+        $this->module->_after($testCase1);
+
+        $this->module->_before($testCase2);
+        $this->module->dontSeeInDatabase('users', $testDataInDb1);
+        $this->module->amConnectedToDatabase('db2', function ($module) use ($testDataInDb2) {
+            $module->dontSeeInDatabase('users', $testDataInDb2);
+        });
+        $this->module->_after($testCase2);
+    }
 }
