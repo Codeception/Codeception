@@ -250,6 +250,13 @@ class Db extends CodeceptionModule implements DbInterface
             $this->readSql($databaseKey, $databaseConfig);
         }
     }
+    public function removeInsertedForDatabases()
+    {
+        foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
+            $this->amConnectedToDatabase($databaseKey);
+            $this->removeInserted($databaseKey, $databaseConfig);
+        }
+    }
     public function disconnectDatabases()
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
@@ -353,6 +360,9 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function connect($databaseKey = null, $databaseConfig = null)
     {
+        if (!empty($this->drivers[$databaseKey]) && !empty($this->dbhs[$databaseKey])) {
+            return;
+        }
         $options = [];
  
         /**
@@ -382,17 +392,17 @@ class Db extends CodeceptionModule implements DbInterface
 
             throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
-        $this->debugSection('Db', 'Connected to ' . $this->drivers[$databaseKey]->getDb());
+        $this->debugSection('Db', 'Connected to ' . $databaseKey . ' ' . $this->drivers[$databaseKey]->getDb());
         $this->dbhs[$databaseKey] = $this->drivers[$databaseKey]->getDbh();
     }
 
-    private function disconnect($databaseKey = null, $databaseConfig = null)
+    private function disconnect($databaseKey, $databaseConfig)
     {
         if (!$databaseConfig['reconnect']) {
             $return;
         }
 
-        $this->debugSection('Db', 'Disconnected');
+        $this->debugSection('Db', 'Disconnected from '.$databaseKey);
         $this->dbhs[$databaseKey] = null;
         $this->drivers[$databaseKey] = null;
     }
@@ -411,24 +421,27 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function _after(TestInterface $test)
     {
-        $this->removeInserted();
+        $this->removeInsertedForDatabases();
         parent::_after($test);
     }
 
-    protected function removeInserted()
+    protected function removeInserted($databaseKey = null, $databaseConfig = null)
     {
-        if (empty($this->insertedRows[self::DEFAULT_DATABASE])) {
+        $databaseKey = empty($databaseKey) ?  self::DEFAULT_DATABASE : $databaseKey;
+        $databaseConfig = empty($databaseConfig) ?  $this->config : $databaseConfig;
+
+        if (empty($this->insertedRows[$databaseKey])) {
             return;
         }
 
-        foreach (array_reverse($this->insertedRows[self::DEFAULT_DATABASE]) as $row) {
+        foreach (array_reverse($this->insertedRows[$databaseKey]) as $row) {
             try {
                 $this->driver->deleteQueryByCriteria($row['table'], $row['primary']);
             } catch (\Exception $e) {
                 $this->debug("couldn't delete record " . json_encode($row['primary']) ." from {$row['table']}");
             }
         }
-        $this->insertedRows[self::DEFAULT_DATABASE] = [];
+        $this->insertedRows[$databaseKey] = [];
     }
 
     public function _cleanup($databaseKey = null, $databaseConfig = null)
@@ -573,7 +586,7 @@ class Db extends CodeceptionModule implements DbInterface
             $primary = $row;
         }
 
-        $this->insertedRows[self::DEFAULT_DATABASE][] = [
+        $this->insertedRows[$this->currentDatabase][] = [
             'table' => $table,
             'primary' => $primary,
         ];
