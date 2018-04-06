@@ -68,6 +68,14 @@ class Yii2 extends Client
      * @var string[] List of component names that must be recreated before each request
      */
     public $recreateComponents = [];
+
+    /**
+     * This option is there primarily for backwards compatibility.
+     * It means you cannot make any modification to application state inside your app, since they will get discarded.
+     * @var bool whether to recreate the whole application before each request
+     */
+    public $recreateApplication = false;
+
     /**
      * @return \yii\web\Application
      */
@@ -137,6 +145,10 @@ class Yii2 extends Client
             $_GET[$k] = $v;
         }
 
+        ob_start();
+
+        $this->beforeRequest();
+
         $app = $this->getApplication();
 
         // disabling logging. Logs are slowing test execution down
@@ -144,9 +156,8 @@ class Yii2 extends Client
             $target->enabled = false;
         }
 
-        ob_start();
 
-        $this->beforeRequest($app);
+
 
         $yiiRequest = $app->getRequest();
         if ($request->getContent() !== null) {
@@ -368,17 +379,26 @@ TEXT
     }
 
     /**
-     * Called before each request, preparation happens here
-     * @param Application $application
+     * Called before each request, preparation happens here.
      */
-    protected function beforeRequest(Application $application)
+    protected function beforeRequest()
     {
+        if ($this->recreateApplication) {
+            $this->resetApplication();
+            return;
+        }
+
+        $application = $this->getApplication();
+
         $this->resetResponse($application);
         $this->resetRequest($application);
 
         $definitions = $application->getComponents(true);
         foreach ($this->recreateComponents as $component) {
-            $application->set($component, $definitions[$component]);
+            // Only recreate if it has actually been instantiated.
+            if ($application->has($component, true)) {
+                $application->set($component, $definitions[$component]);
+            }
         }
     }
 }

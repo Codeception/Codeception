@@ -23,6 +23,7 @@ use yii\db\Transaction;
  * ## Application state during testing
  * This section details what you can expect when using this module.
  * * You will get a fresh application in `\Yii::$app` at the start of each test (available in the test and in `_before()`).
+ * * Inside your test you may change application state; however these changes will be lost when doing a request if you have enabled `recreateApplication`.
  * * When executing a request via one of the request functions the `request` and `response` component are both recreated.
  * * After a request the whole application is available for inspection / interaction.
  * * You may use multiple database connections, each will use a separate transaction; to prevent accidental mistakes we
@@ -45,7 +46,8 @@ use yii\db\Transaction;
  * not a problem since web apps tend to die and start over after each request. This allows you to list application components that need to be recreated before each request.
  * As a consequence, any components specified here should not be changed inside a test since those changes will get regarded.
  * You can use this module by setting params in your functional.suite.yml:
- *
+ * * `recreateApplication` - (default: false) whether to recreate the whole application before each request
+ * You can use this module by setting params in your functional.suite.yml:
  * ```yaml
  * actor: FunctionalTester
  * modules:
