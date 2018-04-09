@@ -34,7 +34,7 @@ To avoid naming conflicts between Actor classes and Helper classes, they should 
 To create test suites with namespaces you can add `--namespace` option to the bootstrap command:
 
 ```bash
-php codecept bootstrap --namespace frontend
+php vendor/bin/codecept bootstrap --namespace frontend
 ```
 
 This will bootstrap a new project with the `namespace: frontend` parameter in the `codeception.yml` file.
@@ -44,7 +44,7 @@ Once each of your applications (bundles) has its own namespace and different Hel
 you can execute all the tests in a single runner. Run the Codeception tests as usual, using the meta-config we created earlier:
 
 ```bash
-php codecept run
+php vendor/bin/codecept run
 ```
 
 This will launch the test suites for all three applications and merge the reports from all of them.
@@ -54,7 +54,7 @@ and you want to get a single report in JUnit and HTML format. The code coverage 
 If you want to run a specific suite from the application you can execute:
 
 ```
-php codecept run unit -c frontend
+php vendor/bin/codecept run unit -c frontend
 ```
 
 Where `unit` is the name of suite and the `-c` option specifies the path to the `codeception.yml` configuration file to use.
@@ -71,7 +71,7 @@ By default, one `RunFailed` Extension is already enabled in your global `codecep
 It allows you to rerun failed tests by using the `-g failed` option:
 
 ```
-php codecept run -g failed
+php vendor/bin/codecept run -g failed
 ```
 
 Codeception comes with bundled extensions located in `ext` directory.
@@ -293,7 +293,7 @@ For instance, for `nocleanup` group we prevent Doctrine2 module from wrapping te
     }
 ```
 
-A group class can be created with `php codecept generate:group groupname` command.
+A group class can be created with `php vendor/bin/codecept generate:group groupname` command.
 Group classes will be stored in the `tests/_support/Group` directory.
 
 A group class can be enabled just like you enable an extension class. In the file `codeception.yml`:

@@ -3,6 +3,13 @@
 
 This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
 It initializes Yii framework in test environment and provides actions for functional testing.
+## Application state during testing
+This section details what you can expect when using this module.
+* You will get a fresh application in `\Yii::$app` at the start of each test (available in the test and in `_before()`).
+* When executing a request via one of the request functions the `request` and `response` component are both recreated.
+* After a request the whole application is available for inspection / interaction.
+* You may use multiple database connections, each will use a separate transaction; to prevent accidental mistakes we
+will warn you if you try to connect to the same database twice but we cannot reuse the same connection.
 
 ## Config
 
@@ -11,6 +18,8 @@ It initializes Yii framework in test environment and provides actions for functi
 * `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
 * `transaction` - (default: true) wrap all database connection inside a transaction and roll it back after the test. Should be disabled for acceptance testing..
 * `cleanup` - (default: true) cleanup fixtures after the test
+* `ignoreCollidingDSN` - (default: false) When 2 database connections use the same DSN but different settings an exception will be thrown, set this to true to disable this behavior.
+* `fixturesMethod` - (default: _fixtures) Name of the method used for creating fixtures.
 
 You can use this module by setting params in your functional.suite.yml:
 
@@ -109,6 +118,7 @@ $I->sendAjaxPostRequest(['/user/update', 'id' => 1], ['UserForm[name]' => 'G.Hop
 Maintainer: **samdark**
 Stability: **stable**
 
+@property \Codeception\Lib\Connector\Yii2 $client
 
 ## Actions
 

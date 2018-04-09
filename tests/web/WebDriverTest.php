@@ -92,7 +92,7 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->notForPhantomJS();
         $this->setExpectedException(
-            'PHPUnit_Framework_AssertionFailedError',
+            '\PHPUnit\Framework\AssertionFailedError',
             'Failed asserting that \'Really?\' contains "Different text"'
         );
         $this->module->amOnPage('/form/popup');
@@ -114,7 +114,7 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->notForPhantomJS();
         $this->setExpectedException(
-            'PHPUnit_Framework_AssertionFailedError',
+            '\PHPUnit\Framework\AssertionFailedError',
             'Failed asserting that \'Really?\' does not contain "Really?"'
         );
         $this->module->amOnPage('/form/popup');
@@ -508,7 +508,7 @@ class WebDriverTest extends TestsForBrowsers
         ]);
         $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
             $cept = (new \Codeception\Test\Cept('loginCept', 'loginCept.php'));
-        $module->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
+        $module->_failed($cept, new \PHPUnit\Framework\AssertionFailedError());
     }
 
     public function testCreateCestScreenshotOnFail()
@@ -527,7 +527,7 @@ class WebDriverTest extends TestsForBrowsers
         ]);
         $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
         $cest = new \Codeception\Test\Cest(new stdClass(), 'login', 'someCest.php');
-        $module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
+        $module->_failed($cest, new \PHPUnit\Framework\AssertionFailedError());
     }
 
     public function testCreateTestScreenshotOnFail()
@@ -549,7 +549,7 @@ class WebDriverTest extends TestsForBrowsers
             ]),
         ]);
         $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
-        $module->_failed($test, new PHPUnit_Framework_AssertionFailedError());
+        $module->_failed($test, new \PHPUnit\Framework\AssertionFailedError());
     }
 
     public function testWebDriverWaits()
