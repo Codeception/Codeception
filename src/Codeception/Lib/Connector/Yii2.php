@@ -96,6 +96,8 @@ class Yii2 extends Client
             \yii\base\Event::offAll();
         }
         Yii::setLogger(null);
+        // This resolves an issue with database connections not closing properly.
+        gc_collect_cycles();
     }
 
     public function startApp()
