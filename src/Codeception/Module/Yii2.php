@@ -387,6 +387,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
              */
             if (isset($this->pdoCache[$key])) {
                 $connection->pdo = $this->pdoCache[$key];
+            } else {
+                $this->pdoCache[$key] = $connection->pdo;
             }
 
             if (isset($this->dsnCache[$connection->dsn])
