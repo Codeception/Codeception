@@ -41,7 +41,7 @@ class Report extends ResultPrinter implements ConsolePrinter
         $this->write($line . "\n");
     }
 
-    protected function endRun()
+    protected function endRun() : void
     {
         $this->write("\nCodeception Results\n");
         $this->write(sprintf(
@@ -57,8 +57,8 @@ class Report extends ResultPrinter implements ConsolePrinter
     {
     }
 
-    public function write($buffer)
+    public function write($buffer) : void
     {
-
+		parent::write($buffer);
     }
 }
