@@ -296,15 +296,14 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _before(TestInterface $test)
     {
-        $forceLoadFixtures = $this->config['forceLoadFixtures'];
         $this->recreateClient();
         $this->client->startApp();
 
         // load fixtures before db transaction
         if ($test instanceof \Codeception\Test\Cest) {
-            $this->loadFixtures($test->getTestClass(), $forceLoadFixtures);
+            $this->loadFixtures($test->getTestClass());
         } else {
-            $this->loadFixtures($test, $forceLoadFixtures);
+            $this->loadFixtures($test);
         }
 
         $this->startTransactions();
@@ -314,9 +313,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * load fixtures before db transaction
      *
      * @param mixed $test instance of test class
-     * @param bool $force force load fixtures. This option can be true if you use Codeception Db module both
      */
-    private function loadFixtures($test, $force = false)
+    private function loadFixtures($test)
     {
         $this->debugSection('Fixtures', 'Loading fixtures');
         /** @var Connection[] $connections */
@@ -326,7 +324,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->debugSection('Fixtures', 'Opened database connection: ' . $event->sender->dsn);
             $connections[] = $event->sender;
         });
-        if (($force || empty($this->loadedFixtures))
+        if (($this->config['forceLoadFixtures'] || empty($this->loadedFixtures))
             && method_exists($test, $this->_getConfig('fixturesMethod'))
         ) {
             $this->haveFixtures(call_user_func([$test, $this->_getConfig('fixturesMethod')]));
