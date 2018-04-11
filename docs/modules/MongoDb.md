@@ -1,5 +1,6 @@
 # MongoDb
 
+
 Works with MongoDb database.
 
 The most important function of this module is cleaning database before each test.
@@ -39,10 +40,11 @@ HINT: This module can be used with [Mongofill](https://github.com/mongofill/mong
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
 
+
 ## Actions
 
 ### dontSeeInCollection
-
+ 
 Checks if collection doesn't contain an item.
 
 ``` php
@@ -53,8 +55,9 @@ $I->dontSeeInCollection('users', array('name' => 'miles'));
  * `param` $collection
  * `param array` $criteria
 
-### grabCollectionCount
 
+### grabCollectionCount
+ 
 Grabs the documents count from a collection
 
 ``` php
@@ -68,8 +71,9 @@ $count = $I->grabCollectionCount('users', array('isAdmin' => true));
  * `param array` $criteria
  * `return` integer
 
-### grabFromCollection
 
+### grabFromCollection
+ 
 Grabs a data from collection
 
 ``` php
@@ -81,8 +85,9 @@ $user = $I->grabFromCollection('users', array('name' => 'miles'));
  * `param array` $criteria
  * `return` array
 
-### haveInCollection
 
+### haveInCollection
+ 
 Inserts data into collection
 
 ``` php
@@ -94,8 +99,9 @@ $user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
  * `param` $collection
  * `param array` $data
 
-### seeElementIsArray
 
+### seeElementIsArray
+ 
 Asserts that an element in a collection exists and is an Array
 
 ``` php
@@ -107,8 +113,9 @@ $I->seeElementIsArray('users', array('name' => 'John Doe') , 'data.skills');
  * `param Array` $criteria
  * `param String` $elementToCheck
 
-### seeElementIsObject
 
+### seeElementIsObject
+ 
 Asserts that an element in a collection exists and is an Object
 
 ``` php
@@ -120,8 +127,9 @@ $I->seeElementIsObject('users', array('name' => 'John Doe') , 'data');
  * `param Array` $criteria
  * `param String` $elementToCheck
 
-### seeInCollection
 
+### seeInCollection
+ 
 Checks if collection contains an item.
 
 ``` php
@@ -132,8 +140,9 @@ $I->seeInCollection('users', array('name' => 'miles'));
  * `param` $collection
  * `param array` $criteria
 
-### seeNumElementsInCollection
 
+### seeNumElementsInCollection
+ 
 Count number of records in a collection
 
 ``` php
@@ -146,8 +155,9 @@ $I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
  * `param integer` $expected
  * `param array` $criteria
 
-### useDatabase
 
+### useDatabase
+ 
 Specify the database to use
 
 ``` php
@@ -157,4 +167,4 @@ $I->useDatabase('db_1');
 
  * `param` $dbName
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/MongoDb.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/MongoDb.php">Help us to improve documentation. Edit module reference</a></div>

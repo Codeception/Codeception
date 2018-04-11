@@ -60,13 +60,23 @@ modules:
         - \Helper\Acceptance
 ```
 
-We should start by creating a 'Cept' file:
+We should start by creating a test with the next command:
+
+```
+php vendor/bin/codecept g:cest acceptance Signin
+```
+
+It will be placed into `tests/acceptance` directory.
 
 ```php
 <?php
-// tests/acceptance/SigninCept.php
-$I = new AcceptanceTester($scenario);
-$I->wantTo('sign in');
+class SigninCest
+{
+    public function tryToTest(AcceptanceTester $I)
+    {
+        $I->wantTo('test my page');
+    }
+}
 ```
 
 The `$I` object is used to write all interactions.
@@ -195,6 +205,21 @@ $I->submitForm('#update_form', array('user' => array(
      'submitButton' => 'Update'
 )));
 ```
+
+##### Hiding Sensitive Data
+
+If you need to fill in sensitive data (like passwords) and hide it in logs, 
+you can pass instance `\Codeception\Step\Argument\PasswordArgument` with the data which needs to be hidden.
+
+```php
+<?php
+use \Codeception\Step\Argument\PasswordArgument;
+
+$I->amOnPage('/form/password_argument');
+$I->fillField('password', new PasswordArgument('thisissecret'));
+```  
+
+`thisissecret` will be filled into a form but it won't be shown in output and logs.
 
 #### Assertions
 

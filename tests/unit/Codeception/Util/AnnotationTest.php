@@ -8,7 +8,7 @@ use \Codeception\Util\Annotation;
  * @tag codeception
  * @tag tdd
  */
-class AnnotationTest extends PHPUnit_Framework_TestCase
+class AnnotationTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testClassAnnotation()

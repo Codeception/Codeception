@@ -1,5 +1,5 @@
 {
     "require-dev": {
-        "codeception/c3": "@dev"
+        "codeception/c3": "2.0.x-dev"
     }
 }

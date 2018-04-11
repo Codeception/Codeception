@@ -280,9 +280,9 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testRedirectToAnotherDomainUsingSchemalessUrl()
     {
-        $this->module->amOnUrl('http://httpbin.org/redirect-to?url=//codeception.com/');
+        $this->module->amOnUrl('http://httpbin.org/redirect-to?url=//example.org/');
         $currentUrl = $this->module->client->getHistory()->current()->getUri();
-        $this->assertSame('http://codeception.com/', $currentUrl);
+        $this->assertSame('http://example.org/', $currentUrl);
     }
 
     public function testSetCookieByHeader()
@@ -608,7 +608,7 @@ class PhpBrowserTest extends TestsForBrowsers
     }
 
     /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedException PHPUnit\Framework\AssertionFailedError
      */
     public function testClickingOnButtonOutsideFormDoesNotCauseFatalError()
     {

@@ -1,5 +1,5 @@
 <?php
-class CrawlerNotConstraintTest extends PHPUnit_Framework_TestCase
+class CrawlerNotConstraintTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -23,7 +23,7 @@ class CrawlerNotConstraintTest extends PHPUnit_Framework_TestCase
         $nodes = new Symfony\Component\DomCrawler\Crawler('<p>Bye world</p><p>Bye warcraft</p>');
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
-        } catch (PHPUnit_Framework_AssertionFailedError $fail) {
+        } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertContains("There was 'selector' element on page /user", $fail->getMessage());
             $this->assertNotContains('+ <p>Bye world</p>', $fail->getMessage());
             $this->assertContains('+ <p>Bye warcraft</p>', $fail->getMessage());
@@ -41,7 +41,7 @@ class CrawlerNotConstraintTest extends PHPUnit_Framework_TestCase
         $nodes = new Symfony\Component\DomCrawler\Crawler($html);
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
-        } catch (PHPUnit_Framework_AssertionFailedError $fail) {
+        } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertContains("There was 'selector' element on page /user", $fail->getMessage());
             $this->assertContains('+ <p>warcraft 0</p>', $fail->getMessage());
             $this->assertContains('+ <p>warcraft 14</p>', $fail->getMessage());
@@ -56,7 +56,7 @@ class CrawlerNotConstraintTest extends PHPUnit_Framework_TestCase
         $nodes = new Symfony\Component\DomCrawler\Crawler('<p>Bye world</p><p>Bye warcraft</p>');
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
-        } catch (PHPUnit_Framework_AssertionFailedError $fail) {
+        } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertContains("There was 'selector' element", $fail->getMessage());
             $this->assertNotContains("There was 'selector' element on page /user", $fail->getMessage());
             return;

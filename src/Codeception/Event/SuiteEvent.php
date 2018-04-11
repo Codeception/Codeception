@@ -7,12 +7,12 @@ use Symfony\Component\EventDispatcher\Event;
 class SuiteEvent extends Event
 {
     /**
-     * @var \PHPUnit_Framework_TestSuite
+     * @var \PHPUnit\Framework\TestSuite
      */
     protected $suite;
 
     /**
-     * @var \PHPUnit_Framework_TestResult
+     * @var \PHPUnit\Framework\TestResult
      */
     protected $result;
 
@@ -22,8 +22,8 @@ class SuiteEvent extends Event
     protected $settings;
 
     public function __construct(
-        \PHPUnit_Framework_TestSuite $suite,
-        \PHPUnit_Framework_TestResult $result = null,
+        \PHPUnit\Framework\TestSuite $suite,
+        \PHPUnit\Framework\TestResult $result = null,
         $settings = []
     ) {
         $this->suite = $suite;
@@ -40,7 +40,7 @@ class SuiteEvent extends Event
     }
 
     /**
-     * @return \PHPUnit_Framework_TestResult
+     * @return \PHPUnit\Framework\TestResult
      */
     public function getResult()
     {

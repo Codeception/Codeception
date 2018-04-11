@@ -13,7 +13,7 @@ trait IgnoreIfMetadataBlocked
     abstract protected function ignore($ignored);
 
     /**
-     * @return \PHPUnit_Framework_TestResult
+     * @return \PHPUnit\Framework\TestResult
      */
     abstract protected function getTestResultObject();
 
@@ -26,11 +26,11 @@ trait IgnoreIfMetadataBlocked
         $this->ignore(true);
 
         if ($this->getMetadata()->getSkip() !== null) {
-            $this->getTestResultObject()->addFailure($this, new \PHPUnit_Framework_SkippedTestError((string)$this->getMetadata()->getSkip()), 0);
+            $this->getTestResultObject()->addFailure($this, new \PHPUnit\Framework\SkippedTestError((string)$this->getMetadata()->getSkip()), 0);
             return;
         }
         if ($this->getMetadata()->getIncomplete() !== null) {
-            $this->getTestResultObject()->addFailure($this, new \PHPUnit_Framework_IncompleteTestError((string)$this->getMetadata()->getIncomplete()), 0);
+            $this->getTestResultObject()->addFailure($this, new \PHPUnit\Framework\IncompleteTestError((string)$this->getMetadata()->getIncomplete()), 0);
             return;
         }
     }

@@ -79,9 +79,9 @@ class Configuration
         'reporters'  => [
             'xml'    => 'Codeception\PHPUnit\Log\JUnit',
             'html'   => 'Codeception\PHPUnit\ResultPrinter\HTML',
-            'tap'    => 'PHPUnit_Util_Log_TAP',
-            'json'   => 'PHPUnit_Util_Log_JSON',
             'report' => 'Codeception\PHPUnit\ResultPrinter\Report',
+            'tap'    => 'PHPUnit\Util\Log\TAP',
+            'json'   => 'PHPUnit\Util\Log\JSON',
         ],
         'groups'     => [],
         'settings'   => [
@@ -319,6 +319,8 @@ class Configuration
             // take a suite path from its name
             $settings['path'] = $suite;
         }
+
+        $config['paths']['tests'] = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['tests']);
 
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
             . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;

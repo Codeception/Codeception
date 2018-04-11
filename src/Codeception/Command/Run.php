@@ -3,6 +3,7 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
+use Codeception\Util\PathResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -240,7 +241,7 @@ class Run extends Command
         }
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString()
+                Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
             );
         }
         if ($this->options['debug']) {
@@ -323,6 +324,11 @@ class Run extends Command
                             // Incorrect include match, continue trying to find one
                             continue;
                         }
+                    } else {
+                        $result = $this->matchSingleTest($suite, $config);
+                        if ($result) {
+                            list(, $suite, $test) = $result;
+                        }
                     }
                 }
 
@@ -331,15 +337,9 @@ class Run extends Command
                     $config = Configuration::config($projectDir);
                 }
             } elseif (!empty($suite)) {
-                // Workaround when codeception.yml is inside tests directory and tests path is set to "."
-                // @see https://github.com/Codeception/Codeception/issues/4432
-                if ($config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
-                    $suite = './' . $suite;
-                }
-                
-                // Run single test without included tests
-                if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
-                    list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
+                $result = $this->matchSingleTest($suite, $config);
+                if ($result) {
+                    list(, $suite, $test) = $result;
                 }
             }
         }
@@ -379,6 +379,38 @@ class Run extends Command
             if (!$this->codecept->getResult()->wasSuccessful()) {
                 exit(1);
             }
+        }
+    }
+
+    protected function matchSingleTest($suite, $config)
+    {
+        // Workaround when codeception.yml is inside tests directory and tests path is set to "."
+        // @see https://github.com/Codeception/Codeception/issues/4432
+        if ($config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
+            $suite = './' . $suite;
+        }
+
+        // running a single test when suite has a configured path
+        if (isset($config['suites'])) {
+            foreach ($config['suites'] as $s => $suiteConfig) {
+                if (!isset($suiteConfig['path'])) {
+                    continue;
+                }
+                $testsPath = $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suiteConfig['path'];
+                if ($suiteConfig['path'] === '.') {
+                    $testsPath = $config['paths']['tests'];
+                }
+                if (preg_match("~^$testsPath/(.*?)$~", $suite, $matches)) {
+                    $matches[2] = $matches[1];
+                    $matches[1] = $s;
+                    return $matches;
+                }
+            }
+        }
+
+        // Run single test without included tests
+        if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
+            return $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
     }
 
@@ -478,11 +510,11 @@ class Run extends Command
         $tokens = explode(' ', $request);
         foreach ($tokens as $token) {
             $token = preg_replace('~=.*~', '', $token); // strip = from options
-            
+
             if (empty($token)) {
                 continue;
             }
-            
+
             if ($token == '--') {
                 break; // there should be no options after ' -- ', only arguments
             }

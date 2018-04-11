@@ -14,6 +14,7 @@ use Codeception\Util\ReflectionHelper;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Collection;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  *
@@ -418,18 +419,26 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * <?php
      * $I->callArtisan('command:name');
      * $I->callArtisan('command:name', ['parameter' => 'value']);
-     * ?>
      * ```
-
+     * Use 3rd parameter to pass in custom `OutputInterface`
+     *
      * @param string $command
      * @param array $parameters
+     * @param OutputInterface $output
+     * @return string
      */
-    public function callArtisan($command, $parameters = [])
+    public function callArtisan($command, $parameters = [], OutputInterface $output = null)
     {
         $console = $this->app->make('Illuminate\Contracts\Console\Kernel');
-        $console->call($command, $parameters);
-
-        return trim($console->output());
+        if (!$output) {
+            $console->call($command, $parameters);
+            $output = trim($console->output());
+            $this->debug($output);
+            return $output;
+        }
+        
+        $console->call($command, $parameters, $output);
+            
     }
 
     /**

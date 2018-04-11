@@ -1,7 +1,7 @@
 <?php
 \Codeception\Module\OrderHelper::appendToFile('P'); // parsed
 
-class ParsedLoadedTest  extends \PHPUnit_Framework_TestCase
+class ParsedLoadedTest  extends \PHPUnit\Framework\TestCase
 {
     public function testSomething()
     {

@@ -21,26 +21,6 @@ if (file_exists('./vendor/autoload.php') && file_exists($autoloadFile) && __FILE
 unset($autoloadFile);
 
 // @codingStandardsIgnoreStart
-// loading WebDriver aliases
-if (!class_exists('RemoteWebDriver') and class_exists('Facebook\WebDriver\Remote\RemoteWebDriver')) {
-    class RemoteWebDriver extends \Facebook\WebDriver\Remote\RemoteWebDriver {};
-    class InvalidSelectorException extends Facebook\WebDriver\Exception\InvalidSelectorException {};
-    class NoSuchElementException extends Facebook\WebDriver\Exception\NoSuchElementException {};
-    class WebDriverCurlException extends Facebook\WebDriver\Exception\WebDriverCurlException {};
-    class WebDriverActions extends Facebook\WebDriver\Interactions\WebDriverActions {};
-    class LocalFileDetector extends Facebook\WebDriver\Remote\LocalFileDetector {};
-    class WebDriverCapabilityType extends Facebook\WebDriver\Remote\WebDriverCapabilityType {};
-    class WebDriverAlert extends Facebook\WebDriver\WebDriverAlert {};
-    class WebDriverBy extends Facebook\WebDriver\WebDriverBy {};
-    class WebDriverDimension extends Facebook\WebDriver\WebDriverDimension {};
-    class RemoteWebElement extends Facebook\WebDriver\Remote\RemoteWebElement {};
-    class WebDriverExpectedCondition extends Facebook\WebDriver\WebDriverExpectedCondition {};
-    class WebDriverKeys extends Facebook\WebDriver\WebDriverKeys {};
-    class WebDriverSelect extends Facebook\WebDriver\WebDriverSelect {};
-    class WebDriverTimeouts extends Facebook\WebDriver\WebDriverTimeouts {};
-    class WebDriverWindow extends Facebook\WebDriver\WebDriverWindow {};
-    interface WebDriverElement extends Facebook\WebDriver\WebDriverElement {};
-}
 
 include_once __DIR__ . DIRECTORY_SEPARATOR . 'shim.php';
 // compat

@@ -1,7 +1,7 @@
 <?php
 use \Codeception\Util\Stub as Stub;
 
-class StubTest extends \PHPUnit_Framework_TestCase
+class StubTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DummyClass
@@ -248,7 +248,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
             } else {
                 $this->thenWeDontCallAnyMethodForExceptionJustVerify($mock);
             }
-        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        } catch (PHPUnit\Framework\ExpectationFailedException $e) {
             $this->assertSame($failMessage, $e->getMessage());
         }
 

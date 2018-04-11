@@ -1,24 +1,58 @@
 sudo: false
 
 language: php
-
+matrix:
+  fast_finish: true
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+env:
+  global:
+    - XDEBUG=
+    - SUITES=
+    - FXP=
+    - PECL=
+    - TEST_PATH='framework-tests'
+    - SYMFONY_DEPRECATIONS_HELPER=weak
+  matrix:
+  - FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. XDEBUG=1 PECL=mongodb
+  - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
+  - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
+  - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
+  - FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
+  - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git'
+  - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git'
+  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
+  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests'
+  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests' SUITES=functional
+  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' SUITES=functional
 matrix:
   include:
-    - php: 5.4 # lowest versions of all dependencies
-      env: SYMFONY=2.7.19 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.7.*
-    - php: 5.5
-      env: SYMFONY=2.7.5 dependencies=lowest SYMFONY_DEPRECATIONS_HELPER=weak #lowest version of 2.7
-    - php: 5.6
-      env: SYMFONY=2.8.12 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 2.8.*
-    - php: 7.0
-      env: SYMFONY=3.2.9 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.2.*
-    - php: 7.1
-      env: SYMFONY=3.3.2 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 3.3.*
-    - php: 7.1
-      env: SYMFONY=4.0.1 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 4.0.*
-    - php: 7.2
-      env: SYMFONY=4.0.1 SYMFONY_DEPRECATIONS_HELPER=weak # latest version of 4.0.*
-
+  - php: 7.1
+    env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. XDEBUG=1 PECL=mongodb
+  exclude:
+  - php: 7.1
+    env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. XDEBUG=1 PECL=mongodb
+  - php: 7.0
+    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
+  - php: 7.1
+    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
+  - php: 7.2
+    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
+  - php: 5.6
+    env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
+  - php: 7.0
+    env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
+  - php: 5.6
+    env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
+  - php: 7.0
+    env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
+#  - php: 7.1
+#    env: FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' functional
+#  - php: 7.2
+#    env: FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' functional
 addons:
   postgresql: "9.2"
 
@@ -37,104 +71,63 @@ services:
   - postgresql
   - redis
 
+before_install:
+  - '$(php PruneTest.php)'
+  - '[[ !(-z "$XDEBUG") ]] || phpenv config-rm xdebug.ini'
+  - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo memory_limit = -1 >> $INI
 install:
-  - export SF_VERSION=$(echo $SYMFONY | head -c 1)
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || pecl install -f mongodb'
-  - yes '' | pecl install imagick
-  #- echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - composer self-update && composer --version
-  - if [ -n "$CI_USER_TOKEN" ]; then composer config github-oauth.github.com ${CI_USER_TOKEN}; echo "Configured Github token"; fi;
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer require mongodb/mongodb --no-update'
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || composer global require "fxp/composer-asset-plugin:~1.3.1"'
-  - '[[ -z "$SYMFONY" ]] || composer require symfony/finder=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ -z "$SYMFONY" ]] || composer require symfony/yaml=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ -z "$SYMFONY" ]] || composer require symfony/console=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ -z "$SYMFONY" ]] || composer require symfony/event-dispatcher=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ -z "$SYMFONY" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
-  - composer_parameters="-n --prefer-dist" # this variable will be used in all composer install commands
-  - '[[ "$dependencies" != "lowest" ]] || composer_parameters="$composer_parameters --prefer-lowest"'
-  - composer update $composer_parameters
-  - composer_parameters="$composer_parameters --no-dev" # Codeception needs dev dependencies, but frameworks don't
-  # Yii2
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || composer create-project "yiisoft/yii2-app-basic" frameworks-yii-basic --no-dev'
+  - '[[ -z "$CI_USER_TOKEN" ]] || composer config github-oauth.github.com ${CI_USER_TOKEN};'
+  # Add extensions
+  - '[[ -z "$PECL" ]] || (yes "" | pecl install -f $PECL)'
+  # Clone test repository
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || git clone -q --depth=1 $TEST_REPO framework-tests'
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || git --git-dir framework-tests/.git log -n 1'
+  - '[[ "$FRAMEWORK" != "Codeception" ]] || composer require mongodb/mongodb --no-update'
+  - '[[ -z "$FXP" ]] || composer global require "fxp/composer-asset-plugin:~1.3.1"'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/finder=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/yaml=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/console=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/event-dispatcher=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/css-selector=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/dom-crawler=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$VERSION --no-update --ignore-platform-reqs'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$VERSION --no-update --ignore-platform-reqs'
   # Phalcon
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer update -d frameworks-phalcon $composer_parameters'
-  # Laravel 5
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q --depth=1 -b codeception-2.3 https://github.com/codeception/codeception-laravel5-sample.git frameworks-l5'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-l5 $composer_parameters'
-  # Lumen
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q --depth=1 -b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git frameworks-lumen'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-lumen $composer_parameters'
+  - '[[ "$FRAMEWORK" != "Phalcon" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
+  - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   # Symfony
-  - '[[ "$SF_VERSION" != "2" ]] || (git clone -q --depth=1 -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 2 site")'
-  - '[[ "$SF_VERSION" != "3" ]] || (git clone -q --depth=1 -b master --recursive https://github.com/Naktibalda/codeception-symfony-tests frameworks-symfony && echo "Cloned Symfony 3 site")'
-  - '[[ "$SF_VERSION" != "4" ]] || (git clone -q --depth=1 -b master https://github.com/Codeception/symfony-demo.git frameworks-symfony && echo "Cloned Symfony 4 site")'
-  - '[[ "$SF_VERSION" == "4" ]] || composer require -d frameworks-symfony symfony/symfony=~$SYMFONY --no-update'
-  - "mysql -e 'create database symfony_test;'"
-  - 'composer update -d frameworks-symfony $composer_parameters'  
-  # ZF1
-  - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
-  - composer update -d frameworks-zf1 $composer_parameters
-  # ZF2
-  - git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
-  - composer update -d frameworks-zf2 $composer_parameters
-  # Zend Expressive
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || git clone -q -b 2.2 --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || composer update -d frameworks-zend-expressive $composer_parameters'
-
+  #- '[[ "$FRAMEWORK$VERSION" != "Symfony3" ]] || composer require -d framework-tests symfony/symfony=~$VERSION --no-update'
+  - '[[ -z "$FRAMEWORK" ]] || composer install'
+  - '[[ "$FRAMEWORK" == "Codeception" ]] || [[ -z "$FRAMEWORK" ]] || composer update -d framework-tests --no-dev --prefer-dist'
 before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # preparing databases
-  - "mysql -e 'create database codeception_test;'"
-  - psql -c 'create database codeception_test;' -U postgres
+  - '[[ "$FRAMEWORK" != "Codeception" ]] || mysql -e "create database codeception_test;"'
+  - '[[ "$FRAMEWORK" != "Codeception" ]] || psql -c "create database codeception_test;" -U postgres'
+  - '[[ "$FRAMEWORK" != "Symfony" ]] || mysql -e "create database symfony_test;"'
   # starting demo servers
-  - 'php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &'
-  - 'php -S 127.0.0.1:8010 -t tests/data >/dev/null 2>&1 &'
+  - '[[ "$FRAMEWORK" != "Codeception" ]] || php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &'
+  - '[[ "$FRAMEWORK" != "Codeception" ]] || php -S 127.0.0.1:8010 -t tests/data >/dev/null 2>&1 &'
   # Phalcon
-  - mysql -e 'CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || cat frameworks-phalcon/schemas/phalcon_demo.sql | mysql phalcon_demo'
+  - '[[ "$FRAMEWORK" != "Phalcon" ]] || mysql -e "CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"'
+  - '[[ "$FRAMEWORK" != "Phalcon" ]] || cat framework-tests/schemas/phalcon_demo.sql | mysql phalcon_demo'
   # Laravel 5
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || touch frameworks-l5/storage/testing.sqlite'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php frameworks-l5/artisan migrate --env=testing --database=sqlite_testing --force'
+  - '[[ "$FRAMEWORK" != "Laravel" ]] || touch framework-tests/storage/testing.sqlite'
+  - '[[ "$FRAMEWORK" != "Laravel" ]] || php framework-tests/artisan migrate --env=testing --database=sqlite_testing --force'
   # Lumen
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || cp frameworks-lumen/.env.testing frameworks-lumen/.env'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || touch frameworks-lumen/storage/testing.sqlite'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php frameworks-lumen/artisan migrate --database=testing --force'
+  - '[[ "$FRAMEWORK" != "Lumen" ]] || cp framework-tests/.env.testing framework-tests/.env'
+  - '[[ "$FRAMEWORK" != "Lumen" ]] || touch framework-tests/storage/testing.sqlite'
+  - '[[ "$FRAMEWORK" != "Lumen" ]] || php framework-tests/artisan migrate --database=testing --force'
   # Symfony
-  - '[[ "$SF_VERSION" != "2" ]] || php frameworks-symfony/app/console doctrine:schema:create -n --env test'
-  - '[[ "$SF_VERSION" != "2" ]] || php frameworks-symfony/app/console doctrine:fixtures:load -n --env test'
-  - '[[ "$SF_VERSION" != "3" ]] || php frameworks-symfony/bin/console doctrine:schema:update --force -n'
+  - '[[ "$FRAMEWORK$VERSION" != "Symfony2.8" ]] || php framework-tests/app/console doctrine:schema:create -n --env test'
+  - '[[ "$FRAMEWORK$VERSION" != "Symfony2.8" ]] || php framework-tests/app/console doctrine:fixtures:load -n --env test'
+  - '[[ "$FRAMEWORK$VERSION" != "Symfony3.4" ]] || php framework-tests/bin/console doctrine:schema:update --force -n'
   # ZF2
-  - "mysql -e 'create database zf2_test;'"
-  - php frameworks-zf2/vendor/bin/doctrine-module orm:schema-tool:create
+  - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
+  - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
   # Build
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept build -c frameworks-yii-basic'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-phalcon'
-  - '[[ "$SF_VERSION" != "2" ]] || php codecept build -c frameworks-symfony/src/AppBundle'
-  - '[[ "$SF_VERSION" == "2" ]] || php codecept build -c frameworks-symfony'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-l5'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-lumen'
-  - php codecept build -c frameworks-zf1
-  - php codecept build -c frameworks-zf2
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept build -c frameworks-zend-expressive'
-
+  - '[[ -z "$FRAMEWORK" ]] || php codecept build -c $TEST_PATH'
 script:
-  - php codecept run cli,unit # self tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || php codecept run coverage'  # run coverage tests on php only
-  - '[[ "$TRAVIS_PHP_VERSION" == "7.2" ]] || php codecept run functional -c frameworks-yii-basic' # Yii2 tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-l5 --skip=seeder' # Laravel5 Tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run -c frameworks-lumen' # Lumen Tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
-  - '[[ "$SF_VERSION" != "2" ]] || php codecept run functional -c frameworks-symfony/src/AppBundle' # Symfony 2 Tests
-  - '[[ "$SF_VERSION" != "3" ]] || php codecept run -c frameworks-symfony' # Symfony 3 Tests
-  - '[[ "$SF_VERSION" != "4" ]] || php codecept run -c frameworks-symfony functional,unit' # Symfony 4 Tests
-  - php codecept run functional -c frameworks-zf1 # ZF1 Tests
-  #ZF2 run doctrine tests on PHP 5.4 and 5.5 only
-  - '[[ "$TRAVIS_PHP_VERSION" > "5.5" ]] || php codecept run -c frameworks-zf2 functional,doctrine'
-  - '[[ "$TRAVIS_PHP_VERSION" < "5.6" ]] || php codecept run -c frameworks-zf2 functional'
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.5" ]] || php codecept run functional -c frameworks-zend-expressive' # Zend Expressive Tests
+  # Run tests if $FRAMEWORK is not empty
+  - '[[ -z "$FRAMEWORK" ]] || php codecept run $SUITES -c $TEST_PATH'

@@ -1,3 +1,52 @@
+#### 2.3.9
+
+* Added `Codeception\Step\Argument\PasswordArgument` to pass sensitive data into tests:
+
+```php
+<?php
+use \Codeception\Step\Argument\PasswordArgument;
+
+$I->amOnPage('/form/password_argument');
+$I->fillField('password', new PasswordArgument('thisissecret'));
+```
+
+* [WebDriver] added `clearField` method to clean up input fields by @eknej 
+* [DataFactory] added `make` method to create instances without saving them to database. But @ibpavlov 
+* [REST] Fixed passing a file to `sendPOST()` without name, size or type parameter. BY @zebraf1
+* [REST] Add missing / to relative url from config by @bscheshirwork 
+* Fixed HTML Report marks tests as succeeded by @mpgo13
+* `clean` command works recursively with included setups. By @davidnewcomb 
+
+
+#### 2.3.8
+
+* `Codeception\Util\Stub` moved to standalone package [Codeception\Stub](https://github.com/Codeception/Stub):
+  * Use `Codeception\Stub` instead of `Codeception\Util\Stub`
+  * Mocking methods `::once`, `::never`, etc moved to `Codeception\Stub\Expected` class
+  * Calling mocking methods from `Codeception\Util\Stub` provides deprecation warning.
+  * Non-static API is [recommended to use for mocking](http://codeception.com/docs/05-UnitTests) 
+* [WebDriver] Added `executeAsyncJS` action to run asynchronous scripts.
+* [WebDriver] Added second parameter to `executeJS` to pass additional arguments into JavaScript function. 
+* [Yii2] `setCookie` signs cookies when signing enabled. #4656 By @SamMousa
+* [Yii2] Method `createAndSetCsrfCookie` added. #4656 By @SamMousa
+* Compatibility with phpunit-mock-objects 5.* by @Naktibalda
+* [DataFactory] Removed dependency to `league/factory-muffin-faker` by @Naktibalda and @Insolita
+* Fixed auto-rebuilding Actor classes when dependencies are used. See #4694 by @stefankleff. 
+* [Symfony] allows to use Symfony Dotenv component to parse `.env` files. Fix by @ebuildy
+* Added the ability to export the code coverage data in PHPUnit xml format by @tobiasstadler 
+  * `--coverage-phpunit` option added 
+  * Allows to use mutation testing with [Inflection](https://infection.github.io)
+* [ZendExpressive] Added Doctrine2 integration by @artmnv
+* [PhpBrowser][Frameworks] Added `_getResponseStatusCode` hidden method for using in helpers. By @FanchTheSystem
+* [Yii2] Use Yii DI to instantiate record class. Fixes #4762. By @bscheshirwork
+* Remote Code Coverage improvements #4768 by @bscheshirwork 
+  * Remove `:port` for cookie domain; 
+  * `->amOnPage('/');` executed when running code coverage with WebDriver
+* Fixed running single test with `include` config parameter. Fixes #4733 by @ppetpadriew
+* Fixed running single test when a custom suite path is configured (For instance, in single-suite setups).
+* `generate:test` command won't include `tester` property if actor is not set for this config.
+* [Facebook] Module is not maintained and is deprecated. If you are using it and you want to keep it, please contact us.
+
 #### 2.3.7
 
 * **Symfony 4 support** implemented by @VolCh.

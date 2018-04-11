@@ -1,6 +1,10 @@
 <?php
 namespace Codeception\Coverage;
 
+use Codeception\Stub;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Driver\Driver;
+
 class FilterTest extends \Codeception\Test\Unit
 {
     /**
@@ -10,38 +14,8 @@ class FilterTest extends \Codeception\Test\Unit
 
     protected function _before()
     {
-        $this->filter = new Filter(new DummyCodeCoverage());
-    }
-
-    // tests
-    public function testBacklistFiltersApplied()
-    {
-        if (!method_exists($this->filter->getFilter(), 'addFileToBlacklist')) {
-            $this->markTestSkipped('The blacklist functionality has been removed from PHPUnit 5');
-        }
-        $config = [
-            'coverage' => [
-                'blacklist' => [
-                    'include' => [
-                        'tests/*',
-                        'vendor/*/*Test.php',
-                        'src/Codeception/Codecept.php'
-                    ],
-                    'exclude' => [
-                        'tests/support/CodeGuy.php'
-                    ]
-                ]
-            ]
-        ];
-        $this->filter->blackList($config);
-        $fileFilter = $this->filter->getFilter();
-        $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('tests/unit/C3Test.php')));
-        $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('src/Codeception/Codecept.php')));
-        $this->assertTrue(
-            $fileFilter->isFiltered(codecept_root_dir('vendor/phpunit/phpunit/tests/Framework/AssertTest.php'))
-        );
-        $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
-        $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('tests/support/CodeGuy.php')));
+        $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
+        $this->filter = new Filter(new CodeCoverage($driver));
     }
 
     public function testWhitelistFilterApplied()
@@ -64,9 +38,6 @@ class FilterTest extends \Codeception\Test\Unit
         $fileFilter = $this->filter->getFilter();
         $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('tests/unit/C3Test.php')));
         $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('src/Codeception/Codecept.php')));
-        $this->assertFalse(
-            $fileFilter->isFiltered(codecept_root_dir('vendor/phpunit/phpunit/tests/Framework/AssertTest.php'))
-        );
         $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
         $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('tests/unit/CodeGuy.php')));
     }

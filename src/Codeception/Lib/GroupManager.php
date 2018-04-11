@@ -85,7 +85,7 @@ class GroupManager
         }
     }
 
-    public function groupsForTest(\PHPUnit_Framework_Test $test)
+    public function groupsForTest(\PHPUnit\Framework\Test $test)
     {
         $groups = [];
         $filename = Descriptor::getTestFileName($test);
@@ -95,14 +95,14 @@ class GroupManager
         if ($test instanceof Reported) {
             $info = $test->getReportFields();
             if (isset($info['class'])) {
-                $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups($info['class'], $info['name']));
+                $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups($info['class'], $info['name']));
             }
             $filename = str_replace(['\\\\', '//'], ['\\', '/'], $info['file']);
         }
-        if ($test instanceof \PHPUnit_Framework_TestCase) {
-            $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->getName(false)));
+        if ($test instanceof \PHPUnit\Framework\TestCase) {
+            $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups(get_class($test), $test->getName(false)));
         }
-        if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+        if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
             $firstTest = $test->testAt(0);
             if ($firstTest != false && $firstTest instanceof TestInterface) {
                 $groups = array_merge($groups, $firstTest->getMetadata()->getGroups());
@@ -118,7 +118,7 @@ class GroupManager
                 if (strpos($filename . ':' . $test->getName(false), $testPattern) === 0) {
                     $groups[] = $group;
                 }
-                if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+                if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
                     $firstTest = $test->testAt(0);
                     if ($firstTest != false && $firstTest instanceof TestInterface) {
                         if (strpos($filename . ':' . $firstTest->getName(false), $testPattern) === 0) {

@@ -93,6 +93,13 @@ final class Events
      */
     const TEST_SKIPPED = 'test.skipped';
 
+
+    /**
+     * The event listener method receives a {@link Codeception\Event\FailEvent} instance.
+     */
+    const TEST_WARNING = 'test.warning';
+
+
     /**
      * The event listener method receives a {@link Codeception\Event\TestEvent} instance.
      */

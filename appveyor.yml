@@ -33,13 +33,9 @@ install:
   - SET PATH=C:\Program Files\curl;%PATH%
   - sc config wuauserv start= auto
   - net start wuauserv
-  - IF %PHP%==1 cinst -y php
+  - IF %PHP%==1 cinst -y php --version 7.1.14
   - IF %PHP%==1 cd c:\tools\php71
-  - IF %PHP%==1 cd ext
-  - IF %PHP%==1 appveyor DownloadFile http://windows.php.net/downloads/pecl/releases/mongodb/1.2.0/php_mongodb-1.2.0-7.1-nts-vc14-x64.zip
-  - IF %PHP%==1 7z x php_mongodb-1.2.0-7.1-nts-vc14-x64.zip -y >nul
-  - IF %PHP%==1 cd ..
-  - IF %PHP%==1 copy php.ini-production php.ini
+  - IF %PHP%==1 copy php.ini-production php.ini  
   - IF %PHP%==1 echo extension_dir=ext >> php.ini
   - IF %PHP%==1 echo extension=php_openssl.dll >> php.ini
   - IF %PHP%==1 echo date.timezone="UTC" >> php.ini
@@ -49,7 +45,6 @@ install:
   - IF %PHP%==1 echo extension=php_pdo_pgsql.dll >> php.ini
   - IF %PHP%==1 echo extension=php_pdo_sqlite.dll >> php.ini
   - IF %PHP%==1 echo extension=php_pgsql.dll >> php.ini
-  - IF %PHP%==1 echo extension=php_mongodb.dll >> php.ini
   - SET PATH=C:\tools\php71;%PATH%
   - cd %APPVEYOR_BUILD_FOLDER%
   - appveyor DownloadFile https://getcomposer.org/composer.phar
