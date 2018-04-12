@@ -367,11 +367,16 @@ class Console implements EventSubscriberInterface
             return;
         }
 
-        $this->printException($fail);
-        $this->printExceptionTrace($fail);
+        $this->printThrowable($fail);
+        $this->printThrowableTrace($fail);
     }
 
     public function printException($e, $cause = null)
+    {
+        return $this->printThrowable($e, $cause);
+    }
+
+    public function printThrowable($e, $cause = null)
     {
         if ($e instanceof \PHPUnit\Framework\SkippedTestError or $e instanceof \PHPUnit\Framework_IncompleteTestError) {
             if ($e->getMessage()) {
@@ -426,22 +431,27 @@ class Console implements EventSubscriberInterface
             }
         }
 
-        $this->printException($fail, $failedStep);
+        $this->printThrowable($fail, $failedStep);
 
         $this->printScenarioTrace($failedTest);
         if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
-            $this->printExceptionTrace($fail);
+            $this->printThrowableTrace($fail);
 
             return;
         }
         if (!$fail instanceof \PHPUnit\Framework\AssertionFailedError) {
-            $this->printExceptionTrace($fail);
+            $this->printThrowableTrace($fail);
 
             return;
         }
     }
 
     public function printExceptionTrace(\Exception $e)
+    {
+        return $this->printThrowableTrace($e);
+    }
+
+    public function printThrowableTrace(\Throwable $e)
     {
         static $limit = 10;
 
@@ -482,7 +492,7 @@ class Console implements EventSubscriberInterface
 
         $prev = $e->getPrevious();
         if ($prev) {
-            $this->printExceptionTrace($prev);
+            $this->printThrowableTrace($prev);
         }
     }
 

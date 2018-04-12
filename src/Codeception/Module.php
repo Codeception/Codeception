@@ -258,7 +258,7 @@ abstract class Module
      * **HOOK** executed when test fails but before `_after`
      *
      * @param TestInterface $test
-     * @param \Exception $fail
+     * @param \Throwable $fail
      */
     public function _failed(TestInterface $test, $fail)
     {
