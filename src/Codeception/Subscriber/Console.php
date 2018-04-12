@@ -441,7 +441,7 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    public function printExceptionTrace(\Exception $e)
+    public function printExceptionTrace($e)
     {
         static $limit = 10;
 
