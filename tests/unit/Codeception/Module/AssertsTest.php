@@ -53,4 +53,15 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
             throw new Exception('here', 2);
         });
     }
+
+    /**
+     * @expectedException PHPUnit\Framework\AssertionFailedError
+     * @expectedExceptionMessageRegExp /RuntimeException/
+     */
+    public function testOutputExceptionTimeWhenNothingCaught()
+    {
+        $module = new \Codeception\Module\Asserts(make_container());
+        $module->expectException(RuntimeException::class, function () {
+        });
+    }
 }
