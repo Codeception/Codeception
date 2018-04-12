@@ -130,6 +130,8 @@ EOF;
                 ->produce();
         } elseif (0 === strpos($refMethod->name, 'am')) {
             $type = 'Condition';
+        } elseif (0 === strpos($refMethod->name, 'expect')) {
+            $type = 'Comment';
         } else {
             $type = 'Action';
         }

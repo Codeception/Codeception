@@ -11,7 +11,7 @@ class BuildTest extends BaseCommandRunner
         $this->config = array(
             'actor' => 'HobbitGuy',
             'path' => 'tests/shire/',
-            'modules' => array('enabled' => array('Filesystem', 'EmulateModuleHelper')),
+            'modules' => array('enabled' => array('Filesystem', 'EmulateModuleHelper', 'Commenter')),
             'include' => []
         );
     }
@@ -32,6 +32,9 @@ class BuildTest extends BaseCommandRunner
 
         // methods from EmulateHelper
         $this->assertContains('public function seeEquals($expected, $actual)', $this->content);
+
+        // methods from Commenter
+        $this->assertContains("\Codeception\Step\Comment('expectResponseIsJson'", $this->content);
 
         $this->assertContains('HobbitGuyActions.php generated successfully.', $this->output);
         $this->assertIsValidPhp($this->content);
