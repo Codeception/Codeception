@@ -36,6 +36,7 @@ use yii\db\Transaction;
  * * `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
  * * `transaction` - (default: true) wrap all database connection inside a transaction and roll it back after the test. Should be disabled for acceptance testing..
  * * `cleanup` - (default: true) cleanup fixtures after the test
+ * * `forceLoadFixtures` - (default: false) force reload fixtures before the test and insert data into database. Set `true` if we use `cleanup` of `Db` codeception module first
  * * `ignoreCollidingDSN` - (default: false) When 2 database connections use the same DSN but different settings an exception will be thrown, set this to true to disable this behavior.
  * * `fixturesMethod` - (default: _fixtures) Name of the method used for creating fixtures.
  * * `responseCleanMethod` - (default: clear) Method for cleaning the response object. Note that this is only for multiple requests inside a single test case.
@@ -154,6 +155,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     protected $config = [
         'fixturesMethod' => '_fixtures',
         'cleanup'     => true,
+        'forceLoadFixtures' => false,
         'ignoreCollidingDSN' => false,
         'transaction' => null,
         'entryScript' => '',
@@ -322,7 +324,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->debugSection('Fixtures', 'Opened database connection: ' . $event->sender->dsn);
             $connections[] = $event->sender;
         });
-        if (empty($this->loadedFixtures)
+        if (($this->config['forceLoadFixtures'] || empty($this->loadedFixtures))
             && method_exists($test, $this->_getConfig('fixturesMethod'))
         ) {
             $this->haveFixtures(call_user_func([$test, $this->_getConfig('fixturesMethod')]));
