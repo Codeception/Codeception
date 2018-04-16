@@ -355,7 +355,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->loadedFixtures = [];
         }
 
-        if ($this->client->getApplication()->has('session', true)) {
+        if ($this->client !== null && $this->client->getApplication()->has('session', true)) {
             $this->client->getApplication()->session->close();
         }
         parent::_after($test);
