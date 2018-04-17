@@ -48,7 +48,11 @@ class Yii2 extends Client
      */
     const CLEAN_MANUAL = 'manual';
 
-
+    /**
+     * @var bool keep log targets enabled or force disable. Set 'false' to force disable
+     */
+    public $logTargetsEnabled = false;
+    
     /**
      * @var string application config file
      */
@@ -157,12 +161,11 @@ class Yii2 extends Client
         $app = $this->getApplication();
 
         // disabling logging. Logs are slowing test execution down
-        foreach ($app->log->targets as $target) {
-            $target->enabled = false;
+        if (!$this->logTargetsEnabled) {
+            foreach ($app->log->targets as $target) {
+                $target->enabled = false;
+            }
         }
-
-
-
 
         $yiiRequest = $app->getRequest();
         if ($request->getContent() !== null) {
