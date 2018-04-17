@@ -107,7 +107,10 @@ class Yii2 extends Client
         if (!isset($config['class'])) {
             $config['class'] = 'yii\web\Application';
         }
-
+        if (!isset($config['container']['definitions']['yii\log\Logger']['class'])) {
+            $config['container']['definitions']['yii\log\Logger']['class'] = 'Codeception\Lib\Connector\Yii2\Logger';
+        }
+        
         $config = $this->mockMailer($config);
         /** @var \yii\web\Application $app */
         Yii::$app = Yii::createObject($config);
