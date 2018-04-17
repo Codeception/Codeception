@@ -112,7 +112,7 @@ class Yii2 extends Client
         /** @var \yii\web\Application $app */
         Yii::$app = Yii::createObject($config);
 
-        Yii::setLogger(new Logger());
+        Yii::setLogger(Yii::createObject('yii\log\Logger'));
     }
 
     /**
