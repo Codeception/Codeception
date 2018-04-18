@@ -23,7 +23,13 @@ class JsonArray
             throw new InvalidArgumentException('$jsonString param must be a string.');
         }
 
-        $this->jsonArray = json_decode($jsonString, true);
+        $jsonDecode = json_decode($jsonString, true);
+
+        if (!is_array($jsonDecode)) {
+            $jsonDecode = [$jsonDecode];
+        }
+
+        $this->jsonArray = $jsonDecode;
 
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new InvalidArgumentException(
