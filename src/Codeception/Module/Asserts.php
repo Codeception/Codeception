@@ -465,8 +465,8 @@ class Asserts extends CodeceptionModule
                 ));
             }
             $this->assertTrue(true); // increment assertion counter
-             return;
+            return;
         }
-        $this->fail("Expected exception to be thrown, but nothing was caught");
+        $this->fail("Expected exception of $class to be thrown, but nothing was caught");
     }
 }
