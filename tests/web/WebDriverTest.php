@@ -652,6 +652,18 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeCookie('PHPSESSID');
     }
 
+    public function testSessionSnapshotsAreDeleted() 
+    {
+        $this->notForPhantomJS();
+        $this->module->amOnPage('/');
+        $this->module->setCookie('PHPSESSID', '123456', ['path' => '/']);
+        $this->module->saveSessionSnapshot('login');
+        $this->webDriver->manage()->deleteAllCookies();
+        $this->module->deleteSessionSnapshot('login');
+        $this->assertFalse($this->module->loadSessionSnapshot('login'));
+        $this->module->dontSeeCookie('PHPSESSID');
+    }
+
     public function testSaveSessionSnapshotsExcludeInvalidCookieDomains()
     {
         $this->notForPhantomJS();

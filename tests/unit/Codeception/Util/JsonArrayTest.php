@@ -60,6 +60,15 @@ class JsonArrayTest extends \Codeception\Test\Unit
     }
 
     /**
+     * @issue https://github.com/Codeception/Codeception/issues/4944
+     */
+    public function testConvertsBareJson()
+    {
+        $jsonArray = new JsonArray('"I am a {string}."');
+        $this->assertEquals(['I am a {string}.'], $jsonArray->toArray());
+    }
+
+    /**
      * @Issue https://github.com/Codeception/Codeception/issues/2899
      */
     public function testInvalidXmlTag()

@@ -355,9 +355,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->loadedFixtures = [];
         }
 
-        if ($this->client->getApplication()->has('session', true)) {
+        if ($this->client !== null && $this->client->getApplication()->has('session', true)) {
             $this->client->getApplication()->session->close();
         }
+
+        $this->client->resetApplication();
         parent::_after($test);
     }
 
@@ -385,6 +387,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
              */
             if (isset($this->pdoCache[$key])) {
                 $connection->pdo = $this->pdoCache[$key];
+            } else {
+                $this->pdoCache[$key] = $connection->pdo;
             }
 
             if (isset($this->dsnCache[$connection->dsn])

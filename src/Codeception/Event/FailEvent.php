@@ -13,7 +13,7 @@ class FailEvent extends TestEvent
      */
     protected $count;
 
-    public function __construct(\PHPUnit\Framework\Test $test, $time, \Exception $e, $count = 0)
+    public function __construct(\PHPUnit\Framework\Test $test, $time, $e, $count = 0)
     {
         parent::__construct($test, $time);
         $this->fail = $e;

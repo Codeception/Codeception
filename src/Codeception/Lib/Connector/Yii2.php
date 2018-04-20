@@ -96,6 +96,8 @@ class Yii2 extends Client
             \yii\base\Event::offAll();
         }
         Yii::setLogger(null);
+        // This resolves an issue with database connections not closing properly.
+        gc_collect_cycles();
     }
 
     public function startApp()
@@ -282,16 +284,6 @@ class Yii2 extends Client
         $config['components']['mailer'] = $mailerConfig;
 
         return $config;
-    }
-
-    /**
-     * A new client is created for every test, it is destroyed after every test.
-     * @see InnerBrowser::_after()
-     *
-     */
-    public function __destruct()
-    {
-        $this->resetApplication();
     }
 
     public function restart()
