@@ -9,7 +9,7 @@ namespace Codeception\PHPUnit;
  */
 interface ConsolePrinter
 {
-    public function write($buffer);
+    public function write(string $buffer);
 
     public function printResult(\PHPUnit\Framework\TestResult $result);
 }

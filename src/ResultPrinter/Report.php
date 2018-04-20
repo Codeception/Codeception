@@ -57,8 +57,8 @@ class Report extends ResultPrinter implements ConsolePrinter
     {
     }
 
-    public function write($buffer) : void
+    public function write(string $buffer) : void
     {
-		parent::write($buffer);
+        parent::write($buffer);
     }
 }
