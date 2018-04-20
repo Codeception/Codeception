@@ -137,6 +137,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'disable_middleware' => false,
                 'disable_events' => false,
                 'disable_model_events' => false,
+                'url' => null
             ],
             (array)$config
         );
