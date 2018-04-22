@@ -1,7 +1,9 @@
 <?php
+
 namespace Codeception\Module;
 
 use Codeception\Configuration;
+use Codeception\Exception\ModuleException;
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony as SymfonyConnector;
@@ -25,6 +27,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
  *
  * * app_path: 'src' - in Symfony 4 Kernel is located inside `src`
  * * environment: 'local' - environment used for load kernel
+ * * kernel_class: 'App\Kernel' - kernel class name
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * debug: true - turn on/off debug mode
  * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
@@ -44,6 +47,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
  * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
  * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
  * * environment: 'local' - environment used for load kernel
+ * * kernel_class: 'AppKernel' - kernel class name
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * debug: true - turn on/off debug mode
  * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
@@ -63,6 +67,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
  *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  * * environment: 'local' - environment used for load kernel
+ * * kernel_class: 'AppKernel' - kernel class name
  * * debug: true - turn on/off debug mode
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
@@ -104,6 +109,11 @@ use Symfony\Component\VarDumper\Cloner\Data;
  */
 class Symfony extends Framework implements DoctrineProvider, PartedModule
 {
+    private static $possibleKernelClasses = [
+        'AppKernel', // Symfony Standard
+        'App\Kernel', // Symfony Flex
+    ];
+
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
      */
@@ -112,6 +122,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     public $config = [
         'app_path' => 'app',
         'var_path' => 'app',
+        'kernel_class' => null,
         'environment' => 'test',
         'debug' => true,
         'cache_router' => false,
@@ -284,10 +295,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
         require_once $file;
 
-        $possibleKernelClasses = [
-            'AppKernel', // Symfony Standard
-            'App\Kernel', // Symfony Flex
-        ];
+        $possibleKernelClasses = $this->getPossibleKernelClasses();
+
         foreach ($possibleKernelClasses as $class) {
             if (class_exists($class)) {
                 $refClass = new \ReflectionClass($class);
@@ -623,5 +632,26 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     private function dataRevealsValue(Data $data)
     {
         return method_exists($data, 'getValue');
+    }
+
+    /**
+     * Returns list of the possible kernel classes based on the module configuration
+     *
+     * @return array
+     */
+    private function getPossibleKernelClasses()
+    {
+        if (empty($this->config['kernel_class'])) {
+            return self::$possibleKernelClasses;
+        }
+
+        if (!is_string($this->config['kernel_class'])) {
+            throw new ModuleException(
+                __CLASS__,
+                "Parameter 'kernel_class' must have 'string' type.\n"
+            );
+        }
+
+        return [$this->config['kernel_class']];
     }
 }
