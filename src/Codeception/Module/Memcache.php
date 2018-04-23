@@ -139,7 +139,7 @@ class Memcache extends CodeceptionModule
         $this->debugSection("Value", $actual);
 
         if (null === $value) {
-            $this->assertTrue(false !== $actual, "Cannot find key '$key' in Memcached");
+            $this->assertNotFalse($actual, "Cannot find key '$key' in Memcached");
         } else {
             $this->assertEquals($value, $actual, "Cannot find key '$key' in Memcached with the provided value");
         }
@@ -169,7 +169,7 @@ class Memcache extends CodeceptionModule
         $this->debugSection("Value", $actual);
 
         if (null === $value) {
-            $this->assertTrue(false === $actual, "The key '$key' exists in Memcached");
+            $this->assertFalse($actual, "The key '$key' exists in Memcached");
         } else {
             if (false !== $actual) {
                 $this->assertEquals($value, $actual, "The key '$key' exists in Memcached with the provided value");
