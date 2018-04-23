@@ -9,6 +9,7 @@ use Codeception\Lib\Interfaces\Db as DbInterface;
 use Codeception\Lib\Driver\Db as Driver;
 use Codeception\Lib\DbPopulator;
 use Codeception\TestInterface;
+use Codeception\Lib\Notification;
 
 /**
  * Access a database.
@@ -275,6 +276,8 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function __get($name)
     {
+        Notification::deprecate("Properties dbh and driver are deprecated in favor of Db::getDbh and Db::getDriver", "Db module");
+
         if ($name == 'driver') {
             return $this->getDriver();
         }
