@@ -292,6 +292,31 @@ class Db extends CodeceptionModule implements DbInterface
         return $this->dbhs[$this->currentDatabase];
     }
 
+    /**
+     * Make sure you are connected to the right database.
+     *
+     * ```php
+     * <?php
+     * $I->seeNumRecords(2, 'users');   //executed on default database
+     * $I->amConnectedToDatabase('db_books');
+     * $I->seeNumRecords(30, 'books');  //executed on db_books database
+     * //All the next queries will be on db_books
+     * ```
+     *
+     * Can be used with a callback if you don't want to change the current database in your test.
+     *
+     * ```php
+     * <?php
+     * $I->seeNumRecords(2, 'users');   //executed on default database
+     * $I->amConnectedToDatabase('db_books', function($I){
+     *     $I->seeNumRecords(30, 'books');  //executed on db_books database
+     * });
+     * $I->seeNumRecords(2, 'users');  //executed on default database
+     * ```
+     *
+     * @param string $databaseKey
+     * @param callback $callback
+     */
     public function amConnectedToDatabase($databaseKey, $callback = null)
     {
         if (empty($this->getDatabases()[$databaseKey]) && $databaseKey != self::DEFAULT_DATABASE) {
