@@ -207,7 +207,7 @@ class Db extends CodeceptionModule implements DbInterface
     protected $insertedRows = [];
     public $currentDatabase = self::DEFAULT_DATABASE;
 
-    public function getDatabases()
+    protected function getDatabases()
     {
         $databases = [$this->currentDatabase => $this->config];
 
@@ -224,19 +224,19 @@ class Db extends CodeceptionModule implements DbInterface
         }
         return $databases;
     }
-    public function connectToDatabases()
+    protected function connectToDatabases()
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             $this->connect($databaseKey, $databaseConfig);
         }
     }
-    public function cleanUpDatabases()
+    protected function cleanUpDatabases()
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             $this->_cleanup($databaseKey, $databaseConfig);
         }
     }
-    public function populateDatabases($configKey)
+    protected function populateDatabases($configKey)
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             if ($databaseConfig[$configKey]) {
@@ -244,26 +244,26 @@ class Db extends CodeceptionModule implements DbInterface
             }
         }
     }
-    public function readSqlForDatabases()
+    protected function readSqlForDatabases()
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             $this->readSql($databaseKey, $databaseConfig);
         }
     }
-    public function removeInsertedForDatabases()
+    protected function removeInsertedForDatabases()
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             $this->amConnectedToDatabase($databaseKey);
             $this->removeInserted($databaseKey, $databaseConfig);
         }
     }
-    public function disconnectDatabases()
+    protected function disconnectDatabases()
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             $this->disconnect($databaseKey, $databaseConfig);
         }
     }
-    public function reconnectDatabases()
+    protected function reconnectDatabases()
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             if ($databaseConfig['reconnect']) {
@@ -283,11 +283,11 @@ class Db extends CodeceptionModule implements DbInterface
         }
     }
 
-    public function getDriver()
+    protected function getDriver()
     {
         return $this->drivers[$this->currentDatabase];
     }
-    public function getDbh()
+    protected function getDbh()
     {
         return $this->dbhs[$this->currentDatabase];
     }
