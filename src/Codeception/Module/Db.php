@@ -66,6 +66,20 @@ use Codeception\Lib\Notification;
  *              ssl_cert: '/path/to/client-cert.pem'
  *              ssl_ca: '/path/to/ca-cert.pem'
  *
+ * ## Example with multi-databases
+ *
+ *     modules:
+ *        enabled:
+ *           - Db:
+ *              dsn: 'mysql:host=localhost;dbname=testdb'
+ *              user: 'root'
+ *              password: ''
+ *              databases:
+ *                 db2:
+ *                    dsn: 'mysql:host=localhost;dbname=testdb2'
+ *                    user: 'userdb2'
+ *                    password: ''
+ *
  * ## SQL data dump
  *
  * There are two ways of loading the dump into your database:
