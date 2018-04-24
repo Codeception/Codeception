@@ -406,7 +406,7 @@ class Db extends CodeceptionModule implements DbInterface
             return;
         }
         $options = [];
- 
+
         /**
          * @see http://php.net/manual/en/pdo.construct.php
          * @see http://php.net/manual/de/ref.pdo-mysql.php#pdo-mysql.constants
@@ -414,11 +414,11 @@ class Db extends CodeceptionModule implements DbInterface
         if (array_key_exists('ssl_key', $databaseConfig) && !empty($databaseConfig['ssl_key'])) {
             $options[\PDO::MYSQL_ATTR_SSL_KEY] = $databaseConfig['ssl_key'];
         }
- 
+
         if (array_key_exists('ssl_cert', $databaseConfig) && !empty($databaseConfig['ssl_cert'])) {
             $options[\PDO::MYSQL_ATTR_SSL_CERT] = $databaseConfig['ssl_cert'];
         }
- 
+
         if (array_key_exists('ssl_ca', $databaseConfig) && !empty($databaseConfig['ssl_ca'])) {
             $options[\PDO::MYSQL_ATTR_SSL_CA] = $databaseConfig['ssl_ca'];
         }
@@ -478,7 +478,7 @@ class Db extends CodeceptionModule implements DbInterface
 
         foreach (array_reverse($this->insertedRows[$databaseKey]) as $row) {
             try {
-                $this->driver->deleteQueryByCriteria($row['table'], $row['primary']);
+                $this->getDriver()->deleteQueryByCriteria($row['table'], $row['primary']);
             } catch (\Exception $e) {
                 $this->debug("couldn't delete record " . json_encode($row['primary']) ." from {$row['table']}");
             }
@@ -587,17 +587,17 @@ class Db extends CodeceptionModule implements DbInterface
 
         return $lastInsertId;
     }
-    
+
     public function _insertInDatabase($table, array $data)
     {
-        $query = $this->driver->insert($table, $data);
+        $query = $this->getDriver()->insert($table, $data);
         $parameters = array_values($data);
         $this->debugSection('Query', $query);
         $this->debugSection('Parameters', $parameters);
-        $this->driver->executeQuery($query, $parameters);
+        $this->getDriver()->executeQuery($query, $parameters);
 
         try {
-            $lastInsertId = (int)$this->driver->lastInsertId($table);
+            $lastInsertId = (int)$this->getDriver()->lastInsertId($table);
         } catch (\PDOException $e) {
             // ignore errors due to uncommon DB structure,
             // such as tables without _id_seq in PGSQL
@@ -608,7 +608,7 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function addInsertedRow($table, array $row, $id)
     {
-        $primaryKey = $this->driver->getPrimaryKey($table);
+        $primaryKey = $this->getDriver()->getPrimaryKey($table);
         $primary = [];
         if ($primaryKey) {
             if ($id && count($primaryKey) === 1) {
@@ -698,13 +698,13 @@ class Db extends CodeceptionModule implements DbInterface
 
     protected function proceedSeeInDatabase($table, $column, $criteria)
     {
-        $query = $this->driver->select($column, $table, $criteria);
+        $query = $this->getDriver()->select($column, $table, $criteria);
         $parameters = array_values($criteria);
         $this->debugSection('Query', $query);
         if (!empty($parameters)) {
             $this->debugSection('Parameters', $parameters);
         }
-        $sth = $this->driver->executeQuery($query, $parameters);
+        $sth = $this->getDriver()->executeQuery($query, $parameters);
 
         return $sth->fetchColumn();
     }
@@ -726,12 +726,12 @@ class Db extends CodeceptionModule implements DbInterface
      */
     public function grabColumnFromDatabase($table, $column, array $criteria = [])
     {
-        $query      = $this->driver->select($column, $table, $criteria);
+        $query      = $this->getDriver()->select($column, $table, $criteria);
         $parameters = array_values($criteria);
         $this->debugSection('Query', $query);
         $this->debugSection('Parameters', $parameters);
-        $sth = $this->driver->executeQuery($query, $parameters);
-        
+        $sth = $this->getDriver()->executeQuery($query, $parameters);
+
         return $sth->fetchAll(\PDO::FETCH_COLUMN, 0);
     }
 
@@ -768,12 +768,12 @@ class Db extends CodeceptionModule implements DbInterface
      */
     public function updateInDatabase($table, array $data, array $criteria = [])
     {
-        $query = $this->driver->update($table, $data, $criteria);
+        $query = $this->getDriver()->update($table, $data, $criteria);
         $parameters = array_merge(array_values($data), array_values($criteria));
         $this->debugSection('Query', $query);
         if (!empty($parameters)) {
             $this->debugSection('Parameters', $parameters);
         }
-        $this->driver->executeQuery($query, $parameters);
+        $this->getDriver()->executeQuery($query, $parameters);
     }
 }
