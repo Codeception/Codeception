@@ -534,6 +534,16 @@ class Db extends CodeceptionModule implements DbInterface
         return (int) $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
     }
 
+    /**
+     * Fetches all values from the column in database.
+     * Provide table name, desired column and criteria.
+     *
+     * @param string $table
+     * @param string $column
+     * @param array  $criteria
+     *
+     * @return array
+     */
     protected function proceedSeeInDatabase($table, $column, $criteria)
     {
         $query = $this->driver->select($column, $table, $criteria);
@@ -573,6 +583,21 @@ class Db extends CodeceptionModule implements DbInterface
         return $sth->fetchAll(\PDO::FETCH_COLUMN, 0);
     }
 
+    /**
+     * Fetches all values from the column in database.
+     * Provide table name, desired column and criteria.
+     *
+     * ``` php
+     * <?php
+     * $mails = $I->grabFromDatabase('users', 'email', array('name' => 'RebOOter'));
+     * ```
+     *
+     * @param string $table
+     * @param string $column
+     * @param array  $criteria
+     *
+     * @return array
+     */
     public function grabFromDatabase($table, $column, $criteria = [])
     {
         return $this->proceedSeeInDatabase($table, $column, $criteria);
