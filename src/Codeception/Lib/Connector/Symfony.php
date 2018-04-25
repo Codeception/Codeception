@@ -76,7 +76,9 @@ class Symfony extends \Symfony\Component\HttpKernel\Client
         $this->container = $this->kernel->getContainer();
 
         foreach ($this->persistentServices as $serviceName => $service) {
-            $this->container->set($serviceName, $service);
+            if (!$this->container->has($serviceName)) {
+                $this->container->set($serviceName, $service);
+            }
         }
 
         if ($this->container->has('profiler')) {
