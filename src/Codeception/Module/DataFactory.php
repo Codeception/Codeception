@@ -187,7 +187,7 @@ EOF;
     public function _after(TestInterface $test)
     {
         $skipCleanup = array_key_exists('cleanup', $this->config) && $this->config['cleanup'] === false;
-        if ($skipCleanup || $this->ormModule->_getConfig('cleanup')) {
+        if ($skipCleanup || $this->ormModule->_getConfig('cleanup') === false) {
             return;
         }
         $this->factoryMuffin->deleteSaved();
