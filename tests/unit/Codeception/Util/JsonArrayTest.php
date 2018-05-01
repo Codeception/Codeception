@@ -36,9 +36,9 @@ class JsonArrayTest extends \Codeception\Test\Unit
 
     public function testXPathLocation()
     {
-        $this->assertTrue($this->jsonArray->filterByXPath('//ticket/title')->length > 0);
-        $this->assertTrue($this->jsonArray->filterByXPath('//ticket/user/name')->length > 0);
-        $this->assertTrue($this->jsonArray->filterByXPath('//user/name')->length > 0);
+        $this->assertGreaterThan(0, $this->jsonArray->filterByXPath('//ticket/title')->length);
+        $this->assertGreaterThan(0, $this->jsonArray->filterByXPath('//ticket/user/name')->length);
+        $this->assertGreaterThan(0, $this->jsonArray->filterByXPath('//user/name')->length);
     }
 
     public function testJsonPathLocation()

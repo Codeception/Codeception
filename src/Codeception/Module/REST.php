@@ -241,7 +241,7 @@ EOF;
     public function seeHttpHeaderOnce($name)
     {
         $headers = $this->getRunningClient()->getInternalResponse()->getHeader($name, false);
-        $this->assertEquals(1, count($headers));
+        $this->assertCount(1, $headers);
     }
 
     /**

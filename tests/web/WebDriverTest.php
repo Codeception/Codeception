@@ -1116,6 +1116,6 @@ HTML
         });
         $this->assertNotTrue($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
         $this->module->_initializeSession();
-        $this->assertTrue(true, $this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
+        $this->assertTrue($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
     }
 }
