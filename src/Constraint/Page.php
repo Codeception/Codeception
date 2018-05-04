@@ -44,7 +44,7 @@ class Page extends \PHPUnit\Framework\Constraint\Constraint
      *
      * @return string
      */
-    public function toString()
+    public function toString() : string
     {
         return sprintf(
             'contains "%s"',
