@@ -37,7 +37,7 @@ class UI extends \PHPUnit\TextUI\ResultPrinter
         $this->write($defect->getExceptionAsString());
         $this->writeNewLine();
 
-        $stackTrace = \PHPUnit\Util\Filter::getFilteredStacktrace($defect->thrownException(), false);
+        $stackTrace = \PHPUnit\Util\Filter::getFilteredStacktrace($defect->thrownException());
 
         foreach ($stackTrace as $i => $frame) {
             if (!isset($frame['file'])) {
