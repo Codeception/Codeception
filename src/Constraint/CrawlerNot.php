@@ -31,7 +31,7 @@ class CrawlerNot extends Crawler
         );
     }
 
-    public function toString()
+    public function toString() : string
     {
         if ($this->string) {
             return 'that contains text "' . $this->string . '"';

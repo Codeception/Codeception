@@ -50,7 +50,7 @@ class JsonType extends \PHPUnit\Framework\Constraint\Constraint
      *
      * @return string
      */
-    public function toString()
+    public function toString() : string
     {
         //unused
         return '';
