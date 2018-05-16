@@ -217,6 +217,10 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                     $connection->disconnect();
                 }
             }
+
+            // Remove references to Faker in factories to prevent memory leak
+            unset($this->app[\Faker\Generator::class]);
+            unset($this->app[\Illuminate\Database\Eloquent\Factory::class]);
         }
     }
 
