@@ -30,7 +30,7 @@
         "symfony/dom-crawler": ">=2.7 <5.0",
         "behat/gherkin": "^4.4.0",
         "codeception/phpunit-wrapper": "^6.0.9|^7.0.6",
-        "codeception/stub": "^1.0"
+        "codeception/stub": "^2.0"
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
