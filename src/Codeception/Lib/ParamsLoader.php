@@ -22,7 +22,7 @@ class ParamsLoader
             return $this->loadEnvironmentVars();
         }
 
-        $this->paramsFile = codecept_root_dir($paramStorage);
+        $this->paramsFile = $paramStorage[0] === '/' ? $paramStorage : codecept_root_dir($paramStorage);
         if (!file_exists($this->paramsFile)) {
             throw new ConfigurationException("Params file {$this->paramsFile} not found");
         }
