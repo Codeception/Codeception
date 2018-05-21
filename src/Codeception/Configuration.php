@@ -110,6 +110,7 @@ class Configuration
             'depends' => []
         ],
         'path'        => null,
+        'presetfile'  => null,
         'namespace'   => null,
         'groups'      => [],
         'shuffle'     => false,
@@ -681,14 +682,22 @@ class Configuration
             return self::mergeConfigs($settings, self::$config['suites'][$suite]);
         }
 
-        $suiteDistConf = self::getConfFromFile(
-            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml"
-        );
-        $suiteConf = self::getConfFromFile(
-            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml"
-        );
+        $suiteDir = self::$dir . DIRECTORY_SEPARATOR . $path;
+
+        $suiteDistConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
+        $suiteConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "$suite.suite.yml");
+
+        // now we check the suite config file, if a presetfile is defined
+        if (isset($suiteConf['presetfile'])) {
+            $presetFilePath = realpath($suiteDir . DIRECTORY_SEPARATOR . $suiteConf['presetfile']);
+            if (file_exists($presetFilePath)) {
+                $settings = self::mergeConfigs(self::getConfFromFile($presetFilePath), $settings);
+            }
+        }
+
         $settings = self::mergeConfigs($settings, $suiteDistConf);
         $settings = self::mergeConfigs($settings, $suiteConf);
+
         return $settings;
     }
 
