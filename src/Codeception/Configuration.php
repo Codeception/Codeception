@@ -69,6 +69,7 @@ class Configuration
         'namespace'  => '',
         'include'    => [],
         'paths'      => [],
+        'presetfile' => null,
         'suites'     => [],
         'modules'    => [],
         'extensions' => [
@@ -178,6 +179,16 @@ class Configuration
 
         if ($config == self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
+        }
+
+        // we check for the "presetfile" key in the yml file
+        if (isset($config['presetfile'])) {
+            // and now we search for the file
+            $presetFilePath = realpath(self::$dir . DIRECTORY_SEPARATOR . $config['presetfile']);
+            if (file_exists($presetFilePath)) {
+                // and merge it with our configuration file
+                $config = self::mergeConfigs(self::getConfFromFile($presetFilePath), $config);
+            }
         }
 
         self::$config = $config;
