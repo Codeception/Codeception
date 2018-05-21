@@ -12,6 +12,8 @@
   * Fixtures method is now configurable
   * Subset of misconfigurations are now detected and informative messages created
 * Fixed using `$settings['path']` in `Codeception\Configuration::suiteSettings()` on Windows by @olegpro 
+* **Breaking** `$settings['configFile']` now supports absolute paths. In you have defined relative path to config in absolute manner 
+(starting with `/`), you must change it. @silverfire
 * [Laravel5] Added Laravel 5.4+ (5.1+ backward compatible) support for `callArtisan` method in Laravel5 module. See #4860 by @mohamed-aiman 
 * Fixed #4854: unnecessary escaping in operation arguments logging by @nicholascus
 * Fixed humanizing steps for utf8 strings by @nicholascus. See #4850
