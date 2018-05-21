@@ -239,7 +239,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         parent::validateConfig();
 
-        $pathToConfig = $this->config['configFile'][0] === '/' ? $this->config['configFile'] : codecept_root_dir($this->config['configFile']);
+        $pathToConfig = codecept_absolute_path($this->config['configFile']);
         if (!is_file($pathToConfig)) {
             throw new ModuleConfigException(
                 __CLASS__,
@@ -264,7 +264,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     protected function configureClient(array $settings)
     {
-        $settings['configFile'] = $settings['configFile'][0] === '/' ? $settings['configFile'] : codecept_root_dir($settings['configFile']);
+        $settings['configFile'] = codecept_absolute_path($settings['configFile']);
 
         foreach ($settings as $key => $value) {
             if (property_exists($this->client, $key)) {

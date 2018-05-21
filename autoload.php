@@ -101,3 +101,18 @@ if (!function_exists('codecept_relative_path')) {
         );
     }
 }
+
+if (!function_exists('codecept_absolute_path')) {
+    /**
+     * If $path is absolute, it will be returned without changes.
+     * If $path is relative, it will be passed to `codecept_root_dir()` function
+     * to make it absolute.
+     *
+     * @param string $path
+     * @return string the absolute path
+     */
+    function codecept_absolute_path($path)
+    {
+        return mb_substr($path, 0, 1) === DIRECTORY_SEPARATOR ? $path : codecept_root_dir($path);
+    }
+}
