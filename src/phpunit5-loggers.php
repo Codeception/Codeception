@@ -560,7 +560,7 @@ namespace PHPUnit\Util\Log {
                         "not ok %d - %s%s%s\n",
                         $this->testNumber,
                         $prefix != '' ? $prefix . ': ' : '',
-                        \PHPUnit\Util\Test::describe($test),
+                        \PHPUnit\Util\Test::describeAsString($test),
                         $directive != '' ? ' # ' . $directive : ''
                     )
                 );
