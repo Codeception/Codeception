@@ -1,3 +1,6 @@
+#### 2.4.2
+* Added support for `extends` in the `codeception.yml` and `*.suite.yml` files; by @johannesschobel
+
 #### 2.4.1
 
 * Fixed "Uncaught Error: Call to undefined method Codeception\Test\Descriptor::getTestDataSetIndex()" error when filtering tests.
