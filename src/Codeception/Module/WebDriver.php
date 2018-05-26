@@ -3028,9 +3028,6 @@ class WebDriver extends CodeceptionModule implements
         throw new \InvalidArgumentException("Only CSS or XPath allowed");
     }
 
-    /**
-     * @param string $name
-     */
     public function saveSessionSnapshot($name)
     {
         $this->sessionSnapshots[$name] = [];
@@ -3048,10 +3045,6 @@ class WebDriver extends CodeceptionModule implements
         $this->debugSection('Snapshot', "Saved \"$name\" session snapshot");
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function loadSessionSnapshot($name)
     {
         if (!isset($this->sessionSnapshots[$name])) {
@@ -3065,9 +3058,6 @@ class WebDriver extends CodeceptionModule implements
         return true;
     }
 
-    /**
-     * @param string $name
-     */
     public function deleteSessionSnapshot($name)
     {
         if (isset($this->sessionSnapshots[$name])) {
