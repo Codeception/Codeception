@@ -1,1 +1,1 @@
-presetfile: ./_presets/missing.preset.codeception.yml
+extends: ./_presets/missing.preset.codeception.yml

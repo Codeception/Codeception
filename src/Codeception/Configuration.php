@@ -69,7 +69,7 @@ class Configuration
         'namespace'  => '',
         'include'    => [],
         'paths'      => [],
-        'presetfile' => null,
+        'extends'    => null,
         'suites'     => [],
         'modules'    => [],
         'extensions' => [
@@ -110,7 +110,7 @@ class Configuration
             'depends' => []
         ],
         'path'        => null,
-        'presetfile'  => null,
+        'extends'     => null,
         'namespace'   => null,
         'groups'      => [],
         'shuffle'     => false,
@@ -182,10 +182,10 @@ class Configuration
             throw new ConfigurationException("Configuration file is invalid");
         }
 
-        // we check for the "presetfile" key in the yml file
-        if (isset($config['presetfile'])) {
+        // we check for the "extends" key in the yml file
+        if (isset($config['extends'])) {
             // and now we search for the file
-            $presetFilePath = realpath(self::$dir . DIRECTORY_SEPARATOR . $config['presetfile']);
+            $presetFilePath = realpath(self::$dir . DIRECTORY_SEPARATOR . $config['extends']);
             if (file_exists($presetFilePath)) {
                 // and merge it with our configuration file
                 $config = self::mergeConfigs(self::getConfFromFile($presetFilePath), $config);
@@ -687,9 +687,9 @@ class Configuration
         $suiteDistConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
         $suiteConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "$suite.suite.yml");
 
-        // now we check the suite config file, if a presetfile is defined
-        if (isset($suiteConf['presetfile'])) {
-            $presetFilePath = realpath($suiteDir . DIRECTORY_SEPARATOR . $suiteConf['presetfile']);
+        // now we check the suite config file, if a extends key is defined
+        if (isset($suiteConf['extends'])) {
+            $presetFilePath = realpath($suiteDir . DIRECTORY_SEPARATOR . $suiteConf['extends']);
             if (file_exists($presetFilePath)) {
                 $settings = self::mergeConfigs(self::getConfFromFile($presetFilePath), $settings);
             }

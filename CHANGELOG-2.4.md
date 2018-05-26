@@ -1,5 +1,5 @@
 #### 2.4.2
-* Added support for `presetfile` in the `codeception.yml` and `*.suite.yml` files; by @johannesschobel
+* Added support for `extends` in the `codeception.yml` and `*.suite.yml` files; by @johannesschobel
 
 #### 2.4.1
 
