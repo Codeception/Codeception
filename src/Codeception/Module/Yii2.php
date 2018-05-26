@@ -34,6 +34,7 @@ use yii\db\Transaction;
  * * `configFile` *required* - the path to the application config file. File should be configured for test environment and return configuration array.
  * * `entryUrl` - initial application url (default: http://localhost/index-test.php).
  * * `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
+ * * `logTargetsEnabled` - keep log targets enabled or set 'false' to force disable. Default is 'false'
  * * `transaction` - (default: true) wrap all database connection inside a transaction and roll it back after the test. Should be disabled for acceptance testing..
  * * `cleanup` - (default: true) cleanup fixtures after the test
  * * `ignoreCollidingDSN` - (default: false) When 2 database connections use the same DSN but different settings an exception will be thrown, set this to true to disable this behavior.
@@ -158,6 +159,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         'transaction' => null,
         'entryScript' => '',
         'entryUrl'    => 'http://localhost/index-test.php',
+        'logTargetsEnabled' => false,
         'responseCleanMethod' => Yii2Connector::CLEAN_CLEAR,
         'requestCleanMethod' => Yii2Connector::CLEAN_RECREATE,
         'recreateComponents' => [],
@@ -282,7 +284,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $entryUrl = $this->config['entryUrl'];
         $entryFile = $this->config['entryScript'] ?: basename($entryUrl);
         $entryScript = $this->config['entryScript'] ?: parse_url($entryUrl, PHP_URL_PATH);
-
+        
         $this->client = new Yii2Connector([
             'SCRIPT_FILENAME' => $entryFile,
             'SCRIPT_NAME' => $entryScript,

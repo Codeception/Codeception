@@ -48,7 +48,11 @@ class Yii2 extends Client
      */
     const CLEAN_MANUAL = 'manual';
 
-
+    /**
+     * @var bool keep log targets enabled or force disable. Set 'false' to force disable
+     */
+    public $logTargetsEnabled = false;
+    
     /**
      * @var string application config file
      */
@@ -107,12 +111,13 @@ class Yii2 extends Client
         if (!isset($config['class'])) {
             $config['class'] = 'yii\web\Application';
         }
-
+        if (!isset($config['container']['definitions']['yii\log\Logger']['class'])) {
+            $config['container']['definitions']['yii\log\Logger']['class'] = 'Codeception\Lib\Connector\Yii2\Logger';
+        }
+        
         $config = $this->mockMailer($config);
         /** @var \yii\web\Application $app */
         Yii::$app = Yii::createObject($config);
-
-        Yii::setLogger(new Logger());
     }
 
     /**
@@ -154,12 +159,11 @@ class Yii2 extends Client
         $app = $this->getApplication();
 
         // disabling logging. Logs are slowing test execution down
-        foreach ($app->log->targets as $target) {
-            $target->enabled = false;
+        if (!$this->logTargetsEnabled) {
+            foreach ($app->log->targets as $target) {
+                $target->enabled = false;
+            }
         }
-
-
-
 
         $yiiRequest = $app->getRequest();
         if ($request->getContent() !== null) {
