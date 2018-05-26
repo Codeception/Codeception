@@ -53,7 +53,7 @@ use yii\db\Transaction;
  * modules:
  *     enabled:
  *         - Yii2:
- *             configFile: '/path/to/config.php'
+ *             configFile: 'path/to/config.php'
  * ```
  *
  * ### Parts
@@ -238,10 +238,12 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     protected function validateConfig()
     {
         parent::validateConfig();
-        if (!is_file(Configuration::projectDir() . $this->config['configFile'])) {
+
+        $pathToConfig = codecept_absolute_path($this->config['configFile']);
+        if (!is_file($pathToConfig)) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "The application config file does not exist: " . Configuration::projectDir() . $this->config['configFile']
+                "The application config file does not exist: " . $pathToConfig
             );
         }
 
@@ -262,7 +264,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     protected function configureClient(array $settings)
     {
-        $settings['configFile'] = Configuration::projectDir() . $settings['configFile'];
+        $settings['configFile'] = codecept_absolute_path($settings['configFile']);
 
         foreach ($settings as $key => $value) {
             if (property_exists($this->client, $key)) {
