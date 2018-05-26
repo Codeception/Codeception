@@ -1,5 +1,31 @@
 #### 2.4.2
-* Added support for `extends` in the `codeception.yml` and `*.suite.yml` files; by @johannesschobel
+
+* Added support for `extends` in the `codeception.yml` and `*.suite.yml` files; by @johannesschobel.
+ Allows to inherit current config from a provided file. See example for `functional.suite.yml`:
+
+
+```yml
+actor: FunctionalTester
+extends: shared.functional.suite.yml
+modules:
+    enabled:
+        - \App\Modules\X\Tests\Helper\Functional
+```
+
+* [Yii2] Restore null check for client in Yii2 by @wkritzinger. See #4940
+* [Yii2] Resetting Yii application in `_after`. By @SamMousa. See #4928
+* [Yii2] **Breaking** `$settings['configFile']` now supports absolute paths. In you have defined relative path to config in absolute manner
+* [WebDriverIO] Added `deleteSessionSnapshot` by @vi4o
+* [Symfony] Added support for custom kernel names with `kernel_class` config option. By @omnilight.
+* [Asserts] Better exception message for `expectException` by @Slamdunk
+* [REST] Decode all non-arrays to array. See #4946 by @Amunak, fixes #4944. 
+* [ZF2] Fixed compatibility with ZF2 ServiceManager by @omnilight.
+* [Laravel5] Fixed memory leak when using Laravel factories inside Codeception. See #4971 by @AdrianSkierniewski
+* [Db] Added support for `null` values in MSSQL driver by @philek
+* Handle absolute paths in ParamsLoader by @SilverFire
+* Fix error on single file test. See #4986 by @mikbox74 
+* Upgraded to Codeception/Stub 2.0 by @Naktibalda, fixed compatibility.
+ 
 
 #### 2.4.1
 
@@ -14,8 +40,7 @@
   * More reliable application state before and during test execution
   * Fixtures method is now configurable
   * Subset of misconfigurations are now detected and informative messages created
-* Fixed using `$settings['path']` in `Codeception\Configuration::suiteSettings()` on Windows by @olegpro 
-* **Breaking** `$settings['configFile']` now supports absolute paths. In you have defined relative path to config in absolute manner 
+* Fixed using `$settings['path']` in `Codeception\Configuration::suiteSettings()` on Windows by @olegpro  
 (starting with `/`), you must change it. @silverfire
 * [Laravel5] Added Laravel 5.4+ (5.1+ backward compatible) support for `callArtisan` method in Laravel5 module. See #4860 by @mohamed-aiman 
 * Fixed #4854: unnecessary escaping in operation arguments logging by @nicholascus
