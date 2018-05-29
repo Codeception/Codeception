@@ -134,6 +134,7 @@ modules:
 
 ```
 
+* `data_provider_output_max`: maximum string size when printing data provider information when running cests. Default is 100.
 * `extends`: allows you to specify a file (relative to the `*.suite.yml` file) that holds some already pre-defined values. This can be used to always use the same configuration for modules or whatever.
 * `namespace`: default namespace of actor, support classes and tests.
 * `suite_namespace`: default namespace for new tests of this suite (ignores `namespace` option)

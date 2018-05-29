@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Test\Loader;
 
+use Codeception\Configuration;
 use Codeception\Exception\TestParseException;
 use Codeception\Lib\Parser;
 use Codeception\Test\Cest as CestFormat;
@@ -9,7 +10,18 @@ use Codeception\Util\ReflectionHelper;
 
 class Cest implements LoaderInterface
 {
+    protected static $defaultSettings = [
+        'data_provider_output_max' => '100'
+    ];
+
     protected $tests = [];
+
+    protected $settings = [];
+
+    public function __construct($settings = [])
+    {
+        $this->settings = Configuration::mergeConfigs(self::$defaultSettings, $settings);
+    }
 
     public function getTests()
     {
@@ -86,7 +98,7 @@ class Cest implements LoaderInterface
                                 "Make sure this is a valid JSON (Hint: \"-char for strings) or a single-line annotation in Doctrine-style"
                             );
                         }
-                        $test = new CestFormat($unit, $method, $file);
+                        $test = new CestFormat($unit, $method, $file, $this->settings);
                         $test->getMetadata()->setCurrent(['example' => $example]);
                         $test->getMetadata()->setIndex($index);
                         $dataProvider->addTest($test);
@@ -95,7 +107,7 @@ class Cest implements LoaderInterface
                     $this->tests[] = $dataProvider;
                     continue;
                 }
-                $this->tests[] = new CestFormat($unit, $method, $file);
+                $this->tests[] = new CestFormat($unit, $method, $file, $this->settings);
             }
         }
     }

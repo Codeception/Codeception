@@ -26,8 +26,9 @@ class Cest extends Test implements
     protected $parser;
     protected $testClassInstance;
     protected $testMethod;
+    protected $settings;
 
-    public function __construct($testClass, $methodName, $fileName)
+    public function __construct($testClass, $methodName, $fileName, $settings = [])
     {
         $metadata = new Metadata();
         $metadata->setName($methodName);
@@ -35,6 +36,7 @@ class Cest extends Test implements
         $this->setMetadata($metadata);
         $this->testClassInstance = $testClass;
         $this->testMethod = $methodName;
+        $this->settings = $settings;
         $this->createScenario();
         $this->parser = new Parser($this->getScenario(), $this->getMetadata());
     }
@@ -50,7 +52,8 @@ class Cest extends Test implements
         // add example params to feature
         if ($this->getMetadata()->getCurrent('example')) {
             $step = new Comment('', $this->getMetadata()->getCurrent('example'));
-            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | '. $step->getArgumentsAsString(100));
+            $outputMax = isset($this->settings['data_provider_output_max']) ? $this->settings['data_provider_output_max'] : 100;
+            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | '. $step->getArgumentsAsString($outputMax));
         }
     }
 

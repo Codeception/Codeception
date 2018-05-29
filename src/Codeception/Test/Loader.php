@@ -49,7 +49,7 @@ class Loader
         $this->path = $suiteSettings['path'];
         $this->formats = [
             new CeptLoader(),
-            new CestLoader(),
+            new CestLoader($suiteSettings),
             new UnitLoader(),
             new GherkinLoader($suiteSettings)
         ];
