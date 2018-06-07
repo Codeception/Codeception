@@ -113,6 +113,7 @@ class Configuration
         'extends'     => null,
         'namespace'   => null,
         'groups'      => [],
+        'formats'     => [],
         'shuffle'     => false,
         'extensions'  => [ // suite extensions
             'enabled' => [],
