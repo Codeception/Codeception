@@ -236,7 +236,7 @@ class Db extends CodeceptionModule implements DbInterface
             && $this->config['dump']
             &&  ($this->config['cleanup'] || ($this->config['populate']))
         ) {
-            $this->readSql();
+            $this->loadSql();
         }
 
         $this->connect();
@@ -254,25 +254,40 @@ class Db extends CodeceptionModule implements DbInterface
         }
     }
 
-    private function readSql()
+    private function loadSql()
     {
-        if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
+        $dumps = $this->config['dump'];
+        if (!is_array($dumps)) {
+            $dumps = array($dumps);
+        }
+
+        foreach ($dumps as $dumpFile) {
+            $this->readSql($dumpFile);
+        }
+    }
+
+    private function readSql($filePath)
+    {
+        if (!file_exists(Configuration::projectDir() . $filePath)) {
             throw new ModuleConfigException(
                 __CLASS__,
                 "\nFile with dump doesn't exist.\n"
                 . "Please, check path for sql file: "
-                . $this->config['dump']
+                . $filePath
             );
         }
 
-        $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
+        $sql = file_get_contents(Configuration::projectDir() . $filePath);
 
         // remove C-style comments (except MySQL directives)
         $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
 
         if (!empty($sql)) {
             // split SQL dump into lines
-            $this->sql = preg_split('/\r\n|\n|\r/', $sql, -1, PREG_SPLIT_NO_EMPTY);
+            $this->sql = array_merge(
+                $this->sql,
+                preg_split('/\r\n|\n|\r/', $sql, -1, PREG_SPLIT_NO_EMPTY)
+            );
         }
     }
 
