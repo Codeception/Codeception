@@ -77,7 +77,7 @@ class DbPopulator
      */
     public function run()
     {
-        if (!isset($this->config['dump'])) {
+        if (!isset($this->config['dump']) || $this->config['dump'] === false) {
             return $this->runCommand((string) $this->config['populator']);
         } elseif (!is_array($this->config['dump'])) {
             $this->config['dump'] = array($this->config['dump']);
