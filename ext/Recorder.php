@@ -32,6 +32,7 @@ use Codeception\Util\Template;
  *
  * * `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
  * * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+ * * `ignore_steps` (default: []) - array of step names that should not be recorded
  *
  *
  * #### Examples:
@@ -42,6 +43,7 @@ use Codeception\Util\Template;
  *         Codeception\Extension\Recorder:
  *             module: AngularJS # enable for Angular
  *             delete_successful: false # keep screenshots of successful tests
+ *             ignore_steps: [have, haveMultiple]
  * ```
  *
  */
@@ -51,7 +53,8 @@ class Recorder extends \Codeception\Extension
         'delete_successful' => true,
         'module'            => 'WebDriver',
         'template'          => null,
-        'animate_slides'    => true
+        'animate_slides'    => true,
+        'ignore_steps'      => []
     ];
 
     protected $template = <<<EOF
@@ -337,6 +340,9 @@ EOF;
             return;
         }
         if ($e->getStep() instanceof CommentStep) {
+            return;
+        }
+        if (in_array($e->getStep()->getAction(), $this->config['ignore_steps'])) {
             return;
         }
 
