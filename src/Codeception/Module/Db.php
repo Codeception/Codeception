@@ -312,6 +312,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
 
         try {
+            $this->debugSection('Connecting To Db', ['config' => $this->config, 'options' => $options]);
             $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password'], $options);
         } catch (\PDOException $e) {
             $message = $e->getMessage();
