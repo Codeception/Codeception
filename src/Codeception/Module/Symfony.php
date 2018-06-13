@@ -292,7 +292,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             require_once codecept_root_dir() . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
         }
 
-        $filesRealPath = array_map(function ($file){
+        $filesRealPath = array_map(function ($file) {
             require_once $file;
             return $file->getRealPath();
         }, $results);
