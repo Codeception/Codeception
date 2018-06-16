@@ -47,7 +47,7 @@ class RunCest
         $I->seeFileFound('report.json', 'tests/_output');
         $I->seeInThisFile('"suite":');
         $I->seeInThisFile('"dummy"');
-        $I->assertNotNull(json_decode((file_get_contents('tests/_output/report.json'))));
+        $I->assertNotNull(json_decode(file_get_contents('tests/_output/report.json')));
     }
 
     /**
