@@ -46,14 +46,14 @@ Only works with PhpBrowser
 Example
 Config -
 
-modules:
-     enabled:
-         - REST:
-             aws:
-                 key: accessKey
-                 secret: accessSecret
-                 service: awsService
-                 region: awsRegion
+    modules:
+        enabled:
+            - REST:
+                aws:
+                    key: accessKey
+                    secret: accessSecret
+                    service: awsService
+                    region: awsRegion
 
 ```php
 <?php
