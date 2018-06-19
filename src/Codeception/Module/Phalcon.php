@@ -245,7 +245,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     public function haveInSession($key, $val)
     {
         $this->di->get('session')->set($key, $val);
-        $this->debugSection('Session', json_encode($this->di['session']->toArray()));
+        $this->debugSection('Session', $this->di['session']->toArray());
     }
 
     /**
@@ -264,7 +264,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
      */
     public function seeInSession($key, $value = null)
     {
-        $this->debugSection('Session', json_encode($this->di['session']->toArray()));
+        $this->debugSection('Session', $this->di['session']->toArray());
 
         if (is_array($key)) {
             $this->seeSessionHasValues($key);
@@ -351,7 +351,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
             return null;
         }
 
-        $this->debugSection($model, json_encode($record));
+        $this->debugSection($model, $record);
 
         return $this->getModelIdentity($record);
     }
@@ -375,7 +375,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         if (!$record) {
             $this->fail("Couldn't find $model with " . json_encode($attributes));
         }
-        $this->debugSection($model, json_encode($record));
+        $this->debugSection($model, $record);
     }
 
     /**
@@ -394,7 +394,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     public function dontSeeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
-        $this->debugSection($model, json_encode($record));
+        $this->debugSection($model, $record);
         if ($record) {
             $this->fail("Unexpectedly managed to find $model with " . json_encode($attributes));
         }

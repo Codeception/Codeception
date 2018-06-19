@@ -591,7 +591,7 @@ EOF;
                 $this->debugSection("Request", "$method $url");
                 $files = [];
             } else {
-                $this->debugSection("Request", "$method $url " . json_encode($parameters));
+                $this->debugSection("Request", "$method $url " . json_encode($parameters, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
                 $files = $this->formatFilesArray($files);
             }
             $this->response = (string)$this->connectionModule->_request($method, $url, $parameters, $files);

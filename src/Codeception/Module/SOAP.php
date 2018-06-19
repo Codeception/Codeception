@@ -229,7 +229,7 @@ EOF;
             $response = $this->processExternalRequest($action, $req);
         }
 
-        $this->debugSection("Response", (string) $response);
+        $this->debugSection("Response", $response);
         $this->xmlResponse = SoapUtils::toXml($response);
         $this->xmlStructure = null;
     }

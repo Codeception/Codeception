@@ -283,7 +283,7 @@ abstract class Module
     protected function debugSection($title, $message)
     {
         if (is_array($message) or is_object($message)) {
-            $message = stripslashes(json_encode($message));
+            $message = stripslashes(json_encode($message, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
         }
         $this->debug("[$title] $message");
     }

@@ -789,7 +789,7 @@ class WebDriver extends CodeceptionModule implements
             },
             $cookies
         );
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugSection('Cookies', $this->webDriver->manage()->getCookies());
         $this->assertContains($cookie, $cookies);
     }
 
@@ -802,7 +802,7 @@ class WebDriver extends CodeceptionModule implements
             },
             $cookies
         );
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugSection('Cookies', $this->webDriver->manage()->getCookies());
         $this->assertNotContains($cookie, $cookies);
     }
 
@@ -820,13 +820,13 @@ class WebDriver extends CodeceptionModule implements
             }
         }
         $this->webDriver->manage()->addCookie($params);
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugSection('Cookies', $this->webDriver->manage()->getCookies());
     }
 
     public function resetCookie($cookie, array $params = [])
     {
         $this->webDriver->manage()->deleteCookieNamed($cookie);
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugSection('Cookies', $this->webDriver->manage()->getCookies());
     }
 
     public function grabCookie($cookie, array $params = [])
@@ -2219,7 +2219,7 @@ class WebDriver extends CodeceptionModule implements
             $form->getAttribute('action') ? $form->getAttribute('action') : $this->_getCurrentUri()
         );
         $this->debugSection('Method', $form->getAttribute('method') ? $form->getAttribute('method') : 'GET');
-        $this->debugSection('Parameters', json_encode($params));
+        $this->debugSection('Parameters', $params);
 
         $submitted = false;
         if (!empty($button)) {
