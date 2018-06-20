@@ -47,6 +47,7 @@ class RunCest
         $I->seeFileFound('report.json', 'tests/_output');
         $I->seeInThisFile('"suite":');
         $I->seeInThisFile('"dummy"');
+        $I->assertNotNull(json_decode(file_get_contents('tests/_output/report.json')));
     }
 
     /**
@@ -292,7 +293,7 @@ EOF
             $scenario->skip("Xdebug not loaded");
         }
 
-        $file = "codeception".DIRECTORY_SEPARATOR."c3";
+        $file = "codeception" . DIRECTORY_SEPARATOR . "c3";
         $I->executeCommand('run scenario SubStepsCept --steps');
         $I->seeInShellOutput(<<<EOF
 Scenario --
