@@ -323,7 +323,7 @@ class Db extends CodeceptionModule implements DbInterface
         if ($this->config['reconnect']) {
             $this->connect();
         }
-        if ($this->config['cleanup'] && !$this->populated) {
+        if ($this->config['cleanup'] && !$this->populated && empty($test->getMetadata()->getParam('skipDbCleanup'))) {
             $this->_cleanup();
             $this->_loadDump();
         }
