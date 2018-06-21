@@ -295,7 +295,7 @@ and you want to check that the user can log into the site using this password:
 
 ```php
 <?php
-$I->fillField('email', 'miles@davis.com')
+$I->fillField('email', 'miles@davis.com');
 $I->click('Generate Password');
 $password = $I->grabTextFrom('#password');
 $I->click('Login');

@@ -357,6 +357,8 @@ Here is how it is done in the Db module:
 class Db extends \Codeception\Module
 {
     protected $requiredFields = ['dsn', 'user', 'password'];
+    // ...
+}
 ```
 
 The next time you start the suite without setting one of these values, an exception will be thrown.
@@ -370,6 +372,8 @@ class WebDriver extends \Codeception\Module
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = ['host' => '127.0.0.1', 'port' => '4444'];
+    // ...
+}
 ```
 
 The host and port parameter can be redefined in the suite configuration.
