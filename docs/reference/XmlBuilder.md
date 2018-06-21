@@ -22,7 +22,7 @@ $xml->users
            ->attr('empty','false')
            ->items
                ->item
-                   ->val('useful item');
+                   ->val('useful item')
                ->parents('user')
        ->active
            ->val(1);

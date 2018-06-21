@@ -49,7 +49,7 @@ $I->bindQueueToExchange(
     'nameOfMyQueueToBind', // name of the queue
     'transactionTracking.transaction', // exchange name to bind to
     'your.routing.key' // Optionally, provide a binding key
-)
+);
 ```
 
  * `param string` $queue
@@ -72,7 +72,7 @@ This is an alias of method `exchange_declare` of `PhpAmqpLib\Channel\AMQPChannel
 $I->declareExchange(
     'nameOfMyExchange', // exchange name
     'topic' // exchange type
-)
+);
 ```
 
  * `param string` $exchange
@@ -96,8 +96,8 @@ This is an alias of method `queue_declare` of `PhpAmqpLib\Channel\AMQPChannel`.
 ```php
 <?php
 $I->declareQueue(
-    'nameOfMyQueue', // exchange name
-)
+    'nameOfMyQueue' // exchange name
+);
 ```
 
  * `param string` $queue

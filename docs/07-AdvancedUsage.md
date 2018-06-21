@@ -497,7 +497,7 @@ public function myTest(\AcceptanceTester $I, \Codeception\Scenario $scenario)
 }
 ```
 
-`Codeception\Scenario` is also availble in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
+`Codeception\Scenario` is also available in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
 
 ### Dependencies
 
@@ -705,9 +705,9 @@ class MyFormat implements \Codeception\Test\Loader\LoaderInterface
 }
 ```
 
-## Shell autocompletion
+## Shell auto-completion
 
-For bash and zsh shells, you can use autocompletion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
+For bash and zsh shells, you can use auto-completion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
 ```bash
 # BASH ~4.x, ZSH
 source <([codecept location] _completion --generate-hook --program codecept --use-vendor-bin)
