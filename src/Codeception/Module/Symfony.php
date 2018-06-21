@@ -286,21 +286,23 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
                 . "Specify directory where file with Kernel class for your application is located with `app_path` parameter."
             );
         }
-        $file = current($results);
 
         if (file_exists(codecept_root_dir() . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) {
             // ensure autoloader from this dir is loaded
             require_once codecept_root_dir() . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
         }
 
-        require_once $file;
+        $filesRealPath = array_map(function ($file) {
+            require_once $file;
+            return $file->getRealPath();
+        }, $results);
 
         $possibleKernelClasses = $this->getPossibleKernelClasses();
 
         foreach ($possibleKernelClasses as $class) {
             if (class_exists($class)) {
                 $refClass = new \ReflectionClass($class);
-                if ($refClass->getFileName() === $file->getRealpath()) {
+                if ($file = array_search($refClass->getFileName(), $filesRealPath)) {
                     return $class;
                 }
             }
