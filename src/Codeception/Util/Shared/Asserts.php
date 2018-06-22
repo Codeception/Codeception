@@ -268,6 +268,17 @@ trait Asserts
     }
 
     /**
+     * Checks that the condition is NOT true (everything but true)
+     *
+     * @param        $condition
+     * @param string $message
+     */
+    protected function assertNotTrue($condition, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertNotTrue($condition, $message);
+    }
+
+    /**
      * Checks that condition is negative.
      *
      * @param        $condition
@@ -276,6 +287,17 @@ trait Asserts
     protected function assertFalse($condition, $message = '')
     {
         \PHPUnit\Framework\Assert::assertFalse($condition, $message);
+    }
+
+    /**
+     * Checks that the condition is NOT false (everything but false)
+     *
+     * @param        $condition
+     * @param string $message
+     */
+    protected function assertNotFalse($condition, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertNotFalse($condition, $message);
     }
 
     /**

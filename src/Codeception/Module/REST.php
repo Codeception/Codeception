@@ -1162,6 +1162,39 @@ EOF;
     }
 
     /**
+     * Checks that the response code is 2xx
+     */
+    public function seeResponseCodeIsSuccessful()
+    {
+        $this->connectionModule->seeResponseCodeIsSuccessful();
+    }
+
+    /**
+     * Checks that the response code 3xx
+     */
+    public function seeResponseCodeIsRedirection()
+    {
+        $this->connectionModule->seeResponseCodeIsRedirection();
+    }
+
+    /**
+     * Checks that the response code is 4xx
+     */
+    public function seeResponseCodeIsClientError()
+    {
+        $this->connectionModule->seeResponseCodeIsClientError();
+    }
+
+    /**
+     * Checks that the response code is 5xx
+     */
+    public function seeResponseCodeIsServerError()
+    {
+        $this->connectionModule->seeResponseCodeIsServerError();
+    }
+
+
+    /**
      * Checks whether last response was valid XML.
      * This is done with libxml_get_last_error function.
      *

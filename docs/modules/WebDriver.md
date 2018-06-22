@@ -936,9 +936,9 @@ A callback should be executed by JavaScript to exit from a script.
 Callback is passed as a last element in `arguments` array.
 Additional arguments can be passed as array in second parameter.
 
-```js
+``` php
 // wait for 1200 milliseconds my running `setTimeout`
-* $I->executeAsyncJS('setTimeout(arguments[0], 1200)');
+$I->executeAsyncJS('setTimeout(arguments[0], 1200)');
 
 $seconds = 1200; // or seconds are passed as argument
 $I->executeAsyncJS('setTimeout(arguments[1], arguments[0])', [$seconds]);

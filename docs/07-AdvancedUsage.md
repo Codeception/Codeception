@@ -497,7 +497,7 @@ public function myTest(\AcceptanceTester $I, \Codeception\Scenario $scenario)
 }
 ```
 
-`Codeception\Scenario` is also availble in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
+`Codeception\Scenario` is also available in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
 
 ### Dependencies
 
@@ -661,9 +661,53 @@ groups:
 
 This will load all found `p*` files in `tests/_data` as groups. Group names will be as follows p1,p2,...,pN.
 
-## Shell autocompletion
+## Formats
 
-For bash and zsh shells, you can use autocompletion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
+In addition to the standard test formats (Cept, Cest, Unit, Gherkin) you can implement your own format classes to customise your test execution.
+Specify these in your suite configuration:
+
+```yaml
+formats:
+  - \My\Namespace\MyFormat
+```
+
+Then define a class which implements the LoaderInterface
+
+```php
+namespace My\Namespace;
+
+class MyFormat implements \Codeception\Test\Loader\LoaderInterface
+{
+    protected $tests;
+    
+    protected $settings;
+    
+    public function __construct($settings = [])
+    {
+        //These are the suite settings
+        $this->settings = $settings;
+    }
+    
+    public function loadTests($filename)
+    {
+        //Load file and create tests
+    }
+
+    public function getTests()
+    {
+        return $this->tests;
+    }
+
+    public function getPattern()
+    {
+        return '~Myformat\.php$~';
+    }
+}
+```
+
+## Shell auto-completion
+
+For bash and zsh shells, you can use auto-completion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
 ```bash
 # BASH ~4.x, ZSH
 source <([codecept location] _completion --generate-hook --program codecept --use-vendor-bin)
