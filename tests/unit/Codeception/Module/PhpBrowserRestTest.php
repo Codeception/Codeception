@@ -323,4 +323,68 @@ class PhpBrowserRestTest extends Unit
         $this->module->sendGET('/rest/http-host/');
         $this->assertEquals('/rest/http-host/', $this->phpBrowser->grabFromCurrentUrl());
     }
+
+    public function test_if_stub_can_be_loaded()
+    {
+        $replacements = [];
+
+        $stub = $this->module->loadAndPrepareStub('rest/stub.json', $replacements);
+
+        $this->assertNotEmpty($stub);
+        $this->assertJson($stub);
+
+        $this->assertContains('{{book-title}}', $stub);
+        $this->assertContains('{{book-author}}', $stub);
+        $this->assertContains('{{book-year}}', $stub);
+    }
+
+    public function test_if_stub_can_be_loaded_and_placeholders_are_replaced()
+    {
+        $replacements = [
+            'book-author' => 'JRR Tolkien',
+            'book-title' => 'Lord of the Rings',
+            'book-year' => 1954,
+        ];
+
+        $stub = $this->module->loadAndPrepareStub('rest/stub.json', $replacements);
+
+        $this->assertNotEmpty($stub);
+        $this->assertJson($stub);
+
+        $this->assertNotContains('{{book-title}}', $stub);
+        $this->assertNotContains('{{book-author}}', $stub);
+        $this->assertNotContains('{{book-year}}', $stub);
+
+        $this->assertContains('JRR Tolkien', $stub);
+        $this->assertContains('Lord of the Rings', $stub);
+        $this->assertContains('1954', $stub);
+    }
+
+    public function test_if_stub_can_be_loaded_and_placeholders_are_replaced_with_custom_patterns()
+    {
+        $replacements = [
+            'book-author' => 'JRR Tolkien',
+            'book-title' => 'Lord of the Rings',
+            'book-year' => 1954,
+        ];
+
+        $stub = $this->module->loadAndPrepareStub('rest/stub2.json', $replacements, '##', '++');
+
+        $this->assertNotEmpty($stub);
+        $this->assertJson($stub);
+
+        $this->assertNotContains('{{book-title}}', $stub);
+        $this->assertNotContains('{{book-author}}', $stub);
+        $this->assertNotContains('{{book-year}}', $stub);
+
+        $this->assertContains('JRR Tolkien', $stub);
+        $this->assertContains('Lord of the Rings', $stub);
+        $this->assertContains('1954', $stub);
+    }
+
+    public function test_if_exception_is_thrown_when_missing_stub_is_loaded()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $stub = $this->module->loadAndPrepareStub('rest/missing.stub', []);
+    }
 }

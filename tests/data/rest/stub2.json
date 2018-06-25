@@ -1,0 +1,7 @@
+{
+  "data" : {
+    "title" : "##book-title++",
+    "author" : "##book-author++",
+    "year" : "##book-year++"
+  }
+}
