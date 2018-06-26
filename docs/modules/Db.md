@@ -219,27 +219,19 @@ $mails = $I->grabColumnFromDatabase('users', 'email', array('name' => 'RebOOter'
 
 ### grabFromDatabase
  
-Fetches a single column value from a database.
+Fetches all values from the column in database.
 Provide table name, desired column and criteria.
 
 ``` php
 <?php
-$mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
+$mails = $I->grabFromDatabase('users', 'email', array('name' => 'RebOOter'));
 ```
-Comparison expressions can be used as well:
-
-```php
-<?php
-$post = $I->grabFromDatabase('posts', ['num_comments >=' => 100]);
-$user = $I->grabFromDatabase('users', ['email like' => 'miles%']);
-```
-
-Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
 
  * `param string` $table
  * `param string` $column
- * `param array` $criteria
+ * `param array`  $criteria
 
+ * `return` array
 
 
 ### grabNumRecords
