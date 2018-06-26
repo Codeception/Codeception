@@ -1,8 +1,16 @@
+#### 2.4.3
+
+* Fixed a bug in order to use multiple Kernels; by @alefcastelo
+* Added feature to specify your own test formats (e.g., Cept, Cest, ...); by @mlambley
+* [Asserts] Added new methods `assertNotTrue` and `assertNotFalse` methods; by @johannesschobel
+* [REST / InnerBrowser] Added new methods to check for `Http Status Ranges` with nice "wrappers" (e.g., `seeHttpStatusCodeIsSuccessful()` checks the code between 200 and 299); by @johannesschobel
+* [REST / InnerBrowser] Added new method to load a stub file from the `data` folder of the suite and replace placeholder with real values; by @johannesschobel
+* Improved the docs; by community
+
 #### 2.4.2
 
 * Added support for `extends` in the `codeception.yml` and `*.suite.yml` files; by @johannesschobel.
  Allows to inherit current config from a provided file. See example for `functional.suite.yml`:
-
 
 ```yml
 actor: FunctionalTester
