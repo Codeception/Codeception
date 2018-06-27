@@ -14,6 +14,7 @@ use yii\web\Application;
 use yii\web\ErrorHandler;
 use yii\web\HttpException;
 use yii\web\Request;
+use yii\web\UploadedFile;
 use yii\web\Response as YiiResponse;
 
 class Yii2 extends Client
@@ -380,6 +381,8 @@ TEXT
             return;
         }
 
+        // Reset uploaded files for every request.
+        UploadedFile::reset();
         $application = $this->getApplication();
 
         $this->resetResponse($application);
