@@ -323,25 +323,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (empty($this->loadedFixtures)
             && method_exists($test, $this->_getConfig('fixturesMethod'))
         ) {
-            /** @var Connection[] $connections */
-            $connections = [];
-            // Register event handler.
-            $handler = function (Event $event) use (&$connections) {
-                $this->debugSection('Fixtures', 'Opened database connection: ' . $event->sender->dsn);
-                $connections[] = $event->sender;
-            };
-
-            Event::on(Connection::class, Connection::EVENT_AFTER_OPEN, $handler);
-
+            $connectionWatcher = new Yii2Connector\ConnectionWatcher();
+            $connectionWatcher->start();
             $this->haveFixtures(call_user_func([$test, $this->_getConfig('fixturesMethod')]));
-
-            Event::off(Connection::class, Connection::EVENT_AFTER_OPEN, $handler);
-
-            // Close all connections so they get properly reopened after the transaction handler has been attached.
-            foreach ($connections as $connection) {
-                $this->debugSection('Fixtures', 'Closing database connection: ' . $connection->dsn);
-                $connection->close();
-            }
+            $connectionWatcher->stop();
+            $connectionWatcher->closeAll();
         }
         $this->debugSection('Fixtures', 'Done');
     }
