@@ -5,6 +5,7 @@ namespace Codeception\Lib\Connector\Yii2;
 
 use yii\base\Event;
 use yii\db\Connection;
+use yii\db\Transaction;
 
 /**
  * Class TransactionForcer
@@ -83,8 +84,10 @@ TEXT
     {
         /** @var Transaction $transaction */
         foreach ($this->transactions as $transaction) {
-            $transaction->rollBack();
-            $this->debug('Transaction cancelled; all changes reverted.');
+            if ($transaction->db->isActive) {
+                $transaction->rollBack();
+                $this->debug('Transaction cancelled; all changes reverted.');
+            }
         }
 
         $this->transactions = [];
