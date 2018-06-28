@@ -20,7 +20,7 @@ class ConnectionWatcher
 
     public function __construct()
     {
-        $this->handler = function(Event $event) {
+        $this->handler = function (Event $event) {
             if ($event->sender instanceof Connection) {
                 $this->connectionOpened($event->sender);
             }
@@ -51,7 +51,7 @@ class ConnectionWatcher
     {
         $count = count($this->connections);
         $this->debug("closing all ($count) connections");
-        foreach($this->connections as $connection) {
+        foreach ($this->connections as $connection) {
             $connection->close();
         }
     }

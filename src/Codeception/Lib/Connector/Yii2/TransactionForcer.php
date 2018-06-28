@@ -3,7 +3,6 @@
 
 namespace Codeception\Lib\Connector\Yii2;
 
-
 use yii\base\Event;
 use yii\db\Connection;
 
