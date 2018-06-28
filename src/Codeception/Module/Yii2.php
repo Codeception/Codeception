@@ -167,22 +167,21 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     protected $requiredFields = ['configFile'];
 
     /**
-     * @var array Array of Transaction objects indexed by a string key
-     */
-    private $transactions = [];
-    /**
-     * @var \PDO[] Array of PDO objects indexed by a string key
-     */
-    private $pdoCache = [];
-    /**
-     * @var string[] Array of cache keys indexes by their DSN
-     */
-    private $dsnCache = [];
-
-    /**
      * @var Yii2Connector\FixturesStore[]
      */
     public $loadedFixtures = [];
+
+    /**
+     * Helper to manage database connections
+     * @var Yii2Connector\ConnectionWatcher
+     */
+    private $connectionWatcher;
+
+    /**
+     * Helper to force database transaction
+     * @var Yii2Connector\TransactionForcer
+     */
+    private $transactionForcer;
 
     /**
      * @var array The contents of $_SERVER upon initialization of this object.
@@ -299,12 +298,16 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $this->recreateClient();
         $this->client->startApp();
 
+        $this->connectionWatcher = new Yii2Connector\ConnectionWatcher();
+        $this->connectionWatcher->start();
+
         // load fixtures before db transaction
         if ($test instanceof \Codeception\Test\Cest) {
             $this->loadFixtures($test->getTestClass());
         } else {
             $this->loadFixtures($test);
         }
+
 
         $this->startTransactions();
     }
@@ -317,24 +320,14 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     private function loadFixtures($test)
     {
         $this->debugSection('Fixtures', 'Loading fixtures');
-        /** @var Connection[] $connections */
-        $connections = [];
-        // Register event handler.
-        Event::on(Connection::class, Connection::EVENT_AFTER_OPEN, function (Event $event) use (&$connections) {
-            $this->debugSection('Fixtures', 'Opened database connection: ' . $event->sender->dsn);
-            $connections[] = $event->sender;
-        });
         if (empty($this->loadedFixtures)
             && method_exists($test, $this->_getConfig('fixturesMethod'))
         ) {
+            $connectionWatcher = new Yii2Connector\ConnectionWatcher();
+            $connectionWatcher->start();
             $this->haveFixtures(call_user_func([$test, $this->_getConfig('fixturesMethod')]));
-        }
-
-        Event::offAll();
-        // Close all connections so they get properly reopened after the transaction handler has been attached.
-        foreach ($connections as $connection) {
-            $this->debugSection('Fixtures', 'Closing database connection: ' . $connection->dsn);
-            $connection->close();
+            $connectionWatcher->stop();
+            $connectionWatcher->closeAll();
         }
         $this->debugSection('Fixtures', 'Done');
     }
@@ -349,6 +342,10 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $_REQUEST = [];
 
         $this->rollbackTransactions();
+
+        $this->connectionWatcher->stop();
+        $this->connectionWatcher->closeAll();
+        unset($this->connectionWatcher);
 
         if ($this->config['cleanup']) {
             foreach ($this->loadedFixtures as $fixture) {
@@ -365,80 +362,21 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         parent::_after($test);
     }
 
-    public function connectionOpenHandler(Event $event)
-    {
-        if ($event->sender instanceof Connection) {
-            $connection = $event->sender;
-            /*
-             * We should check if the known PDO objects are the same, in which case we should reuse the PDO
-             * object so only 1 transaction is started and multiple connections to the same database see the
-             * same data (due to writes inside a transaction not being visible from the outside).
-             *
-             */
-            $key = md5(json_encode([
-                'dsn' => $connection->dsn,
-                'user' => $connection->username,
-                'pass' => $connection->password,
-                'attributes' => $connection->attributes,
-                'emulatePrepare' => $connection->emulatePrepare,
-                'charset' => $connection->charset
-            ]));
-
-            /*
-             * If keys match we assume connections are "similar enough".
-             */
-            if (isset($this->pdoCache[$key])) {
-                $connection->pdo = $this->pdoCache[$key];
-            } else {
-                $this->pdoCache[$key] = $connection->pdo;
-            }
-
-            if (isset($this->dsnCache[$connection->dsn])
-                && $this->dsnCache[$connection->dsn] !== $key
-                && !$this->config['ignoreCollidingDSN']
-            ) {
-                $this->debugSection('WARNING', <<<TEXT
-You use multiple connections to the same DSN ({$connection->dsn}) with different configuration.
-These connections will not see the same database state since we cannot share a transaction between different PDO
-instances.
-You can remove this message by adding 'ignoreCollidingDSN = true' in the module configuration.
-TEXT
-                );
-                Debug::pause();
-            }
-
-            if (isset($this->transactions[$key])) {
-                $this->debugSection('Database', 'Reusing PDO, so no need for a new transaction');
-                return;
-            }
-
-            $this->debugSection('Database', 'Transaction started for: ' . $connection->dsn);
-            $this->transactions[$key] = $connection->beginTransaction();
-        }
-
-    }
-
     protected function startTransactions()
     {
         if ($this->config['transaction']) {
-            // This should register handlers that start a transaction whenever a connection opens and add it to the transactions array.
-            $this->debug('Transaction', 'Registering connection event handler');
-            Event::on(Connection::class, Connection::EVENT_AFTER_OPEN, [$this, 'connectionOpenHandler']);
+            $this->transactionForcer = new Yii2Connector\TransactionForcer($this->config['ignoreCollidingDSN']);
+            $this->transactionForcer->start();
         }
     }
 
     protected function rollbackTransactions()
     {
-        $this->debugSection('Transaction', 'Rolling back ' . count($this->transactions) . ' transactions');
-        Event::off(Connection::class, Connection::EVENT_AFTER_OPEN, [$this, 'connectionOpenHandler']);
-        /** @var Transaction $transaction */
-        foreach ($this->transactions as $transaction) {
-            $transaction->rollBack();
-            $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
+        if (isset($this->transactionForcer)) {
+            $this->transactionForcer->rollbackAll();
+            $this->transactionForcer->stop();
+            unset($this->transactionForcer);
         }
-        $this->transactions = [];
-        $this->pdoCache = [];
-        $this->dsnCache = [];
     }
 
     public function _parts()
