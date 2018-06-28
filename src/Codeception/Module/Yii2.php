@@ -317,24 +317,28 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     private function loadFixtures($test)
     {
         $this->debugSection('Fixtures', 'Loading fixtures');
-        /** @var Connection[] $connections */
-        $connections = [];
-        // Register event handler.
-        Event::on(Connection::class, Connection::EVENT_AFTER_OPEN, function (Event $event) use (&$connections) {
-            $this->debugSection('Fixtures', 'Opened database connection: ' . $event->sender->dsn);
-            $connections[] = $event->sender;
-        });
         if (empty($this->loadedFixtures)
             && method_exists($test, $this->_getConfig('fixturesMethod'))
         ) {
-            $this->haveFixtures(call_user_func([$test, $this->_getConfig('fixturesMethod')]));
-        }
+            /** @var Connection[] $connections */
+            $connections = [];
+            // Register event handler.
+            $handler = function (Event $event) use (&$connections) {
+                $this->debugSection('Fixtures', 'Opened database connection: ' . $event->sender->dsn);
+                $connections[] = $event->sender;
+            };
 
-        Event::offAll();
-        // Close all connections so they get properly reopened after the transaction handler has been attached.
-        foreach ($connections as $connection) {
-            $this->debugSection('Fixtures', 'Closing database connection: ' . $connection->dsn);
-            $connection->close();
+            Event::on(Connection::class, Connection::EVENT_AFTER_OPEN, $handler);
+
+            $this->haveFixtures(call_user_func([$test, $this->_getConfig('fixturesMethod')]));
+
+            Event::off(Connection::class, Connection::EVENT_AFTER_OPEN, $handler);
+
+            // Close all connections so they get properly reopened after the transaction handler has been attached.
+            foreach ($connections as $connection) {
+                $this->debugSection('Fixtures', 'Closing database connection: ' . $connection->dsn);
+                $connection->close();
+            }
         }
         $this->debugSection('Fixtures', 'Done');
     }
