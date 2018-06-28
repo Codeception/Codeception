@@ -1467,4 +1467,19 @@ EOF;
     {
         $this->client->followRedirects(true);
     }
+
+    /**
+     * Loads a File from the DATA directory and replaces specific placeholders
+     *
+     * @param string $fileName the stub file to be loaded (relative to the DATA directory)
+     * @param array  $vars key/value for replacements
+     * @param string $startPattern
+     * @param string $endPattern
+     *
+     * @return mixed|string
+     */
+    public function loadAndPrepareStub($fileName, array $vars = [], $startPattern = '{{', $endPattern = '}}')
+    {
+        return $this->connectionModule->loadAndPrepareStub($fileName, $vars, $startPattern, $endPattern);
+    }
 }

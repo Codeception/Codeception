@@ -210,6 +210,24 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     }
 
     /**
+     * Load a given file from the "data" directory defined in the suite
+     *
+     * @param $filename
+     *
+     * @return string
+     */
+    public function _loadFileFromDataDirectory($filename)
+    {
+        // get the absolute path on disk for this codeception instance
+        $filePath = codecept_data_dir() . $filename;
+
+        $this->checkIfFileExists($filePath);
+
+        $stub = file_get_contents($filePath);
+        return $stub;
+    }
+
+    /**
      * Opens a page with arbitrary request parameters.
      * Useful for testing multi-step forms on a specific step.
      *
@@ -403,6 +421,39 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
     }
 
+    /**
+     *
+     * Checks, if the given file exists and is readable.
+     *
+     * This method is used, e.g., in the attachFile() method to append the file to a request (e.g., for uploading)
+     *
+     * @param $filePath
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function checkIfFileExists($filePath)
+    {
+        if (! file_exists($filePath)) {
+            throw new \InvalidArgumentException("File does not exist: $filePath");
+        }
+        if (! is_readable($filePath)) {
+            throw new \InvalidArgumentException("File is not readable: $filePath");
+        }
+    }
+
+    /**
+     * Masks variables in the data files (stubs)
+     *
+     * @param        $key
+     * @param string $startPattern
+     * @param string $endPattern
+     *
+     * @return string
+     */
+    private function maskStubVariables($key, $startPattern = '{{', $endPattern = '}}')
+    {
+        return $startPattern . $key . $endPattern;
+    }
 
     /**
      * Clicks the link or submits the form when the button is clicked
@@ -1155,12 +1206,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($field));
         $filePath = codecept_data_dir() . $filename;
-        if (!file_exists($filePath)) {
-            throw new \InvalidArgumentException("File does not exist: $filePath");
-        }
-        if (!is_readable($filePath)) {
-            throw new \InvalidArgumentException("File is not readable: $filePath");
-        }
+
+        $this->checkIfFileExists($filePath);
 
         $name = $field->attr('name');
         $formField = $this->matchFormField($name, $form, new FileFormField($field->getNode(0)));
@@ -1857,6 +1904,29 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         $uri = $iframe->getNode(0)->getAttribute('src');
         $this->amOnPage($uri);
+    }
+
+    /**
+     * Loads a File from the DATA directory and replaces specific placeholders
+     *
+     * @param string $fileName the stub file to be loaded (relative to the DATA directory)
+     * @param array  $vars key/value for replacements
+     * @param string $startPattern
+     * @param string $endPattern
+     *
+     * @return mixed|string
+     */
+    public function loadAndPrepareStub($fileName, array $vars = [], $startPattern = '{{', $endPattern = '}}')
+    {
+        // repeat our patterns
+        $startPatterns = array_fill(0, count($vars), $startPattern);
+        $endPatterns = array_fill(0, count($vars), $endPattern);
+
+        // load the stub and replace the placeholders
+        $stub = $this->_loadFileFromDataDirectory($fileName);
+        $stub = str_replace(array_map([$this, 'maskStubVariables'], array_keys($vars), $startPatterns, $endPatterns), array_values($vars), $stub);
+
+        return $stub;
     }
 
     /**
