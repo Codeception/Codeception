@@ -165,9 +165,9 @@ Checks that provided string is CSS selector
 
 ```php
 <?php
-Locator::isCSS('#user .hello'); // => true
-Locator::isCSS('body'); // => true
-Locator::isCSS('//body/p/user'); // => false
+Locator::isCSS('#user .hello') => true
+Locator::isCSS('body') => true
+Locator::isCSS('//body/p/user') => false
 ```
 
  * `param` $selector
@@ -183,9 +183,9 @@ Checks that a string is valid CSS class
 
 ```php
 <?php
-Locator::isClass('.hello'); // => true
-Locator::isClass('body'); // => false
-Locator::isClass('//body/p/user'); // => false
+Locator::isClass('.hello') => true
+Locator::isClass('body') => false
+Locator::isClass('//body/p/user') => false
 ```
 
  * `param` $class
@@ -201,9 +201,9 @@ Checks that a string is valid CSS ID
 
 ```php
 <?php
-Locator::isID('#user'); // => true
-Locator::isID('body'); // => false
-Locator::isID('//body/p/user'); // => false
+Locator::isID('#user') => true
+Locator::isID('body') => false
+Locator::isID('//body/p/user') => false
 ```
 
  * `param` $id
@@ -228,9 +228,9 @@ Checks that locator is an XPath
 
 ```php
 <?php
-Locator::isXPath('#user .hello'); // => false
-Locator::isXPath('body'); // => false
-Locator::isXPath('//body/p/user'); // => true
+Locator::isXPath('#user .hello') => false
+Locator::isXPath('body') => false
+Locator::isXPath('//body/p/user') => true
 ```
 
  * `param` $locator

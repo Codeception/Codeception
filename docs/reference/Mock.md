@@ -24,8 +24,8 @@ $this->make(new User, ['name' => 'davert']);
 ?>
 ```
 
-To replace method provide its name as a key in second parameter
-and its return value or callback function as parameter
+To replace method provide it's name as a key in second parameter
+and it's return value or callback function as parameter
 
 ``` php
 <?php
@@ -301,7 +301,7 @@ use \Codeception\Stub\Expected;
 
 $user = $this->make(
     'User',
-    array (
+    array(
         'getName' => Expected::atLeastOnce('Davert')),
         'someMethod' => function() {}
     )
@@ -353,7 +353,7 @@ Alternatively, a function can be passed as parameter:
 
 ```php
 <?php
-Expected::exactly(function() { return Faker::name(); });
+Expected::exactly(function() { return Faker::name() });
 ```
 
  * `param int` $count
