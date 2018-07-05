@@ -445,11 +445,12 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     }
 
     /**
-     * Checks if any email were sent by last request
+     * Checks if the desired number of emails was sent.
+     * If the number is not provided then at least one email must be sent to satisfy the check.
      *
-     * @throws \LogicException
+     * @param null $emailCount
      */
-    public function seeEmailIsSent()
+    public function seeEmailIsSent($emailCount = null)
     {
         $profile = $this->getProfile();
         if (!$profile) {
@@ -459,7 +460,29 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             $this->fail('Emails can\'t be tested without SwiftMailer connector');
         }
 
-        $this->assertGreaterThan(0, $profile->getCollector('swiftmailer')->getMessageCount());
+        if (!is_int($emailCount) && !is_null($emailCount)) {
+            $this->fail(sprintf(
+                'The required number of emails must be either an integer or null. %s was provided.',
+                $emailCount
+            ));
+        }
+
+        $messageCount = $profile->getCollector('swiftmailer')->getMessageCount();
+        if ($emailCount === null) {
+            $this->assertGreaterThan(0, $messageCount);
+        } else {
+            $this->assertEquals($emailCount, $messageCount);
+        }
+    }
+
+    /**
+     * Checks that no email was sent. This is an alias for seeEmailIsSent(0).
+     *
+     * @part email
+     */
+    public function dontSeeEmailIsSent()
+    {
+        $this->seeEmailIsSent(0);
     }
 
     /**
