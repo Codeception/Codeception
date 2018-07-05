@@ -446,7 +446,13 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
     /**
      * Checks if the desired number of emails was sent.
-     * If the number is not provided then at least one email must be sent to satisfy the check.
+     * If no argument is provided then at least one email must be sent to satisfy the check.
+     *
+     * ``` php
+     * <?php
+     * $I->seeEmailIsSent(2);
+     * ?>
+     * ```
      *
      * @param null|int $expectedCount
      */
