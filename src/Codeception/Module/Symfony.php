@@ -445,11 +445,18 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     }
 
     /**
-     * Checks if any email were sent by last request
+     * Checks if the desired number of emails was sent.
+     * If no argument is provided then at least one email must be sent to satisfy the check.
      *
-     * @throws \LogicException
+     * ``` php
+     * <?php
+     * $I->seeEmailIsSent(2);
+     * ?>
+     * ```
+     *
+     * @param null|int $expectedCount
      */
-    public function seeEmailIsSent()
+    public function seeEmailIsSent($expectedCount = null)
     {
         $profile = $this->getProfile();
         if (!$profile) {
@@ -459,7 +466,38 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             $this->fail('Emails can\'t be tested without SwiftMailer connector');
         }
 
-        $this->assertGreaterThan(0, $profile->getCollector('swiftmailer')->getMessageCount());
+        if (!is_int($expectedCount) && !is_null($expectedCount)) {
+            $this->fail(sprintf(
+                'The required number of emails must be either an integer or null. "%s" was provided.',
+                print_r($expectedCount, true)
+            ));
+        }
+
+        $realCount = $profile->getCollector('swiftmailer')->getMessageCount();
+        if ($expectedCount === null) {
+            $this->assertGreaterThan(0, $realCount);
+        } else {
+            $this->assertEquals(
+                $expectedCount,
+                $realCount,
+                sprintf(
+                    'Expected number of sent emails was %d, but in reality %d %s sent.',
+                    $expectedCount,
+                    $realCount,
+                    $realCount === 2 ? 'was' : 'were'
+                )
+            );
+        }
+    }
+
+    /**
+     * Checks that no email was sent. This is an alias for seeEmailIsSent(0).
+     *
+     * @part email
+     */
+    public function dontSeeEmailIsSent()
+    {
+        $this->seeEmailIsSent(0);
     }
 
     /**
