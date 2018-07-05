@@ -39,7 +39,7 @@ use Codeception\Util\Template;
  * ``` yaml
  * extensions:
  *     enabled:
- *         Codeception\Extension\Recorder:
+ *         - Codeception\Extension\Recorder:
  *             module: AngularJS # enable for Angular
  *             delete_successful: false # keep screenshots of successful tests
  * ```
