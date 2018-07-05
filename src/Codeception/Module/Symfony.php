@@ -448,9 +448,9 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      * Checks if the desired number of emails was sent.
      * If the number is not provided then at least one email must be sent to satisfy the check.
      *
-     * @param null $emailCount
+     * @param null|int $expectedCount
      */
-    public function seeEmailIsSent($emailCount = null)
+    public function seeEmailIsSent($expectedCount = null)
     {
         $profile = $this->getProfile();
         if (!$profile) {
@@ -460,18 +460,27 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             $this->fail('Emails can\'t be tested without SwiftMailer connector');
         }
 
-        if (!is_int($emailCount) && !is_null($emailCount)) {
+        if (!is_int($expectedCount) && !is_null($expectedCount)) {
             $this->fail(sprintf(
-                'The required number of emails must be either an integer or null. %s was provided.',
-                $emailCount
+                'The required number of emails must be either an integer or null. "%s" was provided.',
+                print_r($expectedCount, true)
             ));
         }
 
-        $messageCount = $profile->getCollector('swiftmailer')->getMessageCount();
-        if ($emailCount === null) {
-            $this->assertGreaterThan(0, $messageCount);
+        $realCount = $profile->getCollector('swiftmailer')->getMessageCount();
+        if ($expectedCount === null) {
+            $this->assertGreaterThan(0, $realCount);
         } else {
-            $this->assertEquals($emailCount, $messageCount);
+            $this->assertEquals(
+                $expectedCount,
+                $realCount,
+                sprintf(
+                    'Expected number of sent emails was %d, but in reality %d %s sent.',
+                    $expectedCount,
+                    $realCount,
+                    $realCount === 2 ? 'was' : 'were'
+                )
+            );
         }
     }
 
