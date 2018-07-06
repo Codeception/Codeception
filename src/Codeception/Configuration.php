@@ -186,7 +186,7 @@ class Configuration
         // we check for the "extends" key in the yml file
         if (isset($config['extends'])) {
             // and now we search for the file
-            $presetFilePath = realpath(self::$dir . DIRECTORY_SEPARATOR . $config['extends']);
+            $presetFilePath = codecept_absolute_path($config['extends']);
             if (file_exists($presetFilePath)) {
                 // and merge it with our configuration file
                 $config = self::mergeConfigs(self::getConfFromFile($presetFilePath), $config);
