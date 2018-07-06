@@ -69,17 +69,4 @@ class ConfigurationTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('extends', $defaultConfig);
         $this->assertNull($defaultConfig['extends']);
     }
-
-    public function testConfigExtension()
-    {
-        $pathToConfig = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'data/config_extends/codeception.yml';
-        $config = \Codeception\Configuration::config($pathToConfig);
-
-        $this->assertSame('2048M', $config['settings']['memory_limit']);
-
-        $suites = \Codeception\Configuration::suites();
-        $unitSuiteSettings = \Codeception\Configuration::suiteSettings('unit', \Codeception\Configuration::config());
-
-//        $this->assertArrayHasKey('')
-    }
 }
