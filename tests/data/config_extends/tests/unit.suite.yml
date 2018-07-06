@@ -1,0 +1,6 @@
+# Codeception Test Suite Configuration
+#
+# Suite for unit (internal) tests.
+
+class_name: UnitTester
+extends: unit.suite.common.yml
