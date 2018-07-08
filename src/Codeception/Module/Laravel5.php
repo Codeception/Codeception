@@ -658,7 +658,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @return bool
+     * @return void
      */
     public function seeFormHasErrors()
     {
@@ -676,7 +676,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @return bool
+     * @return void
      */
     public function dontSeeFormErrors()
     {
@@ -995,12 +995,18 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         if (class_exists($table)) {
             $currentNum = $this->countModels($table, $attributes);
-            $this->assertEquals($expectedNum, $currentNum,
-                "The number of found $table ($currentNum) does not match expected number $expectedNum with " . json_encode($attributes));
+            $this->assertEquals(
+                $expectedNum,
+                $currentNum,
+                "The number of found {$table} ({$currentNum}) does not match expected number {$expectedNum} with " . json_encode($attributes)
+            );
         } else {
             $currentNum = $this->countRecords($table, $attributes);
-            $this->assertEquals($expectedNum, $currentNum,
-                "The number of found records ($currentNum) does not match expected number $expectedNum in table $table with " . json_encode($attributes));
+            $this->assertEquals(
+                $expectedNum,
+                $currentNum,
+                "The number of found records in table {$table} ({$currentNum}) does not match expected number $expectedNum with " . json_encode($attributes)
+            );
         }
     }
 
