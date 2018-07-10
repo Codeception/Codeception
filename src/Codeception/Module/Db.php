@@ -325,6 +325,7 @@ class Db extends CodeceptionModule implements DbInterface
     public function _before(TestInterface $test)
     {
         if ($this->config['reconnect']) {
+            $this->disconnect();
             $this->connect();
         }
         if ($this->config['cleanup'] && !$this->populated) {
