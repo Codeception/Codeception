@@ -113,6 +113,24 @@ if (!function_exists('codecept_absolute_path')) {
      */
     function codecept_absolute_path($path)
     {
-        return mb_substr($path, 0, 1) === DIRECTORY_SEPARATOR ? $path : codecept_root_dir($path);
+        return codecept_is_path_absolute($path) ? $path : codecept_root_dir($path);
+    }
+}
+
+if (!function_exists('codecept_is_path_absolute')) {
+    /**
+     * Check whether the given $path is absolute.
+     *
+     * @param string $path
+     * @return bool
+     * @since 2.4.4
+     */
+    function codecept_is_path_absolute($path)
+    {
+        if (DIRECTORY_SEPARATOR === '/') {
+            return mb_substr($path, 0, 1) === DIRECTORY_SEPARATOR;
+        }
+
+        return preg_match('#^[A-Z]:(?![^/\\])#i', $path) === 1;
     }
 }

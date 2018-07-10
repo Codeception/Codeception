@@ -1,3 +1,8 @@
+#### 2.4.4
+
+* Recently added `extends` property in the `codeception.yml` and `*.suite.yml` files now support absolute paths; by @silverfire
+* Fixed absolute paths handling on Windows in ParamLoader; by @silverfire
+
 #### 2.4.3
 
 * [Create your own test formats](https://codeception.com/docs/07-AdvancedUsage#Formats) (e.g., Cept, Cest, ...); by @mlambley
