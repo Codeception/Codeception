@@ -507,7 +507,12 @@ class WebDriver extends CodeceptionModule implements
             return;
         }
         if ($this->config['clear_cookies'] && isset($this->webDriver)) {
-            $this->webDriver->manage()->deleteAllCookies();
+            try {
+                $this->webDriver->manage()->deleteAllCookies();
+            } catch (\Exception $e) {
+                // may cause fatal errors when not handled
+                $this->debug("Error, can't clean cookies after a test: " . $e->getMessage());
+            }
         }
     }
 
