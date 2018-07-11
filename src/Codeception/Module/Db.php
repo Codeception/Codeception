@@ -45,6 +45,7 @@ use Codeception\TestInterface;
  * * populate: false - whether the the dump should be loaded before the test suite is started
  * * cleanup: false - whether the dump should be reloaded before each test
  * * reconnect: false - whether the module should reconnect to the database before each test
+ * * waitlock: 0 - wait lock (in seconds) that the database session should use for DDL statements
  * * ssl_key - path to the SSL key (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-key)
  * * ssl_cert - path to the SSL certificate (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-cert)
  * * ssl_ca - path to the SSL certificate authority (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-ca)
@@ -61,6 +62,7 @@ use Codeception\TestInterface;
  *              populate: true
  *              cleanup: true
  *              reconnect: true
+ *              waitlock: 10
  *              ssl_key: '/path/to/client-key.pem'
  *              ssl_cert: '/path/to/client-cert.pem'
  *              ssl_ca: '/path/to/ca-cert.pem'
@@ -201,6 +203,7 @@ class Db extends CodeceptionModule implements DbInterface
         'populate' => false,
         'cleanup' => false,
         'reconnect' => false,
+        'waitlock' => 0,
         'dump' => null,
         'populator' => null,
     ];
@@ -279,7 +282,7 @@ class Db extends CodeceptionModule implements DbInterface
     private function connect()
     {
         $options = [];
- 
+
         /**
          * @see http://php.net/manual/en/pdo.construct.php
          * @see http://php.net/manual/de/ref.pdo-mysql.php#pdo-mysql.constants
@@ -287,11 +290,11 @@ class Db extends CodeceptionModule implements DbInterface
         if (array_key_exists('ssl_key', $this->config) && !empty($this->config['ssl_key'])) {
             $options[\PDO::MYSQL_ATTR_SSL_KEY] = $this->config['ssl_key'];
         }
- 
+
         if (array_key_exists('ssl_cert', $this->config) && !empty($this->config['ssl_cert'])) {
             $options[\PDO::MYSQL_ATTR_SSL_CERT] = $this->config['ssl_cert'];
         }
- 
+
         if (array_key_exists('ssl_ca', $this->config) && !empty($this->config['ssl_ca'])) {
             $options[\PDO::MYSQL_ATTR_SSL_CA] = $this->config['ssl_ca'];
         }
@@ -307,6 +310,11 @@ class Db extends CodeceptionModule implements DbInterface
 
             throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
+
+        if ($this->config['waitlock']) {
+            $this->driver->setWaitLock($this->config['waitlock']);
+        }
+
         $this->debugSection('Db', 'Connected to ' . $this->driver->getDb());
         $this->dbh = $this->driver->getDbh();
     }
@@ -425,7 +433,7 @@ class Db extends CodeceptionModule implements DbInterface
 
         return $lastInsertId;
     }
-    
+
     public function _insertInDatabase($table, array $data)
     {
         $query = $this->driver->insert($table, $data);
@@ -579,7 +587,7 @@ class Db extends CodeceptionModule implements DbInterface
         $this->debugSection('Query', $query);
         $this->debugSection('Parameters', $parameters);
         $sth = $this->driver->executeQuery($query, $parameters);
-        
+
         return $sth->fetchAll(\PDO::FETCH_COLUMN, 0);
     }
 
