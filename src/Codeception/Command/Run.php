@@ -386,7 +386,7 @@ class Run extends Command
     {
         // Workaround when codeception.yml is inside tests directory and tests path is set to "."
         // @see https://github.com/Codeception/Codeception/issues/4432
-        if ($config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
+        if (isset($config['paths']['tests']) && $config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
             $suite = './' . $suite;
         }
 

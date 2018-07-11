@@ -7,6 +7,7 @@ use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
 use Codeception\Module\WebDriver;
+use Codeception\Step;
 use Codeception\Step\Comment as CommentStep;
 use Codeception\Test\Descriptor;
 use Codeception\Util\FileSystem;
@@ -32,6 +33,7 @@ use Codeception\Util\Template;
  *
  * * `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
  * * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+ * * `ignore_steps` (default: []) - array of step names that should not be recorded, * wildcards supported
  *
  *
  * #### Examples:
@@ -39,9 +41,10 @@ use Codeception\Util\Template;
  * ``` yaml
  * extensions:
  *     enabled:
- *         Codeception\Extension\Recorder:
+ *         - Codeception\Extension\Recorder:
  *             module: AngularJS # enable for Angular
  *             delete_successful: false # keep screenshots of successful tests
+ *             ignore_steps: [have, grab*]
  * ```
  *
  */
@@ -51,7 +54,8 @@ class Recorder extends \Codeception\Extension
         'delete_successful' => true,
         'module'            => 'WebDriver',
         'template'          => null,
-        'animate_slides'    => true
+        'animate_slides'    => true,
+        'ignore_steps'      => []
     ];
 
     protected $template = <<<EOF
@@ -339,10 +343,29 @@ EOF;
         if ($e->getStep() instanceof CommentStep) {
             return;
         }
+        if ($this->isStepIgnored($e->getStep())) {
+            return;
+        }
 
         $filename = str_pad($this->stepNum, 3, "0", STR_PAD_LEFT) . '.png';
         $this->webDriverModule->_saveScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
         $this->stepNum++;
         $this->slides[$filename] = $e->getStep();
+    }
+
+    /**
+     * @param Step $step
+     * @return bool
+     */
+    protected function isStepIgnored($step)
+    {
+        foreach ($this->config['ignore_steps'] as $stepPattern) {
+            $stepRegexp = '/^' . str_replace('*', '.*?', $stepPattern) . '$/i';
+            if (preg_match($stepRegexp, $step->getAction())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

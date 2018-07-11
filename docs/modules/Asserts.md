@@ -212,6 +212,14 @@ $I->assertNotEquals($calculator->add(0.1, 0.2), 0.4, 'Calculator should add the 
  * `param float`  $delta
 
 
+### assertNotFalse
+ 
+Checks that the condition is NOT false (everything but false)
+
+ * `param`        $condition
+ * `param string` $message
+
+
 ### assertNotInstanceOf
  
  * `param` $class
@@ -242,6 +250,14 @@ Checks that two variables are not same
 
  * `param`        $expected
  * `param`        $actual
+ * `param string` $message
+
+
+### assertNotTrue
+ 
+Checks that the condition is NOT true (everything but true)
+
+ * `param`        $condition
  * `param string` $message
 
 

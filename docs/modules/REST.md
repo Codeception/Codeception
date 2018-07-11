@@ -442,6 +442,26 @@ $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
  * `param` $code
 
 
+### seeResponseCodeIsClientError
+ 
+Checks that the response code is 4xx
+
+
+### seeResponseCodeIsRedirection
+ 
+Checks that the response code 3xx
+
+
+### seeResponseCodeIsServerError
+ 
+Checks that the response code is 5xx
+
+
+### seeResponseCodeIsSuccessful
+ 
+Checks that the response code is 2xx
+
+
 ### seeResponseContains
  
 Checks whether the last response contains text.

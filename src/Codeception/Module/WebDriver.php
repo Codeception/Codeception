@@ -507,7 +507,12 @@ class WebDriver extends CodeceptionModule implements
             return;
         }
         if ($this->config['clear_cookies'] && isset($this->webDriver)) {
-            $this->webDriver->manage()->deleteAllCookies();
+            try {
+                $this->webDriver->manage()->deleteAllCookies();
+            } catch (\Exception $e) {
+                // may cause fatal errors when not handled
+                $this->debug("Error, can't clean cookies after a test: " . $e->getMessage());
+            }
         }
     }
 
@@ -3028,9 +3033,6 @@ class WebDriver extends CodeceptionModule implements
         throw new \InvalidArgumentException("Only CSS or XPath allowed");
     }
 
-    /**
-     * @param string $name
-     */
     public function saveSessionSnapshot($name)
     {
         $this->sessionSnapshots[$name] = [];
@@ -3048,10 +3050,6 @@ class WebDriver extends CodeceptionModule implements
         $this->debugSection('Snapshot', "Saved \"$name\" session snapshot");
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
     public function loadSessionSnapshot($name)
     {
         if (!isset($this->sessionSnapshots[$name])) {
@@ -3065,9 +3063,6 @@ class WebDriver extends CodeceptionModule implements
         return true;
     }
 
-    /**
-     * @param string $name
-     */
     public function deleteSessionSnapshot($name)
     {
         if (isset($this->sessionSnapshots[$name])) {

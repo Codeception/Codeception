@@ -247,7 +247,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             throw new ModuleConfigException(
                 $this,
                 "Laravel bootstrap file not found in $bootstrapFile.\n"
-                . "Please provide a valid path to it using 'bootstrap' config param. "
+                . "Please provide a valid path by using the 'bootstrap' config param. "
             );
         }
     }
@@ -442,7 +442,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
         
         $console->call($command, $parameters, $output);
-            
     }
 
     /**
@@ -659,14 +658,13 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @return bool
+     * @return void
      */
     public function seeFormHasErrors()
     {
         $viewErrorBag = $this->app->make('view')->shared('errors');
-        if (count($viewErrorBag) == 0) {
-            $this->fail("There are no form errors");
-        }
+
+        $this->assertGreaterThan(0, count($viewErrorBag), 'Expecting that the form has errors, but there were none!');
     }
 
     /**
@@ -678,14 +676,13 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @return bool
+     * @return void
      */
     public function dontSeeFormErrors()
     {
         $viewErrorBag = $this->app->make('view')->shared('errors');
-        if (count($viewErrorBag) > 0) {
-            $this->fail("Found the following form errors: \n\n" . $viewErrorBag->toJson(JSON_PRETTY_PRINT));
-        }
+
+        $this->assertEquals(0, count($viewErrorBag), 'Expecting that the form does not have errors, but there were!');
     }
 
     /**
@@ -778,9 +775,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             return;
         }
 
-        if (! $guard->attempt($user)) {
-            $this->fail("Failed to login with credentials " . json_encode($user));
-        }
+        $this->assertTrue($guard->attempt($user), 'Failed to login with credentials ' . json_encode($user));
     }
 
     /**
@@ -804,9 +799,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $auth = $auth->guard($guard);
         }
 
-        if (! $auth->check()) {
-            $this->fail("There is no authenticated user");
-        }
+        $this->assertTrue($auth->check(), 'There is no authenticated user');
     }
 
     /**
@@ -822,9 +815,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $auth = $auth->guard($guard);
         }
 
-        if ($auth->check()) {
-            $this->fail("There is an authenticated user");
-        }
+        $this->assertNotTrue($auth->check(), 'There is an user authenticated');
     }
 
     /**
@@ -868,8 +859,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ```
      *
      * @param string $table
-     * @param array $attributes
-     * @return integer|EloquentModel
+     * @param array  $attributes
+     * @return EloquentModel|int
+     * @throws \RuntimeException
      * @part orm
      */
     public function haveRecord($table, $attributes = [])
@@ -917,6 +909,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         } elseif (! $this->findRecord($table, $attributes)) {
             $this->fail("Could not find matching record in table '$table'");
         }
+
+        $this->assertTrue(true);
     }
 
     /**
@@ -943,6 +937,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         } elseif ($this->findRecord($table, $attributes)) {
             $this->fail("Unexpectedly found matching record in table '$table'");
         }
+
+        $this->assertTrue(true);
     }
 
     /**
@@ -999,14 +995,18 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         if (class_exists($table)) {
             $currentNum = $this->countModels($table, $attributes);
-            if ($currentNum != $expectedNum) {
-                $this->fail("The number of found $table ($currentNum) does not match expected number $expectedNum with " . json_encode($attributes));
-            }
+            $this->assertEquals(
+                $expectedNum,
+                $currentNum,
+                "The number of found {$table} ({$currentNum}) does not match expected number {$expectedNum} with " . json_encode($attributes)
+            );
         } else {
             $currentNum = $this->countRecords($table, $attributes);
-            if ($currentNum != $expectedNum) {
-                $this->fail("The number of found records ($currentNum) does not match expected number $expectedNum in table $table with " . json_encode($attributes));
-            }
+            $this->assertEquals(
+                $expectedNum,
+                $currentNum,
+                "The number of found records in table {$table} ({$currentNum}) does not match expected number $expectedNum with " . json_encode($attributes)
+            );
         }
     }
 
@@ -1096,6 +1096,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * @param string $modelClass
      *
      * @return EloquentModel
+     * @throws \RuntimeException
      */
     protected function getQueryBuilderFromModel($modelClass)
     {

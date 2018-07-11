@@ -14,12 +14,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/c3.git",
-                "reference": "c7348bbc82da82834fe237c5fb754003ac0fe782"
+                "reference": "f7e31fce8a9abf1021990b4e31a7ed01689f4295"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/c3/zipball/c7348bbc82da82834fe237c5fb754003ac0fe782",
-                "reference": "c7348bbc82da82834fe237c5fb754003ac0fe782",
+                "url": "https://api.github.com/repos/Codeception/c3/zipball/f7e31fce8a9abf1021990b4e31a7ed01689f4295",
+                "reference": "f7e31fce8a9abf1021990b4e31a7ed01689f4295",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
                 "code coverage",
                 "codecoverage"
             ],
-            "time": "2018-02-19 11:27:45"
+            "time": "2018-05-26 21:53:33"
         }
     ],
     "aliases": [],
