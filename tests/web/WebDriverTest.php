@@ -857,6 +857,13 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/form/anchor#a');
     }
 
+    public function testSubmitHashFormTitle()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Form Title');
+        $this->module->seeCurrentUrlEquals('/form/anchor#a');
+    }
+
     public function testSubmitHashButtonForm()
     {
         $this->module->amOnPage('/form/anchor');
