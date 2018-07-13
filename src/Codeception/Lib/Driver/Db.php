@@ -101,6 +101,14 @@ class Db
         $this->options = $options;
     }
 
+    public function __destruct()
+    {
+        if ($this->dbh->inTransaction()) {
+            $this->dbh->rollBack();
+        }
+        $this->dbh = null;
+    }
+
     public function getDbh()
     {
         return $this->dbh;
