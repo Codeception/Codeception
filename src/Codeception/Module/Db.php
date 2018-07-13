@@ -326,9 +326,9 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function disconnect()
     {
-        $this->debugSection('Db', 'Disconnected');
-        $this->dbh = null;
         $this->driver = null;
+        $this->dbh = null;
+        $this->debugSection('Db', 'Disconnected');
     }
 
     public function _before(TestInterface $test)
