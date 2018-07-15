@@ -561,7 +561,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if (!$record) {
             $this->fail("Couldn't find $model with " . json_encode($attributes));
         }
-        $this->debugSection($model, json_encode($record));
+        $this->debugSection($model, $record);
     }
 
     /**
@@ -578,7 +578,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     public function dontSeeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
-        $this->debugSection($model, json_encode($record));
+        $this->debugSection($model, $record);
         if ($record) {
             $this->fail("Unexpectedly managed to find $model with " . json_encode($attributes));
         }

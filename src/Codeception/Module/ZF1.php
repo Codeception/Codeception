@@ -176,7 +176,7 @@ class ZF1 extends Framework
     {
         parent::debugResponse($url);
 
-        $this->debugSection('Session', json_encode($_COOKIE));
+        $this->debugSection('Session', $_COOKIE);
         if ($this->db) {
             $profiler = $this->db->getProfiler();
             $queries = $profiler->getTotalNumQueries() - $this->queries;
