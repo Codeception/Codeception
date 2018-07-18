@@ -278,10 +278,6 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function connect()
     {
-        if ($this->dbh instanceof \PDO) {
-            return;
-        }
-
         $options = [];
 
         /**
@@ -430,7 +426,7 @@ class Db extends CodeceptionModule implements DbInterface
 
         return $lastInsertId;
     }
-    
+
     public function _insertInDatabase($table, array $data)
     {
         $query = $this->driver->insert($table, $data);
@@ -584,7 +580,7 @@ class Db extends CodeceptionModule implements DbInterface
         $this->debugSection('Query', $query);
         $this->debugSection('Parameters', $parameters);
         $sth = $this->driver->executeQuery($query, $parameters);
-        
+
         return $sth->fetchAll(\PDO::FETCH_COLUMN, 0);
     }
 
