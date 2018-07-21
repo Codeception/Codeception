@@ -23,7 +23,7 @@ Also available:
 * Oracle
 
 Connection is done by database Drivers, which are stored in the `Codeception\Lib\Driver` namespace.
-[Check out the drivers](https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Lib/Driver)
+[Check out the drivers](https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Lib/Driver)
 if you run into problems loading dumps and cleaning databases.
 
 ## Config

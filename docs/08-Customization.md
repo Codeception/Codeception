@@ -366,7 +366,7 @@ Learn from the examples above to build a custom Installation Template. Here are 
 * Use methods like `say`, `saySuccess`, `sayWarning`, `sayError`, `ask`, to interact with a user.
 * Use `createDirectoryFor`, `createEmptyDirectory` methods to create directories
 * Use `createHelper`, `createActor` methods to create helpers and actors.
-* Use [Codeception generators](https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Lib/Generator) to create other support classes.
+* Use [Codeception generators](https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Lib/Generator) to create other support classes.
 
 ## Conclusion
 
