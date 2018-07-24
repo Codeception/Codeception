@@ -130,7 +130,7 @@ class Unit extends \PHPUnit\Framework\TestCase implements
         ];
     }
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
