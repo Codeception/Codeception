@@ -31,7 +31,7 @@ At first we need to create build project. Depending on your needs you can set up
 We need to define build steps. The most simple setup may look like this:
 
 ```
-php codecept run
+php vendor/bin/codecept run
 ```
 
 ![Jenkins Codeception Build Step](http://codeception.com/images/jenkins/Jenk5.png)
@@ -47,7 +47,7 @@ But we don't want to analyze console output for each failing build. Especially I
 Now let's update our build step to generate xml:
 
 ```
-php codecept run --xml
+php vendor/bin/codecept run --xml
 ```
 
 and ask Jenkins to collect resulted XML. This can be done as part of Post-build actions. Let's add *Publish xUnit test result report* action and configure it to use with PHPUnit reports.
@@ -65,7 +65,7 @@ Now for all builds we will see results trend graph that shows us percentage of p
 To get more details on steps executed you can generate HTML report and use Jenkins to display them.
 
 ```
-php codecept run --html
+php vendor/bin/codecept run --html
 ```
 
 Now we need HTML Publisher plugin configured to display generated HTML files. It should be added as post-build action similar way we did it for XML reports.
@@ -93,7 +93,7 @@ As an alternative you can use 3rd-party [TeamCity extension](https://github.com/
 After you create build project you should define build step with Codeception which is
 
 ```
-php codecept run --report
+php vendor/bin/codecept run --report
 ```
 
 ![build step](http://codeception.com/images/teamcity/build.png)
@@ -109,7 +109,7 @@ Once you execute your first build you should see detailed report inside TeamCity
 Travis CI is popular service CI with good GitHub integration. Codeception is self-tested with Travis CI. There nothing special about configuration. Just add to the bottom line of travis configuration:
 
 ```yaml
-php codecept run
+php vendor/bin/codecept run
 ```
 
 More details on configuration can be learned from Codeception's [`.travis.yml`](https://github.com/Codeception/Codeception/blob/master/.travis.yml).

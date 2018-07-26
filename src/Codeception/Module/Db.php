@@ -46,6 +46,7 @@ use Codeception\Lib\Notification;
  * * populate: false - whether the the dump should be loaded before the test suite is started
  * * cleanup: false - whether the dump should be reloaded before each test
  * * reconnect: false - whether the module should reconnect to the database before each test
+ * * waitlock: 0 - wait lock (in seconds) that the database session should use for DDL statements
  * * ssl_key - path to the SSL key (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-key)
  * * ssl_cert - path to the SSL certificate (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-cert)
  * * ssl_ca - path to the SSL certificate authority (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-ca)
@@ -62,6 +63,7 @@ use Codeception\Lib\Notification;
  *              populate: true
  *              cleanup: true
  *              reconnect: true
+ *              waitlock: 10
  *              ssl_key: '/path/to/client-key.pem'
  *              ssl_cert: '/path/to/client-cert.pem'
  *              ssl_ca: '/path/to/ca-cert.pem'
@@ -205,6 +207,7 @@ class Db extends CodeceptionModule implements DbInterface
         'populate' => false,
         'cleanup' => false,
         'reconnect' => false,
+        'waitlock' => 0,
         'dump' => null,
         'populator' => null,
     ];
@@ -434,8 +437,14 @@ class Db extends CodeceptionModule implements DbInterface
 
             throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
+
+        if ($databaseConfig['waitlock']) {
+            $this->driver->setWaitLock($databaseConfig['waitlock']);
+        }
+
         $this->debugSection('Db', 'Connected to ' . $databaseKey . ' ' . $this->drivers[$databaseKey]->getDb());
         $this->dbhs[$databaseKey] = $this->drivers[$databaseKey]->getDbh();
+
     }
 
     private function disconnect($databaseKey, $databaseConfig)
@@ -696,6 +705,16 @@ class Db extends CodeceptionModule implements DbInterface
         return (int) $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
     }
 
+    /**
+     * Fetches all values from the column in database.
+     * Provide table name, desired column and criteria.
+     *
+     * @param string $table
+     * @param string $column
+     * @param array  $criteria
+     *
+     * @return array
+     */
     protected function proceedSeeInDatabase($table, $column, $criteria)
     {
         $query = $this->getDriver()->select($column, $table, $criteria);
@@ -735,6 +754,21 @@ class Db extends CodeceptionModule implements DbInterface
         return $sth->fetchAll(\PDO::FETCH_COLUMN, 0);
     }
 
+    /**
+     * Fetches all values from the column in database.
+     * Provide table name, desired column and criteria.
+     *
+     * ``` php
+     * <?php
+     * $mails = $I->grabFromDatabase('users', 'email', array('name' => 'RebOOter'));
+     * ```
+     *
+     * @param string $table
+     * @param string $column
+     * @param array  $criteria
+     *
+     * @return array
+     */
     public function grabFromDatabase($table, $column, $criteria = [])
     {
         return $this->proceedSeeInDatabase($table, $column, $criteria);

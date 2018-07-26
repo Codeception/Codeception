@@ -264,6 +264,17 @@ class Asserts extends CodeceptionModule
     }
 
     /**
+     * Checks that the condition is NOT true (everything but true)
+     *
+     * @param        $condition
+     * @param string $message
+     */
+    public function assertNotTrue($condition, $message = '')
+    {
+        parent::assertNotTrue($condition, $message);
+    }
+
+    /**
      * Checks that condition is negative.
      *
      * @param        $condition
@@ -272,6 +283,17 @@ class Asserts extends CodeceptionModule
     public function assertFalse($condition, $message = '')
     {
         parent::assertFalse($condition, $message);
+    }
+
+    /**
+     * Checks that the condition is NOT false (everything but false)
+     *
+     * @param        $condition
+     * @param string $message
+     */
+    public function assertNotFalse($condition, $message = '')
+    {
+        parent::assertNotFalse($condition, $message);
     }
 
     /**
@@ -465,8 +487,8 @@ class Asserts extends CodeceptionModule
                 ));
             }
             $this->assertTrue(true); // increment assertion counter
-             return;
+            return;
         }
-        $this->fail("Expected exception to be thrown, but nothing was caught");
+        $this->fail("Expected exception of $class to be thrown, but nothing was caught");
     }
 }

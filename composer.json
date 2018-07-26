@@ -15,7 +15,7 @@
     "minimum-stability": "RC",
 
     "require": {
-        "php": ">=5.4.0 <8.0",
+        "php": ">=5.6.0 <8.0",
         "ext-json": "*",
         "ext-mbstring": "*",
         "facebook/webdriver": ">=1.1.3 <2.0",
@@ -29,8 +29,8 @@
         "symfony/css-selector": ">=2.7 <5.0",
         "symfony/dom-crawler": ">=2.7 <5.0",
         "behat/gherkin": "^4.4.0",
-        "codeception/phpunit-wrapper": "^6.0|^7.0",
-        "codeception/stub": "^1.0"
+        "codeception/phpunit-wrapper": "^6.0.9|^7.0.6",
+        "codeception/stub": "^2.0"
     },
     "require-dev": {
         "monolog/monolog": "~1.8",

@@ -12,7 +12,6 @@ We will get back to this later in this chapter, but for now let's look at the fo
 
 ```php
 <?php
-$I = new AcceptanceTester($scenario);
 $I->amOnPage('/');
 $I->see('Hello');
 $I->seeInDatabase('users', ['id' => 1]);
@@ -107,7 +106,7 @@ breaking the [Single Responsibility Principle](http://en.wikipedia.org/wiki/Sing
 
 ### Session Snapshot
 
-If you need to authorize a user for each test, you can do so by submiting the login form at the beginning of every test.
+If you need to authorize a user for each test, you can do so by submitting the login form at the beginning of every test.
 Running those steps takes time, and in the case of Selenium tests (which are slow by themselves)
 that time loss can become significant.
 
@@ -150,14 +149,14 @@ We call such a classes StepObjects.
 Lets create an Admin StepObject with the generator:
 
 ```bash
-php codecept generate:stepobject acceptance Admin
+php vendor/bin/codecept generate:stepobject acceptance Admin
 ```
 
 You can supply optional action names. Enter one at a time, followed by a newline.
 End with an empty line to continue to StepObject creation.
 
 ```bash
-php codecept generate:stepobject acceptance Admin
+php vendor/bin/codecept generate:stepobject acceptance Admin
 Add action to StepObject class (ENTER to exit): loginAsAdmin
 Add action to StepObject class (ENTER to exit):
 StepObject was created in /tests/acceptance/_support/Step/Acceptance/Admin.php
@@ -238,12 +237,12 @@ the [PageObject pattern](http://docs.seleniumhq.org/docs/06_test_design_consider
 which is widely used by test automation engineers. The PageObject pattern represents a web page as a class
 and the DOM elements on that page as its properties, and some basic interactions as its methods.
 PageObjects are very important when you are developing a flexible architecture of your tests.
-Do not hardcode complex CSS or XPath locators in your tests but rather move them into PageObject classes.
+Do not hard-code complex CSS or XPath locators in your tests but rather move them into PageObject classes.
 
 Codeception can generate a PageObject class for you with command:
 
 ```bash
-php codecept generate:pageobject Login
+php vendor/bin/codecept generate:pageobject Login
 ```
 
 This will create a `Login` class in `tests/_support/Page`.

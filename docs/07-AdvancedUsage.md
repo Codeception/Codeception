@@ -12,7 +12,7 @@ and you want to split it, you can easily move it into classes.
 You can create a Cest file by running the command:
 
 ```bash
-$ php codecept generate:cest suitename CestName
+$ php vendor/bin/codecept generate:cest suitename CestName
 ```
 
 The generated file will look like this:
@@ -61,18 +61,18 @@ class BasicCest
 }
 ```
 
-As you see, Cest classes have no parents. 
+As you see, Cest classes have no parents.
 This is done intentionally. It allows you to extend your classes with common behaviors and workarounds
 that may be used in child classes. But don't forget to make these methods `protected` so they won't be executed as tests.
 
-Cest format also can contain hooks based on test results: 
+Cest format also can contain hooks based on test results:
 
 * `_failed` will be executed on failed test
 * `_passed` will be executed on passed test
 
 ```php
 <?php
-public function _failed(\AcceptanceTester $I) 
+public function _failed(\AcceptanceTester $I)
 {
     // will be executed on test failure
 }
@@ -182,7 +182,7 @@ Moreover, Codeception can resolve dependencies recursively (when `A` depends on 
 and handle parameters of primitive types with default values (like `$param = 'default'`).
 Of course, you are not allowed to have *cyclic dependencies*.
 
-### Examples
+## Example Annotation
 
 What if you want to execute the same test scenario with different data? In this case you can inject examples
 as `\Codeception\Example` instances.
@@ -190,6 +190,8 @@ Data is defined via the `@example` annotation, using JSON or Doctrine-style nota
 
 ```php
 <?php
+class EndpointCest
+{
  /**
   * @example ["/api/", 200]
   * @example ["/api/protected", 401]
@@ -201,12 +203,15 @@ Data is defined via the `@example` annotation, using JSON or Doctrine-style nota
     $I->sendGET($example[0]);
     $I->seeResponseCodeIs($example[1]);
   }
+}
 ```
 
 JSON:
 
 ```php
 <?php
+class PageCest
+{
  /**
   * @example { "url": "/", "title": "Welcome" }
   * @example { "url": "/info", "title": "Info" }
@@ -219,6 +224,7 @@ JSON:
     $I->see($example['title'], 'h1');
     $I->seeInTitle($example['title']);
   }
+}
 ```
 
 <div class="alert alert-info">
@@ -230,6 +236,8 @@ Key-value data in Doctrine-style annotation syntax:
 
 ```php
 <?php
+class PageCest
+{
  /**
   * @example(url="/", title="Welcome")
   * @example(url="/info", title="Info")
@@ -242,14 +250,19 @@ Key-value data in Doctrine-style annotation syntax:
     $I->see($example['title'], 'h1');
     $I->seeInTitle($example['title']);
   }
+}
 ```
 
-You can also use the `@dataprovider` annotation for creating dynamic examples, using a protected method for providing example data:
+## DataProvider Annotations
+
+You can also use the `@dataProvider` annotation for creating dynamic examples for [Cest classes](#Cest-Classes), using a **protected method** for providing example data:
 
 ```php
 <?php
+class PageCest
+{
    /**
-    * @dataprovider pageProvider
+    * @dataProvider pageProvider
     */
     public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
     {
@@ -270,9 +283,13 @@ You can also use the `@dataprovider` annotation for creating dynamic examples, u
             ['url'=>"/contact", 'title'=>"Contact Us"]
         ];
     }
+}
 ```
 
-### Before/After Annotations
+`@dataprovider` annotation is also available for [unit tests](https://codeception.com/docs/05-UnitTests), in this case the data provider **method must be public**.
+For more details about how to use data provider for unit tests, please refer to [PHPUnit documentation](https://phpunit.de/manual/current/en/writing-tests-for-phpunit.html#writing-tests-for-phpunit.data-providers).
+
+## Before/After Annotations
 
 You can control execution flow with `@before` and `@after` annotations. You may move common actions
 into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
@@ -370,7 +387,7 @@ The names of these files are used as environments names
 You can generate a new file with this environment configuration by using the `generate:environment` command:
 
 ```bash
-$ php codecept g:env chrome
+$ php vendor/bin/codecept g:env chrome
 ```
 
 In that file you can specify just the options you wish to override:
@@ -388,13 +405,13 @@ You can easily switch between those configs by running tests with `--env` option
 To run the tests only for PhantomJS you just need to pass `--env phantom` as an option:
 
 ```bash
-$ php codecept run acceptance --env phantom
+$ php vendor/bin/codecept run acceptance --env phantom
 ```
 
 To run the tests in all 3 browsers, list all the environments:
 
 ```bash
-$ php codecept run acceptance --env phantom --env chrome --env firefox
+$ php vendor/bin/codecept run acceptance --env phantom --env chrome --env firefox
 ```
 
 The tests will be executed 3 times, each time in a different browser.
@@ -402,7 +419,7 @@ The tests will be executed 3 times, each time in a different browser.
 It's also possible to merge multiple environments into a single configuration by separating them with a comma:
 
 ```bash
-$ php codecept run acceptance --env dev,phantom --env dev,chrome --env dev,firefox
+$ php vendor/bin/codecept run acceptance --env dev,phantom --env dev,chrome --env dev,firefox
 ```
 
 The configuration is merged in the order given.
@@ -480,7 +497,7 @@ public function myTest(\AcceptanceTester $I, \Codeception\Scenario $scenario)
 }
 ```
 
-`Codeception\Scenario` is also availble in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
+`Codeception\Scenario` is also available in Actor classes and StepObjects. You can access it with `$this->getScenario()`.
 
 ### Dependencies
 
@@ -526,7 +543,7 @@ The interactive console was added to try Codeception commands before executing t
 You can run the console with the following command:
 
 ``` bash
-$ php codecept console suitename
+$ php vendor/bin/codecept console suitename
 ```
 
 Now you can execute all the commands of an appropriate Actor class and see the results immediately.
@@ -543,15 +560,15 @@ If you have several projects with Codeception tests, you can use a single `codec
 You can pass the `-c` option to any Codeception command (except `bootstrap`), to execute Codeception in another directory:
 
 ```bash
-$ php codecept run -c ~/projects/ecommerce/
-$ php codecept run -c ~/projects/drupal/
-$ php codecept generate:cept acceptance CreateArticle -c ~/projects/drupal/
+$ php vendor/bin/codecept run -c ~/projects/ecommerce/
+$ php vendor/bin/codecept run -c ~/projects/drupal/
+$ php vendor/bin/codecept generate:cept acceptance CreateArticle -c ~/projects/drupal/
 ```
 
 To create a project in directory different from the current one, just provide its path as a parameter:
 
 ```bash
-$ php codecept bootstrap ~/projects/drupal/
+$ php vendor/bin/codecept bootstrap ~/projects/drupal/
 ```
 
 Also, the `-c` option allows you to specify another config file to be used.
@@ -563,13 +580,13 @@ and settings). Just pass the `.yml` filename as the `-c` parameter to execute te
 There are several ways to execute a bunch of tests. You can run tests from a specific directory:
 
 ```bash
-$ php codecept run tests/acceptance/admin
+$ php vendor/bin/codecept run tests/acceptance/admin
 ```
 
 You can execute one (or several) specific groups of tests:
 
 ```bash
-$ php codecept run -g admin -g editor
+$ php vendor/bin/codecept run -g admin -g editor
 ```
 
 The concept of groups was taken from PHPUnit and behave in the same way.
@@ -644,9 +661,53 @@ groups:
 
 This will load all found `p*` files in `tests/_data` as groups. Group names will be as follows p1,p2,...,pN.
 
-## Shell autocompletion
+## Formats
 
-For bash and zsh shells, you can use autocompletion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
+In addition to the standard test formats (Cept, Cest, Unit, Gherkin) you can implement your own format classes to customise your test execution.
+Specify these in your suite configuration:
+
+```yaml
+formats:
+  - \My\Namespace\MyFormat
+```
+
+Then define a class which implements the LoaderInterface
+
+```php
+namespace My\Namespace;
+
+class MyFormat implements \Codeception\Test\Loader\LoaderInterface
+{
+    protected $tests;
+    
+    protected $settings;
+    
+    public function __construct($settings = [])
+    {
+        //These are the suite settings
+        $this->settings = $settings;
+    }
+    
+    public function loadTests($filename)
+    {
+        //Load file and create tests
+    }
+
+    public function getTests()
+    {
+        return $this->tests;
+    }
+
+    public function getPattern()
+    {
+        return '~Myformat\.php$~';
+    }
+}
+```
+
+## Shell auto-completion
+
+For bash and zsh shells, you can use auto-completion for your Codeception projects by executing the following in your shell (or add it to your .bashrc/.zshrc):
 ```bash
 # BASH ~4.x, ZSH
 source <([codecept location] _completion --generate-hook --program codecept --use-vendor-bin)

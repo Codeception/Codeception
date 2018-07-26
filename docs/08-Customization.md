@@ -34,7 +34,7 @@ To avoid naming conflicts between Actor classes and Helper classes, they should 
 To create test suites with namespaces you can add `--namespace` option to the bootstrap command:
 
 ```bash
-php codecept bootstrap --namespace frontend
+php vendor/bin/codecept bootstrap --namespace frontend
 ```
 
 This will bootstrap a new project with the `namespace: frontend` parameter in the `codeception.yml` file.
@@ -44,7 +44,7 @@ Once each of your applications (bundles) has its own namespace and different Hel
 you can execute all the tests in a single runner. Run the Codeception tests as usual, using the meta-config we created earlier:
 
 ```bash
-php codecept run
+php vendor/bin/codecept run
 ```
 
 This will launch the test suites for all three applications and merge the reports from all of them.
@@ -54,7 +54,7 @@ and you want to get a single report in JUnit and HTML format. The code coverage 
 If you want to run a specific suite from the application you can execute:
 
 ```
-php codecept run unit -c frontend
+php vendor/bin/codecept run unit -c frontend
 ```
 
 Where `unit` is the name of suite and the `-c` option specifies the path to the `codeception.yml` configuration file to use.
@@ -71,7 +71,7 @@ By default, one `RunFailed` Extension is already enabled in your global `codecep
 It allows you to rerun failed tests by using the `-g failed` option:
 
 ```
-php codecept run -g failed
+php vendor/bin/codecept run -g failed
 ```
 
 Codeception comes with bundled extensions located in `ext` directory.
@@ -95,29 +95,29 @@ All listed events are available as constants in `Codeception\Events` class.
 
 |    Event             |    When?                                |    Triggered by
 |:--------------------:| --------------------------------------- | --------------------------:
-| `suite.before`       | Before suite is executed                | [Suite, Settings](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/SuiteEvent.php)
-| `test.start`         | Before test is executed                 | [Test](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/TestEvent.php)
-| `test.before`        | At the very beginning of test execution | [Codeception Test](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/TestEvent.php)
-| `step.before`        | Before step                             | [Step](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/StepEvent.php)
-| `step.after`         | After step                              | [Step](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/StepEvent.php)
-| `step.fail`          | After failed step                       | [Step](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/StepEvent.php)
-| `test.fail`          | After failed test                       | [Test, Fail](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/FailEvent.php)
-| `test.error`         | After test ended with error             | [Test, Fail](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/FailEvent.php)
-| `test.incomplete`    | After executing incomplete test         | [Test, Fail](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/FailEvent.php)
-| `test.skipped`       | After executing skipped test            | [Test, Fail](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/FailEvent.php)
-| `test.success`       | After executing successful test         | [Test](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/TestEvent.php)
-| `test.after`         | At the end of test execution            | [Codeception Test](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/TestEvent.php)
-| `test.end`           | After test execution                    | [Test](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/TestEvent.php)
-| `suite.after`        | After suite was executed                | [Suite, Result, Settings](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/SuiteEvent.php)
-| `test.fail.print`    | When test fails are printed             | [Test, Fail](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/FailEvent.php)
-| `result.print.after` | After result was printed                | [Result, Printer](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Event/PrintResultEvent.php)
+| `suite.before`       | Before suite is executed                | [Suite, Settings](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/SuiteEvent.php)
+| `test.start`         | Before test is executed                 | [Test](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/TestEvent.php)
+| `test.before`        | At the very beginning of test execution | [Codeception Test](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/TestEvent.php)
+| `step.before`        | Before step                             | [Step](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/StepEvent.php)
+| `step.after`         | After step                              | [Step](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/StepEvent.php)
+| `step.fail`          | After failed step                       | [Step](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/StepEvent.php)
+| `test.fail`          | After failed test                       | [Test, Fail](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/FailEvent.php)
+| `test.error`         | After test ended with error             | [Test, Fail](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/FailEvent.php)
+| `test.incomplete`    | After executing incomplete test         | [Test, Fail](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/FailEvent.php)
+| `test.skipped`       | After executing skipped test            | [Test, Fail](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/FailEvent.php)
+| `test.success`       | After executing successful test         | [Test](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/TestEvent.php)
+| `test.after`         | At the end of test execution            | [Codeception Test](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/TestEvent.php)
+| `test.end`           | After test execution                    | [Test](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/TestEvent.php)
+| `suite.after`        | After suite was executed                | [Suite, Result, Settings](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/SuiteEvent.php)
+| `test.fail.print`    | When test fails are printed             | [Test, Fail](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/FailEvent.php)
+| `result.print.after` | After result was printed                | [Result, Printer](https://github.com/Codeception/Codeception/blob/2.4/src/Codeception/Event/PrintResultEvent.php)
 
 There may be some confusion between `test.start`/`test.before` and `test.after`/`test.end`.
 The start and end events are triggered by PHPUnit, but the before and after events are triggered by Codeception.
 Thus, when you are using classical PHPUnit tests (extended from `PHPUnit\Framework\TestCase`),
 the before/after events won't be triggered for them. During the `test.before` event you can mark a test
 as skipped or incomplete, which is not possible in `test.start`. You can learn more from
-[Codeception internal event listeners](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Subscriber).
+[Codeception internal event listeners](https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Subscriber).
 
 The extension class itself is inherited from `Codeception\Extension`:
 
@@ -293,7 +293,7 @@ For instance, for `nocleanup` group we prevent Doctrine2 module from wrapping te
     }
 ```
 
-A group class can be created with `php codecept generate:group groupname` command.
+A group class can be created with `php vendor/bin/codecept generate:group groupname` command.
 Group classes will be stored in the `tests/_support/Group` directory.
 
 A group class can be enabled just like you enable an extension class. In the file `codeception.yml`:
@@ -366,7 +366,7 @@ Learn from the examples above to build a custom Installation Template. Here are 
 * Use methods like `say`, `saySuccess`, `sayWarning`, `sayError`, `ask`, to interact with a user.
 * Use `createDirectoryFor`, `createEmptyDirectory` methods to create directories
 * Use `createHelper`, `createActor` methods to create helpers and actors.
-* Use [Codeception generators](https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Lib/Generator) to create other support classes.
+* Use [Codeception generators](https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Lib/Generator) to create other support classes.
 
 ## Conclusion
 

@@ -69,6 +69,7 @@ class Configuration
         'namespace'  => '',
         'include'    => [],
         'paths'      => [],
+        'extends'    => null,
         'suites'     => [],
         'modules'    => [],
         'extensions' => [
@@ -109,8 +110,10 @@ class Configuration
             'depends' => []
         ],
         'path'        => null,
+        'extends'     => null,
         'namespace'   => null,
         'groups'      => [],
+        'formats'     => [],
         'shuffle'     => false,
         'extensions'  => [ // suite extensions
             'enabled' => [],
@@ -178,6 +181,16 @@ class Configuration
 
         if ($config == self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
+        }
+
+        // we check for the "extends" key in the yml file
+        if (isset($config['extends'])) {
+            // and now we search for the file
+            $presetFilePath = codecept_absolute_path($config['extends']);
+            if (file_exists($presetFilePath)) {
+                // and merge it with our configuration file
+                $config = self::mergeConfigs(self::getConfFromFile($presetFilePath), $config);
+            }
         }
 
         self::$config = $config;
@@ -319,6 +332,8 @@ class Configuration
             // take a suite path from its name
             $settings['path'] = $suite;
         }
+
+        $config['paths']['tests'] = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['tests']);
 
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
             . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
@@ -668,14 +683,25 @@ class Configuration
             return self::mergeConfigs($settings, self::$config['suites'][$suite]);
         }
 
-        $suiteDistConf = self::getConfFromFile(
-            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml"
-        );
-        $suiteConf = self::getConfFromFile(
-            self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml"
-        );
+        $suiteDir = self::$dir . DIRECTORY_SEPARATOR . $path;
+
+        $suiteDistConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
+        $suiteConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "$suite.suite.yml");
+
+        // now we check the suite config file, if a extends key is defined
+        if (isset($suiteConf['extends'])) {
+            $presetFilePath = codecept_is_path_absolute($suiteConf['extends'])
+                ? $suiteConf['extends'] // If path is absolute – use it
+                : realpath($suiteDir . DIRECTORY_SEPARATOR . $suiteConf['extends']); // Otherwise try to locate it in the suite dir
+
+            if (file_exists($presetFilePath)) {
+                $settings = self::mergeConfigs(self::getConfFromFile($presetFilePath), $settings);
+            }
+        }
+
         $settings = self::mergeConfigs($settings, $suiteDistConf);
         $settings = self::mergeConfigs($settings, $suiteConf);
+
         return $settings;
     }
 

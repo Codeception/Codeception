@@ -56,6 +56,12 @@ class SqlSrv extends Db
 
         $params = [];
         foreach ($criteria as $k => $v) {
+            if ($v === null) {
+                $params[] = $this->getQuotedName($k) . " IS NULL ";
+                unset($criteria[$k]);
+                continue;
+            }
+
             if (strpos(strtolower($k), ' like') > 0) {
                 $k = str_replace(' like', '', strtolower($k));
                 $params[] = $this->getQuotedName($k) . " LIKE ? ";
