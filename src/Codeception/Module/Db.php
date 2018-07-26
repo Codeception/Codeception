@@ -319,7 +319,7 @@ class Db extends CodeceptionModule implements DbInterface
             $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = (string) $this->config['ssl_cipher'];
         }
 
-        if ( array_key_exists( 'ssl_verify_server_cert', $this->config )
+        if (array_key_exists('ssl_verify_server_cert', $this->config)
             && defined('\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')
         ) {
             $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (boolean) $this->config[ 'ssl_verify_server_cert' ];
