@@ -235,6 +235,7 @@ class Db extends CodeceptionModule implements DbInterface
                     'populate' => false,
                     'cleanup' => false,
                     'reconnect' => false,
+                    'waitlock' => 0,
                     'dump' => null,
                     'populator' => null,
                 ], $databaseConfig);
