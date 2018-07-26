@@ -20,6 +20,12 @@ namespace Symfony\Component\CssSelector {
 
 namespace Codeception\TestCase {
 
+    if (version_compare('7.2.0', \PHPUnit\Runner\Version::id(), '<=')) {
+        class_alias('Codeception\Test\PhpUnitTestCase72', 'Codeception\Test\PhpUnitTestCase');
+    } else {
+        class_alias('Codeception\Test\PhpUnitTestCase71', 'Codeception\Test\PhpUnitTestCase');
+    }
+
     class Test extends \Codeception\Test\Unit {
     }
 }
