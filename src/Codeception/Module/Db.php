@@ -237,6 +237,11 @@ class Db extends CodeceptionModule implements DbInterface
         $this->connect();
     }
 
+    public function __destruct()
+    {
+        $this->disconnect();
+    }
+
     public function _beforeSuite($settings = [])
     {
         if (!$this->config['populator']
@@ -347,9 +352,9 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function disconnect()
     {
-        $this->debugSection('Db', 'Disconnected');
-        $this->dbh = null;
         $this->driver = null;
+        $this->dbh = null;
+        $this->debugSection('Db', 'Disconnected');
     }
 
     public function _before(TestInterface $test)
