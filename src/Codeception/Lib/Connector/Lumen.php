@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Client;
+use Illuminate\Http\UploadedFile;
 
 class Lumen extends Client
 {
