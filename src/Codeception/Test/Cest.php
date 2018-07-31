@@ -188,7 +188,7 @@ class Cest extends Test implements
         return $this->parser;
     }
 
-    public function getDependencies()
+    public function fetchDependencies()
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {

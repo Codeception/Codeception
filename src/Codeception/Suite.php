@@ -34,7 +34,7 @@ class Suite extends \PHPUnit\Framework\TestSuite
             return [$test];
         }
         $tests = [];
-        foreach ($test->getDependencies() as $requiredTestName) {
+        foreach ($test->fetchDependencies() as $requiredTestName) {
             $required = $this->findMatchedTest($requiredTestName);
             if (!$required) {
                 continue;
