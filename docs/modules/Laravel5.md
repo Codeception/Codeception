@@ -564,7 +564,7 @@ $I->dontSeeFormErrors();
 ?>
 ```
 
- * `return` bool
+ * `return` void
 
 
 ### dontSeeInCurrentUrl
@@ -1072,8 +1072,9 @@ $user = $I->haveRecord('App\User', array('name' => 'Davert')); // returns Eloque
 ```
 
  * `param string` $table
- * `param array` $attributes
- * `return` integer|EloquentModel
+ * `param array`  $attributes
+ * `return` EloquentModel|int
+@throws \RuntimeException
  * `[Part]` orm
 
 
@@ -1322,7 +1323,7 @@ $I->seeFormHasErrors();
 ?>
 ```
 
- * `return` bool
+ * `return` void
 
 
 ### seeInCurrentUrl
