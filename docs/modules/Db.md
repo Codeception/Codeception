@@ -208,7 +208,7 @@ Supported operators: `<`, `>`, `>=`, `<=`, `!=`, `like`.
 
 ### grabColumnFromDatabase
  
-Fetches all values from the column in database.
+Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
 ``` php
@@ -225,7 +225,7 @@ $mails = $I->grabColumnFromDatabase('users', 'email', array('name' => 'RebOOter'
 
 ### grabFromDatabase
  
-Fetches all values from the column in database.
+Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
 ``` php
