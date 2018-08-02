@@ -2879,7 +2879,9 @@ class WebDriver extends CodeceptionModule implements
     {
         $message = $selector;
         if (is_array($selector)) {
-            $message = implode(array_keys($selector)) . ':' . implode($selector);
+            $type = key($selector);
+            $locator = $selector[$type];
+            $message = $type . ':' . $locator;
         }
         $this->assertThat($nodes, $constraint, $message);
     }
