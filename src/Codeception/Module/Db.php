@@ -575,7 +575,7 @@ class Db extends CodeceptionModule implements DbInterface
     }
 
     /**
-     * Fetches all values from the column in database.
+     * Fetches a single column value from a database.
      * Provide table name, desired column and criteria.
      *
      * @param string $table
@@ -598,7 +598,7 @@ class Db extends CodeceptionModule implements DbInterface
     }
 
     /**
-     * Fetches all values from the column in database.
+     * Fetches a single column value from a database.
      * Provide table name, desired column and criteria.
      *
      * ``` php
@@ -624,7 +624,7 @@ class Db extends CodeceptionModule implements DbInterface
     }
 
     /**
-     * Fetches all values from the column in database.
+     * Fetches a single column value from a database.
      * Provide table name, desired column and criteria.
      *
      * ``` php
