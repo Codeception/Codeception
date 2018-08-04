@@ -1,3 +1,16 @@
+#### 2.4.5
+
+* Fixed PHPUnit 7.2 compatibility.
+* Introduced **RunBefore** extension to execute scripts before running tests. See #5049 by @aashmelev.  
+* [Db] Added two options for MySQL by @bangertz
+    * `ssl_cipher` - list of one or more permissible ciphers to use for SSL encryption
+    * `ssl_verify_server_cert` - disables certificate CN verification
+* [Db] Always disconnect before connect when `reconnect` is set. By @ashnazg
+* [Db] More explicit PDO closing upon destruction and close opened transactions by @ashnazg.
+* [Recorder Extension] Improved error logging by @OneEyedSpaceFish. See #5101
+* [Lumen] Fixed file uploads via REST module. By @retnek.
+* Fixed: function getMetadata() may not exist, results in fatal error. See #4913 by @marcovtwout 
+
 #### 2.4.4
 
 * Recently added `extends` property in the `codeception.yml` and `*.suite.yml` files now support absolute paths; by @silverfire

@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Extension;
 
 use Codeception\Event\StepEvent;
@@ -55,7 +56,7 @@ class Recorder extends \Codeception\Extension
         'module'            => 'WebDriver',
         'template'          => null,
         'animate_slides'    => true,
-        'ignore_steps'      => []
+        'ignore_steps'      => [],
     ];
 
     protected $template = <<<EOF
@@ -232,6 +233,8 @@ EOF;
     protected $stepNum = 0;
     protected $seed;
     protected $recordedTests = [];
+    protected $errors = [];
+    protected $errorMessages = [];
 
     public function beforeSuite()
     {
@@ -242,6 +245,8 @@ EOF;
         }
         $this->seed = uniqid();
         $this->webDriverModule = $this->getModule($this->config['module']);
+        $this->errors = [];
+        $this->errorMessages = [];
         if (!$this->webDriverModule instanceof ScreenshotSaver) {
             throw new ExtensionException(
                 $this,
@@ -257,20 +262,33 @@ EOF;
 
     public function afterSuite()
     {
-        if (!$this->webDriverModule or !$this->dir) {
+        if (!$this->webDriverModule) {
             return;
         }
         $links = '';
-        foreach ($this->recordedTests as $link => $url) {
-            $links .= "<li><a href='$url'>$link</a></li>\n";
-        }
-        $indexHTML = (new Template($this->indexTemplate))
-            ->place('seed', $this->seed)
-            ->place('records', $links)
-            ->produce();
 
-        file_put_contents(codecept_output_dir().'records.html', $indexHTML);
-        $this->writeln("⏺ Records saved into: <info>file://" . codecept_output_dir().'records.html</info>');
+        if (count($this->slides)) {
+            foreach ($this->recordedTests as $link => $url) {
+                $links .= "<li><a href='$url'>$link</a></li>\n";
+            }
+            $indexHTML = (new Template($this->indexTemplate))
+                ->place('seed', $this->seed)
+                ->place('records', $links)
+                ->produce();
+
+            file_put_contents(codecept_output_dir() . 'records.html', $indexHTML);
+            $this->writeln("⏺ Records saved into: <info>file://" . codecept_output_dir() . 'records.html</info>');
+        }
+
+        foreach ($this->errors as $testPath => $screenshotPath) {
+            while (count($this->errorMessages[$testPath])) {
+                $this->writeln(array_pop($this->errorMessages[$testPath]));
+            }
+
+            if ($screenshotPath !== null) {
+                $this->writeln("⏺ Screenshot saved into: <info>file://{$screenshotPath}</info>");
+            }
+        }
     }
 
     public function before(TestEvent $e)
@@ -281,6 +299,7 @@ EOF;
         $this->dir = null;
         $this->stepNum = 0;
         $this->slides = [];
+
         $testName = preg_replace('~\W~', '_', Descriptor::getTestAsString($e->getTest()));
         $this->dir = codecept_output_dir() . "record_{$this->seed}_$testName";
         @mkdir($this->dir);
@@ -302,37 +321,64 @@ EOF;
 
     public function persist(TestEvent $e)
     {
-        if (!$this->webDriverModule or !$this->dir) {
+        if (!$this->webDriverModule) {
             return;
         }
         $indicatorHtml = '';
         $slideHtml = '';
-        foreach ($this->slides as $i => $step) {
-            $indicatorHtml .= (new Template($this->indicatorTemplate))
-                ->place('step', (int)$i)
-                ->place('isActive', (int)$i ? '' : 'class="active"')
-                ->produce();
 
-            $slideHtml .= (new Template($this->slidesTemplate))
-                ->place('image', $i)
-                ->place('caption', $step->getHtml('#3498db'))
-                ->place('isActive', (int)$i ? '' : 'active')
-                ->place('isError', $step->hasFailed() ? 'error' : '')
-                ->produce();
+        $testName = preg_replace('~\W~', '_', Descriptor::getTestAsString($e->getTest()));
+        $testPath = codecept_relative_path(Descriptor::getTestFullName($e->getTest()));
+        $dir = codecept_output_dir() . "record_{$this->seed}_$testName";
+
+        if (strcasecmp($this->dir, $dir) != 0) {
+            $screenshotPath = "{$dir}/error.png";
+            @mkdir($dir);
+            $this->recordedTests = [];
+            $this->slides = [];
+            $this->errorMessages[$testPath] = [
+                "⏺ An error has occurred in <info>{$testName}</info> before any steps could've executed",
+            ];
+
+            try {
+                $this->webDriverModule->webDriver->takeScreenshot($screenshotPath);
+                $this->errors[$testPath] = $screenshotPath;
+            } catch (\Exception $exception) {
+                $this->errors[$testPath] = null;
+                FileSystem::deleteDir($dir);
+            }
+
+            return;
         }
 
-        $html = (new Template($this->template))
-            ->place('indicators', $indicatorHtml)
-            ->place('slides', $slideHtml)
-            ->place('feature', ucfirst($e->getTest()->getFeature()))
-            ->place('test', Descriptor::getTestSignature($e->getTest()))
-            ->place('carousel_class', $this->config['animate_slides'] ? ' slide' : '')
-            ->produce();
+        if (!array_key_exists($testPath, $this->errors)) {
+            foreach ($this->slides as $i => $step) {
+                $indicatorHtml .= (new Template($this->indicatorTemplate))
+                    ->place('step', (int)$i)
+                    ->place('isActive', (int)$i ? '' : 'class="active"')
+                    ->produce();
 
-        $indexFile = $this->dir . DIRECTORY_SEPARATOR . 'index.html';
-        file_put_contents($indexFile, $html);
-        $testName = Descriptor::getTestSignature($e->getTest()). ' - '.ucfirst($e->getTest()->getFeature());
-        $this->recordedTests[$testName] = substr($indexFile, strlen(codecept_output_dir()));
+                $slideHtml .= (new Template($this->slidesTemplate))
+                    ->place('image', $i)
+                    ->place('caption', $step->getHtml('#3498db'))
+                    ->place('isActive', (int)$i ? '' : 'active')
+                    ->place('isError', $step->hasFailed() ? 'error' : '')
+                    ->produce();
+            }
+
+            $html = (new Template($this->template))
+                ->place('indicators', $indicatorHtml)
+                ->place('slides', $slideHtml)
+                ->place('feature', ucfirst($e->getTest()->getFeature()))
+                ->place('test', Descriptor::getTestSignature($e->getTest()))
+                ->place('carousel_class', $this->config['animate_slides'] ? ' slide' : '')
+                ->produce();
+
+            $indexFile = $this->dir . DIRECTORY_SEPARATOR . 'index.html';
+            file_put_contents($indexFile, $html);
+            $testName = Descriptor::getTestSignature($e->getTest()). ' - '.ucfirst($e->getTest()->getFeature());
+            $this->recordedTests[$testName] = substr($indexFile, strlen(codecept_output_dir()));
+        }
     }
 
     public function afterStep(StepEvent $e)
@@ -348,7 +394,27 @@ EOF;
         }
 
         $filename = str_pad($this->stepNum, 3, "0", STR_PAD_LEFT) . '.png';
-        $this->webDriverModule->_saveScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
+
+        try {
+            $this->webDriverModule->webDriver->takeScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
+        } catch (\Exception $exception) {
+            $testPath = codecept_relative_path(Descriptor::getTestFullName($e->getTest()));
+            $this->errors[$testPath] = null;
+
+            if (array_key_exists($testPath, $this->errorMessages)) {
+                $this->errorMessages[$testPath] = array_merge(
+                    $this->errorMessages[$testPath],
+                    ["⏺ Unable to capture a screenshot for <info>{$testPath}/{$e->getStep()->getAction()}</info>"]
+                );
+            } else {
+                $this->errorMessages[$testPath] = [
+                    "⏺ Unable to capture a screenshot for <info>{$testPath}/{$e->getStep()->getAction()}</info>",
+                ];
+            }
+
+            return;
+        }
+
         $this->stepNum++;
         $this->slides[$filename] = $e->getStep();
     }

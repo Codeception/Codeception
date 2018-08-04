@@ -86,6 +86,7 @@ extensions:
 
 * `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
 * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
+* `ignore_steps` (default: []) - array of step names that should not be recorded, * wildcards supported
 
 
 #### Examples:
@@ -93,11 +94,43 @@ extensions:
 ``` yaml
 extensions:
     enabled:
-        Codeception\Extension\Recorder:
+        - Codeception\Extension\Recorder:
             module: AngularJS # enable for Angular
             delete_successful: false # keep screenshots of successful tests
+            ignore_steps: [have, grab*]
 ```
 
+
+
+
+## RunBefore
+
+[See Source](https://github.com/Codeception/Codeception/blob/2.4/ext/RunBefore.php)
+
+Extension for execution of some processes before running tests.
+
+Processes can be independent and dependent.
+Independent processes run independently of each other.
+Dependent processes run sequentially one by one.
+
+Can be configured in suite config:
+
+```yaml
+# acceptance.suite.yml
+extensions:
+    enabled:
+        - Codeception\Extension\RunBefore:
+            - independent_process_1
+            -
+                - dependent_process_1_1
+                - dependent_process_1_2
+            - independent_process_2
+            -
+                - dependent_process_2_1
+                - dependent_process_2_2
+```
+
+HINT: you can use different configurations per environment.
 
 
 

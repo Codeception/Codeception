@@ -131,6 +131,6 @@ if (!function_exists('codecept_is_path_absolute')) {
             return mb_substr($path, 0, 1) === DIRECTORY_SEPARATOR;
         }
 
-        return preg_match('#^[A-Z]:(?![^/\\])#i', $path) === 1;
+        return preg_match('#^[A-Z]:(?![^/\\\])#i', $path) === 1;
     }
 }

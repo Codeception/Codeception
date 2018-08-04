@@ -49,6 +49,8 @@ use Codeception\TestInterface;
  * * ssl_key - path to the SSL key (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-key)
  * * ssl_cert - path to the SSL certificate (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-cert)
  * * ssl_ca - path to the SSL certificate authority (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-ca)
+ * * ssl_verify_server_cert - disables certificate CN verification (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php)
+ * * ssl_cipher - list of one or more permissible ciphers to use for SSL encryption (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-cipher)
  *
  * ## Example
  *
@@ -66,6 +68,8 @@ use Codeception\TestInterface;
  *              ssl_key: '/path/to/client-key.pem'
  *              ssl_cert: '/path/to/client-cert.pem'
  *              ssl_ca: '/path/to/ca-cert.pem'
+ *              ssl_verify_server_cert: false
+ *              ssl_cipher: 'AES256-SHA'
  *
  * ## SQL data dump
  *
@@ -233,6 +237,11 @@ class Db extends CodeceptionModule implements DbInterface
         $this->connect();
     }
 
+    public function __destruct()
+    {
+        $this->disconnect();
+    }
+
     public function _beforeSuite($settings = [])
     {
         if (!$this->config['populator']
@@ -287,16 +296,38 @@ class Db extends CodeceptionModule implements DbInterface
          * @see http://php.net/manual/en/pdo.construct.php
          * @see http://php.net/manual/de/ref.pdo-mysql.php#pdo-mysql.constants
          */
-        if (array_key_exists('ssl_key', $this->config) && !empty($this->config['ssl_key'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_KEY] = $this->config['ssl_key'];
+        if (array_key_exists('ssl_key', $this->config)
+            && !empty($this->config['ssl_key'])
+            && defined('\PDO::MYSQL_ATTR_SSL_KEY')
+        ) {
+            $options[\PDO::MYSQL_ATTR_SSL_KEY] = (string) $this->config['ssl_key'];
         }
 
-        if (array_key_exists('ssl_cert', $this->config) && !empty($this->config['ssl_cert'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CERT] = $this->config['ssl_cert'];
+        if (array_key_exists('ssl_cert', $this->config)
+            && !empty($this->config['ssl_cert'])
+            && defined('\PDO::MYSQL_ATTR_SSL_CERT')
+        ) {
+            $options[\PDO::MYSQL_ATTR_SSL_CERT] = (string) $this->config['ssl_cert'];
         }
 
-        if (array_key_exists('ssl_ca', $this->config) && !empty($this->config['ssl_ca'])) {
-            $options[\PDO::MYSQL_ATTR_SSL_CA] = $this->config['ssl_ca'];
+        if (array_key_exists('ssl_ca', $this->config)
+            && !empty($this->config['ssl_ca'])
+            && defined('\PDO::MYSQL_ATTR_SSL_CA')
+        ) {
+            $options[\PDO::MYSQL_ATTR_SSL_CA] = (string) $this->config['ssl_ca'];
+        }
+
+        if (array_key_exists('ssl_cipher', $this->config)
+            && !empty($this->config['ssl_cipher'])
+            && defined('\PDO::MYSQL_ATTR_SSL_CIPHER')
+        ) {
+            $options[\PDO::MYSQL_ATTR_SSL_CIPHER] = (string) $this->config['ssl_cipher'];
+        }
+
+        if (array_key_exists('ssl_verify_server_cert', $this->config)
+            && defined('\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')
+        ) {
+            $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (boolean) $this->config[ 'ssl_verify_server_cert' ];
         }
 
         try {
@@ -321,14 +352,15 @@ class Db extends CodeceptionModule implements DbInterface
 
     private function disconnect()
     {
-        $this->debugSection('Db', 'Disconnected');
-        $this->dbh = null;
         $this->driver = null;
+        $this->dbh = null;
+        $this->debugSection('Db', 'Disconnected');
     }
 
     public function _before(TestInterface $test)
     {
         if ($this->config['reconnect']) {
+            $this->disconnect();
             $this->connect();
         }
         if ($this->config['cleanup'] && !$this->populated) {
