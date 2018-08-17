@@ -32,9 +32,15 @@ class Fixtures
         return self::$fixtures[$name];
     }
 
-    public static function cleanup()
+    public static function cleanup($name = null)
     {
-        self::$fixtures = [];
+        if ($name === null) {
+            self::$fixtures = [];
+        } elseif (!self::exists($name)) {
+            throw new \RuntimeException("$name not found in fixtures");
+        }
+
+        unset(self::$fixtures[$name]);
     }
 
     public static function exists($name)
