@@ -145,6 +145,46 @@ Checks that actual is greater or equal than expected
  * `param` $actual
  * `param` $description
 
+### assertJson
+
+ * `param` string $actualJson
+ * `param` string $message
+
+### assertJsonFileEqualsJsonFile
+
+ * `param` string $expectedFile
+ * `param` string $actualFile
+ * `param` string $message
+
+### assertJsonFileNotEqualsJsonFile
+
+ * `param` string $expectedFile
+ * `param` string $actualFile
+ * `param` string $message
+
+### assertJsonStringEqualsJsonFile
+
+ * `param` string $expectedFile
+ * `param` string $actualJson
+ * `param` string $message
+
+### assertJsonStringNotEqualsJsonFile
+
+ * `param` string $expectedFile
+ * `param` string $actualJson
+ * `param` string $message
+
+### assertJsonStringEqualsJsonString
+
+ * `param` string $expectedJson
+ * `param` string $actualJson
+ * `param` string $message
+
+### assertJsonStringNotEqualsJsonString
+
+ * `param` string $expectedJson
+ * `param` string $actualJson
+ * `param` string $message
 
 ### assertLessOrEquals
  

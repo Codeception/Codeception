@@ -421,6 +421,75 @@ class Asserts extends CodeceptionModule
     }
 
     /**
+     * @param string $actualJson
+     * @param string $message
+     */
+    public function assertJson($actualJson, $message = '')
+    {
+        parent::assertJson($actualJson, $message);
+    }
+
+    /**
+     * @param string $expectedFile
+     * @param string $actualFile
+     * @param string $message
+     */
+    public function assertJsonFileEqualsJsonFile($expectedFile, $actualFile, $message = '')
+    {
+        parent::assertJsonFileEqualsJsonFile($expectedFile, $actualFile, $message);
+    }
+
+    /**
+     * @param string $expectedFile
+     * @param string $actualFile
+     * @param string $message
+     */
+    public function assertJsonFileNotEqualsJsonFile($expectedFile, $actualFile, $message = '')
+    {
+        parent::assertJsonFileNotEqualsJsonFile($expectedFile, $actualFile, $message);
+    }
+
+    /**
+     * @param string $expectedFile
+     * @param string $actualJson
+     * @param string $message
+     */
+    public function assertJsonStringEqualsJsonFile($expectedFile, $actualJson, $message = '')
+    {
+        parent::assertJsonStringEqualsJsonFile($expectedFile, $actualJson, $message);
+    }
+
+    /**
+     * @param string $expectedFile
+     * @param string $actualJson
+     * @param string $message
+     */
+    public function assertJsonStringNotEqualsJsonFile($expectedFile, $actualJson, $message = '')
+    {
+        parent::assertJsonStringNotEqualsJsonFile($expectedFile, $actualJson, $message);
+    }
+
+    /**
+     * @param string $expectedJson
+     * @param string $actualJson
+     * @param string $message
+     */
+    public function assertJsonStringEqualsJsonString($expectedJson, $actualJson, $message = '')
+    {
+        parent::assertJsonStringEqualsJsonString($expectedJson, $actualJson, $message);
+    }
+
+    /**
+     * @param string $expectedJson
+     * @param string $actualJson
+     * @param string $message
+     */
+    public function assertJsonStringNotEqualsJsonString($expectedJson, $actualJson, $message = '')
+    {
+        parent::assertJsonStringNotEqualsJsonString($expectedJson, $actualJson, $message);
+    }
+
+    /**
      * Fails the test with message.
      *
      * @param $message
