@@ -55,6 +55,10 @@ class DryRun extends Command
         $test = $input->getArgument('test');
 
         $config = $this->getGlobalConfig();
+        ini_set(
+            'memory_limit',
+            isset($config['settings']['memory_limit']) ? $config['settings']['memory_limit'] : '1024M'
+        );
         if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
             list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
