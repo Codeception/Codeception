@@ -85,6 +85,25 @@ Checks that condition is negative.
  * `param string` $message
 
 
+### assertFileEquals
+
+Checks that the contents of one file is equal to the contents of another file.
+
+ * `param string` $expected
+ * `param string` $actual
+ * `param string` $message
+
+
+### assertFileNotEquals
+
+Asserts that the contents of one file is not equal to the contents of
+another file.
+
+ * `param string` $expected
+ * `param string` $actual
+ * `param string` $message
+
+
 ### assertFileExists
  
 Checks if file exists
@@ -98,6 +117,38 @@ Checks if file exists
 Checks if file doesn't exist
 
  * `param string` $filename
+ * `param string` $message
+
+
+### assertFileIsReadable
+
+Checks if file is readable
+
+ * `param string` $file
+ * `param string` $message
+
+
+### assertFileNotIsReadable
+
+Checks if file is not readable
+
+ * `param string` $file
+ * `param string` $message
+
+
+### assertFileIsWritable
+
+Checks if file is writable
+
+ * `param string` $file
+ * `param string` $message
+
+
+### assertFileNotIsWritable
+
+Checks if file is not writable
+
+ * `param string` $file
  * `param string` $message
 
 

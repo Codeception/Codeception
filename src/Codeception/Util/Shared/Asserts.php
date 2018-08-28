@@ -324,7 +324,32 @@ trait Asserts
         \PHPUnit\Framework\Assert::assertThat($haystack, $constraint, $message);
     }
 
-    
+    /**
+     * Checks that the contents of one file is equal to the contents of another
+     * file.
+     *
+     * @param string $expected
+     * @param string $actual
+     * @param string $message
+     */
+    protected function assertFileEquals($expected, $actual, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertFileEquals($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that the contents of one file is not equal to the contents of
+     * another file.
+     *
+     * @param string $expected
+     * @param string $actual
+     * @param string $message
+     */
+    protected function assertFileNotEquals($expected, $actual, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertFileNotEquals($expected, $actual, $message);
+    }
+
     /**
      * Checks if file exists
      *
@@ -335,8 +360,7 @@ trait Asserts
     {
         \PHPUnit\Framework\Assert::assertFileExists($filename, $message);
     }
-    
-        
+
     /**
      * Checks if file doesn't exist
      *
@@ -346,6 +370,50 @@ trait Asserts
     protected function assertFileNotExists($filename, $message = '')
     {
         \PHPUnit\Framework\Assert::assertFileNotExists($filename, $message);
+    }
+
+    /**
+     * Checks if file is readable.
+     *
+     * @param string $file
+     * @param string $message
+     */
+    protected function assertFileIsReadable($file, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertFileIsReadable($file, $message);
+    }
+
+    /**
+     * Checks if file is not readable.
+     *
+     * @param string $file
+     * @param string $message
+     */
+    protected function assertFileNotIsReadable($file, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertFileNotIsReadable($file, $message);
+    }
+
+    /**
+     * Checks if file is writable.
+     *
+     * @param string $file
+     * @param string $message
+     */
+    protected function assertFileIsWritable($file, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertFileIsWritable($file, $message = '');
+    }
+
+    /**
+     * Checks if file is not writable.
+     *
+     * @param string $file
+     * @param string $message
+     */
+    protected function assertFileNotIsWritable($file, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertFileNotIsWritable($file, $message = '');
     }
 
     /**

@@ -297,6 +297,29 @@ class Asserts extends CodeceptionModule
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @param string $expected
+     * @param string $actual
+     * @param string $message
+     */
+    public function assertFileEquals($expected, $actual, $message = '')
+    {
+        parent::assertFileEquals($expected, $actual, $message);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $filename
+     * @param string $message
+     */
+    public function assertFileNotEquals($expected, $actual, $message = '')
+    {
+        parent::assertFileNotEquals($expected, $actual, $message);
+    }
+
+    /**
      * Checks if file exists
      *
      * @param string $filename
@@ -306,7 +329,7 @@ class Asserts extends CodeceptionModule
     {
         parent::assertFileExists($filename, $message);
     }
-    
+
     /**
      * Checks if file doesn't exist
      *
@@ -316,6 +339,50 @@ class Asserts extends CodeceptionModule
     public function assertFileNotExists($filename, $message = '')
     {
         parent::assertFileNotExists($filename, $message);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $file
+     * @param string $message
+     */
+    public function assertFileIsReadable($file, $message = '')
+    {
+        parent::assertFileIsReadable($file, $message);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $file
+     * @param string $message
+     */
+    public function assertFileNotIsReadable($file, $message = '')
+    {
+        parent::assertFileNotIsReadable($file, $message);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $file
+     * @param string $message
+     */
+    public function assertFileNotIsWritable($file, $message = '')
+    {
+        parent::assertFileNotIsWritable($file, $message);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $file
+     * @param string $message
+     */
+    public function assertFileIsWritable($file, $message = '')
+    {
+        parent::assertFileIsWritable($file, $message);
     }
 
     /**
