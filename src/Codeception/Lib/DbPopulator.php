@@ -8,13 +8,6 @@ namespace Codeception\Lib;
 class DbPopulator
 {
     /**
-     * The command to be executed.
-     *
-     * @var string
-     */
-    private $builtCommand;
-
-    /**
      * @var array
      */
     protected $config;
@@ -29,8 +22,6 @@ class DbPopulator
     public function __construct($config)
     {
         $this->config = $config;
-        $command = $this->config['populator'];
-        $this->builtCommand = $this->buildCommand((string) $command);
     }
 
     /**
@@ -52,7 +43,7 @@ class DbPopulator
      * @param array $config The configuration values used to replace any found $keys with values from this array.
      * @return string The resulting command string after evaluating any configuration's key
      */
-    protected function buildCommand($command)
+    protected function buildCommand($command, $dumpFile = null)
     {
         $dsn = isset($this->config['dsn']) ? $this->config['dsn'] : '';
         $dsnVars = [];
@@ -64,7 +55,12 @@ class DbPopulator
                 $dsnVars[$k] = $v;
             }
         }
+
         $vars = array_merge($dsnVars, $this->config);
+        if ($dumpFile !== null) {
+            $vars['dump'] = $dumpFile;
+        }
+
         foreach ($vars as $key => $value) {
             $vars['$'.$key] = $value;
             unset($vars[$key]);
@@ -81,7 +77,23 @@ class DbPopulator
      */
     public function run()
     {
-        $command = $this->getBuiltCommand();
+        if (!isset($this->config['dump']) || $this->config['dump'] === false) {
+            return $this->runCommand((string) $this->config['populator']);
+        } elseif (!is_array($this->config['dump'])) {
+            $this->config['dump'] = array($this->config['dump']);
+        }
+
+        foreach ($this->config['dump'] as $dumpFile) {
+            $this->runCommand($this->config['populator'], $dumpFile);
+        }
+
+        return true;
+    }
+
+    private function runCommand($command, $dumpFile = null)
+    {
+        $command = $this->buildCommand($command, $dumpFile);
+
         codecept_debug("[Db] Executing Populator: `$command`");
 
         exec($command, $output, $exitCode);
