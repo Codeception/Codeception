@@ -449,7 +449,76 @@ trait Asserts
     {
         \PHPUnit\Framework\Assert::assertInternalType($type, $actual, $description);
     }
-    
+
+    /**
+     * @param string $actualJson
+     * @param string $message
+     */
+    protected function assertJson($actualJson, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertJson($actualJson, $message);
+    }
+
+    /**
+     * @param string $expectedFile
+     * @param string $actualFile
+     * @param string $message
+     */
+    protected function assertJsonFileEqualsJsonFile($expectedFile, $actualFile, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertJsonFileEqualsJsonFile($expectedFile, $actualFile, $message);
+    }
+
+    /**
+     * @param string $expectedFile
+     * @param string $actualFile
+     * @param string $message
+     */
+    protected function assertJsonFileNotEqualsJsonFile($expectedFile, $actualFile, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertJsonFileNotEqualsJsonFile($expectedFile, $actualFile, $message);
+    }
+
+    /**
+     * @param string $expectedFile
+     * @param string $actualJson
+     * @param string $message
+     */
+    protected function assertJsonStringEqualsJsonFile($expectedFile, $actualJson, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertJsonStringEqualsJsonFile($expectedFile, $actualJson, $message);
+    }
+
+    /**
+     * @param string $expectedFile
+     * @param string $actualJson
+     * @param string $message
+     */
+    protected function assertJsonStringNotEqualsJsonFile($expectedFile, $actualJson, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertJsonStringNotEqualsJsonFile($expectedFile, $actualJson, $message);
+    }
+
+    /**
+     * @param string $expectedJson
+     * @param string $actualJson
+     * @param string $message
+     */
+    protected function assertJsonStringEqualsJsonString($expectedJson, $actualJson, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertJsonStringEqualsJsonString($expectedJson, $actualJson, $message);
+    }
+
+    /**
+     * @param string $expectedJson
+     * @param string $actualJson
+     * @param string $message
+     */
+    protected function assertJsonStringNotEqualsJsonString($expectedJson, $actualJson, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertJsonStringNotEqualsJsonString($expectedJson, $actualJson, $message);
+    }
+
     /**
      * Fails the test with message.
      *
