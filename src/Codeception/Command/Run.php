@@ -78,6 +78,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --skip-group (-x)     Skip selected groups (multiple values allowed)
  *  --env                 Run tests in selected environments. (multiple values allowed, environments can be merged with ',')
  *  --fail-fast (-f)      Stop after first failure
+ *  --no-rebuild          Do not rebuild actor classes on start
  *  --help (-h)           Display this help message.
  *  --quiet (-q)          Do not output any message.
  *  --verbose (-v|vv|vvv) Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
