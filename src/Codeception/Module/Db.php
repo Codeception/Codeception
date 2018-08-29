@@ -366,7 +366,6 @@ class Db extends CodeceptionModule implements DbInterface
      *
      * ```php
      * $I->performInDatabase('db_books', ['seeNumRecords' => [30, 'books']]);
-     * );
      * ```
      *
      * Choose the syntax you like the most and use it,
