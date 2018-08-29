@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Util\ActionSequence;
+
 require_once \Codeception\Configuration::testsDir().'unit/Codeception/Module/Db/TestsForDb.php';
 
 /**
@@ -134,6 +136,56 @@ class SqliteDbTest extends TestsForDb
         $this->module->_afterSuite();
     }
 
+    public function testMultiDatabaseWithArray()
+    {
+        $config = array_merge($this->getConfig(), [
+            'dsn' => 'sqlite:tests/data/sqlite1.db',
+            'cleanup' => false
+        ]);
+        $this->module->_reconfigure(
+            [
+                'databases'   => ['db2' => $config],
+            ]
+        );
+        $this->module->_beforeSuite();
+
+        $testDataInDb1 = ['name' => 'userdb1', 'email' => 'userdb1@example.org'];
+        $testDataInDb2 = ['name' => 'userdb2', 'email' => 'userdb2@example.org'];
+
+        $this->module->_insertInDatabase('users', $testDataInDb1);
+        $this->module->performInDatabase('db2', [
+            'haveInDatabase' => ['users', $testDataInDb2],
+            'seeInDatabase' => ['users', $testDataInDb2],
+        ]);
+        $this->module->seeInDatabase('users', $testDataInDb1);
+        $this->module->dontSeeInDatabase('users', $testDataInDb2);
+    }
+
+    public function testMultiDatabaseWithActionSequence()
+    {
+        $config = array_merge($this->getConfig(), [
+            'dsn' => 'sqlite:tests/data/sqlite1.db',
+            'cleanup' => false
+        ]);
+        $this->module->_reconfigure(
+            [
+                'databases'   => ['db2' => $config],
+            ]
+        );
+        $this->module->_beforeSuite();
+
+        $testDataInDb1 = ['name' => 'userdb1', 'email' => 'userdb1@example.org'];
+        $testDataInDb2 = ['name' => 'userdb2', 'email' => 'userdb2@example.org'];
+
+        $this->module->_insertInDatabase('users', $testDataInDb1);
+        $this->module->performInDatabase('db2', ActionSequence::build()
+            ->haveInDatabase('users', $testDataInDb2)
+            ->seeInDatabase('users', $testDataInDb2)
+        );
+        $this->module->seeInDatabase('users', $testDataInDb1);
+        $this->module->dontSeeInDatabase('users', $testDataInDb2);
+    }
+
     public function testMultiDatabaseWithAnonymousFunction()
     {
         $config = array_merge($this->getConfig(), [
@@ -151,7 +203,7 @@ class SqliteDbTest extends TestsForDb
         $testDataInDb2 = ['name' => 'userdb2', 'email' => 'userdb2@example.org'];
 
         $this->module->_insertInDatabase('users', $testDataInDb1);
-        $this->module->amConnectedToDatabase('db2', function ($module) use ($testDataInDb2) {
+        $this->module->performInDatabase('db2', function ($module) use ($testDataInDb2) {
             $module->_insertInDatabase('users', $testDataInDb2);
             $module->seeInDatabase('users', $testDataInDb2);
         });
