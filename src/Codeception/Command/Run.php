@@ -221,7 +221,8 @@ class Run extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->ensureCurlIsAvailable();
+        $this->ensurePhpExtIsAvailable('CURL');
+        $this->ensurePhpExtIsAvailable('mbstring');
         $this->options = $input->getOptions();
         $this->output = $output;
 
@@ -544,14 +545,18 @@ class Run extends Command
         return $values;
     }
 
-    private function ensureCurlIsAvailable()
+    /**
+     * @param string $ext
+     * @throws \Exception
+     */
+    private function ensurePhpExtIsAvailable($ext)
     {
-        if (!extension_loaded('curl')) {
+        if (!extension_loaded(strtolower($ext))) {
             throw new \Exception(
-                "Codeception requires CURL extension installed to make tests run\n"
-                . "If you are not sure, how to install CURL, please refer to StackOverflow\n\n"
+                "Codeception requires \"{$ext}\" extension installed to make tests run\n"
+                . "If you are not sure, how to install \"{$ext}\", please refer to StackOverflow\n\n"
                 . "Notice: PHP for Apache/Nginx and CLI can have different php.ini files.\n"
-                . "Please make sure that your PHP you run from console has CURL enabled."
+                . "Please make sure that your PHP you run from console has \"{$ext}\" enabled."
             );
         }
     }
