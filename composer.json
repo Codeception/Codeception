@@ -54,7 +54,9 @@
         "league/factory-muffin": "For DataFactory module",
         "league/factory-muffin-faker": "For Faker support in DataFactory module",
         "symfony/phpunit-bridge": "For phpunit-bridge support",
-        "stecman/symfony-console-completion": "For BASH autocompletion"
+        "stecman/symfony-console-completion": "For BASH autocompletion",
+        "monolog/monolog": "For Logger module",
+        "symfony/process": "For RunBefore and RunProcess modules"
     },
 
     "autoload":{
