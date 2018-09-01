@@ -63,6 +63,13 @@ if (!function_exists('codecept_debug')) {
     }
 }
 
+if (!function_exists('codecept_log')) {
+    function codecept_log()
+    {
+        return \Codeception\Extension\Logger::getLogger();
+    }
+}
+
 if (!function_exists('codecept_root_dir')) {
     function codecept_root_dir($appendPath = '')
     {
