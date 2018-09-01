@@ -491,4 +491,126 @@ class Asserts extends CodeceptionModule
         }
         $this->fail("Expected exception of $class to be thrown, but nothing was caught");
     }
+
+    /**
+     * Handles and checks throwable called inside callback function.
+     * Either throwable class name or throwable instance should be provided.
+     *
+     * ```php
+     * <?php
+     * $I->expectThrow(MyException::class, function() {
+     *     $this->doSomethingBad();
+     * });
+     *
+     * $I->expectThrow(new MyException(), function() {
+     *     $this->doSomethingBad();
+     * });
+     * ```
+     * If you want to check message or throwable code, you can pass them with throwable instance:
+     * ```php
+     * <?php
+     * // will check that MyException is thrown with "Don't do bad things" message
+     * $I->expectThrow(new MyException("Don't do bad things"), function() {
+     *     $this->doSomethingBad();
+     * });
+     * ```
+     *
+     * @param $throwable string or \Throwable
+     * @param $callback
+     */
+    public function expectThrow($throwable, $callback)
+    {
+        $code = null;
+        $msg = null;
+        if (is_object($throwable)) {
+            $class = get_class($throwable);
+            $msg = $throwable->getMessage();
+            $code = $throwable->getCode();
+        } else {
+            $class = $throwable;
+        }
+        try {
+            $callback();
+        } catch (\Throwable $t) {
+            if (!$t instanceof $class) {
+                $this->fail(sprintf("Throw of class $class expected, but %s caught", get_class($t)));
+            }
+            if (null !== $msg and $t->getMessage() !== $msg) {
+                $this->fail(sprintf(
+                    "Throw of $class expected to be '$msg', but actual message was '%s'",
+                    $t->getMessage()
+                ));
+            }
+            if (null !== $code and $t->getCode() !== $code) {
+                $this->fail(sprintf(
+                    "Throw of $class expected to have code $code, but actual code was %s",
+                    $t->getCode()
+                ));
+            }
+            $this->assertTrue(true); // increment assertion counter
+            return;
+        }
+        $this->fail("Expected throw of $class, but nothing was caught");
+    }
+
+    /**
+     * Handles and checks error called inside callback function.
+     * Either error class name or error instance should be provided.
+     *
+     * ```php
+     * <?php
+     * $I->expectError(MyError::class, function() {
+     *     $this->doSomethingBad();
+     * });
+     *
+     * $I->expectError(new MyError(), function() {
+     *     $this->doSomethingBad();
+     * });
+     * ```
+     * If you want to check message or error code, you can pass them with error instance:
+     * ```php
+     * <?php
+     * // will check that MyError is thrown with "Don't do bad things" message
+     * $I->expectError(new MyError("Don't do bad things"), function() {
+     *     $this->doSomethingBad();
+     * });
+     * ```
+     *
+     * @param $error string or \Error
+     * @param $callback
+     */
+    public function expectError($error, $callback)
+    {
+        $code = null;
+        $msg = null;
+        if (is_object($error)) {
+            $class = get_class($error);
+            $msg = $error->getMessage();
+            $code = $error->getCode();
+        } else {
+            $class = $error;
+        }
+        try {
+            $callback();
+        } catch (\Error $error) {
+            if (!$error instanceof $class) {
+                $this->fail(sprintf("Error of class $class expected, but %s caught", get_class($error)));
+            }
+            if (null !== $msg and $error->getMessage() !== $msg) {
+                $this->fail(sprintf(
+                    "Error of $class expected to be '$msg', but actual message was '%s'",
+                    $error->getMessage()
+                ));
+            }
+            if (null !== $code and $error->getCode() !== $code) {
+                $this->fail(sprintf(
+                    "Error of $class expected to have code $code, but actual code was %s",
+                    $error->getCode()
+                ));
+            }
+            $this->assertTrue(true); // increment assertion counter
+            return;
+        }
+        $this->fail("Expected error of $class to be thrown, but nothing was caught");
+    }
 }
