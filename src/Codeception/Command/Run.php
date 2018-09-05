@@ -360,7 +360,7 @@ class Run extends Command
         // Run all tests of given suite or all suites
         if (!$test) {
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
-            $this->executed = $this->runSuites($suites, $this->options['skip']);
+            $this->executed = $this->runSuites($suites, $this->options['skip'], $config);
 
             if (!empty($config['include']) and !$suite) {
                 $current_dir = Configuration::projectDir();
@@ -455,7 +455,7 @@ class Run extends Command
         return $config['namespace'];
     }
 
-    protected function runSuites($suites, $skippedSuites = [])
+    protected function runSuites($suites, $skippedSuites = [], array $config = null)
     {
         $executed = 0;
         foreach ($suites as $suite) {
@@ -465,7 +465,7 @@ class Run extends Command
             if (!in_array($suite, Configuration::suites())) {
                 continue;
             }
-            $this->codecept->run($suite);
+            $this->codecept->run($suite, null, $config);
             $executed++;
         }
 

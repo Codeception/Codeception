@@ -19,7 +19,7 @@ class Codecept
     protected $result;
 
     /**
-     * @var \Codeception\CodeCoverage
+     * @var Codeception\CodeCoverage
      */
     protected $coverage;
 
@@ -140,16 +140,16 @@ class Codecept
         $this->extensionLoader->registerGlobalExtensions();
     }
 
-    public function run($suite, $test = null, array $config = null)
+    public function run($suite, $test = null, array $overriddenConfig = null)
     {
         ini_set(
             'memory_limit',
             isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M'
         );
 
-        $config = $config ?: Configuration::config();
+        $overriddenConfig = $overriddenConfig ?: Configuration::config();
 
-        $settings = Configuration::suiteSettings($suite, $config);
+        $settings = Configuration::suiteSettings($suite, $overriddenConfig);
 
         $selectedEnvironments = $this->options['env'];
         $environments = Configuration::suiteEnvironments($suite);
@@ -170,6 +170,9 @@ class Codecept
                     $config['current_environment'] = implode(',', $currentEnvironment);
                 }
             }
+
+            $config = Configuration::mergeConfigs($config, $overriddenConfig['env'][$env]);
+
             if (empty($config)) {
                 continue;
             }
