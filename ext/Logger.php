@@ -7,6 +7,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Codeception\Test\Descriptor;
 use Monolog\Handler\RotatingFileHandler;
@@ -125,4 +126,12 @@ class Logger extends Extension
     {
         self::$logger->info((string) $e->getStep());
     }
+}
+
+if (!function_exists('codecept_log')) {
+    function codecept_log() {
+        return Logger::getLogger();
+    }
+} else {
+    throw new ExtensionException('Codeception\Extension\Logger', "function 'codecept_log' already defined");
 }
