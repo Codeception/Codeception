@@ -129,7 +129,8 @@ class Logger extends Extension
 }
 
 if (!function_exists('codecept_log')) {
-    function codecept_log() {
+    function codecept_log()
+    {
         return Logger::getLogger();
     }
 } else {
