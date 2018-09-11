@@ -1,0 +1,24 @@
+paths:
+    data: tests/_data
+    output: tests/_output
+    tests: tests
+    support: tests/_support
+
+suites:
+    basic:
+        actor: DataTester
+        path: .
+        modules:
+            enabled:
+                - \Helper\RestoreData
+                - Asserts
+                - Db:
+                    dsn: sqlite:tests/_data/dbtest.db
+                    populate: true
+                    user:
+                    password:
+
+actor_suffix: Tester
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed

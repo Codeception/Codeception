@@ -21,6 +21,7 @@ $app->add(new Codeception\Command\Clean('clean'));
 $app->add(new Codeception\Command\GenerateGroup('generate:groupobject'));
 $app->add(new Codeception\Command\GeneratePageObject('generate:pageobject'));
 $app->add(new Codeception\Command\GenerateStepObject('generate:stepobject'));
+$app->add(new Codeception\Command\GenerateSnapshot('generate:snapshot'));
 $app->add(new Codeception\Command\GenerateEnvironment('generate:environment'));
 $app->add(new Codeception\Command\GenerateFeature('generate:feature'));
 $app->add(new Codeception\Command\GherkinSnippets('gherkin:snippets'));
