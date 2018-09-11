@@ -73,5 +73,4 @@ EOF;
             ->place('actor', $actor)
             ->produce();
     }
-
 }

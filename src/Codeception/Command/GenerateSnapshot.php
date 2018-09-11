@@ -69,5 +69,4 @@ class GenerateSnapshot extends Command
         }
         $output->writeln("<info>Snapshot was created in $filename</info>");
     }
-
 }

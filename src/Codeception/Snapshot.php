@@ -65,7 +65,7 @@ abstract class Snapshot
     protected function getFileName()
     {
         if (!$this->fileName) {
-            $this->fileName = preg_replace('/\W/','.', get_class($this)) . '.json';
+            $this->fileName = preg_replace('/\W/', '.', get_class($this)) . '.json';
         }
         return codecept_data_dir() . $this->fileName;
     }

@@ -239,12 +239,12 @@ class Configuration
             throw new ConfigurationException('Helpers path is not defined by key "paths: support"');
         }
 
-        self::$dataDir = $config['paths']['data'];
-        self::$supportDir = $config['paths']['support'];
-        self::$testsDir = $config['paths']['tests'];
+        self::$dataDir = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['data']);
+        self::$supportDir = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['support']);
+        self::$testsDir = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['tests']);
 
         if (isset($config['paths']['envs'])) {
-            self::$envsDir = $config['paths']['envs'];
+            self::$envsDir = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['envs']);
         }
 
         Autoload::addNamespace(self::$config['namespace'], self::supportDir());
