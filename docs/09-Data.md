@@ -280,35 +280,33 @@ and categories are set by admin user. How would you test that the page is still 
 There is a way to get it tested as well. Codeception allows you take a snapshot of a data on first run and compare with on next executions.
 This principle is so general that it can work for testing APIs, items on a web page, etc.
 
-To start you will need to create a snapshot class:
+Let's check that list of categories on a page is the same it was before.    
+Create a snapshot class:
 
 ```
-php vendor/bin/codecept g:snapshot Users
+php vendor/bin/codecept g:snapshot Categories
 ```
 
-Inject and actor class via constructor and implement `fetchData` method which should return a data set from a test.
-Basic implementation of Snapshot class can look like this:
+Inject an actor class via constructor and implement `fetchData` method which should return a data set from a test.
 
 ```php
 <?php
 namespace Snapshot;
 
-class Users extends \Codeception\Snapshot
+class Categories extends \Codeception\Snapshot
 {
-    /**
-     * @var DataTester
-     */
-    protected $dataTester;
+    /** @var \AcceptanceTester */
+    protected $i;
 
-    public function __construct(\DataTester $I)
+    public function __construct(\AcceptanceTester $I)
     {
-        $this->dataTester = $I;
+        $this->i = $I;
     }
 
     protected function fetchData()
     {
-        // get array of users
-        return $this->dataTester->grabColumnFromDatabase('users', 'email');
+        // fetch texts from all 'a.category' elements on a page        
+        return $this->i->grabMultiple('a.category');
     }
 }
 ```
@@ -317,8 +315,9 @@ Inside a test you can inject the snapshot class and call `assert` method on it:
 
 ```php
 <?php
-public function testsDatabaseSnapshot(DataTester $I, \Snapshot\Users $snapshot)
+public function testCategoriesAreTheSame(\AcceptanceTester $I, \Snapshot\Categories $snapshot)
 {
+    $I->amOnPage('/categories');
     // if previously saved array of users does not match current set, test will fail
     // to update previously saved data set - run test with --debug flag
     $snapshot->assert();
@@ -328,7 +327,7 @@ public function testsDatabaseSnapshot(DataTester $I, \Snapshot\Users $snapshot)
 On the first run, data will be obtained via `fetchData` method and saved to `tests/_data` directory in json format.
 On next execution the obtained data will be compared with previously saved snapshot.
 
-To update snapshot with a new data run tests in `--debug` mode.
+**To update a snapshot with a new data run tests in `--debug` mode.**
 
 By default Snapshot uses `assertEquals` assertion, however this can be customized by overriding `assertData` method.
   
