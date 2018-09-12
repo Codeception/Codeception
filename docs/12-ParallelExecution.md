@@ -286,8 +286,8 @@ public function parallelRun()
     for ($i = 1; $i <= 5; $i++) {
         $parallel->process(
             $this->taskExec('docker-compose run --rm codecept run')
-                ->opt('group', "paracept_$i") // run for groups paracept_*
-                ->opt('xml', "tests/_log/result_$i.xml"); // provide xml report
+                ->option('group', "paracept_$i") // run for groups paracept_*
+                ->option('xml', "tests/_log/result_$i.xml") // provide xml report
         );
     }
     return $parallel->run();
