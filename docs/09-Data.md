@@ -319,7 +319,7 @@ public function testCategoriesAreTheSame(\AcceptanceTester $I, \Snapshot\Categor
 {
     $I->amOnPage('/categories');
     // if previously saved array of users does not match current set, test will fail
-    // to update previously saved data set - run test with --debug flag
+    // to update data in snapshot run test with --debug flag
     $snapshot->assert();
 }
 ```

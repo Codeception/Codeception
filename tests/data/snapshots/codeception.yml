@@ -13,8 +13,7 @@ suites:
                 - \Helper\RestoreData
                 - Asserts
                 - Db:
-                    dsn: sqlite:tests/_data/dbtest.db
-                    populate: true
+                    dsn: sqlite:tests/_data/snapshot_test.db
                     user:
                     password:
 
