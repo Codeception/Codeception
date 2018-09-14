@@ -35,7 +35,7 @@ abstract class Actor
 
     public function wantTo($text)
     {
-        $this->scenario->setFeature(mb_strtolower($text, 'utf-8'));
+        $this->scenario->setFeature($text);
     }
 
     public function __call($method, $arguments)

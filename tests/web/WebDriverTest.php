@@ -814,7 +814,7 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/bug2921');
         $this->module->seeInField('foo', 'bar baz');
     }
-    
+
     /**
     * @Issue 4726
     */
@@ -823,8 +823,8 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/form/textarea');
         $this->module->fillField('#description', 'description');
         $this->module->clearField('#description');
-        $this->module->dontSeeInField('#description', 'description');        
-    } 
+        $this->module->dontSeeInField('#description', 'description');
+    }
 
     public function testClickHashLink()
     {
@@ -1124,5 +1124,24 @@ HTML
         $this->assertNotTrue($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
         $this->module->_initializeSession();
         $this->assertTrue($this->module->webDriver->getCapabilities()->getCapability('acceptInsecureCerts'));
+    }
+
+    /**
+     * @dataProvider strictBug4846Provider
+    **/
+    public function testBug4846($selector)
+    {
+        $this->module->amOnPage('/');
+        $this->module->see('Welcome to test app!', $selector);
+        $this->module->dontSee('You cannot see that', $selector);
+    }
+
+    public function strictBug4846Provider()
+    {
+        return [
+            'by id' => ['h1'],
+            'by css' => [['css' => 'body h1']],
+            'by xpath' => ['//body/h1'],
+        ];
     }
 }

@@ -2872,12 +2872,23 @@ class WebDriver extends CodeceptionModule implements
 
     protected function assertNodesContain($text, $nodes, $selector = null)
     {
-        $this->assertThat($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $selector);
+        $this->assertNodeConstraint($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $selector);
     }
 
     protected function assertNodesNotContain($text, $nodes, $selector = null)
     {
-        $this->assertThat($nodes, new WebDriverConstraintNot($text, $this->_getCurrentUri()), $selector);
+        $this->assertNodeConstraint($nodes, new WebDriverConstraintNot($text, $this->_getCurrentUri()), $selector);
+    }
+
+    protected function assertNodeConstraint($nodes, WebDriverConstraint $constraint, $selector = null)
+    {
+        $message = $selector;
+        if (is_array($selector)) {
+            $type = key($selector);
+            $locator = $selector[$type];
+            $message = $type . ':' . $locator;
+        }
+        $this->assertThat($nodes, $constraint, $message);
     }
 
     protected function assertPageContains($needle, $message = '')
@@ -3055,7 +3066,14 @@ class WebDriver extends CodeceptionModule implements
         if (!isset($this->sessionSnapshots[$name])) {
             return false;
         }
-        $this->webDriver->manage()->deleteAllCookies();
+        
+        foreach ($this->webDriver->manage()->getCookies() as $cookie) {
+            if (in_array(trim($cookie['name']), [LocalServer::COVERAGE_COOKIE, LocalServer::COVERAGE_COOKIE_ERROR])) {
+                continue;
+            }
+            $this->webDriver->manage()->deleteCookieNamed($cookie['name']);
+        }
+        
         foreach ($this->sessionSnapshots[$name] as $cookie) {
             $this->webDriver->manage()->addCookie($cookie);
         }

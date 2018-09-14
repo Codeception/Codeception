@@ -343,9 +343,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         $this->rollbackTransactions();
 
-        $this->connectionWatcher->stop();
-        $this->connectionWatcher->closeAll();
-        unset($this->connectionWatcher);
+        if (isset($this->connectionWatcher)) {
+            $this->connectionWatcher->stop();
+            $this->connectionWatcher->closeAll();
+            unset($this->connectionWatcher);
+        }
 
         if ($this->config['cleanup']) {
             foreach ($this->loadedFixtures as $fixture) {
