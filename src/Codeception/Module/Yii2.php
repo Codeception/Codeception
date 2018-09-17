@@ -2,6 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Configuration;
+use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Connector\Yii2 as Yii2Connector;
@@ -356,10 +357,6 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->loadedFixtures = [];
         }
 
-        if ($this->client !== null && $this->client->getApplication()->has('session', true)) {
-            $this->client->getApplication()->session->close();
-        }
-
         $this->client->resetApplication();
         parent::_after($test);
     }
@@ -406,17 +403,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     public function amLoggedInAs($user)
     {
-        if (!$this->client->getApplication()->has('user')) {
-            throw new ModuleException($this, 'User component is not loaded');
+        try {
+            $this->client->findAndLoginUser($user);
+        } catch (ConfigurationException $e) {
+            throw new ModuleException($this, $e->getMessage());
         }
-        if ($user instanceof \yii\web\IdentityInterface) {
-            $identity = $user;
-        } else {
-            // class name implementing IdentityInterface
-            $identityClass = $this->client->getApplication()->user->identityClass;
-            $identity = call_user_func([$identityClass, 'findIdentity'], $user);
-        }
-        $this->client->getApplication()->user->login($identity);
     }
 
     /**
@@ -659,10 +650,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     protected function clientRequest($method, $uri, array $parameters = [], array $files = [], array $server = [], $content = null, $changeHistory = true)
     {
-        if (is_array($uri)) {
-            $uri = $this->client->getApplication()->getUrlManager()->createUrl($uri);
-        }
-        return parent::clientRequest($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        return parent::clientRequest($method, $this->client->createUrl($uri), $parameters, $files, $server, $content, $changeHistory);
     }
 
     /**
@@ -676,13 +664,15 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * @param $component
      * @return mixed
      * @throws ModuleException
+     * @deprecated in your tests you can use \Yii::$app directly.
      */
     public function grabComponent($component)
     {
-        if (!$this->client->getApplication()->has($component)) {
-            throw new ModuleException($this, "Component $component is not available in current application");
+        try {
+            return $this->client->getComponent($component);
+        } catch (ConfigurationException $e) {
+            throw new ModuleException($this, $e->getMessage());
         }
-        return $this->client->getApplication()->get($component);
     }
 
     /**
@@ -738,11 +728,11 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     public function grabSentEmails()
     {
-        $mailer = $this->grabComponent('mailer');
-        if (!$mailer instanceof Yii2Connector\TestMailer) {
-            throw new ModuleException($this, "Mailer module is not mocked, can't test emails");
+        try {
+            return $this->client->getEmails();
+        } catch (ConfigurationException $e) {
+            throw new ModuleException($this, $e->getMessage());
         }
-        return $mailer->getSentMessages();
     }
 
     /**
@@ -763,33 +753,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         return end($messages);
     }
 
-    /**
-     * Getting domain regex from rule host template
-     *
-     * @param string $template
-     * @return string
-     */
-    private function getDomainRegex($template)
-    {
-        if (preg_match('#https?://(.*)#', $template, $matches)) {
-            $template = $matches[1];
-        }
-        $parameters = [];
-        if (strpos($template, '<') !== false) {
-            $template = preg_replace_callback(
-                '/<(?:\w+):?([^>]+)?>/u',
-                function ($matches) use (&$parameters) {
-                    $key = '#' . count($parameters) . '#';
-                    $parameters[$key] = isset($matches[1]) ? $matches[1] : '\w+';
-                    return $key;
-                },
-                $template
-            );
-        }
-        $template = preg_quote($template);
-        $template = strtr($template, $parameters);
-        return '/^' . $template . '$/u';
-    }
+
 
     /**
      * Returns a list of regex patterns for recognized domain names
@@ -798,17 +762,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     public function getInternalDomains()
     {
-        $domains = [$this->getDomainRegex($this->client->getApplication()->urlManager->hostInfo)];
-
-        if ($this->client->getApplication()->urlManager->enablePrettyUrl) {
-            foreach ($this->client->getApplication()->urlManager->rules as $rule) {
-                /** @var \yii\web\UrlRule $rule */
-                if (isset($rule->host)) {
-                    $domains[] = $this->getDomainRegex($rule->host);
-                }
-            }
-        }
-        return array_unique($domains);
+        return $this->client->getInternalDomains();
     }
 
     private function defineConstants()
@@ -826,11 +780,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     public function setCookie($name, $val, array $params = [])
     {
-        // Sign the cookie.
-        if ($this->client->getApplication()->request->enableCookieValidation) {
-            $val = $this->client->getApplication()->security->hashData(serialize([$name, $val]), $this->client->getApplication()->request->cookieValidationKey);
-        }
-        parent::setCookie($name, $val, $params);
+        parent::setCookie($name, $this->client->hashCookieData($name, $val), $params);
     }
 
     /**
@@ -840,8 +790,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     public function createAndSetCsrfCookie($val)
     {
-        $masked = $this->client->getApplication()->security->maskToken($val);
-        $name = $this->client->getApplication()->request->csrfParam;
+        $masked = $this->client->maskToken($val);
+        $name = $this->client->getCsrfParamName();
         $this->setCookie($name, $val);
         return [$name, $masked];
     }
