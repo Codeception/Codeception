@@ -282,14 +282,14 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testRedirectToAnotherDomainUsingSchemalessUrl()
     {
+
         $this->module->_reconfigure([
-            'handler' => function() {
-                return new MockHandler([
-                    new Response(302, ['Location' => '//example.org/']),
-                    new Response(200, [], 'Cool stuff')
-                ]);
-            }
+            'handler' => new MockHandler([
+                new Response(302, ['Location' => '//example.org/']),
+                new Response(200, [], 'Cool stuff')
+            ])
         ]);
+        /** @var \GuzzleHttp\HandlerStack $handlerStack */
         $this->module->amOnUrl('http://fictional.redirector/redirect-to?url=//example.org/');
         $currentUrl = $this->module->client->getHistory()->current()->getUri();
         $this->assertSame('http://example.org/', $currentUrl);
