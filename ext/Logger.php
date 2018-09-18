@@ -7,6 +7,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Codeception\Test\Descriptor;
 use Monolog\Handler\RotatingFileHandler;
@@ -52,7 +53,7 @@ class Logger extends Extension
     /**
      * @var \Monolog\Logger
      */
-    protected $logger;
+    protected static $logger;
 
     protected $path;
 
@@ -67,8 +68,13 @@ class Logger extends Extension
 
         // internal log
         $logHandler = new RotatingFileHandler($this->path . 'codeception.log', $this->config['max_files']);
-        $this->logger = new \Monolog\Logger('Codeception');
-        $this->logger->pushHandler($logHandler);
+        self::$logger = new \Monolog\Logger('Codeception');
+        self::$logger->pushHandler($logHandler);
+    }
+
+    public static function getLogger()
+    {
+        return self::$logger;
     }
 
     public function beforeSuite(SuiteEvent $e)
@@ -79,10 +85,10 @@ class Logger extends Extension
 
     public function beforeTest(TestEvent $e)
     {
-        $this->logger = new \Monolog\Logger(Descriptor::getTestFileName($e->getTest()));
-        $this->logger->pushHandler($this->logHandler);
-        $this->logger->info('------------------------------------');
-        $this->logger->info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
+        self::$logger = new \Monolog\Logger(Descriptor::getTestFileName($e->getTest()));
+        self::$logger->pushHandler($this->logHandler);
+        self::$logger->info('------------------------------------');
+        self::$logger->info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
     }
 
     public function afterTest(TestEvent $e)
@@ -91,33 +97,42 @@ class Logger extends Extension
 
     public function endTest(TestEvent $e)
     {
-        $this->logger->info("PASSED");
+        self::$logger->info("PASSED");
     }
 
     public function testFail(FailEvent $e)
     {
-        $this->logger->alert($e->getFail()->getMessage());
-        $this->logger->info("# FAILED #");
+        self::$logger->alert($e->getFail()->getMessage());
+        self::$logger->info("# FAILED #");
     }
 
     public function testError(FailEvent $e)
     {
-        $this->logger->alert($e->getFail()->getMessage());
-        $this->logger->info("# ERROR #");
+        self::$logger->alert($e->getFail()->getMessage());
+        self::$logger->info("# ERROR #");
     }
 
     public function testSkipped(FailEvent $e)
     {
-        $this->logger->info("# Skipped #");
+        self::$logger->info("# Skipped #");
     }
 
     public function testIncomplete(FailEvent $e)
     {
-        $this->logger->info("# Incomplete #");
+        self::$logger->info("# Incomplete #");
     }
 
     public function beforeStep(StepEvent $e)
     {
-        $this->logger->info((string) $e->getStep());
+        self::$logger->info((string) $e->getStep());
     }
+}
+
+if (!function_exists('codecept_log')) {
+    function codecept_log()
+    {
+        return Logger::getLogger();
+    }
+} else {
+    throw new ExtensionException('Codeception\Extension\Logger', "function 'codecept_log' already defined");
 }
