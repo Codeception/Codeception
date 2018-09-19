@@ -573,10 +573,10 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         }
         $query = implode(' AND ', $conditions);
         $this->debugSection('Query', $query);
-        return call_user_func_array([$model, 'findFirst'], [
+        return call_user_func_array([$model, 'findFirst'], [[
             'conditions' => $query,
             'bind'       => $bind,
-        ]);
+        ]]);
     }
 
     /**
