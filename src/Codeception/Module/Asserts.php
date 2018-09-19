@@ -17,13 +17,13 @@ class Asserts extends CodeceptionModule
      * Regular example:
      * ```php
      * <?php
-     * $I->assertEquals($element->getChildrenCount(), 5);
+     * $I->assertEquals(5, $element->getChildrenCount());
      * ```
      *
      * Floating-point example:
      * ```php
      * <?php
-     * $I->assertEquals($calculator->add(0.1, 0.2), 0.3, 'Calculator should add the two numbers correctly.', 0.01);
+     * $I->assertEquals(0.3, $calculator->add(0.1, 0.2), 'Calculator should add the two numbers correctly.', 0.01);
      * ```
      *
      * @param        $expected
@@ -44,13 +44,13 @@ class Asserts extends CodeceptionModule
      * Regular example:
      * ```php
      * <?php
-     * $I->assertNotEquals($element->getChildrenCount(), 0);
+     * $I->assertNotEquals(0, $element->getChildrenCount());
      * ```
      *
      * Floating-point example:
      * ```php
      * <?php
-     * $I->assertNotEquals($calculator->add(0.1, 0.2), 0.4, 'Calculator should add the two numbers correctly.', 0.01);
+     * $I->assertNotEquals(0.4, $calculator->add(0.1, 0.2), 'Calculator should add the two numbers correctly.', 0.01);
      * ```
      *
      * @param        $expected
