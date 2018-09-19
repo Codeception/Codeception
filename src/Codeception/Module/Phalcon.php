@@ -564,8 +564,12 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         $conditions = [];
         $bind       = [];
         foreach ($attributes as $key => $value) {
-            $conditions[] = "$key = :$key:";
-            $bind[$key]   = $value;
+            if ($value === null) {
+                $conditions[] = "$key IS NULL";
+            } else {
+                $conditions[] = "$key = :$key:";
+                $bind[$key] = $value;
+            }
         }
         $query = implode(' AND ', $conditions);
         $this->debugSection('Query', $query);
