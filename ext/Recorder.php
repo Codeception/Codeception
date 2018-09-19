@@ -54,6 +54,9 @@ class Recorder extends \Codeception\Extension
     /** @var array */
     protected $config = [
         'delete_successful' => true,
+        'success_color'     => 'success',
+        'failure_color'     => 'danger',
+        'error_color'       => 'error',
         'module'            => 'WebDriver',
         'template'          => null,
         'animate_slides'    => true,
@@ -300,8 +303,8 @@ EOF;
                     $links .= "<li>{$fileName}</li><ul>";
 
                     foreach ($tests as $test) {
-                        $links .= '<li class="' .
-                            ($test['status'] ? 'text-success' : 'text-warning')
+                        $links .= '<li class="text-' .
+                            ($test['status'] ? $this->config['success_color'] : $this->config['failure_color'])
                             . "\"><a href='{$test['index']}'>{$test['name']}</a></li>\n";
                     }
 
