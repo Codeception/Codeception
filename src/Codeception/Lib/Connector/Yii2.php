@@ -2,6 +2,7 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ModuleException;
 use Codeception\Lib\Connector\Yii2\Logger;
 use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Lib\InnerBrowser;
@@ -107,6 +108,7 @@ class Yii2 extends Client
      * Finds and logs in a user
      * @param $user
      * @throws ConfigurationException
+     * @throws \RuntimeException
      */
     public function findAndLoginUser($user)
     {
@@ -121,6 +123,9 @@ class Yii2 extends Client
             // class name implementing IdentityInterface
             $identityClass = $app->user->identityClass;
             $identity = call_user_func([$identityClass, 'findIdentity'], $user);
+            if (!isset($identity)) {
+                throw new \RuntimeException('User not found');
+            }
         }
         $app->user->login($identity);
     }
