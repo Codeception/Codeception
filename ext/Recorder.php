@@ -35,7 +35,9 @@ use Codeception\Util\Template;
  * * `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
  * * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
  * * `ignore_steps` (default: []) - array of step names that should not be recorded, * wildcards supported
- *
+ * * `success_color` (default: success) - bootstrap values to be used for color representation for passed tests
+ * * `failure_color` (default: danger) - bootstrap values to be used for color representation for failed tests
+ * * `error_color` (default: dark) - bootstrap values to be used for color representation for scenarios where there's an issue occurred while generating a recording
  *
  * #### Examples:
  *
@@ -54,13 +56,13 @@ class Recorder extends \Codeception\Extension
     /** @var array */
     protected $config = [
         'delete_successful' => true,
-        'success_color'     => 'success',
-        'failure_color'     => 'danger',
-        'error_color'       => 'error',
-        'module'            => 'WebDriver',
-        'template'          => null,
-        'animate_slides'    => true,
-        'ignore_steps'      => [],
+        'module'         => 'WebDriver',
+        'template'       => null,
+        'animate_slides' => true,
+        'ignore_steps'   => [],
+        'success_color'  => 'success',
+        'failure_color'  => 'danger',
+        'error_color'    => 'dark',
     ];
 
     /** @var string */
@@ -259,6 +261,12 @@ EOF;
     /** @var array */
     protected $errorMessages = [];
 
+    /** @var bool */
+    protected $colors;
+
+    /** @var bool */
+    protected $ansi;
+
     public function beforeSuite()
     {
         $this->webDriverModule = null;
@@ -272,6 +280,8 @@ EOF;
         $this->webDriverModule = $this->getModule($this->config['module']);
         $this->errors = [];
         $this->errorMessages = [];
+        $this->ansi = !isset($this->options['no-ansi']);
+        $this->colors = !isset($this->options['no-colors']);
 
         if (!$this->webDriverModule instanceof ScreenshotSaver) {
             throw new ExtensionException(
@@ -541,5 +551,17 @@ EOF;
     private function getTestName($e)
     {
         return basename($e->getTest()->getMetadata()->getFilename()) . '_' . $e->getTest()->getMetadata()->getName();
+    }
+
+    /**
+     * @param $message
+     */
+    protected function writeln($message)
+    {
+        parent::writeln(
+            $this->ansi
+                ? $message
+                : trim(preg_replace('/[ ]{2,}/', ' ', str_replace('⏺', '', $message)))
+        );
     }
 }
