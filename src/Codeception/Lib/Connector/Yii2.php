@@ -406,7 +406,7 @@ class Yii2 extends Client
 
         $mailerConfig = [
             'class' => TestMailer::class,
-            'callback' => function(MessageInterface $message) {
+            'callback' => function (MessageInterface $message) {
                 $this->emails[] = $message;
             }
         ];
