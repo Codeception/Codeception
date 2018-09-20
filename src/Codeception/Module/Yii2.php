@@ -408,6 +408,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->client->findAndLoginUser($user);
         } catch (ConfigurationException $e) {
             throw new ModuleException($this, $e->getMessage());
+        } catch (\RuntimeException $e) {
+            throw new ModuleException($this, $e->getMessage());
         }
     }
 
