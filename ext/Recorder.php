@@ -128,7 +128,7 @@ class Recorder extends \Codeception\Extension
             <span class="navbar-text">{{test}}</span>
         </div>
     </nav>
-    <header id="steps" class="carousel slide" data-ride="carousel"">
+    <header id="steps" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">
             {{indicators}}
