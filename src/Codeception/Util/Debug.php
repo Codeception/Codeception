@@ -2,6 +2,10 @@
 namespace Codeception\Util;
 
 use Codeception\Lib\Console\Output;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * This class is used only when Codeception is executed in `--debug` mode.
@@ -46,5 +50,20 @@ class Debug
         if (trim(fgets(STDIN)) != chr(13)) {
             return;
         }
+    }
+
+    public static function isEnabled()
+    {
+        return (bool) self::$output;
+    }
+
+    public static function confirm($question)
+    {
+        if (!self::$output) {
+            return;
+        }
+
+        $questionHelper = new QuestionHelper();
+        return $questionHelper->ask(new ArgvInput(), self::$output, new ConfirmationQuestion($question));
     }
 }
