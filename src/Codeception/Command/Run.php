@@ -250,12 +250,6 @@ class Run extends Command
             $this->options['colors'] = $config['settings']['colors'];
         }
 
-        if (!$this->options['seed']) {
-            $this->options['seed'] = rand();
-        } else {
-            $this->options['seed'] = intval($this->options['seed']);
-        }
-
         if (!$this->options['silent']) {
             $this->output->writeln(
                 Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
@@ -288,6 +282,11 @@ class Run extends Command
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
         $userOptions['ansi'] = (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi'));
 
+        if (!$this->options['seed']) {
+            $userOptions['seed'] = rand();
+        } else {
+            $userOptions['seed'] = intval($this->options['seed']);
+        }
         if ($this->options['no-colors'] || !$userOptions['ansi']) {
             $userOptions['colors'] = false;
         }
