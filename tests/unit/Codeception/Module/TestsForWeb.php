@@ -116,6 +116,8 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
         $this->module->amOnPage('/external_url');
         $this->module->seeLink('Next');
         $this->module->seeLink('Next', 'http://codeception.com/');
+        // Without TLD and trailing slash
+        $this->module->dontSeeLink('Next', 'http://codeception');
     }
 
     public function testDontSeeLink()
@@ -169,6 +171,7 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     {
         $this->module->amOnPage('/info');
         $this->module->seeLink('Sign in!', '/login');
+        $this->module->dontSeeLink('Sign in!', '/log');
     }
 
     public function testDontSeeLinkMatchesRelativeLink()
