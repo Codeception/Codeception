@@ -96,7 +96,16 @@ class SuiteManager
 
         $tests = $testLoader->getTests();
         if ($this->settings['shuffle']) {
+            if ($this->settings['seed']) {
+                // seed random generator
+                $seed = intval($this->settings['seed']);
+                mt_rand($seed); // case of PHP < 7.1.0
+                srand($seed);
+            }
             shuffle($tests);
+            // reset random generator
+            mt_rand(); // case of PHP < 7.1.0
+            srand();
         }
         foreach ($tests as $test) {
             $this->addToSuite($test);
