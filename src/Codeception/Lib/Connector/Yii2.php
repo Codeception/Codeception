@@ -13,6 +13,7 @@ use Symfony\Component\BrowserKit\Response;
 use Yii;
 use yii\base\ExitException;
 use yii\base\Security;
+use yii\mail\MessageInterface;
 use yii\web\Application;
 use yii\web\ErrorHandler;
 use yii\web\HttpException;
@@ -79,6 +80,8 @@ class Yii2 extends Client
      */
     public $recreateApplication = false;
 
+
+    private $emails = [];
     /**
      * @return \yii\web\Application
      */
@@ -179,16 +182,7 @@ class Yii2 extends Client
      */
     public function getEmails()
     {
-        $app = $this->getApplication();
-        if ($app->has('mailer', true)) {
-            $mailer = $app->get('mailer');
-            if ($mailer instanceof TestMailer) {
-                return $app->get('mailer')->getSentMessages();
-            } else {
-                throw new ConfigurationException("Mailer module is not mocked, can't test emails");
-            }
-        }
-        return [];
+        return $this->emails;
     }
 
     public function getComponent($name)
@@ -257,7 +251,6 @@ class Yii2 extends Client
         $config = $this->mockMailer($config);
         /** @var \yii\web\Application $app */
         Yii::$app = Yii::createObject($config);
-
         Yii::setLogger(new Logger());
     }
 
@@ -417,7 +410,10 @@ class Yii2 extends Client
         ];
 
         $mailerConfig = [
-            'class' => 'Codeception\Lib\Connector\Yii2\TestMailer',
+            'class' => TestMailer::class,
+            'callback' => function (MessageInterface $message) {
+                $this->emails[] = $message;
+            }
         ];
 
         if (isset($config['components']['mailer']) && is_array($config['components']['mailer'])) {
