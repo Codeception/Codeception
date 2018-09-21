@@ -313,8 +313,7 @@ EOF;
                     $links .= "<li>{$fileName}</li><ul>";
 
                     foreach ($tests as $test) {
-                        $links .= '<li class="text-' .
-                            ($test['status'] ? $this->config['success_color'] : $this->config['failure_color'])
+                        $links .= '<li class="text-' . $this->config[$test['status'] . '_color']
                             . "\"><a href='{$test['index']}'>{$test['name']}</a></li>\n";
                     }
 
@@ -405,37 +404,38 @@ EOF;
         $testName = $this->getTestName($e);
         $testPath = codecept_relative_path(Descriptor::getTestFullName($e->getTest()));
         $dir = codecept_output_dir() . "record_{$this->seed}_$testName";
+        $status = 'success';
 
         if (strcasecmp($this->dir, $dir) !== 0) {
-            $screenshotPath = "{$dir}/error.png";
+            $filename = str_pad(0, 3, '0', STR_PAD_LEFT) . '.png';
 
             try {
                 !is_dir($dir) && !mkdir($dir) && !is_dir($dir);
+                $this->dir = $dir;
             } catch (\Exception $exception) {
                 $this->errors[$testPath] = null;
                 $this->errorMessages[$testPath][] =
                     "⏺ An exception occurred while creating directory: <info>{$dir}</info>";
             }
 
-            $this->recordedTests = [];
             $this->slides = [];
-            $this->errorMessages[$testPath][] =
-                "⏺ An error has occurred in <info>{$testName}</info> before any steps could've executed";
+            $this->slides[$filename] = new Step\Action('encountered an unexpected error prior to the test execution');
+            $status = 'error';
 
             try {
-                $this->webDriverModule->webDriver->takeScreenshot($screenshotPath);
-                $this->errors[$testPath] = $screenshotPath;
+                $this->webDriverModule->webDriver->takeScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
             } catch (\Exception $exception) {
                 $this->errors[$testPath] = null;
                 FileSystem::deleteDir($dir);
             }
-
-            return;
         }
 
         if (!array_key_exists($testPath, $this->errors)) {
-            $failed = false;
             foreach ($this->slides as $i => $step) {
+                if ($step->hasFailed()) {
+                    $status = 'failure';
+                }
+
                 $indicatorHtml .= (new Template($this->indicatorTemplate))
                     ->place('step', (int)$i)
                     ->place('isActive', (int)$i ? '' : 'active')
@@ -445,12 +445,8 @@ EOF;
                     ->place('image', $i)
                     ->place('caption', $step->getHtml('#3498db'))
                     ->place('isActive', (int)$i ? '' : 'active')
-                    ->place('isError', $step->hasFailed() ? 'error' : '')
+                    ->place('isError', $status === 'success' ? '' : 'error')
                     ->produce();
-
-                if ($step->hasFailed()) {
-                    $failed = true;
-                }
             }
 
             $html = (new Template($this->template))
@@ -477,7 +473,7 @@ EOF;
 
             $this->recordedTests["{$suite} ({$environment})"][$testName][] = [
                 'name' => $e->getTest()->getMetadata()->getName(),
-                'status' => !$failed,
+                'status' => $status,
                 'index' => substr($indexFile, strlen(codecept_output_dir())),
             ];
         }
