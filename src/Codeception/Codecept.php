@@ -185,7 +185,9 @@ class Codecept
     {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
         $suiteManager->initialize();
+        srand($this->options['seed']);
         $suiteManager->loadTests($test);
+        srand();
         $suiteManager->run($this->runner, $this->result, $this->options);
         return $this->result;
     }
