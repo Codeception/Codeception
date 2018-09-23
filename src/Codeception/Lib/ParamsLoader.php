@@ -92,10 +92,17 @@ class ParamsLoader
                     case 'int':
                     case 'integer':
                     case 'float':
-                    case 'double'    : $a[$key] = settype($value, $type); break;
-                    case 'collection': $a[$key] = $paramsToArray($param);       break;
-                    case 'constant'  : $a[$key] = constant($value);             break;
-                    default          : $a[$key] = (string) $param;
+                    case 'double':
+                        $a[$key] = settype($value, $type);
+                        break;
+                    case 'constant':
+                        $a[$key] = constant($value);
+                        break;
+                    case 'collection':
+                        $a[$key] = $paramsToArray($param);
+                        break;
+                    default:
+                        $a[$key] = (string) $param;
                 }
             }
 
