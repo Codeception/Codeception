@@ -254,10 +254,6 @@ class Run extends Command
             $this->output->writeln(
                 Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
             );
-            $this->output->writeln(
-                "Running with seed: " . $this->options['seed'] . "\n"
-            );
-
         }
         if ($this->options['debug']) {
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
@@ -367,6 +363,12 @@ class Run extends Command
         if ($test) {
             $filter = $this->matchFilteredTestName($test);
             $userOptions['filter'] = $filter;
+        }
+
+        if (!$this->options['silent'] && $config['settings']['shuffle']) {
+            $this->output->writeln(
+                "[Seed] <info>" . $userOptions['seed'] . "</info>"
+            );
         }
 
         $this->codecept = new Codecept($userOptions);
