@@ -169,6 +169,7 @@ Options:
  --ansi                Force ANSI output.
  --no-ansi             Disable ANSI output.
  --no-interaction (-n) Do not ask any interactive question.
+ --seed                Use the given seed for shuffling tests
 ```
 
 
