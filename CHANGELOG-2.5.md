@@ -5,6 +5,9 @@
   * `amConnectedToDatabase` method added.
   * `performInDatabase` method added.
 * Rerun tests in **[shuffle mode](https://codeception.com/docs/07-AdvancedUsage#Shuffle)** in the same order by setting seed value. By @SamMousa
+* [PhpBrowser][Frameworks] **Breaking Change** `seeLink` now matches the end of a URL, instead of partial matching. By @Slamdunk
+  * Previous: `$I->seeLink('Delete','/post/1');` matches `<a href="/post/199">Delete</a>`
+  * Now: `$I->seeLink('Delete','/post/1');` does NOT match `<a href="/post/199">Delete</a>` 
 * [WebDriver] Keep coverage cookies in `loadSessionSnapshot`. Fix by @rajras 
 * [Yii2] Prevent null pointer exception by @SilverFire. See #5136
 * [Yii2] Fixed issue with empty response stream by @SamMousa.
