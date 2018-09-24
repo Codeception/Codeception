@@ -369,6 +369,12 @@ class Run extends Command
             $userOptions['filter'] = $filter;
         }
 
+        if (!$this->options['silent'] && $config['settings']['shuffle']) {
+            $this->output->writeln(
+                "[Seed] <info>" . $userOptions['seed'] . "</info>"
+            );
+        }
+
         $this->codecept = new Codecept($userOptions);
 
         if ($suite and $test) {

@@ -34,6 +34,16 @@ class CliHelper extends \Codeception\Module
         $this->getModule('Cli')->runShellCommand('php '.\Codeception\Configuration::projectDir().'codecept '.$command.' -n', false);
     }
 
+    public function grabFromOutput($regex)
+    {
+        $match = [];
+        $found = preg_match($regex, $this->getModule('Cli')->output, $match);
+        if (!$found) {
+            return '';
+        }
+        return $match[1];
+    }
+
     public function seeDirFound($dir)
     {
         $this->assertTrue(is_dir($dir) && file_exists($dir), "Directory does not exist");
