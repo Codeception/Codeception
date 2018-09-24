@@ -495,4 +495,45 @@ EOF
         $I->seeInShellOutput('Warnings: 1.');
     }
 
+    /**
+     * @group shuffle
+     * @param CliGuy $I
+     */
+    public function showSeedNumberOnShuffle(CliGuy $I)
+    {
+        $I->executeCommand('run unit -o "settings: shuffle: true"', false);
+        $I->seeInShellOutput('Seed');
+        $I->executeCommand('run unit', false);
+        $I->dontSeeInShellOutput('Seed');
+    }
+
+
+    /**
+     * @group shuffle
+     * @param CliGuy $I
+     */
+    public function showSameOrderOfFilesOnSeed(CliGuy $I, \Codeception\Scenario $s)
+    {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $s->skip('Failing on Windows. Need to investigate');
+        }
+        $I->executeCommand('run unit -o "settings: shuffle: true"', false);
+        $I->seeInShellOutput('Seed');
+        $output = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
+        $output = preg_replace('~\(\d\.\d+s\)~m', '', $output);
+        $seed = $I->grabFromOutput('~\[Seed\] (.*)~');
+
+        $I->executeCommand('run unit -o "settings: shuffle: true" --seed ' . $seed, false);
+        $newOutput = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
+        $newOutput = preg_replace('~\(\d\.\d+s\)~m', '', $newOutput);
+
+        $I->assertEquals($output, $newOutput, 'order of tests is the same');
+
+        $I->executeCommand('run unit -o "settings: shuffle: true"', false);
+        $newOutput = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
+        $newOutput = preg_replace('~\(\d\.\d+s\)~m', '', $newOutput);
+
+        $I->assertNotEquals($output, $newOutput, 'order of tests is the same');
+    }
+
 }

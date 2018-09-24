@@ -86,6 +86,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --ansi                Force ANSI output.
  *  --no-ansi             Disable ANSI output.
  *  --no-interaction (-n) Do not ask any interactive question.
+ *  --seed                Use the given seed for shuffling tests
  * ```
  *
  */
@@ -202,6 +203,13 @@ class Run extends Command
             ),
             new InputOption('fail-fast', 'f', InputOption::VALUE_NONE, 'Stop after first failure'),
             new InputOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start'),
+            new InputOption(
+                'seed',
+                '',
+                InputOption::VALUE_REQUIRED,
+                'Define random seed for shuffle setting'
+            ),
+
         ]);
 
         parent::configure();
@@ -241,6 +249,7 @@ class Run extends Command
         if (!$this->options['colors']) {
             $this->options['colors'] = $config['settings']['colors'];
         }
+
         if (!$this->options['silent']) {
             $this->output->writeln(
                 Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
@@ -269,6 +278,11 @@ class Run extends Command
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
         $userOptions['ansi'] = (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi'));
 
+        if (!$this->options['seed']) {
+            $userOptions['seed'] = rand();
+        } else {
+            $userOptions['seed'] = intval($this->options['seed']);
+        }
         if ($this->options['no-colors'] || !$userOptions['ansi']) {
             $userOptions['colors'] = false;
         }
@@ -349,6 +363,12 @@ class Run extends Command
         if ($test) {
             $filter = $this->matchFilteredTestName($test);
             $userOptions['filter'] = $filter;
+        }
+
+        if (!$this->options['silent'] && $config['settings']['shuffle']) {
+            $this->output->writeln(
+                "[Seed] <info>" . $userOptions['seed'] . "</info>"
+            );
         }
 
         $this->codecept = new Codecept($userOptions);
