@@ -1,0 +1,4 @@
+<parameters>
+    <parameter key="KEY1" type="string">val1</parameter>
+    <parameter key="KEY2">val2</parameter>
+</parameters>

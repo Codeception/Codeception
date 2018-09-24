@@ -37,4 +37,11 @@ class ConfigParamsCest
         $I->executeCommand('run -c codeception_self.yml');
         $I->seeInShellOutput('OK (1 test');
     }
+
+    public function checkXmlParamsPassed(CliGuy $I)
+    {
+        $I->amInPath('tests/data/params');
+        $I->executeCommand('run -c codeception_xml.yml');
+        $I->seeInShellOutput('OK (1 test');
+    }
 }
