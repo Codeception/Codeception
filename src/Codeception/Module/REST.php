@@ -339,7 +339,7 @@ EOF;
 
     /**
      * Allows to send REST request using AWS Authorization
-     * 
+     *
      * Only works with PhpBrowser
      * Example Config:
      * ```yml
