@@ -679,6 +679,7 @@ class Db extends CodeceptionModule implements DbInterface
             // ignore errors due to uncommon DB structure,
             // such as tables without _id_seq in PGSQL
             $lastInsertId = 0;
+            $this->debugSection('DB error', $e->getMessage());
         }
         return $lastInsertId;
     }
