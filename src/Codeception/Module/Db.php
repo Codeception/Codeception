@@ -523,7 +523,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
 
         if ($databaseConfig['waitlock']) {
-            $this->__getDriver()->setWaitLock($databaseConfig['waitlock']);
+            $this->_getDriver()->setWaitLock($databaseConfig['waitlock']);
         }
 
         $this->debugSection('Db', 'Connected to ' . $databaseKey . ' ' . $this->drivers[$databaseKey]->getDb());
