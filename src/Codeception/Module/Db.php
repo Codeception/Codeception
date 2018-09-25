@@ -265,6 +265,13 @@ class Db extends CodeceptionModule implements DbInterface
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             if ($databaseConfig[$configKey]) {
+                if (!$databaseConfig['populate']) {
+                    return;
+                }
+
+                if (isset($this->databasesPopulated[$databaseKey]) && $this->databasesPopulated[$databaseKey]) {
+                    return;
+                }
                 $this->_loadDump($databaseKey, $databaseConfig);
             }
         }
@@ -599,14 +606,6 @@ class Db extends CodeceptionModule implements DbInterface
     {
         $databaseKey = empty($databaseKey) ?  self::DEFAULT_DATABASE : $databaseKey;
         $databaseConfig = empty($databaseConfig) ?  $this->config : $databaseConfig;
-
-        if (!$databaseConfig['populate']) {
-            return;
-        }
-
-        if (isset($this->databasesPopulated[$databaseKey]) && $this->databasesPopulated[$databaseKey]) {
-            return;
-        }
 
         if ($databaseConfig['populator']) {
             $this->loadDumpUsingPopulator($databaseKey, $databaseConfig);
