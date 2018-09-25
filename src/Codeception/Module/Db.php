@@ -286,20 +286,20 @@ class Db extends CodeceptionModule implements DbInterface
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             $this->amConnectedToDatabase($databaseKey);
-            $this->removeInserted($databaseKey, $databaseConfig);
+            $this->removeInserted($databaseKey);
         }
     }
     protected function disconnectDatabases()
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
-            $this->disconnect($databaseKey, $databaseConfig);
+            $this->disconnect($databaseKey);
         }
     }
     protected function reconnectDatabases()
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
             if ($databaseConfig['reconnect']) {
-                $this->disconnect($databaseKey, $databaseConfig);
+                $this->disconnect($databaseKey);
                 $this->connect($databaseKey, $databaseConfig);
             }
         }
@@ -611,7 +611,7 @@ class Db extends CodeceptionModule implements DbInterface
             $this->loadDumpUsingPopulator($databaseKey, $databaseConfig);
             return;
         }
-        $this->loadDumpUsingDriver($databaseKey, $databaseConfig);
+        $this->loadDumpUsingDriver($databaseKey);
     }
 
     protected function loadDumpUsingPopulator($databaseKey, $databaseConfig)
