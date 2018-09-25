@@ -224,7 +224,13 @@ class Db extends CodeceptionModule implements DbInterface
     protected $requiredFields = ['dsn', 'user', 'password'];
     const DEFAULT_DATABASE = 'default';
 
+    /**
+     * @var Driver[]
+     */
     public $drivers = [];
+    /**
+     * @var \PDO[]
+     */
     public $dbhs = [];
     public $databasesPopulated = [];
     public $databasesSql = [];
@@ -317,6 +323,9 @@ class Db extends CodeceptionModule implements DbInterface
         }
     }
 
+    /**
+     * @return Driver
+     */
     public function _getDriver()
     {
         return $this->drivers[$this->currentDatabase];
@@ -381,7 +390,7 @@ class Db extends CodeceptionModule implements DbInterface
      * exception on failure.
      *
      * @param $databaseKey
-     * @param actions $actions
+     * @param callable|array|ActionSequence $actions
      * @throws ModuleConfigException
      */
     public function performInDatabase($databaseKey, $actions)
