@@ -82,8 +82,11 @@ class Yii2 extends Client
 
 
     private $emails = [];
+
     /**
      * @return \yii\web\Application
+     *
+     * @deprecated since 2.5, will become protected in 3.0. Use getComponent() or directly access to \Yii::$app.
      */
     public function getApplication()
     {
