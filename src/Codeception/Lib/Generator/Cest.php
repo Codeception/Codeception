@@ -11,7 +11,8 @@ class Cest
     use Namespaces;
 
     protected $template = <<<EOF
-<?php {{namespace}}
+<?php
+{{namespace}}
 
 class {{name}}Cest
 {
