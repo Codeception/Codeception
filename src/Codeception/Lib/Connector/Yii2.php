@@ -85,7 +85,7 @@ class Yii2 extends Client
     /**
      * @return \yii\web\Application
      */
-    protected function getApplication()
+    public function getApplication()
     {
         if (!isset(Yii::$app)) {
             $this->startApp();
