@@ -531,7 +531,7 @@ class WebDriver extends CodeceptionModule implements
     /**
      * Print out latest Selenium Logs in debug mode
      *
-     * @param TestInterface $test
+     * @param \Codeception\TestInterface $test
      */
     public function debugWebDriverLogs(TestInterface $test = null)
     {
