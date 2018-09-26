@@ -86,7 +86,7 @@ class Yii2 extends Client
     /**
      * @return \yii\web\Application
      *
-     * @deprecated since 2.5, will become protected in 3.0. Use getComponent() or directly access to \Yii::$app.
+     * @deprecated since 2.5, will become protected in 3.0. Directly access to \Yii::$app if you need to interact with it.
      */
     public function getApplication()
     {
@@ -112,6 +112,7 @@ class Yii2 extends Client
 
     /**
      * Finds and logs in a user
+     * @internal
      * @param $user
      * @throws ConfigurationException
      * @throws \RuntimeException
@@ -138,6 +139,7 @@ class Yii2 extends Client
 
     /**
      * Masks a value
+     * @internal
      * @param string $val
      * @return string
      * @see \yii\base\Security::maskToken
@@ -148,6 +150,7 @@ class Yii2 extends Client
     }
 
     /**
+     * @internal
      * @param string $name The name of the cookie
      * @param string $value The value of the cookie
      * @return string The value to send to the browser
@@ -162,6 +165,7 @@ class Yii2 extends Client
     }
 
     /**
+     * @internal
      * @return array List of regex patterns for recognized domain names
      */
     public function getInternalDomains()
@@ -181,6 +185,7 @@ class Yii2 extends Client
     }
 
     /**
+     * @internal
      * @return array List of sent emails
      */
     public function getEmails()
@@ -188,6 +193,9 @@ class Yii2 extends Client
         return $this->emails;
     }
 
+    /**
+     * @internal
+     */
     public function getComponent($name)
     {
         $app = $this->getApplication();
@@ -227,6 +235,7 @@ class Yii2 extends Client
 
     /**
      * Gets the name of the CSRF param.
+     * @internal
      * @return string
      */
     public function getCsrfParamName()
@@ -235,6 +244,7 @@ class Yii2 extends Client
     }
 
     /**
+     * @internal
      * @param $params
      * @return mixed
      */
@@ -439,6 +449,7 @@ class Yii2 extends Client
 
     /**
      * This functions closes the session of the application, if the application exists and has a session.
+     * @internal
      */
     public function closeSession()
     {
