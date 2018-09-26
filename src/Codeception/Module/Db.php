@@ -374,7 +374,7 @@ class Db extends CodeceptionModule implements DbInterface
      * exception on failure.
      *
      * @param $databaseKey
-     * @param actions $actions
+     * @param \Codeception\Util\ActionSequence|callable|array $actions
      * @throws ModuleConfigException
      */
     public function performInDatabase($databaseKey, $actions)
