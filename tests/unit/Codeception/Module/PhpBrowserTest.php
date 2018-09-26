@@ -4,6 +4,8 @@ use Codeception\Util\Stub;
 
 require_once 'tests/data/app/data.php';
 require_once __DIR__ . '/TestsForBrowsers.php';
+
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 
 class PhpBrowserTest extends TestsForBrowsers
@@ -19,7 +21,7 @@ class PhpBrowserTest extends TestsForBrowsers
     {
         $this->module = new \Codeception\Module\PhpBrowser(make_container());
         $url = 'http://localhost:8000';
-        $this->module->_setConfig(array('url' => $url));
+        $this->module->_setConfig(['url' => $url]);
         $this->module->_initialize();
         $this->module->_before($this->makeTest());
         if (class_exists('GuzzleHttp\Url')) {
@@ -280,7 +282,15 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testRedirectToAnotherDomainUsingSchemalessUrl()
     {
-        $this->module->amOnUrl('http://httpbin.org/redirect-to?url=//example.org/');
+
+        $this->module->_reconfigure([
+            'handler' => new MockHandler([
+                new Response(302, ['Location' => '//example.org/']),
+                new Response(200, [], 'Cool stuff')
+            ])
+        ]);
+        /** @var \GuzzleHttp\HandlerStack $handlerStack */
+        $this->module->amOnUrl('http://fictional.redirector/redirect-to?url=//example.org/');
         $currentUrl = $this->module->client->getHistory()->current()->getUri();
         $this->assertSame('http://example.org/', $currentUrl);
     }
@@ -481,7 +491,7 @@ class PhpBrowserTest extends TestsForBrowsers
     {
         $this->skipForOldGuzzle();
 
-        $mock = new \GuzzleHttp\Handler\MockHandler([
+        $mock = new MockHandler([
             new Response(200, ['X-Foo' => 'Bar']),
         ]);
         $handler = \GuzzleHttp\HandlerStack::create($mock);
@@ -690,5 +700,41 @@ HTML
         $this->module->amOnPage('/user-agent');
         $response = $this->module->grabPageSource();
         $this->assertEquals('Codeception User Agent Test 1.0', $response, 'Incorrect user agent');
+    }
+
+    public function testIfStatusCodeIsWithin2xxRange()
+    {
+        $this->module->amOnPage('https://httpstat.us/200');
+        $this->module->seeResponseCodeIsSuccessful();
+
+        $this->module->amOnPage('https://httpstat.us/299');
+        $this->module->seeResponseCodeIsSuccessful();
+    }
+
+    public function testIfStatusCodeIsWithin3xxRange()
+    {
+        $this->module->amOnPage('https://httpstat.us/300');
+        $this->module->seeResponseCodeIsRedirection();
+
+        $this->module->amOnPage('https://httpstat.us/399');
+        $this->module->seeResponseCodeIsRedirection();
+    }
+
+    public function testIfStatusCodeIsWithin4xxRange()
+    {
+        $this->module->amOnPage('https://httpstat.us/400');
+        $this->module->seeResponseCodeIsClientError();
+
+        $this->module->amOnPage('https://httpstat.us/499');
+        $this->module->seeResponseCodeIsClientError();
+    }
+
+    public function testIfStatusCodeIsWithin5xxRange()
+    {
+        $this->module->amOnPage('https://httpstat.us/500');
+        $this->module->seeResponseCodeIsServerError();
+
+        $this->module->amOnPage('https://httpstat.us/599');
+        $this->module->seeResponseCodeIsServerError();
     }
 }

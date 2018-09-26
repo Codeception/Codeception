@@ -26,7 +26,7 @@ class Dependencies implements EventSubscriberInterface
             return;
         }
 
-        $testSignatures = $test->getDependencies();
+        $testSignatures = $test->fetchDependencies();
         foreach ($testSignatures as $signature) {
             if (!in_array($signature, $this->successfulTests)) {
                 $test->getMetadata()->setSkip("This test depends on $signature to pass");

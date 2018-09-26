@@ -305,8 +305,14 @@ abstract class Step
             }, array_values($step['args'])));
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
+            codecept_debug(get_class($step['object']));
             // pageobjects or other classes should not be included with "I"
             if (!in_array('Codeception\Actor', class_parents($step['class']))) {
+                if (isset($step['object'])) {
+                    $this->metaStep->setPrefix(get_class($step['object']) . ':');
+                    return;
+                }
+
                 $this->metaStep->setPrefix($step['class'] . ':');
             }
             return;

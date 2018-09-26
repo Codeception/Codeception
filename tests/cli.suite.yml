@@ -5,3 +5,4 @@ modules:
         - Cli
         - CliHelper
         - CodeHelper
+        - Asserts

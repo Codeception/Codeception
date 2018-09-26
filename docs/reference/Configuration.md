@@ -139,6 +139,7 @@ modules:
 * `suite_namespace`: default namespace for new tests of this suite (ignores `namespace` option)
 * `env`: override any configuration per [environment](http://codeception.com/docs/07-AdvancedUsage#Environments).
 * `groups`: [groups](http://codeception.com/docs/07-AdvancedUsage#Groups) with the list of tests of for corresponding group.
+* `formats`: [formats](http://codeception.com/docs/07-AdvancedUsage#Formats) with the list of extra test format classes.
 * `coverage`: pre suite [CodeCoverage](http://codeception.com/docs/11-Codecoverage#Configuration) settings.
 * `gherkin`: per suite [BDD Gherkin](http://codeception.com/docs/07-BDD#Configuration) settings.
 * `error_level`: [error level](http://codeception.com/docs/04-FunctionalTests#Error-Reporting) for runner in current suite. Should be specified for unit, integration, functional tests. Passes value to `error_reporting` function.

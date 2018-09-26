@@ -1162,6 +1162,51 @@ EOF;
     }
 
     /**
+     * Checks that the response code is 2xx
+     *
+     * @part json
+     * @part xml
+     */
+    public function seeResponseCodeIsSuccessful()
+    {
+        $this->connectionModule->seeResponseCodeIsSuccessful();
+    }
+
+    /**
+     * Checks that the response code 3xx
+     *
+     * @part json
+     * @part xml
+     */
+    public function seeResponseCodeIsRedirection()
+    {
+        $this->connectionModule->seeResponseCodeIsRedirection();
+    }
+
+    /**
+     * Checks that the response code is 4xx
+     *
+     * @part json
+     * @part xml
+     */
+    public function seeResponseCodeIsClientError()
+    {
+        $this->connectionModule->seeResponseCodeIsClientError();
+    }
+
+    /**
+     * Checks that the response code is 5xx
+     *
+     * @part json
+     * @part xml
+     */
+    public function seeResponseCodeIsServerError()
+    {
+        $this->connectionModule->seeResponseCodeIsServerError();
+    }
+
+
+    /**
      * Checks whether last response was valid XML.
      * This is done with libxml_get_last_error function.
      *
@@ -1262,7 +1307,7 @@ EOF;
      */
     public function seeXmlResponseEquals($xml)
     {
-        \PHPUnit\Framework\Assert::assertXmlStringEqualsXmlString($this->connectionModule->getResponseContent(), $xml);
+        \PHPUnit\Framework\Assert::assertXmlStringEqualsXmlString($this->connectionModule->_getResponseContent(), $xml);
     }
 
 

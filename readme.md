@@ -2,9 +2,6 @@
 
 [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
 [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
-[![Daily Downloads](https://img.shields.io/packagist/dd/codeception/codeception.svg)](https://packagist.org/packages/codeception/codeception)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Codeception/Codeception?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/Codeception/Codeception/badge.svg)](https://travis-ci.org/Codeception/Codeception)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Codeception/Codeception/badges/quality-score.png?b=2.4)](https://scrutinizer-ci.com/g/Codeception/Codeception/?branch=2.4)
 
 **Modern PHP Testing for everyone**

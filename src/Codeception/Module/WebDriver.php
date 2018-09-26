@@ -507,7 +507,12 @@ class WebDriver extends CodeceptionModule implements
             return;
         }
         if ($this->config['clear_cookies'] && isset($this->webDriver)) {
-            $this->webDriver->manage()->deleteAllCookies();
+            try {
+                $this->webDriver->manage()->deleteAllCookies();
+            } catch (\Exception $e) {
+                // may cause fatal errors when not handled
+                $this->debug("Error, can't clean cookies after a test: " . $e->getMessage());
+            }
         }
     }
 
@@ -989,7 +994,7 @@ class WebDriver extends CodeceptionModule implements
      *
      * ```
      * @api
-     * @param $page WebDriver instance or an element to search within
+     * @param RemoteWebDriver $page WebDriver instance or an element to search within
      * @param $link a link text or locator to click
      * @return WebDriverElement
      */
@@ -1025,7 +1030,7 @@ class WebDriver extends CodeceptionModule implements
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
             ".//input[./@type = 'image'][contains(./@alt, $locator)]",
             ".//button[contains(normalize-space(string(.)), $locator)]",
-            ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][./@name = $locator]",
+            ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][./@name = $locator or ./@title = $locator]",
             ".//button[./@name = $locator or ./@title = $locator]"
         );
 
@@ -2867,12 +2872,23 @@ class WebDriver extends CodeceptionModule implements
 
     protected function assertNodesContain($text, $nodes, $selector = null)
     {
-        $this->assertThat($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $selector);
+        $this->assertNodeConstraint($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $selector);
     }
 
     protected function assertNodesNotContain($text, $nodes, $selector = null)
     {
-        $this->assertThat($nodes, new WebDriverConstraintNot($text, $this->_getCurrentUri()), $selector);
+        $this->assertNodeConstraint($nodes, new WebDriverConstraintNot($text, $this->_getCurrentUri()), $selector);
+    }
+
+    protected function assertNodeConstraint($nodes, WebDriverConstraint $constraint, $selector = null)
+    {
+        $message = $selector;
+        if (is_array($selector)) {
+            $type = key($selector);
+            $locator = $selector[$type];
+            $message = $type . ':' . $locator;
+        }
+        $this->assertThat($nodes, $constraint, $message);
     }
 
     protected function assertPageContains($needle, $message = '')
@@ -3050,7 +3066,14 @@ class WebDriver extends CodeceptionModule implements
         if (!isset($this->sessionSnapshots[$name])) {
             return false;
         }
-        $this->webDriver->manage()->deleteAllCookies();
+        
+        foreach ($this->webDriver->manage()->getCookies() as $cookie) {
+            if (in_array(trim($cookie['name']), [LocalServer::COVERAGE_COOKIE, LocalServer::COVERAGE_COOKIE_ERROR])) {
+                continue;
+            }
+            $this->webDriver->manage()->deleteCookieNamed($cookie['name']);
+        }
+        
         foreach ($this->sessionSnapshots[$name] as $cookie) {
             $this->webDriver->manage()->addCookie($cookie);
         }

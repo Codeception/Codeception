@@ -34,27 +34,6 @@ if (PHP_MAJOR_VERSION < 7) {
 }
 // @codingStandardsIgnoreEnd
 
-if (!function_exists('json_last_error_msg')) {
-    /**
-     * Copied from http://php.net/manual/en/function.json-last-error-msg.php#117393
-     * @return string
-     */
-    function json_last_error_msg()
-    {
-        static $errors = array(
-            JSON_ERROR_NONE => 'No error',
-            JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
-            JSON_ERROR_STATE_MISMATCH => 'State mismatch (invalid or malformed JSON)',
-            JSON_ERROR_CTRL_CHAR => 'Control character error, possibly incorrectly encoded',
-            JSON_ERROR_SYNTAX => 'Syntax error',
-            JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded'
-        );
-
-        $error = json_last_error();
-        return isset($errors[$error]) ? $errors[$error] : 'Unknown error';
-    }
-}
-
 // function not autoloaded in PHP, thus its a good place for them
 if (!function_exists('codecept_debug')) {
     function codecept_debug($data)
@@ -113,6 +92,24 @@ if (!function_exists('codecept_absolute_path')) {
      */
     function codecept_absolute_path($path)
     {
-        return mb_substr($path, 0, 1) === DIRECTORY_SEPARATOR ? $path : codecept_root_dir($path);
+        return codecept_is_path_absolute($path) ? $path : codecept_root_dir($path);
+    }
+}
+
+if (!function_exists('codecept_is_path_absolute')) {
+    /**
+     * Check whether the given $path is absolute.
+     *
+     * @param string $path
+     * @return bool
+     * @since 2.4.4
+     */
+    function codecept_is_path_absolute($path)
+    {
+        if (DIRECTORY_SEPARATOR === '/') {
+            return mb_substr($path, 0, 1) === DIRECTORY_SEPARATOR;
+        }
+
+        return preg_match('#^[A-Z]:(?![^/\\\])#i', $path) === 1;
     }
 }

@@ -519,8 +519,10 @@ EOF;
                 $releaseFile->line("\n## $branch");
                 if ($major < 2) {
                     $releaseFile->line("*Requires: PHP 5.3 and higher + CURL*\n");
-                } else {
+                } elseif ($major == 2 && $minor < 4) {
                     $releaseFile->line("*Requires: PHP 5.4 and higher + CURL*\n");
+                } else {
+                    $releaseFile->line("*Requires: PHP 5.6 and higher + CURL*\n");
                 }
                 $releaseFile->line("* **[Download Latest $branch Release]($downloadUrl)**");
             }

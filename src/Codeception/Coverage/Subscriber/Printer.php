@@ -17,10 +17,11 @@ class Printer implements EventSubscriberInterface
     ];
 
     protected $settings = [
-        'enabled'        => true,
-        'low_limit'      => '35',
-        'high_limit'     => '70',
-        'show_uncovered' => false
+        'enabled'           => true,
+        'low_limit'         => '35',
+        'high_limit'        => '70',
+        'show_uncovered'    => false,
+        'show_only_summary' => false
     ];
 
     public static $coverage;
@@ -92,7 +93,7 @@ class Printer implements EventSubscriberInterface
             $this->settings['low_limit'],
             $this->settings['high_limit'],
             $this->settings['show_uncovered'],
-            false
+            $this->settings['show_only_summary']
         );
         $printer->write($writer->process(self::$coverage, $this->options['colors']));
     }
@@ -129,7 +130,7 @@ class Printer implements EventSubscriberInterface
             $this->settings['low_limit'],
             $this->settings['high_limit'],
             $this->settings['show_uncovered'],
-            false
+            $this->settings['show_only_summary']
         );
         file_put_contents(
             $this->absolutePath($this->options['coverage-text']),

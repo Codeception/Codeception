@@ -327,7 +327,7 @@ $topBar = $module->_findElements('.top-bar')[0];
 $el = $module->_findClickable($topBar, 'Click Me');
 
 ```
- * `param` $page WebDriver instance or an element to search within
+ * `param RemoteWebDriver` $page WebDriver instance or an element to search within
  * `param` $link a link text or locator to click
  * `return` WebDriverElement
 
@@ -650,6 +650,15 @@ Can't be used with PhantomJS
 Print out latest Selenium Logs in debug mode
 
  * `param TestInterface` $test
+
+
+### deleteSessionSnapshot
+ 
+Deletes session snapshot.
+
+See [saveSessionSnapshot](#saveSessionSnapshot)
+
+ * `param` $name
 
 
 ### dontSee
@@ -1116,8 +1125,12 @@ $name = $I->grabValueFrom(['name' => 'username']);
 
 ### loadSessionSnapshot
  
- * `param string` $name
- * `return` bool
+Loads cookies from a saved snapshot.
+Allows to reuse same session across tests without additional login.
+
+See [saveSessionSnapshot](#saveSessionSnapshot)
+
+ * `param` $name
 
 
 ### makeScreenshot
@@ -1297,7 +1310,33 @@ $I->resizeWindow(800, 600);
 
 ### saveSessionSnapshot
  
- * `param string` $name
+Saves current cookies into named snapshot in order to restore them in other tests
+This is useful to save session state between tests.
+For example, if user needs log in to site for each test this scenario can be executed once
+while other tests can just restore saved cookies.
+
+``` php
+<?php
+// inside AcceptanceTester class:
+
+public function login()
+{
+     // if snapshot exists - skipping login
+     if ($I->loadSessionSnapshot('login')) return;
+
+     // logging in
+     $I->amOnPage('/login');
+     $I->fillField('name', 'jon');
+     $I->fillField('password', '123345');
+     $I->click('Login');
+
+     // saving snapshot
+     $I->saveSessionSnapshot('login');
+}
+?>
+```
+
+ * `param` $name
 
 
 ### scrollTo

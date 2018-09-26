@@ -561,13 +561,24 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     protected function findRecord($model, $attributes = [])
     {
         $this->getModelRecord($model);
-        $query = [];
+        $conditions = [];
+        $bind       = [];
         foreach ($attributes as $key => $value) {
-            $query[] = "$key = '$value'";
+            if ($value === null) {
+                $conditions[] = "$key IS NULL";
+            } else {
+                $conditions[] = "$key = :$key:";
+                $bind[$key] = $value;
+            }
         }
-        $squery = implode(' AND ', $query);
-        $this->debugSection('Query', $squery);
-        return call_user_func_array([$model, 'findFirst'], [$squery]);
+        $query = implode(' AND ', $conditions);
+        $this->debugSection('Query', $query);
+        return call_user_func_array([$model, 'findFirst'], [
+            [
+                'conditions' => $query,
+                'bind'       => $bind,
+            ]
+        ]);
     }
 
     /**

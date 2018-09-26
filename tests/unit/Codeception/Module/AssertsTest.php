@@ -19,7 +19,13 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
         $module->assertNotNull(false);
         $module->assertNotNull(0);
         $module->assertTrue(true);
+        $module->assertNotTrue(false);
+        $module->assertNotTrue(null);
+        $module->assertNotTrue('foo');
         $module->assertFalse(false);
+        $module->assertNotFalse(true);
+        $module->assertNotFalse(null);
+        $module->assertNotFalse('foo');
         $module->assertFileExists(__FILE__);
         $module->assertFileNotExists(__FILE__ . '.notExist');
         $module->assertInstanceOf('Exception', new Exception());

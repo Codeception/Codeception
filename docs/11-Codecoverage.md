@@ -47,6 +47,24 @@ coverage:
     high_limit: 60
 ```
 
+By default, show all whitelisted files in `--coverage-text` output not just the ones with coverage information is set to false, config option:
+
+```yaml
+coverage:
+    enabled: true
+    show_uncovered: false
+```
+
+By default, show only the coverage report summary in `--coverage-text` output is set to false, config option:
+
+```yaml
+coverage:
+    enabled: true
+    show_only_summary: false
+```
+
+For further information please refer to the [PHPUnit configuration docs](https://phpunit.readthedocs.io/en/latest/configuration.html)
+
 ## Local CodeCoverage
 
 The basic codecoverage can be collected for functional and unit tests.
