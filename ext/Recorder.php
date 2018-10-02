@@ -34,7 +34,7 @@ use Codeception\Util\Template;
  *
  * * `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
  * * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
- * * `ignore_steps` (default: []) - array of step names that should not be recorded, * wildcards supported
+ * * `ignore_steps` (default: []) - array of step names that should not be recorded, * wildcards supported. Meta steps can also be ignored.
  *
  *
  * #### Examples:
@@ -46,6 +46,21 @@ use Codeception\Util\Template;
  *             module: AngularJS # enable for Angular
  *             delete_successful: false # keep screenshots of successful tests
  *             ignore_steps: [have, grab*]
+ * ```
+ * #### Skipping recording of steps with annotations
+ *
+ * It is also possible to skip recording of steps for specified tests by using the @skipRecoding annotation.
+ *
+ * ```php
+ * /**
+ * * @skipRecording login
+ * * @skipRecording amOnUrl
+ * *\/
+ * public function testLogin(AcceptanceTester $I)
+ * {
+ *     $I->login();
+ *     $I->amOnUrl('http://codeception.com');
+ * }
  * ```
  *
  */
@@ -389,7 +404,7 @@ EOF;
         if ($e->getStep() instanceof CommentStep) {
             return;
         }
-        if ($this->isStepIgnored($e->getStep())) {
+        if ($this->isStepIgnored($e)) {
             return;
         }
 
@@ -420,14 +435,30 @@ EOF;
     }
 
     /**
-     * @param Step $step
      * @return bool
      */
-    protected function isStepIgnored($step)
+    protected function isStepIgnored(StepEvent $e)
     {
-        foreach ($this->config['ignore_steps'] as $stepPattern) {
+        $configIgnoredSteps = $this->config['ignore_steps'];
+        $annotationIgnoredSteps = $e->getTest()->getMetadata()->getParam('skipRecording');
+
+        $ignoredSteps = array_unique(
+            array_merge(
+                $configIgnoredSteps,
+                is_array($annotationIgnoredSteps) ? $annotationIgnoredSteps : []
+            )
+        );
+
+        foreach ($ignoredSteps as $stepPattern) {
             $stepRegexp = '/^' . str_replace('*', '.*?', $stepPattern) . '$/i';
-            if (preg_match($stepRegexp, $step->getAction())) {
+
+            if (preg_match($stepRegexp, $e->getStep()->getAction())) {
+                return true;
+            }
+
+            if ($e->getStep()->getMetaStep() !== null &&
+                preg_match($stepRegexp, $e->getStep()->getMetaStep()->getAction())
+            ) {
                 return true;
             }
         }
