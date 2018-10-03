@@ -80,8 +80,8 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
         $this->module->expectThrowable('Exception', function () {
             throw new Exception();
         });
-        $this->module->expectThrowable(new Error('here'), function () {
-            throw new Error('here');
+        $this->module->expectThrowable(new Exception('here'), function () {
+            throw new Exception('here');
         });
         $this->module->expectThrowable(new Exception('here', 200), function () {
             throw new Exception('here', 200);
@@ -93,8 +93,8 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
      */
     public function testExpectThrowableFailOnDifferentClass()
     {
-        $this->module->expectThrowable(new Exception(), function () {
-            throw new Error();
+        $this->module->expectThrowable(new RuntimeException(), function () {
+            throw new Exception();
         });
     }
 
