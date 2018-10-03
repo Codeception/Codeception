@@ -4,7 +4,7 @@ class PowerUpCest
 {
     public function iHaveNoPower(PowerGuy $I)
     {
-        $I->expectException('Exception', function() use ($I) {
+        $I->expectThrowable('Exception', function() use ($I) {
             $I->gotThePower();
         });
     }
