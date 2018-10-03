@@ -1,6 +1,7 @@
 <?php
 class AssertsTest extends \PHPUnit\Framework\TestCase
 {
+    /** @var \Codeception\Module\Asserts */
     protected $module;
 
     public function setUp()
