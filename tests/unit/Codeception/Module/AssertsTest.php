@@ -75,7 +75,7 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
         });
     }
 
-    public function testExceptThrowable()
+    public function testExpectThrowable()
     {
         $this->module->expectThrowable('Exception', function () {
             throw new Exception();
@@ -101,7 +101,7 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException PHPUnit\Framework\AssertionFailedError
      */
-    public function testExceptThrowableFailOnDifferentMessage()
+    public function testExpectThrowableFailOnDifferentMessage()
     {
         $this->module->expectThrowable(new Exception('foo', 200), function () {
             throw new Exception('bar', 200);
@@ -111,7 +111,7 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException PHPUnit\Framework\AssertionFailedError
      */
-    public function testExceptThrowableFailOnDifferentCode()
+    public function testExpectThrowableFailOnDifferentCode()
     {
         $this->module->expectThrowable(new Exception('foobar', 200), function () {
             throw new Exception('foobar', 2);
