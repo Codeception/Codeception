@@ -70,4 +70,62 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
         $module->expectException(RuntimeException::class, function () {
         });
     }
+
+    public function testExceptThrowable()
+    {
+        $module = new \Codeception\Module\Asserts(make_container());
+        $module->expectThrowable('Exception', function () {
+            throw new Exception();
+        });
+        $module->expectThrowable(new Error('here'), function () {
+            throw new Error('here');
+        });
+        $module->expectThrowable(new Exception('here', 200), function () {
+            throw new Exception('here', 200);
+        });
+    }
+
+    /**
+     * @expectedException PHPUnit\Framework\AssertionFailedError
+     */
+    public function testExpectThrowableFailOnDifferentClass()
+    {
+        $module = new \Codeception\Module\Asserts(make_container());
+        $module->expectThrowable(new Exception(), function () {
+            throw new Error();
+        });
+    }
+
+    /**
+     * @expectedException PHPUnit\Framework\AssertionFailedError
+     */
+    public function testExceptThrowableFailOnDifferentMessage()
+    {
+        $module = new \Codeception\Module\Asserts(make_container());
+        $module->expectThrowable(new Exception('foo', 200), function () {
+            throw new Exception('bar', 200);
+        });
+    }
+
+    /**
+     * @expectedException PHPUnit\Framework\AssertionFailedError
+     */
+    public function testExceptThrowableFailOnDifferentCode()
+    {
+        $module = new \Codeception\Module\Asserts(make_container());
+        $module->expectThrowable(new Exception('foobar', 200), function () {
+            throw new Exception('foobar', 2);
+        });
+    }
+
+    /**
+     * @expectedException PHPUnit\Framework\AssertionFailedError
+     * @expectedExceptionMessageRegExp /RuntimeException/
+     */
+    public function testExpectThrowableFailOnNothingCaught()
+    {
+        $module = new \Codeception\Module\Asserts(make_container());
+        $module->expectThrowable(RuntimeException::class, function () {
+        });
+    }
 }
