@@ -554,7 +554,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testWebDriverWaits()
     {
-        $fakeWd = Stub::make(self::WEBDRIVER_CLASS, ['wait' => Stub::exactly(12, function () {
+        $fakeWd = Stub::make(self::WEBDRIVER_CLASS, ['wait' => Stub::exactly(16, function () {
             return new \Codeception\Util\Maybe();
         })]);
         $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
