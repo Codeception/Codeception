@@ -2342,6 +2342,27 @@ class WebDriver extends CodeceptionModule implements
     }
 
     /**
+     * Waits up to $timeout seconds for the given element to be clickable.
+     * If element doesn't become clickable, a timeout exception is thrown.
+     *
+     * ``` php
+     * <?php
+     * $I->waitForElementClickable('#agree_button', 30); // secs
+     * $I->click('#agree_button');
+     * ?>
+     * ```
+     *
+     * @param $element
+     * @param int $timeout seconds
+     * @throws \Exception
+     */
+    public function waitForElementClickable($element, $timeout = 10)
+    {
+        $condition = WebDriverExpectedCondition::elementToBeClickable($this->getLocator($element));
+        $this->webDriver->wait($timeout)->until($condition);
+    }
+
+    /**
      * Waits up to $timeout seconds for the given string to appear on the page.
      *
      * Can also be passed a selector to search in, be as specific as possible when using selectors.

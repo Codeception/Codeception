@@ -572,6 +572,11 @@ class WebDriverTest extends TestsForBrowsers
         $module->waitForElementNotVisible(['id' => 'user']);
         $module->waitForElementNotVisible(['css' => '.user']);
         $module->waitForElementNotVisible('//xpath');
+
+        $module->waitForElementClickable(WebDriverBy::partialLinkText('yeah'));
+        $module->waitForElementClickable(['id' => 'user']);
+        $module->waitForElementClickable(['css' => '.user']);
+        $module->waitForElementClickable('//xpath');
     }
 
     public function testWaitForElement()
