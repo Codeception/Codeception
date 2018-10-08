@@ -383,7 +383,7 @@ interface Web
      * ``` php
      * <?php
      * // to match root url
-     * $I->seeCurrentUrlMatches('~$/users/(\d+)~');
+     * $I->seeCurrentUrlMatches('~^/users/(\d+)~');
      * ?>
      * ```
      *
