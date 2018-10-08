@@ -28,7 +28,7 @@ class ParamsLoader
         }
 
         try {
-            if (preg_match('~\.yml$~', $paramStorage)) {
+            if (preg_match('~\.ya?ml$~', $paramStorage)) {
                 return $this->loadYamlFile();
             }
 
