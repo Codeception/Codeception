@@ -6,7 +6,7 @@ use Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    const STABLE_BRANCH = '2.4';
+    const STABLE_BRANCH = '2.5';
     const REPO_BLOB_URL = 'https://github.com/Codeception/Codeception/blob';
 
     public function release()

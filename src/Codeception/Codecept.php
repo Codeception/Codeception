@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "2.4.5";
+    const VERSION = "2.5.0";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -185,7 +185,9 @@ class Codecept
     {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
         $suiteManager->initialize();
+        srand($this->options['seed']);
         $suiteManager->loadTests($test);
+        srand();
         $suiteManager->run($this->runner, $this->result, $this->options);
         return $this->result;
     }

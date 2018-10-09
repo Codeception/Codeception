@@ -272,6 +272,66 @@ modules:
 DataFactory provides a powerful solution for managing data in integration/functional/acceptance tests.
 Read the [full reference](http://codeception.com/docs/modules/DataFactory) to learn how to set this module up.
 
+## Testing Dynamic Data with Snapshots
+
+What if you deal with data which you don't own? For instance, the page look depends on number of categories in database, 
+and categories are set by admin user. How would you test that the page is still valid?  
+
+There is a way to get it tested as well. Codeception allows you take a snapshot of a data on first run and compare with on next executions.
+This principle is so general that it can work for testing APIs, items on a web page, etc.
+
+Let's check that list of categories on a page is the same it was before.    
+Create a snapshot class:
+
+```
+php vendor/bin/codecept g:snapshot Categories
+```
+
+Inject an actor class via constructor and implement `fetchData` method which should return a data set from a test.
+
+```php
+<?php
+namespace Snapshot;
+
+class Categories extends \Codeception\Snapshot
+{
+    /** @var \AcceptanceTester */
+    protected $i;
+
+    public function __construct(\AcceptanceTester $I)
+    {
+        $this->i = $I;
+    }
+
+    protected function fetchData()
+    {
+        // fetch texts from all 'a.category' elements on a page        
+        return $this->i->grabMultiple('a.category');
+    }
+}
+```
+
+Inside a test you can inject the snapshot class and call `assert` method on it:
+
+```php
+<?php
+public function testCategoriesAreTheSame(\AcceptanceTester $I, \Snapshot\Categories $snapshot)
+{
+    $I->amOnPage('/categories');
+    // if previously saved array of users does not match current set, test will fail
+    // to update data in snapshot run test with --debug flag
+    $snapshot->assert();
+}
+```
+
+On the first run, data will be obtained via `fetchData` method and saved to `tests/_data` directory in json format.
+On next execution the obtained data will be compared with previously saved snapshot.
+
+**To update a snapshot with a new data run tests in `--debug` mode.**
+
+By default Snapshot uses `assertEquals` assertion, however this can be customized by overriding `assertData` method.
+  
+
 ## Conclusion
 
 Codeception also assists the developer when dealing with data. Tools for database population

@@ -407,7 +407,7 @@ Checks that current url doesn't match the given regular expression.
 ``` php
 <?php
 // to match root url
-$I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
+$I->dontSeeCurrentUrlMatches('~^/users/(\d+)~');
 ?>
 ```
 
@@ -629,7 +629,7 @@ If no parameters are provided, the full URI is returned.
 
 ``` php
 <?php
-$user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
+$user_id = $I->grabFromCurrentUrl('~^/user/(\d+)/~');
 $uri = $I->grabFromCurrentUrl();
 ?>
 ```
@@ -909,7 +909,7 @@ Checks that the current URL matches the given regular expression.
 ``` php
 <?php
 // to match root url
-$I->seeCurrentUrlMatches('~$/users/(\d+)~');
+$I->seeCurrentUrlMatches('~^/users/(\d+)~');
 ?>
 ```
 

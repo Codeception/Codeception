@@ -1,7 +1,10 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ModuleException;
 use Codeception\Lib\Connector\Yii2\Logger;
+use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Util\Debug;
 use Symfony\Component\BrowserKit\Client;
@@ -10,6 +13,7 @@ use Symfony\Component\BrowserKit\Response;
 use Yii;
 use yii\base\ExitException;
 use yii\base\Security;
+use yii\mail\MessageInterface;
 use yii\web\Application;
 use yii\web\ErrorHandler;
 use yii\web\HttpException;
@@ -76,8 +80,13 @@ class Yii2 extends Client
      */
     public $recreateApplication = false;
 
+
+    private $emails = [];
+
     /**
      * @return \yii\web\Application
+     *
+     * @deprecated since 2.5, will become protected in 3.0. Directly access to \Yii::$app if you need to interact with it.
      */
     public function getApplication()
     {
@@ -90,6 +99,7 @@ class Yii2 extends Client
     public function resetApplication()
     {
         codecept_debug('Destroying application');
+        $this->closeSession();
         Yii::$app = null;
         \yii\web\UploadedFile::reset();
         if (method_exists(\yii\base\Event::className(), 'offAll')) {
@@ -98,6 +108,149 @@ class Yii2 extends Client
         Yii::setLogger(null);
         // This resolves an issue with database connections not closing properly.
         gc_collect_cycles();
+    }
+
+    /**
+     * Finds and logs in a user
+     * @internal
+     * @param $user
+     * @throws ConfigurationException
+     * @throws \RuntimeException
+     */
+    public function findAndLoginUser($user)
+    {
+        $app = $this->getApplication();
+        if (!$app->has('user')) {
+            throw new ConfigurationException('The user component is not configured');
+        }
+
+        if ($user instanceof \yii\web\IdentityInterface) {
+            $identity = $user;
+        } else {
+            // class name implementing IdentityInterface
+            $identityClass = $app->user->identityClass;
+            $identity = call_user_func([$identityClass, 'findIdentity'], $user);
+            if (!isset($identity)) {
+                throw new \RuntimeException('User not found');
+            }
+        }
+        $app->user->login($identity);
+    }
+
+    /**
+     * Masks a value
+     * @internal
+     * @param string $val
+     * @return string
+     * @see \yii\base\Security::maskToken
+     */
+    public function maskToken($val)
+    {
+        return $this->getApplication()->security->maskToken($val);
+    }
+
+    /**
+     * @internal
+     * @param string $name The name of the cookie
+     * @param string $value The value of the cookie
+     * @return string The value to send to the browser
+     */
+    public function hashCookieData($name, $value)
+    {
+        $app = $this->getApplication();
+        if (!$app->request->enableCookieValidation) {
+            return $value;
+        }
+        return $app->security->hashData(serialize([$name, $value]), $app->request->cookieValidationKey);
+    }
+
+    /**
+     * @internal
+     * @return array List of regex patterns for recognized domain names
+     */
+    public function getInternalDomains()
+    {
+        /** @var \yii\web\UrlManager $urlManager */
+        $urlManager = $this->getApplication()->urlManager;
+        $domains = [$this->getDomainRegex($urlManager->hostInfo)];
+        if ($urlManager->enablePrettyUrl) {
+            foreach ($urlManager->rules as $rule) {
+                /** @var \yii\web\UrlRule $rule */
+                if (isset($rule->host)) {
+                    $domains[] = $this->getDomainRegex($rule->host);
+                }
+            }
+        }
+        return array_unique($domains);
+    }
+
+    /**
+     * @internal
+     * @return array List of sent emails
+     */
+    public function getEmails()
+    {
+        return $this->emails;
+    }
+
+    /**
+     * @internal
+     */
+    public function getComponent($name)
+    {
+        $app = $this->getApplication();
+        if (!$app->has($name)) {
+            throw new ConfigurationException("Component $name is not available in current application");
+        }
+        return $app->get($name);
+    }
+
+    /**
+     * Getting domain regex from rule host template
+     *
+     * @param string $template
+     * @return string
+     */
+    private function getDomainRegex($template)
+    {
+        if (preg_match('#https?://(.*)#', $template, $matches)) {
+            $template = $matches[1];
+        }
+        $parameters = [];
+        if (strpos($template, '<') !== false) {
+            $template = preg_replace_callback(
+                '/<(?:\w+):?([^>]+)?>/u',
+                function ($matches) use (&$parameters) {
+                    $key = '#' . count($parameters) . '#';
+                    $parameters[$key] = isset($matches[1]) ? $matches[1] : '\w+';
+                    return $key;
+                },
+                $template
+            );
+        }
+        $template = preg_quote($template);
+        $template = strtr($template, $parameters);
+        return '/^' . $template . '$/u';
+    }
+
+    /**
+     * Gets the name of the CSRF param.
+     * @internal
+     * @return string
+     */
+    public function getCsrfParamName()
+    {
+        return $this->getApplication()->request->csrfParam;
+    }
+
+    /**
+     * @internal
+     * @param $params
+     * @return mixed
+     */
+    public function createUrl($params)
+    {
+        return is_array($params) ?$this->getApplication()->getUrlManager()->createUrl($params) : $params;
     }
 
     public function startApp()
@@ -111,7 +264,6 @@ class Yii2 extends Client
         $config = $this->mockMailer($config);
         /** @var \yii\web\Application $app */
         Yii::$app = Yii::createObject($config);
-
         Yii::setLogger(new Logger());
     }
 
@@ -200,7 +352,7 @@ class Yii2 extends Client
         }
 
         $content = ob_get_clean();
-        if (empty($content) && !empty($response->content)) {
+        if (empty($content) && !empty($response->content) && !isset($response->stream)) {
             throw new \Exception('No content was sent from Yii application');
         }
 
@@ -271,7 +423,10 @@ class Yii2 extends Client
         ];
 
         $mailerConfig = [
-            'class' => 'Codeception\Lib\Connector\Yii2\TestMailer',
+            'class' => TestMailer::class,
+            'callback' => function (MessageInterface $message) {
+                $this->emails[] = $message;
+            }
         ];
 
         if (isset($config['components']['mailer']) && is_array($config['components']['mailer'])) {
@@ -290,6 +445,17 @@ class Yii2 extends Client
     {
         parent::restart();
         $this->resetApplication();
+    }
+
+    /**
+     * This functions closes the session of the application, if the application exists and has a session.
+     * @internal
+     */
+    public function closeSession()
+    {
+        if (isset(\Yii::$app) && \Yii::$app->has('session', true)) {
+            \Yii::$app->session->close();
+        }
     }
 
     /**
