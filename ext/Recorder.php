@@ -34,7 +34,7 @@ use Codeception\Util\Template;
  *
  * * `delete_successful` (default: true) - delete screenshots for successfully passed tests  (i.e. log only failed and errored tests).
  * * `module` (default: WebDriver) - which module for screenshots to use. Set `AngularJS` if you want to use it with AngularJS module. Generally, the module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interface.
- * * `ignore_steps` (default: []) - array of step names that should not be recorded, * wildcards supported
+ * * `ignore_steps` (default: []) - array of step names that should not be recorded (given the step passed), * wildcards supported.
  * * `success_color` (default: success) - bootstrap values to be used for color representation for passed tests
  * * `failure_color` (default: danger) - bootstrap values to be used for color representation for failed tests
  * * `error_color` (default: dark) - bootstrap values to be used for color representation for scenarios where there's an issue occurred while generating a recording
@@ -56,13 +56,13 @@ class Recorder extends \Codeception\Extension
     /** @var array */
     protected $config = [
         'delete_successful' => true,
-        'module'         => 'WebDriver',
-        'template'       => null,
-        'animate_slides' => true,
-        'ignore_steps'   => [],
-        'success_color'  => 'success',
-        'failure_color'  => 'danger',
-        'error_color'    => 'dark',
+        'module'            => 'WebDriver',
+        'template'          => null,
+        'animate_slides'    => true,
+        'ignore_steps'      => [],
+        'success_color'     => 'success',
+        'failure_color'     => 'danger',
+        'error_color'       => 'dark',
     ];
 
     /** @var string */
@@ -256,7 +256,7 @@ EOF;
     protected $recordedTests = [];
 
     /** @var array */
-    protected $errors = [];
+    protected $skipRecording = [];
 
     /** @var array */
     protected $errorMessages = [];
@@ -278,7 +278,7 @@ EOF;
 
         $this->seed = uniqid();
         $this->webDriverModule = $this->getModule($this->config['module']);
-        $this->errors = [];
+        $this->skipRecording = [];
         $this->errorMessages = [];
         $this->ansi = !isset($this->options['no-ansi']);
         $this->colors = !isset($this->options['no-colors']);
@@ -313,7 +313,9 @@ EOF;
                     $links .= "<li>{$fileName}</li><ul>";
 
                     foreach ($tests as $test) {
-                        $links .= '<li class="text-' . $this->config[$test['status'] . '_color']
+                        $links .= in_array($test['path'], $this->skipRecording, true)
+                            ? "<li class=\"text{$this->config['error_color']}\">{$test['name']}</li>\n"
+                            : '<li class="text-' . $this->config[$test['status'] . '_color']
                             . "\"><a href='{$test['index']}'>{$test['name']}</a></li>\n";
                     }
 
@@ -338,14 +340,8 @@ EOF;
             $this->writeln('⏺ Records saved into: <info>file://' . codecept_output_dir() . 'records.html</info>');
         }
 
-        foreach ($this->errors as $testPath => $screenshotPath) {
-            while (count($this->errorMessages[$testPath])) {
-                $this->writeln(array_pop($this->errorMessages[$testPath]));
-            }
-
-            if ($screenshotPath !== null) {
-                $this->writeln("⏺ Screenshot saved into: <info>file://{$screenshotPath}</info>");
-            }
+        foreach ($this->errorMessages as $message) {
+            $this->writeln($message);
         }
     }
 
@@ -367,9 +363,11 @@ EOF;
         try {
             !is_dir($this->dir) && !mkdir($this->dir) && !is_dir($this->dir);
         } catch (\Exception $exception) {
-            $this->errors[$testPath] = null;
-            $this->errorMessages[$testPath][] =
-                "⏺ An exception occurred while creating directory: <info>{$this->dir}</info>";
+            $this->skipRecording[] = $testPath;
+            $this->appendErrorMessage(
+                $testPath,
+                "⏺ An exception occurred while creating directory: <info>{$this->dir}</info>"
+            );
         }
     }
 
@@ -413,9 +411,11 @@ EOF;
                 !is_dir($dir) && !mkdir($dir) && !is_dir($dir);
                 $this->dir = $dir;
             } catch (\Exception $exception) {
-                $this->errors[$testPath] = null;
-                $this->errorMessages[$testPath][] =
-                    "⏺ An exception occurred while creating directory: <info>{$dir}</info>";
+                $this->skipRecording[] = $testPath;
+                $this->appendErrorMessage(
+                    $testPath,
+                    "⏺ An exception occurred while creating directory: <info>{$dir}</info>"
+                );
             }
 
             $this->slides = [];
@@ -425,12 +425,14 @@ EOF;
             try {
                 $this->webDriverModule->webDriver->takeScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
             } catch (\Exception $exception) {
-                $this->errors[$testPath] = null;
-                FileSystem::deleteDir($dir);
+                $this->appendErrorMessage(
+                    $testPath,
+                    "⏺ Unable to capture a screenshot for <info>{$testPath}/before</info>"
+                );
             }
         }
 
-        if (!array_key_exists($testPath, $this->errors)) {
+        if (!in_array($testPath, $this->skipRecording, true)) {
             foreach ($this->slides as $i => $step) {
                 if ($step->hasFailed()) {
                     $status = 'failure';
@@ -458,21 +460,24 @@ EOF;
                 ->produce();
 
             $indexFile = $this->dir . DIRECTORY_SEPARATOR . 'index.html';
+            $environment = $e->getTest()->getMetadata()->getCurrent('env') ?: '';
+            $suite = ucfirst(basename(\dirname($e->getTest()->getMetadata()->getFilename())));
+            $testName = basename($e->getTest()->getMetadata()->getFilename());
 
             try {
                 file_put_contents($indexFile, $html);
             } catch (\Exception $exception) {
-                $this->errors[$testPath] = null;
-                $this->errorMessages[$testPath][] =
-                    "⏺ An exception occurred while saving index.html: <info>{$exception->getMessage()}</info>";
+                $this->skipRecording[] = $testPath;
+                $this->appendErrorMessage(
+                    $testPath,
+                    "⏺ An exception occurred while saving index.html for <info>{$testPath}: "
+                    . "{$exception->getMessage()}</info>"
+                );
             }
-
-            $environment = $e->getTest()->getMetadata()->getCurrent('env') ?: '';
-            $suite = ucfirst(basename(dirname($e->getTest()->getMetadata()->getFilename())));
-            $testName = basename($e->getTest()->getMetadata()->getFilename());
 
             $this->recordedTests["{$suite} ({$environment})"][$testName][] = [
                 'name' => $e->getTest()->getMetadata()->getName(),
+                'path' => $testPath,
                 'status' => $status,
                 'index' => substr($indexFile, strlen(codecept_output_dir())),
             ];
@@ -492,7 +497,8 @@ EOF;
             return;
         }
 
-        if ($this->isStepIgnored($e->getStep())) {
+        // only taking the ignore step into consideration if that step has passed
+        if ($this->isStepIgnored($e->getStep()) && !$e->getStep()->hasFailed()) {
             return;
         }
 
@@ -502,20 +508,10 @@ EOF;
             $this->webDriverModule->webDriver->takeScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
         } catch (\Exception $exception) {
             $testPath = codecept_relative_path(Descriptor::getTestFullName($e->getTest()));
-            $this->errors[$testPath] = null;
-
-            if (array_key_exists($testPath, $this->errorMessages)) {
-                $this->errorMessages[$testPath] = array_merge(
-                    $this->errorMessages[$testPath],
-                    ["⏺ Unable to capture a screenshot for <info>{$testPath}/{$e->getStep()->getAction()}</info>"]
-                );
-            } else {
-                $this->errorMessages[$testPath] = [
-                    "⏺ Unable to capture a screenshot for <info>{$testPath}/{$e->getStep()->getAction()}</info>",
-                ];
-            }
-
-            return;
+            $this->appendErrorMessage(
+                $testPath,
+                "⏺ Unable to capture a screenshot for <info>{$testPath}/{$e->getStep()->getAction()}</info>"
+            );
         }
 
         $this->stepNum++;
@@ -550,7 +546,7 @@ EOF;
     }
 
     /**
-     * @param $message
+     * @param string $message
      */
     protected function writeln($message)
     {
@@ -558,6 +554,18 @@ EOF;
             $this->ansi
                 ? $message
                 : trim(preg_replace('/[ ]{2,}/', ' ', str_replace('⏺', '', $message)))
+        );
+    }
+
+    /**
+     * @param string $testPath
+     * @param string $message
+     */
+    private function appendErrorMessage($testPath, $message)
+    {
+        $this->errorMessages[$testPath] = array_merge(
+            array_key_exists($testPath, $this->errorMessages) ? $this->errorMessages[$testPath]: [],
+            [$message]
         );
     }
 }
