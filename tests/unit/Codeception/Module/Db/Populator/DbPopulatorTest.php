@@ -27,6 +27,31 @@ class DbPopulatorTest extends \Codeception\Test\Unit
         );
     }
 
+    public function testCommandBuilderInterpolatesVariablesMultiDump()
+    {
+        $populator = new DbPopulator(
+            [
+                'populate'  => true,
+                'dsn'       => 'mysql:host=127.0.0.1;dbname=my_db',
+                'dump'      => [
+                    'tests/data/dumps/sqlite.sql',
+                    'tests/data/dumps/sqlite2.sql',
+                ],
+                'user'      => 'root',
+                'populator' => 'mysql -u $user -h $host -D $dbname < $dump'
+
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                'mysql -u root -h 127.0.0.1 -D my_db < tests/data/dumps/sqlite.sql',
+                'mysql -u root -h 127.0.0.1 -D my_db < tests/data/dumps/sqlite2.sql'
+            ],
+            $populator->getBuiltCommand()
+        );
+    }
+
     public function testCommandBuilderWontTouchVariablesNotFound()
     {
         $populator = new DbPopulator([
