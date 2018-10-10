@@ -38,6 +38,7 @@ use Codeception\Util\Template;
  * * `success_color` (default: success) - bootstrap values to be used for color representation for passed tests
  * * `failure_color` (default: danger) - bootstrap values to be used for color representation for failed tests
  * * `error_color` (default: dark) - bootstrap values to be used for color representation for scenarios where there's an issue occurred while generating a recording
+ * * `delete_orphaned` (default: false) - delete recording folders created via previous runs
  *
  * #### Examples:
  *
@@ -63,6 +64,7 @@ class Recorder extends \Codeception\Extension
         'success_color'     => 'success',
         'failure_color'     => 'danger',
         'error_color'       => 'dark',
+        'delete_orphaned'   => false,
     ];
 
     /** @var string */
@@ -253,6 +255,9 @@ EOF;
     protected $seed;
 
     /** @var array */
+    protected $seeds;
+
+    /** @var array */
     protected $recordedTests = [];
 
     /** @var array */
@@ -277,6 +282,7 @@ EOF;
         }
 
         $this->seed = uniqid();
+        $this->seeds[] = $this->seed;
         $this->webDriverModule = $this->getModule($this->config['module']);
         $this->skipRecording = [];
         $this->errorMessages = [];
@@ -376,6 +382,26 @@ EOF;
      */
     public function cleanup(TestEvent $e)
     {
+        if ($this->config['delete_orphaned']) {
+            $recordingDirectories = [];
+            $directories = new \DirectoryIterator(codecept_output_dir());
+
+            // getting a list of currently present recording directories
+            foreach ($directories as $directory) {
+                preg_match('/^record_(.*?)_[^\n]+.php_[^\n]+$/', $directory->getFilename(), $match);
+                if (isset($match[1])) {
+                    $recordingDirectories[$match[1]][] = codecept_output_dir() . $directory->getFilename();
+                }
+            }
+
+            // removing orphaned recording directories
+            foreach (array_diff(array_keys($recordingDirectories), $this->seeds) as $orphanedSeed) {
+                foreach ($recordingDirectories[$orphanedSeed] as $orphanedDirectory) {
+                    FileSystem::deleteDir($orphanedDirectory);
+                }
+            }
+        }
+
         if (!$this->webDriverModule || !$this->dir) {
             return;
         }
