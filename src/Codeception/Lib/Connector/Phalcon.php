@@ -151,7 +151,7 @@ class Phalcon extends Client
         }
 
         return new Response(
-            $response->getContent(),
+            $response->getContent() ?: '',
             $status ? $status : 200,
             $headers
         );
