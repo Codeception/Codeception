@@ -578,8 +578,8 @@ EOF;
     {
         parent::writeln(
             $this->ansi
-                ? $message
-                : trim(preg_replace('/[ ]{2,}/', ' ', str_replace('⏺', '', $message)))
+            ? $message
+            : trim(preg_replace('/[ ]{2,}/', ' ', str_replace('⏺', '', $message)))
         );
     }
 
