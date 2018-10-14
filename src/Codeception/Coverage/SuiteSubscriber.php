@@ -21,7 +21,8 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         'xdebug_session' => 'codeception',
         'remote_config'  => null,
         'show_uncovered' => false,
-        'c3_url'         => null
+        'c3_url'         => null,
+        'work_dir'       => null
     ];
 
     protected $settings = [];
