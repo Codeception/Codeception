@@ -309,7 +309,7 @@ class Configuration
 
         // load global config
         $globalConf = $config['settings'];
-        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'gherkin', 'extensions'] as $key) {
+        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'gherkin', 'extensions', 'seed'] as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }
