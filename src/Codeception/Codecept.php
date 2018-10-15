@@ -148,6 +148,7 @@ class Codecept
         );
 
         $config = $config ?: Configuration::config();
+        $config['seed'] = $this->options['seed'];
 
         $settings = Configuration::suiteSettings($suite, $config);
 
@@ -166,6 +167,7 @@ class Codecept
                 if (isset($environments[$env])) {
                     $currentEnvironment = isset($config['current_environment']) ? [$config['current_environment']] : [];
                     $config = Configuration::mergeConfigs($config, $environments[$env]);
+                    $config['seed'] = $this->options['seed'];
                     $currentEnvironment[] = $config['current_environment'];
                     $config['current_environment'] = implode(',', $currentEnvironment);
                 }
