@@ -106,7 +106,7 @@ abstract class Module
      * <?php
      * // cleanup DB only for specific group of tests
      * public function _before(Test $test) {
-     *     if (in_array('cleanup', $test->getMetadata()->getGroups()) {
+     *     if (in_array('cleanup', $test->getMetadata()->getGroups())) {
      *         $this->getModule('Db')->_reconfigure(['cleanup' => true]);
      *     }
      * }
