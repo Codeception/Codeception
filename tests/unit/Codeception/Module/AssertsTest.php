@@ -55,22 +55,20 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
         });
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     */
     public function testExceptionFails()
     {
+        $this->expectException(PHPUnit\Framework\AssertionFailedError::class);
+
         $this->module->expectException(new Exception('here', 200), function () {
             throw new Exception('here', 2);
         });
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     * @expectedExceptionMessageRegExp /RuntimeException/
-     */
     public function testOutputExceptionTimeWhenNothingCaught()
     {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectExceptionMessageRegExp('/RuntimeException/');
+
         $this->module->expectException(RuntimeException::class, function () {
         });
     }
@@ -88,42 +86,38 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
         });
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     */
     public function testExpectThrowableFailOnDifferentClass()
     {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+
         $this->module->expectThrowable(new RuntimeException(), function () {
             throw new Exception();
         });
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     */
     public function testExpectThrowableFailOnDifferentMessage()
     {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+
         $this->module->expectThrowable(new Exception('foo', 200), function () {
             throw new Exception('bar', 200);
         });
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     */
     public function testExpectThrowableFailOnDifferentCode()
     {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+
         $this->module->expectThrowable(new Exception('foobar', 200), function () {
             throw new Exception('foobar', 2);
         });
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     * @expectedExceptionMessageRegExp /RuntimeException/
-     */
     public function testExpectThrowableFailOnNothingCaught()
     {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectExceptionMessageRegExp('/RuntimeException/');
+
         $this->module->expectThrowable(RuntimeException::class, function () {
         });
     }
