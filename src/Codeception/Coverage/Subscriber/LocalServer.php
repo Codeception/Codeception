@@ -9,7 +9,6 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\RemoteException;
-use PHP_CodeCoverage;
 
 /**
  * When collecting code coverage data from local server HTTP requests are sent to c3.php file.
@@ -131,7 +130,7 @@ class LocalServer extends SuiteSubscriber
     /**
      * Allows Translating Remote Paths To Local (IE: When Using Docker)
      *
-     * @param \PHP_CodeCoverage $coverage
+     * @param \SebastianBergmann\CodeCoverage\CodeCoverage $coverage
      * @return $this
      */
     protected function preProcessCoverage($coverage)
@@ -145,7 +144,7 @@ class LocalServer extends SuiteSubscriber
         $projectDir = Configuration::projectDir();
         $data       = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
 
-        codecept_debug("Replacing All Instances Of {$workDir} with {$projectDir}");
+        codecept_debug("Replacing all instances of {$workDir} with {$projectDir}");
 
         foreach ($data as $path => $datum) {
             unset($data[$path]);
