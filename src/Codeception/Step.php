@@ -174,7 +174,7 @@ abstract class Step
     {
         if ($argument instanceof \Closure) {
             return 'Closure';
-span class="pl-s1">         } elseif ($argument instanceof MockObject) {
+        } elseif ($argument instanceof MockObject) {
             return $this->formatClassName($argument->__mocked);
         }
 
