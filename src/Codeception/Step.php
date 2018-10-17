@@ -174,7 +174,7 @@ abstract class Step
     {
         if ($argument instanceof \Closure) {
             return 'Closure';
-        } elseif (in_array(MockObject::class, class_implements(get_class($argument)))) {
+span class="pl-s1">         } elseif ($argument instanceof MockObject) {
             return $this->formatClassName($argument->__mocked);
         }
 
