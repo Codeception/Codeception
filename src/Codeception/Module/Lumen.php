@@ -220,16 +220,18 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
      */
     private function getRouteByName($routeName)
     {
-        foreach ($this->app->getRoutes() as $route) {
-            if ($route['method'] != 'GET') {
-                return;
-            }
-
+        if (isset($this->app->router) && $this->app->router instanceof \Laravel\Lumen\Routing\Router) {
+            $router = $this->app->router;
+        } else {
+            // backward compatibility with lumen 5.3
+            $router = $this->app;
+        }
+        foreach ($router->getRoutes() as $route) {
             if (isset($route['action']['as']) && $route['action']['as'] == $routeName) {
                 return $route;
             }
         }
-
+        $this->fail("Route with name '$routeName' does not exist");
         return null;
     }
 

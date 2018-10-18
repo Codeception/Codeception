@@ -531,7 +531,7 @@ class WebDriver extends CodeceptionModule implements
     /**
      * Print out latest Selenium Logs in debug mode
      *
-     * @param TestInterface $test
+     * @param \Codeception\TestInterface $test
      */
     public function debugWebDriverLogs(TestInterface $test = null)
     {
@@ -2338,6 +2338,27 @@ class WebDriver extends CodeceptionModule implements
     public function waitForElementNotVisible($element, $timeout = 10)
     {
         $condition = WebDriverExpectedCondition::invisibilityOfElementLocated($this->getLocator($element));
+        $this->webDriver->wait($timeout)->until($condition);
+    }
+
+    /**
+     * Waits up to $timeout seconds for the given element to be clickable.
+     * If element doesn't become clickable, a timeout exception is thrown.
+     *
+     * ``` php
+     * <?php
+     * $I->waitForElementClickable('#agree_button', 30); // secs
+     * $I->click('#agree_button');
+     * ?>
+     * ```
+     *
+     * @param $element
+     * @param int $timeout seconds
+     * @throws \Exception
+     */
+    public function waitForElementClickable($element, $timeout = 10)
+    {
+        $condition = WebDriverExpectedCondition::elementToBeClickable($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
     }
 
