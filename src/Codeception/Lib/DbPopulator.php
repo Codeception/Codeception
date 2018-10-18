@@ -67,14 +67,16 @@ class DbPopulator
         }
 
         $vars = array_merge($dsnVars, $this->config);
-        unset($vars['dump']); //JIC Dumpfile is Null and Dump is an Array (Shouldn't Happen)
 
         if ($dumpFile !== null) {
             $vars['dump'] = $dumpFile;
         }
 
         foreach ($vars as $key => $value) {
-            $vars['$'.$key] = $value;
+            if (!is_array($value)) {
+                $vars['$'.$key] = $value;
+            }
+
             unset($vars[$key]);
         }
         return str_replace(array_keys($vars), array_values($vars), $command);

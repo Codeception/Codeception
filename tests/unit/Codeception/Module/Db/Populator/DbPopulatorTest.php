@@ -16,8 +16,8 @@ class DbPopulatorTest extends \Codeception\Test\Unit
                 'dsn'       => 'mysql:host=127.0.0.1;dbname=my_db',
                 'dump'      => 'tests/data/dumps/sqlite.sql',
                 'user'      => 'root',
-                'populator' => 'mysql -u $user -h $host -D $dbname < $dump'
-
+                'populator' => 'mysql -u $user -h $host -D $dbname < $dump',
+                'databases' => []
             ]
         );
 
