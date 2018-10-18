@@ -122,7 +122,41 @@ class LocalServer extends SuiteSubscriber
         if ($coverage === false) {
             return;
         }
-        $this->mergeToPrint($coverage);
+
+        $this->preProcessCoverage($coverage)
+             ->mergeToPrint($coverage);
+    }
+
+    /**
+     * Allows Translating Remote Paths To Local (IE: When Using Docker)
+     *
+     * @param \SebastianBergmann\CodeCoverage\CodeCoverage $coverage
+     * @return $this
+     */
+    protected function preProcessCoverage($coverage)
+    {
+        //Only Process If Work Directory Set
+        if ($this->settings['work_dir'] === null) {
+            return $this;
+        }
+
+        $workDir    = rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
+        $projectDir = Configuration::projectDir();
+        $data       = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
+
+        codecept_debug("Replacing all instances of {$workDir} with {$projectDir}");
+
+        foreach ($data as $path => $datum) {
+            unset($data[$path]);
+
+            $path = str_replace($workDir, $projectDir, $path);
+
+            $data[$path] = $datum;
+        }
+
+        $coverage->setData($data);
+
+        return $this;
     }
 
     protected function c3Request($action)
