@@ -74,6 +74,17 @@ use Codeception\Util\ActionSequence;
  *              ssl_verify_server_cert: false
  *              ssl_cipher: 'AES256-SHA'
  *
+ * ## Example with multi-dumps
+ *     modules:
+ *          enabled:
+ *             - Db:
+ *                dsn: 'mysql:host=localhost;dbname=testdb'
+ *                user: 'root'
+ *                password: ''
+ *                dump:
+ *                   - 'tests/_data/dump.sql'
+ *                   - 'tests/_data/dump-2.sql'
+ *
  * ## Example with multi-databases
  *
  *     modules:
