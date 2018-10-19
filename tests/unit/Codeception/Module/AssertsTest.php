@@ -1,73 +1,124 @@
 <?php
 class AssertsTest extends \PHPUnit\Framework\TestCase
 {
+    /** @var \Codeception\Module\Asserts */
+    protected $module;
+
+    public function setUp()
+    {
+        $this->module = new \Codeception\Module\Asserts(make_container());
+    }
+
     public function testAsserts()
     {
-        $module = new \Codeception\Module\Asserts(make_container());
-        $module->assertEquals(1, 1);
-        $module->assertContains(1, [1, 2]);
-        $module->assertSame(1, 1);
-        $module->assertNotSame(1, '1');
-        $module->assertRegExp('/^[\d]$/', '1');
-        $module->assertNotRegExp('/^[a-z]$/', '1');
-        $module->assertStringStartsWith('fo', 'foo');
-        $module->assertStringStartsNotWith('ba', 'foo');
-        $module->assertEmpty([]);
-        $module->assertNotEmpty([1]);
-        $module->assertNull(null);
-        $module->assertNotNull('');
-        $module->assertNotNull(false);
-        $module->assertNotNull(0);
-        $module->assertTrue(true);
-        $module->assertNotTrue(false);
-        $module->assertNotTrue(null);
-        $module->assertNotTrue('foo');
-        $module->assertFalse(false);
-        $module->assertNotFalse(true);
-        $module->assertNotFalse(null);
-        $module->assertNotFalse('foo');
-        $module->assertFileExists(__FILE__);
-        $module->assertFileNotExists(__FILE__ . '.notExist');
-        $module->assertInstanceOf('Exception', new Exception());
-        $module->assertInternalType('integer', 5);
-        $module->assertArrayHasKey('one', ['one' => 1, 'two' => 2]);
-        $module->assertArraySubset(['foo' => [1]], ['foo' => [1, 2]]);
-        $module->assertCount(3, [1, 2, 3]);
+        $this->module->assertEquals(1, 1);
+        $this->module->assertContains(1, [1, 2]);
+        $this->module->assertSame(1, 1);
+        $this->module->assertNotSame(1, '1');
+        $this->module->assertRegExp('/^[\d]$/', '1');
+        $this->module->assertNotRegExp('/^[a-z]$/', '1');
+        $this->module->assertStringStartsWith('fo', 'foo');
+        $this->module->assertStringStartsNotWith('ba', 'foo');
+        $this->module->assertEmpty([]);
+        $this->module->assertNotEmpty([1]);
+        $this->module->assertNull(null);
+        $this->module->assertNotNull('');
+        $this->module->assertNotNull(false);
+        $this->module->assertNotNull(0);
+        $this->module->assertTrue(true);
+        $this->module->assertNotTrue(false);
+        $this->module->assertNotTrue(null);
+        $this->module->assertNotTrue('foo');
+        $this->module->assertFalse(false);
+        $this->module->assertNotFalse(true);
+        $this->module->assertNotFalse(null);
+        $this->module->assertNotFalse('foo');
+        $this->module->assertFileExists(__FILE__);
+        $this->module->assertFileNotExists(__FILE__ . '.notExist');
+        $this->module->assertInstanceOf('Exception', new Exception());
+        $this->module->assertInternalType('integer', 5);
+        $this->module->assertArrayHasKey('one', ['one' => 1, 'two' => 2]);
+        $this->module->assertArraySubset(['foo' => [1]], ['foo' => [1, 2]]);
+        $this->module->assertCount(3, [1, 2, 3]);
     }
 
     public function testExceptions()
     {
-        $module = new \Codeception\Module\Asserts(make_container());
-        $module->expectException('Exception', function () {
+        $this->module->expectException('Exception', function () {
             throw new Exception;
         });
-        $module->expectException(new Exception('here'), function () {
+        $this->module->expectException(new Exception('here'), function () {
             throw new Exception('here');
         });
-        $module->expectException(new Exception('here', 200), function () {
+        $this->module->expectException(new Exception('here', 200), function () {
             throw new Exception('here', 200);
         });
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     */
     public function testExceptionFails()
     {
-        $module = new \Codeception\Module\Asserts(make_container());
-        $module->expectException(new Exception('here', 200), function () {
+        $this->expectException(PHPUnit\Framework\AssertionFailedError::class);
+
+        $this->module->expectException(new Exception('here', 200), function () {
             throw new Exception('here', 2);
         });
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     * @expectedExceptionMessageRegExp /RuntimeException/
-     */
     public function testOutputExceptionTimeWhenNothingCaught()
     {
-        $module = new \Codeception\Module\Asserts(make_container());
-        $module->expectException(RuntimeException::class, function () {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectExceptionMessageRegExp('/RuntimeException/');
+
+        $this->module->expectException(RuntimeException::class, function () {
+        });
+    }
+
+    public function testExpectThrowable()
+    {
+        $this->module->expectThrowable('Exception', function () {
+            throw new Exception();
+        });
+        $this->module->expectThrowable(new Exception('here'), function () {
+            throw new Exception('here');
+        });
+        $this->module->expectThrowable(new Exception('here', 200), function () {
+            throw new Exception('here', 200);
+        });
+    }
+
+    public function testExpectThrowableFailOnDifferentClass()
+    {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+
+        $this->module->expectThrowable(new RuntimeException(), function () {
+            throw new Exception();
+        });
+    }
+
+    public function testExpectThrowableFailOnDifferentMessage()
+    {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+
+        $this->module->expectThrowable(new Exception('foo', 200), function () {
+            throw new Exception('bar', 200);
+        });
+    }
+
+    public function testExpectThrowableFailOnDifferentCode()
+    {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+
+        $this->module->expectThrowable(new Exception('foobar', 200), function () {
+            throw new Exception('foobar', 2);
+        });
+    }
+
+    public function testExpectThrowableFailOnNothingCaught()
+    {
+        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectExceptionMessageRegExp('/RuntimeException/');
+
+        $this->module->expectThrowable(RuntimeException::class, function () {
         });
     }
 }

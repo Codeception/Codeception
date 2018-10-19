@@ -18,7 +18,7 @@ class SnapshotDataCest
         ]);
 
         $snapshot->shouldRefreshSnapshot(false);
-        $I->expectException(\PHPUnit\Framework\AssertionFailedError::class, function() use ($snapshot) {
+        $I->expectThrowable(\PHPUnit\Framework\AssertionFailedError::class, function() use ($snapshot) {
             $snapshot->assert();
         });
     }

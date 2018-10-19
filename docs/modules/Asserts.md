@@ -314,30 +314,39 @@ Checks that condition is positive.
 
 
 ### expectException
- 
-Handles and checks exception called inside callback function.
-Either exception class name or exception instance should be provided.
 
-```php
-<?php
-$I->expectException(MyException::class, function() {
-    $this->doSomethingBad();
-});
-
-$I->expectException(new MyException(), function() {
-    $this->doSomethingBad();
-});
-```
-If you want to check message or exception code, you can pass them with exception instance:
-```php
-<?php
-// will check that exception MyException is thrown with "Don't do bad things" message
-$I->expectException(new MyException("Don't do bad things"), function() {
-    $this->doSomethingBad();
-});
-```
+@see expectThrowable
+@deprecated Use expectThrowable instead.
 
  * `param` $exception string or \Exception
+ * `param` $callback
+
+
+### expectThrowable
+ 
+Handles and checks throwables (Exceptions/Errors) called inside the callback function.
+Either throwable class name or throwable instance should be provided.
+
+```php
+<?php
+$I->expectThrowable(MyThrowable::class, function() {
+    $this->doSomethingBad();
+});
+
+$I->expectThrowable(new MyException(), function() {
+    $this->doSomethingBad();
+});
+```
+If you want to check message or throwable code, you can pass them with throwable instance:
+```php
+<?php
+// will check that throwable MyError is thrown with "Don't do bad things" message
+$I->expectThrowable(new MyError("Don't do bad things"), function() {
+    $this->doSomethingBad();
+});
+```
+
+ * `param` $throwable string or \Throwable
  * `param` $callback
 
 

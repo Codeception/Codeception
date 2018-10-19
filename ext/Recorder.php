@@ -464,6 +464,10 @@ EOF;
             $status = 'error';
 
             try {
+                if ($this->webDriverModule->webDriver === null) {
+                    throw new ExtensionException($this, 'Failed to save screenshot as webDriver is not set');
+                }
+
                 $this->webDriverModule->webDriver->takeScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
             } catch (\Exception $exception) {
                 $this->appendErrorMessage(
@@ -546,6 +550,10 @@ EOF;
         $filename = str_pad($this->stepNum, 3, '0', STR_PAD_LEFT) . '.png';
 
         try {
+            if ($this->webDriverModule->webDriver === null) {
+                throw new ExtensionException($this, 'Failed to save screenshot as webDriver is not set');
+            }
+
             $this->webDriverModule->webDriver->takeScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
         } catch (\Exception $exception) {
             $testPath = codecept_relative_path(Descriptor::getTestFullName($e->getTest()));
