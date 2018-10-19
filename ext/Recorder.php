@@ -568,7 +568,7 @@ EOF;
     }
 
     /**
-     * @param Step $step
+     * @param StepEvent $e
      *
      * @return bool
      */
