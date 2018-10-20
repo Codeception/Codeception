@@ -22,8 +22,8 @@ class DbPopulatorTest extends \Codeception\Test\Unit
         );
 
         $this->assertEquals(
-            'mysql -u root -h 127.0.0.1 -D my_db < tests/data/dumps/sqlite.sql',
-            $populator->getBuiltCommand()
+            ['mysql -u root -h 127.0.0.1 -D my_db < tests/data/dumps/sqlite.sql'],
+            $populator->buildCommands()
         );
     }
 
@@ -48,7 +48,7 @@ class DbPopulatorTest extends \Codeception\Test\Unit
                 'mysql -u root -h 127.0.0.1 -D my_db < tests/data/dumps/sqlite.sql',
                 'mysql -u root -h 127.0.0.1 -D my_db < tests/data/dumps/sqlite2.sql'
             ],
-            $populator->getBuiltCommand()
+            $populator->buildCommands()
         );
     }
 
@@ -59,8 +59,8 @@ class DbPopulatorTest extends \Codeception\Test\Unit
             'user' => 'root',
         ]);
         $this->assertEquals(
-            'noop_tool -u root -h $host -D $dbname < $dump',
-            $populator->getBuiltCommand()
+            ['noop_tool -u root -h $host -D $dbname < $dump'],
+            $populator->buildCommands()
         );
 
     }

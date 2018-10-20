@@ -30,7 +30,7 @@ class DbPopulator
 
         //Convert To Array Format
         if (isset($this->config['dump']) && !is_array($this->config['dump'])) {
-            $this->config['dump'] = array($this->config['dump']);
+            $this->config['dump'] = [$this->config['dump']];
         }
     }
 
@@ -91,10 +91,6 @@ class DbPopulator
      */
     public function run()
     {
-        if (!isset($this->config['dump']) || $this->config['dump'] === false) {
-            return $this->runCommand((string) $this->config['populator']);
-        }
-
         foreach ($this->buildCommands() as $command) {
             $this->runCommand($command);
         }
@@ -117,38 +113,22 @@ class DbPopulator
         }
 
         codecept_debug("[Db] Populator Finished.");
-        return true;
     }
 
-    private function buildCommands()
+    public function buildCommands()
     {
         if ($this->commands !== null) {
             return $this->commands;
-        } else if (!isset($this->config['dump'])) {
-            return $this->buildCommand($this->config['populator']);
+        } else if (!isset($this->config['dump']) || $this->config['dump'] === false) {
+            return [$this->buildCommand($this->config['populator'])];
         }
 
-        $this->commands = array();
+        $this->commands = [];
 
         foreach ($this->config['dump'] as $dumpFile) {
             $this->commands[] = $this->buildCommand($this->config['populator'], $dumpFile);
         }
 
         return $this->commands;
-    }
-
-    /**
-     * @return array|string
-     */
-    public function getBuiltCommand()
-    {
-        $commands = $this->buildCommands();
-        if (empty($commands)) {
-            return '';
-        } elseif (is_string($commands)) {
-            return $commands;
-        }
-
-        return count($commands) > 1 ? $commands : $commands[0]; //Only Return First Instance If Only One Command
     }
 }

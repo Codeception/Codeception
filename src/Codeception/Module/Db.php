@@ -457,7 +457,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
 
         if (!is_array($databaseConfig['dump'])) {
-            $databaseConfig['dump'] = array($databaseConfig['dump']);
+            $databaseConfig['dump'] = [$databaseConfig['dump']];
         }
 
         $sql = '';
