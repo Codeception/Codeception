@@ -91,6 +91,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         'bootstrap'  => 'app/config/bootstrap.php',
         'cleanup'    => true,
         'savepoints' => true,
+        'session'    => PhalconConnector\MemorySession::class
     ];
 
     /**
@@ -158,7 +159,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
 
         if ($this->di->has('session')) {
             // Destroy existing sessions of previous tests
-            $this->di['session'] = new PhalconConnector\MemorySession();
+            $this->di['session'] = $this->di->get($this->config['session']);
         }
 
         if ($this->di->has('cookies')) {
