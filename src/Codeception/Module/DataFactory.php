@@ -198,6 +198,15 @@ EOF;
         return ['Codeception\Lib\Interfaces\ORM' => $this->dependencyMessage];
     }
 
+
+    /**
+     * @throws ModuleException
+     */
+    public function onReconfigure()
+    {
+        $this->_beforeSuite();
+    }
+
     /**
      * Creates a model definition. This can be used from a helper:.
      *

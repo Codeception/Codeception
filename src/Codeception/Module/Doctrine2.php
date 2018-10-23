@@ -115,6 +115,14 @@ EOF;
         }
     }
 
+    /**
+     * @throws ModuleConfigException
+     */
+    public function onReconfigure()
+    {
+        $this->retrieveEntityManager();
+    }
+
     protected function retrieveEntityManager()
     {
         if ($this->dependentModule) {
