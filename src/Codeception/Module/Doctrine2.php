@@ -163,7 +163,9 @@ EOF;
         }
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
-                $this->em->getConnection()->rollback();
+                while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
+                    $this->em->getConnection()->rollback();
+                }
                 $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
             } catch (\PDOException $e) {
             }
