@@ -544,7 +544,7 @@ class Configuration
 
         if (!is_writable($dir)) {
             throw new ConfigurationException(
-                "Path for output is not writable. Please, set appropriate access mode for output path."
+                "Path for output is not writable. Please, set appropriate access mode for output path: {$dir}"
             );
         }
 
