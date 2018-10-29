@@ -62,13 +62,13 @@ error are you willing to tolerate in order to consider the two values equal.
 Regular example:
 ```php
 <?php
-$I->assertEquals($element->getChildrenCount(), 5);
+$I->assertEquals(5, $element->getChildrenCount());
 ```
 
 Floating-point example:
 ```php
 <?php
-$I->assertEquals($calculator->add(0.1, 0.2), 0.3, 'Calculator should add the two numbers correctly.', 0.01);
+$I->assertEquals(0.3, $calculator->add(0.1, 0.2), 'Calculator should add the two numbers correctly.', 0.01);
 ```
 
  * `param`        $expected
@@ -197,13 +197,13 @@ error are you willing to tolerate in order to consider the two values not equal.
 Regular example:
 ```php
 <?php
-$I->assertNotEquals($element->getChildrenCount(), 0);
+$I->assertNotEquals(0, $element->getChildrenCount());
 ```
 
 Floating-point example:
 ```php
 <?php
-$I->assertNotEquals($calculator->add(0.1, 0.2), 0.4, 'Calculator should add the two numbers correctly.', 0.01);
+$I->assertNotEquals(0.4, $calculator->add(0.1, 0.2), 'Calculator should add the two numbers correctly.', 0.01);
 ```
 
  * `param`        $expected
@@ -314,12 +314,33 @@ Checks that condition is positive.
 
 
 ### expectException
+ 
+Handles and checks exception called inside callback function.
+Either exception class name or exception instance should be provided.
 
-@see expectThrowable
-@deprecated Use expectThrowable instead.
+```php
+<?php
+$I->expectException(MyException::class, function() {
+    $this->doSomethingBad();
+});
+
+$I->expectException(new MyException(), function() {
+    $this->doSomethingBad();
+});
+```
+If you want to check message or exception code, you can pass them with exception instance:
+```php
+<?php
+// will check that exception MyException is thrown with "Don't do bad things" message
+$I->expectException(new MyException("Don't do bad things"), function() {
+    $this->doSomethingBad();
+});
+```
 
  * `param` $exception string or \Exception
  * `param` $callback
+
+@deprecated Use expectThrowable instead
 
 
 ### expectThrowable
@@ -356,4 +377,4 @@ Fails the test with message.
 
  * `param` $message
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>

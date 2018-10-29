@@ -1,3 +1,30 @@
+#### 2.5.1
+
+* Recorder extension improvements by @OneEyedSpaceFish. See #5177:
+  * HTML layout improvements
+  * Restructured tests to show nested output
+  * file operation exceptions / log them without throwing exceptions
+  * fix edge cases with file operations (too long wantTo, etc.)
+  * the ability to automatically purge old reports (from previous runs)
+  * display errors in the recorded page rather than saving it as error.png
+  * the ability not to display any Unicode characters if ANSI only output is requested
+  * the ability not to display any colors in output if no-colors is requested
+  * the ability to change colors in the generated list based on configuration
+* [Db] Made `_loadDump` unconditional like it was in 2.4. Fixed #5195 by @Naktibala
+* [Db] Allows to specify more than one dump file. See #5220 by @Fenikkusu
+* [WebDriver] Added `waitForElementClickable` by @FatBoyXPC 
+* Code coverage: added `work_dir` config option to map remote paths to local. See #5225 by @Fenikkusu 
+* [Lumen] Added Lumen 5.5+ support for getRoutes method by @lendormi
+* [Yii2] Restored `getApplication()` API by @Slamdunk 
+* [Yii2] Added deprecation doc to `getApplication()` by @Slamdunks
+* [Doctrine2] Reloading module on reconfigure to persist new configs. See #5241 by @joelmedeiros
+* [Doctrine2] Rollback all nested transactions created within test by @Dukecz
+* [DataFactory] Reloading module on reconfigure to persist new configs. See #5241 by @joelmedeiros
+* [Phalcon] Allows null content in response. By @Fenikkusu
+* [Phalcon] Added `session` config option to override session class. By @Fenikkusu
+* [Asserts] Added `expectThrowable()` method by @burned42
+* Use `*.yaml` for params loading
+
 #### 2.5.0
 
 * [**Snapshot testing**](https://codeception.com/docs/09-Data#Testing-Dynamic-Data-with-Snapshots) introduced. Test dynamic data sets by comparing current values with previously saved ones.
