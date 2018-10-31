@@ -5,6 +5,7 @@ namespace Codeception;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\ParamsLoader;
 use Codeception\Util\Autoload;
+use Codeception\Util\HttpCode;
 use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -157,7 +158,7 @@ class Configuration
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 
         if (!(file_exists($configDistFile) || file_exists($configFile))) {
-            throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
+            throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", HttpCode::NOT_FOUND);
         }
 
         // Preload config to retrieve params such that they are applied to codeception config file below

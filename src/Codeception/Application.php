@@ -3,6 +3,7 @@
 namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
+use Codeception\Util\HttpCode;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,7 +33,7 @@ class Application extends BaseApplication
         try {
             $this->readCustomCommandsFromConfig();
         } catch (ConfigurationException $e) {
-            if ($e->getCode() === 404) {
+            if ($e->getCode() === HttpCode::NOT_FOUND) {
                 return;
             }
             $this->renderException($e, new ConsoleOutput());
