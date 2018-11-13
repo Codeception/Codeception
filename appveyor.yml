@@ -4,7 +4,7 @@ platform: 'x86'
 branches:
   except:
     - gh-pages
-    
+
 cache:
   - c:\tools\php71 -> appveyor.yml
 
@@ -27,15 +27,15 @@ install:
   - SET PATH=C:\Program Files\PostgreSQL\9.3\bin\;%PATH%
   # php setup
   - IF EXIST c:\tools\php71 (SET PHP=0)
+  - ps: Set-Service wuauserv -StartupType Manual
   - IF %PHP%==1 cinst -y OpenSSL.Light
   - SET PATH=C:\Program Files\OpenSSL;%PATH%
   - cinst -y curl
   - SET PATH=C:\Program Files\curl;%PATH%
   - sc config wuauserv start= auto
-  - net start wuauserv
   - IF %PHP%==1 cinst -y php --version 7.1.14
   - IF %PHP%==1 cd c:\tools\php71
-  - IF %PHP%==1 copy php.ini-production php.ini  
+  - IF %PHP%==1 copy php.ini-production php.ini
   - IF %PHP%==1 echo extension_dir=ext >> php.ini
   - IF %PHP%==1 echo extension=php_openssl.dll >> php.ini
   - IF %PHP%==1 echo date.timezone="UTC" >> php.ini
@@ -55,5 +55,5 @@ before_test:
   - mysql -uroot -pPassword12! -e "CREATE DATABASE codeception_test"
 
 test_script:
-  - php codecept run cli --no-colors -n --skip-group coverage
-  - php codecept run unit -g core -g appveyor --no-colors -n
+  - codecept run cli --no-colors -n --skip-group coverage
+  - codecept run unit -g core -g appveyor --no-colors -n
