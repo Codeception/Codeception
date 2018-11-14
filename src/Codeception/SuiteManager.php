@@ -154,8 +154,11 @@ class SuiteManager
     {
         $runner->prepareSuite($this->suite, $options);
         $this->dispatcher->dispatch(Events::SUITE_BEFORE, new Event\SuiteEvent($this->suite, $result, $this->settings));
-        $runner->doEnhancedRun($this->suite, $result, $options);
-        $this->dispatcher->dispatch(Events::SUITE_AFTER, new Event\SuiteEvent($this->suite, $result, $this->settings));
+        try {
+            $runner->doEnhancedRun($this->suite, $result, $options);
+        } finally {
+            $this->dispatcher->dispatch(Events::SUITE_AFTER, new Event\SuiteEvent($this->suite, $result, $this->settings));
+        }
     }
 
     /**

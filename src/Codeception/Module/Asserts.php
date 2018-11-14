@@ -455,40 +455,100 @@ class Asserts extends CodeceptionModule
      *
      * @param $exception string or \Exception
      * @param $callback
+     *
+     * @deprecated Use expectThrowable instead
      */
     public function expectException($exception, $callback)
     {
-        $code = null;
-        $msg = null;
-        if (is_object($exception)) {
-            /** @var $exception \Exception  **/
-             $class = get_class($exception);
-            $msg = $exception->getMessage();
-            $code = $exception->getCode();
+        $this->expectThrowable($exception, $callback);
+    }
+
+    /**
+     * Handles and checks throwables (Exceptions/Errors) called inside the callback function.
+     * Either throwable class name or throwable instance should be provided.
+     *
+     * ```php
+     * <?php
+     * $I->expectThrowable(MyThrowable::class, function() {
+     *     $this->doSomethingBad();
+     * });
+     *
+     * $I->expectThrowable(new MyException(), function() {
+     *     $this->doSomethingBad();
+     * });
+     * ```
+     * If you want to check message or throwable code, you can pass them with throwable instance:
+     * ```php
+     * <?php
+     * // will check that throwable MyError is thrown with "Don't do bad things" message
+     * $I->expectThrowable(new MyError("Don't do bad things"), function() {
+     *     $this->doSomethingBad();
+     * });
+     * ```
+     *
+     * @param $throwable string or \Throwable
+     * @param $callback
+     */
+    public function expectThrowable($throwable, $callback)
+    {
+        if (is_object($throwable)) {
+            /** @var $throwable \Throwable */
+            $class = get_class($throwable);
+            $msg = $throwable->getMessage();
+            $code = $throwable->getCode();
         } else {
-            $class = $exception;
+            $class= $throwable;
+            $msg = null;
+            $code = null;
         }
+
         try {
             $callback();
-        } catch (\Exception $e) {
-            if (!$e instanceof $class) {
-                $this->fail(sprintf("Exception of class $class expected to be thrown, but %s caught", get_class($e)));
-            }
-            if (null !== $msg and $e->getMessage() !== $msg) {
-                $this->fail(sprintf(
-                    "Exception of $class expected to be '$msg', but actual message was '%s'",
-                    $e->getMessage()
-                ));
-            }
-            if (null !== $code and $e->getCode() !== $code) {
-                $this->fail(sprintf(
-                    "Exception of $class expected to have code $code, but actual code was %s",
-                    $e->getCode()
-                ));
-            }
-            $this->assertTrue(true); // increment assertion counter
+        } catch (\Exception $t) {
+            $this->checkThrowable($t, $class, $msg, $code);
+
+            return;
+        } catch (\Throwable $t) {
+            $this->checkThrowable($t, $class, $msg, $code);
+
             return;
         }
-        $this->fail("Expected exception of $class to be thrown, but nothing was caught");
+
+        $this->fail("Expected throwable of class '$class' to be thrown, but nothing was caught");
+    }
+
+    /**
+     * Check if the given throwable matches the expected data,
+     * fail (throws an exception) if it does not.
+     *
+     * @param \Throwable $throwable
+     * @param string $expectedClass
+     * @param string $expectedMsg
+     * @param int $expectedCode
+     */
+    protected function checkThrowable($throwable, $expectedClass, $expectedMsg, $expectedCode)
+    {
+        if (!($throwable instanceof $expectedClass)) {
+            $this->fail(sprintf(
+                "Exception of class '$expectedClass' expected to be thrown, but class '%s' was caught",
+                get_class($throwable)
+            ));
+        }
+
+        if (null !== $expectedMsg && $throwable->getMessage() !== $expectedMsg) {
+            $this->fail(sprintf(
+                "Exception of class '$expectedClass' expected to have message '$expectedMsg', but actual message was '%s'",
+                $throwable->getMessage()
+            ));
+        }
+
+        if (null !== $expectedCode && $throwable->getCode() !== $expectedCode) {
+            $this->fail(sprintf(
+                "Exception of class '$expectedClass' expected to have code '$expectedCode', but actual code was '%s'",
+                $throwable->getCode()
+            ));
+        }
+
+        $this->assertTrue(true); // increment assertion counter
     }
 }

@@ -232,4 +232,4 @@ $I->sendSoapRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
  * `param` $request
  * `param` $body
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/SOAP.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/SOAP.php">Help us to improve documentation. Edit module reference</a></div>

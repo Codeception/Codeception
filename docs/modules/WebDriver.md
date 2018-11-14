@@ -649,7 +649,7 @@ Can't be used with PhantomJS
  
 Print out latest Selenium Logs in debug mode
 
- * `param TestInterface` $test
+ * `param \Codeception\TestInterface` $test
 
 
 ### deleteSessionSnapshot
@@ -2064,6 +2064,23 @@ $I->waitForElementChange('#menu', function(WebDriverElement $el) {
 @throws \Codeception\Exception\ElementNotFound
 
 
+### waitForElementClickable
+ 
+Waits up to $timeout seconds for the given element to be clickable.
+If element doesn't become clickable, a timeout exception is thrown.
+
+``` php
+<?php
+$I->waitForElementClickable('#agree_button', 30); // secs
+$I->click('#agree_button');
+?>
+```
+
+ * `param` $element
+ * `param int` $timeout seconds
+@throws \Exception
+
+
 ### waitForElementNotVisible
  
 Waits up to $timeout seconds for the given element to become invisible.
@@ -2133,4 +2150,4 @@ $I->waitForText('foo', 30, '.title'); // secs
  * `param string` $selector optional
 @throws \Exception
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.4/src/Codeception/Module/WebDriver.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/WebDriver.php">Help us to improve documentation. Edit module reference</a></div>

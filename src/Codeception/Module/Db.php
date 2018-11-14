@@ -74,6 +74,17 @@ use Codeception\Util\ActionSequence;
  *              ssl_verify_server_cert: false
  *              ssl_cipher: 'AES256-SHA'
  *
+ * ## Example with multi-dumps
+ *     modules:
+ *          enabled:
+ *             - Db:
+ *                dsn: 'mysql:host=localhost;dbname=testdb'
+ *                user: 'root'
+ *                password: ''
+ *                dump:
+ *                   - 'tests/_data/dump.sql'
+ *                   - 'tests/_data/dump-2.sql'
+ *
  * ## Example with multi-databases
  *
  *     modules:
@@ -445,24 +456,45 @@ class Db extends CodeceptionModule implements DbInterface
             return;
         }
 
-        if (!file_exists(Configuration::projectDir() . $databaseConfig['dump'])) {
-            throw new ModuleConfigException(
-                __CLASS__,
-                "\nFile with dump doesn't exist.\n"
-                . "Please, check path for sql file: "
-                . $databaseConfig['dump']
-            );
+        if (!is_array($databaseConfig['dump'])) {
+            $databaseConfig['dump'] = [$databaseConfig['dump']];
         }
 
-        $sql = file_get_contents(Configuration::projectDir() . $databaseConfig['dump']);
+        $sql = '';
 
-        // remove C-style comments (except MySQL directives)
-        $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
+        foreach ($databaseConfig['dump'] as $filePath) {
+            $sql .= $this->readSqlFile($filePath);
+        }
 
         if (!empty($sql)) {
             // split SQL dump into lines
             $this->databasesSql[$databaseKey] = preg_split('/\r\n|\n|\r/', $sql, -1, PREG_SPLIT_NO_EMPTY);
         }
+    }
+
+    /**
+     * @param $filePath
+     *
+     * @return bool|null|string|string[]
+     * @throws \Codeception\Exception\ModuleConfigException
+     */
+    private function readSqlFile($filePath)
+    {
+        if (!file_exists(Configuration::projectDir() . $filePath)) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "\nFile with dump doesn't exist.\n"
+                . "Please, check path for sql file: "
+                . $filePath
+            );
+        }
+
+        $sql = file_get_contents(Configuration::projectDir() . $filePath);
+
+        // remove C-style comments (except MySQL directives)
+        $sql = preg_replace('%/\*(?!!\d+).*?\*/%s', '', $sql);
+
+        return $sql;
     }
 
     private function connect($databaseKey, $databaseConfig)
@@ -511,6 +543,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
 
         try {
+            $this->debugSection('Connecting To Db', ['config' => $databaseConfig, 'options' => $options]);
             $this->drivers[$databaseKey] = Driver::create($databaseConfig['dsn'], $databaseConfig['user'], $databaseConfig['password'], $options);
         } catch (\PDOException $e) {
             $message = $e->getMessage();

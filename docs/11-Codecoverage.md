@@ -129,6 +129,24 @@ But in case of running tests on a remote server we are not sure of it.
 
 CodeCoverage results from remote server will be saved to `tests/_output` directory. Please note that remote codecoverage results won't be displayed in console by the reason mentioned above: local and remote results can't be merged, and console displays results for local codecoverage.
 
+### Working Directory (Docker/Shared Mounts)
+
+If your remote server is accessed through a shared mount, or a mounted folder (IE: Docker Volumes), you can still get merged coverage details.
+Use the `work_dir` option to specify the work directory. When CodeCoverage runs, Codeception will update any path that matches the `work_dir` option to match the local current project directory.
+
+Given a docker command similar to:
+```bash
+docker run -v $(pwd):/workdir -w /workdir...
+```
+
+Use the below configuration to allow coverage mergers.
+```yaml
+coverage:
+    remote: false
+    work_dir: /workdir
+
+``` 
+
 ### Remote Context Options
 
 HTML report generation can at times take a little more time than the default 30 second timeout. Or maybe you want to alter SSL settings (verify_peer, for example)
