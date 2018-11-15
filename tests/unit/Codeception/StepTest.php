@@ -36,6 +36,11 @@ class StepTest extends \PHPUnit\Framework\TestCase
 
         $step = $this->getStep([null, [[Stub::make($this, []), 'testGetArguments']]]);
         $this->assertEquals('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
+
+        $mock = $this->createMock(get_class($this));
+        $step = $this->getStep([null, [[$mock, 'testGetArguments']]]);
+        $className = get_class($mock);
+        $this->assertEquals('["' . $className . '","testGetArguments"]', $step->getArgumentsAsString());
     }
 
     public function testGetHtml()
