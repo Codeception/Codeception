@@ -63,6 +63,10 @@ class Cest implements LoaderInterface
                 if (!empty($dataMethod)) {
                     try {
                         $data = ReflectionHelper::invokePrivateMethod($unit, $dataMethod);
+                        if ($data instanceof \Traversable) {
+                            $data = iterator_to_array($data, false);
+                        }
+
                         // allow to mix example and dataprovider annotations
                         $examples = array_merge($examples, $data);
                     } catch (\ReflectionException $e) {

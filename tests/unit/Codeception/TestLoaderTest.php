@@ -99,4 +99,14 @@ class TestLoaderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(3, $firstTest->count());
     }
+
+    public function testDataProviderReturningGenerator()
+    {
+        $this->testLoader->loadTest('SimpleWithDataProviderYieldGeneratorCest.php');
+        $tests = $this->testLoader->getTests();
+        /** @var \PHPUnit\Framework\DataProviderTestSuite $firstTest */
+        $firstTest = $tests[0];
+
+        $this->assertEquals(3, $firstTest->count());
+    }
 }
