@@ -97,7 +97,7 @@ class TestLoaderTest extends \PHPUnit\Framework\TestCase
         /** @var \PHPUnit\Framework\DataProviderTestSuite $firstTest */
         $firstTest = $tests[0];
 
-        $this->assertEquals(3, $firstTest->count());
+        $this->assertEquals(5, $firstTest->count());
     }
 
     public function testDataProviderReturningGenerator()
@@ -107,6 +107,6 @@ class TestLoaderTest extends \PHPUnit\Framework\TestCase
         /** @var \PHPUnit\Framework\DataProviderTestSuite $firstTest */
         $firstTest = $tests[0];
 
-        $this->assertEquals(3, $firstTest->count());
+        $this->assertEquals(5, $firstTest->count());
     }
 }

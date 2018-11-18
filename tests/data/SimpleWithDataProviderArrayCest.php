@@ -4,6 +4,9 @@ class SimpleWithDataProviderArrayCest
 {
     /**
      * @dataProvider getTestData
+     *
+     * @example ["fizz", "buzz"]
+     * @example [null, "test"]
      */
     public function helloWorld(\CodeGuy $I, \Codeception\Example $example) {
         $I->execute(function($example) {
