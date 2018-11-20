@@ -131,8 +131,7 @@ class JsonType
 
             preg_match_all('/:regex\((.*?[!"#$%&\'*+,.\/:;=?@^_`|~-])\)/', $type, $regexes);
 
-            $type = preg_replace_callback('/:regex\((.*?[!"#$%&\'*+,.\/:;=?@^_`|~-])\)/', function ($m)
-            {
+            $type = preg_replace_callback('/:regex\((.*?[!"#$%&\'*+,.\/:;=?@^_`|~-])\)/', function ($m) {
                 static $count = 0;
 
                 return ':regex($$' . $count++ . ')';
@@ -155,8 +154,7 @@ class JsonType
 
                 foreach ($filters as $filter) {
                     // Fill regex back in.
-                    $filter = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes)
-                    {
+                    $filter = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
                         $pos = intval(substr($m[0], 2));
                         return $regexes[1][$pos];
                     }, $filter);
