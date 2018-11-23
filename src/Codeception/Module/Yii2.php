@@ -351,7 +351,9 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             $this->loadedFixtures = [];
         }
 
-        $this->client->resetApplication();
+        if ($this->client !== null) {
+            $this->client->resetApplication();
+        }
 
         if (isset($this->connectionWatcher)) {
             $this->connectionWatcher->stop();
