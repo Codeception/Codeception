@@ -272,45 +272,24 @@ class PhpBrowserRestTest extends Unit
     }
 
     /**
-     * @Issue https://github.com/Codeception/Codeception/issues/1650
-     */
-    public function testHostHeader()
-    {
-        if (getenv('dependencies') === 'lowest') {
-            $this->markTestSkipped('This test can\'t pass with the lowest versions of dependencies');
-        }
-
-        $this->module->sendGET('/rest/http-host/');
-        $this->module->seeResponseContains('host: "localhost:8010"');
-
-        $this->module->haveHttpHeader('Host', 'www.example.com');
-        $this->module->sendGET('/rest/http-host/');
-        $this->module->seeResponseContains('host: "www.example.com"');
-    }
-
-    /**
      * @Issue 4203 https://github.com/Codeception/Codeception/issues/4203
-     * @depends testHostHeader
      */
     public function testSessionHeaderBackup()
     {
-        if (getenv('dependencies') === 'lowest') {
-            $this->markTestSkipped('This test can\'t pass with the lowest versions of dependencies');
-        }
 
-        $this->module->haveHttpHeader('Host', 'www.example.com');
-        $this->module->sendGET('/rest/http-host/');
-        $this->module->seeResponseContains('host: "www.example.com"');
+        $this->module->haveHttpHeader('foo', 'bar');
+        $this->module->sendGET('/rest/foo/');
+        $this->module->seeResponseContains('foo: "bar"');
 
         $session = $this->phpBrowser->_backupSession();
 
-        $this->module->haveHttpHeader('Host', 'www.localhost.com');
-        $this->module->sendGET('/rest/http-host/');
-        $this->module->seeResponseContains('host: "www.localhost.com"');
+        $this->module->haveHttpHeader('foo', 'baz');
+        $this->module->sendGET('/rest/foo/');
+        $this->module->seeResponseContains('foo: "baz"');
 
         $this->phpBrowser->_loadSession($session);
-        $this->module->sendGET('/rest/http-host/');
-        $this->module->seeResponseContains('host: "www.example.com"');
+        $this->module->sendGET('/rest/foo/');
+        $this->module->seeResponseContains('foo: "bar"');
     }
 
     protected function shouldFail()
@@ -320,7 +299,7 @@ class PhpBrowserRestTest extends Unit
 
     public function testGrabFromCurrentUrl()
     {
-        $this->module->sendGET('/rest/http-host/');
-        $this->assertEquals('/rest/http-host/', $this->phpBrowser->grabFromCurrentUrl());
+        $this->module->sendGET('/rest/foo/');
+        $this->assertEquals('/rest/foo/', $this->phpBrowser->grabFromCurrentUrl());
     }
 }
