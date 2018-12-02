@@ -4,6 +4,7 @@ namespace Codeception\PHPUnit\Log;
 use Codeception\Configuration;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Test;
+use PHPUnit\Framework\TestCase;
 
 class JUnit extends \PHPUnit\Util\Log\JUnit
 {
@@ -39,6 +40,24 @@ class JUnit extends \PHPUnit\Util\Log\JUnit
                 $numAssertions
             );
         }
-        parent::endTest($test, $time);
+
+        if ($test instanceof TestCase) {
+            parent::endTest($test, $time);
+            return;
+        }
+
+        // since PhpUnit 7.4.0, parent::endTest ignores tests that aren't instances of TestCase
+        // so I copied this code from PhpUnit 7.3.5
+
+        $this->currentTestCase->setAttribute(
+            'time',
+            \sprintf('%F', $time)
+        );
+        $this->testSuites[$this->testSuiteLevel]->appendChild(
+            $this->currentTestCase
+        );
+        $this->testSuiteTests[$this->testSuiteLevel]++;
+        $this->testSuiteTimes[$this->testSuiteLevel] += $time;
+        $this->currentTestCase = null;
     }
 }
