@@ -129,8 +129,11 @@ class JsonType
 
             $regexes = [];
 
+            // Match the string ':regex(' and any characters until a regex delimiter (matches 99.999% use cases) followed by character ')'
+            // Place the 'any character' + delimiter matches in to an array.
             preg_match_all('/:regex\((.*?[!"#$%&\'*+,.\/:;=?@^_`|~-])\)/', $type, $regexes);
 
+            // Do the same match as above, but replace the the 'any character' + delimiter with a place holder ($${count}).
             $type = preg_replace_callback('/:regex\((.*?[!"#$%&\'*+,.\/:;=?@^_`|~-])\)/', function ($m) {
                 static $count = 0;
 
@@ -155,7 +158,7 @@ class JsonType
                 foreach ($filters as $filter) {
                     // Fill regex back in.
                     $filter = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
-                        $pos = intval(substr($m[0], 2));
+                        $pos = (int)(substr($m[0], 2));
                         return $regexes[1][$pos];
                     }, $filter);
 
