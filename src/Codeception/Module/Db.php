@@ -639,7 +639,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
     }
 
-    public function isPopulated()
+    public function _isPopulated()
     {
         return $this->databasesPopulated[$this->currentDatabase];
     }
