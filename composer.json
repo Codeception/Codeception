@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "phpunit/phpunit": ">=7.1 <7.5",
+        "phpunit/phpunit": ">=7.1 <7.6",
         "phpunit/php-code-coverage": "^6.0",
         "sebastian/comparator": "^3.0",
         "sebastian/diff": "^3.0"
