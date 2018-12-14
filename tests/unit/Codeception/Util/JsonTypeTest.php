@@ -82,6 +82,12 @@ class JsonTypeTest extends \Codeception\Test\Unit
 
         $jsonType = new \Codeception\Util\JsonType(['time' => '21:00']);
         $this->assertTrue($jsonType->matches(['time' => 'string:regex(~^([0-1]\d|2[0-3]):[0-5]\d$~)']));
+        
+        $jsonType = new \Codeception\Util\JsonType(['text' => '21@:00']);
+        $this->assertTrue($jsonType->matches(['text' => 'string:regex(~^(\d\d@):\dd$~)']));
+        
+        $jsonType = new \Codeception\Util\JsonType(['text' => '21@:aa']);
+        $this->assertFalse($jsonType->matches(['text' => 'string:regex(~^(\d\d@):\dd$~)']));
     }
 
     public function testDateTimeFilter()
