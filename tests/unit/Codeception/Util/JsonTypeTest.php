@@ -80,13 +80,13 @@ class JsonTypeTest extends \Codeception\Test\Unit
         $jsonType = new JsonType(['code' => 'xyz']);
         $this->assertTrue($jsonType->matches(['code' => 'string:regex(~((xyz)|(abc))~)']));
 
-        $jsonType = new \Codeception\Util\JsonType(['time' => '21:00']);
+        $jsonType = new JsonType(['time' => '21:00']);
         $this->assertTrue($jsonType->matches(['time' => 'string:regex(~^([0-1]\d|2[0-3]):[0-5]\d$~)']));
 
-        $jsonType = new \Codeception\Util\JsonType(['text' => '21@:00']);
+        $jsonType = new JsonType(['text' => '21@:00']);
         $this->assertTrue($jsonType->matches(['text' => 'string:regex(~^(\d\d@):\d\d$~)']));
 
-        $jsonType = new \Codeception\Util\JsonType(['text' => '21@:aa']);
+        $jsonType = new JsonType(['text' => '21@:aa']);
         $this->assertNotTrue($jsonType->matches(['text' => 'string:regex(~^(\d\d@):\d\d$~)']));
     }
 
