@@ -52,7 +52,7 @@ settings:
     colors: true
 
     # Generate XML JUnit report using strict schema
-    # Avoid putting additional report fields like steps or scenario names tot it
+    # Avoid putting additional report fields like steps or scenario names to it
     # Required for XML reports on Jenkins CI
     strict_xml: false
 

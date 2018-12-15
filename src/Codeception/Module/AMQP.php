@@ -55,7 +55,8 @@ class AMQP extends CodeceptionModule implements RequiresPackage
         'port'           => '5672',
         'vhost'          => '/',
         'cleanup'        => true,
-        'single_channel' => false
+        'single_channel' => false,
+        'queues'         => []
     ];
 
     /**
@@ -274,6 +275,18 @@ class AMQP extends CodeceptionModule implements RequiresPackage
             $arguments,
             $ticket
         );
+    }
+
+    /**
+     * Add a queue to purge list
+     *
+     * @param string $queue
+     */
+    public function scheduleQueueCleanup($queue)
+    {
+        if (!in_array($queue, $this->config['queues'])) {
+            $this->config['queues'][] = $queue;
+        }
     }
 
     /**

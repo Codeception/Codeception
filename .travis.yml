@@ -1,5 +1,3 @@
-sudo: false
-
 language: php
 matrix:
   fast_finish: true
