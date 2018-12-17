@@ -21,6 +21,13 @@ if ($currentFramework === 'Codeception') {
     die();
 }
 $files = [];
+// Workaround for travis #4806
+passthru("git fetch origin $branch:$branch --depth 1", $return);
+if ($return !== 0) {
+    stderr("Git fetch failed");
+    die($return);
+}
+
 exec("git diff --name-only $branch --", $files, $return);
 if ($return !== 0) {
     stderr("Git diff failed");
