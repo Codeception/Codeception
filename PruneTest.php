@@ -21,7 +21,7 @@ if ($currentFramework === 'Codeception') {
     die();
 }
 $files = [];
-exec("git diff --name-only $branch", $files, $return);
+exec("git diff --name-only $branch --", $files, $return);
 if ($return !== 0) {
     stderr("Git diff failed");
     die($return);
