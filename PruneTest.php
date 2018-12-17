@@ -6,7 +6,7 @@
  * We check if changes in the source with respect to the configured branch are limited to framework files,
  * if that is the case and the current framework isn't one with changed files then we skip it.
  */
-$branch ="2.4";
+$branch ="2.5";
 
 
 function stderr($message)
@@ -21,8 +21,11 @@ if ($currentFramework === 'Codeception') {
     die();
 }
 $files = [];
-exec("git diff --name-only $branch", $files);
-
+exec("git diff --name-only $branch", $files, $return);
+if ($return !== 0) {
+    stderr("Git diff failed");
+    die($return);
+}
 // Regexes for frameworks:
 $regexes = [
     'Yii2' => '/.*Yii2.*/',
