@@ -108,7 +108,7 @@ class ArrayContainsComparator
         $ret = [];
         foreach ($commonKeys as $key) {
             $return = $this->arrayIntersectRecursive($arr1[$key], $arr2[$key]);
-            if ($return) {
+            if ($return !== false) {
                 $ret[$key] = $return;
                 continue;
             }
