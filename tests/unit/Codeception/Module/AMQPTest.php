@@ -38,6 +38,16 @@ class AMQPTest extends \PHPUnit\Framework\TestCase
         $this->module->seeMessageInQueueContainsText('queue1', 'hello');
     }
 
+    public function testCountQueue()
+    {
+        $this->module->pushToQueue('queue1', 'hello');
+        $this->module->pushToQueue('queue1', 'world');
+        $this->module->dontSeeQueueIsEmpty('queue1');
+        $this->module->seeNumberOfMessagesInQueue('queue1', 2);
+        $this->module->purgeAllQueues();
+        $this->module->seeQueueIsEmpty('queue1');
+    }
+
     public function testPushToExchange()
     {
         $queue = 'test-queue';
@@ -50,6 +60,6 @@ class AMQPTest extends \PHPUnit\Framework\TestCase
         $this->module->bindQueueToExchange($queue, $exchange, 'test.#');
 
         $this->module->pushToExchange($exchange, $message, $topic);
-        $this->module->seeMessageInQueueContainsText($queue , $message);
+        $this->module->seeMessageInQueueContainsText($queue, $message);
     }
 }

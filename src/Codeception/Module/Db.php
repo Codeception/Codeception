@@ -629,7 +629,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
         try {
             // don't clear database for empty dump
-            if (isset($this->databasesSql[$databaseKey]) && !count($this->databasesSql[$databaseKey])) {
+            if (!isset($this->databasesSql[$databaseKey]) || !count($this->databasesSql[$databaseKey])) {
                 return;
             }
             $this->drivers[$databaseKey]->cleanup();
