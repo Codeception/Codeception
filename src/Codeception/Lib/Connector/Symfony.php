@@ -36,6 +36,7 @@ class Symfony extends \Symfony\Component\HttpKernel\Client
         $this->followRedirects(true);
         $this->rebootable = (boolean)$rebootable;
         $this->persistentServices = $services;
+        $this->container = $this->kernel->getContainer();
         $this->rebootKernel();
     }
 
@@ -76,7 +77,9 @@ class Symfony extends \Symfony\Component\HttpKernel\Client
         $this->container = $this->kernel->getContainer();
 
         foreach ($this->persistentServices as $serviceName => $service) {
-            $this->container->set($serviceName, $service);
+            if (!$this->container->initialized($serviceName)) {
+                $this->container->set($serviceName, $service);
+            }
         }
 
         if ($this->container->has('profiler')) {
