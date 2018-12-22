@@ -138,7 +138,7 @@ class JsonType
             preg_match_all($regexMatcher, $type, $regexes);
 
             // Do the same match as above, but replace the the 'any character' + delimiter with a place holder ($${count}).
-            $type = preg_replace_callback($regexMatcher, function ($m) {
+            $type = preg_replace_callback($regexMatcher, function () {
                 static $count = 0;
                 return ':regex($$' . $count++ . ')';
             }, $type);
