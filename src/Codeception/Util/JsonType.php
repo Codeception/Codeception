@@ -119,55 +119,71 @@ class JsonType
             if (!array_key_exists($key, $data)) {
                 return "Key `$key` doesn't exist in " . json_encode($data);
             }
+
             if (is_array($jsonType[$key])) {
                 $message = $this->typeComparison($data[$key], $jsonType[$key]);
+
                 if (is_string($message)) {
                     return $message;
                 }
+
                 continue;
             }
 
+            $regexMatcher = '/:regex\((.*?)\)(?:\|(boolean|integer|double|float|string|array|object|resource|resource \(closed\)|null|unknown type)|$)/';
             $regexes = [];
 
             // Match the string ':regex(' and any characters until a regex delimiter (matches 99.999% use cases) followed by character ')'
             // Place the 'any character' + delimiter matches in to an array.
-            preg_match_all('/:regex\((.*?[!"#$%&\'*+,.\/:;=?@^_`|~-])\)/', $type, $regexes);
+            preg_match_all($regexMatcher, $type, $regexes);
 
             // Do the same match as above, but replace the the 'any character' + delimiter with a place holder ($${count}).
-            $type = preg_replace_callback('/:regex\((.*?[!"#$%&\'*+,.\/:;=?@^_`|~-])\)/', function ($m) {
+            $type = preg_replace_callback($regexMatcher, function ($m) {
                 static $count = 0;
-
                 return ':regex($$' . $count++ . ')';
             }, $type);
 
             $matchTypes  = preg_split("#(?![^]\(]*\))\|#", $type);
             $matched     = false;
             $currentType = strtolower(gettype($data[$key]));
-            if ($currentType == 'double') {
+
+            if ($currentType === 'double') {
                 $currentType = 'float';
             }
+
             foreach ($matchTypes as $matchType) {
                 $filters      = preg_split("#(?![^]\(]*\))\:#", $matchType);
                 $expectedType = trim(strtolower(array_shift($filters)));
 
-                if ($expectedType != $currentType) {
+                if ($expectedType !== $currentType) {
                     continue;
                 }
+
                 $matched = true;
 
                 foreach ($filters as $filter) {
-                    // Fill regex back in.
+                    // Fill regex pattern back in to the filter.
                     $filter = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
                         $pos = (int)(substr($m[0], 2));
+
                         return $regexes[1][$pos];
                     }, $filter);
 
+                    // Fill regex pattern back in to the type.
+                    $type = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
+                        $pos = (int)(substr($m[0], 2));
+
+                        return $regexes[1][$pos];
+                    }, $type);
+
                     $matched = $matched && $this->matchFilter($filter, $data[$key]);
                 }
+
                 if ($matched) {
                     break;
                 }
             }
+
             if (!$matched) {
                 return sprintf("`$key: %s` is of type `$type`", var_export($data[$key], true));
             }
