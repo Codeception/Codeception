@@ -162,14 +162,14 @@ class JsonType
                 $matched = true;
 
                 foreach ($filters as $filter) {
-                    // Fill regex pattern back in to the filter.
+                    // Fill regex pattern back into the filter.
                     $filter = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
                         $pos = (int)substr($m[0], 2);
 
                         return $regexes[1][$pos];
                     }, $filter);
 
-                    // Fill regex pattern back in to the type.
+                    // Fill regex pattern back into the type.
                     $type = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
                         $pos = (int)substr($m[0], 2);
 
