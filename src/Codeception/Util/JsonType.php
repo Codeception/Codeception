@@ -138,12 +138,12 @@ class JsonType
             preg_match_all($regexMatcher, $type, $regexes);
 
             // Do the same match as above, but replace the the 'any character' + delimiter with a place holder ($${count}).
-            $type = preg_replace_callback($regexMatcher, function () {
+            $filterType = preg_replace_callback($regexMatcher, function () {
                 static $count = 0;
                 return ':regex($$' . $count++ . ')';
             }, $type);
 
-            $matchTypes  = preg_split("#(?![^]\(]*\))\|#", $type);
+            $matchTypes  = preg_split("#(?![^]\(]*\))\|#", $filterType);
             $matched     = false;
             $currentType = strtolower(gettype($data[$key]));
 
@@ -168,13 +168,6 @@ class JsonType
 
                         return $regexes[1][$pos];
                     }, $filter);
-
-                    // Fill regex pattern back into the type.
-                    $type = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
-                        $pos = (int)substr($m[0], 2);
-
-                        return $regexes[1][$pos];
-                    }, $type);
 
                     $matched = $matched && $this->matchFilter($filter, $data[$key]);
                 }
