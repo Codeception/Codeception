@@ -57,15 +57,26 @@ class ZendExpressive extends Framework implements DoctrineProvider
         $projectDir = Configuration::projectDir();
         chdir($projectDir);
         $this->container = require $projectDir . $this->config['container'];
-        $app = $this->container->get('Zend\Expressive\Application');
+        $app = $this->container->get(\Zend\Expressive\Application::class);
+
+        $middlewareFactory = null;
+        if ($this->container->has(\Zend\Expressive\MiddlewareFactory::class)) {
+            $middlewareFactory = $this->container->get(\Zend\Expressive\MiddlewareFactory::class);
+        }
 
         $pipelineFile = $projectDir . 'config/pipeline.php';
         if (file_exists($pipelineFile)) {
-            require $pipelineFile;
+            $pipelineFunction = require $pipelineFile;
+            if (is_callable($pipelineFunction) && $middlewareFactory) {
+                $pipelineFunction($app, $middlewareFactory, $this->container);
+            }
         }
         $routesFile = $projectDir . 'config/routes.php';
         if (file_exists($routesFile)) {
-            require $routesFile;
+            $routesFunction = require $routesFile;
+            if (is_callable($routesFunction) && $middlewareFactory) {
+                $routesFunction($app, $middlewareFactory, $this->container);
+            }
         }
         chdir($cwd);
 
@@ -77,7 +88,9 @@ class ZendExpressive extends Framework implements DoctrineProvider
     {
         $this->client = new ZendExpressiveConnector();
         $this->client->setApplication($this->application);
-        $this->client->setResponseCollector($this->responseCollector);
+        if ($this->responseCollector) {
+            $this->client->setResponseCollector($this->responseCollector);
+        }
     }
 
     public function _after(TestInterface $test)
@@ -92,6 +105,11 @@ class ZendExpressive extends Framework implements DoctrineProvider
 
     private function initResponseCollector()
     {
+        if (!method_exists($this->application, 'getEmitter')) {
+            //Does not exist in Zend Expressive v3
+            return;
+        }
+
         /**
          * @var Zend\Expressive\Emitter\EmitterStack
          */

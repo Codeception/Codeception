@@ -76,25 +76,35 @@ class ZendExpressive extends Client
             $request->getUri(),
             $request->getMethod(),
             $inputStream,
-            $this->extractHeaders($request)
+            $this->extractHeaders($request),
+            $request->getCookies(),
+            $queryParams,
+            $postParams
         );
 
         $zendRequest = $zendRequest->withCookieParams($request->getCookies())
             ->withQueryParams($queryParams)
             ->withParsedBody($postParams);
 
-        $cwd = getcwd();
-        chdir(codecept_root_dir());
-        $this->application->run($zendRequest);
-        chdir($cwd);
-
         $this->request = $zendRequest;
 
-        $response = $this->responseCollector->getResponse();
-        $this->responseCollector->clearResponse();
+        $cwd = getcwd();
+        chdir(codecept_root_dir());
+
+        if (method_exists($this->application, 'handle')) {
+            //Zend Expressive v3
+            $response = $this->application->handle($zendRequest);
+        } else {
+            //Older versions
+            $this->application->run($zendRequest);
+            $response = $this->responseCollector->getResponse();
+            $this->responseCollector->clearResponse();
+        }
+
+        chdir($cwd);
 
         return new Response(
-            $response->getBody(),
+            (string)$response->getBody(),
             $response->getStatusCode(),
             $response->getHeaders()
         );
