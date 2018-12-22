@@ -47,7 +47,7 @@ interface Web
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param string $text
-     * @param string $selector optional
+     * @param array|string $selector optional
      */
     public function see($text, $selector = null);
 
@@ -78,7 +78,7 @@ interface Web
      * For checking the raw source code, use `seeInSource()`.
      *
      * @param string $text
-     * @param string $selector optional
+     * @param array|string $selector optional
      */
     public function dontSee($text, $selector = null);
     
