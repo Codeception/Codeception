@@ -153,7 +153,7 @@ class JsonType
 
             foreach ($matchTypes as $matchType) {
                 $filters      = preg_split("#(?![^]\(]*\))\:#", $matchType);
-                $expectedType = trim(strtolower(array_shift($filters)));
+                $expectedType = strtolower(trim(array_shift($filters)));
 
                 if ($expectedType !== $currentType) {
                     continue;
@@ -164,14 +164,14 @@ class JsonType
                 foreach ($filters as $filter) {
                     // Fill regex pattern back in to the filter.
                     $filter = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
-                        $pos = (int)(substr($m[0], 2));
+                        $pos = (int)substr($m[0], 2);
 
                         return $regexes[1][$pos];
                     }, $filter);
 
                     // Fill regex pattern back in to the type.
                     $type = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
-                        $pos = (int)(substr($m[0], 2));
+                        $pos = (int)substr($m[0], 2);
 
                         return $regexes[1][$pos];
                     }, $type);
