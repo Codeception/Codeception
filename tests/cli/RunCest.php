@@ -98,6 +98,44 @@ class RunCest
      *
      * @param CliGuy $I
      */
+    public function runPhpUnitXmlReport(\CliGuy $I)
+    {
+        $I->wantTo('check phpunit xml reports');
+        $I->executeCommand('run dummy --phpunit-xml');
+        $I->seeInShellOutput('PHPUNIT-XML report generated in');
+        $I->seeFileFound('phpunit-report.xml', 'tests/_output');
+        $I->seeInThisFile('<?xml');
+        $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        $I->seeThisFileMatches('/<testsuite file=".*?AnotherCest.php"/');
+        $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php"/');
+        $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        $I->seeInThisFile('<testcase name="FileExists"');
+        $I->seeInThisFile('feature="');
+    }
+
+    /**
+     * @group reports
+     * @param CliGuy $I
+     */
+    public function runPhpUnitXmlReportsInStrictMode(\CliGuy $I)
+    {
+        $I->wantTo('check phpunit xml in strict mode');
+        $I->executeCommand('run dummy --phpunit-xml -c codeception_strict_xml.yml');
+        $I->seeInShellOutput('PHPUNIT-XML report generated in');
+        $I->seeFileFound('phpunit-report.xml', 'tests/_output');
+        $I->seeInThisFile('<?xml');
+        $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        $I->seeThisFileMatches('/<testsuite file=".*?AnotherCest.php"/');
+        $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php"/');
+        $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        $I->dontSeeInThisFile('feature="');
+    }
+
+    /**
+     * @group reports
+     *
+     * @param CliGuy $I
+     */
     public function runCustomReport(\CliGuy $I)
     {
         if (\PHPUnit\Runner\Version::series() >= 7) {

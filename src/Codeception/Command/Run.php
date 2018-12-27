@@ -60,6 +60,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --report              Show output in compact style
  *  --html                Generate html with results (default: "report.html")
  *  --xml                 Generate JUnit XML Log (default: "report.xml")
+ *  --phpunit-xml         Generate PhpUnit XML Log (default: "phpunit-report.xml")
  *  --tap                 Generate Tap Log (default: "report.tap.log")
  *  --json                Generate Json Log (default: "report.json")
  *  --colors              Use colors in output
@@ -128,6 +129,7 @@ class Run extends Command
             new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
             new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html'),
             new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
+            new InputOption('phpunit-xml', '', InputOption::VALUE_OPTIONAL, 'Generate PhpUnit XML Log', 'phpunit-report.xml'),
             new InputOption('tap', '', InputOption::VALUE_OPTIONAL, 'Generate Tap Log', 'report.tap.log'),
             new InputOption('json', '', InputOption::VALUE_OPTIONAL, 'Generate Json Log', 'report.json'),
             new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
@@ -268,6 +270,7 @@ class Run extends Command
             $userOptions,
             $this->booleanOptions($input, [
                 'xml' => 'report.xml',
+                'phpunit-xml' => 'phpunit-report.xml',
                 'html' => 'report.html',
                 'json' => 'report.json',
                 'tap' => 'report.tap.log',
