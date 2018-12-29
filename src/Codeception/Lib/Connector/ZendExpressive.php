@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Configuration;
 use Codeception\Lib\Connector\ZendExpressive\ResponseCollector;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
@@ -16,28 +17,21 @@ class ZendExpressive extends Client
     /**
      * @var Application
      */
-    protected $application;
-
+    private $application;
     /**
      * @var ResponseCollector
      */
-    protected $responseCollector;
+    private $responseCollector;
 
     /**
-     * @param Application
+     * @var \Interop\Container\ContainerInterface
      */
-    public function setApplication(Application $application)
-    {
-        $this->application = $application;
-    }
+    private $container;
 
     /**
-     * @param ResponseCollector $responseCollector
+     * @var array Configuration of the module
      */
-    public function setResponseCollector(ResponseCollector $responseCollector)
-    {
-        $this->responseCollector = $responseCollector;
-    }
+    private $config;
 
     /**
      * @param Request $request
@@ -91,12 +85,18 @@ class ZendExpressive extends Client
         $cwd = getcwd();
         chdir(codecept_root_dir());
 
-        if (method_exists($this->application, 'handle')) {
+        if ($this->config['recreateApplicationBetweenTests'] === true || $this->application === null) {
+            $application = $this->initApplication();
+        } else {
+            $application = $this->application;
+        }
+
+        if (method_exists($application, 'handle')) {
             //Zend Expressive v3
-            $response = $this->application->handle($zendRequest);
+            $response = $application->handle($zendRequest);
         } else {
             //Older versions
-            $this->application->run($zendRequest);
+            $application->run($zendRequest);
             $response = $this->responseCollector->getResponse();
             $this->responseCollector->clearResponse();
         }
@@ -148,5 +148,79 @@ class ZendExpressive extends Client
         }
 
         return $headers;
+    }
+
+    public function initApplication()
+    {
+        $cwd = getcwd();
+        $projectDir = Configuration::projectDir();
+        chdir($projectDir);
+        $this->container = require $projectDir . $this->config['container'];
+        $app = $this->container->get(\Zend\Expressive\Application::class);
+
+        $middlewareFactory = null;
+        if ($this->container->has(\Zend\Expressive\MiddlewareFactory::class)) {
+            $middlewareFactory = $this->container->get(\Zend\Expressive\MiddlewareFactory::class);
+        }
+
+        $pipelineFile = $projectDir . 'config/pipeline.php';
+        if (file_exists($pipelineFile)) {
+            $pipelineFunction = require $pipelineFile;
+            if (is_callable($pipelineFunction) && $middlewareFactory) {
+                $pipelineFunction($app, $middlewareFactory, $this->container);
+            }
+        }
+        $routesFile = $projectDir . 'config/routes.php';
+        if (file_exists($routesFile)) {
+            $routesFunction = require $routesFile;
+            if (is_callable($routesFunction) && $middlewareFactory) {
+                $routesFunction($app, $middlewareFactory, $this->container);
+            }
+        }
+        chdir($cwd);
+
+        $this->application = $app;
+
+        $this->initResponseCollector();
+
+        return $app;
+    }
+
+    private function initResponseCollector()
+    {
+        if (!method_exists($this->application, 'getEmitter')) {
+            //Does not exist in Zend Expressive v3
+            return;
+        }
+
+        /**
+         * @var Zend\Expressive\Emitter\EmitterStack
+         */
+        $emitterStack = $this->application->getEmitter();
+        while (!$emitterStack->isEmpty()) {
+            $emitterStack->pop();
+        }
+
+        $this->responseCollector = new ResponseCollector;
+        $emitterStack->unshift($this->responseCollector);
+    }
+
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @param Application
+     */
+    public function setApplication(Application $application)
+    {
+        $this->application = $application;
+        $this->initResponseCollector();
+    }
+
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
     }
 }
