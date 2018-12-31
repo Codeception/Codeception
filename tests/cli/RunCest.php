@@ -105,10 +105,18 @@ class RunCest
         $I->seeInShellOutput('PHPUNIT-XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
-        $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        if (\PHPUnit\Runner\Version::series() < 6) {
+            $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" failures="0" errors="0" time=');
+        } else {
+            $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        }
         $I->seeThisFileMatches('/<testsuite file=".*?AnotherCest.php"/');
         $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php"/');
-        $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        if (\PHPUnit\Runner\Version::series() < 6) {
+            $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php" tests="2" assertions="2" failures="0" errors="0" time=/');
+        } else {
+            $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        }
         $I->seeInThisFile('<testcase name="FileExists"');
         $I->seeInThisFile('feature="');
     }
@@ -124,10 +132,18 @@ class RunCest
         $I->seeInShellOutput('PHPUNIT-XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
-        $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        if (\PHPUnit\Runner\Version::series() < 6) {
+            $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" failures="0" errors="0" time=');
+        } else {
+            $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        }
         $I->seeThisFileMatches('/<testsuite file=".*?AnotherCest.php"/');
         $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php"/');
-        $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        if (\PHPUnit\Runner\Version::series() < 6) {
+            $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php" tests="2" assertions="2" failures="0" errors="0" time=/');
+        } else {
+            $I->seeThisFileMatches('/<testsuite file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        }
         $I->dontSeeInThisFile('feature="');
     }
 
