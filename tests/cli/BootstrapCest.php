@@ -34,6 +34,22 @@ class BootstrapCest
         $I->seeInThisFile('namespace Generated;');
     }
 
+    public function bootstrapWithNamespaceShortcut(\CliGuy $I)
+    {
+        $I->executeCommand('bootstrap -s Generated');
+
+        $I->seeFileFound('codeception.yml');
+        $I->seeInThisFile('namespace: Generated');
+        $I->dontSeeInThisFile('namespace Generated\\');
+        $this->checkFilesCreated($I);
+
+        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
+        $I->seeInThisFile('namespace Generated\Helper;');
+
+        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
+        $I->seeInThisFile('namespace Generated;');
+    }
+
     public function bootstrapWithActor(\CliGuy $I)
     {
         $I->executeCommand('bootstrap --actor Ninja');
