@@ -504,7 +504,7 @@ class Asserts extends CodeceptionModule
             $callback();
         } catch (\Throwable $t) {
             if (!$t instanceof $class) {
-                $this->fail(sprintf("Throwable of class $class expected, but %s caught", get_class($t)));
+                $this->fail(sprintf("Throwable of class $class expected to be thrown, but %s caught", get_class($t)));
             }
             if (null !== $msg and $t->getMessage() !== $msg) {
                 $this->fail(sprintf(
@@ -521,6 +521,6 @@ class Asserts extends CodeceptionModule
             $this->assertTrue(true); // increment assertion counter
             return;
         }
-        $this->fail("Expected throwable of $class, but nothing was caught");
+        $this->fail("Expected throwable of $class to be thrown, but nothing was caught");
     }
 }
