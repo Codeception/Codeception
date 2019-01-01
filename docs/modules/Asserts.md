@@ -341,46 +341,18 @@ $I->expectException(new MyException("Don't do bad things"), function() {
  * `param` $callback
 
 
-### expectError
-
-Handles and checks error called inside callback function.
-Either error class name or error instance should be provided.
-
-```php
-<?php
-$I->expectError(MyError::class, function() {
-    $this->doSomethingBad();
-});
-
-$I->expectError(new MyError(), function() {
-    $this->doSomethingBad();
-});
-```
-If you want to check message or error code, you can pass them with error instance:
-```php
-<?php
-// will check that error MyError is thrown with "Don't do bad things" message
-$I->expectError(new MyError("Don't do bad things"), function() {
-    $this->doSomethingBad();
-});
-```
-
- * `param` $error string or \Error
- * `param` $callback
-
-
-### expectThrow
+### expectThrowable
 
 Handles and checks throwable called inside callback function.
 Either throwable class name or throwable instance should be provided.
 
 ```php
 <?php
-$I->expectThrow(MyException::class, function() {
+$I->expectThrowable(MyException::class, function() {
     $this->doSomethingBad();
 });
 
-$I->expectThrow(new MyException(), function() {
+$I->expectThrowable(new MyException(), function() {
     $this->doSomethingBad();
 });
 ```
@@ -388,7 +360,7 @@ If you want to check message or throwable code, you can pass them with throwable
 ```php
 <?php
 // will check that throwable MyException is thrown with "Don't do bad things" message
-$I->expectThrow(new MyException("Don't do bad things"), function() {
+$I->expectThrowable(new MyException("Don't do bad things"), function() {
     $this->doSomethingBad();
 });
 ```
