@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\ModuleContainer;
 use Phalcon\Di;
 use PDOException;
 use Phalcon\Mvc\Url;
@@ -96,19 +97,32 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     /**
      * Phalcon bootstrap file path
      */
-    protected $bootstrapFile = null;
+    protected $bootstrapFile;
 
     /**
      * Dependency injection container
      * @var DiInterface
      */
-    public $di = null;
+    public $di;
 
     /**
      * Phalcon Connector
      * @var PhalconConnector
      */
     public $client;
+
+    /**
+     * needed to set the config field otherwise the DI will complain
+     *
+     * Phalcon constructor.
+     * @param ModuleContainer $moduleContainer
+     * @param null $config
+     */
+    public function __construct(ModuleContainer $moduleContainer, $config = null)
+    {
+        $this->config['session'] = $this->getMemorySessionForVersion();
+        parent::__construct($moduleContainer, $config);
+    }
 
     /**
      * HOOK: used after configuration is loaded
@@ -133,8 +147,6 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
                 . 'return new \Phalcon\Mvc\Application($di);'
             );
         }
-
-        $this->config['session'] = $this->getMemorySessionForVersion();
     }
 
     /**
@@ -171,6 +183,10 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
             }
             $this->di['db']->begin();
             $this->debugSection('Database', 'Transaction started');
+        }
+
+        if (!$this->client) {
+            return;
         }
 
         // localize
