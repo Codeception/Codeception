@@ -85,7 +85,7 @@ use Codeception\Lib\Connector\Phalcon as PhalconConnector;
  *             browser: phantomjs
  * ```
  */
-class Phalcon_34x extends Framework implements ActiveRecord, PartedModule
+class Phalcon34x extends Framework implements ActiveRecord, PartedModule
 {
     protected $config = [
         'bootstrap'  => 'app/config/bootstrap.php',

@@ -14,7 +14,7 @@ use Phalcon\Mvc\Micro as MicroApplication;
 use Symfony\Component\BrowserKit\Response;
 use Codeception\Lib\Connector\Shared\PhpSuperGlobalsConverter;
 
-class Phalcon_34x extends Client
+class Phalcon34x extends Client
 {
     use PhpSuperGlobalsConverter;
 

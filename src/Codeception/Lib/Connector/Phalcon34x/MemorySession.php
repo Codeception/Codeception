@@ -208,7 +208,7 @@ class MemorySession implements AdapterInterface
      * @param bool $deleteOldSession
      * @return \Phalcon\Session\AdapterInterface
      */
-    public function regenerateId(bool $deleteOldSession = NULL): \Phalcon\Session\AdapterInterface
+    public function regenerateId(bool $deleteOldSession = null): \Phalcon\Session\AdapterInterface
     {
         $this->sessionId = $this->generateId();
 
