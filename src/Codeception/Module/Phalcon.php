@@ -91,7 +91,6 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         'bootstrap'  => 'app/config/bootstrap.php',
         'cleanup'    => true,
         'savepoints' => true,
-        'session'    => PhalconConnector\MemorySession::class
     ];
 
     /**
@@ -135,7 +134,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
             );
         }
 
-        $this->client = new PhalconConnector();
+        $this->config['session'] = $this->getMemorySessionForVersion();
     }
 
     /**
@@ -670,5 +669,16 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         $domain = $server['HTTP_HOST'];
 
         return '/^' . str_replace('.', '\.', $domain) . '$/';
+    }
+
+    /**
+     * @return string
+     */
+    private function getMemorySessionForVersion() {
+        if (strpos(\Phalcon\Version::get(), '3.4') !== false) {
+            return PhalconConnector\MemorySession34x::class;
+        }
+
+        return PhalconConnector\MemorySession::class;
     }
 }

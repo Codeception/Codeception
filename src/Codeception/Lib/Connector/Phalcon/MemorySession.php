@@ -30,6 +30,10 @@ class MemorySession implements AdapterInterface
      */
     protected $options = [];
 
+    /**
+     * MemorySession constructor.
+     * @param array|null $options
+     */
     public function __construct(array $options = null)
     {
         $this->sessionId = $this->generateId();
@@ -288,7 +292,11 @@ class MemorySession implements AdapterInterface
         $this->remove($index);
     }
 
-    private function prepareIndex($index)
+    /**
+     * @param $index
+     * @return string
+     */
+    protected function prepareIndex($index)
     {
         if ($this->sessionId) {
             $key = $this->sessionId . '#' . $index;
@@ -302,7 +310,7 @@ class MemorySession implements AdapterInterface
     /**
      * @return string
      */
-    private function generateId()
+    protected function generateId()
     {
         return md5(time());
     }
