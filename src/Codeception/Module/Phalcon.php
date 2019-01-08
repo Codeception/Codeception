@@ -674,7 +674,8 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     /**
      * @return string
      */
-    private function getMemorySessionForVersion() {
+    private function getMemorySessionForVersion()
+    {
         if (strpos(\Phalcon\Version::get(), '3.4') !== false) {
             return PhalconConnector\MemorySession34x::class;
         }
