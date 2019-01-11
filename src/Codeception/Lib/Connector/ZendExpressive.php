@@ -69,7 +69,7 @@ class ZendExpressive extends Client
 
         //set cookie header because dflydev/fig-cookies reads cookies from header
         if (!empty($cookies)) {
-            $headers['cookie'] = implode(';', array_map(function($key, $value) {
+            $headers['cookie'] = implode(';', array_map(function ($key, $value) {
                 return "$key=$value";
             }, array_keys($cookies), $cookies));
         }
