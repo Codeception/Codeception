@@ -130,7 +130,7 @@ class JsonType
                 continue;
             }
 
-            $regexMatcher = '/:regex\((.*?)\)(?:\|(boolean|integer|double|float|string|array|object|resource|resource \(closed\)|null|unknown type)|$)/';
+            $regexMatcher = '/:regex\(((.).*?\2)\)/';
             $regexes = [];
 
             // Match the string ':regex(' and any characters until a regex delimiter (matches 99.999% use cases) followed by character ')'
