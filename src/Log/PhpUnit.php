@@ -43,6 +43,15 @@ class PhpUnit extends \PHPUnit\Util\Log\JUnit
 
             $this->currentFile = $filename;
             $this->currentFileSuite = $this->document->createElement('testsuite');
+
+            if ($test instanceof Reported) {
+                $reportFields = $test->getReportFields();
+                $class = isset($reportFields['class']) ? $reportFields['class'] : $reportFields['name'];
+                $this->currentFileSuite->setAttribute('name', $class);
+            } else {
+                $this->currentFileSuite->setAttribute('name', get_class($test));
+            }
+
             $this->currentFileSuite->setAttribute('file', $filename);
 
             $this->testSuites[self::SUITE_LEVEL]->appendChild($this->currentFileSuite);
