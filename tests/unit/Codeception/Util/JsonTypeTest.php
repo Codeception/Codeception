@@ -239,4 +239,14 @@ class JsonTypeTest extends \Codeception\Test\Unit
         // currently produces a false negative
         $this->assertTrue($jsonType->matches(['test'    => 'string:regex(~^(\d\d@):\d\d$~)|integer']));
     }
+
+    public function testRegexFilterWithSpecialDelimiters()
+    {
+        $jsonType = new JsonType(['test' => 'xyz']);
+
+        $this->assertTrue($jsonType->matches(['test' => 'string:regex([xyz])']));
+        $this->assertTrue($jsonType->matches(['test' => 'string:regex({xyz})']));
+        $this->assertTrue($jsonType->matches(['test' => 'string:regex(<xyz>)']));
+        $this->assertTrue($jsonType->matches(['test' => 'string:regex((xyz))']));
+    }
 }
