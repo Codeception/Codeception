@@ -628,8 +628,7 @@ class Db extends CodeceptionModule implements DbInterface
             );
         }
         try {
-            // don't clear database for empty dump
-            if (!isset($this->databasesSql[$databaseKey]) || !count($this->databasesSql[$databaseKey])) {
+            if (false === $this->shouldCleanup($databaseConfig, $databaseKey)) {
                 return;
             }
             $this->drivers[$databaseKey]->cleanup();
@@ -637,6 +636,22 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
+    }
+
+    protected function shouldCleanUp($databaseConfig, $databaseKey)
+    {
+        // If using populator and it's not empty, clean up regardless
+        if (false === empty($databaseConfig['populator'])) {
+            return true;
+        }
+
+        // If no sql dump for $databaseKey or sql dump is empty, don't clean up
+        if (!isset($this->databasesSql[$databaseKey]) || !count($this->databasesSql[$databaseKey])) {
+            return false;
+        }
+
+        // Otherwise, clean up
+        return true;
     }
 
     public function _isPopulated()
