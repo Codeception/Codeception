@@ -45,10 +45,10 @@ To run tests in Chrome browser you may connect to ChromeDriver directly, without
              port: 9515
              browser: chrome
              capabilities:
-                 chromeOptions: # additional chrome options
+                 "goog:chromeOptions": # additional chrome options
 ```
 
-Additional [Chrome options](https://sites.google.com/a/chromium.org/chromedriver/capabilities) can be set in `chromeOptions` capabilities.
+Additional [Chrome options](https://sites.google.com/a/chromium.org/chromedriver/capabilities) can be set in `goog:chromeOptions` capabilities. Note that Selenium 3.8 renamed this capability from `chromeOptions` to `goog:chromeOptions`.
 
 
 ### PhantomJS
