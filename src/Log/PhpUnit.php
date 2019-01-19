@@ -7,7 +7,7 @@ use Codeception\Test\Test;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
 
-class PhpUnit extends \PHPUnit\Util\Log\JUnit
+class PhpUnit extends \Codeception\PHPUnit\NonFinal\JUnit
 {
     const SUITE_LEVEL = 1;
     const FILE_LEVEL  = 2;

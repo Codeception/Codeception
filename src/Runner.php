@@ -3,9 +3,8 @@ namespace Codeception\PHPUnit;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
-use PHPUnit\Framework\TestSuite;
 
-class Runner extends \PHPUnit\TextUI\TestRunner
+class Runner extends NonFinal\TestRunner
 {
     public static $persistentListeners = [];
 
