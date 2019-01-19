@@ -130,10 +130,10 @@ class JsonType
                 continue;
             }
 
-            $regexMatcher = '/:regex\((.*?)\)(?:\|(boolean|integer|double|float|string|array|object|resource|resource \(closed\)|null|unknown type)|$)/';
+            $regexMatcher = '/:regex\((((\()|(\{)|(\[)|(<)|(.)).*?(?(3)\)|(?(4)\}|(?(5)\]|(?(6)>|\7)))))\)/';
             $regexes = [];
 
-            // Match the string ':regex(' and any characters until a regex delimiter (matches 99.999% use cases) followed by character ')'
+            // Match the string ':regex(' and any characters until a ending regex delimiter followed by character ')'
             // Place the 'any character' + delimiter matches in to an array.
             preg_match_all($regexMatcher, $type, $regexes);
 
