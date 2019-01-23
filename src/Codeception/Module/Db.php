@@ -638,6 +638,11 @@ class Db extends CodeceptionModule implements DbInterface
         }
     }
 
+    /**
+     * @param  array  $databaseConfig
+     * @param  string $databaseKey
+     * @return bool
+     */
     protected function shouldCleanup($databaseConfig, $databaseKey)
     {
         // If using populator and it's not empty, clean up regardless
