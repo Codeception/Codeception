@@ -646,12 +646,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
 
         // If no sql dump for $databaseKey or sql dump is empty, don't clean up
-        if (!isset($this->databasesSql[$databaseKey]) || !count($this->databasesSql[$databaseKey])) {
-            return false;
-        }
-
-        // Otherwise, clean up
-        return true;
+        return !empty($this->databasesSql[$databaseKey]);
     }
 
     public function _isPopulated()
