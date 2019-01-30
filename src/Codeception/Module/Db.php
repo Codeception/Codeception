@@ -869,7 +869,7 @@ class Db extends CodeceptionModule implements DbInterface
      * @param string $column
      * @param array  $criteria
      *
-     * @return string|bool
+     * @return mixed
      */
     public function grabFromDatabase($table, $column, $criteria = [])
     {
