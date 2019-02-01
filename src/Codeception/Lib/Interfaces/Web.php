@@ -301,7 +301,7 @@ interface Web
      * // CSS button
      * $I->click('#form input[type=submit]');
      * // XPath
-     * $I->click('//form/*[@type=submit]');
+     * $I->click('//form/*[@type="submit"]');
      * // link in context
      * $I->click('Logout', '#nav');
      * // using strict locator
