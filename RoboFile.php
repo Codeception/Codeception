@@ -11,8 +11,8 @@ class RoboFile extends \Robo\Tasks
 
     public function release()
     {
-        $this->say("CODECEPTION RELEASE: ".\Codeception\Codecept::VERSION);
         $this->versionBump();
+        $this->say("CODECEPTION RELEASE: ".\Codeception\Codecept::VERSION);
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
@@ -35,6 +35,11 @@ class RoboFile extends \Robo\Tasks
         $this->taskReplaceInFile('src/Codeception/Codecept.php')
             ->from(\Codeception\Codecept::VERSION)
             ->to($version)
+            ->run();
+        $this->taskGitStack()
+            ->add('src/Codeception/Codecept.php')
+            ->commit("Bumped version to $version")
+            ->push()
             ->run();
     }
 
