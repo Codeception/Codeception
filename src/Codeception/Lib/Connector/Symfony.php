@@ -77,8 +77,11 @@ class Symfony extends \Symfony\Component\HttpKernel\Client
         $this->container = $this->kernel->getContainer();
 
         foreach ($this->persistentServices as $serviceName => $service) {
-            if (!$this->container->initialized($serviceName)) {
+            try {
                 $this->container->set($serviceName, $service);
+            } catch (\InvalidArgumentException $e) {
+                //Private services can't be set in Symfony 4
+                codecept_debug("[Symfony] Can't set persistent service $serviceName: " . $e->getMessage());
             }
         }
 
