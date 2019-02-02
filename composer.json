@@ -42,7 +42,7 @@
         "flow/jsonpath": "~0.2",
         "predis/predis": "^1.0",
         "squizlabs/php_codesniffer": "~2.0",
-        "vlucas/phpdotenv": "^2.4.0",
+        "vlucas/phpdotenv": "^3.0",
         "symfony/process": ">=2.7 <5.0"
     },
     "suggest": {
