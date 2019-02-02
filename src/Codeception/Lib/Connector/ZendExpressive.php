@@ -63,6 +63,16 @@ class ZendExpressive extends Client
             //required by WhoopsErrorHandler
             $serverParams['SCRIPT_NAME'] = 'Codeception';
         }
+        
+        $cookies = $request->getCookies();
+        $headers = $this->extractHeaders($request);
+
+        //set cookie header because dflydev/fig-cookies reads cookies from header
+        if (!empty($cookies)) {
+            $headers['cookie'] = implode(';', array_map(function ($key, $value) {
+                return "$key=$value";
+            }, array_keys($cookies), $cookies));
+        }
 
         $zendRequest = new ServerRequest(
             $serverParams,
@@ -70,15 +80,11 @@ class ZendExpressive extends Client
             $request->getUri(),
             $request->getMethod(),
             $inputStream,
-            $this->extractHeaders($request),
-            $request->getCookies(),
+            $headers,
+            $cookies,
             $queryParams,
             $postParams
         );
-
-        $zendRequest = $zendRequest->withCookieParams($request->getCookies())
-            ->withQueryParams($queryParams)
-            ->withParsedBody($postParams);
 
         $this->request = $zendRequest;
 
