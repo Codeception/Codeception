@@ -1,3 +1,14 @@
+#### 2.5.3
+
+* [Db] cleanup database if populator is used
+* [FTP] Compatibility with phpseclib v2 by @kardagan
+* [JsonType] Fixed issue #5230 Dropped filters after a string:regex by @ellisgl
+* [Symfony] Fixed persistent service functionality for Symfony 3 by @Naktibalda
+* [ZendExpressive] Set Cookie header in request by @Naktibalda 
+* Updated vlucas/phpdotenv package to ^3.0 version by @KartaviK
+* Documentation improvements by @chrisaligent @richleland @SanzhiyevMergen @sdlins
+
+
 #### 2.5.2
 
 * [ZendExppressive] Support for Zend Expressive v3 by @Naktibalda 
