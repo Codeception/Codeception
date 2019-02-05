@@ -30,7 +30,7 @@
         "symfony/css-selector": ">=2.7 <5.0",
         "symfony/dom-crawler": ">=2.7 <5.0",
         "behat/gherkin": "^4.4.0",
-        "codeception/phpunit-wrapper": "^6.0.9|^7.0.6",
+        "codeception/phpunit-wrapper": ">6.0.14 <6.1.0 | ^6.6.0  ^7.7.0 | ^8.0.0",
         "codeception/stub": "^2.0"
     },
     "require-dev": {
