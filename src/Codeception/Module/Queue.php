@@ -29,12 +29,10 @@ use Codeception\Lib\Driver\Iron;
  *
  * ## Status
  *
- * * Maintainer: **nathanmac**
  * * Stability:
  *     - Iron.io:    **stable**
  *     - Beanstalkd: **stable**
  *     - Amazon SQS: **stable**
- * * Contact: nathan.macnamara@outlook.com
  *
  * ## Config
  *

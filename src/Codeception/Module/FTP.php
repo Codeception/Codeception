@@ -32,11 +32,9 @@ use Codeception\Exception\ModuleException;
  *
  * ## Status
  *
- * * Maintainer: **nathanmac**
  * * Stability:
  *     - FTP: **stable**
  *     - SFTP: **stable**
- * * Contact: nathan.macnamara@outlook.com
  *
  * ## Config
  *
