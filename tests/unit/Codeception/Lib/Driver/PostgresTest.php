@@ -18,7 +18,7 @@ class PostgresTest extends Unit
     protected static $sql;
     protected $postgres;
 
-    public static function setUpBeforeClass()
+    public static function _setUpBeforeClass()
     {
         if (!function_exists('pg_connect')) {
             return;
@@ -35,7 +35,7 @@ class PostgresTest extends Unit
         self::$sql = explode("\n", $sql);
     }
 
-    public function setUp()
+    public function _setUp()
     {
         try {
             $this->postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
@@ -46,7 +46,7 @@ class PostgresTest extends Unit
         $this->postgres->load(self::$sql);
     }
 
-    public function tearDown()
+    public function _tearDown()
     {
         if (isset($this->postgres)) {
             $this->postgres->cleanup();

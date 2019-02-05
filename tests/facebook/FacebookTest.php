@@ -8,7 +8,7 @@ use Codeception\Module\PhpBrowser;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Util\Stub;
 
-class FacebookTest extends \PHPUnit\Framework\TestCase
+class FacebookTest extends \Codeception\PHPUnit\TestCase
 {
     protected $config = array(
         'app_id' => '460287924057084',
@@ -42,7 +42,7 @@ class FacebookTest extends \PHPUnit\Framework\TestCase
         return \Codeception\Util\Stub::make('Codeception\Lib\ModuleContainer');
     }
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new Facebook($this->makeContainer());
         $this->module->_setConfig($this->config);
@@ -53,7 +53,7 @@ class FacebookTest extends \PHPUnit\Framework\TestCase
         $this->facebook = $reflection->getValue($this->module);
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         $this->module->_afterSuite();
     }

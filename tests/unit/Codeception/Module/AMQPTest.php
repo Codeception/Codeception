@@ -1,7 +1,7 @@
 <?php
 
 
-class AMQPTest extends \PHPUnit\Framework\TestCase
+class AMQPTest extends \Codeception\PHPUnit\TestCase
 {
     protected $config = array(
         'host'     => 'localhost',
@@ -18,7 +18,7 @@ class AMQPTest extends \PHPUnit\Framework\TestCase
      */
     protected $module = null;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new \Codeception\Module\AMQP(make_container());
         $this->module->_setConfig($this->config);

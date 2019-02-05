@@ -8,7 +8,7 @@ class DiTest extends \Codeception\Test\Unit
      */
     protected $di;
     
-    protected function setUp()
+    protected function _setUp()
     {
         $this->di = new Di();
     }

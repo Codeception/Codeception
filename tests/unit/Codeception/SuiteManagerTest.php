@@ -7,7 +7,7 @@ if (!defined('PHPUNIT_TESTSUITE')) {
  * @group core
  * Class SuiteManagerTest
  */
-class SuiteManagerTest extends \PHPUnit\Framework\TestCase
+class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
 {
     /**
      * @var \Codeception\SuiteManager
@@ -24,7 +24,7 @@ class SuiteManagerTest extends \PHPUnit\Framework\TestCase
      */
     protected $runner;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
         $settings = \Codeception\Configuration::$defaultSuiteSettings;

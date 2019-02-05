@@ -5,7 +5,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 class BuildTest extends BaseCommandRunner
 {
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->makeCommand('\Codeception\Command\Build');
         $this->config = array(

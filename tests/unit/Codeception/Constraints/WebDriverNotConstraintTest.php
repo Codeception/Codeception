@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/mocked_webelement.php';
 
-class WebDriverConstraintNotTest extends \PHPUnit\Framework\TestCase
+class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
 {
 
     /**
@@ -9,7 +9,7 @@ class WebDriverConstraintNotTest extends \PHPUnit\Framework\TestCase
      */
     protected $constraint;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->constraint = new Codeception\PHPUnit\Constraint\WebDriverNot('warcraft', '/user');
     }

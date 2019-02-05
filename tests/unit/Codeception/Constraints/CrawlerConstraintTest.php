@@ -1,5 +1,5 @@
 <?php
-class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
+class CrawlerConstraintTest extends \Codeception\PHPUnit\TestCase
 {
 
     /**
@@ -7,7 +7,7 @@ class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
      */
     protected $constraint;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->constraint = new Codeception\PHPUnit\Constraint\Crawler('hello', '/user');
     }

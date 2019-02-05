@@ -4,7 +4,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 class GenerateStepObjectTest extends BaseCommandRunner
 {
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->makeCommand('\Codeception\Command\GenerateStepObject');
         $this->config = array(

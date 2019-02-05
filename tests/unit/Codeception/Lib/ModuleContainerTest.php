@@ -15,12 +15,12 @@ class ModuleContainerTest extends Unit
      */
     protected $moduleContainer;
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), []);
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         \Codeception\Module\UniversalFramework::$includeInheritedActions = true;
         \Codeception\Module\UniversalFramework::$onlyActions = [];

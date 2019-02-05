@@ -21,7 +21,7 @@ class SqliteTest extends Unit
     protected static $sqlite;
     protected static $sql;
 
-    public static function setUpBeforeClass()
+    public static function _setUpBeforeClass()
     {
         if (version_compare(PHP_VERSION, '5.5.0', '<')) {
             $dumpFile = '/dumps/sqlite-54.sql';
@@ -34,14 +34,14 @@ class SqliteTest extends Unit
         self::$sql = explode("\n", $sql);
     }
 
-    public function setUp()
+    public function _setUp()
     {
         self::$sqlite = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
         self::$sqlite->cleanup();
         self::$sqlite->load(self::$sql);
     }
 
-    public function tearDown()
+    public function _tearDown()
     {
         if (isset(self::$sqlite)) {
             self::$sqlite->cleanup();

@@ -30,7 +30,7 @@ class MongoDbTest extends Unit
      */
     private $userCollection;
 
-    protected function setUp()
+    protected function _setUp()
     {
         if (!class_exists('\MongoDB\Client')) {
             $this->markTestSkipped('MongoDB is not installed');
@@ -51,7 +51,7 @@ class MongoDbTest extends Unit
         $this->userCollection->insertOne(array('id' => 1, 'email' => 'miles@davis.com'));
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         if (!is_null($this->userCollection)) {
             $this->userCollection->drop();

@@ -17,7 +17,7 @@ class PhpBrowserTest extends TestsForBrowsers
 
     protected $history = [];
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->module = new \Codeception\Module\PhpBrowser(make_container());
         $url = 'http://localhost:8000';
@@ -41,7 +41,7 @@ class PhpBrowserTest extends TestsForBrowsers
         return $this->history->getLastRequest();
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         if ($this->module) {
             $this->module->_after($this->makeTest());

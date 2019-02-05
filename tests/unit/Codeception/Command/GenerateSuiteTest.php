@@ -5,7 +5,7 @@ class GenerateSuiteTest extends BaseCommandRunner
 {
     public $config = ['actor_suffix' => 'Guy'];
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->makeCommand('\Codeception\Command\GenerateSuite');
     }

@@ -3,7 +3,7 @@
 use Codeception\Util\Stub;
 use Pheanstalk\Exception\ConnectionException;
 
-class BeanstalkdTest extends \PHPUnit\Framework\TestCase
+class BeanstalkdTest extends \Codeception\PHPUnit\TestCase
 {
     protected $config = array(
         'type' => 'beanstalkq',
@@ -15,7 +15,7 @@ class BeanstalkdTest extends \PHPUnit\Framework\TestCase
      */
     protected $module = null;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new \Codeception\Module\Queue(make_container());
             $this->module->_setConfig($this->config);

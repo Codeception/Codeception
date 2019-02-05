@@ -1,14 +1,14 @@
 <?php
 use \Codeception\Util\Stub as Stub;
 
-class StubTest extends \PHPUnit\Framework\TestCase
+class StubTest extends \Codeception\PHPUnit\TestCase
 {
     /**
      * @var DummyClass
      */
     protected $dummy;
 
-    public function setUp()
+    public function _setUp()
     {
         $conf = \Codeception\Configuration::config();
         require_once $file = \Codeception\Configuration::dataDir().'DummyClass.php';

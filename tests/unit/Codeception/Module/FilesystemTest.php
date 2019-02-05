@@ -3,7 +3,7 @@
 use Codeception\Module\Filesystem;
 use Codeception\Util\Stub;
 
-class FilesystemTest extends \PHPUnit\Framework\TestCase
+class FilesystemTest extends \Codeception\PHPUnit\TestCase
 {
 
     /**
@@ -11,14 +11,14 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
      */
     protected $module;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new Filesystem(make_container());
         $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
     }
 
 
-    public function tearDown()
+    public function _tearDown()
     {
         $this->module->_after(Stub::makeEmpty('\Codeception\Test\Test'));
     }

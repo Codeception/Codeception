@@ -21,7 +21,7 @@ class MysqlTest extends Unit
      */
     protected $mysql;
     
-    public static function setUpBeforeClass()
+    public static function _setUpBeforeClass()
     {
         if (getenv('APPVEYOR')) {
             self::$config['password'] = 'Password12!';
@@ -36,7 +36,7 @@ class MysqlTest extends Unit
         }
     }
 
-    public function setUp()
+    public function _setUp()
     {
         try {
             $this->mysql = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
@@ -47,7 +47,7 @@ class MysqlTest extends Unit
         $this->mysql->load(self::$sql);
     }
     
-    public function tearDown()
+    public function _tearDown()
     {
         if (isset($this->mysql)) {
             $this->mysql->cleanup();

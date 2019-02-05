@@ -14,7 +14,7 @@ class RestTest extends Unit
      */
     protected $module;
 
-    public function setUp()
+    public function _setUp()
     {
         $connector = new \Codeception\Lib\Connector\Universal();
         $connector->setIndex(\Codeception\Configuration::dataDir() . '/rest/index.php');

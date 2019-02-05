@@ -12,7 +12,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
     abstract public function getConfig();
     abstract public function getPopulator();
 
-    protected function setUp()
+    protected function _setUp()
     {
         $config = $this->getConfig();
         Db::create($config['dsn'], $config['user'], $config['password'])->cleanup();
@@ -23,7 +23,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         $this->assertTrue($this->module->_isPopulated());
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         $this->module->_resetConfig();
         $this->module->_after(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));

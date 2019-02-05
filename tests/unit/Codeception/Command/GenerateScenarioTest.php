@@ -13,7 +13,7 @@ class GenerateScenarioTest extends BaseCommandRunner
      */
     protected $moduleContainer;
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), []);
         $this->moduleContainer->create('EmulateModuleHelper');

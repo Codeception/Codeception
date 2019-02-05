@@ -1,15 +1,15 @@
 <?php
 
 
-class ConfigurationTest extends \PHPUnit\Framework\TestCase
+class ConfigurationTest extends \Codeception\PHPUnit\TestCase
 {
 
-    public function setUp()
+    public function _setUp()
     {
         $this->config = \Codeception\Configuration::config();
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         \Codeception\Module\UniversalFramework::$includeInheritedActions = true;
         \Codeception\Module\UniversalFramework::$onlyActions = [];

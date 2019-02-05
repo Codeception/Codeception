@@ -31,7 +31,7 @@ class Unit extends \PHPUnit\Framework\TestCase implements
         return $this->metadata;
     }
 
-    protected function setUp()
+    protected function _setUp()
     {
         if ($this->getMetadata()->isBlocked()) {
             if ($this->getMetadata()->getSkip() !== null) {
@@ -64,7 +64,7 @@ class Unit extends \PHPUnit\Framework\TestCase implements
     {
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         $this->_after();
     }

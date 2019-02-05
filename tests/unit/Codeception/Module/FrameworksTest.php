@@ -13,7 +13,7 @@ class FrameworksTest extends TestsForWeb
      */
     protected $module;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new \Codeception\Module\UniversalFramework(make_container());
     }

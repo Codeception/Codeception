@@ -1,5 +1,6 @@
 <?php
-class CrawlerNotConstraintTest extends \PHPUnit\Framework\TestCase
+
+class CrawlerNotConstraintTest extends \Codeception\PHPUnit\TestCase
 {
 
     /**
@@ -7,7 +8,7 @@ class CrawlerNotConstraintTest extends \PHPUnit\Framework\TestCase
      */
     protected $constraint;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->constraint = new Codeception\PHPUnit\Constraint\CrawlerNot('warcraft', '/user');
     }

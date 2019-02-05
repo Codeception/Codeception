@@ -2,7 +2,7 @@
 
 use Codeception\Module\MongoDb;
 
-class MongoDbLegacyTest extends \PHPUnit\Framework\TestCase
+class MongoDbLegacyTest extends \Codeception\PHPUnit\TestCase
 {
     /**
      * @var array
@@ -26,7 +26,7 @@ class MongoDbLegacyTest extends \PHPUnit\Framework\TestCase
      */
     private $userCollection;
 
-    protected function setUp()
+    protected function _setUp()
     {
         if (!class_exists('Mongo')) {
             $this->markTestSkipped('Mongo is not installed');
@@ -46,7 +46,7 @@ class MongoDbLegacyTest extends \PHPUnit\Framework\TestCase
         $this->userCollection->insert(array('id' => 1, 'email' => 'miles@davis.com'));
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         if (!is_null($this->userCollection)) {
             $this->userCollection->drop();

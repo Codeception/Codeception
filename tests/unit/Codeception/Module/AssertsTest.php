@@ -1,10 +1,10 @@
 <?php
-class AssertsTest extends \PHPUnit\Framework\TestCase
+class AssertsTest extends \Codeception\PHPUnit\TestCase
 {
     /** @var \Codeception\Module\Asserts */
     protected $module;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new \Codeception\Module\Asserts(make_container());
     }
