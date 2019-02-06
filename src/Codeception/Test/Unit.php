@@ -11,7 +11,7 @@ use Codeception\TestInterface;
 /**
  * Represents tests from PHPUnit compatible format.
  */
-class Unit extends \PHPUnit\Framework\TestCase implements
+class Unit extends \Codeception\PHPUnit\TestCase implements
     Interfaces\Reported,
     Interfaces\Dependent,
     TestInterface
