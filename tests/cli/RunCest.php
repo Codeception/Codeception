@@ -160,7 +160,7 @@ class RunCest
     public function runCustomReport(\CliGuy $I)
     {
         if (\PHPUnit\Runner\Version::series() >= 7) {
-            throw new \Codeception\Exception\Skip('Not for PHPUnit 7');
+            throw new \PHPUnit\Framework\SkippedTestError('Not for PHPUnit 7');
         }
         $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
         $I->seeInShellOutput('FileExistsCept: Check config exists');
@@ -482,7 +482,7 @@ EOF
     public function overrideConfigOptionsToChangeReporter(CliGuy $I)
     {
         if (!class_exists('PHPUnit_Util_Log_TeamCity')) {
-            throw new \Codeception\Exception\Skip('Reporter does not exist for this PHPUnit version');
+            throw new \PHPUnit\Framework\SkippedTestError('Reporter does not exist for this PHPUnit version');
         }
         $I->executeCommand('run scenario --report -o "reporters: report: PHPUnit_Util_Log_TeamCity" --no-exit');
         $I->seeInShellOutput('##teamcity[testStarted');

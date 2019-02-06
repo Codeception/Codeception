@@ -15,7 +15,7 @@ class SecondTestIsExecutedWhenTheFirstTestFailsCest
     public function endTestEventIsEmitted(CliGuy $I)
     {
         if (\PHPUnit\Runner\Version::series() >= 7) {
-            throw new \Codeception\Exception\Skip('Not for PHPUnit 7');
+            throw new \PHPUnit\Framework\SkippedTestError('Not for PHPUnit 7');
         }
         $I->wantTo('see that all start and end events are emitted');
         $I->amInPath('tests/data/first_test_fails');
