@@ -1,5 +1,3 @@
-sudo: false
-
 language: php
 matrix:
   fast_finish: true
@@ -94,7 +92,7 @@ install:
   - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$VERSION --no-update --ignore-platform-reqs'
   - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$VERSION --no-update --ignore-platform-reqs'
   # Phalcon
-  - '[[ "$FRAMEWORK" != "Phalcon" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
+  - '[[ "$FRAMEWORK" != "Phalcon" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b v3.4.2'
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
   # Symfony
   #- '[[ "$FRAMEWORK$VERSION" != "Symfony3" ]] || composer require -d framework-tests symfony/symfony=~$VERSION --no-update'

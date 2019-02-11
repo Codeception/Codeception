@@ -108,6 +108,11 @@ EOF;
 
     public function _before(TestInterface $test)
     {
+        $this->init();
+    }
+
+    private function init()
+    {
         $this->retrieveEntityManager();
 
         if ($this->config['cleanup']) {
@@ -163,6 +168,15 @@ EOF;
         }
     }
 
+    /**
+     * @throws ModuleConfigException
+     */
+    public function onReconfigure()
+    {
+        $this->finish();
+        $this->init();
+    }
+
     protected function retrieveEntityManager()
     {
         if ($this->dependentModule) {
@@ -196,7 +210,7 @@ EOF;
         $this->em->getConnection()->connect();
     }
 
-    public function _after(TestInterface $test)
+    private function finish()
     {
         if (!$this->em instanceof \Doctrine\ORM\EntityManagerInterface) {
             return;
@@ -212,6 +226,11 @@ EOF;
         }
         $this->clean();
         $this->em->getConnection()->close();
+    }
+
+    public function _after(TestInterface $test)
+    {
+        $this->finish();
     }
 
     protected function clean()

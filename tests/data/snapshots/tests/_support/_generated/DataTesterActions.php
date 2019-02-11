@@ -670,18 +670,7 @@ trait DataTesterActions
         return $this->getScenario()->runStep(new \Codeception\Step\Action('performInDatabase', func_get_args()));
     }
 
- 
-    /**
-     * [!] Method is generated. Documentation taken from corresponding module.
-     *
-     *
-     * @see \Codeception\Module\Db::isPopulated()
-     */
-    public function isPopulated() {
-        return $this->getScenario()->runStep(new \Codeception\Step\Action('isPopulated', func_get_args()));
-    }
 
- 
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *

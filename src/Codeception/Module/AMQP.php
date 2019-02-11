@@ -55,7 +55,8 @@ class AMQP extends CodeceptionModule implements RequiresPackage
         'port'           => '5672',
         'vhost'          => '/',
         'cleanup'        => true,
-        'single_channel' => false
+        'single_channel' => false,
+        'queues'         => []
     ];
 
     /**
@@ -277,6 +278,18 @@ class AMQP extends CodeceptionModule implements RequiresPackage
     }
 
     /**
+     * Add a queue to purge list
+     *
+     * @param string $queue
+     */
+    public function scheduleQueueCleanup($queue)
+    {
+        if (!in_array($queue, $this->config['queues'])) {
+            $this->config['queues'][] = $queue;
+        }
+    }
+
+    /**
      * Checks if message containing text received.
      *
      * **This method drops message from queue**
@@ -303,6 +316,76 @@ class AMQP extends CodeceptionModule implements RequiresPackage
         }
         $this->debugSection("Message", $msg->body);
         $this->assertContains($text, $msg->body);
+    }
+
+    /**
+     * Count messages in queue.
+     *
+     * @param string $queue
+     *
+     * @return int
+     */
+    public function _countMessage($queue)
+    {
+        list($queue, $messageCount) = $this->getChannel()->queue_declare($queue, true);
+        return $messageCount;
+    }
+
+    /**
+     * Checks that queue have expected number of message
+     *
+     * ``` php
+     * <?php
+     * $I->pushToQueue('queue.emails', 'Hello, davert');
+     * $I->seeNumberOfMessagesInQueue('queue.emails',1);
+     * ?>
+     * ```
+     *
+     * @param string $queue
+     * @param int $expected
+     */
+    public function seeNumberOfMessagesInQueue($queue, $expected)
+    {
+        $messageCount = $this->_countMessage($queue);
+        $this->assertEquals($expected, $messageCount);
+    }
+
+    /**
+     * Checks that queue is empty
+     *
+     * ``` php
+     * <?php
+     * $I->pushToQueue('queue.emails', 'Hello, davert');
+     * $I->purgeQueue('queue.emails');
+     * $I->seeQueueIsEmpty('queue.emails');
+     * ?>
+     * ```
+     *
+     * @param string $queue
+     * @param int $expected
+     */
+    public function seeQueueIsEmpty($queue)
+    {
+        $messageCount = $this->_countMessage($queue);
+        $this->assertEquals(0, $messageCount);
+    }
+
+    /**
+     * Checks if queue is not empty.
+     *
+     * ``` php
+     * <?php
+     * $I->pushToQueue('queue.emails', 'Hello, davert');
+     * $I->dontSeeQueueIsEmpty('queue.emails');
+     * ?>
+     * ```
+     *
+     * @param string $queue
+     */
+    public function dontSeeQueueIsEmpty($queue)
+    {
+        $messageCount = $this->_countMessage($queue);
+        $this->assertNotEquals(0, $messageCount);
     }
 
     /**

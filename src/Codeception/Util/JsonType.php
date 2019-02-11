@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Util;
 
 /**
@@ -59,7 +60,6 @@ class JsonType
      *     return strpos(' ', $value) !== false;
      * });
      * // => use it as 'string:slug'
-
      *
      * // add custom function to matcher with `len($val)` syntax
      * // parameter matching patterns should be valid regex and start with `/` char
@@ -70,7 +70,7 @@ class JsonType
      * ?>
      * ```
      *
-     * @param $name
+     * @param          $name
      * @param callable $callable
      */
     public static function addCustomFilter($name, callable $callable)
@@ -119,35 +119,64 @@ class JsonType
             if (!array_key_exists($key, $data)) {
                 return "Key `$key` doesn't exist in " . json_encode($data);
             }
+
             if (is_array($jsonType[$key])) {
                 $message = $this->typeComparison($data[$key], $jsonType[$key]);
+
                 if (is_string($message)) {
                     return $message;
                 }
+
                 continue;
             }
-            $matchTypes = preg_split("#(?![^]\(]*\))\|#", $type);
-            $matched = false;
+
+            $regexMatcher = '/:regex\((((\()|(\{)|(\[)|(<)|(.)).*?(?(3)\)|(?(4)\}|(?(5)\]|(?(6)>|\7)))))\)/';
+            $regexes = [];
+
+            // Match the string ':regex(' and any characters until a ending regex delimiter followed by character ')'
+            // Place the 'any character' + delimiter matches in to an array.
+            preg_match_all($regexMatcher, $type, $regexes);
+
+            // Do the same match as above, but replace the the 'any character' + delimiter with a place holder ($${count}).
+            $filterType = preg_replace_callback($regexMatcher, function () {
+                static $count = 0;
+                return ':regex($$' . $count++ . ')';
+            }, $type);
+
+            $matchTypes  = preg_split("#(?![^]\(]*\))\|#", $filterType);
+            $matched     = false;
             $currentType = strtolower(gettype($data[$key]));
-            if ($currentType == 'double') {
+
+            if ($currentType === 'double') {
                 $currentType = 'float';
             }
-            foreach ($matchTypes as $matchType) {
-                $filters = preg_split("#(?![^]\(]*\))\:#", $matchType);
-                $expectedType = trim(strtolower(array_shift($filters)));
 
-                if ($expectedType != $currentType) {
+            foreach ($matchTypes as $matchType) {
+                $filters      = preg_split("#(?![^]\(]*\))\:#", $matchType);
+                $expectedType = strtolower(trim(array_shift($filters)));
+
+                if ($expectedType !== $currentType) {
                     continue;
                 }
+
                 $matched = true;
 
                 foreach ($filters as $filter) {
+                    // Fill regex pattern back into the filter.
+                    $filter = preg_replace_callback('/\$\$\d+/', function ($m) use ($regexes) {
+                        $pos = (int)substr($m[0], 2);
+
+                        return $regexes[1][$pos];
+                    }, $filter);
+
                     $matched = $matched && $this->matchFilter($filter, $data[$key]);
                 }
+
                 if ($matched) {
                     break;
                 }
             }
+
             if (!$matched) {
                 return sprintf("`$key: %s` is of type `$type`", var_export($data[$key], true));
             }
@@ -189,7 +218,8 @@ class JsonType
         }
         if ($filter === 'email') { // from http://emailregex.com/
             // @codingStandardsIgnoreStart
-            return preg_match('/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD', $value);
+            return preg_match('/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD',
+                $value);
             // @codingStandardsIgnoreEnd
         }
         if ($filter === 'empty') {

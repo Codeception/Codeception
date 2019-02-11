@@ -32,7 +32,7 @@ env:
           window_size: false
           restart: false
           capabilities:
-            chromeOptions:
+            "goog:chromeOptions":
               args: ["--headless", "--disable-gpu", "--disable-extensions"]
               binary: "/usr/bin/google-chrome"
   chromedriver:
@@ -43,6 +43,6 @@ env:
           port: 9515 # ChromeDriver port
           window_size: false
           capabilities:
-            chromeOptions:
+            "goog:chromeOptions":
               args: ["--headless", "--disable-gpu"]
               binary: "/usr/bin/google-chrome"

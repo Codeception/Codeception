@@ -8,16 +8,14 @@ namespace Codeception\Lib;
 class DbPopulator
 {
     /**
-     * The command to be executed.
-     *
-     * @var string
+     * @var array
      */
-    private $builtCommand;
+    protected $config;
 
     /**
      * @var array
      */
-    protected $config;
+    protected $commands;
 
     /**
      * Constructs a DbPopulator object for the given command and Db module.
@@ -29,8 +27,11 @@ class DbPopulator
     public function __construct($config)
     {
         $this->config = $config;
-        $command = $this->config['populator'];
-        $this->builtCommand = $this->buildCommand((string) $command);
+
+        //Convert To Array Format
+        if (isset($this->config['dump']) && !is_array($this->config['dump'])) {
+            $this->config['dump'] = [$this->config['dump']];
+        }
     }
 
     /**
@@ -49,10 +50,10 @@ class DbPopulator
      * ```
      *
      * @param string $command The command to be evaluated using the given config
-     * @param array $config The configuration values used to replace any found $keys with values from this array.
+     * @param string|null $dumpFile The dump file to build the command with.
      * @return string The resulting command string after evaluating any configuration's key
      */
-    protected function buildCommand($command)
+    protected function buildCommand($command, $dumpFile = null)
     {
         $dsn = isset($this->config['dsn']) ? $this->config['dsn'] : '';
         $dsnVars = [];
@@ -64,9 +65,18 @@ class DbPopulator
                 $dsnVars[$k] = $v;
             }
         }
+
         $vars = array_merge($dsnVars, $this->config);
+
+        if ($dumpFile !== null) {
+            $vars['dump'] = $dumpFile;
+        }
+
         foreach ($vars as $key => $value) {
-            $vars['$'.$key] = $value;
+            if (!is_array($value)) {
+                $vars['$'.$key] = $value;
+            }
+
             unset($vars[$key]);
         }
         return str_replace(array_keys($vars), array_values($vars), $command);
@@ -81,7 +91,15 @@ class DbPopulator
      */
     public function run()
     {
-        $command = $this->getBuiltCommand();
+        foreach ($this->buildCommands() as $command) {
+            $this->runCommand($command);
+        }
+
+        return true;
+    }
+
+    private function runCommand($command)
+    {
         codecept_debug("[Db] Executing Populator: `$command`");
 
         exec($command, $output, $exitCode);
@@ -95,11 +113,22 @@ class DbPopulator
         }
 
         codecept_debug("[Db] Populator Finished.");
-        return true;
     }
 
-    public function getBuiltCommand()
+    public function buildCommands()
     {
-        return $this->builtCommand;
+        if ($this->commands !== null) {
+            return $this->commands;
+        } else if (!isset($this->config['dump']) || $this->config['dump'] === false) {
+            return [$this->buildCommand($this->config['populator'])];
+        }
+
+        $this->commands = [];
+
+        foreach ($this->config['dump'] as $dumpFile) {
+            $this->commands[] = $this->buildCommand($this->config['populator'], $dumpFile);
+        }
+
+        return $this->commands;
     }
 }

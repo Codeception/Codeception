@@ -5,6 +5,7 @@ use Codeception\Lib\ModuleContainer;
 use Codeception\Step\Argument\FormattedOutput;
 use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
+use PHPUnit\Framework\MockObject\MockObject;
 
 abstract class Step
 {
@@ -173,7 +174,7 @@ abstract class Step
     {
         if ($argument instanceof \Closure) {
             return 'Closure';
-        } elseif ((isset($argument->__mocked))) {
+        } elseif ($argument instanceof MockObject && isset($argument->__mocked)) {
             return $this->formatClassName($argument->__mocked);
         }
 

@@ -10,6 +10,7 @@ use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Codeception\Test\Descriptor;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 
 /**
@@ -68,6 +69,12 @@ class Logger extends Extension
 
         // internal log
         $logHandler = new RotatingFileHandler($this->path . 'codeception.log', $this->config['max_files']);
+
+        $formatter = $logHandler->getFormatter();
+        if ($formatter instanceof LineFormatter) {
+            $formatter->ignoreEmptyContextAndExtra(true);
+        }
+
         self::$logger = new \Monolog\Logger('Codeception');
         self::$logger->pushHandler($logHandler);
     }

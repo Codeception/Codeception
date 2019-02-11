@@ -58,7 +58,7 @@ class ConfigValidate extends Command
 
         if ($suite = $input->getArgument('suite')) {
             $output->write("Validating <bold>$suite</bold> config... ");
-            $config = $this->getSuiteConfig($suite, $input->getOption('config'));
+            $config = $this->getSuiteConfig($suite);
             $output->writeln("Ok");
             $output->writeln("------------------------------\n");
             $output->writeln("<info>$suite Suite Config</info>:\n");
