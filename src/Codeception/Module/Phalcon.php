@@ -397,7 +397,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     {
         $records = $this->findRecords($model, $attributes);
         if ($records->count() != $number) {
-            $this->fail("Couldn't find $number records of $model with " . json_encode($attributes));
+            $this->fail("Couldn't find $number records of $model with " . json_encode($attributes) .". Found: ".$records->count()." records.");
         }
         $this->debugSection($model, json_encode($records));
     }
