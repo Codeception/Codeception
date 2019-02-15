@@ -168,7 +168,7 @@ EOF;
             }
         }
     }
-    
+
     /**
      * @return StoreInterface|null
      */
@@ -202,9 +202,13 @@ EOF;
     /**
      * @throws ModuleException
      */
-    public function onReconfigure()
+    public function onReconfigure($settings = [])
     {
-        $this->_beforeSuite();
+        $skipCleanup = array_key_exists('cleanup', $this->config) && $this->config['cleanup'] === false;
+        if (!$skipCleanup && !$this->ormModule->_getConfig('cleanup')) {
+            $this->factoryMuffin->deleteSaved();
+        }
+        $this->_beforeSuite($settings);
     }
 
     /**
