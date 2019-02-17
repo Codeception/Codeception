@@ -1248,6 +1248,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         foreach ($attributes as $key => $value) {
             if (\is_array($value)) {
                 call_user_func_array(array($query, "where"), $value);
+            } elseif (is_null($value)) {
+                $query->whereNull($key);
             } else {
                 $query->where($key, $value);
             }
