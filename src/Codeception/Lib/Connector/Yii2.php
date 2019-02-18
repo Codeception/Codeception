@@ -352,7 +352,12 @@ class Yii2 extends Client
         }
 
         $content = ob_get_clean();
-        if (empty($content) && !empty($response->content) && !isset($response->stream)) {
+        if (
+            $response->statusCode !== 204
+            && empty($content)
+            && !empty($response->content)
+            && !isset($response->stream)
+        ) {
             throw new \Exception('No content was sent from Yii application');
         }
 
