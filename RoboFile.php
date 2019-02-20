@@ -12,7 +12,6 @@ class RoboFile extends \Robo\Tasks
     public function release()
     {
         $this->say("CODECEPTION RELEASE: ".\Codeception\Codecept::VERSION);
-        $this->versionBump();
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
@@ -21,6 +20,7 @@ class RoboFile extends \Robo\Tasks
         $this->publishPhar();
         $this->publishGit();
         $this->publishBase(null, \Codeception\Codecept::VERSION);
+        $this->versionBump();
         $this->update(); //update dependencies after release, because buildPhar5 set them to old versions
     }
 

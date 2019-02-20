@@ -380,7 +380,12 @@ EOF
         $I->executeCommand('run unit DependsTest --no-exit');
         $I->seeInShellOutput('Skipped: 1');
         $I->executeCommand('run unit --no-exit');
-        $I->seeInShellOutput('Skipped: 2');
+        if (version_compare(\PHPUnit\Runner\Version::id(), '7.5.5', '<')) {
+            $I->seeInShellOutput('Skipped: 2');
+        } else {
+            //one test fails with Warning instead of Skipped with  PHPUnit >= 7.5.5
+            $I->seeInShellOutput('Skipped: 1');
+        }
     }
 
     public function runGherkinTest(CliGuy $I)

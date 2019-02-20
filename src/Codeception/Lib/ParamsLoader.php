@@ -115,7 +115,13 @@ class ParamsLoader
     protected function loadDotEnvFile()
     {
         if (class_exists('Dotenv\Dotenv')) {
-            $dotEnv = \Dotenv\Dotenv::create(codecept_root_dir(), $this->paramStorage);
+            if (method_exists('Dotenv\Dotenv', 'create')) {
+                //dotenv v3
+                $dotEnv = \Dotenv\Dotenv::create(codecept_root_dir(), $this->paramStorage);
+            } else {
+                //dotenv v2
+                $dotEnv = new \Dotenv\Dotenv(codecept_root_dir(), $this->paramStorage);
+            }
             $dotEnv->load();
             return $_SERVER;
         } elseif (class_exists('Symfony\Component\Dotenv\Dotenv')) {
