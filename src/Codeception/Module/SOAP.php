@@ -312,7 +312,7 @@ EOF;
     public function dontSeeSoapResponseIncludes($xml)
     {
         $xml = $this->canonicalize($xml);
-        $this->assertNotContains($xml, $this->getXmlResponse()->C14N(), "found in XML Response");
+        $this->assertStringNotContainsString($xml, $this->getXmlResponse()->C14N(), "found in XML Response");
     }
 
     /**

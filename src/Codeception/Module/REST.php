@@ -750,7 +750,7 @@ EOF;
      */
     public function seeResponseContains($text)
     {
-        $this->assertContains($text, $this->connectionModule->_getResponseContent(), "REST response contains");
+        $this->assertStringContainsString($text, $this->connectionModule->_getResponseContent(), "REST response contains");
     }
 
     /**
@@ -762,7 +762,7 @@ EOF;
      */
     public function dontSeeResponseContains($text)
     {
-        $this->assertNotContains($text, $this->connectionModule->_getResponseContent(), "REST response contains");
+        $this->assertStringNotContainsString($text, $this->connectionModule->_getResponseContent(), "REST response contains");
     }
 
     /**
@@ -1347,7 +1347,7 @@ EOF;
      */
     public function seeXmlResponseIncludes($xml)
     {
-        $this->assertContains(
+        $this->assertStringContainsString(
             XmlUtils::toXml($xml)->C14N(),
             XmlUtils::toXml($this->connectionModule->_getResponseContent())->C14N(),
             "found in XML Response"
@@ -1364,7 +1364,7 @@ EOF;
      */
     public function dontSeeXmlResponseIncludes($xml)
     {
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             XmlUtils::toXml($xml)->C14N(),
             XmlUtils::toXml($this->connectionModule->_getResponseContent())->C14N(),
             "found in XML Response"

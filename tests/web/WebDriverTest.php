@@ -893,7 +893,7 @@ class WebDriverTest extends TestsForBrowsers
 
         $lastStep = end($steps);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "TypeError",
             $lastStep->getHtml()
         );

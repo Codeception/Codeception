@@ -108,7 +108,7 @@ class PostgresTest extends Unit
         $emptyCriteria = [];
         $generatedSql = $this->postgres->select('test_column', 'test_table', $emptyCriteria);
 
-        $this->assertNotContains('where', $generatedSql);
+        $this->assertStringNotContainsString('where', $generatedSql);
     }
 
     public function testGetSingleColumnPrimaryKey()
