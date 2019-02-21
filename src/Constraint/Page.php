@@ -10,7 +10,6 @@ class Page extends \PHPUnit\Framework\Constraint\Constraint
 
     public function __construct($string, $uri = '')
     {
-        parent::__construct();
         $this->string = $this->normalizeText((string)$string);
         $this->uri = $uri;
     }
