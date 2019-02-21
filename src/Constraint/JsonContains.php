@@ -16,7 +16,6 @@ class JsonContains extends \PHPUnit\Framework\Constraint\Constraint
 
     public function __construct(array $expected)
     {
-        parent::__construct();
         $this->expected = $expected;
     }
 
