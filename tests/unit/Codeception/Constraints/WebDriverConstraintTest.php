@@ -1,4 +1,7 @@
 <?php
+
+use Codeception\Util\Locator;
+
 require_once __DIR__.'/mocked_webelement.php';
 
 class WebDriverConstraintTest extends \Codeception\PHPUnit\TestCase
@@ -24,7 +27,7 @@ class WebDriverConstraintTest extends \Codeception\PHPUnit\TestCase
     {
         $nodes = array(new TestedWebElement('Bye warcraft'), new TestedWebElement('Bye world'));
         try {
-            $this->constraint->evaluate($nodes, 'selector');
+            $this->constraint->evaluate($nodes, "'selector'");
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertStringContainsString(
                 "Failed asserting that any element by 'selector' on page /user",
@@ -41,7 +44,7 @@ class WebDriverConstraintTest extends \Codeception\PHPUnit\TestCase
     {
         $nodes = array(new TestedWebElement('Bye warcraft'));
         try {
-            $this->constraint->evaluate($nodes, ['css' => 'p.mocked']);
+            $this->constraint->evaluate($nodes, Locator::humanReadableString(['css' => 'p.mocked']));
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertStringContainsString(
                 "Failed asserting that any element by css 'p.mocked' on page /user",
@@ -60,7 +63,7 @@ class WebDriverConstraintTest extends \Codeception\PHPUnit\TestCase
             $nodes[] = new TestedWebElement("item $i");
         }
         try {
-            $this->constraint->evaluate($nodes, 'selector');
+            $this->constraint->evaluate($nodes, "'selector'");
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertStringContainsString(
                 "Failed asserting that any element by 'selector' on page /user",
@@ -79,7 +82,7 @@ class WebDriverConstraintTest extends \Codeception\PHPUnit\TestCase
         $this->constraint = new Codeception\PHPUnit\Constraint\WebDriver('hello');
         $nodes = array(new TestedWebElement('Bye warcraft'), new TestedWebElement('Bye world'));
         try {
-            $this->constraint->evaluate($nodes, 'selector');
+            $this->constraint->evaluate($nodes, "'selector'");
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertStringContainsString("Failed asserting that any element by 'selector'", $fail->getMessage());
             $this->assertStringNotContainsString("Failed asserting that any element by 'selector' on page", $fail->getMessage());

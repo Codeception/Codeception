@@ -276,7 +276,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     private function resetMockObjects()
     {
         $refl = new ReflectionObject($this);
-        $refl = $refl->getParentClass();
+        $refl = $refl->getParentClass()->getParentClass();
         $prop = $refl->getProperty('mockObjects');
         $prop->setAccessible(true);
         $prop->setValue($this, array());
