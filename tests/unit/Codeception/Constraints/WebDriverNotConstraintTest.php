@@ -1,11 +1,14 @@
 <?php
+
+use Codeception\Util\Locator;
+
 require_once __DIR__.'/mocked_webelement.php';
 
 class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
 {
 
     /**
-     * @var Codeception\PHPUnit\Constraint\WebDriver
+     * @var Codeception\PHPUnit\Constraint\WebDriverNot
      */
     protected $constraint;
 
@@ -26,7 +29,7 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertStringContainsString("There was 'selector' element on page /user", $fail->getMessage());
+            $this->assertStringContainsString("There was selector element on page /user", $fail->getMessage());
             $this->assertStringNotContainsString('+ <p> Bye world', $fail->getMessage());
             $this->assertStringContainsString('+ <p> Bye warcraft', $fail->getMessage());
             return;
@@ -38,7 +41,7 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
     {
         $nodes = array(new TestedWebElement('Bye warcraft'));
         try {
-            $this->constraint->evaluate($nodes, ['css' => 'p.mocked']);
+            $this->constraint->evaluate($nodes, Locator::humanReadableString(['css' => 'p.mocked']));
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertStringContainsString("There was css 'p.mocked' element on page /user", $fail->getMessage());
             $this->assertStringContainsString('+ <p> Bye warcraft', $fail->getMessage());
@@ -56,7 +59,7 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertStringContainsString("There was 'selector' element on page /user", $fail->getMessage());
+            $this->assertStringContainsString("There was selector element on page /user", $fail->getMessage());
             $this->assertStringContainsString('+ <p> warcraft 0', $fail->getMessage());
             $this->assertStringContainsString('+ <p> warcraft 14', $fail->getMessage());
             return;
@@ -71,8 +74,8 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertStringContainsString("There was 'selector' element", $fail->getMessage());
-            $this->assertStringNotContainsString("There was 'selector' element on page", $fail->getMessage());
+            $this->assertStringContainsString("There was selector element", $fail->getMessage());
+            $this->assertStringNotContainsString("There was selector element on page", $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");

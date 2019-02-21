@@ -2,7 +2,7 @@
 
 namespace Codeception;
 
-class ApplicationTest extends \PHPUnit\Framework\TestCase
+class ApplicationTest extends \Codeception\PHPUnit\TestCase
 {
 
     public static function _setUpBeforeClass()
