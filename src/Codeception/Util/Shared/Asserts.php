@@ -163,6 +163,16 @@ trait Asserts
         \PHPUnit\Framework\Assert::assertNotContains($needle, $haystack, $message);
     }
 
+    protected function assertStringContainsString($needle, $haystack, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertStringContainsString($needle, $haystack, $message = '');
+    }
+
+    protected function assertStringNotContainsString($needle, $haystack, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertStringNotContainsString($needle, $haystack, $message = '');
+    }
+
     /**
      * Checks that string match with pattern
      *
