@@ -26,9 +26,9 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertContains("There was 'selector' element on page /user", $fail->getMessage());
-            $this->assertNotContains('+ <p> Bye world', $fail->getMessage());
-            $this->assertContains('+ <p> Bye warcraft', $fail->getMessage());
+            $this->assertStringContainsString("There was 'selector' element on page /user", $fail->getMessage());
+            $this->assertStringNotContainsString('+ <p> Bye world', $fail->getMessage());
+            $this->assertStringContainsString('+ <p> Bye warcraft', $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
@@ -40,8 +40,8 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, ['css' => 'p.mocked']);
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertContains("There was css 'p.mocked' element on page /user", $fail->getMessage());
-            $this->assertContains('+ <p> Bye warcraft', $fail->getMessage());
+            $this->assertStringContainsString("There was css 'p.mocked' element on page /user", $fail->getMessage());
+            $this->assertStringContainsString('+ <p> Bye warcraft', $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
@@ -56,9 +56,9 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertContains("There was 'selector' element on page /user", $fail->getMessage());
-            $this->assertContains('+ <p> warcraft 0', $fail->getMessage());
-            $this->assertContains('+ <p> warcraft 14', $fail->getMessage());
+            $this->assertStringContainsString("There was 'selector' element on page /user", $fail->getMessage());
+            $this->assertStringContainsString('+ <p> warcraft 0', $fail->getMessage());
+            $this->assertStringContainsString('+ <p> warcraft 14', $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
@@ -71,8 +71,8 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertContains("There was 'selector' element", $fail->getMessage());
-            $this->assertNotContains("There was 'selector' element on page", $fail->getMessage());
+            $this->assertStringContainsString("There was 'selector' element", $fail->getMessage());
+            $this->assertStringNotContainsString("There was 'selector' element on page", $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");

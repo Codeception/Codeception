@@ -734,7 +734,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if (! is_null($expectedErrorMessage)) {
-            $this->assertContains($expectedErrorMessage, $viewErrorBag->first($key));
+            $this->assertStringContainsString($expectedErrorMessage, $viewErrorBag->first($key));
         }
     }
 

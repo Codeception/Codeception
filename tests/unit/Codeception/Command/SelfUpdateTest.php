@@ -10,8 +10,8 @@ class SelfUpdateTest extends BaseCommandRunner
         $this->setUpCommand('2.1.2', ['2.1.0-beta', '2.1.2', '2.1.3', '2.2.0-RC2']);
         $this->execute();
 
-        $this->assertContains('Codeception version 2.1.2', $this->output);
-        $this->assertContains('A newer version is available: 2.1.3', $this->output);
+        $this->assertStringContainsString('Codeception version 2.1.2', $this->output);
+        $this->assertStringContainsString('A newer version is available: 2.1.3', $this->output);
     }
     
     public function testAlreadyLatest()
@@ -19,8 +19,8 @@ class SelfUpdateTest extends BaseCommandRunner
         $this->setUpCommand('2.1.8', ['2.1.0-beta', '2.1.7', '2.1.8', '2.2.0-RC2']);
         $this->execute();
 
-        $this->assertContains('Codeception version 2.1.8', $this->output);
-        $this->assertContains('You are already using the latest version.', $this->output);
+        $this->assertStringContainsString('Codeception version 2.1.8', $this->output);
+        $this->assertStringContainsString('You are already using the latest version.', $this->output);
     }
 
     /**

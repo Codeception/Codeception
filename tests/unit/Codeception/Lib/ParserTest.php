@@ -101,21 +101,21 @@ EOF;
     public function testSteps()
     {
         $code = file_get_contents(\Codeception\Configuration::projectDir().'tests/cli/UnitCept.php');
-        $this->assertContains('$I->seeInThisFile', $code);
+        $this->assertStringContainsString('$I->seeInThisFile', $code);
         $this->parser->parseSteps($code);
         $text = $this->scenario->getText();
-        $this->assertContains("I see in this file", $text);
+        $this->assertStringContainsString("I see in this file", $text);
     }
 
     public function testStepsWithFriends()
     {
         $code = file_get_contents(\Codeception\Configuration::projectDir().'tests/web/FriendsCept.php');
-        $this->assertContains('$I->haveFriend', $code);
+        $this->assertStringContainsString('$I->haveFriend', $code);
         $this->parser->parseSteps($code);
         $text = $this->scenario->getText();
-        $this->assertContains("jon does", $text);
-        $this->assertContains("I have friend", $text);
-        $this->assertContains("back to me", $text);
+        $this->assertStringContainsString("jon does", $text);
+        $this->assertStringContainsString("I have friend", $text);
+        $this->assertStringContainsString("back to me", $text);
     }
 
     public function testParseFile()

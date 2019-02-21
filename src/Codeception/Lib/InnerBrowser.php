@@ -144,7 +144,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * // in Helper class
      * public function seeResponseContains($text)
      * {
-     *    $this->assertContains($text, $this->getModule('{{MODULE_NAME}}')->_getResponseContent(), "response contains");
+     *    $this->assertStringContainsString($text, $this->getModule('{{MODULE_NAME}}')->_getResponseContent(), "response contains");
      * }
      * ?>
      * ```
@@ -546,12 +546,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeInCurrentUrl($uri)
     {
-        $this->assertContains($uri, $this->_getCurrentUri());
+        $this->assertStringContainsString($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeInCurrentUrl($uri)
     {
-        $this->assertNotContains($uri, $this->_getCurrentUri());
+        $this->assertStringNotContainsString($uri, $this->_getCurrentUri());
     }
 
     public function seeCurrentUrlEquals($uri)
@@ -1662,7 +1662,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$nodes->count()) {
             throw new ElementNotFound("<title>", "Tag");
         }
-        $this->assertContains($title, $nodes->first()->text(), "page title contains $title");
+        $this->assertStringContainsString($title, $nodes->first()->text(), "page title contains $title");
     }
 
     public function dontSeeInTitle($title)
@@ -1672,7 +1672,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $this->assertTrue(true);
             return;
         }
-        $this->assertNotContains($title, $nodes->first()->text(), "page title contains $title");
+        $this->assertStringNotContainsString($title, $nodes->first()->text(), "page title contains $title");
     }
 
     protected function assertDomContains($nodes, $message, $text = '')

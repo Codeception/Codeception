@@ -1152,7 +1152,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function seeInCurrentUrl($uri)
     {
-        $this->assertContains($uri, $this->_getCurrentUri());
+        $this->assertStringContainsString($uri, $this->_getCurrentUri());
     }
 
     public function seeCurrentUrlEquals($uri)
@@ -1167,7 +1167,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function dontSeeInCurrentUrl($uri)
     {
-        $this->assertNotContains($uri, $this->_getCurrentUri());
+        $this->assertStringNotContainsString($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeCurrentUrlEquals($uri)
@@ -1889,12 +1889,12 @@ class WebDriver extends CodeceptionModule implements
 
     public function seeInTitle($title)
     {
-        $this->assertContains($title, $this->webDriver->getTitle());
+        $this->assertStringContainsString($title, $this->webDriver->getTitle());
     }
 
     public function dontSeeInTitle($title)
     {
-        $this->assertNotContains($title, $this->webDriver->getTitle());
+        $this->assertStringNotContainsString($title, $this->webDriver->getTitle());
     }
 
     /**
@@ -1936,7 +1936,7 @@ class WebDriver extends CodeceptionModule implements
         }
         $alert = $this->webDriver->switchTo()->alert();
         try {
-            $this->assertContains($text, $alert->getText());
+            $this->assertStringContainsString($text, $alert->getText());
         } catch (\PHPUnit\Framework\AssertionFailedError $e) {
             $alert->dismiss();
             throw $e;
@@ -1958,7 +1958,7 @@ class WebDriver extends CodeceptionModule implements
         }
         $alert = $this->webDriver->switchTo()->alert();
         try {
-            $this->assertNotContains($text, $alert->getText());
+            $this->assertStringNotContainsString($text, $alert->getText());
         } catch (\PHPUnit\Framework\AssertionFailedError $e) {
             $alert->dismiss();
             throw $e;
