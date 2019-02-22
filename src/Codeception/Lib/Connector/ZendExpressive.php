@@ -91,7 +91,7 @@ class ZendExpressive extends Client
         $cwd = getcwd();
         chdir(codecept_root_dir());
 
-        if ($this->config['recreateApplicationBetweenTests'] === true || $this->application === null) {
+        if ($this->config['recreateApplicationBetweenRequests'] === true || $this->application === null) {
             $application = $this->initApplication();
         } else {
             $application = $this->application;
