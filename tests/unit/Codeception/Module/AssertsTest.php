@@ -36,9 +36,11 @@ class AssertsTest extends \Codeception\PHPUnit\TestCase
         $this->module->assertFileExists(__FILE__);
         $this->module->assertFileNotExists(__FILE__ . '.notExist');
         $this->module->assertInstanceOf('Exception', new Exception());
-        $this->module->assertInternalType('integer', 5);
+        //assertInternalType is deprecated and will be removed in PHPUnit 9
+        //$this->module->assertInternalType('integer', 5);
         $this->module->assertArrayHasKey('one', ['one' => 1, 'two' => 2]);
-        $this->module->assertArraySubset(['foo' => [1]], ['foo' => [1, 2]]);
+        //assertArraySubset is deprecated and will be removed in PHPUnit 9
+        //$this->module->assertArraySubset(['foo' => [1]], ['foo' => [1, 2]]);
         $this->module->assertCount(3, [1, 2, 3]);
     }
 

@@ -98,7 +98,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
     {
         $userId = $this->module->haveInDatabase('users', ['name' => 'john', 'email' => 'john@jon.com']);
         $this->module->haveInDatabase('groups', ['name' => 'john', 'enabled' => false]);
-        $this->assertInternalType('integer', $userId);
+        $this->assertIsInt($userId);
         $this->module->seeInDatabase('users', ['name' => 'john', 'email' => 'john@jon.com']);
         $this->module->dontSeeInDatabase('users', ['name' => 'john', 'email' => null]);
         $this->module->_after(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));

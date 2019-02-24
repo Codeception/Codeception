@@ -556,7 +556,7 @@ class PhpBrowserTest extends TestsForBrowsers
         $response = $this->module->_request('POST', '/form/try', ['user' => 'davert']);
         $data = data::get('form');
         $this->assertEquals('davert', $data['user']);
-        $this->assertInternalType('string', $response);
+        $this->assertIsString($response);
         $this->assertStringContainsString('Welcome to test app', $response);
         $this->module->click('Welcome to test app'); // page not loaded
     }
