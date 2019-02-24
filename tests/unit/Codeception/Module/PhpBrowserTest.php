@@ -7,6 +7,7 @@ require_once __DIR__ . '/TestsForBrowsers.php';
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\AssertionFailedError;
 
 class PhpBrowserTest extends TestsForBrowsers
 {
@@ -617,11 +618,9 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/info');
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     */
     public function testClickingOnButtonOutsideFormDoesNotCauseFatalError()
     {
+        $this->expectException(AssertionFailedError::class);
         $this->module->amOnPage('/form/button-not-in-form');
         $this->module->click('The Button');
     }
