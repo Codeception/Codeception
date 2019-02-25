@@ -13,15 +13,14 @@ class WebDriverNot extends WebDriver
 
     protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null) : void
     {
-        $selectorString = Locator::humanReadableString($selector);
         if (!$this->string) {
             throw new \PHPUnit\Framework\ExpectationFailedException(
-                "Element $selectorString was found",
+                "Element $selector was found",
                 $comparisonFailure
             );
         }
 
-        $output = "There was $selectorString element";
+        $output = "There was $selector element";
         $output .= $this->uriMessage("on page");
         $output .= $this->nodesList($nodes, $this->string);
         $output .= "\ncontaining '{$this->string}'";
