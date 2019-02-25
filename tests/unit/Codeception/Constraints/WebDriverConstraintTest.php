@@ -30,7 +30,7 @@ class WebDriverConstraintTest extends \Codeception\PHPUnit\TestCase
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertStringContainsString(
-                "Failed asserting that any element by selector on page /user",
+                "Failed asserting that any element by 'selector' on page /user",
                 $fail->getMessage()
             );
             $this->assertStringContainsString('+ <p> Bye world', $fail->getMessage());
@@ -50,7 +50,7 @@ class WebDriverConstraintTest extends \Codeception\PHPUnit\TestCase
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
             $this->assertStringContainsString(
-                "Failed asserting that any element by selector on page /user",
+                "Failed asserting that any element by 'selector' on page /user",
                 $fail->getMessage()
             );
             $this->assertStringNotContainsString('+ <p> item 0', $fail->getMessage());
@@ -68,8 +68,8 @@ class WebDriverConstraintTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertStringContainsString("Failed asserting that any element by selector", $fail->getMessage());
-            $this->assertStringNotContainsString("Failed asserting that any element by selector on page", $fail->getMessage());
+            $this->assertStringContainsString("Failed asserting that any element by 'selector'", $fail->getMessage());
+            $this->assertStringNotContainsString("Failed asserting that any element by 'selector' on page", $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
