@@ -5,6 +5,7 @@ namespace Codeception\Extension;
 use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 /**
@@ -80,7 +81,7 @@ class RunBefore extends Extension
     private function runProcess($command)
     {
         $this->output->debug('[RunBefore] Starting ' . $command);
-        $process = new Process($command, $this->getRootDir());
+        $process = Process::fromShellCommandline($command, $this->getRootDir());
         $process->start();
 
         return $process;
@@ -117,6 +118,10 @@ class RunBefore extends Extension
     {
         foreach ($this->processes as $index => $process) {
             if (!$this->isRunning($process['instance'])) {
+                $this->output->debug($process['instance']->getOutput());
+                if (!$process['instance']->isSuccessful()) {
+                    throw new ProcessFailedException($process['instance']);
+                };
                 $this->output->debug('[RunBefore] Completing ' . $process['instance']->getCommandLine());
                 $this->runFollowingCommand($process['following']);
                 $this->removeProcessFromMonitoring($index);
