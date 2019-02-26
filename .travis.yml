@@ -15,3 +15,4 @@ before_script:
 script:
   - php robo.phar test cli
   - php robo.phar test "unit -g core"
+  - php robo.phar test "tests/unit/Codeception/Constraints/"
