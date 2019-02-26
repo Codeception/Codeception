@@ -29,7 +29,7 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertStringContainsString("There was selector element on page /user", $fail->getMessage());
+            $this->assertStringContainsString("There was 'selector' element on page /user", $fail->getMessage());
             $this->assertStringNotContainsString('+ <p> Bye world', $fail->getMessage());
             $this->assertStringContainsString('+ <p> Bye warcraft', $fail->getMessage());
             return;
@@ -59,7 +59,7 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertStringContainsString("There was selector element on page /user", $fail->getMessage());
+            $this->assertStringContainsString("There was 'selector' element on page /user", $fail->getMessage());
             $this->assertStringContainsString('+ <p> warcraft 0', $fail->getMessage());
             $this->assertStringContainsString('+ <p> warcraft 14', $fail->getMessage());
             return;
@@ -74,8 +74,8 @@ class WebDriverConstraintNotTest extends \Codeception\PHPUnit\TestCase
         try {
             $this->constraint->evaluate($nodes, 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertStringContainsString("There was selector element", $fail->getMessage());
-            $this->assertStringNotContainsString("There was selector element on page", $fail->getMessage());
+            $this->assertStringContainsString("There was 'selector' element", $fail->getMessage());
+            $this->assertStringNotContainsString("There was 'selector' element on page", $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
