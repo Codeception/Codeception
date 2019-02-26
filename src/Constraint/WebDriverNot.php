@@ -13,6 +13,9 @@ class WebDriverNot extends WebDriver
 
     protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null) : void
     {
+        if (!is_string($selector) || strpos($selector, "'") === false) {
+            $selector = Locator::humanReadableString($selector);
+        }
         if (!$this->string) {
             throw new \PHPUnit\Framework\ExpectationFailedException(
                 "Element $selector was found",
