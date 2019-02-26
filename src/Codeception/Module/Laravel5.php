@@ -1230,7 +1230,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Build Eloquent query with attribu
+     * Build Eloquent query with attributes
      *
      * @param string $table
      * @param array $attributes
