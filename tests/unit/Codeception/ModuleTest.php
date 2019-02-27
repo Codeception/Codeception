@@ -2,7 +2,7 @@
 
 use Codeception\Util\Stub;
 
-class ModuleTest extends \PHPUnit\Framework\TestCase
+class ModuleTest extends \Codeception\PHPUnit\TestCase
 {
     public function testRequirements()
     {
