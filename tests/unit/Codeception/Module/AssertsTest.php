@@ -42,6 +42,33 @@ class AssertsTest extends \Codeception\PHPUnit\TestCase
         //assertArraySubset is deprecated and will be removed in PHPUnit 9
         //$this->module->assertArraySubset(['foo' => [1]], ['foo' => [1, 2]]);
         $this->module->assertCount(3, [1, 2, 3]);
+
+        $this->module->assertStringContainsString('bar', 'foobar');
+        $this->module->assertStringContainsStringignoringCase('bar', 'FooBar');
+        $this->module->assertStringNotContainsString('baz', 'foobar');
+        $this->module->assertStringNotContainsStringignoringCase('baz', 'FooBar');
+
+        $this->module->assertIsArray([1, 2, 3]);
+        $this->module->assertIsBool(true);
+        $this->module->assertIsFloat(1.2);
+        $this->module->assertIsInt(2);
+        $this->module->assertIsNumeric('12.34');
+        $this->module->assertIsObject(new stdClass());
+        $this->module->assertIsResource(fopen(__FILE__, 'r'));
+        $this->module->assertIsString('test');
+        $this->module->assertIsScalar('test');
+        $this->module->assertIsCallable(function() {});
+
+        $this->module->assertIsNotArray(false);
+        $this->module->assertIsNotBool([1, 2, 3]);
+        $this->module->assertIsNotFloat(false);
+        $this->module->assertIsNotInt(false);
+        $this->module->assertIsNotNumeric(false);
+        $this->module->assertIsNotObject(false);
+        $this->module->assertIsNotResource(false);
+        $this->module->assertIsNotString(false);
+        $this->module->assertIsNotScalar(function() {});
+        $this->module->assertIsNotCallable('test');
     }
 
     public function testExceptions()
