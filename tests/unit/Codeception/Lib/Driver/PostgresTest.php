@@ -135,10 +135,8 @@ class PostgresTest extends Unit
 
     public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
     {
-        $this->setExpectedException(
-            '\Exception',
-            'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
-        );
+        $this->expectException('\Exception');
+        $this->expectExceptionMessage('getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead');
         $this->postgres->getPrimaryColumn('composite_pk');
     }
 

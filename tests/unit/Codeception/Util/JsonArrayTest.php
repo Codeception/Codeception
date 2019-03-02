@@ -55,7 +55,7 @@ class JsonArrayTest extends \Codeception\Test\Unit
      */
     public function testThrowsInvalidArgumentExceptionIfJsonIsInvalid()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         new JsonArray('{"test":');
     }
 

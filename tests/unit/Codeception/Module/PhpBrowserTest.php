@@ -452,7 +452,7 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testFillFieldWithoutPage()
     {
-        $this->setExpectedException("\\Codeception\\Exception\\ModuleException");
+        $this->expectException("\\Codeception\\Exception\\ModuleException");
         $this->module->fillField('#name', 'Nothing special');
     }
 
@@ -530,7 +530,7 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testRequestApi()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleException');
+        $this->expectException('Codeception\Exception\ModuleException');
         $response = $this->module->_request('POST', '/form/try', ['user' => 'davert']);
         $data = data::get('form');
         $this->assertEquals('davert', $data['user']);
@@ -555,10 +555,8 @@ class PhpBrowserTest extends TestsForBrowsers
     public function testClickFailure()
     {
         $this->module->amOnPage('/info');
-        $this->setExpectedException(
-            'Codeception\Exception\ElementNotFound',
-            "'Sign In!' is invalid CSS and XPath selector and Link or Button element with 'name=Sign In!' was not found"
-        );
+        $this->expectException('Codeception\Exception\ElementNotFound');
+        $this->expectExceptionMessage("'Sign In!' is invalid CSS and XPath selector and Link or Button element with 'name=Sign In!' was not found");
         $this->module->click('Sign In!');
     }
 
@@ -625,10 +623,8 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testGrabPageSourceWhenNotOnPage()
     {
-        $this->setExpectedException(
-            '\Codeception\Exception\ModuleException',
-            'Page not loaded. Use `$I->amOnPage` (or hidden API methods `_request` and `_loadPage`) to open it'
-        );
+        $this->expectException('\Codeception\Exception\ModuleException');
+        $this->expectExceptionMessage('Page not loaded. Use `$I->amOnPage` (or hidden API methods `_request` and `_loadPage`) to open it');
         $this->module->grabPageSource();
     }
 

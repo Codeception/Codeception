@@ -89,7 +89,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         // Since table does not exist it should fail
         // TODO: Catch this exception at the driver level and re-throw a general one
         // just for "table not found" across all the drivers
-        $this->setExpectedException('PDOException');
+        $this->expectException('PDOException');
 
         $this->module->dontSeeInDatabase('users', ['name' => 'davert']);
     }

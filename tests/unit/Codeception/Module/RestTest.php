@@ -109,7 +109,7 @@ class RestTest extends Unit
 
     public function testInvalidJson()
     {
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->expectException('PHPUnit\Framework\ExpectationFailedException');
         $this->setStubResponse('{xxx = yyy}');
         $this->module->seeResponseIsJson();
     }
@@ -131,7 +131,7 @@ class RestTest extends Unit
 
     public function testInvalidXml()
     {
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->expectException('PHPUnit\Framework\ExpectationFailedException');
         $this->setStubResponse('<xml><name>John</surname></xml>');
         $this->module->seeResponseIsXml();
     }
@@ -437,13 +437,14 @@ class RestTest extends Unit
 
     public function testAmDigestAuthenticatedThrowsExceptionWithFunctionalModules()
     {
-        $this->setExpectedException('\Codeception\Exception\ModuleException', 'Not supported by functional modules');
+        $this->expectException('\Codeception\Exception\ModuleException');
+        $this->expectExceptionMessage('Not supported by functional modules');
         $this->module->amDigestAuthenticated('username', 'password');
     }
 
     protected function shouldFail()
     {
-        $this->setExpectedException('PHPUnit\Framework\AssertionFailedError');
+        $this->expectException('PHPUnit\Framework\AssertionFailedError');
     }
 }
 

@@ -97,10 +97,8 @@ class MysqlTest extends Unit
 
     public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
     {
-        $this->setExpectedException(
-            '\Exception',
-            'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
-        );
+        $this->expectException('\Exception');
+        $this->expectExceptionMessage('getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead');
         $this->mysql->getPrimaryColumn('composite_pk');
     }
 
@@ -142,7 +140,8 @@ class MysqlTest extends Unit
         $expectedMessage = 'You have an error in your SQL syntax; ' .
             'check the manual that corresponds to your MySQL server version for the right syntax to use near ' .
             "'VALS('')' at line 1\nSQL query being executed: \n" . $sql;
-        $this->setExpectedException('Codeception\Exception\ModuleException', $expectedMessage);
+        $this->expectException('Codeception\Exception\ModuleException');
+        $this->expectExceptionMessage( $expectedMessage);
         $this->mysql->load([$sql]);
     }
 }

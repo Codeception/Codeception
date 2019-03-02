@@ -81,19 +81,15 @@ class SqliteTest extends Unit
 
     public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
     {
-        $this->setExpectedException(
-            '\Exception',
-            'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
-        );
+        $this->expectException('\Exception');
+        $this->expectExceptionMessage('getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead');
         self::$sqlite->getPrimaryColumn('composite_pk');
     }
 
     public function testThrowsExceptionIfInMemoryDatabaseIsUsed()
     {
-        $this->setExpectedException(
-            '\Codeception\Exception\ModuleException',
-            ':memory: database is not supported'
-        );
+        $this->expectException('\Codeception\Exception\ModuleException');
+        $this->expectExceptionMessage(':memory: database is not supported');
 
         Db::create('sqlite::memory:', '', '');
     }

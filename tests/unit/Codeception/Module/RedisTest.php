@@ -97,7 +97,7 @@ class RedisTest extends Unit
             $exceptionClass = 'PHPUnit\Framework\AssertionFailedError';
         }
 
-        $this->setExpectedException($exceptionClass);
+        $this->expectException($exceptionClass);
     }
 
     // ****************************************

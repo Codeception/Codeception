@@ -15,7 +15,10 @@ class DiTest extends \Codeception\Test\Unit
 
     protected function injectionShouldFail($msg = '')
     {
-        $this->setExpectedException('Codeception\Exception\InjectionException', $msg);
+        $this->expectException('Codeception\Exception\InjectionException');
+        if ($msg) {
+            $this->expectExceptionMessage($msg);
+        }
     }
 
     public function testFailDependenciesCyclic()

@@ -92,7 +92,7 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
 
     public function testDontSeeIsCaseInsensitiveForUnicodeText()
     {
-        $this->setExpectedException("PHPUnit\Framework\AssertionFailedError");
+        $this->expectException("PHPUnit\Framework\AssertionFailedError");
         $this->module->amOnPage('/info');
         $this->module->dontSee('ссылочка');
     }
@@ -129,50 +129,40 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
 
     public function testSeeLinkFailsIfTextDoesNotMatch()
     {
-        $this->setExpectedException(
-            'PHPUnit\Framework\AssertionFailedError',
-            "No links containing text 'Codeception' were found in page /external_url"
-        );
+        $this->expectException('PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage("No links containing text 'Codeception' were found in page /external_url");
         $this->module->amOnPage('/external_url');
         $this->module->seeLink('Codeception');
     }
 
     public function testSeeLinkFailsIfHrefDoesNotMatch()
     {
-        $this->setExpectedException(
-            'PHPUnit\Framework\AssertionFailedError',
-            "No links containing text 'Next' and URL '/fsdfsdf/' were found in page /external_url"
-        );
+        $this->expectException('PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage("No links containing text 'Next' and URL '/fsdfsdf/' were found in page /external_url");
         $this->module->amOnPage('/external_url');
         $this->module->seeLink('Next', '/fsdfsdf/');
     }
 
     public function testSeeLinkFailsIfHrefDoesNotMatchExactly()
     {
-        $this->setExpectedException(
-            'PHPUnit\Framework\AssertionFailedError',
-            "No links containing text 'Next' and URL 'http://codeception' were found in page /external_url"
-        );
+        $this->expectException('PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage("No links containing text 'Next' and URL 'http://codeception' were found in page /external_url");
         $this->module->amOnPage('/external_url');
         $this->module->seeLink('Next', 'http://codeception');
     }
 
     public function testDontSeeLinkFailsIfTextMatches()
     {
-        $this->setExpectedException(
-            'PHPUnit\Framework\AssertionFailedError',
-            "Link containing text 'Next' was found in page /external_url"
-        );
+        $this->expectException('PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage("Link containing text 'Next' was found in page /external_url");
         $this->module->amOnPage('/external_url');
         $this->module->dontSeeLink('Next');
     }
 
     public function testDontSeeLinkFailsIfTextAndUrlMatches()
     {
-        $this->setExpectedException(
-            'PHPUnit\Framework\AssertionFailedError',
-            "Link containing text 'Next' and URL 'http://codeception.com/' was found in page /external_url"
-        );
+        $this->expectException('PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage("Link containing text 'Next' and URL 'http://codeception.com/' was found in page /external_url");
         $this->module->amOnPage('/external_url');
         $this->module->dontSeeLink('Next', 'http://codeception.com/');
     }
@@ -186,10 +176,8 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
 
     public function testDontSeeLinkMatchesRelativeLink()
     {
-        $this->setExpectedException(
-            'PHPUnit\Framework\AssertionFailedError',
-            "Link containing text 'Sign in!' and URL '/login' was found in page /info"
-        );
+        $this->expectException('PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage("Link containing text 'Sign in!' and URL '/login' was found in page /info");
         $this->module->amOnPage('/info');
         $this->module->dontSeeLink('Sign in!', '/login');
     }
@@ -624,7 +612,7 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     public function testSeeInFormFieldsFails()
     {
         $this->module->amOnPage('/form/field_values');
-        $this->setExpectedException("PHPUnit\Framework\AssertionFailedError");
+        $this->expectException("PHPUnit\Framework\AssertionFailedError");
         $params = [
             'radio1' => 'something I should not see',
             'checkbox1' => true,
@@ -662,7 +650,7 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     public function testDontSeeInFormFieldsFails()
     {
         $this->module->amOnPage('/form/field_values');
-        $this->setExpectedException("PHPUnit\Framework\AssertionFailedError");
+        $this->expectException("PHPUnit\Framework\AssertionFailedError");
         $params = [
             'checkbox[]' => [
                 'wont see this anyway',
@@ -790,7 +778,7 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     // regression test. https://github.com/Codeception/Codeception/issues/587
     public function testSeeElementOnPageFails()
     {
-        $this->setExpectedException("PHPUnit\Framework\AssertionFailedError");
+        $this->expectException("PHPUnit\Framework\AssertionFailedError");
         $this->module->amOnPage('/form/field');
         $this->module->dontSeeElement('input[name=name]');
     }
@@ -1210,7 +1198,7 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
 
     protected function shouldFail()
     {
-        $this->setExpectedException('PHPUnit\Framework\AssertionFailedError');
+        $this->expectException('PHPUnit\Framework\AssertionFailedError');
     }
 
     /**
@@ -1354,28 +1342,28 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
      */
     public function testWrongXpath()
     {
-        $this->setExpectedException('Codeception\Exception\MalformedLocatorException');
+        $this->expectException('Codeception\Exception\MalformedLocatorException');
         $this->module->amOnPage('/');
         $this->module->seeElement('//aas[asd}[sd]a[/[');
     }
 
     public function testWrongCSS()
     {
-        $this->setExpectedException('Codeception\Exception\MalformedLocatorException');
+        $this->expectException('Codeception\Exception\MalformedLocatorException');
         $this->module->amOnPage('/');
         $this->module->seeElement('.user#iasos<here');
     }
 
     public function testWrongStrictCSSLocator()
     {
-        $this->setExpectedException('Codeception\Exception\MalformedLocatorException');
+        $this->expectException('Codeception\Exception\MalformedLocatorException');
         $this->module->amOnPage('/');
         $this->module->seeElement(['css' => 'hel!1$<world']);
     }
 
     public function testWrongStrictXPathLocator()
     {
-        $this->setExpectedException('Codeception\Exception\MalformedLocatorException');
+        $this->expectException('Codeception\Exception\MalformedLocatorException');
         $this->module->amOnPage('/');
         $this->module->seeElement(['xpath' => 'hello<wo>rld']);
     }
@@ -1585,8 +1573,8 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
      */
     public function testClickThrowsElementNotFoundExceptionWhenTextContainsNumber()
     {
-        $this->setExpectedException('Codeception\Exception\ElementNotFound',
-            "'Link 2' is invalid CSS and XPath selector and Link or Button element with 'name=Link 2' was not found.");
+        $this->expectException('Codeception\Exception\ElementNotFound');
+        $this->expectExceptionMessage("'Link 2' is invalid CSS and XPath selector and Link or Button element with 'name=Link 2' was not found.");
         $this->module->amOnPage('/info');
         $this->module->click('Link 2');
     }
@@ -1707,7 +1695,8 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     {
         $filename = 'does-not-exist.jpg';
         $expectedMessage = 'File does not exist: ' . codecept_data_dir($filename);
-        $this->setExpectedException('InvalidArgumentException', $expectedMessage);
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage($expectedMessage);
 
         $this->module->amOnPage('/form/file');
         $this->module->attachFile('Avatar', $filename);

@@ -157,7 +157,7 @@ EOF;
         if (PHP_MAJOR_VERSION < 7) {
             $this->markTestSkipped();
         }
-        $this->setExpectedException('Codeception\Exception\TestParseException');
+        $this->expectException('Codeception\Exception\TestParseException');
         Parser::load(codecept_data_dir('Invalid.php'));
     }
 
