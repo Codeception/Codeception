@@ -483,7 +483,7 @@ class PhpBrowserTest extends TestsForBrowsers
         $handler = \GuzzleHttp\HandlerStack::create($mock);
         $handler->push(\GuzzleHttp\Middleware::history($this->history));
         $client = new \GuzzleHttp\Client(['handler' => $handler, 'base_uri' => 'http://codeception.com']);
-        $guzzleConnector = new \Codeception\Lib\Connector\Guzzle6();
+        $guzzleConnector = new \Codeception\Lib\Connector\Guzzle();
         $guzzleConnector->setClient($client);
         $guzzleConnector->getCookieJar()->set(new \Symfony\Component\BrowserKit\Cookie('hello', 'world'));
         $guzzleConnector->request('GET', 'http://codeception.com/');

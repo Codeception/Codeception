@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Lib\Connector\Guzzle6;
+use Codeception\Lib\Connector\Guzzle;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Remote;
@@ -110,7 +110,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
     ];
 
     /**
-     * @var \Codeception\Lib\Connector\Guzzle6
+     * @var \Codeception\Lib\Connector\Guzzle
      */
     public $client;
 
@@ -132,7 +132,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
     public function _before(TestInterface $test)
     {
         if (!$this->client) {
-            $this->client = new Guzzle6();
+            $this->client = new Guzzle();
         }
         $this->_prepareSession();
     }
@@ -220,7 +220,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
     public function _initializeSession()
     {
         // independent sessions need independent cookies
-        $this->client = new Guzzle6();
+        $this->client = new Guzzle();
         $this->_prepareSession();
     }
 
@@ -240,7 +240,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession, RequiresP
 
         $defaults['base_uri'] = $this->config['url'];
         $defaults['curl'] = $curlOptions;
-        $handler = Guzzle6::createHandler($this->config['handler']);
+        $handler = Guzzle::createHandler($this->config['handler']);
         if ($handler && is_array($this->config['middleware'])) {
             foreach ($this->config['middleware'] as $middleware) {
                 $handler->push($middleware);

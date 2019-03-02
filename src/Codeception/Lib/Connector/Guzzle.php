@@ -20,7 +20,7 @@ use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
 
-class Guzzle6 extends Client
+class Guzzle extends Client
 {
     protected $requestOptions = [
         'allow_redirects' => false,
