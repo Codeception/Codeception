@@ -401,15 +401,6 @@ EOF;
     }
 
     /**
-     * @deprecated use seeSoapResponseCodeIs instead
-     */
-    public function seeResponseCodeIs($code)
-    {
-        Notification::deprecate('SOAP::seeResponseCodeIs deprecated in favor of seeSoapResponseCodeIs', 'SOAP Module');
-        $this->seeSoapResponseCodeIs($code);
-    }
-
-    /**
      * Finds and returns text contents of element.
      * Element is matched by either CSS or XPath
      *
