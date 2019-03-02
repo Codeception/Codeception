@@ -25,12 +25,8 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->_setConfig(['url' => $url]);
         $this->module->_initialize();
         $this->module->_before($this->makeTest());
-        if (class_exists('GuzzleHttp\Url')) {
-            $this->history = new \GuzzleHttp\Subscriber\History();
-            $this->module->guzzle->getEmitter()->attach($this->history);
-        } else {
-            $this->module->guzzle->getConfig('handler')->push(\GuzzleHttp\Middleware::history($this->history));
-        }
+        $this->module->guzzle->getConfig('handler')->push(\GuzzleHttp\Middleware::history($this->history));
+
     }
 
     private function getLastRequest()
@@ -380,11 +376,7 @@ class PhpBrowserTest extends TestsForBrowsers
                 'CURLOPT_SSL_CIPHER_LIST' => 'TLSv1',
             )));
         $this->module->_initialize();
-        if (method_exists($this->module->guzzle, 'getConfig')) {
-            $config = $this->module->guzzle->getConfig();
-        } else {
-            $config = $this->module->guzzle->getDefaultOption('config');
-        }
+        $config = $this->module->guzzle->getConfig();
 
         $this->assertArrayHasKey('curl', $config);
         $this->assertArrayHasKey(CURLOPT_SSL_CIPHER_LIST, $config['curl']);
@@ -466,8 +458,6 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testArrayFieldSubmitForm()
     {
-        $this->skipForOldGuzzle();
-
         $this->module->amOnPage('/form/example17');
         $this->module->submitForm(
             'form',
@@ -487,8 +477,6 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testCookiesForDomain()
     {
-        $this->skipForOldGuzzle();
-
         $mock = new MockHandler([
             new Response(200, ['X-Foo' => 'Bar']),
         ]);
@@ -527,14 +515,6 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->amOnPage('/cookies');
         $this->module->seeCurrentUrlEquals('/info');
     }
-
-    private function skipForOldGuzzle()
-    {
-        if (class_exists('GuzzleHttp\Url')) {
-            $this->markTestSkipped("Not for Guzzle <6");
-        }
-    }
-
     /**
      * @issue https://github.com/Codeception/Codeception/issues/2234
      */
