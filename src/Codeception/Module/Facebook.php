@@ -159,9 +159,7 @@ EOF;
                 'secret' => $this->config['secret'],
             ],
             function ($title, $message) {
-                if (version_compare(PHP_VERSION, '5.4', '>=')) {
-                    $this->debugSection($title, $message);
-                }
+                $this->debugSection($title, $message);
             }
         );
     }

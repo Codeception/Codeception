@@ -109,10 +109,6 @@ abstract class TestsForDb extends \Codeception\Test\Unit
 
     public function testHaveInDatabaseWithCompositePrimaryKey()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('Does not support WITHOUT ROWID on travis');
-        }
-
         $insertQuery = 'INSERT INTO composite_pk (group_id, id, status) VALUES (?, ?, ?)';
         //this test checks that module does not delete columns by partial primary key
         $this->module->driver->executeQuery($insertQuery, [1, 2, 'test']);

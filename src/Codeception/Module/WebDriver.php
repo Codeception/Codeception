@@ -427,18 +427,10 @@ class WebDriver extends CodeceptionModule implements
         }
         $this->setBaseElement();
 
-        if (method_exists($this->webDriver, 'getCapabilities')) {
-            $browser = $this->webDriver->getCapabilities()->getBrowserName();
-            $capabilities = $this->webDriver->getCapabilities()->toArray();
-        } else {
-            //Used with facebook/php-webdriver <1.3.0 (usually on PHP 5.4)
-            $browser = $this->config['browser'];
-            $capabilities = $this->config['capabilities'];
-        }
         $test->getMetadata()->setCurrent(
             [
-                'browser'      => $browser,
-                'capabilities' => $capabilities,
+                'browser'      => $this->webDriver->getCapabilities()->getBrowserName(),
+                'capabilities' => $this->webDriver->getCapabilities()->toArray(),
             ]
         );
     }
