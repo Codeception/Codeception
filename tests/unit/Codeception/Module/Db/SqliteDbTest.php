@@ -17,10 +17,6 @@ class SqliteDbTest extends TestsForDb
             $this->markTestSkipped('Disabled on Appveyor');
         }
 
-        if (getenv('WERCKER_ROOT')) {
-            $this->markTestSkipped('Disabled on Wercker CI');
-        }
-
         $this->markTestSkipped('Currently Travis CI uses old SQLite :(');
 
         $config = $this->getConfig();

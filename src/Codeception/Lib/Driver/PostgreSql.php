@@ -94,12 +94,6 @@ class PostgreSql extends Db
                     "To run 'COPY' commands 'pgsql' extension should be installed"
                 );
             }
-            if (defined('HHVM_VERSION')) {
-                throw new ModuleException(
-                    '\Codeception\Module\Db',
-                    "'COPY' command is not supported on HHVM, please use INSERT instead"
-                );
-            }
             $constring = str_replace(';', ' ', substr($this->dsn, 6));
             $constring .= ' user=' . $this->user;
             $constring .= ' password=' . $this->password;
