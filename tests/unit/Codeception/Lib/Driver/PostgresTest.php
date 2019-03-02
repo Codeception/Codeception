@@ -128,18 +128,6 @@ class PostgresTest extends Unit
         $this->assertEquals(1, $this->postgres->lastInsertId('seqnames'));
     }
 
-    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
-    {
-        $this->assertEquals('id', $this->postgres->getPrimaryColumn('order'));
-    }
-
-    public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
-    {
-        $this->expectException('\Exception');
-        $this->expectExceptionMessage('getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead');
-        $this->postgres->getPrimaryColumn('composite_pk');
-    }
-
     /**
      * @issue https://github.com/Codeception/Codeception/issues/4059
      */
