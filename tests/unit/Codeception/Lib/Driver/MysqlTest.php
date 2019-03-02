@@ -90,32 +90,6 @@ class MysqlTest extends Unit
         $this->assertEquals([], $this->mysql->getPrimaryKey('no_pk'));
     }
 
-    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
-    {
-        $this->assertEquals('id', $this->mysql->getPrimaryColumn('order'));
-    }
-
-    public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
-    {
-        $this->expectException('\Exception');
-        $this->expectExceptionMessage('getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead');
-        $this->mysql->getPrimaryColumn('composite_pk');
-    }
-
-    public function testDeleteFromTableUsingReservedWordAsTableName()
-    {
-        $this->mysql->deleteQuery('order', 1);
-        $res = $this->mysql->getDbh()->query("select id from `order` where id = 1");
-        $this->assertEquals(0, $res->rowCount());
-    }
-
-    public function testDeleteFromTableUsingReservedWordAsPrimaryKey()
-    {
-        $this->mysql->deleteQuery('table_with_reserved_primary_key', 1, 'unique');
-        $res = $this->mysql->getDbh()->query("select name from `table_with_reserved_primary_key` where `unique` = 1");
-        $this->assertEquals(0, $res->rowCount());
-    }
-
     public function testSelectWithBooleanParam()
     {
         $res = $this->mysql->executeQuery("select `id` from `users` where `is_active` = ?", [false]);

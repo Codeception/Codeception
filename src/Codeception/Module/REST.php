@@ -1434,22 +1434,6 @@ EOF;
     }
 
     /**
-     * Deprecated since 2.0.9 and removed since 2.1.0
-     *
-     * @param $path
-     * @throws ModuleException
-     * @deprecated
-     */
-    public function grabDataFromJsonResponse($path)
-    {
-        throw new ModuleException(
-            $this,
-            "This action was deprecated in Codeception 2.0.9 and removed in 2.1. "
-            . "Please use `grabDataFromResponseByJsonPath` instead"
-        );
-    }
-
-    /**
      * Prevents automatic redirects to be followed by the client
      *
      * ```php

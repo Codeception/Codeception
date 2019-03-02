@@ -74,18 +74,6 @@ class SqliteTest extends Unit
         $this->assertEquals(['group_id', 'id'], self::$sqlite->getPrimaryKey('composite_pk'));
     }
 
-    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableNameWhenTableHasNoRowId()
-    {
-        $this->assertEquals('id', self::$sqlite->getPrimaryColumn('order'));
-    }
-
-    public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
-    {
-        $this->expectException('\Exception');
-        $this->expectExceptionMessage('getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead');
-        self::$sqlite->getPrimaryColumn('composite_pk');
-    }
-
     public function testThrowsExceptionIfInMemoryDatabaseIsUsed()
     {
         $this->expectException('\Codeception\Exception\ModuleException');
