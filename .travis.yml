@@ -47,10 +47,8 @@ matrix:
     env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
   - php: 7.0
     env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-#  - php: 7.1
-#    env: FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' functional
-#  - php: 7.2
-#    env: FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' functional
+  - php: 7.2
+    env: FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
 addons:
   postgresql: "9.2"
 
