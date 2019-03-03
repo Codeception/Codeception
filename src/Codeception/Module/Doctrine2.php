@@ -314,7 +314,7 @@ EOF;
     public function haveInRepository($entity, array $data)
     {
         $reflectedEntity = new \ReflectionClass($entity);
-        $entityObject = $reflectedEntity->newInstance();
+        $entityObject = $reflectedEntity->newInstanceWithoutConstructor();
         foreach ($reflectedEntity->getProperties() as $property) {
             /** @var $property \ReflectionProperty */
             if (!isset($data[$property->name])) {
