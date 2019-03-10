@@ -160,42 +160,42 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     {
         $dummy = Stub::make(new \DummyClass());
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::make(new \DummyOverloadableClass());
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::makeEmpty(new \DummyClass());
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::makeEmpty(new \DummyOverloadableClass());
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::makeEmptyExcept(new \DummyClass(), 'helloWorld');
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::makeEmptyExcept(new \DummyOverloadableClass(), 'helloWorld');
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::construct(new \DummyClass());
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::construct(new \DummyOverloadableClass());
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::constructEmpty(new \DummyClass());
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::constructEmpty(new \DummyOverloadableClass());
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::constructEmptyExcept(new \DummyClass(), 'helloWorld');
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::constructEmptyExcept(new \DummyOverloadableClass(), 'helloWorld');
