@@ -1,7 +1,7 @@
 <?php
-namespace WebGuy;
+namespace WebGuy\Steps;
 
-class RootWatcherSteps extends \WebGuy
+class RootWatcher extends \WebGuy
 {
     public function seeInRootPage($selector)
     {
