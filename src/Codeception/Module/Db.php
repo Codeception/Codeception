@@ -639,6 +639,20 @@ class Db extends CodeceptionModule implements DbInterface
     }
 
     /**
+     * Executes a Truncate command on the table. Useful when creating records with frameworks/orm.
+     *
+     * ```php
+     * $I->truncateTable('users');
+     * ```
+     *
+     * @param $tableName
+     */
+    public function truncateTable($tableName)
+    {
+        return $this->_getDriver()->truncateTable($tableName);
+    }
+
+    /**
      * @param  array  $databaseConfig
      * @param  string $databaseKey
      * @return bool

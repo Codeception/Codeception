@@ -81,6 +81,14 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         $this->module->dontSeeInDatabase('empty_table');
     }
 
+    public function testTruncateTable()
+    {
+        $this->module->_cleanup();
+        $this->module->haveInDatabase('users', ['name' => 'john', 'email' => 'john@doe.com']);
+        $this->module->truncateTable('users');
+        $this->module->dontSeeInDatabase('users', ['name' => 'john', 'email' => 'john@doe.com']);
+    }
+
     public function testCleanupDatabase()
     {
         $this->module->seeInDatabase('users', ['name' => 'davert']);

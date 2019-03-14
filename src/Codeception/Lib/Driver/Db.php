@@ -378,4 +378,15 @@ class Db
     {
         return $this->options;
     }
+
+    /**
+     * Executes Truncate Against DB
+     * @param $tableName
+     *
+     * @throws \Codeception\Exception\ModuleException
+     */
+    public function truncateTable($tableName)
+    {
+        $this->sqlQuery('TRUNCATE ' . $this->getQuotedName($tableName));
+    }
 }
