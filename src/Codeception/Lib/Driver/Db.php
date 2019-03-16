@@ -214,12 +214,6 @@ class Db
 
         $params = [];
         foreach ($criteria as $k => $v) {
-            if ($v === null) {
-                $params[] = $this->getQuotedName($k) . " IS NULL ";
-                unset($criteria[$k]);
-                continue;
-            }
-
             $hasOperand = false; // search for equals - no additional operand given
 
             foreach ($operands as $operand) {
@@ -229,13 +223,23 @@ class Db
 
                 $hasOperand = true;
                 $k = str_ireplace(" $operand", '', $k);
-                $operand = strtoupper($operand);
-                $params[] = $this->getQuotedName($k) . " $operand ? ";
+
+                if ($v === null && $operand === '!=') {
+                    $params[] = $this->getQuotedName($k) . " IS NOT NULL ";
+                } else {
+                    $operand  = strtoupper($operand);
+                    $params[] = $this->getQuotedName($k) . " $operand ? ";
+                }
+
                 break;
             }
 
             if (!$hasOperand) {
-                $params[] = $this->getQuotedName($k) . " = ? ";
+                if ($v === null) {
+                    $params[] = $this->getQuotedName($k) . " IS NULL ";
+                } else {
+                    $params[] = $this->getQuotedName($k) . " = ? ";
+                }
             }
         }
 

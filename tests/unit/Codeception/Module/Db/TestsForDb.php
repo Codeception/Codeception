@@ -69,6 +69,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         $this->module->seeNumRecords(1, 'users', ['name' => 'davert']);
         $this->module->seeNumRecords(0, 'users', ['name' => 'davert', 'email' => 'xxx@yyy.zz']);
         $this->module->seeNumRecords(0, 'users', ['name' => 'user1']);
+        $this->module->seeNumRecords(4, 'users', ['email !=' => null]);
     }
 
     public function testDontSeeInDatabase()
