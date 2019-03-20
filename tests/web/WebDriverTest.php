@@ -91,10 +91,8 @@ class WebDriverTest extends TestsForBrowsers
     public function testFailedSeeInPopup()
     {
         $this->notForPhantomJS();
-        $this->setExpectedException(
-            '\PHPUnit\Framework\AssertionFailedError',
-            'Failed asserting that \'Really?\' contains "Different text"'
-        );
+        $this->expectException('\PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage('Failed asserting that \'Really?\' contains "Different text"');
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->seeInPopup('Different text');
@@ -113,10 +111,8 @@ class WebDriverTest extends TestsForBrowsers
     public function testFailedDontSeeInPopup()
     {
         $this->notForPhantomJS();
-        $this->setExpectedException(
-            '\PHPUnit\Framework\AssertionFailedError',
-            'Failed asserting that \'Really?\' does not contain "Really?"'
-        );
+        $this->expectException('\PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage('Failed asserting that \'Really?\' does not contain "Really?"');
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->dontSeeInPopup('Really?');
@@ -621,7 +617,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testSeeElementMalformedWdLocator()
     {
-        $this->setExpectedException('Codeception\Exception\MalformedLocatorException');
+        $this->expectException('Codeception\Exception\MalformedLocatorException');
         $this->module->amOnPage('/');
         $this->module->seeElement(WebDriverBy::xpath('H---EY!'));
     }
@@ -1083,10 +1079,8 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testGrabPageSourceWhenNotOnPage()
     {
-        $this->setExpectedException(
-            '\Codeception\Exception\ModuleException',
-            'Current url is blank, no page was opened'
-        );
+        $this->expectException('\Codeception\Exception\ModuleException');
+        $this->expectExceptionMessage('Current url is blank, no page was opened');
         $this->module->grabPageSource();
     }
 

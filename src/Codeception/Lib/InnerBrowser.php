@@ -1823,21 +1823,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     }
 
     /**
-     * Clicks on a given link.
-     *
-     * @param Link $link A Link instance
-     * @return Crawler
-     * @deprecated No longer used by InnerBrowser, please use amOnPage instead
-     */
-    protected function clientClick(Link $link)
-    {
-        if ($link instanceof Form) {
-            return $this->proceedSubmitForm($link);
-        }
-        return $this->clientRequest($link->getMethod(), $link->getUri());
-    }
-
-    /**
      * Switch to iframe or frame on the page.
      *
      * Example:

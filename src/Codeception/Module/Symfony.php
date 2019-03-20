@@ -513,26 +513,6 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      *
      * ``` php
      * <?php
-     * $em = $I->grabServiceFromContainer('doctrine');
-     * ?>
-     * ```
-     *
-     * @param $service
-     * @return mixed
-     * @part services
-     * @deprecated Use grabService instead
-     */
-    public function grabServiceFromContainer($service)
-    {
-        return $this->grabService($service);
-    }
-
-    /**
-     * Grabs a service from Symfony DIC container.
-     * Recommended to use for unit testing.
-     *
-     * ``` php
-     * <?php
      * $em = $I->grabService('doctrine');
      * ?>
      * ```

@@ -126,9 +126,6 @@ EOF;
 
     public function testParseFileWithClass()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('only for php 5.5');
-        }
         $classes = Parser::getClassesFromFile(codecept_data_dir('php55Test'));
         $this->assertEquals(['php55Test'], $classes);
     }
@@ -160,7 +157,7 @@ EOF;
         if (PHP_MAJOR_VERSION < 7) {
             $this->markTestSkipped();
         }
-        $this->setExpectedException('Codeception\Exception\TestParseException');
+        $this->expectException('Codeception\Exception\TestParseException');
         Parser::load(codecept_data_dir('Invalid.php'));
     }
 

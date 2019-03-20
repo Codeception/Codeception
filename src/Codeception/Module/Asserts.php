@@ -97,8 +97,6 @@ class Asserts extends CodeceptionModule
      *
      * @param $exception string or \Exception
      * @param $callback
-     *
-     * @deprecated Use expectThrowable instead
      */
     public function expectException($exception, $callback)
     {

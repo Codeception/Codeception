@@ -17,10 +17,6 @@ class SqliteDbTest extends TestsForDb
             $this->markTestSkipped('Disabled on Appveyor');
         }
 
-        if (getenv('WERCKER_ROOT')) {
-            $this->markTestSkipped('Disabled on Wercker CI');
-        }
-
         $this->markTestSkipped('Currently Travis CI uses old SQLite :(');
 
         $config = $this->getConfig();
@@ -30,17 +26,11 @@ class SqliteDbTest extends TestsForDb
 
     public function getConfig()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $dumpFile = 'dumps/sqlite-54.sql';
-        } else {
-            $dumpFile = 'dumps/sqlite.sql';
-        }
-
         return [
             'dsn' => 'sqlite:tests/data/sqlite.db',
             'user' => 'root',
             'password' => '',
-            'dump' => 'tests/data/' . $dumpFile,
+            'dump' => 'tests/data/dumps/sqlite.sql',
             'reconnect' => true,
             'cleanup' => true,
             'populate' => true

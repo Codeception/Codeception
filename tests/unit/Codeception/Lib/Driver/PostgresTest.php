@@ -26,11 +26,7 @@ class PostgresTest extends Unit
         if (getenv('APPVEYOR')) {
             self::$config['password'] = 'Password12!';
         }
-        $dumpFile = 'dumps/postgres.sql';
-        if (defined('HHVM_VERSION')) {
-            $dumpFile = 'dumps/postgres-hhvm.sql';
-        }
-        $sql = file_get_contents(codecept_data_dir($dumpFile));
+        $sql = file_get_contents(codecept_data_dir('dumps/postgres.sql'));
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', '', $sql);
         self::$sql = explode("\n", $sql);
     }
@@ -130,20 +126,6 @@ class PostgresTest extends Unit
     {
         $this->postgres->executeQuery('INSERT INTO seqnames(name) VALUES(?)',['test']);
         $this->assertEquals(1, $this->postgres->lastInsertId('seqnames'));
-    }
-
-    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
-    {
-        $this->assertEquals('id', $this->postgres->getPrimaryColumn('order'));
-    }
-
-    public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
-    {
-        $this->setExpectedException(
-            '\Exception',
-            'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
-        );
-        $this->postgres->getPrimaryColumn('composite_pk');
     }
 
     /**
