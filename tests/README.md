@@ -42,7 +42,7 @@ Requirements:
 * PhpBrowser - demo application running on web server
 * WebDriver, Selenium2 - demo application on web server + selenium server
 * Frameworks (general all-framework tests) - demo application
-* MongoDb, AMQP, Facebook, etc - corresponding backends
+* MongoDb, AMQP, etc - corresponding backends
 
 ### Demo Application
 
