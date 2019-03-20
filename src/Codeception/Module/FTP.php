@@ -117,7 +117,7 @@ class FTP extends Filesystem
         'timeout'  => 90,
         'user'     => 'anonymous',
         'password' => '',
-        //'key'      => '',
+        'key'      => '',
         'tmp'      => 'tests/_data',
         'passive'  => false,
         'cleanup'  => true
@@ -861,17 +861,20 @@ class FTP extends Filesystem
         }
 
         if (isset($this->config['key'])) {
-            $keyFile = file_get_contents($this->config['key']);
 
-            if (class_exists('Crypt_RSA')) {
-                $password = new \Crypt_RSA();
-            } elseif (class_exists('phpseclib\Crypt\RSA')) {
-                $password = new \phpseclib\Crypt\RSA();
-            } else {
-                throw new ModuleException('phpseclib/phpseclib library is not installed');
+            if ($this->config['key'] != '') {
+                $keyFile = file_get_contents($this->config['key']);
+
+                if (class_exists('Crypt_RSA')) {
+                    $password = new \Crypt_RSA();
+                } elseif (class_exists('phpseclib\Crypt\RSA')) {
+                    $password = new \phpseclib\Crypt\RSA();
+                } else {
+                    throw new ModuleException('phpseclib/phpseclib library is not installed');
+                }
+
+                $password->loadKey($keyFile);
             }
-
-            $password->loadKey($keyFile);
         }
 
         if (!$this->ftp->login($user, $password)) {
