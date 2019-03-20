@@ -82,7 +82,19 @@ use Codeception\Exception\ModuleException;
  *              key: ''
  *              tmp: 'tests/_data/ftp'
  *              cleanup: false
+ * *  *  * #### Example (SFTP) for symphony
  *
+ *     modules:
+ *        enabled:
+ *           - FTP:
+ *              type: sftp
+ *              host: '127.0.0.1'
+ *              port: 22
+ *              timeout: 120
+ *              user: 'root'
+ *              password: 'root'
+ *              tmp: 'tests/_data/ftp'
+ *              cleanup: false
  *
  * This module extends the Filesystem module, file contents methods are inherited from this module.
  */
@@ -105,7 +117,7 @@ class FTP extends Filesystem
         'timeout'  => 90,
         'user'     => 'anonymous',
         'password' => '',
-        'key'      => '',
+        //'key'      => '',
         'tmp'      => 'tests/_data',
         'passive'  => false,
         'cleanup'  => true
