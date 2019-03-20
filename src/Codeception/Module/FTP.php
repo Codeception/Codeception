@@ -82,7 +82,7 @@ use Codeception\Exception\ModuleException;
  *              key: ''
  *              tmp: 'tests/_data/ftp'
  *              cleanup: false
- * *  *  * #### Example (SFTP) for symphony
+ * *  *  * #### Example (SFTP) for framework symfony
  *
  *     modules:
  *        enabled:
