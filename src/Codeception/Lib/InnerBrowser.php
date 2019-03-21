@@ -842,7 +842,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
         }
 
-        $url = $url ? $url : $this->getFormUrl($frmCrawl);
+        if (!$url) {
+            $url = $this->getFormUrl($frmCrawl);
+        }
+        
         if (strcasecmp($form->getMethod(), 'GET') === 0) {
             $url = Uri::mergeUrls($url, '?' . http_build_query($requestParams));
         }
