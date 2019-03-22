@@ -114,9 +114,7 @@ EOF;
 
             if($this->em->getConnection()->isTransactionActive()) {
                 try {
-                    while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
-                        $this->em->getConnection()->rollback();
-                    }
+                    $this->rollbackTransaction();
                     $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
                 } catch (\PDOException $e) {
                 }
@@ -137,7 +135,7 @@ EOF;
         }
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
-                $this->em->getConnection()->rollback();
+                $this->rollbackTransaction();
                 $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
             } catch (\PDOException $e) {
             }
@@ -150,9 +148,7 @@ EOF;
 
             if($this->em->getConnection()->isTransactionActive()) {
                 try {
-                    while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
-                        $this->em->getConnection()->rollback();
-                    }
+                    $this->rollbackTransaction();
                     $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
                 } catch (\PDOException $e) {
                 }
@@ -203,9 +199,7 @@ EOF;
         }
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
-                while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
-                    $this->em->getConnection()->rollback();
-                }
+                $this->rollbackTransaction();
                 $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
             } catch (\PDOException $e) {
             }
@@ -481,7 +475,7 @@ EOF;
      *
      * @version 1.1
      * @param $entity
-     * @param array $params. For `IS NULL`, use `array('field'=>null)`
+     * @param array $params
      * @return array
      */
     public function grabEntitiesFromRepository($entity, $params = [])
@@ -512,7 +506,7 @@ EOF;
      *
      * @version 1.1
      * @param $entity
-     * @param array $params. For `IS NULL`, use `array('field'=>null)`
+     * @param array $params
      * @return object
      */
     public function grabEntityFromRepository($entity, $params = [])
@@ -576,4 +570,12 @@ EOF;
         }
         return $this->em;
     }
+
+    private function rollbackTransaction(): void
+    {
+        while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
+            $this->em->getConnection()->rollback();
+        }
+    }
 }
+
