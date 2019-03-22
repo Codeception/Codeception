@@ -238,9 +238,14 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if ($this->kernel === null) {
             $this->fail('Symfony2 platform module is not loaded');
         }
-        if (!isset($this->permanentServices[$this->config['em_service']])) {
+        if (!isset($this->permanentServices[$this->config['em_service']]) || !$this->permanentServices[$this->config['em_service']]->isOpen()) {
             // try to persist configured EM
             $this->persistService($this->config['em_service'], true);
+
+            if (!$this->permanentServices[$this->config['em_service']]->isOpen()) {
+                $this->grabService('doctrine')->resetManager();
+                $this->persistService($this->config['em_service'], true);
+            }
 
             if ($this->_getContainer()->has('doctrine')) {
                 $this->persistService('doctrine', true);
