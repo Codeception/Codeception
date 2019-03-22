@@ -114,7 +114,7 @@ EOF;
 
             if($this->em->getConnection()->isTransactionActive()) {
                 try {
-                    $this->rollbackTransaction();
+                    $this->rollbackTransactions();
                     $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
                 } catch (\PDOException $e) {
                 }
@@ -135,7 +135,7 @@ EOF;
         }
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
-                $this->rollbackTransaction();
+                $this->rollbackTransactions();
                 $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
             } catch (\PDOException $e) {
             }
@@ -148,7 +148,7 @@ EOF;
 
             if($this->em->getConnection()->isTransactionActive()) {
                 try {
-                    $this->rollbackTransaction();
+                    $this->rollbackTransactions();
                     $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
                 } catch (\PDOException $e) {
                 }
@@ -199,7 +199,7 @@ EOF;
         }
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
-                $this->rollbackTransaction();
+                $this->rollbackTransactions();
                 $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
             } catch (\PDOException $e) {
             }
@@ -571,7 +571,7 @@ EOF;
         return $this->em;
     }
 
-    private function rollbackTransaction(): void
+    private function rollbackTransactions(): void
     {
         while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
             $this->em->getConnection()->rollback();
