@@ -571,7 +571,7 @@ EOF;
         return $this->em;
     }
 
-    private function rollbackTransactions(): void
+    private function rollbackTransactions()
     {
         while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
             $this->em->getConnection()->rollback();
