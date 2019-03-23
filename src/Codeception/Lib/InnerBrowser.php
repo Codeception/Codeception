@@ -1253,6 +1253,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->debugSection('Response Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
     }
 
+    public function makeHtmlSnapshot($name = null)
+    {
+        if (empty($name)) {
+            $name = uniqid(date("Y-m-d_H-i-s_"));
+        }
+        $debugDir = codecept_output_dir() . 'debug';
+        if (!is_dir($debugDir)) {
+            mkdir($debugDir, 0777);
+        }
+        $fileName = $debugDir . DIRECTORY_SEPARATOR . $name . '.html';
+
+        $this->_savePageSource($fileName);
+        $this->debugSection('Snapshot Saved', "file://$fileName");
+    }
+
     public function _getResponseStatusCode()
     {
         return $this->getResponseStatusCode();

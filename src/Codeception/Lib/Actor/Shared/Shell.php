@@ -19,7 +19,9 @@ trait Shell
         );
         $output = new ConsoleOutput();
         $output->writeln("  <comment>Execution PAUSED, starting interactive shell...</comment>");
-        $output->writeln("  Type in commands to try them in action, 'ENTER' to continue execution");
+        $output->writeln("  Type in commands to try them in action, 'ENTER' to continue execution, TAB to auto-complete");
+
+        $result = '';
 
         do {
             $command = $readline->readLine('$I->'); // “> ” is the prefix of the line.
@@ -32,8 +34,12 @@ trait Shell
             }
             try {
                 $value = eval("return \$I->$command;");
-                if ($value && !is_object($value)) {
-                    codecept_debug($value);
+                if ($value) {
+                    $result = $value;
+                    if (!is_object($result)) {
+                        codecept_debug($result);
+                    }
+                    codecept_debug('>> Result saved to $result variable, you can use it in next commands');
                 }
             } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
                 $output->writeln("<error>fail</error> " . $fail->getMessage());

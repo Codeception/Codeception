@@ -707,6 +707,7 @@ class WebDriver extends CodeceptionModule implements
             $this->webDriver->takeScreenshot($filename);
         } catch (\Exception $e) {
             $this->debug('Unable to retrieve screenshot from Selenium : ' . $e->getMessage());
+            return;
         }
     }
 
@@ -757,8 +758,25 @@ class WebDriver extends CodeceptionModule implements
         }
         $screenName = $debugDir . DIRECTORY_SEPARATOR . $name . '.png';
         $this->_saveScreenshot($screenName);
-        $this->debug("Screenshot saved to $screenName");
+        $this->debugSection('Screenshot Saved', "file://$screenName");
     }
+
+    public function makeHtmlSnapshot($name = null)
+    {
+        if (empty($name)) {
+            $name = uniqid(date("Y-m-d_H-i-s_"));
+        }
+        $debugDir = codecept_output_dir() . 'debug';
+        if (!is_dir($debugDir)) {
+            mkdir($debugDir, 0777);
+        }
+        $fileName = $debugDir . DIRECTORY_SEPARATOR . $name . '.html';
+
+        $this->_savePageSource($fileName);
+        $this->debugSection('Snapshot Saved', "file://$fileName");
+    }
+
+
 
     /**
      * Resize the current window.

@@ -94,8 +94,6 @@ class Console extends Command
 
         $output->writeln("<info>Interactive console started for suite $suiteName</info>");
         $output->writeln("<info>Try Codeception commands without writing a test</info>");
-        $output->writeln("<info>type 'exit' to leave console</info>");
-        $output->writeln("<info>type 'actions' to see all available actions for this suite</info>");
 
         $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResult(), $settings);
         $dispatcher->dispatch(Events::SUITE_BEFORE, $suiteEvent);
