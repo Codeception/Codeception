@@ -2689,17 +2689,6 @@ class WebDriver extends CodeceptionModule implements
         $this->webDriver->getMouse()->contextClick();
     }
 
-    /**
-     * Pauses test execution in debug mode.
-     * To proceed test press "ENTER" in console.
-     *
-     * This method is useful while writing tests,
-     * since it allows you to inspect the current page in the middle of a test case.
-     */
-    public function pauseExecution()
-    {
-        Debug::pause();
-    }
 
     /**
      * Performs a double-click on an element matched by CSS or XPath.
