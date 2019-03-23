@@ -828,7 +828,7 @@ class WebDriver extends CodeceptionModule implements
         $params = array_filter($params);
         $params += [
             'path' => '/',
-            'expiry' => 0,
+            'expiry' => time() + 86400,
             'secure' => false,
             'httpOnly' => false,
         ];
