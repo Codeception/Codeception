@@ -83,7 +83,6 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         $failedToStart = ReflectionHelper::readPrivateProperty($result, 'lastTestFailed');
 
         if (!$this->ignored && !$failedToStart) {
-
             Timer::start();
             try {
                 $this->test();
