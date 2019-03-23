@@ -579,22 +579,6 @@ It should be mentioned that Cloud Testing services are not free. You should inve
 and choose one that fits your needs. They also may work painfully slowly if ping times between the local server
 and the cloud is too high. This may lead to random failures in acceptance tests.
 
-### AngularJS Testing
-
-In the modern era of Single Page Applications, the browser replaces the server in creating the user interface.
-Unlike traditional web applications, web pages are not reloaded on user actions.
-All interactions with the server are done in JavaScript with XHR requests.
-However, testing Single Page Applications can be a hard task.
-There could be no information of the application state: e.g. has it completed rendering or not?
-What is possible to do in this case is to use more `wait*` methods or execute JavaScript that checks the application state.
-
-For applications built with the AngularJS v1.x framework,
-we implemented [AngularJS module](http://codeception.com/docs/modules/AngularJS) which is based on Protractor
-(an official tool for testing Angular apps). Under the hood, it pauses step execution
-before the previous actions are completed and use the AngularJS API to check the application state.
-
-The AngularJS module extends WebDriver so that all the configuration options from it are available.
-
 ### Debugging
 
 Codeception modules can print valuable information while running.
