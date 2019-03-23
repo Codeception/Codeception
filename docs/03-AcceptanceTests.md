@@ -274,6 +274,15 @@ $I->cantSeeInField('user[name]', 'Miles');
 
 Each failed assertion will be shown in the test results, but it won't stop the test.
 
+Conditional assertions are disabled by default. To enable them you should add corresponding step generators to suite config:
+
+```yaml
+# in acceptance.suite.yml 
+# or in codeception.yml inside suites section
+steps:
+  - \Codeception\Step\ConditionalAssertion
+``` 
+
 #### Comments
 
 Within a long scenario, you should describe what actions you are going to perform and what results should be achieved.
@@ -494,6 +503,54 @@ $I->dontSeeElement('#login'); // DISABLED, can't wait for element to hide
 $I->seeNumberOfElements(['css' => 'button.link'], 5); // DISABLED, can wait only for one element
 ```
 
+#### Retry
+
+When it's hard to define condition to wait for, we can retry a command few times until it succeeds.
+For instance, if you try to click while it's animating you can try to do it few times until it freezes.
+Since Codeception 3.0 each action and assertion have an alias prefixed with `retry` which allows to retry a flaky command.
+
+```php
+<?php
+$I->retryClick('flaky element');
+$I->retrySee('Something changed');
+```
+
+Retry can be configured via `$I->retry()` command, where you can set number of retries and interval.
+
+```php
+<?php
+// Retry up to 4 sec: 10 times, for 400ms interval 
+$I->retry(10, 400);
+```
+
+`$I->retry` takes 2 parameters:
+* number of retries (1 by default)
+* interval (200ms by default)
+
+Retries are disabled by default. To enable them you should add retry step generators to suite config:
+
+```yaml
+# in acceptance.suite.yml 
+# or in codeception.yml inside suites section
+steps:
+  - \Codeception\Step\Retry
+``` 
+
+Then add `\Codeception\Lib\Actor\Shared\Retry` trait into `AcceptanceTester` class:
+
+```php
+<?php
+class AcceptanceTester extends \Codeception\Actor
+{
+    use _generated\AcceptanceTesterActions;
+    
+    use \Codeception\Lib\Actor\Shared\Retry; 
+}
+```
+
+Run `codecept build` to recreate actions. New `retry*` actions are available for tests. 
+Keep in mind, that you can change retry policy dynamically for each test.
+
 #### Wait and Act
 
 To combine `waitForElement` with actions inside that element you can use the [performOn](http://codeception.com/docs/modules/WebDriver#performOn) method.
@@ -552,6 +609,18 @@ $nickAdmin->does(function(adminStep $I) {
     // Admin does ...
 });
 $nickAdmin->leave();
+```
+
+Multi session testing is disabled by default. To enable it, add `\Codeception\Lib\Actor\Shared\Friend` into `AcceptancTester`.
+
+```php
+<?php
+class AcceptanceTester extends \Codeception\Actor
+{
+    use _generated\AcceptanceTesterActions;
+    
+    use \Codeception\Lib\Actor\Shared\Friend; 
+}
 ```
 
 ### Cloud Testing

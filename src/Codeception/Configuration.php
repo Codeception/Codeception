@@ -111,6 +111,7 @@ class Configuration
             'config'  => [],
             'depends' => []
         ],
+        'steps'       => [],
         'path'        => null,
         'extends'     => null,
         'namespace'   => null,

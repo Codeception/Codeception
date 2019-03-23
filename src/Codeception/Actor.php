@@ -8,7 +8,6 @@ use Codeception\Step\Executor;
 abstract class Actor
 {
     use Comment;
-    use Friend;
 
     /**
      * @var \Codeception\Scenario
