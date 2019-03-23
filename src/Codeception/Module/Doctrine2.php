@@ -111,8 +111,7 @@ EOF;
         $this->retrieveEntityManager();
 
         if ($this->config['cleanup']) {
-
-            if($this->em->getConnection()->isTransactionActive()) {
+            if ($this->em->getConnection()->isTransactionActive()) {
                 try {
                     while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
                         $this->em->getConnection()->rollback();
@@ -147,8 +146,7 @@ EOF;
 
         $this->retrieveEntityManager();
         if ($this->config['cleanup']) {
-
-            if($this->em->getConnection()->isTransactionActive()) {
+            if ($this->em->getConnection()->isTransactionActive()) {
                 try {
                     while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
                         $this->em->getConnection()->rollback();
