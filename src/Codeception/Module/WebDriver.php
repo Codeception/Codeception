@@ -824,6 +824,14 @@ class WebDriver extends CodeceptionModule implements
                 $params['domain'] = $urlParts['host'];
             }
         }
+        // #5401 Supply defaults, otherwise chromedriver 2.46 complains.
+        $params = array_filter($params);
+        $params += [
+            'path' => '/',
+            'expiry' => time() + 86400,
+            'secure' => false,
+            'httpOnly' => false,
+        ];
         $this->webDriver->manage()->addCookie($params);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
@@ -3097,7 +3105,7 @@ class WebDriver extends CodeceptionModule implements
         }
         
         foreach ($this->sessionSnapshots[$name] as $cookie) {
-            $this->webDriver->manage()->addCookie($cookie);
+            $this->setCookie($cookie->getName(), $cookie->getValue(), $cookie->toArray());
         }
         $this->debugSection('Snapshot', "Restored \"$name\" session snapshot");
         return true;

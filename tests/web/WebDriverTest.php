@@ -2,6 +2,7 @@
 
 use Codeception\Step;
 use Codeception\Util\Stub;
+use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
@@ -675,17 +676,17 @@ class WebDriverTest extends TestsForBrowsers
         $fakeWdOptions = Stub::make('\Facebook\WebDriver\WebDriverOptions', [
             'getCookies' => Stub::atLeastOnce(function () {
                 return [
-                    [
+                    Cookie::createFromArray([
                         'name' => 'PHPSESSID',
                         'value' => '123456',
                         'path' => '/',
-                    ],
-                    [
+                    ]),
+                    Cookie::createFromArray([
                         'name' => '3rdParty',
                         'value' => '_value_',
                         'path' => '/',
                         'domain' => '.3rd-party.net',
-                    ]
+                    ]),
                 ];
             }),
         ]);
