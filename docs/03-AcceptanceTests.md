@@ -283,6 +283,8 @@ steps:
   - \Codeception\Step\ConditionalAssertion
 ``` 
 
+Then rebuild actors with `codecept build` command.
+
 #### Comments
 
 Within a long scenario, you should describe what actions you are going to perform and what results should be achieved.
@@ -576,6 +578,47 @@ $I->performOn('.confirm', function(\Codeception\Module\WebDriver $I) {
 ```
 
 For more options see [`performOn()` reference](http://codeception.com/docs/modules/WebDriver#performOn).
+
+#### A/B Testing
+
+When a web site acts unpredictably you may need to react on that change.
+This happens if site configured for A/B testing, or shows different popups, based on environment.
+
+Since Codeception 3.0 you can have some actions to fail silently, is they are errored.
+Let's say, you open a page and some times there is a popup which should be closed. 
+We may try to hit the "close" button but if this action fails (no popup on page) we just continue the test.
+
+This is how it can be implemented:
+
+```php
+<?php
+$I->amOnPage('/');
+$I->tryToClick('x', '.alert'); 
+// continue execution
+```
+
+When you have a multiple actions, you can combine them using `performOn` method from the previouse chapter.
+Just add prefix `tryTo` to let it silently fail:
+
+```php
+<?php
+$I->amOnPage('/');
+$I->tryToPerformOn('.alert', \Codeception\Util\ActionSequence::build()
+ ->waitForText('Do you accept cookies?')
+ ->click('Yes')
+);
+```
+
+A/B testing is disabled by default. To enable it you should add corresponding step generators to suite config:
+
+```yaml
+# in acceptance.suite.yml 
+# or in codeception.yml inside suites section
+steps:
+  - \Codeception\Step\TryTo
+``` 
+
+Then rebuild actors with `codecept build` command.
 
 ### Multi Session Testing
 

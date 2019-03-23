@@ -30,7 +30,6 @@ trait {{name}}Actions
 
 EOF;
 
-
     protected $methodTemplate = <<<EOF
 
     /**
