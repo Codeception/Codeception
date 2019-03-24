@@ -35,7 +35,6 @@ $urls = array(
     '/somepath/redirect_base_uri_has_path' => 'redirect_base_uri_has_path',
     '/somepath/redirect_base_uri_has_path_302' => 'redirect_base_uri_has_path_302',
     '/somepath/info' => 'info',
-    '/facebook\??.*' => 'facebookController',
     '/form/(.*?)(#|\?.*?)?' => 'form',
     '/user-agent' => 'userAgent',
     '/articles\??.*' => 'articles',
