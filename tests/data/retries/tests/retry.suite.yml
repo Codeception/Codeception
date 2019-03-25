@@ -4,3 +4,4 @@ modules:
         - \Helper\Retry
 steps:
     - Codeception\Step\Retry
+    - Codeception\Step\TryTo

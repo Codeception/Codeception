@@ -37,6 +37,6 @@ class TryTo extends Assertion implements GeneratedStep
         return $template
             ->place('doc', $conditionalDoc)
             ->place('action', 'tryTo' . ucfirst($action))
-            ->place('step', 'ConditionalAssertion');
+            ->place('step', 'TryTo');
     }
 }

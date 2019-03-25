@@ -36,6 +36,16 @@ trait RetryTesterActions
         $retryInterval = isset($this->retryInterval) ? $this->retryInterval : 200;
         return $this->getScenario()->runStep(new \Codeception\Step\Retry('failAt', func_get_args(), $retryNum, $retryInterval));
     }
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     * [!] Test won't be stopped on fail. Error won't be logged 
+     *
+     * @see \Helper\Retry::failAt()
+     */
+    public function tryToFailAt($amount = null) {
+        return $this->getScenario()->runStep(new \Codeception\Step\TryTo('failAt', func_get_args()));
+    }
 
  
     /**
@@ -60,5 +70,15 @@ trait RetryTesterActions
         $retryNum = isset($this->retryNum) ? $this->retryNum : 1;
         $retryInterval = isset($this->retryInterval) ? $this->retryInterval : 200;
         return $this->getScenario()->runStep(new \Codeception\Step\Retry('failFor', func_get_args(), $retryNum, $retryInterval));
+    }
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     * [!] Test won't be stopped on fail. Error won't be logged 
+     *
+     * @see \Helper\Retry::failFor()
+     */
+    public function tryToFailFor($sec = null) {
+        return $this->getScenario()->runStep(new \Codeception\Step\TryTo('failFor', func_get_args()));
     }
 }

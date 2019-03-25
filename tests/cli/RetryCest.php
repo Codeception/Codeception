@@ -34,4 +34,10 @@ class RetryCest
         $I->seeInShellOutput('Retrying #2');
     }
 
+    public function tryTo(CliGuy $I)
+    {
+        $I->executeCommand('run --debug -g ignore');
+        $I->seeInShellOutput('Failed to perform');
+    }
+
 }
