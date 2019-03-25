@@ -461,8 +461,6 @@ $I->wait(3); // wait for 3 secs
 
 #### SmartWait
 
-*since 2.3.4 version*
-
 It is possible to wait for elements pragmatically.
 If a test uses element which is not on a page yet, Codeception will wait for few extra seconds before failing.
 This feature is based on [Implicit Wait](http://www.seleniumhq.org/docs/04_webdriver_advanced.jsp#implicit-waits) of Selenium.
@@ -706,9 +704,8 @@ PhpBrowser will store the HTML code and WebDriver will save a screenshot of the 
 
 Additional debugging features by Codeception:
 
-* [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of WebDriver module allows pausing the test.
-* [Recorder extension](http://codeception.com/addons#CodeceptionExtensionRecorder) allows to record tests step-by-steps and show them in slideshow
-* [Interactive Console](http://codeception.com/docs/07-AdvancedUsage#Interactive-Console) is a REPL that allows to type and check commands for instant feedback.
+* [Interactive Pause](http://codeception.com/docs/02-GettingStarted#Interactive-Pause) is a REPL that allows to type and check commands for instant feedback.
+* [Recorder Extension](http://codeception.com/addons#CodeceptionExtensionRecorder) allows to record tests step-by-steps and show them in slideshow
 
 ### Custom Browser Sessions
 

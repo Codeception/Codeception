@@ -20,6 +20,8 @@ class WebGuy extends \Codeception\Actor
 {
     use _generated\WebGuyActions;
 
+    use \Codeception\Lib\Actor\Shared\Friend;
+
    /**
     * Define custom actions here
     */

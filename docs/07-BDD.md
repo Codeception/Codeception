@@ -525,6 +525,17 @@ gherkin:
                 - "Step\FastLogin"
 ```
 
+Contexts can be autoloaded as well:
+```yaml
+gherkin:
+    contexts:
+        path: tests/_support/Steps
+        namespace_prefix: Steps
+        default:
+            - AcceptanceTester
+```
+This will load all context from the given path and prefix it with the given namespace.
+
 ## Migrating From Behat
 
 While Behat is a great tool for Behavior Driven Development, you still may prefer to use Codeception as your primary testing framework. In case you want to unify all your tests (unit/functional/acceptance), and make them be executed with one runner, Codeception is a good choice. Also Codeception provides rich set of well-maintained modules for various testing backends like Selenium Webdriver, Symfony, Laravel, etc.

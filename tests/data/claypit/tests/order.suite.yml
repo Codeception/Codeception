@@ -1,3 +1,5 @@
 class_name: OrderGuy
 modules:
     enabled: [OrderHelper]
+steps:
+    - Codeception\Step\ConditionalAssertion

@@ -1,6 +1,16 @@
+#### 2.5.5
+
+* [Laravel] Fix missing declaration shouldReport in Laravel 5.8 by @edno
+* [Lumen] add support for Laravel\Lumen\Application::boot by @lendormi
+* [WebDriver] Fixed SetCookie for chromedriver 2.46+ by @JorisVanEijden
+* [ZendExpressive] Fixed recreateApplicationBetweenRequests option, by @artmnv
+* [Gherkin] Add possibility to dynamically load contexts (#5409) by @hansdubois
+* [Build command] Fixed message printing number of methods in actor class
+* Documented usage of IS NULL in Doctrine module by @ThomasLandauer
+
 #### 2.5.4
 
-* Restored compatility with vlucas/phpdotenv v2
+* Restored compatibility with vlucas/phpdotenv v2
 * [Doctrine] Fixed cleanup issue #5326
 
 #### 2.5.3
