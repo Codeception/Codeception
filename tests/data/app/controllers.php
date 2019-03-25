@@ -154,12 +154,6 @@ class iframe {
     }
 }
 
-class facebookController {
-    function GET($matches) {
-        include __DIR__.'/view/facebook.php';
-    }
-}
-
 class form {
     function GET($matches) {
         data::set('query', $_GET);

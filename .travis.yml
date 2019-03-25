@@ -23,7 +23,6 @@ env:
   - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git'
   - FRAMEWORK=Laravel TEST_REPO='-b codeception-2.6 https://github.com/codeception/codeception-laravel5-sample.git'
   - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
-  - FRAMEWORK=Zend1 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf1-tests'
   - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests' SUITES=functional
   - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' SUITES=functional
 matrix:

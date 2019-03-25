@@ -138,24 +138,6 @@ modules:
         - \Helper\Functional
 ```
 
-### Zend Framework 1.x
-
-The module for Zend Framework is highly inspired by the ControllerTestCase class, used for functional testing with PHPUnit.
-It follows similar approaches for bootstrapping and cleaning up.
-To start using Zend Framework in your functional tests, include the `ZF1` module:
-
-```yaml
-# functional.suite.yml
-
-actor: FunctionalTester
-modules:
-    enabled:
-        - ZF1
-        - \Helper\Functional
-```
-
-[See the full reference](http://codeception.com/docs/modules/ZF1)
-
 ### Phalcon
 
 The `Phalcon` module requires creating a bootstrap file which returns an instance of `\Phalcon\Mvc\Application`.

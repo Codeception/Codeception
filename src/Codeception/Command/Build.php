@@ -61,12 +61,12 @@ class Build extends Command
     private function buildActions(array $settings)
     {
         $actionsGenerator = new ActionsGenerator($settings);
-
         $content = $actionsGenerator->produce();
         $this->output->writeln(
             " -> {$settings['actor']}Actions.php generated successfully. "
             . $actionsGenerator->getNumMethods() . " methods added"
         );
+
 
         $file = $this->createDirectoryFor(Configuration::supportDir() . '_generated', $settings['actor']);
         $file .= $this->getShortClassName($settings['actor']) . 'Actions.php';
