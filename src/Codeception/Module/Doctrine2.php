@@ -111,8 +111,7 @@ EOF;
         $this->retrieveEntityManager();
 
         if ($this->config['cleanup']) {
-
-            if($this->em->getConnection()->isTransactionActive()) {
+            if ($this->em->getConnection()->isTransactionActive()) {
                 try {
                     while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
                         $this->em->getConnection()->rollback();
@@ -147,8 +146,7 @@ EOF;
 
         $this->retrieveEntityManager();
         if ($this->config['cleanup']) {
-
-            if($this->em->getConnection()->isTransactionActive()) {
+            if ($this->em->getConnection()->isTransactionActive()) {
                 try {
                     while ($this->em->getConnection()->getTransactionNestingLevel() > 0) {
                         $this->em->getConnection()->rollback();
@@ -481,7 +479,7 @@ EOF;
      *
      * @version 1.1
      * @param $entity
-     * @param array $params
+     * @param array $params. For `IS NULL`, use `array('field'=>null)`
      * @return array
      */
     public function grabEntitiesFromRepository($entity, $params = [])
@@ -512,7 +510,7 @@ EOF;
      *
      * @version 1.1
      * @param $entity
-     * @param array $params
+     * @param array $params. For `IS NULL`, use `array('field'=>null)`
      * @return object
      */
     public function grabEntityFromRepository($entity, $params = [])

@@ -205,13 +205,13 @@ class ModuleContainerTest extends Unit
         $config = ['modules' =>
             ['config' => [
                 'REST' => [
-                    'depends' => 'ZF1',
+                    'depends' => 'ZF2',
                     ]
                 ]
             ]
         ];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
-        $this->moduleContainer->create('ZF1');
+        $this->moduleContainer->create('ZF2');
         $this->moduleContainer->create('REST');
         $this->moduleContainer->validateConflicts();
     }

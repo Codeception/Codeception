@@ -622,7 +622,6 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             }
 
             throw new \RuntimeException("$model::find() must return an instance of yii\db\QueryInterface");
-
         }
         throw new \RuntimeException("Class $model does not have a public static find() method without required parameters");
     }
@@ -808,5 +807,4 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
         $_SERVER = $this->server;
     }
-
 }
