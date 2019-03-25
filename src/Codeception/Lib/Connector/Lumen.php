@@ -106,7 +106,12 @@ class Lumen extends Client
         }
 
         $this->app = $this->kernel = require $this->module->config['bootstrap_file'];
-
+        
+        // in version 5.6.*, lumen introduced the same design pattern like Laravel
+        // to load all service provider we need to call on Laravel\Lumen\Application::boot()
+        if (method_exists($this->app, 'boot')) {
+            $this->app->boot();
+        }
         // Lumen registers necessary bindings on demand when calling $app->make(),
         // so here we force the request binding before registering our own request object,
         // otherwise Lumen will overwrite our request object.

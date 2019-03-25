@@ -49,6 +49,17 @@ class ExceptionHandlerDecorator implements ExceptionHandlerContract
     {
         $this->laravelExceptionHandler->report($e);
     }
+    
+    /**
+      * Determine if the exception should be reported.
+     *
+     * @param  \Exception $e
+     * @return bool
+     */
+    public function shouldReport(Exception $e)
+    {
+        return $this->exceptionHandlingDisabled;
+    }
 
     /**
      * @param $request
