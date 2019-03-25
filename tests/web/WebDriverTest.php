@@ -424,12 +424,6 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->appendField('form input[name=terms]', 'Get Off123');
     }
 
-    public function testPauseExecution()
-    {
-        $this->module->amOnPage('/');
-        $this->module->pauseExecution();
-    }
-
     // Issue https://github.com/Codeception/Codeception/pull/875
     public function testFillPasswordOnFormSubmit()
     {
