@@ -48,31 +48,6 @@ class SqlSrv extends Db
         );
     }
 
-    protected function generateWhereClause(array &$criteria)
-    {
-        if (empty($criteria)) {
-            return '';
-        }
-
-        $params = [];
-        foreach ($criteria as $k => $v) {
-            if ($v === null) {
-                $params[] = $this->getQuotedName($k) . " IS NULL ";
-                unset($criteria[$k]);
-                continue;
-            }
-
-            if (strpos(strtolower($k), ' like') > 0) {
-                $k = str_replace(' like', '', strtolower($k));
-                $params[] = $this->getQuotedName($k) . " LIKE ? ";
-            } else {
-                $params[] = $this->getQuotedName($k) . " = ? ";
-            }
-        }
-
-        return 'WHERE ' . implode('AND ', $params);
-    }
-
     public function getQuotedName($name)
     {
         return '[' . str_replace('.', '].[', $name) . ']';
