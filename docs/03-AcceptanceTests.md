@@ -74,7 +74,6 @@ class SigninCest
 {
     public function tryToTest(AcceptanceTester $I)
     {
-        $I->wantTo('test my page');
     }
 }
 ```
@@ -274,7 +273,7 @@ $I->cantSeeInField('user[name]', 'Miles');
 
 Each failed assertion will be shown in the test results, but it won't stop the test.
 
-Conditional assertions are disabled by default. To enable them you should add corresponding step generators to suite config:
+Conditional assertions are disabled by default. To enable them you should add corresponding step decorators to suite config:
 
 ```yaml
 # in acceptance.suite.yml 
@@ -527,7 +526,7 @@ $I->retry(10, 400);
 * number of retries (1 by default)
 * interval (200ms by default)
 
-Retries are disabled by default. To enable them you should add retry step generators to suite config:
+Retries are disabled by default. To enable them you should add retry step decorators to suite config:
 
 ```yaml
 # in acceptance.suite.yml 
@@ -607,7 +606,7 @@ $I->tryToPerformOn('.alert', \Codeception\Util\ActionSequence::build()
 );
 ```
 
-A/B testing is disabled by default. To enable it you should add corresponding step generators to suite config:
+A/B testing is disabled by default. To enable it you should add corresponding step decorators to suite config:
 
 ```yaml
 # in acceptance.suite.yml 

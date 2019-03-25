@@ -49,8 +49,8 @@ EOF;
                 if ($retry > $this->retryNum) {
                     throw $e;
                 }
-                codecept_debug("Retrying... #$retry");
-                usleep($interval);
+                codecept_debug("Retrying #$retry in ${interval}ms");
+                usleep($interval * 1000);
             }
         }
     }
