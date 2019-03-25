@@ -248,8 +248,10 @@ $I->pause();
 At this moment you can try all commands available in actor. 
 This can be very useful when you write functional, acceptance, or api test.
 
+![](https://user-images.githubusercontent.com/220264/54929617-875ad180-4f1e-11e9-8fea-fc1b02423050.gif)
+
 Inside interactive pause you can use all power of PHP interpreter. Use variables, functions, etc.
-Result of the last executed command (usually a grabber) is saved to `$result` vairable, so you can use it in next commands.
+Result of the last executed command (usually a grabber) is saved to `$result` variable, so you can use it in next commands.
 
 Inside acceptance or functional test you can save page screenshot or html snapshot to check the page you are working on.
 
@@ -264,8 +266,7 @@ $I->makeHtmlSnapshot();
 $I->makeScreenshot();
 ```
 
-To try commands without running a single test you can start interactive console.
-
+To try commands without running a single test you can launch interactive console:
 
 ``` bash
 $ php vendor/bin/codecept console suitename

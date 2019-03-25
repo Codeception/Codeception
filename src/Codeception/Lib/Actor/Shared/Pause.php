@@ -3,7 +3,7 @@ namespace Codeception\Lib\Actor\Shared;
 
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-trait Shell
+trait Pause
 {
     public function pause()
     {
@@ -19,7 +19,7 @@ trait Shell
         );
         $output = new ConsoleOutput();
         $output->writeln("  <comment>Execution PAUSED, starting interactive shell...</comment>");
-        $output->writeln("  Type in commands to try them in action, 'ENTER' to continue execution, TAB to auto-complete");
+        $output->writeln("  Type in commands to try them, ENTER to continue, TAB to auto-complete");
 
         $result = '';
 
