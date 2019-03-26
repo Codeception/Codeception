@@ -3,12 +3,14 @@ namespace Codeception;
 
 use Codeception\Lib\Actor\Shared\Comment;
 use Codeception\Lib\Actor\Shared\Friend;
+use Codeception\Lib\Actor\Shared\Pause;
 use Codeception\Step\Executor;
 
 abstract class Actor
 {
     use Comment;
     use Friend;
+    use Pause;
 
     /**
      * @var \Codeception\Scenario
