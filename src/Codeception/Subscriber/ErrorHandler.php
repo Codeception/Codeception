@@ -107,8 +107,8 @@ class ErrorHandler implements EventSubscriberInterface
         }
         // not fatal
         if ($error['type'] > 1) {
-			echo "\n\n\nNot fatal error.\n";
-			echo sprintf("%s \nin %s:%d\n", $error['message'], $error['file'], $error['line']);
+            echo "\n\n\nNot fatal error.\n";
+            echo sprintf("%s \nin %s:%d\n", $error['message'], $error['file'], $error['line']);
             return;
         }
 
