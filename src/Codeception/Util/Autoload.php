@@ -123,6 +123,7 @@ class Autoload
             }
         }
 
+        echo "\nClass " . $class . "not loaded.\n";
         return false;
     }
 
