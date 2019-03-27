@@ -2,7 +2,6 @@
 namespace Codeception;
 
 use Codeception\Lib\Actor\Shared\Comment;
-use Codeception\Lib\Actor\Shared\Friend;
 use Codeception\Step\Executor;
 
 abstract class Actor
