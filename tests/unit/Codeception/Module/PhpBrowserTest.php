@@ -70,6 +70,15 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->click('Ссылочка');
     }
 
+    public function testHtmlSnapshot()
+    {
+        $this->module->amOnPage('/');
+        $testName="debugPhpBrowser";
+        $this->module->makeHtmlSnapshot($testName);
+        $this->assertFileExists(\Codeception\Configuration::outputDir().'debug/'.$testName.'.html');
+        @unlink(\Codeception\Configuration::outputDir().'debug/'.$testName.'.html');
+    }
+
     /**
      * @see https://github.com/Codeception/Codeception/issues/4509
      */
