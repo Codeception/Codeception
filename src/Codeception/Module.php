@@ -289,6 +289,17 @@ abstract class Module
     }
 
     /**
+     * Short text message to an amount of chars
+     *
+     * @param $message
+     * @param $chars
+     * @return string
+     */
+    protected function shortenMessage($message, $chars = 150) {
+        return substr($message, 0, $chars) . "...";
+    }
+
+    /**
      * Checks that module is enabled.
      *
      * @param $name

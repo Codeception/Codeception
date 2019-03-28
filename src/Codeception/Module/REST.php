@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Module;
 
 use Codeception\Exception\ConfigurationException;
@@ -28,6 +29,8 @@ use Codeception\Util\Soap as XmlUtils;
  * ## Configuration
  *
  * * url *optional* - the url of api
+ * * shortDebugResponse *optional* - true, false or an amount of chars to limit the api response length (0 to avoid
+ *                                   printing response at all)
  *
  * This module requires PHPBrowser or any of Framework modules enabled.
  *
@@ -38,6 +41,7 @@ use Codeception\Util\Soap as XmlUtils;
  *            - REST:
  *                depends: PhpBrowser
  *                url: 'http://serviceapp/api/v1/'
+ *                shortDebugResponse: true
  *
  * ## Public Properties
  *
@@ -70,9 +74,12 @@ modules:
         - REST:
             depends: PhpBrowser
             url: http://localhost/api/
+            shortDebugResponse: true
 --
 Framework modules can be used for testing of API as well.
 EOF;
+
+    protected $DEFAULT_SHORTEN_VALUE = 150;
 
     /**
      * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client
@@ -608,7 +615,20 @@ EOF;
         if ($this->isBinaryData($printedResponse)) {
             $printedResponse = $this->binaryToDebugString($printedResponse);
         }
-        $this->debugSection("Response", $printedResponse);
+
+        $short = $this->_getConfig('shortDebugResponse');
+
+        if ($short !== null && $short !== false) {
+            if (!is_int($short) && $short <= 0) {
+                $short = $this->DEFAULT_SHORTEN_VALUE;
+            }
+            if ($short !== 0) {
+                $printedResponse = $this->shortenMessage($printedResponse, $short);
+                $this->debugSection("Shortened Response", $printedResponse);
+            }
+        } else {
+            $this->debugSection("Response", $printedResponse);
+        }
     }
 
     /**
