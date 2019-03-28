@@ -295,7 +295,8 @@ abstract class Module
      * @param $chars
      * @return string
      */
-    protected function shortenMessage($message, $chars = 150) {
+    protected function shortenMessage($message, $chars = 150)
+    {
         return substr($message, 0, $chars) . "...";
     }
 
