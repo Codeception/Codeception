@@ -119,7 +119,10 @@ class GroupManager
                     $groups[] = $group;
                 }
                 // TODO: consider mb_strtolower per https://stackoverflow.com/a/5473569
-                if (strcasecmp($filename . ':' . $test->getMetadata()->getFeature(), $testPattern) === 0) {
+                if (
+                    method_exists($test, 'getMetadata')
+                    && strcasecmp($filename . ':' . $test->getMetadata()->getFeature(), $testPattern) === 0
+                ) {
                     $groups[] = $group;
                 }
                 if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
