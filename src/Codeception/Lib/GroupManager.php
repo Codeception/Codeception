@@ -118,6 +118,10 @@ class GroupManager
                 if (strpos($filename . ':' . $test->getName(false), $testPattern) === 0) {
                     $groups[] = $group;
                 }
+                // TODO: consider mb_strtolower per https://stackoverflow.com/a/5473569
+                if (strcasecmp($filename . ':' . $test->getMetadata()->getFeature(), $testPattern) === 0) {
+                    $groups[] = $group;
+                }
                 if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
                     $firstTest = $test->testAt(0);
                     if ($firstTest != false && $firstTest instanceof TestInterface) {
