@@ -119,8 +119,7 @@ class GroupManager
                     $groups[] = $group;
                 }
                 // TODO: consider mb_strtolower per https://stackoverflow.com/a/5473569
-                if (
-                    method_exists($test, 'getMetadata')
+                if (method_exists($test, 'getMetadata')
                     && strcasecmp($filename . ':' . $test->getMetadata()->getFeature(), $testPattern) === 0
                 ) {
                     $groups[] = $group;
