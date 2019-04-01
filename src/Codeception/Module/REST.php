@@ -74,7 +74,7 @@ modules:
         - REST:
             depends: PhpBrowser
             url: http://localhost/api/
-            shortDebugResponse: true
+            shortDebugResponse: 300
 --
 Framework modules can be used for testing of API as well.
 EOF;
@@ -618,7 +618,7 @@ EOF;
 
         $short = $this->_getConfig('shortDebugResponse');
 
-        if ($short === null) {
+        if (!is_null($short)) {
             $printedResponse = $this->shortenMessage($printedResponse, $short);
             $this->debugSection("Shortened Response", $printedResponse);
         } else {

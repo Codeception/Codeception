@@ -298,7 +298,7 @@ abstract class Module
      */
     protected function shortenMessage($message, $chars = 150)
     {
-        return mb_substr($message, 0, $chars);
+        return mb_substr($message, 0, $chars, 'utf-8');
     }
 
     /**
