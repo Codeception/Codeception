@@ -2,6 +2,7 @@
 namespace Codeception\Lib;
 
 use Codeception\Util\Stub;
+use Codeception\Test\Loader\Gherkin as GherkinLoader;
 
 class GroupManagerTest extends \Codeception\Test\Unit
 {
@@ -73,6 +74,24 @@ class GroupManagerTest extends \Codeception\Test\Unit
 
         $this->assertContains('whitespace_group_test', $this->manager->groupsForTest($goodTest));
         $this->assertEmpty($this->manager->groupsForTest($badTest));
+    }
+
+    public function testLoadSpecificScenarioFromFile()
+    {
+        $this->manager = new GroupManager(['gherkinGroup1' => 'tests/data/gherkinGroup1']);
+        $loader = new GherkinLoader();
+        $loader->loadTests(codecept_absolute_path('tests/data/refund.feature'));
+        $test = $loader->getTests()[0];
+        $this->assertContains('gherkinGroup1', $this->manager->groupsForTest($test));
+    }
+
+    public function testLoadSpecificScenarioWithMultibyteStringFromFile()
+    {
+        $this->manager = new GroupManager(['gherkinGroup2' => 'tests/data/gherkinGroup2']);
+        $loader = new GherkinLoader();
+        $loader->loadTests(codecept_absolute_path('tests/data/refund2.feature'));
+        $test = $loader->getTests()[0];
+        $this->assertContains('gherkinGroup2', $this->manager->groupsForTest($test));
     }
 
     protected function makeTestCase($file, $name = '')
