@@ -30,6 +30,7 @@ EOF;
             enabled:
                 # add more modules here
                 - Asserts
+        step_decorators: ~ 
 EOF;
 
 

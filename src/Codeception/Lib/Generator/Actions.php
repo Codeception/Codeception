@@ -67,7 +67,7 @@ EOF;
         $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
 
-        $this->generatedSteps = $settings['steps'];
+        $this->generatedSteps = (array) $settings['step_decorators'];
     }
 
 

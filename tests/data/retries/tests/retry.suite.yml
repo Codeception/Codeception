@@ -2,6 +2,6 @@ actor: RetryTester
 modules:
     enabled:
         - \Helper\Retry
-steps:
+step_decorators:
     - Codeception\Step\Retry
     - Codeception\Step\TryTo

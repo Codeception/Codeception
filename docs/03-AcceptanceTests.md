@@ -273,12 +273,14 @@ $I->cantSeeInField('user[name]', 'Miles');
 
 Each failed assertion will be shown in the test results, but it won't stop the test.
 
-Conditional assertions are disabled by default. To enable them you should add corresponding step decorators to suite config:
+Conditional assertions are disabled in bootstrap setup. To enable them you should add corresponding step decorators to suite config:
+
+> If you started project as `codecept init acceptance` they should be already enabled in config
 
 ```yaml
 # in acceptance.suite.yml 
 # or in codeception.yml inside suites section
-steps:
+step_drcorators:
   - \Codeception\Step\ConditionalAssertion
 ``` 
 
@@ -528,10 +530,12 @@ $I->retry(10, 400);
 
 Retries are disabled by default. To enable them you should add retry step decorators to suite config:
 
+> If you started project as `codecept init acceptance` they should be already enabled in config
+
 ```yaml
 # in acceptance.suite.yml 
 # or in codeception.yml inside suites section
-steps:
+step_drcorators:
   - \Codeception\Step\Retry
 ``` 
 
@@ -608,10 +612,12 @@ $I->tryToPerformOn('.alert', \Codeception\Util\ActionSequence::build()
 
 A/B testing is disabled by default. To enable it you should add corresponding step decorators to suite config:
 
+> If you started project as `codecept init acceptance` they should be already enabled in config
+
 ```yaml
 # in acceptance.suite.yml 
 # or in codeception.yml inside suites section
-steps:
+step_drcorators:
   - \Codeception\Step\TryTo
 ``` 
 

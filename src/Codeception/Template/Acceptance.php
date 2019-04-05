@@ -22,7 +22,9 @@ suites:
                 - \Helper\Acceptance
                 
         # add Codeception\Step\Retry trait to AcceptanceTester to enable retries
-        steps:
+        step_decorators:
+            - Codeception\Step\ConditionalAssertion
+            - Codeception\Step\TryTo
             - Codeception\Step\Retry
                 
 extensions:

@@ -316,14 +316,14 @@ Contrary to standard assertions those assertions won't stop test on failure. Thi
 
 List of available step decorators:
 
-- (ConditionalAssertion)[https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Step/ConditionalAssertion.php]  - failed assertion will be logged, but test will continue.
-- (TryTo)[https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Step/TryTo.php] - failed action will be ignored.
-- (Retry)[https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Step/Retry.php] - failed action will be retried automatically.
+- [ConditionalAssertion](https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Step/ConditionalAssertion.php)  - failed assertion will be logged, but test will continue.
+- [TryTo](https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Step/TryTo.php) - failed action will be ignored.
+- [Retry](https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Step/Retry.php) - failed action will be retried automatically.
 
 Step decorators can be added to suite config inside `steps` block:
 
 ```yml
-steps:
+step_decorators:
     - Codeception/Step/TryTo
     - Codeception/Step/Retry
     - Codeception/Step/ConditionalAssertion

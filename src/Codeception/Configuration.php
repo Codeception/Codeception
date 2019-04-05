@@ -111,7 +111,9 @@ class Configuration
             'config'  => [],
             'depends' => []
         ],
-        'steps'       => [],
+        'step_decorators' => [
+            'Codeception\Step\ConditionalAssertion'
+        ],
         'path'        => null,
         'extends'     => null,
         'namespace'   => null,
