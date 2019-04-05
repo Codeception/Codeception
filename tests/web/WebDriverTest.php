@@ -1081,6 +1081,11 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->see('Lots of valuable data here');
         $this->module->switchToIFrame();
         $this->module->see('Iframe test');
+        $this->module->switchToIFrame('iframe');
+        $this->module->see('Lots of valuable data here');
+        $this->module->switchToIFrame();
+        $this->module->see('Iframe test');
+
     }
 
     public function testGrabPageSourceWhenNotOnPage()

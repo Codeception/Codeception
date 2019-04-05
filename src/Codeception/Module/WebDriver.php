@@ -2524,7 +2524,16 @@ class WebDriver extends CodeceptionModule implements
             $this->webDriver->switchTo()->defaultContent();
             return;
         }
-        $this->webDriver->switchTo()->frame($name);
+        try {
+            $this->webDriver->switchTo()->frame($name);
+        } catch (\Exception $e) {
+            $this->debug('Iframe was not found by name, locating iframe by CSS or XPath');
+            $frames = $this->_findElements($name);
+            if (!count($frames)) {
+                throw $e;
+            }
+            $this->webDriver->switchTo()->frame($frames[0]);
+        }
     }
 
     /**
