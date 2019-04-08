@@ -21,6 +21,12 @@ suites:
                     browser: {{browser}}
                 - \Helper\Acceptance
                 
+        # add Codeception\Step\Retry trait to AcceptanceTester to enable retries
+        step_decorators:
+            - Codeception\Step\ConditionalAssertion
+            - Codeception\Step\TryTo
+            - Codeception\Step\Retry
+                
 extensions:
     enabled: [Codeception\Extension\RunFailed]
 
@@ -117,10 +123,12 @@ EOF;
 
         $this->say();
         $this->say("<bold>Next steps:</bold>");
-        $this->say('1. Launch Selenium Server or PhantomJS and webserver');
+        $this->say('1. Launch Selenium Server and webserver');
         $this->say("2. Edit <bold>$dir/LoginCest.php</bold> to test login of your application");
         $this->say("3. Run tests using: <comment>codecept run</comment>");
         $this->say();
+        $this->say("HINT: Add '\\Codeception\\Step\\Retry' trait to AcceptanceTester class to enable auto-retries");
+        $this->say("HINT: See https://codeception.com/docs/03-AcceptanceTests#retry");
         $this->say("<bold>Happy testing!</bold>");
     }
 }

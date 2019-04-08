@@ -305,6 +305,34 @@ extensions:
 
 Now the Admin group class will listen for all events of tests that belong to the `admin` group.
 
+## Step Decorators
+
+Actor classes include generated steps taken from corresponding modules and helpers. 
+You can introduce wrappers for those steps by using step decorators. 
+
+Step decorators are used to implement conditional assertions. 
+When enabled, conditional assertions take all method prefixed by `see` or `dontSee` and introduce new steps prefixed with `canSee` and `cantSee`. 
+Contrary to standard assertions those assertions won't stop test on failure. This is done by wrapping action into try/catch blocks.
+
+List of available step decorators:
+
+- [ConditionalAssertion](https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Step/ConditionalAssertion.php)  - failed assertion will be logged, but test will continue.
+- [TryTo](https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Step/TryTo.php) - failed action will be ignored.
+- [Retry](https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Step/Retry.php) - failed action will be retried automatically.
+
+Step decorators can be added to suite config inside `steps` block:
+
+```yml
+step_decorators:
+    - Codeception/Step/TryTo
+    - Codeception/Step/Retry
+    - Codeception/Step/ConditionalAssertion
+```
+
+You can introduce your own step decorators. Take a look into sample decorator classes and create your own class which implements `Codeception\Step\GeneratedStep` interface.
+A class should provide `getTemplate` method which returns a code block and variables passed into a template. 
+Make your class accessible by autoloader and you can have your own step decorators working. 
+
 ## Custom Reporters
 
 Alternative reporters can be implemented as extension.

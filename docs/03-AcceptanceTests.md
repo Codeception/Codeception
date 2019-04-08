@@ -74,7 +74,6 @@ class SigninCest
 {
     public function tryToTest(AcceptanceTester $I)
     {
-        $I->wantTo('test my page');
     }
 }
 ```
@@ -273,6 +272,19 @@ $I->cantSeeInField('user[name]', 'Miles');
 ```
 
 Each failed assertion will be shown in the test results, but it won't stop the test.
+
+Conditional assertions are disabled in bootstrap setup. To enable them you should add corresponding step decorators to suite config:
+
+> If you started project as `codecept init acceptance` they should be already enabled in config
+
+```yaml
+# in acceptance.suite.yml 
+# or in codeception.yml inside suites section
+step_drcorators:
+  - \Codeception\Step\ConditionalAssertion
+``` 
+
+Then rebuild actors with `codecept build` command.
 
 #### Comments
 
@@ -492,6 +504,56 @@ $I->dontSeeElement('#login'); // DISABLED, can't wait for element to hide
 $I->seeNumberOfElements(['css' => 'button.link'], 5); // DISABLED, can wait only for one element
 ```
 
+#### Retry
+
+When it's hard to define condition to wait for, we can retry a command few times until it succeeds.
+For instance, if you try to click while it's animating you can try to do it few times until it freezes.
+Since Codeception 3.0 each action and assertion have an alias prefixed with `retry` which allows to retry a flaky command.
+
+```php
+<?php
+$I->retryClick('flaky element');
+$I->retrySee('Something changed');
+```
+
+Retry can be configured via `$I->retry()` command, where you can set number of retries and interval.
+
+```php
+<?php
+// Retry up to 4 sec: 10 times, for 400ms interval 
+$I->retry(10, 400);
+```
+
+`$I->retry` takes 2 parameters:
+* number of retries (1 by default)
+* interval (200ms by default)
+
+Retries are disabled by default. To enable them you should add retry step decorators to suite config:
+
+> If you started project as `codecept init acceptance` they should be already enabled in config
+
+```yaml
+# in acceptance.suite.yml 
+# or in codeception.yml inside suites section
+step_drcorators:
+  - \Codeception\Step\Retry
+``` 
+
+Then add `\Codeception\Lib\Actor\Shared\Retry` trait into `AcceptanceTester` class:
+
+```php
+<?php
+class AcceptanceTester extends \Codeception\Actor
+{
+    use _generated\AcceptanceTesterActions;
+    
+    use \Codeception\Lib\Actor\Shared\Retry; 
+}
+```
+
+Run `codecept build` to recreate actions. New `retry*` actions are available for tests. 
+Keep in mind, that you can change retry policy dynamically for each test.
+
 #### Wait and Act
 
 To combine `waitForElement` with actions inside that element you can use the [performOn](http://codeception.com/docs/modules/WebDriver#performOn) method.
@@ -517,6 +579,49 @@ $I->performOn('.confirm', function(\Codeception\Module\WebDriver $I) {
 ```
 
 For more options see [`performOn()` reference](http://codeception.com/docs/modules/WebDriver#performOn).
+
+#### A/B Testing
+
+When a web site acts unpredictably you may need to react on that change.
+This happens if site configured for A/B testing, or shows different popups, based on environment.
+
+Since Codeception 3.0 you can have some actions to fail silently, is they are errored.
+Let's say, you open a page and some times there is a popup which should be closed. 
+We may try to hit the "close" button but if this action fails (no popup on page) we just continue the test.
+
+This is how it can be implemented:
+
+```php
+<?php
+$I->amOnPage('/');
+$I->tryToClick('x', '.alert'); 
+// continue execution
+```
+
+When you have a multiple actions, you can combine them using `performOn` method from the previouse chapter.
+Just add prefix `tryTo` to let it silently fail:
+
+```php
+<?php
+$I->amOnPage('/');
+$I->tryToPerformOn('.alert', \Codeception\Util\ActionSequence::build()
+ ->waitForText('Do you accept cookies?')
+ ->click('Yes')
+);
+```
+
+A/B testing is disabled by default. To enable it you should add corresponding step decorators to suite config:
+
+> If you started project as `codecept init acceptance` they should be already enabled in config
+
+```yaml
+# in acceptance.suite.yml 
+# or in codeception.yml inside suites section
+step_drcorators:
+  - \Codeception\Step\TryTo
+``` 
+
+Then rebuild actors with `codecept build` command.
 
 ### Multi Session Testing
 
@@ -550,6 +655,18 @@ $nickAdmin->does(function(adminStep $I) {
     // Admin does ...
 });
 $nickAdmin->leave();
+```
+
+Multi session testing is disabled by default. To enable it, add `\Codeception\Lib\Actor\Shared\Friend` into `AcceptancTester`.
+
+```php
+<?php
+class AcceptanceTester extends \Codeception\Actor
+{
+    use _generated\AcceptanceTesterActions;
+    
+    use \Codeception\Lib\Actor\Shared\Friend; 
+}
 ```
 
 ### Cloud Testing

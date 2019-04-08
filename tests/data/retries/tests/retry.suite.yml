@@ -1,0 +1,7 @@
+actor: RetryTester
+modules:
+    enabled:
+        - \Helper\Retry
+step_decorators:
+    - Codeception\Step\Retry
+    - Codeception\Step\TryTo

@@ -12,15 +12,14 @@
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
- * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = null)
  *
  * @SuppressWarnings(PHPMD)
 */
-class WebGuy extends \Codeception\Actor
+class RetryTester extends \Codeception\Actor
 {
-    use _generated\WebGuyActions;
+    use _generated\RetryTesterActions;
 
-    use \Codeception\Lib\Actor\Shared\Friend;
+    use \Codeception\Lib\Actor\Shared\Retry;
 
    /**
     * Define custom actions here
