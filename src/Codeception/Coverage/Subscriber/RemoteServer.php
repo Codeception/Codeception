@@ -19,6 +19,27 @@ class RemoteServer extends LocalServer
         return $this->module and $this->settings['remote'] and $this->settings['enabled'];
     }
 
+    public function beforeSuite(SuiteEvent $e)
+    {
+        parent::beforeSuite($e);
+
+        if (!$this->isEnabled()) {
+            return;
+        }
+
+        $knock = $this->c3Request('clear');
+        if ($knock === false) {
+            throw new RemoteException(
+                '
+                CodeCoverage Error.
+                Check the file "c3.php" is included in your application.
+                We tried to access "/c3/report/clear" but this URI was not accessible.
+                You can review actual error messages in c3tmp dir.
+                '
+            );
+        }
+    }
+
     public function afterSuite(SuiteEvent $e)
     {
         if (!$this->isEnabled()) {
