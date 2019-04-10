@@ -66,7 +66,7 @@ abstract class Module
      * Requires module container (to provide access between modules of suite) and config.
      *
      * @param ModuleContainer $moduleContainer
-     * @param null $config
+     * @param array|null $config
      */
     public function __construct(ModuleContainer $moduleContainer, $config = null)
     {
@@ -345,7 +345,7 @@ abstract class Module
     /**
      * Get config values or specific config item.
      *
-     * @param null $key
+     * @param mixed|null $key
      * @return array|mixed|null
      */
     public function _getConfig($key = null)
