@@ -147,28 +147,6 @@ class LocalServer extends SuiteSubscriber
         return $this;
     }
 
-    protected function c3Request($action)
-    {
-        $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
-        $context = stream_context_create($this->c3Access);
-        $c3Url = $this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl();
-        $contents = file_get_contents($c3Url . '/c3/report/' . $action, false, $context);
-
-        $okHeaders = array_filter(
-            $http_response_header,
-            function ($h) {
-                return preg_match('~^HTTP(.*?)\s200~', $h);
-            }
-        );
-        if (empty($okHeaders)) {
-            throw new RemoteException("Request was not successful. See response header: " . $http_response_header[0]);
-        }
-        if ($contents === false) {
-            $this->getRemoteError($http_response_header);
-        }
-        return $contents;
-    }
-
     protected function startCoverageCollection($testName)
     {
         $value = [
@@ -253,6 +231,7 @@ class LocalServer extends SuiteSubscriber
     protected function applySettings($settings)
     {
         parent::applySettings($settings);
+
         if (isset($settings['coverage']['remote_context_options'])) {
             $this->c3Access = array_replace_recursive($this->c3Access, $settings['coverage']['remote_context_options']);
         }
