@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception;
 
 use Codeception\Exception\ModuleException;
@@ -17,7 +18,7 @@ use Codeception\Util\Shared\Asserts;
 abstract class Module
 {
     use Asserts;
-    
+
     /**
      * @var ModuleContainer
      */
@@ -176,7 +177,7 @@ abstract class Module
      */
     public function _getName()
     {
-        $moduleName = '\\'.get_class($this);
+        $moduleName = '\\' . get_class($this);
 
         if (strpos($moduleName, ModuleContainer::MODULE_NAMESPACE) === 0) {
             return substr($moduleName, strlen(ModuleContainer::MODULE_NAMESPACE));
@@ -286,6 +287,18 @@ abstract class Module
             $message = stripslashes(json_encode($message));
         }
         $this->debug("[$title] $message");
+    }
+
+    /**
+     * Short text message to an amount of chars
+     *
+     * @param $message
+     * @param $chars
+     * @return string
+     */
+    protected function shortenMessage($message, $chars = 150)
+    {
+        return mb_substr($message, 0, $chars, 'utf-8');
     }
 
     /**

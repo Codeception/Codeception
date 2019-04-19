@@ -1,7 +1,9 @@
 <?php
+
 namespace Codeception\Module;
 
 use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
@@ -28,6 +30,7 @@ use Codeception\Util\Soap as XmlUtils;
  * ## Configuration
  *
  * * url *optional* - the url of api
+ * * shortDebugResponse *optional* - amount of chars to limit the api response length
  *
  * This module requires PHPBrowser or any of Framework modules enabled.
  *
@@ -38,6 +41,7 @@ use Codeception\Util\Soap as XmlUtils;
  *            - REST:
  *                depends: PhpBrowser
  *                url: 'http://serviceapp/api/v1/'
+ *                shortDebugResponse: 300 # only the first 300 chars of the response
  *
  * ## Public Properties
  *
@@ -70,9 +74,12 @@ modules:
         - REST:
             depends: PhpBrowser
             url: http://localhost/api/
+            shortDebugResponse: 300
 --
 Framework modules can be used for testing of API as well.
 EOF;
+
+    protected $DEFAULT_SHORTEN_VALUE = 150;
 
     /**
      * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client
@@ -332,7 +339,7 @@ EOF;
             throw new ModuleException(__METHOD__, 'Not supported if not using a Guzzle client');
         }
         if (version_compare(\GuzzleHttp\Client::VERSION, '6.2.1', 'lt')) {
-            throw new ModuleException(__METHOD__, 'Guzzle '.\GuzzleHttp\Client::VERSION.' found. Requires Guzzle >=6.3.0 for NTLM auth option');
+            throw new ModuleException(__METHOD__, 'Guzzle ' . \GuzzleHttp\Client::VERSION . ' found. Requires Guzzle >=6.3.0 for NTLM auth option');
         }
         $this->client->setAuth($username, $password, 'ntlm');
     }
@@ -608,7 +615,15 @@ EOF;
         if ($this->isBinaryData($printedResponse)) {
             $printedResponse = $this->binaryToDebugString($printedResponse);
         }
-        $this->debugSection("Response", $printedResponse);
+
+        $short = $this->_getConfig('shortDebugResponse');
+
+        if (!is_null($short)) {
+            $printedResponse = $this->shortenMessage($printedResponse, $short);
+            $this->debugSection("Shortened Response", $printedResponse);
+        } else {
+            $this->debugSection("Response", $printedResponse);
+        }
     }
 
     /**
@@ -718,6 +733,23 @@ EOF;
     }
 
     /**
+     * Extends the function Module::validateConfig for shorten messages
+     *
+     */
+    protected function validateConfig()
+    {
+        parent::validateConfig();
+
+        $short = $this->_getConfig('shortDebugResponse');
+
+        if (!is_null($short)) {
+            if (!is_int($short) || $short < 0) {
+                throw new ModuleConfigException(__CLASS__, 'The value of "shortDebugMessage" should be integer and greater or equal "0".');
+            }
+        }
+    }
+
+    /**
      * Checks whether last response was valid JSON.
      * This is done with json_last_error function.
      *
@@ -809,10 +841,10 @@ EOF;
      * ?>
      * ```
      *
-     * @version 1.1
      * @return string
      * @part json
      * @part xml
+     * @version 1.1
      */
     public function grabResponse()
     {
@@ -839,9 +871,9 @@ EOF;
      *
      * @param string $jsonPath
      * @return array Array of matching items
-     * @version 2.0.9
      * @throws \Exception
      * @part json
+     * @version 2.0.9
      */
     public function grabDataFromResponseByJsonPath($jsonPath)
     {
@@ -1077,9 +1109,9 @@ EOF;
      * See [JsonType reference](http://codeception.com/docs/reference/JsonType).
      *
      * @part json
-     * @version 2.1.3
      * @param array $jsonType
      * @param string $jsonPath
+     * @version 2.1.3
      */
     public function seeResponseMatchesJsonType(array $jsonType, $jsonPath = null)
     {
@@ -1095,9 +1127,9 @@ EOF;
      * Opposite to `seeResponseMatchesJsonType`.
      *
      * @part json
-     * @see seeResponseMatchesJsonType
      * @param $jsonType jsonType structure
      * @param null $jsonPath optionally set specific path to structure with JsonPath
+     * @see seeResponseMatchesJsonType
      * @version 2.1.3
      */
     public function dontSeeResponseMatchesJsonType($jsonType, $jsonPath = null)

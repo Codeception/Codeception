@@ -234,7 +234,7 @@ Learn more about the [Cest format](http://codeception.com/docs/07-AdvancedUsage#
 ## Interactive Pause
 
 It's hard to write a complete test at once. 
-You will probably need to try different commands with dfferent arguments before you find a correct path.
+You will need to try different commands with different arguments before you find a correct path.
 
 Since Codeception 3.0 you can pause execution in any point and enter interactive shell where you will be able to try commands in action.
 All you need to do is to **call `$I->pause()` in debug mode**.
@@ -245,7 +245,7 @@ All you need to do is to **call `$I->pause()` in debug mode**.
 $I->pause(); 
 ```
 
-At this moment you can try all commands available in actor. 
+When a test gets to this point it stops and shows a console where you can try all available commands. 
 This can be very useful when you write functional, acceptance, or api test.
 
 ![](https://user-images.githubusercontent.com/220264/54929617-875ad180-4f1e-11e9-8fea-fc1b02423050.gif)

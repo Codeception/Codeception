@@ -4,3 +4,5 @@ modules:
 gherkin:
     contexts:
         default: [ScenarioGuy]
+steps:
+    - Codeception\Step\ConditionalAssertion
