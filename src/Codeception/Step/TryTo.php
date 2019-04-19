@@ -13,7 +13,9 @@ class TryTo extends Assertion implements GeneratedStep
             parent::run($container);
         } catch (\Exception $e) {
             codecept_debug("Failed to perform: {$e->getMessage()}, skipping...");
+            return false;
         }
+        return true;
     }
 
     public static function getTemplate(Template $template)
@@ -24,12 +26,12 @@ class TryTo extends Assertion implements GeneratedStep
             return; // dont try on conditions
         }
 
-        if ((strpos($action, 'see') === 0) || (strpos($action, 'dontSee') === 0)) {
-            return; // dont try on assertions
-        }
-
         if (strpos($action, 'wait') === 0) {
             return; // dont try on waiters
+        }
+
+        if (strpos($action, 'grab') === 0) {
+            return; // dont on grabbers
         }
 
         $conditionalDoc = "* [!] Test won't be stopped on fail. Error won't be logged \n     " . $template->getVar('doc');

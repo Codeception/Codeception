@@ -136,6 +136,19 @@ EOF;
         }
     }
 
+    public function _failed(TestInterface $test, $fail)
+    {
+        if (!$this->response) {
+            return;
+        }
+        $printedResponse = $this->response;
+        if ($this->isBinaryData($printedResponse)) {
+            $printedResponse = $this->binaryToDebugString($printedResponse);
+        }
+        $test->getMetadata()->addReport('body', $printedResponse);
+    }
+
+
     protected function getRunningClient()
     {
         if ($this->client->getInternalRequest() === null) {

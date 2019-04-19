@@ -598,21 +598,19 @@ $I->tryToClick('x', '.alert');
 // continue execution
 ```
 
-When you have a multiple actions, you can combine them using `performOn` method from the previouse chapter.
-Just add prefix `tryTo` to let it silently fail:
+You can also use `tryTo` as condition for your tests:
 
 ```php
 <?php
-$I->amOnPage('/');
-$I->tryToPerformOn('.alert', \Codeception\Util\ActionSequence::build()
- ->waitForText('Do you accept cookies?')
- ->click('Yes')
-);
+if ($I->tryToSeeElement('.alert')) {
+    $I->waitForText('Do you accept cookies?');
+    $I->click('Yes');
+}
 ```
 
 A/B testing is disabled by default. To enable it you should add corresponding step decorators to suite config:
 
-> If you started project as `codecept init acceptance` they should be already enabled in config
+> If you started project as `codecept init acceptance` in Codeception >= 3.0 they should be already enabled in config
 
 ```yaml
 # in acceptance.suite.yml 
