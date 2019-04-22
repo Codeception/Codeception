@@ -110,6 +110,7 @@ before_script:
   # Laravel 5
   - '[[ "$FRAMEWORK" != "Laravel" ]] || touch framework-tests/storage/testing.sqlite'
   - '[[ "$FRAMEWORK" != "Laravel" ]] || php framework-tests/artisan migrate --env=testing --database=sqlite_testing --force'
+  - '[[ "$FRAMEWORK" != "Laravel" ]] || php framework-tests/artisan config:clear'
   # Lumen
   - '[[ "$FRAMEWORK" != "Lumen" ]] || cp framework-tests/.env.testing framework-tests/.env'
   - '[[ "$FRAMEWORK" != "Lumen" ]] || touch framework-tests/storage/testing.sqlite'

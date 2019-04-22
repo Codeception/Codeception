@@ -188,7 +188,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if ($this->config['run_database_seeder']) {
-            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class'], '--quiet' => true ]);
+            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class'], '--force' => true ]);
         }
     }
 
