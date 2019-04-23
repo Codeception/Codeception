@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib;
 
-use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\ExternalUrlException;
 use Codeception\Exception\MalformedLocatorException;
@@ -445,8 +444,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 return true;
             }
         }
-        codecept_debug('Button is not inside a link or a form');
-        return false;
+        throw new TestRuntimeException('Button is not inside a link or a form');
     }
 
     private function openHrefFromDomNode(\DOMNode $node)
