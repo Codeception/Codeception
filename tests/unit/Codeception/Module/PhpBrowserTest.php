@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Exception\TestRuntimeException;
 use Codeception\Util\Stub;
 
 require_once 'tests/data/app/data.php';
@@ -604,9 +605,10 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testClickingOnButtonOutsideFormDoesNotCauseFatalError()
     {
-        $this->expectException(AssertionFailedError::class);
+        $this->expectException(TestRuntimeException::class);
+        $this->expectExceptionMessage('Button is not inside a link or a form');
         $this->module->amOnPage('/form/button-not-in-form');
-        $this->module->click('The Button');
+        $this->module->click(['xpath' => '//input[@type="submit"][@form="form-id"]']);
     }
 
     public function testSubmitFormWithoutEmptyOptionsInSelect()
