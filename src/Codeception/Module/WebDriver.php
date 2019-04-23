@@ -835,13 +835,17 @@ class WebDriver extends CodeceptionModule implements
             }
         }
         // #5401 Supply defaults, otherwise chromedriver 2.46 complains.
-        $params = array_filter($params);
-        $params += [
+        $defaults = [
             'path' => '/',
             'expiry' => time() + 86400,
             'secure' => false,
             'httpOnly' => false,
         ];
+        foreach ($defaults as $key => $default) {
+            if (empty($params[$key])) {
+                $params[$key] = $default;
+            }
+        }
         $this->webDriver->manage()->addCookie($params);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }

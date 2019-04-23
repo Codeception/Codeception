@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib;
 
-use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\ExternalUrlException;
 use Codeception\Exception\MalformedLocatorException;
@@ -445,8 +444,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 return true;
             }
         }
-        codecept_debug('Button is not inside a link or a form');
-        return false;
+        throw new TestRuntimeException('Button is not inside a link or a form');
     }
 
     private function openHrefFromDomNode(\DOMNode $node)
@@ -831,6 +829,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     protected function proceedSubmitForm(Crawler $frmCrawl, array $params, $button = null)
     {
+        $url = null;
         $form = $this->getFormFor($frmCrawl);
         $defaults = $this->getFormValuesFor($form);
         $merged = array_merge($defaults, $params);
@@ -843,10 +842,17 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             ));
             if (count($btnCrawl)) {
                 $requestParams[$button] = $btnCrawl->attr('value');
+                $formaction = $btnCrawl->attr('formaction');
+                if ($formaction) {
+                    $url = $formaction;
+                }
             }
         }
 
-        $url = $this->getFormUrl($frmCrawl);
+        if (!$url) {
+            $url = $this->getFormUrl($frmCrawl);
+        }
+        
         if (strcasecmp($form->getMethod(), 'GET') === 0) {
             $url = Uri::mergeUrls($url, '?' . http_build_query($requestParams));
         }

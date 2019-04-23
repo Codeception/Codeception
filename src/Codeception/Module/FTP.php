@@ -683,12 +683,14 @@ class FTP extends Filesystem
         file_put_contents($tmp_file, $contents);
 
         // Update variables
-        $this->filepath = $tmp_file;
+        $this->filepath = $filename;
         $this->file = $contents;
 
         // Upload the file to server
         if ($this->isSFTP()) {
-            $uploaded = @$this->ftp->put($filename, $tmp_file, NET_SFTP_LOCAL_FILE);
+            $flag = defined('NET_SFTP_LOCAL_FILE') ? NET_SFTP_LOCAL_FILE : \phpseclib\Net\SFTP::SOURCE_LOCAL_FILE;
+
+            $uploaded = @$this->ftp->put($filename, $tmp_file, $flag);
         } else {
             $uploaded = ftp_put($this->ftp, $filename, $tmp_file, FTP_BINARY);
         }
