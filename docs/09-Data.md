@@ -158,9 +158,7 @@ $I->click('Delete');
 $I->dontSeeRecord('posts', ['id' => $id]);
 ```
 
-<div class="alert alert-notice">
-Laravel5 module also provides `haveModel`, `makeModel` methods which use factories to generate models with fake data.
-</div>
+Laravel5 module provides the method `have` which uses the [factory](https://laravel.com/docs/5.8/database-testing#generating-factories) method to generate models with fake data.
 
 If you want to use ORM for integration testing only, you should enable the framework module with only the `ORM` part enabled:
 
