@@ -19,4 +19,8 @@
 * Print artifacts on test failure
 * [REST] Short API responses in debug mode with `shortDebugResponse` config option. See #5455 by @sebastianneubert 
 * [WebDriver] `switchToIFrame` allow to locate iframe by CSS/XPath.
-     
+* [PhpBrowser][Frameworks] clickButton throws exception if button is outside form by @Naktibalda.
+* Updated to PHP 7.3 in Docker container by @OneEyedSpaceFish
+* Recorder Extension: Added timestamp information with `include_microseconds` config option. By @OneEyedSpaceFish.
+* [REST] Fixed sending request with duplicated slash with endpoint + URL. By @nicholascus 
+    
