@@ -10,9 +10,9 @@ Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides an absolutely new way of writing acceptance, functional and even unit tests.
 Powered by PHPUnit.
 
-| General |  Windows |  Webdriver  | HHVM |
-| ------- | -------- | -------- | -------- |
-| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.4)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.4) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/master/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) | [![wercker status](https://app.wercker.com/status/b4eecd0596bedb65333ff7ab7836bc7f/s/ "wercker status")](https://app.wercker.com/project/byKey/b4eecd0596bedb65333ff7ab7836bc7f) |
+| General |  Windows |  Webdriver  |
+| ------- | -------- | -------- |
+| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=3.0)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/3.0) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/3-0/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) |
 
 #### Contributions
 
@@ -27,7 +27,6 @@ Run tests and see what actions were taken and what results were seen.
 #### Sample test
 
 ``` php
-$I->wantTo('create wiki page');
 $I->amOnPage('/');
 $I->click('Pages');
 $I->click('New');
@@ -96,4 +95,4 @@ Documentation is included within the project. Look for it in the ['docs' directo
 MIT
 
 (c) [Codeception Team](http://codeception.com/credits)
-2011-2018
+2011-2019
