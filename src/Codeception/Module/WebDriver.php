@@ -2133,16 +2133,16 @@ class WebDriver extends CodeceptionModule implements
      *      'field1' => 'value',
      *      'checkbox' => [
      *          'value of first checkbox',
-     *          'value of second checkbox,
+     *          'value of second checkbox',
      *      ],
      *      'otherCheckboxes' => [
      *          true,
      *          false,
-     *          false
+     *          false,
      *      ],
      *      'multiselect' => [
      *          'first option value',
-     *          'second option value'
+     *          'second option value',
      *      ]
      * ]);
      * ?>
@@ -3117,7 +3117,7 @@ class WebDriver extends CodeceptionModule implements
         }
         
         foreach ($this->sessionSnapshots[$name] as $cookie) {
-            $this->setCookie($cookie->getName(), $cookie->getValue(), $cookie->toArray());
+            $this->setCookie($cookie['name'], $cookie['value'], (array)$cookie);
         }
         $this->debugSection('Snapshot', "Restored \"$name\" session snapshot");
         return true;
