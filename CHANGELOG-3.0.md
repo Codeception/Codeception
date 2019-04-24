@@ -23,4 +23,4 @@
 * Updated to PHP 7.3 in Docker container by @OneEyedSpaceFish
 * Recorder Extension: Added timestamp information with `include_microseconds` config option. By @OneEyedSpaceFish.
 * [REST] Fixed sending request with duplicated slash with endpoint + URL. By @nicholascus 
-    
+* [Db] Remove generateWhereClause method from SqlSrv to be compatible with other drivers. By @Naktibalda
