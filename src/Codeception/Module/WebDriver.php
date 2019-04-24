@@ -2123,16 +2123,16 @@ class WebDriver extends CodeceptionModule implements
      *      'field1' => 'value',
      *      'checkbox' => [
      *          'value of first checkbox',
-     *          'value of second checkbox,
+     *          'value of second checkbox',
      *      ],
      *      'otherCheckboxes' => [
      *          true,
      *          false,
-     *          false
+     *          false,
      *      ],
      *      'multiselect' => [
      *          'first option value',
-     *          'second option value'
+     *          'second option value',
      *      ]
      * ]);
      * ?>
