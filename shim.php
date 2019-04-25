@@ -70,4 +70,3 @@ namespace {
         interface WebDriverElement extends Facebook\WebDriver\WebDriverElement {};
     }
 }
-
