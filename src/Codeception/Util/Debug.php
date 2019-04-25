@@ -36,22 +36,6 @@ class Debug
         self::$output->debug($message);
     }
 
-    /**
-     * Pauses execution and waits for user input to proceed.
-     */
-    public static function pause()
-    {
-        if (!self::$output) {
-            return;
-        }
-
-        self::$output->writeln("<info>The execution has been paused. Press ENTER to continue</info>");
-
-        if (trim(fgets(STDIN)) != chr(13)) {
-            return;
-        }
-    }
-
     public static function isEnabled()
     {
         return (bool) self::$output;

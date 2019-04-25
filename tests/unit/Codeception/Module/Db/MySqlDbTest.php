@@ -13,10 +13,6 @@ class MySqlDbTest extends TestsForDb
         if (getenv('APPVEYOR')) {
             $this->markTestSkipped('Disabled on Appveyor');
         }
-
-        if (getenv('WERCKER_ROOT')) {
-            $this->markTestSkipped('Disabled on Wercker CI');
-        }
         $config = $this->getConfig();
         $password = $config['password'] ? '-p'.$config['password'] : '';
         return "mysql -u \$user $password \$dbname < {$config['dump']}";

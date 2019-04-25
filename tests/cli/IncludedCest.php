@@ -4,8 +4,9 @@ class IncludedCest
 
     public function _before()
     {
-        \Codeception\Util\FileSystem::doEmptyDir('tests/data/included/_log');
-        file_put_contents('tests/data/included/_log/.gitkeep', '');
+        $logDir = codecept_root_dir('tests/data/included/_log');
+        \Codeception\Util\FileSystem::doEmptyDir($logDir);
+        file_put_contents($logDir . '/.gitkeep', '');
     }
 
     /**

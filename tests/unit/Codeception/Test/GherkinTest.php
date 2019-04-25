@@ -63,12 +63,10 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->assertEquals('abc', self::$calls);
     }
 
-    /**
-     * @depends testLoadGherkin
-     * @expectedException \Codeception\Exception\ParseException
-     */
     public function testBadRegex()
     {
+        $this->expectException(\Codeception\Exception\ParseException::class);
+
         $this->loader = new \Codeception\Test\Loader\Gherkin(
             [
                 'gherkin' => [

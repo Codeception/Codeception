@@ -5,7 +5,7 @@ class GenerateSuiteTest extends BaseCommandRunner
 {
     public $config = ['actor_suffix' => 'Guy'];
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->makeCommand('\Codeception\Command\GenerateSuite');
     }
@@ -20,17 +20,17 @@ class GenerateSuiteTest extends BaseCommandRunner
         $conf = \Symfony\Component\Yaml\Yaml::parse($configFile['content']);
         $this->assertEquals('Hobbit', $conf['actor']);
         $this->assertContains('\Helper\Shire', $conf['modules']['enabled']);
-        $this->assertContains('Suite shire generated', $this->output);
+        $this->assertStringContainsString('Suite shire generated', $this->output);
 
         $actor = $this->log[2];
         $this->assertEquals(\Codeception\Configuration::supportDir().'Hobbit.php', $actor['filename']);
-        $this->assertContains('class Hobbit extends \Codeception\Actor', $actor['content']);
+        $this->assertStringContainsString('class Hobbit extends \Codeception\Actor', $actor['content']);
 
 
         $helper = $this->log[0];
         $this->assertEquals(\Codeception\Configuration::supportDir().'Helper/Shire.php', $helper['filename']);
-        $this->assertContains('namespace Helper;', $helper['content']);
-        $this->assertContains('class Shire extends \Codeception\Module', $helper['content']);
+        $this->assertStringContainsString('namespace Helper;', $helper['content']);
+        $this->assertStringContainsString('class Shire extends \Codeception\Module', $helper['content']);
     }
 
     public function testGuyWithSuffix()
@@ -44,6 +44,6 @@ class GenerateSuiteTest extends BaseCommandRunner
 
         $helper = $this->log[0];
         $this->assertEquals(\Codeception\Configuration::supportDir().'Helper/Shire.php', $helper['filename']);
-        $this->assertContains('class Shire extends \Codeception\Module', $helper['content']);
+        $this->assertStringContainsString('class Shire extends \Codeception\Module', $helper['content']);
     }
 }

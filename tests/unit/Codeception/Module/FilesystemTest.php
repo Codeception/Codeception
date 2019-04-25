@@ -2,8 +2,9 @@
 
 use Codeception\Module\Filesystem;
 use Codeception\Util\Stub;
+use PHPUnit\Framework\AssertionFailedError;
 
-class FilesystemTest extends \PHPUnit\Framework\TestCase
+class FilesystemTest extends \Codeception\PHPUnit\TestCase
 {
 
     /**
@@ -11,14 +12,14 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
      */
     protected $module;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new Filesystem(make_container());
         $this->module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
     }
 
 
-    public function tearDown()
+    public function _tearDown()
     {
         $this->module->_after(Stub::makeEmpty('\Codeception\Test\Test'));
     }
@@ -33,21 +34,17 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
         $this->module->seeFileFound('mysql.sql', 'tests/data/');
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     * @expectedExceptionMessage File "does-not-exist" not found at
-     */
     public function testSeeFileFoundFailsWhenFileDoesNotExist()
     {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('File "does-not-exist" not found at');
         $this->module->seeFileFound('does-not-exist');
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     * @expectedExceptionMessageRegExp  /Directory does not exist: .*does-not-exist/
-     */
     public function testSeeFileFoundFailsWhenPathDoesNotExist()
     {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessageRegExp('/Directory does not exist: .*does-not-exist/');
         $this->module->seeFileFound('mysql.sql', 'does-not-exist');
     }
 
@@ -61,30 +58,24 @@ class FilesystemTest extends \PHPUnit\Framework\TestCase
         $this->module->dontSeeFileFound('does-not-exist', 'tests/data/');
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     * @expectedExceptionMessage Failed asserting that file "tests/data/dumps/mysql.sql" does not exist.
-     */
     public function testDontSeeFileFoundFailsWhenFileExists()
     {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('Failed asserting that file "tests/data/dumps/mysql.sql" does not exist.');
         $this->module->dontSeeFileFound('tests/data/dumps/mysql.sql');
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     * @expectedExceptionMessageRegExp  /Directory does not exist: .*does-not-exist/
-     */
     public function testDontSeeFileFoundFailsWhenPathDoesNotExist()
     {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessageRegExp('/Directory does not exist: .*does-not-exist/');
         $this->module->dontSeeFileFound('mysql.sql', 'does-not-exist');
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\AssertionFailedError
-     * @expectedExceptionMessageRegExp /Failed asserting that file ".*tests\/data\/dumps\/mysql.sql" does not exist/
-     */
     public function testDontSeeFileFoundFailsWhenFileExistsInSubdirectoryOfPath()
     {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessageRegExp('/Failed asserting that file ".*tests\/data\/dumps\/mysql.sql" does not exist/');
         $this->module->dontSeeFileFound('mysql.sql', 'tests/data/');
     }
 }

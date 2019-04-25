@@ -15,7 +15,7 @@ class PhpBrowserRestTest extends Unit
      */
     protected $phpBrowser;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->phpBrowser = new \Codeception\Module\PhpBrowser(make_container());
         $url = 'http://localhost:8010';
@@ -71,7 +71,7 @@ class PhpBrowserRestTest extends Unit
 
     public function testInvalidJson()
     {
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->expectException('PHPUnit\Framework\ExpectationFailedException');
         $this->setStubResponse('{xxx = yyy}');
         $this->module->seeResponseIsJson();
     }
@@ -87,7 +87,7 @@ class PhpBrowserRestTest extends Unit
 
     public function testInvalidXml()
     {
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->expectException('PHPUnit\Framework\ExpectationFailedException');
         $this->setStubResponse('<xml><name>John</surname></xml>');
         $this->module->seeResponseIsXml();
     }
@@ -294,7 +294,7 @@ class PhpBrowserRestTest extends Unit
 
     protected function shouldFail()
     {
-        $this->setExpectedException('PHPUnit\Framework\AssertionFailedError');
+        $this->expectException('PHPUnit\Framework\AssertionFailedError');
     }
 
     public function testGrabFromCurrentUrl()

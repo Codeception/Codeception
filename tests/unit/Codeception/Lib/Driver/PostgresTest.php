@@ -18,7 +18,7 @@ class PostgresTest extends Unit
     protected static $sql;
     protected $postgres;
 
-    public static function setUpBeforeClass()
+    public static function _setUpBeforeClass()
     {
         if (!function_exists('pg_connect')) {
             return;
@@ -26,16 +26,12 @@ class PostgresTest extends Unit
         if (getenv('APPVEYOR')) {
             self::$config['password'] = 'Password12!';
         }
-        $dumpFile = 'dumps/postgres.sql';
-        if (defined('HHVM_VERSION')) {
-            $dumpFile = 'dumps/postgres-hhvm.sql';
-        }
-        $sql = file_get_contents(codecept_data_dir($dumpFile));
+        $sql = file_get_contents(codecept_data_dir('dumps/postgres.sql'));
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', '', $sql);
         self::$sql = explode("\n", $sql);
     }
 
-    public function setUp()
+    public function _setUp()
     {
         try {
             $this->postgres = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
@@ -46,7 +42,7 @@ class PostgresTest extends Unit
         $this->postgres->load(self::$sql);
     }
 
-    public function tearDown()
+    public function _tearDown()
     {
         if (isset($this->postgres)) {
             $this->postgres->cleanup();
@@ -108,7 +104,7 @@ class PostgresTest extends Unit
         $emptyCriteria = [];
         $generatedSql = $this->postgres->select('test_column', 'test_table', $emptyCriteria);
 
-        $this->assertNotContains('where', $generatedSql);
+        $this->assertStringNotContainsString('where', $generatedSql);
     }
 
     public function testGetSingleColumnPrimaryKey()
@@ -130,20 +126,6 @@ class PostgresTest extends Unit
     {
         $this->postgres->executeQuery('INSERT INTO seqnames(name) VALUES(?)',['test']);
         $this->assertEquals(1, $this->postgres->lastInsertId('seqnames'));
-    }
-
-    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
-    {
-        $this->assertEquals('id', $this->postgres->getPrimaryColumn('order'));
-    }
-
-    public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
-    {
-        $this->setExpectedException(
-            '\Exception',
-            'getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead'
-        );
-        $this->postgres->getPrimaryColumn('composite_pk');
     }
 
     /**

@@ -568,28 +568,6 @@ Pass the copied seed into `--seed` option:
 codecept run --seed 1872290562
 ```  
 
-
-
-## Interactive Console
-
-The interactive console was added to try Codeception commands before executing them inside a test.
-
-![console](http://codeception.com/images/console.png)
-
-You can run the console with the following command:
-
-``` bash
-$ php vendor/bin/codecept console suitename
-```
-
-Now you can execute all the commands of an appropriate Actor class and see the results immediately.
-This is especially useful when used with the `WebDriver` module. It always takes too long to launch Selenium
-and the browser for tests. But with the console you can try different selectors, and different commands,
-and then write a test that should pass when executed.
-
-And a special hint: show your boss how you can easily manipulate web pages with the console and Selenium.
-It will be easy to convince them to automate this step and introduce acceptance testing to the project.
-
 ## Running from different folders
 
 If you have several projects with Codeception tests, you can use a single `codecept` file to run all of your tests.

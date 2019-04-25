@@ -4,7 +4,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 class GenerateCeptTest extends BaseCommandRunner
 {
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->makeCommand('\Codeception\Command\GenerateCept');
         $this->config = array(
@@ -17,8 +17,8 @@ class GenerateCeptTest extends BaseCommandRunner
     {
         $this->execute(array('suite' => 'shire', 'test' => 'HomeCanInclude12Dwarfs'));
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
-        $this->assertContains('$I = new HobbitGuy($scenario);', $this->content);
-        $this->assertContains('Test was created in tests/shire/HomeCanInclude12DwarfsCept.php', $this->output);
+        $this->assertStringContainsString('$I = new HobbitGuy($scenario);', $this->content);
+        $this->assertStringContainsString('Test was created in tests/shire/HomeCanInclude12DwarfsCept.php', $this->output);
         $this->assertIsValidPhp($this->content);
     }
 
@@ -47,8 +47,8 @@ class GenerateCeptTest extends BaseCommandRunner
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(array('suite' => 'shire', 'test' => 'HomeCanInclude12Dwarfs'));
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
-        $this->assertContains('use MiddleEarth\HobbitGuy;', $this->content);
-        $this->assertContains('$I = new HobbitGuy($scenario);', $this->content);
+        $this->assertStringContainsString('use MiddleEarth\HobbitGuy;', $this->content);
+        $this->assertStringContainsString('$I = new HobbitGuy($scenario);', $this->content);
         $this->assertIsValidPhp($this->content);
     }
 }

@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib;
 
-use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\ExternalUrlException;
 use Codeception\Exception\MalformedLocatorException;
@@ -73,7 +72,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         
         $filename = mb_strcut($filename, 0, 244, 'utf-8') . '.fail.' . $extension;
         $this->_savePageSource($report = codecept_output_dir() . $filename);
-        $test->getMetadata()->addReport('html', $report);
+        $test->getMetadata()->addReport('response', $report);
     }
 
     public function _after(TestInterface $test)
@@ -144,7 +143,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * // in Helper class
      * public function seeResponseContains($text)
      * {
-     *    $this->assertContains($text, $this->getModule('{{MODULE_NAME}}')->_getResponseContent(), "response contains");
+     *    $this->assertStringContainsString($text, $this->getModule('{{MODULE_NAME}}')->_getResponseContent(), "response contains");
      * }
      * ?>
      * ```
@@ -445,8 +444,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 return true;
             }
         }
-        codecept_debug('Button is not inside a link or a form');
-        return false;
+        throw new TestRuntimeException('Button is not inside a link or a form');
     }
 
     private function openHrefFromDomNode(\DOMNode $node)
@@ -546,12 +544,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeInCurrentUrl($uri)
     {
-        $this->assertContains($uri, $this->_getCurrentUri());
+        $this->assertStringContainsString($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeInCurrentUrl($uri)
     {
-        $this->assertNotContains($uri, $this->_getCurrentUri());
+        $this->assertStringNotContainsString($uri, $this->_getCurrentUri());
     }
 
     public function seeCurrentUrlEquals($uri)
@@ -1261,6 +1259,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->debugSection('Response Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
     }
 
+    public function makeHtmlSnapshot($name = null)
+    {
+        if (empty($name)) {
+            $name = uniqid(date("Y-m-d_H-i-s_"));
+        }
+        $debugDir = codecept_output_dir() . 'debug';
+        if (!is_dir($debugDir)) {
+            mkdir($debugDir, 0777);
+        }
+        $fileName = $debugDir . DIRECTORY_SEPARATOR . $name . '.html';
+
+        $this->_savePageSource($fileName);
+        $this->debugSection('Snapshot Saved', "file://$fileName");
+    }
+
     public function _getResponseStatusCode()
     {
         return $this->getResponseStatusCode();
@@ -1670,7 +1683,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$nodes->count()) {
             throw new ElementNotFound("<title>", "Tag");
         }
-        $this->assertContains($title, $nodes->first()->text(), "page title contains $title");
+        $this->assertStringContainsString($title, $nodes->first()->text(), "page title contains $title");
     }
 
     public function dontSeeInTitle($title)
@@ -1680,7 +1693,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $this->assertTrue(true);
             return;
         }
-        $this->assertNotContains($title, $nodes->first()->text(), "page title contains $title");
+        $this->assertStringNotContainsString($title, $nodes->first()->text(), "page title contains $title");
     }
 
     protected function assertDomContains($nodes, $message, $text = '')
@@ -1828,21 +1841,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
         $this->client->followRedirects(true);
         return $result;
-    }
-
-    /**
-     * Clicks on a given link.
-     *
-     * @param Link $link A Link instance
-     * @return Crawler
-     * @deprecated No longer used by InnerBrowser, please use amOnPage instead
-     */
-    protected function clientClick(Link $link)
-    {
-        if ($link instanceof Form) {
-            return $this->proceedSubmitForm($link);
-        }
-        return $this->clientRequest($link->getMethod(), $link->getUri());
     }
 
     /**

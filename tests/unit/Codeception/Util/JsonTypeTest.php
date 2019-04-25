@@ -35,14 +35,14 @@ class JsonTypeTest extends \Codeception\Test\Unit
     {
         $this->data['in_reply_to_screen_name'] = true;
         $jsonType = new JsonType($this->data);
-        $this->assertContains('`in_reply_to_screen_name: true` is of type', $jsonType->matches($this->types));
+        $this->assertStringContainsString('`in_reply_to_screen_name: true` is of type', $jsonType->matches($this->types));
     }
 
     public function testIntegerFilter()
     {
         $jsonType = new JsonType($this->data);
-        $this->assertContains('`id: 11` is of type', $jsonType->matches(['id' => 'integer:<5']));
-        $this->assertContains('`id: 11` is of type', $jsonType->matches(['id' => 'integer:>15']));
+        $this->assertStringContainsString('`id: 11` is of type', $jsonType->matches(['id' => 'integer:<5']));
+        $this->assertStringContainsString('`id: 11` is of type', $jsonType->matches(['id' => 'integer:>15']));
         $this->assertTrue($jsonType->matches(['id' => 'integer:=11']));
         $this->assertTrue($jsonType->matches(['id' => 'integer:>5']));
         $this->assertTrue($jsonType->matches(['id' => 'integer:>5:<12']));
@@ -195,8 +195,8 @@ class JsonTypeTest extends \Codeception\Test\Unit
             'id' => 'integer:<3'
         ]));
 
-        $this->assertContains('3` is of type `integer:<3', $res);
-        $this->assertContains('5` is of type `integer:<3', $res);
+        $this->assertStringContainsString('3` is of type `integer:<3', $res);
+        $this->assertStringContainsString('5` is of type `integer:<3', $res);
     }
 
     /**

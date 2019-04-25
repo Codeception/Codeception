@@ -8,14 +8,17 @@ class DiTest extends \Codeception\Test\Unit
      */
     protected $di;
     
-    protected function setUp()
+    protected function _setUp()
     {
         $this->di = new Di();
     }
 
     protected function injectionShouldFail($msg = '')
     {
-        $this->setExpectedException('Codeception\Exception\InjectionException', $msg);
+        $this->expectException('Codeception\Exception\InjectionException');
+        if ($msg) {
+            $this->expectExceptionMessage($msg);
+        }
     }
 
     public function testFailDependenciesCyclic()

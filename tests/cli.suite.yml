@@ -6,3 +6,5 @@ modules:
         - CliHelper
         - CodeHelper
         - Asserts
+steps:
+    - Codeception\Step\ConditionalAssertion

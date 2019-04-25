@@ -188,7 +188,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if ($this->config['run_database_seeder']) {
-            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class']]);
+            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class'], '--force' => true ]);
         }
     }
 
@@ -734,7 +734,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if (! is_null($expectedErrorMessage)) {
-            $this->assertContains($expectedErrorMessage, $viewErrorBag->first($key));
+            $this->assertStringContainsString($expectedErrorMessage, $viewErrorBag->first($key));
         }
     }
 

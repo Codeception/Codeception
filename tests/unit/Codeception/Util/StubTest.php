@@ -1,14 +1,14 @@
 <?php
 use \Codeception\Util\Stub as Stub;
 
-class StubTest extends \PHPUnit\Framework\TestCase
+class StubTest extends \Codeception\PHPUnit\TestCase
 {
     /**
      * @var DummyClass
      */
     protected $dummy;
 
-    public function setUp()
+    public function _setUp()
     {
         $conf = \Codeception\Configuration::config();
         require_once $file = \Codeception\Configuration::dataDir().'DummyClass.php';
@@ -160,42 +160,42 @@ class StubTest extends \PHPUnit\Framework\TestCase
     {
         $dummy = Stub::make(new \DummyClass());
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::make(new \DummyOverloadableClass());
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::makeEmpty(new \DummyClass());
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::makeEmpty(new \DummyOverloadableClass());
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::makeEmptyExcept(new \DummyClass(), 'helloWorld');
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::makeEmptyExcept(new \DummyOverloadableClass(), 'helloWorld');
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::construct(new \DummyClass());
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::construct(new \DummyOverloadableClass());
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::constructEmpty(new \DummyClass());
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::constructEmpty(new \DummyOverloadableClass());
         $this->assertObjectHasAttribute('__mocked', $dummy);
         $dummy = Stub::constructEmptyExcept(new \DummyClass(), 'helloWorld');
         $this->assertInstanceOf(
-            '\PHPUnit_Framework_MockObject_MockObject',
+            '\PHPUnit\Framework\MockObject\MockObject',
             $dummy
         );
         $dummy = Stub::constructEmptyExcept(new \DummyOverloadableClass(), 'helloWorld');
@@ -276,7 +276,7 @@ class StubTest extends \PHPUnit\Framework\TestCase
     private function resetMockObjects()
     {
         $refl = new ReflectionObject($this);
-        $refl = $refl->getParentClass();
+        $refl = $refl->getParentClass()->getParentClass();
         $prop = $refl->getProperty('mockObjects');
         $prop->setAccessible(true);
         $prop->setValue($this, array());

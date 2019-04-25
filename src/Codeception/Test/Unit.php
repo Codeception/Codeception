@@ -11,7 +11,7 @@ use Codeception\TestInterface;
 /**
  * Represents tests from PHPUnit compatible format.
  */
-class Unit extends \PHPUnit\Framework\TestCase implements
+class Unit extends \Codeception\PHPUnit\TestCase implements
     Interfaces\Reported,
     Interfaces\Dependent,
     TestInterface
@@ -31,7 +31,7 @@ class Unit extends \PHPUnit\Framework\TestCase implements
         return $this->metadata;
     }
 
-    protected function setUp()
+    protected function _setUp()
     {
         if ($this->getMetadata()->isBlocked()) {
             if ($this->getMetadata()->getSkip() !== null) {
@@ -64,7 +64,7 @@ class Unit extends \PHPUnit\Framework\TestCase implements
     {
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         $this->_after();
     }
@@ -74,26 +74,6 @@ class Unit extends \PHPUnit\Framework\TestCase implements
      */
     protected function _after()
     {
-    }
-
-    /**
-     * If the method exists (PHPUnit 5) forward the call to the parent class, otherwise
-     * call `expectException` instead (PHPUnit 6)
-     */
-    public function setExpectedException($exception, $message = null, $code = null)
-    {
-        if (is_callable('parent::setExpectedException')) {
-            parent::setExpectedException($exception, $message, $code);
-        } else {
-            Notification::deprecate('PHPUnit\Framework\TestCase::setExpectedException deprecated in favor of expectException, expectExceptionMessage, and expectExceptionCode');
-            $this->expectException($exception);
-            if ($message !== null) {
-                $this->expectExceptionMessage($message);
-            }
-            if ($code !== null) {
-                $this->expectExceptionCode($code);
-            }
-        }
     }
 
     /**

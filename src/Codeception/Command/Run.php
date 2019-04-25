@@ -259,7 +259,6 @@ class Run extends Command
             $this->output->writeln(
                 "Running with seed: " . $this->options['seed'] . "\n"
             );
-
         }
         if ($this->options['debug']) {
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);

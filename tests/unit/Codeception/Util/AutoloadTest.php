@@ -4,10 +4,10 @@ require_once 'MockAutoload.php';
 
 use Codeception\Util\MockAutoload as Autoload;
 
-class AutoloadTest extends \PHPUnit\Framework\TestCase
+class AutoloadTest extends \Codeception\PHPUnit\TestCase
 {
 
-    protected function setUp()
+    protected function _setUp()
     {
         Autoload::setFiles([
             '/vendor/foo.bar/src/ClassName.php',

@@ -4,14 +4,14 @@
  * Class TestLoaderTest
  * @group load
  */
-class TestLoaderTest extends \PHPUnit\Framework\TestCase
+class TestLoaderTest extends \Codeception\PHPUnit\TestCase
 {
     /**
      * @var \Codeception\Test\Loader
      */
     protected $testLoader;
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->testLoader = new \Codeception\Test\Loader(['path' => \Codeception\Configuration::dataDir()]);
     }

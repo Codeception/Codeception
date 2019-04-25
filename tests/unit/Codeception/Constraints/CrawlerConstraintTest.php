@@ -1,5 +1,5 @@
 <?php
-class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
+class CrawlerConstraintTest extends \Codeception\PHPUnit\TestCase
 {
 
     /**
@@ -7,7 +7,7 @@ class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
      */
     protected $constraint;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->constraint = new Codeception\PHPUnit\Constraint\Crawler('hello', '/user');
     }
@@ -24,12 +24,12 @@ class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 "Failed asserting that any element by 'selector' on page /user",
                 $fail->getMessage()
             );
-            $this->assertContains('+ <p>Bye world</p>', $fail->getMessage());
-            $this->assertContains('+ <p>Bye warcraft</p>', $fail->getMessage());
+            $this->assertStringContainsString('+ <p>Bye world</p>', $fail->getMessage());
+            $this->assertStringContainsString('+ <p>Bye warcraft</p>', $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
@@ -45,13 +45,13 @@ class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 "Failed asserting that any element by 'selector' on page /user",
                 $fail->getMessage()
             );
-            $this->assertNotContains('+ <p>item 0</p>', $fail->getMessage());
-            $this->assertNotContains('+ <p>item 14</p>', $fail->getMessage());
-            $this->assertContains('[total 15 elements]', $fail->getMessage());
+            $this->assertStringNotContainsString('+ <p>item 0</p>', $fail->getMessage());
+            $this->assertStringNotContainsString('+ <p>item 14</p>', $fail->getMessage());
+            $this->assertStringContainsString('[total 15 elements]', $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");
@@ -64,8 +64,8 @@ class CrawlerConstraintTest extends \PHPUnit\Framework\TestCase
         try {
             $this->constraint->evaluate($nodes->filter('p'), 'selector');
         } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
-            $this->assertContains("Failed asserting that any element by 'selector'", $fail->getMessage());
-            $this->assertNotContains("Failed asserting that any element by 'selector' on page", $fail->getMessage());
+            $this->assertStringContainsString("Failed asserting that any element by 'selector'", $fail->getMessage());
+            $this->assertStringNotContainsString("Failed asserting that any element by 'selector' on page", $fail->getMessage());
             return;
         }
         $this->fail("should have failed, but not");

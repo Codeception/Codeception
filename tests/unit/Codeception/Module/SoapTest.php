@@ -7,7 +7,7 @@ use Codeception\Util\Soap as SoapUtil;
  * Class SoapTest
  * @group appveyor
  */
-class SoapTest extends \PHPUnit\Framework\TestCase
+class SoapTest extends \Codeception\PHPUnit\TestCase
 {
 
     /**
@@ -17,7 +17,7 @@ class SoapTest extends \PHPUnit\Framework\TestCase
 
     protected $layout;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new \Codeception\Module\SOAP(make_container());
         $this->module->_setConfig(array(

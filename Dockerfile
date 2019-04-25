@@ -1,4 +1,4 @@
-FROM php:7.2-cli
+FROM php:7.3-cli
 
 MAINTAINER Tobias Munk tobias@diemeisterei.de
 
@@ -8,6 +8,8 @@ RUN apt-get update && \
             git \
             zlib1g-dev \
             libssl-dev \
+            libzip-dev \
+            unzip \
         --no-install-recommends && \
         apt-get clean && \
         rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -20,7 +22,7 @@ RUN docker-php-ext-install \
 # Install pecl extensions
 RUN pecl install \
         mongodb \
-        xdebug-2.6.0beta1 && \
+        xdebug-2.7.0RC2 && \
     docker-php-ext-enable \
         mongodb.so \
         xdebug
@@ -41,7 +43,7 @@ WORKDIR /repo
 
 # Install vendor
 COPY ./composer.json /repo/composer.json
-RUN composer install --prefer-dist --optimize-autoloader
+RUN composer install --prefer-dist --no-interaction --optimize-autoloader --classmap-authoritative
 
 # Add source-code
 COPY . /repo

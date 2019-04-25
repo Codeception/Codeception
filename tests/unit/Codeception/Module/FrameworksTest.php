@@ -13,7 +13,7 @@ class FrameworksTest extends TestsForWeb
      */
     protected $module;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new \Codeception\Module\UniversalFramework(make_container());
     }
@@ -33,7 +33,7 @@ class FrameworksTest extends TestsForWeb
 
     public function testExceptionIsThrownOnRedirectToExternalUrl()
     {
-        $this->setExpectedException('\Codeception\Exception\ExternalUrlException');
+        $this->expectException('\Codeception\Exception\ExternalUrlException');
         $this->module->amOnPage('/external_url');
         $this->module->click('Next');
     }

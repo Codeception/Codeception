@@ -4,7 +4,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 class GenerateStepObjectTest extends BaseCommandRunner
 {
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->makeCommand('\Codeception\Command\GenerateStepObject');
         $this->config = array(
@@ -19,8 +19,8 @@ class GenerateStepObjectTest extends BaseCommandRunner
 
         $generated = $this->log[0];
         $this->assertEquals(\Codeception\Configuration::supportDir().'Step/Shire/Login.php', $generated['filename']);
-        $this->assertContains('class Login extends \HobbitGuy', $generated['content']);
-        $this->assertContains('namespace Step\\Shire;', $generated['content']);
+        $this->assertStringContainsString('class Login extends \HobbitGuy', $generated['content']);
+        $this->assertStringContainsString('namespace Step\\Shire;', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
 
         $this->assertIsValidPhp($this->content);
@@ -32,8 +32,8 @@ class GenerateStepObjectTest extends BaseCommandRunner
         $this->execute(array('suite' => 'shire', 'step' => 'Login', '--silent' => true));
         $generated = $this->log[0];
         $this->assertEquals(\Codeception\Configuration::supportDir().'Step/Shire/Login.php', $generated['filename']);
-        $this->assertContains('namespace MiddleEarth\Step\Shire;', $generated['content']);
-        $this->assertContains('class Login extends \MiddleEarth\HobbitGuy', $generated['content']);
+        $this->assertStringContainsString('namespace MiddleEarth\Step\Shire;', $generated['content']);
+        $this->assertStringContainsString('class Login extends \MiddleEarth\HobbitGuy', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
 
         $this->assertIsValidPhp($this->content);
