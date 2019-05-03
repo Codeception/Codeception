@@ -265,6 +265,16 @@ abstract class Module
     }
 
     /**
+     * Defines if the debug flag is enabled on the execution or not
+     *
+     * @return bool
+     */
+    protected function isDebugEnabled()
+    {
+        return codecept_debug_mode_enabled();
+    }
+
+    /**
      * Print debug message to the screen.
      *
      * @param $message
