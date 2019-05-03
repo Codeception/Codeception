@@ -2,6 +2,7 @@
 
 use Codeception\Step;
 use Codeception\Util\Stub;
+use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
@@ -685,7 +686,7 @@ class WebDriverTest extends TestsForBrowsers
                         'value' => '_value_',
                         'path' => '/',
                         'domain' => '.3rd-party.net',
-                    ]
+                    ],
                 ];
             }),
         ]);
