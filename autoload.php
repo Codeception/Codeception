@@ -42,6 +42,16 @@ if (!function_exists('codecept_debug')) {
     }
 }
 
+if (!function_exists('codecept_debug_mode')) {
+    /**
+     * @return bool
+     */
+    function codecept_debug_mode_enabled()
+    {
+        return \Codeception\Util\Debug::isEnabled();
+    }
+}
+
 if (!function_exists('codecept_root_dir')) {
     function codecept_root_dir($appendPath = '')
     {
