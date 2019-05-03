@@ -106,7 +106,7 @@ class ErrorHandler implements EventSubscriberInterface
             return;
         }
         // not fatal
-        if ($error['type'] > 1) {
+        if (!in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR])) {
             return;
         }
 

@@ -69,22 +69,6 @@ class Autoload
         }
     }
 
-    /**
-     * @deprecated Use self::addNamespace() instead.
-     */
-    public static function register($namespace, $suffix, $path)
-    {
-        self::addNamespace($namespace, $path);
-    }
-
-    /**
-     * @deprecated Use self::addNamespace() instead.
-     */
-    public static function registerSuffix($suffix, $path)
-    {
-        self::addNamespace('', $path);
-    }
-
     public static function load($class)
     {
         // the current namespace prefix

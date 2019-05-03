@@ -30,7 +30,6 @@ trait {{name}}Actions
 
 EOF;
 
-
     protected $methodTemplate = <<<EOF
 
     /**
@@ -50,6 +49,11 @@ EOF;
     protected $actions;
     protected $numMethods = 0;
 
+    /**
+     * @var array GeneratedStep[]
+     */
+    protected $generatedSteps = [];
+
     public function __construct($settings)
     {
         $this->name = $settings['actor'];
@@ -62,6 +66,8 @@ EOF;
         }
         $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
+
+        $this->generatedSteps = (array) $settings['step_decorators'];
     }
 
 
@@ -104,30 +110,13 @@ EOF;
             $doc = "*";
         }
 
-        $conditionalDoc = $doc . "\n     * Conditional Assertion: Test won't be stopped on fail";
-
         $methodTemplate = (new Template($this->methodTemplate))
             ->place('module', $module)
             ->place('method', $refMethod->name)
             ->place('params', $params);
 
-        // generate conditional assertions
         if (0 === strpos($refMethod->name, 'see')) {
             $type = 'Assertion';
-            $body .= $methodTemplate
-                ->place('doc', $conditionalDoc)
-                ->place('action', 'can' . ucfirst($refMethod->name))
-                ->place('step', 'ConditionalAssertion')
-                ->produce();
-
-            // generate negative assertion
-        } elseif (0 === strpos($refMethod->name, 'dontSee')) {
-            $type = 'Assertion';
-            $body .= $methodTemplate
-                ->place('doc', $conditionalDoc)
-                ->place('action', str_replace('dont', 'cant', $refMethod->name))
-                ->place('step', 'ConditionalAssertion')
-                ->produce();
         } elseif (0 === strpos($refMethod->name, 'am')) {
             $type = 'Condition';
         } else {
@@ -139,6 +128,17 @@ EOF;
             ->place('action', $refMethod->name)
             ->place('step', $type)
             ->produce();
+
+        // add auto generated steps
+        foreach ($this->generatedSteps as $generator) {
+            if (!is_callable([$generator, 'getTemplate'])) {
+                throw new \Exception("Wrong configuration for generated steps. $generator doesn't implement \Codeception\Step\GeneratedStep interface");
+            }
+            $template = call_user_func([$generator, 'getTemplate'], clone $methodTemplate);
+            if ($template) {
+                $body .= $template->produce();
+            }
+        }
 
         return $body;
     }

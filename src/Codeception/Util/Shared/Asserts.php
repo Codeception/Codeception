@@ -87,14 +87,6 @@ trait Asserts
     }
 
     /**
-     * @deprecated
-     */
-    protected function assertGreaterThen($expected, $actual, $message = '')
-    {
-        \PHPUnit\Framework\Assert::assertGreaterThan($expected, $actual, $message);
-    }
-
-    /**
      * Checks that actual is greater or equal than expected
      *
      * @param        $expected
@@ -102,14 +94,6 @@ trait Asserts
      * @param string $message
      */
     protected function assertGreaterThanOrEqual($expected, $actual, $message = '')
-    {
-        \PHPUnit\Framework\Assert::assertGreaterThanOrEqual($expected, $actual, $message);
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function assertGreaterThenOrEqual($expected, $actual, $message = '')
     {
         \PHPUnit\Framework\Assert::assertGreaterThanOrEqual($expected, $actual, $message);
     }
@@ -458,5 +442,125 @@ trait Asserts
     protected function fail($message)
     {
         \PHPUnit\Framework\Assert::fail($message);
+    }
+
+    protected function assertStringContainsString($needle, $haystack, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertStringContainsString($needle, $haystack, $message);
+    }
+
+    protected function assertStringNotContainsString($needle, $haystack, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertStringNotContainsString($needle, $haystack, $message);
+    }
+
+    protected function assertStringContainsStringIgnoringCase($needle, $haystack, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertStringContainsStringIgnoringCase($needle, $haystack, $message);
+    }
+
+    protected function assertStringNotContainsStringIgnoringCase($needle, $haystack, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertStringNotContainsStringIgnoringCase($needle, $haystack, $message);
+    }
+
+    protected function assertIsArray($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsArray($actual, $message);
+    }
+
+    protected function assertIsBool($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsBool($actual, $message);
+    }
+
+    protected function assertIsFloat($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsFloat($actual, $message);
+    }
+
+    protected function assertIsInt($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsInt($actual, $message);
+    }
+
+    protected function assertIsNumeric($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNumeric($actual, $message);
+    }
+
+    protected function assertIsObject($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsObject($actual, $message);
+    }
+
+    protected function assertIsResource($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsResource($actual, $message);
+    }
+
+    protected function assertIsString($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsString($actual, $message);
+    }
+
+    protected function assertIsScalar($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsScalar($actual, $message);
+    }
+
+    protected function assertIsCallable($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsCallable($actual, $message);
+    }
+
+    protected function assertIsNotArray($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotArray($actual, $message);
+    }
+
+    protected function assertIsNotBool($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotBool($actual, $message);
+    }
+
+    protected function assertIsNotFloat($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotFloat($actual, $message);
+    }
+
+    protected function assertIsNotInt($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotInt($actual, $message);
+    }
+
+    protected function assertIsNotNumeric($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotNumeric($actual, $message);
+    }
+
+    protected function assertIsNotObject($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotObject($actual, $message);
+    }
+
+    protected function assertIsNotResource($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotResource($actual, $message);
+    }
+
+    protected function assertIsNotString($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotString($actual, $message);
+    }
+
+    protected function assertIsNotScalar($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotScalar($actual, $message);
+    }
+
+    protected function assertIsNotCallable($actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertIsNotCallable($actual, $message);
     }
 }

@@ -6,7 +6,7 @@ use Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    const STABLE_BRANCH = '2.5';
+    const STABLE_BRANCH = '3.0';
     const REPO_BLOB_URL = 'https://github.com/Codeception/Codeception/blob';
 
     public function release()
@@ -367,10 +367,16 @@ class RoboFile extends \Robo\Tasks
 
         $this->taskGenDoc('docs/reference/Stub.md')
             ->docClass('Codeception\Stub')
-            ->filterMethods(function(\ReflectionMethod $method) {
-                if ($method->isConstructor() or $method->isDestructor()) return false;
-                if (!$method->isPublic()) return false;
-                if (strpos($method->name, '_') === 0) return false;
+            ->filterMethods(function (\ReflectionMethod $method) {
+                if ($method->isConstructor() or $method->isDestructor()) {
+                    return false;
+                }
+                if (!$method->isPublic()) {
+                    return false;
+                }
+                if (strpos($method->name, '_') === 0) {
+                    return false;
+                }
                 return true;
             })
             ->processMethodDocBlock(
@@ -378,7 +384,8 @@ class RoboFile extends \Robo\Tasks
                     $doc = str_replace(array('@since'), array(' * available since version'), $doc);
                     $doc = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $doc);
                     return $doc;
-                })
+                }
+            )
             ->processProperty(false)
             ->run();
 
@@ -395,11 +402,19 @@ EOF;
             ->processClassDocBlock(false)
             ->processClassSignature(false)
             ->prepend($mocksDocumentation)
-            ->filterMethods(function(\ReflectionMethod $method) {
-                if ($method->isConstructor() or $method->isDestructor()) return false;
-                if (!$method->isPublic()) return false;
-                if (strpos($method->name, '_') === 0) return false;
-                if (strpos($method->name, 'stub') === 0) return false;
+            ->filterMethods(function (\ReflectionMethod $method) {
+                if ($method->isConstructor() or $method->isDestructor()) {
+                    return false;
+                }
+                if (!$method->isPublic()) {
+                    return false;
+                }
+                if (strpos($method->name, '_') === 0) {
+                    return false;
+                }
+                if (strpos($method->name, 'stub') === 0) {
+                    return false;
+                }
                 return true;
             })
             ->run();

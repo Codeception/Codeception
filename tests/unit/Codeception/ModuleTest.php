@@ -2,7 +2,7 @@
 
 use Codeception\Util\Stub;
 
-class ModuleTest extends \PHPUnit\Framework\TestCase
+class ModuleTest extends \Codeception\PHPUnit\TestCase
 {
     public function testRequirements()
     {
@@ -10,10 +10,10 @@ class ModuleTest extends \PHPUnit\Framework\TestCase
         try {
             $module->_setConfig([]);
         } catch (\Exception $e) {
-            $this->assertContains('"error"', $e->getMessage());
-            $this->assertContains('no\such\class', $e->getMessage());
-            $this->assertContains('composer', $e->getMessage());
-            $this->assertNotContains('installed', $e->getMessage());
+            $this->assertStringContainsString('"error"', $e->getMessage());
+            $this->assertStringContainsString('no\such\class', $e->getMessage());
+            $this->assertStringContainsString('composer', $e->getMessage());
+            $this->assertStringNotContainsString('installed', $e->getMessage());
             return;
         }
         $this->fail('no exception thrown');

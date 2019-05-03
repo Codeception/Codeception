@@ -88,6 +88,7 @@ modules:
     enabled:
         # add a framework module here
         - \\{$this->namespace}Helper\Functional
+    step_decorators: ~        
 EOF;
         $this->createSuite('functional', $actor, $suiteConfig);
     }
@@ -107,6 +108,7 @@ modules:
         - PhpBrowser:
             url: http://localhost/myapp
         - \\{$this->namespace}Helper\Acceptance
+    step_decorators: ~        
 EOF;
         $this->createSuite('acceptance', $actor, $suiteConfig);
     }
@@ -123,6 +125,7 @@ modules:
     enabled:
         - Asserts
         - \\{$this->namespace}Helper\Unit
+    step_decorators: ~        
 EOF;
         $this->createSuite('unit', $actor, $suiteConfig);
     }

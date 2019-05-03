@@ -1,5 +1,0 @@
-class_name: FacebookGuy
-bootstrap: false
-modules:
-    enabled:
-        - Asserts

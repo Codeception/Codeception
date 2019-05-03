@@ -2,7 +2,7 @@
 
 use Codeception\Configuration;
 
-class C3Test extends \PHPUnit\Framework\TestCase
+class C3Test extends \Codeception\PHPUnit\TestCase
 {
     /**
      * @var string
@@ -14,7 +14,7 @@ class C3Test extends \PHPUnit\Framework\TestCase
      */
     public $c3_dir = null;
 
-    protected function setUp()
+    protected function _setUp()
     {
         if (!extension_loaded('xdebug')) {
             $this->markTestSkipped('xdebug extension required for c3test.');
@@ -28,7 +28,7 @@ class C3Test extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 'debug';
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         unset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG']);
         unset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
@@ -37,9 +37,6 @@ class C3Test extends \PHPUnit\Framework\TestCase
 
     public function testC3CodeCoverageStarted()
     {
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped('This test fails on HHVM');
-        }
         $_SERVER['REQUEST_URI'] = '/';
         include $this->c3;
         $this->assertInstanceOf('PHP_CodeCoverage', $codeCoverage);
@@ -65,9 +62,6 @@ class C3Test extends \PHPUnit\Framework\TestCase
 
     public function testCodeCoverageHtmlReport()
     {
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped('Remote coverage HTML report does not work on HHVM');
-        }
         $_SERVER['REQUEST_URI'] = '/c3/report/html';
         include $this->c3;
         $this->assertEquals('html', $route);

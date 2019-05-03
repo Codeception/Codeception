@@ -53,7 +53,7 @@ class RedisTest extends Unit
      * Every time a test starts, cleanup the database and populates it with some
      * dummy data.
      */
-    protected function setUp()
+    protected function _setUp()
     {
         if (!class_exists('Predis\Client')) {
             $this->markTestSkipped('Predis is not installed');
@@ -97,7 +97,7 @@ class RedisTest extends Unit
             $exceptionClass = 'PHPUnit\Framework\AssertionFailedError';
         }
 
-        $this->setExpectedException($exceptionClass);
+        $this->expectException($exceptionClass);
     }
 
     // ****************************************

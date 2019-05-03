@@ -13,7 +13,7 @@ class GenerateScenarioTest extends BaseCommandRunner
      */
     protected $moduleContainer;
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), []);
         $this->moduleContainer->create('EmulateModuleHelper');
@@ -40,9 +40,9 @@ class GenerateScenarioTest extends BaseCommandRunner
         $file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt';
         $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
-        $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $content);
-        $this->assertContains('I see file found "$codeception"', $content);
-        $this->assertContains('* File_Exists generated', $this->output);
+        $this->assertStringContainsString('I WANT TO CHECK CONFIG EXISTS', $content);
+        $this->assertStringContainsString('I see file found "$codeception"', $content);
+        $this->assertStringContainsString('* File_Exists generated', $this->output);
     }
 
     public function testMultipleTestsGeneration()
@@ -53,9 +53,9 @@ class GenerateScenarioTest extends BaseCommandRunner
         $file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt';
         $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
-        $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $content);
-        $this->assertContains('I see file found "$codeception"', $content);
-        $this->assertContains('* File_Exists generated', $this->output);
+        $this->assertStringContainsString('I WANT TO CHECK CONFIG EXISTS', $content);
+        $this->assertStringContainsString('I see file found "$codeception"', $content);
+        $this->assertStringContainsString('* File_Exists generated', $this->output);
     }
 
     public function testHtml()
@@ -64,9 +64,9 @@ class GenerateScenarioTest extends BaseCommandRunner
         $file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.html';
         $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
-        $this->assertContains('<html><body><h3>I WANT TO CHECK CONFIG EXISTS</h3>', $content);
-        $this->assertContains('I see file found &quot;$codeception&quot;', strip_tags($content));
-        $this->assertContains('* File_Exists generated', $this->output);
+        $this->assertStringContainsString('<html><body><h3>I WANT TO CHECK CONFIG EXISTS</h3>', $content);
+        $this->assertStringContainsString('I see file found &quot;$codeception&quot;', strip_tags($content));
+        $this->assertStringContainsString('* File_Exists generated', $this->output);
     }
 
     public function testOneFile()
@@ -76,10 +76,10 @@ class GenerateScenarioTest extends BaseCommandRunner
 
         $this->execute(array('suite' => 'skipped', '--single-file' => true));
         $this->assertEquals(codecept_root_dir().'tests/data/scenarios/skipped.txt', $this->filename);
-        $this->assertContains('I WANT TO SKIP IT', $this->content);
-        $this->assertContains('I WANT TO MAKE IT INCOMPLETE', $this->content);
-        $this->assertContains('* Skip_Me rendered', $this->output);
-        $this->assertContains('* Incomplete_Me rendered', $this->output);
+        $this->assertStringContainsString('I WANT TO SKIP IT', $this->content);
+        $this->assertStringContainsString('I WANT TO MAKE IT INCOMPLETE', $this->content);
+        $this->assertStringContainsString('* Skip_Me rendered', $this->output);
+        $this->assertStringContainsString('* Incomplete_Me rendered', $this->output);
     }
 
     public function testOneFileWithHtml()
@@ -89,19 +89,19 @@ class GenerateScenarioTest extends BaseCommandRunner
 
         $this->execute(array('suite' => 'skipped', '--single-file' => true, '--format' => 'html'));
         $this->assertEquals(codecept_root_dir().'tests/data/scenarios/skipped.html', $this->filename);
-        $this->assertContains('<h3>I WANT TO MAKE IT INCOMPLETE</h3>', $this->content);
-        $this->assertContains('<h3>I WANT TO SKIP IT</h3>', $this->content);
-        $this->assertContains('<body><h3>', $this->content);
-        $this->assertContains('</body></html>', $this->content);
-        $this->assertContains('* Skip_Me rendered', $this->output);
-        $this->assertContains('* Incomplete_Me rendered', $this->output);
+        $this->assertStringContainsString('<h3>I WANT TO MAKE IT INCOMPLETE</h3>', $this->content);
+        $this->assertStringContainsString('<h3>I WANT TO SKIP IT</h3>', $this->content);
+        $this->assertStringContainsString('<body><h3>', $this->content);
+        $this->assertStringContainsString('</body></html>', $this->content);
+        $this->assertStringContainsString('* Skip_Me rendered', $this->output);
+        $this->assertStringContainsString('* Incomplete_Me rendered', $this->output);
     }
 
     public function testDifferentPath()
     {
         $this->execute(array('suite' => 'dummy', '--single-file' => true, '--path' => 'docs'));
         $this->assertEquals('docs/dummy.txt', $this->filename);
-        $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $this->content);
-        $this->assertContains('* File_Exists rendered', $this->output);
+        $this->assertStringContainsString('I WANT TO CHECK CONFIG EXISTS', $this->content);
+        $this->assertStringContainsString('* File_Exists rendered', $this->output);
     }
 }

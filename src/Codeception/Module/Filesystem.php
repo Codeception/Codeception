@@ -150,7 +150,7 @@ class Filesystem extends CodeceptionModule
      */
     public function seeInThisFile($text)
     {
-        $this->assertContains($text, $this->file, "No text '$text' in currently opened file");
+        $this->assertStringContainsString($text, $this->file, "No text '$text' in currently opened file");
     }
 
     /**
@@ -221,7 +221,7 @@ class Filesystem extends CodeceptionModule
      */
     public function dontSeeInThisFile($text)
     {
-        $this->assertNotContains($text, $this->file, "Found text '$text' in currently opened file");
+        $this->assertStringNotContainsString($text, $this->file, "Found text '$text' in currently opened file");
     }
 
     /**

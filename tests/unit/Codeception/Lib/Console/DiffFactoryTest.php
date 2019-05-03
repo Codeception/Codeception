@@ -13,7 +13,7 @@ class DiffFactoryTest extends \Codeception\Test\Unit
      */
     protected $diffFactory;
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->diffFactory = new DiffFactory();
     }

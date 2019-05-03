@@ -12,13 +12,14 @@
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
- * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = NULL)
  *
  * @SuppressWarnings(PHPMD)
 */
-class FacebookGuy extends \Codeception\Actor
+class RetryTester extends \Codeception\Actor
 {
-    use _generated\FacebookGuyActions;
+    use _generated\RetryTesterActions;
+
+    use \Codeception\Lib\Actor\Shared\Retry;
 
    /**
     * Define custom actions here

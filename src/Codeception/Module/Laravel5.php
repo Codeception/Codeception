@@ -188,7 +188,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if ($this->config['run_database_seeder']) {
-            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class']]);
+            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class'], '--force' => true ]);
         }
     }
 
@@ -734,7 +734,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if (! is_null($expectedErrorMessage)) {
-            $this->assertContains($expectedErrorMessage, $viewErrorBag->first($key));
+            $this->assertStringContainsString($expectedErrorMessage, $viewErrorBag->first($key));
         }
     }
 
@@ -1039,10 +1039,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function findModel($modelClass, $attributes = [])
     {
-        $query = $this->getQueryBuilderFromModel($modelClass);
-        foreach ($attributes as $key => $value) {
-            $query->where($key, $value);
-        }
+        $query = $this->buildQuery($modelClass, $attributes);
 
         return $query->first();
     }
@@ -1054,11 +1051,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function findRecord($table, $attributes = [])
     {
-        $query = $this->getQueryBuilderFromTable($table);
-        foreach ($attributes as $key => $value) {
-            $query->where($key, $value);
-        }
-
+        $query = $this->buildQuery($table, $attributes);
         return (array) $query->first();
     }
 
@@ -1069,11 +1062,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function countModels($modelClass, $attributes = [])
     {
-        $query = $this->getQueryBuilderFromModel($modelClass);
-        foreach ($attributes as $key => $value) {
-            $query->where($key, $value);
-        }
-
+        $query = $this->buildQuery($modelClass, $attributes);
         return $query->count();
     }
 
@@ -1084,11 +1073,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function countRecords($table, $attributes = [])
     {
-        $query = $this->getQueryBuilderFromTable($table);
-        foreach ($attributes as $key => $value) {
-            $query->where($key, $value);
-        }
-
+        $query = $this->buildQuery($table, $attributes);
         return $query->count();
     }
 
@@ -1242,5 +1227,33 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $compiledRoute = ReflectionHelper::readPrivateProperty($route, 'compiled');
 
         return $compiledRoute->getHostRegex();
+    }
+
+    /**
+     * Build Eloquent query with attributes
+     *
+     * @param string $table
+     * @param array $attributes
+     * @return EloquentModel
+     * @part orm
+     */
+    private function buildQuery($table, $attributes = [])
+    {
+        if (class_exists($table)) {
+            $query = $this->getQueryBuilderFromModel($table);
+        } else {
+            $query = $this->getQueryBuilderFromTable($table);
+        }
+
+        foreach ($attributes as $key => $value) {
+            if (\is_array($value)) {
+                call_user_func_array(array($query, "where"), $value);
+            } elseif (is_null($value)) {
+                $query->whereNull($key);
+            } else {
+                $query->where($key, $value);
+            }
+        }
+        return $query;
     }
 }

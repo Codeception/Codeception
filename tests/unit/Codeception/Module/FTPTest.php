@@ -2,17 +2,7 @@
 
 use Codeception\Util\Stub;
 
-/**
- * Module for testing remote ftp systems.
- *
- * ## Status
- *
- * Maintainer: **nathanmac**
- * Stability: **stable**
- * Contact: nathan.macnamara@outlook.com
- *
- */
-class FTPTest extends \PHPUnit\Framework\TestCase
+class FTPTest extends \Codeception\PHPUnit\TestCase
 {
     protected $config = array(
         'host' => '127.0.0.1',
@@ -26,7 +16,7 @@ class FTPTest extends \PHPUnit\Framework\TestCase
      */
     protected $module = null;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new \Codeception\Module\FTP(make_container());
         $this->module->_setConfig($this->config);
@@ -117,7 +107,7 @@ class FTPTest extends \PHPUnit\Framework\TestCase
         $this->module->deleteDir('TESTING');
     }
 
-    public function tearDown()
+    public function _tearDown()
     {
         $this->module->_after(Stub::makeEmpty('\Codeception\Test\Test'));
     }

@@ -439,21 +439,6 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Alias for `grabServiceFromContainer`.
-     *
-     * Note: Deprecated. Will be removed in Codeception 2.3.
-     *
-     * @param string $service    Service name
-     * @param array  $parameters Parameters [Optional]
-     * @return mixed
-     * @part services
-     */
-    public function grabServiceFromDi($service, array $parameters = [])
-    {
-        return $this->grabServiceFromContainer($service, $parameters);
-    }
-
-    /**
      * Registers a service in the services container and resolve it. This record will be erased after the test.
      * Recommended to use for unit testing.
      *
@@ -484,23 +469,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         }
     }
 
-    /**
-     * Alias for `addServiceToContainer`.
-     *
-     * Note: Deprecated. Will be removed in Codeception 2.3.
-     *
-     * @param string $name
-     * @param mixed $definition
-     * @param boolean $shared
-     * @return mixed|null
-     * @part services
-     */
-    public function haveServiceInDi($name, $definition, $shared = false)
-    {
-        return $this->addServiceToContainer($name, $definition, $shared);
-    }
-
-    /**
+     /**
      * Opens web page using route name and parameters.
      *
      * ``` php

@@ -100,8 +100,7 @@ class Application extends BaseApplication
             $input = $this->getCoreArguments();
         }
 
-        if (!ini_get('register_argc_argv') && empty($_SERVER['argv'])) {
-            //register_argc_argv is always off on HHVM, but it has no effect
+        if (!ini_get('register_argc_argv')) {
             throw new ConfigurationException('register_argc_argv must be set to On for running Codeception');
         }
 

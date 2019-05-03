@@ -1,10 +1,10 @@
 <?php
-class AssertsTest extends \PHPUnit\Framework\TestCase
+class AssertsTest extends \Codeception\PHPUnit\TestCase
 {
     /** @var \Codeception\Module\Asserts */
     protected $module;
 
-    public function setUp()
+    public function _setUp()
     {
         $this->module = new \Codeception\Module\Asserts(make_container());
     }
@@ -36,10 +36,39 @@ class AssertsTest extends \PHPUnit\Framework\TestCase
         $this->module->assertFileExists(__FILE__);
         $this->module->assertFileNotExists(__FILE__ . '.notExist');
         $this->module->assertInstanceOf('Exception', new Exception());
-        $this->module->assertInternalType('integer', 5);
+        //assertInternalType is deprecated and will be removed in PHPUnit 9
+        //$this->module->assertInternalType('integer', 5);
         $this->module->assertArrayHasKey('one', ['one' => 1, 'two' => 2]);
-        $this->module->assertArraySubset(['foo' => [1]], ['foo' => [1, 2]]);
+        //assertArraySubset is deprecated and will be removed in PHPUnit 9
+        //$this->module->assertArraySubset(['foo' => [1]], ['foo' => [1, 2]]);
         $this->module->assertCount(3, [1, 2, 3]);
+
+        $this->module->assertStringContainsString('bar', 'foobar');
+        $this->module->assertStringContainsStringignoringCase('bar', 'FooBar');
+        $this->module->assertStringNotContainsString('baz', 'foobar');
+        $this->module->assertStringNotContainsStringignoringCase('baz', 'FooBar');
+
+        $this->module->assertIsArray([1, 2, 3]);
+        $this->module->assertIsBool(true);
+        $this->module->assertIsFloat(1.2);
+        $this->module->assertIsInt(2);
+        $this->module->assertIsNumeric('12.34');
+        $this->module->assertIsObject(new stdClass());
+        $this->module->assertIsResource(fopen(__FILE__, 'r'));
+        $this->module->assertIsString('test');
+        $this->module->assertIsScalar('test');
+        $this->module->assertIsCallable(function() {});
+
+        $this->module->assertIsNotArray(false);
+        $this->module->assertIsNotBool([1, 2, 3]);
+        $this->module->assertIsNotFloat(false);
+        $this->module->assertIsNotInt(false);
+        $this->module->assertIsNotNumeric(false);
+        $this->module->assertIsNotObject(false);
+        $this->module->assertIsNotResource(false);
+        $this->module->assertIsNotString(false);
+        $this->module->assertIsNotScalar(function() {});
+        $this->module->assertIsNotCallable('test');
     }
 
     public function testExceptions()

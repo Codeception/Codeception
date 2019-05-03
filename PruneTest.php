@@ -42,7 +42,6 @@ $regexes = [
     'Symfony' => '/.*Symfony.*/',
     'Yii1' => '/.*Yii1.*/',
     'ZendExpressive' => '/.*ZendExpressive.*/',
-    'Zend1' => '/.*ZF1.*/',
     'Zend2' => '/.*ZF2.*/',
 ];
 

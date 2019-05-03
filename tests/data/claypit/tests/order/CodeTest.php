@@ -8,12 +8,12 @@ class CodeTest extends \Codeception\Test\Unit
         OrderHelper::appendToFile('C');
     }
 
-    public static function setUpBeforeClass()
+    public static function _setUpBeforeClass()
     {
         OrderHelper::appendToFile('{');
     }
 
-    public static function tearDownAfterClass()
+    public static function _tearDownAfterClass()
     {
         OrderHelper::appendToFile('}');
     }

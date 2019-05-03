@@ -20,7 +20,6 @@ class ModuleIsDebugEnabledMethodCest
 
     /**
      * @param CliGuy $I
-     * @group now
      */
     public function runTestWithDebugFlag(CliGuy $I)
     {

@@ -15,12 +15,12 @@ class ModuleContainerTest extends Unit
      */
     protected $moduleContainer;
 
-    protected function setUp()
+    protected function _setUp()
     {
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), []);
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         \Codeception\Module\UniversalFramework::$includeInheritedActions = true;
         \Codeception\Module\UniversalFramework::$onlyActions = [];
@@ -115,7 +115,7 @@ class ModuleContainerTest extends Unit
      */
     public function testCreateModuleWithoutRequiredFields()
     {
-        $this->setExpectedException('\Codeception\Exception\ModuleConfigException');
+        $this->expectException('\Codeception\Exception\ModuleConfigException');
         $this->moduleContainer->create('Codeception\Lib\StubModule');
     }
 
@@ -169,7 +169,7 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByModuleName()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleConflictException');
+        $this->expectException('Codeception\Exception\ModuleConflictException');
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule');
         $this->moduleContainer->create('Cli');
         $this->moduleContainer->validateConflicts();
@@ -178,7 +178,7 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByClass()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleConflictException');
+        $this->expectException('Codeception\Exception\ModuleConflictException');
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule2');
         $this->moduleContainer->create('Cli');
         $this->moduleContainer->validateConflicts();
@@ -186,7 +186,7 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByInterface()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleConflictException');
+        $this->expectException('Codeception\Exception\ModuleConflictException');
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule3');
         $this->moduleContainer->create('Symfony2');
         $this->moduleContainer->validateConflicts();
@@ -194,7 +194,7 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByWebInterface()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleConflictException');
+        $this->expectException('Codeception\Exception\ModuleConflictException');
         $this->moduleContainer->create('Laravel5');
         $this->moduleContainer->create('Symfony2');
         $this->moduleContainer->validateConflicts();
@@ -205,13 +205,13 @@ class ModuleContainerTest extends Unit
         $config = ['modules' =>
             ['config' => [
                 'REST' => [
-                    'depends' => 'ZF1',
+                    'depends' => 'ZF2',
                     ]
                 ]
             ]
         ];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
-        $this->moduleContainer->create('ZF1');
+        $this->moduleContainer->create('ZF2');
         $this->moduleContainer->create('REST');
         $this->moduleContainer->validateConflicts();
     }
@@ -252,7 +252,7 @@ class ModuleContainerTest extends Unit
 
     public function testModuleDependenciesFail()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleRequireException');
+        $this->expectException('Codeception\Exception\ModuleRequireException');
         $this->moduleContainer->create('Codeception\Lib\DependencyModule');
     }
 

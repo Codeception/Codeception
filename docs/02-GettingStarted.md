@@ -231,6 +231,49 @@ class TaskCrudCest
 
 Learn more about the [Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes) in the Advanced Testing section.
 
+## Interactive Pause
+
+It's hard to write a complete test at once. 
+You will need to try different commands with different arguments before you find a correct path.
+
+Since Codeception 3.0 you can pause execution in any point and enter interactive shell where you will be able to try commands in action.
+All you need to do is to **call `$I->pause()` in debug mode**.
+
+```php
+<?php
+// use pause inside a test:
+$I->pause(); 
+```
+
+When a test gets to this point it stops and shows a console where you can try all available commands. 
+This can be very useful when you write functional, acceptance, or api test.
+
+![](https://user-images.githubusercontent.com/220264/54929617-875ad180-4f1e-11e9-8fea-fc1b02423050.gif)
+
+Inside interactive pause you can use all power of PHP interpreter. Use variables, functions, etc.
+Result of the last executed command (usually a grabber) is saved to `$result` variable, so you can use it in next commands.
+
+Inside acceptance or functional test you can save page screenshot or html snapshot to check the page you are working on.
+
+```php
+<?php
+// inside PhpBrowser, WebDrvier, frameworks
+// saves current HTML and prints a path to created file 
+$I->makeHtmlSnapshot();
+
+// inside WebDriver
+// saves screenshot and prints a path to created file
+$I->makeScreenshot();
+```
+
+To try commands without running a single test you can launch interactive console:
+
+``` bash
+$ php vendor/bin/codecept console suitename
+```
+
+Now you can execute all the commands of a corresponding Actor class and see the results immediately.
+
 ## BDD
 
 Codeception allows execution of user stories in Gherkin format in a similar manner as is done in Cucumber or Behat.

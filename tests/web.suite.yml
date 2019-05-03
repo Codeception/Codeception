@@ -7,6 +7,7 @@ modules:
       browser: chrome
       window_size: 1200x768
       restart: true # Use a new browser window for each test (to isolate test cases from each other)
+
 env:
   fast:
     modules:

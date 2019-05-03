@@ -12,7 +12,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
     abstract public function getConfig();
     abstract public function getPopulator();
 
-    protected function setUp()
+    protected function _setUp()
     {
         $config = $this->getConfig();
         Db::create($config['dsn'], $config['user'], $config['password'])->cleanup();
@@ -23,7 +23,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         $this->assertTrue($this->module->_isPopulated());
     }
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         $this->module->_resetConfig();
         $this->module->_after(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
@@ -89,7 +89,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         // Since table does not exist it should fail
         // TODO: Catch this exception at the driver level and re-throw a general one
         // just for "table not found" across all the drivers
-        $this->setExpectedException('PDOException');
+        $this->expectException('PDOException');
 
         $this->module->dontSeeInDatabase('users', ['name' => 'davert']);
     }
@@ -98,7 +98,7 @@ abstract class TestsForDb extends \Codeception\Test\Unit
     {
         $userId = $this->module->haveInDatabase('users', ['name' => 'john', 'email' => 'john@jon.com']);
         $this->module->haveInDatabase('groups', ['name' => 'john', 'enabled' => false]);
-        $this->assertInternalType('integer', $userId);
+        $this->assertIsInt($userId);
         $this->module->seeInDatabase('users', ['name' => 'john', 'email' => 'john@jon.com']);
         $this->module->dontSeeInDatabase('users', ['name' => 'john', 'email' => null]);
         $this->module->_after(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
@@ -109,10 +109,6 @@ abstract class TestsForDb extends \Codeception\Test\Unit
 
     public function testHaveInDatabaseWithCompositePrimaryKey()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('Does not support WITHOUT ROWID on travis');
-        }
-
         $insertQuery = 'INSERT INTO composite_pk (group_id, id, status) VALUES (?, ?, ?)';
         //this test checks that module does not delete columns by partial primary key
         $this->module->driver->executeQuery($insertQuery, [1, 2, 'test']);
