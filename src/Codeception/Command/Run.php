@@ -245,11 +245,10 @@ class Run extends Command
             $config = $this->overrideConfig($this->options['override']);
         }
 
-        ini_set(
-            'memory_limit',
-            isset($config['settings']['memory_limit']) ? $config['settings']['memory_limit'] : '1024M'
-        );
-
+        if (isset($config['settings']['memory_limit'])) {
+            ini_set('memory_limit', $config['settings']['memory_limit']);
+        }
+        
         if ($this->options['ext']) {
             $config = $this->enableExtensions($this->options['ext']);
         }
