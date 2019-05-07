@@ -43,6 +43,7 @@ class Codecept
         'html'            => false,
         'xml'             => false,
         'phpunit-xml'     => false,
+        'no-redirect'     => true,
         'json'            => false,
         'tap'             => false,
         'report'          => false,
