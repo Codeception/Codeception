@@ -42,7 +42,7 @@ if (!function_exists('codecept_debug')) {
     }
 }
 
-if (!function_exists('codecept_debug_mode')) {
+if (!function_exists('codecept_debug_mode_enabled')) {
     /**
      * @return bool
      */
