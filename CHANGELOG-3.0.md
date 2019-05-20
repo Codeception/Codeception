@@ -1,3 +1,9 @@
+#### 3.0.1
+
+* Fixed code duplication when building actors. Fixes #5506 #5500
+* Fixed autoloader generation for 3.0 docker images by @OneEyedSpaceFish
+* Removed `hoa/console` dependency from `codeception/base` package. 
+
 #### 3.0.0
 
 * **BREAKING** Modules removed:

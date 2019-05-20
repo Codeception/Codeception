@@ -885,6 +885,11 @@ EOF;
             ->run();
 
         $this->taskReplaceInFile('composer.json')
+            ->regex('~^\s+"hoa\/console".*$~m')
+            ->to('')
+            ->run();
+
+        $this->taskReplaceInFile('composer.json')
             ->regex('~^\s+"guzzlehttp\/guzzle".*$~m')
             ->to('')
             ->run();

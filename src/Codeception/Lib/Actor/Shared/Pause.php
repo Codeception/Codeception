@@ -11,6 +11,10 @@ trait Pause
             return;
         }
 
+        if (!class_exists('Hoa\Console\Readline\Readline')) {
+            throw new \Exception('Hoa Console is not installed. Please add `hoa/console` to composer.json');
+        }
+
         $I = $this;
         $readline = new \Hoa\Console\Readline\Readline();
 

@@ -29,5 +29,4 @@ interface PageSourceSaver
      * @param null $name
      */
     public function makeHtmlSnapshot($name = null);
-
 }
