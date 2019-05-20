@@ -22,8 +22,10 @@ RUN docker-php-ext-install \
 # Install pecl extensions
 RUN pecl install \
         mongodb \
-        xdebug-2.7.0RC2 && \
+        apcu \
+        xdebug-2.7.1 && \
     docker-php-ext-enable \
+        apcu.so \
         mongodb.so \
         xdebug
 
@@ -35,7 +37,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- \
         --filename=composer \
         --install-dir=/usr/local/bin
-RUN composer global require --optimize-autoloader \
+RUN composer global require --prefer-dist --no-interaction --optimize-autoloader --apcu-autoloader \
         "hirak/prestissimo"
 
 # Prepare application
@@ -43,7 +45,7 @@ WORKDIR /repo
 
 # Install vendor
 COPY ./composer.json /repo/composer.json
-RUN composer install --prefer-dist --no-interaction --optimize-autoloader --classmap-authoritative
+RUN composer install --prefer-dist --no-interaction --optimize-autoloader --apcu-autoloader
 
 # Add source-code
 COPY . /repo
