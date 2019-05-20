@@ -1,5 +1,6 @@
 <?php
 use \Codeception\Util\Stub as Stub;
+use \Codeception\Stub\Expected as Expected;
 
 class StubTest extends \Codeception\PHPUnit\TestCase
 {
@@ -212,22 +213,22 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     public static function matcherAndFailMessageProvider()
     {
         return array(
-            array(Stub::never(),
+            array(Expected::never(),
               "DummyClass::targetMethod() was not expected to be called."
             ),
-            array(Stub::atLeastOnce(),
+            array(Expected::atLeastOnce(),
               "Expectation failed for method name is equal to <string:targetMethod> when invoked at least once.\n"
               . 'Expected invocation at least once but it never occured.'
             ),
-            array(Stub::once(),
+            array(Expected::once(),
               "Expectation failed for method name is equal to <string:targetMethod> when invoked 1 time(s).\n"
               . 'Method was expected to be called 1 times, actually called 0 times.'
             ),
-            array(Stub::exactly(1),
+            array(Expected::exactly(1),
               "Expectation failed for method name is equal to <string:targetMethod> when invoked 3 time(s).\n"
               . 'Method was expected to be called 3 times, actually called 0 times.'
             ),
-            array(Stub::exactly(3),
+            array(Expected::exactly(3),
               "Expectation failed for method name is equal to <string:targetMethod> when invoked 3 time(s).\n"
               . 'Method was expected to be called 3 times, actually called 0 times.'
             ),
@@ -285,20 +286,20 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     public static function matcherProvider()
     {
         return array(
-            array(0, Stub::never()),
-            array(1, Stub::once()),
-            array(2, Stub::atLeastOnce()),
-            array(3, Stub::exactly(3)),
-            array(1, Stub::once(function () {
+            array(0, Expected::never()),
+            array(1, Expected::once()),
+            array(2, Expected::atLeastOnce()),
+            array(3, Expected::exactly(3)),
+            array(1, Expected::once(function () {
                 return true;
             }), true),
-            array(2, Stub::atLeastOnce(function () {
+            array(2, Expected::atLeastOnce(function () {
                 return array();
             }), array()),
-            array(1, Stub::exactly(1, function () {
+            array(1, Expected::exactly(1, function () {
                 return null;
             }), null),
-            array(1, Stub::exactly(1, function () {
+            array(1, Expected::exactly(1, function () {
                 return 'hello world!';
             }), 'hello world!'),
         );
