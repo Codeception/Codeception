@@ -130,7 +130,7 @@ EOF;
             ->produce();
 
         // add auto generated steps
-        foreach ($this->generatedSteps as $generator) {
+        foreach (array_unique($this->generatedSteps) as $generator) {
             if (!is_callable([$generator, 'getTemplate'])) {
                 throw new \Exception("Wrong configuration for generated steps. $generator doesn't implement \Codeception\Step\GeneratedStep interface");
             }
@@ -198,7 +198,7 @@ EOF;
             $actions[$moduleName] = get_class_methods(get_class($module));
         }
 
-        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']));
+        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']) . implode(',', (array) $settings['step_decorators']));
     }
 
     public function getNumMethods()
