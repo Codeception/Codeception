@@ -272,10 +272,10 @@ class Db extends CodeceptionModule implements DbInterface
             $this->connect($databaseKey, $databaseConfig);
         }
     }
-    protected function cleanUpDatabases()
+    protected function cleanUpDatabases($configKey = 'cleanup')
     {
         foreach ($this->getDatabases() as $databaseKey => $databaseConfig) {
-            $this->_cleanup($databaseKey, $databaseConfig);
+            $this->_cleanup($databaseKey, $databaseConfig, $configKey);
         }
     }
     protected function populateDatabases($configKey)
@@ -440,7 +440,7 @@ class Db extends CodeceptionModule implements DbInterface
     {
         $this->readSqlForDatabases();
         $this->connectToDatabases();
-        $this->cleanUpDatabases();
+        $this->cleanUpDatabases('populate');
         $this->populateDatabases('populate');
     }
 
@@ -575,7 +575,7 @@ class Db extends CodeceptionModule implements DbInterface
         $this->reconnectDatabases();
         $this->amConnectedToDatabase(self::DEFAULT_DATABASE);
 
-        $this->cleanUpDatabases();
+        $this->cleanUpDatabases('cleanup');
 
         $this->populateDatabases('cleanup');
 
@@ -606,7 +606,7 @@ class Db extends CodeceptionModule implements DbInterface
         $this->insertedRows[$databaseKey] = [];
     }
 
-    public function _cleanup($databaseKey = null, $databaseConfig = null)
+    public function _cleanup($databaseKey = null, $databaseConfig = null, $configKey = 'cleanup')
     {
         $databaseKey = empty($databaseKey) ?  self::DEFAULT_DATABASE : $databaseKey;
         $databaseConfig = empty($databaseConfig) ?  $this->config : $databaseConfig;
@@ -614,7 +614,7 @@ class Db extends CodeceptionModule implements DbInterface
         if (!$databaseConfig['populate']) {
             return;
         }
-        if (!$databaseConfig['cleanup']) {
+        if (!$databaseConfig['cleanup'] && $configKey != 'populate') {
             return;
         }
         if (isset($this->databasesPopulated[$databaseKey]) && !$this->databasesPopulated[$databaseKey]) {
