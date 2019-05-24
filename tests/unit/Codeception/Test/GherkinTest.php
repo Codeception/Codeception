@@ -58,7 +58,7 @@ class GherkinTest extends \Codeception\Test\Unit
         /** @var $test \Codeception\Test\Gherkin  * */
         $test = $tests[0];
         $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
-        $this->assertEquals('Jeff returns a faulty microwave', $test->getScenarioNode()->getTitle());
+        $this->assertEquals('Jeff returns a faulty microwave', $test->getScenarioTitle());
     }
 
     /**
