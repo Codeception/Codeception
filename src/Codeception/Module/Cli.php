@@ -62,7 +62,7 @@ class Cli extends CodeceptionModule
      */
     public function seeInShellOutput($text)
     {
-        \PHPUnit\Framework\Assert::assertStringContainsString($text, $this->output);
+        \Codeception\PHPUnit\TestCase::assertStringContainsString($text, $this->output);
     }
 
     /**
