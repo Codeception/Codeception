@@ -47,7 +47,18 @@ class GherkinTest extends \Codeception\Test\Unit
         /** @var $test \Codeception\Test\Gherkin  * */
         $test = $tests[0];
         $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
-        $this->assertEquals('Jeff returns a faulty microwave', $test->getFeature());
+        $this->assertEquals('Refund item', $test->getFeature());
+    }
+
+    public function testGherkinScenario()
+    {
+        $this->loader->loadTests(codecept_data_dir('refund.feature'));
+        $tests = $this->loader->getTests();
+        $this->assertCount(1, $tests);
+        /** @var $test \Codeception\Test\Gherkin  * */
+        $test = $tests[0];
+        $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
+        $this->assertEquals('Jeff returns a faulty microwave', $test->getScenarioNode()->getTitle());
     }
 
     /**

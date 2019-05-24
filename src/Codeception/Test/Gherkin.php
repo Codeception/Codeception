@@ -40,8 +40,8 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         $this->steps = $steps;
         $this->setMetadata(new Metadata());
         $this->scenario = new Scenario($this);
-        $this->getMetadata()->setName($featureNode->getTitle());
-        $this->getMetadata()->setFeature($scenarioNode->getTitle());
+        $this->getMetadata()->setName($scenarioNode->getTitle());
+        $this->getMetadata()->setFeature($featureNode->getTitle());
         $this->getMetadata()->setFilename($featureNode->getFile());
     }
 
