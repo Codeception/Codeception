@@ -142,6 +142,7 @@ class Run extends Command
             new InputOption('silent', '', InputOption::VALUE_NONE, 'Only outputs suite names and final results'),
             new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
             new InputOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output'),
+            new InputOption('pause-on-fail', '', InputOption::VALUE_NONE, 'Start interactive console after a failure'),
             new InputOption(
                 'coverage',
                 '',
@@ -262,6 +263,9 @@ class Run extends Command
         }
         if ($this->options['debug']) {
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
+        }
+        if ($this->options['pause-on-fail']) {
+            $userOptions['pause-on-fail'] = true;
         }
 
         $userOptions = array_intersect_key($this->options, array_flip($this->passedOptionKeys($input)));

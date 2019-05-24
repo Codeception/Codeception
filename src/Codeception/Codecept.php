@@ -58,6 +58,7 @@ class Codecept
         'filter'          => null,
         'env'             => null,
         'fail-fast'       => false,
+        'pause-on-fail'   => false,
         'ansi'            => true,
         'verbosity'       => 1,
         'interactive'     => true,
@@ -129,6 +130,9 @@ class Codecept
         }
         if ($this->options['fail-fast']) {
             $this->dispatcher->addSubscriber(new Subscriber\FailFast());
+        }
+        if ($this->options['pause-on-fail']) {
+            $this->dispatcher->addSubscriber(new Subscriber\PauseOnFail());
         }
 
         if ($this->options['coverage']) {
