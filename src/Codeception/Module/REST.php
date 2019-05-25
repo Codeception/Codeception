@@ -575,11 +575,10 @@ EOF;
     protected function execute($method, $url, $parameters = [], $files = [])
     {
         // allow full url to be requested
-        if (strpos($url, '://') === false) {
-            $url = $this->config['url'] . $url;
-            if ($this->config['url'] && strpos($url, '://') === false && strpos($url, '/') !== 0 && $this->config['url'][0] !== '/') {
-                $url = '/' . $url;
-            }
+        if (!$url) {
+            $url = $this->config['url'];
+        } elseif (strpos($url, '://') === false && $this->config['url']) {
+            $url = rtrim($this->config['url'], '/') . '/' . ltrim($url, '/');
         }
 
         $this->params = $parameters;
