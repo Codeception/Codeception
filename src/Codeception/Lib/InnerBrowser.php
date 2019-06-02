@@ -1283,11 +1283,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         // depending on Symfony version
         $response = $this->getRunningClient()->getInternalResponse();
-        if (method_exists($response, 'getStatus')) {
-            return $response->getStatus();
-        }
         if (method_exists($response, 'getStatusCode')) {
             return $response->getStatusCode();
+        }
+        if (method_exists($response, 'getStatus')) {
+            return $response->getStatus();
         }
         return "N/A";
     }
