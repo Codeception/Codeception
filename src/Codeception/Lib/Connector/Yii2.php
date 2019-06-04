@@ -256,6 +256,7 @@ class Yii2 extends Client
     public function startApp()
     {
         codecept_debug('Starting application');
+        require_once __DIR__ . '/Yii2/mock_register_shutdown_function.php';
         $config = require($this->configFile);
         if (!isset($config['class'])) {
             $config['class'] = 'yii\web\Application';
@@ -352,12 +353,7 @@ class Yii2 extends Client
         }
 
         $content = ob_get_clean();
-        if (
-            $response->statusCode !== 204
-            && empty($content)
-            && !empty($response->content)
-            && !isset($response->stream)
-        ) {
+        if (empty($content) && !empty($response->content) && !isset($response->stream)) {
             throw new \Exception('No content was sent from Yii application');
         }
 
