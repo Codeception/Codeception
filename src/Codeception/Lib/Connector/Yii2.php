@@ -265,7 +265,7 @@ class Yii2 extends Client
         $config = $this->mockMailer($config);
         /** @var \yii\web\Application $app */
         Yii::$app = Yii::createObject($config);
-        Yii::setLogger(new Logger());
+        Yii::getLogger()->flushInterval = 1;
     }
 
     /**
