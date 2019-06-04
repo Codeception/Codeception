@@ -3,7 +3,6 @@
 
 namespace Codeception\Lib\Connector\Yii2;
 
-
 use yii\log\Target;
 
 /**
@@ -31,7 +30,7 @@ class CodeceptionDebugTarget extends Target
      */
     public function export()
     {
-        foreach($this->messages as $message) {
+        foreach ($this->messages as $message) {
             codecept_debug($this->formatMessage($message));
         }
     }
