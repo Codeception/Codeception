@@ -541,27 +541,20 @@ EOF;
         $data = $this->em->getClassMetadata($assoc);
         foreach ($params as $key => $val) {
             if (isset($data->associationMappings)) {
-                if ($map = array_key_exists($key, $data->associationMappings)) {
+                if (array_key_exists($key, $data->associationMappings)) {
+                    $map = $data->associationMappings[$key];
                     if (is_array($val)) {
-                        $qb->innerJoin("$alias.$key", "_$key");
-                        foreach ($val as $column => $v) {
-                            if (is_array($v)) {
-                                $this->buildAssociationQuery($qb, $map['targetEntity'], $column, $v);
-                                continue;
-                            }
-                            $paramname = "_$key" . '__' . $column;
-                            $qb->andWhere("_$key.$column = :$paramname");
-                            $qb->setParameter($paramname, $v);
-                        }
+                        $qb->innerJoin("$alias.$key", "${alias}__$key");
+                        $this->buildAssociationQuery($qb, $map['targetEntity'], "${alias}__$key", $val);
                         continue;
                     }
                 }
             }
             if ($val === null) {
-                $qb->andWhere("s.$key IS NULL");
+                $qb->andWhere("$alias.$key IS NULL");
             } else {
-                $paramname = str_replace(".", "", "s_$key");
-                $qb->andWhere("s.$key = :$paramname");
+                $paramname = str_replace(".", "", "${alias}_$key");
+                $qb->andWhere("$alias.$key = :$paramname");
                 $qb->setParameter($paramname, $val);
             }
         }
