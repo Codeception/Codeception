@@ -302,7 +302,7 @@ class Guzzle extends Client
                         ];
                         if (isset($info['type'])) {
                             $file['headers'] = [
-                                'content-type' = $info['type']
+                                'content-type' => $info['type']
                             ];
                         }
                         $files[] = $file;
