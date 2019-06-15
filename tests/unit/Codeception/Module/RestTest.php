@@ -311,7 +311,7 @@ class RestTest extends Unit
         $this->module->seeResponseJsonMatchesXpath('//comment');
     }
 
-    
+
     public function testSeeResponseJsonMatchesJsonPathFails()
     {
         $this->shouldFail();
@@ -322,8 +322,8 @@ class RestTest extends Unit
         $this->module->seeResponseIsJson();
         $this->module->seeResponseJsonMatchesJsonPath('$[*].profile');
     }
-    
-    
+
+
     public function testStructuredJsonPathAndXPath()
     {
         $this->setStubResponse(
@@ -440,6 +440,63 @@ class RestTest extends Unit
         $this->expectException('\Codeception\Exception\ModuleException');
         $this->expectExceptionMessage('Not supported by functional modules');
         $this->module->amDigestAuthenticated('username', 'password');
+    }
+
+    /**
+     * @param $configUrl
+     * @param $requestUrl
+     * @param $expectedFullUrl
+     *
+     * @dataProvider configAndRequestUrls
+     */
+    public function testRestExecute($configUrl, $requestUrl, $expectedFullUrl)
+    {
+        $connectionModule = $this->createMock(
+            \Codeception\Module\UniversalFramework::class
+        );
+        $connectionModule
+            ->expects($this->once())
+            ->method('_request')
+            ->will(
+                $this->returnCallback(function($method,
+                    $uri,
+                    $parameters,
+                    $files,
+                    $server,
+                    $content
+                ) use ($expectedFullUrl) {
+                    \PHPUnit\Framework\Assert::assertEquals($expectedFullUrl, $uri);
+                })
+            );
+
+        $config = ['url' => $configUrl];
+
+        /** @var \Codeception\Module\REST */
+        $module = Stub::make('\Codeception\Module\REST');
+        $module->_setConfig($config);
+        $module->_inject($connectionModule);
+        $module->_initialize();
+        $module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
+
+        $module->sendGET($requestUrl);
+    }
+
+    public static function configAndRequestUrls()
+    {
+        return [
+                //$configUrl, $requestUrl, $expectedFullUrl
+                ['v1/', 'healthCheck', 'v1/healthCheck'],
+                ['/v1', '/healthCheck', '/v1/healthCheck'],
+                ['v1', 'healthCheck', 'v1/healthCheck'],
+                ['http://v1/', '/healthCheck', 'http://v1/healthCheck'],
+                ['http://v1', 'healthCheck', 'http://v1/healthCheck'],
+                ['http://v1', 'http://v2/healthCheck', 'http://v2/healthCheck'],
+                ['http://v1', '', 'http://v1'],
+                ['http://v1', '/', 'http://v1/'],
+                ['', 'http://v1', 'http://v1'],
+                ['', 'healthCheck', 'healthCheck'],
+                ['/', 'healthCheck', '/healthCheck'],
+            ];
     }
 
     protected function shouldFail()
