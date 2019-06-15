@@ -95,7 +95,9 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
         if (isset($this->applicationConfig['module_listener_options']['config_cache_enabled'])) {
             $this->applicationConfig['module_listener_options']['config_cache_enabled'] = false;
         }
-        Console::overrideIsConsole(false);
+        if (class_exists(Console::class)) {
+            Console::overrideIsConsole(false);
+        }
 
         //grabServiceFromContainer may need client in beforeClass hooks of modules or helpers
         $this->client = new ZF2Connector();
