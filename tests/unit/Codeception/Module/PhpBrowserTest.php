@@ -720,4 +720,16 @@ HTML
         $this->module->amOnPage('https://httpstat.us/599');
         $this->module->seeResponseCodeIsServerError();
     }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/5547
+     */
+    public function testSelectOptionByTextWhenItHasNoValue()
+    {
+        $this->module->amOnPage('/form/bug5547');
+        $this->module->selectOption('#_payment_type', 'qwerty');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('qwerty', $form['payment_type']);
+    }
 }
