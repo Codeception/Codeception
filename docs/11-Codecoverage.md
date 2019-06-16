@@ -5,7 +5,13 @@ Just for this case the [CodeCoverage](http://en.wikipedia.org/wiki/Code_coverage
 you will receive statistics of all classes, methods, and lines triggered by these tests.
 The ratio between all lines in script and all touched lines is a main coverage criterion. In the ideal world you should get 100% code coverage, but in reality 80% is really enough. Because even 100% code coverage rate doesn't save you from fatal errors and crashes.
 
-*To collect coverage information `xdebug` is required**.
+The required information is provided by [SebastianBergmann\CodeCoverage](https://github.com/sebastianbergmann/php-code-coverage), and you can use any of the supported drivers.
+
+| Driver | Description |
+| --- | --- |
+| [Xdebug](https://github.com/xdebug/xdebug) | Great for debugging, but too slow when collecting coverage |
+| [phpdbg](https://www.php.net/manual/en/book.phpdbg.php) | Faster than `Xdebug` but inaccurate |
+| [pcov](https://github.com/krakjoe/pcov) | Fast and accurate, but no debug functionality &mdash; perfect for CI |
 
 ![Code Coverage Example](http://codeception.com/images/coverage.png)
 
