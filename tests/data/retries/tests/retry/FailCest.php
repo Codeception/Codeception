@@ -30,7 +30,7 @@ class FailCest
     public function passTime1(RetryTester $I)
     {
         $I->retry(3, 200);
-        $I->retryFailFor(0.4);
+        $I->retryFailFor(0.6);
     }
 
 
@@ -41,7 +41,7 @@ class FailCest
     public function failNum2(RetryTester $I)
     {
         $I->retry(3, 100);
-        $I->retryFailFor(0.4);
+        $I->retryFailFor(1);
     }
 
 }

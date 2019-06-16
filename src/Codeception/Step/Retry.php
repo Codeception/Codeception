@@ -51,6 +51,7 @@ EOF;
                 }
                 codecept_debug("Retrying #$retry in ${interval}ms");
                 usleep($interval * 1000);
+                $interval *= 2;
             }
         }
     }
