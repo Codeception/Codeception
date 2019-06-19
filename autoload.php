@@ -1,11 +1,11 @@
 <?php
 
 $autoloadFile = './vendor/codeception/codeception/autoload.php';
-if (file_exists('./vendor/autoload.php') && file_exists($autoloadFile) && __FILE__ != realpath($autoloadFile)) {
+if ( ( !isset($argv) || (isset($argv) && !in_array('--no-redirect', $argv)) ) && file_exists('./vendor/autoload.php') && file_exists($autoloadFile) && __FILE__ != realpath($autoloadFile)) {
     //for global installation or phar file
     fwrite(
         STDERR,
-        "\n==== Redirecting to Composer-installed version in vendor/codeception ====\n"
+        "\n==== Redirecting to Composer-installed version in vendor/codeception. You can skip this using --no-redirect ====\n"
     );
     require $autoloadFile;
     //require package/bin instead of codecept to avoid printing hashbang line
