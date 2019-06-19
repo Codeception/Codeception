@@ -295,12 +295,17 @@ class Guzzle extends Client
                     if ($info['tmp_name']) {
                         $handle = fopen($info['tmp_name'], 'r');
                         $filename = isset($info['name']) ? $info['name'] : null;
-
-                        $files[] = [
+                        $file = [
                             'name' => $name,
                             'contents' => $handle,
                             'filename' => $filename
                         ];
+                        if (isset($info['type'])) {
+                            $file['headers'] = [
+                                'content-type' => $info['type']
+                            ];
+                        }
+                        $files[] = $file;
                     }
                 } else {
                     $files = array_merge($files, $this->mapFiles($info, $name));
