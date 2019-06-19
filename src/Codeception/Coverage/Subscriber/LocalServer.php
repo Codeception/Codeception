@@ -194,12 +194,16 @@ class LocalServer extends SuiteSubscriber
             $this->module->amOnPage('/');
         }
 
-        $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
+        $cookieDomain = isset($this->settings['cookie_domain']) ? $this->settings['cookie_domain'] : null;
 
-        // we need to separate coverage cookies by host; we can't separate cookies by port.
-        $c3Host = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
+        if (!$cookieDomain) {
+            $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
 
-        $this->module->setCookie(self::COVERAGE_COOKIE, $value, ['domain' => $c3Host]);
+            // we need to separate coverage cookies by host; we can't separate cookies by port.
+            $cookieDomain = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
+        }
+
+        $this->module->setCookie(self::COVERAGE_COOKIE, $value, ['domain' => $cookieDomain]);
 
         // putting in configuration ensures the cookie is used for all sessions of a MultiSession test
 
@@ -220,6 +224,8 @@ class LocalServer extends SuiteSubscriber
                 break;
             }
         }
+        unset($cookie);
+
         if (!$found) {
             $cookies[] = [
                 'Name' => self::COVERAGE_COOKIE,

@@ -119,6 +119,19 @@ In case you execute your application locally there is nothing to be changed in c
 All codecoverage reports will be collected as usual and merged afterwards.
 Think of it: Codeception runs remote coverage in the same way as local.
 
+#### Custom cookie domain
+
+It's possible to override the cookie domain set by Codeception during code coverage. Typical case for that is when you
+have several subdomains that your acceptance tests are visiting, e.g. `mysite.com` and `admin.mysite.com`. By default,
+Codeception will run code coverage only for the domain set in the url of the  `WebDriver/url` (or `c3_url` if defined),
+thus leaving out other subdomains from code coverage. To avoid that and to include all relevant subdomains in code
+covereage, it's advised to set `.mysite.com` as the cookie domain option:
+
+```yaml
+coverage:
+    cookie_domain: ".mysite.com"
+```
+
 ### Remote Server
 
 But if you run tests on different server (or your webserver doesn't use code from current directory) a single option `remote` should be added to config.
