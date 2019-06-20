@@ -614,6 +614,7 @@ class FTP extends Filesystem
         if (!$pwd) {
             $this->fail("couldn't get current directory");
         }
+        return $pwd;
     }
 
     /**
