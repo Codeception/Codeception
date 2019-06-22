@@ -164,7 +164,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
 
     public function toString()
     {
-        return $this->featureNode->getTitle() . ': ' . $this->getFeature();
+        return $this->getFeature() . ': ' . $this->getScenarioTitle();
     }
 
     public function getFeature()
