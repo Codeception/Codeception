@@ -1,3 +1,20 @@
+#### 3.0.2
+* @weshooper reduced size of exported package.
+* --no-redirect option disables the redirect to a Composer-installed version, by @DanielRuf
+* PhpUnit 8.2 support by @Naktibalda
+* Retry: double wait interval after each execution by @Naktibalda
+* [FTP] Bugfix: Make sure _directory will return its directory by @bbatsche
+* [Doctrine2] Fixed recursive building of association queries by @alexkunin
+* [PhpBrowser] Pass file type option to Guzzle if specified #5548 by @Naktibalda
+* [PhpBrowser][Frameworks]  InnerBrowser: selectOption can match by text when option has no value attribute #5547 by @Naktibalda
+* [REST] Updated url construction logic, so it does not produce double slashes, by @nicholascus
+* [ZF2] Add check for console class before calling it by @carnage
+* [Gherkin] Fixed Gherkin setup for single run from group file by @bnpatel1990
+* [CodeCoverage] Ability to use a custom cookie domain for code coverage by @maksimovic
+* [Docs] @EspadaV8 fixed env substitution in DB module example
+* [Docs] @splinter89 mentioned phpdbg and pcov for code coverage
+* @el7cosmos, @KartaviK and @davertMik fixed various deprecation messages
+
 #### 3.0.1
 
 * Fixed code duplication when building actors. Fixes #5506 #5500
