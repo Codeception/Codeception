@@ -105,25 +105,6 @@ modules:
 Yii2 tests are included in [Basic](https://github.com/yiisoft/yii2-app-basic)
 and [Advanced](https://github.com/yiisoft/yii2-app-advanced) application templates. Follow the Yii2 guides to start.
 
-### Yii
-
-By itself Yii framework does not have an engine for functional testing.
-So Codeception is the first and the only functional testing framework for Yii.
-To use it with Yii include `Yii1` module into config:
-
-```yaml
-# functional.suite.yml
-
-actor: FunctionalTester
-modules:
-    enabled:
-        - Yii1
-        - \Helper\Functional
-```
-
-To avoid the common pitfalls we discussed earlier, Codeception provides basic hooks over the Yii engine.
-Please set them up following [the installation steps in the module reference](http://codeception.com/docs/modules/Yii1).
-
 ### Zend Framework 2
 
 Use [the ZF2 module](http://codeception.com/docs/modules/ZF2) to run functional tests inside Zend Framework 2:
@@ -241,7 +222,7 @@ The error reporting level can be set in the suite configuration file:
 actor: FunctionalTester
 modules:
     enabled:
-        - Yii1
+        - Yii2
         - \Helper\Functional
 error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
 ```
