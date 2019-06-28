@@ -59,6 +59,8 @@ modules:
 * ORM - only include the database methods of this module:
     * have
     * haveMultiple
+    * make
+    * makeMultiple
     * haveRecord
     * grabRecord
     * seeRecord
@@ -934,6 +936,19 @@ $I->have('App\User', [], 'admin');
 ?>
 ```
 
+### make
+ 
+Use Laravel's model factory to make a model.
+Can only be used with Laravel 5.1 and later.
+
+``` php
+<?php
+$I->make('App\User');
+$I->make('App\User', ['name' => 'John Doe']);
+$I->make('App\User', [], 'admin');
+?>
+```
+
 @see http://laravel.com/docs/5.1/testing#model-factories
  * `param string` $model
  * `param array` $attributes
@@ -1047,6 +1062,20 @@ Can only be used with Laravel 5.1 and later.
 $I->haveMultiple('App\User', 10);
 $I->haveMultiple('App\User', 10, ['name' => 'John Doe']);
 $I->haveMultiple('App\User', 10, [], 'admin');
+?>
+```
+
+
+### makeMultiple
+ 
+Use Laravel's model factory to make multiple models.
+Can only be used with Laravel 5.1 and later.
+
+``` php
+<?php
+$I->makeMultiple('App\User', 10);
+$I->makeMultiple('App\User', 10, ['name' => 'John Doe']);
+$I->makeMultiple('App\User', 10, [], 'admin');
 ?>
 ```
 
