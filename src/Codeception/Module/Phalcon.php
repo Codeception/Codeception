@@ -564,9 +564,9 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         $bind       = [];
         foreach ($attributes as $key => $value) {
             if ($value === null) {
-                $conditions[] = "$key IS NULL";
+                $conditions[] = "[$key] IS NULL";
             } else {
-                $conditions[] = "$key = :$key:";
+                $conditions[] = "[$key] = :$key:";
                 $bind[$key] = $value;
             }
         }
@@ -595,9 +595,9 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         $bind       = [];
         foreach ($attributes as $key => $value) {
             if ($value === null) {
-                $conditions[] = "$key IS NULL";
+                $conditions[] = "[$key] IS NULL";
             } else {
-                $conditions[] = "$key = :$key:";
+                $conditions[] = "[$key] = :$key:";
                 $bind[$key] = $value;
             }
         }
