@@ -1169,8 +1169,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
     
     /**
-     * Use Lumen's model factory to make a model instance.
-     * Can only be used with Lumen 5.1 and later.
+     * Use Laravel's model factory to make a model instance.
+     * Can only be used with Laravel 5.1 and later.
      *
      * ``` php
      * <?php
@@ -1180,7 +1180,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @see https://lumen.laravel.com/docs/master/testing#model-factories
+     * @see http://laravel.com/docs/5.1/testing#model-factories
      * @param string $model
      * @param array $attributes
      * @param string $name
@@ -1198,7 +1198,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     
     /**
      * Use Laravel's model factory to make multiple model instances.
-     * Can only be used with Lumen 5.1 and later.
+     * Can only be used with Laravel 5.1 and later.
      *
      * ``` php
      * <?php
@@ -1208,7 +1208,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @see https://lumen.laravel.com/docs/master/testing#model-factories
+     * @see http://laravel.com/docs/5.1/testing#model-factories
      * @param string $model
      * @param int $times
      * @param array $attributes
