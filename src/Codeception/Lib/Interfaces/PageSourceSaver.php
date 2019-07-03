@@ -20,9 +20,9 @@ interface PageSourceSaver
      *
      * ```php
      * <?php
-     * $I->makePageSnapshot('edit_page');
+     * $I->makeHtmlSnapshot('edit_page');
      * // saved to: tests/_output/debug/edit_page.html
-     * $I->makePageSnapshot();
+     * $I->makeHtmlSnapshot();
      * // saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.html
      * ```
      *
