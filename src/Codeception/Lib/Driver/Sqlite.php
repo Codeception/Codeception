@@ -25,6 +25,7 @@ class Sqlite extends Db
     public function cleanup()
     {
         $this->dbh = null;
+        gc_collect_cycles();
         file_put_contents($this->filename, '');
         $this->dbh = self::connect($this->dsn, $this->user, $this->password);
     }
