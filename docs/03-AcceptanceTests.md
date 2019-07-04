@@ -273,7 +273,7 @@ $I->cantSeeInField('user[name]', 'Miles');
 
 Each failed assertion will be shown in the test results, but it won't stop the test.
 
-Conditional assertions are disabled in bootstrap setup. To enable them you should add corresponding step decorators to suite config:
+Conditional assertions are enabled by default suite config step decorator settings (unless overridden):
 
 > If you started project as `codecept init acceptance` they should be already enabled in config
 
