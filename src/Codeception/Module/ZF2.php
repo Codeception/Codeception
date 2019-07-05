@@ -27,6 +27,7 @@ use Codeception\Lib\Connector\ZF2 as ZF2Connector;
  * ## Config
  *
  * * config: relative path to config file (default: `tests/application.config.php`)
+ * * em_service: 'Doctrine\ORM\EntityManager' - use the stated EntityManager to pair with Doctrine Module.
  *
  * ## Public Properties
  *
@@ -57,6 +58,7 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
 {
     protected $config = [
         'config' => 'tests/application.config.php',
+        'em_service' => 'Doctrine\ORM\EntityManager',
     ];
 
     /**
@@ -137,11 +139,12 @@ class ZF2 extends Framework implements DoctrineProvider, PartedModule
     public function _getEntityManager()
     {
         if (!$this->client) {
-            $this->client = new ZF2Connector();
-            $this->client->setApplicationConfig($this->applicationConfig);
+            $this->fail('ZF2 module is not loaded');
         }
 
-        return $this->grabServiceFromContainer('Doctrine\ORM\EntityManager');
+        $this->client->persistService($this->config['em_service']);
+
+        return $this->grabServiceFromContainer('doctrine.entitymanager.orm_default');
     }
 
     /**

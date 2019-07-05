@@ -144,19 +144,21 @@ class ZF2 extends Client
             throw new \PHPUnit\Framework\AssertionFailedError("Service $service is not available in container");
         }
 
-        if ($service === 'Doctrine\ORM\EntityManager') {
-            $this->persistentServices[$service] = $serviceManager->get($service);
-        }
-
         return $serviceManager->get($service);
+    }
+
+    public function persistService($name)
+    {
+        $service = $this->grabServiceFromContainer($name);
+        $this->persistentServices[$name] = $service;
     }
 
     public function addServiceToContainer($name, $service)
     {
-        $this->persistentServices[$name] = $service;
         $this->application->getServiceManager()->setAllowOverride(true);
         $this->application->getServiceManager()->setService($name, $service);
         $this->application->getServiceManager()->setAllowOverride(false);
+        $this->persistentServices[$name] = $service;
     }
 
     private function createApplication()
