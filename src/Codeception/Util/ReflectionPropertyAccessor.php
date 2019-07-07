@@ -1,0 +1,66 @@
+<?php
+
+namespace Codeception\Util;
+
+use InvalidArgumentException;
+use ReflectionClass;
+use ReflectionException;
+use function get_class;
+use function get_parent_class;
+use function is_object;
+
+class ReflectionPropertyAccessor
+{
+    /**
+     * @param object|null $obj
+     * @param string $class
+     * @param array $data
+     * @return object|null
+     * @throws ReflectionException
+     */
+    private function setPropertiesForClass($obj, $class, array $data)
+    {
+        $reflectedEntity = new ReflectionClass($class);
+        $obj = $obj ?: $reflectedEntity->newInstance();
+        foreach ($reflectedEntity->getProperties() as $property) {
+            if (isset($data[$property->name])) {
+                $property->setAccessible(true);
+                $property->setValue($obj, $data[$property->name]);
+            }
+        }
+        return $obj;
+    }
+
+    /**
+     * @param object|null $obj
+     * @param array $data
+     * @throws ReflectionException
+     */
+    public function setProperties($obj, array $data)
+    {
+        if (!$obj || !is_object($obj)) {
+            throw new InvalidArgumentException('Cannot set properties for "' . gettype($obj) . '", expecting object');
+        }
+        $class = get_class($obj);
+        do {
+            $obj = $this->setPropertiesForClass($obj, $class, $data);
+            $class = get_parent_class($class);
+        } while ($class);
+    }
+
+    /**
+     * @param string $class
+     * @param array $data
+     * @return object
+     * @throws ReflectionException
+     */
+    public function createWithProperties($class, array $data)
+    {
+        $obj = null;
+        do {
+            $obj = $this->setPropertiesForClass($obj, $class, $data);
+            $class = get_parent_class($class);
+        } while ($class);
+        return $obj;
+    }
+}
