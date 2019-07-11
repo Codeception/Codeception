@@ -2,6 +2,7 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\Connector\Yii2\CodeceptionDebugTarget;
 use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Util\Debug;
 use Symfony\Component\BrowserKit\Client;
@@ -10,6 +11,7 @@ use Symfony\Component\BrowserKit\Response;
 use Yii;
 use yii\base\ExitException;
 use yii\base\Security;
+use yii\log\Logger;
 use yii\mail\MessageInterface;
 use yii\web\Application;
 use yii\web\ErrorHandler;
@@ -262,7 +264,12 @@ class Yii2 extends Client
         $config = $this->mockMailer($config);
         /** @var \yii\web\Application $app */
         Yii::$app = Yii::createObject($config);
-        Yii::getLogger()->flushInterval = 1;
+        /** @var Logger $logger */
+        $logger = Yii::getLogger();
+        $logger->flushInterval = 1;
+        $logger->dispatcher->targets[] = new CodeceptionDebugTarget();
+
+
     }
 
     /**
