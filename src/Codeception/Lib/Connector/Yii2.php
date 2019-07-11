@@ -221,7 +221,7 @@ class Yii2 extends Client
             $template = preg_replace_callback(
                 '/<(?:\w+):?([^>]+)?>/u',
                 function ($matches) use (&$parameters) {
-                    $key = '#' . count($parameters) . '#';
+                    $key = '__' . count($parameters) . '__';
                     $parameters[$key] = isset($matches[1]) ? $matches[1] : '\w+';
                     return $key;
                 },
