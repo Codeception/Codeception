@@ -43,7 +43,9 @@
         "predis/predis": "^1.0",
         "squizlabs/php_codesniffer": "~2.0",
         "vlucas/phpdotenv": "^3.0",
-        "symfony/process": ">=2.7 <5.0"
+        "symfony/process": ">=2.7 <5.0",
+        "doctrine/orm": "^2",
+        "doctrine/annotations": "^1"
     },
     "suggest": {
         "aws/aws-sdk-php": "For using AWS Auth in REST module and Queue module",

@@ -7,6 +7,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestInterface;
+use Codeception\Util\ReflectionPropertyAccessor;
 use Codeception\Util\Stub;
 
 /**
@@ -252,12 +253,8 @@ EOF;
     public function persistEntity($obj, $values = [])
     {
         if ($values) {
-            $reflectedObj = new \ReflectionClass($obj);
-            foreach ($values as $key => $val) {
-                $property = $reflectedObj->getProperty($key);
-                $property->setAccessible(true);
-                $property->setValue($obj, $val);
-            }
+            $rpa = new ReflectionPropertyAccessor();
+            $rpa->setProperties($obj, $values);
         }
 
         $this->em->persist($obj);
@@ -363,16 +360,8 @@ EOF;
      */
     public function haveInRepository($entity, array $data)
     {
-        $reflectedEntity = new \ReflectionClass($entity);
-        $entityObject = $reflectedEntity->newInstance();
-        foreach ($reflectedEntity->getProperties() as $property) {
-            /** @var $property \ReflectionProperty */
-            if (!isset($data[$property->name])) {
-                continue;
-            }
-            $property->setAccessible(true);
-            $property->setValue($entityObject, $data[$property->name]);
-        }
+        $rpa = new ReflectionPropertyAccessor();
+        $entityObject = $rpa->createWithProperties($entity, $data);
         $this->em->persist($entityObject);
         $this->em->flush();
 
