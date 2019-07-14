@@ -9,6 +9,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionPropertyAccessor;
 use Codeception\Util\Stub;
+use ReflectionException;
 
 /**
  * Access the database using [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/).
@@ -255,6 +256,7 @@ EOF;
         if ($values) {
             $rpa = new ReflectionPropertyAccessor();
             $rpa->setProperties($obj, $values);
+            $this->populateEmbeddables($obj, $values);
         }
 
         $this->em->persist($obj);
@@ -362,6 +364,7 @@ EOF;
     {
         $rpa = new ReflectionPropertyAccessor();
         $entityObject = $rpa->createWithProperties($entity, $data);
+        $this->populateEmbeddables($entityObject, $data);
         $this->em->persist($entityObject);
         $this->em->flush();
 
@@ -369,6 +372,39 @@ EOF;
             $id = $entityObject->getId();
             $this->debug("$entity entity created with id:$id");
             return $id;
+        }
+    }
+
+    /**
+     * Entity can have embeddable as a field, in which case $data argument of persistEntity() and haveInRepository()
+     * could contain keys like {field}.{subField}, where {field} is name of entity's embeddable field, and {subField}
+     * is embeddable's field.
+     *
+     * This method checks if entity has embeddables, and if data have keys as described above, and then uses
+     * Reflection API to set values.
+     *
+     * See https://www.doctrine-project.org/projects/doctrine-orm/en/current/tutorials/embeddables.html for
+     * details about this Doctrine feature.
+     *
+     * @param object $entityObject
+     * @param array $data
+     * @throws ReflectionException
+     */
+    private function populateEmbeddables($entityObject, array $data)
+    {
+        $rpa = new ReflectionPropertyAccessor();
+        $metadata = $this->em->getClassMetadata(get_class($entityObject));
+        foreach (array_keys($metadata->embeddedClasses) as $embeddedField) {
+            $embeddedData = [];
+            foreach ($data as $entityField => $value) {
+                $parts = explode('.', $entityField, 2);
+                if (count($parts) === 2 && $parts[0] === $embeddedField) {
+                    $embeddedData[$parts[1]] = $value;
+                }
+            }
+            if ($embeddedData) {
+                $rpa->setProperties($rpa->getProperty($entityObject, $embeddedField), $embeddedData);
+            }
         }
     }
 
