@@ -7,10 +7,28 @@ use ReflectionClass;
 use ReflectionException;
 use function get_class;
 use function get_parent_class;
+use function gettype;
 use function is_object;
 
 class ReflectionPropertyAccessor
 {
+    /**
+     * @param object $obj
+     * @param string $field
+     * @return mixed
+     * @throws ReflectionException
+     */
+    public function getProperty($obj, $field)
+    {
+        if (!$obj || !is_object($obj)) {
+            throw new InvalidArgumentException('Cannot get property "' . $field . '" of "' . gettype($obj) . '", expecting object');
+        }
+        $reflectedEntity = new ReflectionClass(get_class($obj));
+        $property = $reflectedEntity->getProperty($field);
+        $property->setAccessible(true);
+        return $property->getValue($obj);
+    }
+
     /**
      * @param object|null $obj
      * @param string $class

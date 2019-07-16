@@ -37,6 +37,7 @@ class Doctrine2Test extends Unit
         require_once $dir . "/PlainEntity.php";
         require_once $dir . "/JoinedEntityBase.php";
         require_once $dir . "/JoinedEntity.php";
+        require_once $dir . "/EntityWithEmbeddable.php";
 
         $this->em = EntityManager::create(
             ['url' => 'sqlite:///:memory:'],
@@ -47,6 +48,7 @@ class Doctrine2Test extends Unit
             $this->em->getClassMetadata(PlainEntity::class),
             $this->em->getClassMetadata(JoinedEntityBase::class),
             $this->em->getClassMetadata(JoinedEntity::class),
+            $this->em->getClassMetadata(EntityWithEmbeddable::class),
         ]);
 
         $this->module = new Doctrine2(make_container(), [
@@ -57,7 +59,7 @@ class Doctrine2Test extends Unit
 
         $this->module->_initialize();
         $this->module->_beforeSuite();
-   }
+    }
 
     public function testPlainEntity()
     {
@@ -90,5 +92,16 @@ class Doctrine2Test extends Unit
         $this->module->dontSeeInRepository(JoinedEntity::class, ['inherited' => 'Test 2']);
         $this->module->persistEntity(new JoinedEntity, ['inherited' => 'Test 2']);
         $this->module->seeInRepository(JoinedEntity::class, ['inherited' => 'Test 2']);
+    }
+
+    public function testEmbeddable()
+    {
+        $this->module->dontSeeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 1']);
+        $this->module->haveInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 1']);
+        $this->module->seeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 1']);
+
+        $this->module->dontSeeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 2']);
+        $this->module->persistEntity(new EntityWithEmbeddable, ['embed.val' => 'Test 2']);
+        $this->module->seeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 2']);
     }
 }
