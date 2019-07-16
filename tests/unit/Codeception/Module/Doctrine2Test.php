@@ -38,6 +38,10 @@ class Doctrine2Test extends Unit
         require_once $dir . "/JoinedEntityBase.php";
         require_once $dir . "/JoinedEntity.php";
         require_once $dir . "/EntityWithEmbeddable.php";
+        require_once $dir . "/QuirkyFieldName/Association.php";
+        require_once $dir . "/QuirkyFieldName/AssociationHost.php";
+        require_once $dir . "/QuirkyFieldName/Embeddable.php";
+        require_once $dir . "/QuirkyFieldName/EmbeddableHost.php";
 
         $this->em = EntityManager::create(
             ['url' => 'sqlite:///:memory:'],
@@ -49,6 +53,10 @@ class Doctrine2Test extends Unit
             $this->em->getClassMetadata(JoinedEntityBase::class),
             $this->em->getClassMetadata(JoinedEntity::class),
             $this->em->getClassMetadata(EntityWithEmbeddable::class),
+            $this->em->getClassMetadata(\QuirkyFieldName\Association::class),
+            $this->em->getClassMetadata(\QuirkyFieldName\AssociationHost::class),
+            $this->em->getClassMetadata(\QuirkyFieldName\Embeddable::class),
+            $this->em->getClassMetadata(\QuirkyFieldName\EmbeddableHost::class),
         ]);
 
         $this->module = new Doctrine2(make_container(), [
@@ -103,5 +111,91 @@ class Doctrine2Test extends Unit
         $this->module->dontSeeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 2']);
         $this->module->persistEntity(new EntityWithEmbeddable, ['embed.val' => 'Test 2']);
         $this->module->seeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 2']);
+    }
+
+    public function testQuirkyAssociationFieldNames()
+    {
+        // This test case demonstrates how quirky field names can interfere with parameter
+        // names generated within Doctrine2. Specifically, parameter name for entity's own field
+        // '_assoc_val' clashes with parameter name for field 'val' of relation 'assoc'.
+
+        $this->module->dontSeeInRepository(\QuirkyFieldName\AssociationHost::class, [
+            'assoc'    => [
+                'val' => 'a',
+            ],
+            '_assoc_val' => 'b',
+        ]);
+        $this->module->haveInRepository(\QuirkyFieldName\AssociationHost::class, [
+            'assoc'    => $this->module->grabEntityFromRepository(
+                \QuirkyFieldName\Association::class,
+                [
+                    'id' => $this->module->haveInRepository(\QuirkyFieldName\Association::class, [
+                        'val' => 'a',
+                    ]),
+                ]
+            ),
+            '_assoc_val' => 'b',
+        ]);
+        $this->module->seeInRepository(\QuirkyFieldName\AssociationHost::class, [
+            'assoc'    => [
+                'val' => 'a',
+            ],
+            '_assoc_val' => 'b',
+        ]);
+
+        $this->module->dontSeeInRepository(\QuirkyFieldName\AssociationHost::class, [
+            'assoc'    => [
+                'val' => 'c',
+            ],
+            '_assoc_val' => 'd',
+        ]);
+        $this->module->persistEntity(new \QuirkyFieldName\AssociationHost, [
+            'assoc'    => $this->module->grabEntityFromRepository(
+                \QuirkyFieldName\Association::class,
+                [
+                    'id' => $this->module->haveInRepository(\QuirkyFieldName\Association::class, [
+                        'val' => 'c',
+                    ]),
+                ]
+            ),
+            '_assoc_val' => 'd',
+        ]);
+        $this->module->seeInRepository(\QuirkyFieldName\AssociationHost::class, [
+            'assoc'    => [
+                'val' => 'c',
+            ],
+            '_assoc_val' => 'd',
+        ]);
+    }
+
+    public function testQuirkyEmbeddableFieldNames()
+    {
+        // Same as testQuirkyAssociationFieldNames(), but for embeddables.
+
+        $this->module->dontSeeInRepository(\QuirkyFieldName\EmbeddableHost::class, [
+            'embed.val' => 'a',
+            'embedval'  => 'b',
+        ]);
+        $this->module->haveInRepository(\QuirkyFieldName\EmbeddableHost::class, [
+            'embed.val' => 'a',
+            'embedval'  => 'b',
+        ]);
+        $this->module->seeInRepository(\QuirkyFieldName\EmbeddableHost::class, [
+            'embed.val' => 'a',
+            'embedval'  => 'b',
+        ]);
+
+        $this->module->dontSeeInRepository(\QuirkyFieldName\EmbeddableHost::class, [
+            'embed.val' => 'c',
+            'embedval'  => 'd',
+        ]);
+        $this->module->persistEntity(new \QuirkyFieldName\EmbeddableHost, [
+            'embed.val' => 'c',
+            'embedval'  => 'd',
+        ]);
+        $this->module->seeInRepository(\QuirkyFieldName\EmbeddableHost::class, [
+            'embed.val' => 'c',
+            'embedval'  => 'd',
+        ]);
     }
 }
