@@ -196,7 +196,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         } else {
             //Symfony 2.7 support
             $isFollowingRedirects = ReflectionHelper::readPrivateProperty($this->client, 'followRedirects');
-            $maxRedirects = ReflectionHelper::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
+            $maxRedirects = ReflectionHelper::readPrivateProperty($this->client, 'maxRedirects');
         }
 
         if (!$isFollowingRedirects) {
