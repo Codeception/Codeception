@@ -9,6 +9,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionPropertyAccessor;
 use Codeception\Util\Stub;
+use Doctrine\ORM\QueryBuilder;
 use ReflectionException;
 
 /**
@@ -551,17 +552,28 @@ EOF;
         return $qb->getQuery()->getSingleResult();
     }
 
-
-
     /**
      * It's Fuckin Recursive!
      *
-     * @param $qb
-     * @param $assoc
-     * @param $alias
-     * @param $params
+     * @param QueryBuilder $qb
+     * @param string $assoc
+     * @param string $alias
+     * @param array $params
      */
     protected function buildAssociationQuery($qb, $assoc, $alias, $params)
+    {
+        $paramIndex = 0;
+        $this->_buildAssociationQuery($qb, $assoc, $alias, $params, $paramIndex);
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $assoc
+     * @param string $alias
+     * @param array $params
+     * @param int &$paramIndex
+     */
+    protected function _buildAssociationQuery($qb, $assoc, $alias, $params, &$paramIndex)
     {
         $data = $this->em->getClassMetadata($assoc);
         foreach ($params as $key => $val) {
@@ -570,7 +582,7 @@ EOF;
                     $map = $data->associationMappings[$key];
                     if (is_array($val)) {
                         $qb->innerJoin("$alias.$key", "${alias}__$key");
-                        $this->buildAssociationQuery($qb, $map['targetEntity'], "${alias}__$key", $val);
+                        $this->_buildAssociationQuery($qb, $map['targetEntity'], "${alias}__$key", $val, $paramIndex);
                         continue;
                     }
                 }
@@ -578,9 +590,9 @@ EOF;
             if ($val === null) {
                 $qb->andWhere("$alias.$key IS NULL");
             } else {
-                $paramname = str_replace(".", "", "${alias}_$key");
-                $qb->andWhere("$alias.$key = :$paramname");
-                $qb->setParameter($paramname, $val);
+                $qb->andWhere("$alias.$key = ?$paramIndex");
+                $qb->setParameter($paramIndex, $val);
+                $paramIndex++;
             }
         }
     }
