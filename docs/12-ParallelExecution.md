@@ -36,7 +36,7 @@ To prepare application and tests to be executed inside containers you will need 
 
 Define all required services in `docker-compose.yml` file. Make sure to follow Docker philisophy: 1 service = 1 container. So each process should be defined as its own service. Those services can use official Docker images pulled from DockerHub. Directories with code and tests should be mounted using `volume` directive. And exposed ports should be explicitly set using `ports` directive.
 
-We prepared a sample config with codeception, web server, database, and selenium with firefox to be executed together.
+We prepared a sample config with codeception, web server, database, and selenium with Chrome to be executed together.
 
 ```yaml
 version: '3'
