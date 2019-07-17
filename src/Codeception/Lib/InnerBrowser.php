@@ -190,13 +190,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
         }
 
-        if (!ReflectionHelper::readPrivateProperty($this->client, 'followRedirects')) {
+        if (method_exists($this->client, 'isFollowingRedirects')) {
+            $isFollowingRedirects = $this->client->isFollowingRedirects();
+            $maxRedirects = $this->client->getMaxRedirects();
+        } else {
+            //Symfony 2.7 support
+            $isFollowingRedirects = ReflectionHelper::readPrivateProperty($this->client, 'followRedirects');
+            $maxRedirects = ReflectionHelper::readPrivateProperty($this->client, 'maxRedirects');
+        }
+
+        if (!$isFollowingRedirects) {
             $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
             $this->debugResponse($uri);
             return $result;
         }
 
-        $maxRedirects = ReflectionHelper::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
         $this->client->followRedirects(false);
         $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
         $this->debugResponse($uri);
