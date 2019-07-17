@@ -541,7 +541,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      *
      * @throws \Exception
      */
-    public function runSymfonyConsoleCommand(string $command, array $params = []): string
+    public function runSymfonyConsoleCommand(string $command, array $params = [])
     {
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
