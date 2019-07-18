@@ -1,6 +1,15 @@
 #### 3.0.3
-- [Laravel5] Add `make` and `makeMultiple` methods for generating model instance
-- [Lumen] Add `make` and `makeMultiple` methods for generating model instance
+- [Laravel5] Add `make` and `makeMultiple` methods for generating model instance by @ibpavlov
+- [Lumen] Add `make` and `makeMultiple` methods for generating model instance by @ibpavlov
+- [Phalcon] ActiveRecord: escape all column names using [] by @maxgalbu
+- [Yii2] Fixed issue on PHP7.3 because `preg_quote` now also quotes `#` by @SamMousa
+- [ZF2] Persistent service functionality for ZF3 by @svycka
+- [ZF2] Doctrine entity manager name is configurable by @svycka
+- [Db] Fix sqlite connection close when holding reference in PHP's GC (#5557) by @hoogi91
+- [Doctrine2] Fixed handling of embedables, inherited entities and parameter name clashes by @alexkunin
+- [Frameworks][PhpBrowser] Fixed compatibility with symfony/browserkit 4.3 by @kapcus
+- [Docs] Small documentation updates by @Nebulosar, @reinholdfuereder and @richardbrinkman
+- [Docker] Switched to buster php build by @OneEyedSpaceFish
 
 #### 3.0.2
 * @weshooper reduced size of exported package.
