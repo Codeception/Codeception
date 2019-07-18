@@ -544,6 +544,64 @@ class Lumen extends Framework implements ActiveRecord, PartedModule
             $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
         }
     }
+    
+
+    /**
+     * Use Lumen's model factory to make a model instance.
+     * Can only be used with Lumen 5.1 and later.
+     *
+     * ``` php
+     * <?php
+     * $I->make('App\User');
+     * $I->make('App\User', ['name' => 'John Doe']);
+     * $I->make('App\User', [], 'admin');
+     * ?>
+     * ```
+     *
+     * @see https://lumen.laravel.com/docs/master/testing#model-factories
+     * @param string $model
+     * @param array $attributes
+     * @param string $name
+     * @return mixed
+     * @part orm
+     */
+    public function make($model, $attributes = [], $name = 'default')
+    {
+        try {
+            return $this->modelFactory($model, $name)->make($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Could not make model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Use Laravel's model factory to make multiple model instances.
+     * Can only be used with Lumen 5.1 and later.
+     *
+     * ``` php
+     * <?php
+     * $I->makeMultiple('App\User', 10);
+     * $I->makeMultiple('App\User', 10, ['name' => 'John Doe']);
+     * $I->makeMultiple('App\User', 10, [], 'admin');
+     * ?>
+     * ```
+     *
+     * @see https://lumen.laravel.com/docs/master/testing#model-factories
+     * @param string $model
+     * @param int $times
+     * @param array $attributes
+     * @param string $name
+     * @return mixed
+     * @part orm
+     */
+    public function makeMultiple($model, $times, $attributes = [], $name = 'default')
+    {
+        try {
+            return $this->modelFactory($model, $name, $times)->make($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Could not make model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+        }
+    }
 
     /**
      * @param string $model

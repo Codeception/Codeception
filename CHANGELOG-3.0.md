@@ -1,3 +1,7 @@
+#### 3.0.3
+- [Laravel5] Add `make` and `makeMultiple` methods for generating model instance
+- [Lumen] Add `make` and `makeMultiple` methods for generating model instance
+
 #### 3.0.2
 * @weshooper reduced size of exported package.
 * --no-redirect option disables the redirect to a Composer-installed version, by @DanielRuf
