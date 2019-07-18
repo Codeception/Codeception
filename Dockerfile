@@ -1,4 +1,4 @@
-FROM php:7.3-cli
+FROM php:7.3.7-cli-buster
 
 MAINTAINER Tobias Munk tobias@diemeisterei.de
 
@@ -23,7 +23,7 @@ RUN docker-php-ext-install \
 RUN pecl install \
         mongodb \
         apcu \
-        xdebug-2.7.1 && \
+        xdebug-2.7.2 && \
     docker-php-ext-enable \
         apcu.so \
         mongodb.so \
