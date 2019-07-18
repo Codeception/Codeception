@@ -132,7 +132,7 @@ class MyCustomExtension extends \Codeception\Extension
 
     public static $events = array(
         Events::SUITE_AFTER  => 'afterSuite',
-        Events::SUITE_BEFORE => 'beforeTest',
+        Events::TEST_BEFORE => 'beforeTest',
         Events::STEP_BEFORE => 'beforeStep',
         Events::TEST_FAIL => 'testFailed',
         Events::RESULT_PRINT_AFTER => 'print',
