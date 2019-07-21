@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Exception\ModuleException;
 use Codeception\Module\Doctrine2;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManager;
@@ -260,6 +261,7 @@ class Doctrine2Test extends Unit
     public function testUnknownFixtureClassName()
     {
         $this->_preloadFixtures();
+        $this->expectException(ModuleException::class);
         $this->expectExceptionMessageRegExp('/Fixture class ".*" does not exist/');
         $this->module->haveFixtures('InvalidFixtureClass');
     }
@@ -267,6 +269,7 @@ class Doctrine2Test extends Unit
     public function testUnsuitableFixtureClassName()
     {
         $this->_preloadFixtures();
+        $this->expectException(ModuleException::class);
         $this->expectExceptionMessageRegExp('/Fixture class ".*" does not inherit from/');
         // Somewhat risky, but it's unlikely unit class will
         // ever inherit from a fixture interface:
@@ -276,6 +279,7 @@ class Doctrine2Test extends Unit
     public function testUnsuitableFixtureInstance()
     {
         $this->_preloadFixtures();
+        $this->expectException(ModuleException::class);
         $this->expectExceptionMessageRegExp('/Fixture ".*" does not inherit from/');
         $this->module->haveFixtures(new \stdClass);
     }
@@ -283,6 +287,7 @@ class Doctrine2Test extends Unit
     public function testUnsuitableFixtureType()
     {
         $this->_preloadFixtures();
+        $this->expectException(ModuleException::class);
         $this->expectExceptionMessageRegExp('/Fixture is expected to be .* got ".*" instead/');
         $this->module->haveFixtures(1);
     }
