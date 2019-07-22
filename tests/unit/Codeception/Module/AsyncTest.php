@@ -80,14 +80,13 @@ class AsyncTest extends Unit
     public function testParams()
     {
         $this->module->_before(new Cest(__CLASS__, __FUNCTION__, __FILE__));
-        $date = new DateTimeImmutable();
         $handle = $this->module->haveAsyncMethodRunning('_asyncParams', [
             'a',
             'b',
-            ['date' => $date],
+            ['key' => 'val'],
         ]);
         $this->assertEquals('a', $this->module->grabAsyncMethodOutput($handle));
         $this->assertEquals('b', $this->module->grabAsyncMethodErrorOutput($handle));
-        $this->assertEquals(['date' => $date], $this->module->grabAsyncMethodReturnValue($handle));
+        $this->assertEquals(['key' => 'val'], $this->module->grabAsyncMethodReturnValue($handle));
     }
 }

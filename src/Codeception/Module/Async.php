@@ -2,21 +2,22 @@
 
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleException;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Test\Cest;
 use Codeception\TestInterface;
 use Exception;
 use Symfony\Component\Process\PhpProcess;
-use Symfony\Component\VarExporter\Exception\ExceptionInterface;
-use Symfony\Component\VarExporter\VarExporter;
 use function assert;
 use function call_user_func_array;
 use function file_get_contents;
+use function json_encode;
+use function json_last_error;
+use function json_last_error_msg;
 use function register_shutdown_function;
 use function sprintf;
 use function sys_get_temp_dir;
 use function tempnam;
+use const JSON_ERROR_NONE;
 
 class Async extends CodeceptionModule
 {
@@ -45,8 +46,6 @@ class Async extends CodeceptionModule
      * @param string $methodName
      * @param array $params
      * @return string
-     * @throws ExceptionInterface
-     * @throws ModuleException
      * @throws Exception
      */
     public function haveAsyncMethodRunning($methodName, array $params = [])
@@ -61,21 +60,15 @@ class Async extends CodeceptionModule
 
         $this->debug($handle);
 
-        try {
-            $serializedParams = VarExporter::export($params);
-        } catch (ExceptionInterface $e) {
-            throw new ModuleException($this, 'Failed serializing parameters: ' . $e->getMessage());
-        }
-
         $code = sprintf(
             "<?php\nrequire %s;\nrequire %s;\n%s::_bootstrapAsyncMethod(%s, %s, %s, %s);",
-            VarExporter::export(__DIR__ . '/../../../vendor/autoload.php'),
-            VarExporter::export($currentTest->getFileName()),
+            var_export(__DIR__ . '/../../../vendor/autoload.php', true),
+            var_export($currentTest->getFileName(), true),
             __CLASS__,
-            VarExporter::export($handle),
-            VarExporter::export($currentTest->getTestClass()),
-            VarExporter::export($methodName),
-            $serializedParams
+            var_export($handle, true),
+            var_export($currentTest->getTestClass(), true),
+            var_export($methodName, true),
+            var_export($params, true)
         );
 
         $this->debug($code);
@@ -143,10 +136,15 @@ class Async extends CodeceptionModule
         return $this->getFinishedProcess($handle)->getErrorOutput();
     }
 
+    /**
+     * @param $handle
+     * @return mixed
+     * @throws Exception
+     */
     public function grabAsyncMethodReturnValue($handle)
     {
         assert(0 === $this->getFinishedProcess($handle)->getExitCode());
-        return eval('return ' . file_get_contents($handle) . ';');
+        return self::deserialize(file_get_contents($handle));
     }
 
     public function haveAllAsyncMethodsFinished()
@@ -163,12 +161,34 @@ class Async extends CodeceptionModule
      * @param string $class
      * @param string $method
      * @param array $params
-     * @throws ExceptionInterface
      */
     public static function _bootstrapAsyncMethod($filename, $class, $method, $params)
     {
         $returnValue = call_user_func_array([$class, $method], $params);
-        $serializedReturnValue = VarExporter::export($returnValue);
+        $serializedReturnValue = self::serialize($returnValue);
         file_put_contents($filename, $serializedReturnValue);
+    }
+
+    /**
+     * @param $data
+     * @return false|string
+     */
+    private static function serialize($data)
+    {
+        return json_encode($data);
+    }
+
+    /**
+     * @param $string
+     * @return mixed
+     * @throws Exception
+     */
+    private static function deserialize($string)
+    {
+        $data = json_decode($string, true);
+        if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('Deserialization failed due to JSON decoding error: ' . json_last_error_msg());
+        }
+        return $data;
     }
 }
