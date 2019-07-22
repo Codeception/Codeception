@@ -75,7 +75,12 @@ class Async extends CodeceptionModule
 
         register_shutdown_function('unlink', $handle);
 
-        $process = new PhpProcess($code);
+        $process = new PhpProcess(
+            $code,
+            null,
+            null,
+            3
+        );
 
         $this->processes[$handle] = $process;
 
@@ -108,11 +113,15 @@ class Async extends CodeceptionModule
         $this->assertTrue($process->isTerminated() && $process->isSuccessful());
     }
 
-    private function getFinishedProcess($handle)
+    private function getProcess($handle)
     {
         assert(isset($this->processes[$handle]));
+        return $this->processes[$handle];
+    }
 
-        $process = $this->processes[$handle];
+    private function getFinishedProcess($handle)
+    {
+        $process = $this->getProcess($handle);
 
         if ($process->isRunning()) {
             $process->wait();
@@ -129,6 +138,11 @@ class Async extends CodeceptionModule
     public function grabAsyncMethodOutput($handle)
     {
         return $this->getFinishedProcess($handle)->getOutput();
+    }
+
+    public function grabAsyncMethodErrorOutputSoFar($handle)
+    {
+        return $this->getProcess($handle)->getErrorOutput();
     }
 
     public function grabAsyncMethodErrorOutput($handle)
