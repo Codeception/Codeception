@@ -98,8 +98,10 @@ class ErrorHandler implements EventSubscriberInterface
         if (!$this->suiteFinished && (
             $error === null || !in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR])
         )) {
-            throw new \RuntimeException('Command Did Not Finish Properly');
-        } elseif (!is_array($error)) {
+            echo "\n\n\nCOMMAND DID NOT FINISH PROPERLY.\n";
+            return;
+        }
+        if (!is_array($error)) {
             return;
         }
         if (error_reporting() === 0) {
