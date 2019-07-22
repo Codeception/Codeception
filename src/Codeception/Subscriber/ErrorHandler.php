@@ -99,7 +99,7 @@ class ErrorHandler implements EventSubscriberInterface
             $error === null || !in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR])
         )) {
             echo "\n\n\nCOMMAND DID NOT FINISH PROPERLY.\n";
-            return;
+            exit(255);
         }
         if (!is_array($error)) {
             return;
