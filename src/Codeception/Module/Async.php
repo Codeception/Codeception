@@ -3,15 +3,12 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
-use Codeception\Module\Async\MasterController;
-use Codeception\Module\Async\SlaveController;
+use Codeception\Module\Async\IPC;
 use Codeception\Test\Cest;
 use Codeception\TestInterface;
 use Exception;
 use Symfony\Component\Process\PhpProcess;
 use function assert;
-use function call_user_func_array;
-use function file_get_contents;
 use function get_class;
 use function json_encode;
 use function json_last_error;
@@ -39,6 +36,11 @@ class Async extends CodeceptionModule
      */
     private $processes = [];
 
+    /**
+     * @var IPC[]
+     */
+    private $masterControllers = [];
+
     public function _before(TestInterface $test)
     {
         $this->currentTest = $test;
@@ -50,6 +52,7 @@ class Async extends CodeceptionModule
         $this->currentTest = null;
         $this->slaveControllerInputFilenames = [];
         $this->slaveControllerOutputFilenames = [];
+        $this->masterControllers = [];
     }
 
     private $slaveControllerInputFilenames = [];
@@ -58,8 +61,7 @@ class Async extends CodeceptionModule
 
     private function addProcess()
     {
-        $handle = tempnam(sys_get_temp_dir(), 'codecept_async');
-        register_shutdown_function('unlink', $handle);
+        $handle = uniqid('codecept_async', true);
 
         $this->slaveControllerInputFilenames[$handle] = tempnam(sys_get_temp_dir(), 'codecept_async_input');
         register_shutdown_function('unlink', $this->slaveControllerInputFilenames[$handle]);
@@ -67,24 +69,12 @@ class Async extends CodeceptionModule
         $this->slaveControllerOutputFilenames[$handle] = tempnam(sys_get_temp_dir(), 'codecept_async_output');
         register_shutdown_function('unlink', $this->slaveControllerOutputFilenames[$handle]);
 
-        return $handle;
-    }
+        $this->masterControllers[$handle] = new IPC(
+            $this->slaveControllerOutputFilenames[$handle],
+            $this->slaveControllerInputFilenames[$handle]
+        );
 
-    /**
-     * @param $inputFilename
-     * @param $outputFilename
-     * @param string $filename
-     * @param string $class
-     * @param string $method
-     * @param array $params
-     */
-    public static function _bootstrapAsyncMethod($inputFilename, $outputFilename, $filename, $class, $method, $params)
-    {
-        self::$slaveControllerInputFilename = $inputFilename;
-        self::$slaveControllerOutputFilename = $outputFilename;
-        $returnValue = call_user_func_array([$class, $method], $params);
-        $serializedReturnValue = self::serialize($returnValue);
-        file_put_contents($filename, $serializedReturnValue);
+        return $handle;
     }
 
     private function getAutoloadPath()
@@ -95,13 +85,12 @@ class Async extends CodeceptionModule
     private function generateCode($handle, $file, $class, $method, array $params)
     {
         return sprintf(
-            "<?php\nrequire %s;\nrequire %s;\n%s::_bootstrapAsyncMethod(%s, %s, %s, %s, %s, %s);",
+            "<?php\nrequire %s;\nrequire %s;\n(new %s(%s, %s, %s, %s))->run(%s);",
             var_export($this->getAutoloadPath(), true),
             var_export($file, true),
-            __CLASS__,
+            CodeceptionModule\Async\AsyncSlave::class,
             var_export($this->slaveControllerInputFilenames[$handle], true),
             var_export($this->slaveControllerOutputFilenames[$handle], true),
-            var_export($handle, true),
             var_export($class, true),
             var_export($method, true),
             var_export($params, true)
@@ -205,17 +194,6 @@ class Async extends CodeceptionModule
         return $this->getFinishedProcess($handle)->getErrorOutput();
     }
 
-    /**
-     * @param $handle
-     * @return mixed
-     * @throws Exception
-     */
-    public function grabAsyncMethodReturnValue($handle)
-    {
-        assert(0 === $this->getFinishedProcess($handle)->getExitCode());
-        return self::deserialize(file_get_contents($handle));
-    }
-
     public function haveAllAsyncMethodsFinished()
     {
         foreach ($this->processes as $process) {
@@ -248,20 +226,13 @@ class Async extends CodeceptionModule
         return $data;
     }
 
-    private static $slaveControllerInputFilename;
-
-    private static $slaveControllerOutputFilename;
-
-    public static function getSlaveController()
+    public function read($handle)
     {
-        return new SlaveController(self::$slaveControllerInputFilename, self::$slaveControllerOutputFilename);
+        return $this->masterControllers[$handle]->read();
     }
 
-    public function getMasterController($handle)
+    public function write($handle, $message)
     {
-        return new MasterController(
-            $this->slaveControllerOutputFilenames[$handle],
-            $this->slaveControllerInputFilenames[$handle]
-        );
+        $this->masterControllers[$handle]->write($message);
     }
 }
