@@ -10,6 +10,7 @@ use Symfony\Component\Process\PhpProcess;
 use function assert;
 use function call_user_func_array;
 use function file_get_contents;
+use function get_class;
 use function json_encode;
 use function json_last_error;
 use function json_last_error_msg;
@@ -17,6 +18,7 @@ use function register_shutdown_function;
 use function sprintf;
 use function sys_get_temp_dir;
 use function tempnam;
+use function var_export;
 use const JSON_ERROR_NONE;
 
 class Async extends CodeceptionModule
@@ -42,6 +44,42 @@ class Async extends CodeceptionModule
         $this->currentTest = null;
     }
 
+    private function addProcess()
+    {
+        $handle = tempnam(sys_get_temp_dir(), 'codecept_async');
+
+        register_shutdown_function('unlink', $handle);
+
+        return $handle;
+    }
+
+    /**
+     * @param string $filename
+     * @param string $class
+     * @param string $method
+     * @param array $params
+     */
+    public static function _bootstrapAsyncMethod($filename, $class, $method, $params)
+    {
+        $returnValue = call_user_func_array([$class, $method], $params);
+        $serializedReturnValue = self::serialize($returnValue);
+        file_put_contents($filename, $serializedReturnValue);
+    }
+
+    private function generateCode($handle, $file, $class, $method, array $params)
+    {
+        return sprintf(
+            "<?php\nrequire %s;\nrequire %s;\n%s::_bootstrapAsyncMethod(%s, %s, %s, %s);",
+            var_export(__DIR__ . '/../../../vendor/autoload.php', true),
+            var_export($file, true),
+            __CLASS__,
+            var_export($handle, true),
+            var_export($class, true),
+            var_export($method, true),
+            var_export($params, true)
+        );
+    }
+
     /**
      * @param string $methodName
      * @param array $params
@@ -56,24 +94,11 @@ class Async extends CodeceptionModule
             throw new Exception('Invalid test type');
         }
 
-        $handle = tempnam(sys_get_temp_dir(), 'codecept_async');
+        $handle = $this->addProcess();
 
-        $this->debug($handle);
-
-        $code = sprintf(
-            "<?php\nrequire %s;\nrequire %s;\n%s::_bootstrapAsyncMethod(%s, %s, %s, %s);",
-            var_export(__DIR__ . '/../../../vendor/autoload.php', true),
-            var_export($currentTest->getFileName(), true),
-            __CLASS__,
-            var_export($handle, true),
-            var_export($currentTest->getTestClass(), true),
-            var_export($methodName, true),
-            var_export($params, true)
-        );
+        $code = $this->generateCode($handle, $currentTest->getFileName(), get_class($currentTest->getTestClass()), $methodName, $params);
 
         $this->debug($code);
-
-        register_shutdown_function('unlink', $handle);
 
         $process = new PhpProcess(
             $code,
@@ -88,7 +113,7 @@ class Async extends CodeceptionModule
             $this->debug(
                 sprintf(
                     '%s::%s [%s] %s',
-                    $currentTest->getTestClass(),
+                    get_class($currentTest->getTestClass()),
                     $methodName,
                     $type,
                     $data
@@ -168,19 +193,6 @@ class Async extends CodeceptionModule
                 $process->wait();
             }
         }
-    }
-
-    /**
-     * @param string $filename
-     * @param string $class
-     * @param string $method
-     * @param array $params
-     */
-    public static function _bootstrapAsyncMethod($filename, $class, $method, $params)
-    {
-        $returnValue = call_user_func_array([$class, $method], $params);
-        $serializedReturnValue = self::serialize($returnValue);
-        file_put_contents($filename, $serializedReturnValue);
     }
 
     /**
