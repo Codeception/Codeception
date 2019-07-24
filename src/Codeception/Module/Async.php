@@ -3,6 +3,8 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
+use Codeception\Module\Async\MasterController;
+use Codeception\Module\Async\SlaveController;
 use Codeception\Test\Cest;
 use Codeception\TestInterface;
 use Exception;
@@ -46,25 +48,40 @@ class Async extends CodeceptionModule
     {
         $this->processes = [];
         $this->currentTest = null;
+        $this->slaveControllerInputFilenames = [];
+        $this->slaveControllerOutputFilenames = [];
     }
+
+    private $slaveControllerInputFilenames = [];
+
+    private $slaveControllerOutputFilenames = [];
 
     private function addProcess()
     {
         $handle = tempnam(sys_get_temp_dir(), 'codecept_async');
-
         register_shutdown_function('unlink', $handle);
+
+        $this->slaveControllerInputFilenames[$handle] = tempnam(sys_get_temp_dir(), 'codecept_async_input');
+        register_shutdown_function('unlink', $this->slaveControllerInputFilenames[$handle]);
+
+        $this->slaveControllerOutputFilenames[$handle] = tempnam(sys_get_temp_dir(), 'codecept_async_output');
+        register_shutdown_function('unlink', $this->slaveControllerOutputFilenames[$handle]);
 
         return $handle;
     }
 
     /**
+     * @param $inputFilename
+     * @param $outputFilename
      * @param string $filename
      * @param string $class
      * @param string $method
      * @param array $params
      */
-    public static function _bootstrapAsyncMethod($filename, $class, $method, $params)
+    public static function _bootstrapAsyncMethod($inputFilename, $outputFilename, $filename, $class, $method, $params)
     {
+        self::$slaveControllerInputFilename = $inputFilename;
+        self::$slaveControllerOutputFilename = $outputFilename;
         $returnValue = call_user_func_array([$class, $method], $params);
         $serializedReturnValue = self::serialize($returnValue);
         file_put_contents($filename, $serializedReturnValue);
@@ -78,10 +95,12 @@ class Async extends CodeceptionModule
     private function generateCode($handle, $file, $class, $method, array $params)
     {
         return sprintf(
-            "<?php\nrequire %s;\nrequire %s;\n%s::_bootstrapAsyncMethod(%s, %s, %s, %s);",
+            "<?php\nrequire %s;\nrequire %s;\n%s::_bootstrapAsyncMethod(%s, %s, %s, %s, %s, %s);",
             var_export($this->getAutoloadPath(), true),
             var_export($file, true),
             __CLASS__,
+            var_export($this->slaveControllerInputFilenames[$handle], true),
+            var_export($this->slaveControllerOutputFilenames[$handle], true),
             var_export($handle, true),
             var_export($class, true),
             var_export($method, true),
@@ -115,6 +134,8 @@ class Async extends CodeceptionModule
             null,
             3
         );
+
+        $this->debug($process->getCommandLine());
 
         $this->processes[$handle] = $process;
 
@@ -225,5 +246,22 @@ class Async extends CodeceptionModule
             throw new Exception('Deserialization failed due to JSON decoding error: ' . json_last_error_msg());
         }
         return $data;
+    }
+
+    private static $slaveControllerInputFilename;
+
+    private static $slaveControllerOutputFilename;
+
+    public static function getSlaveController()
+    {
+        return new SlaveController(self::$slaveControllerInputFilename, self::$slaveControllerOutputFilename);
+    }
+
+    public function getMasterController($handle)
+    {
+        return new MasterController(
+            $this->slaveControllerOutputFilenames[$handle],
+            $this->slaveControllerInputFilenames[$handle]
+        );
     }
 }
