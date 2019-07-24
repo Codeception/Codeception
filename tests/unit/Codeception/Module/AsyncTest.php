@@ -16,7 +16,9 @@ class AsyncTest extends Unit
     {
         /** @var ModuleContainer $container */
         $container = make_container();
-        $module = new Async($container);
+        $module = new Async($container, [
+            'autoload_path' => __DIR__ . '/../../../../vendor/autoload.php',
+        ]);
         $module->_initialize();
         $module->_beforeSuite();
         $this->module = $module;

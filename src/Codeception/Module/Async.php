@@ -23,6 +23,10 @@ use const JSON_ERROR_NONE;
 
 class Async extends CodeceptionModule
 {
+    protected $requiredFields = [
+        'autoload_path',
+    ];
+
     /**
      * @var TestInterface|null
      */
@@ -66,11 +70,16 @@ class Async extends CodeceptionModule
         file_put_contents($filename, $serializedReturnValue);
     }
 
+    private function getAutoloadPath()
+    {
+        return $this->config['autoload_path'];
+    }
+
     private function generateCode($handle, $file, $class, $method, array $params)
     {
         return sprintf(
             "<?php\nrequire %s;\nrequire %s;\n%s::_bootstrapAsyncMethod(%s, %s, %s, %s);",
-            var_export(__DIR__ . '/../../../vendor/autoload.php', true),
+            var_export($this->getAutoloadPath(), true),
             var_export($file, true),
             __CLASS__,
             var_export($handle, true),
