@@ -99,6 +99,31 @@ class AsyncTest extends Unit
         $this->assertEquals(['key' => 'val'], $this->module->grabAsyncMethodReturnValue($handle));
     }
 
+    public static function _asyncControllerCommsRead()
+    {
+        return Async::getSlaveController()->read();
+    }
+
+    public function testControllerCommsRead()
+    {
+        $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
+        $handle = $this->module->haveAsyncMethodRunning('_asyncControllerCommsRead');
+        $this->module->getMasterController($handle)->write('value');
+        $this->assertEquals('value', $this->module->grabAsyncMethodReturnValue($handle));
+    }
+
+    public static function _asyncControllerCommsWrite()
+    {
+        Async::getSlaveController()->write('value');
+    }
+
+    public function testControllerCommsWrite()
+    {
+        $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
+        $handle = $this->module->haveAsyncMethodRunning('_asyncControllerCommsWrite');
+        $this->assertEquals('value', $this->module->getMasterController($handle)->read());
+    }
+
     public static function _asyncStreamServer($dataToSend)
     {
         $serverSocket = stream_socket_server('tcp://localhost:0', $errno, $errstr)
