@@ -99,68 +99,65 @@ class AsyncTest extends Unit
         $this->assertEquals(['key' => 'val'], $this->module->grabAsyncMethodReturnValue($handle));
     }
 
-    public static function _asyncServer($dataToSend)
+    public static function _asyncStreamServer($dataToSend)
     {
-        $serverSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        socket_bind($serverSocket, '127.0.0.1');
+        $serverSocket = stream_socket_server('tcp://localhost:0', $errno, $errstr)
+        or die("stream_socket_server failed with code $errno: $errstr");
 
-        socket_getsockname($serverSocket, $addr, $port);
-        file_put_contents('php://stderr', $port);
+        file_put_contents('php://stderr', stream_socket_get_name($serverSocket, false));
 
-        socket_listen($serverSocket);
-        $socket = socket_accept($serverSocket);
+        $socket = stream_socket_accept($serverSocket)
+        or die('stream_socket_accept failed');
 
         $sum = 0;
         $received = [];
         foreach ($dataToSend as $output) {
-            $input = (int)socket_read($socket, 1024, PHP_NORMAL_READ);
+            $input = (int)fgets($socket);
             echo "from client> $output\n";
             $sum += $input;
             $received[] = $sum;
             echo "to client> $output\n";
-            socket_write($socket, $output . PHP_EOL);
+            fputs($socket, $output . PHP_EOL);
         }
 
-        socket_close($socket);
-        socket_close($serverSocket);
+        fclose($socket);
+        fclose($serverSocket);
 
         return $received;
     }
 
-    public static function _asyncClient($port, $dataToSend)
+    public static function _asyncStreamClient($address, $dataToSend)
     {
-        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        socket_connect($socket, '127.0.0.1', $port);
+        $socket = stream_socket_client("tcp://$address", $errno, $errmsg)
+        or die("stream_socket_client failed with code $errno: $errmsg");
 
         $product = 1;
         $received = [];
         foreach ($dataToSend as $output) {
             echo "to server> $output\n";
-            socket_write($socket, $output . PHP_EOL);
-            $input = socket_read($socket, 1024, PHP_NORMAL_READ);
+            fputs($socket, $output . PHP_EOL);
+            $input = fgets($socket);
             echo "from server> $input\n";
             $product *= (int)$input;
             $received[] = $product;
         }
 
-        socket_close($socket);
+        fclose($socket);
 
         return $received;
     }
 
-    public function testMultipleAsyncMethods()
+    public function testStreamSockets()
     {
-        $this->_requireSockets();
         $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
 
-        $server = $this->module->haveAsyncMethodRunning('_asyncServer', [[2, 3, 4]]);
+        $server = $this->module->haveAsyncMethodRunning('_asyncStreamServer', [[2, 3, 4]]);
 
-        while (($serverErrorOutput = $this->module->grabAsyncMethodErrorOutputSoFar($server)) === '') {
+        while (($address = $this->module->grabAsyncMethodErrorOutputSoFar($server)) === '') {
             usleep(10000);
         }
-        $port = (int)$serverErrorOutput;
 
-        $client = $this->module->haveAsyncMethodRunning('_asyncClient', [$port, [5, 6, 7]]);
+        $client = $this->module->haveAsyncMethodRunning('_asyncStreamClient', [$address, [5, 6, 7]]);
 
         $this->assertEquals([5, 11, 18], $this->module->grabAsyncMethodReturnValue($server));
         $this->assertEquals([2, 6, 24], $this->module->grabAsyncMethodReturnValue($client));
