@@ -22,6 +22,13 @@ class AsyncTest extends Unit
         $this->module = $module;
     }
 
+    private function _requireSockets()
+    {
+        if (!extension_loaded('sockets')) {
+            $this->markTestSkipped('Extension "sockets" is not available');
+        }
+    }
+
     public static function _asyncStdout()
     {
         echo 'this is stdout';
@@ -29,7 +36,7 @@ class AsyncTest extends Unit
 
     public function testStdout()
     {
-        $this->module->_before(new Cest(__CLASS__, __FUNCTION__, __FILE__));
+        $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
         $handle = $this->module->haveAsyncMethodRunning('_asyncStdout');
         $this->assertEquals('this is stdout', $this->module->grabAsyncMethodOutput($handle));
     }
@@ -41,7 +48,7 @@ class AsyncTest extends Unit
 
     public function testStderr()
     {
-        $this->module->_before(new Cest(__CLASS__, __FUNCTION__, __FILE__));
+        $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
         $handle = $this->module->haveAsyncMethodRunning('_asyncStderr');
         $this->assertEquals('this is stderr', $this->module->grabAsyncMethodErrorOutput($handle));
     }
@@ -53,7 +60,7 @@ class AsyncTest extends Unit
 
     public function testReturnValue()
     {
-        $this->module->_before(new Cest(__CLASS__, __FUNCTION__, __FILE__));
+        $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
         $handle = $this->module->haveAsyncMethodRunning('_asyncReturnValue');
         $this->assertEquals(['key' => 'this is retval'], $this->module->grabAsyncMethodReturnValue($handle));
     }
@@ -65,7 +72,7 @@ class AsyncTest extends Unit
 
     public function testExitCode()
     {
-        $this->module->_before(new Cest(__CLASS__, __FUNCTION__, __FILE__));
+        $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
         $handle = $this->module->haveAsyncMethodRunning('_asyncExitCode');
         $this->assertEquals(13, $this->module->grabAsyncMethodStatusCode($handle));
     }
@@ -79,7 +86,7 @@ class AsyncTest extends Unit
 
     public function testParams()
     {
-        $this->module->_before(new Cest(__CLASS__, __FUNCTION__, __FILE__));
+        $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
         $handle = $this->module->haveAsyncMethodRunning('_asyncParams', [
             'a',
             'b',
@@ -141,10 +148,8 @@ class AsyncTest extends Unit
 
     public function testMultipleAsyncMethods()
     {
-        if (!extension_loaded('sockets')) {
-            $this->markTestSkipped('Extension "sockets" is not available');
-        }
-        $this->module->_before(new Cest(__CLASS__, __FUNCTION__, __FILE__));
+        $this->_requireSockets();
+        $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
 
         $server = $this->module->haveAsyncMethodRunning('_asyncServer', [[2, 3, 4]]);
 
