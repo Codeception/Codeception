@@ -2,6 +2,8 @@
 
 namespace Codeception\Module\Async;
 
+use Codeception\Module\Async;
+use Exception;
 use function call_user_func_array;
 
 class AsyncSlave
@@ -52,18 +54,31 @@ class AsyncSlave
         $this->slaveController = new IPC($inputFilename, $outputFilename);
     }
 
+    /**
+     * @param array $params
+     * @throws Exception
+     */
     public function run($params)
     {
-        call_user_func_array([$this->class, $this->method], $params);
+        $result = call_user_func_array([$this->class, $this->method], $params);
+        self::$singleton->slaveController->write(Async::RESULT_CHANNEL, $result);
     }
 
+    /**
+     * @return mixed
+     * @throws Exception
+     */
     public static function read()
     {
-        return self::$singleton->slaveController->read();
+        return self::$singleton->slaveController->read(Async::MESSAGES_CHANNEL);
     }
 
+    /**
+     * @param mixed $message
+     * @throws Exception
+     */
     public static function write($message)
     {
-        self::$singleton->slaveController->write($message);
+        self::$singleton->slaveController->write(Async::MESSAGES_CHANNEL, $message);
     }
 }

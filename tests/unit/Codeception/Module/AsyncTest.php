@@ -49,6 +49,18 @@ class AsyncTest extends Unit
         $this->assertEquals('this is stderr', $this->module->grabAsyncMethodErrorOutput($handle));
     }
 
+    public static function _asyncReturnValue()
+    {
+        return ['key' => 'this is retval'];
+    }
+
+    public function testReturnValue()
+    {
+        $this->module->_before(new Cest($this, __FUNCTION__, __FILE__));
+        $handle = $this->module->haveAsyncMethodRunning('_asyncReturnValue');
+        $this->assertEquals(['key' => 'this is retval'], $this->module->grabAsyncMethodReturnValue($handle));
+    }
+
     public static function _asyncExitCode()
     {
         exit(13);

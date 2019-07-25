@@ -8,20 +8,20 @@ use Codeception\Test\Cest;
 use Codeception\TestInterface;
 use Exception;
 use Symfony\Component\Process\PhpProcess;
+use function array_key_exists;
 use function assert;
 use function get_class;
-use function json_encode;
-use function json_last_error;
-use function json_last_error_msg;
 use function register_shutdown_function;
 use function sprintf;
 use function sys_get_temp_dir;
 use function tempnam;
 use function var_export;
-use const JSON_ERROR_NONE;
 
 class Async extends CodeceptionModule
 {
+    const RESULT_CHANNEL = 'result';
+    const MESSAGES_CHANNEL = 'messages';
+
     protected $requiredFields = [
         'autoload_path',
     ];
@@ -41,6 +41,21 @@ class Async extends CodeceptionModule
      */
     private $masterControllers = [];
 
+    /**
+     * @var array
+     */
+    private $returnValues = [];
+
+    /**
+     * @var string[]
+     */
+    private $slaveControllerInputFilenames = [];
+
+    /**
+     * @var string[]
+     */
+    private $slaveControllerOutputFilenames = [];
+
     public function _before(TestInterface $test)
     {
         $this->currentTest = $test;
@@ -53,12 +68,12 @@ class Async extends CodeceptionModule
         $this->slaveControllerInputFilenames = [];
         $this->slaveControllerOutputFilenames = [];
         $this->masterControllers = [];
+        $this->returnValues = [];
     }
 
-    private $slaveControllerInputFilenames = [];
-
-    private $slaveControllerOutputFilenames = [];
-
+    /**
+     * @return string
+     */
     private function addProcess()
     {
         $handle = uniqid('codecept_async', true);
@@ -77,16 +92,29 @@ class Async extends CodeceptionModule
         return $handle;
     }
 
+    /**
+     * @return string|null
+     */
     private function getAutoloadPath()
     {
         return $this->config['autoload_path'];
     }
 
+    /**
+     * @param string $handle
+     * @param string $file
+     * @param string $class
+     * @param string $method
+     * @param array $params
+     * @return string
+     */
     private function generateCode($handle, $file, $class, $method, array $params)
     {
         return sprintf(
-            "<?php\nrequire %s;\nrequire %s;\n(new %s(%s, %s, %s, %s))->run(%s);",
-            var_export($this->getAutoloadPath(), true),
+            "<?php\n%srequire %s;\n(new %s(%s, %s, %s, %s))->run(%s);",
+            $this->getAutoloadPath() === null
+                ? ''
+                : sprintf("require %s;\n", var_export($this->getAutoloadPath(), true)),
             var_export($file, true),
             CodeceptionModule\Async\AsyncSlave::class,
             var_export($this->slaveControllerInputFilenames[$handle], true),
@@ -143,6 +171,9 @@ class Async extends CodeceptionModule
         return $handle;
     }
 
+    /**
+     * @param string $handle
+     */
     public function seeAsyncMethodFinished($handle)
     {
         assert(isset($this->processes[$handle]));
@@ -150,6 +181,9 @@ class Async extends CodeceptionModule
         $this->assertTrue($process->isTerminated());
     }
 
+    /**
+     * @param string $handle
+     */
     public function seeAsyncMethodFinishedSuccessfully($handle)
     {
         assert(isset($this->processes[$handle]));
@@ -157,12 +191,20 @@ class Async extends CodeceptionModule
         $this->assertTrue($process->isTerminated() && $process->isSuccessful());
     }
 
+    /**
+     * @param string $handle
+     * @return PhpProcess
+     */
     private function getProcess($handle)
     {
         assert(isset($this->processes[$handle]));
         return $this->processes[$handle];
     }
 
+    /**
+     * @param string $handle
+     * @return PhpProcess
+     */
     private function getFinishedProcess($handle)
     {
         $process = $this->getProcess($handle);
@@ -174,26 +216,59 @@ class Async extends CodeceptionModule
         return $process;
     }
 
+    /**
+     * @param string $handle
+     * @return mixed
+     * @throws Exception
+     */
+    public function grabAsyncMethodReturnValue($handle)
+    {
+        $this->getFinishedProcess($handle);
+        if (!array_key_exists($handle, $this->returnValues)) {
+            $this->returnValues[$handle] = $this->masterControllers[$handle]->read(self::RESULT_CHANNEL);
+        }
+        return $this->returnValues[$handle];
+    }
+
+    /**
+     * @param string $handle
+     * @return int
+     */
     public function grabAsyncMethodStatusCode($handle)
     {
         return $this->getFinishedProcess($handle)->getExitCode();
     }
 
+    /**
+     * @param string $handle
+     * @return string
+     */
     public function grabAsyncMethodOutput($handle)
     {
         return $this->getFinishedProcess($handle)->getOutput();
     }
 
+    /**
+     * @param string $handle
+     * @return string
+     */
     public function grabAsyncMethodErrorOutputSoFar($handle)
     {
         return $this->getProcess($handle)->getErrorOutput();
     }
 
+    /**
+     * @param string $handle
+     * @return string
+     */
     public function grabAsyncMethodErrorOutput($handle)
     {
         return $this->getFinishedProcess($handle)->getErrorOutput();
     }
 
+    /**
+     *
+     */
     public function haveAllAsyncMethodsFinished()
     {
         foreach ($this->processes as $process) {
@@ -204,35 +279,22 @@ class Async extends CodeceptionModule
     }
 
     /**
-     * @param $data
-     * @return false|string
-     */
-    private static function serialize($data)
-    {
-        return json_encode($data);
-    }
-
-    /**
-     * @param $string
+     * @param string $handle
      * @return mixed
      * @throws Exception
      */
-    private static function deserialize($string)
-    {
-        $data = json_decode($string, true);
-        if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
-            throw new Exception('Deserialization failed due to JSON decoding error: ' . json_last_error_msg());
-        }
-        return $data;
-    }
-
     public function read($handle)
     {
-        return $this->masterControllers[$handle]->read();
+        return $this->masterControllers[$handle]->read(self::MESSAGES_CHANNEL);
     }
 
+    /**
+     * @param string $handle
+     * @param mixed $message
+     * @throws Exception
+     */
     public function write($handle, $message)
     {
-        $this->masterControllers[$handle]->write($message);
+        $this->masterControllers[$handle]->write(self::MESSAGES_CHANNEL, $message);
     }
 }
