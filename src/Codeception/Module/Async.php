@@ -11,11 +11,13 @@ use Symfony\Component\Process\PhpProcess;
 use function array_key_exists;
 use function assert;
 use function get_class;
+use function join;
 use function register_shutdown_function;
 use function sprintf;
 use function sys_get_temp_dir;
 use function tempnam;
 use function var_export;
+use const PHP_EOL;
 
 class Async extends CodeceptionModule
 {
@@ -110,12 +112,16 @@ class Async extends CodeceptionModule
      */
     private function generateCode($handle, $file, $class, $method, array $params)
     {
-        return sprintf(
-            "<?php\n%srequire %s;\n(new %s(%s, %s, %s, %s))->run(%s);",
-            $this->getAutoloadPath() === null
-                ? ''
-                : sprintf("require %s;\n", var_export($this->getAutoloadPath(), true)),
-            var_export($file, true),
+        $lines = ['<?php'];
+
+        if (!empty($this->getAutoloadPath())) {
+            $lines[] = sprintf('require_once %s;', var_export($this->getAutoloadPath(), true));
+        }
+
+        $lines[] = sprintf('require_once %s;', var_export($file, true));
+
+        $lines[] = sprintf(
+            "(new %s(%s, %s, %s, %s))->run(%s);",
             CodeceptionModule\Async\AsyncSlave::class,
             var_export($this->slaveControllerInputFilenames[$handle], true),
             var_export($this->slaveControllerOutputFilenames[$handle], true),
@@ -123,6 +129,8 @@ class Async extends CodeceptionModule
             var_export($method, true),
             var_export($params, true)
         );
+
+        return join(PHP_EOL, $lines);
     }
 
     /**

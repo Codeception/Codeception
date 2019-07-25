@@ -130,14 +130,12 @@ class IPC
     {
         $message = json_decode($string, true);
 
-        if (
-            $message === null
+        if ($message === null
             && json_last_error() !== JSON_ERROR_NONE) {
             throw new Exception('Failed parsing message: ' . json_last_error_msg());
         }
 
-        if (
-            !is_array($message)
+        if (!is_array($message)
             || !array_key_exists(self::CHANNEL_KEY, $message)
             || !is_string($message[self::CHANNEL_KEY])
             || !array_key_exists(self::PAYLOAD_KEY, $message)) {
