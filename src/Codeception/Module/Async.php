@@ -4,12 +4,13 @@ namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
 use Codeception\Module\Async\IPC;
+use Codeception\Module\Async\Process;
 use Codeception\Test\Cest;
 use Codeception\TestInterface;
 use Exception;
 use Symfony\Component\Process\PhpProcess;
-use function array_key_exists;
 use function assert;
+use function count;
 use function get_class;
 use function join;
 use function register_shutdown_function;
@@ -34,29 +35,9 @@ class Async extends CodeceptionModule
     private $currentTest = null;
 
     /**
-     * @var PhpProcess[]
+     * @var Process[]
      */
     private $processes = [];
-
-    /**
-     * @var IPC[]
-     */
-    private $masterControllers = [];
-
-    /**
-     * @var array
-     */
-    private $returnValues = [];
-
-    /**
-     * @var string[]
-     */
-    private $slaveControllerInputFilenames = [];
-
-    /**
-     * @var string[]
-     */
-    private $slaveControllerOutputFilenames = [];
 
     public function _before(TestInterface $test)
     {
@@ -67,31 +48,33 @@ class Async extends CodeceptionModule
     {
         $this->processes = [];
         $this->currentTest = null;
-        $this->slaveControllerInputFilenames = [];
-        $this->slaveControllerOutputFilenames = [];
-        $this->masterControllers = [];
-        $this->returnValues = [];
     }
 
     /**
-     * @return string
+     * @param string $filename
+     * @param string $class
+     * @param string $method
+     * @param array $params
+     * @return Process
      */
-    private function addProcess()
+    private function addProcess($filename, $class, $method, $params)
     {
-        $handle = uniqid('codecept_async', true);
+        $inputFilename = tempnam(sys_get_temp_dir(), 'codecept_async_input');
+        register_shutdown_function('unlink', $inputFilename);
 
-        $this->slaveControllerInputFilenames[$handle] = tempnam(sys_get_temp_dir(), 'codecept_async_input');
-        register_shutdown_function('unlink', $this->slaveControllerInputFilenames[$handle]);
+        $outputFilename = tempnam(sys_get_temp_dir(), 'codecept_async_output');
+        register_shutdown_function('unlink', $outputFilename);
 
-        $this->slaveControllerOutputFilenames[$handle] = tempnam(sys_get_temp_dir(), 'codecept_async_output');
-        register_shutdown_function('unlink', $this->slaveControllerOutputFilenames[$handle]);
+        $ipc = new IPC($outputFilename, $inputFilename);
 
-        $this->masterControllers[$handle] = new IPC(
-            $this->slaveControllerOutputFilenames[$handle],
-            $this->slaveControllerInputFilenames[$handle]
-        );
+        $code = $this->generateCode($inputFilename, $outputFilename, $filename, $class, $method, $params);
+        $this->debug($code);
 
-        return $handle;
+        $process = new PhpProcess($code, null, null, 3);
+        $this->debug($process->getCommandLine());
+
+        $handle = sprintf('%s:%s[%d]', $class, $method, count($this->processes));
+        return $this->processes[$handle] = new Process($handle, $process, $ipc);
     }
 
     /**
@@ -103,14 +86,15 @@ class Async extends CodeceptionModule
     }
 
     /**
-     * @param string $handle
+     * @param string $inputFilename
+     * @param string $outputFilename
      * @param string $file
      * @param string $class
      * @param string $method
      * @param array $params
      * @return string
      */
-    private function generateCode($handle, $file, $class, $method, array $params)
+    private function generateCode($inputFilename, $outputFilename, $file, $class, $method, array $params)
     {
         $lines = ['<?php'];
 
@@ -123,8 +107,8 @@ class Async extends CodeceptionModule
         $lines[] = sprintf(
             "(new %s(%s, %s, %s, %s))->run(%s);",
             CodeceptionModule\Async\AsyncSlave::class,
-            var_export($this->slaveControllerInputFilenames[$handle], true),
-            var_export($this->slaveControllerOutputFilenames[$handle], true),
+            var_export($inputFilename, true),
+            var_export($outputFilename, true),
             var_export($class, true),
             var_export($method, true),
             var_export($params, true)
@@ -147,24 +131,14 @@ class Async extends CodeceptionModule
             throw new Exception('Invalid test type');
         }
 
-        $handle = $this->addProcess();
-
-        $code = $this->generateCode($handle, $currentTest->getFileName(), get_class($currentTest->getTestClass()), $methodName, $params);
-
-        $this->debug($code);
-
-        $process = new PhpProcess(
-            $code,
-            null,
-            null,
-            3
+        $process = $this->addProcess(
+            $currentTest->getFileName(),
+            get_class($currentTest->getTestClass()),
+            $methodName,
+            $params
         );
 
-        $this->debug($process->getCommandLine());
-
-        $this->processes[$handle] = $process;
-
-        $process->start(function ($type, $data) use ($methodName, $currentTest) {
+        $process->getProcess()->start(function ($type, $data) use ($methodName, $currentTest) {
             $this->debug(
                 sprintf(
                     '%s::%s [%s] %s',
@@ -176,32 +150,31 @@ class Async extends CodeceptionModule
             );
         });
 
-        return $handle;
+        return $process->getHandle();
     }
 
     /**
      * @param string $handle
+     * @return bool
      */
     public function seeAsyncMethodFinished($handle)
     {
-        assert(isset($this->processes[$handle]));
-        $process = $this->processes[$handle];
-        $this->assertTrue($process->isTerminated());
+        return $this->getProcess($handle)->getProcess()->isTerminated();
     }
 
     /**
      * @param string $handle
+     * @return bool
      */
     public function seeAsyncMethodFinishedSuccessfully($handle)
     {
-        assert(isset($this->processes[$handle]));
-        $process = $this->processes[$handle];
-        $this->assertTrue($process->isTerminated() && $process->isSuccessful());
+        $process = $this->getProcess($handle)->getProcess();
+        return $process->isTerminated() && $process->isSuccessful();
     }
 
     /**
      * @param string $handle
-     * @return PhpProcess
+     * @return Process
      */
     private function getProcess($handle)
     {
@@ -211,14 +184,14 @@ class Async extends CodeceptionModule
 
     /**
      * @param string $handle
-     * @return PhpProcess
+     * @return Process
      */
     private function getFinishedProcess($handle)
     {
         $process = $this->getProcess($handle);
 
-        if ($process->isRunning()) {
-            $process->wait();
+        if ($process->getProcess()->isRunning()) {
+            $process->getProcess()->wait();
         }
 
         return $process;
@@ -231,11 +204,7 @@ class Async extends CodeceptionModule
      */
     public function grabAsyncMethodReturnValue($handle)
     {
-        $this->getFinishedProcess($handle);
-        if (!array_key_exists($handle, $this->returnValues)) {
-            $this->returnValues[$handle] = $this->masterControllers[$handle]->read(self::RESULT_CHANNEL);
-        }
-        return $this->returnValues[$handle];
+        return $this->getFinishedProcess($handle)->getReturnValue();
     }
 
     /**
@@ -244,7 +213,7 @@ class Async extends CodeceptionModule
      */
     public function grabAsyncMethodStatusCode($handle)
     {
-        return $this->getFinishedProcess($handle)->getExitCode();
+        return $this->getFinishedProcess($handle)->getProcess()->getExitCode();
     }
 
     /**
@@ -253,7 +222,7 @@ class Async extends CodeceptionModule
      */
     public function grabAsyncMethodOutput($handle)
     {
-        return $this->getFinishedProcess($handle)->getOutput();
+        return $this->getFinishedProcess($handle)->getProcess()->getOutput();
     }
 
     /**
@@ -262,7 +231,7 @@ class Async extends CodeceptionModule
      */
     public function grabAsyncMethodErrorOutputSoFar($handle)
     {
-        return $this->getProcess($handle)->getErrorOutput();
+        return $this->getProcess($handle)->getProcess()->getErrorOutput();
     }
 
     /**
@@ -271,7 +240,7 @@ class Async extends CodeceptionModule
      */
     public function grabAsyncMethodErrorOutput($handle)
     {
-        return $this->getFinishedProcess($handle)->getErrorOutput();
+        return $this->getFinishedProcess($handle)->getProcess()->getErrorOutput();
     }
 
     /**
@@ -280,8 +249,8 @@ class Async extends CodeceptionModule
     public function haveAllAsyncMethodsFinished()
     {
         foreach ($this->processes as $process) {
-            if ($process->isRunning()) {
-                $process->wait();
+            if ($process->getProcess()->isRunning()) {
+                $process->getProcess()->wait();
             }
         }
     }
@@ -293,7 +262,7 @@ class Async extends CodeceptionModule
      */
     public function read($handle)
     {
-        return $this->masterControllers[$handle]->read(self::MESSAGES_CHANNEL);
+        return $this->getProcess($handle)->getIpc()->read(self::MESSAGES_CHANNEL);
     }
 
     /**
@@ -303,6 +272,6 @@ class Async extends CodeceptionModule
      */
     public function write($handle, $message)
     {
-        $this->masterControllers[$handle]->write(self::MESSAGES_CHANNEL, $message);
+        $this->getProcess($handle)->getIpc()->write(self::MESSAGES_CHANNEL, $message);
     }
 }
