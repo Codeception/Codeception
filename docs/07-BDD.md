@@ -200,7 +200,9 @@ Please note that regular expressions should start and end with `/` char. Regex i
 
 ```php
 <?php
-/** @Given /I am (?:logged|authorized) as "(\w+)"/  */
+/**
+* @Given /I am (?:logged|authorized) as "(\w+)"/
+*/
 function amAuthorized($role)
 {
   // logged or authorized does not matter to us
