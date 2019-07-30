@@ -65,6 +65,7 @@ services:
   - rabbitmq
   - postgresql
   - redis
+  - mysql
 
 before_install:
   - '$(php PruneTest.php)'
