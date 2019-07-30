@@ -129,9 +129,6 @@ EOF;
         }
     }
 
-    /**
-     * @throws ModuleConfigException
-     */
     public function onReconfigure()
     {
         if (!$this->em instanceof \Doctrine\ORM\EntityManagerInterface) {
