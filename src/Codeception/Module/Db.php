@@ -54,6 +54,7 @@ use Codeception\Util\ActionSequence;
  * * ssl_verify_server_cert - disables certificate CN verification (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php)
  * * ssl_cipher - list of one or more permissible ciphers to use for SSL encryption (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-cipher)
  * * databases - include more database configs and switch between them in tests.
+ * * init_command - command to execute when creating the PDO connection (MySQL specific, @see https://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-init-command)
  *
  * ## Example
  *
@@ -73,6 +74,7 @@ use Codeception\Util\ActionSequence;
  *              ssl_ca: '/path/to/ca-cert.pem'
  *              ssl_verify_server_cert: false
  *              ssl_cipher: 'AES256-SHA'
+ *              init_command: 'SET NAMES utf8;'
  *
  * ## Example with multi-dumps
  *     modules:
@@ -540,6 +542,10 @@ class Db extends CodeceptionModule implements DbInterface
             && defined('\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')
         ) {
             $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (boolean) $databaseConfig[ 'ssl_verify_server_cert' ];
+        }
+
+        if (array_key_exists('init_command', $databaseConfig) && defined('\PDO::MYSQL_ATTR_INIT_COMMAND')) {
+            $options[\PDO::MYSQL_ATTR_INIT_COMMAND] = $databaseConfig['init_command'];
         }
 
         try {
