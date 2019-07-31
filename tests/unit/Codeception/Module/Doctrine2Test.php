@@ -228,10 +228,10 @@ class Doctrine2Test extends Unit
             Criteria::expr()->eq('name', 'Test 1'),
         ]);
         $this->module->seeInRepository(PlainEntity::class, [
-            Criteria::expr()->startsWith('name', 'T'),
+            Criteria::expr()->contains('name', 'est'),
         ]);
         $this->module->seeInRepository(PlainEntity::class, [
-            Criteria::expr()->endsWith('name', '1'),
+            Criteria::expr()->in('name', ['Test 1']),
         ]);
     }
 }
