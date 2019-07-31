@@ -122,13 +122,13 @@ class Doctrine2Test extends Unit
         // '_assoc_val' clashes with parameter name for field 'val' of relation 'assoc'.
 
         $this->module->dontSeeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'      => [
+            'assoc'    => [
                 'val' => 'a',
             ],
             '_assoc_val' => 'b',
         ]);
         $this->module->haveInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'      => $this->module->grabEntityFromRepository(
+            'assoc'    => $this->module->grabEntityFromRepository(
                 \QuirkyFieldName\Association::class,
                 [
                     'id' => $this->module->haveInRepository(\QuirkyFieldName\Association::class, [
@@ -139,20 +139,20 @@ class Doctrine2Test extends Unit
             '_assoc_val' => 'b',
         ]);
         $this->module->seeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'      => [
+            'assoc'    => [
                 'val' => 'a',
             ],
             '_assoc_val' => 'b',
         ]);
 
         $this->module->dontSeeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'      => [
+            'assoc'    => [
                 'val' => 'c',
             ],
             '_assoc_val' => 'd',
         ]);
         $this->module->persistEntity(new \QuirkyFieldName\AssociationHost, [
-            'assoc'      => $this->module->grabEntityFromRepository(
+            'assoc'    => $this->module->grabEntityFromRepository(
                 \QuirkyFieldName\Association::class,
                 [
                     'id' => $this->module->haveInRepository(\QuirkyFieldName\Association::class, [
@@ -163,7 +163,7 @@ class Doctrine2Test extends Unit
             '_assoc_val' => 'd',
         ]);
         $this->module->seeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'      => [
+            'assoc'    => [
                 'val' => 'c',
             ],
             '_assoc_val' => 'd',
