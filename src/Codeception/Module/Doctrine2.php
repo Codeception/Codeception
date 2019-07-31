@@ -9,6 +9,8 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionPropertyAccessor;
 use Codeception\Util\Stub;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\ORM\QueryBuilder;
 use ReflectionException;
 
@@ -54,6 +56,32 @@ use ReflectionException;
  * ## Public Properties
  *
  * * `em` - Entity Manager
+ *
+ * ## Note on parameters
+ *
+ * Every method that expects some parameters to be checked against values in the database (`see...()`,
+ * `dontSee...()`, `grab...()`) can accept instance of \Doctrine\Common\Collections\Criteria for more
+ * flexibility, e.g.:
+ *
+ * ``` php
+ * $I->seeInRepository('User', [
+ *     'name' => 'John',
+ *     Criteria::create()->where(
+ *         Criteria::expr()->endsWith('email', '@domain.com')
+ *     ),
+ * ]);
+ * ```
+ *
+ * If criteria is just a `->where(...)` construct, you can pass just expression without criteria wrapper:
+ *
+ * ``` php
+ * $I->seeInRepository('User', [
+ *     'name' => 'John',
+ *     Criteria::expr()->endsWith('email', '@domain.com'),
+ * ]);
+ * ```
+ *
+ * Note that key is ignored, because actual field name is part of criteria and/or expression.
  */
 
 class Doctrine2 extends CodeceptionModule implements DependsOnModule, DataMapper
@@ -586,6 +614,10 @@ EOF;
             }
             if ($val === null) {
                 $qb->andWhere("$alias.$key IS NULL");
+            } elseif ($val instanceof Criteria) {
+                $qb->addCriteria($val);
+            } elseif ($val instanceof Expression) {
+                $qb->addCriteria(Criteria::create()->where($val));
             } else {
                 $qb->andWhere("$alias.$key = ?$paramIndex");
                 $qb->setParameter($paramIndex, $val);
