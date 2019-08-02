@@ -211,12 +211,12 @@ class Doctrine2Test extends Unit
         ]);
         $this->module->seeInRepository(PlainEntity::class, [
             Criteria::create()->where(
-                Criteria::expr()->contains('name', 'est'),
+                Criteria::expr()->contains('name', 'est')
             ),
         ]);
         $this->module->seeInRepository(PlainEntity::class, [
             Criteria::create()->where(
-                Criteria::expr()->in('name', ['Test 1']),
+                Criteria::expr()->in('name', ['Test 1'])
             ),
         ]);
     }
