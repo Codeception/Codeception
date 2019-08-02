@@ -12,6 +12,7 @@ use Codeception\Util\Stub;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\ORM\QueryBuilder;
+use PlainEntity;
 use ReflectionException;
 
 /**
@@ -78,6 +79,15 @@ use ReflectionException;
  * $I->seeInRepository('User', [
  *     'name' => 'John',
  *     Criteria::expr()->endsWith('email', '@domain.com'),
+ * ]);
+ * ```
+ *
+ * Criteria can be used not only to filter data, but also to change order of results:
+ *
+ * ``` php
+ * $I->grabEntitiesFromRepository('User', [
+ *     'status' => 'active',
+ *     Criteria::create()->orderBy(['name' => 'asc']),
  * ]);
  * ```
  *
