@@ -5,7 +5,6 @@ use Codeception\Test\Unit;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 
@@ -122,13 +121,13 @@ class Doctrine2Test extends Unit
         // '_assoc_val' clashes with parameter name for field 'val' of relation 'assoc'.
 
         $this->module->dontSeeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'    => [
+            'assoc'      => [
                 'val' => 'a',
             ],
             '_assoc_val' => 'b',
         ]);
         $this->module->haveInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'    => $this->module->grabEntityFromRepository(
+            'assoc'      => $this->module->grabEntityFromRepository(
                 \QuirkyFieldName\Association::class,
                 [
                     'id' => $this->module->haveInRepository(\QuirkyFieldName\Association::class, [
@@ -139,20 +138,20 @@ class Doctrine2Test extends Unit
             '_assoc_val' => 'b',
         ]);
         $this->module->seeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'    => [
+            'assoc'      => [
                 'val' => 'a',
             ],
             '_assoc_val' => 'b',
         ]);
 
         $this->module->dontSeeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'    => [
+            'assoc'      => [
                 'val' => 'c',
             ],
             '_assoc_val' => 'd',
         ]);
         $this->module->persistEntity(new \QuirkyFieldName\AssociationHost, [
-            'assoc'    => $this->module->grabEntityFromRepository(
+            'assoc'      => $this->module->grabEntityFromRepository(
                 \QuirkyFieldName\Association::class,
                 [
                     'id' => $this->module->haveInRepository(\QuirkyFieldName\Association::class, [
@@ -163,7 +162,7 @@ class Doctrine2Test extends Unit
             '_assoc_val' => 'd',
         ]);
         $this->module->seeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'    => [
+            'assoc'      => [
                 'val' => 'c',
             ],
             '_assoc_val' => 'd',
@@ -233,5 +232,38 @@ class Doctrine2Test extends Unit
         $this->module->seeInRepository(PlainEntity::class, [
             Criteria::expr()->in('name', ['Test 1']),
         ]);
+    }
+
+    public function testOrderBy()
+    {
+        $this->module->haveInRepository(PlainEntity::class, ['name' => 'a']);
+        $this->module->haveInRepository(PlainEntity::class, ['name' => 'b']);
+        $this->module->haveInRepository(PlainEntity::class, ['name' => 'c']);
+
+        $getName = function ($entity) {
+            return $entity->getName();
+        };
+
+        $this->assertEquals(
+            [
+                'a',
+                'b',
+                'c',
+            ],
+            array_map($getName, $this->module->grabEntitiesFromRepository(PlainEntity::class, [
+                Criteria::create()->orderBy(['name' => 'asc']),
+            ]))
+        );
+
+        $this->assertEquals(
+            [
+                'c',
+                'b',
+                'a',
+            ],
+            array_map($getName, $this->module->grabEntitiesFromRepository(PlainEntity::class, [
+                Criteria::create()->orderBy(['name' => 'desc']),
+            ]))
+        );
     }
 }
