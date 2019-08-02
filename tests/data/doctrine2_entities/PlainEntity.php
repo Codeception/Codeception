@@ -23,6 +23,14 @@ class PlainEntity
     private $name;
 
     /**
+     * @return int|null
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return string|null
      */
     public function getName()
