@@ -1,4 +1,4 @@
-FROM php:7.3.7-cli-buster
+FROM php:7.3-cli
 
 MAINTAINER Tobias Munk tobias@diemeisterei.de
 
