@@ -291,7 +291,7 @@ EOF;
      *
      * @param object|object[] $entities
      */
-    public function haveEntitiesRefreshed($entities)
+    public function refreshEntities($entities)
     {
         if (!is_array($entities)) {
             $entities = [$entities];
@@ -305,7 +305,7 @@ EOF;
     /**
      * Performs $em->clear();
      */
-    public function haveEntityManagerCleared()
+    public function clearEntityManager()
     {
         $this->em->clear();
     }

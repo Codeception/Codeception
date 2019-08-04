@@ -350,7 +350,7 @@ class Doctrine2Test extends Unit
         $this->assertEquals('a', $grabbed1->getName());
 
         // Now we explicitly ask EntityManager invalidate its cache:
-        $this->module->haveEntitiesRefreshed($original);
+        $this->module->refreshEntities($original);
 
         // Without grabbing, entity should be updated:
         $this->assertEquals('b', $original->getName());
@@ -374,7 +374,7 @@ class Doctrine2Test extends Unit
         $this->assertEquals('a', $a->getName());
         $this->assertEquals('b', $b->getName());
 
-        $this->module->haveEntitiesRefreshed([$a, $b]);
+        $this->module->refreshEntities([$a, $b]);
 
         $this->assertEquals('c', $a->getName());
         $this->assertEquals('c', $b->getName());
@@ -391,7 +391,7 @@ class Doctrine2Test extends Unit
         $grabbed1 = $this->module->grabEntityFromRepository(PlainEntity::class, ['id' => $id]);
         $this->assertSame($original, $grabbed1);
 
-        $this->module->haveEntityManagerCleared();
+        $this->module->clearEntityManager();
 
         // All entities should be detached, grabbing should result in new object:
         $grabbed2 = $this->module->grabEntityFromRepository(PlainEntity::class, ['id' => $id]);
