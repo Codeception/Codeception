@@ -36,10 +36,12 @@ class Doctrine2Test extends Unit
 
         $dir = __DIR__ . "/../../../data/doctrine2_entities";
 
+        require_once $dir . "/CompositePrimaryKeyEntity.php";
         require_once $dir . "/PlainEntity.php";
         require_once $dir . "/JoinedEntityBase.php";
         require_once $dir . "/JoinedEntity.php";
         require_once $dir . "/EntityWithEmbeddable.php";
+        require_once $dir . "/NonTypicalPrimaryKeyEntity.php";
         require_once $dir . "/QuirkyFieldName/Association.php";
         require_once $dir . "/QuirkyFieldName/AssociationHost.php";
         require_once $dir . "/QuirkyFieldName/Embeddable.php";
@@ -51,10 +53,12 @@ class Doctrine2Test extends Unit
         );
 
         (new SchemaTool($this->em))->createSchema([
+            $this->em->getClassMetadata(CompositePrimaryKeyEntity::class),
             $this->em->getClassMetadata(PlainEntity::class),
             $this->em->getClassMetadata(JoinedEntityBase::class),
             $this->em->getClassMetadata(JoinedEntity::class),
             $this->em->getClassMetadata(EntityWithEmbeddable::class),
+            $this->em->getClassMetadata(NonTypicalPrimaryKeyEntity::class),
             $this->em->getClassMetadata(\QuirkyFieldName\Association::class),
             $this->em->getClassMetadata(\QuirkyFieldName\AssociationHost::class),
             $this->em->getClassMetadata(\QuirkyFieldName\Embeddable::class),
@@ -305,5 +309,22 @@ class Doctrine2Test extends Unit
         $this->expectException(ModuleException::class);
         $this->expectExceptionMessageRegExp('/Fixture is expected to be .* got ".*" instead/');
         $this->module->loadFixtures(1);
+    }
+
+    public function testNonTypicalPrimaryKey()
+    {
+        $primaryKey = $this->module->haveInRepository(NonTypicalPrimaryKeyEntity::class, [
+            'primaryKey' => 'abc',
+        ]);
+        $this->assertEquals('abc', $primaryKey);
+    }
+
+    public function testCompositePrimaryKey()
+    {
+        $res = $this->module->haveInRepository(CompositePrimaryKeyEntity::class, [
+            'integerPart' => 123,
+            'stringPart' => 'abc',
+        ]);
+        $this->assertEquals([123, 'abc'], $res);
     }
 }

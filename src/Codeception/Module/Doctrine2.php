@@ -26,6 +26,8 @@ use ReflectionException;
 use function gettype;
 use function is_object;
 use function is_scalar;
+use function get_class;
+use function is_array;
 
 /**
  * Access the database using [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/).
@@ -385,7 +387,9 @@ EOF;
      * Persists record into repository.
      * This method creates an entity, and sets its properties directly (via reflection).
      * Setters of entity won't be executed, but you can create almost any entity and save it to database.
-     * Returns id using `getId` of newly created entity.
+     *
+     * Returns primary key of newly created entity. Primary key value is extracted using Reflection API.
+     * If primary key is composite, array of values is returned.
      *
      * ```php
      * $I->haveInRepository('Entity\User', array('name' => 'davert'));
@@ -409,9 +413,11 @@ EOF;
         $rpa = new ReflectionPropertyAccessor();
         if (is_object($classNameOrInstance)) {
             $instance = $classNameOrInstance;
+            $className = get_class($instance);
             $rpa->setProperties($instance, $data);
         } elseif (is_string($classNameOrInstance)) {
-            $instance = $rpa->createWithProperties($classNameOrInstance, $data);
+            $className = $classNameOrInstance;
+            $instance = $rpa->createWithProperties($className, $data);
         } else {
             throw new InvalidArgumentException(sprintf('Doctrine2::haveInRepository expects a class name or instance as first argument, got "%s" instead', gettype($classNameOrInstance)));
         }
@@ -419,13 +425,18 @@ EOF;
         $this->em->persist($instance);
         $this->em->flush();
 
-        if (method_exists($instance, 'getId')) {
-            $id = $instance->getId();
-            if (is_scalar($classNameOrInstance)) {
-                $this->debug("$classNameOrInstance entity created with id:$id");
+        $metadata = $this->em->getClassMetadata($className);
+        if ($metadata->isIdentifierComposite) {
+            $pk = [];
+            foreach ($metadata->identifier as $field) {
+                $pk[] = $rpa->getProperty($instance, $field);
             }
-            return $id;
+        } else {
+            $pk = $rpa->getProperty($instance, $metadata->identifier[0]);
         }
+
+        $this->debug("$className entity created with primary key ". var_export($pk, true));
+        return $pk;
     }
 
     /**
