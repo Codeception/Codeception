@@ -2,6 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Lib\Interfaces\DataMapper;
+use Codeception\Lib\Notification;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
@@ -278,10 +279,11 @@ EOF;
 
 
     /**
-     * This is merely and alias to `haveInRepository()`.
+     * This method is deprecated in favor of `haveInRepository()`. It's functionality is exactly the same.
      */
     public function persistEntity($obj, $values = [])
     {
+        Notification::deprecate("Doctrine2::persistEntity is deprecated in favor of Doctrine2::haveInRepository");
         return $this->haveInRepository($obj, $values);
     }
 

@@ -75,10 +75,6 @@ class Doctrine2Test extends Unit
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'Test 1']);
         $this->module->haveInRepository(PlainEntity::class, ['name' => 'Test 1']);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'Test 1']);
-
-        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'Test 2']);
-        $this->module->persistEntity(new PlainEntity, ['name' => 'Test 2']);
-        $this->module->seeInRepository(PlainEntity::class, ['name' => 'Test 2']);
     }
 
     public function testJoinedEntityOwnField()
@@ -86,10 +82,6 @@ class Doctrine2Test extends Unit
         $this->module->dontSeeInRepository(JoinedEntity::class, ['own' => 'Test 1']);
         $this->module->haveInRepository(JoinedEntity::class, ['own' => 'Test 1']);
         $this->module->seeInRepository(JoinedEntity::class, ['own' => 'Test 1']);
-
-        $this->module->dontSeeInRepository(JoinedEntity::class, ['own' => 'Test 2']);
-        $this->module->persistEntity(new JoinedEntity, ['own' => 'Test 2']);
-        $this->module->seeInRepository(JoinedEntity::class, ['own' => 'Test 2']);
     }
 
     public function testJoinedEntityInheritedField()
@@ -97,10 +89,6 @@ class Doctrine2Test extends Unit
         $this->module->dontSeeInRepository(JoinedEntity::class, ['inherited' => 'Test 1']);
         $this->module->haveInRepository(JoinedEntity::class, ['inherited' => 'Test 1']);
         $this->module->seeInRepository(JoinedEntity::class, ['inherited' => 'Test 1']);
-
-        $this->module->dontSeeInRepository(JoinedEntity::class, ['inherited' => 'Test 2']);
-        $this->module->persistEntity(new JoinedEntity, ['inherited' => 'Test 2']);
-        $this->module->seeInRepository(JoinedEntity::class, ['inherited' => 'Test 2']);
     }
 
     public function testEmbeddable()
@@ -108,10 +96,6 @@ class Doctrine2Test extends Unit
         $this->module->dontSeeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 1']);
         $this->module->haveInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 1']);
         $this->module->seeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 1']);
-
-        $this->module->dontSeeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 2']);
-        $this->module->persistEntity(new EntityWithEmbeddable, ['embed.val' => 'Test 2']);
-        $this->module->seeInRepository(EntityWithEmbeddable::class, ['embed.val' => 'Test 2']);
     }
 
     public function testQuirkyAssociationFieldNames()
@@ -143,30 +127,6 @@ class Doctrine2Test extends Unit
             ],
             '_assoc_val' => 'b',
         ]);
-
-        $this->module->dontSeeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'      => [
-                'val' => 'c',
-            ],
-            '_assoc_val' => 'd',
-        ]);
-        $this->module->persistEntity(new \QuirkyFieldName\AssociationHost, [
-            'assoc'      => $this->module->grabEntityFromRepository(
-                \QuirkyFieldName\Association::class,
-                [
-                    'id' => $this->module->haveInRepository(\QuirkyFieldName\Association::class, [
-                        'val' => 'c',
-                    ]),
-                ]
-            ),
-            '_assoc_val' => 'd',
-        ]);
-        $this->module->seeInRepository(\QuirkyFieldName\AssociationHost::class, [
-            'assoc'      => [
-                'val' => 'c',
-            ],
-            '_assoc_val' => 'd',
-        ]);
     }
 
     public function testQuirkyEmbeddableFieldNames()
@@ -184,19 +144,6 @@ class Doctrine2Test extends Unit
         $this->module->seeInRepository(\QuirkyFieldName\EmbeddableHost::class, [
             'embed.val' => 'a',
             'embedval'  => 'b',
-        ]);
-
-        $this->module->dontSeeInRepository(\QuirkyFieldName\EmbeddableHost::class, [
-            'embed.val' => 'c',
-            'embedval'  => 'd',
-        ]);
-        $this->module->persistEntity(new \QuirkyFieldName\EmbeddableHost, [
-            'embed.val' => 'c',
-            'embedval'  => 'd',
-        ]);
-        $this->module->seeInRepository(\QuirkyFieldName\EmbeddableHost::class, [
-            'embed.val' => 'c',
-            'embedval'  => 'd',
         ]);
     }
 
