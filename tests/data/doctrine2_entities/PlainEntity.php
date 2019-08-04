@@ -21,4 +21,12 @@ class PlainEntity
      * @ORM\Column(type="string", nullable=true)
      */
     private $name;
+
+    /**
+     * @return string|null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 }
