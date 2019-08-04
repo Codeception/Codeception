@@ -424,9 +424,9 @@ EOF;
      *
      * ```php
      * <?php
-     * $I->haveFixtures(AppFixtures::class);
-     * $I->haveFixtures([AppFixtures1::class, AppFixtures2::class]);
-     * $I->haveFixtures(new AppFixtures);
+     * $I->loadFixtures(AppFixtures::class);
+     * $I->loadFixtures([AppFixtures1::class, AppFixtures2::class]);
+     * $I->loadFixtures(new AppFixtures);
      * ```
      *
      * By default fixtures are loaded in 'append' mode. To replace all
@@ -434,7 +434,7 @@ EOF;
      *
      * ```php
      * <?php
-     * $I->haveFixtures(AppFixtures::class, false);
+     * $I->loadFixtures(AppFixtures::class, false);
      * ```
      *
      * Note: this method requires `doctrine/data-fixtures` package to be installed.
@@ -444,7 +444,7 @@ EOF;
      * @throws ModuleException
      * @throws ModuleRequireException
      */
-    public function haveFixtures($fixtures, $append = true)
+    public function loadFixtures($fixtures, $append = true)
     {
         if (!class_exists(\Doctrine\Common\DataFixtures\Loader::class)
             || !class_exists(\Doctrine\Common\DataFixtures\Purger\ORMPurger::class)

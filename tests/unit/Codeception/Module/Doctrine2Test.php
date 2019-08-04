@@ -286,7 +286,7 @@ class Doctrine2Test extends Unit
     {
         $this->_preloadFixtures();
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
-        $this->module->haveFixtures(TestFixture1::class);
+        $this->module->loadFixtures(TestFixture1::class);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
     }
 
@@ -295,7 +295,7 @@ class Doctrine2Test extends Unit
         $this->_preloadFixtures();
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
-        $this->module->haveFixtures([TestFixture1::class, TestFixture2::class]);
+        $this->module->loadFixtures([TestFixture1::class, TestFixture2::class]);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
     }
@@ -305,10 +305,10 @@ class Doctrine2Test extends Unit
         $this->_preloadFixtures();
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
-        $this->module->haveFixtures([TestFixture1::class]);
+        $this->module->loadFixtures([TestFixture1::class]);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
-        $this->module->haveFixtures([TestFixture2::class]);
+        $this->module->loadFixtures([TestFixture2::class]);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
     }
@@ -318,10 +318,10 @@ class Doctrine2Test extends Unit
         $this->_preloadFixtures();
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
-        $this->module->haveFixtures([TestFixture1::class]);
+        $this->module->loadFixtures([TestFixture1::class]);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
-        $this->module->haveFixtures([TestFixture2::class], false);
+        $this->module->loadFixtures([TestFixture2::class], false);
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
     }
@@ -331,7 +331,7 @@ class Doctrine2Test extends Unit
         $this->_preloadFixtures();
         $this->expectException(ModuleException::class);
         $this->expectExceptionMessageRegExp('/Fixture class ".*" does not exist/');
-        $this->module->haveFixtures('InvalidFixtureClass');
+        $this->module->loadFixtures('InvalidFixtureClass');
     }
 
     public function testUnsuitableFixtureClassName()
@@ -341,7 +341,7 @@ class Doctrine2Test extends Unit
         $this->expectExceptionMessageRegExp('/Fixture class ".*" does not inherit from/');
         // Somewhat risky, but it's unlikely unit class will
         // ever inherit from a fixture interface:
-        $this->module->haveFixtures(__CLASS__);
+        $this->module->loadFixtures(__CLASS__);
     }
 
     public function testUnsuitableFixtureInstance()
@@ -349,7 +349,7 @@ class Doctrine2Test extends Unit
         $this->_preloadFixtures();
         $this->expectException(ModuleException::class);
         $this->expectExceptionMessageRegExp('/Fixture ".*" does not inherit from/');
-        $this->module->haveFixtures(new \stdClass);
+        $this->module->loadFixtures(new \stdClass);
     }
 
     public function testUnsuitableFixtureType()
@@ -357,6 +357,6 @@ class Doctrine2Test extends Unit
         $this->_preloadFixtures();
         $this->expectException(ModuleException::class);
         $this->expectExceptionMessageRegExp('/Fixture is expected to be .* got ".*" instead/');
-        $this->module->haveFixtures(1);
+        $this->module->loadFixtures(1);
     }
 }
