@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Exception\ModuleException;
 use Codeception\Module\Doctrine2;
 use Codeception\Test\Unit;
 use Doctrine\Common\Collections\Criteria;
@@ -68,6 +69,20 @@ class Doctrine2Test extends Unit
 
         $this->module->_initialize();
         $this->module->_beforeSuite();
+    }
+
+    private function _preloadFixtures()
+    {
+        if (!class_exists(\Doctrine\Common\DataFixtures\Loader::class)
+            || !class_exists(\Doctrine\Common\DataFixtures\Purger\ORMPurger::class)
+            || !class_exists(\Doctrine\Common\DataFixtures\Executor\ORMExecutor::class)) {
+            $this->markTestSkipped('doctrine/data-fixtures is not installed');
+        }
+
+        $dir = __DIR__ . "/../../../data/doctrine2_fixtures";
+
+        require_once $dir . "/TestFixture1.php";
+        require_once $dir . "/TestFixture2.php";
     }
 
     public function testPlainEntity()
@@ -265,5 +280,83 @@ class Doctrine2Test extends Unit
                 Criteria::create()->orderBy(['name' => 'desc']),
             ]))
         );
+    }
+
+    public function testSingleFixture()
+    {
+        $this->_preloadFixtures();
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+        $this->module->loadFixtures(TestFixture1::class);
+        $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+    }
+
+    public function testMultipleFixtures()
+    {
+        $this->_preloadFixtures();
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
+        $this->module->loadFixtures([TestFixture1::class, TestFixture2::class]);
+        $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+        $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
+    }
+
+    public function testAppendFixturesMode()
+    {
+        $this->_preloadFixtures();
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
+        $this->module->loadFixtures([TestFixture1::class]);
+        $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
+        $this->module->loadFixtures([TestFixture2::class]);
+        $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+        $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
+    }
+
+    public function testReplaceFixturesMode()
+    {
+        $this->_preloadFixtures();
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
+        $this->module->loadFixtures([TestFixture1::class]);
+        $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
+        $this->module->loadFixtures([TestFixture2::class], false);
+        $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'from TestFixture1']);
+        $this->module->seeInRepository(PlainEntity::class, ['name' => 'from TestFixture2']);
+    }
+
+    public function testUnknownFixtureClassName()
+    {
+        $this->_preloadFixtures();
+        $this->expectException(ModuleException::class);
+        $this->expectExceptionMessageRegExp('/Fixture class ".*" does not exist/');
+        $this->module->loadFixtures('InvalidFixtureClass');
+    }
+
+    public function testUnsuitableFixtureClassName()
+    {
+        $this->_preloadFixtures();
+        $this->expectException(ModuleException::class);
+        $this->expectExceptionMessageRegExp('/Fixture class ".*" does not inherit from/');
+        // Somewhat risky, but it's unlikely unit class will
+        // ever inherit from a fixture interface:
+        $this->module->loadFixtures(__CLASS__);
+    }
+
+    public function testUnsuitableFixtureInstance()
+    {
+        $this->_preloadFixtures();
+        $this->expectException(ModuleException::class);
+        $this->expectExceptionMessageRegExp('/Fixture ".*" does not inherit from/');
+        $this->module->loadFixtures(new \stdClass);
+    }
+
+    public function testUnsuitableFixtureType()
+    {
+        $this->_preloadFixtures();
+        $this->expectException(ModuleException::class);
+        $this->expectExceptionMessageRegExp('/Fixture is expected to be .* got ".*" instead/');
+        $this->module->loadFixtures(1);
     }
 }

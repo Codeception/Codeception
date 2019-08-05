@@ -29,4 +29,12 @@ class PlainEntity
     {
         return $this->name;
     }
+
+    /**
+     * @param string|null $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
 }

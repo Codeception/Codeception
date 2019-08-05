@@ -9,10 +9,17 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionPropertyAccessor;
 use Codeception\Util\Stub;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Codeception\Exception\ModuleException;
+use Codeception\Exception\ModuleRequireException;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\ORM\QueryBuilder;
 use PlainEntity;
+use Exception;
 use ReflectionException;
 
 /**
@@ -408,6 +415,141 @@ EOF;
             $id = $entityObject->getId();
             $this->debug("$entity entity created with id:$id");
             return $id;
+        }
+    }
+
+    /**
+     * Loads fixtures. Fixture can be specified as a fully qualified class name,
+     * an instance, or an array of class names/instances.
+     *
+     * ```php
+     * <?php
+     * $I->loadFixtures(AppFixtures::class);
+     * $I->loadFixtures([AppFixtures1::class, AppFixtures2::class]);
+     * $I->loadFixtures(new AppFixtures);
+     * ```
+     *
+     * By default fixtures are loaded in 'append' mode. To replace all
+     * data in database, use `false` as second parameter:
+     *
+     * ```php
+     * <?php
+     * $I->loadFixtures(AppFixtures::class, false);
+     * ```
+     *
+     * Note: this method requires `doctrine/data-fixtures` package to be installed.
+     *
+     * @param string|string[]|object[] $fixtures
+     * @param bool $append
+     * @throws ModuleException
+     * @throws ModuleRequireException
+     */
+    public function loadFixtures($fixtures, $append = true)
+    {
+        if (!class_exists(\Doctrine\Common\DataFixtures\Loader::class)
+            || !class_exists(\Doctrine\Common\DataFixtures\Purger\ORMPurger::class)
+            || !class_exists(\Doctrine\Common\DataFixtures\Executor\ORMExecutor::class)) {
+            throw new ModuleRequireException(
+                __CLASS__,
+                'Doctrine fixtures support in unavailable.\n'
+                . 'Please, install doctrine/data-fixtures.'
+            );
+        }
+
+        if (!is_array($fixtures)) {
+            $fixtures = [$fixtures];
+        }
+
+        $loader = new Loader();
+
+        foreach ($fixtures as $fixture) {
+            if (is_string($fixture)) {
+                if (!class_exists($fixture)) {
+                    throw new ModuleException(
+                        __CLASS__,
+                        sprintf(
+                            'Fixture class "%s" does not exist',
+                            $fixture
+                        )
+                    );
+                }
+
+                if (!is_a($fixture, FixtureInterface::class, true)) {
+                    throw new ModuleException(
+                        __CLASS__,
+                        sprintf(
+                            'Fixture class "%s" does not inherit from "%s"',
+                            $fixture,
+                            FixtureInterface::class
+                        )
+                    );
+                }
+
+                try {
+                    $fixtureInstance = new $fixture;
+                } catch (Exception $e) {
+                    throw new ModuleException(
+                        __CLASS__,
+                        sprintf(
+                            'Fixture class "%s" could not be loaded, got %s%s',
+                            $fixture,
+                            get_class($e),
+                            empty($e->getMessage()) ? '' : ': ' . $e->getMessage()
+                        )
+                    );
+                }
+            } elseif (is_object($fixture)) {
+                if (!$fixture instanceof FixtureInterface) {
+                    throw new ModuleException(
+                        __CLASS__,
+                        sprintf(
+                            'Fixture "%s" does not inherit from "%s"',
+                            get_class($fixture),
+                            FixtureInterface::class
+                        )
+                    );
+                }
+
+                $fixtureInstance = $fixture;
+            } else {
+                throw new ModuleException(
+                    __CLASS__,
+                    sprintf(
+                        'Fixture is expected to be an instance or class name, inherited from "%s"; got "%s" instead',
+                        FixtureInterface::class,
+                        is_object($fixture) ? get_class($fixture) ? is_string($fixture) : $fixture : gettype($fixture)
+                    )
+                );
+            }
+
+            try {
+                $loader->addFixture($fixtureInstance);
+            } catch (Exception $e) {
+                throw new ModuleException(
+                    __CLASS__,
+                    sprintf(
+                        'Fixture class "%s" could not be loaded, got %s%s',
+                        get_class($fixtureInstance),
+                        get_class($e),
+                        empty($e->getMessage()) ? '' : ': ' . $e->getMessage()
+                    )
+                );
+            }
+        }
+
+        try {
+            $purger = new ORMPurger($this->em);
+            $executor = new ORMExecutor($this->em, $purger);
+            $executor->execute($loader->getFixtures(), $append);
+        } catch (Exception $e) {
+            throw new ModuleException(
+                __CLASS__,
+                sprintf(
+                    'Fixtures could not be loaded, got %s%s',
+                    get_class($e),
+                    empty($e->getMessage()) ? '' : ': ' . $e->getMessage()
+                )
+            );
         }
     }
 
