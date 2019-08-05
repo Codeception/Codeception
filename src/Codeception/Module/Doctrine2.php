@@ -2,6 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Lib\Interfaces\DataMapper;
+use Codeception\Lib\Notification;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
@@ -18,9 +19,13 @@ use Codeception\Exception\ModuleRequireException;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\ORM\QueryBuilder;
+use InvalidArgumentException;
 use PlainEntity;
 use Exception;
 use ReflectionException;
+use function gettype;
+use function is_object;
+use function is_scalar;
 
 /**
  * Access the database using [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/).
@@ -281,29 +286,12 @@ EOF;
 
 
     /**
-     * Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->persistEntity(new \Entity\User, array('name' => 'Miles'));
-     * $I->persistEntity($user, array('name' => 'Miles'));
-     * ```
-     *
-     * @param $obj
-     * @param array $values
+     * This method is deprecated in favor of `haveInRepository()`. It's functionality is exactly the same.
      */
     public function persistEntity($obj, $values = [])
     {
-        if ($values) {
-            $rpa = new ReflectionPropertyAccessor();
-            $rpa->setProperties($obj, $values);
-            $this->populateEmbeddables($obj, $values);
-        }
-
-        $this->em->persist($obj);
-        $this->em->flush();
+        Notification::deprecate("Doctrine2::persistEntity is deprecated in favor of Doctrine2::haveInRepository");
+        return $this->haveInRepository($obj, $values);
     }
 
     /**
@@ -402,18 +390,40 @@ EOF;
      * ```php
      * $I->haveInRepository('Entity\User', array('name' => 'davert'));
      * ```
+     *
+     * This method also accepts instances as first argument, which is useful when entity constructor
+     * has some arguments:
+     *
+     * ```php
+     * $I->haveInRepository(new User($arg), array('name' => 'davert'));
+     * ```
+     *
+     * Note that both `$em->persist(...)` and `$em->flush()` are called every time.
+     *
+     * @param string|object $classNameOrInstance
+     * @param array $data
+     * @return mixed
      */
-    public function haveInRepository($entity, array $data)
+    public function haveInRepository($classNameOrInstance, array $data = [])
     {
         $rpa = new ReflectionPropertyAccessor();
-        $entityObject = $rpa->createWithProperties($entity, $data);
-        $this->populateEmbeddables($entityObject, $data);
-        $this->em->persist($entityObject);
+        if (is_object($classNameOrInstance)) {
+            $instance = $classNameOrInstance;
+            $rpa->setProperties($instance, $data);
+        } elseif (is_string($classNameOrInstance)) {
+            $instance = $rpa->createWithProperties($classNameOrInstance, $data);
+        } else {
+            throw new InvalidArgumentException(sprintf('Doctrine2::haveInRepository expects a class name or instance as first argument, got "%s" instead', gettype($classNameOrInstance)));
+        }
+        $this->populateEmbeddables($instance, $data);
+        $this->em->persist($instance);
         $this->em->flush();
 
-        if (method_exists($entityObject, 'getId')) {
-            $id = $entityObject->getId();
-            $this->debug("$entity entity created with id:$id");
+        if (method_exists($instance, 'getId')) {
+            $id = $instance->getId();
+            if (is_scalar($classNameOrInstance)) {
+                $this->debug("$classNameOrInstance entity created with id:$id");
+            }
             return $id;
         }
     }
