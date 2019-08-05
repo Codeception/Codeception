@@ -23,10 +23,17 @@ class ReflectionPropertyAccessor
         if (!$obj || !is_object($obj)) {
             throw new InvalidArgumentException('Cannot get property "' . $field . '" of "' . gettype($obj) . '", expecting object');
         }
-        $reflectedEntity = new ReflectionClass(get_class($obj));
-        $property = $reflectedEntity->getProperty($field);
-        $property->setAccessible(true);
-        return $property->getValue($obj);
+        $class = get_class($obj);
+        do {
+            $reflectedEntity = new ReflectionClass($class);
+            if ($reflectedEntity->hasProperty($field)) {
+                $property = $reflectedEntity->getProperty($field);
+                $property->setAccessible(true);
+                return $property->getValue($obj);
+            }
+            $class = get_parent_class($class);
+        } while ($class);
+        throw new InvalidArgumentException('Property "' . $field . '" does not exists in class "' . get_class($obj) . '" and its parents');
     }
 
     /**
