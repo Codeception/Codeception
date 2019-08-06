@@ -46,8 +46,9 @@ use yii\db\Transaction;
  * * `recreateComponents` - (default: []) Some components change their state making them unsuitable for processing multiple requests. In production this is usually
  * not a problem since web apps tend to die and start over after each request. This allows you to list application components that need to be recreated before each request.
  * As a consequence, any components specified here should not be changed inside a test since those changes will get regarded.
- * You can use this module by setting params in your functional.suite.yml:
  * * `recreateApplication` - (default: false) whether to recreate the whole application before each request
+ * * `closeSessionOnRecreateApplication` - (default: true) whether to close the session in between requests inside a single test,
+ * * if recreateApplication is set to true
  * You can use this module by setting params in your functional.suite.yml:
  * ```yaml
  * actor: FunctionalTester
@@ -162,7 +163,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         'responseCleanMethod' => Yii2Connector::CLEAN_CLEAR,
         'requestCleanMethod' => Yii2Connector::CLEAN_RECREATE,
         'recreateComponents' => [],
-        'recreateApplication' => false
+        'recreateApplication' => false,
+        'closeSessionOnRecreateApplication' => true,
     ];
 
     protected $requiredFields = ['configFile'];
