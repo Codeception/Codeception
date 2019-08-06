@@ -29,6 +29,8 @@ if ($return !== 0) {
 }
 
 exec("git diff --name-only $branch --", $files, $return);
+stderr("Result of git diff --name-only $branch --");
+stderr(print_r($files, true));
 if ($return !== 0) {
     stderr("Git diff failed");
     die($return);
