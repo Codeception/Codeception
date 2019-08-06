@@ -9,9 +9,9 @@
 $branch ="3.0";
 
 
-function stderr($message)
+function stderr($message, $eol = true)
 {
-    fwrite(STDERR, $message . "\n");
+    fwrite(STDERR, $message . ($eol ? "\n" : ""));
 }
 
 $currentFramework = getenv('FRAMEWORK');
@@ -50,19 +50,19 @@ $frameworkOnly = true;
 $frameworks = [];
 foreach ($files as $file) {
     $match = false;
-    echo "Testing file: $file\n";
+    stderr("Testing file: $file");
     foreach ($regexes as $framework => $regex) {
-        echo "Checking framework $framework...";
+        stderr("Checking framework $framework...", false);
         if (preg_match($regex, $file)) {
             $match = true;
             $frameworks[$framework] = $framework;
-            echo "MATCH\n";
+            stderr("MATCH");
             break;
         }
-        echo "\n";
+        stderr('X');
     }
     if (!$match) {
-        echo "No framework matched, need to run all tests\n";
+        stderr("No framework matched, need to run all tests");
         $frameworkOnly = false;
         break;
     }
