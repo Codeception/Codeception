@@ -286,8 +286,15 @@ EOF;
     }
 
     /**
-     * Performs $em->refresh() on every passed entity. This is useful in acceptance tests where
-     * entity can become invalid due to external changes (relative to entity manager used in tests).
+     * Performs $em->refresh() on every passed entity:
+     *
+     * ``` php
+     * $I->refreshEntities($user);
+     * $I->refreshEntities([$post1, $post2, $post3]]);
+     * ```
+     *
+     * This can useful in acceptance tests where entity can become invalid due to
+     * external (relative to entity manager used in tests) changes.
      *
      * @param object|object[] $entities
      */
@@ -303,7 +310,11 @@ EOF;
     }
 
     /**
-     * Performs $em->clear();
+     * Performs $em->clear():
+     *
+     * ``` php
+     * $I->clearEntityManager();
+     * ```
      */
     public function clearEntityManager()
     {
