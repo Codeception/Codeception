@@ -46,7 +46,20 @@ class ReflectionPropertyAccessor
     private function setPropertiesForClass($obj, $class, array $data)
     {
         $reflectedEntity = new ReflectionClass($class);
-        $obj = $obj ?: $reflectedEntity->newInstance();
+
+        $constructorParameters = [];
+        $constructor = $reflectedEntity->getConstructor();
+        if (null !== $constructor) {
+            foreach ($constructor->getParameters() as $parameter) {
+                if (array_key_exists($parameter->getName(), $data)) {
+                    $constructorParameters[] = $data[$parameter->getName()];
+                } elseif ($parameter->isOptional()) {
+                    $constructorParameters[] = $parameter->getDefaultValue();
+                }
+            }
+        }
+
+        $obj = $obj ?: $reflectedEntity->newInstance(...$constructorParameters);
         foreach ($reflectedEntity->getProperties() as $property) {
             if (isset($data[$property->name])) {
                 $property->setAccessible(true);
