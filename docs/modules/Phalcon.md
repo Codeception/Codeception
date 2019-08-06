@@ -1158,6 +1158,21 @@ $I->seeRecord('App\Models\Categories', ['name' => 'Testing']);
  * `param array`  $attributes Model attributes
  * `[Part]` orm
 
+### seeNumberOfRecords
+ 
+Checks that given number of records exist in database.
+
+``` php
+<?php
+$I->seeNumberOfRecords('App\Models\Categories', 3, ['name' => 'Testing']);
+?>
+```
+
+ * `param string` $model Model name
+ * `param int` $number int number of records
+ * `param array`  $attributes Model attributes
+ * `[Part]` orm
+
 
 ### seeResponseCodeIs
  

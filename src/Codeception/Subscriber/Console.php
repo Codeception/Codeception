@@ -16,6 +16,7 @@ use Codeception\Step\Comment;
 use Codeception\Suite;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\TestInterface;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatter;
@@ -364,12 +365,26 @@ class Console implements EventSubscriberInterface
 
         if ($failedTest instanceof ScenarioDriven) {
             $this->printScenarioFail($failedTest, $fail);
-
+            $this->printReports($failedTest);
             return;
         }
 
         $this->printException($fail);
         $this->printExceptionTrace($fail);
+    }
+
+    public function printReports(TestInterface $failedTest)
+    {
+        $reports = $failedTest->getMetadata()->getReports();
+        if (count($reports)) {
+            $this->output->writeln('<comment>Artifacts:</comment>');
+            $this->output->writeln('');
+        }
+
+        foreach ($reports as $type => $report) {
+            $type = ucfirst($type);
+            $this->output->writeln("$type: <debug>$report</debug>");
+        }
     }
 
     public function printException($e, $cause = null)

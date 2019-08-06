@@ -18,7 +18,7 @@ class JsonArrayTest extends \Codeception\Test\Unit
 
     public function testXmlConversion()
     {
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<ticket><title>Bug should be fixed</title><user><name>Davert</name></user><labels></labels></ticket>',
             $this->jsonArray->toXml()->saveXML()
         );
@@ -30,7 +30,7 @@ class JsonArrayTest extends \Codeception\Test\Unit
             '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},'
             . '{"user":"John Doe","age":27,"tags":["web-dev","java"]}]'
         );
-        $this->assertContains('<tags>wed-dev</tags>', $jsonArray->toXml()->saveXML());
+        $this->assertStringContainsString('<tags>wed-dev</tags>', $jsonArray->toXml()->saveXML());
         $this->assertEquals(2, $jsonArray->filterByXPath('//user')->length);
     }
 
@@ -55,7 +55,7 @@ class JsonArrayTest extends \Codeception\Test\Unit
      */
     public function testThrowsInvalidArgumentExceptionIfJsonIsInvalid()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         new JsonArray('{"test":');
     }
 
@@ -76,7 +76,7 @@ class JsonArrayTest extends \Codeception\Test\Unit
         $jsonArray = new JsonArray('{"a":{"foo/bar":1,"":2},"b":{"foo/bar":1,"":2},"baz":2}');
         $expectedXml = '<a><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></a>'
             . '<b><invalidTag1>1</invalidTag1><invalidTag2>2</invalidTag2></b><baz>2</baz>';
-        $this->assertContains($expectedXml, $jsonArray->toXml()->saveXML());
+        $this->assertStringContainsString($expectedXml, $jsonArray->toXml()->saveXML());
     }
 
     public function testConvertsArrayHavingSingleElement()

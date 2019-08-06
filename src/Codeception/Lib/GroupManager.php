@@ -5,6 +5,7 @@ use Codeception\Configuration;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
+use Codeception\Test\Gherkin;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -97,7 +98,7 @@ class GroupManager
             if (isset($info['class'])) {
                 $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups($info['class'], $info['name']));
             }
-            $filename = str_replace(['\\\\', '//'], ['\\', '/'], $info['file']);
+            $filename = str_replace(['\\\\', '//', '/./'], ['\\', '/', '/'], $info['file']);
         }
         if ($test instanceof \PHPUnit\Framework\TestCase) {
             $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups(get_class($test), $test->getName(false)));
@@ -116,6 +117,10 @@ class GroupManager
                     $groups[] = $group;
                 }
                 if (strpos($filename . ':' . $test->getName(false), $testPattern) === 0) {
+                    $groups[] = $group;
+                }
+                if ($test instanceof Gherkin
+                    && mb_strtolower($filename . ':' . $test->getMetadata()->getFeature()) === mb_strtolower($testPattern)) {
                     $groups[] = $group;
                 }
                 if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {

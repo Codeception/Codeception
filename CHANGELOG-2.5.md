@@ -1,3 +1,27 @@
+#### 2.5.6
+
+* [WebDriver] Fixed `loadSessionSnapshot` with php-webdriver 1.1.3 by @Naktibalda.
+* [WebDriver] Avoid removing required fields in cookies. #5470 by @JorisVanEijden
+* [PhpBrowser][Frameworks] Support for `formaction` attribute in `button` to submit forms. By @Dezzpil
+* [FTP] Updated to phpseclib v2 constants
+* Fixes: Gherkin Scenarios not loading when specified in group file by @mozillalives. See #5457
+
+
+#### 2.5.5
+
+* [Laravel] Fix missing declaration shouldReport in Laravel 5.8 by @edno
+* [Lumen] add support for Laravel\Lumen\Application::boot by @lendormi
+* [WebDriver] Fixed SetCookie for chromedriver 2.46+ by @JorisVanEijden
+* [ZendExpressive] Fixed recreateApplicationBetweenRequests option, by @artmnv
+* [Gherkin] Add possibility to dynamically load contexts (#5409) by @hansdubois
+* [Build command] Fixed message printing number of methods in actor class
+* Documented usage of IS NULL in Doctrine module by @ThomasLandauer
+
+#### 2.5.4
+
+* Restored compatibility with vlucas/phpdotenv v2
+* [Doctrine] Fixed cleanup issue #5326
+
 #### 2.5.3
 
 * [Db] cleanup database if populator is used

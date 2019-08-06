@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception;
 
 use Codeception\Exception\ModuleException;
@@ -17,7 +18,7 @@ use Codeception\Util\Shared\Asserts;
 abstract class Module
 {
     use Asserts;
-    
+
     /**
      * @var ModuleContainer
      */
@@ -65,7 +66,7 @@ abstract class Module
      * Requires module container (to provide access between modules of suite) and config.
      *
      * @param ModuleContainer $moduleContainer
-     * @param null $config
+     * @param array|null $config
      */
     public function __construct(ModuleContainer $moduleContainer, $config = null)
     {
@@ -176,7 +177,7 @@ abstract class Module
      */
     public function _getName()
     {
-        $moduleName = '\\'.get_class($this);
+        $moduleName = '\\' . get_class($this);
 
         if (strpos($moduleName, ModuleContainer::MODULE_NAMESPACE) === 0) {
             return substr($moduleName, strlen(ModuleContainer::MODULE_NAMESPACE));
@@ -289,6 +290,18 @@ abstract class Module
     }
 
     /**
+     * Short text message to an amount of chars
+     *
+     * @param $message
+     * @param $chars
+     * @return string
+     */
+    protected function shortenMessage($message, $chars = 150)
+    {
+        return mb_substr($message, 0, $chars, 'utf-8');
+    }
+
+    /**
      * Checks that module is enabled.
      *
      * @param $name
@@ -332,8 +345,8 @@ abstract class Module
     /**
      * Get config values or specific config item.
      *
-     * @param null $key
-     * @return array|mixed|null
+     * @param mixed $key
+     * @return mixed the config item's value or null if it doesn't exist
      */
     public function _getConfig($key = null)
     {

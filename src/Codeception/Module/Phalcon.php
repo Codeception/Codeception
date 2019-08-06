@@ -380,6 +380,35 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Checks that number of records exists in database.
+     *
+     * ``` php
+     * <?php
+     * $I->seeNumberOfRecords('App\Models\Categories', 3, ['name' => 'Testing']);
+     * ?>
+     * ```
+     *
+     * @param string $model Model name
+     * @param int $number int number of records
+     * @param array  $attributes Model attributes
+     * @part orm
+     */
+    public function seeNumberOfRecords($model, $number, $attributes = [])
+    {
+        $records = $this->findRecords($model, $attributes);
+        if ($records->count() != $number) {
+            $this->fail(sprintf(
+                "Couldn't find %s records of %s with %s. Found: %s records.",
+                $number,
+                $model,
+                json_encode($attributes),
+                $records->count()
+            ));
+        }
+        $this->debugSection($model, json_encode($records));
+    }
+
+    /**
      * Checks that record does not exist in database.
      *
      * ``` php
@@ -439,21 +468,6 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Alias for `grabServiceFromContainer`.
-     *
-     * Note: Deprecated. Will be removed in Codeception 2.3.
-     *
-     * @param string $service    Service name
-     * @param array  $parameters Parameters [Optional]
-     * @return mixed
-     * @part services
-     */
-    public function grabServiceFromDi($service, array $parameters = [])
-    {
-        return $this->grabServiceFromContainer($service, $parameters);
-    }
-
-    /**
      * Registers a service in the services container and resolve it. This record will be erased after the test.
      * Recommended to use for unit testing.
      *
@@ -484,23 +498,7 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         }
     }
 
-    /**
-     * Alias for `addServiceToContainer`.
-     *
-     * Note: Deprecated. Will be removed in Codeception 2.3.
-     *
-     * @param string $name
-     * @param mixed $definition
-     * @param boolean $shared
-     * @return mixed|null
-     * @part services
-     */
-    public function haveServiceInDi($name, $definition, $shared = false)
-    {
-        return $this->addServiceToContainer($name, $definition, $shared);
-    }
-
-    /**
+     /**
      * Opens web page using route name and parameters.
      *
      * ``` php
@@ -566,15 +564,46 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
         $bind       = [];
         foreach ($attributes as $key => $value) {
             if ($value === null) {
-                $conditions[] = "$key IS NULL";
+                $conditions[] = "[$key] IS NULL";
             } else {
-                $conditions[] = "$key = :$key:";
+                $conditions[] = "[$key] = :$key:";
                 $bind[$key] = $value;
             }
         }
         $query = implode(' AND ', $conditions);
         $this->debugSection('Query', $query);
         return call_user_func_array([$model, 'findFirst'], [
+            [
+                'conditions' => $query,
+                'bind'       => $bind,
+            ]
+        ]);
+    }
+
+    /**
+     * Allows to query the many records that match the specified conditions
+     *
+     * @param string $model Model name
+     * @param array $attributes Model attributes
+     *
+     * @return \Phalcon\Mvc\ResultsetInterface
+     */
+    protected function findRecords($model, $attributes = [])
+    {
+        $this->getModelRecord($model);
+        $conditions = [];
+        $bind       = [];
+        foreach ($attributes as $key => $value) {
+            if ($value === null) {
+                $conditions[] = "[$key] IS NULL";
+            } else {
+                $conditions[] = "[$key] = :$key:";
+                $bind[$key] = $value;
+            }
+        }
+        $query = implode(' AND ', $conditions);
+        $this->debugSection('Query', $query);
+        return call_user_func_array([$model, 'find'], [
             [
                 'conditions' => $query,
                 'bind'       => $bind,

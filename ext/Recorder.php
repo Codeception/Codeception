@@ -39,6 +39,7 @@ use Codeception\Util\Template;
  * * `failure_color` (default: danger) - bootstrap values to be used for color representation for failed tests
  * * `error_color` (default: dark) - bootstrap values to be used for color representation for scenarios where there's an issue occurred while generating a recording
  * * `delete_orphaned` (default: false) - delete recording folders created via previous runs
+ * * `include_microseconds` (default: false) - enable microsecond precision for recorded step time details
  *
  * #### Examples:
  *
@@ -71,15 +72,16 @@ class Recorder extends \Codeception\Extension
 {
     /** @var array */
     protected $config = [
-        'delete_successful' => true,
-        'module'            => 'WebDriver',
-        'template'          => null,
-        'animate_slides'    => true,
-        'ignore_steps'      => [],
-        'success_color'     => 'success',
-        'failure_color'     => 'danger',
-        'error_color'       => 'dark',
-        'delete_orphaned'   => false,
+        'delete_successful'    => true,
+        'module'               => 'WebDriver',
+        'template'             => null,
+        'animate_slides'       => true,
+        'ignore_steps'         => [],
+        'success_color'        => 'success',
+        'failure_color'        => 'danger',
+        'error_color'          => 'dark',
+        'delete_orphaned'      => false,
+        'include_microseconds' => false,
     ];
 
     /** @var string */
@@ -238,7 +240,7 @@ EOF;
     <img class="mx-auto d-block mh-100" src="{{image}}">
     <div class="carousel-caption {{isError}}">
         <h5>{{caption}}</h5>
-        <p>scroll up and down to see the full page</p>
+        <p>Step finished at <span style="color: #3498db">"{{timeStamp}}"</span></p>
     </div>
 </div>
 EOF;
@@ -287,6 +289,12 @@ EOF;
     /** @var bool */
     protected $ansi;
 
+    /** @var array */
+    protected $timeStamps = [];
+
+    /** @var string */
+    private $dateFormat;
+
     public function beforeSuite()
     {
         $this->webDriverModule = null;
@@ -301,6 +309,7 @@ EOF;
         $this->webDriverModule = $this->getModule($this->config['module']);
         $this->skipRecording = [];
         $this->errorMessages = [];
+        $this->dateFormat = $this->config['include_microseconds'] ? 'Y-m-d\TH:i:s.uP' : DATE_ATOM;
         $this->ansi = !isset($this->options['no-ansi']);
         $this->colors = !isset($this->options['no-colors']);
 
@@ -377,6 +386,7 @@ EOF;
         $this->dir = null;
         $this->stepNum = 0;
         $this->slides = [];
+        $this->timeStamps = [];
 
         $this->dir = codecept_output_dir() . "record_{$this->seed}_{$this->getTestName($e)}";
         $testPath = codecept_relative_path(Descriptor::getTestFullName($e->getTest()));
@@ -460,7 +470,9 @@ EOF;
             }
 
             $this->slides = [];
+            $this->timeStamps = [];
             $this->slides[$filename] = new Step\Action('encountered an unexpected error prior to the test execution');
+            $this->timeStamps[$filename] = (new \DateTime())->format($this->dateFormat);
             $status = 'error';
 
             try {
@@ -479,6 +491,7 @@ EOF;
 
         if (!in_array($testPath, $this->skipRecording, true)) {
             foreach ($this->slides as $i => $step) {
+                /** @var Step $step */
                 if ($step->hasFailed()) {
                     $status = 'failure';
                 }
@@ -493,6 +506,7 @@ EOF;
                     ->place('caption', $step->getHtml('#3498db'))
                     ->place('isActive', (int)$i ? '' : 'active')
                     ->place('isError', $status === 'success' ? '' : 'error')
+                    ->place('timeStamp', $this->timeStamps[$i])
                     ->produce();
             }
 
@@ -565,6 +579,7 @@ EOF;
 
         $this->stepNum++;
         $this->slides[$filename] = $e->getStep();
+        $this->timeStamps[$filename] = (new \DateTime())->format($this->dateFormat);
     }
 
     /**

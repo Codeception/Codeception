@@ -17,7 +17,7 @@ class GenerateEnvironmentTest extends BaseCommandRunner
     public function testCreated()
     {
         $this->execute(['env' => 'firefox']);
-        $this->assertContains('firefox config was created in tests/_envs/firefox.yml', $this->output);
+        $this->assertStringContainsString('firefox config was created in tests/_envs/firefox.yml', $this->output);
         $this->assertEquals('tests/_envs/firefox.yml', $this->filename);
     }
 
@@ -25,6 +25,6 @@ class GenerateEnvironmentTest extends BaseCommandRunner
     {
         $this->makeCommand('\Codeception\Command\GenerateEnvironment', false);
         $this->execute(['env' => 'firefox']);
-        $this->assertContains('File tests/_envs/firefox.yml already exists', $this->output);
+        $this->assertStringContainsString('File tests/_envs/firefox.yml already exists', $this->output);
     }
 }

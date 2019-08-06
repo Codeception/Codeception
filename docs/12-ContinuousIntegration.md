@@ -112,7 +112,7 @@ Travis CI is popular service CI with good GitHub integration. Codeception is sel
 php vendor/bin/codecept run
 ```
 
-More details on configuration can be learned from Codeception's [`.travis.yml`](https://github.com/Codeception/Codeception/blob/master/.travis.yml).
+More details on configuration can be learned from Codeception's [`.travis.yml`](https://github.com/Codeception/Codeception/blob/3.0/.travis.yml).
 
 Travis doesn't provide visualization for XML or HTML reports so you can't view reports in format any different than console output. However, Codeception produces nice console output with detailed error reports.
 

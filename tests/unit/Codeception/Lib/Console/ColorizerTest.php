@@ -18,7 +18,7 @@ class ColorizerTest extends Unit
      */
     protected function _setUp()
     {
-        parent::setUp();
+        parent::_setUp();
         $this->colorizer = new Colorizer();
     }
 

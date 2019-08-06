@@ -188,7 +188,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if ($this->config['run_database_seeder']) {
-            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class']]);
+            $this->callArtisan('db:seed', ['--class' => $this->config['database_seeder_class'], '--force' => true ]);
         }
     }
 
@@ -734,7 +734,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         if (! is_null($expectedErrorMessage)) {
-            $this->assertContains($expectedErrorMessage, $viewErrorBag->first($key));
+            $this->assertStringContainsString($expectedErrorMessage, $viewErrorBag->first($key));
         }
     }
 
@@ -1039,10 +1039,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function findModel($modelClass, $attributes = [])
     {
-        $query = $this->getQueryBuilderFromModel($modelClass);
-        foreach ($attributes as $key => $value) {
-            $query->where($key, $value);
-        }
+        $query = $this->buildQuery($modelClass, $attributes);
 
         return $query->first();
     }
@@ -1054,11 +1051,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function findRecord($table, $attributes = [])
     {
-        $query = $this->getQueryBuilderFromTable($table);
-        foreach ($attributes as $key => $value) {
-            $query->where($key, $value);
-        }
-
+        $query = $this->buildQuery($table, $attributes);
         return (array) $query->first();
     }
 
@@ -1069,11 +1062,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function countModels($modelClass, $attributes = [])
     {
-        $query = $this->getQueryBuilderFromModel($modelClass);
-        foreach ($attributes as $key => $value) {
-            $query->where($key, $value);
-        }
-
+        $query = $this->buildQuery($modelClass, $attributes);
         return $query->count();
     }
 
@@ -1084,11 +1073,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function countRecords($table, $attributes = [])
     {
-        $query = $this->getQueryBuilderFromTable($table);
-        foreach ($attributes as $key => $value) {
-            $query->where($key, $value);
-        }
-
+        $query = $this->buildQuery($table, $attributes);
         return $query->count();
     }
 
@@ -1182,6 +1167,63 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
         }
     }
+    
+    /**
+     * Use Laravel's model factory to make a model instance.
+     * Can only be used with Laravel 5.1 and later.
+     *
+     * ``` php
+     * <?php
+     * $I->make('App\User');
+     * $I->make('App\User', ['name' => 'John Doe']);
+     * $I->make('App\User', [], 'admin');
+     * ?>
+     * ```
+     *
+     * @see http://laravel.com/docs/5.1/testing#model-factories
+     * @param string $model
+     * @param array $attributes
+     * @param string $name
+     * @return mixed
+     * @part orm
+     */
+    public function make($model, $attributes = [], $name = 'default')
+    {
+        try {
+            return $this->modelFactory($model, $name)->make($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Could not make model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Use Laravel's model factory to make multiple model instances.
+     * Can only be used with Laravel 5.1 and later.
+     *
+     * ``` php
+     * <?php
+     * $I->makeMultiple('App\User', 10);
+     * $I->makeMultiple('App\User', 10, ['name' => 'John Doe']);
+     * $I->makeMultiple('App\User', 10, [], 'admin');
+     * ?>
+     * ```
+     *
+     * @see http://laravel.com/docs/5.1/testing#model-factories
+     * @param string $model
+     * @param int $times
+     * @param array $attributes
+     * @param string $name
+     * @return mixed
+     * @part orm
+     */
+    public function makeMultiple($model, $times, $attributes = [], $name = 'default')
+    {
+        try {
+            return $this->modelFactory($model, $name, $times)->make($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Could not make model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+        }
+    }
 
     /**
      * @param string $model
@@ -1242,5 +1284,33 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $compiledRoute = ReflectionHelper::readPrivateProperty($route, 'compiled');
 
         return $compiledRoute->getHostRegex();
+    }
+
+    /**
+     * Build Eloquent query with attributes
+     *
+     * @param string $table
+     * @param array $attributes
+     * @return EloquentModel
+     * @part orm
+     */
+    private function buildQuery($table, $attributes = [])
+    {
+        if (class_exists($table)) {
+            $query = $this->getQueryBuilderFromModel($table);
+        } else {
+            $query = $this->getQueryBuilderFromTable($table);
+        }
+
+        foreach ($attributes as $key => $value) {
+            if (\is_array($value)) {
+                call_user_func_array(array($query, "where"), $value);
+            } elseif (is_null($value)) {
+                $query->whereNull($key);
+            } else {
+                $query->where($key, $value);
+            }
+        }
+        return $query;
     }
 }

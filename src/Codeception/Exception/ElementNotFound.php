@@ -7,7 +7,9 @@ class ElementNotFound extends \PHPUnit\Framework\AssertionFailedError
 {
     public function __construct($selector, $message = null)
     {
-        $selector = Locator::humanReadableString($selector);
+        if (!is_string($selector) || strpos($selector, "'") === false) {
+            $selector = Locator::humanReadableString($selector);
+        }
         parent::__construct($message . " element with $selector was not found.");
     }
 }

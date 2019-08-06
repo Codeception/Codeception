@@ -102,7 +102,7 @@ class MongoDbLegacyTest extends \Codeception\PHPUnit\TestCase
 
     public function testSeeElementIsArrayThrowsError()
     {
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->expectException('PHPUnit\Framework\ExpectationFailedException');
 
         $this->userCollection->insert(array('id' => 5, 'trumpets' => array('piccolo', 'bass', 'slide')));
         $this->userCollection->insert(array('id' => 6, 'trumpets' => array('piccolo', 'bass', 'slide')));
@@ -130,7 +130,7 @@ class MongoDbLegacyTest extends \Codeception\PHPUnit\TestCase
         $trumpet->pitch = 'B♭';
         $trumpet->price = array('min' => 458, 'max' => 891);
 
-        $this->setExpectedException('PHPUnit\Framework\ExpectationFailedException');
+        $this->expectException('PHPUnit\Framework\ExpectationFailedException');
 
         $this->userCollection->insert(array('id' => 5, 'trumpet' => $trumpet));
         $this->userCollection->insert(array('id' => 6, 'trumpet' => $trumpet));

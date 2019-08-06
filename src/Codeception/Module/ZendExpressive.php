@@ -33,7 +33,7 @@ class ZendExpressive extends Framework implements DoctrineProvider
 {
     protected $config = [
         'container'                          => 'config/container.php',
-        'recreateApplicationBetweenTests'    => false,
+        'recreateApplicationBetweenTests'    => true,
         'recreateApplicationBetweenRequests' => false,
     ];
 

@@ -283,7 +283,7 @@ EOF;
     public function seeSoapResponseIncludes($xml)
     {
         $xml = $this->canonicalize($xml);
-        $this->assertContains($xml, $this->getXmlResponse()->C14N(), "found in XML Response");
+        $this->assertStringContainsString($xml, $this->getXmlResponse()->C14N(), "found in XML Response");
     }
 
 
@@ -312,7 +312,7 @@ EOF;
     public function dontSeeSoapResponseIncludes($xml)
     {
         $xml = $this->canonicalize($xml);
-        $this->assertNotContains($xml, $this->getXmlResponse()->C14N(), "found in XML Response");
+        $this->assertStringNotContainsString($xml, $this->getXmlResponse()->C14N(), "found in XML Response");
     }
 
     /**
@@ -398,15 +398,6 @@ EOF;
             $this->client->getInternalResponse()->getStatus(),
             "soap response code matches expected"
         );
-    }
-
-    /**
-     * @deprecated use seeSoapResponseCodeIs instead
-     */
-    public function seeResponseCodeIs($code)
-    {
-        Notification::deprecate('SOAP::seeResponseCodeIs deprecated in favor of seeSoapResponseCodeIs', 'SOAP Module');
-        $this->seeSoapResponseCodeIs($code);
     }
 
     /**

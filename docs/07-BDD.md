@@ -200,7 +200,9 @@ Please note that regular expressions should start and end with `/` char. Regex i
 
 ```php
 <?php
-/** @Given /I am (?:logged|authorized) as "(\w+)"/  */
+/**
+* @Given /I am (?:logged|authorized) as "(\w+)"/
+*/
 function amAuthorized($role)
 {
   // logged or authorized does not matter to us
@@ -524,6 +526,17 @@ gherkin:
             fastlogin:
                 - "Step\FastLogin"
 ```
+
+Contexts can be autoloaded as well:
+```yaml
+gherkin:
+    contexts:
+        path: tests/_support/Steps
+        namespace_prefix: Steps
+        default:
+            - AcceptanceTester
+```
+This will load all context from the given path and prefix it with the given namespace.
 
 ## Migrating From Behat
 

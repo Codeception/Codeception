@@ -61,6 +61,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --html                Generate html with results (default: "report.html")
  *  --xml                 Generate JUnit XML Log (default: "report.xml")
  *  --phpunit-xml         Generate PhpUnit XML Log (default: "phpunit-report.xml")
+ *  --no-redirect         Do not redirect to Composer-installed version in vendor/codeception
  *  --tap                 Generate Tap Log (default: "report.tap.log")
  *  --json                Generate Json Log (default: "report.json")
  *  --colors              Use colors in output
@@ -142,6 +143,7 @@ class Run extends Command
             new InputOption('silent', '', InputOption::VALUE_NONE, 'Only outputs suite names and final results'),
             new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
             new InputOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output'),
+            new InputOption('no-redirect', '', InputOption::VALUE_NONE, 'Do not redirect to Composer-installed version in vendor/codeception'),
             new InputOption(
                 'coverage',
                 '',
@@ -259,7 +261,6 @@ class Run extends Command
             $this->output->writeln(
                 "Running with seed: " . $this->options['seed'] . "\n"
             );
-
         }
         if ($this->options['debug']) {
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);

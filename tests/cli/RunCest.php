@@ -318,7 +318,7 @@ EOF
      */
     public function runTestWithFailedScenario(\CliGuy $I, $scenario)
     {
-        if (!extension_loaded('xdebug') && !defined('HHVM_VERSION')) {
+        if (!extension_loaded('xdebug')) {
             $scenario->skip("Xdebug not loaded");
         }
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
@@ -348,7 +348,7 @@ EOF
      */
     public function runTestWithSubSteps(\CliGuy $I, $scenario)
     {
-        if (!extension_loaded('xdebug') && !defined('HHVM_VERSION')) {
+        if (!extension_loaded('xdebug')) {
             $scenario->skip("Xdebug not loaded");
         }
 
@@ -358,10 +358,6 @@ EOF
 Scenario --
  I am in path "."
  I see code coverage files are present
-EOF
-        );
-        // I split this assertion into two, because extra space is printed after "present" on HHVM
-        $I->seeInShellOutput(<<<EOF
    I see file found "c3.php"
    I see file found "composer.json"
    I see in this file "$file"
@@ -380,7 +376,12 @@ EOF
         $I->executeCommand('run unit DependsTest --no-exit');
         $I->seeInShellOutput('Skipped: 1');
         $I->executeCommand('run unit --no-exit');
-        $I->seeInShellOutput('Skipped: 2');
+        if (version_compare(\PHPUnit\Runner\Version::id(), '7.5.5', '<')) {
+            $I->seeInShellOutput('Skipped: 2');
+        } else {
+            //one test fails with Warning instead of Skipped with  PHPUnit >= 7.5.5
+            $I->seeInShellOutput('Skipped: 1');
+        }
     }
 
     public function runGherkinTest(CliGuy $I)

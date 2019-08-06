@@ -59,7 +59,7 @@ abstract class TestsForBrowsers extends TestsForWeb
 
     public function testOpenPageException()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleException');
+        $this->expectException('Codeception\Exception\ModuleException');
         $this->module->see('Hello');
     }
 }

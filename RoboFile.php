@@ -6,13 +6,12 @@ use Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    const STABLE_BRANCH = '2.5';
+    const STABLE_BRANCH = '3.0';
     const REPO_BLOB_URL = 'https://github.com/Codeception/Codeception/blob';
 
     public function release()
     {
         $this->say("CODECEPTION RELEASE: ".\Codeception\Codecept::VERSION);
-        $this->versionBump();
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
@@ -21,6 +20,7 @@ class RoboFile extends \Robo\Tasks
         $this->publishPhar();
         $this->publishGit();
         $this->publishBase(null, \Codeception\Codecept::VERSION);
+        $this->versionBump();
         $this->update(); //update dependencies after release, because buildPhar5 set them to old versions
     }
 
@@ -367,10 +367,16 @@ class RoboFile extends \Robo\Tasks
 
         $this->taskGenDoc('docs/reference/Stub.md')
             ->docClass('Codeception\Stub')
-            ->filterMethods(function(\ReflectionMethod $method) {
-                if ($method->isConstructor() or $method->isDestructor()) return false;
-                if (!$method->isPublic()) return false;
-                if (strpos($method->name, '_') === 0) return false;
+            ->filterMethods(function (\ReflectionMethod $method) {
+                if ($method->isConstructor() or $method->isDestructor()) {
+                    return false;
+                }
+                if (!$method->isPublic()) {
+                    return false;
+                }
+                if (strpos($method->name, '_') === 0) {
+                    return false;
+                }
                 return true;
             })
             ->processMethodDocBlock(
@@ -378,7 +384,8 @@ class RoboFile extends \Robo\Tasks
                     $doc = str_replace(array('@since'), array(' * available since version'), $doc);
                     $doc = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $doc);
                     return $doc;
-                })
+                }
+            )
             ->processProperty(false)
             ->run();
 
@@ -395,11 +402,19 @@ EOF;
             ->processClassDocBlock(false)
             ->processClassSignature(false)
             ->prepend($mocksDocumentation)
-            ->filterMethods(function(\ReflectionMethod $method) {
-                if ($method->isConstructor() or $method->isDestructor()) return false;
-                if (!$method->isPublic()) return false;
-                if (strpos($method->name, '_') === 0) return false;
-                if (strpos($method->name, 'stub') === 0) return false;
+            ->filterMethods(function (\ReflectionMethod $method) {
+                if ($method->isConstructor() or $method->isDestructor()) {
+                    return false;
+                }
+                if (!$method->isPublic()) {
+                    return false;
+                }
+                if (strpos($method->name, '_') === 0) {
+                    return false;
+                }
+                if (strpos($method->name, 'stub') === 0) {
+                    return false;
+                }
                 return true;
             })
             ->run();
@@ -601,7 +616,7 @@ EOF;
                     'source' => self::REPO_BLOB_URL."/".self::STABLE_BRANCH."/src/Codeception/Module/$name.php"
                 ];
                 // building version switcher
-                foreach (['master', '2.3', '2.2', '2.1', '2.0', '1.8'] as $branch) {
+                foreach (['master', '3.0', '2.5', '1.8'] as $branch) {
                     $buttons[$branch] = self::REPO_BLOB_URL."/$branch/docs/modules/$name.md";
                 }
                 $buttonHtml = "\n\n".'<div class="btn-group" role="group" style="float: right" aria-label="...">';
@@ -866,6 +881,11 @@ EOF;
 
         $this->taskReplaceInFile('composer.json')
             ->regex('~^\s+"facebook\/webdriver".*$~m')
+            ->to('')
+            ->run();
+
+        $this->taskReplaceInFile('composer.json')
+            ->regex('~^\s+"hoa\/console".*$~m')
             ->to('')
             ->run();
 

@@ -221,9 +221,11 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         parent::_after($test);
     }
 
-    public function onReconfigure()
+    public function onReconfigure($settings = [])
     {
-        $this->_beforeSuite();
+
+        parent::_beforeSuite($settings);
+        $this->_initialize();
     }
 
     /**
@@ -452,6 +454,9 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     /**
      * Checks if the desired number of emails was sent.
      * If no argument is provided then at least one email must be sent to satisfy the check.
+     * The email is checked using Symfony's profiler. If your app performs a redirect after sending the email,
+     * you need to tell Codeception to not follow this redirect, using REST Module's [stopFollowingRedirects](
+     * https://codeception.com/docs/modules/REST#stopFollowingRedirects) method.
      *
      * ``` php
      * <?php
@@ -503,26 +508,6 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     public function dontSeeEmailIsSent()
     {
         $this->seeEmailIsSent(0);
-    }
-
-    /**
-     * Grabs a service from Symfony DIC container.
-     * Recommended to use for unit testing.
-     *
-     * ``` php
-     * <?php
-     * $em = $I->grabServiceFromContainer('doctrine');
-     * ?>
-     * ```
-     *
-     * @param $service
-     * @return mixed
-     * @part services
-     * @deprecated Use grabService instead
-     */
-    public function grabServiceFromContainer($service)
-    {
-        return $this->grabService($service);
     }
 
     /**

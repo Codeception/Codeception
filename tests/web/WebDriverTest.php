@@ -2,6 +2,7 @@
 
 use Codeception\Step;
 use Codeception\Util\Stub;
+use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
@@ -91,10 +92,8 @@ class WebDriverTest extends TestsForBrowsers
     public function testFailedSeeInPopup()
     {
         $this->notForPhantomJS();
-        $this->setExpectedException(
-            '\PHPUnit\Framework\AssertionFailedError',
-            'Failed asserting that \'Really?\' contains "Different text"'
-        );
+        $this->expectException('\PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage('Failed asserting that \'Really?\' contains "Different text"');
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->seeInPopup('Different text');
@@ -113,10 +112,8 @@ class WebDriverTest extends TestsForBrowsers
     public function testFailedDontSeeInPopup()
     {
         $this->notForPhantomJS();
-        $this->setExpectedException(
-            '\PHPUnit\Framework\AssertionFailedError',
-            'Failed asserting that \'Really?\' does not contain "Really?"'
-        );
+        $this->expectException('\PHPUnit\Framework\AssertionFailedError');
+        $this->expectExceptionMessage('Failed asserting that \'Really?\' does not contain "Really?"');
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->dontSeeInPopup('Really?');
@@ -136,6 +133,17 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->_saveScreenshot(\Codeception\Configuration::outputDir().'testshot.png');
         $this->assertFileExists(\Codeception\Configuration::outputDir().'testshot.png');
         @unlink(\Codeception\Configuration::outputDir().'testshot.png');
+    }
+
+    public function testSnapshot()
+    {
+        $this->module->amOnPage('/');
+        @unlink(\Codeception\Configuration::outputDir().'testshot.png');
+        $testName="debugTest";
+
+        $this->module->makeHtmlSnapshot($testName);
+        $this->assertFileExists(\Codeception\Configuration::outputDir().'debug/'.$testName.'.html');
+        @unlink(\Codeception\Configuration::outputDir().'debug/'.$testName.'.html');
     }
 
     public function testSubmitForm()
@@ -417,12 +425,6 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->appendField('form input[name=terms]', 'Get Off123');
     }
 
-    public function testPauseExecution()
-    {
-        $this->module->amOnPage('/');
-        $this->module->pauseExecution();
-    }
-
     // Issue https://github.com/Codeception/Codeception/pull/875
     public function testFillPasswordOnFormSubmit()
     {
@@ -621,7 +623,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testSeeElementMalformedWdLocator()
     {
-        $this->setExpectedException('Codeception\Exception\MalformedLocatorException');
+        $this->expectException('Codeception\Exception\MalformedLocatorException');
         $this->module->amOnPage('/');
         $this->module->seeElement(WebDriverBy::xpath('H---EY!'));
     }
@@ -685,7 +687,7 @@ class WebDriverTest extends TestsForBrowsers
                         'value' => '_value_',
                         'path' => '/',
                         'domain' => '.3rd-party.net',
-                    ]
+                    ],
                 ];
             }),
         ]);
@@ -893,7 +895,7 @@ class WebDriverTest extends TestsForBrowsers
 
         $lastStep = end($steps);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "TypeError",
             $lastStep->getHtml()
         );
@@ -1079,14 +1081,17 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->see('Lots of valuable data here');
         $this->module->switchToIFrame();
         $this->module->see('Iframe test');
+        $this->module->switchToIFrame('iframe');
+        $this->module->see('Lots of valuable data here');
+        $this->module->switchToIFrame();
+        $this->module->see('Iframe test');
+
     }
 
     public function testGrabPageSourceWhenNotOnPage()
     {
-        $this->setExpectedException(
-            '\Codeception\Exception\ModuleException',
-            'Current url is blank, no page was opened'
-        );
+        $this->expectException('\Codeception\Exception\ModuleException');
+        $this->expectExceptionMessage('Current url is blank, no page was opened');
         $this->module->grabPageSource();
     }
 
