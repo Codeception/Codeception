@@ -50,14 +50,19 @@ $frameworkOnly = true;
 $frameworks = [];
 foreach ($files as $file) {
     $match = false;
+    echo "Testing file: $file\n";
     foreach ($regexes as $framework => $regex) {
+        echo "Checking framework $framework...";
         if (preg_match($regex, $file)) {
             $match = true;
             $frameworks[$framework] = $framework;
+            echo "MATCH\n";
             break;
         }
+        echo "\n";
     }
     if (!$match) {
+        echo "No framework matched, need to run all tests\n";
         $frameworkOnly = false;
         break;
     }
