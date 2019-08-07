@@ -4,6 +4,7 @@ php:
   - 7.0
   - 7.1
   - 7.2
+  - 7.3
 env:
   global:
     - SUITES=
@@ -11,7 +12,7 @@ env:
     - TEST_PATH='framework-tests'
     - SYMFONY_DEPRECATIONS_HELPER=weak
   matrix:
-  - FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL=mongodb
+  - FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb pcov"
   - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
   - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
@@ -28,7 +29,7 @@ matrix:
     env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. PECL="mongodb pcov"
   exclude:
   - php: 7.1
-    env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL=mongodb
+    env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb pcov"
   - php: 7.0
     env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - php: 7.1
@@ -65,15 +66,15 @@ services:
   - mysql
 
 before_install:
-  - '$(php PruneTest.php)'
   - phpenv config-rm xdebug.ini
+  - '$(php PruneTest.php)'
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
   - composer global require hirak/prestissimo
 install:
   - '[[ -z "$CI_USER_TOKEN" ]] || composer config github-oauth.github.com ${CI_USER_TOKEN};'
   # Add extensions
-  - '[[ -z "$PECL" ]] || (yes "" | pecl install -f $PECL)'
+  - '[[ -z "$PECL" ]] || (yes "" | pecl install -qf $PECL)'
   # Clone test repository
   - '[[ "$FRAMEWORK" == "Codeception" ]] || git clone -q --depth=1 $TEST_REPO framework-tests'
   - '[[ "$FRAMEWORK" == "Codeception" ]] || git --git-dir framework-tests/.git log -n 1'
@@ -94,7 +95,8 @@ install:
   - '[[ -z "$FRAMEWORK" ]] || composer install'
   - '[[ "$FRAMEWORK" == "Codeception" ]] || [[ -z "$FRAMEWORK" ]] || composer update -d framework-tests --no-dev --prefer-dist'
 before_script:
-  - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
+  # It seems pecl does this.
+  # - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   # preparing databases
   - '[[ "$FRAMEWORK" != "Codeception" ]] || mysql -e "create database codeception_test;"'
   - '[[ "$FRAMEWORK" != "Codeception" ]] || psql -c "create database codeception_test;" -U postgres'
