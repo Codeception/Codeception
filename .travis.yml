@@ -68,7 +68,8 @@ services:
 
 before_install:
   # Install coverage driver; for php < 7.1 we use xdebug, for >= 7.1 we use pcov
-  - '[[ -z "$COVERAGE" ]] || [[ "$TRAVIS_PHP_VERSION" < 7.1 ]] || (phpenv config-rm xdebug.ini; pecl -q install -f pcov)'
+  - '[[ -z "$COVERAGE" ]] || [[ "$TRAVIS_PHP_VERSION" < 7.1 ]] || (phpenv config-rm xdebug.ini; pecl install -f pcov)'
+  - php -i
   - '$(php PruneTest.php)'
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
