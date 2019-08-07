@@ -424,6 +424,7 @@ EOF;
      * Persists record into repository.
      * This method creates an entity, and sets its properties directly (via reflection).
      * Setters of entity won't be executed, but you can create almost any entity and save it to database.
+     * If the entity has a constructor, for optional parameters the default value will be used and for non-optional parameters the given fields (with a matching name) will be passed when calling the constructor before the properties get set directly (via reflection).
      *
      * Returns primary key of newly created entity. Primary key value is extracted using Reflection API.
      * If primary key is composite, array of values is returned.
