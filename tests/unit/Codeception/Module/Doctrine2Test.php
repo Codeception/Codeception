@@ -120,6 +120,14 @@ class Doctrine2Test extends Unit
         );
     }
 
+    public function testEntityWithConstructorParametersExceptionOnMissingParameter()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Constructor parameter "name" missing');
+
+        $this->module->haveInRepository(EntityWithConstructorParameters::class);
+    }
+
     public function testJoinedEntityOwnField()
     {
         $this->module->dontSeeInRepository(JoinedEntity::class, ['own' => 'Test 1']);

@@ -55,6 +55,10 @@ class ReflectionPropertyAccessor
                     $constructorParameters[] = $parameter->getDefaultValue();
                 } elseif (array_key_exists($parameter->getName(), $data)) {
                     $constructorParameters[] = $data[$parameter->getName()];
+                } else {
+                    throw new InvalidArgumentException(
+                        'Constructor parameter "'.$parameter->getName().'" missing'
+                    );
                 }
             }
         }
