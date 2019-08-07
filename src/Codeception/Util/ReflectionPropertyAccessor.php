@@ -51,10 +51,10 @@ class ReflectionPropertyAccessor
         $constructor = $reflectedEntity->getConstructor();
         if (null !== $constructor) {
             foreach ($constructor->getParameters() as $parameter) {
-                if (array_key_exists($parameter->getName(), $data)) {
-                    $constructorParameters[] = $data[$parameter->getName()];
-                } elseif ($parameter->isOptional()) {
+                if ($parameter->isOptional()) {
                     $constructorParameters[] = $parameter->getDefaultValue();
+                } elseif (array_key_exists($parameter->getName(), $data)) {
+                    $constructorParameters[] = $data[$parameter->getName()];
                 }
             }
         }
