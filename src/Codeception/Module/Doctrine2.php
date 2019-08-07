@@ -440,6 +440,12 @@ EOF;
      * $I->haveInRepository(new User($arg), array('name' => 'davert'));
      * ```
      *
+     * Alternatively, constructor arguments can be passed by name. Given User constructor signature is `__constructor($arg)`, the example above could be rewritten like this:
+     *
+     * ```php
+     * $I->haveInRepository('Entity\User', array('arg' => $arg, 'name' => 'davert'));
+     * ```
+     *
      * If entity has relations, they can be populated too. In case of OneToMany the following format
      * ie expected:
      *
