@@ -1,33 +1,36 @@
 <?php
+
 namespace Codeception\Module;
 
-use Codeception\Lib\Interfaces\DataMapper;
-use Codeception\Lib\Notification;
-use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleConfigException;
+use Codeception\Exception\ModuleException;
+use Codeception\Exception\ModuleRequireException;
+use Codeception\Lib\Interfaces\DataMapper;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
+use Codeception\Lib\Notification;
+use Codeception\Module as CodeceptionModule;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionPropertyAccessor;
 use Codeception\Util\Stub;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Codeception\Exception\ModuleException;
-use Codeception\Exception\ModuleRequireException;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\ORM\QueryBuilder;
-use InvalidArgumentException;
-use PlainEntity;
 use Exception;
+use InvalidArgumentException;
 use ReflectionException;
-use function gettype;
-use function is_object;
-use function is_scalar;
+use function array_merge;
 use function get_class;
+use function gettype;
 use function is_array;
+use function is_object;
+use function is_string;
+use function sprintf;
+use function var_export;
 
 /**
  * Access the database using [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/).
@@ -436,7 +439,37 @@ EOF;
      * $I->haveInRepository(new User($arg), array('name' => 'davert'));
      * ```
      *
-     * Note that both `$em->persist(...)` and `$em->flush()` are called every time.
+     * If entity has relations, they can be populated too. In case of OneToMany the following format
+     * ie expected:
+     *
+     * ```php
+     * $I->haveInRepository('Entity\User', array(
+     *     'name' => 'davert',
+     *     'posts' => array(
+     *         array(
+     *             'title' => 'Post 1',
+     *         ),
+     *         array(
+     *             'title' => 'Post 2',
+     *         ),
+     *     ),
+     * ));
+     * ```
+     *
+     * For ManyToOne format is slightly different:
+     *
+     * ```php
+     * $I->haveInRepository('Entity\User', array(
+     *     'name' => 'davert',
+     *     'post' => array(
+     *         'title' => 'Post 1',
+     *     ),
+     * ));
+     * ```
+     *
+     * This works recursively, so you can create deep structures in a single call.
+     *
+     * Note that both `$em->persist(...)`, $em->refresh(...), and `$em->flush()` are called every time.
      *
      * @param string|object $classNameOrInstance
      * @param array $data
@@ -444,22 +477,148 @@ EOF;
      */
     public function haveInRepository($classNameOrInstance, array $data = [])
     {
-        $rpa = new ReflectionPropertyAccessor();
+        // Here we'll have array of all instances (including any relations) created:
+        $instances = [];
+
+        // Create and/or populate main instance and gather all created relations:
         if (is_object($classNameOrInstance)) {
-            $instance = $classNameOrInstance;
-            $className = get_class($instance);
-            $rpa->setProperties($instance, $data);
+            $instance = $this->populateEntity($classNameOrInstance, $data, $instances);
         } elseif (is_string($classNameOrInstance)) {
-            $className = $classNameOrInstance;
-            $instance = $rpa->createWithProperties($className, $data);
+            $instance = $this->instantiateAndPopulateEntity($classNameOrInstance, $data, $instances);
         } else {
             throw new InvalidArgumentException(sprintf('Doctrine2::haveInRepository expects a class name or instance as first argument, got "%s" instead', gettype($classNameOrInstance)));
         }
+
+        // Flush all changes to database and then refresh all entities. We need this because
+        // currently all assignments are done via Reflection API without using setters, which means
+        // all OneToMany relations won't get set properly as real setter method would use some
+        // Collection operation.
+        $this->em->flush();
+        $this->refreshEntities($instances);
+
+        $pk = $this->extractPrimaryKey($instance);
+
+        $this->debug(get_class($instance) . " entity created with primary key " . var_export($pk, true));
+
+        return $pk;
+    }
+
+    /**
+     * @param string $className
+     * @param array $data
+     * @param array $instances
+     * @return object
+     * @throws ReflectionException
+     */
+    private function instantiateAndPopulateEntity($className, array $data, array &$instances)
+    {
+        $rpa = new ReflectionPropertyAccessor();
+        $instance = $rpa->createWithProperties($className, []);
+        $this->populateEntity($instance, $data, $instances);
+        return $instance;
+    }
+
+    /**
+     * @param object $instance
+     * @param array $data
+     * @param array &$instances
+     * @return object
+     * @throws ReflectionException
+     */
+    private function populateEntity($instance, array $data, array &$instances)
+    {
+        $rpa = new ReflectionPropertyAccessor();
+        $className = get_class($instance);
+        $instances[] = $instance;
+        list($scalars, $relations) = $this->splitScalarsAndRelations($className, $data);
+        $rpa->setProperties(
+            $instance,
+            array_merge(
+                $scalars,
+                $this->instantiateRelations($className, $instance, $relations, $instances)
+            )
+        );
         $this->populateEmbeddables($instance, $data);
         $this->em->persist($instance);
-        $this->em->flush();
+        return $instance;
+    }
+
+    /**
+     * @param string $className
+     * @param array $data
+     * @return array
+     */
+    private function splitScalarsAndRelations($className, array $data)
+    {
+        $scalars = [];
+        $relations = [];
 
         $metadata = $this->em->getClassMetadata($className);
+
+        foreach ($data as $field => $value) {
+            if ($metadata->hasAssociation($field)) {
+                $relations[$field] = $value;
+            } else {
+                $scalars[$field] = $value;
+            }
+        }
+
+        return [$scalars, $relations];
+    }
+
+    /**
+     * @param string $className
+     * @param object $master
+     * @param array $data
+     * @param array &$instances
+     * @return array
+     */
+    private function instantiateRelations($className, $master, array $data, array &$instances)
+    {
+        $metadata = $this->em->getClassMetadata($className);
+
+        foreach ($data as $field => $value) {
+            if (is_array($value) && $metadata->hasAssociation($field)) {
+                unset($data[$field]);
+                if ($metadata->isCollectionValuedAssociation($field)) {
+                    foreach ($value as $subvalue) {
+                        if (!is_array($subvalue)) {
+                            throw new InvalidArgumentException('Association "' . $field . '" of entity "' . $className . '" requires array as input, got "' . gettype($subvalue) . '" instead"');
+                        }
+                        $instance = $this->instantiateAndPopulateEntity(
+                            $metadata->getAssociationTargetClass($field),
+                            array_merge($subvalue, [
+                                $metadata->getAssociationMappedByTargetField($field) => $master,
+                            ]),
+                            $instances
+                        );
+                        $instances[] = $instance;
+                    }
+                } else {
+                    $instance = $this->instantiateAndPopulateEntity(
+                        $metadata->getAssociationTargetClass($field),
+                        $value,
+                        $instances
+                    );
+                    $instances[] = $instance;
+                    $data[$field] = $instance;
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param object $instance
+     * @return array|mixed
+     * @throws ReflectionException
+     */
+    private function extractPrimaryKey($instance)
+    {
+        $className = get_class($instance);
+        $metadata = $this->em->getClassMetadata($className);
+        $rpa = new ReflectionPropertyAccessor();
         if ($metadata->isIdentifierComposite) {
             $pk = [];
             foreach ($metadata->identifier as $field) {
@@ -468,8 +627,6 @@ EOF;
         } else {
             $pk = $rpa->getProperty($instance, $metadata->identifier[0]);
         }
-
-        $this->debug("$className entity created with primary key ". var_export($pk, true));
         return $pk;
     }
 
