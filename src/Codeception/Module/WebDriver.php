@@ -6,7 +6,7 @@ use Codeception\Coverage\Subscriber\LocalServer;
 use Codeception\Exception\ConnectionException;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocatorException;
-use Codeception\Exception\ModuleConfigException as ModuleConfigException;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
@@ -798,12 +798,7 @@ class WebDriver extends CodeceptionModule implements
     public function seeCookie($cookie, array $params = [])
     {
         $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
-        $cookies = array_map(
-            function ($c) {
-                return $c['name'];
-            },
-            $cookies
-        );
+        $cookies = array_column($cookies, 'name');
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertContains($cookie, $cookies);
     }
@@ -811,12 +806,7 @@ class WebDriver extends CodeceptionModule implements
     public function dontSeeCookie($cookie, array $params = [])
     {
         $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
-        $cookies = array_map(
-            function ($c) {
-                return $c['name'];
-            },
-            $cookies
-        );
+        $cookies = array_column($cookies, 'name');
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertNotContains($cookie, $cookies);
     }

@@ -65,7 +65,7 @@ class Autoload
         if ($prepend) {
             array_unshift(self::$map[$prefix], $base_dir);
         } else {
-            array_push(self::$map[$prefix], $base_dir);
+            self::$map[$prefix][] = $base_dir;
         }
     }
 

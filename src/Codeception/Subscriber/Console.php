@@ -293,11 +293,7 @@ class Console implements EventSubscriberInterface
 
     protected function isDetailed($test)
     {
-        if ($test instanceof ScenarioDriven && $this->steps) {
-            return true;
-        }
-
-        return false;
+        return $test instanceof ScenarioDriven && $this->steps;
     }
 
     public function beforeStep(StepEvent $e)

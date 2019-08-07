@@ -79,7 +79,7 @@ class DbPopulator
 
             unset($vars[$key]);
         }
-        return str_replace(array_keys($vars), array_values($vars), $command);
+        return str_replace(array_keys($vars), $vars, $command);
     }
 
     /**

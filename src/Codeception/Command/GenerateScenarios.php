@@ -2,7 +2,7 @@
 namespace Codeception\Command;
 
 use Codeception\Configuration;
-use Codeception\Exception\ConfigurationException as ConfigurationException;
+use Codeception\Exception\ConfigurationException;
 use Codeception\Test\Cest;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Command\Command;

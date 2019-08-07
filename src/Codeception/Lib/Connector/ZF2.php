@@ -3,7 +3,6 @@ namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\ZF2\PersistentServiceManager;
 use Symfony\Component\BrowserKit\Client;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Headers as HttpHeaders;
@@ -44,7 +43,7 @@ class ZF2 extends Client
     }
 
     /**
-     * @param Request $request
+     * @param BrowserKitRequest $request
      *
      * @return Response
      * @throws \Exception
