@@ -26,7 +26,10 @@ class Bootstrap implements EventSubscriberInterface
             return;
         }
 
-        $bootstrap = $settings['path'] . $settings['bootstrap'];
+        $bootstrap = codecept_is_path_absolute($settings['bootstrap'])
+            ? $settings['bootstrap']
+            : $settings['path'] . $settings['bootstrap'];
+
         if (!is_file($bootstrap)) {
             throw new ConfigurationException("Bootstrap file $bootstrap can't be loaded");
         }
