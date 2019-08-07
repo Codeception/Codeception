@@ -7,12 +7,13 @@ php:
   - 7.3
 env:
   global:
+    - COVERAGE=
     - SUITES=
     - PECL=
     - TEST_PATH='framework-tests'
     - SYMFONY_DEPRECATIONS_HELPER=weak
   matrix:
-  - FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb pcov"
+  - FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb" COVERAGE=1
   - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
   - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
@@ -26,10 +27,10 @@ matrix:
   fast_finish: true
   include:
   - php: 7.1
-    env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. PECL="mongodb pcov"
+    env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. PECL="mongodb" COVERAGE=1
   exclude:
   - php: 7.1
-    env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb pcov"
+    env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb" COVERAGE=1
   - php: 7.0
     env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - php: 7.1
@@ -66,7 +67,8 @@ services:
   - mysql
 
 before_install:
-  - phpenv config-rm xdebug.ini
+  # Install coverage driver; for php < 7.1 we use xdebug, for >= 7.1 we use pcov
+  - '[[ -z "$COVERAGE" ]] || [[ "$TRAVIS_PHP_VERSION" > 7.0 ]] || (phpenv config-rm xdebug.ini; pecl -q install -f pcov)'
   - '$(php PruneTest.php)'
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
@@ -74,7 +76,7 @@ before_install:
 install:
   - '[[ -z "$CI_USER_TOKEN" ]] || composer config github-oauth.github.com ${CI_USER_TOKEN};'
   # Add extensions
-  - '[[ -z "$PECL" ]] || (yes "" | pecl install -qf $PECL)'
+  - '[[ -z "$PECL" ]] || (yes "" | pecl -q install -f $PECL)'
   # Clone test repository
   - '[[ "$FRAMEWORK" == "Codeception" ]] || git clone -q --depth=1 $TEST_REPO framework-tests'
   - '[[ "$FRAMEWORK" == "Codeception" ]] || git --git-dir framework-tests/.git log -n 1'
