@@ -798,7 +798,12 @@ class WebDriver extends CodeceptionModule implements
     public function seeCookie($cookie, array $params = [])
     {
         $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
-        $cookies = array_column($cookies, 'name');
+        $cookies = array_map(
+            function ($c) {
+                return $c['name'];
+            },
+            $cookies
+        );
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertContains($cookie, $cookies);
     }
@@ -806,7 +811,12 @@ class WebDriver extends CodeceptionModule implements
     public function dontSeeCookie($cookie, array $params = [])
     {
         $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
-        $cookies = array_column($cookies, 'name');
+        $cookies = array_map(
+            function ($c) {
+                return $c['name'];
+            },
+            $cookies
+        );
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertNotContains($cookie, $cookies);
     }
