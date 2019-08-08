@@ -594,6 +594,43 @@ EOF
         $newOutput = preg_replace('~\(\d\.\d+s\)~m', '', $newOutput);
 
         $I->assertNotEquals($output, $newOutput, 'order of tests is the same');
+        }
+
+    public function runCustomBootstrap(\CliGuy $I)
+    {
+        $I->wantTo('execute one test');
+        $I->executeCommand('run dummy --bootstrap tests/_init.php');
+        $I->seeInShellOutput('--INIT--');
+        $I->seeInShellOutput("'hello' => 'world'");
+        $I->seeInShellOutput("OK (");
+    }
+
+    public function throwErrorIfBootstrapNotFound(\CliGuy $I)
+    {
+        $I->wantTo('execute one test');
+        $I->executeCommand('run dummy --bootstrap tests/init.php --no-exit 2>&1', false);
+        $I->dontSeeInShellOutput('--INIT--');
+        $I->seeInShellOutput("can't be loaded");
+        $I->dontSeeInShellOutput("OK (");
+    }
+
+
+    public function runBootstrapInGlobalConfig(\CliGuy $I)
+    {
+        $I->wantTo('execute one test');
+        $I->executeCommand('run dummy -c codeception.bootstrap.yml');
+        $I->seeInShellOutput('--INIT--');
+        $I->seeInShellOutput("'hello' => 'world'");
+        $I->seeInShellOutput("OK (");
+    }
+
+    public function runBootstrapInSuiteConfig(\CliGuy $I)
+    {
+        $I->wantTo('execute one test');
+        $I->executeCommand('run dummy.bootstrap');
+        $I->seeInShellOutput('--INIT--');
+        $I->seeInShellOutput("'hello' => 'world'");
+        $I->seeInShellOutput("OK (");
     }
 
 }

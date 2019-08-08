@@ -277,7 +277,7 @@ class Configuration
 
         $bootstrap = codecept_is_path_absolute($bootstrap)
             ? $bootstrap
-            : $path . $bootstrap;
+            : rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $bootstrap;
 
 
         if (!file_exists($bootstrap)) {
