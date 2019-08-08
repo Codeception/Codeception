@@ -277,7 +277,6 @@ EOF;
         $this->em->clear();
     }
 
-
     /**
      * Performs $em->flush();
      */
@@ -286,6 +285,41 @@ EOF;
         $this->em->flush();
     }
 
+    /**
+     * Performs $em->refresh() on every passed entity:
+     *
+     * ``` php
+     * $I->refreshEntities($user);
+     * $I->refreshEntities([$post1, $post2, $post3]]);
+     * ```
+     *
+     * This can useful in acceptance tests where entity can become invalid due to
+     * external (relative to entity manager used in tests) changes.
+     *
+     * @param object|object[] $entities
+     */
+    public function refreshEntities($entities)
+    {
+        if (!is_array($entities)) {
+            $entities = [$entities];
+        }
+
+        foreach ($entities as $entity) {
+            $this->em->refresh($entity);
+        }
+    }
+
+    /**
+     * Performs $em->clear():
+     *
+     * ``` php
+     * $I->clearEntityManager();
+     * ```
+     */
+    public function clearEntityManager()
+    {
+        $this->em->clear();
+    }
 
     /**
      * This method is deprecated in favor of `haveInRepository()`. It's functionality is exactly the same.

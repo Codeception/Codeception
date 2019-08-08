@@ -327,4 +327,75 @@ class Doctrine2Test extends Unit
         ]);
         $this->assertEquals([123, 'abc'], $res);
     }
+
+    public function testRefresh()
+    {
+        // We have an entity:
+        $original = new PlainEntity;
+        $this->module->persistEntity($original, ['name' => 'a']);
+        $id = $original->getId();
+
+        // If we grab entity, original one should be retrieved:
+        $this->assertSame($original, $this->module->grabEntityFromRepository(PlainEntity::class, ['id' => $id]));
+
+        // Here comes external change:
+        $this->em->getConnection()->executeUpdate('UPDATE PlainEntity SET name = ? WHERE id = ?', ['b', $id]);
+
+        // Our original entity still has old data:
+        $this->assertEquals('a', $original->getName());
+
+        // Grabbing it again should not work as EntityManager still does not know about external change:
+        $grabbed1 = $this->module->grabEntityFromRepository(PlainEntity::class, ['id' => $id]);
+        $this->assertSame($original, $grabbed1);
+        $this->assertEquals('a', $grabbed1->getName());
+
+        // Now we explicitly ask EntityManager invalidate its cache:
+        $this->module->refreshEntities($original);
+
+        // Without grabbing, entity should be updated:
+        $this->assertEquals('b', $original->getName());
+
+        // Grabbing it again should also work:
+        $grabbed2 = $this->module->grabEntityFromRepository(PlainEntity::class, ['id' => $id]);
+        $this->assertSame($original, $grabbed2);
+        $this->assertEquals('b', $grabbed2->getName());
+    }
+
+    public function testRefreshingMultipleEntities()
+    {
+        $a = new PlainEntity;
+        $this->module->persistEntity($a, ['name' => 'a']);
+
+        $b = new PlainEntity;
+        $this->module->persistEntity($b, ['name' => 'b']);
+
+        $this->em->getConnection()->executeUpdate('UPDATE PlainEntity SET name = ?', ['c']);
+
+        $this->assertEquals('a', $a->getName());
+        $this->assertEquals('b', $b->getName());
+
+        $this->module->refreshEntities([$a, $b]);
+
+        $this->assertEquals('c', $a->getName());
+        $this->assertEquals('c', $b->getName());
+    }
+
+    public function testClear()
+    {
+        // We have an entity:
+        $original = new PlainEntity;
+        $this->module->persistEntity($original);
+        $id = $original->getId();
+
+        // If we grab entity, original one should be retrieved:
+        $grabbed1 = $this->module->grabEntityFromRepository(PlainEntity::class, ['id' => $id]);
+        $this->assertSame($original, $grabbed1);
+
+        $this->module->clearEntityManager();
+
+        // All entities should be detached, grabbing should result in new object:
+        $grabbed2 = $this->module->grabEntityFromRepository(PlainEntity::class, ['id' => $id]);
+        $this->assertNotSame($original, $grabbed2);
+        $this->assertNotSame($grabbed1, $grabbed2);
+    }
 }
