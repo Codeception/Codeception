@@ -22,4 +22,28 @@ class JoinedEntityBase
      * @ORM\Column(type="string", nullable=true)
      */
     private $inherited;
+
+    /**
+     * @return int|null
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getInherited()
+    {
+        return $this->inherited;
+    }
+
+    /**
+     * @param string|null $inherited
+     */
+    public function setInherited($inherited)
+    {
+        $this->inherited = $inherited;
+    }
 }

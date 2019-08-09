@@ -36,4 +36,36 @@ class EmbeddableHost
     {
         $this->embed = new Embeddable;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Embeddable
+     */
+    public function getEmbed()
+    {
+        return $this->embed;
+    }
+
+    /**
+     * @param string|null $embedval
+     */
+    public function setEmbedval($embedval)
+    {
+        $this->embedval = $embedval;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmbedval()
+    {
+        return $this->embedval;
+    }
 }

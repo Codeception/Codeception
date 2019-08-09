@@ -1,13 +1,11 @@
 <?php
 
-namespace QuirkyFieldName;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class AssociationHost
+class QuirkySetters
 {
     /**
      * @var int|null
@@ -19,18 +17,11 @@ class AssociationHost
     private $id;
 
     /**
-     * @var Association|null
-     *
-     * @ORM\OneToOne(targetEntity="Association")
-     */
-    private $assoc;
-
-    /**
      * @var string|null
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $_assoc_val;
+    private $name;
 
     /**
      * @return int|null
@@ -40,19 +31,29 @@ class AssociationHost
         return $this->id;
     }
 
-    /**
-     * @param Association|null $assoc
-     */
-    public function setAssoc($assoc)
+    public function getCustomProperty($property)
     {
-        $this->assoc = $assoc;
+        return $this->{$property};
+    }
+
+    public function setCustomProperty($property, $value)
+    {
+        $this->{$property} = '[c]' . $value;
     }
 
     /**
-     * @param string|null $assoc_val
+     * @param string|null $name
      */
-    public function setAssocVal($assoc_val)
+    public function setName($name)
     {
-        $this->_assoc_val = $assoc_val;
+        $this->name = '[set]' . $name;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }

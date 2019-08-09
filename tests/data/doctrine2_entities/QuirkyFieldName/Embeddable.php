@@ -15,4 +15,20 @@ class Embeddable
      * @ORM\Column(type="string", nullable=true)
      */
     private $val;
+
+    /**
+     * @param string|null $val
+     */
+    public function setVal($val)
+    {
+        $this->val = $val;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getVal()
+    {
+        return $this->val;
+    }
 }

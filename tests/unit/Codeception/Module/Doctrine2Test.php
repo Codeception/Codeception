@@ -49,6 +49,7 @@ class Doctrine2Test extends Unit
         require_once $dir . "/MultilevelRelations/A.php";
         require_once $dir . "/MultilevelRelations/B.php";
         require_once $dir . "/MultilevelRelations/C.php";
+        require_once $dir . "/QuirkySetters.php";
 
         $this->em = EntityManager::create(
             ['url' => 'sqlite:///:memory:'],
@@ -69,6 +70,7 @@ class Doctrine2Test extends Unit
             $this->em->getClassMetadata(\MultilevelRelations\A::class),
             $this->em->getClassMetadata(\MultilevelRelations\B::class),
             $this->em->getClassMetadata(\MultilevelRelations\C::class),
+            $this->em->getClassMetadata(\QuirkySetters::class),
         ]);
 
         $this->module = new Doctrine2(make_container(), [
@@ -468,5 +470,33 @@ class Doctrine2Test extends Unit
         $this->assertSame($bbb1->getA(), $aaa);
         $this->assertSame($bbb2->getA(), $aaa);
         $this->assertSame($ccc->getB(), $bbb2);
+    }
+
+    public function testDefaultPropertyAccessorStrategy()
+    {
+        $this->module->haveInRepository(QuirkySetters::class, ['name' => 'abc']);
+        $this->module->seeInRepository(QuirkySetters::class, ['name' => 'abc']);
+    }
+
+    public function testReflectionPropertyAccessorStrategy()
+    {
+        $this->module->setPropertyAccessorStrategy('reflection');
+        $this->module->haveInRepository(QuirkySetters::class, ['name' => 'abc']);
+        $this->module->seeInRepository(QuirkySetters::class, ['name' => 'abc']);
+    }
+
+    public function testSymfonyPropertyAccessorStrategy()
+    {
+        $this->module->setPropertyAccessorStrategy('symfony');
+        $this->module->haveInRepository(QuirkySetters::class, ['name' => 'abc']);
+        $this->module->seeInRepository(QuirkySetters::class, ['name' => '[set]abc']);
+    }
+
+    public function testCustomPropertyAccessorStrategy()
+    {
+        require_once __DIR__ . "/../../../data/CustomPropertyAccessorStrategy.php";
+        $this->module->setPropertyAccessorStrategy('CustomPropertyAccessorStrategy');
+        $this->module->haveInRepository(QuirkySetters::class, ['name' => 'abc']);
+        $this->module->seeInRepository(QuirkySetters::class, ['name' => '[c]abc']);
     }
 }

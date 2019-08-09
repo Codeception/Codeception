@@ -10,7 +10,7 @@ use function get_parent_class;
 use function gettype;
 use function is_object;
 
-class ReflectionPropertyAccessor
+class ReflectionPropertyAccessor implements PropertyAccessorStrategy
 {
     /**
      * @param object $obj

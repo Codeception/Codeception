@@ -28,4 +28,20 @@ class EntityWithEmbeddable
     {
         $this->embed = new SampleEmbeddable();
     }
+
+    /**
+     * @return int|null
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return SampleEmbeddable
+     */
+    public function getEmbed()
+    {
+        return $this->embed;
+    }
 }

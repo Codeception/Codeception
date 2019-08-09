@@ -32,4 +32,20 @@ class Association
     {
         return $this->id;
     }
+
+    /**
+     * @param string|null $val
+     */
+    public function setVal($val)
+    {
+        $this->val = $val;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getVal()
+    {
+        return $this->val;
+    }
 }

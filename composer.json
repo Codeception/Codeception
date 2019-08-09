@@ -46,7 +46,8 @@
         "symfony/process": ">=2.7 <5.0",
         "doctrine/orm": "^2",
         "doctrine/annotations": "^1",
-        "doctrine/data-fixtures": "^1"
+        "doctrine/data-fixtures": "^1",
+        "symfony/property-access": "^4"
     },
     "suggest": {
         "aws/aws-sdk-php": "For using AWS Auth in REST module and Queue module",

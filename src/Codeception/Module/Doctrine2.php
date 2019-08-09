@@ -11,8 +11,10 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\Lib\Notification;
 use Codeception\Module as CodeceptionModule;
 use Codeception\TestInterface;
+use Codeception\Util\PropertyAccessorStrategy;
 use Codeception\Util\ReflectionPropertyAccessor;
 use Codeception\Util\Stub;
+use Codeception\Util\SymfonyPropertyAccessor;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
@@ -20,11 +22,13 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
 use InvalidArgumentException;
+use Exception;
 use ReflectionException;
 use function array_merge;
 use function get_class;
+use function class_exists;
+use function class_implements;
 use function gettype;
 use function is_array;
 use function is_object;
@@ -117,7 +121,8 @@ class Doctrine2 extends CodeceptionModule implements DependsOnModule, DataMapper
     protected $config = [
         'cleanup' => true,
         'connection_callback' => false,
-        'depends' => null
+        'depends' => null,
+        'accessor' => 'reflection',
     ];
 
     protected $dependencyMessage = <<<EOF
@@ -146,6 +151,11 @@ EOF;
      */
     private $dependentModule;
 
+    /**
+     * @var PropertyAccessorStrategy
+     */
+    private $propertyAccessorStrategy;
+
     public function _depends()
     {
         if ($this->config['connection_callback']) {
@@ -162,6 +172,7 @@ EOF;
     public function _beforeSuite($settings = [])
     {
         $this->retrieveEntityManager();
+        $this->propertyAccessorStrategy = $this->createPropertyAccessorStrategy($this->config['accessor']);
     }
 
     public function _before(TestInterface $test)
@@ -213,6 +224,40 @@ EOF;
 
             $this->em->getConnection()->beginTransaction();
             $this->debugSection('Database', 'Transaction started');
+        }
+
+        $this->propertyAccessorStrategy = $this->createPropertyAccessorStrategy($this->config['accessor']);
+    }
+
+    /**
+     * @param string|null $name
+     * @return PropertyAccessorStrategy
+     * @throws ModuleConfigException
+     */
+    private function createPropertyAccessorStrategy($name)
+    {
+        switch ($name) {
+            case null:
+            case 'reflection':
+                return new ReflectionPropertyAccessor();
+                break;
+
+            case 'symfony':
+                return new SymfonyPropertyAccessor();
+
+            default:
+                if (!class_exists($name) || !in_array(PropertyAccessorStrategy::class, class_implements($name), true)) {
+                    throw new ModuleConfigException(
+                        __CLASS__,
+                        "Property accessor strategy is invalid.\n \n"
+                        . "Please specify `accessor` config option with one of the following values: \n"
+                        . "`reflection` -- to use Reflection API (default),\n"
+                        . "`symfony` -- to use `symfony/property-access`\n"
+                        . "fully qualified class name -- to use custom strategy\n"
+                        . "(it must implement \Codeception\Util\PropertyAccessorStrategy)."
+                    );
+                }
+                return new $name;
         }
     }
 
@@ -278,6 +323,31 @@ EOF;
             $property->setValue($em, []);
         }
         $this->em->clear();
+    }
+
+    /**
+     * Sets property accessor strategy:
+     *
+     * ``` php
+     * $I->setPropertyAccessorStrategy('reflection');
+     * $I->setPropertyAccessorStrategy('symfony');
+     * $I->setPropertyAccessorStrategy('Custom\Accessor\StrategyClass');
+     * ```
+     *
+     * Strategy is effective for current test only. Before every test it is reset to value
+     * configured by `accessor` option. Possible values:
+     *
+     * `reflection` -- use Reflection API (default)
+     * `symfony` -- use `symfony/property-access` package
+     * fully qualified class name -- to use custom strategy (it must implement
+     * \Codeception\Util\PropertyAccessorStrategy interface).
+     *
+     * @param string $name
+     * @throws ModuleConfigException
+     */
+    public function setPropertyAccessorStrategy($name)
+    {
+        $this->propertyAccessorStrategy = $this->createPropertyAccessorStrategy($name);
     }
 
     /**
@@ -421,6 +491,14 @@ EOF;
     }
 
     /**
+     * @return PropertyAccessorStrategy
+     */
+    private function getPropertyAccessorStrategy()
+    {
+        return $this->propertyAccessorStrategy;
+    }
+
+    /**
      * Persists record into repository.
      * This method creates an entity, and sets its properties directly (via reflection).
      * Setters of entity won't be executed, but you can create almost any entity and save it to database.
@@ -527,11 +605,10 @@ EOF;
      */
     private function populateEntity($instance, array $data, array &$instances)
     {
-        $rpa = new ReflectionPropertyAccessor();
         $className = get_class($instance);
         $instances[] = $instance;
         list($scalars, $relations) = $this->splitScalarsAndRelations($className, $data);
-        $rpa->setProperties(
+        $this->getPropertyAccessorStrategy()->setProperties(
             $instance,
             array_merge(
                 $scalars,
@@ -612,20 +689,19 @@ EOF;
     /**
      * @param object $instance
      * @return array|mixed
-     * @throws ReflectionException
      */
     private function extractPrimaryKey($instance)
     {
         $className = get_class($instance);
         $metadata = $this->em->getClassMetadata($className);
-        $rpa = new ReflectionPropertyAccessor();
+        $pas = $this->getPropertyAccessorStrategy();
         if ($metadata->isIdentifierComposite) {
             $pk = [];
             foreach ($metadata->identifier as $field) {
-                $pk[] = $rpa->getProperty($instance, $field);
+                $pk[] = $pas->getProperty($instance, $field);
             }
         } else {
-            $pk = $rpa->getProperty($instance, $metadata->identifier[0]);
+            $pk = $pas->getProperty($instance, $metadata->identifier[0]);
         }
         return $pk;
     }
@@ -778,11 +854,10 @@ EOF;
      *
      * @param object $entityObject
      * @param array $data
-     * @throws ReflectionException
      */
     private function populateEmbeddables($entityObject, array $data)
     {
-        $rpa = new ReflectionPropertyAccessor();
+        $pas = $this->getPropertyAccessorStrategy();
         $metadata = $this->em->getClassMetadata(get_class($entityObject));
         foreach (array_keys($metadata->embeddedClasses) as $embeddedField) {
             $embeddedData = [];
@@ -793,7 +868,7 @@ EOF;
                 }
             }
             if ($embeddedData) {
-                $rpa->setProperties($rpa->getProperty($entityObject, $embeddedField), $embeddedData);
+                $pas->setProperties($pas->getProperty($entityObject, $embeddedField), $embeddedData);
             }
         }
     }

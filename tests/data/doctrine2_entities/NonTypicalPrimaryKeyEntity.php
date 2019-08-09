@@ -13,4 +13,20 @@ class NonTypicalPrimaryKeyEntity
      * @ORM\Column(type="string")
      */
     private $primaryKey;
+
+    /**
+     * @param int|null $primaryKey
+     */
+    public function setPrimaryKey($primaryKey)
+    {
+        $this->primaryKey = $primaryKey;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
 }
