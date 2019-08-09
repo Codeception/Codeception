@@ -17,7 +17,6 @@ use GuzzleHttp\Psr7\Uri as Psr7Uri;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
 
 class Guzzle extends Client
@@ -253,7 +252,7 @@ class Guzzle extends Client
         return $request->getParameters();
     }
 
-    protected function extractMultipartFormData(Request $request)
+    protected function extractMultipartFormData(BrowserKitRequest $request)
     {
         if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH'])) {
             return [];
