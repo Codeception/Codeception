@@ -46,6 +46,9 @@ class Doctrine2Test extends Unit
         require_once $dir . "/QuirkyFieldName/AssociationHost.php";
         require_once $dir . "/QuirkyFieldName/Embeddable.php";
         require_once $dir . "/QuirkyFieldName/EmbeddableHost.php";
+        require_once $dir . "/MultilevelRelations/A.php";
+        require_once $dir . "/MultilevelRelations/B.php";
+        require_once $dir . "/MultilevelRelations/C.php";
 
         $this->em = EntityManager::create(
             ['url' => 'sqlite:///:memory:'],
@@ -63,6 +66,9 @@ class Doctrine2Test extends Unit
             $this->em->getClassMetadata(\QuirkyFieldName\AssociationHost::class),
             $this->em->getClassMetadata(\QuirkyFieldName\Embeddable::class),
             $this->em->getClassMetadata(\QuirkyFieldName\EmbeddableHost::class),
+            $this->em->getClassMetadata(\MultilevelRelations\A::class),
+            $this->em->getClassMetadata(\MultilevelRelations\B::class),
+            $this->em->getClassMetadata(\MultilevelRelations\C::class),
         ]);
 
         $this->module = new Doctrine2(make_container(), [
@@ -332,7 +338,7 @@ class Doctrine2Test extends Unit
     {
         // We have an entity:
         $original = new PlainEntity;
-        $this->module->persistEntity($original, ['name' => 'a']);
+        $this->module->haveInRepository($original, ['name' => 'a']);
         $id = $original->getId();
 
         // If we grab entity, original one should be retrieved:
@@ -364,10 +370,10 @@ class Doctrine2Test extends Unit
     public function testRefreshingMultipleEntities()
     {
         $a = new PlainEntity;
-        $this->module->persistEntity($a, ['name' => 'a']);
+        $this->module->haveInRepository($a, ['name' => 'a']);
 
         $b = new PlainEntity;
-        $this->module->persistEntity($b, ['name' => 'b']);
+        $this->module->haveInRepository($b, ['name' => 'b']);
 
         $this->em->getConnection()->executeUpdate('UPDATE PlainEntity SET name = ?', ['c']);
 
@@ -384,7 +390,7 @@ class Doctrine2Test extends Unit
     {
         // We have an entity:
         $original = new PlainEntity;
-        $this->module->persistEntity($original);
+        $this->module->haveInRepository($original);
         $id = $original->getId();
 
         // If we grab entity, original one should be retrieved:
@@ -397,5 +403,70 @@ class Doctrine2Test extends Unit
         $grabbed2 = $this->module->grabEntityFromRepository(PlainEntity::class, ['id' => $id]);
         $this->assertNotSame($original, $grabbed2);
         $this->assertNotSame($grabbed1, $grabbed2);
+    }
+
+    public function testManyToOneRecursiveEntityCreation()
+    {
+        $this->module->haveInRepository(\MultilevelRelations\C::class, [
+            'name' => 'ccc',
+            'b'    => [
+                'name' => 'bbb',
+                'a'    => [
+                    'name' => 'aaa',
+                ],
+            ],
+        ]);
+
+        $aaa = $this->module->grabEntityFromRepository(\MultilevelRelations\A::class, ['name' => 'aaa']);
+        $this->assertNotNull($aaa);
+
+        $bbb = $this->module->grabEntityFromRepository(\MultilevelRelations\B::class, ['name' => 'bbb']);
+        $this->assertNotNull($bbb);
+
+        $ccc = $this->module->grabEntityFromRepository(\MultilevelRelations\C::class, ['name' => 'ccc']);
+        $this->assertNotNull($ccc);
+
+        $this->assertSame($ccc->getB(), $bbb);
+        $this->assertSame($bbb->getA(), $aaa);
+        $this->assertSame($ccc->getB()->getA(), $aaa);
+    }
+
+    public function testOneToManyRecursiveEntityCreation()
+    {
+        $this->module->haveInRepository(\MultilevelRelations\A::class, [
+            'name' => 'aaa',
+            'b'    => [
+                [
+                    'name' => 'bbb1',
+                ],
+                [
+                    'name' => 'bbb2',
+                    'c'    => [
+                        [
+                            'name' => 'ccc',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $aaa = $this->module->grabEntityFromRepository(\MultilevelRelations\A::class, ['name' => 'aaa']);
+        $this->assertNotNull($aaa);
+
+        $bbb1 = $this->module->grabEntityFromRepository(\MultilevelRelations\B::class, ['name' => 'bbb1']);
+        $this->assertNotNull($bbb1);
+
+        $bbb2 = $this->module->grabEntityFromRepository(\MultilevelRelations\B::class, ['name' => 'bbb2']);
+        $this->assertNotNull($bbb2);
+
+        $ccc = $this->module->grabEntityFromRepository(\MultilevelRelations\C::class, ['name' => 'ccc']);
+        $this->assertNotNull($ccc);
+
+        $this->assertContains($bbb1, $aaa->getB()->toArray());
+        $this->assertContains($bbb2, $aaa->getB()->toArray());
+        $this->assertContains($ccc, $bbb2->getC()->toArray());
+        $this->assertSame($bbb1->getA(), $aaa);
+        $this->assertSame($bbb2->getA(), $aaa);
+        $this->assertSame($ccc->getB(), $bbb2);
     }
 }
