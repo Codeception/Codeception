@@ -520,7 +520,8 @@ EOF;
     private function instantiateAndPopulateEntity($className, array $data, array &$instances)
     {
         $rpa = new ReflectionPropertyAccessor();
-        $instance = $rpa->createWithProperties($className, []);
+        list($scalars,) = $this->splitScalarsAndRelations($className, $data);
+        $instance = $rpa->createWithProperties($className, $scalars);
         $this->populateEntity($instance, $data, $instances);
         return $instance;
     }
