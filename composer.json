@@ -47,7 +47,7 @@
         "doctrine/orm": "^2",
         "doctrine/annotations": "^1",
         "doctrine/data-fixtures": "^1",
-        "symfony/property-access": "^4"
+        "symfony/property-access": "^3"
     },
     "suggest": {
         "aws/aws-sdk-php": "For using AWS Auth in REST module and Queue module",
