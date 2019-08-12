@@ -67,7 +67,7 @@ services:
   - mysql
 
 before_install:
-  # Install coverage driver; for php < 7.1 we use xdebug, for >= 7.1 we use pcov
+  # Install coverage driver; for php < 7.2 we use xdebug, for >= 7.2 we use pcov, pcov supports 7.1, but phpunit only supports pcov from 8.0 which requires php 7.2s
   - '[[ -z "$COVERAGE" ]] || [[ "$TRAVIS_PHP_VERSION" < 7.1 ]] || (phpenv config-rm xdebug.ini; pecl install -f pcov)'
   - php -i
   - '$(php PruneTest.php)'
