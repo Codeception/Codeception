@@ -1,10 +1,10 @@
 language: php
 php:
   - 5.6
-  #- 7.0
+  - 7.0
   - 7.1
-  #- 7.2
-  #- 7.3
+  - 7.2
+  - 7.3
 env:
   global:
     - COVERAGE=
@@ -26,10 +26,11 @@ env:
 matrix:
   fast_finish: true
   include:
-  - php: 7.1
+  # Run our coverage suite on 7.2 (so it uses pcov)
+  - php: 7.2
     env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. PECL="mongodb" COVERAGE=1
   exclude:
-  - php: 7.1
+  - php: 7.2
     env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb" COVERAGE=1
   - php: 7.0
     env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
@@ -45,8 +46,6 @@ matrix:
     env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
   - php: 7.0
     env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-  - php: 7.2
-    env: FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
 addons:
   postgresql: "9.6"
 
