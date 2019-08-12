@@ -570,7 +570,6 @@ trait Asserts
      * @param        $expected
      * @param        $actual
      * @param string $message
-     * @param float  $delta
      */
     protected function assertEqualsCanonicalizing($expected, $actual, $message = '')
     {
