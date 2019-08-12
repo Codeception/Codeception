@@ -563,4 +563,17 @@ trait Asserts
     {
         \Codeception\PHPUnit\TestCase::assertIsNotCallable($actual, $message);
     }
+
+    /**
+     * Checks that two canonicalized variables are equal.
+     *
+     * @param        $expected
+     * @param        $actual
+     * @param string $message
+     * @param float  $delta
+     */
+    protected function assertEqualsCanonicalizing($expected, $actual, $message = '')
+    {
+        \PHPUnit\Framework\Assert::assertEqualsCanonicalizing($expected, $actual, $message);
+    }
 }
