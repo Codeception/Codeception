@@ -67,6 +67,7 @@ class Asserts extends CodeceptionModule
         assertIsNotString  as public;
         assertIsNotScalar  as public;
         assertIsNotCallable  as public;
+        assertEqualsCanonicalizing as public;
         fail as public;
     }
 
