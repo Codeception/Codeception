@@ -283,7 +283,7 @@ class Configuration
         if (!file_exists($bootstrap)) {
             throw new ConfigurationException("Bootstrap file $bootstrap can't be loaded");
         }
-        include_once $bootstrap;
+        require_once $bootstrap;
     }
 
     protected static function loadSuites()
