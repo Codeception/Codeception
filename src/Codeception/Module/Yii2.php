@@ -20,36 +20,62 @@ use yii\db\Transaction;
 
 /**
  * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
- * It initializes Yii framework in test environment and provides actions for functional testing.
+ *
+ * It initializes the Yii framework in a test environment and provides actions
+ * for functional testing.
+ *
  * ## Application state during testing
+ *
  * This section details what you can expect when using this module.
- * * You will get a fresh application in `\Yii::$app` at the start of each test (available in the test and in `_before()`).
- * * Inside your test you may change application state; however these changes will be lost when doing a request if you have enabled `recreateApplication`.
- * * When executing a request via one of the request functions the `request` and `response` component are both recreated.
- * * After a request the whole application is available for inspection / interaction.
- * * You may use multiple database connections, each will use a separate transaction; to prevent accidental mistakes we
- * will warn you if you try to connect to the same database twice but we cannot reuse the same connection.
+ *
+ * * You will get a fresh application in `\Yii::$app` at the start of each test
+ *   (available in the test and in `_before()`).
+ * * Inside your test you may change application state; however these changes
+ *   will be lost when doing a request if you have enabled `recreateApplication`.
+ * * When executing a request via one of the request functions the `request`
+ *   and `response` component are both recreated.
+ * * After a request the whole application is available for inspection /
+ *   interaction.
+ * * You may use multiple database connections, each will use a separate
+ *   transaction; to prevent accidental mistakes we will warn you if you try to
+ *   connect to the same database twice but we cannot reuse the same connection.
  *
  * ## Config
  *
- * * `configFile` *required* - the path to the application config file. File should be configured for test environment and return configuration array.
+ * * `configFile` *required* - path to the application config file. The file
+ *   should be configured for the test environment and return a configuration
+ *   array.
  * * `entryUrl` - initial application url (default: http://localhost/index-test.php).
- * * `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
- * * `transaction` - (default: true) wrap all database connection inside a transaction and roll it back after the test. Should be disabled for acceptance testing..
- * * `cleanup` - (default: true) cleanup fixtures after the test
- * * `ignoreCollidingDSN` - (default: false) When 2 database connections use the same DSN but different settings an exception will be thrown, set this to true to disable this behavior.
- * * `fixturesMethod` - (default: _fixtures) Name of the method used for creating fixtures.
- * * `responseCleanMethod` - (default: clear) Method for cleaning the response object. Note that this is only for multiple requests inside a single test case.
- * Between test casesthe whole application is always recreated
- * * `requestCleanMethod` - (default: recreate) Method for cleaning the request object. Note that this is only for multiple requests inside a single test case.
- * Between test cases the whole application is always recreated
- * * `recreateComponents` - (default: []) Some components change their state making them unsuitable for processing multiple requests. In production this is usually
- * not a problem since web apps tend to die and start over after each request. This allows you to list application components that need to be recreated before each request.
- * As a consequence, any components specified here should not be changed inside a test since those changes will get regarded.
- * * `recreateApplication` - (default: false) whether to recreate the whole application before each request
- * * `closeSessionOnRecreateApplication` - (default: true) whether to close the session in between requests inside a single test,
- * * if recreateApplication is set to true
- * You can use this module by setting params in your functional.suite.yml:
+ * * `entryScript` - front script title (like: index-test.php). If not set it's
+ *   taken from `entryUrl`.
+ * * `transaction` - (default: `true`) wrap all database connection inside a
+ *   transaction and roll it back after the test. Should be disabled for
+ *   acceptance testing.
+ * * `cleanup` - (default: `true`) cleanup fixtures after the test
+ * * `ignoreCollidingDSN` - (default: `false`) When 2 database connections use
+ *   the same DSN but different settings an exception will be thrown. Set this to
+ *   true to disable this behavior.
+ * * `fixturesMethod` - (default: `_fixtures`) Name of the method used for
+ *   creating fixtures.
+ * * `responseCleanMethod` - (default: `clear`) Method for cleaning the
+ *   response object. Note that this is only for multiple requests inside a
+ *   single test case. Between test cases the whole application is always
+ *   recreated.
+ * * `requestCleanMethod` - (default: `recreate`) Method for cleaning the
+ *   request object. Note that this is only for multiple requests inside a single
+ *   test case. Between test cases the whole application is always recreated.
+ * * `recreateComponents` - (default: `[]`) Some components change their state
+ *   making them unsuitable for processing multiple requests. In production
+ *   this is usually not a problem since web apps tend to die and start over
+ *   after each request. This allows you to list application components that
+ *   need to be recreated before each request.  As a consequence, any
+ *   components specified here should not be changed inside a test since those
+ *   changes will get discarded.
+ * * `recreateApplication` - (default: `false`) whether to recreate the whole
+ *   application before each request
+ *
+ * You can use this module by setting params in your `functional.suite.yml`:
+ *
  * ```yaml
  * actor: FunctionalTester
  * modules:
@@ -60,9 +86,11 @@ use yii\db\Transaction;
  *
  * ### Parts
  *
- * By default all available methods are loaded, but you can specify parts to select only needed actions and avoid conflicts.
+ * By default all available methods are loaded, but you can also use the `part`
+ * option to select only the needed actions and to avoid conflicts. The
+ * avilable parts are:
  *
- * * `init` - use module only for initialization (for acceptance tests).
+ * * `init` - use the module only for initialization (for acceptance tests).
  * * `orm` - include only `haveRecord/grabRecord/seeRecord/dontSeeRecord` actions.
  * * `fixtures` - use fixtures inside tests with `haveFixtures/grabFixture/grabFixtures` actions.
  * * `email` - include email actions `seeEmailsIsSent/grabLastSentEmail/...`
@@ -100,7 +128,7 @@ use yii\db\Transaction;
  *             browser: firefox
  *         - Yii2:
  *             configFile: 'config/test.php'
- *             part: ORM # allow to use AR methods
+ *             part: orm # allow to use AR methods
  *             transaction: false # don't wrap test in transaction
  *             cleanup: false # don't cleanup the fixtures
  *             entryScript: index-test.php
@@ -108,8 +136,10 @@ use yii\db\Transaction;
  *
  * ## Fixtures
  *
- * This module allows to use [fixtures](http://www.yiiframework.com/doc-2.0/guide-test-fixtures.html) inside a test. There are two options for that.
- * Fixtures can be loaded using [haveFixtures](#haveFixtures) method inside a test:
+ * This module allows to use
+ * [fixtures](http://www.yiiframework.com/doc-2.0/guide-test-fixtures.html)
+ * inside a test. There are two ways to do that. Fixtures can either be loaded
+ * with the [haveFixtures](#haveFixtures) method inside a test:
  *
  * ```php
  * <?php
@@ -117,7 +147,7 @@ use yii\db\Transaction;
  * ```
  *
  * or, if you need to load fixtures before the test, you
- * can specify fixtures with `_fixtures` method of a testcase:
+ * can specify fixtures in the `_fixtures` method of a test case:
  *
  * ```php
  * <?php
@@ -129,15 +159,16 @@ use yii\db\Transaction;
  * ```
  *
  * ## URL
- * This module provide to use native URL formats of Yii2 for all codeception commands that use url for work.
- * This commands allows input like:
+ *
+ * With this module you can also use Yii2's URL format for all codeception
+ * commands that expect a URL:
  *
  * ```php
  * <?php
  * $I->amOnPage(['site/view','page'=>'about']);
  * $I->amOnPage('index-test.php?site/index');
  * $I->amOnPage('http://localhost/index-test.php?site/index');
- * $I->sendAjaxPostRequest(['/user/update', 'id' => 1], ['UserForm[name]' => 'G.Hopper');
+ * $I->sendAjaxPostRequest(['/user/update', 'id' => 1], ['UserForm[name]' => 'G.Hopper']);
  * ```
  *
  * ## Status
@@ -389,7 +420,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Authorizes user on a site without submitting login form.
+     * Authenticates a user on a site without submitting a login form.
      * Use it for fast pragmatic authorization in functional tests.
      *
      * ```php
@@ -401,7 +432,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * $admin = \app\models\User::findByUsername('admin');
      * $I->amLoggedInAs($admin);
      * ```
-     * Requires `user` component to be enabled and configured.
+     * Requires the `user` component to be enabled and configured.
      *
      * @param $user
      * @throws ModuleException
@@ -419,7 +450,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Creates and loads fixtures from a config.
-     * Signature is the same as for `fixtures()` method of `yii\test\FixtureTrait`
+     * The signature is the same as for the `fixtures()` method of `yii\test\FixtureTrait`
      *
      * ```php
      * <?php
@@ -432,8 +463,10 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      * ]);
      * ```
      *
-     * Note: if you need to load fixtures before the test (probably before the cleanup transaction is started;
-     * `cleanup` options is `true` by default), you can specify fixtures with _fixtures method of a testcase
+     * Note: if you need to load fixtures before a test (probably before the
+     * cleanup transaction is started; `cleanup` option is `true` by default),
+     * you can specify the fixtures in the `_fixtures()` method of a test case
+     *
      * ```php
      * <?php
      * // inside Cest file or Codeception\TestCase\Unit
@@ -446,7 +479,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      *     ];
      * }
      * ```
-     * instead of defining `haveFixtures` in Cest `_before`
+     * instead of calling `haveFixtures` in Cest `_before`
      *
      * @param $fixtures
      * @part fixtures
@@ -484,8 +517,9 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Gets a fixture by name.
-     * Returns a Fixture instance. If a fixture is an instance of `\yii\test\BaseActiveFixture` a second parameter
-     * can be used to return a specific model:
+     * Returns a Fixture instance. If a fixture is an instance of
+     * `\yii\test\BaseActiveFixture` a second parameter can be used to return a
+     * specific model:
      *
      * ```php
      * <?php
@@ -493,13 +527,13 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      *
      * $users = $I->grabFixture('users');
      *
-     * // get first user by key, if a fixture is instance of ActiveFixture
+     * // get first user by key, if a fixture is an instance of ActiveFixture
      * $user = $I->grabFixture('users', 'user1');
      * ```
      *
      * @param $name
      * @return mixed
-     * @throws ModuleException if a fixture is not found
+     * @throws ModuleException if the fixture is not found
      * @part fixtures
      */
     public function grabFixture($name, $index = null)
@@ -519,7 +553,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Inserts record into the database.
+     * Inserts a record into the database.
      *
      * ``` php
      * <?php
@@ -545,7 +579,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Checks that record exists in database.
+     * Checks that a record exists in the database.
      *
      * ``` php
      * $I->seeRecord('app\models\User', array('name' => 'davert'));
@@ -565,7 +599,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Checks that record does not exist in database.
+     * Checks that a record does not exist in the database.
      *
      * ``` php
      * $I->dontSeeRecord('app\models\User', array('name' => 'davert'));
@@ -585,7 +619,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Retrieves record from database
+     * Retrieves a record from the database
      *
      * ``` php
      * $category = $I->grabRecord('app\models\User', array('name' => 'davert'));
@@ -629,17 +663,39 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Similar to amOnPage but accepts route as first argument and params as second
+     * Similar to `amOnPage` but accepts a route as first argument and params as second
      *
      * ```
      * $I->amOnRoute('site/view', ['page' => 'about']);
      * ```
      *
+     * @param string $route A route
+     * @param array $params Additional route parameters
      */
     public function amOnRoute($route, array $params = [])
     {
         array_unshift($params, $route);
         $this->amOnPage($params);
+    }
+
+    /**
+     * Opens the page for the given relative URI or route.
+     *
+     * ``` php
+     * <?php
+     * // opens front page
+     * $I->amOnPage('/');
+     * // opens /register page
+     * $I->amOnPage('/register');
+     * // opens customer view page for id 25
+     * $I->amOnPage(['customer/view', 'id' => 25]);
+     * ```
+     *
+     * @param string|array $page the URI or route in array format
+     */
+    public function amOnPage($page)
+    {
+        parent::amOnPage($page);
     }
 
     /**
@@ -660,7 +716,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Gets a component from Yii container. Throws exception if component is not available
+     * Gets a component from the Yii container. Throws an exception if the
+     * component is not available
      *
      * ```php
      * <?php
@@ -682,7 +739,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Checks that email is sent.
+     * Checks that an email is sent.
      *
      * ```php
      * <?php
@@ -718,8 +775,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Returns array of all sent email messages.
-     * Each message implements `yii\mail\MessageInterface` interface.
-     * Useful to perform additional checks using `Asserts` module:
+     * Each message implements the `yii\mail\MessageInterface` interface.
+     * Useful to perform additional checks using the `Asserts` module:
      *
      * ```php
      * <?php
@@ -742,7 +799,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Returns last sent email:
+     * Returns the last sent email:
      *
      * ```php
      * <?php
@@ -790,7 +847,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * This function creates the CSRF Cookie.
+     * Creates the CSRF Cookie.
      * @param string $val The value of the CSRF token
      * @return string[] Returns an array containing the name of the CSRF param and the masked CSRF token.
      */
