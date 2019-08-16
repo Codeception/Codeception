@@ -520,8 +520,15 @@ EOF;
     private function instantiateAndPopulateEntity($className, array $data, array &$instances)
     {
         $rpa = new ReflectionPropertyAccessor();
-        list($scalars,) = $this->splitScalarsAndRelations($className, $data);
-        $instance = $rpa->createWithProperties($className, $scalars);
+        list($scalars,$relations) = $this->splitScalarsAndRelations($className, $data);
+        // Pass relations that are already objects to the constructor, too
+        $properties = array_merge(
+            $scalars,
+            array_filter($relations, function ($relation) {
+                return is_object($relation);
+            })
+        );
+        $instance = $rpa->createWithProperties($className, $properties);
         $this->populateEntity($instance, $data, $instances);
         return $instance;
     }
