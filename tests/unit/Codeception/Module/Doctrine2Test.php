@@ -38,6 +38,7 @@ class Doctrine2Test extends Unit
 
         require_once $dir . "/CompositePrimaryKeyEntity.php";
         require_once $dir . "/PlainEntity.php";
+        require_once $dir . "/EntityWithConstructorParameters.php";
         require_once $dir . "/JoinedEntityBase.php";
         require_once $dir . "/JoinedEntity.php";
         require_once $dir . "/EntityWithEmbeddable.php";
@@ -58,6 +59,7 @@ class Doctrine2Test extends Unit
         (new SchemaTool($this->em))->createSchema([
             $this->em->getClassMetadata(CompositePrimaryKeyEntity::class),
             $this->em->getClassMetadata(PlainEntity::class),
+            $this->em->getClassMetadata(EntityWithConstructorParameters::class),
             $this->em->getClassMetadata(JoinedEntityBase::class),
             $this->em->getClassMetadata(JoinedEntity::class),
             $this->em->getClassMetadata(EntityWithEmbeddable::class),
@@ -100,6 +102,30 @@ class Doctrine2Test extends Unit
         $this->module->dontSeeInRepository(PlainEntity::class, ['name' => 'Test 1']);
         $this->module->haveInRepository(PlainEntity::class, ['name' => 'Test 1']);
         $this->module->seeInRepository(PlainEntity::class, ['name' => 'Test 1']);
+    }
+
+    public function testEntityWithConstructorParameters()
+    {
+        $this->module->dontSeeInRepository(
+            EntityWithConstructorParameters::class,
+            ['name' => 'Constructor Test 1', 'foo' => 'test', 'bar' => 'foobar']
+        );
+        $this->module->haveInRepository(
+            EntityWithConstructorParameters::class,
+            ['name' => 'Constructor Test 1', 'foo' => 'test']
+        );
+        $this->module->seeInRepository(
+            EntityWithConstructorParameters::class,
+            ['name' => 'Constructor Test 1', 'foo' => 'test', 'bar' => 'foobar']
+        );
+    }
+
+    public function testEntityWithConstructorParametersExceptionOnMissingParameter()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Constructor parameter "name" missing');
+
+        $this->module->haveInRepository(EntityWithConstructorParameters::class);
     }
 
     public function testJoinedEntityOwnField()
