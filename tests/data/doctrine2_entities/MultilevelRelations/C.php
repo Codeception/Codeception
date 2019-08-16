@@ -1,10 +1,13 @@
 <?php
+
+namespace MultilevelRelations;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class PlainEntity
+class C
 {
     /**
      * @var int|null
@@ -23,26 +26,17 @@ class PlainEntity
     private $name;
 
     /**
-     * @return int|null
+     * @var B
+     *
+     * @ORM\ManyToOne(targetEntity="B")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $b;
 
     /**
-     * @return string|null
+     * @return B
      */
-    public function getName()
+    public function getB()
     {
-        return $this->name;
-    }
-
-    /**
-     * @param string|null $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
+        return $this->b;
     }
 }

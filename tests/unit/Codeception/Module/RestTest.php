@@ -1,7 +1,7 @@
 <?php
 
 use Codeception\Test\Unit;
-use Codeception\Util\Stub as Stub;
+use Codeception\Util\Stub;
 
 /**
  * Class RestTest

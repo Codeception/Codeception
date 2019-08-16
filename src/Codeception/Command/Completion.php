@@ -10,7 +10,7 @@ use Codeception\Configuration;
 use Stecman\Component\Symfony\Console\BashCompletion\Completion as ConsoleCompletion;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionHandler;
-use Stecman\Component\Symfony\Console\BashCompletion\Completion\ShellPathCompletion as ShellPathCompletion;
+use Stecman\Component\Symfony\Console\BashCompletion\Completion\ShellPathCompletion;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -3,6 +3,7 @@
 namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\Notification;
 use Codeception\Lib\ParamsLoader;
 use Codeception\Util\Autoload;
 use Codeception\Util\Template;
@@ -86,6 +87,7 @@ class Configuration
             'phpunit-xml' => 'Codeception\PHPUnit\Log\PhpUnit',
         ],
         'groups'     => [],
+        'bootstrap'  => false,
         'settings'   => [
             'colors'                    => true,
             'bootstrap'                 => false,
@@ -251,21 +253,37 @@ class Configuration
         }
 
         Autoload::addNamespace(self::$config['namespace'], self::supportDir());
-        self::loadBootstrap($config['settings']['bootstrap']);
+
+        if ($config['settings']['bootstrap']) {
+            $bootstrap = self::$config['settings']['bootstrap'];
+            Notification::deprecate("'settings: bootstrap: $bootstrap' option is deprecated! Replace it with: 'bootstrap: $bootstrap' (not under settings section). See https://bit.ly/2YrRzVc ");
+            try {
+                self::loadBootstrap($bootstrap, self::testsDir());
+            } catch (ConfigurationException $exception) {
+                Notification::deprecate("Bootstrap file ($bootstrap) is defined in configuration but can't be loaded. Disable 'settings: bootstrap:' configuration to remove this message");
+            }
+        }
+        self::loadBootstrap($config['bootstrap'], self::testsDir());
         self::loadSuites();
 
         return $config;
     }
 
-    protected static function loadBootstrap($bootstrap)
+    public static function loadBootstrap($bootstrap, $path)
     {
         if (!$bootstrap) {
             return;
         }
-        $bootstrap = self::$dir . DIRECTORY_SEPARATOR . self::$testsDir . DIRECTORY_SEPARATOR . $bootstrap;
-        if (file_exists($bootstrap)) {
-            include_once $bootstrap;
+
+        $bootstrap = codecept_is_path_absolute($bootstrap)
+            ? $bootstrap
+            : rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $bootstrap;
+
+
+        if (!file_exists($bootstrap)) {
+            throw new ConfigurationException("Bootstrap file $bootstrap can't be loaded");
         }
+        require_once $bootstrap;
     }
 
     protected static function loadSuites()
@@ -494,7 +512,7 @@ class Configuration
 
     public static function isExtensionEnabled($extensionName)
     {
-        return isset(self::$config['extensions'], self::$config['extensions']['enabled'])
+        return isset(self::$config['extensions']['enabled'])
         && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 

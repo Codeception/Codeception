@@ -34,11 +34,6 @@ paths:
 ```yaml
 settings:
 
-    # name of bootstrap that will be used
-    # each bootstrap file should be
-    # inside a suite directory.
-    bootstrap: _bootstrap.php
-
     # enable/disable syntax of test files before loading
     # for php < 7 exec('php -l') is used
     # disable if you need to speed up tests execution
@@ -99,6 +94,7 @@ modules:
 * `coverage`: [CodeCoverage](http://codeception.com/docs/11-Codecoverage#Configuration) settings.
 * `params`: allows to pass [external parameters](http://codeception.com/docs/06-ModulesAndHelpers#Dynamic-Configuration-With-Params) into module configuration.
 * `gherkin`: BDD-specific [Gherkin options](http://codeception.com/docs/07-BDD#Configuration).
+* `bootstrap`:  bootstrap script that will be executed before all suites. A script should be put into `tests` directory.
 
 ## Suite Configuration
 
@@ -143,6 +139,7 @@ modules:
 * `coverage`: pre suite [CodeCoverage](http://codeception.com/docs/11-Codecoverage#Configuration) settings.
 * `gherkin`: per suite [BDD Gherkin](http://codeception.com/docs/07-BDD#Configuration) settings.
 * `error_level`: [error level](http://codeception.com/docs/04-FunctionalTests#Error-Reporting) for runner in current suite. Should be specified for unit, integration, functional tests. Passes value to `error_reporting` function.
+* `bootstrap`:  bootstrap script that will be executed before current suites. A script should be put into suite directory.
 
 ## Config Templates (dist)
 

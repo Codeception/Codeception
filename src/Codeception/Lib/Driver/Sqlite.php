@@ -34,7 +34,7 @@ class Sqlite extends Db
     {
         if ($this->hasSnapshot) {
             $this->dbh = null;
-            file_put_contents($this->filename, file_get_contents($this->filename . '_snapshot'));
+            copy($this->filename . '_snapshot', $this->filename);
             $this->dbh = new \PDO($this->dsn, $this->user, $this->password);
         } else {
             if (file_exists($this->filename . '_snapshot')) {

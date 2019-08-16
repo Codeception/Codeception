@@ -1,10 +1,15 @@
 <?php
+
+namespace MultilevelRelations;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class PlainEntity
+class A
 {
     /**
      * @var int|null
@@ -23,26 +28,24 @@ class PlainEntity
     private $name;
 
     /**
-     * @return int|null
+     * @var Collection|B[]
+     *
+     * @ORM\OneToMany(targetEntity="B", mappedBy="a")
      */
-    public function getId()
+    private $b;
+
+    /**
+     */
+    public function __construct()
     {
-        return $this->id;
+        $this->b = new ArrayCollection();
     }
 
     /**
-     * @return string|null
+     * @return Collection|B[]
      */
-    public function getName()
+    public function getB()
     {
-        return $this->name;
-    }
-
-    /**
-     * @param string|null $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
+        return $this->b;
     }
 }
