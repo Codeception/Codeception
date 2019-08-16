@@ -6,7 +6,6 @@ paths:
     envs: tests/envs
 settings:
     shuffle: true
-    bootstrap: _bootstrap.php
     suite_class: \PHPUnit_Framework_TestSuite
     colors: true
     memory_limit: 1024M
