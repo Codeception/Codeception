@@ -69,6 +69,13 @@ class AssertsTest extends \Codeception\PHPUnit\TestCase
         $this->module->assertIsNotString(false);
         $this->module->assertIsNotScalar(function() {});
         $this->module->assertIsNotCallable('test');
+
+        $this->module->assertEqualsCanonicalizing([3, 2, 1], [1, 2, 3]);
+        $this->module->assertNotEqualsCanonicalizing([3, 2, 1], [2, 3, 0, 1]);
+        $this->module->assertEqualsIgnoringCase('foo', 'FOO');
+        $this->module->assertNotEqualsIgnoringCase('foo', 'BAR');
+        $this->module->assertEqualsWithDelta(1.0, 1.01, 0.1);
+        $this->module->assertNotEqualsWithDelta(1.0, 1.5, 0.1);
     }
 
     public function testExceptions()
