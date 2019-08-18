@@ -6,12 +6,13 @@ use Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    const STABLE_BRANCH = '3.0';
+    const STABLE_BRANCH = '3.1';
     const REPO_BLOB_URL = 'https://github.com/Codeception/Codeception/blob';
 
     public function release()
     {
         $this->say("CODECEPTION RELEASE: ".\Codeception\Codecept::VERSION);
+        $this->stopOnFail();
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
