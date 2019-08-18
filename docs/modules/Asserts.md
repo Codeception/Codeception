@@ -19,16 +19,6 @@ Special module for using asserts in your tests.
  * `param` $description
 
 
-### assertArraySubset
- 
-Checks that array contains subset.
-
- * `param array`  $subset
- * `param array`  $array
- * `param bool`   $strict
- * `param string` $message
-
-
 ### assertContains
  
 Checks that haystack contains needle
@@ -55,26 +45,24 @@ Checks that variable is empty.
 
 ### assertEquals
  
-Checks that two variables are equal. If you're comparing floating-point values,
-you can specify the optional "delta" parameter which dictates how great of a precision
-error are you willing to tolerate in order to consider the two values equal.
-
-Regular example:
-```php
-<?php
-$I->assertEquals(5, $element->getChildrenCount());
-```
-
-Floating-point example:
-```php
-<?php
-$I->assertEquals(0.3, $calculator->add(0.1, 0.2), 'Calculator should add the two numbers correctly.', 0.01);
-```
+Checks that two variables are equal.
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
  * `param float`  $delta
+
+
+### assertEqualsCanonicalizing
+__not documented__
+
+
+### assertEqualsIgnoringCase
+__not documented__
+
+
+### assertEqualsWithDelta
+__not documented__
 
 
 ### assertFalse
@@ -140,10 +128,90 @@ Checks that actual is greater or equal than expected
  * `param` $description
 
 
+### assertIsArray
+__not documented__
+
+
+### assertIsBool
+__not documented__
+
+
+### assertIsCallable
+__not documented__
+
+
 ### assertIsEmpty
  
  * `param` $actual
  * `param` $description
+
+
+### assertIsFloat
+__not documented__
+
+
+### assertIsInt
+__not documented__
+
+
+### assertIsNotArray
+__not documented__
+
+
+### assertIsNotBool
+__not documented__
+
+
+### assertIsNotCallable
+__not documented__
+
+
+### assertIsNotFloat
+__not documented__
+
+
+### assertIsNotInt
+__not documented__
+
+
+### assertIsNotNumeric
+__not documented__
+
+
+### assertIsNotObject
+__not documented__
+
+
+### assertIsNotResource
+__not documented__
+
+
+### assertIsNotScalar
+__not documented__
+
+
+### assertIsNotString
+__not documented__
+
+
+### assertIsNumeric
+__not documented__
+
+
+### assertIsObject
+__not documented__
+
+
+### assertIsResource
+__not documented__
+
+
+### assertIsScalar
+__not documented__
+
+
+### assertIsString
+__not documented__
 
 
 ### assertLessOrEquals
@@ -190,26 +258,24 @@ Checks that variable is not empty.
 
 ### assertNotEquals
  
-Checks that two variables are not equal. If you're comparing floating-point values,
-you can specify the optional "delta" parameter which dictates how great of a precision
-error are you willing to tolerate in order to consider the two values not equal.
-
-Regular example:
-```php
-<?php
-$I->assertNotEquals(0, $element->getChildrenCount());
-```
-
-Floating-point example:
-```php
-<?php
-$I->assertNotEquals(0.4, $calculator->add(0.1, 0.2), 'Calculator should add the two numbers correctly.', 0.01);
-```
+Checks that two variables are not equal
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
  * `param float`  $delta
+
+
+### assertNotEqualsCanonicalizing
+__not documented__
+
+
+### assertNotEqualsIgnoringCase
+__not documented__
+
+
+### assertNotEqualsWithDelta
+__not documented__
 
 
 ### assertNotFalse
@@ -287,6 +353,22 @@ Checks that two variables are same
  * `param string` $message
 
 
+### assertStringContainsString
+__not documented__
+
+
+### assertStringContainsStringIgnoringCase
+__not documented__
+
+
+### assertStringNotContainsString
+__not documented__
+
+
+### assertStringNotContainsStringIgnoringCase
+__not documented__
+
+
 ### assertStringStartsNotWith
  
 Checks that a string doesn't start with the given prefix.
@@ -340,8 +422,6 @@ $I->expectException(new MyException("Don't do bad things"), function() {
  * `param` $exception string or \Exception
  * `param` $callback
 
-@deprecated Use expectThrowable instead
-
 
 ### expectThrowable
  
@@ -377,4 +457,4 @@ Fails the test with message.
 
  * `param` $message
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.0/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>

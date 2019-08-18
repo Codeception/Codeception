@@ -108,7 +108,7 @@ Use it in Helpers when you want to retrieve response of request performed by ano
 // in Helper class
 public function seeResponseContains($text)
 {
-   $this->assertContains($text, $this->getModule('Phalcon')->_getResponseContent(), "response contains");
+   $this->assertStringContainsString($text, $this->getModule('Phalcon')->_getResponseContent(), "response contains");
 }
 ?>
 ```
@@ -292,7 +292,7 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[@type=submit]');
+$I->click('//form/*[@type="submit"]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
@@ -351,7 +351,7 @@ But will ignore strings like:
 For checking the raw source code, use `seeInSource()`.
 
  * `param string` $text
- * `param string` $selector optional
+ * `param array|string` $selector optional
 
 
 ### dontSeeCheckboxIsChecked
@@ -707,17 +707,6 @@ Recommended to use for unit testing.
  * `[Part]` services
 
 
-### grabServiceFromDi
- 
-Alias for `grabServiceFromContainer`.
-
-Note: Deprecated. Will be removed in Codeception 2.3.
-
- * `param string` $service    Service name
- * `param array`  $parameters Parameters [Optional]
- * `[Part]` services
-
-
 ### grabTextFrom
  
 Finds and returns the text contents of the given element.
@@ -796,17 +785,20 @@ $I->haveRecord('App\Models\Categories', ['name' => 'Testing']');
  * `[Part]` orm
 
 
-### haveServiceInDi
+### makeHtmlSnapshot
  
-Alias for `addServiceToContainer`.
+Saves current page's HTML into a temprary file.
+Use this method in debug mode within an interactive pause to get a source code of current page.
 
-Note: Deprecated. Will be removed in Codeception 2.3.
+```php
+<?php
+$I->makeHtmlSnapshot('edit_page');
+// saved to: tests/_output/debug/edit_page.html
+$I->makeHtmlSnapshot();
+// saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.html
+```
 
- * `param string` $name
- * `param mixed` $definition
- * `param boolean` $shared
- * `return` mixed|null
- * `[Part]` services
+ * `param null` $name
 
 
 ### moveBack
@@ -856,7 +848,7 @@ But will *not* be true for strings like:
 For checking the raw source code, use `seeInSource()`.
 
  * `param string` $text
- * `param string` $selector optional
+ * `param array|string` $selector optional
 
 
 ### seeCheckboxIsChecked
@@ -1124,6 +1116,22 @@ $I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
  * `param mixed` $expected int or int[]
 
 
+### seeNumberOfRecords
+ 
+Checks that number of records exists in database.
+
+``` php
+<?php
+$I->seeNumberOfRecords('App\Models\Categories', 3, ['name' => 'Testing']);
+?>
+```
+
+ * `param string` $model Model name
+ * `param int` $number int number of records
+ * `param array`  $attributes Model attributes
+ * `[Part]` orm
+
+
 ### seeOptionIsSelected
  
 Checks that the given option is selected.
@@ -1155,21 +1163,6 @@ $I->seeRecord('App\Models\Categories', ['name' => 'Testing']);
 ```
 
  * `param string` $model Model name
- * `param array`  $attributes Model attributes
- * `[Part]` orm
-
-### seeNumberOfRecords
- 
-Checks that given number of records exist in database.
-
-``` php
-<?php
-$I->seeNumberOfRecords('App\Models\Categories', 3, ['name' => 'Testing']);
-?>
-```
-
- * `param string` $model Model name
- * `param int` $number int number of records
  * `param array`  $attributes Model attributes
  * `[Part]` orm
 
@@ -1538,4 +1531,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/Phalcon.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.0/src/Codeception/Module/Phalcon.php">Help us to improve documentation. Edit module reference</a></div>

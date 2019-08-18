@@ -282,4 +282,4 @@ $I->sendCommandToRedis('flushdb');
  * `param string` $command The command name
 
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/Redis.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.0/src/Codeception/Module/Redis.php">Help us to improve documentation. Edit module reference</a></div>

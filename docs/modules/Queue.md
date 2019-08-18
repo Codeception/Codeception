@@ -21,12 +21,10 @@ The following dependencies are needed for the listed queue servers:
 
 ## Status
 
-* Maintainer: **nathanmac**
 * Stability:
     - Iron.io:    **stable**
     - Beanstalkd: **stable**
     - Amazon SQS: **stable**
-* Contact: nathan.macnamara@outlook.com
 
 ## Config
 
@@ -294,4 +292,4 @@ $I->seeQueueHasTotalCount('default', 10);
  * `param string` $queue Queue Name
  * `param int` $expected Number of messages expected
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/Queue.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.0/src/Codeception/Module/Queue.php">Help us to improve documentation. Edit module reference</a></div>
