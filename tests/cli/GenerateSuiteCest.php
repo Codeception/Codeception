@@ -12,7 +12,6 @@ class GenerateSuiteCest
         $I->seeFileFound('House.php', 'tests/_support/Helper');
         $I->seeInThisFile('namespace Helper;');
         $I->seeDirFound('tests/house');
-        $I->seeFileFound('_bootstrap.php', 'tests/house');
 
         $I->expect('suite is not created due to dashes');
         $I->executeCommand('generate:suite invalid-dash-suite');
