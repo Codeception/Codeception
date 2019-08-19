@@ -42,6 +42,8 @@ matrix:
     env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
   - php: 7.0
     env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
+  - php: 7.3
+    env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
   - php: 5.6
     env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
   - php: 7.0
