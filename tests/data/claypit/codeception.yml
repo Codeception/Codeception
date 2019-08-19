@@ -4,7 +4,7 @@ paths:
     data: tests/_data
     helpers: tests/_support
     envs: tests/_envs
-bootstrap: _bootstrap.php
+bootstrap: bootstrap_global.php
 settings:
     suite_class: \PHPUnit_Framework_TestSuite
     colors: false
