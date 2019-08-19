@@ -533,7 +533,16 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         return $container->get($service);
     }
     
-     /**
+    /**
+     * Run Symfony console command, grab response and return as string.
+     * Recommended to use for integration or functional testing.
+     *
+     * ``` php
+     * <?php
+     * $result = $I->runSymfonyConsoleCommand('hello:world', '--verbose' => 3]);
+     * ?>
+     * ```
+     *
      * @param string  $command
      * @param mixed[] $params
      *
