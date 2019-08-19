@@ -30,6 +30,9 @@ matrix:
   - php: 7.2
     env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. PECL="mongodb" COVERAGE=1
   exclude:
+
+  - php: 5.6
+    env: FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
   - php: 7.2
     env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb" COVERAGE=1
   - php: 7.0
@@ -37,6 +40,8 @@ matrix:
   - php: 7.1
     env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - php: 7.2
+    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
+  - php: 7.3
     env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
   - php: 5.6
     env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
