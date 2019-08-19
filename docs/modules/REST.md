@@ -10,6 +10,7 @@ Otherwise, a PHPBrowser should be specified as a dependency to send requests and
 ## Configuration
 
 * url *optional* - the url of api
+* shortDebugResponse *optional* - amount of chars to limit the api response length
 
 This module requires PHPBrowser or any of Framework modules enabled.
 
@@ -20,6 +21,7 @@ This module requires PHPBrowser or any of Framework modules enabled.
            - REST:
                depends: PhpBrowser
                url: 'http://serviceapp/api/v1/'
+               shortDebugResponse: 300 # only the first 300 chars of the response
 
 ## Public Properties
 
@@ -218,9 +220,9 @@ Opposite to seeResponseJsonMatchesXpath
 Opposite to `seeResponseMatchesJsonType`.
 
  * `[Part]` json
-@see seeResponseMatchesJsonType
  * `param` $jsonType jsonType structure
  * `param null` $jsonPath optionally set specific path to structure with JsonPath
+@see seeResponseMatchesJsonType
  * `Available since` 2.1.3
 
 
@@ -268,15 +270,6 @@ Element is matched by either CSS or XPath
  * `[Part]` xml
 
 
-### grabDataFromJsonResponse
- 
-Deprecated since 2.0.9 and removed since 2.1.0
-
- * `param` $path
-@throws ModuleException
-@deprecated
-
-
 ### grabDataFromResponseByJsonPath
  
 Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
@@ -298,9 +291,9 @@ $I->sendPUT('/user', array('id' => $firstUserId[0], 'name' => 'davert'));
 
  * `param string` $jsonPath
  * `return` array Array of matching items
- * `Available since` 2.0.9
 @throws \Exception
  * `[Part]` json
+ * `Available since` 2.0.9
 
 
 ### grabHttpHeader
@@ -328,10 +321,10 @@ $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
 ?>
 ```
 
- * `Available since` 1.1
  * `return` string
  * `[Part]` json
  * `[Part]` xml
+ * `Available since` 1.1
 
 
 ### grabTextContentFromXmlElement
@@ -702,9 +695,9 @@ You can also add custom filters y accessing `JsonType::addCustomFilter` method.
 See [JsonType reference](http://codeception.com/docs/reference/JsonType).
 
  * `[Part]` json
- * `Available since` 2.1.3
  * `param array` $jsonType
  * `param string` $jsonPath
+ * `Available since` 2.1.3
 
 
 ### seeXmlResponseEquals
@@ -897,4 +890,4 @@ $I->stopFollowingRedirects();
  * `[Part]` xml
  * `[Part]` json
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/REST.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.0/src/Codeception/Module/REST.php">Help us to improve documentation. Edit module reference</a></div>

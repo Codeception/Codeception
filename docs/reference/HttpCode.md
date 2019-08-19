@@ -35,6 +35,6 @@ HttpCode::getDescription(401); // '401 (Unauthorized)'
  * `param` $code
  * `return` mixed
 
-[See source](https://github.com/Codeception/Codeception/blob/2.5/src/Codeception/Util/HttpCode.php#L155)
+[See source](https://github.com/Codeception/Codeception/blob/3.0/src/Codeception/Util/HttpCode.php#L155)
 
-<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.5/src//Codeception/Util/HttpCode.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/3.0/src//Codeception/Util/HttpCode.php">Help us to improve documentation. Edit module reference</a></div>

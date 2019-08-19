@@ -59,8 +59,6 @@ modules:
 * ORM - only include the database methods of this module:
     * have
     * haveMultiple
-    * make
-    * makeMultiple
     * haveRecord
     * grabRecord
     * seeRecord
@@ -127,7 +125,7 @@ Use it in Helpers when you want to retrieve response of request performed by ano
 // in Helper class
 public function seeResponseContains($text)
 {
-   $this->assertContains($text, $this->getModule('Laravel5')->_getResponseContent(), "response contains");
+   $this->assertStringContainsString($text, $this->getModule('Laravel5')->_getResponseContent(), "response contains");
 }
 ?>
 ```
@@ -355,7 +353,7 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[@type=submit]');
+$I->click('//form/*[@type="submit"]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
@@ -460,7 +458,7 @@ But will ignore strings like:
 For checking the raw source code, use `seeInSource()`.
 
  * `param string` $text
- * `param string` $selector optional
+ * `param array|string` $selector optional
 
 
 ### dontSeeAuthentication
@@ -936,19 +934,6 @@ $I->have('App\User', [], 'admin');
 ?>
 ```
 
-### make
- 
-Use Laravel's model factory to make a model.
-Can only be used with Laravel 5.1 and later.
-
-``` php
-<?php
-$I->make('App\User');
-$I->make('App\User', ['name' => 'John Doe']);
-$I->make('App\User', [], 'admin');
-?>
-```
-
 @see http://laravel.com/docs/5.1/testing#model-factories
  * `param string` $model
  * `param array` $attributes
@@ -1065,20 +1050,6 @@ $I->haveMultiple('App\User', 10, [], 'admin');
 ?>
 ```
 
-
-### makeMultiple
- 
-Use Laravel's model factory to make multiple models.
-Can only be used with Laravel 5.1 and later.
-
-``` php
-<?php
-$I->makeMultiple('App\User', 10);
-$I->makeMultiple('App\User', 10, ['name' => 'John Doe']);
-$I->makeMultiple('App\User', 10, [], 'admin');
-?>
-```
-
 @see http://laravel.com/docs/5.1/testing#model-factories
  * `param string` $model
  * `param int` $times
@@ -1125,6 +1096,63 @@ $I->haveSingleton('My\Interface', 'My\Singleton');
 ### logout
  
 Logout user.
+
+
+### make
+ 
+Use Laravel's model factory to make a model instance.
+Can only be used with Laravel 5.1 and later.
+
+``` php
+<?php
+$I->make('App\User');
+$I->make('App\User', ['name' => 'John Doe']);
+$I->make('App\User', [], 'admin');
+?>
+```
+
+@see http://laravel.com/docs/5.1/testing#model-factories
+ * `param string` $model
+ * `param array` $attributes
+ * `param string` $name
+ * `[Part]` orm
+
+
+### makeHtmlSnapshot
+ 
+Saves current page's HTML into a temprary file.
+Use this method in debug mode within an interactive pause to get a source code of current page.
+
+```php
+<?php
+$I->makeHtmlSnapshot('edit_page');
+// saved to: tests/_output/debug/edit_page.html
+$I->makeHtmlSnapshot();
+// saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.html
+```
+
+ * `param null` $name
+
+
+### makeMultiple
+ 
+Use Laravel's model factory to make multiple model instances.
+Can only be used with Laravel 5.1 and later.
+
+``` php
+<?php
+$I->makeMultiple('App\User', 10);
+$I->makeMultiple('App\User', 10, ['name' => 'John Doe']);
+$I->makeMultiple('App\User', 10, [], 'admin');
+?>
+```
+
+@see http://laravel.com/docs/5.1/testing#model-factories
+ * `param string` $model
+ * `param int` $times
+ * `param array` $attributes
+ * `param string` $name
+ * `[Part]` orm
 
 
 ### moveBack
@@ -1174,7 +1202,7 @@ But will *not* be true for strings like:
 For checking the raw source code, use `seeInSource()`.
 
  * `param string` $text
- * `param string` $selector optional
+ * `param array|string` $selector optional
 
 
 ### seeAuthentication
@@ -1951,4 +1979,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/Laravel5.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.0/src/Codeception/Module/Laravel5.php">Help us to improve documentation. Edit module reference</a></div>

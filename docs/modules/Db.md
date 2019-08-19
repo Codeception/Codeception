@@ -278,7 +278,6 @@ $mails = $I->grabFromDatabase('users', 'email', array('name' => 'RebOOter'));
  * `param string` $column
  * `param array`  $criteria
 
- * `return` array
 
 
 ### grabNumRecords
@@ -305,10 +304,6 @@ $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com
  * `param array` $data
 
  * `return integer` $id
-
-
-### isPopulated
-__not documented__
 
 
 ### performInDatabase
@@ -401,4 +396,4 @@ $I->updateInDatabase('users', array('isAdmin' => true), array('email' => 'miles@
  * `param array` $data
  * `param array` $criteria
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.5/src/Codeception/Module/Db.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.0/src/Codeception/Module/Db.php">Help us to improve documentation. Edit module reference</a></div>

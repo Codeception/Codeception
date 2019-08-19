@@ -424,6 +424,7 @@ EOF;
      * Persists record into repository.
      * This method creates an entity, and sets its properties directly (via reflection).
      * Setters of entity won't be executed, but you can create almost any entity and save it to database.
+     * If the entity has a constructor, for optional parameters the default value will be used and for non-optional parameters the given fields (with a matching name) will be passed when calling the constructor before the properties get set directly (via reflection).
      *
      * Returns primary key of newly created entity. Primary key value is extracted using Reflection API.
      * If primary key is composite, array of values is returned.
@@ -437,6 +438,12 @@ EOF;
      *
      * ```php
      * $I->haveInRepository(new User($arg), array('name' => 'davert'));
+     * ```
+     *
+     * Alternatively, constructor arguments can be passed by name. Given User constructor signature is `__constructor($arg)`, the example above could be rewritten like this:
+     *
+     * ```php
+     * $I->haveInRepository('Entity\User', array('arg' => $arg, 'name' => 'davert'));
      * ```
      *
      * If entity has relations, they can be populated too. In case of OneToMany the following format
@@ -513,7 +520,15 @@ EOF;
     private function instantiateAndPopulateEntity($className, array $data, array &$instances)
     {
         $rpa = new ReflectionPropertyAccessor();
-        $instance = $rpa->createWithProperties($className, []);
+        list($scalars,$relations) = $this->splitScalarsAndRelations($className, $data);
+        // Pass relations that are already objects to the constructor, too
+        $properties = array_merge(
+            $scalars,
+            array_filter($relations, function ($relation) {
+                return is_object($relation);
+            })
+        );
+        $instance = $rpa->createWithProperties($className, $properties);
         $this->populateEntity($instance, $data, $instances);
         return $instance;
     }
