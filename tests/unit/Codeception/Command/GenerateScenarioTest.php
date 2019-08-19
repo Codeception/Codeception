@@ -41,7 +41,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
         $this->assertStringContainsString('I WANT TO CHECK CONFIG EXISTS', $content);
-        $this->assertStringContainsString('I see file found \'codeception.yml\'', $content);
+        $this->assertStringContainsString('I see file found "codeception.yml"', $content);
         $this->assertStringContainsString('* File_Exists generated', $this->output);
     }
 
@@ -54,7 +54,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
         $this->assertStringContainsString('I WANT TO CHECK CONFIG EXISTS', $content);
-        $this->assertStringContainsString('I see file found \'codeception.yml\'', $content);
+        $this->assertStringContainsString('I see file found "codeception.yml"', $content);
         $this->assertStringContainsString('* File_Exists generated', $this->output);
     }
 
@@ -65,7 +65,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
         $this->assertStringContainsString('<html><body><h3>I WANT TO CHECK CONFIG EXISTS</h3>', $content);
-        $this->assertStringContainsString('I see file found \'codeception.yml\'', strip_tags($content));
+        $this->assertStringContainsString('I see file found &quot;codeception.yml&quot;', strip_tags($content));
         $this->assertStringContainsString('* File_Exists generated', $this->output);
     }
 
