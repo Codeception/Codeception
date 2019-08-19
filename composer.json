@@ -67,6 +67,17 @@
             "Codeception\\Extension\\": "ext"
         }
     },
+    "autoload-dev": {
+        "files": [
+            "tests/unit/make_container.php"
+        ],
+        "classmap": [
+            "tests/cli/_steps",
+            "tests/web/_steps",
+            "tests/data/DummyClass.php",
+            "tests/data/claypit/tests/_data"
+        ]
+    },
     "extra": {
         "branch-alias": {
         }
