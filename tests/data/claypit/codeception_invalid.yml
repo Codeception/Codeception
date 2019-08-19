@@ -3,10 +3,9 @@ paths:
     log: tests/_output
     data: tests/_data
     helpers: tests/_support
-bootstrap: bootstrap_global.php
 settings:
-    coloe
     silent: false
+    coloe
     log: false
     strict_xml: true
 modules:
