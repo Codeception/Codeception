@@ -68,9 +68,6 @@
         }
     },
     "autoload-dev": {
-        "files": [
-            "tests/unit/make_container.php"
-        ],
         "classmap": [
             "tests/cli/_steps",
             "tests/web/_steps",
