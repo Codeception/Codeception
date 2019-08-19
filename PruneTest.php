@@ -74,8 +74,6 @@ if ($frameworkOnly) {
     stderr('Changes limited to frameworks: ' . implode(', ', $frameworks));
     if (!isset($frameworks[$currentFramework])) {
         stderr("Skipping test for framework: $currentFramework");
-        echo "export FRAMEWORK=\n";
-        echo "export PECL=\n";
-        echo "export CI_USER_TOKEN=\n";
+        echo "travis_terminate 0\n";
     }
 }
