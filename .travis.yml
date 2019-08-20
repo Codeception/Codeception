@@ -111,8 +111,8 @@ before_script:
   - '[[ "$FRAMEWORK" != "Codeception" ]] || psql -c "create database codeception_test;" -U postgres'
   - '[[ "$FRAMEWORK" != "Symfony" ]] || mysql -e "create database symfony_test;"'
   # starting demo servers
-  - '[[ "$FRAMEWORK" != "Codeception" ]] || php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &'
-  - '[[ "$FRAMEWORK" != "Codeception" ]] || php -S 127.0.0.1:8010 -t tests/data >/dev/null 2>&1 &'
+  - '[[ "$FRAMEWORK" != "Codeception" ]] || php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &'
+  - '[[ "$FRAMEWORK" != "Codeception" ]] || php -S 127.0.0.1:8010 -t tests/data -d pcov.directory=$(pwd)/tests/data >/dev/null 2>&1 &'
   # Phalcon
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || mysql -e "CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"'
   - '[[ "$FRAMEWORK" != "Phalcon" ]] || cat framework-tests/schemas/phalcon_demo.sql | mysql phalcon_demo'
