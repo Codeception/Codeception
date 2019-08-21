@@ -559,7 +559,7 @@ class Db extends CodeceptionModule implements DbInterface
             $this->_getDriver()->setWaitLock($databaseConfig['waitlock']);
         }
 
-        if (isset ($databaseConfig['initial_queries'])) {
+        if (isset($databaseConfig['initial_queries'])) {
             foreach ($databaseConfig['initial_queries'] as $initialQuery) {
                 $this->drivers[$databaseKey]->executeQuery($initialQuery, []);
             }

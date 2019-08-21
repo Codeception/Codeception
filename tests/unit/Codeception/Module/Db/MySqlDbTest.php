@@ -73,7 +73,7 @@ class MySqlDbTest extends TestsForDb
             'USE ' . $dbName . ';',
         ];
         $this->module->_reconfigure($config);
-        $this->module->_initialize();
+        $this->module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
         $usedDatabaseName = $this->module->dbh->query('SELECT DATABASE();')->fetch(PDO::FETCH_COLUMN);
 
         $this->assertEquals($dbName, $usedDatabaseName);
