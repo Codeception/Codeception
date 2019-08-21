@@ -124,4 +124,13 @@ class PathResolver
     {
         return ($dirSep == '\\');
     }
+
+    public static function isPathAbsolute($path)
+    {
+        if (DIRECTORY_SEPARATOR === '/') {
+            return substr($path, 0, 1) === DIRECTORY_SEPARATOR;
+        }
+
+        return preg_match('#^[A-Z]:(?![^/\\\])#i', $path) === 1;
+    }
 }

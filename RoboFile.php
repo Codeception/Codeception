@@ -15,7 +15,7 @@ class RoboFile extends \Robo\Tasks
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
-        $this->buildPhar();
+        $this->buildPhar7();
         $this->buildPhar5();
         $this->publishPhar();
         $this->publishGit();
@@ -166,17 +166,27 @@ class RoboFile extends \Robo\Tasks
      */
     public function buildPhar()
     {
-        $this->installDependenciesForPhp70();
         $this->packPhar('package/codecept.phar');
         $code = $this->taskExec('php codecept.phar')->dir('package')->run()->getExitCode();
         if ($code !== 0) {
             throw new Exception("There was problem compiling phar");
         }
+    }
+
+
+    /**
+     * @desc creates codecept.phar for PHP 7.0
+     * @throws Exception
+     */
+    public function buildPhar7()
+    {
+        $this->installDependenciesForPhp70();
+        $this->buildPhar();
         $this->revertComposerJsonChanges();
     }
 
     /**
-     * @desc creates codecept.phar with Guzzle 5.3 and Symfony 2.8
+     * @desc creates codecept.phar for PHP 5.6 with Guzzle 5.3 and Symfony 2.8
      * @throws Exception
      */
     public function buildPhar5()

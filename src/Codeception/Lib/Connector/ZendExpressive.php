@@ -4,7 +4,6 @@ namespace Codeception\Lib\Connector;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\ZendExpressive\ResponseCollector;
 use Symfony\Component\BrowserKit\Client;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Zend\Diactoros\ServerRequest;
@@ -34,7 +33,7 @@ class ZendExpressive extends Client
     private $config;
 
     /**
-     * @param Request $request
+     * @param BrowserKitRequest $request
      *
      * @return Response
      * @throws \Exception

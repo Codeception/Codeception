@@ -80,6 +80,11 @@ class Yii2 extends Client
      */
     public $recreateApplication = false;
 
+    /**
+     * @var bool whether to close the session in between requests inside a single test, if recreateApplication is set to true
+     */
+    public $closeSessionOnRecreateApplication = true;
+
 
     private $emails = [];
 
@@ -96,10 +101,15 @@ class Yii2 extends Client
         return Yii::$app;
     }
 
-    public function resetApplication()
+    /**
+     * @param bool $closeSession
+     */
+    public function resetApplication($closeSession = true)
     {
         codecept_debug('Destroying application');
-        $this->closeSession();
+        if (true === $closeSession) {
+            $this->closeSession();
+        }
         Yii::$app = null;
         \yii\web\UploadedFile::reset();
         if (method_exists(\yii\base\Event::className(), 'offAll')) {
@@ -542,7 +552,7 @@ TEXT
     protected function beforeRequest()
     {
         if ($this->recreateApplication) {
-            $this->resetApplication();
+            $this->resetApplication($this->closeSessionOnRecreateApplication);
             return;
         }
 

@@ -1,10 +1,11 @@
 <?php
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class PlainEntity
+class EntityWithConstructorParameters
 {
     /**
      * @var int|null
@@ -23,26 +24,23 @@ class PlainEntity
     private $name;
 
     /**
-     * @return int|null
+     * @var string|null
+     *
+     * @ORM\Column(type="string", nullable=true)
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $foo;
 
     /**
-     * @return string|null
+     * @var string
+     *
+     * @ORM\Column(type="string")
      */
-    public function getName()
-    {
-        return $this->name;
-    }
+    private $bar;
 
-    /**
-     * @param string|null $name
-     */
-    public function setName($name)
+    public function __construct($name, $foo = null, $bar = 'foobar')
     {
         $this->name = $name;
+        $this->foo = $foo;
+        $this->bar = $bar;
     }
 }

@@ -36,6 +36,8 @@ tests/data/exception_in_before/tests/_support/_generated/UnitTesterActions.php
 tests/data/exception_in_before/tests/_output/
 tests/data/bundled_suites/_support/_generated/UnitTesterActions.php
 tests/data/bundled_suites/_output/
+tests/data/snapshots/tests/_support/_generated
+tests/data/snapshots/tests/_data/Snapshot.UserSnapshot.json
 .DS_Store
 robo.phar
 .env

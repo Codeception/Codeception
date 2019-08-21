@@ -8,3 +8,4 @@ modules:
         - Asserts
 steps:
     - Codeception\Step\ConditionalAssertion
+bootstrap: _bootstrap.php

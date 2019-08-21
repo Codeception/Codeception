@@ -1,19 +1,36 @@
 <?php
+
 namespace Codeception\Module;
 
-use Codeception\Lib\Interfaces\DataMapper;
-use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleConfigException;
+use Codeception\Exception\ModuleException;
+use Codeception\Exception\ModuleRequireException;
+use Codeception\Lib\Interfaces\DataMapper;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
+use Codeception\Lib\Notification;
+use Codeception\Module as CodeceptionModule;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionPropertyAccessor;
 use Codeception\Util\Stub;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\QueryBuilder;
-use PlainEntity;
+use Exception;
+use InvalidArgumentException;
 use ReflectionException;
+use function array_merge;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function is_string;
+use function sprintf;
+use function var_export;
 
 /**
  * Access the database using [Doctrine2 ORM](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/).
@@ -263,7 +280,6 @@ EOF;
         $this->em->clear();
     }
 
-
     /**
      * Performs $em->flush();
      */
@@ -272,31 +288,49 @@ EOF;
         $this->em->flush();
     }
 
-
     /**
-     * Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
-     *
-     * Example:
+     * Performs $em->refresh() on every passed entity:
      *
      * ``` php
-     * <?php
-     * $I->persistEntity(new \Entity\User, array('name' => 'Miles'));
-     * $I->persistEntity($user, array('name' => 'Miles'));
+     * $I->refreshEntities($user);
+     * $I->refreshEntities([$post1, $post2, $post3]]);
      * ```
      *
-     * @param $obj
-     * @param array $values
+     * This can useful in acceptance tests where entity can become invalid due to
+     * external (relative to entity manager used in tests) changes.
+     *
+     * @param object|object[] $entities
+     */
+    public function refreshEntities($entities)
+    {
+        if (!is_array($entities)) {
+            $entities = [$entities];
+        }
+
+        foreach ($entities as $entity) {
+            $this->em->refresh($entity);
+        }
+    }
+
+    /**
+     * Performs $em->clear():
+     *
+     * ``` php
+     * $I->clearEntityManager();
+     * ```
+     */
+    public function clearEntityManager()
+    {
+        $this->em->clear();
+    }
+
+    /**
+     * This method is deprecated in favor of `haveInRepository()`. It's functionality is exactly the same.
      */
     public function persistEntity($obj, $values = [])
     {
-        if ($values) {
-            $rpa = new ReflectionPropertyAccessor();
-            $rpa->setProperties($obj, $values);
-            $this->populateEmbeddables($obj, $values);
-        }
-
-        $this->em->persist($obj);
-        $this->em->flush();
+        Notification::deprecate("Doctrine2::persistEntity is deprecated in favor of Doctrine2::haveInRepository");
+        return $this->haveInRepository($obj, $values);
     }
 
     /**
@@ -390,24 +424,359 @@ EOF;
      * Persists record into repository.
      * This method creates an entity, and sets its properties directly (via reflection).
      * Setters of entity won't be executed, but you can create almost any entity and save it to database.
-     * Returns id using `getId` of newly created entity.
+     * If the entity has a constructor, for optional parameters the default value will be used and for non-optional parameters the given fields (with a matching name) will be passed when calling the constructor before the properties get set directly (via reflection).
+     *
+     * Returns primary key of newly created entity. Primary key value is extracted using Reflection API.
+     * If primary key is composite, array of values is returned.
      *
      * ```php
      * $I->haveInRepository('Entity\User', array('name' => 'davert'));
      * ```
+     *
+     * This method also accepts instances as first argument, which is useful when entity constructor
+     * has some arguments:
+     *
+     * ```php
+     * $I->haveInRepository(new User($arg), array('name' => 'davert'));
+     * ```
+     *
+     * Alternatively, constructor arguments can be passed by name. Given User constructor signature is `__constructor($arg)`, the example above could be rewritten like this:
+     *
+     * ```php
+     * $I->haveInRepository('Entity\User', array('arg' => $arg, 'name' => 'davert'));
+     * ```
+     *
+     * If entity has relations, they can be populated too. In case of OneToMany the following format
+     * ie expected:
+     *
+     * ```php
+     * $I->haveInRepository('Entity\User', array(
+     *     'name' => 'davert',
+     *     'posts' => array(
+     *         array(
+     *             'title' => 'Post 1',
+     *         ),
+     *         array(
+     *             'title' => 'Post 2',
+     *         ),
+     *     ),
+     * ));
+     * ```
+     *
+     * For ManyToOne format is slightly different:
+     *
+     * ```php
+     * $I->haveInRepository('Entity\User', array(
+     *     'name' => 'davert',
+     *     'post' => array(
+     *         'title' => 'Post 1',
+     *     ),
+     * ));
+     * ```
+     *
+     * This works recursively, so you can create deep structures in a single call.
+     *
+     * Note that both `$em->persist(...)`, $em->refresh(...), and `$em->flush()` are called every time.
+     *
+     * @param string|object $classNameOrInstance
+     * @param array $data
+     * @return mixed
      */
-    public function haveInRepository($entity, array $data)
+    public function haveInRepository($classNameOrInstance, array $data = [])
+    {
+        // Here we'll have array of all instances (including any relations) created:
+        $instances = [];
+
+        // Create and/or populate main instance and gather all created relations:
+        if (is_object($classNameOrInstance)) {
+            $instance = $this->populateEntity($classNameOrInstance, $data, $instances);
+        } elseif (is_string($classNameOrInstance)) {
+            $instance = $this->instantiateAndPopulateEntity($classNameOrInstance, $data, $instances);
+        } else {
+            throw new InvalidArgumentException(sprintf('Doctrine2::haveInRepository expects a class name or instance as first argument, got "%s" instead', gettype($classNameOrInstance)));
+        }
+
+        // Flush all changes to database and then refresh all entities. We need this because
+        // currently all assignments are done via Reflection API without using setters, which means
+        // all OneToMany relations won't get set properly as real setter method would use some
+        // Collection operation.
+        $this->em->flush();
+        $this->refreshEntities($instances);
+
+        $pk = $this->extractPrimaryKey($instance);
+
+        $this->debug(get_class($instance) . " entity created with primary key " . var_export($pk, true));
+
+        return $pk;
+    }
+
+    /**
+     * @param string $className
+     * @param array $data
+     * @param array $instances
+     * @return object
+     * @throws ReflectionException
+     */
+    private function instantiateAndPopulateEntity($className, array $data, array &$instances)
     {
         $rpa = new ReflectionPropertyAccessor();
-        $entityObject = $rpa->createWithProperties($entity, $data);
-        $this->populateEmbeddables($entityObject, $data);
-        $this->em->persist($entityObject);
-        $this->em->flush();
+        list($scalars,$relations) = $this->splitScalarsAndRelations($className, $data);
+        // Pass relations that are already objects to the constructor, too
+        $properties = array_merge(
+            $scalars,
+            array_filter($relations, function ($relation) {
+                return is_object($relation);
+            })
+        );
+        $instance = $rpa->createWithProperties($className, $properties);
+        $this->populateEntity($instance, $data, $instances);
+        return $instance;
+    }
 
-        if (method_exists($entityObject, 'getId')) {
-            $id = $entityObject->getId();
-            $this->debug("$entity entity created with id:$id");
-            return $id;
+    /**
+     * @param object $instance
+     * @param array $data
+     * @param array &$instances
+     * @return object
+     * @throws ReflectionException
+     */
+    private function populateEntity($instance, array $data, array &$instances)
+    {
+        $rpa = new ReflectionPropertyAccessor();
+        $className = get_class($instance);
+        $instances[] = $instance;
+        list($scalars, $relations) = $this->splitScalarsAndRelations($className, $data);
+        $rpa->setProperties(
+            $instance,
+            array_merge(
+                $scalars,
+                $this->instantiateRelations($className, $instance, $relations, $instances)
+            )
+        );
+        $this->populateEmbeddables($instance, $data);
+        $this->em->persist($instance);
+        return $instance;
+    }
+
+    /**
+     * @param string $className
+     * @param array $data
+     * @return array
+     */
+    private function splitScalarsAndRelations($className, array $data)
+    {
+        $scalars = [];
+        $relations = [];
+
+        $metadata = $this->em->getClassMetadata($className);
+
+        foreach ($data as $field => $value) {
+            if ($metadata->hasAssociation($field)) {
+                $relations[$field] = $value;
+            } else {
+                $scalars[$field] = $value;
+            }
+        }
+
+        return [$scalars, $relations];
+    }
+
+    /**
+     * @param string $className
+     * @param object $master
+     * @param array $data
+     * @param array &$instances
+     * @return array
+     */
+    private function instantiateRelations($className, $master, array $data, array &$instances)
+    {
+        $metadata = $this->em->getClassMetadata($className);
+
+        foreach ($data as $field => $value) {
+            if (is_array($value) && $metadata->hasAssociation($field)) {
+                unset($data[$field]);
+                if ($metadata->isCollectionValuedAssociation($field)) {
+                    foreach ($value as $subvalue) {
+                        if (!is_array($subvalue)) {
+                            throw new InvalidArgumentException('Association "' . $field . '" of entity "' . $className . '" requires array as input, got "' . gettype($subvalue) . '" instead"');
+                        }
+                        $instance = $this->instantiateAndPopulateEntity(
+                            $metadata->getAssociationTargetClass($field),
+                            array_merge($subvalue, [
+                                $metadata->getAssociationMappedByTargetField($field) => $master,
+                            ]),
+                            $instances
+                        );
+                        $instances[] = $instance;
+                    }
+                } else {
+                    $instance = $this->instantiateAndPopulateEntity(
+                        $metadata->getAssociationTargetClass($field),
+                        $value,
+                        $instances
+                    );
+                    $instances[] = $instance;
+                    $data[$field] = $instance;
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param object $instance
+     * @return array|mixed
+     * @throws ReflectionException
+     */
+    private function extractPrimaryKey($instance)
+    {
+        $className = get_class($instance);
+        $metadata = $this->em->getClassMetadata($className);
+        $rpa = new ReflectionPropertyAccessor();
+        if ($metadata->isIdentifierComposite) {
+            $pk = [];
+            foreach ($metadata->identifier as $field) {
+                $pk[] = $rpa->getProperty($instance, $field);
+            }
+        } else {
+            $pk = $rpa->getProperty($instance, $metadata->identifier[0]);
+        }
+        return $pk;
+    }
+
+    /**
+     * Loads fixtures. Fixture can be specified as a fully qualified class name,
+     * an instance, or an array of class names/instances.
+     *
+     * ```php
+     * <?php
+     * $I->loadFixtures(AppFixtures::class);
+     * $I->loadFixtures([AppFixtures1::class, AppFixtures2::class]);
+     * $I->loadFixtures(new AppFixtures);
+     * ```
+     *
+     * By default fixtures are loaded in 'append' mode. To replace all
+     * data in database, use `false` as second parameter:
+     *
+     * ```php
+     * <?php
+     * $I->loadFixtures(AppFixtures::class, false);
+     * ```
+     *
+     * Note: this method requires `doctrine/data-fixtures` package to be installed.
+     *
+     * @param string|string[]|object[] $fixtures
+     * @param bool $append
+     * @throws ModuleException
+     * @throws ModuleRequireException
+     */
+    public function loadFixtures($fixtures, $append = true)
+    {
+        if (!class_exists(\Doctrine\Common\DataFixtures\Loader::class)
+            || !class_exists(\Doctrine\Common\DataFixtures\Purger\ORMPurger::class)
+            || !class_exists(\Doctrine\Common\DataFixtures\Executor\ORMExecutor::class)) {
+            throw new ModuleRequireException(
+                __CLASS__,
+                'Doctrine fixtures support in unavailable.\n'
+                . 'Please, install doctrine/data-fixtures.'
+            );
+        }
+
+        if (!is_array($fixtures)) {
+            $fixtures = [$fixtures];
+        }
+
+        $loader = new Loader();
+
+        foreach ($fixtures as $fixture) {
+            if (is_string($fixture)) {
+                if (!class_exists($fixture)) {
+                    throw new ModuleException(
+                        __CLASS__,
+                        sprintf(
+                            'Fixture class "%s" does not exist',
+                            $fixture
+                        )
+                    );
+                }
+
+                if (!is_a($fixture, FixtureInterface::class, true)) {
+                    throw new ModuleException(
+                        __CLASS__,
+                        sprintf(
+                            'Fixture class "%s" does not inherit from "%s"',
+                            $fixture,
+                            FixtureInterface::class
+                        )
+                    );
+                }
+
+                try {
+                    $fixtureInstance = new $fixture;
+                } catch (Exception $e) {
+                    throw new ModuleException(
+                        __CLASS__,
+                        sprintf(
+                            'Fixture class "%s" could not be loaded, got %s%s',
+                            $fixture,
+                            get_class($e),
+                            empty($e->getMessage()) ? '' : ': ' . $e->getMessage()
+                        )
+                    );
+                }
+            } elseif (is_object($fixture)) {
+                if (!$fixture instanceof FixtureInterface) {
+                    throw new ModuleException(
+                        __CLASS__,
+                        sprintf(
+                            'Fixture "%s" does not inherit from "%s"',
+                            get_class($fixture),
+                            FixtureInterface::class
+                        )
+                    );
+                }
+
+                $fixtureInstance = $fixture;
+            } else {
+                throw new ModuleException(
+                    __CLASS__,
+                    sprintf(
+                        'Fixture is expected to be an instance or class name, inherited from "%s"; got "%s" instead',
+                        FixtureInterface::class,
+                        is_object($fixture) ? get_class($fixture) ? is_string($fixture) : $fixture : gettype($fixture)
+                    )
+                );
+            }
+
+            try {
+                $loader->addFixture($fixtureInstance);
+            } catch (Exception $e) {
+                throw new ModuleException(
+                    __CLASS__,
+                    sprintf(
+                        'Fixture class "%s" could not be loaded, got %s%s',
+                        get_class($fixtureInstance),
+                        get_class($e),
+                        empty($e->getMessage()) ? '' : ': ' . $e->getMessage()
+                    )
+                );
+            }
+        }
+
+        try {
+            $purger = new ORMPurger($this->em);
+            $executor = new ORMExecutor($this->em, $purger);
+            $executor->execute($loader->getFixtures(), $append);
+        } catch (Exception $e) {
+            throw new ModuleException(
+                __CLASS__,
+                sprintf(
+                    'Fixtures could not be loaded, got %s%s',
+                    get_class($e),
+                    empty($e->getMessage()) ? '' : ': ' . $e->getMessage()
+                )
+            );
         }
     }
 

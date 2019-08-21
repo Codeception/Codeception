@@ -563,4 +563,34 @@ trait Asserts
     {
         \Codeception\PHPUnit\TestCase::assertIsNotCallable($actual, $message);
     }
+
+    protected function assertEqualsCanonicalizing($expected, $actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertEqualsCanonicalizing($expected, $actual, $message);
+    }
+
+    protected function assertNotEqualsCanonicalizing($expected, $actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertNotEqualsCanonicalizing($expected, $actual, $message);
+    }
+
+    protected function assertEqualsIgnoringCase($expected, $actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertEqualsIgnoringCase($expected, $actual, $message);
+    }
+
+    protected function assertNotEqualsIgnoringCase($expected, $actual, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertNotEqualsIgnoringCase($expected, $actual, $message);
+    }
+
+    protected function assertEqualsWithDelta($expected, $actual, $delta, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertEqualsWithDelta($expected, $actual, $delta, $message);
+    }
+
+    protected function assertNotEqualsWithDelta($expected, $actual, $delta, $message = '')
+    {
+        \Codeception\PHPUnit\TestCase::assertNotEqualsWithDelta($expected, $actual, $delta, $message);
+    }
 }

@@ -12,6 +12,12 @@ class Asserts extends CodeceptionModule
     use SharedAsserts {
         assertEquals as public;
         assertNotEquals as public;
+        assertEqualsCanonicalizing as public;
+        assertNotEqualsCanonicalizing as public;
+        assertEqualsIgnoringCase as public;
+        assertNotEqualsIgnoringCase as public;
+        assertEqualsWithDelta as public;
+        assertNotEqualsWithDelta as public;
         assertSame as public;
         assertNotSame as public;
         assertGreaterThan as public;

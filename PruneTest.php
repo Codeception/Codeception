@@ -6,7 +6,7 @@
  * We check if changes in the source with respect to the configured branch are limited to framework files,
  * if that is the case and the current framework isn't one with changed files then we skip it.
  */
-$branch ="2.5";
+$branch ="3.0";
 
 
 function stderr($message)

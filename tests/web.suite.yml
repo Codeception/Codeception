@@ -1,4 +1,5 @@
 class_name: WebGuy
+bootstrap: _bootstrap.php
 modules:
   enabled: [WebDriver, WebHelper]
   config:

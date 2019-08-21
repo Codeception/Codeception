@@ -1,6 +1,6 @@
 <?php
-use \Codeception\Util\Stub as Stub;
-use \Codeception\Stub\Expected as Expected;
+use \Codeception\Util\Stub;
+use \Codeception\Stub\Expected;
 
 class StubTest extends \Codeception\PHPUnit\TestCase
 {
