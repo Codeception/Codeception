@@ -51,7 +51,7 @@ class ReflectionPropertyAccessor
          * In case we need to create the entity via reflection, we need to have all constructor parameters
          * in the $data array, in case we only want to enhance an existing instance, the given $obj has
          * already been constructed with all of its parameters outside of this function,
-         * so we can skip throwing this exception.
+         * so we can skip creating it via reflection.
          */
         if ($this->isObjectOf($obj, $class)) {
             $obj = $this->createObjectViaReflection($reflectedEntity, $data);
