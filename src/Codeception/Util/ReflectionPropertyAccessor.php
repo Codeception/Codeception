@@ -53,11 +53,17 @@ class ReflectionPropertyAccessor
             foreach ($constructor->getParameters() as $parameter) {
                 if ($parameter->isOptional()) {
                     $constructorParameters[] = $parameter->getDefaultValue();
-                } elseif (array_key_exists($parameter->getName(), $data)) {
+                } elseif (\array_key_exists($parameter->getName(), $data)) {
                     $constructorParameters[] = $data[$parameter->getName()];
-                } else {
+                } elseif (false === \is_a($obj, $class)) {
+                    /*
+                     * In case we need to create the entity via reflection, we need to have all constructor parameters
+                     * in the $data array, in case we only want to enhance an existing instance, the given $obj has
+                     * already been constructed with all of its parameters outside of this function,
+                     * so we can skip throwing this exception.
+                     */
                     throw new InvalidArgumentException(
-                        'Constructor parameter "'.$parameter->getName().'" missing'
+                      'Constructor parameter "'.$parameter->getName().'" missing'
                     );
                 }
             }

@@ -128,6 +128,44 @@ class Doctrine2Test extends Unit
         $this->module->haveInRepository(EntityWithConstructorParameters::class);
     }
 
+    public function testInstatiatedEntityWithConstructorParameter()
+    {
+        $name    = 'Constructor Test 2';
+        $entity = new EntityWithConstructorParameters($name);
+
+        $this->module->dontSeeInRepository(
+          EntityWithConstructorParameters::class,
+          ['name' => $name, 'foo' => 'test', 'bar' => 'foobar']
+        );
+
+        $this->module->haveInRepository($entity, ['foo' => 'test', 'bar' => 'foobar']);
+
+        $this->module->seeInRepository(
+          EntityWithConstructorParameters::class,
+          ['name' => $name, 'foo' => 'test', 'bar' => 'foobar']
+        );
+    }
+
+    public function testInstatiatedEntityWithConstructorParameterOverwritingConstructorValueFromDataArray()
+    {
+        $name   = 'Constructor Test 3';
+        $changedName = 'Changed name';
+
+        $entity = new EntityWithConstructorParameters($name);
+
+        $this->module->dontSeeInRepository(
+          EntityWithConstructorParameters::class,
+          ['name' => $name, 'foo' => 'test', 'bar' => 'foobar']
+        );
+
+        $this->module->haveInRepository($entity, ['name' => $changedName, 'foo' => 'test', 'bar' => 'foobar']);
+
+        $this->module->seeInRepository(
+          EntityWithConstructorParameters::class,
+          ['name' => $changedName, 'foo' => 'test', 'bar' => 'foobar']
+        );
+    }
+
     public function testJoinedEntityOwnField()
     {
         $this->module->dontSeeInRepository(JoinedEntity::class, ['own' => 'Test 1']);
