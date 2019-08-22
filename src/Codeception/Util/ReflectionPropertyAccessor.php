@@ -47,35 +47,23 @@ class ReflectionPropertyAccessor
     {
         $reflectedEntity = new ReflectionClass($class);
 
-        $constructorParameters = [];
-        $constructor = $reflectedEntity->getConstructor();
-        if (null !== $constructor) {
-            foreach ($constructor->getParameters() as $parameter) {
-                if ($parameter->isOptional()) {
-                    $constructorParameters[] = $parameter->getDefaultValue();
-                } elseif (\array_key_exists($parameter->getName(), $data)) {
-                    $constructorParameters[] = $data[$parameter->getName()];
-                } elseif (false === \is_a($obj, $class)) {
-                    /*
-                     * In case we need to create the entity via reflection, we need to have all constructor parameters
-                     * in the $data array, in case we only want to enhance an existing instance, the given $obj has
-                     * already been constructed with all of its parameters outside of this function,
-                     * so we can skip throwing this exception.
-                     */
-                    throw new InvalidArgumentException(
-                      'Constructor parameter "'.$parameter->getName().'" missing'
-                    );
-                }
-            }
+        /*
+         * In case we need to create the entity via reflection, we need to have all constructor parameters
+         * in the $data array, in case we only want to enhance an existing instance, the given $obj has
+         * already been constructed with all of its parameters outside of this function,
+         * so we can skip throwing this exception.
+         */
+        if ($this->isObjectOf($obj, $class)) {
+            $obj = $this->createObjectViaReflection($reflectedEntity, $data);
         }
 
-        $obj = $obj ?: $reflectedEntity->newInstance(...$constructorParameters);
         foreach ($reflectedEntity->getProperties() as $property) {
             if (isset($data[$property->name])) {
                 $property->setAccessible(true);
                 $property->setValue($obj, $data[$property->name]);
             }
         }
+
         return $obj;
     }
 
@@ -110,5 +98,44 @@ class ReflectionPropertyAccessor
             $class = get_parent_class($class);
         } while ($class);
         return $obj;
+    }
+
+    /**
+     * @param mixed $obj
+     * @param string $class
+     *
+     * @return bool
+     */
+    private function isObjectOf($obj, $class)
+    {
+        return false === \is_a($obj, $class);
+    }
+
+    /**
+     * @param array            $data
+     * @param \ReflectionClass $reflectedEntity
+     *
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    private function createObjectViaReflection(ReflectionClass $reflectedEntity, array $data)
+    {
+        $constructorParameters = [];
+        $constructor           = $reflectedEntity->getConstructor();
+        if (null !== $constructor) {
+            foreach ($constructor->getParameters() as $parameter) {
+                if ($parameter->isOptional()) {
+                    $constructorParameters[] = $parameter->getDefaultValue();
+                } elseif (\array_key_exists($parameter->getName(), $data)) {
+                    $constructorParameters[] = $data[$parameter->getName()];
+                } else {
+                    throw new InvalidArgumentException(
+                      'Constructor parameter "'.$parameter->getName().'" missing'
+                    );
+                }
+            }
+        }
+
+        return $reflectedEntity->newInstance(...$constructorParameters);
     }
 }
