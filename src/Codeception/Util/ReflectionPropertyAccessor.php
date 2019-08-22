@@ -130,7 +130,7 @@ class ReflectionPropertyAccessor
                     $constructorParameters[] = $data[$parameter->getName()];
                 } else {
                     throw new InvalidArgumentException(
-                      'Constructor parameter "'.$parameter->getName().'" missing'
+                        'Constructor parameter "'.$parameter->getName().'" missing'
                     );
                 }
             }
