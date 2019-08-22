@@ -30,6 +30,9 @@ matrix:
   - php: 7.2
     env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. PECL="mongodb" COVERAGE=1
   exclude:
+
+  - php: 5.6
+    env: FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
   - php: 7.2
     env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb" COVERAGE=1
   - php: 7.0
