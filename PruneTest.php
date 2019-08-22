@@ -42,7 +42,6 @@ $regexes = [
     'Laravel' => '/.*Laravel.*/',
     'Phalcon' => '/.*Phalcon.*/',
     'Symfony' => '/.*Symfony.*/',
-    'Yii1' => '/.*Yii1.*/',
     'ZendExpressive' => '/.*ZendExpressive.*/',
     'Zend2' => '/.*ZF2.*/',
 ];
