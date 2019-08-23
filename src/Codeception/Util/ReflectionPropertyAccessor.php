@@ -53,7 +53,7 @@ class ReflectionPropertyAccessor
          * already been constructed with all of its parameters outside of this function,
          * so we can skip creating it via reflection.
          */
-        if ($this->isObjectOf($obj, $class)) {
+        if ($this->isNoObjectOf($obj, $class)) {
             $obj = $this->createObjectViaReflection($reflectedEntity, $data);
         }
 
@@ -106,7 +106,7 @@ class ReflectionPropertyAccessor
      *
      * @return bool
      */
-    private function isObjectOf($obj, $class)
+    private function isNoObjectOf($obj, $class)
     {
         return false === \is_a($obj, $class);
     }
