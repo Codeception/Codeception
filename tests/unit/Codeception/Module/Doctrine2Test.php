@@ -37,6 +37,7 @@ class Doctrine2Test extends Unit
         $dir = __DIR__ . "/../../../data/doctrine2_entities";
 
         require_once $dir . "/CompositePrimaryKeyEntity.php";
+        require_once $dir . "/CompositePrimaryKeyEntityWithManyToOneKeys.php";
         require_once $dir . "/PlainEntity.php";
         require_once $dir . "/EntityWithConstructorParameters.php";
         require_once $dir . "/JoinedEntityBase.php";
@@ -58,6 +59,7 @@ class Doctrine2Test extends Unit
 
         (new SchemaTool($this->em))->createSchema([
             $this->em->getClassMetadata(CompositePrimaryKeyEntity::class),
+            $this->em->getClassMetadata(CompositePrimaryKeyEntityWithManyToOneKeys::class),
             $this->em->getClassMetadata(PlainEntity::class),
             $this->em->getClassMetadata(EntityWithConstructorParameters::class),
             $this->em->getClassMetadata(JoinedEntityBase::class),
@@ -358,6 +360,23 @@ class Doctrine2Test extends Unit
             'stringPart' => 'abc',
         ]);
         $this->assertEquals([123, 'abc'], $res);
+    }
+
+    public function testCompositePrimaryKeyWithManyToOneKeysReturnsArrayOfRelatedClassNamesAndKeys()
+    {
+        $firstComposite  = new PlainEntity();
+        $secondComposite = new PlainEntity();
+        $compositeEntity = new CompositePrimaryKeyEntityWithManyToOneKeys($firstComposite, $secondComposite);
+
+        $pks = $this->module->haveInRepository(
+          $compositeEntity,
+          ['firstComposite' => $firstComposite, 'secondComposite' => $secondComposite]
+        );
+
+        $this->assertEquals([
+          [PlainEntity::class => 1],
+          [PlainEntity::class => 2],
+        ], $pks);
     }
 
     public function testRefresh()

@@ -637,7 +637,11 @@ EOF;
         if ($metadata->isIdentifierComposite) {
             $pk = [];
             foreach ($metadata->identifier as $field) {
-                $pk[] = $rpa->getProperty($instance, $field);
+                $id = $rpa->getProperty($instance, $field);
+                if (is_object($id)) {
+                    $id = [get_class($id) => $this->extractPrimaryKey($id)];
+                }
+                $pk[] = $id;
             }
         } else {
             $pk = $rpa->getProperty($instance, $metadata->identifier[0]);
