@@ -54,6 +54,7 @@ use Codeception\Util\ActionSequence;
  * * ssl_verify_server_cert - disables certificate CN verification (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php)
  * * ssl_cipher - list of one or more permissible ciphers to use for SSL encryption (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-cipher)
  * * databases - include more database configs and switch between them in tests.
+ * * initial_queries - list of queries to be executed right after connection to the database has been initiated, i.e. creating the database if it does not exist or preparing the database collation
  *
  * ## Example
  *
@@ -73,6 +74,10 @@ use Codeception\Util\ActionSequence;
  *              ssl_ca: '/path/to/ca-cert.pem'
  *              ssl_verify_server_cert: false
  *              ssl_cipher: 'AES256-SHA'
+ *              initial_queries:
+ *                  - 'CREATE DATABASE IF NOT EXISTS temp_db;'
+ *                  - 'USE temp_db;'
+ *                  - 'SET NAMES utf8;'
  *
  * ## Example with multi-dumps
  *     modules:
@@ -557,6 +562,12 @@ class Db extends CodeceptionModule implements DbInterface
 
         if ($databaseConfig['waitlock']) {
             $this->_getDriver()->setWaitLock($databaseConfig['waitlock']);
+        }
+
+        if (isset($databaseConfig['initial_queries'])) {
+            foreach ($databaseConfig['initial_queries'] as $initialQuery) {
+                $this->drivers[$databaseKey]->executeQuery($initialQuery, []);
+            }
         }
 
         $this->debugSection('Db', 'Connected to ' . $databaseKey . ' ' . $this->drivers[$databaseKey]->getDb());

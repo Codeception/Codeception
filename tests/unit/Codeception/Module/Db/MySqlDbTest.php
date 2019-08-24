@@ -64,6 +64,21 @@ class MySqlDbTest extends TestsForDb
         $this->assertNotEquals($connection3, $connection2);
     }
 
+    public function testInitialQueriesAreExecuted()
+    {
+        $dbName = 'test_db';
+        $config = $this->module->_getConfig();
+        $config['initial_queries'] = [
+            'CREATE DATABASE IF NOT EXISTS ' . $dbName . ';',
+            'USE ' . $dbName . ';',
+        ];
+        $this->module->_reconfigure($config);
+        $this->module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
+        $usedDatabaseName = $this->module->dbh->query('SELECT DATABASE();')->fetch(PDO::FETCH_COLUMN);
+
+        $this->assertEquals($dbName, $usedDatabaseName);
+    }
+
     public function testGrabColumnFromDatabase()
     {
         $emails = $this->module->grabColumnFromDatabase('users', 'email');
