@@ -380,7 +380,7 @@ class PhpBrowserTest extends TestsForBrowsers
     public function testCurlSslOptions()
     {
         $this->module->_setConfig(array(
-            'url' => 'https://google.com',
+            'url' => 'https://github.com',
             'curl' => array(
                 'CURLOPT_NOBODY' => true,
                 'CURLOPT_SSL_CIPHER_LIST' => 'TLSv1',

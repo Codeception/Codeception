@@ -65,7 +65,6 @@ class SnapshotCest
         $I->executeCommand('generate:snapshot Login');
         $I->seeFileWithGeneratedClass('Login', 'tests/_support/Snapshot');
         $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
-        $I->seeFileFound('tests/_bootstrap.php');
     }
 
     public function generateSuiteSnapshot(CliGuy\GeneratorSteps $I)
@@ -85,7 +84,6 @@ class SnapshotCest
         $I->amInPath('tests/data/sandbox');
         $I->seeFileWithGeneratedClass('Login', 'tests/_support/Snapshot');
         $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
-        $I->seeFileFound('tests/_bootstrap.php');
     }
 
 }

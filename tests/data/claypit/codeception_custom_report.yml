@@ -3,8 +3,8 @@ paths:
     log: tests/_output
     data: tests/_data
     helpers: tests/_support
+bootstrap: bootstrap_global.php
 settings:
-    bootstrap: _bootstrap.php
     colors: false
     silent: false
     log: false

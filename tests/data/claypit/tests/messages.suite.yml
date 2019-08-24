@@ -7,7 +7,6 @@ paths:
     envs: tests/_envs
 
 settings:
-    bootstrap: _bootstrap.php
     colors: false
     log: false
 

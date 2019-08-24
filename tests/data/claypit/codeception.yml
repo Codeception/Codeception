@@ -4,8 +4,8 @@ paths:
     data: tests/_data
     helpers: tests/_support
     envs: tests/_envs
+bootstrap: bootstrap_global.php
 settings:
-    bootstrap: _bootstrap.php
     suite_class: \PHPUnit_Framework_TestSuite
     colors: false
     memory_limit: 1024M

@@ -4,9 +4,8 @@ paths:
     data: tests/_data
     helpers: tests/_support
 settings:
-    bootstrap: _bootstrap.php
-    coloe
     silent: false
+    coloe
     log: false
     strict_xml: true
 modules:

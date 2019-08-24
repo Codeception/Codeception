@@ -9,9 +9,9 @@
 $branch ="3.0";
 
 
-function stderr($message)
+function stderr($message, $eol = true)
 {
-    fwrite(STDERR, $message . "\n");
+    fwrite(STDERR, $message . ($eol ? "\n" : ""));
 }
 
 $currentFramework = getenv('FRAMEWORK');
@@ -29,6 +29,8 @@ if ($return !== 0) {
 }
 
 exec("git diff --name-only $branch --", $files, $return);
+stderr("Result of git diff --name-only $branch --");
+stderr(print_r($files, true));
 if ($return !== 0) {
     stderr("Git diff failed");
     die($return);
@@ -40,7 +42,6 @@ $regexes = [
     'Laravel' => '/.*Laravel.*/',
     'Phalcon' => '/.*Phalcon.*/',
     'Symfony' => '/.*Symfony.*/',
-    'Yii1' => '/.*Yii1.*/',
     'ZendExpressive' => '/.*ZendExpressive.*/',
     'Zend2' => '/.*ZF2.*/',
 ];
@@ -50,14 +51,19 @@ $frameworkOnly = true;
 $frameworks = [];
 foreach ($files as $file) {
     $match = false;
+    stderr("Testing file: $file");
     foreach ($regexes as $framework => $regex) {
+        stderr("Checking framework $framework...", false);
         if (preg_match($regex, $file)) {
             $match = true;
             $frameworks[$framework] = $framework;
+            stderr("MATCH");
             break;
         }
+        stderr('X');
     }
     if (!$match) {
+        stderr("No framework matched, need to run all tests");
         $frameworkOnly = false;
         break;
     }
@@ -67,9 +73,6 @@ if ($frameworkOnly) {
     stderr('Changes limited to frameworks: ' . implode(', ', $frameworks));
     if (!isset($frameworks[$currentFramework])) {
         stderr("Skipping test for framework: $currentFramework");
-        echo "export FRAMEWORK=\n";
-        echo "export PECL=\n";
-        echo "export FXP=\n";
-        echo "export CI_USER_TOKEN=\n";
+        echo "travis_terminate 0\n";
     }
 }
