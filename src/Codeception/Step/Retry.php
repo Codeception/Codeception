@@ -43,10 +43,11 @@ EOF;
         $interval = $this->retryInterval;
         while (true) {
             try {
+                $this->isTry = $retry < $this->retryNum;
                 return parent::run($container);
             } catch (\Exception $e) {
                 $retry++;
-                if ($retry > $this->retryNum) {
+                if (!$this->isTry) {
                     throw $e;
                 }
                 codecept_debug("Retrying #$retry in ${interval}ms");
