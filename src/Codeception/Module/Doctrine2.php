@@ -427,7 +427,8 @@ EOF;
      * If the entity has a constructor, for optional parameters the default value will be used and for non-optional parameters the given fields (with a matching name) will be passed when calling the constructor before the properties get set directly (via reflection).
      *
      * Returns primary key of newly created entity. Primary key value is extracted using Reflection API.
-     * If primary key is composite, array of values is returned.
+     * If primary key is composite, array of values is returned. If primary key
+     * is composite of related entites, array of [classname, pk] arrays is returned.
      *
      * ```php
      * $I->haveInRepository('Entity\User', array('name' => 'davert'));
@@ -639,7 +640,7 @@ EOF;
             foreach ($metadata->identifier as $field) {
                 $id = $rpa->getProperty($instance, $field);
                 if (is_object($id)) {
-                    $id = [get_class($id) => $this->extractPrimaryKey($id)];
+                    $id = [get_class($id), $this->extractPrimaryKey($id)];
                 }
                 $pk[] = $id;
             }

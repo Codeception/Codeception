@@ -374,8 +374,8 @@ class Doctrine2Test extends Unit
         );
 
         $this->assertEquals([
-          [PlainEntity::class => 1],
-          [PlainEntity::class => 2],
+          [PlainEntity::class, 1],
+          [PlainEntity::class, 2],
         ], $pks);
     }
 
