@@ -146,6 +146,26 @@ class Doctrine2Test extends Unit
         );
     }
 
+    public function testEntityWithOptionalConstructorParameters()
+    {
+        $name = 'Constructor Test 4';
+
+        $this->module->dontSeeInRepository(
+          EntityWithConstructorParameters::class,
+          ['name' => $name, 'foo' => 'test']
+        );
+
+        $this->module->haveInRepository(
+          EntityWithConstructorParameters::class,
+          ['name' => $name, 'foo' => 'test']
+        );
+
+        $this->module->seeInRepository(
+          EntityWithConstructorParameters::class,
+          ['name' => $name, 'foo' => 'test']
+        );
+    }
+
     public function testInstatiatedEntityWithConstructorParameterOverwritingConstructorValueFromDataArray()
     {
         $name   = 'Constructor Test 3';
