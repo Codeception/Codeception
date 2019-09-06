@@ -9,6 +9,7 @@ class TryTo extends Assertion implements GeneratedStep
 {
     public function run(ModuleContainer $container = null)
     {
+        $this->isTry = true;
         try {
             parent::run($container);
         } catch (\Exception $e) {

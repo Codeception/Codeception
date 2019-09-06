@@ -34,6 +34,7 @@ abstract class Step
     protected $metaStep = null;
 
     protected $failed = false;
+    protected $isTry = false;
 
     public function __construct($action, array $arguments = [])
     {
@@ -264,6 +265,9 @@ abstract class Step
         try {
             $res = call_user_func_array([$activeModule, $this->action], $this->arguments);
         } catch (\Exception $e) {
+            if ($this->isTry) {
+                throw $e;
+            }
             $this->failed = true;
             if ($this->getMetaStep()) {
                 $this->getMetaStep()->setFailed(true);
