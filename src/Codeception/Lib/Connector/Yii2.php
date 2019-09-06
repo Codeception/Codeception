@@ -2,12 +2,10 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Exception\ConfigurationException;
-use Codeception\Exception\ModuleException;
 use Codeception\Lib\Connector\Yii2\Logger;
 use Codeception\Lib\Connector\Yii2\TestMailer;
-use Codeception\Lib\InnerBrowser;
 use Codeception\Util\Debug;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\AbstractBrowser as Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Response;
 use Yii;

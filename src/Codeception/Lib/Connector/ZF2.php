@@ -2,7 +2,7 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\ZF2\PersistentServiceManager;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\AbstractBrowser as Client;
 use Symfony\Component\BrowserKit\Response;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Headers as HttpHeaders;
