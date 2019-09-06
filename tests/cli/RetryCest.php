@@ -31,8 +31,8 @@ class RetryCest
     public function failForInterval(CliGuy $I)
     {
         $I->executeFailCommand('run --debug -g fail2');
-        $I->seeInShellOutput('Retrying #1 in 100ms');
         $I->seeInShellOutput('Retrying #2 in 200ms');
+        $I->seeInShellOutput('Retrying #1 in 100ms');
         $I->seeInShellOutput('Retrying #3 in 400ms');
         $I->seeResultCodeIsNot(0);
     }
