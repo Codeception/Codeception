@@ -700,9 +700,9 @@ Additional debugging features by Codeception:
 
 ### Common Cases
 
-Let's see how common problems of acceptance testing can be solved with Codeception.
+Let's see how common problems of acceptance testing can be solved with Codeception. We will need to update actor class (whcih is AcceptanceTester) in our case to add a new action.
 
-#### Authorization
+#### Login
 
 It is recommended to put widely used actions inside an Actor class. A good example is the `login` action
 which would probably be actively involved in acceptance or functional testing:
@@ -738,7 +738,7 @@ $I->login('miles', '123456');
 However, implementing all actions for reuse in a single actor class may lead to
 breaking the [Single Responsibility Principle](http://en.wikipedia.org/wiki/Single_responsibility_principle).
 
-#### Session Snapshot
+#### Single Login
 
 If you need to authorize a user for each test, you can do so by submitting the login form at the beginning of every test.
 Running those steps takes time, and in the case of Selenium tests (which are slow by themselves)

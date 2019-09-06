@@ -68,6 +68,8 @@ The most important part is the `_generated\AcceptanceTesterActions` trait, which
 It knows which module executes which action and passes parameters into it.
 This trait was created by running `codecept build` and is regenerated each time module or configuration changes.
 
+> Use actor classes to set common actions which can be used accross a suite.
+
 
 ## PageObjects
 
@@ -76,48 +78,37 @@ we should have buttons, links and form fields being reused as well. For those ca
 the [PageObject pattern](http://docs.seleniumhq.org/docs/06_test_design_considerations.jsp#page-object-design-pattern),
 which is widely used by test automation engineers. The PageObject pattern represents a web page as a class
 and the DOM elements on that page as its properties, and some basic interactions as its methods.
-PageObjects are very important when you are developing a flexible architecture of your tests.
+PageObjects are very important when you are developing a flexible architecture of your acceptance or functional tests.
 Do not hard-code complex CSS or XPath locators in your tests but rather move them into PageObject classes.
 
 Codeception can generate a PageObject class for you with command:
 
 ```bash
-php vendor/bin/codecept generate:pageobject Login
+php vendor/bin/codecept generate:pageobject acceptance Login
 ```
 
-This will create a `Login` class in `tests/_support/Page`.
+> It is recommended to use page objects for acceptance testing only
+
+This will create a `Login` class in `tests/_support/Page/Acceptance`.
 The basic PageObject is nothing more than an empty class with a few stubs.
-It is expected that you will populate it with the UI locators of a page it represents
-and then those locators will be used on a page.
-Locators are represented with public static properties:
+
+It is expected that you will populate it with the UI locators of a page it represents. Locators can be added as public properties:
 
 ```php
 <?php
-namespace Page;
+namespace Page\Acceptance;
 
 class Login
 {
     public static $URL = '/login';
 
-    public static $usernameField = '#mainForm #username';
-    public static $passwordField = '#mainForm input[name=password]';
-    public static $loginButton = '#mainForm input[type=submit]';
+    public $usernameField = '#mainForm #username';
+    public $passwordField = '#mainForm input[name=password]';
+    public $loginButton = '#mainForm input[type=submit]';
+
+    // ...
 }
 ```
-
-And this is how this page object can be used in a test:
-
-```php
-<?php
-$I->amOnPage(\Page\Login::$URL);
-$I->fillField(\Page\Login::$usernameField, 'bill evans');
-$I->fillField(\Page\Login::$passwordField, 'debby');
-$I->click(\Page\Login::$loginButton);
-$I->see('Welcome, bill');
-```
-
-As you see, you can freely change markup of your login page, and all the tests interacting with this page
-will have their locators updated according to properties of LoginPage class.
 
 But let's move further. The PageObject concept specifies that the methods for the page interaction should also be stored in a PageObject class. 
 
@@ -125,15 +116,15 @@ Let's define a `login` method in this class:
 
 ```php
 <?php
-namespace Page;
+namespace Page\Acceptance;
 
 class Login
 {
     public static $URL = '/login';
 
-    public static $usernameField = '#mainForm #username';
-    public static $passwordField = '#mainForm input[name=password]';
-    public static $loginButton = '#mainForm input[type=submit]';
+    public $usernameField = '#mainForm #username';
+    public $passwordField = '#mainForm input[name=password]';
+    public $loginButton = '#mainForm input[type=submit]';
 
     /**
      * @var AcceptanceTester
@@ -151,9 +142,9 @@ class Login
         $I = $this->tester;
 
         $I->amOnPage(self::$URL);
-        $I->fillField(self::$usernameField, $name);
-        $I->fillField(self::$passwordField, $password);
-        $I->click(self::$loginButton);
+        $I->fillField($this->usernameField, $name);
+        $I->fillField($this->passwordField, $password);
+        $I->click($this->loginButton);
     }
 }
 ```
@@ -165,7 +156,7 @@ In the case of a PageObject you should declare a class as a parameter for a test
 <?php
 class UserCest
 {
-    function showUserProfile(AcceptanceTester $I, \Page\Login $loginPage)
+    function showUserProfile(AcceptanceTester $I, \Page\Acceptance\Login $loginPage)
     {
         $loginPage->login('bill evans', 'debby');
         $I->amOnPage('/profile');
@@ -259,6 +250,8 @@ class UserCest
 If you have a complex interaction scenario, you may use several step objects in one test.
 If you feel like adding too many actions into your Actor class
 (which is AcceptanceTester in this case) consider moving some of them into separate StepObjects.
+
+> Use StepObjects when you have multiple areas of applications or multiple roles.
 
 
 ## Conclusion
