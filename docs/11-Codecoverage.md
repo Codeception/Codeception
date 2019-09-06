@@ -164,7 +164,7 @@ coverage:
     remote: false
     work_dir: /workdir
 
-``` 
+```
 
 ### Remote Context Options
 

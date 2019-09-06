@@ -216,7 +216,7 @@ use \Codeception\Step\Argument\PasswordArgument;
 
 $I->amOnPage('/form/password_argument');
 $I->fillField('password', new PasswordArgument('thisissecret'));
-```  
+```
 
 `thisissecret` will be filled into a form but it won't be shown in output and logs.
 
@@ -282,7 +282,7 @@ Conditional assertions are disabled in bootstrap setup. To enable them you shoul
 # or in codeception.yml inside suites section
 step_decorators:
   - \Codeception\Step\ConditionalAssertion
-``` 
+```
 
 Then rebuild actors with `codecept build` command.
 
@@ -383,19 +383,6 @@ This makes Selenium quite heavy to install, as it requires Java, browsers, Chrom
 
 * Follow [Installation Instructions](http://codeception.com/docs/modules/WebDriver#Selenium)
 * Enable [RunProcess](http://codeception.com/extensions#RunProcess) extension to start/stop Selenium automatically *(optional)*.
-
-#### PhantomJS
-
-PhantomJS is a customized WebKit-based [headless browser](https://en.wikipedia.org/wiki/Headless_browser)
-built for programmatic usage only. It doesn't display a browser window and doesn't require GUI (display server) to be installed.
-This makes PhantomJS highly popular for Continuous Integration systems.
-PhantomJS needs only one binary with no extra dependencies which make it the simplest WebDriver tool to install.
-
-However, it should be noted that PhantomJS is not a real browser, so the behavior and output in real browsers may differ from PhantomJS.
-And the most important: **PhantomJS is not maintained** anymore. So use it at your own risk.
-
-* Follow [Installation Instructions](http://codeception.com/docs/modules/WebDriver#PhantomJS)
-* Enable [RunProcess](http://codeception.com/extensions#RunProcess) extension to start/stop PhantomJS automatically *(optional)*.
 
 #### ChromeDriver
 
@@ -538,7 +525,7 @@ Retries are disabled by default. To enable them you should add retry step decora
 # or in codeception.yml inside suites section
 step_decorators:
   - \Codeception\Step\Retry
-``` 
+```
 
 Then add `\Codeception\Lib\Actor\Shared\Retry` trait into `AcceptanceTester` class:
 
@@ -618,7 +605,7 @@ A/B testing is disabled by default. To enable it you should add corresponding st
 # or in codeception.yml inside suites section
 step_decorators:
   - \Codeception\Step\TryTo
-``` 
+```
 
 Then rebuild actors with `codecept build` command.
 
@@ -710,6 +697,82 @@ Additional debugging features by Codeception:
 
 * [Interactive Pause](http://codeception.com/docs/02-GettingStarted#Interactive-Pause) is a REPL that allows to type and check commands for instant feedback.
 * [Recorder Extension](http://codeception.com/addons#CodeceptionExtensionRecorder) allows to record tests step-by-steps and show them in slideshow
+
+### Common Cases
+
+Let's see how common problems of acceptance testing can be solved with Codeception. We will need to update actor class (whcih is AcceptanceTester) in our case to add a new action.
+
+#### Login
+
+It is recommended to put widely used actions inside an Actor class. A good example is the `login` action
+which would probably be actively involved in acceptance or functional testing:
+
+``` php
+<?php
+class AcceptanceTester extends \Codeception\Actor
+{
+    // do not ever remove this line!
+    use _generated\AcceptanceTesterActions;
+
+    public function login($name, $password)
+    {
+        $I = $this;
+        $I->amOnPage('/login');
+        $I->submitForm('#loginForm', [
+            'login' => $name,
+            'password' => $password
+        ]);
+        $I->see($name, '.navbar');
+    }
+}
+```
+
+Now you can use the `login` method inside your tests:
+
+```php
+<?php
+// $I is AcceptanceTester
+$I->login('miles', '123456');
+```
+
+However, implementing all actions for reuse in a single actor class may lead to
+breaking the [Single Responsibility Principle](http://en.wikipedia.org/wiki/Single_responsibility_principle).
+
+#### Single Login
+
+If you need to authorize a user for each test, you can do so by submitting the login form at the beginning of every test.
+Running those steps takes time, and in the case of Selenium tests (which are slow by themselves)
+that time loss can become significant.
+
+Codeception allows you to share cookies between tests, so a test user can stay logged in for other tests.
+
+Let's improve the code of our `login` method, executing the form submission only once
+and restoring the session from cookies for each subsequent login function call:
+
+``` php
+<?php
+    public function login($name, $password)
+    {
+        $I = $this;
+        // if snapshot exists - skipping login
+        if ($I->loadSessionSnapshot('login')) {
+            return;
+        }
+        // logging in
+        $I->amOnPage('/login');
+        $I->submitForm('#loginForm', [
+            'login' => $name,
+            'password' => $password
+        ]);
+        $I->see($name, '.navbar');
+         // saving snapshot
+        $I->saveSessionSnapshot('login');
+    }
+```
+
+Note that session restoration only works for `WebDriver` modules
+(modules implementing `Codeception\Lib\Interfaces\SessionSnapshot`).
+
 
 ### Custom Browser Sessions
 

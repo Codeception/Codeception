@@ -1,16 +1,16 @@
-# Testing WebServices
+# API Testing
 
 The same way we tested a web site, Codeception allows you to test web services. They are very hard to test manually, so it's a really good idea to automate web service testing. We have SOAP and REST as standards, which are represented in corresponding modules, which we will cover in this chapter.
 
 You should start by creating a new test suite, (which was not provided by the `bootstrap` command). We recommend calling it **api** and using the `ApiTester` class for it.
 
 ```bash
-$ php vendor/bin/codecept generate:suite api
+php vendor/bin/codecept generate:suite api
 ```
 
 We will put all the api tests there.
 
-## REST
+## REST API
 
 The REST web service is accessed via HTTP with standard methods: `GET`, `POST`, `PUT`, `DELETE`. They allow users to receive and manipulate entities from the service. Accessing a WebService requires an HTTP client, so for using it you need the module `PhpBrowser` or one of framework modules set up. For example, we can use the `Symfony` module for Symfony2 applications in order to ignore web server and test web service internally.
 
@@ -51,7 +51,7 @@ modules:
 Once we have configured our new testing suite, we can create the first sample test:
 
 ```bash
-$ codecept generate:cest api CreateUser
+php vendor/bin/codecept generate:cest api CreateUser
 ```
 
 It will be called `CreateUserCest.php`. 
@@ -61,20 +61,15 @@ We need to implement a public method for each test. Let's make `createUserViaAPI
 <?php
 class CreateUserCest
 {
-    public function _before(\ApiTester $I)
-    {
-    }
-
-    public function _after(\ApiTester $I)
-    {
-    }
-
     // tests
     public function createUserViaAPI(\ApiTester $I)
     {
         $I->amHttpAuthenticated('service_user', '123456');
         $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-        $I->sendPOST('/users', ['name' => 'davert', 'email' => 'davert@codeception.com']);
+        $I->sendPOST('/users', [
+          'name' => 'davert', 
+          'email' => 'davert@codeception.com'
+        ]);
         $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK); // 200
         $I->seeResponseIsJson();
         $I->seeResponseContains('{"result":"ok"}');
@@ -85,7 +80,100 @@ class CreateUserCest
 
 We can use HTTP code constants from `Codeception\Util\HttpCode` instead of numeric values to check response code in `seeResponseCodeIs` and `dontSeeResponseCodeIs` methods.
 
-### Testing JSON Responses
+Let's see what the test consist of.
+
+### Authorization
+
+To authorize requests to external resources, usually provider requires you to authorize using headers. Additional headers can be set before request using `haveHttpHeader` command:
+
+      
+```php
+<?php
+$I->haveHttpHeader('api_key', 'special-key');
+```
+
+For common authorization patterns use one of the following methods:
+
+* `amAWSAuthenticated`
+* `amBearerAuthenticated`
+* `amDigestAuthenticated`
+* `amHttpAuthenticated`
+* `amNTLMAuthenticated`
+
+### Sending Requests
+
+The real action in a test happens only when a request is sent. Before a request you may provide additional http headers which will be used in a next request to set authorization or expected content format.
+
+```php
+<?php
+$I->haveHttpHeader('accept', 'application/json');
+$I->haveHttpHeader('content-type', 'application/json');
+```
+
+When headers are set, you can send a request. To obtain data use `sendGET`:
+
+```php
+<?php
+// pass in query params in second argument
+$I->sendGET('/posts', [ 'status' => 'pending' ]);
+$I->seeResponseCodeIs(200);
+$I->seeResponseIsJson();
+```
+
+> `sendGET` won't return any value. However, you can access data from a response and perform assertions using other available methods of REST module.
+
+To create or update data you can use other common methods:
+
+* `sendPOST`
+* `sendPUT`
+* `sendDELETE`
+* `sendPATCH`
+
+### JSON Structure Validation
+
+If we expect a JSON response to be received we can check its structure with [JSONPath](http://goessner.net/articles/JsonPath/). It looks and sounds like XPath but is designed to work with JSON data, however we can convert JSON into XML and use XPath to validate the structure. Both approaches are valid and can be used in the REST module:
+
+```php
+<?php
+$I->sendGET('/users');
+$I->seeResponseCodeIs(HttpCode::OK); // 200
+$I->seeResponseIsJson();
+$I->seeResponseJsonMatchesJsonPath('$[0].user.login');
+$I->seeResponseJsonMatchesXpath('//user/login');
+```
+
+More detailed check can be applied if you need to validate the type of fields in a response.
+You can do that by using with a [seeResponseMatchesJsonType](http://codeception.com/docs/modules/REST#seeResponseMatchesJsonType) action in which you define the structure of JSON response.
+
+```php
+<?php
+$I->sendGET('/users/1');
+$I->seeResponseCodeIs(HttpCode::OK); // 200
+$I->seeResponseIsJson();
+$I->seeResponseMatchesJsonType([
+    'id' => 'integer',
+    'name' => 'string',
+    'email' => 'string:email',
+    'homepage' => 'string:url|null',
+    'created_at' => 'string:date',
+    'is_active' => 'boolean'
+]);
+
+```
+
+Codeception uses this simple and lightweight definitions format which can be [easily learned and extended](http://codeception.com/docs/modules/REST#seeResponseMatchesJsonType).
+
+### Taking Data From Responses
+
+When you need to obtain a value from a response and use it in next requests you can use `grab*` methods. For instance, use `grabDataFromResponseByJsonPath` allows to query JSON for a value.
+
+```php
+<?php
+list($id) = $I->grabDataFromResponseByJsonPath('$.id');
+$I->sendGET('/pet/' . $id);
+```
+
+### Validating Data JSON Responses
 
 The last line of the previous example verified that the response contained the provided string. However we shouldn't rely on it, as depending on content formatting we can receive different results with the same data. What we actually need is to check that the response can be parsed and it contains some of the values we expect. In the case of JSON we can use the `seeResponseContainsJson` method
 
@@ -123,42 +211,6 @@ class Api extends \Codeception\Module
 
 The same way you can receive request parameters and headers.
 
-### Validate JSON structures
-
-It is pretty common for API tests to not only validate the received data but to check the structure of the response. Response data is not usually considered to be consistent, and may change on each request, however the JSON/XML structure should be kept the same for an API version. In order to check response structure the REST module has some useful methods.
-
-If we expect a JSON response to be received we can check its structure with [JSONPath](http://goessner.net/articles/JsonPath/). It looks and sounds like XPath but is designed to work with JSON data, however we can convert JSON into XML and use XPath to validate the structure. Both approaches are valid and can be used in the REST module:
-
-```php
-<?php
-$I->sendGET('/users');
-$I->seeResponseCodeIs(HttpCode::OK); // 200
-$I->seeResponseIsJson();
-$I->seeResponseJsonMatchesJsonPath('$[0].user.login');
-$I->seeResponseJsonMatchesXpath('//user/login');
-```
-
-More detailed check can be applied if you need to validate the type of fields in a response.
-You can do that by using with a [seeResponseMatchesJsonType](http://codeception.com/docs/modules/REST#seeResponseMatchesJsonType) action in which you define the structure of JSON response.
-
-```php
-<?php
-$I->sendGET('/users/1');
-$I->seeResponseCodeIs(HttpCode::OK); // 200
-$I->seeResponseIsJson();
-$I->seeResponseMatchesJsonType([
-    'id' => 'integer',
-    'name' => 'string',
-    'email' => 'string:email',
-    'homepage' => 'string:url|null',
-    'created_at' => 'string:date',
-    'is_active' => 'boolean'
-]);
-
-```
-
-Codeception uses this simple and lightweight definitions format which can be [easily learned and extended](http://codeception.com/docs/modules/REST#seeResponseMatchesJsonType).
-
 ### Testing XML Responses
 
 In case your REST API works with XML format you can use similar methods to test its data and structure.
@@ -182,11 +234,9 @@ $I->seeXmlResponseIncludes(\Codeception\Util\Xml::toXml([
 
 We are using `Codeception\Util\Xml` class which allows us to build XML structures in a clean manner. The `toXml` method may accept a string or array and returns \DOMDocument instance. If your XML contains attributes and so can't be represented as a PHP array you can create XML using the [XmlBuilder](http://codeception.com/docs/reference/XmlBuilder) class. We will take a look at it a bit more in next section.
 
-<div class="alert alert-info">
-Use `\Codeception\Util\Xml::build()` to create XmlBuilder instance.
-</div>
+> Use `\Codeception\Util\Xml::build()` to create XmlBuilder instance.
 
-## SOAP
+## SOAP API
 
 SOAP web services are usually more complex. You will need PHP [configured with SOAP support](http://php.net/manual/en/soap.installation.php). Good knowledge of XML is required too. `SOAP` module uses specially formatted POST request to connect to WSDL web services. Codeception uses `PhpBrowser` or one of framework modules to perform interactions. If you choose using a framework module, SOAP will automatically connect to the underlying framework. That may improve the speed of a test execution and will provide you with more detailed stack traces.
 
@@ -196,17 +246,16 @@ Let's configure `SOAP` module to be used with `PhpBrowser`:
 actor: ApiTester
 modules:
     enabled:
-    - SOAP:
-      depends: PhpBrowser
-      endpoint: http://serviceapp/api/v1/
+        - SOAP:
+          depends: PhpBrowser
+          endpoint: http://serviceapp/api/v1/
 ```
 
 SOAP request may contain application specific information, like authentication or payment. This information is provided with SOAP header inside the `<soap:Header>` element of XML request. In case you need to submit such header, you can use `haveSoapHeader` action. For example, next line of code
 
 ```php
 <?php
-$I->haveSoapHeader('Auth', array('username' => 'Miles', 'password' => '123456'));
-
+$I->haveSoapHeader('Auth', ['username' => 'Miles', 'password' => '123456']);
 ```
 will produce this XML header
 
@@ -273,11 +322,11 @@ You may extend current functionality by using `SOAP` module in your helper class
 namespace Helper;
 class Api extends \Codeception\Module {
 
-  public function seeResponseIsValidOnSchema($schema)
-  {
-    $response = $this->getModule('SOAP')->response;
-    $this->assertTrue($response->schemaValidate($schema));
-  }
+    public function seeResponseIsValidOnSchema($schema)
+    {
+        $response = $this->getModule('SOAP')->response;
+        $this->assertTrue($response->schemaValidate($schema));
+    }
 }
 
 ```
