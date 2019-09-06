@@ -12,7 +12,7 @@ and you want to split it, you can easily move it into classes.
 You can create a Cest file by running the command:
 
 ```bash
-$ php vendor/bin/codecept generate:cest suitename CestName
+php vendor/bin/codecept generate:cest suitename CestName
 ```
 
 The generated file will look like this:

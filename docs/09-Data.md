@@ -325,7 +325,7 @@ public function testCategoriesAreTheSame(\AcceptanceTester $I, \Snapshot\Categor
 On the first run, data will be obtained via `fetchData` method and saved to `tests/_data` directory in json format.
 On next execution the obtained data will be compared with previously saved snapshot.
 
-**To update a snapshot with a new data run tests in `--debug` mode.**
+> To update a snapshot with a new data run tests in `--debug` mode.
 
 By default Snapshot uses `assertEquals` assertion, however this can be customized by overriding `assertData` method.
   

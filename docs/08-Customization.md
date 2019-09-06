@@ -194,15 +194,15 @@ To enable extension dynamically, execute the `run` command with `--ext` option.
 Provide a class name as a parameter:
 
 ```bash
-codecept run --ext MyCustomExtension
-codecept run --ext "\My\Extension"
+php vendor/bin/codecept run --ext MyCustomExtension
+php vendor/bin/codecept run --ext "\My\Extension"
 ```
 
 If a class is in a `Codeception\Extension` namespace you can skip it and provide only a shortname.
 So Recorder extension can be started like this:
 
 ```bash
-codecept run --ext Recorder
+php vendor/bin/codecept run --ext Recorder
 ```
 
 ### Configuring Extension
@@ -281,9 +281,9 @@ class Admin extends \Codeception\GroupObject
         $this->writeln('inserting additional admin users...');
 
         $db = $this->getModule('Db');
-        $db->haveInDatabase('users', array('name' => 'bill', 'role' => 'admin'));
-        $db->haveInDatabase('users', array('name' => 'john', 'role' => 'admin'));
-        $db->haveInDatabase('users', array('name' => 'mark', 'role' => 'banned'));
+        $db->haveInDatabase('users', ['name' => 'bill', 'role' => 'admin']);
+        $db->haveInDatabase('users', ['name' => 'john', 'role' => 'admin']);
+        $db->haveInDatabase('users', ['name' => 'mark', 'role' => 'banned']);
     }
 
     public function _after(\Codeception\Event\TestEvent $e)
@@ -354,7 +354,7 @@ There are [DotReporter](http://codeception.com/extensions#DotReporter) and [Simp
 Use them to change output or use them as an example to build your own reporter. They can be easily enabled with `--ext` option
 
 ```bash
-codecept run --ext DotReporter
+php vendor/bin/codecept run --ext DotReporter
 ```
 
 ![](https://cloud.githubusercontent.com/assets/220264/26132800/4d23f336-3aab-11e7-81ba-2896a4c623d2.png)
@@ -392,12 +392,12 @@ Codeception has built-in installation templates for
 They can be executed with `init` command:
 
 ```bash
-codecept init Acceptance
+php vendor/bin/codecept init Acceptance
 ```
 To init tests in specific folder use `--path` option:
 
 ```bash
-codecept init Acceptance --path acceptance_tests
+php vendor/bin/codecept init Acceptance --path acceptance_tests
 ```
 
 You will be asked several questions and then config files will be generated and all necessary directories will be created.
@@ -433,9 +433,7 @@ settings:
 
 You should also specify the path to the `log` directory, where the reports and logs will be saved.
 
-<div class="alert alert-notice">
-Wildcards (*) can be used to specify multiple directories at once.
-</div>
+> Wildcards (*) can be used to specify multiple directories at once.
 
 
 ## Conclusion
