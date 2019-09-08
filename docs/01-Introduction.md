@@ -22,7 +22,7 @@ Out of the box you have tools for writing unit, functional, and acceptance tests
 | Testing computer needs access to project's PHP files | Yes | Yes | No |
 | Webserver required | No | No | Yes |
 | JavaScript  | No | No | Yes |
-| Additional software required | None | None | Selenium for browser testing</ul> |
+| Additional software required | None | None | Selenium for browser testing |
 | Speed | Fast | Fast | Slow |
 | Configuration file | `unit.suite.yml` | `functional.suite.yml` | `acceptance.suite.yml` |
 
