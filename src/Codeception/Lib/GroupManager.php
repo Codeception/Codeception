@@ -19,7 +19,6 @@ class GroupManager
 
     public function __construct(array $groups)
     {
-        codecept_debug($groups);
         $this->configuredGroups = $groups;
         $this->loadGroupsByPattern();
         $this->loadConfiguredGroupSettings();
