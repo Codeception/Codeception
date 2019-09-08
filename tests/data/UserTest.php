@@ -1,6 +1,6 @@
 <?php
 
-final class PostTest
+final class UserTest
 {
 
 }
