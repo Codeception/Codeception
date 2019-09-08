@@ -63,7 +63,10 @@ class GroupManager
             if (is_array($tests)) {
                 foreach ($tests as $test) {
                     $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $test);
-                    $this->testsInGroups[$group][] = Configuration::projectDir() . $file;
+
+                    $filePath = codecept_is_path_absolute($file) ? $file : realpath(Configuration::projectDir() . $file);
+
+                    $this->testsInGroups[$group][] = $filePath;
                 }
             } elseif (is_file(Configuration::projectDir() . $tests)) {
                 $handle = @fopen(Configuration::projectDir() . $tests, "r");
