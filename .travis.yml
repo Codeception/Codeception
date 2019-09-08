@@ -8,53 +8,17 @@ php:
 env:
   global:
     - COVERAGE=
-    - SUITES=
-    - PECL=
-    - TEST_PATH='framework-tests'
+    - SUITES=cli,unit
     - SYMFONY_DEPRECATIONS_HELPER=weak
-  matrix:
-  - FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb" COVERAGE=1
-  - FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
-  - FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
-  - FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
-  - FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-  - FRAMEWORK=Lumen TEST_REPO='-b codeception-2.2 https://github.com/codeception/codeception-lumen-sample.git'
-  - FRAMEWORK=Laravel TEST_REPO='-b codeception-3.0 https://github.com/codeception/codeception-laravel5-sample.git'
-  - FRAMEWORK=Phalcon TEST_REPO=https://github.com/Codeception/phalcon-demo.git
-  - FRAMEWORK=Zend2 TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zf2-tests' SUITES=functional
-  - FRAMEWORK=ZendExpressive TEST_REPO='-b 2.2 --recurse-submodules https://github.com/Naktibalda/codeception-zend-expressive-tests' SUITES=functional
 matrix:
   fast_finish: true
   include:
   # Run our coverage suite on 7.2 (so it uses pcov)
   - php: 7.2
-    env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. PECL="mongodb" COVERAGE=1
+    env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. COVERAGE=1
   exclude:
-
-  - php: 5.6
-    env: FRAMEWORK=Yii2 TEST_REPO="https://github.com/Codeception/yii2-tests"
   - php: 7.2
-    env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. PECL="mongodb" COVERAGE=1
-  - php: 7.0
-    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
-  - php: 7.1
-    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
-  - php: 7.2
-    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
-  - php: 7.3
-    env: FRAMEWORK=Symfony VERSION=2.8 TEST_REPO='-b 2.1 https://github.com/Codeception/symfony-demo.git' SUITES=functional TEST_PATH=framework-tests/src/AppBundle
-  - php: 5.6
-    env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
-  - php: 7.0
-    env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
-  - php: 7.3
-    env: FRAMEWORK=Symfony VERSION=3.4 TEST_REPO='--recurse-submodules https://github.com/Naktibalda/codeception-symfony-tests'
-  - php: 5.6
-    env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-  - php: 7.0
-    env: FRAMEWORK=Symfony VERSION=4 TEST_REPO='https://github.com/Codeception/symfony-demo.git' SUITES=functional,unit
-addons:
-  postgresql: "9.6"
+    env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. COVERAGE=1
 
 branches:
   except:
@@ -65,74 +29,25 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
-services:
-  - mongodb
-  - rabbitmq
-  - postgresql
-  - redis
-  - mysql
-
 before_install:
   # Install coverage driver; for php < 7.2 we use xdebug, for >= 7.2 we use pcov, pcov supports 7.1, but phpunit only supports pcov from 8.0 which requires php 7.2s
   - '[[ -z "$COVERAGE" ]] || [[ "$TRAVIS_PHP_VERSION" < 7.2 ]] || (phpenv config-rm xdebug.ini; pecl install -f pcov)'
   - php -i
-  - '$(php PruneTest.php)'
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
   - composer global require hirak/prestissimo
 install:
   - '[[ -z "$CI_USER_TOKEN" ]] || composer config github-oauth.github.com ${CI_USER_TOKEN};'
-  # Add extensions
-  - '[[ -z "$PECL" ]] || (yes "" | pecl -q install -f $PECL)'
-  # Clone test repository
-  - '[[ "$FRAMEWORK" == "Codeception" ]] || git clone -q --depth=1 $TEST_REPO framework-tests'
-  - '[[ "$FRAMEWORK" == "Codeception" ]] || git --git-dir framework-tests/.git log -n 1'
-  - '[[ "$FRAMEWORK" != "Codeception" ]] || composer require mongodb/mongodb --no-update'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/finder=~$VERSION --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/yaml=~$VERSION --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/console=~$VERSION --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/event-dispatcher=~$VERSION --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/css-selector=~$VERSION --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/dom-crawler=~$VERSION --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$VERSION --no-update --ignore-platform-reqs'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || composer require symfony/browser-kit=~$VERSION --no-update --ignore-platform-reqs'
-  # Phalcon
-  - '[[ "$FRAMEWORK" != "Phalcon" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b v3.4.2'
-  - '[[ "$FRAMEWORK" != "Phalcon" ]] || (cd cphalcon/build; bash ./install --phpize $(phpenv which phpize) --php-config $(phpenv which php-config) &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null)'
-  # Symfony
-  #- '[[ "$FRAMEWORK$VERSION" != "Symfony3" ]] || composer require -d framework-tests symfony/symfony=~$VERSION --no-update'
-  - '[[ -z "$FRAMEWORK" ]] || composer install'
-  - '[[ "$FRAMEWORK" == "Codeception" ]] || [[ -z "$FRAMEWORK" ]] || composer update -d framework-tests --no-dev --prefer-dist'
+  - composer require --no-update codeception/module-asserts:"dev-master"
+  - composer require --no-update codeception/module-cli:"dev-master"
+  - composer require --no-update codeception/module-db:"dev-master"
+  - composer require --no-update codeception/module-filesystem:"dev-master"
+  - composer require --no-update codeception/module-phpbrowser:"dev-master"
+  - composer require --no-update codeception/util-universalframework:"dev-master"
+  - composer install
 before_script:
-  # It seems pecl does this.
-  # - '[[ "$TRAVIS_PHP_VERSION" == 7.* ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
-  # preparing databases
-  - '[[ "$FRAMEWORK" != "Codeception" ]] || mysql -e "create database codeception_test;"'
-  - '[[ "$FRAMEWORK" != "Codeception" ]] || psql -c "create database codeception_test;" -U postgres'
-  - '[[ "$FRAMEWORK" != "Symfony" ]] || mysql -e "create database symfony_test;"'
-  # starting demo servers
-  - '[[ "$FRAMEWORK" != "Codeception" ]] || php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &'
-  - '[[ "$FRAMEWORK" != "Codeception" ]] || php -S 127.0.0.1:8010 -t tests/data -d pcov.directory=$(pwd)/tests/data >/dev/null 2>&1 &'
-  # Phalcon
-  - '[[ "$FRAMEWORK" != "Phalcon" ]] || mysql -e "CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"'
-  - '[[ "$FRAMEWORK" != "Phalcon" ]] || cat framework-tests/schemas/phalcon_demo.sql | mysql phalcon_demo'
-  # Laravel 5
-  - '[[ "$FRAMEWORK" != "Laravel" ]] || touch framework-tests/storage/testing.sqlite'
-  - '[[ "$FRAMEWORK" != "Laravel" ]] || php framework-tests/artisan migrate --env=testing --database=sqlite_testing --force'
-  - '[[ "$FRAMEWORK" != "Laravel" ]] || php framework-tests/artisan config:clear'
-  # Lumen
-  - '[[ "$FRAMEWORK" != "Lumen" ]] || cp framework-tests/.env.testing framework-tests/.env'
-  - '[[ "$FRAMEWORK" != "Lumen" ]] || touch framework-tests/storage/testing.sqlite'
-  - '[[ "$FRAMEWORK" != "Lumen" ]] || php framework-tests/artisan migrate --database=testing --force'
-  # Symfony
-  - '[[ "$FRAMEWORK$VERSION" != "Symfony2.8" ]] || php framework-tests/app/console doctrine:schema:create -n --env test'
-  - '[[ "$FRAMEWORK$VERSION" != "Symfony2.8" ]] || php framework-tests/app/console doctrine:fixtures:load -n --env test'
-  - '[[ "$FRAMEWORK$VERSION" != "Symfony3.4" ]] || php framework-tests/bin/console doctrine:schema:update --force -n'
-  # ZF2
-  - '[[ "$FRAMEWORK" != "Zend2" ]] || mysql -e "create database zf2_test;"'
-  - '[[ "$FRAMEWORK" != "Zend2" ]] || php framework-tests/vendor/bin/doctrine-module orm:schema-tool:create'
-  # Build
-  - '[[ -z "$FRAMEWORK" ]] || php codecept build -c $TEST_PATH'
+  # starting demo server
+  - 'php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &'
+  - 'php codecept build'
 script:
-  # Run tests if $FRAMEWORK is not empty
-  - '[[ -z "$FRAMEWORK" ]] || php codecept run $SUITES -c $TEST_PATH'
+  - 'php codecept run $SUITES'
