@@ -38,7 +38,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     /**
      * @api
-     * @var \Symfony\Component\BrowserKit\Client
+     * @var \Symfony\Component\BrowserKit\AbstractBrowser
      */
     public $client;
 

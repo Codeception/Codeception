@@ -2,7 +2,7 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Util\Stub;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\AbstractBrowser as Client;
 use Symfony\Component\BrowserKit\Response;
 
 class Yii1 extends Client

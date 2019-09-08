@@ -82,7 +82,7 @@ EOF;
     protected $DEFAULT_SHORTEN_VALUE = 150;
 
     /**
-     * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client
+     * @var \Symfony\Component\HttpKernel\HttpKernelBrowser|\Symfony\Component\BrowserKit\AbstractBrowser
      */
     public $client = null;
     public $isFunctional = false;

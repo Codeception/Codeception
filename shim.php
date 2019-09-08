@@ -69,4 +69,9 @@ namespace {
         class WebDriverWindow extends Facebook\WebDriver\WebDriverWindow {};
         interface WebDriverElement extends Facebook\WebDriver\WebDriverElement {};
     }
+
+    //Alias for Symfony < 4.3
+    if (!class_exists('Symfony\Component\BrowserKit\AbstractBrowser') && class_exists('Symfony\Component\BrowserKit\Client')) {
+        class_alias('Symfony\Component\BrowserKit\Client', 'Symfony\Component\BrowserKit\AbstractBrowser');
+    }
 }

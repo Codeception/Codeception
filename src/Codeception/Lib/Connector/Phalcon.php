@@ -9,7 +9,7 @@ use ReflectionProperty;
 use Codeception\Util\Stub;
 use Phalcon\Mvc\Application;
 use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\AbstractBrowser as Client;
 use Phalcon\Mvc\Micro as MicroApplication;
 use Symfony\Component\BrowserKit\Response;
 use Codeception\Lib\Connector\Shared\PhpSuperGlobalsConverter;
