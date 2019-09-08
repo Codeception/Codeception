@@ -19,6 +19,7 @@ class GroupManager
 
     public function __construct(array $groups)
     {
+        codecept_debug($groups);
         $this->configuredGroups = $groups;
         $this->loadGroupsByPattern();
         $this->loadConfiguredGroupSettings();
@@ -64,7 +65,19 @@ class GroupManager
                 foreach ($tests as $test) {
                     $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $test);
 
-                    $filePath = codecept_is_path_absolute($file) ? $file : realpath(Configuration::projectDir() . $file);
+                    if (codecept_is_path_absolute($file)) {
+                        $filePath = $file;
+                    } elseif (strpos($file, ':') === false) {
+                        $filePath = realpath(Configuration::projectDir() . $file);
+                    } else {
+                        $pathParts = explode(':', $file);
+
+                        $filePath = sprintf(
+                            '%s:%s',
+                            realpath(Configuration::projectDir() . $pathParts[0]),
+                            $pathParts[1]
+                        );
+                    }
 
                     $this->testsInGroups[$group][] = $filePath;
                 }

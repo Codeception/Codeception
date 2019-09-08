@@ -14,13 +14,20 @@ class GroupManagerTest extends \Codeception\Test\Unit
     // tests
     public function testGroupsFromArray()
     {
-        $this->manager = new GroupManager(['important' => ['UserTest.php:testName', 'PostTest.php']]);
-        $test1 = $this->makeTestCase('UserTest.php', 'testName');
-        $test2 = $this->makeTestCase('PostTest.php');
+        $this->manager = new GroupManager(['important' => ['tests/data/UserTest.php:testName', 'tests/data/PostTest.php']]);
+        $test1 = $this->makeTestCase('tests/data/UserTest.php', 'testName');
+        $test2 = $this->makeTestCase('tests/data/PostTest.php');
         $test3 = $this->makeTestCase('UserTest.php', 'testNot');
         $this->assertContains('important', $this->manager->groupsForTest($test1));
         $this->assertContains('important', $this->manager->groupsForTest($test2));
         $this->assertNotContains('important', $this->manager->groupsForTest($test3));
+    }
+
+    public function testRealPathForFileWithMethodName()
+    {
+        $this->manager = new GroupManager(['important' => ['tests/data/PostTest.php:testName']]);
+        $test = $this->makeTestCase('tests/data/PostTest.php', 'testName');
+        $this->assertContains('important', $this->manager->groupsForTest($test));
     }
 
     public function testGroupsFromFile()
@@ -43,8 +50,8 @@ class GroupManagerTest extends \Codeception\Test\Unit
 
     public function testGroupsFromArrayOnWindows()
     {
-        $this->manager = new GroupManager(['important' => ['tests\WinTest.php']]);
-        $test = $this->makeTestCase('tests/WinTest.php');
+        $this->manager = new GroupManager(['important' => ['tests\data\WinTest.php']]);
+        $test = $this->makeTestCase('tests/data/WinTest.php');
         $this->assertContains('important', $this->manager->groupsForTest($test));
     }
 
