@@ -3,7 +3,7 @@ namespace Codeception\Lib\Connector;
 
 use Codeception\Configuration;
 use Codeception\Lib\Connector\ZendExpressive\ResponseCollector;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\AbstractBrowser as Client;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Zend\Diactoros\ServerRequest;

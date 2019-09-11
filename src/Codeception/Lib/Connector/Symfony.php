@@ -1,7 +1,14 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-class Symfony extends \Symfony\Component\HttpKernel\Client
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
+
+//Alias for Symfony < 4.3
+if (!class_exists('Symfony\Component\HttpKernel\HttpKernelBrowser') && class_exists('Symfony\Component\HttpKernel\Client')) {
+    class_alias('Symfony\Component\HttpKernel\Client', 'Symfony\Component\HttpKernel\HttpKernelBrowser');
+}
+
+class Symfony extends HttpKernelBrowser
 {
     /**
      * @var boolean

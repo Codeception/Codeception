@@ -66,7 +66,7 @@ Framework modules can be used as well for functional testing of SOAP API.
 EOF;
 
     /**
-     * @var \Symfony\Component\BrowserKit\Client
+     * @var \Symfony\Component\BrowserKit\AbstractBrowser
      */
     public $client = null;
     public $isFunctional = false;
