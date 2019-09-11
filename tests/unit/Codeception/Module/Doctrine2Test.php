@@ -120,6 +120,21 @@ class Doctrine2Test extends Unit
         );
     }
 
+    public function testPreconstructedEntityWithConstructorParameters()
+    {
+        $this->module->dontSeeInRepository(
+            EntityWithConstructorParameters::class,
+            ['name' => 'Constructor Test 1', 'foo' => 'test', 'bar' => 'foobar']
+        );
+
+        $entity = new EntityWithConstructorParameters('Constructor Test 1', 'test');
+        $this->module->haveInRepository($entity);
+
+        $this->module->seeInRepository(
+            EntityWithConstructorParameters::class,
+            ['name' => 'Constructor Test 1', 'foo' => 'test', 'bar' => 'foobar']
+        );
+    }
     public function testEntityWithConstructorParametersExceptionOnMissingParameter()
     {
         $this->expectException(\InvalidArgumentException::class);
