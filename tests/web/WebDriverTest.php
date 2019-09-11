@@ -917,6 +917,9 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertCount(0, $steps);
     }
 
+    /**
+     * @group window
+     */
     public function testMoveMouseOver()
     {
         $this->module->amOnPage('/form/click');
@@ -938,6 +941,9 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->see('click, offsetX: 8 - offsetY: 108');
     }
 
+    /**
+     * @group window
+     */
     public function testLeftClick()
     {
         $this->module->amOnPage('/form/click');
@@ -958,6 +964,9 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->see('click, offsetX: 78 - offsetY: 183');
     }
 
+    /**
+     * @group window
+     */
     public function testRightClick()
     {
         // actually not supported in phantomjs see https://github.com/ariya/phantomjs/issues/14005
@@ -1088,6 +1097,9 @@ class WebDriverTest extends TestsForBrowsers
 
     }
 
+    /**
+     * @group window
+     */
     public function testGrabPageSourceWhenNotOnPage()
     {
         $this->expectException('\Codeception\Exception\ModuleException');
