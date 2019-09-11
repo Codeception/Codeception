@@ -700,15 +700,9 @@ Additional debugging features by Codeception:
 
 ### Common Cases
 
-<<<<<<< HEAD
 Let's see how common problems of acceptance testing can be solved with Codeception.
 
-#### Authorization
-=======
-Let's see how common problems of acceptance testing can be solved with Codeception. We will need to update actor class (whcih is AcceptanceTester) in our case to add a new action.
-
 #### Login
->>>>>>> 82997221b762bc09876379f9f30906c9d364a4f5
 
 It is recommended to put widely used actions inside an Actor class. A good example is the `login` action
 which would probably be actively involved in acceptance or functional testing:

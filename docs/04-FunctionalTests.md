@@ -18,7 +18,7 @@ This is a sample functional test:
 
 class LoginCest
 {
-    public function tryLogin (FunctionalTester $I)
+    public function tryLogin(FunctionalTester $I)
     {
         $I->amOnPage('/');
         $I->click('Login');
@@ -26,7 +26,7 @@ class LoginCest
         $I->fillField('Password', 'Davis');
         $I->click('Enter');
         $I->see('Hello, Miles', 'h1');
-        // $I->seeEmailIsSent(); // only for Symfony2
+        // $I->seeEmailIsSent(); // only for Symfony
     }
 }
 ```
@@ -77,7 +77,6 @@ modules:
         - Symfony
         - Doctrine2:
             depends: Symfony # connect to Symfony
-        - \Helper\Functional
 ```
 
 By default this module will search for AppKernel in the `app` directory.
@@ -97,7 +96,6 @@ actor: FunctionalTester
 modules:
     enabled:
         - Laravel5
-        - \Helper\Functional
 ```
 
 ### Yii2
@@ -116,8 +114,22 @@ actor: FunctionalTester
 modules:
     enabled:
         - ZF2
-        - \Helper\Functional
 ```
+
+### Zend Expressive
+
+[Zend Expressive](http://codeception.com/docs/modules/ZendExpressive) tests can be executed with enabling a corresponding module.
+
+```yaml
+# functional.suite.yml
+
+actor: FunctionalTester
+modules:
+    enabled:
+        - ZendExpressive
+```
+
+> See module reference to more configuration options
 
 ### Phalcon
 
@@ -135,7 +147,6 @@ modules:
             bootstrap: 'app/config/bootstrap.php'
              cleanup: true
              savepoints: true
-        - \Helper\Functional
 ```
 
 [See the full reference](http://codeception.com/docs/modules/Phalcon)
@@ -150,7 +161,6 @@ Therefore we can open a web page with `amOnPage` method:
 
 ```php
 <?php
-$I = new FunctionalTester($scenario);
 $I->amOnPage('/login');
 ```
 
