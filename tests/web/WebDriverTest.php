@@ -878,6 +878,9 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/form/anchor#a');
     }
 
+    /**
+     * @group window
+     */
     public function testJSErrorLoggingPositive()
     {
         // arrange
