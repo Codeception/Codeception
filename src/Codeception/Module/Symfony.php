@@ -532,6 +532,41 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         }
         return $container->get($service);
     }
+    
+    /**
+     * Run Symfony console command, grab response and return as string.
+     * Recommended to use for integration or functional testing.
+     *
+     * ``` php
+     * <?php
+     * $result = $I->runSymfonyConsoleCommand('hello:world', '--verbose' => 3]);
+     * ?>
+     * ```
+     *
+     * @param string  $command
+     * @param mixed[] $params
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function runSymfonyConsoleCommand(string $command, array $params = [])
+    {
+        $application = new Application($this->kernel);
+        $application->setAutoExit(false);
+        $params['command'] = $command;
+
+        $input = new ArrayInput($params);
+        $output = new BufferedOutput();
+        $code = $application->run($input, $output);
+
+        // return the output, don't use if you used NullOutput()
+        $content = $output->fetch();
+
+        $this->assertEquals(0, $code, 'Exit code in '.$command.' is not equal 0 :'.$content);
+
+        return $content;
+    }
 
     /**
      * @return \Symfony\Component\HttpKernel\Profiler\Profile
