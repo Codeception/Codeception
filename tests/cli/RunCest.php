@@ -633,4 +633,17 @@ EOF
         $I->seeInShellOutput("OK (");
     }
 
+  /**
+   * @group reports
+   *
+   * @param CliGuy $I
+   */
+  public function runHtmlCheckReport(\CliGuy $I)
+  {
+    $I->wantTo('execute tests with html output and check html');
+    $I->executeCommand('run html_report --html');
+    $I->seeFileFound('report.html', 'tests/_output');
+    //TODO: check HTML report
+  }
+
 }
