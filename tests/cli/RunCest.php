@@ -718,8 +718,7 @@ EOF
         ->addMetaStep('Page\DemoPageObject: demo action1')
         ->addStep("I don't see file found", 'thisFileDoesNotExist')
         ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
-        // Due to #4413:
-//        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
         ->addStep("I don't see file found", 'thisFileDoesNotExist')
         ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
       )
@@ -727,8 +726,7 @@ EOF
         ->addMetaStep('Page\DemoPageObject: demo action1')
         ->addStep("I don't see file found", 'thisFileDoesNotExist')
         ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
-        // Due to #4413:
-//        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
         ->addStep("I don't see file found", 'thisFileDoesNotExist')
         ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
         ->addMetaStep('Page\DemoPageObject: demo action2')
@@ -738,8 +736,7 @@ EOF
         ->addMetaStep('Page\DemoPageObject: demo action1')
         ->addStep("I don't see file found", 'thisFileDoesNotExist')
         ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
-        // Due to #4413:
-//        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
         ->addStep("I don't see file found", 'thisFileDoesNotExist')
         ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
         ->addMetaStep('Page\DemoPageObject: demo action2')
@@ -751,8 +748,7 @@ EOF
         ->addMetaStep('Page\DemoPageObject: demo action1')
         ->addStep("I don't see file found", 'thisFileDoesNotExist')
         ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
-        // Due to #4413:
-//        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
         ->addStep("I don't see file found", 'thisFileDoesNotExist')
         ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
       );
