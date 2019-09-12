@@ -643,7 +643,203 @@ EOF
     $I->wantTo('execute tests with html output and check html');
     $I->executeCommand('run html_report --html');
     $I->seeFileFound('report.html', 'tests/_output');
-    //TODO: check HTML report
+
+    // Check HTML report in sufficient detail:
+    $htmlReportRegexBuilder = new HtmlReportRegexBuilder();
+    $htmlReportRegexBuilder
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case1_orig')
+        ->addStep('no metaStep')
+        ->addStep('no metaStep')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case1')
+        ->addStep('no metaStep')
+        ->addStep('no metaStep')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case2')
+        ->addStep('no metaStep')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ->addStep('no metaStep')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case3')
+        ->addStep('no metaStep')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ->addStep('no metaStep')
+        ->addMetaStep('Page\DemoPageObject: demo action2')
+        ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case4')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ->addMetaStep('Page\DemoPageObject: demo action2')
+        ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case5')
+        ->addStep('no metaStep')
+        ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ->addStep('no metaStep inside a method')
+        ->addStep('no metaStep')
+        ->addMetaStep('Page\DemoPageObject: demo action2')
+        ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case5b')
+        ->addStep('no metaStep')
+        ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep2')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ->addStep('no metaStep inside a private internal method')
+        ->addStep('no metaStep')
+        ->addMetaStep('Page\DemoPageObject: demo action2')
+        ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case6')
+        ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ->addStep('no metaStep inside a method')
+        ->addMetaStep('Page\DemoPageObject: demo action2')
+        ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case6b')
+        ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep2')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ->addStep('no metaStep inside a private internal method')
+        ->addMetaStep('Page\DemoPageObject: demo action2')
+        ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case7')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        // Due to #4413:
+//        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case8')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        // Due to #4413:
+//        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ->addMetaStep('Page\DemoPageObject: demo action2')
+        ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case9')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        // Due to #4413:
+//        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ->addMetaStep('Page\DemoPageObject: demo action2')
+        ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+      )
+      ->addTest(HtmlReportRegexBuilder::newTestBuilder('CodeceptionIssue4413Cest', 'Case10')
+        ->addMetaStep('Page\DemoPageObject: demo action2')
+        ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        // Due to #4413:
+//        ->addMetaStep('Page\DemoPageObject: demo action1')
+        ->addStep("I don't see file found", 'thisFileDoesNotExist')
+        ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+      );
+    $I->seeThisFileMatches($htmlReportRegexBuilder->build());
+  }
+
+}
+
+class HtmlReportRegexBuilder
+{
+
+  private $regex;
+
+  public static function newTestBuilder($testClass, $testCase)
+  {
+    return new TestHtmlReportRegexBuilder($testClass, $testCase);
+  }
+
+  /**
+   * @return string
+   */
+  public function build()
+  {
+    return '/' . $this->regex . '/s';
+  }
+
+  /**
+   * @param $testBuilder TestHtmlReportRegexBuilder
+   * @return HtmlReportRegexBuilder
+   */
+  public function addTest($testBuilder)
+  {
+    $this->regex .= $testBuilder->build();
+    return $this;
+  }
+
+}
+
+class TestHtmlReportRegexBuilder
+{
+
+  private $headerRegex;
+  private $stepsRegex;
+
+  /**
+   * @param $testClass string
+   * @param $testCase string
+   */
+  public function __construct($testClass, $testCase)
+  {
+    $this->headerRegex = 'scenarioRow .*?' . $testClass . ' .*? ' . $testCase;
+  }
+
+  /**
+   * @param $step string
+   * @param $arg string
+   * @return TestHtmlReportRegexBuilder
+   */
+  public function addStep($step, $arg = null)
+  {
+    $this->stepsRegex .=  '.*?' . 'stepName ' . '.*?' . $step;
+    if ($arg) {
+      $this->stepsRegex .= '.*?' . '>&quot;' . $arg . '&quot;';
+    }
+    return $this;
+  }
+
+  public function addMetaStep($step)
+  {
+    $this->addStep(preg_quote($step));
+    $this->stepsRegex .=  '.*?substeps ';
+    return $this;
+  }
+
+
+  /**
+   * @return string
+   */
+  public function build()
+  {
+    $regex = $this->headerRegex;
+    if ($this->stepsRegex) {
+      $regex .= ' .*?scenarioRow ' . $this->stepsRegex . '.*?';
+    } else {
+      $regex .= '.*?';
+    }
+    return $regex;
   }
 
 }
