@@ -1,0 +1,5 @@
+class_name: DumbGuy
+modules:
+    enabled: [Filesystem, DumbHelper]
+env:
+    dev: []
