@@ -1024,7 +1024,8 @@ EOF;
         $message = get_class($instance).' entity created with ';
 
         if (!is_array($pks)) {
-            $pks = [$pks];
+            $pks     = [$pks];
+            $message .= 'primary key ';
         } else {
             $message .= 'composite primary key of ';
         }
@@ -1033,7 +1034,7 @@ EOF;
             if (is_object($pk)) {
                 $message .= get_class($pk).': '.var_export($this->extractPrimaryKey($pk), true).', ';
             } else {
-                $message .= 'primary key '.var_export($pk, true);
+                $message .= var_export($pk, true).', ';
             }
         }
 
