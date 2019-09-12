@@ -381,6 +381,10 @@ class Doctrine2Test extends Unit
         $this->assertEquals([123, 'abc'], $res);
     }
 
+    /**
+     * The main purpose of this test is, that the debug call at the end of
+     * haveInRepository doesn't fail with "var_export does not handle circular references".
+     */
     public function testCompositePrimaryKeyWithEntities()
     {
         $a = new \CircularRelations\A();
