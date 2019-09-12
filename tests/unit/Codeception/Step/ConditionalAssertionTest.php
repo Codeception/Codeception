@@ -1,6 +1,5 @@
 <?php
-
-use \Codeception\Step\ConditionalAssertion;
+namespace Codeception\Step;
 
 class ConditionalAssertionTest extends \PHPUnit\Framework\TestCase
 {
