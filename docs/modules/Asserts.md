@@ -396,7 +396,9 @@ Checks that condition is positive.
 
 
 ### expectException
- 
+
+Note: Deprecated. Use expectThrowable()
+
 Handles and checks exception called inside callback function.
 Either exception class name or exception instance should be provided.
 
