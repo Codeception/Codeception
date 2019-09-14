@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Notification;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Util\Shared\Asserts as SharedAsserts;
 
@@ -101,11 +102,13 @@ class Asserts extends CodeceptionModule
      * });
      * ```
      *
+     * @deprecated Use expectThrowable() instead
      * @param $exception string or \Exception
      * @param $callback
      */
     public function expectException($exception, $callback)
     {
+        Notification::deprecate('Use expectThrowable() instead');
         $this->expectThrowable($exception, $callback);
     }
 
