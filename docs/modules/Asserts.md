@@ -419,6 +419,7 @@ $I->expectException(new MyException("Don't do bad things"), function() {
 });
 ```
 
+@deprecated Use expectThrowable() instead
  * `param` $exception string or \Exception
  * `param` $callback
 
@@ -457,4 +458,4 @@ Fails the test with message.
 
  * `param` $message
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.0/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.1/src/Codeception/Module/Asserts.php">Help us to improve documentation. Edit module reference</a></div>
