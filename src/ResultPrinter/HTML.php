@@ -96,21 +96,21 @@ class HTML extends CodeceptionResultPrinter
         }
 
         $stepsBuffer = '';
-        $subStepsBuffer = '';
         $subStepsRendered = [];
 
         foreach ($steps as $step) {
             if ($step->getMetaStep()) {
-                $subStepsRendered[$step->getMetaStep()->getAction()][] = $this->renderStep($step);
+                $key = $step->getMetaStep()->getLine() . $step->getMetaStep()->getAction();
+                $subStepsRendered[$key][] = $this->renderStep($step);
             }
         }
 
         foreach ($steps as $step) {
             if ($step->getMetaStep()) {
-                if (! empty($subStepsRendered[$step->getMetaStep()->getAction()])) {
-                    $subStepsBuffer = implode('', $subStepsRendered[$step->getMetaStep()->getAction()]);
-                    unset($subStepsRendered[$step->getMetaStep()->getAction()]);
-
+                $key = $step->getMetaStep()->getLine() . $step->getMetaStep()->getAction();
+                if (! empty($subStepsRendered[$key])) {
+                    $subStepsBuffer = implode('', $subStepsRendered[$key]);
+                    unset($subStepsRendered[$key]);
                     $stepsBuffer .= $this->renderSubsteps($step->getMetaStep(), $subStepsBuffer);
                 }
             } else {
