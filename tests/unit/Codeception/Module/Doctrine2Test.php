@@ -50,6 +50,9 @@ class Doctrine2Test extends Unit
         require_once $dir . "/MultilevelRelations/A.php";
         require_once $dir . "/MultilevelRelations/B.php";
         require_once $dir . "/MultilevelRelations/C.php";
+        require_once $dir . "/CircularRelations/A.php";
+        require_once $dir . "/CircularRelations/B.php";
+        require_once $dir . "/CircularRelations/C.php";
 
         $this->em = EntityManager::create(
             ['url' => 'sqlite:///:memory:'],
@@ -71,6 +74,9 @@ class Doctrine2Test extends Unit
             $this->em->getClassMetadata(\MultilevelRelations\A::class),
             $this->em->getClassMetadata(\MultilevelRelations\B::class),
             $this->em->getClassMetadata(\MultilevelRelations\C::class),
+            $this->em->getClassMetadata(\CircularRelations\A::class),
+            $this->em->getClassMetadata(\CircularRelations\B::class),
+            $this->em->getClassMetadata(\CircularRelations\C::class),
         ]);
 
         $this->module = new Doctrine2(make_container(), [
@@ -373,6 +379,21 @@ class Doctrine2Test extends Unit
             'stringPart' => 'abc',
         ]);
         $this->assertEquals([123, 'abc'], $res);
+    }
+
+    /**
+     * The main purpose of this test is, that the debug call at the end of
+     * haveInRepository doesn't fail with "var_export does not handle circular references".
+     */
+    public function testCompositePrimaryKeyWithEntities()
+    {
+        $a = new \CircularRelations\A();
+        $b = new \CircularRelations\B();
+        $c = new \CircularRelations\C($a, $b);
+
+        $pks = $this->module->haveInRepository($c);
+
+        $this->assertEquals([$a, $b], $pks);
     }
 
     public function testRefresh()

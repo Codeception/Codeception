@@ -814,6 +814,25 @@ You can set additional cookie params like `domain`, `path` in array passed as la
  * `param array` $params
 
 
+### runSymfonyConsoleCommand
+ 
+Run Symfony console command, grab response and return as string.
+Recommended to use for integration or functional testing.
+
+``` php
+<?php
+$result = $I->runSymfonyConsoleCommand('hello:world', '--verbose' => 3]);
+?>
+```
+
+ * `param string`  $command
+ * `param mixed[]` $params
+
+ * `return` string
+
+@throws \Exception
+
+
 ### see
  
 Checks that the current page contains the given string (case insensitive).
@@ -1506,4 +1525,4 @@ Remove service $serviceName from the lists of persistent services.
 
  * `param string` $serviceName
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.0/src/Codeception/Module/Symfony.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/3.1/src/Codeception/Module/Symfony.php">Help us to improve documentation. Edit module reference</a></div>
