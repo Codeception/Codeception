@@ -644,7 +644,7 @@ EOF
         $I->executeFailCommand('run phpbrowser_html_report --html');
         $I->seeResultCodeIsNot(0);
         $expectedReportFilename    = 'CodeceptionIssue5568Cest.failureShouldCreateHtmlSnapshot.fail.html';
-        $expectedReportAbsFilename = getcwd() . '/tests/_output/' . $expectedReportFilename;
+        $expectedReportAbsFilename = join(DIRECTORY_SEPARATOR, array(getcwd(), 'tests', '_output', $expectedReportFilename));
         $I->seeInShellOutput('Html: ' . $expectedReportAbsFilename);
         $I->seeInShellOutput('Response: ' . $expectedReportAbsFilename);
         $I->seeFileFound('report.html', 'tests/_output');
