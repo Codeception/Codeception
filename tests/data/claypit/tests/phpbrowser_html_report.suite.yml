@@ -3,7 +3,7 @@ modules:
     enabled: [PhpBrowser]
     config:
         PhpBrowser:
-            url: http://127.0.0.1:8000
+            url: https://www.google.com
 
 env:
     dev: []
