@@ -1,0 +1,9 @@
+class_name: AcceptanceTester
+modules:
+    enabled: [PhpBrowser]
+    config:
+        PhpBrowser:
+            url: http://127.0.0.1:8000
+
+env:
+    dev: []
