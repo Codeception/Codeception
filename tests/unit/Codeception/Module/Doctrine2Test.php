@@ -26,7 +26,9 @@ class Doctrine2Test extends Unit
 
     protected static function _setUpBeforeClass()
     {
-        Type::addType('uuid', UuidType::class);
+        if (false === Type::hasType('uuid')) {
+            Type::addType('uuid', UuidType::class);
+        }
     }
 
     /**
