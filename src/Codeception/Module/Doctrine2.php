@@ -1060,5 +1060,5 @@ EOF;
         }
 
         return $isEntity;
-}
+    }
 }
