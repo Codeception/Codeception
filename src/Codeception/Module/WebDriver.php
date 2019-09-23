@@ -795,6 +795,16 @@ class WebDriver extends CodeceptionModule implements
         $this->webDriver->manage()->window()->setSize(new WebDriverDimension($width, $height));
     }
 
+    private function debugCookies()
+    {
+        $result = [];
+        $cookies = $this->webDriver->manage()->getCookies();
+        foreach ($cookies as $cookie) {
+            $result[] = is_array($cookie) ? $cookie : $cookie->toArray();
+        }
+        $this->debugSection('Cookies', json_encode($result));
+    }
+
     public function seeCookie($cookie, array $params = [])
     {
         $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
@@ -804,7 +814,7 @@ class WebDriver extends CodeceptionModule implements
             },
             $cookies
         );
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugCookies();
         $this->assertContains($cookie, $cookies);
     }
 
@@ -817,11 +827,11 @@ class WebDriver extends CodeceptionModule implements
             },
             $cookies
         );
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugCookies();
         $this->assertNotContains($cookie, $cookies);
     }
 
-    public function setCookie($cookie, $value, array $params = [])
+    public function setCookie($cookie, $value, array $params = [], $showDebug = true)
     {
         $params['name'] = $cookie;
         $params['value'] = $value;
@@ -847,13 +857,15 @@ class WebDriver extends CodeceptionModule implements
             }
         }
         $this->webDriver->manage()->addCookie($params);
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        if ($showDebug) {
+            $this->debugCookies();
+        }
     }
 
     public function resetCookie($cookie, array $params = [])
     {
         $this->webDriver->manage()->deleteCookieNamed($cookie);
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
+        $this->debugCookies();
     }
 
     public function grabCookie($cookie, array $params = [])
@@ -3117,7 +3129,8 @@ class WebDriver extends CodeceptionModule implements
         }
         
         foreach ($this->sessionSnapshots[$name] as $cookie) {
-            $this->setCookie($cookie['name'], $cookie['value'], (array)$cookie);
+            $showDebug = $cookie == end($this->sessionSnapshots[$name]);
+            $this->setCookie($cookie['name'], $cookie['value'], (array)$cookie, $showDebug);
         }
         $this->debugSection('Snapshot', "Restored \"$name\" session snapshot");
         return true;
