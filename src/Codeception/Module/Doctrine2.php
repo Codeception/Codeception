@@ -19,7 +19,6 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use InvalidArgumentException;
@@ -1054,7 +1053,9 @@ EOF;
         if ($isEntity) {
             try {
                 $this->em->getClassMetadata(get_class($pk));
-            } catch (MappingException $ex) {
+            } catch (\Doctrine\ORM\Mapping\MappingException $ex) {
+                $isEntity = false;
+            } catch (\Doctrine\Common\Persistence\Mapping\MappingException $ex) {
                 $isEntity = false;
             }
         }
