@@ -3,7 +3,6 @@ php:
   - 5.6
   - 7.0
   - 7.1
-  - 7.2
   - 7.3
 env:
   global:
@@ -16,9 +15,6 @@ matrix:
   # Run our coverage suite on 7.2 (so it uses pcov)
   - php: 7.2
     env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. COVERAGE=1
-  exclude:
-  - php: 7.2
-    env: FRAMEWORK=Codeception SUITES=cli,unit TEST_PATH=. COVERAGE=1
 
 branches:
   except:
