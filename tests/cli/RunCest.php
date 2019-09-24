@@ -773,8 +773,9 @@ EOF
     $testClass = $testBuilder->getTestClass();
     $testCase = $testBuilder->getTestCase();
 
-    $I->wantTo('execute tests with html output and check html');
-    $I->executeCommand('run html_report ' . $testClass . ':' . $testCase . '$ --html');
+    $test = $testClass . ':' . $testCase;
+    $I->wantTo('execute tests with html output and check html (' . $test . ')');
+    $I->executeCommand('run html_report ' . $test . '$ --html');
     $I->seeFileFound('report.html', 'tests/_output');
 
     // Check HTML report in sufficient detail:
