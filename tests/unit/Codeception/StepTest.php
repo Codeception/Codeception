@@ -17,9 +17,10 @@ class StepTest extends \PHPUnit\Framework\TestCase
 
     public function testGetArguments()
     {
-        $by = WebDriverBy::cssSelector('.something');
-        $step = $this->getStep([null, [$by]]);
-        $this->assertEquals('"' . Locator::humanReadableString($by) . '"', $step->getArgumentsAsString());
+        //facebook/php-webdriver is no longer a dependency of core so this behaviour can't be tested anymore
+        //$by = WebDriverBy::cssSelector('.something');
+        //$step = $this->getStep([null, [$by]]);
+        //$this->assertEquals('"' . Locator::humanReadableString($by) . '"', $step->getArgumentsAsString());
 
         $step = $this->getStep([null, [['just', 'array']]]);
         $this->assertEquals('["just","array"]', $step->getArgumentsAsString());
