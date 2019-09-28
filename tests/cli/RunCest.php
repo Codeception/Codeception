@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Scenario;
+
 class RunCest
 {
     public function _before(\CliGuy $I)
@@ -763,11 +765,17 @@ EOF
    *
    * @dataProvider htmlReportRegexCheckProvider
    *
-   * @param CliGuy $I
+   * @param CliGuy               $I
    * @param \Codeception\Example $example
+   * @param Scenario             $scenario
    */
-  public function runHtmlCheckReport(\CliGuy $I, \Codeception\Example $example)
+  public function runHtmlCheckReport(\CliGuy $I, \Codeception\Example $example, Scenario $scenario)
   {
+    print PHP_EOL . 'PHP version: ' . phpversion() . PHP_EOL; //TODO: delete
+    if (version_compare(phpversion(), '7.0', '<')) {
+      $scenario->skip('This test fails due to another Codeception bug that only happens with PHP 5.6: the execution of single CEST test cases does not work');
+    }
+
     /** @var TestHtmlReportRegexBuilder $testBuilder */
     $testBuilder = $example['testHtmlReportRegexBuilder'];
     $testClass = $testBuilder->getTestClass();
