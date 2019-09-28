@@ -60,7 +60,11 @@ class Descriptor
         return $testCase->toString();
     }
 
-    public static function getTestCaseNameAsString(string $testCaseName)
+  /**
+   * @param string $testCaseName
+   * @return string
+   */
+    public static function getTestCaseNameAsString($testCaseName)
     {
         $text = $testCaseName;
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
