@@ -2560,7 +2560,7 @@ class WebDriver extends CodeceptionModule implements
             return $wd->executeScript($script);
         };
         $message = sprintf(
-            'Waited for %d secs but script %s still not executed',
+            'Waited for %d secs but script %s still doesn\'t evaluate to true',
             $timeout,
             Locator::humanReadableString($script)
         );
