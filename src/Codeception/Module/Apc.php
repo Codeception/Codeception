@@ -15,7 +15,7 @@ use Codeception\Exception\ModuleException;
  *
  * * Maintainer: **Serghei Iakovlev**
  * * Stability: **stable**
- * * Contact: serghei@phalconphp.com
+ * * Contact: serghei@phalcon.io
  *
  * ### Example (`unit.suite.yml`)
  *

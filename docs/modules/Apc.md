@@ -10,7 +10,7 @@ Performs a cleanup by flushing all values after each test run.
 
 * Maintainer: **Serghei Iakovlev**
 * Stability: **stable**
-* Contact: serghei@phalconphp.com
+* Contact: serghei@phalcon.io
 
 ### Example (`unit.suite.yml`)
 
