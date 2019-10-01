@@ -17,14 +17,14 @@ class Actor
 {{inheritedMethods}}
  *
  * @SuppressWarnings(PHPMD)
-*/
+ */
 class {{actor}} extends \Codeception\Actor
 {
     use _generated\{{actor}}Actions;
 
-   /**
-    * Define custom actions here
-    */
+    /**
+     * Define custom actions here
+     */
 }
 
 EOF;

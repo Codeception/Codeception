@@ -12,10 +12,10 @@ class GherkinSnippets
     /**
      * @{{type}} {{text}}
      */
-     public function {{methodName}}({{params}})
-     {
-         throw new \PHPUnit\Framework\IncompleteTestError("Step `{{text}}` is not defined");
-     }
+    public function {{methodName}}({{params}})
+    {
+        throw new \PHPUnit\Framework\IncompleteTestError("Step `{{text}}` is not defined");
+    }
 
 EOF;
 
