@@ -880,7 +880,7 @@ EOF;
      * @param $entity
      * @param $field
      * @param array $params
-     * @return array
+     * @return mixed
      */
     public function grabFromRepository($entity, $field, $params = [])
     {
