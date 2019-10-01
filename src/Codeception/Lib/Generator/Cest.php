@@ -40,7 +40,7 @@ EOF;
     {
         $actor = $this->settings['actor'];
         if (!$actor) {
-            throw new ConfigurationException("Cept can't be created for suite without an actor. Add `actor: SomeTester` to suite config");
+            throw new ConfigurationException("Cest can't be created for suite without an actor. Add `actor: SomeTester` to suite config");
         }
 
         if (array_key_exists('suite_namespace', $this->settings)) {
