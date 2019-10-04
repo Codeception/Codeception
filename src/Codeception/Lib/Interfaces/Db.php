@@ -32,7 +32,7 @@ interface Db
      * @param array $criteria
      * @return
      */
-    public function seeInDatabase($table,  $criteria = [[]]);
+    public function seeInDatabase($table, $criteria = [[]]);
 
     /**
      * Effect is opposite to ->seeInDatabase

@@ -777,13 +777,13 @@ class Db extends CodeceptionModule implements DbInterface
             foreach ($criterias as $criteria) {
                 $this->seeRowInDatabase($table, $criteria);
             }
-        }
-        else {
+        } else {
             $this->seeRowInDatabase($table, $criterias);
         }
     }
 
-    private function seeRowInDatabase($table, $criteria) {
+    private function seeRowInDatabase($table, $criteria)
+    {
         $res = $this->countInDatabase($table, $criteria);
         $this->assertGreaterThan(
             0,
