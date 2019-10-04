@@ -771,8 +771,19 @@ class Db extends CodeceptionModule implements DbInterface
         ];
     }
 
-    public function seeInDatabase($table, $criteria = [])
+    public function seeInDatabase($table, $criterias = [[]])
     {
+        if (isset($criterias[0]) && is_array($criterias[0])) {
+            foreach ($criterias as $criteria) {
+                $this->seeRowInDatabase($table, $criteria);
+            }
+        }
+        else {
+            $this->seeRowInDatabase($table, $criterias);
+        }
+    }
+
+    private function seeRowInDatabase($table, $criteria) {
         $res = $this->countInDatabase($table, $criteria);
         $this->assertGreaterThan(
             0,

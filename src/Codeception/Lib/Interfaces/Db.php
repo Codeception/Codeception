@@ -4,12 +4,16 @@ namespace Codeception\Lib\Interfaces;
 interface Db
 {
     /**
-     * Asserts that a row with the given column values exists.
+     * Asserts that rows with the given column values exists.
      * Provide table name and column values.
      *
      * ```php
      * <?php
      * $I->seeInDatabase('users', ['name' => 'Davert', 'email' => 'davert@mail.com']);
+     * $I->seeInDatabase('users', [
+     *      ['name' => 'Davert', 'email' => 'davert@mail.com'],
+     *      ['name' => 'Pierre', 'email' => 'pierre@mail.com'],
+     * ]);
      * ```
      * Fails if no such user found.
      *
@@ -26,8 +30,9 @@ interface Db
      *
      * @param string $table
      * @param array $criteria
+     * @return
      */
-    public function seeInDatabase($table, $criteria = []);
+    public function seeInDatabase($table,  $criteria = [[]]);
 
     /**
      * Effect is opposite to ->seeInDatabase
