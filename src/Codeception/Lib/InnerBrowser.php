@@ -62,7 +62,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignatureUnique($test));
         
-        $extensions = ['application/json' => 'json', 'text/xml' => 'xml', 'application/xml' => 'xml'];
+        $extensions = [
+            'application/json' => 'json',
+            'text/xml' => 'xml',
+            'application/xml' => 'xml',
+            'text/plain' => 'txt'
+        ];
         
         $internalResponse = $this->client->getInternalResponse();
         
