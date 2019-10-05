@@ -62,6 +62,10 @@ abstract class TestsForDb extends \Codeception\Test\Unit
     public function testSeeInDatabase()
     {
         $this->module->seeInDatabase('users', ['name' => 'davert']);
+        $this->module->seeInDatabase('users', [
+            ['name' => 'davert', 'email' => 'davert@mail.ua'],
+            ['name' => 'miles', 'email' => 'miles@davis.com']
+        ]);
     }
 
     public function testCountInDatabase()

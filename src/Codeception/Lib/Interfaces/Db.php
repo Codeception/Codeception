@@ -12,7 +12,7 @@ interface Db
      * $I->seeInDatabase('users', ['name' => 'Davert', 'email' => 'davert@mail.com']);
      * $I->seeInDatabase('users', [
      *      ['name' => 'Davert', 'email' => 'davert@mail.com'],
-     *      ['name' => 'Pierre', 'email' => 'pierre@mail.com'],
+     *      ['name' => 'Miles', 'email' => 'miles@davis.com'],
      * ]);
      * ```
      * Fails if no such user found.
@@ -30,7 +30,6 @@ interface Db
      *
      * @param string $table
      * @param array $criteria
-     * @return
      */
     public function seeInDatabase($table, $criteria = [[]]);
 
