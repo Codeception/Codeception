@@ -781,7 +781,7 @@ EOF
     $testCase = $testBuilder->getTestCase();
 
     $test = $testClass . ':' . $testCase;
-    $I->wantTo('execute tests with html output and check html (' . $test . ')');
+    $I->wantTo('verify that all steps are rendered correctly in HTML report (' . $test . ')');
     $I->executeCommand('run html_report ' . $test . '$ --html');
     $I->seeFileFound('report.html', 'tests/_output');
 
