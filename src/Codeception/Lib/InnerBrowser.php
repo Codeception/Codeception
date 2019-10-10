@@ -62,13 +62,19 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignatureUnique($test));
         
-        $extensions = ['application/json' => 'json', 'text/xml' => 'xml', 'application/xml' => 'xml'];
+        $extensions = [
+            'application/json' => 'json',
+            'text/xml' => 'xml',
+            'application/xml' => 'xml',
+            'text/plain' => 'txt'
+        ];
         
         $internalResponse = $this->client->getInternalResponse();
         
-        $responseContentType = $internalResponse ? $internalResponse->getHeader('content-type') : null;
+        $responseContentType = $internalResponse ? $internalResponse->getHeader('content-type') : '';
+        list($responseMimeType) = explode(';', $responseContentType);
         
-        $extension = isset($extensions[$responseContentType]) ? $extensions[$responseContentType] : 'html';
+        $extension = isset($extensions[$responseMimeType]) ? $extensions[$responseMimeType] : 'html';
         
         $filename = mb_strcut($filename, 0, 244, 'utf-8') . '.fail.' . $extension;
         $this->_savePageSource($report = codecept_output_dir() . $filename);
