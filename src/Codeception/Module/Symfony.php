@@ -265,7 +265,17 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
      */
     public function _getContainer()
     {
-        return $this->kernel->getContainer();
+        $container = $this->kernel->getContainer();
+
+        if (!($container instanceof ContainerInterface)) {
+            $this->fail('Could not get Symfony container');
+        }
+
+        if ($container->has('test.service_container')) {
+            return $container->get('test.service_container');
+        }
+
+        return $container;
     }
 
     /**
