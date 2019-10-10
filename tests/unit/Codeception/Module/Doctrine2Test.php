@@ -4,10 +4,13 @@ use Codeception\Exception\ModuleException;
 use Codeception\Module\Doctrine2;
 use Codeception\Test\Unit;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
+use Ramsey\Uuid\Doctrine\UuidType;
+use Ramsey\Uuid\UuidInterface;
 
 class Doctrine2Test extends Unit
 {
@@ -20,6 +23,13 @@ class Doctrine2Test extends Unit
      * @var Doctrine2
      */
     private $module;
+
+    protected static function _setUpBeforeClass()
+    {
+        if (false === Type::hasType('uuid')) {
+            Type::addType('uuid', UuidType::class);
+        }
+    }
 
     /**
      * @throws ORMException
@@ -53,6 +63,8 @@ class Doctrine2Test extends Unit
         require_once $dir . "/CircularRelations/A.php";
         require_once $dir . "/CircularRelations/B.php";
         require_once $dir . "/CircularRelations/C.php";
+        require_once $dir . '/EntityWithUuid.php';
+
 
         $this->em = EntityManager::create(
             ['url' => 'sqlite:///:memory:'],
@@ -77,6 +89,7 @@ class Doctrine2Test extends Unit
             $this->em->getClassMetadata(\CircularRelations\A::class),
             $this->em->getClassMetadata(\CircularRelations\B::class),
             $this->em->getClassMetadata(\CircularRelations\C::class),
+            $this->em->getClassMetadata(\EntityWithUuid::class),
         ]);
 
         $this->module = new Doctrine2(make_container(), [
@@ -394,6 +407,17 @@ class Doctrine2Test extends Unit
         $pks = $this->module->haveInRepository($c);
 
         $this->assertEquals([$a, $b], $pks);
+    }
+
+    /**
+     * The purpose of this test is to verify that entites with object @id, that are
+     * not entites itself, e.g. Ramsey\Uuid\UuidInterface, don't break the debug message.
+     */
+    public function testDebugEntityWithNonEntityButObjectId()
+    {
+        $pk = $this->module->haveInRepository(EntityWithUuid::class);
+
+        self::assertInstanceOf(UuidInterface::class, $pk);
     }
 
     public function testRefresh()

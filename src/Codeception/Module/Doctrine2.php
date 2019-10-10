@@ -1031,7 +1031,7 @@ EOF;
         }
 
         foreach ($pks as $pk) {
-            if (is_object($pk)) {
+            if ($this->isDoctrineEntity($pk)) {
                 $message .= get_class($pk).': '.var_export($this->extractPrimaryKey($pk), true).', ';
             } else {
                 $message .= var_export($pk, true).', ';
@@ -1039,5 +1039,27 @@ EOF;
         }
 
         $this->debug(trim($message, ' ,'));
+    }
+
+    /**
+     * @param mixed $pk
+     *
+     * @return bool
+     */
+    private function isDoctrineEntity($pk)
+    {
+        $isEntity = is_object($pk);
+
+        if ($isEntity) {
+            try {
+                $this->em->getClassMetadata(get_class($pk));
+            } catch (\Doctrine\ORM\Mapping\MappingException $ex) {
+                $isEntity = false;
+            } catch (\Doctrine\Common\Persistence\Mapping\MappingException $ex) {
+                $isEntity = false;
+            }
+        }
+
+        return $isEntity;
     }
 }
