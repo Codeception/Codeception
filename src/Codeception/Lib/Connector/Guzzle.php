@@ -99,15 +99,13 @@ class Guzzle extends Client
     }
 
     /**
-     * Taken from Mink\BrowserKitDriver
-     *
      * @param Response $response
      *
      * @return \Symfony\Component\BrowserKit\Response
      */
     protected function createResponse(Psr7Response $response)
     {
-        $body = (string) $response->getBody();
+        $body = $response->getBody()->getContents();
         $headers = $response->getHeaders();
 
         $contentType = null;
