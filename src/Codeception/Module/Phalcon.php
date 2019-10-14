@@ -1,23 +1,23 @@
 <?php
 namespace Codeception\Module;
 
-use Phalcon\Di;
-use PDOException;
-use Phalcon\Mvc\Url;
-use Phalcon\DiInterface;
-use Phalcon\Di\Injectable;
-use Codeception\TestInterface;
 use Codeception\Configuration;
-use Codeception\Lib\Framework;
-use Phalcon\Mvc\RouterInterface;
-use Phalcon\Mvc\Model as PhalconModel;
-use Phalcon\Mvc\Router\RouteInterface;
-use Codeception\Util\ReflectionHelper;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
+use Codeception\Lib\Connector\Phalcon as PhalconConnector;
+use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
-use Codeception\Exception\ModuleConfigException;
-use Codeception\Lib\Connector\Phalcon as PhalconConnector;
+use Codeception\TestInterface;
+use Codeception\Util\ReflectionHelper;
+use PDOException;
+use Phalcon\Di;
+use Phalcon\Di\Injectable;
+use Phalcon\DiInterface;
+use Phalcon\Mvc\Model as PhalconModel;
+use Phalcon\Mvc\Router\RouteInterface;
+use Phalcon\Mvc\RouterInterface;
+use Phalcon\Mvc\Url;
 
 /**
  * This module provides integration with [Phalcon framework](http://www.phalcon.io/) (3.x).
@@ -655,7 +655,20 @@ class Phalcon extends Framework implements ActiveRecord, PartedModule
             case 0:
                 return null;
             case 1:
-                return $model->{$primaryKeys[0]};
+                $primaryKey = $primaryKeys[0];
+
+                // if columnMap is used for model, map database column name to model property name
+                $columnMap = $this->di->get('modelsMetadata')->getColumnMap($model);
+                if ($columnMap) {
+                    $primaryKey = $columnMap[$primaryKey];
+                }
+
+                if (property_exists($model, $primaryKey)) {
+                    return $model->{$primaryKey};
+                }
+
+                return null;
+
             default:
                 return array_intersect_key(get_object_vars($model), array_flip($primaryKeys));
         }
