@@ -275,7 +275,7 @@ class Configuration
             return;
         }
 
-        $bootstrap = codecept_is_path_absolute($bootstrap)
+        $bootstrap = \Codeception\Util\PathResolver::isPathAbsolute($bootstrap)
             ? $bootstrap
             : rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $bootstrap;
 
