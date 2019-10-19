@@ -1,3 +1,16 @@
+#### 3.1.2
+
+* [Doctrine2] Support non-entity doctrine @id on the haveInRepository debug message by @Basster 
+* [Frameworks][PhpBrowser] Improved detection of content-type for .fail files by @jasny
+* [Frameworks][PhpBrowser] Add HTML snapshots of failing tests to HTML Report by @reinholdfuereder
+* [Symfony] Fixed runConsoleCommand by @wirwolf
+* [Symfony] grabService uses the special test service container if available by @burned42
+* [Webdriver] Display cookie details in debug output by @Mitrichius
+* [WebDriver] Improved error text of WaitForJS method by @eriksape
+* Code coverage does not fail when excluded directory not exists by @Mitrichius
+* Use path resolver for bootstrap file detection by @laoneo
+* [Docs] Documentation updates by @burned42, @kishorehariram, @Mitrichius, @ruudboon, @sva1sva
+
 #### 3.1.1
 
 * Preparation for Symfony 5, removes deprecation message when Symfony 4.3 components are used. See #5670 by @Naktibalda
