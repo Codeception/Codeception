@@ -87,9 +87,9 @@ This will create a default directory structure and default test suites.
 
 ## Documentation
 
-[Documentation](http://codeception.com/docs/01-Introduction)
+[View Documentation](http://codeception.com/docs/01-Introduction)
 
-Documentation is included within the project. Look for it in the ['docs' directory](https://github.com/Codeception/Codeception/tree/master/docs).
+The documentation source files can be found at https://github.com/Codeception/codeception.github.com/tree/master/docs/.
 
 ## License
 MIT
