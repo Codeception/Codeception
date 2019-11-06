@@ -403,6 +403,9 @@ class Run extends Command
 
             if (!empty($config['include']) && (!$suite || $this->options['recurse-includes'])) {
                 $current_dir = Configuration::projectDir();
+                if (empty($suites)) {
+                    $suites = Configuration::suites();
+                }
                 $this->runIncludedSuites($config['include'], $current_dir, $suites);
             }
 
