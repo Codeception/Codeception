@@ -40,7 +40,7 @@ use Codeception\Util\Stub;
  * By default, the module will wrap everything into a transaction for each test and roll it back afterwards
  * (this is controlled by the `cleanup` setting).
  * By doing this, tests will run much faster and will be isolated from each other.
- * 
+ *
  * To use the Doctrine2 Module in acceptance tests, set up your `acceptance.suite.yml` like this:
  * ```
  * modules:
