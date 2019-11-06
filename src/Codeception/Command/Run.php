@@ -215,7 +215,12 @@ class Run extends Command
                 InputOption::VALUE_REQUIRED,
                 'Define random seed for shuffle setting'
             ),
-
+            new InputOption(
+                'recurse-includes',
+                '',
+                InputOption::VALUE_NONE,
+                'Recurse into all included tests (only when running a single suite)'
+            ),
         ]);
 
         parent::configure();
@@ -396,10 +401,9 @@ class Run extends Command
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
             $this->executed = $this->runSuites($suites, $this->options['skip']);
 
-            if (!empty($config['include']) and !$suite) {
+            if (!empty($config['include']) && (!$suite || $this->options['recurse-includes'])) {
                 $current_dir = Configuration::projectDir();
-                $suites += $config['include'];
-                $this->runIncludedSuites($config['include'], $current_dir);
+                $this->runIncludedSuites($config['include'], $current_dir, $suites);
             }
 
             if ($this->executed === 0) {
@@ -453,15 +457,15 @@ class Run extends Command
     /**
      * Runs included suites recursively
      *
-     * @param array $suites
+     * @param array $includePaths
      * @param string $parent_dir
+     * @param array $suites
      */
-    protected function runIncludedSuites($suites, $parent_dir)
+    protected function runIncludedSuites($includePaths, $parent_dir, array $suites)
     {
-        foreach ($suites as $relativePath) {
+        foreach ($includePaths as $relativePath) {
             $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
             $config = Configuration::config($current_dir);
-            $suites = Configuration::suites();
 
             $namespace = $this->currentNamespace();
             $this->output->writeln(
@@ -470,7 +474,7 @@ class Run extends Command
 
             $this->executed += $this->runSuites($suites, $this->options['skip']);
             if (!empty($config['include'])) {
-                $this->runIncludedSuites($config['include'], $current_dir);
+                $this->runIncludedSuites($config['include'], $current_dir, $suites);
             }
         }
     }
