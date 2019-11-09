@@ -2,7 +2,7 @@
 
 [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
 [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Codeception/Codeception/badges/quality-score.png?b=2.4)](https://scrutinizer-ci.com/g/Codeception/Codeception/?branch=2.4)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Codeception/Codeception/badges/quality-score.png?b=4.0)](https://scrutinizer-ci.com/g/Codeception/Codeception/?branch=4.0)
 
 **Modern PHP Testing for everyone**
 
@@ -12,11 +12,11 @@ Powered by PHPUnit.
 
 | General |  Windows |  Webdriver  |
 | ------- | -------- | -------- |
-| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=3.0)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/3.0) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/3-0/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) |
+| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=4.0)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/4.0) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/3-0/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) |
 
 #### Contributions
 
-At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/2.4/CONTRIBUTING.md).
+At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/4.0/CONTRIBUTING.md).
 
 ### At a Glance
 
