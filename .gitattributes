@@ -41,3 +41,7 @@
 /.gitignore      export-ignore
 /*.md            export-ignore
 /*.yml           export-ignore
+/.github         export-ignore
+/Dockerfile      export-ignore
+/nitpick.json    export-ignore
+/ruleset.xml     export-ignore
