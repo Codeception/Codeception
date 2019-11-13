@@ -65,7 +65,6 @@ class SelfUpdate extends Command
             )
         );
 
-        $output->writeln("\n<info>Checking for a new version...</info>\n");
         try {
             $output->writeln("\n<info>Updating...</info>");
             $this->retrievePharFile($output);
