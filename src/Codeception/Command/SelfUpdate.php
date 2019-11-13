@@ -4,7 +4,6 @@ namespace Codeception\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Codeception\Codecept;
 
 /**
@@ -20,21 +19,14 @@ class SelfUpdate extends Command
      * Class constants
      */
     const NAME = 'Codeception';
-    const GITHUB_REPO = 'Codeception/Codeception';
-    const PHAR_URL = 'http://codeception.com/releases/%s/codecept.phar';
-    const PHAR_URL_PHP54 = 'http://codeception.com/releases/%s/php54/codecept.phar';
+    const PHAR_URL = 'http://codeception.com/codecept.phar';
+    const PHAR_URL_PHP56 = 'http://codeception.com/php56/codecept.phar';
 
     /**
      * Holds the current script filename.
      * @var string
      */
     protected $filename;
-
-    /**
-     * Holds the live version string.
-     * @var string
-     */
-    protected $liveVersion;
 
     /**
      * {@inheritdoc}
@@ -48,7 +40,6 @@ class SelfUpdate extends Command
         }
 
         $this
-            // ->setAliases(array('selfupdate'))
             ->setDescription(
                 sprintf(
                     'Upgrade <comment>%s</comment> to the latest version',
@@ -60,53 +51,24 @@ class SelfUpdate extends Command
     }
 
     /**
-     * @return string
-     */
-    protected function getCurrentVersion()
-    {
-        return Codecept::VERSION;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $version = $this->getCurrentVersion();
+        $currentVersion = Codecept::VERSION;
 
         $output->writeln(
             sprintf(
                 '<info>%s</info> version <comment>%s</comment>',
                 self::NAME,
-                $version
+                $currentVersion
             )
         );
 
         $output->writeln("\n<info>Checking for a new version...</info>\n");
         try {
-            $latestVersion = $this->getLatestStableVersion();
-            if ($this->isOutOfDate($version, $latestVersion)) {
-                $output->writeln(
-                    sprintf(
-                        'A newer version is available: <comment>%s</comment>',
-                        $latestVersion
-                    )
-                );
-                if (!$input->getOption('no-interaction')) {
-                    $dialog = $this->getHelperSet()->get('question');
-                    $question = new ConfirmationQuestion("\n<question>Do you want to update?</question> ", false);
-                    if (!$dialog->ask($input, $output, $question)) {
-                        $output->writeln("\n<info>Bye-bye!</info>\n");
-
-                        return;
-                    }
-                }
-                $output->writeln("\n<info>Updating...</info>");
-
-                $this->retrievePharFile($latestVersion, $output);
-            } else {
-                $output->writeln('You are already using the latest version.');
-            }
+            $output->writeln("\n<info>Updating...</info>");
+            $this->retrievePharFile($output);
         } catch (\Exception $e) {
             $output->writeln(
                 sprintf(
@@ -118,141 +80,17 @@ class SelfUpdate extends Command
     }
 
     /**
-     * Checks whether the provided version is current.
-     *
-     * @param string $version The version number to check.
-     * @param string $latestVersion Latest stable version
-     * @return boolean Returns True if a new version is available.
-     */
-    private function isOutOfDate($version, $latestVersion)
-    {
-        return -1 != version_compare($version, $latestVersion, '>=');
-    }
-
-    /**
-     * @return string
-     */
-    private function getLatestStableVersion()
-    {
-        $stableVersions = $this->filterStableVersions(
-            $this->getGithubTags(self::GITHUB_REPO)
-        );
-
-        return array_reduce(
-            $stableVersions,
-            function ($a, $b) {
-                return version_compare($a, $b, '>') ? $a : $b;
-            }
-        );
-    }
-
-    /**
-     * @param array $tags
-     * @return array
-     */
-    private function filterStableVersions($tags)
-    {
-        return array_filter($tags, function ($tag) {
-            return preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $tag);
-        });
-    }
-
-    /**
-     * Returns an array of tags from a github repo.
-     *
-     * @param  string $repo The repository name to check upon.
-     * @return array
-     */
-    protected function getGithubTags($repo)
-    {
-        $jsonTags = $this->retrieveContentFromUrl(
-            'https://api.github.com/repos/' . $repo . '/tags'
-        );
-
-        return array_column(json_decode($jsonTags, true), 'name');
-    }
-
-    /**
-     * Retrieves the body-content from the provided URL.
-     *
-     * @param  string $url
-     * @return string
-     * @throws \Exception if status code is above 300
-     */
-    private function retrieveContentFromUrl($url)
-    {
-        $ctx = $this->prepareContext($url);
-
-        $body = file_get_contents($url, 0, $ctx);
-
-        if (isset($http_response_header)) {
-            $code = substr($http_response_header[0], 9, 3);
-            if (floor($code / 100) > 3) {
-                throw new \Exception($http_response_header[0]);
-            }
-        } else {
-            throw new \Exception('Request failed.');
-        }
-
-        return $body;
-    }
-
-    /**
-     * Add proxy support to context if environment variable was set up
-     *
-     * @param array $opt context options
-     * @param string $url
-     */
-    private function prepareProxy(&$opt, $url)
-    {
-        $scheme = parse_url($url)['scheme'];
-        if ($scheme === 'http' && (!empty($_SERVER['HTTP_PROXY']) || !empty($_SERVER['http_proxy']))) {
-            $proxy = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
-        }
-
-        if ($scheme === 'https' && (!empty($_SERVER['HTTPS_PROXY']) || !empty($_SERVER['https_proxy']))) {
-            $proxy = !empty($_SERVER['https_proxy']) ? $_SERVER['https_proxy'] : $_SERVER['HTTPS_PROXY'];
-        }
-
-        if (!empty($proxy)) {
-            $proxy = str_replace(['http://', 'https://'], ['tcp://', 'ssl://'], $proxy);
-            $opt['http']['proxy'] = $proxy;
-        }
-    }
-
-    /**
-     * Preparing context for request
-     * @param $url
-     *
-     * @return resource
-     */
-    private function prepareContext($url)
-    {
-        $opts = [
-            'http' => [
-                'follow_location' => 1,
-                'max_redirects'   => 20,
-                'timeout'         => 10,
-                'user_agent'      => self::NAME
-            ]
-        ];
-        $this->prepareProxy($opts, $url);
-        return stream_context_create($opts);
-    }
-
-    /**
      * Retrieves the latest phar file.
      *
-     * @param string $version
      * @param OutputInterface $output
      * @throws \Exception
      */
-    protected function retrievePharFile($version, OutputInterface $output)
+    protected function retrievePharFile(OutputInterface $output)
     {
         $temp = basename($this->filename, '.phar') . '-temp.phar';
 
         try {
-            $sourceUrl = $this->getPharUrl($version);
+            $sourceUrl = $this->getPharUrl();
             if (@copy($sourceUrl, $temp)) {
                 chmod($temp, 0777 & ~umask());
 
@@ -289,18 +127,16 @@ class SelfUpdate extends Command
     }
 
     /**
-     * Returns Phar file URL for specified version
+     * Returns Phar file URL for current version of PHP
      *
-     * @param string $version
      * @return string
      */
-    protected function getPharUrl($version)
+    protected function getPharUrl()
     {
-        $sourceUrl = self::PHAR_URL;
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $sourceUrl = self::PHAR_URL_PHP54;
+        if (version_compare(PHP_VERSION, '7.2.0', '<')) {
+            return self::PHAR_URL_PHP56;
         }
 
-        return sprintf($sourceUrl, $version);
+        return self::PHAR_URL;
     }
 }
