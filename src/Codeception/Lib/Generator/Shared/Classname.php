@@ -5,7 +5,7 @@ trait Classname
 {
     protected function removeSuffix($classname, $suffix)
     {
-        $classname = preg_replace('~\.php$~', '', $classname);
-        return preg_replace("~$suffix$~", '', $classname);
+        $classname = \preg_replace('~\.php$~', '', $classname);
+        return \preg_replace("~$suffix$~", '', $classname);
     }
 }

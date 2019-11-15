@@ -23,15 +23,15 @@ class TryTo extends Assertion implements GeneratedStep
     {
         $action = $template->getVar('action');
 
-        if ((strpos($action, 'have') === 0) || (strpos($action, 'am') === 0)) {
+        if ((\strpos($action, 'have') === 0) || (\strpos($action, 'am') === 0)) {
             return; // dont try on conditions
         }
 
-        if (strpos($action, 'wait') === 0) {
+        if (\strpos($action, 'wait') === 0) {
             return; // dont try on waiters
         }
 
-        if (strpos($action, 'grab') === 0) {
+        if (\strpos($action, 'grab') === 0) {
             return; // dont on grabbers
         }
 
@@ -39,7 +39,7 @@ class TryTo extends Assertion implements GeneratedStep
 
         return $template
             ->place('doc', $conditionalDoc)
-            ->place('action', 'tryTo' . ucfirst($action))
+            ->place('action', 'tryTo' . \ucfirst($action))
             ->place('step', 'TryTo');
     }
 }

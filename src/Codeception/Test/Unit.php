@@ -48,7 +48,7 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
         $di->set(new Scenario($this));
 
         // auto-inject $tester property
-        if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor_suffix']))) {
+        if (($this->getMetadata()->getCurrent('actor')) && ($property = \lcfirst(Configuration::config()['actor_suffix']))) {
             $this->$property = $di->instantiate($this->getMetadata()->getCurrent('actor'));
         }
 
@@ -105,7 +105,7 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
     {
         return [
             'name'    => $this->getName(),
-            'class'   => get_class($this),
+            'class'   => \get_class($this),
             'file'    => $this->getMetadata()->getFilename()
         ];
     }
@@ -114,8 +114,8 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
-            if ((strpos($required, ':') === false) and method_exists($this, $required)) {
-                $required = get_class($this) . ":$required";
+            if ((\strpos($required, ':') === false) and \method_exists($this, $required)) {
+                $required = \get_class($this) . ":$required";
             }
             $names[] = $required;
         }
@@ -136,9 +136,9 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
         $dependencyInput = [];
 
         foreach ($dependencies as $dependency) {
-            $dependency = str_replace(':', '::', $dependency); // Codeception => PHPUnit format
-            if (strpos($dependency, '::') === false) {         // check it is method of same class
-                $dependency = get_class($this) . '::' . $dependency;
+            $dependency = \str_replace(':', '::', $dependency); // Codeception => PHPUnit format
+            if (\strpos($dependency, '::') === false) {         // check it is method of same class
+                $dependency = \get_class($this) . '::' . $dependency;
             }
             if (isset($passed[$dependency])) {
                 $dependencyInput[] = $passed[$dependency]['result'];

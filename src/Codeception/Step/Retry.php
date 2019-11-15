@@ -51,7 +51,7 @@ EOF;
                     throw $e;
                 }
                 codecept_debug("Retrying #$retry in ${interval}ms");
-                usleep($interval * 1000);
+                \usleep($interval * 1000);
                 $interval *= 2;
             }
         }
@@ -61,11 +61,11 @@ EOF;
     {
         $action = $template->getVar('action');
 
-        if ((strpos($action, 'have') === 0) || (strpos($action, 'am') === 0)) {
+        if ((\strpos($action, 'have') === 0) || (\strpos($action, 'am') === 0)) {
             return; // dont retry conditions
         }
 
-        if (strpos($action, 'wait') === 0) {
+        if (\strpos($action, 'wait') === 0) {
             return; // dont retry waiters
         }
 
@@ -76,6 +76,6 @@ EOF;
             ->place('module', $template->getVar('module'))
             ->place('params', $template->getVar('params'))
             ->place('doc', $doc)
-            ->place('action', 'retry'. ucfirst($action));
+            ->place('action', 'retry'. \ucfirst($action));
     }
 }

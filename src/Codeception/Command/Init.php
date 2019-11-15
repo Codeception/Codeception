@@ -33,12 +33,12 @@ class Init extends Command
     {
         $template = $input->getArgument('template');
 
-        if (class_exists($template)) {
+        if (\class_exists($template)) {
             $className = $template;
         } else {
-            $className = 'Codeception\Template\\' . ucfirst($template);
+            $className = 'Codeception\Template\\' . \ucfirst($template);
 
-            if (!class_exists($className)) {
+            if (!\class_exists($className)) {
                 throw new \Exception("Template from a $className can't be loaded; Init can't be executed");
             }
         }

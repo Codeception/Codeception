@@ -106,19 +106,19 @@ class LocalServer extends SuiteSubscriber
         $coverageFile = Configuration::outputDir() . 'c3tmp/codecoverage.serialized';
 
         $retries = 5;
-        while (!file_exists($coverageFile) && --$retries >= 0) {
-            usleep(0.5 * 1000000); // 0.5 sec
+        while (!\file_exists($coverageFile) && --$retries >= 0) {
+            \usleep(0.5 * 1000000); // 0.5 sec
         }
 
-        if (!file_exists($coverageFile)) {
-            if (file_exists(Configuration::outputDir() . 'c3tmp/error.txt')) {
-                throw new \RuntimeException(file_get_contents(Configuration::outputDir() . 'c3tmp/error.txt'));
+        if (!\file_exists($coverageFile)) {
+            if (\file_exists(Configuration::outputDir() . 'c3tmp/error.txt')) {
+                throw new \RuntimeException(\file_get_contents(Configuration::outputDir() . 'c3tmp/error.txt'));
             }
             return;
         }
 
-        $contents = file_get_contents($coverageFile);
-        $coverage = @unserialize($contents);
+        $contents = \file_get_contents($coverageFile);
+        $coverage = @\unserialize($contents);
         if ($coverage === false) {
             return;
         }
@@ -140,7 +140,7 @@ class LocalServer extends SuiteSubscriber
             return $this;
         }
 
-        $workDir    = rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
+        $workDir    = \rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
         $projectDir = Configuration::projectDir();
         $data       = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
 
@@ -149,7 +149,7 @@ class LocalServer extends SuiteSubscriber
         foreach ($data as $path => $datum) {
             unset($data[$path]);
 
-            $path = str_replace($workDir, $projectDir, $path);
+            $path = \str_replace($workDir, $projectDir, $path);
 
             $data[$path] = $datum;
         }
@@ -162,14 +162,14 @@ class LocalServer extends SuiteSubscriber
     protected function c3Request($action)
     {
         $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
-        $context = stream_context_create($this->c3Access);
+        $context = \stream_context_create($this->c3Access);
         $c3Url = $this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl();
-        $contents = file_get_contents($c3Url . '/c3/report/' . $action, false, $context);
+        $contents = \file_get_contents($c3Url . '/c3/report/' . $action, false, $context);
 
-        $okHeaders = array_filter(
+        $okHeaders = \array_filter(
             $http_response_header,
             function ($h) {
-                return preg_match('~^HTTP(.*?)\s200~', $h);
+                return \preg_match('~^HTTP(.*?)\s200~', $h);
             }
         );
         if (empty($okHeaders)) {
@@ -188,7 +188,7 @@ class LocalServer extends SuiteSubscriber
             'CodeCoverage_Suite'  => $this->suiteName,
             'CodeCoverage_Config' => $this->settings['remote_config']
         ];
-        $value = json_encode($value);
+        $value = \json_encode($value);
 
         if ($this->module instanceof \Codeception\Module\WebDriver) {
             $this->module->amOnPage('/');
@@ -197,7 +197,7 @@ class LocalServer extends SuiteSubscriber
         $cookieDomain = isset($this->settings['cookie_domain']) ? $this->settings['cookie_domain'] : null;
 
         if (!$cookieDomain) {
-            $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
+            $c3Url = \parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
 
             // we need to separate coverage cookies by host; we can't separate cookies by port.
             $cookieDomain = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
@@ -208,13 +208,13 @@ class LocalServer extends SuiteSubscriber
         // putting in configuration ensures the cookie is used for all sessions of a MultiSession test
 
         $cookies = $this->module->_getConfig('cookies');
-        if (!$cookies || !is_array($cookies)) {
+        if (!$cookies || !\is_array($cookies)) {
             $cookies = [];
         }
 
         $found = false;
         foreach ($cookies as &$cookie) {
-            if (!is_array($cookie) || !array_key_exists('Name', $cookie) || !array_key_exists('Value', $cookie)) {
+            if (!\is_array($cookie) || !\array_key_exists('Name', $cookie) || !\array_key_exists('Value', $cookie)) {
                 // \Codeception\Lib\InnerBrowser will complain about this
                 continue;
             }
@@ -254,7 +254,7 @@ class LocalServer extends SuiteSubscriber
     protected function getRemoteError($headers)
     {
         foreach ($headers as $header) {
-            if (strpos($header, self::COVERAGE_HEADER_ERROR) === 0) {
+            if (\strpos($header, self::COVERAGE_HEADER_ERROR) === 0) {
                 throw new RemoteException($header);
             }
         }
@@ -263,7 +263,7 @@ class LocalServer extends SuiteSubscriber
     protected function addC3AccessHeader($header, $value)
     {
         $headerString = "$header: $value\r\n";
-        if (strpos($this->c3Access['http']['header'], $headerString) === false) {
+        if (\strpos($this->c3Access['http']['header'], $headerString) === false) {
             $this->c3Access['http']['header'] .= $headerString;
         }
     }
@@ -272,7 +272,7 @@ class LocalServer extends SuiteSubscriber
     {
         parent::applySettings($settings);
         if (isset($settings['coverage']['remote_context_options'])) {
-            $this->c3Access = array_replace_recursive($this->c3Access, $settings['coverage']['remote_context_options']);
+            $this->c3Access = \array_replace_recursive($this->c3Access, $settings['coverage']['remote_context_options']);
         }
     }
 }

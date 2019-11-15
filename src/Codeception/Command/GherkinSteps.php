@@ -55,7 +55,7 @@ class GherkinSteps extends Command
             $output->writeln("Steps from <bold>$name</bold> context:");
 
             foreach ($context as $step => $callable) {
-                if (count($callable) < 2) {
+                if (\count($callable) < 2) {
                     continue;
                 }
                 $method = $callable[0] . '::' . $callable[1];

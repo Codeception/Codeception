@@ -37,8 +37,8 @@ class Annotation
      */
     public static function forClass($class)
     {
-        if (is_object($class)) {
-            $class = get_class($class);
+        if (\is_object($class)) {
+            $class = \get_class($class);
         }
 
         if (!isset(static::$reflectedClasses[$class])) {
@@ -68,7 +68,7 @@ class Annotation
      */
     public static function fetchAnnotationsFromDocblock($annotation, $docblock)
     {
-        if (preg_match_all(sprintf(self::$regex, $annotation), $docblock, $matched)) {
+        if (\preg_match_all(\sprintf(self::$regex, $annotation), $docblock, $matched)) {
             return $matched[1];
         }
         return [];
@@ -83,7 +83,7 @@ class Annotation
     public static function fetchAllAnnotationsFromDocblock($docblock)
     {
         $annotations = [];
-        if (!preg_match_all(sprintf(self::$regex, '(\w+)'), $docblock, $matched)) {
+        if (!\preg_match_all(\sprintf(self::$regex, '(\w+)'), $docblock, $matched)) {
             return $annotations;
         }
         foreach ($matched[1] as $k => $annotation) {
@@ -119,7 +119,7 @@ class Annotation
     public function fetch($annotation)
     {
         $docBlock = $this->currentReflectedItem->getDocComment();
-        if (preg_match(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
+        if (\preg_match(\sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
         }
         return null;
@@ -132,7 +132,7 @@ class Annotation
     public function fetchAll($annotation)
     {
         $docBlock = $this->currentReflectedItem->getDocComment();
-        if (preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
+        if (\preg_match_all(\sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
         }
         return [];
@@ -153,17 +153,17 @@ class Annotation
      */
     public static function arrayValue($annotation)
     {
-        $annotation = trim($annotation);
-        $openingBrace = substr($annotation, 0, 1);
+        $annotation = \trim($annotation);
+        $openingBrace = \substr($annotation, 0, 1);
 
         // json-style data format
-        if (in_array($openingBrace, ['{', '['])) {
-            return json_decode($annotation, true);
+        if (\in_array($openingBrace, ['{', '['])) {
+            return \json_decode($annotation, true);
         }
 
         // doctrine-style data format
         if ($openingBrace === '(') {
-            preg_match_all('~(\w+)\s*?=\s*?"(.*?)"\s*?[,)]~', $annotation, $matches, PREG_SET_ORDER);
+            \preg_match_all('~(\w+)\s*?=\s*?"(.*?)"\s*?[,)]~', $annotation, $matches, PREG_SET_ORDER);
             $data = [];
             foreach ($matches as $item) {
                 $data[$item[1]] = $item[2];

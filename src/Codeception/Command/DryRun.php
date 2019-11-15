@@ -55,11 +55,11 @@ class DryRun extends Command
         $test = $input->getArgument('test');
 
         $config = $this->getGlobalConfig();
-        ini_set(
+        \ini_set(
             'memory_limit',
             isset($config['settings']['memory_limit']) ? $config['settings']['memory_limit'] : '1024M'
         );
-        if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
+        if (! Configuration::isEmpty() && ! $test && \strpos($suite, $config['paths']['tests']) === 0) {
             list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
         $settings = $this->getSuiteConfig($suite);
@@ -100,8 +100,8 @@ class DryRun extends Command
 
     protected function matchTestFromFilename($filename, $tests_path)
     {
-        $filename = str_replace(['//', '\/', '\\'], '/', $filename);
-        $res = preg_match("~^$tests_path/(.*?)/(.*)$~", $filename, $matches);
+        $filename = \str_replace(['//', '\/', '\\'], '/', $filename);
+        $res = \preg_match("~^$tests_path/(.*?)/(.*)$~", $filename, $matches);
         if (!$res) {
             throw new \InvalidArgumentException("Test file can't be matched");
         }

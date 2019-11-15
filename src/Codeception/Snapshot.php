@@ -40,10 +40,10 @@ abstract class Snapshot
      */
     protected function load()
     {
-        if (!file_exists($this->getFileName())) {
+        if (!\file_exists($this->getFileName())) {
             return;
         }
-        $this->dataSet = json_decode(file_get_contents($this->getFileName()));
+        $this->dataSet = \json_decode(\file_get_contents($this->getFileName()));
         if (!$this->dataSet) {
             throw new ContentNotFound("Loaded snapshot is empty");
         }
@@ -54,7 +54,7 @@ abstract class Snapshot
      */
     protected function save()
     {
-        file_put_contents($this->getFileName(), json_encode($this->dataSet));
+        \file_put_contents($this->getFileName(), \json_encode($this->dataSet));
     }
 
     /**
@@ -65,7 +65,7 @@ abstract class Snapshot
     protected function getFileName()
     {
         if (!$this->fileName) {
-            $this->fileName = preg_replace('/\W/', '.', get_class($this)) . '.json';
+            $this->fileName = \preg_replace('/\W/', '.', \get_class($this)) . '.json';
         }
         return codecept_data_dir() . $this->fileName;
     }
@@ -96,7 +96,7 @@ abstract class Snapshot
         } catch (AssertionFailedError $exception) {
             $this->printDebug('Snapshot assertion failed');
 
-            if (!is_bool($this->refresh)) {
+            if (!\is_bool($this->refresh)) {
                 $confirm = Debug::confirm('Should we update snapshot with fresh data? (Y/n) ');
             } else {
                 $confirm = $this->refresh;
@@ -125,6 +125,6 @@ abstract class Snapshot
 
     private function printDebug($message)
     {
-        Debug::debug(get_class($this) . ': ' . $message);
+        Debug::debug(\get_class($this) . ': ' . $message);
     }
 }

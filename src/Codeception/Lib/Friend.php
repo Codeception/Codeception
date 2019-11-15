@@ -16,7 +16,7 @@ class Friend
         $this->name = $name;
         $this->actor = $actor;
 
-        $this->multiSessionModules = array_filter($modules, function ($m) {
+        $this->multiSessionModules = \array_filter($modules, function ($m) {
             return $m instanceof Interfaces\MultiSession;
         });
 
@@ -40,9 +40,9 @@ class Friend
             $module->_loadSession($this->data[$name]);
         };
 
-        $this->actor->comment(strtoupper("{$this->name} does ---"));
+        $this->actor->comment(\strtoupper("{$this->name} does ---"));
         $ret = $closure($this->actor);
-        $this->actor->comment(strtoupper("--- {$this->name} finished"));
+        $this->actor->comment(\strtoupper("--- {$this->name} finished"));
 
         foreach ($this->multiSessionModules as $module) {
             $name = $module->_getName();

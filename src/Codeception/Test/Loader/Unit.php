@@ -43,13 +43,13 @@ class Unit implements LoaderInterface
 
     protected function createTestFromPhpUnitMethod(\ReflectionClass $class, \ReflectionMethod $method)
     {
-        if (method_exists(\PHPUnit\Framework\TestSuite::class, 'isTestMethod')) {
+        if (\method_exists(\PHPUnit\Framework\TestSuite::class, 'isTestMethod')) {
             //PHPUnit <8.2
             if (!\PHPUnit\Framework\TestSuite::isTestMethod($method)) {
                 return;
             }
             $test = \PHPUnit\Framework\TestSuite::createTest($class, $method->name);
-        } elseif (method_exists(\PHPUnit\Util\Test::class, 'isTestMethod')) {
+        } elseif (\method_exists(\PHPUnit\Util\Test::class, 'isTestMethod')) {
             //PHPUnit >=8.2
             if (!\PHPUnit\Util\Test::isTestMethod($method)) {
                 return;
@@ -73,7 +73,7 @@ class Unit implements LoaderInterface
 
     protected function enhancePhpunitTest(\PHPUnit\Framework\Test $test)
     {
-        $className = get_class($test);
+        $className = \get_class($test);
         $methodName = $test->getName(false);
         $dependencies = \PHPUnit\Util\Test::getDependencies($className, $methodName);
         $test->setDependencies($dependencies);

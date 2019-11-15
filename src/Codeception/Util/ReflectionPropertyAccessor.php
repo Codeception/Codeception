@@ -20,10 +20,10 @@ class ReflectionPropertyAccessor
      */
     public function getProperty($obj, $field)
     {
-        if (!$obj || !is_object($obj)) {
-            throw new InvalidArgumentException('Cannot get property "' . $field . '" of "' . gettype($obj) . '", expecting object');
+        if (!$obj || !\is_object($obj)) {
+            throw new InvalidArgumentException('Cannot get property "' . $field . '" of "' . \gettype($obj) . '", expecting object');
         }
-        $class = get_class($obj);
+        $class = \get_class($obj);
         do {
             $reflectedEntity = new ReflectionClass($class);
             if ($reflectedEntity->hasProperty($field)) {
@@ -31,9 +31,9 @@ class ReflectionPropertyAccessor
                 $property->setAccessible(true);
                 return $property->getValue($obj);
             }
-            $class = get_parent_class($class);
+            $class = \get_parent_class($class);
         } while ($class);
-        throw new InvalidArgumentException('Property "' . $field . '" does not exists in class "' . get_class($obj) . '" and its parents');
+        throw new InvalidArgumentException('Property "' . $field . '" does not exists in class "' . \get_class($obj) . '" and its parents');
     }
 
     /**
@@ -54,7 +54,7 @@ class ReflectionPropertyAccessor
                 foreach ($constructor->getParameters() as $parameter) {
                     if ($parameter->isOptional()) {
                         $constructorParameters[] = $parameter->getDefaultValue();
-                    } elseif (array_key_exists($parameter->getName(), $data)) {
+                    } elseif (\array_key_exists($parameter->getName(), $data)) {
                         $constructorParameters[] = $data[$parameter->getName()];
                     } else {
                         throw new InvalidArgumentException(
@@ -83,13 +83,13 @@ class ReflectionPropertyAccessor
      */
     public function setProperties($obj, array $data)
     {
-        if (!$obj || !is_object($obj)) {
-            throw new InvalidArgumentException('Cannot set properties for "' . gettype($obj) . '", expecting object');
+        if (!$obj || !\is_object($obj)) {
+            throw new InvalidArgumentException('Cannot set properties for "' . \gettype($obj) . '", expecting object');
         }
-        $class = get_class($obj);
+        $class = \get_class($obj);
         do {
             $obj = $this->setPropertiesForClass($obj, $class, $data);
-            $class = get_parent_class($class);
+            $class = \get_parent_class($class);
         } while ($class);
     }
 
@@ -104,7 +104,7 @@ class ReflectionPropertyAccessor
         $obj = null;
         do {
             $obj = $this->setPropertiesForClass($obj, $class, $data);
-            $class = get_parent_class($class);
+            $class = \get_parent_class($class);
         } while ($class);
         return $obj;
     }

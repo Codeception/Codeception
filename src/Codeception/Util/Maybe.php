@@ -27,7 +27,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     public function __construct($val = null)
     {
         $this->val = $val;
-        if (is_array($this->val)) {
+        if (\is_array($this->val)) {
             $this->assocArray = $this->isAssocArray($this->val);
         }
         $this->position = 0;
@@ -35,7 +35,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 
     private function isAssocArray($arr)
     {
-        return array_keys($arr) !== range(0, count($arr) - 1);
+        return \array_keys($arr) !== \range(0, \count($arr) - 1);
     }
 
     public function __toString()
@@ -43,11 +43,11 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if ($this->val === null) {
             return "?";
         }
-        if (is_scalar($this->val)) {
+        if (\is_scalar($this->val)) {
             return (string)$this->val;
         }
 
-        if (is_object($this->val) && method_exists($this->val, '__toString')) {
+        if (\is_object($this->val) && \method_exists($this->val, '__toString')) {
             return $this->val->__toString();
         }
 
@@ -60,8 +60,8 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
             return new Maybe();
         }
 
-        if (is_object($this->val)) {
-            if (isset($this->val->{$key}) || property_exists($this->val, $key)) {
+        if (\is_object($this->val)) {
+            if (isset($this->val->{$key}) || \property_exists($this->val, $key)) {
                 return $this->val->{$key};
             }
         }
@@ -75,7 +75,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
             return;
         }
 
-        if (is_object($this->val)) {
+        if (\is_object($this->val)) {
             $this->val->{$key} = $val;
             return;
         }
@@ -88,20 +88,20 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if ($this->val === null) {
             return new Maybe();
         }
-        return call_user_func_array([$this->val, $method], $args);
+        return \call_user_func_array([$this->val, $method], $args);
     }
 
     public function __clone()
     {
-        if (is_object($this->val)) {
+        if (\is_object($this->val)) {
             $this->val = clone $this->val;
         }
     }
 
     public function __unset($key)
     {
-        if (is_object($this->val)) {
-            if (isset($this->val->{$key}) || property_exists($this->val, $key)) {
+        if (\is_object($this->val)) {
+            if (isset($this->val->{$key}) || \property_exists($this->val, $key)) {
                 unset($this->val->{$key});
                 return;
             }
@@ -110,7 +110,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 
     public function offsetExists($offset)
     {
-        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
+        if (\is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
             return isset($this->val[$offset]);
         }
         return false;
@@ -118,7 +118,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 
     public function offsetGet($offset)
     {
-        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
+        if (\is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
             return $this->val[$offset];
         }
         return new Maybe();
@@ -126,14 +126,14 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 
     public function offsetSet($offset, $value)
     {
-        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
+        if (\is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
             $this->val[$offset] = $value;
         }
     }
 
     public function offsetUnset($offset)
     {
-        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
+        if (\is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
             unset($this->val[$offset]);
         }
     }
@@ -141,7 +141,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     public function __value()
     {
         $val = $this->val;
-        if (is_array($val)) {
+        if (\is_array($val)) {
             foreach ($val as $k => $v) {
                 if ($v instanceof self) {
                     $v = $v->__value();
@@ -160,11 +160,11 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      */
     public function current()
     {
-        if (!is_array($this->val)) {
+        if (!\is_array($this->val)) {
             return null;
         }
         if ($this->assocArray) {
-            $keys = array_keys($this->val);
+            $keys = \array_keys($this->val);
             return $this->val[$keys[$this->position]];
         }
 
@@ -191,7 +191,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     public function key()
     {
         if ($this->assocArray) {
-            $keys = array_keys($this->val);
+            $keys = \array_keys($this->val);
             return $keys[$this->position];
         }
 
@@ -207,11 +207,11 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      */
     public function valid()
     {
-        if (!is_array($this->val)) {
+        if (!\is_array($this->val)) {
             return null;
         }
         if ($this->assocArray) {
-            $keys = array_keys($this->val);
+            $keys = \array_keys($this->val);
             return isset($keys[$this->position]);
         }
 
@@ -226,7 +226,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      */
     public function rewind()
     {
-        if (is_array($this->val)) {
+        if (\is_array($this->val)) {
             $this->assocArray = $this->isAssocArray($this->val);
         }
         $this->position = 0;

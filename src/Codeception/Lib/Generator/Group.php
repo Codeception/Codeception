@@ -54,10 +54,10 @@ EOF;
     {
         $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $this->name);
         return (new Template($this->template))
-            ->place('class', ucfirst($this->name))
+            ->place('class', \ucfirst($this->name))
             ->place('name', $this->name)
             ->place('namespace', $this->namespace)
-            ->place('groupName', strtolower($this->name))
+            ->place('groupName', \strtolower($this->name))
             ->produce();
     }
 }

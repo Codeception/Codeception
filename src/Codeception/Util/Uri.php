@@ -19,12 +19,12 @@ class Uri
     public static function mergeUrls($baseUri, $uri)
     {
         $base = new Psr7Uri($baseUri);
-        $parts = parse_url($uri);
+        $parts = \parse_url($uri);
 
         //If the relative URL does not parse, attempt to parse the entire URL.
         //PHP Known bug ( https://bugs.php.net/bug.php?id=70942 )
         if ($parts === false) {
-            $parts = parse_url($base.$uri);
+            $parts = \parse_url($base.$uri);
         }
         
         if ($parts === false) {
@@ -45,18 +45,18 @@ class Uri
         if (isset($parts['path'])) {
             $path = $parts['path'];
             $basePath = $base->getPath();
-            if ((strpos($path, '/') !== 0) && !empty($path)) {
+            if ((\strpos($path, '/') !== 0) && !empty($path)) {
                 if ($basePath) {
                     // if it ends with a slash, relative paths are below it
-                    if (preg_match('~/$~', $basePath)) {
+                    if (\preg_match('~/$~', $basePath)) {
                         $path = $basePath . $path;
                     } else {
                         // remove double slashes
-                        $dir = rtrim(dirname($basePath), '\\/');
+                        $dir = \rtrim(\dirname($basePath), '\\/');
                         $path = $dir . '/' . $path;
                     }
                 } else {
-                    $path = '/' . ltrim($path, '/');
+                    $path = '/' . \ltrim($path, '/');
                 }
             }
             $base = $base->withPath($path);
@@ -90,7 +90,7 @@ class Uri
 
     public static function retrieveHost($url)
     {
-        $urlParts = parse_url($url);
+        $urlParts = \parse_url($url);
         if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
             throw new \InvalidArgumentException("Wrong URL passes, host and scheme not set");
         }
@@ -110,6 +110,6 @@ class Uri
             return $cutUrl . $path;
         }
 
-        return rtrim($cutUrl, '/') . '/'  . ltrim($path, '/');
+        return \rtrim($cutUrl, '/') . '/'  . \ltrim($path, '/');
     }
 }

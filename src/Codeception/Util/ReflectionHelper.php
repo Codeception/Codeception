@@ -16,7 +16,7 @@ class ReflectionHelper
      */
     public static function readPrivateProperty($object, $property, $class = null)
     {
-        if (is_null($class)) {
+        if (\is_null($class)) {
             $class = $object;
         }
 
@@ -37,7 +37,7 @@ class ReflectionHelper
      */
     public static function invokePrivateMethod($object, $method, $args = [], $class = null)
     {
-        if (is_null($class)) {
+        if (\is_null($class)) {
             $class = $object;
         }
 
@@ -57,7 +57,7 @@ class ReflectionHelper
      */
     public static function getClassShortName($object)
     {
-        $path = explode('\\', get_class($object));
-        return array_pop($path);
+        $path = \explode('\\', \get_class($object));
+        return \array_pop($path);
     }
 }

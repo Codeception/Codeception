@@ -35,12 +35,12 @@ class Parser
     {
         $matches = [];
         $code = $this->stripComments($code);
-        $res = preg_match("~\\\$I->wantTo\\(\s*?['\"](.*?)['\"]\s*?\\);~", $code, $matches);
+        $res = \preg_match("~\\\$I->wantTo\\(\s*?['\"](.*?)['\"]\s*?\\);~", $code, $matches);
         if ($res) {
             $this->scenario->setFeature($matches[1]);
             return;
         }
-        $res = preg_match("~\\\$I->wantToTest\\(['\"](.*?)['\"]\\);~", $code, $matches);
+        $res = \preg_match("~\\\$I->wantToTest\\(['\"](.*?)['\"]\\);~", $code, $matches);
         if ($res) {
             $this->scenario->setFeature("test " . $matches[1]);
             return;
@@ -56,17 +56,17 @@ class Parser
     {
         // parse per line
         $friends = [];
-        $lines = explode("\n", $code);
+        $lines = \explode("\n", $code);
         $isFriend = false;
         foreach ($lines as $line) {
             // friends
-            if (preg_match("~\\\$I->haveFriend\((.*?)\);~", $line, $matches)) {
-                $friends[] = trim($matches[1], '\'"');
+            if (\preg_match("~\\\$I->haveFriend\((.*?)\);~", $line, $matches)) {
+                $friends[] = \trim($matches[1], '\'"');
             }
             // friend's section start
-            if (preg_match("~\\\$(.*?)->does\(~", $line, $matches)) {
+            if (\preg_match("~\\\$(.*?)->does\(~", $line, $matches)) {
                 $friend = $matches[1];
-                if (!in_array($friend, $friends)) {
+                if (!\in_array($friend, $friends)) {
                     continue;
                 }
                 $isFriend = true;
@@ -75,12 +75,12 @@ class Parser
             }
 
             // actions
-            if (preg_match("~\\\$I->(.*)\((.*?)\);~", $line, $matches)) {
+            if (\preg_match("~\\\$I->(.*)\((.*?)\);~", $line, $matches)) {
                 $this->addStep($matches);
             }
 
             // friend's section ends
-            if ($isFriend && strpos($line, '}') !== false) {
+            if ($isFriend && \strpos($line, '}') !== false) {
                 $this->addCommentStep("-------- back to me\n");
                 $isFriend = false;
             }
@@ -90,10 +90,10 @@ class Parser
     protected function addStep($matches)
     {
         list($m, $action, $params) = $matches;
-        if (in_array($action, ['wantTo', 'wantToTest'])) {
+        if (\in_array($action, ['wantTo', 'wantToTest'])) {
             return;
         }
-        $this->scenario->addStep(new Step\Action($action, explode(',', $params)));
+        $this->scenario->addStep(new Step\Action($action, \explode(',', $params)));
     }
 
     protected function addCommentStep($comment)
@@ -107,13 +107,13 @@ class Parser
         if (empty($config['settings']['lint'])) { // lint disabled in config
             return;
         }
-        if (!function_exists('exec')) {
+        if (!\function_exists('exec')) {
             //exec function is disabled #3324
             return;
         }
-        exec("php -l " . escapeshellarg($file) . " 2>&1", $output, $code);
+        \exec("php -l " . \escapeshellarg($file) . " 2>&1", $output, $code);
         if ($code !== 0) {
-            throw new TestParseException($file, implode("\n", $output));
+            throw new TestParseException($file, \implode("\n", $output));
         }
     }
 
@@ -133,10 +133,10 @@ class Parser
 
     public static function getClassesFromFile($file)
     {
-        $sourceCode = file_get_contents($file);
+        $sourceCode = \file_get_contents($file);
         $classes = [];
-        $tokens = token_get_all($sourceCode);
-        $tokenCount = count($tokens);
+        $tokens = \token_get_all($sourceCode);
+        $tokenCount = \count($tokens);
         $namespace = '';
 
         for ($i = 0; $i < $tokenCount; $i++) {
@@ -188,8 +188,8 @@ class Parser
      */
     protected function stripComments($code)
     {
-        $code = preg_replace('~\/\/.*?$~m', '', $code); // remove inline comments
-        $code = preg_replace('~\/*\*.*?\*\/~ms', '', $code);
+        $code = \preg_replace('~\/\/.*?$~m', '', $code); // remove inline comments
+        $code = \preg_replace('~\/*\*.*?\*\/~ms', '', $code);
         return $code; // remove block comment
     }
 
@@ -197,13 +197,13 @@ class Parser
     {
         $matches = [];
         $comments = '';
-        $hasLineComment = preg_match_all('~\/\/(.*?)$~m', $code, $matches);
+        $hasLineComment = \preg_match_all('~\/\/(.*?)$~m', $code, $matches);
         if ($hasLineComment) {
             foreach ($matches[1] as $line) {
                 $comments .= $line."\n";
             }
         }
-        $hasBlockComment = preg_match('~\/*\*(.*?)\*\/~ms', $code, $matches);
+        $hasBlockComment = \preg_match('~\/*\*(.*?)\*\/~ms', $code, $matches);
         if ($hasBlockComment) {
             $comments .= $matches[1]."\n";
         }

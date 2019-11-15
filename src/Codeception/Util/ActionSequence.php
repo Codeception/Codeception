@@ -62,7 +62,7 @@ class ActionSequence
 
     protected function addAction($action, $arguments)
     {
-        if (!is_array($arguments)) {
+        if (!\is_array($arguments)) {
             $arguments = [$arguments];
         }
         $this->actions[] = new Action($action, $arguments);
@@ -103,9 +103,9 @@ class ActionSequence
             /** @var $step Action  **/
             codecept_debug("- $step");
             try {
-                call_user_func_array([$context, $step->getAction()], $step->getArguments());
+                \call_user_func_array([$context, $step->getAction()], $step->getArguments());
             } catch (\Exception $e) {
-                $class = get_class($e); // rethrow exception for a specific action
+                $class = \get_class($e); // rethrow exception for a specific action
                 throw new $class($e->getMessage() . "\nat $step");
             }
         }
@@ -116,10 +116,10 @@ class ActionSequence
         $actionsLog = [];
 
         foreach ($this->actions as $step) {
-            $args = str_replace('"', "'", $step->getArgumentsAsString(20));
+            $args = \str_replace('"', "'", $step->getArgumentsAsString(20));
             $actionsLog[] = $step->getAction() . ": $args";
         }
 
-        return implode(', ', $actionsLog);
+        return \implode(', ', $actionsLog);
     }
 }

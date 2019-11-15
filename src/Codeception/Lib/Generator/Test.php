@@ -62,7 +62,7 @@ EOF;
         if ($this->settings['actor']) {
             $tester = (new Template($this->testerTemplate))
             ->place('actorClass', $actor)
-            ->place('actor', lcfirst(Configuration::config()['actor_suffix']))
+            ->place('actor', \lcfirst(Configuration::config()['actor_suffix']))
             ->produce();
         }
 

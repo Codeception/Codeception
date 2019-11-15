@@ -29,7 +29,7 @@ EOF;
         }
         $use = '';
         if (! empty($this->settings['namespace'])) {
-            $namespace = rtrim($this->settings['namespace'], '\\');
+            $namespace = \rtrim($this->settings['namespace'], '\\');
             $use = "use {$namespace}\\$actor;";
         }
 

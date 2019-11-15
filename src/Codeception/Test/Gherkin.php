@@ -67,13 +67,13 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     
     public function getSignature()
     {
-        return basename($this->getFileName(), '.feature') . ':' . $this->getScenarioTitle();
+        return \basename($this->getFileName(), '.feature') . ':' . $this->getScenarioTitle();
     }
 
     public function test()
     {
         $this->makeContexts();
-        $description = explode("\n", $this->featureNode->getDescription());
+        $description = \explode("\n", $this->featureNode->getDescription());
         foreach ($description as $line) {
             $this->getScenario()->runStep(new Comment($line));
         }
@@ -96,7 +96,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
             $stepText .= ' ""';
         }
         foreach ($this->steps as $pattern => $context) {
-            $res = preg_match($pattern, $stepText);
+            $res = \preg_match($pattern, $stepText);
             if (!$res) {
                 continue;
             }
@@ -128,18 +128,18 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         $this->getScenario()->comment(null); // make metastep to be printed even if no steps in it
         foreach ($this->steps as $pattern => $context) {
             $matches = [];
-            if (!preg_match($pattern, $stepText, $matches)) {
+            if (!\preg_match($pattern, $stepText, $matches)) {
                 continue;
             }
-            array_shift($matches);
+            \array_shift($matches);
             if ($hasPyStringArg) {
                 // get rid off last fake argument
-                array_pop($matches);
+                \array_pop($matches);
             }
             if ($stepNode->hasArguments()) {
-                $matches = array_merge($matches, $stepNode->getArguments());
+                $matches = \array_merge($matches, $stepNode->getArguments());
             }
-            call_user_func_array($context, $matches); // execute the step
+            \call_user_func_array($context, $matches); // execute the step
             break;
         }
         $this->scenario->setMetaStep(null); // disable metastep
@@ -187,7 +187,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
 
     public function getScenarioText($format = 'text')
     {
-        return file_get_contents($this->getFileName());
+        return \file_get_contents($this->getFileName());
     }
 
     public function getSourceCode()

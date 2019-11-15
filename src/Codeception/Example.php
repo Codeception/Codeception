@@ -26,7 +26,7 @@ class Example implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->data);
+        return \array_key_exists($offset, $this->data);
     }
 
     /**
@@ -88,7 +88,7 @@ class Example implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function count()
     {
-        return count($this->data);
+        return \count($this->data);
     }
 
     /**

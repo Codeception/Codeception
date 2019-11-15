@@ -11,14 +11,14 @@ class Colorizer
      */
     public function colorize($string = '')
     {
-        $fp = fopen('php://memory', 'r+');
-        fwrite($fp, $string);
-        rewind($fp);
+        $fp = \fopen('php://memory', 'r+');
+        \fwrite($fp, $string);
+        \rewind($fp);
 
         $colorizedMessage = '';
-        while ($line = fgets($fp)) {
+        while ($line = \fgets($fp)) {
             $char = $line[0];
-            $line = OutputFormatter::escape(trim($line));
+            $line = OutputFormatter::escape(\trim($line));
 
             switch ($char) {
                 case '+':
@@ -32,6 +32,6 @@ class Colorizer
             $colorizedMessage .= $line . "\n";
         }
 
-        return trim($colorizedMessage);
+        return \trim($colorizedMessage);
     }
 }

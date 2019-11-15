@@ -36,7 +36,7 @@ class Metadata
      */
     public function getGroups()
     {
-        return array_unique($this->params['group']);
+        return \array_unique($this->params['group']);
     }
 
     /**
@@ -44,7 +44,7 @@ class Metadata
      */
     public function setGroups($groups)
     {
-        $this->params['group'] = array_merge($this->params['group'], $groups);
+        $this->params['group'] = \array_merge($this->params['group'], $groups);
     }
 
     /**
@@ -100,7 +100,7 @@ class Metadata
 
     public function setCurrent(array $currents)
     {
-        $this->current = array_merge($this->current, $currents);
+        $this->current = \array_merge($this->current, $currents);
     }
 
     /**
@@ -244,7 +244,7 @@ class Metadata
     public function setParamsFromAnnotations($annotations)
     {
         $params = Annotation::fetchAllAnnotationsFromDocblock($annotations);
-        $this->params = array_merge_recursive($this->params, $params);
+        $this->params = \array_merge_recursive($this->params, $params);
 
         // set singular value for some params
         foreach (['skip', 'incomplete'] as $single) {
@@ -257,6 +257,6 @@ class Metadata
      */
     public function setParams($params)
     {
-        $this->params = array_merge_recursive($this->params, $params);
+        $this->params = \array_merge_recursive($this->params, $params);
     }
 }

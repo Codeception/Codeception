@@ -47,9 +47,9 @@ EOF;
             throw new ConfigurationException("Steps can't be created for suite without an actor");
         }
         $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $actor . '\\' . $this->name);
-        $ns = ltrim($ns, '\\');
+        $ns = \ltrim($ns, '\\');
 
-        $extended = '\\' . ltrim('\\' . $this->settings['namespace'] . '\\' . $actor, '\\');
+        $extended = '\\' . \ltrim('\\' . $this->settings['namespace'] . '\\' . $actor, '\\');
 
         return (new Template($this->template))
             ->place('namespace', $this->namespace)

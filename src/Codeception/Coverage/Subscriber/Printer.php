@@ -33,7 +33,7 @@ class Printer implements EventSubscriberInterface
     {
         $this->options = $options;
         $this->logDir = Configuration::outputDir();
-        $this->settings = array_merge($this->settings, Configuration::config()['coverage']);
+        $this->settings = \array_merge($this->settings, Configuration::config()['coverage']);
         self::$coverage = new \SebastianBergmann\CodeCoverage\CodeCoverage();
 
         // Apply filter
@@ -45,7 +45,7 @@ class Printer implements EventSubscriberInterface
 
     protected function absolutePath($path)
     {
-        if ((strpos($path, '/') === 0) || (strpos($path, ':') === 1)) { // absolute path
+        if ((\strpos($path, '/') === 0) || (\strpos($path, ':') === 1)) { // absolute path
             return $path;
         }
         return $this->logDir . $path;
@@ -103,7 +103,7 @@ class Printer implements EventSubscriberInterface
         $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade(
             $this->settings['low_limit'],
             $this->settings['high_limit'],
-            sprintf(
+            \sprintf(
                 ', <a href="http://codeception.com">Codeception</a> and <a href="http://phpunit.de/">PHPUnit %s</a>',
                 \PHPUnit\Runner\Version::id()
             )
@@ -132,7 +132,7 @@ class Printer implements EventSubscriberInterface
             $this->settings['show_uncovered'],
             $this->settings['show_only_summary']
         );
-        file_put_contents(
+        \file_put_contents(
             $this->absolutePath($this->options['coverage-text']),
             $writer->process(self::$coverage, false)
         );

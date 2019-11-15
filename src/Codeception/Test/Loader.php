@@ -67,14 +67,14 @@ class Loader
 
     protected function relativeName($file)
     {
-        return str_replace([$this->path, '\\'], ['', '/'], $file);
+        return \str_replace([$this->path, '\\'], ['', '/'], $file);
     }
 
     protected function findPath($path)
     {
-        if (!file_exists($path)
-            && substr($path, -strlen('.php')) !== '.php'
-            && file_exists($newPath = $path . '.php')
+        if (!\file_exists($path)
+            && \substr($path, -\strlen('.php')) !== '.php'
+            && \file_exists($newPath = $path . '.php')
         ) {
             return $newPath;
         }
@@ -86,13 +86,13 @@ class Loader
     {
         $path = $this->path . $this->relativeName($originalPath);
 
-        if (file_exists($newPath = $this->findPath($path))
-            || file_exists($newPath = $this->findPath(getcwd() . "/{$originalPath}"))
+        if (\file_exists($newPath = $this->findPath($path))
+            || \file_exists($newPath = $this->findPath(\getcwd() . "/{$originalPath}"))
         ) {
             $path = $newPath;
         }
 
-        if (!file_exists($path)) {
+        if (!\file_exists($path)) {
             throw new \Exception("File or path $originalPath not found");
         }
 
@@ -105,14 +105,14 @@ class Loader
 
         foreach ($this->formats as $format) {
             /** @var $format Loader  **/
-            if (preg_match($format->getPattern(), $path)) {
+            if (\preg_match($format->getPattern(), $path)) {
                 $format->loadTests($path);
                 $this->tests = $format->getTests();
                 return;
             }
         }
 
-        if (is_dir($path)) {
+        if (\is_dir($path)) {
             $currentPath = $this->path;
             $this->path = $path;
             $this->loadTests();
@@ -135,10 +135,10 @@ class Loader
             $formatFinder = clone($finder);
             $testFiles = $formatFinder->name($format->getPattern());
             foreach ($testFiles as $test) {
-                $pathname = str_replace(["//", "\\\\"], ["/", "\\"], $test->getPathname());
+                $pathname = \str_replace(["//", "\\\\"], ["/", "\\"], $test->getPathname());
                 $format->loadTests($pathname);
             }
-            $this->tests = array_merge($this->tests, $format->getTests());
+            $this->tests = \array_merge($this->tests, $format->getTests());
         }
     }
 }

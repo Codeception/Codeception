@@ -79,14 +79,14 @@ class SuiteManager
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
-        if ($this->settings['actor'] && !file_exists(Configuration::supportDir() . $this->settings['actor'] . '.php')) {
+        if ($this->settings['actor'] && !\file_exists(Configuration::supportDir() . $this->settings['actor'] . '.php')) {
             throw new Exception\ConfigurationException(
                 $this->settings['actor']
                 . " class doesn't exist in suite folder.\nRun the 'build' command to generate it"
             );
         }
         $this->dispatcher->dispatch(Events::SUITE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
-        ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
+        \ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
     public function loadTests($path = null)
@@ -96,7 +96,7 @@ class SuiteManager
 
         $tests = $testLoader->getTests();
         if ($this->settings['shuffle']) {
-            shuffle($tests);
+            \shuffle($tests);
         }
         foreach ($tests as $test) {
             $this->addToSuite($test);
@@ -133,7 +133,7 @@ class SuiteManager
     protected function createSuite($name)
     {
         $suite = new Suite();
-        $suite->setBaseName(preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
+        $suite->setBaseName(\preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
             $name = $this->settings['namespace'] . ".$name";
         }
@@ -142,7 +142,7 @@ class SuiteManager
             $suite->setBackupGlobals((bool) $this->settings['backup_globals']);
         }
 
-        if (isset($this->settings['be_strict_about_changes_to_global_state']) && method_exists($suite, 'setbeStrictAboutChangesToGlobalState')) {
+        if (isset($this->settings['be_strict_about_changes_to_global_state']) && \method_exists($suite, 'setbeStrictAboutChangesToGlobalState')) {
             $suite->setbeStrictAboutChangesToGlobalState((bool)$this->settings['be_strict_about_changes_to_global_state']);
         }
         $suite->setModules($this->moduleContainer->all());
@@ -183,7 +183,7 @@ class SuiteManager
             return null;
         }
         return $this->settings['namespace']
-            ? rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['actor']
+            ? \rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['actor']
             : $this->settings['actor'];
     }
 
@@ -197,10 +197,10 @@ class SuiteManager
             Notification::warning("Environments are not configured", Descriptor::getTestFullName($test));
             return;
         }
-        $availableEnvironments = array_keys($this->settings['env']);
-        $listedEnvironments = explode(',', implode(',', $envs));
+        $availableEnvironments = \array_keys($this->settings['env']);
+        $listedEnvironments = \explode(',', \implode(',', $envs));
         foreach ($listedEnvironments as $env) {
-            if (!in_array($env, $availableEnvironments)) {
+            if (!\in_array($env, $availableEnvironments)) {
                 Notification::warning("Environment $env was not configured but used in test", Descriptor::getTestFullName($test));
             }
         }
@@ -212,10 +212,10 @@ class SuiteManager
         if (empty($envs)) {
             return true;
         }
-        $currentEnvironments = explode(',', $this->env);
+        $currentEnvironments = \explode(',', $this->env);
         foreach ($envs as $envList) {
-            $envList = explode(',', $envList);
-            if (count($envList) == count(array_intersect($currentEnvironments, $envList))) {
+            $envList = \explode(',', $envList);
+            if (\count($envList) == \count(\array_intersect($currentEnvironments, $envList))) {
                 return true;
             }
         }

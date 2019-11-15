@@ -49,14 +49,14 @@ class Locator
      */
     public static function combine($selector1, $selector2)
     {
-        $selectors = func_get_args();
+        $selectors = \func_get_args();
         foreach ($selectors as $k => $v) {
             $selectors[$k] = self::toXPath($v);
             if (!$selectors[$k]) {
                 throw new \Exception("$v is invalid CSS or XPath");
             }
         }
-        return implode(' | ', $selectors);
+        return \implode(' | ', $selectors);
     }
 
     /**
@@ -78,7 +78,7 @@ class Locator
      */
     public static function href($url)
     {
-        return sprintf('//a[@href=normalize-space(%s)]', Translator::getXpathLiteral($url));
+        return \sprintf('//a[@href=normalize-space(%s)]', Translator::getXpathLiteral($url));
     }
 
     /**
@@ -104,7 +104,7 @@ class Locator
      */
     public static function tabIndex($index)
     {
-        return sprintf('//*[@tabindex = normalize-space(%d)]', $index);
+        return \sprintf('//*[@tabindex = normalize-space(%d)]', $index);
     }
 
     /**
@@ -123,7 +123,7 @@ class Locator
      */
     public static function option($value)
     {
-        return sprintf('//option[.=normalize-space("%s")]', $value);
+        return \sprintf('//option[.=normalize-space("%s")]', $value);
     }
 
     protected static function toXPath($selector)
@@ -160,13 +160,13 @@ class Locator
     {
         $operands = [];
         foreach ($attributes as $attribute => $value) {
-            if (is_int($attribute)) {
+            if (\is_int($attribute)) {
                 $operands[] = '@' . $value;
             } else {
                 $operands[] = '@' . $attribute . ' = ' . Translator::getXpathLiteral($value);
             }
         }
-        return sprintf('//%s[%s]', $element, implode(' and ', $operands));
+        return \sprintf('//%s[%s]', $element, \implode(' and ', $operands));
     }
 
     /**
@@ -220,7 +220,7 @@ class Locator
      */
     public static function isPrecise($locator)
     {
-        if (is_array($locator)) {
+        if (\is_array($locator)) {
             return true;
         }
         if ($locator instanceof WebDriverBy) {
@@ -229,7 +229,7 @@ class Locator
         if (Locator::isID($locator)) {
             return true;
         }
-        if (strpos($locator, '//') === 0) {
+        if (\strpos($locator, '//') === 0) {
             return true; // simple xpath check
         }
         return false;
@@ -251,7 +251,7 @@ class Locator
      */
     public static function isID($id)
     {
-        return (bool)preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
+        return (bool)\preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
     }
 
     /**
@@ -269,7 +269,7 @@ class Locator
      */
     public static function isClass($class)
     {
-        return (bool)preg_match('~^\.[\w\.\-\[\]\=\^\~\:]+$~', $class);
+        return (bool)\preg_match('~^\.[\w\.\-\[\]\=\^\~\:]+$~', $class);
     }
 
     /**
@@ -292,7 +292,7 @@ class Locator
     public static function contains($element, $text)
     {
         $text = Translator::getXpathLiteral($text);
-        return sprintf('%s[%s]', self::toXPath($element), "contains(., $text)");
+        return \sprintf('%s[%s]', self::toXPath($element), "contains(., $text)");
     }
 
     /**
@@ -317,16 +317,16 @@ class Locator
      */
     public static function elementAt($element, $position)
     {
-        if (is_int($position) && $position < 0) {
+        if (\is_int($position) && $position < 0) {
             $position++; // -1 points to the last element
-            $position = 'last()-'.abs($position);
+            $position = 'last()-'.\abs($position);
         }
         if ($position === 0) {
             throw new \InvalidArgumentException(
                 '0 is not valid element position. XPath expects first element to have index 1'
             );
         }
-        return sprintf('(%s)[position()=%s]', self::toXPath($element), $position);
+        return \sprintf('(%s)[position()=%s]', self::toXPath($element), $position);
     }
 
     /**
@@ -380,15 +380,15 @@ class Locator
      */
     public static function humanReadableString($selector)
     {
-        if (is_string($selector)) {
+        if (\is_string($selector)) {
             return "'$selector'";
         }
-        if (is_array($selector)) {
-            $type = strtolower(key($selector));
+        if (\is_array($selector)) {
+            $type = \strtolower(\key($selector));
             $locator = $selector[$type];
             return "$type '$locator'";
         }
-        if (class_exists('\Facebook\WebDriver\WebDriverBy')) {
+        if (\class_exists('\Facebook\WebDriver\WebDriverBy')) {
             if ($selector instanceof WebDriverBy) {
                 $type = $selector->getMechanism();
                 $locator = $selector->getValue();

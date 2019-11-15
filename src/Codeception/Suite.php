@@ -13,16 +13,16 @@ class Suite extends \PHPUnit\Framework\TestSuite
     {
         $tests = [];
         foreach ($this->tests as $test) {
-            $tests = array_merge($tests, $this->getDependencies($test));
+            $tests = \array_merge($tests, $this->getDependencies($test));
         }
 
         $queue = [];
         $hashes = [];
         foreach ($tests as $test) {
-            if (in_array(spl_object_hash($test), $hashes)) {
+            if (\in_array(\spl_object_hash($test), $hashes)) {
                 continue;
             }
-            $hashes[] = spl_object_hash($test);
+            $hashes[] = \spl_object_hash($test);
             $queue[] = $test;
         }
         $this->tests = $queue;
@@ -39,7 +39,7 @@ class Suite extends \PHPUnit\Framework\TestSuite
             if (!$required) {
                 continue;
             }
-            $tests = array_merge($tests, $this->getDependencies($required));
+            $tests = \array_merge($tests, $this->getDependencies($required));
         }
         $tests[] = $test;
         return $tests;

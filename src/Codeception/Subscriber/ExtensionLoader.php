@@ -54,7 +54,7 @@ class ExtensionLoader implements EventSubscriberInterface
 
         $this->suiteExtensions = [];
         foreach ($extensions as $extension) {
-            $extensionClass = get_class($extension);
+            $extensionClass = \get_class($extension);
             if (isset($this->globalExtensions[$extensionClass])) {
                 continue; // already globally enabled
             }
@@ -76,10 +76,10 @@ class ExtensionLoader implements EventSubscriberInterface
         $extensions = [];
 
         foreach ($config['extensions']['enabled'] as $extensionClass) {
-            if (is_array($extensionClass)) {
-                $extensionClass = key($extensionClass);
+            if (\is_array($extensionClass)) {
+                $extensionClass = \key($extensionClass);
             }
-            if (!class_exists($extensionClass)) {
+            if (!\class_exists($extensionClass)) {
                 throw new ConfigurationException(
                     "Class `$extensionClass` is not defined. Autoload it or include into "
                     . "'_bootstrap.php' file of 'tests' directory"
@@ -93,7 +93,7 @@ class ExtensionLoader implements EventSubscriberInterface
                     "Class $extensionClass is not an EventListener. Please create it as Extension or GroupObject."
                 );
             }
-            $extensions[get_class($extension)] = $extension;
+            $extensions[\get_class($extension)] = $extension;
         }
         return $extensions;
     }
@@ -108,18 +108,18 @@ class ExtensionLoader implements EventSubscriberInterface
             return $extensionConfig;
         }
 
-        if (!is_array($config['extensions']['enabled'])) {
+        if (!\is_array($config['extensions']['enabled'])) {
             return $extensionConfig;
         }
 
         foreach ($config['extensions']['enabled'] as $enabledExtensionsConfig) {
-            if (!is_array($enabledExtensionsConfig)) {
+            if (!\is_array($enabledExtensionsConfig)) {
                 continue;
             }
 
-            $enabledExtension = key($enabledExtensionsConfig);
+            $enabledExtension = \key($enabledExtensionsConfig);
             if ($enabledExtension === $extension) {
-                return Configuration::mergeConfigs(reset($enabledExtensionsConfig), $extensionConfig);
+                return Configuration::mergeConfigs(\reset($enabledExtensionsConfig), $extensionConfig);
             }
         }
 

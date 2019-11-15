@@ -52,11 +52,11 @@ class GenerateSuite extends Command
 
         $config = $this->getGlobalConfig();
         if (!$actor) {
-            $actor = ucfirst($suite) . $config['actor_suffix'];
+            $actor = \ucfirst($suite) . $config['actor_suffix'];
         }
 
         $dir = Configuration::testsDir();
-        if (file_exists($dir . $suite . '.suite.yml')) {
+        if (\file_exists($dir . $suite . '.suite.yml')) {
             throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
 
@@ -71,7 +71,7 @@ class GenerateSuite extends Command
             );
         }
 
-        $helperName = ucfirst($suite);
+        $helperName = \ucfirst($suite);
 
         $file = $this->createDirectoryFor(
             Configuration::supportDir() . "Helper",
@@ -129,6 +129,6 @@ EOF;
 
     private function containsInvalidCharacters($suite)
     {
-        return preg_match('#[^A-Za-z0-9_]#', $suite) ? true : false;
+        return \preg_match('#[^A-Za-z0-9_]#', $suite) ? true : false;
     }
 }

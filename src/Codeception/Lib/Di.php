@@ -22,13 +22,13 @@ class Di
     public function get($className)
     {
         // normalize namespace
-        $className = ltrim($className, '\\');
+        $className = \ltrim($className, '\\');
         return isset($this->container[$className]) ? $this->container[$className] : null;
     }
 
     public function set($class)
     {
-        $this->container[get_class($class)] = $class;
+        $this->container[\get_class($class)] = $class;
     }
 
     /**
@@ -45,7 +45,7 @@ class Di
         $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME
     ) {
         // normalize namespace
-        $className = ltrim($className, '\\');
+        $className = \ltrim($className, '\\');
 
         // get class from container
         if (isset($this->container[$className])) {
@@ -71,7 +71,7 @@ class Di
         }
 
         $reflectedConstructor = $reflectedClass->getConstructor();
-        if (is_null($reflectedConstructor)) {
+        if (\is_null($reflectedConstructor)) {
             $object = new $className;
         } else {
             try {
@@ -99,7 +99,7 @@ class Di
      */
     public function injectDependencies($object, $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME, $defaults = [])
     {
-        if (!is_object($object)) {
+        if (!\is_object($object)) {
             return;
         }
 
@@ -139,7 +139,7 @@ class Di
         $parameters = $method->getParameters();
         foreach ($parameters as $k => $parameter) {
             $dependency = $parameter->getClass();
-            if (is_null($dependency)) {
+            if (\is_null($dependency)) {
                 if (!$parameter->isOptional()) {
                     if (!isset($defaults[$k])) {
                         throw new InjectionException("Parameter '$parameter->name' must have default value.");
@@ -150,7 +150,7 @@ class Di
                 $args[] = $parameter->getDefaultValue();
             } else {
                 $arg = $this->instantiate($dependency->name);
-                if (is_null($arg)) {
+                if (\is_null($arg)) {
                     throw new InjectionException("Failed to resolve dependency '{$dependency->name}'.");
                 }
                 $args[] = $arg;

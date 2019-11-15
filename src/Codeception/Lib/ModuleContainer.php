@@ -76,7 +76,7 @@ class ModuleContainer
         $this->active[$moduleName] = $active;
 
         $moduleClass = $this->getModuleClass($moduleName);
-        if (!class_exists($moduleClass)) {
+        if (!\class_exists($moduleClass)) {
             throw new ConfigurationException("Module $moduleName could not be found and loaded");
         }
 
@@ -137,7 +137,7 @@ class ModuleContainer
         // Should this module be loaded partially?
         $configuredParts = null;
         if ($module instanceof PartedModule && isset($config['part'])) {
-            $configuredParts = is_array($config['part']) ? $config['part'] : [$config['part']];
+            $configuredParts = \is_array($config['part']) ? $config['part'] : [$config['part']];
         }
 
         $actions = [];
@@ -161,12 +161,12 @@ class ModuleContainer
     private function includeMethodAsAction($module, $method, $configuredParts = null)
     {
         // Filter out excluded actions
-        if ($module::$excludeActions && in_array($method->name, $module::$excludeActions)) {
+        if ($module::$excludeActions && \in_array($method->name, $module::$excludeActions)) {
             return false;
         }
 
         // Keep only the $onlyActions if they are specified
-        if ($module::$onlyActions && !in_array($method->name, $module::$onlyActions)) {
+        if ($module::$onlyActions && !\in_array($method->name, $module::$onlyActions)) {
             return false;
         }
 
@@ -174,21 +174,21 @@ class ModuleContainer
         // However, if an inherited action is also specified in the static $onlyActions property
         // it should be included as an action.
         if (!$module::$includeInheritedActions &&
-            !in_array($method->name, $module::$onlyActions) &&
-            $method->getDeclaringClass()->getName() != get_class($module)
+            !\in_array($method->name, $module::$onlyActions) &&
+            $method->getDeclaringClass()->getName() != \get_class($module)
         ) {
             return false;
         }
 
         // Do not include hidden methods, methods with a name starting with an underscore
-        if (strpos($method->name, '_') === 0) {
+        if (\strpos($method->name, '_') === 0) {
             return false;
         };
 
         // If a part is configured for the module, only include actions from that part
         if ($configuredParts) {
             $moduleParts = Annotation::forMethod($module, $method->name)->fetchAll('part');
-            if (!array_uintersect($moduleParts, $configuredParts, 'strcasecmp')) {
+            if (!\array_uintersect($moduleParts, $configuredParts, 'strcasecmp')) {
                 return false;
             }
         }
@@ -204,7 +204,7 @@ class ModuleContainer
      */
     private function isHelper($moduleName)
     {
-        return strpos($moduleName, '\\') !== false;
+        return \strpos($moduleName, '\\') !== false;
     }
 
     /**
@@ -307,15 +307,15 @@ class ModuleContainer
     {
         $this->checkForMissingDependencies($moduleName, $module);
 
-        if (!method_exists($module, '_inject')) {
+        if (!\method_exists($module, '_inject')) {
             throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
         }
 
-        $dependencies = array_map(function ($dependency) {
+        $dependencies = \array_map(function ($dependency) {
             return $this->create($dependency, false);
         }, $this->getConfiguredDependencies($moduleName));
 
-        call_user_func_array([$module, '_inject'], $dependencies);
+        \call_user_func_array([$module, '_inject'], $dependencies);
     }
 
     /**
@@ -329,12 +329,12 @@ class ModuleContainer
     private function checkForMissingDependencies($moduleName, DependsOnModule $module)
     {
         $dependencies = $this->getModuleDependencies($module);
-        $configuredDependenciesCount = count($this->getConfiguredDependencies($moduleName));
+        $configuredDependenciesCount = \count($this->getConfiguredDependencies($moduleName));
 
-        if ($configuredDependenciesCount < count($dependencies)) {
-            $missingDependency = array_keys($dependencies)[$configuredDependenciesCount];
+        if ($configuredDependenciesCount < \count($dependencies)) {
+            $missingDependency = \array_keys($dependencies)[$configuredDependenciesCount];
 
-            $message = sprintf(
+            $message = \sprintf(
                 "\nThis module depends on %s\n\n\n%s",
                 $missingDependency,
                 $this->getErrorMessageForDependency($module, $missingDependency)
@@ -359,8 +359,8 @@ class ModuleContainer
             return [];
         }
 
-        if (!is_array($depends)) {
-            $message = sprintf("Method _depends of module '%s' must return an array", get_class($module));
+        if (!\is_array($depends)) {
+            $message = \sprintf("Method _depends of module '%s' must return an array", \get_class($module));
             throw new ModuleException($module, $message);
         }
 
@@ -381,7 +381,7 @@ class ModuleContainer
             return [];
         }
 
-        return is_array($config['depends']) ? $config['depends'] : [$config['depends']];
+        return \is_array($config['depends']) ? $config['depends'] : [$config['depends']];
     }
 
     /**
@@ -422,18 +422,18 @@ class ModuleContainer
             return $config;
         }
 
-        if (!is_array($this->config['modules']['enabled'])) {
+        if (!\is_array($this->config['modules']['enabled'])) {
             return $config;
         }
 
         foreach ($this->config['modules']['enabled'] as $enabledModuleConfig) {
-            if (!is_array($enabledModuleConfig)) {
+            if (!\is_array($enabledModuleConfig)) {
                 continue;
             }
 
-            $enabledModuleName = key($enabledModuleConfig);
+            $enabledModuleName = \key($enabledModuleConfig);
             if ($enabledModuleName === $moduleName) {
-                return Configuration::mergeConfigs(reset($enabledModuleConfig), $config);
+                return Configuration::mergeConfigs(\reset($enabledModuleConfig), $config);
             }
         }
 
@@ -491,7 +491,7 @@ class ModuleContainer
      */
     private function normalizeConflictSpecification($conflicts)
     {
-        if (interface_exists($conflicts) || class_exists($conflicts)) {
+        if (\interface_exists($conflicts) || \class_exists($conflicts)) {
             return $conflicts;
         }
 

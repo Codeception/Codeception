@@ -73,7 +73,7 @@ abstract class Module
         $this->moduleContainer = $moduleContainer;
 
         $this->backupConfig = $this->config;
-        if (is_array($config)) {
+        if (\is_array($config)) {
             $this->_setConfig($config);
         }
     }
@@ -95,7 +95,7 @@ abstract class Module
      */
     public function _setConfig($config)
     {
-        $this->config = $this->backupConfig = array_merge($this->config, $config);
+        $this->config = $this->backupConfig = \array_merge($this->config, $config);
         $this->validateConfig();
     }
 
@@ -119,7 +119,7 @@ abstract class Module
      */
     public function _reconfigure($config)
     {
-        $this->config = array_merge($this->backupConfig, $config);
+        $this->config = \array_merge($this->backupConfig, $config);
         $this->onReconfigure();
         $this->validateConfig();
     }
@@ -148,18 +148,18 @@ abstract class Module
      */
     protected function validateConfig()
     {
-        $fields = array_keys($this->config);
-        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
+        $fields = \array_keys($this->config);
+        if (\array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
             throw new Exception\ModuleConfigException(
-                get_class($this),
-                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
+                \get_class($this),
+                "\nOptions: " . \implode(', ', $this->requiredFields) . " are required\n" .
                 "Please, update the configuration and set all the required fields\n\n"
             );
         }
         if ($this instanceof RequiresPackage) {
             $errorMessage = '';
             foreach ($this->_requires() as $className => $package) {
-                if (class_exists($className)) {
+                if (\class_exists($className)) {
                     continue;
                 }
                 $errorMessage .= "Class $className can't be loaded, please add $package to composer.json\n";
@@ -177,10 +177,10 @@ abstract class Module
      */
     public function _getName()
     {
-        $moduleName = '\\' . get_class($this);
+        $moduleName = '\\' . \get_class($this);
 
-        if (strpos($moduleName, ModuleContainer::MODULE_NAMESPACE) === 0) {
-            return substr($moduleName, strlen(ModuleContainer::MODULE_NAMESPACE));
+        if (\strpos($moduleName, ModuleContainer::MODULE_NAMESPACE) === 0) {
+            return \substr($moduleName, \strlen(ModuleContainer::MODULE_NAMESPACE));
         }
 
         return $moduleName;
@@ -283,8 +283,8 @@ abstract class Module
      */
     protected function debugSection($title, $message)
     {
-        if (is_array($message) or is_object($message)) {
-            $message = stripslashes(json_encode($message));
+        if (\is_array($message) or \is_object($message)) {
+            $message = \stripslashes(\json_encode($message));
         }
         $this->debug("[$title] $message");
     }
@@ -298,7 +298,7 @@ abstract class Module
      */
     protected function shortenMessage($message, $chars = 150)
     {
-        return mb_substr($message, 0, $chars, 'utf-8');
+        return \mb_substr($message, 0, $chars, 'utf-8');
     }
 
     /**
@@ -362,8 +362,8 @@ abstract class Module
     protected function scalarizeArray($array)
     {
         foreach ($array as $k => $v) {
-            if (!is_null($v) && !is_scalar($v)) {
-                $array[$k] = (is_array($v) || $v instanceof \ArrayAccess)
+            if (!\is_null($v) && !\is_scalar($v)) {
+                $array[$k] = (\is_array($v) || $v instanceof \ArrayAccess)
                     ? $this->scalarizeArray($v)
                     : (string)$v;
             }

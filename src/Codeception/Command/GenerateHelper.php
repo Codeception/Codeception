@@ -34,7 +34,7 @@ class GenerateHelper extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $name = ucfirst($input->getArgument('name'));
+        $name = \ucfirst($input->getArgument('name'));
         $config = $this->getGlobalConfig();
 
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Helper', $name);

@@ -69,7 +69,7 @@ class ConfigValidate extends Command
         $output->write("Validating global config... ");
         $config = $this->getGlobalConfig();
         $output->writeln($input->getOption('override'));
-        if (count($input->getOption('override'))) {
+        if (\count($input->getOption('override'))) {
             $config = $this->overrideConfig($input->getOption('override'));
         }
         $suites = Configuration::suites();
@@ -85,7 +85,7 @@ class ConfigValidate extends Command
         $output->writeln("<comment>codecept_data_dir()</comment>   " . codecept_data_dir());
         $output->writeln('');
 
-        $output->writeln("<info>Available suites</info>: " . implode(', ', $suites));
+        $output->writeln("<info>Available suites</info>: " . \implode(', ', $suites));
 
         foreach ($suites as $suite) {
             $output->write("Validating suite <bold>$suite</bold>... ");
@@ -99,7 +99,7 @@ class ConfigValidate extends Command
 
     protected function formatOutput($config)
     {
-        $output = print_r($config, true);
-        return preg_replace('~\[(.*?)\] =>~', "<fg=yellow>$1</fg=yellow> =>", $output);
+        $output = \print_r($config, true);
+        return \preg_replace('~\[(.*?)\] =>~', "<fg=yellow>$1</fg=yellow> =>", $output);
     }
 }

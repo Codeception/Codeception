@@ -112,9 +112,9 @@ class Console implements EventSubscriberInterface
                 continue;
             }
             $path = $this->absolutePath($this->options[$report]);
-            $this->reports[] = sprintf(
+            $this->reports[] = \sprintf(
                 "- <bold>%s</bold> report generated in <comment>file://%s</comment>",
-                strtoupper($report),
+                \strtoupper($report),
                 $path
             );
         }
@@ -129,7 +129,7 @@ class Console implements EventSubscriberInterface
             $this->namespace = $settings['namespace'];
         }
         $this->message("%s Tests (%d) ")
-            ->with(ucfirst($e->getSuite()->getName()), $e->getSuite()->count())
+            ->with(\ucfirst($e->getSuite()->getName()), $e->getSuite()->count())
             ->style('bold')
             ->width($this->width, '-')
             ->prepend("\n")
@@ -137,9 +137,9 @@ class Console implements EventSubscriberInterface
 
         if ($e->getSuite() instanceof Suite) {
             $message = $this->message(
-                implode(
+                \implode(
                     ', ',
-                    array_map(
+                    \array_map(
                         function ($module) {
                             return $module->_getName();
                         },
@@ -216,7 +216,7 @@ class Console implements EventSubscriberInterface
 
     private function absolutePath($path)
     {
-        if ((strpos($path, '/') === 0) or (strpos($path, ':') === 1)) { // absolute path
+        if ((\strpos($path, '/') === 0) or (\strpos($path, ':') === 1)) { // absolute path
             return $path;
         }
 
@@ -339,7 +339,7 @@ class Console implements EventSubscriberInterface
     {
         $this->message()->width($this->width, '-')->writeln();
         $messages = Notification::all();
-        foreach (array_count_values($messages) as $message => $count) {
+        foreach (\array_count_values($messages) as $message => $count) {
             if ($count > 1) {
                 $message = $count . 'x ' . $message;
             }
@@ -372,13 +372,13 @@ class Console implements EventSubscriberInterface
     public function printReports(TestInterface $failedTest)
     {
         $reports = $failedTest->getMetadata()->getReports();
-        if (count($reports)) {
+        if (\count($reports)) {
             $this->output->writeln('<comment>Artifacts:</comment>');
             $this->output->writeln('');
         }
 
         foreach ($reports as $type => $report) {
-            $type = ucfirst($type);
+            $type = \ucfirst($type);
             $this->output->writeln("$type: <debug>$report</debug>");
         }
     }
@@ -395,10 +395,10 @@ class Console implements EventSubscriberInterface
 
         $class = $e instanceof \PHPUnit\Framework\ExceptionWrapper
             ? $e->getClassname()
-            : get_class($e);
+            : \get_class($e);
 
-        if (strpos($class, 'Codeception\Exception') === 0) {
-            $class = substr($class, strlen('Codeception\Exception\\'));
+        if (\strpos($class, 'Codeception\Exception') === 0) {
+            $class = \substr($class, \strlen('Codeception\Exception\\'));
         }
 
         $this->output->writeln('');
@@ -420,7 +420,7 @@ class Console implements EventSubscriberInterface
         }
 
         if ($isFailure && $cause) {
-            $cause = OutputFormatter::escape(ucfirst($cause));
+            $cause = OutputFormatter::escape(\ucfirst($cause));
             $message->prepend("<error> Step </error> $cause\n<error> Fail </error> ");
         }
 
@@ -430,11 +430,11 @@ class Console implements EventSubscriberInterface
     public function printScenarioFail(ScenarioDriven $failedTest, $fail)
     {
         if ($this->conditionalFails) {
-            $failedStep = (string) array_shift($this->conditionalFails);
+            $failedStep = (string) \array_shift($this->conditionalFails);
         } else {
             $failedStep = (string) $failedTest->getScenario()->getMetaStep();
             if ($failedStep === '') {
-                $failedStep = (string) array_shift($this->failedStep);
+                $failedStep = (string) \array_shift($this->failedStep);
             }
         }
 
@@ -504,8 +504,8 @@ class Console implements EventSubscriberInterface
      */
     public function printScenarioTrace(ScenarioDriven $failedTest)
     {
-        $trace = array_reverse($failedTest->getScenario()->getSteps());
-        $length = $stepNumber = count($trace);
+        $trace = \array_reverse($failedTest->getScenario()->getSteps());
+        $length = $stepNumber = \count($trace);
 
         if (!$length) {
             return;
@@ -524,7 +524,7 @@ class Console implements EventSubscriberInterface
             $message = $this
                 ->message($stepNumber)
                 ->prepend(' ')
-                ->width(strlen($length))
+                ->width(\strlen($length))
                 ->append(". ");
             $message->append(OutputFormatter::escape($step->getPhpCode($this->width - $message->getLength())));
 
@@ -550,20 +550,20 @@ class Console implements EventSubscriberInterface
     {
         $this->width = 60;
         if (!$this->isWin()
-            && (php_sapi_name() === "cli")
-            && (getenv('TERM'))
-            && (getenv('TERM') != 'unknown')
+            && (\php_sapi_name() === "cli")
+            && (\getenv('TERM'))
+            && (\getenv('TERM') != 'unknown')
         ) {
             // try to get terminal width from ENV variable (bash), see also https://github.com/Codeception/Codeception/issues/3788
-            if (getenv('COLUMNS')) {
-                $this->width = getenv('COLUMNS');
+            if (\getenv('COLUMNS')) {
+                $this->width = \getenv('COLUMNS');
             } else {
                 $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
             }
-        } elseif ($this->isWin() && (php_sapi_name() === "cli")) {
-            exec('mode con', $output);
+        } elseif ($this->isWin() && (\php_sapi_name() === "cli")) {
+            \exec('mode con', $output);
             if (isset($output[4])) {
-                preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
+                \preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
                 if (!empty($matches[1])) {
                     $this->width = (int) $matches[1];
                 }
@@ -574,7 +574,7 @@ class Console implements EventSubscriberInterface
 
     private function isWin()
     {
-        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        return \strtoupper(\substr(PHP_OS, 0, 3)) === 'WIN';
     }
 
     /**
@@ -586,7 +586,7 @@ class Console implements EventSubscriberInterface
         $prefix = ($this->output->isInteractive() and !$this->isDetailed($test) and $inProgress) ? '- ' : '';
 
         $testString = Descriptor::getTestAsString($test);
-        $testString = preg_replace('~^([^:]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
+        $testString = \preg_replace('~^([^:]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
 
         $this
             ->message($testString)
@@ -608,7 +608,7 @@ class Console implements EventSubscriberInterface
         $this->writeCurrentTest($test, false);
 
         $conditionalFailsMessage = "";
-        $numFails = count($this->conditionalFails);
+        $numFails = \count($this->conditionalFails);
         if ($numFails == 1) {
             $conditionalFailsMessage = "[F]";
         } elseif ($numFails) {
@@ -637,7 +637,7 @@ class Console implements EventSubscriberInterface
         $time = $event->getTime();
         if ($time) {
             $this
-                ->message(number_format(round($time, 2), 2))
+                ->message(\number_format(\round($time, 2), 2))
                 ->prepend('(')
                 ->append('s)')
                 ->style('info')
@@ -650,7 +650,7 @@ class Console implements EventSubscriberInterface
      */
     private function prepareOptions($options)
     {
-        $this->options = array_merge($this->options, $options);
+        $this->options = \array_merge($this->options, $options);
         $this->debug = $this->options['debug'] || $this->options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
         $this->steps = $this->debug || $this->options['steps'];
         $this->rawStackTrace = ($this->options['verbosity'] === OutputInterface::VERBOSITY_DEBUG);

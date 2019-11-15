@@ -19,7 +19,7 @@ class Bootstrap extends InitTemplate
 
         $input = $this->input;
         if ($input->getOption('namespace')) {
-            $this->namespace = trim($input->getOption('namespace'), '\\') . '\\';
+            $this->namespace = \trim($input->getOption('namespace'), '\\') . '\\';
         }
 
         if ($input->hasOption('actor') && $input->getOption('actor')) {
@@ -148,7 +148,7 @@ EOF;
 
         $str = Yaml::dump($basicConfig, 4);
         if ($this->namespace) {
-            $namespace = rtrim($this->namespace, '\\');
+            $namespace = \rtrim($this->namespace, '\\');
             $str = "namespace: $namespace\n" . $str;
         }
         $this->createFile('codeception.yml', $str);

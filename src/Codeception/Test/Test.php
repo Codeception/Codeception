@@ -75,7 +75,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         $result->startTest($this);
 
         foreach ($this->hooks as $hook) {
-            if (method_exists($this, $hook.'Start')) {
+            if (\method_exists($this, $hook.'Start')) {
                 $this->{$hook.'Start'}();
             }
         }
@@ -101,8 +101,8 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
             $time = Timer::stop();
         }
 
-        foreach (array_reverse($this->hooks) as $hook) {
-            if (method_exists($this, $hook.'End')) {
+        foreach (\array_reverse($this->hooks) as $hook) {
+            if (\method_exists($this, $hook.'End')) {
                 $this->{$hook.'End'}($status, $time, $e);
             }
         }

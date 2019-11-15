@@ -106,7 +106,7 @@ EOF;
             ->produce();
 
         if ($this->namespace) {
-            $namespace = rtrim($this->namespace, '\\');
+            $namespace = \rtrim($this->namespace, '\\');
             $configFile = "namespace: $namespace\n" . $configFile;
         }
 

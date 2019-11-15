@@ -26,7 +26,7 @@ abstract class Extension implements EventSubscriberInterface
 
     public function __construct($config, $options)
     {
-        $this->config = array_merge($this->config, $config);
+        $this->config = \array_merge($this->config, $config);
         $this->options = $options;
         $this->output = new Output($options);
         $this->_initialize();
@@ -39,7 +39,7 @@ abstract class Extension implements EventSubscriberInterface
             return [Events::SUITE_INIT => 'receiveModuleContainer'];
         }
         if (isset(static::$events[Events::SUITE_INIT])) {
-            if (!is_array(static::$events[Events::SUITE_INIT])) {
+            if (!\is_array(static::$events[Events::SUITE_INIT])) {
                 static::$events[Events::SUITE_INIT] = [[static::$events[Events::SUITE_INIT]]];
             }
             static::$events[Events::SUITE_INIT][] = ['receiveModuleContainer'];
@@ -61,7 +61,7 @@ abstract class Extension implements EventSubscriberInterface
      */
     public function _reconfigure($config = [])
     {
-        if (is_array($config)) {
+        if (\is_array($config)) {
             Config::append($config);
         }
     }
@@ -96,7 +96,7 @@ abstract class Extension implements EventSubscriberInterface
 
     public function getCurrentModuleNames()
     {
-        return array_keys($this->modules);
+        return \array_keys($this->modules);
     }
 
     public function getModule($name)

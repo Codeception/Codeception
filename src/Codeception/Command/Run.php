@@ -242,14 +242,14 @@ class Run extends Command
         $this->output = $output;
 
         if ($this->options['bootstrap']) {
-            Configuration::loadBootstrap($this->options['bootstrap'], getcwd());
+            Configuration::loadBootstrap($this->options['bootstrap'], \getcwd());
         }
 
         // load config
         $config = $this->getGlobalConfig();
 
         // update config from options
-        if (count($this->options['override'])) {
+        if (\count($this->options['override'])) {
             $config = $this->overrideConfig($this->options['override']);
         }
         if ($this->options['ext']) {
@@ -272,8 +272,8 @@ class Run extends Command
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
 
-        $userOptions = array_intersect_key($this->options, array_flip($this->passedOptionKeys($input)));
-        $userOptions = array_merge(
+        $userOptions = \array_intersect_key($this->options, \array_flip($this->passedOptionKeys($input)));
+        $userOptions = \array_merge(
             $userOptions,
             $this->booleanOptions($input, [
                 'xml' => 'report.xml',
@@ -293,9 +293,9 @@ class Run extends Command
         $userOptions['ansi'] = (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi'));
 
         if (!$this->options['seed']) {
-            $userOptions['seed'] = rand();
+            $userOptions['seed'] = \rand();
         } else {
-            $userOptions['seed'] = intval($this->options['seed']);
+            $userOptions['seed'] = \intval($this->options['seed']);
         }
         if ($this->options['no-colors'] || !$userOptions['ansi']) {
             $userOptions['colors'] = false;
@@ -320,7 +320,7 @@ class Run extends Command
         $test = $input->getArgument('test');
 
         if ($this->options['group']) {
-            $this->output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $this->options['group'])));
+            $this->output->writeln(\sprintf("[Groups] <info>%s</info> ", \implode(', ', $this->options['group'])));
         }
         if ($input->getArgument('test')) {
             $this->options['steps'] = true;
@@ -335,13 +335,13 @@ class Run extends Command
 
                 foreach ($config['include'] as $include) {
                     // Find if the suite begins with an include path
-                    if (strpos($suite, $include) === 0) {
+                    if (\strpos($suite, $include) === 0) {
                         // Use include config
                         $config = Configuration::config($projectDir.$include);
 
                         if (!isset($config['paths']['tests'])) {
                             throw new \RuntimeException(
-                                sprintf("Included '%s' has no tests path configured", $include)
+                                \sprintf("Included '%s' has no tests path configured", $include)
                             );
                         }
 
@@ -393,7 +393,7 @@ class Run extends Command
 
         // Run all tests of given suite or all suites
         if (!$test) {
-            $suites = $suite ? explode(',', $suite) : Configuration::suites();
+            $suites = $suite ? \explode(',', $suite) : Configuration::suites();
             $this->executed = $this->runSuites($suites, $this->options['skip']);
 
             if (!empty($config['include']) and !$suite) {
@@ -404,7 +404,7 @@ class Run extends Command
 
             if ($this->executed === 0) {
                 throw new \RuntimeException(
-                    sprintf("Suite '%s' could not be found", implode(', ', $suites))
+                    \sprintf("Suite '%s' could not be found", \implode(', ', $suites))
                 );
             }
         }
@@ -422,7 +422,7 @@ class Run extends Command
     {
         // Workaround when codeception.yml is inside tests directory and tests path is set to "."
         // @see https://github.com/Codeception/Codeception/issues/4432
-        if (isset($config['paths']['tests']) && $config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
+        if (isset($config['paths']['tests']) && $config['paths']['tests'] === '.' && !\preg_match('~^\.[/\\\]~', $suite)) {
             $suite = './' . $suite;
         }
 
@@ -436,7 +436,7 @@ class Run extends Command
                 if ($suiteConfig['path'] === '.') {
                     $testsPath = $config['paths']['tests'];
                 }
-                if (preg_match("~^$testsPath/(.*?)$~", $suite, $matches)) {
+                if (\preg_match("~^$testsPath/(.*?)$~", $suite, $matches)) {
                     $matches[2] = $matches[1];
                     $matches[1] = $s;
                     return $matches;
@@ -445,7 +445,7 @@ class Run extends Command
         }
 
         // Run single test without included tests
-        if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
+        if (! Configuration::isEmpty() && \strpos($suite, $config['paths']['tests']) === 0) {
             return $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
     }
@@ -459,7 +459,7 @@ class Run extends Command
     protected function runIncludedSuites($suites, $parent_dir)
     {
         foreach ($suites as $relativePath) {
-            $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
+            $current_dir = \rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
             $config = Configuration::config($current_dir);
             $suites = Configuration::suites();
 
@@ -493,10 +493,10 @@ class Run extends Command
     {
         $executed = 0;
         foreach ($suites as $suite) {
-            if (in_array($suite, $skippedSuites)) {
+            if (\in_array($suite, $skippedSuites)) {
                 continue;
             }
-            if (!in_array($suite, Configuration::suites())) {
+            if (!\in_array($suite, Configuration::suites())) {
                 continue;
             }
             $this->codecept->run($suite);
@@ -508,9 +508,9 @@ class Run extends Command
 
     protected function matchTestFromFilename($filename, $testsPath)
     {
-        $testsPath = str_replace(['//', '\/', '\\'], '/', $testsPath);
-        $filename = str_replace(['//', '\/', '\\'], '/', $filename);
-        $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
+        $testsPath = \str_replace(['//', '\/', '\\'], '/', $testsPath);
+        $filename = \str_replace(['//', '\/', '\\'], '/', $filename);
+        $res = \preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
 
         if (!$res) {
             throw new \InvalidArgumentException("Test file can't be matched");
@@ -524,14 +524,14 @@ class Run extends Command
 
     private function matchFilteredTestName(&$path)
     {
-        $test_parts = explode(':', $path, 2);
-        if (count($test_parts) > 1) {
+        $test_parts = \explode(':', $path, 2);
+        if (\count($test_parts) > 1) {
             list($path, $filter) = $test_parts;
             // use carat to signify start of string like in normal regex
             // phpunit --filter matches against the fully qualified method name, so tests actually begin with :
-            $carat_pos = strpos($filter, '^');
+            $carat_pos = \strpos($filter, '^');
             if ($carat_pos !== false) {
-                $filter = substr_replace($filter, ':', $carat_pos, 1);
+                $filter = \substr_replace($filter, ':', $carat_pos, 1);
             }
             return $filter;
         }
@@ -543,9 +543,9 @@ class Run extends Command
     {
         $options = [];
         $request = (string)$input;
-        $tokens = explode(' ', $request);
+        $tokens = \explode(' ', $request);
         foreach ($tokens as $token) {
-            $token = preg_replace('~=.*~', '', $token); // strip = from options
+            $token = \preg_replace('~=.*~', '', $token); // strip = from options
 
             if (empty($token)) {
                 continue;
@@ -555,10 +555,10 @@ class Run extends Command
                 break; // there should be no options after ' -- ', only arguments
             }
 
-            if (substr($token, 0, 2) === '--') {
-                $options[] = substr($token, 2);
+            if (\substr($token, 0, 2) === '--') {
+                $options[] = \substr($token, 2);
             } elseif ($token[0] === '-') {
-                $shortOption = substr($token, 1);
+                $shortOption = \substr($token, 1);
                 $options[] = $this->getDefinition()->getOptionForShortcut($shortOption)->getName();
             }
         }
@@ -570,7 +570,7 @@ class Run extends Command
         $values = [];
         $request = (string)$input;
         foreach ($options as $option => $defaultValue) {
-            if (strpos($request, "--$option")) {
+            if (\strpos($request, "--$option")) {
                 $values[$option] = $input->getOption($option) ? $input->getOption($option) : $defaultValue;
             } else {
                 $values[$option] = false;
@@ -586,7 +586,7 @@ class Run extends Command
      */
     private function ensurePhpExtIsAvailable($ext)
     {
-        if (!extension_loaded(strtolower($ext))) {
+        if (!\extension_loaded(\strtolower($ext))) {
             throw new \Exception(
                 "Codeception requires \"{$ext}\" extension installed to make tests run\n"
                 . "If you are not sure, how to install \"{$ext}\", please refer to StackOverflow\n\n"

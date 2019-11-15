@@ -14,7 +14,7 @@ class ParamsLoader
         $this->paramsFile = null;
         $this->paramStorage = $paramStorage;
 
-        if (is_array($paramStorage)) {
+        if (\is_array($paramStorage)) {
             return $this->loadArray();
         }
 
@@ -23,28 +23,28 @@ class ParamsLoader
         }
 
         $this->paramsFile = codecept_absolute_path($paramStorage);
-        if (!file_exists($this->paramsFile)) {
+        if (!\file_exists($this->paramsFile)) {
             throw new ConfigurationException("Params file {$this->paramsFile} not found");
         }
 
         try {
-            if (preg_match('~\.ya?ml$~', $paramStorage)) {
+            if (\preg_match('~\.ya?ml$~', $paramStorage)) {
                 return $this->loadYamlFile();
             }
 
-            if (preg_match('~\.ini$~', $paramStorage)) {
+            if (\preg_match('~\.ini$~', $paramStorage)) {
                 return $this->loadIniFile();
             }
 
-            if (preg_match('~\.php$~', $paramStorage)) {
+            if (\preg_match('~\.php$~', $paramStorage)) {
                 return $this->loadPhpFile();
             }
 
-            if (preg_match('~(\.env(\.|$))~', $paramStorage)) {
+            if (\preg_match('~(\.env(\.|$))~', $paramStorage)) {
                 return $this->loadDotEnvFile();
             }
 
-            if (preg_match('~\.xml$~', $paramStorage)) {
+            if (\preg_match('~\.xml$~', $paramStorage)) {
                 return $this->loadXmlFile();
             }
         } catch (\Exception $e) {
@@ -61,7 +61,7 @@ class ParamsLoader
 
     protected function loadIniFile()
     {
-        return parse_ini_file($this->paramsFile);
+        return \parse_ini_file($this->paramsFile);
     }
 
     protected function loadPhpFile()
@@ -71,7 +71,7 @@ class ParamsLoader
 
     protected function loadYamlFile()
     {
-        $params = Yaml::parse(file_get_contents($this->paramsFile));
+        $params = Yaml::parse(\file_get_contents($this->paramsFile));
         if (isset($params['parameters'])) { // Symfony style
             $params = $params['parameters'];
         }
@@ -93,10 +93,10 @@ class ParamsLoader
                     case 'integer':
                     case 'float':
                     case 'double':
-                        $a[$key] = settype($value, $type);
+                        $a[$key] = \settype($value, $type);
                         break;
                     case 'constant':
-                        $a[$key] = constant($value);
+                        $a[$key] = \constant($value);
                         break;
                     case 'collection':
                         $a[$key] = $paramsToArray($param);
@@ -109,13 +109,13 @@ class ParamsLoader
             return $a;
         };
 
-        return $paramsToArray(simplexml_load_file($this->paramsFile));
+        return $paramsToArray(\simplexml_load_file($this->paramsFile));
     }
 
     protected function loadDotEnvFile()
     {
-        if (class_exists('Dotenv\Dotenv')) {
-            if (method_exists('Dotenv\Dotenv', 'create')) {
+        if (\class_exists('Dotenv\Dotenv')) {
+            if (\method_exists('Dotenv\Dotenv', 'create')) {
                 //dotenv v3
                 $dotEnv = \Dotenv\Dotenv::create(codecept_root_dir(), $this->paramStorage);
             } else {
@@ -124,7 +124,7 @@ class ParamsLoader
             }
             $dotEnv->load();
             return $_SERVER;
-        } elseif (class_exists('Symfony\Component\Dotenv\Dotenv')) {
+        } elseif (\class_exists('Symfony\Component\Dotenv\Dotenv')) {
             $dotEnv = new \Symfony\Component\Dotenv\Dotenv();
             $dotEnv->load(codecept_root_dir($this->paramStorage));
             return $_SERVER;

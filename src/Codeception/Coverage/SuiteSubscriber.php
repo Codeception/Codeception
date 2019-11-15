@@ -55,7 +55,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
 
         $this->filters = $settings;
         $this->settings = $this->defaultSettings;
-        $keys = array_keys($this->defaultSettings);
+        $keys = \array_keys($this->defaultSettings);
         foreach ($keys as $key) {
             if (isset($settings['coverage'][$key])) {
                 $this->settings[$key] = $settings['coverage'][$key];

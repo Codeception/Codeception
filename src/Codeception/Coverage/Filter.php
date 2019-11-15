@@ -73,11 +73,11 @@ class Filter
         }
 
         if (isset($coverage['whitelist']['include'])) {
-            if (!is_array($coverage['whitelist']['include'])) {
+            if (!\is_array($coverage['whitelist']['include'])) {
                 throw new ConfigurationException('Error parsing yaml. Config `whitelist: include:` should be an array');
             }
             foreach ($coverage['whitelist']['include'] as $fileOrDir) {
-                $finder = strpos($fileOrDir, '*') === false
+                $finder = \strpos($fileOrDir, '*') === false
                     ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
@@ -88,12 +88,12 @@ class Filter
         }
 
         if (isset($coverage['whitelist']['exclude'])) {
-            if (!is_array($coverage['whitelist']['exclude'])) {
+            if (!\is_array($coverage['whitelist']['exclude'])) {
                 throw new ConfigurationException('Error parsing yaml. Config `whitelist: exclude:` should be an array');
             }
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 try {
-                    $finder = strpos($fileOrDir, '*') === false
+                    $finder = \strpos($fileOrDir, '*') === false
                         ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
@@ -120,14 +120,14 @@ class Filter
         }
         $coverage = $config['coverage'];
         if (isset($coverage['blacklist'])) {
-            if (!method_exists($filter, 'addFileToBlacklist')) {
+            if (!\method_exists($filter, 'addFileToBlacklist')) {
                 throw new ModuleException($this, 'The blacklist functionality has been removed from PHPUnit 5,'
                 . ' please remove blacklist section from configuration.');
             }
 
             if (isset($coverage['blacklist']['include'])) {
                 foreach ($coverage['blacklist']['include'] as $fileOrDir) {
-                    $finder = strpos($fileOrDir, '*') === false
+                    $finder = \strpos($fileOrDir, '*') === false
                         ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
@@ -138,7 +138,7 @@ class Filter
             }
             if (isset($coverage['blacklist']['exclude'])) {
                 foreach ($coverage['blacklist']['exclude'] as $fileOrDir) {
-                    $finder = strpos($fileOrDir, '*') === false
+                    $finder = \strpos($fileOrDir, '*') === false
                         ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
@@ -154,16 +154,16 @@ class Filter
     protected function matchWildcardPattern($pattern)
     {
         $finder = Finder::create();
-        $fileOrDir = str_replace('\\', '/', $pattern);
-        $parts = explode('/', $fileOrDir);
-        $file = array_pop($parts);
+        $fileOrDir = \str_replace('\\', '/', $pattern);
+        $parts = \explode('/', $fileOrDir);
+        $file = \array_pop($parts);
         $finder->name($file);
-        if (count($parts)) {
-            $last_path = array_pop($parts);
+        if (\count($parts)) {
+            $last_path = \array_pop($parts);
             if ($last_path === '*') {
-                $finder->in(Configuration::projectDir() . implode('/', $parts));
+                $finder->in(Configuration::projectDir() . \implode('/', $parts));
             } else {
-                $finder->in(Configuration::projectDir() . implode('/', $parts) . '/' . $last_path);
+                $finder->in(Configuration::projectDir() . \implode('/', $parts) . '/' . $last_path);
             }
         }
         $finder->ignoreVCS(true)->files();

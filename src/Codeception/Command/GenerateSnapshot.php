@@ -51,7 +51,7 @@ class GenerateSnapshot extends Command
             : $this->getGlobalConfig();
 
         if ($suite) {
-            $suite = DIRECTORY_SEPARATOR . ucfirst($suite);
+            $suite = DIRECTORY_SEPARATOR . \ucfirst($suite);
         }
 
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Snapshot' . $suite, $class);
@@ -60,7 +60,7 @@ class GenerateSnapshot extends Command
 
         $output->writeln($filename);
 
-        $gen = new SnapshotGenerator($conf, ucfirst($suite) . '\\' . $class);
+        $gen = new SnapshotGenerator($conf, \ucfirst($suite) . '\\' . $class);
         $res = $this->createFile($filename, $gen->produce());
 
         if (!$res) {

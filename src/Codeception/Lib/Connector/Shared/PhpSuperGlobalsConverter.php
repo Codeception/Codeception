@@ -44,7 +44,7 @@ trait PhpSuperGlobalsConverter
     {
         $files = [];
         foreach ($requestFiles as $name => $info) {
-            if (!is_array($info)) {
+            if (!\is_array($info)) {
                 continue;
             }
 
@@ -68,7 +68,7 @@ trait PhpSuperGlobalsConverter
              * this will check if current element contains inner arrays within it's keys
              * so we can ignore element itself and only process inner files
              */
-            $hasInnerArrays = count(array_filter($info, 'is_array'));
+            $hasInnerArrays = \count(\array_filter($info, 'is_array'));
 
             if ($hasInnerArrays || !isset($info['tmp_name'])) {
                 $inner = $this->remapFiles($info);
@@ -77,7 +77,7 @@ trait PhpSuperGlobalsConverter
                      * Convert from ['a' => ['tmp_name' => '/tmp/test.txt'] ]
                      * to ['tmp_name' => ['a' => '/tmp/test.txt'] ]
                      */
-                    $innerInfo = array_map(
+                    $innerInfo = \array_map(
                         function ($v) use ($innerName) {
                             return [$innerName => $v];
                         },
@@ -88,7 +88,7 @@ trait PhpSuperGlobalsConverter
                         $files[$name] = [];
                     }
 
-                    $files[$name] = array_replace_recursive($files[$name], $innerInfo);
+                    $files[$name] = \array_replace_recursive($files[$name], $innerInfo);
                 }
             } else {
                 $files[$name] = $info;
@@ -109,8 +109,8 @@ trait PhpSuperGlobalsConverter
      */
     private function replaceSpaces($parameters)
     {
-        $qs = http_build_query($parameters, '', '&');
-        parse_str($qs, $output);
+        $qs = \http_build_query($parameters, '', '&');
+        \parse_str($qs, $output);
 
         return $output;
     }

@@ -27,14 +27,14 @@ trait Config
     {
         $updatedConfig = [];
         foreach ($configOptions as $option) {
-            $keys = explode(': ', $option);
-            if (count($keys) < 2) {
+            $keys = \explode(': ', $option);
+            if (\count($keys) < 2) {
                 throw new \InvalidArgumentException('--config-option should have config passed as "key:value"');
             }
-            $value = array_pop($keys);
+            $value = \array_pop($keys);
             $yaml = '';
-            for ($ind = 0; count($keys); $ind += 2) {
-                $yaml .= "\n" . str_repeat(' ', $ind) . array_shift($keys) . ': ';
+            for ($ind = 0; \count($keys); $ind += 2) {
+                $yaml .= "\n" . \str_repeat(' ', $ind) . \array_shift($keys) . ': ';
             }
             $yaml .= $value;
             try {
@@ -42,7 +42,7 @@ trait Config
             } catch (ParseException $e) {
                 throw new \Codeception\Exception\ParseException("Overridden config can't be parsed: \n$yaml\n" . $e->getParsedLine());
             }
-            $updatedConfig = array_merge_recursive($updatedConfig, $config);
+            $updatedConfig = \array_merge_recursive($updatedConfig, $config);
         }
         return Configuration::append($updatedConfig);
     }
@@ -51,9 +51,9 @@ trait Config
     {
         $config = ['extensions' => ['enabled' => []]];
         foreach ($extensions as $name) {
-            if (!class_exists($name)) {
-                $className = 'Codeception\\Extension\\' . ucfirst($name);
-                if (!class_exists($className)) {
+            if (!\class_exists($name)) {
+                $className = 'Codeception\\Extension\\' . \ucfirst($name);
+                if (!\class_exists($className)) {
                     throw new InvalidOptionException("Extension $name can't be loaded (tried by $name and $className)");
                 }
                 $config['extensions']['enabled'][] = $className;

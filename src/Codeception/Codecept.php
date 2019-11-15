@@ -100,8 +100,8 @@ class Codecept
     protected function mergeOptions($options)
     {
         $config = Configuration::config();
-        $baseOptions = array_merge($this->options, $config['settings']);
-        return array_merge($baseOptions, $options);
+        $baseOptions = \array_merge($this->options, $config['settings']);
+        return \array_merge($baseOptions, $options);
     }
 
     protected function registerPHPUnitListeners()
@@ -144,7 +144,7 @@ class Codecept
 
     public function run($suite, $test = null, array $config = null)
     {
-        ini_set(
+        \ini_set(
             'memory_limit',
             isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M'
         );
@@ -161,15 +161,15 @@ class Codecept
             return;
         }
 
-        foreach (array_unique($selectedEnvironments) as $envList) {
-            $envArray = explode(',', $envList);
+        foreach (\array_unique($selectedEnvironments) as $envList) {
+            $envArray = \explode(',', $envList);
             $config = [];
             foreach ($envArray as $env) {
                 if (isset($environments[$env])) {
                     $currentEnvironment = isset($config['current_environment']) ? [$config['current_environment']] : [];
                     $config = Configuration::mergeConfigs($config, $environments[$env]);
                     $currentEnvironment[] = $config['current_environment'];
-                    $config['current_environment'] = implode(',', $currentEnvironment);
+                    $config['current_environment'] = \implode(',', $currentEnvironment);
                 }
             }
             if (empty($config)) {
@@ -177,7 +177,7 @@ class Codecept
             }
             $suiteToRun = $suite;
             if (!empty($envList)) {
-                $suiteToRun .= ' (' . implode(', ', $envArray) . ')';
+                $suiteToRun .= ' (' . \implode(', ', $envArray) . ')';
             }
             $this->runSuite($config, $suiteToRun, $test);
         }
@@ -187,9 +187,9 @@ class Codecept
     {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
         $suiteManager->initialize();
-        srand($this->options['seed']);
+        \srand($this->options['seed']);
         $suiteManager->loadTests($test);
-        srand();
+        \srand();
         $suiteManager->run($this->runner, $this->result, $this->options);
         return $this->result;
     }

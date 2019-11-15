@@ -73,12 +73,12 @@ EOF;
 
     public function produce()
     {
-        $namespace = rtrim($this->settings['namespace'], '\\');
+        $namespace = \rtrim($this->settings['namespace'], '\\');
 
         $methods = [];
         $code = [];
         foreach ($this->actions as $action => $moduleName) {
-            if (in_array($action, $methods)) {
+            if (\in_array($action, $methods)) {
                 continue;
             }
             $class = new \ReflectionClass($this->modules[$moduleName]);
@@ -92,7 +92,7 @@ EOF;
             ->place('namespace', $namespace ? $namespace . '\\' : '')
             ->place('hash', self::genHash($this->modules, $this->settings))
             ->place('name', $this->name)
-            ->place('methods', implode("\n\n ", $code))
+            ->place('methods', \implode("\n\n ", $code))
             ->produce();
     }
 
@@ -104,8 +104,8 @@ EOF;
 
         $body = '';
         $doc = $this->addDoc($class, $refMethod);
-        $doc = str_replace('/**', '', $doc);
-        $doc = trim(str_replace('*/', '', $doc));
+        $doc = \str_replace('/**', '', $doc);
+        $doc = \trim(\str_replace('*/', '', $doc));
         if (!$doc) {
             $doc = "*";
         }
@@ -115,9 +115,9 @@ EOF;
             ->place('method', $refMethod->name)
             ->place('params', $params);
 
-        if (0 === strpos($refMethod->name, 'see')) {
+        if (0 === \strpos($refMethod->name, 'see')) {
             $type = 'Assertion';
-        } elseif (0 === strpos($refMethod->name, 'am')) {
+        } elseif (0 === \strpos($refMethod->name, 'am')) {
             $type = 'Condition';
         } else {
             $type = 'Action';
@@ -130,11 +130,11 @@ EOF;
             ->produce();
 
         // add auto generated steps
-        foreach (array_unique($this->generatedSteps) as $generator) {
-            if (!is_callable([$generator, 'getTemplate'])) {
+        foreach (\array_unique($this->generatedSteps) as $generator) {
+            if (!\is_callable([$generator, 'getTemplate'])) {
                 throw new \Exception("Wrong configuration for generated steps. $generator doesn't implement \Codeception\Step\GeneratedStep interface");
             }
-            $template = call_user_func([$generator, 'getTemplate'], clone $methodTemplate);
+            $template = \call_user_func([$generator, 'getTemplate'], clone $methodTemplate);
             if ($template) {
                 $body .= $template->produce();
             }
@@ -157,7 +157,7 @@ EOF;
                 $params[] = '$' . $param->name;
             };
         }
-        return implode(', ', $params);
+        return \implode(', ', $params);
     }
 
     /**
@@ -195,10 +195,10 @@ EOF;
     {
         $actions = [];
         foreach ($modules as $moduleName => $module) {
-            $actions[$moduleName] = get_class_methods(get_class($module));
+            $actions[$moduleName] = \get_class_methods(\get_class($module));
         }
 
-        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']) . implode(',', (array) $settings['step_decorators']));
+        return \md5(Codecept::VERSION . \serialize($actions) . \serialize($settings['modules']) . \implode(',', (array) $settings['step_decorators']));
     }
 
     public function getNumMethods()

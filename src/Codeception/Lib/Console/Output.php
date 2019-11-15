@@ -25,12 +25,12 @@ class Output extends ConsoleOutput
 
     public function __construct($config)
     {
-        $this->config = array_merge($this->config, $config);
+        $this->config = \array_merge($this->config, $config);
 
         // enable interactive output mode for CLI
         $this->isInteractive = $this->config['interactive']
             && isset($_SERVER['TERM'])
-            && php_sapi_name() == 'cli'
+            && \php_sapi_name() == 'cli'
             && $_SERVER['TERM'] != 'linux';
 
         $formatter = new OutputFormatter($this->config['colors']);
@@ -59,14 +59,14 @@ class Output extends ConsoleOutput
     protected function clean($message)
     {
         // clear json serialization
-        $message = str_replace('\/', '/', $message);
+        $message = \str_replace('\/', '/', $message);
         return $message;
     }
 
     public function debug($message)
     {
-        $message = print_r($message, true);
-        $message = str_replace("\n", "\n  ", $message);
+        $message = \print_r($message, true);
+        $message = \str_replace("\n", "\n  ", $message);
         $message = $this->clean($message);
         $message = OutputFormatter::escape($message);
 
@@ -79,13 +79,13 @@ class Output extends ConsoleOutput
 
     public function message($message)
     {
-        $message = call_user_func_array('sprintf', func_get_args());
+        $message = \call_user_func_array('sprintf', \func_get_args());
         return new Message($message, $this);
     }
 
     public function exception(\Exception $e)
     {
-        $class = get_class($e);
+        $class = \get_class($e);
 
         $this->writeln("");
         $this->writeln("(![ $class ]!)");

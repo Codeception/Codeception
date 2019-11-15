@@ -59,16 +59,16 @@ class Cest extends Test implements
         $method = new \ReflectionMethod($this->testClassInstance, $this->testMethod);
         $start_line = $method->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
         $end_line = $method->getEndLine();
-        $source = file($method->getFileName());
-        return implode("", array_slice($source, $start_line, $end_line - $start_line));
+        $source = \file($method->getFileName());
+        return \implode("", \array_slice($source, $start_line, $end_line - $start_line));
     }
 
     public function getSpecFromMethod()
     {
         $text = $this->testMethod;
-        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        $text = strtolower($text);
+        $text = \preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
+        $text = \preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
+        $text = \strtolower($text);
         return $text;
     }
 
@@ -93,40 +93,40 @@ class Cest extends Test implements
 
     protected function executeHook($I, $hook)
     {
-        if (is_callable([$this->testClassInstance, "_$hook"])) {
+        if (\is_callable([$this->testClassInstance, "_$hook"])) {
             $this->invoke("_$hook", [$I, $this->scenario]);
         }
     }
 
     protected function executeBeforeMethods($testMethod, $I)
     {
-        $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
+        $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(\get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['before'])) {
             foreach ($annotations['method']['before'] as $m) {
-                $this->executeContextMethod(trim($m), $I);
+                $this->executeContextMethod(\trim($m), $I);
             }
         }
     }
     protected function executeAfterMethods($testMethod, $I)
     {
-        $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
+        $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(\get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['after'])) {
             foreach ($annotations['method']['after'] as $m) {
-                $this->executeContextMethod(trim($m), $I);
+                $this->executeContextMethod(\trim($m), $I);
             }
         }
     }
 
     protected function executeContextMethod($context, $I)
     {
-        if (method_exists($this->testClassInstance, $context)) {
+        if (\method_exists($this->testClassInstance, $context)) {
             $this->executeBeforeMethods($context, $I);
             $this->invoke($context, [$I, $this->scenario]);
             $this->executeAfterMethods($context, $I);
             return;
         }
         throw new \LogicException(
-            "Method $context defined in annotation but does not exist in " . get_class($this->testClassInstance)
+            "Method $context defined in annotation but does not exist in " . \get_class($this->testClassInstance)
         );
     }
 
@@ -139,7 +139,7 @@ class Cest extends Test implements
     }
     protected function executeTestMethod($I)
     {
-        if (!method_exists($this->testClassInstance, $this->testMethod)) {
+        if (!\method_exists($this->testClassInstance, $this->testMethod)) {
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
         }
 
@@ -152,12 +152,12 @@ class Cest extends Test implements
 
     public function toString()
     {
-        return sprintf('%s: %s', ReflectionHelper::getClassShortName($this->getTestClass()), Message::ucfirst($this->getFeature()));
+        return \sprintf('%s: %s', ReflectionHelper::getClassShortName($this->getTestClass()), Message::ucfirst($this->getFeature()));
     }
 
     public function getSignature()
     {
-        return get_class($this->getTestClass()) . ":" . $this->getTestMethod();
+        return \get_class($this->getTestClass()) . ":" . $this->getTestMethod();
     }
 
     public function getTestClass()
@@ -178,7 +178,7 @@ class Cest extends Test implements
         return [
             'file'    => $this->getFileName(),
             'name'    => $this->getTestMethod(),
-            'class'   => get_class($this->getTestClass()),
+            'class'   => \get_class($this->getTestClass()),
             'feature' => $this->getFeature()
         ];
     }
@@ -192,8 +192,8 @@ class Cest extends Test implements
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
-            if ((strpos($required, ':') === false) and method_exists($this->getTestClass(), $required)) {
-                $required = get_class($this->getTestClass()) . ":$required";
+            if ((\strpos($required, ':') === false) and \method_exists($this->getTestClass(), $required)) {
+                $required = \get_class($this->getTestClass()) . ":$required";
             }
             $names[] = $required;
         }
@@ -202,7 +202,7 @@ class Cest extends Test implements
 
     public function getLinesToBeCovered()
     {
-        $class  = get_class($this->getTestClass());
+        $class  = \get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
         return \PHPUnit\Util\Test::getLinesToBeCovered($class, $method);
@@ -210,7 +210,7 @@ class Cest extends Test implements
 
     public function getLinesToBeUsed()
     {
-        $class  = get_class($this->getTestClass());
+        $class  = \get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
         return \PHPUnit\Util\Test::getLinesToBeUsed($class, $method);

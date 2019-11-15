@@ -35,7 +35,7 @@ class GenerateGroup extends Command
         $config = $this->getGlobalConfig();
         $group = $input->getArgument('group');
 
-        $class = ucfirst($group);
+        $class = \ucfirst($group);
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Group' . DIRECTORY_SEPARATOR, $class);
 
         $filename = $path . $class . '.php';

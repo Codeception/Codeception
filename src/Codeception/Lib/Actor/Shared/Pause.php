@@ -11,7 +11,7 @@ trait Pause
             return;
         }
 
-        if (!class_exists('Hoa\Console\Readline\Readline')) {
+        if (!\class_exists('Hoa\Console\Readline\Readline')) {
             throw new \Exception('Hoa Console is not installed. Please add `hoa/console` to composer.json');
         }
 
@@ -19,7 +19,7 @@ trait Pause
         $readline = new \Hoa\Console\Readline\Readline();
 
         $readline->setAutocompleter(
-            new \Hoa\Console\Readline\Autocompleter\Word(get_class_methods($this))
+            new \Hoa\Console\Readline\Autocompleter\Word(\get_class_methods($this))
         );
         $output = new ConsoleOutput();
         $output->writeln("  <comment>Execution PAUSED, starting interactive shell...</comment>");
@@ -40,7 +40,7 @@ trait Pause
                 $value = eval("return \$I->$command;");
                 if ($value) {
                     $result = $value;
-                    if (!is_object($result)) {
+                    if (!\is_object($result)) {
                         codecept_debug($result);
                     }
                     codecept_debug('>> Result saved to $result variable, you can use it in next commands');

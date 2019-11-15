@@ -15,7 +15,7 @@ class Xml
     public static function arrayToXml(\DOMDocument $xml, \DOMNode $node, $array = [])
     {
         foreach ($array as $el => $val) {
-            if (is_array($val)) {
+            if (\is_array($val)) {
                 self::arrayToXml($xml, $node->$el, $val);
             } else {
                 $node->appendChild($xml->createElement($el, $val));
@@ -47,7 +47,7 @@ class Xml
             return $dom;
         }
 
-        if (is_array($xml)) {
+        if (\is_array($xml)) {
             return self::arrayToXml($dom, $dom, $xml);
         }
         if (!empty($xml)) {

@@ -40,6 +40,6 @@ EOF;
 
     public function getHelperName()
     {
-        return rtrim('\\' . $this->namespace, '\\') . '\\Helper\\' . $this->name;
+        return \rtrim('\\' . $this->namespace, '\\') . '\\Helper\\' . $this->name;
     }
 }

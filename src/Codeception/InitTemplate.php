@@ -77,7 +77,7 @@ abstract class InitTemplate
         $this->checkInstalled($workDir);
         $this->sayInfo("Initializing Codeception in $workDir");
         $this->createDirectoryFor($workDir);
-        chdir($workDir);
+        \chdir($workDir);
         $this->workDir = $workDir;
     }
 
@@ -108,11 +108,11 @@ abstract class InitTemplate
     {
         $question = "? $question";
         $dialog = new QuestionHelper();
-        if (is_array($answer)) {
+        if (\is_array($answer)) {
             $question .= " <info>(" . $answer[0] . ")</info> ";
             return $dialog->ask($this->input, $this->output, new ChoiceQuestion($question, $answer, 0));
         }
-        if (is_bool($answer)) {
+        if (\is_bool($answer)) {
             $question .= " (y/n) ";
             return $dialog->ask($this->input, $this->output, new ConfirmationQuestion($question, $answer));
         }
@@ -200,14 +200,14 @@ abstract class InitTemplate
 
     protected function gitIgnore($path)
     {
-        if (file_exists(self::GIT_IGNORE)) {
-            file_put_contents($path . DIRECTORY_SEPARATOR . self::GIT_IGNORE, "*\n!" . self::GIT_IGNORE);
+        if (\file_exists(self::GIT_IGNORE)) {
+            \file_put_contents($path . DIRECTORY_SEPARATOR . self::GIT_IGNORE, "*\n!" . self::GIT_IGNORE);
         }
     }
 
     protected function checkInstalled($dir = '.')
     {
-        if (file_exists($dir . DIRECTORY_SEPARATOR . 'codeception.yml') || file_exists($dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml')) {
+        if (\file_exists($dir . DIRECTORY_SEPARATOR . 'codeception.yml') || \file_exists($dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml')) {
             throw new \Exception("Codeception is already installed in this directory");
         }
     }

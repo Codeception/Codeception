@@ -72,7 +72,7 @@ class Console extends Command
         $this->suite = $suiteManager->getSuite();
         $moduleContainer = $suiteManager->getModuleContainer();
 
-        $this->actions = array_keys($moduleContainer->getActions());
+        $this->actions = \array_keys($moduleContainer->getActions());
 
         $this->test = new Cept(null, null);
         $this->test->getMetadata()->setServices([
@@ -101,7 +101,7 @@ class Console extends Command
         $dispatcher->dispatch(Events::TEST_PARSED, new TestEvent($this->test));
         $dispatcher->dispatch(Events::TEST_BEFORE, new TestEvent($this->test));
 
-        if (file_exists($settings['bootstrap'])) {
+        if (\file_exists($settings['bootstrap'])) {
             require $settings['bootstrap'];
         }
 
@@ -115,7 +115,7 @@ class Console extends Command
 
     protected function listenToSignals()
     {
-        if (function_exists('pcntl_signal')) {
+        if (\function_exists('pcntl_signal')) {
             declare (ticks = 1);
             pcntl_signal(SIGINT, SIG_IGN);
             pcntl_signal(SIGTERM, SIG_IGN);

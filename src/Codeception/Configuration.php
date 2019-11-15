@@ -148,19 +148,19 @@ class Configuration
         }
 
         if ($configFile === null) {
-            $configFile = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
+            $configFile = \getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
         }
 
-        if (is_dir($configFile)) {
+        if (\is_dir($configFile)) {
             $configFile = $configFile . DIRECTORY_SEPARATOR . 'codeception.yml';
         }
 
-        $dir = realpath(dirname($configFile));
+        $dir = \realpath(\dirname($configFile));
         self::$dir = $dir;
 
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 
-        if (!(file_exists($configDistFile) || file_exists($configFile))) {
+        if (!(\file_exists($configDistFile) || \file_exists($configFile))) {
             throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
         }
 
@@ -168,14 +168,14 @@ class Configuration
         $tempConfig = self::$defaultConfig;
 
         $distConfigContents = "";
-        if (file_exists($configDistFile)) {
-            $distConfigContents = file_get_contents($configDistFile);
+        if (\file_exists($configDistFile)) {
+            $distConfigContents = \file_get_contents($configDistFile);
             $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($distConfigContents, $configDistFile));
         }
 
         $configContents = "";
-        if (file_exists($configFile)) {
-            $configContents = file_get_contents($configFile);
+        if (\file_exists($configFile)) {
+            $configContents = \file_get_contents($configFile);
             $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($configContents, $configFile));
         }
         self::prepareParams($tempConfig);
@@ -192,7 +192,7 @@ class Configuration
         if (isset($config['extends'])) {
             // and now we search for the file
             $presetFilePath = codecept_absolute_path($config['extends']);
-            if (file_exists($presetFilePath)) {
+            if (\file_exists($presetFilePath)) {
                 // and merge it with our configuration file
                 $config = self::mergeConfigs(self::getConfFromFile($presetFilePath), $config);
             }
@@ -223,7 +223,7 @@ class Configuration
         $config['include'] = self::expandWildcardedIncludes($config['include']);
 
         // config without tests, for inclusion of other configs
-        if (count($config['include'])) {
+        if (\count($config['include'])) {
             self::$config = $config;
             if (!isset($config['paths']['tests'])) {
                  return $config;
@@ -277,10 +277,10 @@ class Configuration
 
         $bootstrap = \Codeception\Util\PathResolver::isPathAbsolute($bootstrap)
             ? $bootstrap
-            : rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $bootstrap;
+            : \rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $bootstrap;
 
 
-        if (!file_exists($bootstrap)) {
+        if (!\file_exists($bootstrap)) {
             throw new ConfigurationException("Bootstrap file $bootstrap can't be loaded");
         }
         require_once $bootstrap;
@@ -297,13 +297,13 @@ class Configuration
 
         self::$suites = [];
 
-        foreach (array_keys(self::$config['suites']) as $suite) {
+        foreach (\array_keys(self::$config['suites']) as $suite) {
             self::$suites[$suite] = $suite;
         }
 
         /** @var SplFileInfo $suite */
         foreach ($suites as $suite) {
-            preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
+            \preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
             self::$suites[$matches[1]] = $matches[1];
         }
     }
@@ -319,11 +319,11 @@ class Configuration
     public static function suiteSettings($suite, $config)
     {
         // cut namespace name from suite name
-        if ($suite != $config['namespace'] && substr($suite, 0, strlen($config['namespace'])) == $config['namespace']) {
-            $suite = substr($suite, strlen($config['namespace']));
+        if ($suite != $config['namespace'] && \substr($suite, 0, \strlen($config['namespace'])) == $config['namespace']) {
+            $suite = \substr($suite, \strlen($config['namespace']));
         }
 
-        if (!in_array($suite, self::$suites)) {
+        if (!\in_array($suite, self::$suites)) {
             throw new ConfigurationException("Suite $suite was not loaded");
         }
 
@@ -354,7 +354,7 @@ class Configuration
             $settings['path'] = $suite;
         }
 
-        $config['paths']['tests'] = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['tests']);
+        $config['paths']['tests'] = \str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['tests']);
 
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
             . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
@@ -375,7 +375,7 @@ class Configuration
         if (isset(self::$envConfig[$path])) {
             return self::$envConfig[$path];
         }
-        if (!is_dir($path)) {
+        if (!\is_dir($path)) {
             self::$envConfig[$path] = [];
             return self::$envConfig[$path];
         }
@@ -389,7 +389,7 @@ class Configuration
         $envConfig = [];
         /** @var SplFileInfo $envFile */
         foreach ($envFiles as $envFile) {
-            $env = str_replace(['.dist.yml', '.yml'], '', $envFile->getFilename());
+            $env = \str_replace(['.dist.yml', '.yml'], '', $envFile->getFilename());
             $envConfig[$env] = [];
             $envPath = $path;
             if ($envFile->getRelativePath()) {
@@ -428,7 +428,7 @@ class Configuration
             return Yaml::parse($contents);
         } catch (ParseException $exception) {
             throw new ConfigurationException(
-                sprintf(
+                \sprintf(
                     "Error loading Yaml config from `%s`\n \n%s\nRead more about Yaml format https://goo.gl/9UPuEC",
                     $filename,
                     $exception->getMessage()
@@ -447,8 +447,8 @@ class Configuration
      */
     protected static function getConfFromFile($filename, $nonExistentValue = [])
     {
-        if (file_exists($filename)) {
-            $yaml = file_get_contents($filename);
+        if (\file_exists($filename)) {
+            $yaml = \file_get_contents($filename);
             return self::getConfFromContents($yaml, $filename);
         }
         return $nonExistentValue;
@@ -466,7 +466,7 @@ class Configuration
     {
         $settings = self::suiteSettings($suite, self::config());
 
-        if (!isset($settings['env']) || !is_array($settings['env'])) {
+        if (!isset($settings['env']) || !\is_array($settings['env'])) {
             return [];
         }
 
@@ -493,19 +493,19 @@ class Configuration
      */
     public static function modules($settings)
     {
-        return array_filter(
-            array_map(
+        return \array_filter(
+            \array_map(
                 function ($m) {
-                    return is_array($m) ? key($m) : $m;
+                    return \is_array($m) ? \key($m) : $m;
                 },
                 $settings['modules']['enabled'],
-                array_keys($settings['modules']['enabled'])
+                \array_keys($settings['modules']['enabled'])
             ),
             function ($m) use ($settings) {
                 if (!isset($settings['modules']['disabled'])) {
                     return true;
                 }
-                return !in_array($m, $settings['modules']['disabled']);
+                return !\in_array($m, $settings['modules']['disabled']);
             }
         );
     }
@@ -513,7 +513,7 @@ class Configuration
     public static function isExtensionEnabled($extensionName)
     {
         return isset(self::$config['extensions']['enabled'])
-        && in_array($extensionName, self::$config['extensions']['enabled']);
+        && \in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
     /**
@@ -552,19 +552,19 @@ class Configuration
         }
 
         $dir = self::$outputDir . DIRECTORY_SEPARATOR;
-        if (strcmp(self::$outputDir[0], "/") !== 0) {
+        if (\strcmp(self::$outputDir[0], "/") !== 0) {
             $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
         }
 
-        if (!file_exists($dir)) {
-            @mkdir($dir, 0777, true);
+        if (!\file_exists($dir)) {
+            @\mkdir($dir, 0777, true);
         }
 
-        if (!is_writable($dir)) {
-            @chmod($dir, 0777);
+        if (!\is_writable($dir)) {
+            @\chmod($dir, 0777);
         }
 
-        if (!is_writable($dir)) {
+        if (!\is_writable($dir)) {
             throw new ConfigurationException(
                 "Path for output is not writable. Please, set appropriate access mode for output path: {$dir}"
             );
@@ -658,11 +658,11 @@ class Configuration
 
     public static function mergeConfigs($a1, $a2)
     {
-        if (!is_array($a1)) {
+        if (!\is_array($a1)) {
             return $a2;
         }
 
-        if (!is_array($a2)) {
+        if (!\is_array($a2)) {
             return $a1;
         }
 
@@ -670,7 +670,7 @@ class Configuration
 
         // for sequential arrays
         if (isset($a1[0], $a2[0])) {
-            return array_merge_recursive($a2, $a1);
+            return \array_merge_recursive($a2, $a1);
         }
 
         // for associative arrays
@@ -717,9 +717,9 @@ class Configuration
         if (isset($suiteConf['extends'])) {
             $presetFilePath = codecept_is_path_absolute($suiteConf['extends'])
                 ? $suiteConf['extends'] // If path is absolute – use it
-                : realpath($suiteDir . DIRECTORY_SEPARATOR . $suiteConf['extends']); // Otherwise try to locate it in the suite dir
+                : \realpath($suiteDir . DIRECTORY_SEPARATOR . $suiteConf['extends']); // Otherwise try to locate it in the suite dir
 
-            if (file_exists($presetFilePath)) {
+            if (\file_exists($presetFilePath)) {
                 $settings = self::mergeConfigs(self::getConfFromFile($presetFilePath), $settings);
             }
         }
@@ -744,7 +744,7 @@ class Configuration
         }
         $expandedIncludes = [];
         foreach ($includes as $include) {
-            $expandedIncludes = array_merge($expandedIncludes, self::expandWildcardsFor($include));
+            $expandedIncludes = \array_merge($expandedIncludes, self::expandWildcardsFor($include));
         }
         return $expandedIncludes;
     }
@@ -759,7 +759,7 @@ class Configuration
      */
     protected static function expandWildcardsFor($include)
     {
-        if (1 !== preg_match('/[\?\.\*]/', $include)) {
+        if (1 !== \preg_match('/[\?\.\*]/', $include)) {
             return [$include,];
         }
 
@@ -787,7 +787,7 @@ class Configuration
         $paramsLoader = new ParamsLoader();
 
         foreach ($settings['params'] as $paramStorage) {
-            static::$params = array_merge(self::$params, $paramsLoader->load($paramStorage));
+            static::$params = \array_merge(self::$params, $paramsLoader->load($paramStorage));
         }
     }
 }

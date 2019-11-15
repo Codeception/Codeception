@@ -25,9 +25,9 @@ trait Comment
 
     public function am($role)
     {
-        $role = trim($role);
+        $role = \trim($role);
 
-        if (stripos('aeiou', $role[0]) !== false) {
+        if (\stripos('aeiou', $role[0]) !== false) {
             return $this->comment('As an ' . $role);
         }
 

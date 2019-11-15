@@ -57,13 +57,13 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
 
     public function getSourceCode()
     {
-        return file_get_contents($this->getFileName());
+        return \file_get_contents($this->getFileName());
     }
 
     public function getReportFields()
     {
         return [
-            'name' => basename($this->getFileName(), 'Cept.php'),
+            'name' => \basename($this->getFileName(), 'Cept.php'),
             'file' => $this->getFileName(),
             'feature' => $this->getFeature()
         ];

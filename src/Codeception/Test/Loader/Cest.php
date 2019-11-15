@@ -27,7 +27,7 @@ class Cest implements LoaderInterface
         $testClasses = Parser::getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
-            if (substr($testClass, -strlen('Cest')) !== 'Cest') {
+            if (\substr($testClass, -\strlen('Cest')) !== 'Cest') {
                 continue;
             }
             if (!(new \ReflectionClass($testClass))->isInstantiable()) {
@@ -35,17 +35,17 @@ class Cest implements LoaderInterface
             }
             $unit = new $testClass;
 
-            $methods = get_class_methods($testClass);
+            $methods = \get_class_methods($testClass);
             foreach ($methods as $method) {
-                if (strpos($method, '_') === 0) {
+                if (\strpos($method, '_') === 0) {
                     continue;
                 }
                 $examples = [];
 
                 // example Annotation
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
-                if (count($rawExamples)) {
-                    $examples = array_map(
+                if (\count($rawExamples)) {
+                    $examples = \array_map(
                         function ($v) {
                             return Annotation::arrayValue($v);
                         },
@@ -75,7 +75,7 @@ class Cest implements LoaderInterface
                     }
                 }
 
-                if (count($examples)) {
+                if (\count($examples)) {
                     $dataProvider = new \PHPUnit\Framework\DataProviderTestSuite();
                     $index = 0;
                     foreach ($examples as $k => $example) {

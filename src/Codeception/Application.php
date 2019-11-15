@@ -75,13 +75,13 @@ class Application extends BaseApplication
      */
     protected function getCustomCommandName($commandClass)
     {
-        if (!class_exists($commandClass)) {
+        if (!\class_exists($commandClass)) {
             throw new ConfigurationException("Extension: Command class $commandClass not found");
         }
 
-        $interfaces = class_implements($commandClass);
+        $interfaces = \class_implements($commandClass);
 
-        if (!in_array('Codeception\CustomCommandInterface', $interfaces)) {
+        if (!\in_array('Codeception\CustomCommandInterface', $interfaces)) {
             throw new ConfigurationException("Extension: Command {$commandClass} must implement " .
                                              "the interface `Codeception\\CustomCommandInterface`");
         }
@@ -100,7 +100,7 @@ class Application extends BaseApplication
             $input = $this->getCoreArguments();
         }
 
-        if (!ini_get('register_argc_argv')) {
+        if (!\ini_get('register_argc_argv')) {
             throw new ConfigurationException('register_argc_argv must be set to On for running Codeception');
         }
 
@@ -142,8 +142,8 @@ class Application extends BaseApplication
         if (isset($_SERVER['argv'])) {
             $argv = $_SERVER['argv'];
 
-            for ($i = 0; $i < count($argv); $i++) {
-                if (preg_match('/^(?:-([^c-]*)?c|--config(?:=|$))(.*)$/', $argv[$i], $match)) {
+            for ($i = 0; $i < \count($argv); $i++) {
+                if (\preg_match('/^(?:-([^c-]*)?c|--config(?:=|$))(.*)$/', $argv[$i], $match)) {
                     if (!empty($match[2])) { //same index
                         $this->preloadConfiguration($match[2]);
                     } elseif (isset($argv[$i + 1])) { //next index

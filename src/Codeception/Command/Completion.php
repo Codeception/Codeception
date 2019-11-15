@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Command;
 
-if (!class_exists('Stecman\Component\Symfony\Console\BashCompletion\Completion')) {
+if (!\class_exists('Stecman\Component\Symfony\Console\BashCompletion\Completion')) {
     echo "Please install `stecman/symfony-console-completion\n` to enable auto completion";
     return;
 }
@@ -63,7 +63,7 @@ class Completion extends CompletionCommand
     {
         if ($input->getOption('generate-hook') && $input->getOption('use-vendor-bin')) {
             global $argv;
-            $argv[0] = 'vendor/bin/' . basename($argv[0]);
+            $argv[0] = 'vendor/bin/' . \basename($argv[0]);
         }
 
         parent::execute($input, $output);

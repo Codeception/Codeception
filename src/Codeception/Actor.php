@@ -40,7 +40,7 @@ abstract class Actor
 
     public function __call($method, $arguments)
     {
-        $class = get_class($this);
+        $class = \get_class($this);
         throw new \RuntimeException("Call to undefined method $class::$method");
     }
     

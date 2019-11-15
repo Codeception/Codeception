@@ -50,7 +50,7 @@ class GeneratePageObject extends Command
             : $this->getGlobalConfig();
 
         if ($suite) {
-            $suite = DIRECTORY_SEPARATOR . ucfirst($suite);
+            $suite = DIRECTORY_SEPARATOR . \ucfirst($suite);
         }
 
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Page' . $suite, $class);
@@ -59,7 +59,7 @@ class GeneratePageObject extends Command
 
         $output->writeln($filename);
 
-        $gen = new PageObjectGenerator($conf, ucfirst($suite) . '\\' . $class);
+        $gen = new PageObjectGenerator($conf, \ucfirst($suite) . '\\' . $class);
         $res = $this->createFile($filename, $gen->produce());
 
         if (!$res) {

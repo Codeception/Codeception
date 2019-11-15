@@ -45,16 +45,16 @@ class Autoload
     public static function addNamespace($prefix, $base_dir, $prepend = false)
     {
         if (!self::$registered) {
-            spl_autoload_register([__CLASS__, 'load']);
+            \spl_autoload_register([__CLASS__, 'load']);
             self::$registered = true;
         }
 
         // normalize namespace prefix
-        $prefix = trim($prefix, '\\') . '\\';
+        $prefix = \trim($prefix, '\\') . '\\';
 
         // normalize the base directory with a trailing separator
-        $base_dir = rtrim($base_dir, '/') . DIRECTORY_SEPARATOR;
-        $base_dir = rtrim($base_dir, DIRECTORY_SEPARATOR) . '/';
+        $base_dir = \rtrim($base_dir, '/') . DIRECTORY_SEPARATOR;
+        $base_dir = \rtrim($base_dir, DIRECTORY_SEPARATOR) . '/';
 
         // initialize the namespace prefix array
         if (isset(self::$map[$prefix]) === false) {
@@ -63,7 +63,7 @@ class Autoload
 
         // retain the base directory for the namespace prefix
         if ($prepend) {
-            array_unshift(self::$map[$prefix], $base_dir);
+            \array_unshift(self::$map[$prefix], $base_dir);
         } else {
             self::$map[$prefix][] = $base_dir;
         }
@@ -75,12 +75,12 @@ class Autoload
         $prefix = $class;
 
         // work backwards through the namespace names of the fully-qualified class name to find a mapped file name
-        while (false !== ($pos = strrpos($prefix, '\\'))) {
+        while (false !== ($pos = \strrpos($prefix, '\\'))) {
             // retain the trailing namespace separator in the prefix
-            $prefix = substr($class, 0, $pos + 1);
+            $prefix = \substr($class, 0, $pos + 1);
 
             // the rest is the relative class name
-            $relative_class = substr($class, $pos + 1);
+            $relative_class = \substr($class, $pos + 1);
 
             // try to load a mapped file for the prefix and relative class
             $mapped_file = self::loadMappedFile($prefix, $relative_class);
@@ -89,7 +89,7 @@ class Autoload
             }
 
             // remove the trailing namespace separator for the next iteration of strrpos()
-            $prefix = rtrim($prefix, '\\');
+            $prefix = \rtrim($prefix, '\\');
         }
 
         // fix for empty prefix
@@ -99,8 +99,8 @@ class Autoload
 
         // backwards compatibility with old autoloader
         // :TODO: it should be removed
-        if (strpos($class, '\\') !== false) {
-            $relative_class = substr(strrchr($class, '\\'), 1); // Foo\Bar\ClassName -> ClassName
+        if (\strpos($class, '\\') !== false) {
+            $relative_class = \substr(\strrchr($class, '\\'), 1); // Foo\Bar\ClassName -> ClassName
             $mapped_file = self::loadMappedFile('\\', $relative_class);
             if ($mapped_file) {
                 return $mapped_file;
@@ -125,7 +125,7 @@ class Autoload
 
         foreach (self::$map[$prefix] as $base_dir) {
             $file = $base_dir
-                . str_replace('\\', '/', $relative_class)
+                . \str_replace('\\', '/', $relative_class)
                 . '.php';
 
             // 'static' is for testing purposes
@@ -139,7 +139,7 @@ class Autoload
 
     protected static function requireFile($file)
     {
-        if (file_exists($file)) {
+        if (\file_exists($file)) {
             require_once $file;
             return true;
         }

@@ -18,8 +18,8 @@ class ConditionalAssertion extends Assertion implements GeneratedStep
 
     public function getAction()
     {
-        $action = 'can' . ucfirst($this->action);
-        $action = preg_replace('/^canDont/', 'cant', $action);
+        $action = 'can' . \ucfirst($this->action);
+        $action = \preg_replace('/^canDont/', 'cant', $action);
         return $action;
     }
 
@@ -32,26 +32,26 @@ class ConditionalAssertion extends Assertion implements GeneratedStep
     {
         $action = $template->getVar('action');
 
-        if ((0 !== strpos($action, 'see')) && (0 !== strpos($action, 'dontSee'))) {
+        if ((0 !== \strpos($action, 'see')) && (0 !== \strpos($action, 'dontSee'))) {
             return '';
         }
 
         $conditionalDoc = "* [!] Conditional Assertion: Test won't be stopped on fail\n     " . $template->getVar('doc');
 
         $prefix = 'can';
-        if (strpos($action, 'dontSee') === 0) {
+        if (\strpos($action, 'dontSee') === 0) {
             $prefix = 'cant';
-            $action = str_replace('dont', '', $action);
+            $action = \str_replace('dont', '', $action);
         }
 
         return $template
             ->place('doc', $conditionalDoc)
-            ->place('action', $prefix . ucfirst($action))
+            ->place('action', $prefix . \ucfirst($action))
             ->place('step', 'ConditionalAssertion');
     }
 
     public function match($name)
     {
-        return 0 === strpos($name, 'see') || 0 === strpos($name, 'dontSee');
+        return 0 === \strpos($name, 'see') || 0 === \strpos($name, 'dontSee');
     }
 }

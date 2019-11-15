@@ -16,14 +16,14 @@ class Message
 
     public function with($param)
     {
-        $args = array_merge([$this->message], func_get_args());
-        $this->message = call_user_func_array('sprintf', $args);
+        $args = \array_merge([$this->message], \func_get_args());
+        $this->message = \call_user_func_array('sprintf', $args);
         return $this;
     }
 
     public function style($name)
     {
-        $this->message = sprintf('<%s>%s</%s>', $name, $this->message, $name);
+        $this->message = \sprintf('<%s>%s</%s>', $name, $this->message, $name);
         return $this;
     }
 
@@ -32,14 +32,14 @@ class Message
         $message_length = $this->getLength();
 
         if ($message_length < $length) {
-            $this->message .= str_repeat($char, $length - $message_length);
+            $this->message .= \str_repeat($char, $length - $message_length);
         }
         return $this;
     }
 
     public function cut($length)
     {
-        $this->message = mb_substr($this->message, 0, $length, 'utf-8');
+        $this->message = \mb_substr($this->message, 0, $length, 'utf-8');
         return $this;
     }
 
@@ -80,7 +80,7 @@ class Message
 
     public function apply($func)
     {
-        $this->message = call_user_func($func, $this->message);
+        $this->message = \call_user_func($func, $this->message);
         return $this;
     }
 
@@ -107,12 +107,12 @@ class Message
 
     public function getLength($includeTags = false)
     {
-        return mb_strwidth($includeTags ? $this->message : strip_tags($this->message), 'utf-8');
+        return \mb_strwidth($includeTags ? $this->message : \strip_tags($this->message), 'utf-8');
     }
 
     public static function ucfirst($text)
     {
-        return mb_strtoupper(mb_substr($text, 0, 1, 'utf-8'), 'utf-8') . mb_substr($text, 1, null, 'utf-8');
+        return \mb_strtoupper(\mb_substr($text, 0, 1, 'utf-8'), 'utf-8') . \mb_substr($text, 1, null, 'utf-8');
     }
 
     public function __toString()

@@ -46,7 +46,7 @@ class GenerateCest extends Command
         $filename = $this->completeSuffix($className, 'Cest');
         $filename = $path . $filename;
 
-        if (file_exists($filename)) {
+        if (\file_exists($filename)) {
             $output->writeln("<error>Test $filename already exists</error>");
             return;
         }

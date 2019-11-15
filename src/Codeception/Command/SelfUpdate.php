@@ -50,7 +50,7 @@ class SelfUpdate extends Command
         $this
             // ->setAliases(array('selfupdate'))
             ->setDescription(
-                sprintf(
+                \sprintf(
                     'Upgrade <comment>%s</comment> to the latest version',
                     $this->filename
                 )
@@ -75,7 +75,7 @@ class SelfUpdate extends Command
         $version = $this->getCurrentVersion();
 
         $output->writeln(
-            sprintf(
+            \sprintf(
                 '<info>%s</info> version <comment>%s</comment>',
                 self::NAME,
                 $version
@@ -87,7 +87,7 @@ class SelfUpdate extends Command
             $latestVersion = $this->getLatestStableVersion();
             if ($this->isOutOfDate($version, $latestVersion)) {
                 $output->writeln(
-                    sprintf(
+                    \sprintf(
                         'A newer version is available: <comment>%s</comment>',
                         $latestVersion
                     )
@@ -109,7 +109,7 @@ class SelfUpdate extends Command
             }
         } catch (\Exception $e) {
             $output->writeln(
-                sprintf(
+                \sprintf(
                     "<error>\n%s\n</error>",
                     $e->getMessage()
                 )
@@ -126,7 +126,7 @@ class SelfUpdate extends Command
      */
     private function isOutOfDate($version, $latestVersion)
     {
-        return -1 != version_compare($version, $latestVersion, '>=');
+        return -1 != \version_compare($version, $latestVersion, '>=');
     }
 
     /**
@@ -138,10 +138,10 @@ class SelfUpdate extends Command
             $this->getGithubTags(self::GITHUB_REPO)
         );
 
-        return array_reduce(
+        return \array_reduce(
             $stableVersions,
             function ($a, $b) {
-                return version_compare($a, $b, '>') ? $a : $b;
+                return \version_compare($a, $b, '>') ? $a : $b;
             }
         );
     }
@@ -152,8 +152,8 @@ class SelfUpdate extends Command
      */
     private function filterStableVersions($tags)
     {
-        return array_filter($tags, function ($tag) {
-            return preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $tag);
+        return \array_filter($tags, function ($tag) {
+            return \preg_match('/^[0-9]+\.[0-9]+\.[0-9]+$/', $tag);
         });
     }
 
@@ -169,7 +169,7 @@ class SelfUpdate extends Command
             'https://api.github.com/repos/' . $repo . '/tags'
         );
 
-        return array_column(json_decode($jsonTags, true), 'name');
+        return \array_column(\json_decode($jsonTags, true), 'name');
     }
 
     /**
@@ -183,11 +183,11 @@ class SelfUpdate extends Command
     {
         $ctx = $this->prepareContext($url);
 
-        $body = file_get_contents($url, 0, $ctx);
+        $body = \file_get_contents($url, 0, $ctx);
 
         if (isset($http_response_header)) {
-            $code = substr($http_response_header[0], 9, 3);
-            if (floor($code / 100) > 3) {
+            $code = \substr($http_response_header[0], 9, 3);
+            if (\floor($code / 100) > 3) {
                 throw new \Exception($http_response_header[0]);
             }
         } else {
@@ -205,7 +205,7 @@ class SelfUpdate extends Command
      */
     private function prepareProxy(&$opt, $url)
     {
-        $scheme = parse_url($url)['scheme'];
+        $scheme = \parse_url($url)['scheme'];
         if ($scheme === 'http' && (!empty($_SERVER['HTTP_PROXY']) || !empty($_SERVER['http_proxy']))) {
             $proxy = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
         }
@@ -215,7 +215,7 @@ class SelfUpdate extends Command
         }
 
         if (!empty($proxy)) {
-            $proxy = str_replace(['http://', 'https://'], ['tcp://', 'ssl://'], $proxy);
+            $proxy = \str_replace(['http://', 'https://'], ['tcp://', 'ssl://'], $proxy);
             $opt['http']['proxy'] = $proxy;
         }
     }
@@ -237,7 +237,7 @@ class SelfUpdate extends Command
             ]
         ];
         $this->prepareProxy($opts, $url);
-        return stream_context_create($opts);
+        return \stream_context_create($opts);
     }
 
     /**
@@ -249,18 +249,18 @@ class SelfUpdate extends Command
      */
     protected function retrievePharFile($version, OutputInterface $output)
     {
-        $temp = basename($this->filename, '.phar') . '-temp.phar';
+        $temp = \basename($this->filename, '.phar') . '-temp.phar';
 
         try {
             $sourceUrl = $this->getPharUrl($version);
-            if (@copy($sourceUrl, $temp)) {
-                chmod($temp, 0777 & ~umask());
+            if (@\copy($sourceUrl, $temp)) {
+                \chmod($temp, 0777 & ~\umask());
 
                 // test the phar validity
                 $phar = new \Phar($temp);
                 // free the variable to unlock the file
                 unset($phar);
-                rename($temp, $this->filename);
+                \rename($temp, $this->filename);
             } else {
                 throw new \Exception('Request failed.');
             }
@@ -270,10 +270,10 @@ class SelfUpdate extends Command
             ) {
                 throw $e;
             }
-            unlink($temp);
+            \unlink($temp);
 
             $output->writeln(
-                sprintf(
+                \sprintf(
                     "<error>\nSomething went wrong (%s).\nPlease re-run this again.</error>\n",
                     $e->getMessage()
                 )
@@ -281,7 +281,7 @@ class SelfUpdate extends Command
         }
 
         $output->writeln(
-            sprintf(
+            \sprintf(
                 "\n<comment>%s</comment> has been updated.\n",
                 $this->filename
             )
@@ -297,10 +297,10 @@ class SelfUpdate extends Command
     protected function getPharUrl($version)
     {
         $sourceUrl = self::PHAR_URL;
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (\version_compare(PHP_VERSION, '7.0.0', '<')) {
             $sourceUrl = self::PHAR_URL_PHP54;
         }
 
-        return sprintf($sourceUrl, $version);
+        return \sprintf($sourceUrl, $version);
     }
 }

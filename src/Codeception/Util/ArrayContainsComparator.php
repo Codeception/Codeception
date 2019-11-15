@@ -38,7 +38,7 @@ class ArrayContainsComparator
      */
     private function arrayIntersectRecursive($arr1, $arr2)
     {
-        if (!is_array($arr1) || !is_array($arr2)) {
+        if (!\is_array($arr1) || !\is_array($arr2)) {
             return false;
         }
         // if it is not an associative array we do not compare keys
@@ -57,7 +57,7 @@ class ArrayContainsComparator
      */
     private function arrayIsSequential(array $array)
     {
-        return array_keys($array) === range(0, count($array) - 1);
+        return \array_keys($array) === \range(0, \count($array) - 1);
     }
 
     /**
@@ -103,7 +103,7 @@ class ArrayContainsComparator
      */
     private function associativeArrayIntersect(array $arr1, array $arr2)
     {
-        $commonKeys = array_intersect(array_keys($arr1), array_keys($arr2));
+        $commonKeys = \array_intersect(\array_keys($arr1), \array_keys($arr2));
 
         $ret = [];
         foreach ($commonKeys as $key) {
@@ -126,7 +126,7 @@ class ArrayContainsComparator
             }
         }
 
-        if (count($ret) < min(count($arr1), count($arr2))) {
+        if (\count($ret) < \min(\count($arr1), \count($arr2))) {
             return null;
         }
 
@@ -135,11 +135,11 @@ class ArrayContainsComparator
 
     private function isEqualValue($val1, $val2)
     {
-        if (is_numeric($val1)) {
+        if (\is_numeric($val1)) {
             $val1 = (string) $val1;
         }
 
-        if (is_numeric($val2)) {
+        if (\is_numeric($val2)) {
             $val2 = (string) $val2;
         }
 

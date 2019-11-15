@@ -45,7 +45,7 @@ class Build extends Command
         $actorGenerator = new ActorGenerator($settings);
         $this->output->writeln(
             '<info>' . Configuration::config()['namespace'] . '\\' . $actorGenerator->getActorName()
-            . "</info> includes modules: " . implode(', ', $actorGenerator->getModules())
+            . "</info> includes modules: " . \implode(', ', $actorGenerator->getModules())
         );
         
         $content = $actorGenerator->produce();
@@ -77,7 +77,7 @@ class Build extends Command
     {
         $suites = $this->getSuites();
         if (!empty($suites)) {
-            $this->output->writeln("<info>Building Actor classes for suites: " . implode(', ', $suites) . '</info>');
+            $this->output->writeln("<info>Building Actor classes for suites: " . \implode(', ', $suites) . '</info>');
         }
         foreach ($suites as $suite) {
             $settings = $this->getSuiteConfig($suite);

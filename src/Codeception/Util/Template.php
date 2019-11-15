@@ -61,9 +61,9 @@ class Template
     public function produce()
     {
         $result = $this->template;
-        $regex = sprintf('~%s([\w\.]+)%s~m', $this->placeholderStart, $this->placeholderEnd);
+        $regex = \sprintf('~%s([\w\.]+)%s~m', $this->placeholderStart, $this->placeholderEnd);
 
-        $matched = preg_match_all($regex, $result, $matches, PREG_SET_ORDER);
+        $matched = \preg_match_all($regex, $result, $matches, PREG_SET_ORDER);
         if (!$matched) {
             return $result;
         }
@@ -71,15 +71,15 @@ class Template
         foreach ($matches as $match) { // fill in placeholders
             $placeholder = $match[1];
             $value = $this->vars;
-            foreach (explode('.', $placeholder) as $segment) {
-                if (is_array($value) && array_key_exists($segment, $value)) {
+            foreach (\explode('.', $placeholder) as $segment) {
+                if (\is_array($value) && \array_key_exists($segment, $value)) {
                     $value = $value[$segment];
                 } else {
                     continue 2;
                 }
             }
 
-            $result = str_replace($this->placeholderStart . $placeholder . $this->placeholderEnd, $value, $result);
+            $result = \str_replace($this->placeholderStart . $placeholder . $this->placeholderEnd, $value, $result);
         }
         return $result;
     }

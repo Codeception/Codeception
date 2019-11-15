@@ -52,9 +52,9 @@ class GenerateScenarios extends Command
 
         $format = $input->getOption('format');
 
-        @mkdir($path);
+        @\mkdir($path);
 
-        if (!is_writable($path)) {
+        if (!\is_writable($path)) {
             throw new ConfigurationException(
                 "Path $path is not writable. Please, set valid permissions for folder to store scenarios."
             );
@@ -62,13 +62,13 @@ class GenerateScenarios extends Command
 
         $path = $path . DIRECTORY_SEPARATOR . $suite;
         if (!$input->getOption('single-file')) {
-            @mkdir($path);
+            @\mkdir($path);
         }
 
         $suiteManager = new \Codeception\SuiteManager(new EventDispatcher(), $suite, $suiteConf);
 
         if ($suiteConf['bootstrap']) {
-            if (file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
+            if (\file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
                 require_once $suiteConf['path'] . $suiteConf['bootstrap'];
             }
         }
@@ -82,7 +82,7 @@ class GenerateScenarios extends Command
             }
             $feature = $test->getScenarioText($format);
 
-            $name = $this->underscore(basename($test->getFileName(), '.php'));
+            $name = $this->underscore(\basename($test->getFileName(), '.php'));
 
             // create separate file for each test in Cest
             if ($test instanceof Cest && !$input->getOption('single-file')) {
@@ -132,11 +132,11 @@ class GenerateScenarios extends Command
 
     private function underscore($name)
     {
-        $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1_\\2', $name);
-        $name = preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $name);
-        $name = str_replace(['/', '\\'], ['.', '.'], $name);
-        $name = preg_replace('/_Cept$/', '', $name);
-        $name = preg_replace('/_Cest$/', '', $name);
+        $name = \preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1_\\2', $name);
+        $name = \preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $name);
+        $name = \str_replace(['/', '\\'], ['.', '.'], $name);
+        $name = \preg_replace('/_Cept$/', '', $name);
+        $name = \preg_replace('/_Cest$/', '', $name);
         return $name;
     }
 }

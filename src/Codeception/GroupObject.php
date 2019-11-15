@@ -25,6 +25,6 @@ abstract class GroupObject extends Extension
                 Events::TEST_AFTER . '.' . static::$group  => '_after',
             ];
         }
-        return array_merge($events, $inheritedEvents);
+        return \array_merge($events, $inheritedEvents);
     }
 }

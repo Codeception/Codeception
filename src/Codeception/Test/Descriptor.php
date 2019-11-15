@@ -19,7 +19,7 @@ class Descriptor
             return $testCase->getSignature();
         }
         if ($testCase instanceof \PHPUnit\Framework\TestCase) {
-            return get_class($testCase) . ':' . $testCase->getName(false);
+            return \get_class($testCase) . ':' . $testCase->getName(false);
         }
         return $testCase->toString();
     }
@@ -35,16 +35,16 @@ class Descriptor
         $env     = '';
         $example = '';
 
-        if (method_exists($testCase, 'getScenario')
+        if (\method_exists($testCase, 'getScenario')
             && !empty($testCase->getScenario()->current('env'))
         ) {
             $env = ':' . $testCase->getScenario()->current('env');
         }
 
-        if (method_exists($testCase, 'getMetaData')
+        if (\method_exists($testCase, 'getMetaData')
             && !empty($testCase->getMetadata()->getCurrent('example'))
         ) {
-            $example = ':' . substr(sha1(json_encode($testCase->getMetadata()->getCurrent('example'))), 0, 7);
+            $example = ':' . \substr(\sha1(\json_encode($testCase->getMetadata()->getCurrent('example'))), 0, 7);
         }
 
         return self::getTestSignature($testCase) . $env . $example;
@@ -54,11 +54,11 @@ class Descriptor
     {
         if ($testCase instanceof \PHPUnit\Framework\TestCase) {
             $text = $testCase->getName();
-            $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-            $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-            $text = preg_replace('/^test /', '', $text);
-            $text = ucfirst(strtolower($text));
-            $text = str_replace(['::', 'with data set'], [':', '|'], $text);
+            $text = \preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
+            $text = \preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
+            $text = \preg_replace('/^test /', '', $text);
+            $text = \ucfirst(\strtolower($text));
+            $text = \str_replace(['::', 'with data set'], [':', '|'], $text);
             return ReflectionHelper::getClassShortName($testCase) . ': ' . $text;
         }
 
@@ -74,7 +74,7 @@ class Descriptor
     public static function getTestFileName(\PHPUnit\Framework\SelfDescribing $testCase)
     {
         if ($testCase instanceof Descriptive) {
-            return codecept_relative_path(realpath($testCase->getFileName()));
+            return codecept_relative_path(\realpath($testCase->getFileName()));
         }
         return (new \ReflectionClass($testCase))->getFileName();
     }
@@ -90,7 +90,7 @@ class Descriptor
         }
         if ($testCase instanceof Descriptive) {
             $signature = $testCase->getSignature(); // cut everything before ":" from signature
-            return self::getTestFileName($testCase) . ':' . preg_replace('~^(.*?):~', '', $signature);
+            return self::getTestFileName($testCase) . ':' . \preg_replace('~^(.*?):~', '', $signature);
         }
         if ($testCase instanceof \PHPUnit\Framework\TestCase) {
             return self::getTestFileName($testCase) . ':' . $testCase->getName(false);

@@ -19,15 +19,15 @@ class FileSystem
         );
 
         foreach ($iterator as $path) {
-            $basename = basename((string)$path);
+            $basename = \basename((string)$path);
             if ($basename === '.' || $basename === '..' || $basename === '.gitignore') {
                 continue;
             }
 
             if ($path->isDir()) {
-                rmdir((string)$path);
+                \rmdir((string)$path);
             } else {
-                unlink((string)$path);
+                \unlink((string)$path);
             }
         }
     }
@@ -38,34 +38,34 @@ class FileSystem
      */
     public static function deleteDir($dir)
     {
-        if (!file_exists($dir)) {
+        if (!\file_exists($dir)) {
             return true;
         }
 
-        if (!is_dir($dir) || is_link($dir)) {
-            return @unlink($dir);
+        if (!\is_dir($dir) || \is_link($dir)) {
+            return @\unlink($dir);
         }
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $dir = str_replace('/', '\\', $dir);
-            exec('rd /s /q "'.$dir.'"');
+        if (\strtoupper(\substr(PHP_OS, 0, 3)) === 'WIN') {
+            $dir = \str_replace('/', '\\', $dir);
+            \exec('rd /s /q "'.$dir.'"');
             return true;
         }
 
-        foreach (scandir($dir) as $item) {
+        foreach (\scandir($dir) as $item) {
             if ($item === '.' || $item === '..') {
                 continue;
             }
 
             if (!self::deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
-                chmod($dir . DIRECTORY_SEPARATOR . $item, 0777);
+                \chmod($dir . DIRECTORY_SEPARATOR . $item, 0777);
                 if (!self::deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
                     return false;
                 }
             }
         }
 
-        return @rmdir($dir);
+        return @\rmdir($dir);
     }
 
     /**
@@ -74,17 +74,17 @@ class FileSystem
      */
     public static function copyDir($src, $dst)
     {
-        $dir = opendir($src);
-        @mkdir($dst);
-        while (false !== ($file = readdir($dir))) {
+        $dir = \opendir($src);
+        @\mkdir($dst);
+        while (false !== ($file = \readdir($dir))) {
             if (($file != '.') && ($file != '..')) {
-                if (is_dir($src . DIRECTORY_SEPARATOR . $file)) {
+                if (\is_dir($src . DIRECTORY_SEPARATOR . $file)) {
                     self::copyDir($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
                 } else {
-                    copy($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
+                    \copy($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
                 }
             }
         }
-        closedir($dir);
+        \closedir($dir);
     }
 }

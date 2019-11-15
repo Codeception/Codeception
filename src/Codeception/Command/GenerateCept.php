@@ -44,7 +44,7 @@ class GenerateCept extends Command
         $filename = $this->completeSuffix($filename, 'Cept');
         $gen = new Cept($config);
 
-        $full_path = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
+        $full_path = \rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
         $res = $this->createFile($full_path, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");

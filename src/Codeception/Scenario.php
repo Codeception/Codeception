@@ -72,7 +72,7 @@ class Scenario
             $result = $step->run($this->metadata->getService('modules'));
         } catch (ConditionalAssertionFailed $f) {
             $result = $this->test->getTestResultObject();
-            if (is_null($result)) {
+            if (\is_null($result)) {
                 $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
                 throw $f;
             } else {
@@ -110,11 +110,11 @@ class Scenario
             if ($step->getName() !== 'Comment') {
                 $text .= $step->getHtml() . '<br/>';
             } else {
-                $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
+                $text .= \trim($step->getHumanizedArguments(), '"') . '<br/>';
             }
         }
-        $text = str_replace(['"\'', '\'"'], ["'", "'"], $text);
-        $text = "<h3>" . mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "</h3>" . $text;
+        $text = \str_replace(['"\'', '\'"'], ["'", "'"], $text);
+        $text = "<h3>" . \mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "</h3>" . $text;
         return $text;
     }
 
@@ -124,8 +124,8 @@ class Scenario
         foreach ($this->getSteps() as $step) {
             $text .= $step->getPrefix() . "$step \r\n";
         }
-        $text = trim(str_replace(['"\'', '\'"'], ["'", "'"], $text));
-        $text = mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "\r\n\r\n" . $text . "\r\n\r\n";
+        $text = \trim(\str_replace(['"\'', '\'"'], ["'", "'"], $text));
+        $text = \mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "\r\n\r\n" . $text . "\r\n\r\n";
         return $text;
     }
 
@@ -147,7 +147,7 @@ class Scenario
     public function __call($method, $args)
     {
         // all methods were deprecated and removed from here
-        trigger_error("Codeception: \$scenario->$method() has been deprecated and removed. Use annotations to pass scenario params", E_USER_DEPRECATED);
+        \trigger_error("Codeception: \$scenario->$method() has been deprecated and removed. Use annotations to pass scenario params", E_USER_DEPRECATED);
     }
 
     /**
