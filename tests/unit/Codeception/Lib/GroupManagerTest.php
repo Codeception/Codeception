@@ -14,18 +14,25 @@ class GroupManagerTest extends \Codeception\Test\Unit
     // tests
     public function testGroupsFromArray()
     {
-        $this->manager = new GroupManager(['important' => ['UserTest.php:testName', 'PostTest.php']]);
-        $test1 = $this->makeTestCase('UserTest.php', 'testName');
-        $test2 = $this->makeTestCase('PostTest.php');
+        $this->manager = new GroupManager(['important' => ['tests/data/group_manager_test/UserTest.php:testName', 'tests/data/group_manager_test/PostTest.php']]);
+        $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php', 'testName');
+        $test2 = $this->makeTestCase('tests/data/group_manager_test/PostTest.php');
         $test3 = $this->makeTestCase('UserTest.php', 'testNot');
         $this->assertContains('important', $this->manager->groupsForTest($test1));
         $this->assertContains('important', $this->manager->groupsForTest($test2));
         $this->assertNotContains('important', $this->manager->groupsForTest($test3));
     }
 
+    public function testRealPathForFileWithMethodName()
+    {
+        $this->manager = new GroupManager(['important' => ['tests/data/group_manager_test/PostTest.php:testName']]);
+        $test = $this->makeTestCase('tests/data/group_manager_test/PostTest.php', 'testName');
+        $this->assertContains('important', $this->manager->groupsForTest($test));
+    }
+
     public function testGroupsFromFile()
     {
-        $this->manager = new GroupManager(['important' => 'tests/data/test_groups']);
+        $this->manager = new GroupManager(['important' => 'tests/data/group_manager_test/test_groups']);
         $test1 = $this->makeTestCase('tests/UserTest.php', 'testName');
         $test2 = $this->makeTestCase('tests/PostTest.php');
         $test3 = $this->makeTestCase('tests/UserTest.php', 'testNot');
@@ -36,21 +43,21 @@ class GroupManagerTest extends \Codeception\Test\Unit
 
     public function testGroupsFromFileOnWindows()
     {
-        $this->manager = new GroupManager(['important' => 'tests/data/group_3']);
+        $this->manager = new GroupManager(['important' => 'tests/data/group_manager_test/group_3']);
         $test = $this->makeTestCase('tests/WinTest.php');
         $this->assertContains('important', $this->manager->groupsForTest($test));
     }
 
     public function testGroupsFromArrayOnWindows()
     {
-        $this->manager = new GroupManager(['important' => ['tests\WinTest.php']]);
-        $test = $this->makeTestCase('tests/WinTest.php');
+        $this->manager = new GroupManager(['important' => ['tests\data\group_manager_test\WinTest.php']]);
+        $test = $this->makeTestCase('tests/data/group_manager_test/WinTest.php');
         $this->assertContains('important', $this->manager->groupsForTest($test));
     }
 
     public function testGroupsByPattern()
     {
-        $this->manager = new GroupManager(['group_*' => 'tests/data/group_*']);
+        $this->manager = new GroupManager(['group_*' => 'tests/data/group_manager_test/group_*']);
         $test1 = $this->makeTestCase('tests/UserTest.php');
         $test2 = $this->makeTestCase('tests/PostTest.php');
         $this->assertContains('group_1', $this->manager->groupsForTest($test1));
@@ -59,7 +66,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
 
     public function testGroupsByDifferentPattern()
     {
-        $this->manager = new GroupManager(['g_*' => 'tests/data/group_*']);
+        $this->manager = new GroupManager(['g_*' => 'tests/data/group_manager_test/group_*']);
         $test1 = $this->makeTestCase('tests/UserTest.php');
         $test2 = $this->makeTestCase('tests/PostTest.php');
         $this->assertContains('g_1', $this->manager->groupsForTest($test1));
@@ -68,7 +75,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
 
     public function testGroupsFileHandlesWhitespace()
     {
-        $this->manager = new GroupManager(['whitespace_group_test' => 'tests/data/whitespace_group_test']);
+        $this->manager = new GroupManager(['whitespace_group_test' => 'tests/data/group_manager_test/whitespace_group_test']);
         $goodTest = $this->makeTestCase('tests/WhitespaceTest.php');
         $badTest = $this->makeTestCase('');
 
@@ -78,7 +85,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
 
     public function testLoadSpecificScenarioFromFile()
     {
-        $this->manager = new GroupManager(['gherkinGroup1' => 'tests/data/gherkinGroup1']);
+        $this->manager = new GroupManager(['gherkinGroup1' => 'tests/data/group_manager_test/gherkinGroup1']);
         $loader = new GherkinLoader();
         $loader->loadTests(codecept_absolute_path('tests/data/refund.feature'));
         $test = $loader->getTests()[0];
@@ -87,7 +94,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
 
     public function testLoadSpecificScenarioWithMultibyteStringFromFile()
     {
-        $this->manager = new GroupManager(['gherkinGroup2' => 'tests/data/gherkinGroup2']);
+        $this->manager = new GroupManager(['gherkinGroup2' => 'tests/data/group_manager_test/gherkinGroup2']);
         $loader = new GherkinLoader();
         $loader->loadTests(codecept_absolute_path('tests/data/refund2.feature'));
         $test = $loader->getTests()[0];
