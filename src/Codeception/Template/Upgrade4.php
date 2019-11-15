@@ -99,17 +99,19 @@ class Upgrade4 extends InitTemplate
         }
 
         file_put_contents('composer.json', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        $this->sayInfo('Running composer install');
-        exec('composer update', $output, $status);
-        if ($status !== 0) {
-            $this->sayInfo('Composer installation failed. Please check composer.json and try to run "composer install" manually');
-            return;
+        if ($packageCounter) {
+            $this->say("$packageCounter new packages added to $section");
+        }
+        if ($packageCounter && $this->ask('composer.json updated. Do you want to run "composer update"?', true)) {
+            $this->sayInfo('Running composer update');
+            exec('composer update', $output, $status);
+            if ($status !== 0) {
+                $this->sayInfo('Composer installation failed. Please check composer.json and try to run "composer update" manually');
+                return;
+            }
         }
 
         $this->saySuccess("Done upgrading!");
-        if ($packageCounter) {
-            $this->say("$packageCounter new packages installed");
-        }
         $this->say('');
 
         $this->say('Please consider donating to Codeception on regular basis:');
@@ -118,7 +120,6 @@ class Upgrade4 extends InitTemplate
         $this->say('');
         $this->say('It\'s ok to pay for reliable software.');
         $this->say('Talk to your manager & support further development of Codeception!');
-
     }
 
     private function isInstalled()
