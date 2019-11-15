@@ -87,10 +87,8 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals("'string selector'", Locator::humanReadableString("string selector"));
         $this->assertEquals("css '.something'", Locator::humanReadableString(['css' => '.something']));
-        $this->assertEquals(
-            "css selector '.something'",
-            Locator::humanReadableString(WebDriverBy::cssSelector('.something'))
-        );
+        //WebDriver is no longer a dependency of core, so this can't be testedI
+        //$this->assertEquals("css selector '.something'", Locator::humanReadableString(WebDriverBy::cssSelector('.something')) );
 
         try {
             Locator::humanReadableString(null);

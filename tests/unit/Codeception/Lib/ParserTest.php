@@ -109,7 +109,7 @@ EOF;
 
     public function testStepsWithFriends()
     {
-        $code = file_get_contents(\Codeception\Configuration::projectDir().'tests/web/FriendsCept.php');
+        $code = file_get_contents(codecept_data_dir('FriendsCept.php'));
         $this->assertStringContainsString('$I->haveFriend', $code);
         $this->parser->parseSteps($code);
         $text = $this->scenario->getText();

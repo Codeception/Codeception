@@ -633,4 +633,23 @@ EOF
         $I->seeInShellOutput("OK (");
     }
 
+    /**
+     * @group reports
+     *
+     * @param CliGuy $I
+     */
+    public function runHtmlWithPhpBrowserCheckReport(\CliGuy $I)
+    {
+        $I->wantTo('execute tests with PhpBrowser with html output and check html');
+        $I->executeFailCommand('run phpbrowser_html_report --html');
+        $I->seeResultCodeIsNot(0);
+        $expectedRelReportPath = 'tests/_output';
+        $expectedReportFilename    = 'CodeceptionIssue5568Cest.failureShouldCreateHtmlSnapshot.fail.html';
+        $expectedReportAbsFilename = join(DIRECTORY_SEPARATOR, array(getcwd(), $expectedRelReportPath, $expectedReportFilename));
+        $I->seeInShellOutput('Html: ' . $expectedReportAbsFilename);
+        $I->seeInShellOutput('Response: ' . $expectedReportAbsFilename);
+        $I->seeFileFound('report.html', $expectedRelReportPath);
+        $I->seeInThisFile("See <a href='" . $expectedReportFilename . "' target='_blank'>HTML snapshot</a> of a failed page");
+    }
+
 }

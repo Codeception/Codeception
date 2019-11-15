@@ -1,0 +1,9 @@
+class_name: AcceptanceTester
+modules:
+    enabled: [PhpBrowser]
+    config:
+        PhpBrowser:
+            url: https://www.google.com
+
+env:
+    dev: []

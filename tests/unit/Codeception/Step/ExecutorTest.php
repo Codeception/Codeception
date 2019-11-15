@@ -1,4 +1,5 @@
 <?php
+namespace Codeception\Step;
 
 class ExecutorTest extends \PHPUnit\Framework\TestCase
 {

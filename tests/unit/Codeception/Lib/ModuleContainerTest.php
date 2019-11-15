@@ -186,6 +186,8 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByInterface()
     {
+        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+
         $this->expectException('Codeception\Exception\ModuleConflictException');
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule3');
         $this->moduleContainer->create('Symfony2');
@@ -194,6 +196,8 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByWebInterface()
     {
+        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+
         $this->expectException('Codeception\Exception\ModuleConflictException');
         $this->moduleContainer->create('Laravel5');
         $this->moduleContainer->create('Symfony2');
@@ -202,6 +206,8 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsForREST()
     {
+        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+
         $config = ['modules' =>
             ['config' => [
                 'REST' => [
@@ -218,6 +224,8 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsOnDependentModules()
     {
+        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+
         $config = ['modules' =>
             ['config' => [
                 'WebDriver' => ['url' => 'localhost', 'browser' => 'firefox'],
@@ -233,9 +241,10 @@ class ModuleContainerTest extends Unit
         $this->moduleContainer->validateConflicts();
     }
 
-
     public function testNoConflictsForPartedModules()
     {
+        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+
         $config = ['modules' =>
             ['config' => [
                 'Laravel5' => [
