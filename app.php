@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/autoload.php';
+
 use Codeception\Application;
 
 $app = new Application('Codeception', Codeception\Codecept::VERSION);
