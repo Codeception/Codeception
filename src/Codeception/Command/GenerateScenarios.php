@@ -102,6 +102,7 @@ class GenerateScenarios extends Command
         if ($input->getOption('single-file')) {
             $this->createFile($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
         }
+        return 0;
     }
 
     protected function decorate($text, $format)

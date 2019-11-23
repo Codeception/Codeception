@@ -63,7 +63,8 @@ class ConfigValidate extends Command
             $output->writeln("------------------------------\n");
             $output->writeln("<info>$suite Suite Config</info>:\n");
             $output->writeln($this->formatOutput($config));
-            return;
+
+            return 0;
         }
 
         $output->write("Validating global config... ");
@@ -95,6 +96,7 @@ class ConfigValidate extends Command
 
 
         $output->writeln("Execute <info>codecept config:validate [<suite>]</info> to see config for a suite");
+        return 0;
     }
 
     protected function formatOutput($config)

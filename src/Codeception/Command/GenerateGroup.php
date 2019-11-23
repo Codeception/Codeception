@@ -45,12 +45,13 @@ class GenerateGroup extends Command
 
         if (!$res) {
             $output->writeln("<error>Group $filename already exists</error>");
-            return;
+            return 1;
         }
 
         $output->writeln("<info>Group extension was created in $filename</info>");
         $output->writeln(
             'To use this group extension, include it to "extensions" option of global Codeception config.'
         );
+        return 0;
     }
 }

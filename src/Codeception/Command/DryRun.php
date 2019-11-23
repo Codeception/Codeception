@@ -95,6 +95,7 @@ class DryRun extends Command
             }
         }
         $dispatcher->dispatch(Events::SUITE_AFTER, new SuiteEvent($suiteManager->getSuite()));
+        return 0;
     }
 
 

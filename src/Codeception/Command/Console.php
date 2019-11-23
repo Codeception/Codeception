@@ -111,6 +111,7 @@ class Console extends Command
         $dispatcher->dispatch(Events::SUITE_AFTER, new SuiteEvent($this->suite));
 
         $output->writeln("<info>Bye-bye!</info>");
+        return 0;
     }
 
     protected function listenToSignals()
