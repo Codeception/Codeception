@@ -9,13 +9,13 @@ class EmulateModuleHelper extends \Codeception\Module
 
     public function seeEquals($expected, $actual)
     {
-        \PHPUnit_Framework_Assert::assertEquals($expected, $actual);
+        \PHPUnit\Framework\Assert::assertEquals($expected, $actual);
         $this->assertions++;
     }
     
     public function seeFeaturesEquals($expected)
     {
-        \PHPUnit_Framework_Assert::assertEquals($expected, $this->feature);
+        \PHPUnit\Framework\Assert::assertEquals($expected, $this->feature);
     }
 
     public function _before(\Codeception\TestInterface $test)

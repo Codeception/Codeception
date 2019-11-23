@@ -1,9 +1,6 @@
 <?php
 // @codingStandardsIgnoreStart
 
-namespace {
-    \Codeception\PHPUnit\Init::init();
-}
 
 namespace Symfony\Component\CssSelector {
     if (!class_exists('Symfony\Component\CssSelector\CssSelectorConverter')) {
