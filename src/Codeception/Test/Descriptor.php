@@ -53,16 +53,26 @@ class Descriptor
     public static function getTestAsString(\PHPUnit\Framework\SelfDescribing $testCase)
     {
         if ($testCase instanceof \PHPUnit\Framework\TestCase) {
-            $text = $testCase->getName();
-            $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-            $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-            $text = preg_replace('/^test /', '', $text);
-            $text = ucfirst(strtolower($text));
-            $text = str_replace(['::', 'with data set'], [':', '|'], $text);
+            $text = self::getTestCaseNameAsString($testCase->getName());
             return ReflectionHelper::getClassShortName($testCase) . ': ' . $text;
         }
 
         return $testCase->toString();
+    }
+
+  /**
+   * @param string $testCaseName
+   * @return string
+   */
+    public static function getTestCaseNameAsString($testCaseName)
+    {
+        $text = $testCaseName;
+        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
+        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
+        $text = preg_replace('/^test /', '', $text);
+        $text = ucfirst(strtolower($text));
+        $text = str_replace(['::', 'with data set'], [':', '|'], $text);
+        return $text;
     }
 
     /**
