@@ -67,22 +67,22 @@ class Scenario
         }
         $this->steps[] = $step;
         $result = null;
-        $this->metadata->getService('dispatcher')->dispatch(Events::STEP_BEFORE, new StepEvent($this->test, $step));
+        $this->metadata->getService('dispatcher')->dispatch(new StepEvent($this->test, $step), Events::STEP_BEFORE);
         try {
             $result = $step->run($this->metadata->getService('modules'));
         } catch (ConditionalAssertionFailed $f) {
             $result = $this->test->getTestResultObject();
             if (is_null($result)) {
-                $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+                $this->metadata->getService('dispatcher')->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
                 throw $f;
             } else {
                 $result->addFailure(clone($this->test), $f, $result->time());
             }
         } catch (\Exception $e) {
-            $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+            $this->metadata->getService('dispatcher')->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
             throw $e;
         }
-        $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+        $this->metadata->getService('dispatcher')->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
         $step->executed = true;
         return $result;
     }

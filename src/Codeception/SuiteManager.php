@@ -75,7 +75,7 @@ class SuiteManager
 
     public function initialize()
     {
-        $this->dispatcher->dispatch(Events::MODULE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::MODULE_INIT);
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
@@ -85,7 +85,7 @@ class SuiteManager
                 . " class doesn't exist in suite folder.\nRun the 'build' command to generate it"
             );
         }
-        $this->dispatcher->dispatch(Events::SUITE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::SUITE_INIT);
         ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
@@ -153,11 +153,11 @@ class SuiteManager
     public function run(PHPUnit\Runner $runner, \PHPUnit\Framework\TestResult $result, $options)
     {
         $runner->prepareSuite($this->suite, $options);
-        $this->dispatcher->dispatch(Events::SUITE_BEFORE, new Event\SuiteEvent($this->suite, $result, $this->settings));
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_BEFORE);
         try {
             $runner->doEnhancedRun($this->suite, $result, $options);
         } finally {
-            $this->dispatcher->dispatch(Events::SUITE_AFTER, new Event\SuiteEvent($this->suite, $result, $this->settings));
+            $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_AFTER);
         }
     }
 

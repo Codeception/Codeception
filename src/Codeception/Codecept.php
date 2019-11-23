@@ -207,7 +207,7 @@ class Codecept
         $printer = $this->runner->getPrinter();
         $printer->printResult($result);
 
-        $this->dispatcher->dispatch(Events::RESULT_PRINT_AFTER, new Event\PrintResultEvent($result, $printer));
+        $this->dispatcher->dispatch(new Event\PrintResultEvent($result, $printer), Events::RESULT_PRINT_AFTER);
     }
 
     /**
