@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Scenario;
+
 class RunCest
 {
     public function _before(\CliGuy $I)
@@ -643,13 +645,273 @@ EOF
         $I->wantTo('execute tests with PhpBrowser with html output and check html');
         $I->executeFailCommand('run phpbrowser_html_report --html');
         $I->seeResultCodeIsNot(0);
-        $expectedRelReportPath = 'tests/_output';
+        $expectedRelReportPath     = 'tests/_output';
         $expectedReportFilename    = 'CodeceptionIssue5568Cest.failureShouldCreateHtmlSnapshot.fail.html';
-        $expectedReportAbsFilename = join(DIRECTORY_SEPARATOR, array(getcwd(), $expectedRelReportPath, $expectedReportFilename));
+        $expectedReportAbsFilename = join(DIRECTORY_SEPARATOR, array(
+            getcwd(),
+            $expectedRelReportPath,
+            $expectedReportFilename
+        ));
         $I->seeInShellOutput('Html: ' . $expectedReportAbsFilename);
         $I->seeInShellOutput('Response: ' . $expectedReportAbsFilename);
         $I->seeFileFound('report.html', $expectedRelReportPath);
         $I->seeInThisFile("See <a href='" . $expectedReportFilename . "' target='_blank'>HTML snapshot</a> of a failed page");
     }
 
+    protected function htmlReportRegexCheckProvider()
+    {
+      return [
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoCommentStepsInARow'))
+            ->addStep('no metaStep')
+            ->addStep('no metaStep')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoCommentStepsInARowViaPageObjectActor'))
+            ->addStep('no metaStep')
+            ->addStep('no metaStep')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoCommentStepsWithOneSubStepInBetween'))
+            ->addStep('no metaStep')
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addStep('no metaStep')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'commentStepsWithDifferentSubStepsInBetweenAndAfter'))
+            ->addStep('no metaStep')
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addStep('no metaStep')
+            ->addMetaStep('Page\DemoPageObject: demo action2')
+            ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'differentSubSteps'))
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addMetaStep('Page\DemoPageObject: demo action2')
+            ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'commentStepsWithDifferentSubStepsOnceNestedInBetweenAndAfter'))
+            ->addStep('no metaStep')
+            ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addStep('no metaStep inside a method')
+            ->addStep('no metaStep')
+            ->addMetaStep('Page\DemoPageObject: demo action2')
+            ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'commentStepsWithDifferentSubStepsOnceNestedInBetweenAndAfter2'))
+            ->addStep('no metaStep')
+            ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep2')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addStep('no metaStep inside a private internal method')
+            ->addStep('no metaStep')
+            ->addMetaStep('Page\DemoPageObject: demo action2')
+            ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'nestedSubStepFollowedByOtherSubStep'))
+            ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addStep('no metaStep inside a method')
+            ->addMetaStep('Page\DemoPageObject: demo action2')
+            ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'nestedSubStepFollowedByOtherSubStep2'))
+            ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep2')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addStep('no metaStep inside a private internal method')
+            ->addMetaStep('Page\DemoPageObject: demo action2')
+            ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoIdentialSubStepsInARow'))
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoIdentialSubStepsInARowFollowedByAnotherSubStep'))
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addMetaStep('Page\DemoPageObject: demo action2')
+            ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoIdentialSubStepsWithAnotherSubStepInBetween'))
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addMetaStep('Page\DemoPageObject: demo action2')
+            ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ],
+        [
+          'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'subStepFollowedByTwoIdentialSubSteps'))
+            ->addMetaStep('Page\DemoPageObject: demo action2')
+            ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+            ->addMetaStep('Page\DemoPageObject: demo action1')
+            ->addStep("I don't see file found", 'thisFileDoesNotExist')
+            ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+        ]
+      ];
+    }
+
+  /**
+   * @group reports
+   *
+   * @dataProvider htmlReportRegexCheckProvider
+   *
+   * @param CliGuy               $I
+   * @param \Codeception\Example $example
+   * @param Scenario             $scenario
+   */
+  public function runHtmlCheckReport(\CliGuy $I, \Codeception\Example $example, Scenario $scenario)
+  {
+    if (version_compare(phpversion(), '7.0', '<')) {
+      $scenario->skip('This test fails due to another Codeception bug that only happens with PHP 5.6: the execution of single CEST test cases does not work');
+    }
+
+    /** @var TestHtmlReportRegexBuilder $testBuilder */
+    $testBuilder = $example['testHtmlReportRegexBuilder'];
+    $testClass = $testBuilder->getTestClass();
+    $testCase = $testBuilder->getTestCase();
+
+    $test = $testClass . ':' . $testCase;
+    $I->wantTo('verify that all steps are rendered correctly in HTML report (' . $test . ')');
+    $I->executeCommand('run html_report ' . $test . '$ --html');
+    $I->seeFileFound('report.html', 'tests/_output');
+
+    // Check HTML report in sufficient detail:
+    $builder = (new HtmlReportRegexBuilder())->addTest($testBuilder);
+    $I->seeThisFileMatches($builder->build());
+  }
+
+}
+
+
+// Helper classes for test 'runHtmlCheckReport':
+
+class HtmlReportRegexBuilder
+{
+
+  private $regex;
+
+  /**
+   * @return string
+   */
+  public function build()
+  {
+    return '/' . $this->regex . '/s';
+  }
+
+  /**
+   * @param $testBuilder TestHtmlReportRegexBuilder
+   * @return HtmlReportRegexBuilder
+   */
+  public function addTest($testBuilder)
+  {
+    $this->regex .= $testBuilder->build();
+    return $this;
+  }
+
+}
+
+class TestHtmlReportRegexBuilder
+{
+
+  private $testClass;
+  private $testCase;
+  private $stepsRegex;
+
+  /**
+   * @param $testClass string
+   * @param $testCase string
+   */
+  public function __construct($testClass, $testCase)
+  {
+    $this->testClass = $testClass;
+    $this->testCase = $testCase;
+  }
+
+  public function getTestClass()
+  {
+    return $this->testClass;
+  }
+
+  public function getTestCase()
+  {
+    return $this->testCase;
+  }
+
+  /**
+   * Allows for nice output in @dataProvider usage.
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    return $this->getTestClass() . ':' . $this->getTestCase();
+  }
+
+  /**
+   * @param $step string
+   * @param $arg string
+   * @return TestHtmlReportRegexBuilder
+   */
+  public function addStep($step, $arg = null)
+  {
+    $this->stepsRegex .=  '.*?' . 'stepName ' . '.*?' . $step;
+    if ($arg) {
+      $this->stepsRegex .= '.*?' . '>&quot;' . $arg . '&quot;';
+    }
+    return $this;
+  }
+
+  public function addMetaStep($step)
+  {
+    $this->addStep(preg_quote($step));
+    $this->stepsRegex .=  '.*?substeps ';
+    return $this;
+  }
+
+
+  /**
+   * @return string
+   */
+  public function build()
+  {
+    $regex = 'scenarioRow .*?' . $this->testClass . ' .*? ' . \Codeception\Test\Descriptor::getTestCaseNameAsString($this->testCase);
+    if ($this->stepsRegex) {
+      $regex .= ' .*?scenarioRow ' . $this->stepsRegex . '.*?';
+    } else {
+      $regex .= '.*?';
+    }
+    return $regex;
+  }
 }
