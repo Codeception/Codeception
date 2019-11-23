@@ -82,8 +82,6 @@ class Configuration
             'xml'         => 'Codeception\PHPUnit\Log\JUnit',
             'html'        => 'Codeception\PHPUnit\ResultPrinter\HTML',
             'report'      => 'Codeception\PHPUnit\ResultPrinter\Report',
-            'tap'         => 'PHPUnit\Util\Log\TAP',
-            'json'        => 'PHPUnit\Util\Log\JSON',
             'phpunit-xml' => 'Codeception\PHPUnit\Log\PhpUnit',
         ],
         'groups'     => [],

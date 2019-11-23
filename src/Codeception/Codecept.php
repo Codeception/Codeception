@@ -44,8 +44,6 @@ class Codecept
         'xml'             => false,
         'phpunit-xml'     => false,
         'no-redirect'     => true,
-        'json'            => false,
-        'tap'             => false,
         'report'          => false,
         'colors'          => false,
         'coverage'        => false,
