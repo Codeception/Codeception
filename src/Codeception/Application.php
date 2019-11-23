@@ -35,10 +35,10 @@ class Application extends BaseApplication
             if ($e->getCode() === 404) {
                 return;
             }
-            $this->renderException($e, new ConsoleOutput());
+            $this->renderThrowable($e, new ConsoleOutput());
             exit(1);
         } catch (\Exception $e) {
-            $this->renderException($e, new ConsoleOutput());
+            $this->renderThrowable($e, new ConsoleOutput());
             exit(1);
         }
     }
