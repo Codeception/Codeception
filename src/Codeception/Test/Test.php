@@ -55,7 +55,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      *
      * @return mixed
      */
-    abstract public function toString();
+    abstract public function toString(): string;
 
     /**
      * Runs a test and collects its result in a TestResult instance.
@@ -64,7 +64,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      * @param  \PHPUnit\Framework\TestResult $result
      * @return \PHPUnit\Framework\TestResult
      */
-    final public function run(\PHPUnit\Framework\TestResult $result = null)
+    final public function run(\PHPUnit\Framework\TestResult $result = null): \PHPUnit\Framework\TestResult
     {
         $this->testResult = $result;
 
