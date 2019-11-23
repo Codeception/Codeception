@@ -1,8 +1,5 @@
 language: php
 php:
-  - 5.6
-  - 7.0
-  - 7.1
   - 7.3
 env:
   global:
@@ -26,8 +23,7 @@ cache:
     - $HOME/.composer/cache
 
 before_install:
-  # Install coverage driver; for php < 7.2 we use xdebug, for >= 7.2 we use pcov, pcov supports 7.1, but phpunit only supports pcov from 8.0 which requires php 7.2s
-  - '[[ -z "$COVERAGE" ]] || [[ "$TRAVIS_PHP_VERSION" < 7.2 ]] || (phpenv config-rm xdebug.ini; pecl install -f pcov)'
+  - '[[ -z "$COVERAGE" ]] || (phpenv config-rm xdebug.ini; pecl install -f pcov)'
   - php -i
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
