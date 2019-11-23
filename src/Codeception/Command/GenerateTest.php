@@ -53,8 +53,9 @@ class GenerateTest extends Command
 
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
-            return;
+            return 1;
         }
         $output->writeln("<info>Test was created in $filename</info>");
+        return 0;
     }
 }
