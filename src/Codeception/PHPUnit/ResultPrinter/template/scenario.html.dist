@@ -1,0 +1,22 @@
+   <tr class="scenarioRow {scenarioStatus}">
+    <td>
+     <p class="{scenarioStatus}" onclick="showHide('{id}', this)">{toggle}
+          {name} <span style="color: #34495e; font-size: 70%;">{time}s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow {scenarioStatus}">
+    <td>
+     <table border="0" width="100%" class="{scenarioStatus} scenarioStepsTable" id="stepContainer{id}">
+
+
+{steps}
+         {failure}
+         {png}
+         {html}
+     </table>
+
+
+    </td>
+   </tr>
+
+
