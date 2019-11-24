@@ -1,17 +1,18 @@
 <?php
 namespace Codeception\PHPUnit;
 
+use Codeception\PHPUnit\DispatcherWrapper;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\TestInterface;
-use Exception;
-use PHPUnit\Framework\Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Listener implements \PHPUnit\Framework\TestListener
 {
+    use DispatcherWrapper;
+
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
@@ -79,17 +80,17 @@ class Listener implements \PHPUnit\Framework\TestListener
 
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
     {
-        $this->dispatcher->dispatch('suite.start', new SuiteEvent($suite));
+        $this->dispatch($this->dispatcher, 'suite.start', new SuiteEvent($suite));
     }
 
     public function endTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
     {
-        $this->dispatcher->dispatch('suite.end', new SuiteEvent($suite));
+        $this->dispatch($this->dispatcher, 'suite.end', new SuiteEvent($suite));
     }
 
     public function startTest(\PHPUnit\Framework\Test $test) : void
     {
-        $this->dispatcher->dispatch(Events::TEST_START, new TestEvent($test));
+        $this->dispatch($this->dispatcher, Events::TEST_START, new TestEvent($test));
         if (!$test instanceof TestInterface) {
             return;
         }
@@ -119,7 +120,7 @@ class Listener implements \PHPUnit\Framework\TestListener
             $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
         }
 
-        $this->dispatcher->dispatch(Events::TEST_END, new TestEvent($test, $time));
+        $this->dispatch($this->dispatcher, Events::TEST_END, new TestEvent($test, $time));
     }
 
     protected function fire($event, TestEvent $eventType)
@@ -127,9 +128,9 @@ class Listener implements \PHPUnit\Framework\TestListener
         $test = $eventType->getTest();
         if ($test instanceof TestInterface) {
             foreach ($test->getMetadata()->getGroups() as $group) {
-                $this->dispatcher->dispatch($event . '.' . $group, $eventType);
+                $this->dispatch($this->dispatcher, $event . '.' . $group, $eventType);
             }
         }
-        $this->dispatcher->dispatch($event, $eventType);
+        $this->dispatch($this->dispatcher, $event, $eventType);
     }
 }
