@@ -22,7 +22,7 @@ class ModuleContainer
      */
     const MODULE_NAMESPACE = '\\Codeception\\Module\\';
 
-    static $packages = [
+    public static $packages = [
         'AMQP' => 'codeception/module-amqp',
         'Apc' => 'codeception/module-apc',
         'Asserts' => 'codeception/module-asserts',
