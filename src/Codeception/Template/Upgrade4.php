@@ -9,35 +9,6 @@ class Upgrade4 extends InitTemplate
     const SURVEY_LINK = 'http://bit.ly/codecept-survey';
     const DONATE_LINK = 'https://opencollective.com/codeception';
 
-    protected $modules = [
-        'WebDriver' => "codeception/module-webdriver",
-        'Yii2' => "codeception/module-yii2",
-        'Doctrine2' => "codeception/module-doctrine2",
-        'Asserts' => 'codeception/module-asserts',
-        'Filesystem' => 'codeception/module-filesystem',
-        'Cli' => 'codeception/module-cli',
-        'PhpBrowser' => 'codeception/module-phpbrowser',
-        'Db' => 'codeception/module-db',
-        'ZendExpressive' => 'codeception/module-zendexpressive',
-        'Symfony' => 'codeception/module-symfony',
-        'REST' => 'codeception/module-rest',
-        'Lumen' => 'codeception/module-lumen',
-        'Laravel5' => 'codeception/module-laravel5',
-        'Phalcon' => 'codeception/module-phalcon',
-        'ZF2' => 'codeception/module-zf2',
-        'Sequence' => 'codeception/module-sequence',
-        'SOAP' => 'codeception/module-soap',
-        'Redis' => 'codeception/module-redis',
-        'Queue' => 'codeception/module-queue',
-        'MongoDb' => 'codeception/module-mongodb',
-        'Memcache' => 'codeception/module-memcache',
-        'FTP' => 'codeception/module-ftp',
-        'DataFactory' => 'codeception/module-datafactory',
-        'Apc' => 'codeception/module-apc',
-        'AMQP' => 'codeception/module-amqp',
-
-    ];
-
     public function setup()
     {
         if (!$this->isInstalled()) {
@@ -51,6 +22,7 @@ class Upgrade4 extends InitTemplate
         $this->say('');
         $this->say('Please take a minute and fill in a brief survey:');
         $this->say('<bold>'  . self::SURVEY_LINK . '</bold>');
+        sleep(5);
         $this->say('');
         $result = $this->ask('<question>Did you fill in the survey?</question>', true);
         if ($result) {
@@ -58,61 +30,18 @@ class Upgrade4 extends InitTemplate
         } else {
             $this->say('Anyway...');
         }
-        if (!file_exists('composer.json')) {
-            $this->sayWarning('Please use composer installation of Codeception');
-            throw new \Exception('composer.json not found, can\'t run upgrade');
-        }
-        $composer = json_decode(file_get_contents('composer.json'), true);
-        if ($composer === null) {
-            throw new \Exception("Invalid composer.json file. JSON can't be decoded");
-        }
-        $section = null;
-        if (isset($composer['require'])) {
-            if (isset($composer['require']['codeception/codeception'])) {
-                $section = 'require';
-            }
-        }
-        if (isset($composer['require-dev'])) {
-            if (isset($composer['require-dev']['codeception/codeception'])) {
-                $section = 'require-dev';
-            }
-        }
-        if (!$section) {
-            throw new \Exception("No 'codeception/codeception' found in composer.json. Can't upgrade");
-        }
         $config = Configuration::config();
-        $packageCounter = 0;
         $modules = [];
+        $suites = Configuration::suites();
+        if (empty($suites)) {
+            throw new \Exception("No suites found in codeception.yml. Use upgrade script on config with suites");
+        }
         foreach (Configuration::suites() as $suite) {
             $suiteConfig = Configuration::suiteSettings($suite, $config);
             $modules = array_merge($modules, Configuration::modules($suiteConfig));
         }
 
-        foreach (array_unique($modules) as $module) {
-            if (!isset($this->modules[$module])) {
-                continue;
-            }
-            $package = $this->modules[$module];
-            if (isset($composer[$section][$package])) {
-                continue;
-            }
-            $this->sayInfo("Adding $package for $module to composer.json");
-            $composer[$section][$package] = "^1.0.0";
-            $packageCounter++;
-        }
-
-        file_put_contents('composer.json', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        if ($packageCounter) {
-            $this->say("$packageCounter new packages added to $section");
-        }
-        if ($packageCounter && $this->ask('composer.json updated. Do you want to run "composer update"?', true)) {
-            $this->sayInfo('Running composer update');
-            exec('composer update', $output, $status);
-            if ($status !== 0) {
-                $this->sayInfo('Composer installation failed. Please check composer.json and try to run "composer update" manually');
-                return;
-            }
-        }
+        $this->addModulesToComposer($modules);
 
         $this->saySuccess("Done upgrading!");
         $this->say('');

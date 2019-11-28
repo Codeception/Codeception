@@ -40,14 +40,10 @@ class Bootstrap extends InitTemplate
         }
 
         $this->createUnitSuite();
-        $this->say("tests/unit created                 <- unit tests");
-        $this->say("tests/unit.suite.yml written       <- unit tests suite configuration");
         $this->createFunctionalSuite();
-        $this->say("tests/functional created           <- functional tests");
-        $this->say("tests/functional.suite.yml written <- functional tests suite configuration");
         $this->createAcceptanceSuite();
-        $this->say("tests/acceptance created           <- acceptance tests");
-        $this->say("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
+
+        $this->addModulesToComposer(['PhpBrowser', 'Asserts']);
 
         $this->say(" --- ");
         $this->say();
@@ -91,6 +87,8 @@ modules:
     step_decorators: ~        
 EOF;
         $this->createSuite('functional', $actor, $suiteConfig);
+        $this->say("tests/functional created           <- functional tests");
+        $this->say("tests/functional.suite.yml written <- functional tests suite configuration");
     }
 
     protected function createAcceptanceSuite($actor = 'Acceptance')
@@ -111,6 +109,8 @@ modules:
     step_decorators: ~        
 EOF;
         $this->createSuite('acceptance', $actor, $suiteConfig);
+        $this->say("tests/acceptance created           <- acceptance tests");
+        $this->say("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
     }
 
     protected function createUnitSuite($actor = 'Unit')
@@ -128,6 +128,8 @@ modules:
     step_decorators: ~        
 EOF;
         $this->createSuite('unit', $actor, $suiteConfig);
+        $this->say("tests/unit created                 <- unit tests");
+        $this->say("tests/unit.suite.yml written       <- unit tests suite configuration");
     }
 
     public function createGlobalConfig()

@@ -55,6 +55,8 @@ EOF;
 
         $url = $this->ask("Start url for tests", "http://localhost/api");
 
+        $this->addModulesToComposer(['REST', 'PhpBrowser']);
+
         $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
         $this->createEmptyDirectory($dir . DIRECTORY_SEPARATOR . '_data');
         $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . '_support');
@@ -77,9 +79,11 @@ EOF;
         $this->createHelper('Api', $supportDir);
         $this->createActor('ApiTester', $supportDir, Yaml::parse($configFile)['suites']['api']);
 
+
         $this->sayInfo("Created global config codeception.yml inside the root directory");
         $this->createFile($dir . DIRECTORY_SEPARATOR . 'ApiCest.php', $this->firstTest);
         $this->sayInfo("Created a demo test ApiCest.php");
+
 
         $this->say();
         $this->saySuccess("INSTALLATION COMPLETE");

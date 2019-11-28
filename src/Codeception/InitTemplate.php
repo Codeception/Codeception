@@ -4,6 +4,7 @@ namespace Codeception;
 
 use Codeception\Command\Shared\FileSystem;
 use Codeception\Command\Shared\Style;
+use Codeception\Lib\ModuleContainer;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -245,5 +246,76 @@ abstract class InitTemplate
         $this->createDirectoryFor($generatedDir, 'Actions.php');
         $this->createFile($generatedDir . DIRECTORY_SEPARATOR . $actorGenerator->getActorName() . 'Actions.php', $content);
         $this->sayInfo("Actions have been loaded");
+    }
+
+    protected function addModulesToComposer($modules)
+    {
+        $packages = ModuleContainer::$packages;
+        $section = null;
+        if (!file_exists('composer.json')) {
+            $this->say('');
+            $this->sayWarning('Can\'t locate composer.json, please add following packages into "require-dev" section of composer.json:');
+            $this->say('');
+
+            foreach (array_unique($modules) as $module) {
+                if (!isset($packages[$module])) {
+                    continue;
+                }
+                $package = $packages[$module];
+                $this->say(sprintf('"%s": "%s"', $package, "^1.0.0"));
+                $composer[$section][$package] = "^1.0.0";
+            }
+            $this->say('');
+            return;
+        }
+        $composer = json_decode(file_get_contents('composer.json'), true);
+        if ($composer === null) {
+            throw new \Exception("Invalid composer.json file. JSON can't be decoded");
+        }
+        $section = null;
+        if (isset($composer['require'])) {
+            if (isset($composer['require']['codeception/codeception'])) {
+                $section = 'require';
+            }
+        }
+        if (isset($composer['require-dev'])) {
+            if (isset($composer['require-dev']['codeception/codeception'])) {
+                $section = 'require-dev';
+            }
+        }
+        if (!$section) {
+            $section = 'require';
+        }
+
+        $packageCounter = 0;
+        foreach (array_unique($modules) as $module) {
+            if (!isset($packages[$module])) {
+                continue;
+            }
+            $package = $packages[$module];
+            if (isset($composer[$section][$package])) {
+                continue;
+            }
+            $this->sayInfo("Adding $package for $module to composer.json");
+            $composer[$section][$package] = "^1.0.0";
+            $packageCounter++;
+        }
+
+        file_put_contents('composer.json', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        if ($packageCounter) {
+            $this->say("$packageCounter new packages added to $section");
+        }
+
+        if ($packageCounter && $this->ask('composer.json updated. Do you want to run "composer update"?', true)) {
+            $this->sayInfo('Running composer update');
+            exec('composer update', $output, $status);
+            if ($status !== 0) {
+                $this->sayInfo('Composer installation failed. Please check composer.json and try to run "composer update" manually');
+                return;
+            }
+        }
+
+        return $packageCounter;
     }
 }
