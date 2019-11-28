@@ -14,7 +14,7 @@ matrix:
   include:
   # Run our coverage suite on 7.2 (so it uses pcov)
   - php: 7.2
-    env: FRAMEWORK=Codeception SUITES=cli,unit,coverage TEST_PATH=. COVERAGE=1
+    env: SUITES=cli,unit,coverage COVERAGE=1
 
 branches:
   except:
