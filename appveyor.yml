@@ -34,12 +34,6 @@ install:
   - SET PATH=C:\tools\php71;%PATH%
   - cd %APPVEYOR_BUILD_FOLDER%
   - appveyor DownloadFile https://getcomposer.org/composer.phar
-  - php composer.phar require --no-update codeception/module-asserts:"dev-master"
-  - php composer.phar require --no-update codeception/module-cli:"dev-master"
-  - php composer.phar require --no-update codeception/module-db:"dev-master"
-  - php composer.phar require --no-update codeception/module-filesystem:"dev-master"
-  - php composer.phar require --no-update codeception/module-phpbrowser:"dev-master"
-  - php composer.phar require --no-update codeception/util-universalframework:"dev-master"
   - php composer.phar install --prefer-dist -n --no-ansi
 
 test_script:
