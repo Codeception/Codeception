@@ -67,6 +67,7 @@ class Completion extends CompletionCommand
         }
 
         parent::execute($input, $output);
+        return 0;
     }
 
     protected function createDefinition()

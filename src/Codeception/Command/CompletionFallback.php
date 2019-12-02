@@ -36,5 +36,6 @@ END
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("Install optional <comment>stecman/symfony-console-completion</comment>");
+        return 0;
     }
 }

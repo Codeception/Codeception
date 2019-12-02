@@ -35,4 +35,9 @@ namespace Codeception\Platform {
 
 namespace {
     class_alias('Codeception\TestInterface', 'Codeception\TestCase');
+
+    //Compatibility with Symfony 5
+    if (!class_exists('Symfony\Component\EventDispatcher\Event') && class_exists('Symfony\Contracts\EventDispatcher\Event')) {
+        class_alias('Symfony\Contracts\EventDispatcher\Event', 'Symfony\Component\EventDispatcher\Event');
+    }
 }

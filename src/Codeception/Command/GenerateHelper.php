@@ -43,8 +43,10 @@ class GenerateHelper extends Command
         $res = $this->createFile($filename, (new Helper($name, $config['namespace']))->produce());
         if ($res) {
             $output->writeln("<info>Helper $filename created</info>");
+            return 0;
         } else {
             $output->writeln("<error>Error creating helper $filename</error>");
+            return 1;
         }
     }
 }

@@ -416,6 +416,7 @@ class Run extends Command
                 exit(1);
             }
         }
+        return 0;
     }
 
     protected function matchSingleTest($suite, $config)
