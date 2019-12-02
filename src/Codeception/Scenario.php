@@ -1,12 +1,15 @@
 <?php
 namespace Codeception;
 
+use Codeception\Event\DispatcherWrapper;
 use Codeception\Event\StepEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Test\Metadata;
 
 class Scenario
 {
+    use DispatcherWrapper;
+
     /**
      * @var TestInterface
      */
@@ -67,22 +70,23 @@ class Scenario
         }
         $this->steps[] = $step;
         $result = null;
-        $this->metadata->getService('dispatcher')->dispatch(Events::STEP_BEFORE, new StepEvent($this->test, $step));
+        $dispatcher = $this->metadata->getService('dispatcher');
+        $this->dispatch($dispatcher, Events::STEP_BEFORE, new StepEvent($this->test, $step));
         try {
             $result = $step->run($this->metadata->getService('modules'));
         } catch (ConditionalAssertionFailed $f) {
             $result = $this->test->getTestResultObject();
             if (is_null($result)) {
-                $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+                $this->dispatch($dispatcher, Events::STEP_AFTER, new StepEvent($this->test, $step));
                 throw $f;
             } else {
                 $result->addFailure(clone($this->test), $f, $result->time());
             }
         } catch (\Exception $e) {
-            $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+            $this->dispatch($dispatcher, Events::STEP_AFTER, new StepEvent($this->test, $step));
             throw $e;
         }
-        $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+        $this->dispatch($dispatcher, Events::STEP_AFTER, new StepEvent($this->test, $step));
         $step->executed = true;
         return $result;
     }

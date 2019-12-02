@@ -35,11 +35,21 @@ class Application extends BaseApplication
             if ($e->getCode() === 404) {
                 return;
             }
-            $this->renderException($e, new ConsoleOutput());
+            $this->renderExceptionWrapper($e, new ConsoleOutput());
             exit(1);
         } catch (\Exception $e) {
-            $this->renderException($e, new ConsoleOutput());
+            $this->renderExceptionWrapper($e, new ConsoleOutput());
             exit(1);
+        }
+    }
+
+    public function renderExceptionWrapper(\Exception $e, OutputInterface $output)
+    {
+        if (method_exists('Symfony\Component\Console\Application', 'renderException')) {
+            //Symfony 5
+            parent::renderException($e, $output);
+        } else {
+            parent::renderThrowable($e, $output);
         }
     }
 

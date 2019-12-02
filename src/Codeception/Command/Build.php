@@ -38,6 +38,7 @@ class Build extends Command
     {
         $this->output = $output;
         $this->buildActorsForConfig();
+        return 0;
     }
     
     private function buildActor(array $settings)

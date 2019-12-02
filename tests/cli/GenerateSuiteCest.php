@@ -14,7 +14,8 @@ class GenerateSuiteCest
         $I->seeDirFound('tests/house');
 
         $I->expect('suite is not created due to dashes');
-        $I->executeCommand('generate:suite invalid-dash-suite');
+        $I->executeCommand('generate:suite invalid-dash-suite', false);
+        $I->seeResultCodeIs(1);
         $I->seeInShellOutput('contains invalid characters');
     }
 
@@ -32,7 +33,8 @@ class GenerateSuiteCest
         $I->seeInThisFile('namespace FooBar\Helper;');
 
         $I->expect('suite is not created due to dashes');
-        $I->executeCommand('generate:suite invalid-dash-suite');
+        $I->executeCommand('generate:suite invalid-dash-suite', false);
+        $I->seeResultCodeIs(1);
         $I->seeInShellOutput('contains invalid characters');
     }
 }

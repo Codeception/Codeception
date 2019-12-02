@@ -101,7 +101,10 @@ class SelfUpdate extends Command
                     $e->getMessage()
                 )
             );
+            return 1;
         }
+
+        return 0;
     }
 
     /**

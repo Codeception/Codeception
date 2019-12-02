@@ -79,5 +79,6 @@ class MyCustomCommand extends Command implements CustomCommandInterface
 
         echo "Hello " . get_current_user();
         echo $messageEnd . PHP_EOL;
+        return 0;
     }
 }

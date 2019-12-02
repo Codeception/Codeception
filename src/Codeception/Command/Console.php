@@ -3,6 +3,7 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
+use Codeception\Event\DispatcherWrapper;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
@@ -27,6 +28,8 @@ use Symfony\Component\Console\Question\Question;
  */
 class Console extends Command
 {
+    use DispatcherWrapper;
+
     protected $test;
     protected $codecept;
     protected $suite;
@@ -96,10 +99,10 @@ class Console extends Command
         $output->writeln("<info>Try Codeception commands without writing a test</info>");
 
         $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResult(), $settings);
-        $dispatcher->dispatch(Events::SUITE_BEFORE, $suiteEvent);
+        $this->dispatch($dispatcher, Events::SUITE_BEFORE, $suiteEvent);
 
-        $dispatcher->dispatch(Events::TEST_PARSED, new TestEvent($this->test));
-        $dispatcher->dispatch(Events::TEST_BEFORE, new TestEvent($this->test));
+        $this->dispatch($dispatcher, Events::TEST_PARSED, new TestEvent($this->test));
+        $this->dispatch($dispatcher, Events::TEST_BEFORE, new TestEvent($this->test));
 
         if (file_exists($settings['bootstrap'])) {
             require $settings['bootstrap'];
@@ -107,10 +110,11 @@ class Console extends Command
 
         $I->pause();
 
-        $dispatcher->dispatch(Events::TEST_AFTER, new TestEvent($this->test));
-        $dispatcher->dispatch(Events::SUITE_AFTER, new SuiteEvent($this->suite));
+        $this->dispatch($dispatcher, Events::TEST_AFTER, new TestEvent($this->test));
+        $this->dispatch($dispatcher, Events::SUITE_AFTER, new SuiteEvent($this->suite));
 
         $output->writeln("<info>Bye-bye!</info>");
+        return 0;
     }
 
     protected function listenToSignals()
