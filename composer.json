@@ -34,7 +34,7 @@
         "monolog/monolog": "~1.8",
         "codeception/specify": "~0.3",
         "squizlabs/php_codesniffer": "~2.0",
-        "vlucas/phpdotenv": "^3.0",
+        "vlucas/phpdotenv": "^4.0",
         "symfony/process": ">=2.7 <6.0"
     },
     "suggest": {

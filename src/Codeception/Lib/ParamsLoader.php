@@ -115,7 +115,14 @@ class ParamsLoader
     protected function loadDotEnvFile()
     {
         if (class_exists('Dotenv\Dotenv')) {
-            if (method_exists('Dotenv\Dotenv', 'create')) {
+            if (class_exists('Dotenv\Repository\RepositoryBuilder')) {
+                //dotenv v4
+                $repository = \Dotenv\Repository\RepositoryBuilder::create()
+                    ->withReaders([new \Dotenv\Repository\Adapter\ServerConstAdapter()])
+                    ->immutable()
+                    ->make();
+                $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
+            } elseif (method_exists('Dotenv\Dotenv', 'create')) {
                 //dotenv v3
                 $dotEnv = \Dotenv\Dotenv::create(codecept_root_dir(), $this->paramStorage);
             } else {
