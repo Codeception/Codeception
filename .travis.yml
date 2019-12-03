@@ -34,12 +34,6 @@ before_install:
   - composer global require hirak/prestissimo
 install:
   - '[[ -z "$CI_USER_TOKEN" ]] || composer config github-oauth.github.com ${CI_USER_TOKEN};'
-  - composer require --no-update codeception/module-asserts:"dev-master"
-  - composer require --no-update codeception/module-cli:"dev-master"
-  - composer require --no-update codeception/module-db:"dev-master"
-  - composer require --no-update codeception/module-filesystem:"dev-master"
-  - composer require --no-update codeception/module-phpbrowser:"dev-master"
-  - composer require --no-update codeception/util-universalframework:"dev-master"
   - composer install
 before_script:
   # starting demo server
