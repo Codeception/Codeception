@@ -96,7 +96,10 @@ EOF;
         $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->sayInfo("Created test directories inside at $dir");
 
-        $this->addModulesToComposer(['WebDriver']);
+        if (!class_exists('\\Codeception\\Module\\WebDriver')) {
+            // composer version
+            $this->addModulesToComposer(['WebDriver']);
+        }
 
         $configFile = (new Template($this->configTemplate))
             ->place('url', $url)

@@ -35,12 +35,7 @@
         "codeception/specify": "~0.3",
         "squizlabs/php_codesniffer": "~2.0",
         "vlucas/phpdotenv": "^3.0",
-        "symfony/process": ">=2.7 <5.0",
-        "codeception/module-filesystem": "^1.0",
-        "codeception/module-cli": "^1.0",
-        "codeception/module-asserts": "^1.1",
-        "codeception/module-phpbrowser": "^1.0",
-        "codeception/util-universalframework": "@dev"
+        "symfony/process": ">=2.7 <5.0"
     },
     "suggest": {
         "hoa/console": "For interactive console functionality",

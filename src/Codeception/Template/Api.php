@@ -55,7 +55,9 @@ EOF;
 
         $url = $this->ask("Start url for tests", "http://localhost/api");
 
-        $this->addModulesToComposer(['REST', 'PhpBrowser']);
+        if (!class_exists('\\Codeception\\Module\\REST') && !class_exists('\\Codeception\\Module\\PhpBrowser')) {
+            $this->addModulesToComposer(['REST', 'PhpBrowser']);
+        }
 
         $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
         $this->createEmptyDirectory($dir . DIRECTORY_SEPARATOR . '_data');
