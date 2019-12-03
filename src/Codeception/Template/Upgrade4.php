@@ -34,14 +34,22 @@ class Upgrade4 extends InitTemplate
         $modules = [];
         $suites = Configuration::suites();
         if (empty($suites)) {
-            throw new \Exception("No suites found in codeception.yml. Use upgrade script on config with suites");
+            $this->sayError("No suites found in current config.");
+            $this->sayWarning('If you use sub-configs with `include` option, run this script on subconfigs:');
+            $this->sayWarning('Example: php /vendor/bin/codecept init upgrade4 -c backend/');
+            throw new \Exception("No suites found, can't upgrade");
         }
         foreach (Configuration::suites() as $suite) {
             $suiteConfig = Configuration::suiteSettings($suite, $config);
             $modules = array_merge($modules, Configuration::modules($suiteConfig));
         }
 
-        $this->addModulesToComposer($modules);
+        $numPackages = $this->addModulesToComposer($modules);
+
+        if ($numPackages === 0) {
+            $this->sayWarning("No upgrade needed! Everything is fine already");
+            return;
+        }
 
         $this->saySuccess("Done upgrading!");
         $this->say('');
