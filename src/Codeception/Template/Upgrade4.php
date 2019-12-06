@@ -36,7 +36,7 @@ class Upgrade4 extends InitTemplate
         if (empty($suites)) {
             $this->sayError("No suites found in current config.");
             $this->sayWarning('If you use sub-configs with `include` option, run this script on subconfigs:');
-            $this->sayWarning('Example: php /vendor/bin/codecept init upgrade4 -c backend/');
+            $this->sayWarning('Example: php vendor/bin/codecept init upgrade4 -c backend/');
             throw new \Exception("No suites found, can't upgrade");
         }
         foreach (Configuration::suites() as $suite) {
