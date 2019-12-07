@@ -79,10 +79,7 @@ EOF;
 
         $dir = $this->ask("Where tests will be stored?", 'tests');
 
-        $browser = $this->ask("Select a browser for testing", ['chrome', 'phantomjs', 'firefox']);
-        if ($browser === 'phantomjs') {
-            $this->sayInfo("Ensure that you have Phantomjs running before starting tests");
-        }
+        $browser = $this->ask("Select a browser for testing", ['chrome', 'firefox']);
         if ($browser === 'chrome') {
             $this->sayInfo("Ensure that you have Selenium Server and ChromeDriver installed before running tests");
         }
@@ -98,6 +95,11 @@ EOF;
         $this->gitIgnore($outputDir);
         $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->sayInfo("Created test directories inside at $dir");
+
+        if (!class_exists('\\Codeception\\Module\\WebDriver')) {
+            // composer version
+            $this->addModulesToComposer(['WebDriver']);
+        }
 
         $configFile = (new Template($this->configTemplate))
             ->place('url', $url)

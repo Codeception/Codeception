@@ -64,6 +64,10 @@ EOF;
 
         $this->createFile('codeception.yml', $configFile);
 
+        if (!class_exists('\\Codeception\\Module\\Asserts')) {
+            $this->addModulesToComposer(['Asserts']);
+        }
+
         if ($haveTester) {
             $this->createHelper('Unit', $supportDir);
             $this->createActor('UnitTester', $supportDir, Yaml::parse($configFile)['suites']['unit']);

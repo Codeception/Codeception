@@ -22,6 +22,34 @@ class ModuleContainer
      */
     const MODULE_NAMESPACE = '\\Codeception\\Module\\';
 
+    public static $packages = [
+        'AMQP' => 'codeception/module-amqp',
+        'Apc' => 'codeception/module-apc',
+        'Asserts' => 'codeception/module-asserts',
+        'Cli' => 'codeception/module-cli',
+        'DataFactory' => 'codeception/module-datafactory',
+        'Db' => 'codeception/module-db',
+        'Doctrine2' => "codeception/module-doctrine2",
+        'Filesystem' => 'codeception/module-filesystem',
+        'FTP' => 'codeception/module-ftp',
+        'Laravel5' => 'codeception/module-laravel5',
+        'Lumen' => 'codeception/module-lumen',
+        'Memcache' => 'codeception/module-memcache',
+        'MongoDb' => 'codeception/module-mongodb',
+        'Phalcon' => 'codeception/module-phalcon',
+        'PhpBrowser' => 'codeception/module-phpbrowser',
+        'Queue' => 'codeception/module-queue',
+        'Redis' => 'codeception/module-redis',
+        'REST' => 'codeception/module-rest',
+        'Sequence' => 'codeception/module-sequence',
+        'SOAP' => 'codeception/module-soap',
+        'Symfony' => 'codeception/module-symfony',
+        'WebDriver' => "codeception/module-webdriver",
+        'Yii2' => "codeception/module-yii2",
+        'ZendExpressive' => 'codeception/module-zendexpressive',
+        'ZF2' => 'codeception/module-zf2',
+    ];
+
     /**
      * @var array
      */
@@ -77,6 +105,10 @@ class ModuleContainer
 
         $moduleClass = $this->getModuleClass($moduleName);
         if (!class_exists($moduleClass)) {
+            if (isset(self::$packages[$moduleName])) {
+                $package = self::$packages[$moduleName];
+                throw new ConfigurationException("Module $moduleName is not installed.\nUse Composer to install corresponding package:\n\ncomposer require $package --dev");
+            }
             throw new ConfigurationException("Module $moduleName could not be found and loaded");
         }
 
