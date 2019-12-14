@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib\Actor\Shared;
 
+use Codeception\Lib\Console\ReplHistory;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 trait Pause
@@ -16,7 +17,6 @@ trait Pause
         }
 
         $autoStash = false;
-        $stashedCommands = [];
 
         $I = $this;
         $output = new ConsoleOutput();
@@ -26,13 +26,13 @@ trait Pause
             new \Hoa\Console\Readline\Autocompleter\Word(get_class_methods($this))
         );
 
-        $stashFn = function (\Hoa\Console\Readline\Readline $self, $isManual = true) use (&$stashedCommands) {
+        $stashFn = function (\Hoa\Console\Readline\Readline $self, $isManual = true) {
             $lastCommand = $self->previousHistory();
 
             \Hoa\Console\Cursor::clear('↔');
 
             if (strlen($lastCommand) > 0) {
-                $stashedCommands[] = "\$I->{$lastCommand};";
+                ReplHistory::getInstance()->add("\$I->{$lastCommand};");
                 codecept_debug("Command stashed: \$I->{$lastCommand};");
             } else {
                 codecept_debug("Nothing to stash.");
@@ -47,8 +47,8 @@ trait Pause
             return \Hoa\Console\Readline\Readline::STATE_CONTINUE;
         };
 
-        $clearStashFn = function (\Hoa\Console\Readline\Readline $self) use (&$stashedCommands) {
-            $stashedCommands = [];
+        $clearStashFn = function (\Hoa\Console\Readline\Readline $self) {
+            ReplHistory::getInstance()->clear();
 
             \Hoa\Console\Cursor::clear('↔');
 
@@ -59,8 +59,9 @@ trait Pause
             return \Hoa\Console\Readline\Readline::STATE_CONTINUE;
         };
 
-        $viewStashedFn = function (\Hoa\Console\Readline\Readline $self) use (&$stashedCommands, $output) {
+        $viewStashedFn = function (\Hoa\Console\Readline\Readline $self) use ($output) {
             \Hoa\Console\Cursor::clear('↔');
+            $stashedCommands = ReplHistory::getInstance()->getAll();
 
             if (!empty($stashedCommands)) {
                 $output->writeln("\n<comment>Stashed commands:</comment>");
@@ -106,10 +107,8 @@ trait Pause
         do {
             $command = $readline->readLine('$I->'); // “> ” is the prefix of the line.
 
-            if ($command == 'exit') {
-                return;
-            }
-            if ($command == '') {
+            if ($command == 'exit' || $command == '') {
+                ReplHistory::getInstance()->save();
                 return;
             }
             try {
@@ -119,7 +118,7 @@ trait Pause
                     if (!is_object($result)) {
                         codecept_debug($result);
                     }
-                    codecept_debug('>> Result saved to $result variable, you can usZZe it in next commands');
+                    codecept_debug('>> Result saved to $result variable, you can use it in next commands');
                 }
 
                 if ($autoStash) {
