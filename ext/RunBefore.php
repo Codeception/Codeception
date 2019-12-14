@@ -80,7 +80,13 @@ class RunBefore extends Extension
     private function runProcess($command)
     {
         $this->output->debug('[RunBefore] Starting ' . $command);
-        $process = new Process($command, $this->getRootDir());
+
+        if (method_exists(Process::class, 'fromShellCommandline')) {
+            //Symfony 4.2+
+            $process = Process::fromShellCommandline($command, $this->getRootDir());
+        } else {
+            $process = new Process($command, $this->getRootDir());
+        }
         $process->start();
 
         return $process;
