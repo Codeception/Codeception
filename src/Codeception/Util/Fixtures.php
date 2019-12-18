@@ -32,8 +32,13 @@ class Fixtures
         return self::$fixtures[$name];
     }
 
-    public static function cleanup()
+    public static function cleanup($name = null)
     {
+        if (self::exists($name)) {
+            unset(self::$fixtures[$name]);
+            return;
+        }
+
         self::$fixtures = [];
     }
 
