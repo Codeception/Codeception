@@ -2,6 +2,7 @@
 namespace Codeception\Lib;
 
 use Codeception\Configuration;
+use Codeception\Exception\ConfigurationException;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
@@ -67,15 +68,14 @@ class GroupManager
                     if (codecept_is_path_absolute($file)) {
                         $filePath = $file;
                     } elseif (strpos($file, ':') === false) {
-                        $filePath = realpath(Configuration::projectDir() . $file);
+                        $dirtyPath = Configuration::projectDir() . $file;
+                        $this->checkIfFileExists($dirtyPath);
+                        $filePath = realpath($dirtyPath);
                     } else {
                         $pathParts = explode(':', $file);
-
-                        $filePath = sprintf(
-                            '%s:%s',
-                            realpath(Configuration::projectDir() . $pathParts[0]),
-                            $pathParts[1]
-                        );
+                        $dirtyPath = Configuration::projectDir() . $pathParts[0];
+                        $this->checkIfFileExists($dirtyPath);
+                        $filePath  = sprintf('%s:%s', realpath($dirtyPath), $pathParts[1]);
                     }
 
                     $this->testsInGroups[$group][] = $filePath;
@@ -98,6 +98,17 @@ class GroupManager
                     fclose($handle);
                 }
             }
+        }
+    }
+
+    /**
+     * @param string $path
+     * @throws ConfigurationException
+     */
+    private function checkIfFileExists($path)
+    {
+        if (!file_exists($path)) {
+            throw new ConfigurationException('GroupManager: File or directory ' . $path . ' does not exist');
         }
     }
 

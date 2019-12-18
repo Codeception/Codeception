@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib;
 
+use Codeception\Exception\ConfigurationException;
 use Codeception\Util\Stub;
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
 
@@ -100,6 +101,23 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $test = $loader->getTests()[0];
         $this->assertContains('gherkinGroup2', $this->manager->groupsForTest($test));
     }
+
+    public function testThrowsExceptionIfDirectoryDoesNotExists()
+    {
+        $this->expectException(ConfigurationException::class);
+        $this->expectExceptionMessage('tests/data/missing-directory');
+        $this->expectExceptionMessage('does not exist');
+        new GroupManager(['invalidGroup' => ['tests/data/missing-directory']]);
+    }
+
+    public function testThrowsExceptionIfDirectoryDoesNotExistsWithColonAndTestName()
+    {
+        $this->expectException(ConfigurationException::class);
+        $this->expectExceptionMessage('tests/data/missing-directory');
+        $this->expectExceptionMessage('does not exist');
+        new GroupManager(['invalidGroup' => ['tests/data/missing-directory:testName']]);
+    }
+
 
     protected function makeTestCase($file, $name = '')
     {
