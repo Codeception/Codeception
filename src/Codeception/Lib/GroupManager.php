@@ -2,6 +2,7 @@
 namespace Codeception\Lib;
 
 use Codeception\Configuration;
+use Codeception\Exception\ConfigurationException;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
@@ -63,22 +64,7 @@ class GroupManager
             if (is_array($tests)) {
                 foreach ($tests as $test) {
                     $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $test);
-
-                    if (codecept_is_path_absolute($file)) {
-                        $filePath = $file;
-                    } elseif (strpos($file, ':') === false) {
-                        $filePath = realpath(Configuration::projectDir() . $file);
-                    } else {
-                        $pathParts = explode(':', $file);
-
-                        $filePath = sprintf(
-                            '%s:%s',
-                            realpath(Configuration::projectDir() . $pathParts[0]),
-                            $pathParts[1]
-                        );
-                    }
-
-                    $this->testsInGroups[$group][] = $filePath;
+                    $this->testsInGroups[$group][] = $this->normalizeFilePath($file);
                 }
             } elseif (is_file(Configuration::projectDir() . $tests)) {
                 $handle = @fopen(Configuration::projectDir() . $tests, "r");
@@ -91,13 +77,56 @@ class GroupManager
                             continue;
                         }
 
-                        $file = trim(Configuration::projectDir() . $test);
-                        $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $file);
-                        $this->testsInGroups[$group][] = $file;
+                        $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], trim($test));
+                        $this->testsInGroups[$group][] = $this->normalizeFilePath($file);
                     }
                     fclose($handle);
                 }
             }
+        }
+    }
+
+    /**
+     * @param string $file
+     * @return false|string
+     * @throws ConfigurationException
+     */
+    private function normalizeFilePath($file)
+    {
+        $pathParts = explode(':', $file);
+        if (codecept_is_path_absolute($file)) {
+            if ($file[0] === '/' && count($pathParts) > 1) {
+                //take segment before first :
+                $this->checkIfFileExists($pathParts[0]);
+                return sprintf('%s:%s', realpath($pathParts[0]), $pathParts[1]);
+            } else if (count($pathParts) > 2) {
+                //on Windows take segment before second :
+                $fullPath = $pathParts[0] . ':' . $pathParts[1];
+                $this->checkIfFileExists($fullPath);
+                return sprintf('%s:%s', realpath($fullPath), $pathParts[2]);
+            }
+
+            $this->checkIfFileExists($file);
+            return realpath($file);
+        } elseif (strpos($file, ':') === false) {
+            $dirtyPath = Configuration::projectDir() . $file;
+            $this->checkIfFileExists($dirtyPath);
+            return realpath($dirtyPath);
+        }
+
+        $dirtyPath = Configuration::projectDir() . $pathParts[0];
+        $this->checkIfFileExists($dirtyPath);
+        return sprintf('%s:%s', realpath($dirtyPath), $pathParts[1]);
+    }
+
+    /**
+     * @param string $path
+     * @throws ConfigurationException
+     */
+    private function checkIfFileExists($path)
+    {
+        if (!file_exists($path)) {
+            throw new ConfigurationException('GroupManager: File or directory ' . $path . ' does not exist');
         }
     }
 
