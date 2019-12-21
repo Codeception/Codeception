@@ -4,6 +4,7 @@ namespace Codeception\PHPUnit;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcherInterface;
 
 trait DispatcherWrapper
 {
@@ -15,7 +16,8 @@ trait DispatcherWrapper
      */
     protected function dispatch(EventDispatcher $dispatcher, $eventType, Event $eventObject)
     {
-        if (class_exists('Symfony\Contracts\EventDispatcher\Event')) {
+        //TraceableEventDispatcherInterface was introduced in symfony/event-dispatcher 2.5 and removed in 5.0
+        if (!interface_exists(TraceableEventDispatcherInterface::class)) {
             //Symfony 5
             $dispatcher->dispatch($eventObject, $eventType);
         } else {
