@@ -101,8 +101,8 @@ abstract class InitTemplate
      * $this->ask('do you want to proceed (y/n)', true);
      * ```
      *
-     * @param $question
-     * @param null $answer
+     * @param string $question
+     * @param mixed $answer
      * @return mixed|string
      */
     protected function ask($question, $answer = null)
@@ -141,11 +141,20 @@ abstract class InitTemplate
 
     /**
      * Print a successful message
-     * @param $message
+     * @param string $message
      */
     protected function saySuccess($message)
     {
         $this->say("<notice> $message </notice>");
+    }
+
+    /**
+     * Print error message
+     * @param string $message
+     */
+    protected function sayError($message)
+    {
+        $this->say("<error> $message </error>");
     }
 
     /**
@@ -159,11 +168,11 @@ abstract class InitTemplate
 
     /**
      * Print info message
-     * @param $message
+     * @param string $message
      */
     protected function sayInfo($message)
     {
-        $this->say("<debug>> $message</debug>");
+        $this->say("<debug> $message</debug>");
     }
 
     /**
