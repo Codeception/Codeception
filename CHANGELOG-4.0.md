@@ -1,3 +1,8 @@
+#### 4.0.1
+
+* Fixed error reporting error in upgrade4 script
+* Symfony 5 compatibility: Improved detection of event-dispatcher version
+
 #### 4.0.0
 
 * Extracted modules from Codeception core to separate repository
