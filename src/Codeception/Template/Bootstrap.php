@@ -78,7 +78,7 @@ class Bootstrap extends InitTemplate
 #
 # Suite for functional tests
 # Emulate web requests and make application process them
-# Include one of framework modules (Symfony2, Yii2, Laravel5) to use it
+# Include one of framework modules (Symfony2, Yii2, Laravel5, Phalcon4) to use it
 # Remove this suite if you don't use frameworks
 
 actor: $actor{$this->actorSuffix}
