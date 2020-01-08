@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Module\PhpBrowser;
+use Codeception\Module\UniversalFramework;
 use Codeception\Test\Unit;
 use Codeception\Util\Stub;
 
@@ -497,6 +499,48 @@ class RestTest extends Unit
                 ['', 'healthCheck', 'healthCheck'],
                 ['/', 'healthCheck', '/healthCheck'],
             ];
+    }
+
+    /**
+     * @param $connectionModuleClass - Connection Module Class Name
+     * @param $loadPageConfig - value for loadPages REST module configuration parameter
+     * @param $requestMethod - request method expected to be used on connection module
+     *
+     * @dataProvider testLoadPageTestCases
+     */
+    public function testLoadPageConfig($connectionModuleClass, $loadPageConfig, $requestMethod)
+    {
+        $connectionModule = $this->createMock($connectionModuleClass);
+        $connectionModule->expects($this->exactly($requestMethod=='_request' ? 1 : 0))->method('_request');
+        $connectionModule->expects($this->exactly($requestMethod=='_loadPage' ? 1 : 0))->method('_loadPage');
+
+        $config = [];
+        if ($loadPageConfig!==null) {
+            $config['loadPages'] = $loadPageConfig;
+        }
+
+        /** @var \Codeception\Module\REST */
+        $module = Stub::make('\Codeception\Module\REST');
+        $module->_setConfig($config);
+        $module->_inject($connectionModule);
+        $module->_initialize();
+        $module->_before(Stub::makeEmpty('\Codeception\Test\Test'));
+
+        $module->sendGET('https://ya.ru');
+    }
+
+    public static function testLoadPageTestCases()
+    {
+        return [
+            // connectionModuleClass,   loadPageConfig, requestMethod
+            [PhpBrowser::class,         true,           '_loadPage'],
+            [PhpBrowser::class,         false,          '_request'],
+            [PhpBrowser::class,         1,              '_loadPage'],
+            [PhpBrowser::class,         'true',         '_loadPage'],
+            [PhpBrowser::class,         null,           '_request'],
+            [UniversalFramework::class, true,           '_request'],
+            [UniversalFramework::class, false,          '_request'],
+        ];
     }
 
     protected function shouldFail()

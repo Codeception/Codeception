@@ -42,6 +42,7 @@ use Codeception\Util\Soap as XmlUtils;
  *                depends: PhpBrowser
  *                url: 'http://serviceapp/api/v1/'
  *                shortDebugResponse: 300 # only the first 300 chars of the response
+ *                loadPages: false  # non false values when used with PHPBrowser would enable PHPBrowser asserts
  *
  * ## Public Properties
  *
@@ -63,7 +64,8 @@ class REST extends CodeceptionModule implements DependsOnModule, PartedModule, A
 {
     protected $config = [
         'url' => '',
-        'aws' => ''
+        'aws' => '',
+        'loadPages' => ''
     ];
 
     protected $dependencyMessage = <<<EOF
@@ -75,6 +77,7 @@ modules:
             depends: PhpBrowser
             url: http://localhost/api/
             shortDebugResponse: 300
+            loadPages: true
 --
 Framework modules can be used for testing of API as well.
 EOF;
@@ -614,14 +617,14 @@ EOF;
                 $this->debugSection("Request", "$method $url " . json_encode($parameters));
                 $files = $this->formatFilesArray($files);
             }
-            $this->response = (string)$this->connectionModule->_request($method, $url, $parameters, $files);
+            $this->response = $this->processRequest($method, $url, $parameters, $files);
         } else {
             $requestData = $parameters;
             if ($this->isBinaryData($requestData)) {
                 $requestData = $this->binaryToDebugString($requestData);
             }
             $this->debugSection("Request", "$method $url " . $requestData);
-            $this->response = (string)$this->connectionModule->_request($method, $url, [], $files, [], $parameters);
+            $this->response = $this->processRequest($method, $url, [], $files, [], $parameters);
         }
         $printedResponse = $this->response;
         if ($this->isBinaryData($printedResponse)) {
@@ -635,6 +638,15 @@ EOF;
             $this->debugSection("Shortened Response", $printedResponse);
         } else {
             $this->debugSection("Response", $printedResponse);
+        }
+    }
+
+    protected function processRequest($method, $uri, array $parameters = [], array $files = [], array $server = [], $content = null)
+    {
+        if (!$this->isFunctional && $this->config['loadPages']) {
+            return (string)$this->connectionModule->_loadPage($method, $uri, $parameters, $files, $server, $content);
+        } else {
+            return (string)$this->connectionModule->_request($method, $uri, $parameters, $files, $server, $content);
         }
     }
 
