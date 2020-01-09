@@ -39,7 +39,7 @@ class Bootstrap extends InitTemplate
             return;
         }
 
-        if (!class_exists('\\Codeception\\Module\\Asserts') && !class_exists('\\Codeception\\Module\\PhpBrowser')) {
+        if (!class_exists('\\Codeception\\Module\\Asserts') || !class_exists('\\Codeception\\Module\\PhpBrowser')) {
             $this->addModulesToComposer(['PhpBrowser', 'Asserts']);
         }
 

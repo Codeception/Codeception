@@ -55,7 +55,7 @@ EOF;
 
         $url = $this->ask("Start url for tests", "http://localhost/api");
 
-        if (!class_exists('\\Codeception\\Module\\REST') && !class_exists('\\Codeception\\Module\\PhpBrowser')) {
+        if (!class_exists('\\Codeception\\Module\\REST') || !class_exists('\\Codeception\\Module\\PhpBrowser')) {
             $this->addModulesToComposer(['REST', 'PhpBrowser']);
         }
 
