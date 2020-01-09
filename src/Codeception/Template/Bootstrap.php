@@ -39,13 +39,13 @@ class Bootstrap extends InitTemplate
             return;
         }
 
-        $this->createUnitSuite();
-        $this->createFunctionalSuite();
-        $this->createAcceptanceSuite();
-
         if (!class_exists('\\Codeception\\Module\\Asserts') && !class_exists('\\Codeception\\Module\\PhpBrowser')) {
             $this->addModulesToComposer(['PhpBrowser', 'Asserts']);
         }
+
+        $this->createUnitSuite();
+        $this->createFunctionalSuite();
+        $this->createAcceptanceSuite();
 
         $this->say(" --- ");
         $this->say();
