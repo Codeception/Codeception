@@ -1,3 +1,7 @@
+#### 4.0.2
+
+* Fixed errors in bootstrap scripts #5806
+
 #### 4.0.1
 
 * Fixed error reporting error in upgrade4 script
