@@ -28,6 +28,14 @@ call_user_func(static function () {
     $app->add(new Codeception\Command\GherkinSteps('gherkin:steps'));
     $app->add(new Codeception\Command\DryRun('dry-run'));
     $app->add(new Codeception\Command\ConfigValidate('config:validate'));
+
+    // Suggests package	
+    if (class_exists('Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand')) {
+        $app->add(new Codeception\Command\Completion());
+    } else {
+        $app->add(new Codeception\Command\CompletionFallback());
+    }
+
     $app->registerCustomCommands();
 
     // add only if within a phar archive.
