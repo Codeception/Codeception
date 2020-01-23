@@ -30,10 +30,10 @@ call_user_func(static function () {
     $app->add(new Codeception\Command\ConfigValidate('config:validate'));
 
     // Suggests package	
-    if (class_exists('Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand')) {	
-        $app->add(new Codeception\Command\Completion());	
-    } else {	
-        $app->add(new Codeception\Command\CompletionFallback());	
+    if (class_exists('Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand')) {
+        $app->add(new Codeception\Command\Completion());
+    } else {
+        $app->add(new Codeception\Command\CompletionFallback());
     }
 
     $app->registerCustomCommands();
