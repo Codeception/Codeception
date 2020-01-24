@@ -1,3 +1,7 @@
+#### 4.0.3
+
+* Fixed command autocompletion #5806 by @svycka
+
 #### 4.0.2
 
 * Fixed errors in bootstrap scripts #5806
