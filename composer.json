@@ -18,7 +18,7 @@
     },
     "autoload":{
         "psr-4":{
-            "Codeception\\PHPUnit\\": "src\\"
+            "Codeception\\PHPUnit\\": "src/"
         }
     },
     "require-dev": {
