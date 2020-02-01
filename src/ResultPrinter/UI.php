@@ -8,7 +8,7 @@ use Codeception\Test\Unit;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class UI extends \PHPUnit\TextUI\ResultPrinter
+class UI extends \PHPUnit\TextUI\DefaultResultPrinter
 {
     use DispatcherWrapper;
 

@@ -4,8 +4,8 @@ env:
   CODECEPTION_VERSION: '4.0.x-dev'
 
 php:
-  - 7.2
   - 7.3
+  - 7.4
 
 before_script:
   - wget https://robo.li/robo.phar

@@ -3,6 +3,7 @@ namespace Codeception\PHPUnit;
 
 use \PHPUnit\Framework\AssertionFailedError;
 use \PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestResult;
 use \PHPUnit\Runner\BaseTestRunner;
 
 class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
@@ -92,5 +93,10 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
     public function startTest(\PHPUnit\Framework\Test $test) : void
     {
         $this->testStatus = \PHPUnit\Runner\BaseTestRunner::STATUS_PASSED;
+    }
+
+    public function printResult(TestResult $result): void
+    {
+        // TODO: Implement printResult() method.
     }
 }
