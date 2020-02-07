@@ -1,3 +1,6 @@
-.idea
-composer.lock
-vendor
+/.idea
+/composer.lock
+/vendor
+/tests
+/codecept
+/codeception.yml

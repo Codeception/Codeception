@@ -16,8 +16,8 @@
         "sebastian/comparator": "^3.0",
         "sebastian/diff": "^3.0"
     },
-    "autoload":{
-        "psr-4":{
+    "autoload": {
+        "psr-4": {
             "Codeception\\PHPUnit\\": "src/"
         }
     },

@@ -1,7 +1,7 @@
 language: php
 
 env:
-  CODECEPTION_VERSION: '3.0.x-dev'
+  CODECEPTION_VERSION: '4.0.x-dev'
 
 php:
   - 7.2
@@ -9,11 +9,13 @@ php:
 
 before_script:
   - wget https://robo.li/robo.phar
-  - php robo.phar prepare
+  - php robo.phar prepare:dependencies
   - composer update
+  - php robo.phar prepare:tests
+  - php robo.phar prepare:test-autoloading
+  - composer dump-autoload
 
 script:
-  - php robo.phar test cli
-  - php robo.phar test "unit -g core"
-  - php robo.phar test "tests/unit/Codeception/Constraints/"
-  - php robo.phar test "tests/unit/Codeception/Module/AssertsTest.php"
+  - php ./codecept run -c vendor/codeception/module-asserts/
+  - php ./codecept run unit -g core
+  - php ./codecept run cli
