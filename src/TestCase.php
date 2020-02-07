@@ -33,4 +33,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             static::_tearDownAfterClass();
         }
     }
+
+    public function expectExceptionMessageRegExp(string $regularExpression): void
+    {
+        $this->expectExceptionMessageMatches($regularExpression);
+    }
 }
