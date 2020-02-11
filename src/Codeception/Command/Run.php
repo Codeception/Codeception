@@ -215,7 +215,7 @@ class Run extends Command
                 InputOption::VALUE_REQUIRED,
                 'Define random seed for shuffle setting'
             ),
-
+            new InputOption('no-artifacts', '', InputOption::VALUE_NONE, 'Don\'t report about artifacts'),
         ]);
 
         parent::configure();
