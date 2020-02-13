@@ -623,7 +623,7 @@ EOF;
      */
     private function getTestName($e)
     {
-        return basename($e->getTest()->getMetadata()->getFilename()) . '_' . $e->getTest()->getMetadata()->getName();
+        return basename($e->getTest()->getMetadata()->getFilename()) . '_' . preg_replace('/[^A-Za-z0-9\-\_]/', '_', $e->getTest()->getMetadata()->getName());
     }
 
     /**
