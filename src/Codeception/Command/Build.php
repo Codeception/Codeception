@@ -28,6 +28,19 @@ class Build extends Command
      */
     protected $output;
 
+    /**
+     * Sets Run arguments
+     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
+     */
+    protected function configure()
+    {
+        $this->setDefinition([
+            new InputOption('no-redirect', '', InputOption::VALUE_NONE, 'Do not redirect to Composer-installed version in vendor/codeception'),
+        ]);
+
+        parent::configure();
+    }
+
     public function getDescription()
     {
         return 'Generates base classes for all suites';
