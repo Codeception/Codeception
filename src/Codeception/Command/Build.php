@@ -29,10 +29,6 @@ class Build extends Command
      */
     protected $output;
 
-    /**
-     * Sets Run arguments
-     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
-     */
     protected function configure()
     {
         $this->setDefinition([
