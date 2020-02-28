@@ -38,7 +38,7 @@ EOF;
      {{doc}}
      * @see \{{module}}::{{method}}()
      */
-    public function {{action}}({{params}}) {
+    public function {{action}}({{params}}){{return_type}} {
         return \$this->getScenario()->runStep(new \Codeception\Step\{{step}}('{{method}}', func_get_args()));
     }
 EOF;
@@ -113,6 +113,7 @@ EOF;
         $methodTemplate = (new Template($this->methodTemplate))
             ->place('module', $module)
             ->place('method', $refMethod->name)
+            ->place('return_type', $this->createReturnTypeHint($refMethod))
             ->place('params', $params);
 
         if (0 === strpos($refMethod->name, 'see')) {
@@ -204,5 +205,27 @@ EOF;
     public function getNumMethods()
     {
         return $this->numMethods;
+    }
+
+    private function createReturnTypeHint(\ReflectionMethod $refMethod)
+    {
+        if (PHP_VERSION_ID < 70000) {
+            return '';
+        }
+
+        $returnType = $refMethod->getReturnType();
+
+        if ($returnType === null) {
+            return '';
+        }
+
+        return strtr(
+            ': {nullable}{trailingBackslash}{type}',
+            [
+                '{nullable}' => $returnType->allowsNull() ? '?' : '',
+                '{trailingBackslash}' => $returnType->isBuiltin() ? '' : '\\',
+                '{type}' => (string)$returnType
+            ]
+        );
     }
 }
