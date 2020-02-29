@@ -3,6 +3,7 @@ modules:
     enabled: [Asserts]
 coverage:
     enabled: true
+    show_uncovered: true
     include:
         - 'tests/_support/Math/Adder.php'
         - 'tests/_support/Math/Subtractor.php'

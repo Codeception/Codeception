@@ -45,10 +45,13 @@ WORKDIR /repo
 
 # Install vendor
 COPY ./composer.json /repo/composer.json
-RUN composer install --prefer-dist --no-interaction --optimize-autoloader --apcu-autoloader
+RUN composer install --prefer-dist --no-interaction --no-autoloader
 
 # Add source-code
 COPY . /repo
+
+# Create autoloader
+RUN composer dump-autoload --optimize --apcu
 
 ENV PATH /repo:${PATH}
 ENTRYPOINT ["codecept"]
