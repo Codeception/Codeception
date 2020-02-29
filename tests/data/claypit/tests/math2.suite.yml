@@ -1,0 +1,8 @@
+class_name: Math2Tester
+modules:
+    enabled: [Asserts]
+coverage:
+    enabled: true
+    include:
+        - 'tests/_support/Math2/Adder.php'
+        - 'tests/_support/Math2/Subtractor.php'
