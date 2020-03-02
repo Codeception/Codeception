@@ -62,6 +62,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
             }
         }
         $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
+        $this->coverage->setAddUncoveredFilesFromWhitelist(false);
     }
 
     /**
