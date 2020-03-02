@@ -1,6 +1,6 @@
 <?php
 
-class MathCest
+class Math2Cest
 {
     public function testAddition(MathTester $I)
     {

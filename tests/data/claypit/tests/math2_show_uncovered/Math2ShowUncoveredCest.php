@@ -1,8 +1,6 @@
 <?php
 
-use \Math\CalcHelper as Calc;
-
-class MathCest
+class Math2ShowUncoveredCest
 {
     public function testAddition(MathTester $I)
     {
