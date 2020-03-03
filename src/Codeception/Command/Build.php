@@ -7,7 +7,6 @@ use Codeception\Lib\Generator\Actor as ActorGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Generates Actor classes (initially Guy classes) from suite configs.
@@ -28,15 +27,6 @@ class Build extends Command
      * @var OutputInterface
      */
     protected $output;
-
-    protected function configure()
-    {
-        $this->setDefinition([
-            new InputOption('no-redirect', '', InputOption::VALUE_NONE, 'Do not redirect to Composer-installed version in vendor/codeception'),
-        ]);
-
-        parent::configure();
-    }
 
     public function getDescription()
     {
