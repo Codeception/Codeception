@@ -27,8 +27,12 @@ if (( !isset($argv) || (isset($argv) && !in_array('--no-redirect', $argv)) ) && 
     require_once __DIR__ . '/../../autoload.php';
 }
 unset($autoloadFile);
-$argv = array_diff($argv, ['--no-redirect']);
-$_SERVER['argv'] = array_diff($_SERVER['argv'], ['--no-redirect']);
+if (isset($argv)) {
+    $argv = array_diff($argv, ['--no-redirect']);
+}
+if (isset($_SERVER['argv'])) {
+    $_SERVER['argv'] = array_diff($_SERVER['argv'], ['--no-redirect']);
+}
 
 // @codingStandardsIgnoreStart
 
