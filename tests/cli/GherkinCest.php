@@ -72,4 +72,12 @@ class GherkinCest
         $I->seeInShellOutput('@Given я написал сценарий на языке :arg1');
         $I->seeInShellOutput('public function step_62e20dc62($arg1)');
     }
+
+    public function ambigiousStepDefinitions(CliGuy $I)
+    {
+        $I->executeCommand('run scenario "AmbiguousStep.feature" --steps');
+        $I->dontSeeInShellOutput('definition1 was executed');
+        $I->dontSeeInShellOutput('definition2 was executed');
+        $I->seeInShellOutput('Ambiguous step: `a step which matches multiple step definitions` matches multiple definitions');
+    }
 }
