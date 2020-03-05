@@ -101,7 +101,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
             if (!$res) {
                 continue;
             }
-            $matches[] = [$pattern, $context];
+            $matches[$pattern] = $context;
         }
         if (count($matches) === 1) {
             // Exactly one step definition matches the given step
@@ -115,8 +115,28 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         if (count($matches) > 1) {
             // There were more than one match, meaning that we don't know which step definition to execute for this step
             $incomplete = $this->getMetadata()->getIncomplete();
-            $this->getMetadata()->setIncomplete("$incomplete\nAmbiguous step: `$stepText` matches multiple definitions");
+            $matchingDefinitions = [];
+            foreach ($matches as $pattern => $context) {
+                $matchingDefinitions[] = '- ' . $pattern . ' (' . self::contextAsString($context) . ')';
+            }
+            $this->getMetadata()->setIncomplete(
+                "$incomplete\nAmbiguous step: `$stepText` matches multiple definitions:\n"
+                . implode("\n", $matchingDefinitions)
+            );
         }
+    }
+
+    private function contextAsString($context)
+    {
+        if (is_array($context) && count($context) === 2) {
+            list($class, $method) = $context;
+
+            if (is_string($class) && is_string($method)) {
+                return $class . ':' . $method;
+            }
+        }
+
+        return var_export($context, true);
     }
 
     protected function runStep(StepNode $stepNode)

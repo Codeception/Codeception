@@ -78,6 +78,10 @@ class GherkinCest
         $I->executeCommand('run scenario "AmbiguousStep.feature" --steps');
         $I->dontSeeInShellOutput('definition1 was executed');
         $I->dontSeeInShellOutput('definition2 was executed');
-        $I->seeInShellOutput('Ambiguous step: `a step which matches multiple step definitions` matches multiple definitions');
+        $I->seeInShellOutput(
+            "Ambiguous step: `a step which matches multiple step definitions` matches multiple definitions:\n" .
+            "- /multiple step definitions/ (ScenarioGuy:definition1)\n" .
+            "- /a step which matches/ (ScenarioGuy:definition2)"
+        );
     }
 }
