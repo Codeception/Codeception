@@ -35,6 +35,7 @@ class ModuleContainer
         'Laravel5' => 'codeception/module-laravel5',
         'Lumen' => 'codeception/module-lumen',
         'Memcache' => 'codeception/module-memcache',
+        'Mezzio' => 'codeception/module-mezzio',
         'MongoDb' => 'codeception/module-mongodb',
         'Phalcon' => 'codeception/module-phalcon',
         'PhpBrowser' => 'codeception/module-phpbrowser',
