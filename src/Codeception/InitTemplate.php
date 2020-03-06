@@ -323,10 +323,9 @@ abstract class InitTemplate
                 $this->sayInfo('Composer installation failed. Please check composer.json and try to run "composer update" manually');
                 return;
             }
-            if(!empty($composer['config']['vendor_dir'])) {
+            if (!empty($composer['config']['vendor_dir'])) {
                 $this->updateComposerClassMap($composer['config']['vendor_dir']);
-            }
-            else {
+            } else {
                 $this->updateComposerClassMap();
             }
         }
