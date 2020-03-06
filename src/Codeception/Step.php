@@ -9,6 +9,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 abstract class Step
 {
+    const DEFAULT_MAX_LENGTH = 200;
+
     const STACK_POSITION = 3;
     /**
      * @var    string
@@ -94,7 +96,7 @@ abstract class Step
         return $this->arguments;
     }
 
-    public function getArgumentsAsString($maxLength = 200)
+    public function getArgumentsAsString($maxLength = self::DEFAULT_MAX_LENGTH)
     {
         $arguments = $this->arguments;
 
@@ -224,7 +226,7 @@ abstract class Step
             return sprintf('%s %s', ucfirst($this->prefix), $this->humanize($this->getAction()));
         }
 
-        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->prefix), htmlspecialchars($this->humanize($this->getAction())), $highlightColor, htmlspecialchars($this->getHumanizedArguments()));
+        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->prefix), htmlspecialchars($this->humanize($this->getAction())), $highlightColor, htmlspecialchars($this->getHumanizedArguments(0)));
     }
 
     public function getHumanizedActionWithoutArguments()
@@ -232,7 +234,7 @@ abstract class Step
         return $this->humanize($this->getAction());
     }
 
-    public function getHumanizedArguments($maxLength = 200)
+    public function getHumanizedArguments($maxLength = self::DEFAULT_MAX_LENGTH)
     {
         return $this->getArgumentsAsString($maxLength);
     }
