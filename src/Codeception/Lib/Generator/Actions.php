@@ -219,13 +219,11 @@ EOF;
             return '';
         }
 
-        return strtr(
-            ': {nullable}{trailingBackslash}{type}',
-            [
-                '{nullable}' => $returnType->allowsNull() ? '?' : '',
-                '{trailingBackslash}' => $returnType->isBuiltin() ? '' : '\\',
-                '{type}' => (string)$returnType
-            ]
+        return sprintf(
+            ': %s%s%s',
+            $returnType->allowsNull() ? '?' : '',
+            $returnType->isBuiltin() ? '' : '\\',
+            (string)$returnType
         );
     }
 }
