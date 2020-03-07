@@ -323,18 +323,22 @@ abstract class InitTemplate
                 $this->sayInfo('Composer installation failed. Please check composer.json and try to run "composer update" manually');
                 return;
             }
-            $this->updateComposerClassMap();
+            if (!empty($composer['config']['vendor_dir'])) {
+                $this->updateComposerClassMap($composer['config']['vendor_dir']);
+            } else {
+                $this->updateComposerClassMap();
+            }
         }
 
         return $packageCounter;
     }
 
-    private function updateComposerClassMap()
+    private function updateComposerClassMap($vendorDir = 'vendor')
     {
-        $loader = require 'vendor/autoload.php';
-        $classMap = require 'vendor/composer/autoload_classmap.php';
+        $loader = require $vendorDir . '/autoload.php';
+        $classMap = require $vendorDir . '/composer/autoload_classmap.php';
         $loader->addClassMap($classMap);
-        $map = require 'vendor/composer/autoload_psr4.php';
+        $map = require $vendorDir . '/composer/autoload_psr4.php';
         foreach ($map as $namespace => $path) {
             $loader->setPsr4($namespace, $path);
         }
