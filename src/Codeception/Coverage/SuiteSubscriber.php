@@ -21,6 +21,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         'xdebug_session' => 'codeception',
         'remote_config'  => null,
         'show_uncovered' => false,
+        'add_uncovered'  => false,
         'c3_url'         => null,
         'work_dir'       => null,
         'cookie_domain'  => null,
@@ -62,6 +63,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
             }
         }
         $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
+        $this->coverage->setAddUncoveredFilesFromWhitelist($this->settings['add_uncovered']);
     }
 
     /**
