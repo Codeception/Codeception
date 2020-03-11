@@ -21,6 +21,7 @@ class Printer implements EventSubscriberInterface
         'low_limit'         => '35',
         'high_limit'        => '70',
         'show_uncovered'    => false,
+        'add_uncovered'     => false,
         'show_only_summary' => false
     ];
 
