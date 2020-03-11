@@ -9,6 +9,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 abstract class Step
 {
+    const ARGUMENTS_DEFAULT_LENGTH = 200;
+
     const STACK_POSITION = 3;
     /**
      * @var    string
@@ -94,7 +96,7 @@ abstract class Step
         return $this->arguments;
     }
 
-    public function getArgumentsAsString($maxLength = 200)
+    public function getArgumentsAsString($maxLength = self::ARGUMENTS_DEFAULT_LENGTH)
     {
         $arguments = $this->arguments;
 
@@ -232,7 +234,7 @@ abstract class Step
         return $this->humanize($this->getAction());
     }
 
-    public function getHumanizedArguments($maxLength = 200)
+    public function getHumanizedArguments($maxLength = self::ARGUMENTS_DEFAULT_LENGTH)
     {
         return $this->getArgumentsAsString($maxLength);
     }
