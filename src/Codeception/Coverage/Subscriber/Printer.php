@@ -36,6 +36,8 @@ class Printer implements EventSubscriberInterface
         $this->logDir = Configuration::outputDir();
         $this->settings = array_merge($this->settings, Configuration::config()['coverage']);
         self::$coverage = new \SebastianBergmann\CodeCoverage\CodeCoverage();
+        self::$coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
+        self::$coverage->setAddUncoveredFilesFromWhitelist($this->settings['add_uncovered']);
 
         // Apply filter
         $filter = new Filter(self::$coverage);
