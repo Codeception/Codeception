@@ -670,7 +670,7 @@ class Configuration
 
         // for sequential arrays
         if (isset($a1[0], $a2[0])) {
-            return array_merge_recursive($a2, $a1);
+            return array_values(array_unique(array_merge_recursive($a2, $a1), SORT_REGULAR));
         }
 
         // for associative arrays
