@@ -1,6 +1,6 @@
 #### 4.1.2
 
-* Fixed --no-redirect option does not exist error #5827 by @liamjtoohey
+* Fixed --no-redirect option does not exist error #5857 by @liamjtoohey
 * Init command: Check the composer option config.vendor_dir when updating composer #5871 by @gabriel-lima96
 * Add return type hint to the generated actions above PHP 7.0 #5862 by @pezia
 * Prevent merged config array ballooning in memory #5871 by @AndrewFeeney
