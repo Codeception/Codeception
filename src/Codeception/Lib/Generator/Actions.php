@@ -109,11 +109,12 @@ EOF;
         if (!$doc) {
             $doc = "*";
         }
+        $returnType = $this->createReturnTypeHint($refMethod);
 
         $methodTemplate = (new Template($this->methodTemplate))
             ->place('module', $module)
             ->place('method', $refMethod->name)
-            ->place('return_type', $returnType = $this->createReturnTypeHint($refMethod))
+            ->place('return_type', $returnType)
             ->place('return', $returnType === 'void' ? '' : 'return ')
             ->place('params', $params);
 
