@@ -39,7 +39,7 @@ EOF;
      * @see \{{module}}::{{method}}()
      */
     public function {{action}}({{params}}){{return_type}} {
-        return \$this->getScenario()->runStep(new \Codeception\Step\{{step}}('{{method}}', func_get_args()));
+        {{return}}\$this->getScenario()->runStep(new \Codeception\Step\{{step}}('{{method}}', func_get_args()));
     }
 EOF;
 
@@ -109,11 +109,13 @@ EOF;
         if (!$doc) {
             $doc = "*";
         }
+        $returnType = $this->createReturnTypeHint($refMethod);
 
         $methodTemplate = (new Template($this->methodTemplate))
             ->place('module', $module)
             ->place('method', $refMethod->name)
-            ->place('return_type', $this->createReturnTypeHint($refMethod))
+            ->place('return_type', $returnType)
+            ->place('return', $returnType === 'void' ? '' : 'return ')
             ->place('params', $params);
 
         if (0 === strpos($refMethod->name, 'see')) {
