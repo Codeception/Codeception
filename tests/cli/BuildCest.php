@@ -1,6 +1,8 @@
 <?php
 // @group core
 
+use Codeception\Scenario;
+
 class BuildCest
 {
     /** @var string */
@@ -29,8 +31,12 @@ class BuildCest
         $I->seeInThisFile('seeFileFound(');
     }
 
-    public function usesTypehintsWherePossible(CliGuy $I)
+    public function usesTypehintsWherePossible(CliGuy $I, Scenario $scenario)
     {
+        if (PHP_MAJOR_VERSION < 7) {
+            $scenario->skip('Does not work in PHP < 7');
+        }
+
         $I->wantToTest('generate typehints with generated actions');
 
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
@@ -48,8 +54,12 @@ class BuildCest
         $I->seeInThisFile('return $match[1]');
     }
     
-    public function noReturnForVoidType(CliGuy $I)
+    public function noReturnForVoidType(CliGuy $I, Scenario $scenario)
     {
+        if (PHP_MAJOR_VERSION < 7) {
+            $scenario->skip('Does not work in PHP < 7');
+        }
+
         $I->wantToTest('no return keyword generated for void typehint');
 
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
