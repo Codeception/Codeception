@@ -7,20 +7,20 @@ class CeptTest extends \Codeception\Test\Unit
      */
     public function testCeptNamings()
     {
-        $cept = new \Codeception\Test\Cept('Build', 'tests/cli/BuildCept.php');
+        $cept = new \Codeception\Test\Cept('AutoRebuild', 'tests/cli/AutoRebuildCept.php');
 
         $path = 'tests' . DIRECTORY_SEPARATOR . 'cli' . DIRECTORY_SEPARATOR;
 
         $this->assertEquals(
-            $path . 'BuildCept.php',
+            $path . 'AutoRebuildCept.php',
             \Codeception\Test\Descriptor::getTestFileName($cept)
         );
         $this->assertEquals(
-            $path . 'BuildCept.php',
+            $path . 'AutoRebuildCept.php',
             \Codeception\Test\Descriptor::getTestFullName($cept)
         );
         $this->assertEquals(
-            'BuildCept',
+            'AutoRebuildCept',
             \Codeception\Test\Descriptor::getTestSignature($cept)
         );
     }
