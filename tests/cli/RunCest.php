@@ -161,12 +161,20 @@ class RunCest
      */
     public function runCustomReport(\CliGuy $I)
     {
-        if (\PHPUnit\Runner\Version::series() >= 7) {
-            throw new \PHPUnit\Framework\SkippedTestError('Not for PHPUnit 7');
-        }
         $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
         $I->seeInShellOutput('FileExistsCept: Check config exists');
         $I->dontSeeInShellOutput('Ok');
+    }
+
+    /**
+     * @group reports
+     *
+     * @param CliGuy $I
+     */
+    public function runCompactReport(\CliGuy $I)
+    {
+        $I->executeCommand('run dummy --report');
+        $I->seeInShellOutput('FileExistsCept: Check config exists........................................Ok');
     }
 
     public function runOneGroup(\CliGuy $I)
