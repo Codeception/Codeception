@@ -169,6 +169,17 @@ class RunCest
         $I->dontSeeInShellOutput('Ok');
     }
 
+    /**
+     * @group reports
+     *
+     * @param CliGuy $I
+     */
+    public function runCompactReport(\CliGuy $I)
+    {
+        $I->executeCommand('run dummy --report');
+        $I->seeInShellOutput('FileExistsCept: Check config exists........................................Ok');
+    }
+
     public function runOneGroup(\CliGuy $I)
     {
         $I->executeCommand('run skipped -g notorun');
