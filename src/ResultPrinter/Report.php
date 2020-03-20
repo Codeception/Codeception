@@ -53,7 +53,7 @@ class Report extends ResultPrinter implements ConsolePrinter
         ) . "\n");
     }
 
-    public function printResult(\PHPUnit\Framework\TestResult $result)
+    public function printResult(\PHPUnit\Framework\TestResult $result): void
     {
     }
 
