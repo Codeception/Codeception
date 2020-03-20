@@ -1,9 +1,10 @@
-<?php 
+<?php
 
-if (\PHPUnit\Runner\Version::series() < 7) {
-    require __DIR__ . '/MyReportPrinter5.php';
-} else if (\PHPUnit\Runner\Version::series() < 9) {
+$series = \PHPUnit\Runner\Version::series();
+if ($series >= 9) {
+    require __DIR__ . '/MyReportPrinter9.php';
+} else if ($series >= 7) {
     require __DIR__ . '/MyReportPrinter7.php';
 } else {
-    require __DIR__ . '/MyReportPrinter9.php';
+    require __DIR__ . '/MyReportPrinter5.php';
 }
