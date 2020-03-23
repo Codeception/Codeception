@@ -1,3 +1,8 @@
+#### 4.1.4
+
+* Build: Fix bug with void type not being picked up correctly #5880 by @Jamesking56
+* Test --report flag (the bugfix in phpunit-wrapper library)
+
 #### 4.1.3
 
 * Build: Use non-deprecated method to get return type hint on PHP 7.1+ #5876
