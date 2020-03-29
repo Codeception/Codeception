@@ -51,8 +51,11 @@
         "stecman/symfony-console-completion": "For BASH autocompletion"
     },
 
-    "autoload":{
-        "psr-4":{
+    "autoload": {
+        "files": [
+            "shim.php"
+        ],
+        "psr-4": {
             "Codeception\\": "src/Codeception",
             "Codeception\\Extension\\": "ext"
         }
