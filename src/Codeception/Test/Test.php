@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Test;
 
+use Codeception\PHPUnit\Test As TestAbstract;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionHelper;
 use SebastianBergmann\Timer\Timer;
@@ -15,7 +16,7 @@ use SebastianBergmann\Timer\Timer;
  *
  * Inherited class must implement `test` method.
  */
-abstract class Test implements TestInterface, Interfaces\Descriptive
+abstract class Test extends TestAbstract implements TestInterface
 {
     use Feature\AssertionCounter;
     use Feature\CodeCoverage;
@@ -51,20 +52,13 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     abstract public function test();
 
     /**
-     * Test representation
-     *
-     * @return mixed
-     */
-    abstract public function toString();
-
-    /**
      * Runs a test and collects its result in a TestResult instance.
      * Executes before/after hooks coming from traits.
      *
      * @param  \PHPUnit\Framework\TestResult $result
      * @return \PHPUnit\Framework\TestResult
      */
-    final public function run(\PHPUnit\Framework\TestResult $result = null)
+    final public function _run(\PHPUnit\Framework\TestResult $result = null)
     {
         $this->testResult = $result;
 

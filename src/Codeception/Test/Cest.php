@@ -150,7 +150,7 @@ class Cest extends Test implements
         $this->invoke($this->testMethod, [$I, $this->scenario]);
     }
 
-    public function toString()
+    public function _toString()
     {
         return sprintf('%s: %s', ReflectionHelper::getClassShortName($this->getTestClass()), Message::ucfirst($this->getFeature()));
     }

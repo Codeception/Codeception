@@ -50,7 +50,7 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         return $this->getMetadata()->getName() . 'Cept';
     }
 
-    public function toString()
+    public function _toString()
     {
         return $this->getSignature() . ': ' . Message::ucfirst($this->getFeature());
     }
