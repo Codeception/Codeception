@@ -38,4 +38,19 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         $this->expectExceptionMessageMatches($regularExpression);
     }
+
+    public static function assertRegExp(string $pattern, string $string, string $message = ''): void
+    {
+        parent::assertMatchesRegularExpression($pattern, $string, $message);
+    }
+
+    public static function assertNotRegExp(string $pattern, string $string, string $message = ''): void
+    {
+        parent::assertDoesNotMatchRegularExpression($pattern, $string, $message);
+    }
+
+    public static function assertFileNotExists(string $filename, string $message = ''): void
+    {
+        parent::assertFileDoesNotExist($filename, $message);
+    }
 }
