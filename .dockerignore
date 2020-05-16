@@ -1,0 +1,9 @@
+/package
+/.github
+/tests
+/vendor
+/*.md
+/*.yml
+/codecept.bat
+/nitpick.json
+/ruleset.xml
