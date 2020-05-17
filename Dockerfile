@@ -8,6 +8,7 @@ RUN apt-get update && \
             git \
             zlib1g-dev \
             libmemcached-dev \
+            libpq-dev \
             libssl-dev \
             libxml2-dev \
             libzip-dev \
@@ -19,6 +20,7 @@ RUN apt-get update && \
 # Install php extensions
 RUN docker-php-ext-install \
     bcmath \
+    pdo pdo_mysql pdo_pgsql \
     soap \
     sockets \
     zip
