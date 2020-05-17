@@ -10,7 +10,7 @@ trait AssertionCounter
         return $this->numAssertions;
     }
     /**
-     * This method is not covered by the backward compatibility promise 
+     * This method is not covered by the backward compatibility promise
      * for PHPUnit, but is nice to have for extensions.
      */
     public function addToAssertionCount(int $count): void
