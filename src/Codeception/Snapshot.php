@@ -17,6 +17,14 @@ abstract class Snapshot
 
     protected $refresh;
 
+    protected $showDiff;
+
+    public function __construct()
+    {
+        $config = Configuration::config();
+        $this->shouldShowDiffOnError($config['snapshot']['show_diff']);
+    }
+
     /**
      * Should return data from current test run
      *
@@ -109,6 +117,10 @@ abstract class Snapshot
                 return;
             }
 
+            if ($this->showDiff) {
+                throw $exception;
+            }
+
             $this->fail($exception->getMessage());
         }
     }
@@ -121,6 +133,16 @@ abstract class Snapshot
     public function shouldRefreshSnapshot($refresh = true)
     {
         $this->refresh = $refresh;
+    }
+
+    /**
+     * Show detailed diff if snapshot test fails
+     *
+     * @param bool $showDiff
+     */
+    public function shouldShowDiffOnError($showDiff = false)
+    {
+        $this->showDiff = $showDiff;
     }
 
     private function printDebug($message)
