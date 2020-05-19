@@ -19,10 +19,13 @@ abstract class Snapshot
 
     protected $showDiff;
 
+    protected $saveAsJson;
+
     public function __construct()
     {
         $config = Configuration::config();
         $this->shouldShowDiffOnError($config['snapshot']['show_diff']);
+        $this->shouldSaveAsJson($config['snapshot']['save_as_json']);
     }
 
     /**
@@ -51,7 +54,11 @@ abstract class Snapshot
         if (!file_exists($this->getFileName())) {
             return;
         }
-        $this->dataSet = json_decode(file_get_contents($this->getFileName()));
+        $fileContents = file_get_contents($this->getFileName());
+        if ($this->saveAsJson) {
+            $fileContents = json_decode($fileContents);
+        }
+        $this->dataSet = $fileContents;
         if (!$this->dataSet) {
             throw new ContentNotFound("Loaded snapshot is empty");
         }
@@ -62,7 +69,11 @@ abstract class Snapshot
      */
     protected function save()
     {
-        file_put_contents($this->getFileName(), json_encode($this->dataSet));
+        $fileContents = file_get_contents($this->getFileName());
+        if ($this->saveAsJson) {
+            $fileContents = json_encode($fileContents);
+        }
+        file_put_contents($this->getFileName(), $fileContents);
     }
 
     /**
@@ -143,6 +154,16 @@ abstract class Snapshot
     public function shouldShowDiffOnError($showDiff = false)
     {
         $this->showDiff = $showDiff;
+    }
+
+    /**
+     * Encode and decodes the snapshop before savind and loading.
+     *
+     * @param bool $saveAsJson
+     */
+    public function shouldSaveAsJson($saveAsJson = true)
+    {
+        $this->saveAsJson = $saveAsJson;
     }
 
     private function printDebug($message)
