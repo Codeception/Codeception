@@ -100,6 +100,10 @@ class Configuration
             'be_strict_about_changes_to_global_state' => false,
             'shuffle'     => false,
         ],
+        'snapshot'   => [
+            'save_as_json' => true,
+            'show_diff'    => false,
+        ],
         'coverage'   => [],
         'params'     => [],
         'gherkin'    => []
