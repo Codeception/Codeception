@@ -69,7 +69,7 @@ abstract class Snapshot
      */
     protected function save()
     {
-        $fileContents = file_get_contents($this->getFileName());
+        $fileContents = $this->dataSet;
         if ($this->saveAsJson) {
             $fileContents = json_encode($fileContents);
         }
