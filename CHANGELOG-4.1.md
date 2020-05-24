@@ -1,3 +1,9 @@
+#### 4.1.5
+
+* Fixed docker images
+* Fix indentation in generated Actor class, by @cebe
+* Added addToAssertionCount method to AssertionCounter trait, #5918 by @Archanium
+
 #### 4.1.4
 
 * Build: Fix bug with void type not being picked up correctly #5880 by @Jamesking56
