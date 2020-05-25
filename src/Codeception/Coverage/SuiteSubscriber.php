@@ -61,6 +61,13 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }
+
+        foreach($settings['coverage']['advanced'] as $key => $value) {
+            $method = 'set' . ucfirst($key);
+            if (method_exists($this->coverage, $method)) {
+                $this->coverage->$method($value);
+            }
+        }
         $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
     }
 
@@ -80,9 +87,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
 
     public function applyFilter(\PHPUnit\Framework\TestResult $result)
     {
-        $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
-        $result->setCodeCoverage(new CodeCoverage($driver));
-
         Filter::setup($this->coverage)
             ->whiteList($this->filters)
             ->blackList($this->filters);
@@ -90,7 +94,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         $result->setCodeCoverage($this->coverage);
     }
 
-    protected function mergeToPrint($coverage)
+    protected function mergeToPrint(CodeCoverage $coverage)
     {
         Printer::$coverage->merge($coverage);
     }
