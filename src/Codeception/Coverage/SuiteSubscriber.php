@@ -62,10 +62,12 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
             }
         }
 
-        foreach($settings['coverage']['advanced'] as $key => $value) {
-            $method = 'set' . ucfirst($key);
-            if (method_exists($this->coverage, $method)) {
-                $this->coverage->$method($value);
+        if (isset($settings['coverage']['advanced'])) {
+            foreach ($settings['coverage']['advanced'] as $key => $value) {
+                $method = 'set' . ucfirst($key);
+                if (method_exists($this->coverage, $method)) {
+                    $this->coverage->$method($value);
+                }
             }
         }
         $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
