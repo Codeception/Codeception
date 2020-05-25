@@ -3,6 +3,7 @@ namespace Codeception\Test\Feature;
 
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\StrictCoverage;
+use SebastianBergmann\CodeCoverage\RuntimeException;
 
 trait CodeCoverage
 {
@@ -38,6 +39,10 @@ trait CodeCoverage
         try {
             $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
         } catch (\PHP_CodeCoverage_Exception $cce) {
+            if ($status === \Codeception\Test\Test::STATUS_OK) {
+                $this->getTestResultObject()->addError($this, $cce, $time);
+            }
+        } catch (RuntimeException $cce) {
             if ($status === \Codeception\Test\Test::STATUS_OK) {
                 $this->getTestResultObject()->addError($this, $cce, $time);
             }
