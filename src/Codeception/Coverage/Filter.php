@@ -26,9 +26,7 @@ class Filter
 
     public function __construct(\SebastianBergmann\CodeCoverage\CodeCoverage $phpCoverage)
     {
-        $this->phpCodeCoverage = $phpCoverage
-            ? $phpCoverage
-            : new \SebastianBergmann\CodeCoverage\CodeCoverage;
+        $this->phpCodeCoverage = $phpCoverage;
 
         $this->filter = $this->phpCodeCoverage->filter();
     }
