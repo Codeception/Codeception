@@ -2,7 +2,7 @@
 
 use \Math\CalcHelper as Calc;
 
-class MathCest
+class CoverageCest
 {
     /**
      * @var Calc
