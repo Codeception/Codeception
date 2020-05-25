@@ -1,0 +1,7 @@
+class_name: AdvancedCoverageTester
+modules:
+    enabled: [Asserts]
+coverage:
+    enabled: true
+    advanced:
+        checkForMissingCoversAnnotation: true
