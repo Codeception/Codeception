@@ -1,8 +1,6 @@
 <?php
 namespace Codeception\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-
 class PrintResultEvent extends Event
 {
     /**

@@ -2,7 +2,6 @@
 namespace Codeception\Event;
 
 use Codeception\Suite;
-use Symfony\Component\EventDispatcher\Event;
 
 class SuiteEvent extends Event
 {
