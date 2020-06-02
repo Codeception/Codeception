@@ -21,13 +21,6 @@ abstract class Snapshot
 
     protected $saveAsJson;
 
-    public function __construct()
-    {
-        $config = Configuration::config();
-        $this->shouldShowDiffOnError($config['snapshot']['show_diff']);
-        $this->shouldSaveAsJson($config['snapshot']['save_as_json']);
-    }
-
     /**
      * Should return data from current test run
      *
@@ -55,7 +48,7 @@ abstract class Snapshot
             return;
         }
         $fileContents = file_get_contents($this->getFileName());
-        if ($this->saveAsJson) {
+        if ($this->getSaveAsJson()) {
             $fileContents = json_decode($fileContents);
         }
         $this->dataSet = $fileContents;
@@ -70,7 +63,7 @@ abstract class Snapshot
     protected function save()
     {
         $fileContents = $this->dataSet;
-        if ($this->saveAsJson) {
+        if ($this->getSaveAsJson()) {
             $fileContents = json_encode($fileContents);
         }
         file_put_contents($this->getFileName(), $fileContents);
@@ -128,7 +121,7 @@ abstract class Snapshot
                 return;
             }
 
-            if ($this->showDiff) {
+            if ($this->getShowDiff()) {
                 throw $exception;
             }
 
@@ -147,6 +140,22 @@ abstract class Snapshot
     }
 
     /**
+     * Checks if the show diff configuration is set and return it.
+     * If not set, will load from configuration.
+     *
+     * @return bool
+     */
+    protected function getShowDiff()
+    {
+        if ($this->showDiff === null) {
+            $config = Configuration::config();
+            $this->shouldShowDiffOnError($config['snapshot']['show_diff']);
+        }
+
+        return $this->showDiff;
+    }
+
+    /**
      * Show detailed diff if snapshot test fails
      *
      * @param bool $showDiff
@@ -154,6 +163,22 @@ abstract class Snapshot
     public function shouldShowDiffOnError($showDiff = false)
     {
         $this->showDiff = $showDiff;
+    }
+
+    /**
+     * Checks if the save as json configuration is set and return it.
+     * If not set, will load from configuration.
+     *
+     * @return bool
+     */
+    protected function getSaveAsJson()
+    {
+        if ($this->saveAsJson === null) {
+            $config = Configuration::config();
+            $this->shouldSaveAsJson($config['snapshot']['save_as_json']);
+        }
+
+        return $this->saveAsJson;
     }
 
     /**
