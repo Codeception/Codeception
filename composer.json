@@ -27,7 +27,7 @@
         "symfony/yaml": ">=2.7 <6.0",
         "symfony/css-selector": ">=2.7 <6.0",
         "behat/gherkin": "^4.4.0",
-        "codeception/phpunit-wrapper": "9.0.9999",
+        "codeception/phpunit-wrapper": "^8.1.9999 | ^9.0.9999",
         "codeception/stub": "^2.0 | ^3.0"
     },
     "repositories": [
