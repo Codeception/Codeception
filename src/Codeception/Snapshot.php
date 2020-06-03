@@ -17,6 +17,8 @@ abstract class Snapshot
 
     protected $refresh;
 
+    protected $showDiff = false;
+
     /**
      * Should return data from current test run
      *
@@ -109,6 +111,10 @@ abstract class Snapshot
                 return;
             }
 
+            if ($this->showDiff) {
+                throw $exception;
+            }
+
             $this->fail($exception->getMessage());
         }
     }
@@ -121,6 +127,16 @@ abstract class Snapshot
     public function shouldRefreshSnapshot($refresh = true)
     {
         $this->refresh = $refresh;
+    }
+
+    /**
+     * Show detailed diff if snapshot test fails
+     *
+     * @param bool $showDiff
+     */
+    public function shouldShowDiffOnFail($showDiff = true)
+    {
+        $this->showDiff = $showDiff;
     }
 
     private function printDebug($message)
