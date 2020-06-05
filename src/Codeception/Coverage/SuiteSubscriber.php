@@ -67,6 +67,8 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
                 $method = 'set' . ucfirst($key);
                 if (method_exists($this->coverage, $method)) {
                     $this->coverage->$method($value);
+                } else {
+                    throw new \Exception('Unknown coverage option: ' . $key);
                 }
             }
         }
