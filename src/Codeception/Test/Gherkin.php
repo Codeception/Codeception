@@ -103,10 +103,6 @@ class Gherkin extends Test implements ScenarioDriven, Reported
             }
             $matches[$pattern] = $context;
         }
-        if (count($matches) === 1) {
-            // Exactly one step definition matches the given step
-            return;
-        }
         if (count($matches) === 0) {
             // There were no matches, meaning that the user should first add a step definition for this step
             $incomplete = $this->getMetadata()->getIncomplete();
