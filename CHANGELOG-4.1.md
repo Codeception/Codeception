@@ -1,3 +1,7 @@
+#### 4.1.6
+
+* Compatibility with PHPUnit 9.2
+
 #### 4.1.5
 
 * Fixed docker images
