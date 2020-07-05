@@ -108,7 +108,7 @@ modules:
         - PhpBrowser:
             url: http://localhost/myapp
         - \\{$this->namespace}Helper\Acceptance
-    step_decorators: ~        
+step_decorators: ~        
 EOF;
         $this->createSuite('acceptance', $actor, $suiteConfig);
         $this->say("tests/acceptance created           <- acceptance tests");
