@@ -1,3 +1,7 @@
+#### 4.1.7
+
+* Fixed step decorators in generated configuration file #5936 by @rene-hermenau
+
 #### 4.1.6
 
 * Compatibility with PHPUnit 9.2
