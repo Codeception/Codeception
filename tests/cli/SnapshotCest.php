@@ -50,6 +50,16 @@ class SnapshotCest
      * @before _openSnapshotSuite
      * @param CliGuy $I
      */
+    public function runSnapshotDiffDisplay(CliGuy $I)
+    {
+        $I->executeCommand('run tests/SnapshotDisplayDiffCest.php');
+        $I->seeInShellOutput('PASSED');
+    }
+
+    /**
+     * @before _openSnapshotSuite
+     * @param CliGuy $I
+     */
     public function loadSnapshotInDebugAndFailOnProd(CliGuy $I)
     {
         $I->executeCommand('run tests/SnapshotFailCest.php --debug');
