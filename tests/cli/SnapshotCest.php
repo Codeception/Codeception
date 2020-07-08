@@ -53,7 +53,7 @@ class SnapshotCest
     public function runSnapshotDiffDisplay(CliGuy $I)
     {
         $I->executeCommand('run tests/SnapshotDisplayDiffCest.php');
-        $I->seeInShellOutput('PASSED');
+        $I->seeInShellOutput('OK (1 test');
     }
 
     /**
