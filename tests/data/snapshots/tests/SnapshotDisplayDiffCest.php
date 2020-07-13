@@ -20,6 +20,7 @@ class SnapshotDisplayDiffCest
         try {
             $snapshot->shouldShowDiffOnFail();
             $snapshot->assert();
+            $I->fail('Snapshot assert must throw an exception.');
         } catch (\PHPUnit\Framework\ExpectationFailedException $t) {
             $I->assertEquals($expected, $t->getComparisonFailure()->getExpected());
             $I->assertEquals($actual, $t->getComparisonFailure()->getActual());
