@@ -161,6 +161,21 @@ abstract class Snapshot
         $this->saveAsJson = $saveAsJson;
     }
 
+    /**
+     * Set the snapshot file extension.
+     * By default it will be stored as `.json`.
+     *
+     * The file extension will not perform any formatting in the data,
+     * it is only used as the snapshot file extension.
+     *
+     * @param string $fileExtension
+     * @return void
+     */
+    public function setSnapshotFileExtension($fileExtension = 'json')
+    {
+        $this->extension = $fileExtension;
+    }
+
     private function printDebug($message)
     {
         Debug::debug(get_class($this) . ': ' . $message);

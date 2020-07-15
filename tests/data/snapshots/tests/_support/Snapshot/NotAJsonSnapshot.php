@@ -17,7 +17,7 @@ class NotAJsonSnapshot extends \Codeception\Snapshot
     {
         $this->dataTester = $I;
         $this->shouldSaveAsJson(false);
-        $this->extension = 'xml';
+        $this->setSnapshotFileExtension('xml');
     }
 
     protected function fetchData()
