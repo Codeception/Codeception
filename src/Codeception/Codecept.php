@@ -157,21 +157,25 @@ class Codecept
         $settings = Configuration::suiteSettings($suite, $config);
 
         $selectedEnvironments = $this->options['env'];
-        $environments = Configuration::suiteEnvironments($suite);
 
-        if (!$selectedEnvironments or empty($environments)) {
+        if (!$selectedEnvironments or empty($settings['env'])) {
             $this->runSuite($settings, $suite, $test);
             return;
         }
 
         foreach (array_unique($selectedEnvironments) as $envList) {
             $envArray = explode(',', $envList);
-            $config = [];
+            $config = $settings;
             foreach ($envArray as $env) {
-                if (isset($environments[$env])) {
+                if (isset($settings['env'])) {
                     $currentEnvironment = isset($config['current_environment']) ? [$config['current_environment']] : [];
-                    $config = Configuration::mergeConfigs($config, $environments[$env]);
-                    $currentEnvironment[] = $config['current_environment'];
+
+                    if (!array_key_exists($env, $settings['env'])) {
+                        return;
+                    }
+
+                    $config = Configuration::mergeConfigs($config, $settings['env'][$env]);
+                    $currentEnvironment[] = $env;
                     $config['current_environment'] = implode(',', $currentEnvironment);
                 }
             }
