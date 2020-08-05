@@ -153,40 +153,47 @@ class Codecept
         );
 
         $config = $config ?: Configuration::config();
-
-        $settings = Configuration::suiteSettings($suite, $config);
+        $config = Configuration::suiteSettings($suite, $config);
 
         $selectedEnvironments = $this->options['env'];
 
-        if (!$selectedEnvironments or empty($settings['env'])) {
-            $this->runSuite($settings, $suite, $test);
+        if (!$selectedEnvironments || empty($config['env'])) {
+            $this->runSuite($config, $suite, $test);
             return;
         }
 
+        // Iterate over all unique environment sets and runs the given suite with each of the merged configurations.
         foreach (array_unique($selectedEnvironments) as $envList) {
-            $envArray = explode(',', $envList);
-            $config = $settings;
-            foreach ($envArray as $env) {
-                if (isset($settings['env'])) {
-                    $currentEnvironment = isset($config['current_environment']) ? [$config['current_environment']] : [];
+            $envSet = explode(',', $envList);
+            $suiteEnvConfig = $config;
 
-                    if (!array_key_exists($env, $settings['env'])) {
+            // contains a list of the environments used in this suite configuration env set.
+            $envConfigs = [];
+            foreach ($envSet as $currentEnv) {
+                if (isset($config['env'])) {
+                    // The $settings['env'] actually contains all parsed configuration files as a
+                    // filename => filecontents key-value array. If there is no configuration file for the
+                    // $currentEnv the merge will be skipped.
+                    if (!array_key_exists($currentEnv, $config['env'])) {
                         return;
                     }
 
-                    $config = Configuration::mergeConfigs($config, $settings['env'][$env]);
-                    $currentEnvironment[] = $env;
-                    $config['current_environment'] = implode(',', $currentEnvironment);
+                    // Merge configuration consecutively with already build configuration
+                    $suiteEnvConfig = Configuration::mergeConfigs($suiteEnvConfig, $config['env'][$currentEnv]);
+                    $envConfigs[] = $currentEnv;
                 }
             }
-            if (empty($config)) {
+
+            $suiteEnvConfig['current_environment'] = implode(',', $envConfigs);
+
+            if (empty($suiteEnvConfig)) {
                 continue;
             }
             $suiteToRun = $suite;
             if (!empty($envList)) {
-                $suiteToRun .= ' (' . implode(', ', $envArray) . ')';
+                $suiteToRun .= ' (' . implode(', ', $envSet) . ')';
             }
-            $this->runSuite($config, $suiteToRun, $test);
+            $this->runSuite($suiteEnvConfig, $suiteToRun, $test);
         }
     }
 
