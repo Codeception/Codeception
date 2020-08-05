@@ -79,6 +79,23 @@ class RunEnvironmentCest
         $I->seeInShellOutput('message4: MESSAGE4 FROM SUITE-ENV1.');
     }
 
+    public function testSparseEnvMerging(CliGuy $I)
+    {
+        $I->wantTo('test that every configuration ' .
+            'in the list of environments gets merged in order of given environments');
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run messages MessageCest.php:allMessages -vv --env envLayer1,envLayer2');
+        $I->seeInShellOutput('message1: MESSAGE1 FROM envLayer1.');
+        $I->seeInShellOutput('message2: MESSAGE2 FROM envLayer2.');
+        $I->seeInShellOutput('message3: MESSAGE3 FROM SUITE.');
+
+        $I->wantTo('test that the order in which sparse environments get configured are irrelevant');
+        $I->executeCommand('run messages MessageCest.php:allMessages -vv --env envLayer2,envLayer1');
+        $I->seeInShellOutput('message1: MESSAGE1 FROM envLayer1.');
+        $I->seeInShellOutput('message2: MESSAGE2 FROM envLayer2.');
+        $I->seeInShellOutput('message3: MESSAGE3 FROM SUITE.');
+    }
+
     public function runTestForMultipleEnvironments(CliGuy $I)
     {
         $I->wantTo('check that multiple required environments are taken into account');
