@@ -88,8 +88,12 @@ class RunEnvironmentCest
         $I->seeInShellOutput('message1: MESSAGE1 FROM envLayer1.');
         $I->seeInShellOutput('message2: MESSAGE2 FROM envLayer2.');
         $I->seeInShellOutput('message3: MESSAGE3 FROM SUITE.');
+    }
 
+    public function testSparseEnvMergingIsIdempotent(CliGuy $I)
+    {
         $I->wantTo('test that the order in which sparse environments get configured are irrelevant');
+        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run messages MessageCest.php:allMessages -vv --env envLayer2,envLayer1');
         $I->seeInShellOutput('message1: MESSAGE1 FROM envLayer1.');
         $I->seeInShellOutput('message2: MESSAGE2 FROM envLayer2.');
