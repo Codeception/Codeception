@@ -7,7 +7,7 @@ namespace Codeception\Util;
 class Annotation
 {
     protected static $reflectedClasses = [];
-    protected static $regex = '/@%s(?:[ \t]*(.*?))?[ \t]*\r?$/m';
+    protected static $regex = '/@%s(?:[ \t]*(.*?))?[ \t]*(?:\*\/)?\r?$/m';
     protected static $lastReflected = null;
 
     /**

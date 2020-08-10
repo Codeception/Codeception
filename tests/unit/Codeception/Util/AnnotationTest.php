@@ -83,4 +83,12 @@ EOF;
         $values = Annotation::arrayValue('( code="200", user="davert", email = "davert@gmail.com")');
         $this->assertEquals(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
     }
+
+    /** @value foobar */
+    public function testSingleLineAnnotation()
+    {
+        $this->assertEquals('foobar', Annotation::forClass(__CLASS__)
+                ->method('testSingleLineAnnotation')
+                ->fetch('value'));
+    }
 }
