@@ -1,6 +1,9 @@
 <?php
 use Codeception\Example;
 
+/**
+* @group dataprovider
+*/
 class DataProviderCest
 {
      /**
@@ -53,6 +56,13 @@ class DataProviderCest
        {
            return true;
        }
+
+     /** @dataProvider __exampleDataSource */
+      public function singleLineAnnotationDataProvider(ScenarioGuy $I, Example $example)
+      {
+          $I->amInPath($example['path']);
+          $I->seeFileFound($example['file']);
+      }
 
       /**
        * @return array
