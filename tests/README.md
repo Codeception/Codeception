@@ -138,7 +138,7 @@ Test cases are:
 
 ### Claypit + Sandbox
 
-Before each test `tests/data/claypit` is copied to `tests/data/sandbox`, and all the test actions will be executed inside that sandbox. In the end this directory is removed. In sandbox different codeception tests may be executed and checked for exepected output.
+Before each test `tests/data/claypit` is copied to `tests/data/sandbox`, and all the test actions will be executed inside that sandbox. In the end this directory is removed. In sandbox different codeception tests may be executed and checked for expected output.
 
 Example test:
 
