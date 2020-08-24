@@ -86,4 +86,15 @@ class SnapshotCest
         $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
     }
 
+    /**
+     * @before _openSnapshotSuite
+     * @param CliGuy $I
+     */
+    public function runNonJsonContentSnapshotTests(CliGuy $I)
+    {
+        $I->executeCommand('run tests/SnapshotNonJsonDataCest.php');
+        $I->seeInShellOutput('OK (3 tests');
+        $I->seeInShellOutput('Load snapshot and skip refresh');
+        $I->seeInShellOutput('Load snapshot and refresh');
+    }
 }
