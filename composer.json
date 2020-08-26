@@ -15,8 +15,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "phpunit/phpunit": "^9.0",
-        "phpunit/php-code-coverage": "^8.0"
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {
