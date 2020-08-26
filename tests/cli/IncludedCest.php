@@ -148,9 +148,10 @@ class IncludedCest
         $I->executeCommand('run --coverage-xml');
         $I->amInPath('_log');
         $I->seeFileFound('coverage.xml');
-        $I->seeInThisFile('BillEvans" namespace="Jazz\Pianist">');
-        $I->seeInThisFile('Musician" namespace="Jazz">');
-        $I->seeInThisFile('Hobbit" namespace="Shire">');
+        //these assertions shrank over the years to be compatible with many versions of php-code-coverage library
+        $I->seeInThisFile('BillEvans" namespace="');
+        $I->seeInThisFile('Musician" namespace="');
+        $I->seeInThisFile('Hobbit" namespace="');
     }
 
     /**

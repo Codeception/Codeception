@@ -8,6 +8,7 @@ use Codeception\Stub;
 use Codeception\Subscriber\Shared\StaticEvents;
 use PHPUnit\Framework\CodeCoverageException;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface
@@ -46,7 +47,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     protected function applySettings($settings)
     {
         try {
-            $this->coverage = new \SebastianBergmann\CodeCoverage\CodeCoverage();
+            $this->coverage = PhpCodeCoverageFactory::build();
         } catch (CodeCoverageException $e) {
             throw new \Exception(
                 'XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini'
@@ -61,7 +62,17 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }
-        $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
+        if (method_exists($this->coverage, 'setProcessUncoveredFilesFromWhitelist')) {
+            //php-code-coverage 8 or older
+            $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
+        } else {
+            //php-code-coverage 9+
+            if ($this->settings['show_uncovered']) {
+                $this->coverage->processUncoveredFiles();
+            } else {
+                $this->coverage->doNotProcessUncoveredFiles();
+            }
+        }
     }
 
     /**
@@ -81,7 +92,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     public function applyFilter(\PHPUnit\Framework\TestResult $result)
     {
         $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
-        $result->setCodeCoverage(new CodeCoverage($driver));
+        $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
 
         Filter::setup($this->coverage)
             ->whiteList($this->filters)

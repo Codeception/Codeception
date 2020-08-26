@@ -10,6 +10,9 @@
 
 // $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 1;
 
+use SebastianBergmann\CodeCoverage\Driver\Driver;
+use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
+
 if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
     $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true);
 
@@ -229,7 +232,15 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             
             return array($phpCoverage, $file);
         } else {
-            $phpCoverage = new PHP_CodeCoverage();
+            if (method_exists(Driver::class, 'forLineCoverage')) {
+                //php-code-coverage 9+
+                $filter = new CodeCoverageFilter();
+                $driver = Driver::forLineCoverage($filter);
+                $phpCoverage = new PHP_CodeCoverage($driver, $filter);
+            } else {
+                //php-code-coverage 8 or older
+                $phpCoverage = new PHP_CodeCoverage();
+            }
         }
 
         if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'])) {
