@@ -5,6 +5,8 @@ use Codeception\Stub;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 
+use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
+
 class FilterTest extends \Codeception\Test\Unit
 {
     /**
@@ -15,7 +17,7 @@ class FilterTest extends \Codeception\Test\Unit
     protected function _before()
     {
         $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
-        $this->filter = new Filter(new CodeCoverage($driver));
+        $this->filter = new Filter(new CodeCoverage($driver, new CodeCoverageFilter()));
     }
 
     public function testWhitelistFilterApplied()
@@ -36,10 +38,11 @@ class FilterTest extends \Codeception\Test\Unit
         ];
         $this->filter->whiteList($config);
         $fileFilter = $this->filter->getFilter();
-        $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('tests/unit/C3Test.php')));
-        $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('src/Codeception/Codecept.php')));
-        $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
-        $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('tests/unit/CodeGuy.php')));
+        $filterMethod = $this->getFilterMethod();
+        $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('tests/unit/C3Test.php')));
+        $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('src/Codeception/Codecept.php')));
+        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
+        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/unit/CodeGuy.php')));
     }
 
     public function testShortcutFilter()
@@ -50,7 +53,21 @@ class FilterTest extends \Codeception\Test\Unit
         ]];
         $this->filter->whiteList($config);
         $fileFilter = $this->filter->getFilter();
-        $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('tests/unit/C3Test.php')));
-        $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('tests/unit/CodeGuy.php')));
+        $filterMethod = $this->getFilterMethod();
+        $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('tests/unit/C3Test.php')));
+        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/unit/CodeGuy.php')));
+    }
+
+    /**
+     * @return string
+     */
+    private function getFilterMethod()
+    {
+        $filterMethod = 'isFiltered';
+        if (method_exists($this->filter->getFilter(), 'isExcluded')) {
+            //php-code-coverage 9+
+            $filterMethod = 'isExcluded';
+        }
+        return $filterMethod;
     }
 }
