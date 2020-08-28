@@ -1,6 +1,10 @@
 #### 4.1.7
 
+* Compatibility with PhpCodeCoverage 9 and PHPUnit 9.3
+* Show snapshot diff on fail #5930 by @fkupper
+* Ability to store non-json snapshots #5945 by @fkupperr
 * Fixed step decorators in generated configuration file #5936 by @rene-hermenau
+* Fixed single line style dataprovider #5944 by @edno
 
 #### 4.1.6
 
