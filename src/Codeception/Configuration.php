@@ -552,7 +552,7 @@ class Configuration
         }
 
         $dir = self::$outputDir . DIRECTORY_SEPARATOR;
-        if (strcmp(self::$outputDir[0], "/") !== 0) {
+        if (!codecept_is_path_absolute($dir)) {
             $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
         }
 
