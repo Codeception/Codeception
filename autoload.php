@@ -28,10 +28,10 @@ if (( !isset($argv) || (isset($argv) && !in_array('--no-redirect', $argv)) ) && 
 }
 unset($autoloadFile);
 if (isset($argv)) {
-    $argv = array_diff($argv, ['--no-redirect']);
+    $argv = array_values(array_diff($argv, ['--no-redirect']));
 }
 if (isset($_SERVER['argv'])) {
-    $_SERVER['argv'] = array_diff($_SERVER['argv'], ['--no-redirect']);
+    $_SERVER['argv'] = array_values(array_diff($_SERVER['argv'], ['--no-redirect']));
 }
 
 // @codingStandardsIgnoreStart
