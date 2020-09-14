@@ -1,7 +1,14 @@
 <?php
+
 namespace Codeception\Lib;
 
 use Codeception\Exception\ConfigurationException;
+use Dotenv\Repository\Adapter\EnvConstAdapter;
+use Dotenv\Repository\Adapter\ServerConstAdapter;
+use Dotenv\Repository\RepositoryBuilder;
+use Exception;
+use SimpleXMLElement;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Yaml\Yaml;
 
 class ParamsLoader
@@ -47,7 +54,7 @@ class ParamsLoader
             if (preg_match('~\.xml$~', $paramStorage)) {
                 return $this->loadXmlFile();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new ConfigurationException("Failed loading params from $paramStorage\n" . $e->getMessage());
         }
 
@@ -57,6 +64,20 @@ class ParamsLoader
     public function loadArray()
     {
         return $this->paramStorage;
+    }
+
+    protected function loadEnvironmentVars()
+    {
+        return $_SERVER;
+    }
+
+    protected function loadYamlFile()
+    {
+        $params = Yaml::parse(file_get_contents($this->paramsFile));
+        if (isset($params['parameters'])) { // Symfony style
+            $params = $params['parameters'];
+        }
+        return $params;
     }
 
     protected function loadIniFile()
@@ -69,23 +90,51 @@ class ParamsLoader
         return require $this->paramsFile;
     }
 
-    protected function loadYamlFile()
+    protected function loadDotEnvFile()
     {
-        $params = Yaml::parse(file_get_contents($this->paramsFile));
-        if (isset($params['parameters'])) { // Symfony style
-            $params = $params['parameters'];
+        if (class_exists('Dotenv\Dotenv')) {
+            if (class_exists('Dotenv\Repository\RepositoryBuilder') && method_exists('Dotenv\Repository\RepositoryBuilder', 'createWithNoAdapters')) {
+                //dotenv v5
+                $repository = RepositoryBuilder::createWithNoAdapters()
+                    ->addAdapter(EnvConstAdapter::class)
+                    ->make();
+                $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
+            } elseif (class_exists('Dotenv\Repository\RepositoryBuilder')) {
+                //dotenv v4
+                $repository = RepositoryBuilder::create()
+                    ->withReaders([new ServerConstAdapter()])
+                    ->immutable()
+                    ->make();
+                $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
+            } elseif (method_exists('Dotenv\Dotenv', 'create')) {
+                //dotenv v3
+                $dotEnv = \Dotenv\Dotenv::create(codecept_root_dir(), $this->paramStorage);
+            } else {
+                //dotenv v2
+                $dotEnv = new \Dotenv\Dotenv(codecept_root_dir(), $this->paramStorage);
+            }
+            $dotEnv->load();
+            return $_SERVER;
+        } elseif (class_exists('Symfony\Component\Dotenv\Dotenv')) {
+            $dotEnv = new Dotenv();
+            $dotEnv->load(codecept_root_dir($this->paramStorage));
+            return $_SERVER;
         }
-        return $params;
+
+        throw new ConfigurationException(
+            "`vlucas/phpdotenv` library is required to parse .env files.\n" .
+            "Please install it via composer: composer require vlucas/phpdotenv"
+        );
     }
 
     protected function loadXmlFile()
     {
-        $paramsToArray = function (\SimpleXMLElement $params) use (&$paramsToArray) {
+        $paramsToArray = function (SimpleXMLElement $params) use (&$paramsToArray) {
             $a = [];
             foreach ($params as $param) {
-                $key = isset($param['key']) ? (string) $param['key'] : $param->getName();
-                $type = isset($param['type']) ? (string) $param['type'] : 'string';
-                $value = (string) $param;
+                $key = isset($param['key']) ? (string)$param['key'] : $param->getName();
+                $type = isset($param['type']) ? (string)$param['type'] : 'string';
+                $value = (string)$param;
                 switch ($type) {
                     case 'bool':
                     case 'boolean':
@@ -102,7 +151,7 @@ class ParamsLoader
                         $a[$key] = $paramsToArray($param);
                         break;
                     default:
-                        $a[$key] = (string) $param;
+                        $a[$key] = (string)$param;
                 }
             }
 
@@ -110,47 +159,5 @@ class ParamsLoader
         };
 
         return $paramsToArray(simplexml_load_file($this->paramsFile));
-    }
-
-    protected function loadDotEnvFile()
-    {
-        if (class_exists('Dotenv\Dotenv')) {
-            if (class_exists('Dotenv\Repository\RepositoryBuilder') && method_exists('Dotenv\Repository\RepositoryBuilder', 'createWithNoAdapters')) {
-                //dotenv v5
-                $repository = \Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
-                    ->addAdapter(\Dotenv\Repository\Adapter\EnvConstAdapter::class)
-                    ->make();
-                $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
-            } elseif (class_exists('Dotenv\Repository\RepositoryBuilder')) {
-                //dotenv v4
-                $repository = \Dotenv\Repository\RepositoryBuilder::create()
-                    ->withReaders([new \Dotenv\Repository\Adapter\ServerConstAdapter()])
-                    ->immutable()
-                    ->make();
-                $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
-            } elseif (method_exists('Dotenv\Dotenv', 'create')) {
-                //dotenv v3
-                $dotEnv = \Dotenv\Dotenv::create(codecept_root_dir(), $this->paramStorage);
-            } else {
-                //dotenv v2
-                $dotEnv = new \Dotenv\Dotenv(codecept_root_dir(), $this->paramStorage);
-            }
-            $dotEnv->load();
-            return $_SERVER;
-        } elseif (class_exists('Symfony\Component\Dotenv\Dotenv')) {
-            $dotEnv = new \Symfony\Component\Dotenv\Dotenv();
-            $dotEnv->load(codecept_root_dir($this->paramStorage));
-            return $_SERVER;
-        }
-
-        throw new ConfigurationException(
-            "`vlucas/phpdotenv` library is required to parse .env files.\n" .
-            "Please install it via composer: composer require vlucas/phpdotenv"
-        );
-    }
-
-    protected function loadEnvironmentVars()
-    {
-        return $_SERVER;
     }
 }
