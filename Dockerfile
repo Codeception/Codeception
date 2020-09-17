@@ -20,6 +20,7 @@ RUN apt-get update && \
 # Install php extensions
 RUN docker-php-ext-install \
     bcmath \
+    mysqli \
     pdo pdo_mysql pdo_pgsql \
     soap \
     sockets \
