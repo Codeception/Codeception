@@ -337,19 +337,22 @@ class Run extends Command
                     // Find if the suite begins with an include path
                     if (strpos($suite, $include) === 0) {
                         // Use include config
-                        $config = Configuration::config($projectDir.$include);
+                        $includeConfig = Configuration::config($projectDir.$include);
 
-                        if (!isset($config['paths']['tests'])) {
+                        if (!isset($includeConfig['paths']['tests'])) {
                             throw new \RuntimeException(
                                 sprintf("Included '%s' has no tests path configured", $include)
                             );
                         }
 
-                        $testsPath = $include . DIRECTORY_SEPARATOR.  $config['paths']['tests'];
+                        $testsPath = $include . DIRECTORY_SEPARATOR.  $includeConfig['paths']['tests'];
 
                         try {
                             list(, $suite, $test) = $this->matchTestFromFilename($suite, $testsPath);
-                            $isIncludeTest = true;
+                            $config = $includeConfig;
+                            if (count($this->options['override'])) {
+                                $config = $this->overrideConfig($this->options['override']);
+                            }
                         } catch (\InvalidArgumentException $e) {
                             // Incorrect include match, continue trying to find one
                             continue;
@@ -360,11 +363,6 @@ class Run extends Command
                             list(, $suite, $test) = $result;
                         }
                     }
-                }
-
-                // Restore main config
-                if (!$isIncludeTest) {
-                    $config = Configuration::config($projectDir);
                 }
             } elseif (!empty($suite)) {
                 $result = $this->matchSingleTest($suite, $config);
