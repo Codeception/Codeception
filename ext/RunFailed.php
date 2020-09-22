@@ -7,7 +7,7 @@ use Codeception\Extension;
 use Codeception\Test\Descriptor;
 
 /**
- * Saves failed tests into tests/log/failed in order to rerun failed tests.
+ * Saves failed tests into tests/_output/failed in order to rerun failed tests.
  *
  * To rerun failed tests just run the `failed` group:
  *
