@@ -12,7 +12,8 @@ class Test
 
     protected $template = <<<EOF
 <?php {{namespace}}
-class {{name}}Test extends \Codeception\Test\Unit
+use Codeception\Test\Unit;
+class {{name}}Test extends Unit
 {
 {{tester}}
     protected function _before()
