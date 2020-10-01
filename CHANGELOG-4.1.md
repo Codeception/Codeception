@@ -1,3 +1,7 @@
+#### 4.1.8
+
+* Add compatibility with vlucas/phpdotenv v5
+
 #### 4.1.7
 
 * Compatibility with PhpCodeCoverage 9 and PHPUnit 9.3
