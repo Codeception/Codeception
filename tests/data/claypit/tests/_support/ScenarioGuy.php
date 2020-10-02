@@ -85,4 +85,20 @@ class ScenarioGuy extends \Codeception\Actor
      {
         echo "Argument: $arg1\n";
      }
+
+    /**
+     * @Given /multiple step definitions/
+     */
+    public function definition1()
+    {
+        echo __METHOD__ . ' was executed';
+    }
+
+    /**
+     * @Given /a step which matches/
+     */
+    public function definition2()
+    {
+        echo __METHOD__ . ' was executed';
+    }
 }
