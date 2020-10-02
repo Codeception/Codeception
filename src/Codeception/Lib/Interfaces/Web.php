@@ -966,7 +966,7 @@ interface Web
     /**
      * Grabs a cookie value.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
-     * If the cookie is set by an ajax request (XMLHttpRequest), there might be some delay, so try `$I->wait(0.1)`.
+     * If the cookie is set by an ajax request (XMLHttpRequest), there might be some delay caused by the browser, so try `$I->wait(0.1)`.
      *
      * @param $cookie
      *
