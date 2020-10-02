@@ -67,18 +67,17 @@ class LocalServer extends SuiteSubscriber
 
         if ($this->settings['remote_config']) {
             $this->addC3AccessHeader(self::COVERAGE_HEADER_CONFIG, $this->settings['remote_config']);
-        }
-
-        $knock = $this->c3Request('clear');
-        if ($knock === false) {
-            throw new RemoteException(
-                '
-                CodeCoverage Error.
-                Check the file "c3.php" is included in your application.
-                We tried to access "/c3/report/clear" but this URI was not accessible.
-                You can review actual error messages in c3tmp dir.
-                '
-            );
+            $knock = $this->c3Request('clear');
+            if ($knock === false) {
+                throw new RemoteException(
+                    '
+                    CodeCoverage Error.
+                    Check the file "c3.php" is included in your application.
+                    We tried to access "/c3/report/clear" but this URI was not accessible.
+                    You can review actual error messages in c3tmp dir.
+                    '
+                );
+            }
         }
     }
 
