@@ -15,6 +15,8 @@ modules:
           - MessageHelper
       config:
           MessageHelper:
+                message1: MESSAGE1 FROM SUITE.
+                message2: MESSAGE2 FROM SUITE.
                 message3: MESSAGE3 FROM SUITE.
 
 env:
