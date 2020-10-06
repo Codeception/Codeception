@@ -75,6 +75,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --coverage-xml        Generate CodeCoverage XML report in file (default: "coverage.xml")
  *  --coverage-text       Generate CodeCoverage text report in file (default: "coverage.txt")
  *  --coverage-phpunit    Generate CodeCoverage PHPUnit report in file (default: "coverage-phpunit")
+ *  --coverage-cobertura  Generate CodeCoverage Cobertura report in file (default: "coverage-cobertura")
  *  --no-exit             Don't finish with exit code
  *  --group (-g)          Groups of tests to be executed (multiple values allowed)
  *  --skip (-s)           Skip selected suites (multiple values allowed)
@@ -175,6 +176,12 @@ class Run extends Command
                 '',
                 InputOption::VALUE_OPTIONAL,
                 'Generate CodeCoverage report in Crap4J XML format'
+            ),
+            new InputOption(
+                'coverage-cobertura',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'Generate CodeCoverage report in Cobertura XML format'
             ),
             new InputOption(
                 'coverage-phpunit',
@@ -286,6 +293,7 @@ class Run extends Command
                 'coverage-html' => 'coverage',
                 'coverage-text' => 'coverage.txt',
                 'coverage-crap4j' => 'crap4j.xml',
+                'coverage-cobertura' => 'cobertura.xml',
                 'coverage-phpunit' => 'coverage-phpunit'])
         );
         $userOptions['verbosity'] = $this->output->getVerbosity();
