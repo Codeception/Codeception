@@ -88,7 +88,7 @@ class Logger extends Extension
     public function beforeSuite(SuiteEvent $e)
     {
         $suiteLogFile = str_replace('\\', '_', $e->getSuite()->getName()) . '.log';
-        $this->logHandler = new RotatingFileHandler($this->path . $suite, $this->config['max_files']);
+        $this->logHandler = new RotatingFileHandler($this->path . $suiteLogFile, $this->config['max_files']);
     }
 
     public function beforeTest(TestEvent $e)
