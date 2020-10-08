@@ -22,7 +22,7 @@ use Monolog\Handler\RotatingFileHandler;
  * ```
  *
  * Codeception's core/internal stuff is logged into `tests/_output/codeception.log`.
- * Test suites' steps are logged into `tests/_outoput/<test_full_name>-<rotation_date>.log`.
+ * Test suites' steps are logged into `tests/_output/<test_full_name>-<rotation_date>.log`.
  *
  * To enable this module add to your `codeception.yml`:
  *
