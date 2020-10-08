@@ -55,8 +55,8 @@ class Page extends \PHPUnit\Framework\Constraint\Constraint
     {
         $message = $this->uriMessage('on page');
         $message->append("\n--> ");
-        $message->append(substr($pageContent, 0, 300));
-        if (strlen($pageContent) > 300) {
+        $message->append(mb_substr($pageContent, 0, 300, 'utf-8'));
+        if (mb_strlen($pageContent, 'utf-8') > 300) {
             $debugMessage = new Message(
                 "[Content too long to display. See complete response in '" . codecept_output_dir() . "' directory]"
             );
