@@ -1,6 +1,13 @@
 #### 4.1.8
 
-* Add compatibility with vlucas/phpdotenv v5
+* Support Covertura code coverage format #5994 by @zachkknowbe4
+* Compatibility with vlucas/phpdotenv v5 #5975 by @johanzandstra
+* Support absolute output dir path on Windows #5966 by @Naktibalda
+* Fix --no-redirect option for run command #5967 by @convenient
+* Code coverage: Don't make request to c3.php if remote=false #5991 by @dereuromark
+* Gherkin: Fail on ambiguous step definition #5866 by @matthiasnoback
+* Removed complicated merge logic for environment configurations #5948 by @Sasti
+* Logger extension: add .log to suite log files #5982 by @varp
 
 #### 4.1.7
 
