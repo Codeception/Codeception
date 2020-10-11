@@ -21,7 +21,8 @@ use Monolog\Handler\RotatingFileHandler;
  * composer require monolog/monolog
  * ```
  *
- * Steps are logged into `tests/_output/codeception.log`
+ * Codeception's core/internal stuff is logged into `tests/_output/codeception.log`.
+ * Test suites' steps are logged into `tests/_output/<test_full_name>-<rotation_date>.log`.
  *
  * To enable this module add to your `codeception.yml`:
  *
@@ -86,13 +87,13 @@ class Logger extends Extension
 
     public function beforeSuite(SuiteEvent $e)
     {
-        $suite = str_replace('\\', '_', $e->getSuite()->getName());
-        $this->logHandler = new RotatingFileHandler($this->path . $suite, $this->config['max_files']);
+        $suiteLogFile = str_replace('\\', '_', $e->getSuite()->getName()) . '.log';
+        $this->logHandler = new RotatingFileHandler($this->path . $suiteLogFile, $this->config['max_files']);
     }
 
     public function beforeTest(TestEvent $e)
     {
-        self::$logger = new \Monolog\Logger(Descriptor::getTestFileName($e->getTest()));
+        self::$logger = new \Monolog\Logger(Descriptor::getTestFullName($e->getTest()));
         self::$logger->pushHandler($this->logHandler);
         self::$logger->info('------------------------------------');
         self::$logger->info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
