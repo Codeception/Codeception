@@ -2,6 +2,7 @@
 namespace Codeception\Lib;
 
 use Codeception\Exception\InjectionException;
+use Codeception\Util\ReflectionHelper;
 
 class Di
 {
@@ -138,7 +139,7 @@ class Di
         $args = [];
         $parameters = $method->getParameters();
         foreach ($parameters as $k => $parameter) {
-            $dependency = $parameter->getClass();
+            $dependency = ReflectionHelper::getClassFromParameter($parameter);
             if (is_null($dependency)) {
                 if (!$parameter->isOptional()) {
                     if (!isset($defaults[$k])) {
@@ -149,9 +150,9 @@ class Di
                 }
                 $args[] = $parameter->getDefaultValue();
             } else {
-                $arg = $this->instantiate($dependency->name);
+                $arg = $this->instantiate($dependency);
                 if (is_null($arg)) {
-                    throw new InjectionException("Failed to resolve dependency '{$dependency->name}'.");
+                    throw new InjectionException("Failed to resolve dependency '$dependency'.");
                 }
                 $args[] = $arg;
             }

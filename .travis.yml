@@ -4,6 +4,7 @@ php:
   - 7.0
   - 7.1
   - 7.3
+  - 8.0
 env:
   global:
     - COVERAGE=
@@ -18,7 +19,8 @@ matrix:
   # Run our coverage suite on 7.4 (so it uses php-code-coverage 9)
   - php: 7.4
     env: SUITES=cli,unit,coverage COVERAGE=1
-
+  allow_failures:
+    - php: 8.0
 branches:
   except:
     - gh-pages
