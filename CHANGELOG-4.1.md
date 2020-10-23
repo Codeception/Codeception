@@ -1,3 +1,9 @@
+#### 4.1.9
+
+* Support PHP 8 #5999
+* Generate correct default values in Actions files #5999
+* Use sendGet in Api template #5998 by @ThomasLandauer
+
 #### 4.1.8
 
 * Support Covertura code coverage format #5994 by @zachkknowbe4
