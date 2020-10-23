@@ -29,7 +29,7 @@ EOF;
     private $retryNum;
     private $retryInterval;
 
-    public function __construct($action, array $arguments = [], $retryNum, $retryInterval)
+    public function __construct($action, array $arguments, $retryNum, $retryInterval)
     {
         $this->action = $action;
         $this->arguments = $arguments;

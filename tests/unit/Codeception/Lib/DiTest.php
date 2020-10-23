@@ -40,7 +40,12 @@ class DiTest extends \Codeception\Test\Unit
     public function testFailDependenciesNonExistent()
     {
         require_once codecept_data_dir().'FailDependenciesNonExistent.php';
-        $this->injectionShouldFail('Class FailDependenciesNonExistent\NonExistentClass does not exist');
+        if (PHP_MAJOR_VERSION < 8) {
+            $expectedExceptionMessage = 'Class FailDependenciesNonExistent\NonExistentClass does not exist';
+        } else {
+            $expectedExceptionMessage = 'Class "FailDependenciesNonExistent\NonExistentClass" does not exist';
+        }
+        $this->injectionShouldFail($expectedExceptionMessage);
         $this->di->instantiate('FailDependenciesNonExistent\IncorrectDependenciesClass');
     }
 
