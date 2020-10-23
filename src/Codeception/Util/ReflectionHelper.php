@@ -95,4 +95,78 @@ class ReflectionHelper
 
         return $typeString;
     }
+
+    /**
+     * Infer default parameter from the reflection object and format it as PHP (code) string
+     *
+     * @param \ReflectionParameter $param
+     *
+     * @return string
+     */
+    public static function getDefaultValue(\ReflectionParameter $param)
+    {
+        if ($param->isDefaultValueAvailable()) {
+            if (method_exists($param, 'isDefaultValueConstant') && $param->isDefaultValueConstant()) {
+                $constName = $param->getDefaultValueConstantName();
+                if (false !== strpos($constName, '::')) {
+                    list($class, $const) = explode('::', $constName);
+                    if (in_array($class, ['self', 'static'])) {
+                        $constName = $param->getDeclaringClass()->getName().'::'.$const;
+                    }
+                }
+
+                return $constName;
+            }
+
+            return self::phpEncodeValue($param->getDefaultValue());
+        }
+
+        return 'null';
+    }
+
+    /**
+     * PHP encode value
+     *
+     * @param mixed $value
+     *
+     * @return string
+     */
+    public static function phpEncodeValue($value)
+    {
+        if (is_array($value)) {
+            return self::phpEncodeArray($value);
+        }
+
+        if (is_string($value)) {
+            return json_encode($value);
+        }
+
+        return var_export($value, true);
+    }
+
+    /**
+     * Recursively PHP encode an array
+     *
+     * @param array $array
+     *
+     * @return string
+     */
+    public static function phpEncodeArray(array $array)
+    {
+        $isPlainArray = function (array $value) {
+            return ((count($value) === 0)
+                || (
+                    (array_keys($value) === range(0, count($value) - 1))
+                    && (0 === count(array_filter(array_keys($value), 'is_string'))))
+            );
+        };
+
+        if ($isPlainArray($array)) {
+            return '[' . implode(', ', array_map([self::class, 'phpEncodeValue'], $array)) . ']';
+        }
+
+        return '[' . implode(', ', array_map(function ($key) use ($array) {
+                return self::phpEncodeValue($key) . ' => ' . self::phpEncodeValue($array[$key]);
+        }, array_keys($array))) . ']';
+    }
 }

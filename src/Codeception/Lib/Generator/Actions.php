@@ -5,6 +5,7 @@ use Codeception\Codecept;
 use Codeception\Configuration;
 use Codeception\Lib\Di;
 use Codeception\Lib\ModuleContainer;
+use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Template;
 
 class Actions
@@ -155,7 +156,7 @@ EOF;
         $params = [];
         foreach ($refMethod->getParameters() as $param) {
             if ($param->isOptional()) {
-                $params[] = '$' . $param->name . ' = null';
+                $params[] = '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
                 $params[] = '$' . $param->name;
             };
