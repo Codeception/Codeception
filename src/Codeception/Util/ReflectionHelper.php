@@ -1,9 +1,10 @@
 <?php
 namespace Codeception\Util;
 
-use ReflectionClass;
 use ReflectionException;
 use ReflectionParameter;
+use ReflectionProperty;
+use ReflectionMethod;
 
 /**
  * This class contains helper methods to help with common Reflection tasks.
@@ -17,14 +18,15 @@ class ReflectionHelper
      * @param string $property
      * @param string|null $class
      * @return mixed
+     * @throws ReflectionException
      */
     public static function readPrivateProperty($object, $property, $class = null)
     {
         if (is_null($class)) {
-            $class = $object;
+            $class = get_class($object);
         }
 
-        $property = new \ReflectionProperty($class, $property);
+        $property = new ReflectionProperty($class, $property);
         $property->setAccessible(true);
 
         return $property->getValue($object);
@@ -38,14 +40,15 @@ class ReflectionHelper
      * @param array $args
      * @param string|null $class
      * @return mixed
+     * @throws ReflectionException
      */
     public static function invokePrivateMethod($object, $method, $args = [], $class = null)
     {
         if (is_null($class)) {
-            $class = $object;
+            $class = get_class($object);
         }
 
-        $method = new \ReflectionMethod($class, $method);
+        $method = new ReflectionMethod($class, $method);
         $method->setAccessible(true);
 
         return $method->invokeArgs($object, $args);
@@ -99,11 +102,11 @@ class ReflectionHelper
     /**
      * Infer default parameter from the reflection object and format it as PHP (code) string
      *
-     * @param \ReflectionParameter $param
+     * @param ReflectionParameter $param
      *
      * @return string
      */
-    public static function getDefaultValue(\ReflectionParameter $param)
+    public static function getDefaultValue(ReflectionParameter $param)
     {
         if ($param->isDefaultValueAvailable()) {
             if (method_exists($param, 'isDefaultValueConstant') && $param->isDefaultValueConstant()) {
@@ -111,7 +114,7 @@ class ReflectionHelper
                 if (false !== strpos($constName, '::')) {
                     list($class, $const) = explode('::', $constName);
                     if (in_array($class, ['self', 'static'])) {
-                        $constName = $param->getDeclaringClass()->getName().'::'.$const;
+                        $constName = '\\' . $param->getDeclaringClass()->getName() . '::' . $const;
                     }
                 }
 
@@ -121,7 +124,17 @@ class ReflectionHelper
             return self::phpEncodeValue($param->getDefaultValue());
         }
 
-        return 'null';
+        $type = $param->getType();
+
+        if (!$type || $type->allowsNull() || !$type->isBuiltin()) {
+            return 'null';
+        }
+
+        $result = null;
+
+        settype($result, $type->getName());
+
+        return var_export($result, true);
     }
 
     /**
@@ -167,6 +180,6 @@ class ReflectionHelper
 
         return '[' . implode(', ', array_map(function ($key) use ($array) {
                 return self::phpEncodeValue($key) . ' => ' . self::phpEncodeValue($array[$key]);
-        }, array_keys($array))) . ']';
+            }, array_keys($array))) . ']';
     }
 }
