@@ -23,7 +23,7 @@ class ReflectionHelper
     public static function readPrivateProperty($object, $property, $class = null)
     {
         if (is_null($class)) {
-            $class = get_class($object);
+            $class = $object;
         }
 
         $property = new ReflectionProperty($class, $property);
@@ -45,7 +45,7 @@ class ReflectionHelper
     public static function invokePrivateMethod($object, $method, $args = [], $class = null)
     {
         if (is_null($class)) {
-            $class = get_class($object);
+            $class = $object;
         }
 
         $method = new ReflectionMethod($class, $method);
