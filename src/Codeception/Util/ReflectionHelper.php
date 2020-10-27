@@ -178,8 +178,13 @@ class ReflectionHelper
             return '[' . implode(', ', array_map([self::class, 'phpEncodeValue'], $array)) . ']';
         }
 
-        return '[' . implode(', ', array_map(function ($key) use ($array) {
+        $values = array_map(
+            function ($key) use ($array) {
                 return self::phpEncodeValue($key) . ' => ' . self::phpEncodeValue($array[$key]);
-            }, array_keys($array))) . ']';
+            },
+            array_keys($array)
+        );
+
+        return '[' . implode(', ', $values) . ']';
     }
 }
