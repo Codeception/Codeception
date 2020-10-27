@@ -5,9 +5,9 @@ class ReflectionTestClass
 {
     const FOO = 'bar';
 
-    private string $value = 'test';
-    protected Debug $obj;
-    static string $flavorOfTheWeek = '';
+    private $value = 'test';
+    protected $obj = null;
+    static $flavorOfTheWeek = '';
 
     public function setInt(int $i): self
     {
