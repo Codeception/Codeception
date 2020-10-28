@@ -126,15 +126,29 @@ class ReflectionHelper
 
         $type = $param->getType();
 
+        // Return 'null' as default if explicitly allowed or there is no specific type hint.
         if (!$type || $type->allowsNull() || !$type->isBuiltin()) {
             return 'null';
         }
 
-        $result = null;
-
-        settype($result, $type->getName());
-
-        return var_export($result, true);
+        // Default value should match the parameter type if 'null' is _not_ allowed.
+        switch ($type->getName()) {
+            case 'string':
+                return "''";
+            case 'array':
+                return '[]';
+            case 'boolean':
+                return 'false';
+            case 'int':
+            case 'integer':
+            case 'float':
+            case 'double':
+            case 'number':
+            case 'numeric':
+                return '0';
+            default:
+                return 'null';
+        }
     }
 
     /**
