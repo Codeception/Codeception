@@ -124,14 +124,19 @@ class ReflectionHelper
             return self::phpEncodeValue($param->getDefaultValue());
         }
 
+        // Default to 'null' for PHP versions < 7.1.
+        if(PHP_VERSION_ID < 70100) {
+            return 'null';
+        }
+
         $type = $param->getType();
 
-        // Return 'null' as default if explicitly allowed or there is no specific type hint.
+        // Default to 'null' if explicitly allowed or there is no specific type hint.
         if (!$type || $type->allowsNull() || !$type->isBuiltin()) {
             return 'null';
         }
 
-        // Default value should match the parameter type if 'null' is _not_ allowed.
+        // Default value should match the parameter type if 'null' is NOT allowed.
         switch ($type->getName()) {
             case 'string':
                 return "''";

@@ -113,12 +113,12 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
 
         $this->assertEquals(
-            "''",
+            PHP_VERSION_ID < 70100 ? 'null' : "''",
             ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setValue'), 0))
         );
 
         $this->assertEquals(
-            '0',
+            PHP_VERSION_ID < 70100 ? 'null' : '0',
             ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setInt'), 0))
         );
 
