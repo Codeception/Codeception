@@ -125,7 +125,7 @@ class ReflectionHelper
         }
 
         // Default to 'null' for PHP versions < 7.1.
-        if(PHP_VERSION_ID < 70100) {
+        if (PHP_VERSION_ID < 70100) {
             return 'null';
         }
 
