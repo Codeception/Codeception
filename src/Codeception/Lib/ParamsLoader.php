@@ -119,6 +119,7 @@ class ParamsLoader
                 //dotenv v5
                 $repository = \Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
                     ->addAdapter(\Dotenv\Repository\Adapter\EnvConstAdapter::class)
+                    ->addAdapter(\Dotenv\Repository\Adapter\ServerConstAdapter::class)
                     ->make();
                 $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
             } elseif (class_exists('Dotenv\Repository\RepositoryBuilder')) {
