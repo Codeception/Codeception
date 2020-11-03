@@ -1,3 +1,7 @@
+#### 4.1.11
+
+* Another patch for class constant default values #6027 by @mwi-gofore
+
 #### 4.1.10
 
 * Use fully qualified name for class constant defaults #6016 by @lastzero
