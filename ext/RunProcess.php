@@ -9,7 +9,7 @@ use Symfony\Component\Process\Process;
 
 /**
  * Extension to start and stop processes per suite.
- * Can be used to start/stop selenium server, chromedriver, phantomjs, mailcatcher, etc.
+ * Can be used to start/stop selenium server, chromedriver, mailcatcher, etc.
  *
  * Can be configured in suite config:
  *
