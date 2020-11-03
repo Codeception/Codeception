@@ -113,6 +113,11 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
 
         $this->assertEquals(
+            '\Codeception\Codecept::VERSION',
+            ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setFlavorImportedDefault'), 'flavor'))
+        );
+
+        $this->assertEquals(
             PHP_VERSION_ID < 70100 ? 'null' : "''",
             ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setValue'), 0))
         );

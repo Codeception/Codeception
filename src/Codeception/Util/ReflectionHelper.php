@@ -115,6 +115,8 @@ class ReflectionHelper
                     list($class, $const) = explode('::', $constName);
                     if (in_array($class, ['self', 'static'])) {
                         $constName = '\\' . $param->getDeclaringClass()->getName() . '::' . $const;
+                    } elseif (substr($class, 0, 1) !== '\\') {
+                        $constName = '\\' . $constName;
                     }
                 }
 
