@@ -1,3 +1,8 @@
+#### 4.1.10
+
+* Use fully qualified name for class constant defaults #6016 by @lastzero
+* add ServerConstAdapter for phpdotenv v5 #6015 by #retnek
+
 #### 4.1.9
 
 * Support PHP 8 #5999
