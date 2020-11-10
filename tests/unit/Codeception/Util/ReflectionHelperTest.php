@@ -90,6 +90,11 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
             null,
             ReflectionHelper::getClassFromParameter(new ReflectionParameter(array($object, 'setDebug'), 'flavor'))
         );
+
+        $this->assertEquals(
+            null,
+            ReflectionHelper::getClassFromParameter(new ReflectionParameter(array($object, 'setInt'), 'i'))
+        );
     }
 
     public function testGetDefaultValue()
