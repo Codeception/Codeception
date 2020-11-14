@@ -85,7 +85,7 @@ class ReflectionHelper
         }
 
         $type = $parameter->getType();
-        if ($type === null) {
+        if ($type === null || $type->isBuiltin()) {
             return null;
         }
         $typeString = $type->getName();
