@@ -1,3 +1,7 @@
+#### 4.1.12
+
+* Dependency Injection: Fix PHP types being treated as classes #6031 by @cs278
+
 #### 4.1.11
 
 * Another patch for class constant default values #6027 by @mwi-gofore

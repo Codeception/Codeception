@@ -10,7 +10,7 @@ class Codecept
 {
     use DispatcherWrapper;
 
-    const VERSION = '4.1.11';
+    const VERSION = '4.1.12';
 
     /**
      * @var \Codeception\PHPUnit\Runner
