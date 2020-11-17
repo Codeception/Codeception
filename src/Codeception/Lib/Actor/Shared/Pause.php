@@ -93,7 +93,7 @@ trait Pause
         $readline->addMapping($tput->get('key_f8'), $viewStashedFn);
         $readline->addMapping($tput->get('key_f10'), $clearStashFn);
 
-        $output->writeln("  <comment>Execution PAUSED, starting interactive shell...</comment>");
+        $output->writeln("  <comment>Execution PAUSED, starting Interactive Shell...</comment>");
         $output->writeln("  Type in commands to try them:");
         $output->writeln("  - <info>ENTER</info> to continue");
         $output->writeln("  - <info>TAB</info> to auto-complete");
@@ -101,6 +101,7 @@ trait Pause
         $output->writeln("  - <info>F6</info> to toggle auto-stashing of successful commands");
         $output->writeln("  - <info>F8</info> to view stashed commands");
         $output->writeln("  - <info>F10</info> to clear stashed commands");
+        $output->writeln("  - <info>exit</info> to leave the Interactive Shell");
 
         $result = '';
 
