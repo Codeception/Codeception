@@ -94,7 +94,7 @@ trait Pause
         $readline->addMapping($tput->get('key_f10'), $clearStashFn);
 
         $output->writeln("  <comment>Execution PAUSED, starting Interactive Shell...</comment>");
-        $output->writeln("  Type in PHP commands to try them, or press:");
+        $output->writeln("  Type in commands to try them, or press:");
         $output->writeln("  - <info>ENTER</info> (on blank line) to leave the Interactive Shell");
         $output->writeln("  - <info>TAB</info> to auto-complete");
         $output->writeln("  - <info>F5</info> to stash a command");
