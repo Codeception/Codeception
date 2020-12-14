@@ -59,7 +59,7 @@ if (!function_exists('codecept_debug')) {
 if (!function_exists('codecept_root_dir')) {
     function codecept_root_dir($appendPath = '')
     {
-        return \Codeception\Configuration::projectDir() . $appendPath;
+        return \Codeception\Configuration::rootDir() . $appendPath;
     }
 }
 
@@ -89,7 +89,7 @@ if (!function_exists('codecept_relative_path')) {
     {
         return \Codeception\Util\PathResolver::getRelativeDir(
             $path,
-            \Codeception\Configuration::projectDir(),
+            \Codeception\Configuration::rootDir(),
             DIRECTORY_SEPARATOR
         );
     }

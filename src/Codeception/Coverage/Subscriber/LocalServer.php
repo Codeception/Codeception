@@ -140,15 +140,15 @@ class LocalServer extends SuiteSubscriber
         }
 
         $workDir    = rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
-        $projectDir = Configuration::projectDir();
+        $rootDir = Configuration::rootDir();
         $data       = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
 
-        codecept_debug("Replacing all instances of {$workDir} with {$projectDir}");
+        codecept_debug("Replacing all instances of {$workDir} with {$rootDir}");
 
         foreach ($data as $path => $datum) {
             unset($data[$path]);
 
-            $path = str_replace($workDir, $projectDir, $path);
+            $path = str_replace($workDir, $rootDir, $path);
 
             $data[$path] = $datum;
         }

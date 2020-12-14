@@ -76,7 +76,7 @@ class Filter
             }
             foreach ($coverage['whitelist']['include'] as $fileOrDir) {
                 $finder = strpos($fileOrDir, '*') === false
-                    ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
+                    ? [Configuration::rootDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
                 foreach ($finder as $file) {
@@ -98,7 +98,7 @@ class Filter
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 try {
                     $finder = strpos($fileOrDir, '*') === false
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
+                        ? [Configuration::rootDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {
@@ -138,7 +138,7 @@ class Filter
             if (isset($coverage['blacklist']['include'])) {
                 foreach ($coverage['blacklist']['include'] as $fileOrDir) {
                     $finder = strpos($fileOrDir, '*') === false
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
+                        ? [Configuration::rootDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {
@@ -149,7 +149,7 @@ class Filter
             if (isset($coverage['blacklist']['exclude'])) {
                 foreach ($coverage['blacklist']['exclude'] as $fileOrDir) {
                     $finder = strpos($fileOrDir, '*') === false
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
+                        ? [Configuration::rootDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {
@@ -171,9 +171,9 @@ class Filter
         if (count($parts)) {
             $last_path = array_pop($parts);
             if ($last_path === '*') {
-                $finder->in(Configuration::projectDir() . implode('/', $parts));
+                $finder->in(Configuration::rootDir() . implode('/', $parts));
             } else {
-                $finder->in(Configuration::projectDir() . implode('/', $parts) . '/' . $last_path);
+                $finder->in(Configuration::rootDir() . implode('/', $parts) . '/' . $last_path);
             }
         }
         $finder->ignoreVCS(true)->files();

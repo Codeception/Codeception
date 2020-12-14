@@ -33,6 +33,12 @@ class Configuration
     protected static $dir = null;
 
     /**
+     * @var string Project root dir.
+     * @see self::rootDir()
+     */
+    protected static $rootDir = null;
+
+    /**
      * @var string Current project output directory.
      */
     protected static $outputDir = null;
@@ -200,6 +206,10 @@ class Configuration
 
         self::$config = $config;
 
+        if (isset($config['paths']) && isset($config['paths']['root'])) {
+            self::$rootDir = $config['paths']['root'];
+        }
+
         // compatibility with suites created by Codeception < 2.3.0
         if (!isset($config['paths']['output']) and isset($config['paths']['log'])) {
             $config['paths']['output'] = $config['paths']['log'];
@@ -291,7 +301,7 @@ class Configuration
         $suites = Finder::create()
             ->files()
             ->name('*.{suite,suite.dist}.yml')
-            ->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)
+            ->in(self::testsDir())
             ->depth('< 1')
             ->sortByName();
 
@@ -337,10 +347,10 @@ class Configuration
         $settings = self::mergeConfigs(self::$defaultSuiteSettings, $globalConf);
 
         // load suite config
-        $settings = self::loadSuiteConfig($suite, $config['paths']['tests'], $settings);
+        $settings = self::loadSuiteConfig($suite, self::testsDir(), $settings);
         // load from environment configs
         if (isset($config['paths']['envs'])) {
-            $envConf = self::loadEnvConfigs(self::$dir . DIRECTORY_SEPARATOR . $config['paths']['envs']);
+            $envConf = self::loadEnvConfigs(self::envsDir());
             $settings = self::mergeConfigs($settings, $envConf);
         }
 
@@ -356,10 +366,7 @@ class Configuration
 
         $config['paths']['tests'] = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['tests']);
 
-        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
-            . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
-
-
+        $settings['path'] = self::testsDir() . $settings['path'] . DIRECTORY_SEPARATOR;
 
         return $settings;
     }
@@ -498,7 +505,7 @@ class Configuration
      */
     public static function dataDir()
     {
-        return self::$dir . DIRECTORY_SEPARATOR . self::$dataDir . DIRECTORY_SEPARATOR;
+        return self::rootDir() . self::$dataDir . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -509,7 +516,7 @@ class Configuration
      */
     public static function supportDir()
     {
-        return self::$dir . DIRECTORY_SEPARATOR . self::$supportDir . DIRECTORY_SEPARATOR;
+        return self::rootDir() . self::$supportDir . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -525,7 +532,7 @@ class Configuration
             throw new ConfigurationException("Path for output not specified. Please, set output path in global config");
         }
 
-        $dir = self::$outputDir . DIRECTORY_SEPARATOR;
+        $dir = self::rootDir() . self::$outputDir . DIRECTORY_SEPARATOR;
         if (!codecept_is_path_absolute($dir)) {
             $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
         }
@@ -558,14 +565,26 @@ class Configuration
     }
 
     /**
-     * Returns path to the root of your project.
-     * Basically returns path to current `codeception.yml` loaded.
+     * returns path to current `codeception.yml` loaded.
      * Use this method instead of `__DIR__`, `getcwd()` or anything else.
      * @return string
      */
     public static function projectDir()
     {
         return self::$dir . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Returns path to the root of your project.
+     * @return string
+     */
+    public static function rootDir()
+    {
+        if (self::$rootDir) {
+            return realpath(self::$dir . DIRECTORY_SEPARATOR . self::$rootDir) . DIRECTORY_SEPARATOR;
+        }
+
+        return self::projectDir();
     }
 
 
@@ -576,7 +595,7 @@ class Configuration
      */
     public static function testsDir()
     {
-        return self::$dir . DIRECTORY_SEPARATOR . self::$testsDir . DIRECTORY_SEPARATOR;
+        return self::rootDir() . self::$testsDir . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -590,7 +609,7 @@ class Configuration
         if (!self::$envsDir) {
             return null;
         }
-        return self::$dir . DIRECTORY_SEPARATOR . self::$envsDir . DIRECTORY_SEPARATOR;
+        return self::rootDir() . self::$envsDir . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -682,16 +701,14 @@ class Configuration
             return self::mergeConfigs($settings, self::$config['suites'][$suite]);
         }
 
-        $suiteDir = self::$dir . DIRECTORY_SEPARATOR . $path;
-
-        $suiteDistConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
-        $suiteConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "$suite.suite.yml");
+        $suiteDistConf = self::getConfFromFile($path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
+        $suiteConf = self::getConfFromFile(self::testsDir() . DIRECTORY_SEPARATOR . "$suite.suite.yml");
 
         // now we check the suite config file, if a extends key is defined
         if (isset($suiteConf['extends'])) {
             $presetFilePath = codecept_is_path_absolute($suiteConf['extends'])
                 ? $suiteConf['extends'] // If path is absolute – use it
-                : realpath($suiteDir . DIRECTORY_SEPARATOR . $suiteConf['extends']); // Otherwise try to locate it in the suite dir
+                : realpath(self::testsDir() . DIRECTORY_SEPARATOR . $suiteConf['extends']); // Otherwise try to locate it in the suite dir
 
             if (file_exists($presetFilePath)) {
                 $settings = self::mergeConfigs(self::getConfFromFile($presetFilePath), $settings);
