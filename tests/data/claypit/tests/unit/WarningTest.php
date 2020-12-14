@@ -1,15 +1,8 @@
 <?php
 class WarningTest extends \Codeception\Test\Unit
 {
-    /**
-     * @dataProvider dependentProvider
-     */
-    public function testWarningInvalidDataProvider($a)
+    public function testWarning()
     {
-        $this->assertTrue(true);
-    }
-    public function dependentProvider()
-    {
-        throw new Exception;
+        throw new \PHPUnit\Framework\Warning();
     }
 }

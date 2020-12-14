@@ -563,7 +563,7 @@ EOF
     {
         $I->executeCommand('run unit WarningTest.php', false);
         $I->seeInShellOutput('There was 1 warning');
-        $I->seeInShellOutput('WarningTest::testWarningInvalidDataProvider');
+        $I->seeInShellOutput('WarningTest: Warning');
         $I->seeInShellOutput('Tests: 1,');
         $I->seeInShellOutput('Warnings: 1.');
     }

@@ -1,13 +1,10 @@
 version: '2'
 services:
   codecept:
-    image: testing/codeception/codeception
-    build: ..
-    working_dir: /repo
+    build:
+      context: ../
+      dockerfile: Dockerfile-dev
     volumes:
-      - ../tests:/repo/tests
-      - ../codeception.yml:/repo/codeception.yml
-      - ../src:/repo/src
-      - ../shim.php:/repo/shim.php
+      - ../:/repo
   #redis:
   #  image: redis:3

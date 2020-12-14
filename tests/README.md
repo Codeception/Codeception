@@ -170,17 +170,10 @@ Using `docker-compose` for test configurations
 
     cd tests
 
-Build the `codeception/codeception` image
+Build the `codeception` image and install composer packages
 
     docker-compose build
-
-Start
-
-    docker-compose up -d
-
-By default the image has `codecept` as its entrypoint, to run the tests simply supply the `run` command
-
-    docker-compose run --rm codecept help
+    docker-compose run --rm --entrypoint composer codecept install
 
 Run suite
 
