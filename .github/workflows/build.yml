@@ -71,7 +71,6 @@ jobs:
 
       - name: Run tests PHP 8.0
         if: matrix.php == '8.0'
-        continue-on-error: true
         run: |
           php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
           php codecept build
