@@ -436,6 +436,9 @@ class Run extends Command
                 }
                 $testsPath = $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suiteConfig['path'];
                 if ($suiteConfig['path'] === '.') {
+                    if ($config['paths']['tests'] === '.') {
+                        return ['', $s, $suite];
+                    }
                     $testsPath = $config['paths']['tests'];
                 }
                 if (preg_match("~^$testsPath/(.*?)$~", $suite, $matches)) {
@@ -456,8 +459,11 @@ class Run extends Command
             $realTestDir = realpath(Configuration::testsDir());
             $cwd = getcwd();
             if (strpos($realTestDir, $cwd) === 0) {
-                list($path) = explode(':', $suite);
-                $realPath = $cwd . DIRECTORY_SEPARATOR . $path;
+                $file = $suite;
+                if (strpos($file, ':') !== false) {
+                    list($file) = explode(':', $suite, -1);
+                }
+                $realPath = $cwd . DIRECTORY_SEPARATOR . $file;
                 if (file_exists($realPath) || is_dir($realPath)) {
                     return $this->matchTestFromFilename(
                         $cwd . DIRECTORY_SEPARATOR . $suite,
