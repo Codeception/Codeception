@@ -1,0 +1,131 @@
+on:
+  pull_request:
+    branches-ignore: gh-pages
+  push:
+    branches-ignore: gh-pages
+
+name: build
+
+jobs:
+  linux:
+    name: PHP ${{ matrix.php }}-${{ matrix.os }}
+
+    env:
+      extensions: curl, mbstring, openssl, pdo, pdo_sqlite
+      SYMFONY_DEPRECATIONS_HELPER: weak
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        php: ["5.6", "7.0", "7.1", "7.2", "7.3", "7.4", "8.0"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ env.extensions }}
+          ini-values: memory_limit=-1, date.timezone='UTC'
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Determine composer cache directory
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+      - name: Cache dependencies installed with composer
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php${{ matrix.php }}-composer-
+
+      - name: Update composer
+        run: composer self-update
+
+      - name: Validate composer.json
+        run: composer validate
+
+      - name: Composer install
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+
+      - name: Run tests PHP 5.6, 7.0, 7.1, 7.3
+        if: matrix.php == '56' || matrix.php == '7.0' || matrix.php == '7.1' || matrix.php == '7.3'
+        run: |
+          php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
+          php codecept build
+          php codecept run cli,unit
+
+      - name: Run tests PHP 7.2, 7.4
+        if: matrix.php == '7.2' || matrix.php == '7.4'
+        run: |
+          php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
+          php codecept build
+          php codecept run cli,unit,coverage --env COVERAGE=1
+
+      - name: Run tests PHP 8.0
+        if: matrix.php == '8.0'
+        run: |
+          php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
+          php codecept build
+          php codecept run cli,unit,coverage --env COVERAGE=1          
+
+  windows-latest:
+    name: PHP ${{ matrix.php }}-${{ matrix.os }}
+
+    env:
+      extensions: curl, mbstring, openssl, pdo, pdo_sqlite
+      SYMFONY_DEPRECATIONS_HELPER: weak
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+
+        php: ["7.0", "7.1", "7.2", "7.3", "7.4", "8.0"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ env.extensions }}
+          ini-values: memory_limit=-1, date.timezone='UTC'
+          tools: composer:v2
+
+      - name: Determine composer cache directory
+        run: echo "COMPOSER_CACHE_DIR=~\AppData\Local\Composer" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Cache dependencies installed with composer
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php${{ matrix.php }}-composer-
+
+      - name: Update composer
+        run: composer self-update
+
+      - name: Validate composer.json
+        run: composer validate
+
+      - name: Composer install
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+
+      - name: Run tests cli
+        run: php codecept run cli --skip-group coverage
+        
+      - name: Run tests unit
+        run: php codecept run unit -g core -g appveyor
