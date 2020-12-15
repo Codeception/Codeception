@@ -36,6 +36,7 @@ before_install:
   - php -i
   - export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo memory_limit = -1 >> $INI
+  - echo xdebug.mode = coverage >> $INI
 install:
   - '[[ -z "$CI_USER_TOKEN" ]] || composer config github-oauth.github.com ${CI_USER_TOKEN};'
   - composer install
