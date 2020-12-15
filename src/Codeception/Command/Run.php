@@ -117,7 +117,6 @@ class Run extends Command
      */
     protected $output;
 
-
     /**
      * Sets Run arguments
      * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
@@ -429,12 +428,6 @@ class Run extends Command
 
     protected function matchSingleTest($suite, $config)
     {
-        // Workaround when codeception.yml is inside tests directory and tests path is set to "."
-        // @see https://github.com/Codeception/Codeception/issues/4432
-        if (isset($config['paths']['tests']) && $config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
-            $suite = './' . $suite;
-        }
-
         // running a single test when suite has a configured path
         if (isset($config['suites'])) {
             foreach ($config['suites'] as $s => $suiteConfig) {
@@ -453,9 +446,25 @@ class Run extends Command
             }
         }
 
-        // Run single test without included tests
-        if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
-            return $this->matchTestFromFilename($suite, $config['paths']['tests']);
+        if (! Configuration::isEmpty()) {
+            // Run single test without included tests
+            if (strpos($suite, $config['paths']['tests']) === 0) {
+                return $this->matchTestFromFilename($suite, $config['paths']['tests']);
+            }
+
+            // Run single test from working directory
+            $realTestDir = realpath(Configuration::testsDir());
+            $cwd = getcwd();
+            if (strpos($realTestDir, $cwd) === 0) {
+                list($path) = explode(':', $suite);
+                $realPath = $cwd . DIRECTORY_SEPARATOR . $path;
+                if (file_exists($realPath) || is_dir($realPath)) {
+                    return $this->matchTestFromFilename(
+                        $cwd . DIRECTORY_SEPARATOR . $suite,
+                        $realTestDir
+                    );
+                }
+            }
         }
     }
 
@@ -483,7 +492,6 @@ class Run extends Command
             }
         }
     }
-
 
     protected function currentNamespace()
     {
