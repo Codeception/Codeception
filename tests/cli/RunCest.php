@@ -558,9 +558,11 @@ EOF
         $I->seeInShellOutput('Failures: 2.');
     }
 
-
-    public function runWarningTests(CliGuy $I)
+    public function runWarningTests(CliGuy $I, \Codeception\Scenario $scenario)
     {
+        if (version_compare(\PHPUnit\Runner\Version::id(), '9.5.0', '>=')) {
+            $scenario->skip('This warning is an error since PHPUnit 9.5');
+        }
         $I->executeCommand('run unit WarningTest.php', false);
         $I->seeInShellOutput('There was 1 warning');
         $I->seeInShellOutput('WarningTest::testWarningInvalidDataProvider');
