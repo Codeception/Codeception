@@ -41,8 +41,7 @@
         "codeception/module-db": "*@dev",
         "codeception/module-filesystem": "*@dev",
         "codeception/module-phpbrowser": "*@dev",
-        "codeception/util-universalframework": "*@dev",
-        "phpunit/phpunit": "<9.5"
+        "codeception/util-universalframework": "*@dev"
     },
     "suggest": {
         "hoa/console": "For interactive console functionality",
