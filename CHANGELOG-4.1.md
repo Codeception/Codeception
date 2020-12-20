@@ -1,3 +1,7 @@
+#### 4.1.13
+
+* Gherkin: Fixed loading methods from namespaced helper classes #6057
+
 #### 4.1.12
 
 * Dependency Injection: Fix PHP types being treated as classes #6031 by @cs278
