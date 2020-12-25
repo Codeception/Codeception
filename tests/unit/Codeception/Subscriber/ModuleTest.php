@@ -12,6 +12,7 @@ use Codeception\Suite;
 use Codeception\Test\Test;
 use Codeception\Test\Unit;
 use Codeception\TestInterface;
+use DateTime;
 use Exception;
 use Prophecy\Prophecy\ObjectProphecy;
 use Prophecy\Prophet;
@@ -25,6 +26,28 @@ class ModuleTest extends Unit
     {
         $this->prophet = new Prophet();
         CodeceptionModuleStub::$callOrderSequence = 1;
+    }
+
+    public function testBeforeSuiteDoesNothingWhenEventSuiteHasIncorrectType()
+    {
+        /** @var ModuleContainer $moduleContainer */
+        $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
+
+        $module1 = new CodeceptionModuleStub($moduleContainer);
+        $module2 = new CodeceptionModuleStub($moduleContainer);
+        $module3 = new CodeceptionModuleStub($moduleContainer);
+
+        /** @var SuiteEvent|ObjectProphecy $suiteEvent */
+        $suiteEvent = $this->prophet->prophesize(SuiteEvent::class);
+        $suiteEvent->getSuite()->willReturn(new DateTime());
+        $suiteEvent = $suiteEvent->reveal();
+
+        $subject = new Module();
+        $subject->beforeSuite($suiteEvent);
+
+        $this->assertEquals(0, $module1->getCallOrder());
+        $this->assertEquals(0, $module2->getCallOrder());
+        $this->assertEquals(0, $module3->getCallOrder());
     }
 
     public function testBeforeSuite()
@@ -84,6 +107,34 @@ class ModuleTest extends Unit
         $this->assertEquals(1, $module3->getCallOrder());
     }
 
+    public function testBeforeDoesNothingWhenEventTestHasIncorrectType()
+    {
+        /** @var ModuleContainer $moduleContainer */
+        $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
+
+        $module1 = new CodeceptionModuleStub($moduleContainer);
+        $module2 = new CodeceptionModuleStub($moduleContainer);
+        $module3 = new CodeceptionModuleStub($moduleContainer);
+
+        /** @var TestEvent|ObjectProphecy $testEvent */
+        $testEvent = $this->prophet->prophesize(TestEvent::class);
+        $testEvent->getTest()->willReturn(new DateTime());
+        $testEvent = $testEvent->reveal();
+
+        $subject = new Module(
+            [
+                $module1,
+                $module2,
+                $module3,
+            ]
+        );
+        $subject->before($testEvent);
+
+        $this->assertEquals(0, $module1->getCallOrder());
+        $this->assertEquals(0, $module2->getCallOrder());
+        $this->assertEquals(0, $module3->getCallOrder());
+    }
+
     public function testBefore()
     {
         /** @var ModuleContainer $moduleContainer */
@@ -112,6 +163,34 @@ class ModuleTest extends Unit
         $this->assertEquals(3, $module3->getCallOrder());
     }
 
+    public function testAfterDoesNothingWhenEventTestHasIncorrectType()
+    {
+        /** @var ModuleContainer $moduleContainer */
+        $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
+
+        $module1 = new CodeceptionModuleStub($moduleContainer);
+        $module2 = new CodeceptionModuleStub($moduleContainer);
+        $module3 = new CodeceptionModuleStub($moduleContainer);
+
+        /** @var TestEvent|ObjectProphecy $testEvent */
+        $testEvent = $this->prophet->prophesize(TestEvent::class);
+        $testEvent->getTest()->willReturn(new DateTime());
+        $testEvent = $testEvent->reveal();
+
+        $subject = new Module(
+            [
+                $module1,
+                $module2,
+                $module3,
+            ]
+        );
+        $subject->after($testEvent);
+
+        $this->assertEquals(0, $module1->getCallOrder());
+        $this->assertEquals(0, $module2->getCallOrder());
+        $this->assertEquals(0, $module3->getCallOrder());
+    }
+
     public function testAfter()
     {
         /** @var ModuleContainer $moduleContainer */
@@ -138,6 +217,35 @@ class ModuleTest extends Unit
         $this->assertEquals(3, $module1->getCallOrder());
         $this->assertEquals(2, $module2->getCallOrder());
         $this->assertEquals(1, $module3->getCallOrder());
+    }
+
+    public function testFailedDoesNothingWhenEventTestHasIncorrectType()
+    {
+        /** @var ModuleContainer $moduleContainer */
+        $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
+
+        $module1 = new CodeceptionModuleStub($moduleContainer);
+        $module2 = new CodeceptionModuleStub($moduleContainer);
+        $module3 = new CodeceptionModuleStub($moduleContainer);
+
+        /** @var FailEvent|ObjectProphecy $failed */
+        $failed = $this->prophet->prophesize(FailEvent::class);
+        $failed->getTest()->willReturn(new DateTime());
+        $failed->getFail()->willReturn($this->prophet->prophesize(Exception::class)->reveal());
+        $failed = $failed->reveal();
+
+        $subject = new Module(
+            [
+                $module1,
+                $module2,
+                $module3,
+            ]
+        );
+        $subject->failed($failed);
+
+        $this->assertEquals(0, $module1->getCallOrder());
+        $this->assertEquals(0, $module2->getCallOrder());
+        $this->assertEquals(0, $module3->getCallOrder());
     }
 
     public function testFailed()
@@ -234,12 +342,12 @@ class CodeceptionModuleStub extends \Codeception\Module
     public static $callOrderSequence = 1;
 
     /** @var int */
-    private $callOrder;
+    private $callOrder = 0;
 
     /**
      * @return int
      */
-    public function getCallOrder(): int
+    public function getCallOrder()
     {
         return $this->callOrder;
     }
@@ -275,14 +383,17 @@ class CodeceptionModuleStub extends \Codeception\Module
      *
      * @param TestInterface $test
      */
-    public function _after(TestInterface $e)
+    public function _after(TestInterface $test)
     {
         $this->callOrder = static::$callOrderSequence++;
-        parent::_after($e);
+        parent::_after($test);
     }
 
     /**
      * **HOOK** executed when test fails but before `_after`
+     *
+     * @param TestInterface $test
+     * @param Exception $fail
      */
     public function _failed(TestInterface $test, $fail)
     {
