@@ -24,6 +24,7 @@
     },
     "require-dev": {
         "vlucas/phpdotenv": "^3.0",
-        "codeception/specify": "*"
+        "codeception/specify": "*",
+        "consolidation/robo": "^3.0.0-alpha3"
     }
 }

@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [7.3, 7.4]
+        php: [7.3, 7.4, 8.0]
 
     env:
       CODECEPTION_VERSION: '4.1.x-dev'
@@ -25,11 +25,11 @@ jobs:
 
       - name: Prepare dependencies
         run: |
-          wget https://robo.li/robo.phar
-          php robo.phar prepare:dependencies
           composer update
-          php robo.phar prepare:tests
-          php robo.phar prepare:test-autoloading
+          php ./vendor/bin/robo prepare:dependencies
+          composer update
+          php ./vendor/bin/robo prepare:tests
+          php ./vendor/bin/robo prepare:test-autoloading
           composer dump-autoload
 
       - name: Run test suite
