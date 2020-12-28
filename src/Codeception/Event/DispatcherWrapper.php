@@ -4,7 +4,7 @@ namespace Codeception\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 
 trait DispatcherWrapper
 {
@@ -16,12 +16,12 @@ trait DispatcherWrapper
      */
     protected function dispatch(EventDispatcher $dispatcher, $eventType, Event $eventObject)
     {
-        //TraceableEventDispatcherInterface was introduced in symfony/event-dispatcher 2.5 and removed in 5.0
-        if (!interface_exists(TraceableEventDispatcherInterface::class)) {
-            //Symfony 5
+        // The `EventDispatcherInterface` of `Symfony\Contracts` is only implemented in Symfony 4.3 or higher
+        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
+            //Symfony 4.3 or higher
             $dispatcher->dispatch($eventObject, $eventType);
         } else {
-            //Symfony 2,3 or 4
+            //Symfony 4.2 or lower
             $dispatcher->dispatch($eventType, $eventObject);
         }
     }
