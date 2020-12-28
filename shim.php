@@ -12,25 +12,7 @@ namespace Symfony\Component\CssSelector {
 }
 
 
-// prefering old names
-
-namespace Codeception\TestCase {
-
-    class Test extends \Codeception\Test\Unit {
-    }
-}
-
-namespace Codeception\Platform {
-    abstract class Group extends \Codeception\GroupObject
-    {
-    }
-    abstract class Extension extends \Codeception\Extension
-    {
-    }
-}
-
 namespace {
-    class_alias('Codeception\TestInterface', 'Codeception\TestCase');
 
     //Compatibility with Symfony 5
     if (!class_exists('Symfony\Component\EventDispatcher\Event') && class_exists('Symfony\Contracts\EventDispatcher\Event')) {
