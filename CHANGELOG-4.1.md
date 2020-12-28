@@ -1,3 +1,7 @@
+#### 4.1.14
+
+* Improved compatibility logic for Symfony EventDispatcher
+
 #### 4.1.13
 
 * Gherkin: Fixed loading methods from namespaced helper classes #6057
