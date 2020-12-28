@@ -4,7 +4,7 @@ use Codeception\PHPUnit\ResultPrinter;
 
 class MyReportPrinter extends ResultPrinter implements ConsolePrinter
 {
-    public function endTest(\PHPUnit\Framework\Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, float $time): void
     {
         $name = \Codeception\Test\Descriptor::getTestAsString($test);
         if ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE) {
@@ -31,7 +31,7 @@ class MyReportPrinter extends ResultPrinter implements ConsolePrinter
         $this->write(" $name \n");
     }
 
-    public function printResult(\PHPUnit\Framework\TestResult $result)
+    public function printResult(\PHPUnit\Framework\TestResult $result): void
     {
         
     }
