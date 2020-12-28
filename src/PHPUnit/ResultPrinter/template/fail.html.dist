@@ -1,0 +1,5 @@
+<tr >
+    <td class="error">
+        {fail}
+    </td>
+</tr>
