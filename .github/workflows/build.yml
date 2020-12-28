@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ["5.6", "7.0", "7.1", "7.2", "7.3", "7.4", "8.0"]
+        php: ["7.3", "7.4", "8.0"]
 
     steps:
       - name: Checkout
@@ -55,22 +55,15 @@ jobs:
       - name: Composer install
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
-      - name: Run tests PHP 5.6, 7.0, 7.1, 7.3
-        if: matrix.php == '56' || matrix.php == '7.0' || matrix.php == '7.1' || matrix.php == '7.3'
+      - name: Run tests without code coverage on PHP 7.3, 7.4
+        if: matrix.php == '7.3' || matrix.php == '7.4'
         run: |
           php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
           php codecept build
           php codecept run cli,unit
 
-      - name: Run tests PHP 7.2, 7.4
-        if: matrix.php == '7.2' || matrix.php == '7.4'
-        run: |
-          php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
-          php codecept build
-          php codecept run cli,unit,coverage --env COVERAGE=1
-
-      - name: Run tests PHP 8.0
-        if: matrix.php == '8.0'
+      - name: Run tests with code coverage on PHP 7.2, 8.0
+        if: matrix.php == '7.2' || matrix.php == '8.0'
         run: |
           php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
           php codecept build
@@ -90,7 +83,7 @@ jobs:
       matrix:
         os: [windows-latest]
 
-        php: ["7.0", "7.1", "7.2", "7.3", "7.4", "8.0"]
+        php: ["7.3", "7.4", "8.0"]
 
     steps:
       - name: Checkout
