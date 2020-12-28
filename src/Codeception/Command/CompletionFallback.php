@@ -27,11 +27,8 @@ To enable BASH completion, install optional stecman/symfony-console-completion f
 END
             );
 
-        // Hide this command from listing if supported
-        // Command::setHidden() was not available before Symfony 3.2.0
-        if (method_exists($this, 'setHidden')) {
-            $this->setHidden(true);
-        }
+        // Hide this command from listing
+        $this->setHidden(true);
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {

@@ -2,7 +2,6 @@
 namespace Codeception\Command;
 
 use Codeception\Configuration;
-use Codeception\Event\DispatcherWrapper;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
@@ -30,7 +29,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class DryRun extends Command
 {
-    use DispatcherWrapper;
     use Shared\Config;
     use Shared\Style;
 
@@ -82,8 +80,9 @@ class DryRun extends Command
         $suiteManager->loadTests($test);
         $tests = $suiteManager->getSuite()->tests();
 
-        $this->dispatch($dispatcher, Events::SUITE_INIT, new SuiteEvent($suiteManager->getSuite(), null, $settings));
-        $this->dispatch($dispatcher, Events::SUITE_BEFORE, new SuiteEvent($suiteManager->getSuite(), null, $settings));
+        $dispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_INIT);
+        $dispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_BEFORE);
+
         foreach ($tests as $test) {
             if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
                 foreach ($test as $t) {
@@ -96,7 +95,7 @@ class DryRun extends Command
                 $this->dryRunTest($output, $dispatcher, $test);
             }
         }
-        $this->dispatch($dispatcher, Events::SUITE_AFTER, new SuiteEvent($suiteManager->getSuite()));
+        $dispatcher->dispatch(new SuiteEvent($suiteManager->getSuite()), Events::SUITE_AFTER);
         return 0;
     }
 
@@ -119,14 +118,15 @@ class DryRun extends Command
      */
     protected function dryRunTest(OutputInterface $output, EventDispatcher $dispatcher, Test $test)
     {
-        $this->dispatch($dispatcher, Events::TEST_START, new TestEvent($test));
-        $this->dispatch($dispatcher, Events::TEST_BEFORE, new TestEvent($test));
+        $dispatcher->dispatch(new TestEvent($test), Events::TEST_START);
+        $dispatcher->dispatch(new TestEvent($test), Events::TEST_BEFORE);
         try {
             $test->test();
         } catch (\Exception $e) {
         }
-        $this->dispatch($dispatcher, Events::TEST_AFTER, new TestEvent($test));
-        $this->dispatch($dispatcher, Events::TEST_END, new TestEvent($test));
+        $dispatcher->dispatch(new TestEvent($test), Events::TEST_AFTER);
+        $dispatcher->dispatch(new TestEvent($test), Events::TEST_END);
+
         if ($test->getMetadata()->isBlocked()) {
             $output->writeln('');
             if ($skip = $test->getMetadata()->getSkip()) {

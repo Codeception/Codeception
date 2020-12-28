@@ -1,15 +1,12 @@
 <?php
 namespace Codeception;
 
-use Codeception\Event\DispatcherWrapper;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Subscriber\ExtensionLoader;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    use DispatcherWrapper;
-
     const VERSION = '4.1.13';
 
     /**
@@ -222,7 +219,7 @@ class Codecept
         $printer = $this->runner->getPrinter();
         $printer->printResult($result);
 
-        $this->dispatch($this->dispatcher, Events::RESULT_PRINT_AFTER, new Event\PrintResultEvent($result, $printer));
+        $this->dispatcher->dispatch(new Event\PrintResultEvent($result, $printer), Events::RESULT_PRINT_AFTER);
     }
 
     /**

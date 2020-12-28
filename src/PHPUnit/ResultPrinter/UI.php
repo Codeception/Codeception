@@ -3,15 +3,12 @@ namespace Codeception\PHPUnit\ResultPrinter;
 
 use Codeception\Event\FailEvent;
 use Codeception\Events;
-use Codeception\PHPUnit\DispatcherWrapper;
 use Codeception\Test\Unit;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class UI extends \PHPUnit\TextUI\DefaultResultPrinter
 {
-    use DispatcherWrapper;
-
     /**
      * @var EventDispatcher
      */
@@ -26,11 +23,7 @@ class UI extends \PHPUnit\TextUI\DefaultResultPrinter
     protected function printDefect(\PHPUnit\Framework\TestFailure $defect, int $count): void
     {
         $this->write("\n---------\n");
-        $this->dispatch(
-            $this->dispatcher,
-            Events::TEST_FAIL_PRINT,
-            new FailEvent($defect->failedTest(), null, $defect->thrownException(), $count)
-        );
+        $this->dispatcher->dispatch(new FailEvent($defect->failedTest(), null, $defect->thrownException(), $count), Events::TEST_FAIL_PRINT);
     }
 
     /**

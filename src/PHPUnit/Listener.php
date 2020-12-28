@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\PHPUnit;
 
-use Codeception\PHPUnit\DispatcherWrapper;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
@@ -11,8 +10,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Listener implements \PHPUnit\Framework\TestListener
 {
-    use DispatcherWrapper;
-
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
@@ -33,7 +30,6 @@ class Listener implements \PHPUnit\Framework\TestListener
      * @param PHPUnit\Framework\Test $test
      * @param \Throwable $e
      * @param float $time
-     * @since  Method available since Release 4.0.0
      */
     public function addRiskyTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
@@ -51,7 +47,6 @@ class Listener implements \PHPUnit\Framework\TestListener
         $this->fire(Events::TEST_ERROR, new FailEvent($test, $time, $e));
     }
 
-    // This method was added in PHPUnit 6
     public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, float $time) : void
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
@@ -80,17 +75,17 @@ class Listener implements \PHPUnit\Framework\TestListener
 
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
     {
-        $this->dispatch($this->dispatcher, 'suite.start', new SuiteEvent($suite));
+        $this->dispatcher->dispatch(new SuiteEvent($suite), 'suite.start');
     }
 
     public function endTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
     {
-        $this->dispatch($this->dispatcher, 'suite.end', new SuiteEvent($suite));
+        $this->dispatcher->dispatch(new SuiteEvent($suite), 'suite.end');
     }
 
     public function startTest(\PHPUnit\Framework\Test $test) : void
     {
-        $this->dispatch($this->dispatcher, Events::TEST_START, new TestEvent($test));
+        $this->dispatcher->dispatch(new TestEvent($test), Events::TEST_START);
         if (!$test instanceof TestInterface) {
             return;
         }
@@ -120,17 +115,17 @@ class Listener implements \PHPUnit\Framework\TestListener
             $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
         }
 
-        $this->dispatch($this->dispatcher, Events::TEST_END, new TestEvent($test, $time));
+        $this->dispatcher->dispatch(new TestEvent($test, $time), Events::TEST_END);
     }
 
-    protected function fire($event, TestEvent $eventType)
+    protected function fire($eventType, TestEvent $event)
     {
-        $test = $eventType->getTest();
+        $test = $event->getTest();
         if ($test instanceof TestInterface) {
             foreach ($test->getMetadata()->getGroups() as $group) {
-                $this->dispatch($this->dispatcher, $event . '.' . $group, $eventType);
+                $this->dispatcher->dispatch($event, $eventType . '.' . $group);
             }
         }
-        $this->dispatch($this->dispatcher, $event, $eventType);
+        $this->dispatcher->dispatch($event, $eventType);
     }
 }

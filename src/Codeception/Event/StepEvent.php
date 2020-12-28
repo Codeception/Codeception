@@ -3,7 +3,7 @@ namespace Codeception\Event;
 
 use Codeception\Step;
 use Codeception\TestInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class StepEvent extends Event
 {

@@ -22,11 +22,11 @@
         "phpunit/phpunit": "^9.5",
         "codeception/lib-asserts": "^1.0",
         "guzzlehttp/psr7": "~1.4",
-        "symfony/finder": ">=2.7 <6.0",
-        "symfony/console": ">=2.7 <6.0",
-        "symfony/event-dispatcher": ">=2.7 <6.0",
-        "symfony/yaml": ">=2.7 <6.0",
-        "symfony/css-selector": ">=2.7 <6.0",
+        "symfony/finder": ">=4.4 <6.0",
+        "symfony/console": ">=4.4 <6.0",
+        "symfony/event-dispatcher": ">=4.4 <6.0",
+        "symfony/yaml": ">=4.4 <6.0",
+        "symfony/css-selector": ">=4.4 <6.0",
         "behat/gherkin": "^4.4.0",
         "codeception/stub": "^2.0 | ^3.0"
     },
@@ -35,7 +35,7 @@
         "codeception/specify": "~0.3",
         "squizlabs/php_codesniffer": "~2.0",
         "vlucas/phpdotenv": "^2.0 | ^3.0 | ^4.0 | ^5.0",
-        "symfony/process": ">=2.7 <6.0",
+        "symfony/process": ">=4.4 <6.0",
         "codeception/module-asserts": "*@dev",
         "codeception/module-cli": "*@dev",
         "codeception/module-db": "*@dev",
@@ -56,7 +56,7 @@
 
     "autoload": {
         "files": [
-            "shim.php"
+            "functions.php"
         ],
         "psr-4": {
             "Codeception\\": "src/Codeception",
