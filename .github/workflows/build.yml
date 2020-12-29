@@ -53,7 +53,7 @@ jobs:
         run: composer validate
 
       - name: Composer install
-        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+        run: composer install --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Run tests without code coverage on PHP 7.3, 7.4
         if: matrix.php == '7.3' || matrix.php == '7.4'
@@ -67,7 +67,13 @@ jobs:
         run: |
           php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
           php codecept build
-          php codecept run cli,unit,coverage --env COVERAGE=1          
+          php codecept run cli,unit,coverage --env COVERAGE=1
+
+      - name: Run module-asserts tests
+        run: php codecept run -c vendor/codeception/module-asserts/
+
+      - name: Run module-filesystem tests
+        run: php codecept run -c vendor/codeception/module-filesystem/
 
   windows-latest:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
