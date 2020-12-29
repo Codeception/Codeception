@@ -31,7 +31,7 @@
         "codeception/stub": "^3.7"
     },
     "require-dev": {
-        "vlucas/phpdotenv": "^2.0 | ^3.0 | ^4.0 | ^5.0",
+        "vlucas/phpdotenv": "^4.0 | ^5.0",
         "symfony/process": ">=4.4 <6.0",
         "codeception/module-asserts": "*@dev",
         "codeception/module-cli": "*@dev",

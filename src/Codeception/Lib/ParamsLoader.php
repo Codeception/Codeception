@@ -114,33 +114,23 @@ class ParamsLoader
 
     protected function loadDotEnvFile()
     {
-        if (class_exists('Dotenv\Dotenv')) {
-            if (class_exists('Dotenv\Repository\RepositoryBuilder') && method_exists('Dotenv\Repository\RepositoryBuilder', 'createWithNoAdapters')) {
+        if (class_exists('Dotenv\Repository\RepositoryBuilder')) {
+            if (method_exists('Dotenv\Repository\RepositoryBuilder', 'createWithNoAdapters')) {
                 //dotenv v5
                 $repository = \Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
                     ->addAdapter(\Dotenv\Repository\Adapter\EnvConstAdapter::class)
                     ->addAdapter(\Dotenv\Repository\Adapter\ServerConstAdapter::class)
                     ->make();
                 $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
-            } elseif (class_exists('Dotenv\Repository\RepositoryBuilder')) {
+            } else {
                 //dotenv v4
                 $repository = \Dotenv\Repository\RepositoryBuilder::create()
                     ->withReaders([new \Dotenv\Repository\Adapter\ServerConstAdapter()])
                     ->immutable()
                     ->make();
                 $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
-            } elseif (method_exists('Dotenv\Dotenv', 'create')) {
-                //dotenv v3
-                $dotEnv = \Dotenv\Dotenv::create(codecept_root_dir(), $this->paramStorage);
-            } else {
-                //dotenv v2
-                $dotEnv = new \Dotenv\Dotenv(codecept_root_dir(), $this->paramStorage);
             }
             $dotEnv->load();
-            return $_SERVER;
-        } elseif (class_exists('Symfony\Component\Dotenv\Dotenv')) {
-            $dotEnv = new \Symfony\Component\Dotenv\Dotenv();
-            $dotEnv->load(codecept_root_dir($this->paramStorage));
             return $_SERVER;
         }
 
