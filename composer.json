@@ -20,15 +20,15 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "phpunit/phpunit": "^9.5",
-        "codeception/lib-asserts": "^1.0",
-        "guzzlehttp/psr7": "~1.4",
+        "codeception/lib-asserts": "^1.13",
+        "guzzlehttp/psr7": "^1.7",
         "symfony/finder": ">=4.4 <6.0",
         "symfony/console": ">=4.4 <6.0",
         "symfony/event-dispatcher": ">=4.4 <6.0",
         "symfony/yaml": ">=4.4 <6.0",
         "symfony/css-selector": ">=4.4 <6.0",
-        "behat/gherkin": "^4.4.0",
-        "codeception/stub": "^2.0 | ^3.0"
+        "behat/gherkin": "^4.6.2",
+        "codeception/stub": "^3.7"
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
