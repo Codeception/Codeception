@@ -254,15 +254,6 @@ class Configuration
 
         Autoload::addNamespace(self::$config['namespace'], self::supportDir());
 
-        if ($config['settings']['bootstrap']) {
-            $bootstrap = self::$config['settings']['bootstrap'];
-            Notification::deprecate("'settings: bootstrap: $bootstrap' option is deprecated! Replace it with: 'bootstrap: $bootstrap' (not under settings section). See https://bit.ly/2YrRzVc ");
-            try {
-                self::loadBootstrap($bootstrap, self::testsDir());
-            } catch (ConfigurationException $exception) {
-                Notification::deprecate("Bootstrap file ($bootstrap) is defined in configuration but can't be loaded. Disable 'settings: bootstrap:' configuration to remove this message");
-            }
-        }
         self::loadBootstrap($config['bootstrap'], self::testsDir());
         self::loadSuites();
 
