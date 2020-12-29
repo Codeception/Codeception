@@ -9,7 +9,7 @@ use Codeception\Util\Stub;
 // @codingStandardsIgnoreFile
 class ModuleContainerTest extends Unit
 {
-    use \Codeception\Specify;
+
     /**
      * @var ModuleContainer
      */
