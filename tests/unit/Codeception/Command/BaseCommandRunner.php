@@ -1,5 +1,5 @@
 <?php
-use Codeception\Util\Stub;
+use Codeception\Stub;
 use Codeception\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 

@@ -34,8 +34,8 @@ class GherkinTest extends \Codeception\Test\Unit
     {
         return [
             'di'         => new \Codeception\Lib\Di(),
-            'dispatcher' => \Codeception\Util\Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher'),
-            'modules'    => \Codeception\Util\Stub::makeEmpty('Codeception\Lib\ModuleContainer')
+            'dispatcher' => \Codeception\Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher'),
+            'modules'    => \Codeception\Stub::makeEmpty('Codeception\Lib\ModuleContainer')
         ];
     }
 

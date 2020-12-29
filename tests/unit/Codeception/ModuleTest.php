@@ -1,6 +1,6 @@
 <?php
 
-use Codeception\Util\Stub;
+use Codeception\Stub;
 
 class ModuleTest extends \Codeception\PHPUnit\TestCase
 {

@@ -31,7 +31,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $settings['actor'] = 'CodeGuy';
         $this->suiteman = new \Codeception\SuiteManager($this->dispatcher, 'suite', $settings);
         
-        $printer = \Codeception\Util\Stub::makeEmpty('PHPUnit\TextUI\ResultPrinter');
+        $printer = \Codeception\Stub::makeEmpty('PHPUnit\TextUI\ResultPrinter');
         $this->runner = new \Codeception\PHPUnit\Runner;
         $this->runner->setPrinter($printer);
     }

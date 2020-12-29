@@ -1,8 +1,7 @@
 <?php
 
-use Codeception\Util\Stub;
+use Codeception\Stub;
 use Facebook\WebDriver\WebDriverBy;
-use Codeception\Util\Locator;
 use Codeception\Step;
 
 class StepTest extends \PHPUnit\Framework\TestCase
@@ -132,7 +131,7 @@ class StepTest extends \PHPUnit\Framework\TestCase
 
     public function testFormattedOutput()
     {
-        $argument = Codeception\Util\Stub::makeEmpty('\Codeception\Step\Argument\FormattedOutput');
+        $argument = Stub::makeEmpty('\Codeception\Step\Argument\FormattedOutput');
         $argument->method('getOutput')->willReturn('some formatted output');
 
         $step = $this->getStep(['argument', [$argument]]);
