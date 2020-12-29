@@ -58,14 +58,14 @@ jobs:
       - name: Run tests without code coverage on PHP 7.3, 7.4
         if: matrix.php == '7.3' || matrix.php == '7.4'
         run: |
-          php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
+          php -S 127.0.0.1:8008 -t tests/data/app >/dev/null 2>&1 &
           php codecept build
           php codecept run cli,unit
 
       - name: Run tests with code coverage on PHP 7.2, 8.0
         if: matrix.php == '7.2' || matrix.php == '8.0'
         run: |
-          php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
+          php -S 127.0.0.1:8008 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
           php codecept build
           php codecept run cli,unit,coverage --env COVERAGE=1
 
@@ -74,6 +74,13 @@ jobs:
 
       - name: Run module-filesystem tests
         run: php codecept run -c vendor/codeception/module-filesystem/
+
+      - name: Run module-phpbrowser tests
+        run: |
+          cd vendor/codeception/module-phpbrowser/
+          php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
+          php -S 127.0.0.1:8010 -t tests/data/rest >/dev/null 2>&1 &
+          php ../../../codecept run tests/unit/Codeception/Module/PhpBrowserTest.php
 
   windows-latest:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
