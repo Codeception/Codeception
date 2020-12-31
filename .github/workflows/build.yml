@@ -75,6 +75,9 @@ jobs:
       - name: Run module-filesystem tests
         run: php codecept run -c vendor/codeception/module-filesystem/
 
+      - name: Run module-db sqlite tests
+        run: php codecept run -c vendor/codeception/module-db/ unit :Sqlite
+
       - name: Run module-phpbrowser tests
         run: |
           cd vendor/codeception/module-phpbrowser/
