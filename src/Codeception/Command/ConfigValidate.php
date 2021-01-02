@@ -49,13 +49,13 @@ class ConfigValidate extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Validates and prints config to screen';
     }
 
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
 

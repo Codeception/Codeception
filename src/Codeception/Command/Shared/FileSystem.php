@@ -10,7 +10,7 @@ trait FileSystem
 {
     use Namespaces;
 
-    protected function createDirectoryFor($basePath, $className = '')
+    protected function createDirectoryFor($basePath, $className = ''): string
     {
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR);
         if ($className) {
@@ -25,7 +25,7 @@ trait FileSystem
         return $basePath;
     }
 
-    protected function completeSuffix($filename, $suffix)
+    protected function completeSuffix($filename, $suffix): string
     {
         if (strpos(strrev($filename), strrev($suffix)) === 0) {
             $filename .= '.php';

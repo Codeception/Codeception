@@ -6,7 +6,6 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
-use Codeception\Util\PathResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -231,7 +230,7 @@ class Run extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Runs the test suites';
     }
@@ -239,12 +238,12 @@ class Run extends Command
     /**
      * Executes Run
      *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int|null|void
      * @throws \RuntimeException
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->ensurePhpExtIsAvailable('CURL');
         $this->ensurePhpExtIsAvailable('mbstring');
@@ -468,7 +467,7 @@ class Run extends Command
      * @param array $suites
      * @param string $parent_dir
      */
-    protected function runIncludedSuites($suites, $parent_dir)
+    protected function runIncludedSuites(array $suites, string $parent_dir)
     {
         foreach ($suites as $relativePath) {
             $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
@@ -501,7 +500,7 @@ class Run extends Command
         return $config['namespace'];
     }
 
-    protected function runSuites($suites, $skippedSuites = [])
+    protected function runSuites($suites, $skippedSuites = []): int
     {
         $executed = 0;
         foreach ($suites as $suite) {
@@ -551,7 +550,7 @@ class Run extends Command
         return null;
     }
 
-    protected function passedOptionKeys(InputInterface $input)
+    protected function passedOptionKeys(InputInterface $input): array
     {
         $options = [];
         $request = (string)$input;
@@ -577,7 +576,7 @@ class Run extends Command
         return $options;
     }
 
-    protected function booleanOptions(InputInterface $input, $options = [])
+    protected function booleanOptions(InputInterface $input, $options = []): array
     {
         $values = [];
         $request = (string)$input;
@@ -596,7 +595,7 @@ class Run extends Command
      * @param string $ext
      * @throws \Exception
      */
-    private function ensurePhpExtIsAvailable($ext)
+    private function ensurePhpExtIsAvailable(string $ext)
     {
         if (!extension_loaded(strtolower($ext))) {
             throw new \Exception(

@@ -34,12 +34,12 @@ class GenerateStepObject extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty StepObject class';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = (string)$input->getArgument('suite');
         $step = $input->getArgument('step');

@@ -11,22 +11,22 @@ use Symfony\Component\Yaml\Yaml;
 
 trait Config
 {
-    protected function getSuiteConfig($suite)
+    protected function getSuiteConfig($suite): array
     {
         return Configuration::suiteSettings($suite, $this->getGlobalConfig());
     }
 
-    protected function getGlobalConfig($conf = null)
+    protected function getGlobalConfig($conf = null): ?array
     {
         return Configuration::config($conf);
     }
 
-    protected function getSuites($conf = null)
+    protected function getSuites($conf = null): array
     {
         return Configuration::suites();
     }
 
-    protected function overrideConfig($configOptions)
+    protected function overrideConfig($configOptions): ?array
     {
         $updatedConfig = [];
         foreach ($configOptions as $option) {
@@ -50,7 +50,7 @@ trait Config
         return Configuration::append($updatedConfig);
     }
 
-    protected function enableExtensions($extensions)
+    protected function enableExtensions($extensions): ?array
     {
         $config = ['extensions' => ['enabled' => []]];
         foreach ($extensions as $name) {

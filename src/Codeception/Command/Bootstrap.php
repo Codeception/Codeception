@@ -44,12 +44,12 @@ class Bootstrap extends Command
         );
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return "Creates default test suites and generates all required files";
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $bootstrap = new BootstrapTemplate($input, $output);
         if ($input->getArgument('path')) {

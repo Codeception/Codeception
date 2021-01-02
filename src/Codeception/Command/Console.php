@@ -16,12 +16,10 @@ use Codeception\SuiteManager;
 use Codeception\Test\Cept;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Try to execute test commands in run-time. You may try commands before writing the test.
@@ -46,12 +44,12 @@ class Console extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Launches interactive test console';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suiteName = $input->getArgument('suite');
         $this->output = $output;

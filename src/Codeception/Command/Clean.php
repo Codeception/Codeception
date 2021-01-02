@@ -20,12 +20,12 @@ class Clean extends Command
 {
     use Shared\Config;
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Recursively cleans log and generated code';
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $projectDir = Configuration::projectDir();
         $this->cleanProjectsRecursively($output, $projectDir);

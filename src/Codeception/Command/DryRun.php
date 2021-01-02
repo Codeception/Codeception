@@ -17,7 +17,6 @@ use Codeception\Util\Maybe;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -46,12 +45,12 @@ class DryRun extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Prints step-by-step scenario-driven test or a feature';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
         $suite = $input->getArgument('suite');

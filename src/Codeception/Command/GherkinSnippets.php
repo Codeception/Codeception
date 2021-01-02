@@ -39,12 +39,12 @@ class GherkinSnippets extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Fetches empty steps from feature files of suite and prints code snippets for them';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
         $suite = $input->getArgument('suite');

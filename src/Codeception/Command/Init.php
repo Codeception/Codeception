@@ -26,12 +26,12 @@ class Init extends Command
         );
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return "Creates test suites by a template";
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $template = (string)$input->getArgument('template');
 

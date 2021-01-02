@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Codeception\Command;
 
+use Codeception\Codecept;
 use Humbug\SelfUpdate\Updater;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Codeception\Codecept;
 
 /**
  * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
@@ -60,7 +59,7 @@ class SelfUpdate extends Command
     /**
      * @return string
      */
-    protected function getCurrentVersion()
+    protected function getCurrentVersion(): string
     {
         return Codecept::VERSION;
     }
@@ -68,7 +67,7 @@ class SelfUpdate extends Command
     /**
      * {@inheritdoc}
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $version = $this->getCurrentVersion();
 
@@ -115,7 +114,7 @@ class SelfUpdate extends Command
      *
      * @return string
      */
-    protected function getPharUrl()
+    protected function getPharUrl(): string
     {
         if (version_compare(PHP_VERSION, '7.2.0', '<')) {
             return self::PHAR_URL_PHP56;

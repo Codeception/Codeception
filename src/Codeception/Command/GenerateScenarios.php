@@ -38,12 +38,12 @@ class GenerateScenarios extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates text representation for all scenarios';
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
 
@@ -108,7 +108,7 @@ class GenerateScenarios extends Command
         return 0;
     }
 
-    protected function decorate($text, $format)
+    protected function decorate($text, $format): string
     {
         switch ($format) {
             case 'text':
@@ -124,7 +124,7 @@ class GenerateScenarios extends Command
         return $suiteManager->getSuite()->tests();
     }
 
-    protected function formatExtension($format)
+    protected function formatExtension($format): string
     {
         switch ($format) {
             case 'text':

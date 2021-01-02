@@ -34,12 +34,12 @@ class GenerateSnapshot extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty Snapshot class';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = (string)$input->getArgument('suite');
         $class = $input->getArgument('snapshot');

@@ -33,12 +33,12 @@ class GenerateFeature extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty feature file in suite';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
         $filename = $input->getArgument('feature');

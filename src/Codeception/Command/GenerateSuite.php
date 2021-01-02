@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Codeception\Command;
 
 use Codeception\Configuration;
+use Codeception\Lib\Generator\Actor as ActorGenerator;
 use Codeception\Lib\Generator\Helper;
 use Codeception\Util\Template;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Codeception\Lib\Generator\Actor as ActorGenerator;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -37,12 +37,12 @@ class GenerateSuite extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates new test suite';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
         $suite = (string)$input->getArgument('suite');
@@ -131,7 +131,7 @@ EOF;
         return 0;
     }
 
-    private function containsInvalidCharacters($suite)
+    private function containsInvalidCharacters($suite): bool
     {
         return preg_match('#[^A-Za-z0-9_]#', $suite) ? true : false;
     }

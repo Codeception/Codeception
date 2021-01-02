@@ -28,12 +28,12 @@ class GenerateGroup extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates Group subscriber';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = $this->getGlobalConfig();
         $group = (string)$input->getArgument('group');

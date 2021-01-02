@@ -30,12 +30,12 @@ class GenerateEnvironment extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty environment config';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $conf = $this->getGlobalConfig();
         if (!Configuration::envsDir()) {

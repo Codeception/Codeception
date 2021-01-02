@@ -32,12 +32,12 @@ class GenerateTest extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty unit test file in suite';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
