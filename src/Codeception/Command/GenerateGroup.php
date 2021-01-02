@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -33,7 +36,7 @@ class GenerateGroup extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $config = $this->getGlobalConfig();
-        $group = $input->getArgument('group');
+        $group = (string)$input->getArgument('group');
 
         $class = ucfirst($group);
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Group' . DIRECTORY_SEPARATOR, $class);

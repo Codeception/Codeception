@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -38,7 +41,7 @@ class GenerateStepObject extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $suite = $input->getArgument('suite');
+        $suite = (string)$input->getArgument('suite');
         $step = $input->getArgument('step');
         $config = $this->getSuiteConfig($suite);
 

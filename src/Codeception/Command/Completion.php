@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 if (!class_exists('Stecman\Component\Symfony\Console\BashCompletion\Completion')) {

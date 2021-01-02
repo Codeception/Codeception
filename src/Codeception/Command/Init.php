@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\InitTemplate;
@@ -31,7 +33,7 @@ class Init extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $template = $input->getArgument('template');
+        $template = (string)$input->getArgument('template');
 
         if (class_exists($template)) {
             $className = $template;

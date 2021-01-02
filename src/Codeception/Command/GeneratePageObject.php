@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -37,12 +40,12 @@ class GeneratePageObject extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $suite = $input->getArgument('suite');
+        $suite = (string)$input->getArgument('suite');
         $class = $input->getArgument('page');
 
         if (!$class) {
             $class = $suite;
-            $suite = null;
+            $suite = '';
         }
 
         $conf = $suite

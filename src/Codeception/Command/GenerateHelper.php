@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -34,7 +37,7 @@ class GenerateHelper extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $name = ucfirst($input->getArgument('name'));
+        $name = ucfirst((string)$input->getArgument('name'));
         $config = $this->getGlobalConfig();
 
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Helper', $name);

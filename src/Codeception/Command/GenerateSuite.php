@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -42,7 +45,7 @@ class GenerateSuite extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->addStyles($output);
-        $suite = $input->getArgument('suite');
+        $suite = (string)$input->getArgument('suite');
         $actor = $input->getArgument('actor');
 
         if ($this->containsInvalidCharacters($suite)) {
