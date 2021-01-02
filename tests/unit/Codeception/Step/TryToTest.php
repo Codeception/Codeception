@@ -2,7 +2,7 @@
 namespace Codeception\Step;
 
 use Codeception\Lib\ModuleContainer;
-use Codeception\Util\Stub;
+use Codeception\Stub;
 
 class TryToTest extends \PHPUnit\Framework\TestCase
 {

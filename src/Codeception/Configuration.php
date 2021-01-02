@@ -82,8 +82,8 @@ class Configuration
             'xml'         => 'Codeception\PHPUnit\Log\JUnit',
             'html'        => 'Codeception\PHPUnit\ResultPrinter\HTML',
             'report'      => 'Codeception\PHPUnit\ResultPrinter\Report',
-            'tap'         => 'PHPUnit\Util\Log\TAP',
-            'json'        => 'PHPUnit\Util\Log\JSON',
+            'tap'         => 'Codeception\PHPUnit\Util\Log\TAP',
+            'json'        => 'Codeception\PHPUnit\Util\Log\JSON',
             'phpunit-xml' => 'Codeception\PHPUnit\Log\PhpUnit',
         ],
         'groups'     => [],
@@ -254,15 +254,6 @@ class Configuration
 
         Autoload::addNamespace(self::$config['namespace'], self::supportDir());
 
-        if ($config['settings']['bootstrap']) {
-            $bootstrap = self::$config['settings']['bootstrap'];
-            Notification::deprecate("'settings: bootstrap: $bootstrap' option is deprecated! Replace it with: 'bootstrap: $bootstrap' (not under settings section). See https://bit.ly/2YrRzVc ");
-            try {
-                self::loadBootstrap($bootstrap, self::testsDir());
-            } catch (ConfigurationException $exception) {
-                Notification::deprecate("Bootstrap file ($bootstrap) is defined in configuration but can't be loaded. Disable 'settings: bootstrap:' configuration to remove this message");
-            }
-        }
         self::loadBootstrap($config['bootstrap'], self::testsDir());
         self::loadSuites();
 

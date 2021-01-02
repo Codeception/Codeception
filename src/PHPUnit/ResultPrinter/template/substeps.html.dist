@@ -1,0 +1,12 @@
+<tr>
+ <td class="stepName {error}" ><p onclick="showHide('{id}', this)"><span class="toggle">+</span> {metaStep}</p>
+
+     </td>
+</tr>
+<tr>
+ <td class="nostyle">
+  <table border="0" width="100%" class="substeps scenarioStepsTable" id="stepContainer{id}">
+    {steps}
+  </table>
+ </td>
+</tr>

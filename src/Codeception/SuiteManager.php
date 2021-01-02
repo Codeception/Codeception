@@ -1,7 +1,6 @@
 <?php
 namespace Codeception;
 
-use Codeception\Event\DispatcherWrapper;
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
@@ -13,8 +12,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
 {
-    use DispatcherWrapper;
-
     public static $environment;
     public static $name;
 
@@ -78,7 +75,7 @@ class SuiteManager
 
     public function initialize()
     {
-        $this->dispatch($this->dispatcher, Events::MODULE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::MODULE_INIT);
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
@@ -88,7 +85,7 @@ class SuiteManager
                 . " class doesn't exist in suite folder.\nRun the 'build' command to generate it"
             );
         }
-        $this->dispatch($this->dispatcher, Events::SUITE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::SUITE_INIT);
         ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
@@ -156,11 +153,11 @@ class SuiteManager
     public function run(PHPUnit\Runner $runner, \PHPUnit\Framework\TestResult $result, $options)
     {
         $runner->prepareSuite($this->suite, $options);
-        $this->dispatch($this->dispatcher, Events::SUITE_BEFORE, new Event\SuiteEvent($this->suite, $result, $this->settings));
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_BEFORE);
         try {
             $runner->doEnhancedRun($this->suite, $result, $options);
         } finally {
-            $this->dispatch($this->dispatcher, Events::SUITE_AFTER, new Event\SuiteEvent($this->suite, $result, $this->settings));
+            $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_AFTER);
         }
     }
 

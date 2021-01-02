@@ -124,39 +124,9 @@ class Filter
      */
     public function blackList($config)
     {
-        $filter = $this->filter;
-        if (!isset($config['coverage'])) {
-            return $this;
-        }
-        $coverage = $config['coverage'];
-        if (isset($coverage['blacklist'])) {
-            if (!method_exists($filter, 'addFileToBlacklist')) {
-                throw new ModuleException($this, 'The blacklist functionality has been removed from PHPUnit 5,'
-                . ' please remove blacklist section from configuration.');
-            }
-
-            if (isset($coverage['blacklist']['include'])) {
-                foreach ($coverage['blacklist']['include'] as $fileOrDir) {
-                    $finder = strpos($fileOrDir, '*') === false
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
-                        : $this->matchWildcardPattern($fileOrDir);
-
-                    foreach ($finder as $file) {
-                        $filter->addFileToBlacklist($file);
-                    }
-                }
-            }
-            if (isset($coverage['blacklist']['exclude'])) {
-                foreach ($coverage['blacklist']['exclude'] as $fileOrDir) {
-                    $finder = strpos($fileOrDir, '*') === false
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
-                        : $this->matchWildcardPattern($fileOrDir);
-
-                    foreach ($finder as $file) {
-                        $filter->removeFileFromBlacklist($file);
-                    }
-                }
-            }
+        if (isset($config['coverage']['blacklist'])) {
+            throw new ModuleException($this, 'The blacklist functionality has been removed from PHPUnit 5,'
+            . ' please remove blacklist section from configuration.');
         }
         return $this;
     }

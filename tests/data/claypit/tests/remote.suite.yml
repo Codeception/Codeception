@@ -3,7 +3,7 @@ modules:
     enabled: [PhpBrowser, Filesystem, OtherHelper]
     config:
         PhpBrowser:
-            url: http://127.0.0.1:8000
+            url: http://127.0.0.1:8008
 
 
 env:
@@ -14,7 +14,7 @@ env:
             enabled: [WebDriver, Filesystem, OtherHelper]
             config:
                 WebDriver:
-                    url: http://127.0.0.1:8000
+                    url: http://127.0.0.1:8008
                     browser: firefox
 
 

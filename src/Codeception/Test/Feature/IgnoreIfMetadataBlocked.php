@@ -8,7 +8,7 @@ trait IgnoreIfMetadataBlocked
     /**
      * @return Metadata
      */
-    abstract protected function getMetadata();
+    abstract public function getMetadata();
 
     abstract protected function ignore($ignored);
 

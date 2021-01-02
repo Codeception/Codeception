@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<base href="http://127.0.0.1:8000">
+<base href="http://127.0.0.1:8008">
 <meta charset="utf-8">
 <title>Test submitting a form with a relative URL without a leading slash as its action from a URI in the root directory</title>
 </head>

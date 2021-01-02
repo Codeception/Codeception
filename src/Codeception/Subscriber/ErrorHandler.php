@@ -144,9 +144,6 @@ class ErrorHandler implements EventSubscriberInterface
         if (!($this->errorLevel & $type)) {
             return;
         }
-        if (strpos($message, 'Symfony 4.3')) { // skip Symfony 4.3 deprecations
-            return;
-        }
         if ($this->deprecationsInstalled && $this->oldHandler) {
             call_user_func($this->oldHandler, $type, $message, $file, $line, $context);
             return;

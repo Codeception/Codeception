@@ -3,7 +3,6 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
-use Codeception\Event\DispatcherWrapper;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
@@ -28,8 +27,6 @@ use Symfony\Component\Console\Question\Question;
  */
 class Console extends Command
 {
-    use DispatcherWrapper;
-
     protected $test;
     protected $codecept;
     protected $suite;
@@ -99,10 +96,9 @@ class Console extends Command
         $output->writeln("<info>Try Codeception commands without writing a test</info>");
 
         $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResult(), $settings);
-        $this->dispatch($dispatcher, Events::SUITE_BEFORE, $suiteEvent);
-
-        $this->dispatch($dispatcher, Events::TEST_PARSED, new TestEvent($this->test));
-        $this->dispatch($dispatcher, Events::TEST_BEFORE, new TestEvent($this->test));
+        $dispatcher->dispatch($suiteEvent, Events::SUITE_INIT);
+        $dispatcher->dispatch(new TestEvent($this->test), Events::TEST_PARSED);
+        $dispatcher->dispatch(new TestEvent($this->test), Events::TEST_BEFORE);
 
         if (file_exists($settings['bootstrap'])) {
             require $settings['bootstrap'];
@@ -110,9 +106,8 @@ class Console extends Command
 
         $I->pause();
 
-        $this->dispatch($dispatcher, Events::TEST_AFTER, new TestEvent($this->test));
-        $this->dispatch($dispatcher, Events::SUITE_AFTER, new SuiteEvent($this->suite));
-
+        $dispatcher->dispatch(new TestEvent($this->test), Events::TEST_AFTER);
+        $dispatcher->dispatch(new SuiteEvent($this->suite), Events::SUITE_AFTER);
         $output->writeln("<info>Bye-bye!</info>");
         return 0;
     }

@@ -2,7 +2,7 @@
 namespace Codeception\Lib;
 
 use Codeception\Exception\ConfigurationException;
-use Codeception\Util\Stub;
+use Codeception\Stub;
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
 
 class GroupManagerTest extends \Codeception\Test\Unit
