@@ -52,7 +52,6 @@ class GherkinSteps extends Command
         $steps = $loader->getSteps();
 
         foreach ($steps as $name => $context) {
-            /** @var $table Table  **/
             $table = new Table($output);
             $table->setHeaders(['Step', 'Implementation']);
             $output->writeln("Steps from <bold>$name</bold> context:");

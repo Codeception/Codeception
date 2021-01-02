@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Command;
 
 use Codeception\InitTemplate;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,13 +42,13 @@ class Init extends Command
             $className = 'Codeception\Template\\' . ucfirst($template);
 
             if (!class_exists($className)) {
-                throw new \Exception("Template from a $className can't be loaded; Init can't be executed");
+                throw new Exception("Template from a $className can't be loaded; Init can't be executed");
             }
         }
 
         $initProcess = new $className($input, $output);
         if (!$initProcess instanceof InitTemplate) {
-            throw new \Exception("$className is not a valid template");
+            throw new Exception("$className is not a valid template");
         }
         if ($input->getOption('path')) {
             $initProcess->initDir($input->getOption('path'));

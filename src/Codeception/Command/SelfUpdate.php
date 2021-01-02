@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Codeception\Command;
 
 use Codeception\Codecept;
+use Exception;
 use Humbug\SelfUpdate\Updater;
+use Phar;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,7 +43,7 @@ class SelfUpdate extends Command
         if (isset($_SERVER['argv'][0])) {
             $this->filename = $_SERVER['argv'][0];
         } else {
-            $this->filename = \Phar::running(false);
+            $this->filename = Phar::running(false);
         }
 
         $this
@@ -96,7 +98,7 @@ class SelfUpdate extends Command
             } else {
                 $output->writeln('You are already using the latest version.');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $output->writeln(
                 sprintf(
                     "<error>\n%s\n</error>",

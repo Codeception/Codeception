@@ -8,6 +8,7 @@ use Codeception\Configuration;
 use Codeception\Lib\Generator\Actor as ActorGenerator;
 use Codeception\Lib\Generator\Helper;
 use Codeception\Util\Template;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -60,7 +61,7 @@ class GenerateSuite extends Command
 
         $dir = Configuration::testsDir();
         if (file_exists($dir . $suite . '.suite.yml')) {
-            throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
+            throw new Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
 
         $this->createDirectoryFor($dir . $suite);

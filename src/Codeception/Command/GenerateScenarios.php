@@ -6,6 +6,7 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
+use Codeception\SuiteManager;
 use Codeception\Test\Cest;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Command\Command;
@@ -68,7 +69,7 @@ class GenerateScenarios extends Command
             @mkdir($path);
         }
 
-        $suiteManager = new \Codeception\SuiteManager(new EventDispatcher(), $suite, $suiteConf);
+        $suiteManager = new SuiteManager(new EventDispatcher(), $suite, $suiteConf);
 
         if ($suiteConf['bootstrap']) {
             if (file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {

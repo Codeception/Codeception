@@ -14,6 +14,9 @@ use Codeception\SuiteManager;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Test;
 use Codeception\Util\Maybe;
+use Exception;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestSuite\DataProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -86,7 +89,7 @@ class DryRun extends Command
         $dispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_BEFORE);
 
         foreach ($tests as $test) {
-            if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
+            if ($test instanceof DataProvider) {
                 foreach ($test as $t) {
                     if ($t instanceof Test) {
                         $this->dryRunTest($output, $dispatcher, $t);
@@ -107,7 +110,7 @@ class DryRun extends Command
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
         $res = preg_match("~^$tests_path/(.*?)/(.*)$~", $filename, $matches);
         if (!$res) {
-            throw new \InvalidArgumentException("Test file can't be matched");
+            throw new InvalidArgumentException("Test file can't be matched");
         }
 
         return $matches;
@@ -124,7 +127,7 @@ class DryRun extends Command
         $dispatcher->dispatch(new TestEvent($test), Events::TEST_BEFORE);
         try {
             $test->test();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
         $dispatcher->dispatch(new TestEvent($test), Events::TEST_AFTER);
         $dispatcher->dispatch(new TestEvent($test), Events::TEST_END);

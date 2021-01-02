@@ -6,7 +6,13 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
+use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ParseException;
+use Exception;
+use PHPUnit\Runner\Version;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -122,7 +128,7 @@ class Run extends Command
 
     /**
      * Sets Run arguments
-     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function configure()
     {
@@ -241,7 +247,7 @@ class Run extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|null|void
-     * @throws \RuntimeException
+     * @throws ConfigurationException|ParseException
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -271,7 +277,7 @@ class Run extends Command
 
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
+                Codecept::versionString() . "\nPowered by " . Version::getVersionString()
             );
             $this->output->writeln(
                 "Running with seed: " . $this->options['seed'] . "\n"
@@ -350,7 +356,7 @@ class Run extends Command
                         $config = Configuration::config($projectDir.$include);
 
                         if (!isset($config['paths']['tests'])) {
-                            throw new \RuntimeException(
+                            throw new RuntimeException(
                                 sprintf("Included '%s' has no tests path configured", $include)
                             );
                         }
@@ -413,7 +419,7 @@ class Run extends Command
             }
 
             if ($this->executed === 0) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     sprintf("Suite '%s' could not be found", implode(', ', $suites))
                 );
             }
@@ -466,6 +472,7 @@ class Run extends Command
      *
      * @param array $suites
      * @param string $parent_dir
+     * @throws ConfigurationException
      */
     protected function runIncludedSuites(array $suites, string $parent_dir)
     {
@@ -491,7 +498,7 @@ class Run extends Command
     {
         $config = Configuration::config();
         if (!$config['namespace']) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 "Can't include into runner suite without a namespace;\n"
                 . "Please add `namespace` section into included codeception.yml file"
             );
@@ -593,12 +600,12 @@ class Run extends Command
 
     /**
      * @param string $ext
-     * @throws \Exception
+     * @throws Exception
      */
     private function ensurePhpExtIsAvailable(string $ext)
     {
         if (!extension_loaded(strtolower($ext))) {
-            throw new \Exception(
+            throw new Exception(
                 "Codeception requires \"{$ext}\" extension installed to make tests run\n"
                 . "If you are not sure, how to install \"{$ext}\", please refer to StackOverflow\n\n"
                 . "Notice: PHP for Apache/Nginx and CLI can have different php.ini files.\n"

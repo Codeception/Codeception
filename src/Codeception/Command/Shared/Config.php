@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Command\Shared;
 
 use Codeception\Configuration;
+use InvalidArgumentException;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -32,7 +33,7 @@ trait Config
         foreach ($configOptions as $option) {
             $keys = explode(': ', $option);
             if (count($keys) < 2) {
-                throw new \InvalidArgumentException('--config-option should have config passed as "key:value"');
+                throw new InvalidArgumentException('--config-option should have config passed as "key:value"');
             }
             $value = array_pop($keys);
             $yaml = '';
