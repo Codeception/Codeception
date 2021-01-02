@@ -7,6 +7,7 @@ namespace Codeception\Lib\Generator;
 use Codeception\Codecept;
 use Codeception\Configuration;
 use Codeception\Lib\Di;
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step\GeneratedStep;
 use Codeception\Util\ReflectionHelper;
@@ -20,6 +21,8 @@ use ReflectionUnionType;
 
 class Actions
 {
+    use Classname;
+
     public Di $di;
 
     public ModuleContainer $moduleContainer;
@@ -90,7 +93,7 @@ EOF;
 
     public function produce(): string
     {
-        $namespace = rtrim($this->settings['namespace'], '\\');
+        $namespace = trim($this->supportNamespace(), '\\');
 
         $methods = [];
         $code = [];

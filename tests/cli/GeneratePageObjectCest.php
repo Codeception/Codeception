@@ -12,7 +12,6 @@ final class GeneratePageObjectCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('generate:page Login');
         $I->seeFileWithGeneratedClass('Login', 'tests/_support/Page');
-        $I->seeInThisFile('static $URL = ');
         $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
     }
 
@@ -32,7 +31,6 @@ final class GeneratePageObjectCest
         $I->executeCommand('generate:page Login -c tests/data/sandbox');
         $I->amInPath('tests/data/sandbox');
         $I->seeFileWithGeneratedClass('Login', 'tests/_support/Page');
-        $I->seeInThisFile('static $URL = ');
         $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
     }
 }

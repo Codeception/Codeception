@@ -6,7 +6,6 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Lib\Generator\Actor as ActorGenerator;
-use Codeception\Lib\Generator\Helper as HelperGenerator;
 use Codeception\Util\Template;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -78,34 +77,19 @@ class GenerateSuite extends Command
             );
         }
 
-        $helperName = ucfirst($suite);
-
-        $file = $this->createDirectoryFor(
-            Configuration::supportDir() . "Helper",
-            "{$helperName}.php"
-        ) . "{$helperName}.php";
-
-        $helper = new HelperGenerator($helperName, $config['namespace']);
-        // generate helper
-        $this->createFile(
-            $file,
-            $helper->produce()
-        );
-
-        $output->writeln("Helper <info>" . $helper->getHelperName() . "</info> was created in {$file}");
-
         $yamlSuiteConfigTemplate = <<<EOF
 actor: {{actor}}
+suite_namespace: {{suite_namespace}}
 modules:
-    enabled:
-        - {{helper}}
+    # enable helpers as array
+    enabled: []
 EOF;
 
         $this->createFile(
-            $dir . $suite . '.suite.yml',
+            $dir . ucfirst($suite) . '.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
                 ->place('actor', $actor)
-                ->place('helper', $helper->getHelperName())
+                ->place('suite_namespace', $config['namespace']. '\\' . ucfirst($suite))
                 ->produce()
         );
 

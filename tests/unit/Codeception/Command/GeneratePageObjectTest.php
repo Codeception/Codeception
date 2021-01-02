@@ -23,7 +23,6 @@ class GeneratePageObjectTest extends BaseCommandRunner
         $this->execute(['suite' => 'Login'], false);
         $this->assertSame(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);
         $this->assertStringContainsString('class Login', $this->content);
-        $this->assertStringContainsString('public static', $this->content);
         $this->assertStringNotContainsString('public function __construct', $this->content);
         $this->assertIsValidPhp($this->content);
     }
@@ -36,7 +35,6 @@ class GeneratePageObjectTest extends BaseCommandRunner
         $this->assertSame(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);
         $this->assertStringContainsString('namespace MiddleEarth\Page;', $this->content);
         $this->assertStringContainsString('class Login', $this->content);
-        $this->assertStringContainsString('public static', $this->content);
         $this->assertIsValidPhp($this->content);
     }
 

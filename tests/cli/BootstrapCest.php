@@ -27,11 +27,8 @@ final class BootstrapCest
         $I->dontSeeInThisFile('namespace Generated\\');
         $this->checkFilesCreated($I);
 
-        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
-        $I->seeInThisFile('namespace Generated\Helper;');
-
-        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
-        $I->seeInThisFile('namespace Generated;');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/TestSupport');
+        $I->seeInThisFile('namespace Generated\\TestSupport;');
     }
 
     public function bootstrapWithNamespaceShortcut(CliGuy $I)
@@ -43,17 +40,14 @@ final class BootstrapCest
         $I->dontSeeInThisFile('namespace Generated\\');
         $this->checkFilesCreated($I);
 
-        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
-        $I->seeInThisFile('namespace Generated\Helper;');
-
-        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
-        $I->seeInThisFile('namespace Generated;');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/TestSupport');
+        $I->seeInThisFile('namespace Generated\\TestSupport;');
     }
 
     public function bootstrapWithActor(CliGuy $I)
     {
         $I->executeCommand('bootstrap --actor Ninja');
-        $I->seeFileFound('AcceptanceNinja.php', 'tests/_support/');
+        $I->seeFileFound('AcceptanceNinja.php', 'tests/TestSupport/');
     }
 
     public function bootstrapEmpty(CliGuy $I)
@@ -77,20 +71,16 @@ final class BootstrapCest
 
     private function checkFilesCreated(CliGuy $I)
     {
-        $I->seeDirFound('tests/_support');
-        $I->seeDirFound('tests/_data');
+        $I->seeDirFound('tests/TestSupport');
+        $I->seeDirFound('tests/TestSupport/Data');
         $I->seeDirFound('tests/_output');
 
-        $I->seeFileFound('functional.suite.yml', 'tests');
-        $I->seeFileFound('acceptance.suite.yml', 'tests');
-        $I->seeFileFound('unit.suite.yml', 'tests');
+        $I->seeFileFound('Functional.suite.yml', 'tests');
+        $I->seeFileFound('Acceptance.suite.yml', 'tests');
+        $I->seeFileFound('Unit.suite.yml', 'tests');
 
-        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
-        $I->seeFileFound('FunctionalTester.php', 'tests/_support');
-        $I->seeFileFound('UnitTester.php', 'tests/_support');
-
-        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
-        $I->seeFileFound('Functional.php', 'tests/_support/Helper');
-        $I->seeFileFound('Unit.php', 'tests/_support/Helper');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/TestSupport');
+        $I->seeFileFound('FunctionalTester.php', 'tests/TestSupport');
+        $I->seeFileFound('UnitTester.php', 'tests/TestSupport');
     }
 }

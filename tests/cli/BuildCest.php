@@ -39,7 +39,9 @@ final class BuildCest
         $I->wantToTest('generate typehints with generated actions');
 
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
-        $cliHelperContents = str_replace('public function grabFromOutput($regex)', 'public function grabFromOutput(string $regex): int', $cliHelperContents);
+
+        $cliHelperContents = str_replace('public function grabFromOutput($regex)', 'public function grabFromOutput(string $regex): string', $cliHelperContents);
+
         file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
 
         $I->runShellCommand('php codecept build');
@@ -48,7 +50,7 @@ final class BuildCest
         $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
-        $I->seeInThisFile('public function grabFromOutput(string $regex): int');
+        $I->seeInThisFile('public function grabFromOutput(string $regex): string');
     }
 
     public function generatedUnionReturnType(CliGuy $I, Scenario $scenario): void

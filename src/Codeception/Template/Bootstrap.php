@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Template;
 
+use Codeception\Configuration;
 use Codeception\Extension\RunFailed;
 use Codeception\InitTemplate;
 use Codeception\Module\Asserts;
@@ -12,21 +13,28 @@ use Symfony\Component\Yaml\Yaml;
 
 class Bootstrap extends InitTemplate
 {
-    protected string $supportDir = 'tests/_support';
+    // defaults
+    protected string $supportDir = 'tests/TestSupport';
 
-    protected string $outputDir = 'tests/_output';
-
-    protected string $dataDir = 'tests/_data';
+    protected string $dataDir = 'tests/TestSupport/Data';
 
     protected string $envsDir = 'tests/_envs';
 
-    public function setup()
+    protected string $outputDir = 'tests/_output';
+
+
+    // default since v5
+    protected string $namespace = 'Tests';
+
+    protected string $supportNamespace = 'TestSupport';
+
+    public function setup(): void
     {
         $this->checkInstalled($this->workDir);
 
         $input = $this->input;
         if ($input->getOption('namespace')) {
-            $this->namespace = trim($input->getOption('namespace'), '\\') . '\\';
+            $this->namespace = trim($input->getOption('namespace'), '\\');
         }
 
         if ($input->hasOption('actor') && $input->getOption('actor')) {
@@ -74,8 +82,8 @@ class Bootstrap extends InitTemplate
         $this->createEmptyDirectory($this->dataDir);
         $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . "Helper");
-        $this->gitIgnore('tests/_output');
-        $this->gitIgnore('tests/_support/_generated');
+        $this->gitIgnore($this->outputDir);
+        $this->gitIgnore($this->supportDir . DIRECTORY_SEPARATOR . '/_generated');
     }
 
     protected function createFunctionalSuite(string $actor = 'Functional'): void
@@ -92,12 +100,11 @@ actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         # add a framework module here
-        - \\{$this->namespace}Helper\Functional
     step_decorators: ~        
 EOF;
-        $this->createSuite('functional', $actor, $suiteConfig);
-        $this->say("tests/functional created           <- functional tests");
-        $this->say("tests/functional.suite.yml written <- functional tests suite configuration");
+        $this->createSuite('Functional', $actor, $suiteConfig);
+        $this->say("tests/Functional created           <- functional tests");
+        $this->say("tests/Functional.suite.yml written <- functional tests suite configuration");
     }
 
     protected function createAcceptanceSuite(string $actor = 'Acceptance'): void
@@ -114,12 +121,11 @@ modules:
     enabled:
         - PhpBrowser:
             url: http://localhost/myapp
-        - \\{$this->namespace}Helper\Acceptance
 step_decorators: ~        
 EOF;
-        $this->createSuite('acceptance', $actor, $suiteConfig);
-        $this->say("tests/acceptance created           <- acceptance tests");
-        $this->say("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
+        $this->createSuite('Acceptance', $actor, $suiteConfig);
+        $this->say("tests/Acceptance created           <- acceptance tests");
+        $this->say("tests/Acceptance.suite.yml written <- acceptance tests suite configuration");
     }
 
     protected function createUnitSuite(string $actor = 'Unit'): void
@@ -133,17 +139,17 @@ actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         - Asserts
-        - \\{$this->namespace}Helper\Unit
     step_decorators: ~        
 EOF;
-        $this->createSuite('unit', $actor, $suiteConfig);
-        $this->say("tests/unit created                 <- unit tests");
-        $this->say("tests/unit.suite.yml written       <- unit tests suite configuration");
+        $this->createSuite('Unit', $actor, $suiteConfig);
+        $this->say("tests/Unit created                 <- unit tests");
+        $this->say("tests/Unit.suite.yml written       <- unit tests suite configuration");
     }
 
     public function createGlobalConfig(): void
     {
         $basicConfig = [
+            'support_namespace' => $this->supportNamespace,
             'paths'    => [
                 'tests'   => 'tests',
                 'output'  => $this->outputDir,
@@ -167,9 +173,10 @@ EOF;
 
     protected function createSuite(string $suite, string $actor, string $config): void
     {
+        $settings = Yaml::parse($config);
+        $settings['support_namespace'] = $this->supportNamespace;
         $this->createDirectoryFor("tests/{$suite}", "{$suite}.suite.yml");
-        $this->createHelper($actor, $this->supportDir);
-        $this->createActor($actor . $this->actorSuffix, $this->supportDir, Yaml::parse($config));
+        $this->createActor($actor . $this->actorSuffix, $this->supportDir, $settings);
         $this->createFile('tests' . DIRECTORY_SEPARATOR . "{$suite}.suite.yml", $config);
     }
 }

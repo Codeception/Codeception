@@ -22,7 +22,7 @@ settings:
 paths:
     tests: {{dir}}
     output: {{dir}}/_output
-    support: {{dir}}/_support
+    support: {{dir}}/TestSupport
     data: {{dir}}
      
 EOF;
@@ -36,7 +36,7 @@ EOF;
         step_decorators: ~ 
 EOF;
 
-    public function setup()
+    public function setup(): void
     {
         $this->sayInfo('This will install Codeception for unit testing only');
         $this->say();
@@ -59,10 +59,8 @@ EOF;
             ->place('tester', $haveTester ? $this->testerAndModules : '')
             ->produce();
 
-        if ($this->namespace !== '') {
-            $namespace = rtrim($this->namespace, '\\');
-            $configFile = "namespace: {$namespace}\n" . $configFile;
-        }
+        $namespace = rtrim($this->namespace, '\\');
+        $configFile = "namespace: $namespace\nsupport_namespace: {$this->supportNamespace}\n" . $configFile;
 
         $this->createFile('codeception.yml', $configFile);
 
@@ -71,7 +69,6 @@ EOF;
         }
 
         if ($haveTester) {
-            $this->createHelper('Unit', $supportDir);
             $this->createActor('UnitTester', $supportDir, Yaml::parse($configFile)['suites']['unit']);
         }
 

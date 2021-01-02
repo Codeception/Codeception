@@ -16,7 +16,9 @@ class Cest
 
     protected string $template = <<<EOF
 <?php
+
 {{namespace}}
+
 class {{name}}Cest
 {
     public function _before({{actor}} \$I)
@@ -45,21 +47,15 @@ EOF;
             throw new ConfigurationException("Cest can't be created for suite without an actor. Add `actor: SomeTester` to suite config");
         }
 
-        if (array_key_exists('suite_namespace', $this->settings)) {
-            $namespace = rtrim($this->settings['suite_namespace'], '\\');
-        } else {
-            $namespace = rtrim($this->settings['namespace'], '\\');
-        }
+        $namespaceHeader = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . ucfirst($this->settings['suite']) . '\\' . $this->name);
 
-        $ns = $this->getNamespaceHeader($namespace . '\\' . $this->name);
-
-        if ($namespace !== '') {
-            $ns .= "use " . $this->settings['namespace'] . '\\' . $actor . ";";
+        if ($namespaceHeader) {
+            $namespaceHeader .= "\nuse ". $this->supportNamespace() . $actor.";";
         }
 
         return (new Template($this->template))
             ->place('name', $this->getShortClassName($this->name))
-            ->place('namespace', $ns)
+            ->place('namespace', $namespaceHeader)
             ->place('actor', $actor)
             ->produce();
     }
