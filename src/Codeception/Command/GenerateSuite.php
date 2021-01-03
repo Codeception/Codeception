@@ -14,6 +14,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
+use function file_exists;
+use function preg_match;
+use function ucfirst;
 
 /**
  * Create new test suite. Requires suite name and actor name

@@ -18,6 +18,24 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function array_flip;
+use function array_intersect_key;
+use function array_merge;
+use function count;
+use function explode;
+use function extension_loaded;
+use function getcwd;
+use function implode;
+use function in_array;
+use function preg_match;
+use function preg_replace;
+use function rtrim;
+use function sprintf;
+use function str_replace;
+use function strpos;
+use function strtolower;
+use function substr;
+use function substr_replace;
 
 /**
  * Executes tests.

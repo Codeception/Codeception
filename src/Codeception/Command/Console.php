@@ -20,6 +20,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function array_keys;
+use function file_exists;
+use function function_exists;
+use function pcntl_signal;
 
 /**
  * Try to execute test commands in run-time. You may try commands before writing the test.

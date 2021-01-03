@@ -5,6 +5,15 @@ declare(strict_types=1);
 namespace Codeception\Command\Shared;
 
 use Codeception\Util\Shared\Namespaces;
+use function file_exists;
+use function file_put_contents;
+use function mkdir;
+use function pathinfo;
+use function preg_replace;
+use function rtrim;
+use function str_replace;
+use function strpos;
+use function strrev;
 
 trait FileSystem
 {

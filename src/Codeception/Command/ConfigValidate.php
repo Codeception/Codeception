@@ -10,6 +10,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function codecept_data_dir;
+use function codecept_output_dir;
+use function codecept_root_dir;
+use function count;
+use function implode;
+use function preg_replace;
+use function print_r;
 
 /**
  * Validates and prints Codeception config.

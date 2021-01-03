@@ -15,6 +15,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use function basename;
+use function file_exists;
+use function is_writable;
+use function mkdir;
+use function preg_replace;
 
 /**
  * Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).

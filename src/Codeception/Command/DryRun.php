@@ -22,6 +22,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use function ini_set;
+use function preg_match;
+use function str_replace;
+use function strpos;
 
 /**
  * Shows step by step execution process for scenario driven tests without actually running them.
