@@ -215,7 +215,7 @@ class Run extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Generate CodeCoverage PHPUnit report in path'
             ),
-            new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
+            new InputOption('no-exit', '', InputOption::VALUE_NONE, "Don't finish with exit code"),
             new InputOption(
                 'group',
                 'g',
@@ -248,7 +248,7 @@ class Run extends Command
                 InputOption::VALUE_REQUIRED,
                 'Define random seed for shuffle setting'
             ),
-            new InputOption('no-artifacts', '', InputOption::VALUE_NONE, 'Don\'t report about artifacts'),
+            new InputOption('no-artifacts', '', InputOption::VALUE_NONE, "Don't report about artifacts"),
         ]);
 
         parent::configure();
@@ -329,7 +329,7 @@ class Run extends Command
         if (!$this->options['seed']) {
             $userOptions['seed'] = rand();
         } else {
-            $userOptions['seed'] = intval($this->options['seed']);
+            $userOptions['seed'] = (int) $this->options['seed'];
         }
         if ($this->options['no-colors'] || !$userOptions['ansi']) {
             $userOptions['colors'] = false;
@@ -343,7 +343,7 @@ class Run extends Command
         if ($this->options['report']) {
             $userOptions['silent'] = true;
         }
-        if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text'] or $this->options['coverage-crap4j'] or $this->options['coverage-phpunit']) {
+        if ($this->options['coverage-xml'] || $this->options['coverage-html'] || $this->options['coverage-text'] || $this->options['coverage-crap4j'] || $this->options['coverage-phpunit']) {
             $this->options['coverage'] = true;
         }
         if (!$userOptions['ansi'] && $input->getOption('colors')) {
@@ -369,7 +369,7 @@ class Run extends Command
 
                 foreach ($config['include'] as $include) {
                     // Find if the suite begins with an include path
-                    if (strpos($suite, $include) === 0) {
+                    if (strpos($suite, (string) $include) === 0) {
                         // Use include config
                         $config = Configuration::config($projectDir.$include);
 
@@ -421,7 +421,7 @@ class Run extends Command
 
         $this->codecept = new Codecept($userOptions);
 
-        if ($suite and $test) {
+        if ($suite && $test) {
             $this->codecept->run($suite, $test, $config);
         }
 
@@ -430,10 +430,10 @@ class Run extends Command
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
             $this->executed = $this->runSuites($suites, $this->options['skip']);
 
-            if (!empty($config['include']) and !$suite) {
-                $current_dir = Configuration::projectDir();
+            if (!empty($config['include']) && !$suite) {
+                $currentDir = Configuration::projectDir();
                 $suites += $config['include'];
-                $this->runIncludedSuites($config['include'], $current_dir);
+                $this->runIncludedSuites($config['include'], $currentDir);
             }
 
             if ($this->executed === 0) {
@@ -445,10 +445,8 @@ class Run extends Command
 
         $this->codecept->printResult();
 
-        if (!$input->getOption('no-exit')) {
-            if (!$this->codecept->getResult()->wasSuccessful()) {
-                exit(1);
-            }
+        if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessful()) {
+            exit(1);
         }
         return 0;
     }
@@ -483,7 +481,7 @@ class Run extends Command
         }
 
         // Run single test without included tests
-        if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
+        if (! Configuration::isEmpty() && strpos($suite, (string) $config['paths']['tests']) === 0) {
             return $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
     }
@@ -492,24 +490,24 @@ class Run extends Command
      * Runs included suites recursively
      *
      * @param array $suites
-     * @param string $parent_dir
+     * @param string $parentDir
      * @throws ConfigurationException
      */
-    protected function runIncludedSuites(array $suites, string $parent_dir)
+    protected function runIncludedSuites(array $suites, string $parentDir): void
     {
         foreach ($suites as $relativePath) {
-            $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
-            $config = Configuration::config($current_dir);
+            $currentDir = rtrim($parentDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
+            $config = Configuration::config($currentDir);
             $suites = Configuration::suites();
 
             $namespace = $this->currentNamespace();
             $this->output->writeln(
-                "\n<fg=white;bg=magenta>\n[$namespace]: tests from $current_dir\n</fg=white;bg=magenta>"
+                "\n<fg=white;bg=magenta>\n[$namespace]: tests from $currentDir\n</fg=white;bg=magenta>"
             );
 
             $this->executed += $this->runSuites($suites, $this->options['skip']);
             if (!empty($config['include'])) {
-                $this->runIncludedSuites($config['include'], $current_dir);
+                $this->runIncludedSuites($config['include'], $currentDir);
             }
         }
     }
@@ -539,7 +537,7 @@ class Run extends Command
                 continue;
             }
             $this->codecept->run($suite);
-            $executed++;
+            ++$executed;
         }
 
         return $executed;
@@ -563,14 +561,14 @@ class Run extends Command
 
     private function matchFilteredTestName(&$path): ?string
     {
-        $test_parts = explode(':', $path, 2);
-        if (count($test_parts) > 1) {
-            list($path, $filter) = $test_parts;
+        $testParts = explode(':', $path, 2);
+        if (count($testParts) > 1) {
+            list($path, $filter) = $testParts;
             // use carat to signify start of string like in normal regex
             // phpunit --filter matches against the fully qualified method name, so tests actually begin with :
-            $carat_pos = strpos($filter, '^');
-            if ($carat_pos !== false) {
-                $filter = substr_replace($filter, ':', $carat_pos, 1);
+            $caratPos = strpos($filter, '^');
+            if ($caratPos !== false) {
+                $filter = substr_replace($filter, ':', $caratPos, 1);
             }
             return $filter;
         }
@@ -618,7 +616,7 @@ class Run extends Command
         $values = [];
         $request = (string)$input;
         foreach ($options as $option => $defaultValue) {
-            if (strpos($request, "--$option")) {
+            if (strpos($request, sprintf('--%s', (string) $option))) {
                 $values[$option] = $input->getOption($option) ? $input->getOption($option) : $defaultValue;
             } else {
                 $values[$option] = false;

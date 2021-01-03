@@ -6,7 +6,7 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Lib\Generator\Actor as ActorGenerator;
-use Codeception\Lib\Generator\Helper;
+use Codeception\Lib\Generator\Helper as HelperGenerator;
 use Codeception\Util\Template;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -85,14 +85,14 @@ class GenerateSuite extends Command
             "$helperName.php"
         ) . "$helperName.php";
 
-        $gen = new Helper($helperName, $config['namespace']);
+        $helper = new HelperGenerator($helperName, $config['namespace']);
         // generate helper
         $this->createFile(
             $file,
-            $gen->produce()
+            $helper->produce()
         );
 
-        $output->writeln("Helper <info>" . $gen->getHelperName() . "</info> was created in $file");
+        $output->writeln("Helper <info>" . $helper->getHelperName() . "</info> was created in $file");
 
         $yamlSuiteConfigTemplate = <<<EOF
 actor: {{actor}}
@@ -105,7 +105,7 @@ EOF;
             $dir . $suite . '.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
                 ->place('actor', $actor)
-                ->place('helper', $gen->getHelperName())
+                ->place('helper', $helper->getHelperName())
                 ->produce()
         );
 
@@ -137,6 +137,6 @@ EOF;
 
     private function containsInvalidCharacters($suite): bool
     {
-        return preg_match('#[^A-Za-z0-9_]#', $suite) ? true : false;
+        return (bool) preg_match('#[^A-Za-z0-9_]#', $suite);
     }
 }

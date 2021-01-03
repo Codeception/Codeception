@@ -13,21 +13,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CompletionFallback extends Command
 {
-    protected function configure()
+    /**
+     * @var string
+     */
+    protected static $defaultName = '_completion';
+
+    protected function configure(): void
     {
         $this
-            ->setName('_completion')
             ->setDescription('BASH completion hook.')
+            ->setHidden(true) // Hide from listing
             ->setHelp(<<<END
 To enable BASH completion, install optional stecman/symfony-console-completion first:
 
     <comment>composer require stecman/symfony-console-completion</comment>
 
-END
-            );
-
-        // Hide this command from listing
-        $this->setHidden(true);
+END);
     }
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

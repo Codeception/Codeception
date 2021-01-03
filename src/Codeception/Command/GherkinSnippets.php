@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Command;
 
-use Codeception\Lib\Generator\GherkinSnippets as SnippetsGenerator;
+use Codeception\Lib\Generator\GherkinSnippets as GherkinSnippetsGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,15 +52,16 @@ class GherkinSnippets extends Command
         $test = $input->getArgument('test');
         $config = $this->getSuiteConfig($suite);
 
-        $generator = new SnippetsGenerator($config, $test);
-        $snippets = $generator->getSnippets();
-        $features = $generator->getFeatures();
+        $generator = new GherkinSnippetsGenerator($config, $test);
 
+        $snippets = $generator->getSnippets();
         if (empty($snippets)) {
             $output->writeln("<notice> All Gherkin steps are defined. Exiting... </notice>");
             return 0;
         }
         $output->writeln("<comment> Snippets found in: </comment>");
+
+        $features = $generator->getFeatures();
         foreach ($features as $feature) {
             $output->writeln("<info>  - {$feature} </info>");
         }

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function sprintf;
 
 /**
- * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
+ * Auto-updates phar archive from official site: 'https://codeception.com/codecept.phar' .
  *
  * * `php codecept.phar self-update`
  *
@@ -23,12 +23,17 @@ use function sprintf;
 class SelfUpdate extends Command
 {
     /**
-     * Class constants
+     * @var string
      */
     const NAME = 'Codeception';
+    /**
+     * @var string
+     */
     const GITHUB_REPO = 'Codeception/Codeception';
-    const PHAR_URL = 'http://codeception.com/';
-    const PHAR_URL_PHP56 = 'http://codeception.com/php56/';
+    /**
+     * @var string
+     */
+    const PHAR_URL = 'https://codeception.com/';
 
     /**
      * Holds the current script filename.
@@ -41,12 +46,7 @@ class SelfUpdate extends Command
      */
     protected function configure(): void
     {
-        if (isset($_SERVER['argv'][0])) {
-            $this->filename = $_SERVER['argv'][0];
-        } else {
-            $this->filename = Phar::running(false);
-        }
-
+        $this->filename = isset($_SERVER['argv'][0]) ? $_SERVER['argv'][0] : Phar::running(false);
         $this
             ->setAliases(array('selfupdate'))
             ->setDescription(
@@ -55,7 +55,6 @@ class SelfUpdate extends Command
                     $this->filename
                 )
             );
-
         parent::configure();
     }
 
@@ -69,17 +68,17 @@ class SelfUpdate extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $version = $this->getCurrentVersion();
+        $currentVersion = $this->getCurrentVersion();
 
         $output->writeln(
             sprintf(
                 '<info>%s</info> version <comment>%s</comment>',
                 self::NAME,
-                $version
+                $currentVersion
             )
         );
 
-        $url = $this->getPharUrl();
+        $url = self::PHAR_URL;
 
         $updater = new Updater(null, false);
         $updater->getStrategy()->setPharUrl($url . 'codecept.phar');
@@ -107,18 +106,5 @@ class SelfUpdate extends Command
         }
 
         return 0;
-    }
-
-    /**
-     * Returns base url of phar file for current PHP version
-     *
-     * @return string
-     */
-    protected function getPharUrl(): string
-    {
-        if (version_compare(PHP_VERSION, '7.2.0', '<')) {
-            return self::PHAR_URL_PHP56;
-        }
-        return self::PHAR_URL;
     }
 }

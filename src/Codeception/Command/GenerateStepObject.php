@@ -56,19 +56,19 @@ class GenerateStepObject extends Command
         $helper = $this->getHelper('question');
         $question = new Question("Add action to StepObject class (ENTER to exit): ");
 
-        $gen = new StepObjectGenerator($config, ucfirst($suite) . '\\' . $step);
+        $stepObject = new StepObjectGenerator($config, ucfirst($suite) . '\\' . $step);
 
         if (!$input->getOption('silent')) {
             do {
                 $question = new Question('Add action to StepObject class (ENTER to exit): ', null);
                 $action = $dialog->ask($input, $output, $question);
                 if ($action) {
-                    $gen->createAction($action);
+                    $stepObject->createAction($action);
                 }
             } while ($action);
         }
 
-        $res = $this->createFile($filename, $gen->produce());
+        $res = $this->createFile($filename, $stepObject->produce());
 
         if (!$res) {
             $output->writeln("<error>StepObject $filename already exists</error>");

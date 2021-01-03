@@ -76,10 +76,8 @@ class GenerateScenarios extends Command
 
         $suiteManager = new SuiteManager(new EventDispatcher(), $suite, $suiteConf);
 
-        if ($suiteConf['bootstrap']) {
-            if (file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
-                require_once $suiteConf['path'] . $suiteConf['bootstrap'];
-            }
+        if ($suiteConf['bootstrap'] && file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
+            require_once $suiteConf['path'] . $suiteConf['bootstrap'];
         }
 
         $tests = $this->getTests($suiteManager);

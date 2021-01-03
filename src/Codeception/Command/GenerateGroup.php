@@ -37,15 +37,15 @@ class GenerateGroup extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = $this->getGlobalConfig();
-        $group = (string)$input->getArgument('group');
+        $groupInputArgument = (string)$input->getArgument('group');
 
-        $class = ucfirst($group);
+        $class = ucfirst($groupInputArgument);
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Group' . DIRECTORY_SEPARATOR, $class);
 
         $filename = $path . $class . '.php';
 
-        $gen = new GroupGenerator($config, $group);
-        $res = $this->createFile($filename, $gen->produce());
+        $group = new GroupGenerator($config, $groupInputArgument);
+        $res = $this->createFile($filename, $group->produce());
 
         if (!$res) {
             $output->writeln("<error>Group $filename already exists</error>");

@@ -86,10 +86,11 @@ class Console extends Command
         Debug::setOutput(new Output($options));
 
         $this->codecept = new Codecept($options);
-        $dispatcher = $this->codecept->getDispatcher();
+        $eventDispatcher = $this->codecept->getDispatcher();
 
-        $suiteManager = new SuiteManager($dispatcher, $suiteName, $settings);
+        $suiteManager = new SuiteManager($eventDispatcher, $suiteName, $settings);
         $suiteManager->initialize();
+
         $this->suite = $suiteManager->getSuite();
         $moduleContainer = $suiteManager->getModuleContainer();
 
@@ -97,7 +98,7 @@ class Console extends Command
 
         $this->test = new Cept(null, null);
         $this->test->getMetadata()->setServices([
-           'dispatcher' => $dispatcher,
+           'dispatcher' => $eventDispatcher,
            'modules' =>  $moduleContainer
         ]);
 
@@ -117,9 +118,9 @@ class Console extends Command
         $output->writeln("<info>Try Codeception commands without writing a test</info>");
 
         $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResult(), $settings);
-        $dispatcher->dispatch($suiteEvent, Events::SUITE_INIT);
-        $dispatcher->dispatch(new TestEvent($this->test), Events::TEST_PARSED);
-        $dispatcher->dispatch(new TestEvent($this->test), Events::TEST_BEFORE);
+        $eventDispatcher->dispatch($suiteEvent, Events::SUITE_INIT);
+        $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_PARSED);
+        $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_BEFORE);
 
         if (file_exists($settings['bootstrap'])) {
             require $settings['bootstrap'];
@@ -127,8 +128,8 @@ class Console extends Command
 
         $I->pause();
 
-        $dispatcher->dispatch(new TestEvent($this->test), Events::TEST_AFTER);
-        $dispatcher->dispatch(new SuiteEvent($this->suite), Events::SUITE_AFTER);
+        $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_AFTER);
+        $eventDispatcher->dispatch(new SuiteEvent($this->suite), Events::SUITE_AFTER);
         $output->writeln("<info>Bye-bye!</info>");
         return 0;
     }

@@ -63,8 +63,8 @@ class GeneratePageObject extends Command
 
         $output->writeln($filename);
 
-        $gen = new PageObjectGenerator($conf, ucfirst($suite) . '\\' . $class);
-        $res = $this->createFile($filename, $gen->produce());
+        $pageObject = new PageObjectGenerator($conf, ucfirst($suite) . '\\' . $class);
+        $res = $this->createFile($filename, $pageObject->produce());
 
         if (!$res) {
             $output->writeln("<error>PageObject $filename already exists</error>");
@@ -72,9 +72,5 @@ class GeneratePageObject extends Command
         }
         $output->writeln("<info>PageObject was created in $filename</info>");
         return 0;
-    }
-
-    protected function pathToPageObject($class, $suite)
-    {
     }
 }

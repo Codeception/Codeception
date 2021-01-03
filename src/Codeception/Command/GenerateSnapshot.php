@@ -64,8 +64,8 @@ class GenerateSnapshot extends Command
 
         $output->writeln($filename);
 
-        $gen = new SnapshotGenerator($conf, ucfirst($suite) . '\\' . $class);
-        $res = $this->createFile($filename, $gen->produce());
+        $snapshot = new SnapshotGenerator($conf, ucfirst($suite) . '\\' . $class);
+        $res = $this->createFile($filename, $snapshot->produce());
 
         if (!$res) {
             $output->writeln("<error>Snapshot $filename already exists</error>");

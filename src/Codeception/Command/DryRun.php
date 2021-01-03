@@ -16,7 +16,7 @@ use Codeception\Test\Test;
 use Codeception\Util\Maybe;
 use Exception;
 use InvalidArgumentException;
-use PHPUnit\Framework\TestSuite\DataProvider;
+use PHPUnit\Framework\TestSuite\DataProvider as PHPUnitDataProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -68,20 +68,20 @@ class DryRun extends Command
             'memory_limit',
             isset($config['settings']['memory_limit']) ? $config['settings']['memory_limit'] : '1024M'
         );
-        if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
+        if (! Configuration::isEmpty() && ! $test && strpos($suite, (string) $config['paths']['tests']) === 0) {
             list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
         $settings = $this->getSuiteConfig($suite);
 
-        $dispatcher = new EventDispatcher();
-        $dispatcher->addSubscriber(new ConsolePrinter([
+        $eventDispatcher = new EventDispatcher();
+        $eventDispatcher->addSubscriber(new ConsolePrinter([
             'colors' => !$input->getOption('no-ansi'),
             'steps'     => true,
             'verbosity' => OutputInterface::VERBOSITY_VERBOSE,
         ]));
-        $dispatcher->addSubscriber(new BootstrapLoader());
+        $eventDispatcher->addSubscriber(new BootstrapLoader());
 
-        $suiteManager = new SuiteManager($dispatcher, $suite, $settings);
+        $suiteManager = new SuiteManager($eventDispatcher, $suite, $settings);
         $moduleContainer = $suiteManager->getModuleContainer();
         foreach (Configuration::modules($settings) as $module) {
             $moduleContainer->mock($module, new Maybe());
@@ -89,30 +89,29 @@ class DryRun extends Command
         $suiteManager->loadTests($test);
         $tests = $suiteManager->getSuite()->tests();
 
-        $dispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_INIT);
-        $dispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_BEFORE);
+        $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_INIT);
+        $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_BEFORE);
 
         foreach ($tests as $test) {
-            if ($test instanceof DataProvider) {
+            if ($test instanceof PHPUnitDataProvider) {
                 foreach ($test as $t) {
                     if ($t instanceof Test) {
-                        $this->dryRunTest($output, $dispatcher, $t);
+                        $this->dryRunTest($output, $eventDispatcher, $t);
                     }
                 }
             }
-            if ($test instanceof Test and $test instanceof ScenarioDriven) {
-                $this->dryRunTest($output, $dispatcher, $test);
+            if ($test instanceof Test && $test instanceof ScenarioDriven) {
+                $this->dryRunTest($output, $eventDispatcher, $test);
             }
         }
-        $dispatcher->dispatch(new SuiteEvent($suiteManager->getSuite()), Events::SUITE_AFTER);
+        $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite()), Events::SUITE_AFTER);
         return 0;
     }
 
-
-    protected function matchTestFromFilename($filename, $tests_path)
+    protected function matchTestFromFilename($filename, $testsPath)
     {
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
-        $res = preg_match("~^$tests_path/(.*?)/(.*)$~", $filename, $matches);
+        $res = preg_match("~^$testsPath/(.*?)/(.*)$~", $filename, $matches);
         if (!$res) {
             throw new InvalidArgumentException("Test file can't be matched");
         }
@@ -120,21 +119,16 @@ class DryRun extends Command
         return $matches;
     }
 
-    /**
-     * @param OutputInterface $output
-     * @param $dispatcher
-     * @param $test
-     */
-    protected function dryRunTest(OutputInterface $output, EventDispatcher $dispatcher, Test $test)
+    protected function dryRunTest(OutputInterface $output, EventDispatcher $eventDispatcher, Test $test): void
     {
-        $dispatcher->dispatch(new TestEvent($test), Events::TEST_START);
-        $dispatcher->dispatch(new TestEvent($test), Events::TEST_BEFORE);
+        $eventDispatcher->dispatch(new TestEvent($test), Events::TEST_START);
+        $eventDispatcher->dispatch(new TestEvent($test), Events::TEST_BEFORE);
         try {
             $test->test();
         } catch (Exception $e) {
         }
-        $dispatcher->dispatch(new TestEvent($test), Events::TEST_AFTER);
-        $dispatcher->dispatch(new TestEvent($test), Events::TEST_END);
+        $eventDispatcher->dispatch(new TestEvent($test), Events::TEST_AFTER);
+        $eventDispatcher->dispatch(new TestEvent($test), Events::TEST_END);
 
         if ($test->getMetadata()->isBlocked()) {
             $output->writeln('');

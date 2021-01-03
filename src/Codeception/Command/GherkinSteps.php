@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Command;
 
-use Codeception\Test\Loader\Gherkin;
+use Codeception\Test\Loader\Gherkin as GherkinLoader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -49,7 +49,7 @@ class GherkinSteps extends Command
         $config = $this->getSuiteConfig($suite);
         $config['describe_steps'] = true;
 
-        $loader = new Gherkin($config);
+        $loader = new GherkinLoader($config);
         $steps = $loader->getSteps();
 
         foreach ($steps as $name => $context) {

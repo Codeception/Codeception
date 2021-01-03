@@ -50,9 +50,9 @@ class GenerateTest extends Command
         $filename = $this->completeSuffix($className, 'Test');
         $filename = $path . $filename;
 
-        $gen = new TestGenerator($config, $class);
+        $test = new TestGenerator($config, $class);
 
-        $res = $this->createFile($filename, $gen->produce());
+        $res = $this->createFile($filename, $test->produce());
 
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");

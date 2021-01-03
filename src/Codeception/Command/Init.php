@@ -22,7 +22,7 @@ class Init extends Command
             [
                 new InputArgument('template', InputArgument::REQUIRED, 'Init template for the setup'),
                 new InputOption('path', null, InputOption::VALUE_REQUIRED, 'Change current directory', null),
-                new InputOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers\'', null),
+                new InputOption('namespace', null, InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers', null),
 
             ]
         );
@@ -51,8 +51,8 @@ class Init extends Command
         if (!$initProcess instanceof InitTemplate) {
             throw new Exception("$className is not a valid template");
         }
-        if ($input->getOption('path')) {
-            $initProcess->initDir($input->getOption('path'));
+        if ($path = $input->getOption('path')) {
+            $initProcess->initDir($path);
         }
         $initProcess->setup();
         return 0;
