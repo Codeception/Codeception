@@ -21,7 +21,7 @@ class GenerateTest extends Command
     use Shared\FileSystem;
     use Shared\Config;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition(
             [

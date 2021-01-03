@@ -33,7 +33,7 @@ class GenerateSuite extends Command
     use Shared\Config;
     use Shared\Style;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),

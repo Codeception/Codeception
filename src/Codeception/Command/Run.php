@@ -144,12 +144,11 @@ class Run extends Command
      */
     protected $output;
 
-
     /**
      * Sets Run arguments
      * @throws SymfonyConsoleInvalidArgumentException
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
@@ -454,6 +453,9 @@ class Run extends Command
         return 0;
     }
 
+    /**
+     * @return mixed|void
+     */
     protected function matchSingleTest($suite, $config)
     {
         // Workaround when codeception.yml is inside tests directory and tests path is set to "."
@@ -559,7 +561,7 @@ class Run extends Command
         return $matches;
     }
 
-    private function matchFilteredTestName(&$path)
+    private function matchFilteredTestName(&$path): ?string
     {
         $test_parts = explode(':', $path, 2);
         if (count($test_parts) > 1) {
@@ -576,6 +578,10 @@ class Run extends Command
         return null;
     }
 
+    /**
+     * @param InputInterface $input
+     * @return string[]
+     */
     protected function passedOptionKeys(InputInterface $input): array
     {
         $options = [];
@@ -602,6 +608,11 @@ class Run extends Command
         return $options;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param array $options
+     * @return array<int|string, mixed>
+     */
     protected function booleanOptions(InputInterface $input, $options = []): array
     {
         $values = [];
@@ -621,7 +632,7 @@ class Run extends Command
      * @param string $ext
      * @throws Exception
      */
-    private function ensurePhpExtIsAvailable(string $ext)
+    private function ensurePhpExtIsAvailable(string $ext): void
     {
         if (!extension_loaded(strtolower($ext))) {
             throw new Exception(

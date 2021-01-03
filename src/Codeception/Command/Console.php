@@ -12,6 +12,7 @@ use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\Console\Output;
 use Codeception\Scenario;
+use Codeception\Suite;
 use Codeception\SuiteManager;
 use Codeception\Test\Cept;
 use Codeception\Util\Debug;
@@ -32,13 +33,28 @@ use function pcntl_signal;
  */
 class Console extends Command
 {
+    /**
+     * @var Cept|null
+     */
     protected $test;
+    /**
+     * @var Codecept|null
+     */
     protected $codecept;
+    /**
+     * @var Suite|null
+     */
     protected $suite;
+    /**
+     * @var OutputInterface|null
+     */
     protected $output;
+    /**
+     * @var int[]|string[]
+     */
     protected $actions = [];
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
@@ -117,7 +133,7 @@ class Console extends Command
         return 0;
     }
 
-    protected function listenToSignals()
+    protected function listenToSignals(): void
     {
         if (function_exists('pcntl_signal')) {
             declare (ticks = 1);

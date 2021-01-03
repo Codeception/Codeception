@@ -22,7 +22,7 @@ class GenerateGroup extends Command
     use Shared\FileSystem;
     use Shared\Config;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('group', InputArgument::REQUIRED, 'Group class name'),

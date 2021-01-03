@@ -24,7 +24,7 @@ class GenerateHelper extends Command
     use Shared\FileSystem;
     use Shared\Config;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('name', InputArgument::REQUIRED, 'helper name'),

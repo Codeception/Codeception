@@ -26,8 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Bootstrap extends Command
 {
-
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition(
             [

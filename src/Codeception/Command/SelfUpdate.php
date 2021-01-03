@@ -39,7 +39,7 @@ class SelfUpdate extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         if (isset($_SERVER['argv'][0])) {
             $this->filename = $_SERVER['argv'][0];
@@ -59,9 +59,6 @@ class SelfUpdate extends Command
         parent::configure();
     }
 
-    /**
-     * @return string
-     */
     protected function getCurrentVersion(): string
     {
         return Codecept::VERSION;

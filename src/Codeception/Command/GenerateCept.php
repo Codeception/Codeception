@@ -24,7 +24,7 @@ class GenerateCept extends Command
     use Shared\FileSystem;
     use Shared\Config;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),

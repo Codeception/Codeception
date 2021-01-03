@@ -33,7 +33,7 @@ class GenerateScenarios extends Command
     use Shared\FileSystem;
     use Shared\Config;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite from which texts should be generated'),
@@ -114,7 +114,7 @@ class GenerateScenarios extends Command
         return 0;
     }
 
-    protected function decorate($text, $format): string
+    protected function decorate(string $text, string $format): string
     {
         switch ($format) {
             case 'text':
@@ -130,7 +130,7 @@ class GenerateScenarios extends Command
         return $suiteManager->getSuite()->tests();
     }
 
-    protected function formatExtension($format): string
+    protected function formatExtension(string $format): string
     {
         switch ($format) {
             case 'text':
@@ -140,6 +140,10 @@ class GenerateScenarios extends Command
         }
     }
 
+    /**
+     * @param string|string[] $name
+     * @return mixed[]|string|null
+     */
     private function underscore($name)
     {
         $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1_\\2', $name);

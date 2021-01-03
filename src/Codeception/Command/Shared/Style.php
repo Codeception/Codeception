@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 trait Style
 {
-    public function addStyles(OutputInterface $output)
+    public function addStyles(OutputInterface $output): void
     {
         $output->getFormatter()->setStyle('notice', new OutputFormatterStyle('white', 'green', ['bold']));
         $output->getFormatter()->setStyle('bold', new OutputFormatterStyle(null, null, ['bold']));

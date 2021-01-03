@@ -25,7 +25,7 @@ class GeneratePageObject extends Command
     use Shared\FileSystem;
     use Shared\Config;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'Either suite name or page object name)'),

@@ -44,7 +44,7 @@ class ConfigValidate extends Command
     use Shared\Config;
     use Shared\Style;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition(
             [
@@ -60,7 +60,6 @@ class ConfigValidate extends Command
     {
         return 'Validates and prints config to screen';
     }
-
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -109,7 +108,7 @@ class ConfigValidate extends Command
         return 0;
     }
 
-    protected function formatOutput($config)
+    protected function formatOutput($config): ?string
     {
         $output = print_r($config, true);
         return preg_replace('~\[(.*?)\] =>~', "<fg=yellow>$1</fg=yellow> =>", $output);

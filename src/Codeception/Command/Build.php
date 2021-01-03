@@ -25,6 +25,9 @@ class Build extends Command
     use Shared\Config;
     use Shared\FileSystem;
 
+    /**
+     * @var string
+     */
     protected $inheritedMethodTemplate = ' * @method void %s(%s)';
 
     /**
@@ -78,7 +81,7 @@ class Build extends Command
         return $this->createFile($file, $content, true);
     }
 
-    private function buildSuiteActors()
+    private function buildSuiteActors(): void
     {
         $suites = $this->getSuites();
         if (!empty($suites)) {
@@ -98,7 +101,7 @@ class Build extends Command
         }
     }
 
-    protected function buildActorsForConfig($configFile = null)
+    protected function buildActorsForConfig($configFile = null): void
     {
         $config = $this->getGlobalConfig($configFile);
 

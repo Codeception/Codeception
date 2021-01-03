@@ -16,8 +16,7 @@ use function ucfirst;
 
 class Init extends Command
 {
-
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition(
             [
