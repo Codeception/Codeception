@@ -9,10 +9,11 @@ use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ParseException;
 use Exception;
-use PHPUnit\Runner\Version;
+use InvalidArgumentException;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Exception\InvalidArgumentException as SymfonyConsoleInvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -128,7 +129,7 @@ class Run extends Command
 
     /**
      * Sets Run arguments
-     * @throws InvalidArgumentException
+     * @throws SymfonyConsoleInvalidArgumentException
      */
     protected function configure()
     {
@@ -277,7 +278,7 @@ class Run extends Command
 
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . "\nPowered by " . Version::getVersionString()
+                Codecept::versionString() . "\nPowered by " . PHPUnitVersion::getVersionString()
             );
             $this->output->writeln(
                 "Running with seed: " . $this->options['seed'] . "\n"
@@ -366,7 +367,7 @@ class Run extends Command
                         try {
                             list(, $suite, $test) = $this->matchTestFromFilename($suite, $testsPath);
                             $isIncludeTest = true;
-                        } catch (\InvalidArgumentException $e) {
+                        } catch (InvalidArgumentException $e) {
                             // Incorrect include match, continue trying to find one
                             continue;
                         }
@@ -531,7 +532,7 @@ class Run extends Command
         $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
 
         if (!$res) {
-            throw new \InvalidArgumentException("Test file can't be matched");
+            throw new InvalidArgumentException("Test file can't be matched");
         }
         if (!isset($matches[2])) {
             $matches[2] = null;
