@@ -56,7 +56,7 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Run tests PHP 5.6, 7.0, 7.1, 7.3
-        if: matrix.php == '56' || matrix.php == '7.0' || matrix.php == '7.1' || matrix.php == '7.3'
+        if: matrix.php == '5.6' || matrix.php == '7.0' || matrix.php == '7.1' || matrix.php == '7.3'
         run: |
           php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
           php codecept build
