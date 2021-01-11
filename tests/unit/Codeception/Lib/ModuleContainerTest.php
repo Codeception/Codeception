@@ -388,17 +388,11 @@ class ModuleContainerTest extends Unit
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('Codeception\Lib\HelperModule');
-
-//        $message = "couldn't be connected (did you mean '$correctModule'?)";
-        $message = "Codeception\Module: Module $wrongModule couldn't be connected (did you mean '$correctModule'?)";
-//        $expectedException = new ModuleException($wrongModule, $message);
-
+        
+        $message = "Codeception\Lib\ModuleContainer: Module $wrongModule couldn't be connected (did you mean '$correctModule'?)";
         $this->expectException('\Codeception\Exception\ModuleException');
         $this->expectExceptionMessage($message);
         $this->moduleContainer->getModule($wrongModule);
-//        $this->tester->expectException($expectedException, function($wrongModule) {
-//            $this->moduleContainer->hasModule($wrongModule);
-//        });
     }
 }
 
