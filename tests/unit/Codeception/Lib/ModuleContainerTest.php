@@ -395,7 +395,7 @@ class ModuleContainerTest extends Unit
 
         $this->expectException('\Codeception\Exception\ModuleException');
         $this->expectExceptionMessage($message);
-        $this->moduleContainer->hasModule($wrongModule);
+        $this->moduleContainer->getModule($wrongModule);
 //        $this->tester->expectException($expectedException, function($wrongModule) {
 //            $this->moduleContainer->hasModule($wrongModule);
 //        });
