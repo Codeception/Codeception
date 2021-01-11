@@ -25,10 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Verbosity modes:
  *
- * * `codecept run -v`:
  * * `codecept run --steps`: print step-by-step execution
- * * `codecept run -vv`:
- * * `codecept run --debug`: print steps and debug information
  * * `codecept run -vvv`: print internal debug information
  *
  * Load config:
@@ -48,6 +45,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  * * `codecept run --ext DotReporter` run with DotReporter printer
  * * `codecept run --ext "My\Custom\Extension"` run with an extension loaded by class name
  *
+ * The `codecept` CLI command is based on [Symfony Console](https://symfony.com/doc/current/console.html).
+ *
  * Full reference:
  * ```
  * Arguments:
@@ -66,9 +65,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --json                Generate Json Log (default: "report.json")
  *  --colors              Use colors in output
  *  --no-colors           Force no colors in output (useful to override config file)
- *  --silent              Only outputs suite names and final results
  *  --steps               Show steps in output
- *  --debug (-d)          Show debug and scenario output
  *  --bootstrap           Execute bootstrap script before the test
  *  --coverage            Run with code coverage (default: "coverage.serialized")
  *  --coverage-html       Generate CodeCoverage HTML report in path (default: "coverage")
@@ -85,7 +82,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --no-rebuild          Do not rebuild actor classes on start
  *  --help (-h)           Display this help message.
  *  --quiet (-q)          Do not output any message.
- *  --verbose (-v|vv|vvv) Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+ *  --verbose (-v|vv|vvv) Increase the verbosity of messages: 1 for normal output (=default), 2 for more verbose output and 3 for debugging Codeception itself
  *  --version (-V)        Display this application version.
  *  --ansi                Force ANSI output.
  *  --no-ansi             Disable ANSI output.
