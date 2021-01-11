@@ -101,7 +101,6 @@ trait Pause
         $output->writeln("  - <info>F6</info> to toggle auto-stashing of successful commands");
         $output->writeln("  - <info>F8</info> to view stashed commands");
         $output->writeln("  - <info>F10</info> to clear stashed commands");
-        $output->writeln("  - <info>exit</info> to leave the Interactive Shell");
 
         $result = '';
 
