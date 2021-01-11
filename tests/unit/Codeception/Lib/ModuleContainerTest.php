@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib;
 
+use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Test\Unit;
@@ -375,6 +376,24 @@ class ModuleContainerTest extends Unit
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('Codeception\Lib\HelperModule');
         $this->moduleContainer->hasModule('Codeception\Lib\HelperModule');
+    }
+
+    public function testSuggestMissingModule()
+    {
+        $correctModule = 'Codeception\Lib\HelperModule';
+        $wrongModule = 'Codeception\Lib\Helpamodule';
+
+        $config = ['modules' => [
+            'enabled' => [$correctModule],
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('Codeception\Lib\HelperModule');
+
+        $message = "couldn't be connected (did you mean '$correctModule'?)";
+        $expectedException = new ModuleException($wrongModule, $message);
+        $this->tester->expectException($expectedException, function($wrongModule) {
+            $this->moduleContainer->hasModule($wrongModule);
+        });
     }
 }
 
