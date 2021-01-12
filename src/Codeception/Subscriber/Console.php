@@ -18,9 +18,11 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\Debug;
+use NunoMaduro\Collision\Writer;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Whoops\Exception\Inspector;
 
 class Console implements EventSubscriberInterface
 {
@@ -464,6 +466,20 @@ class Console implements EventSubscriberInterface
         if ($e instanceof \PHPUnit\Framework\SkippedTestError or $e instanceof \PHPUnit\Framework_IncompleteTestError) {
             return;
         }
+
+        $writer = (new Writer())->setOutput($this->output);
+        $inspector = new Inspector($e);
+
+        $writer->ignoreFilesIn([
+            '/vendor\/codeception\/',
+            '/vendor\/phpunit\/phpunit\/src/',
+            '/vendor\/mockery\/mockery/',
+            '/vendor\/laravel\/framework\/src\/Illuminate\/Testing/',
+            '/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Testing/',
+        ]);
+
+        $writer->showTrace(false);
+        $writer->write($inspector);
 
         if ($this->rawStackTrace) {
             $this->message(OutputFormatter::escape(\PHPUnit\Util\Filter::getFilteredStacktrace($e, true, false)))->writeln();
