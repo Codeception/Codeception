@@ -22,6 +22,7 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\Debug;
+use NunoMaduro\Collision\Writer;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -32,6 +33,7 @@ use PHPUnit\Util\Filter as PHPUnitFilter;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Whoops\Exception\Inspector;
 use function array_count_values;
 use function array_map;
 use function array_merge;
@@ -544,6 +546,21 @@ class Console implements EventSubscriberInterface
         if ($exception instanceof SkippedTestError || $exception instanceof IncompleteTestError) {
             return;
         }
+
+        $writer = (new Writer())->setOutput($this->output);
+        $inspector = new Inspector($exception);
+
+        $writer->ignoreFilesIn([
+            '/vendor\/codeception\/',
+            '/vendor\/phpunit\/phpunit\/src/',
+            '/vendor\/mockery\/mockery/',
+            '/vendor\/laravel\/framework\/src\/Illuminate\/Testing/',
+            '/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Testing/',
+        ]);
+
+        $writer->showTrace(false);
+        $writer->showTitle(false);
+        $writer->write($inspector);
 
         if ($this->rawStackTrace) {
             $this->message(OutputFormatter::escape(PHPUnitFilter::getFilteredStacktrace($exception, true, false)))->writeln();
