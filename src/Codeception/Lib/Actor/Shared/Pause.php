@@ -97,6 +97,7 @@ trait Pause
         $output->writeln("  Type in commands to try them, or press:");
         $output->writeln("  - <info>ENTER</info> (on blank line) to leave the Interactive Shell");
         $output->writeln("  - <info>TAB</info> to auto-complete");
+        $output->writeln("  - <info>UP</info> to return to the beginning of the line");
         $output->writeln("  - <info>F5</info> to stash a command");
         $output->writeln("  - <info>F6</info> to toggle auto-stashing of successful commands");
         $output->writeln("  - <info>F8</info> to view stashed commands");
