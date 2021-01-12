@@ -479,6 +479,7 @@ class Console implements EventSubscriberInterface
         ]);
 
         $writer->showTrace(false);
+        $writer->showTitle(false);
         $writer->write($inspector);
 
         if ($this->rawStackTrace) {
