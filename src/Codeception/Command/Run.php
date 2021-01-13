@@ -274,7 +274,7 @@ class Run extends Command
 
             if ($this->options['seed']) {
                 $this->output->writeln(
-                    "Running with seed: " . $this->options['seed'] . "\n"
+                    "Running with seed: <info>" . $this->options['seed'] . "</info>\n"
                 );
             }
         }
