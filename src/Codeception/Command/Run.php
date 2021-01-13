@@ -428,6 +428,12 @@ class Run extends Command
 
     protected function matchSingleTest($suite, $config)
     {
+        // Workaround when codeception.yml is inside tests directory and tests path is set to "."
+        // @see https://github.com/Codeception/Codeception/issues/4432
+        if (isset($config['paths']['tests']) && $config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
+            $suite = './' . $suite;
+        }
+
         // running a single test when suite has a configured path
         if (isset($config['suites'])) {
             foreach ($config['suites'] as $s => $suiteConfig) {
@@ -436,9 +442,6 @@ class Run extends Command
                 }
                 $testsPath = $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suiteConfig['path'];
                 if ($suiteConfig['path'] === '.') {
-                    if ($config['paths']['tests'] === '.') {
-                        return ['', $s, $suite];
-                    }
                     $testsPath = $config['paths']['tests'];
                 }
                 if (preg_match("~^$testsPath/(.*?)$~", $suite, $matches)) {
