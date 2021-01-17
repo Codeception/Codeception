@@ -20,8 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GenerateEnvironment extends Command
 {
-    use Shared\FileSystem;
-    use Shared\Config;
+    use Shared\FileSystemTrait;
+    use Shared\ConfigTrait;
 
     protected function configure(): void
     {

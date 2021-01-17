@@ -21,8 +21,8 @@ use function ucfirst;
  */
 class GenerateHelper extends Command
 {
-    use Shared\FileSystem;
-    use Shared\Config;
+    use Shared\FileSystemTrait;
+    use Shared\ConfigTrait;
 
     protected function configure(): void
     {

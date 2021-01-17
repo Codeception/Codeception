@@ -29,9 +29,9 @@ use function ucfirst;
  */
 class GenerateSuite extends Command
 {
-    use Shared\FileSystem;
-    use Shared\Config;
-    use Shared\Style;
+    use Shared\FileSystemTrait;
+    use Shared\ConfigTrait;
+    use Shared\StyleTrait;
 
     protected function configure(): void
     {

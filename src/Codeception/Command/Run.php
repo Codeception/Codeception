@@ -123,7 +123,7 @@ use function substr_replace;
  */
 class Run extends Command
 {
-    use Shared\Config;
+    use Shared\ConfigTrait;
     /**
      * @var Codecept
      */

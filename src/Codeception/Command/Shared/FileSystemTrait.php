@@ -15,7 +15,7 @@ use function str_replace;
 use function strpos;
 use function strrev;
 
-trait FileSystem
+trait FileSystemTrait
 {
     use Namespaces;
 

@@ -2,8 +2,8 @@
 
 namespace Codeception;
 
-use Codeception\Command\Shared\FileSystem;
-use Codeception\Command\Shared\Style;
+use Codeception\Command\Shared\FileSystemTrait;
+use Codeception\Command\Shared\StyleTrait;
 use Codeception\Lib\ModuleContainer;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,8 +33,8 @@ use Symfony\Component\Console\Question\Question;
  */
 abstract class InitTemplate
 {
-    use FileSystem;
-    use Style;
+    use FileSystemTrait;
+    use StyleTrait;
 
     const GIT_IGNORE = '.gitignore';
 

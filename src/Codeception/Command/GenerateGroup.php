@@ -19,8 +19,8 @@ use function ucfirst;
  */
 class GenerateGroup extends Command
 {
-    use Shared\FileSystem;
-    use Shared\Config;
+    use Shared\FileSystemTrait;
+    use Shared\ConfigTrait;
 
     protected function configure(): void
     {

@@ -16,8 +16,8 @@ use \Symfony\Component\Console\Output\OutputInterface;
 class YourCustomCommand extends Command implements CustomCommandInterface
 {
 
-    use \Codeception\Command\Shared\FileSystem;
-    use \Codeception\Command\Shared\Config;
+    use \Codeception\Command\Shared\FileSystemTrait;
+    use \Codeception\Command\Shared\ConfigTrait;
 
     /**
      * returns the name of the command

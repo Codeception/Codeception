@@ -23,8 +23,8 @@ use function count;
  */
 class GherkinSteps extends Command
 {
-    use Shared\Config;
-    use Shared\Style;
+    use Shared\ConfigTrait;
+    use Shared\StyleTrait;
 
     protected function configure(): void
     {

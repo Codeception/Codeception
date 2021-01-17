@@ -18,7 +18,7 @@ use function explode;
 use function str_repeat;
 use function ucfirst;
 
-trait Config
+trait ConfigTrait
 {
     protected function getSuiteConfig($suite): array
     {

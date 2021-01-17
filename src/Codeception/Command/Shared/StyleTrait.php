@@ -7,7 +7,7 @@ namespace Codeception\Command\Shared;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 
-trait Style
+trait StyleTrait
 {
     public function addStyles(OutputInterface $output): void
     {

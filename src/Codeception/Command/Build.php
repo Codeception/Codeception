@@ -22,8 +22,8 @@ use function implode;
  */
 class Build extends Command
 {
-    use Shared\Config;
-    use Shared\FileSystem;
+    use Shared\ConfigTrait;
+    use Shared\FileSystemTrait;
 
     /**
      * @var string

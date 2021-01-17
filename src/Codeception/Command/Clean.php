@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Clean extends Command
 {
-    use Shared\Config;
+    use Shared\ConfigTrait;
 
     public function getDescription(): string
     {

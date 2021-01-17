@@ -41,8 +41,8 @@ use function print_r;
  */
 class ConfigValidate extends Command
 {
-    use Shared\Config;
-    use Shared\Style;
+    use Shared\ConfigTrait;
+    use Shared\StyleTrait;
 
     protected function configure(): void
     {
