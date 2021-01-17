@@ -50,7 +50,7 @@ class Console extends Command
      */
     protected $output;
     /**
-     * @var int[]|string[]
+     * @var string[]
      */
     protected $actions = [];
 

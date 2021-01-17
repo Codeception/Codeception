@@ -19,7 +19,7 @@ trait FileSystem
 {
     use Namespaces;
 
-    protected function createDirectoryFor($basePath, $className = ''): string
+    protected function createDirectoryFor(string $basePath, string $className = ''): string
     {
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR);
         if ($className) {
@@ -34,7 +34,7 @@ trait FileSystem
         return $basePath;
     }
 
-    protected function completeSuffix($filename, $suffix): string
+    protected function completeSuffix(string $filename, string $suffix): string
     {
         if (strpos(strrev($filename), strrev($suffix)) === 0) {
             $filename .= '.php';
@@ -49,13 +49,13 @@ trait FileSystem
         return $filename;
     }
 
-    protected function removeSuffix($classname, $suffix)
+    protected function removeSuffix(string $classname, string $suffix): string
     {
         $classname = preg_replace('~\.php$~', '', $classname);
         return preg_replace("~$suffix$~", '', $classname);
     }
 
-    protected function createFile($filename, $contents, $force = false, $flags = 0): bool
+    protected function createFile(string $filename, $contents, bool $force = false, int $flags = 0): bool
     {
         if (file_exists($filename) && !$force) {
             return false;

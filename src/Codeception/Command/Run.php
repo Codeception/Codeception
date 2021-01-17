@@ -451,10 +451,7 @@ class Run extends Command
         return 0;
     }
 
-    /**
-     * @return mixed|void
-     */
-    protected function matchSingleTest($suite, $config)
+    protected function matchSingleTest($suite, $config): ?array
     {
         // Workaround when codeception.yml is inside tests directory and tests path is set to "."
         // @see https://github.com/Codeception/Codeception/issues/4432
@@ -484,6 +481,8 @@ class Run extends Command
         if (! Configuration::isEmpty() && strpos($suite, (string) $config['paths']['tests']) === 0) {
             return $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
+
+        return null;
     }
 
     /**
@@ -559,7 +558,7 @@ class Run extends Command
         return $matches;
     }
 
-    private function matchFilteredTestName(&$path): ?string
+    private function matchFilteredTestName(string &$path): ?string
     {
         $testParts = explode(':', $path, 2);
         if (count($testParts) > 1) {
@@ -609,7 +608,7 @@ class Run extends Command
     /**
      * @param InputInterface $input
      * @param array $options
-     * @return array<int|string, mixed>
+     * @return array<string, bool>
      */
     protected function booleanOptions(InputInterface $input, $options = []): array
     {
@@ -617,7 +616,7 @@ class Run extends Command
         $request = (string)$input;
         foreach ($options as $option => $defaultValue) {
             if (strpos($request, sprintf('--%s', (string) $option))) {
-                $values[$option] = $input->getOption($option) ? $input->getOption($option) : $defaultValue;
+                $values[$option] = $input->getOption($option) ?: $defaultValue;
             } else {
                 $values[$option] = false;
             }

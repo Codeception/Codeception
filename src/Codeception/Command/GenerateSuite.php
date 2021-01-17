@@ -135,7 +135,7 @@ EOF;
         return 0;
     }
 
-    private function containsInvalidCharacters($suite): bool
+    private function containsInvalidCharacters(string $suite): bool
     {
         return (bool) preg_match('#[^A-Za-z0-9_]#', $suite);
     }

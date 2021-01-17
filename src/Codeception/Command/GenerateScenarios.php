@@ -138,11 +138,7 @@ class GenerateScenarios extends Command
         }
     }
 
-    /**
-     * @param string|string[] $name
-     * @return mixed[]|string|null
-     */
-    private function underscore($name)
+    private function underscore(string $name): string
     {
         $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1_\\2', $name);
         $name = preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $name);

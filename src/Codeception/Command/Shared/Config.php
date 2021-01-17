@@ -25,7 +25,7 @@ trait Config
         return Configuration::suiteSettings($suite, $this->getGlobalConfig());
     }
 
-    protected function getGlobalConfig($conf = null): ?array
+    protected function getGlobalConfig($conf = null): array
     {
         return Configuration::config($conf);
     }
@@ -35,7 +35,7 @@ trait Config
         return Configuration::suites();
     }
 
-    protected function overrideConfig($configOptions): ?array
+    protected function overrideConfig($configOptions): array
     {
         $updatedConfig = [];
         foreach ($configOptions as $option) {
@@ -59,7 +59,7 @@ trait Config
         return Configuration::append($updatedConfig);
     }
 
-    protected function enableExtensions($extensions): ?array
+    protected function enableExtensions($extensions): array
     {
         $config = ['extensions' => ['enabled' => []]];
         foreach ($extensions as $name) {
