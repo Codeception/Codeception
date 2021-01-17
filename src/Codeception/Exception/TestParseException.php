@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Codeception\Exception;
 
-class TestParseException extends \Exception
+use Exception;
+
+class TestParseException extends Exception
 {
     public function __construct($fileName, $errors = null, $line = null)
     {

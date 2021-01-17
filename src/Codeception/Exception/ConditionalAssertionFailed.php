@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Codeception\Exception;
 
-class ConditionalAssertionFailed extends \PHPUnit\Framework\AssertionFailedError
+use PHPUnit\Framework\AssertionFailedError;
+
+class ConditionalAssertionFailed extends AssertionFailedError
 {
 }

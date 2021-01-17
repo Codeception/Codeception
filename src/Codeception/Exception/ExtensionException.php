@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Codeception\Exception;
 
-class ExtensionException extends \Exception
+use Exception;
+use function get_class;
+use function is_object;
+
+class ExtensionException extends Exception
 {
     public function __construct($extension, $message, \Exception $previous = null)
     {

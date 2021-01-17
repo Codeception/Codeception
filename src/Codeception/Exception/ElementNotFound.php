@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Codeception\Exception;
 
 use Codeception\Util\Locator;
+use PHPUnit\Framework\AssertionFailedError;
+use function is_string;
+use function strpos;
 
-class ElementNotFound extends \PHPUnit\Framework\AssertionFailedError
+class ElementNotFound extends AssertionFailedError
 {
     public function __construct($selector, $message = null)
     {

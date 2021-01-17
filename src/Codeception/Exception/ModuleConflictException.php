@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace Codeception\Exception;
 
-class ModuleConflictException extends \Exception
+use Exception;
+use function get_class;
+use function is_object;
+use function ltrim;
+use function str_replace;
+
+class ModuleConflictException extends Exception
 {
     public function __construct($module, $conflicted, $additional = '')
     {
