@@ -271,9 +271,12 @@ class Run extends Command
             $this->output->writeln(
                 Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
             );
-            $this->output->writeln(
-                "Running with seed: " . $this->options['seed'] . "\n"
-            );
+
+            if ($this->options['seed']) {
+                $this->output->writeln(
+                    "Running with seed: <info>" . $this->options['seed'] . "</info>\n"
+                );
+            }
         }
         if ($this->options['debug']) {
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
