@@ -12,9 +12,18 @@ use function str_replace;
 
 class ModuleException extends Exception
 {
+    /**
+     * @var string
+     */
     protected $module;
 
-    public function __construct($module, $message)
+    /**
+     * ModuleException constructor.
+     *
+     * @param object|string $module
+     * @param string $message
+     */
+    public function __construct($module, string $message)
     {
         if (is_object($module)) {
             $module = get_class($module);

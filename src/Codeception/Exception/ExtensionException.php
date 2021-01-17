@@ -10,7 +10,14 @@ use function is_object;
 
 class ExtensionException extends Exception
 {
-    public function __construct($extension, $message, \Exception $previous = null)
+    /**
+     * ExtensionException constructor.
+     *
+     * @param object|string $extension
+     * @param string $message
+     * @param Exception|null $previous
+     */
+    public function __construct($extension, string $message, Exception $previous = null)
     {
         parent::__construct($message, $previous);
         if (is_object($extension)) {

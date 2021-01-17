@@ -8,8 +8,8 @@ use function ucfirst;
 
 class MalformedLocatorException extends TestRuntimeException
 {
-    public function __construct($locator, $type = "CSS or XPath")
+    public function __construct(string $locator, string $type = 'CSS or XPath')
     {
-        parent::__construct(ucfirst($type) . " locator is malformed: $locator");
+        parent::__construct(ucfirst($type) . " locator is malformed: {$locator}");
     }
 }

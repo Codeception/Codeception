@@ -12,7 +12,14 @@ use function str_replace;
 
 class ModuleConfigException extends Exception
 {
-    public function __construct($module, $message, \Exception $previous = null)
+    /**
+     * ModuleConfigException constructor.
+     *
+     * @param object|string $module
+     * @param string $message
+     * @param Exception|null $previous
+     */
+    public function __construct($module, string $message, Exception $previous = null)
     {
         if (is_object($module)) {
             $module = get_class($module);
