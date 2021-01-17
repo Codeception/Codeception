@@ -289,7 +289,7 @@ class ModuleContainer
     public function throwMissingModuleExceptionWithSuggestion($className, $moduleName)
     {
         $suggestedModuleNameInfo = $this->getModuleSuggestion($moduleName);
-        throw new ModuleException($className, "Module $moduleName couldn't be connected$suggestedModuleNameInfo");
+        throw new ModuleException($className, "Module $moduleName couldn't be connected" . $suggestedModuleNameInfo);
     }
 
     protected function getModuleSuggestion($missingModuleName)
