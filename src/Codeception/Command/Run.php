@@ -525,7 +525,7 @@ class Run extends Command
         return $config['namespace'];
     }
 
-    protected function runSuites($suites, $skippedSuites = []): int
+    protected function runSuites(array $suites, array $skippedSuites = []): int
     {
         $executed = 0;
         foreach ($suites as $suite) {
