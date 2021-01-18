@@ -1,6 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Exception;
 
-class ContentNotFound extends \PHPUnit\Framework\AssertionFailedError
+use PHPUnit\Framework\AssertionFailedError;
+
+class ContentNotFound extends AssertionFailedError
 {
 }
