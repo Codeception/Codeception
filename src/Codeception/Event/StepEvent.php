@@ -26,15 +26,12 @@ class StepEvent extends Event
         $this->step = $step;
     }
 
-    public function getStep()
+    public function getStep(): Step
     {
         return $this->step;
     }
 
-    /**
-     * @return TestInterface
-     */
-    public function getTest()
+    public function getTest(): TestInterface
     {
         return $this->test;
     }

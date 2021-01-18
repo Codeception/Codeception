@@ -15,6 +15,9 @@ use Codeception\Lib\Interfaces\Remote;
  */
 class Local extends SuiteSubscriber
 {
+    /**
+     * @var array<string, string>
+     */
     public static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::SUITE_AFTER  => 'afterSuite',
@@ -25,26 +28,26 @@ class Local extends SuiteSubscriber
      */
     protected $module;
 
-    protected function isEnabled()
+    protected function isEnabled(): bool
     {
-        return $this->module === null and $this->settings['enabled'];
+        return $this->module === null && $this->settings['enabled'];
     }
 
-    public function beforeSuite(SuiteEvent $e)
+    public function beforeSuite(SuiteEvent $event): void
     {
-        $this->applySettings($e->getSettings());
-        $this->module = $this->getServerConnectionModule($e->getSuite()->getModules());
+        $this->applySettings($event->getSettings());
+        $this->module = $this->getServerConnectionModule($event->getSuite()->getModules());
         if (!$this->isEnabled()) {
             return;
         }
-        $this->applyFilter($e->getResult());
+        $this->applyFilter($event->getResult());
     }
 
-    public function afterSuite(SuiteEvent $e)
+    public function afterSuite(SuiteEvent $event): void
     {
         if (!$this->isEnabled()) {
             return;
         }
-        $this->mergeToPrint($e->getResult()->getCodeCoverage());
+        $this->mergeToPrint($event->getResult()->getCodeCoverage());
     }
 }

@@ -7,10 +7,11 @@ namespace Codeception\Coverage;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
+use function method_exists;
 
 class PhpCodeCoverageFactory
 {
-    public static function build()
+    public static function build(): CodeCoverage
     {
         if (method_exists(Driver::class, 'forLineCoverage')) {
             //php-code-coverage 9+
