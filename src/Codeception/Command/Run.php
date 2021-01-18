@@ -1,14 +1,41 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
-use Codeception\Util\PathResolver;
+use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ParseException;
+use Exception;
+use InvalidArgumentException;
+use PHPUnit\Runner\Version as PHPUnitVersion;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException as SymfonyConsoleInvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function array_flip;
+use function array_intersect_key;
+use function array_merge;
+use function count;
+use function explode;
+use function extension_loaded;
+use function getcwd;
+use function implode;
+use function in_array;
+use function preg_match;
+use function preg_replace;
+use function rtrim;
+use function sprintf;
+use function str_replace;
+use function strpos;
+use function strtolower;
+use function substr;
+use function substr_replace;
 
 /**
  * Executes tests.
@@ -96,7 +123,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Run extends Command
 {
-    use Shared\Config;
+    use Shared\ConfigTrait;
     /**
      * @var Codecept
      */
@@ -117,12 +144,11 @@ class Run extends Command
      */
     protected $output;
 
-
     /**
      * Sets Run arguments
-     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
+     * @throws SymfonyConsoleInvalidArgumentException
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
@@ -189,7 +215,7 @@ class Run extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Generate CodeCoverage PHPUnit report in path'
             ),
-            new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
+            new InputOption('no-exit', '', InputOption::VALUE_NONE, "Don't finish with exit code"),
             new InputOption(
                 'group',
                 'g',
@@ -222,13 +248,13 @@ class Run extends Command
                 InputOption::VALUE_REQUIRED,
                 'Define random seed for shuffle setting'
             ),
-            new InputOption('no-artifacts', '', InputOption::VALUE_NONE, 'Don\'t report about artifacts'),
+            new InputOption('no-artifacts', '', InputOption::VALUE_NONE, "Don't report about artifacts"),
         ]);
 
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Runs the test suites';
     }
@@ -236,12 +262,12 @@ class Run extends Command
     /**
      * Executes Run
      *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return int|null|void
-     * @throws \RuntimeException
+     * @throws ConfigurationException|ParseException
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->ensurePhpExtIsAvailable('CURL');
         $this->ensurePhpExtIsAvailable('mbstring');
@@ -269,7 +295,7 @@ class Run extends Command
 
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . "\nPowered by " . \PHPUnit\Runner\Version::getVersionString()
+                Codecept::versionString() . "\nPowered by " . PHPUnitVersion::getVersionString()
             );
 
             if ($this->options['seed']) {
@@ -306,7 +332,7 @@ class Run extends Command
         if (!$this->options['seed']) {
             $userOptions['seed'] = rand();
         } else {
-            $userOptions['seed'] = intval($this->options['seed']);
+            $userOptions['seed'] = (int) $this->options['seed'];
         }
         if ($this->options['no-colors'] || !$userOptions['ansi']) {
             $userOptions['colors'] = false;
@@ -320,7 +346,7 @@ class Run extends Command
         if ($this->options['report']) {
             $userOptions['silent'] = true;
         }
-        if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text'] or $this->options['coverage-crap4j'] or $this->options['coverage-phpunit']) {
+        if ($this->options['coverage-xml'] || $this->options['coverage-html'] || $this->options['coverage-text'] || $this->options['coverage-crap4j'] || $this->options['coverage-phpunit']) {
             $this->options['coverage'] = true;
         }
         if (!$userOptions['ansi'] && $input->getOption('colors')) {
@@ -346,12 +372,12 @@ class Run extends Command
 
                 foreach ($config['include'] as $include) {
                     // Find if the suite begins with an include path
-                    if (strpos($suite, $include) === 0) {
+                    if (strpos($suite, (string) $include) === 0) {
                         // Use include config
                         $config = Configuration::config($projectDir.$include);
 
                         if (!isset($config['paths']['tests'])) {
-                            throw new \RuntimeException(
+                            throw new RuntimeException(
                                 sprintf("Included '%s' has no tests path configured", $include)
                             );
                         }
@@ -361,7 +387,7 @@ class Run extends Command
                         try {
                             list(, $suite, $test) = $this->matchTestFromFilename($suite, $testsPath);
                             $isIncludeTest = true;
-                        } catch (\InvalidArgumentException $e) {
+                        } catch (InvalidArgumentException $e) {
                             // Incorrect include match, continue trying to find one
                             continue;
                         }
@@ -398,7 +424,7 @@ class Run extends Command
 
         $this->codecept = new Codecept($userOptions);
 
-        if ($suite and $test) {
+        if ($suite && $test) {
             $this->codecept->run($suite, $test, $config);
         }
 
@@ -407,14 +433,14 @@ class Run extends Command
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
             $this->executed = $this->runSuites($suites, $this->options['skip']);
 
-            if (!empty($config['include']) and !$suite) {
-                $current_dir = Configuration::projectDir();
+            if (!empty($config['include']) && !$suite) {
+                $currentDir = Configuration::projectDir();
                 $suites += $config['include'];
-                $this->runIncludedSuites($config['include'], $current_dir);
+                $this->runIncludedSuites($config['include'], $currentDir);
             }
 
             if ($this->executed === 0) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     sprintf("Suite '%s' could not be found", implode(', ', $suites))
                 );
             }
@@ -422,15 +448,13 @@ class Run extends Command
 
         $this->codecept->printResult();
 
-        if (!$input->getOption('no-exit')) {
-            if (!$this->codecept->getResult()->wasSuccessful()) {
-                exit(1);
-            }
+        if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessful()) {
+            exit(1);
         }
         return 0;
     }
 
-    protected function matchSingleTest($suite, $config)
+    protected function matchSingleTest($suite, $config): ?array
     {
         // Workaround when codeception.yml is inside tests directory and tests path is set to "."
         // @see https://github.com/Codeception/Codeception/issues/4432
@@ -457,32 +481,35 @@ class Run extends Command
         }
 
         // Run single test without included tests
-        if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
+        if (! Configuration::isEmpty() && strpos($suite, (string) $config['paths']['tests']) === 0) {
             return $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
+
+        return null;
     }
 
     /**
      * Runs included suites recursively
      *
      * @param array $suites
-     * @param string $parent_dir
+     * @param string $parentDir
+     * @throws ConfigurationException
      */
-    protected function runIncludedSuites($suites, $parent_dir)
+    protected function runIncludedSuites(array $suites, string $parentDir): void
     {
         foreach ($suites as $relativePath) {
-            $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
-            $config = Configuration::config($current_dir);
+            $currentDir = rtrim($parentDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
+            $config = Configuration::config($currentDir);
             $suites = Configuration::suites();
 
             $namespace = $this->currentNamespace();
             $this->output->writeln(
-                "\n<fg=white;bg=magenta>\n[$namespace]: tests from $current_dir\n</fg=white;bg=magenta>"
+                "\n<fg=white;bg=magenta>\n[$namespace]: tests from $currentDir\n</fg=white;bg=magenta>"
             );
 
             $this->executed += $this->runSuites($suites, $this->options['skip']);
             if (!empty($config['include'])) {
-                $this->runIncludedSuites($config['include'], $current_dir);
+                $this->runIncludedSuites($config['include'], $currentDir);
             }
         }
     }
@@ -492,7 +519,7 @@ class Run extends Command
     {
         $config = Configuration::config();
         if (!$config['namespace']) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 "Can't include into runner suite without a namespace;\n"
                 . "Please add `namespace` section into included codeception.yml file"
             );
@@ -501,7 +528,7 @@ class Run extends Command
         return $config['namespace'];
     }
 
-    protected function runSuites($suites, $skippedSuites = [])
+    protected function runSuites(array $suites, array $skippedSuites = []): int
     {
         $executed = 0;
         foreach ($suites as $suite) {
@@ -512,7 +539,7 @@ class Run extends Command
                 continue;
             }
             $this->codecept->run($suite);
-            $executed++;
+            ++$executed;
         }
 
         return $executed;
@@ -525,7 +552,7 @@ class Run extends Command
         $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
 
         if (!$res) {
-            throw new \InvalidArgumentException("Test file can't be matched");
+            throw new InvalidArgumentException("Test file can't be matched");
         }
         if (!isset($matches[2])) {
             $matches[2] = null;
@@ -534,16 +561,16 @@ class Run extends Command
         return $matches;
     }
 
-    private function matchFilteredTestName(&$path)
+    private function matchFilteredTestName(string &$path): ?string
     {
-        $test_parts = explode(':', $path, 2);
-        if (count($test_parts) > 1) {
-            list($path, $filter) = $test_parts;
+        $testParts = explode(':', $path, 2);
+        if (count($testParts) > 1) {
+            list($path, $filter) = $testParts;
             // use carat to signify start of string like in normal regex
             // phpunit --filter matches against the fully qualified method name, so tests actually begin with :
-            $carat_pos = strpos($filter, '^');
-            if ($carat_pos !== false) {
-                $filter = substr_replace($filter, ':', $carat_pos, 1);
+            $caratPos = strpos($filter, '^');
+            if ($caratPos !== false) {
+                $filter = substr_replace($filter, ':', $caratPos, 1);
             }
             return $filter;
         }
@@ -551,7 +578,11 @@ class Run extends Command
         return null;
     }
 
-    protected function passedOptionKeys(InputInterface $input)
+    /**
+     * @param InputInterface $input
+     * @return string[]
+     */
+    protected function passedOptionKeys(InputInterface $input): array
     {
         $options = [];
         $request = (string)$input;
@@ -577,13 +608,18 @@ class Run extends Command
         return $options;
     }
 
-    protected function booleanOptions(InputInterface $input, $options = [])
+    /**
+     * @param InputInterface $input
+     * @param array $options
+     * @return array<string, bool>
+     */
+    protected function booleanOptions(InputInterface $input, $options = []): array
     {
         $values = [];
         $request = (string)$input;
         foreach ($options as $option => $defaultValue) {
-            if (strpos($request, "--$option")) {
-                $values[$option] = $input->getOption($option) ? $input->getOption($option) : $defaultValue;
+            if (strpos($request, sprintf('--%s', (string) $option))) {
+                $values[$option] = $input->getOption($option) ?: $defaultValue;
             } else {
                 $values[$option] = false;
             }
@@ -594,12 +630,12 @@ class Run extends Command
 
     /**
      * @param string $ext
-     * @throws \Exception
+     * @throws Exception
      */
-    private function ensurePhpExtIsAvailable($ext)
+    private function ensurePhpExtIsAvailable(string $ext): void
     {
         if (!extension_loaded(strtolower($ext))) {
-            throw new \Exception(
+            throw new Exception(
                 "Codeception requires \"{$ext}\" extension installed to make tests run\n"
                 . "If you are not sure, how to install \"{$ext}\", please refer to StackOverflow\n\n"
                 . "Notice: PHP for Apache/Nginx and CLI can have different php.ini files.\n"

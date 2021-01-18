@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Codecept;
@@ -9,16 +12,19 @@ use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\Console\Output;
 use Codeception\Scenario;
+use Codeception\Suite;
 use Codeception\SuiteManager;
 use Codeception\Test\Cept;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
+use function array_keys;
+use function file_exists;
+use function function_exists;
+use function pcntl_signal;
 
 /**
  * Try to execute test commands in run-time. You may try commands before writing the test.
@@ -27,13 +33,28 @@ use Symfony\Component\Console\Question\Question;
  */
 class Console extends Command
 {
+    /**
+     * @var Cept|null
+     */
     protected $test;
+    /**
+     * @var Codecept|null
+     */
     protected $codecept;
+    /**
+     * @var Suite|null
+     */
     protected $suite;
+    /**
+     * @var OutputInterface|null
+     */
     protected $output;
+    /**
+     * @var string[]
+     */
     protected $actions = [];
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
@@ -43,12 +64,12 @@ class Console extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Launches interactive test console';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suiteName = $input->getArgument('suite');
         $this->output = $output;
@@ -65,10 +86,11 @@ class Console extends Command
         Debug::setOutput(new Output($options));
 
         $this->codecept = new Codecept($options);
-        $dispatcher = $this->codecept->getDispatcher();
+        $eventDispatcher = $this->codecept->getDispatcher();
 
-        $suiteManager = new SuiteManager($dispatcher, $suiteName, $settings);
+        $suiteManager = new SuiteManager($eventDispatcher, $suiteName, $settings);
         $suiteManager->initialize();
+
         $this->suite = $suiteManager->getSuite();
         $moduleContainer = $suiteManager->getModuleContainer();
 
@@ -76,7 +98,7 @@ class Console extends Command
 
         $this->test = new Cept(null, null);
         $this->test->getMetadata()->setServices([
-           'dispatcher' => $dispatcher,
+           'dispatcher' => $eventDispatcher,
            'modules' =>  $moduleContainer
         ]);
 
@@ -96,9 +118,9 @@ class Console extends Command
         $output->writeln("<info>Try Codeception commands without writing a test</info>");
 
         $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResult(), $settings);
-        $dispatcher->dispatch($suiteEvent, Events::SUITE_INIT);
-        $dispatcher->dispatch(new TestEvent($this->test), Events::TEST_PARSED);
-        $dispatcher->dispatch(new TestEvent($this->test), Events::TEST_BEFORE);
+        $eventDispatcher->dispatch($suiteEvent, Events::SUITE_INIT);
+        $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_PARSED);
+        $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_BEFORE);
 
         if (file_exists($settings['bootstrap'])) {
             require $settings['bootstrap'];
@@ -106,13 +128,13 @@ class Console extends Command
 
         $I->pause();
 
-        $dispatcher->dispatch(new TestEvent($this->test), Events::TEST_AFTER);
-        $dispatcher->dispatch(new SuiteEvent($this->suite), Events::SUITE_AFTER);
+        $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_AFTER);
+        $eventDispatcher->dispatch(new SuiteEvent($this->suite), Events::SUITE_AFTER);
         $output->writeln("<info>Bye-bye!</info>");
         return 0;
     }
 
-    protected function listenToSignals()
+    protected function listenToSignals(): void
     {
         if (function_exists('pcntl_signal')) {
             declare (ticks = 1);

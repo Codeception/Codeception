@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Feature;
@@ -7,6 +10,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function basename;
+use function preg_match;
+use function rtrim;
 
 /**
  * Generates Feature file (in Gherkin):
@@ -18,10 +24,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GenerateFeature extends Command
 {
-    use Shared\FileSystem;
-    use Shared\Config;
+    use Shared\FileSystemTrait;
+    use Shared\ConfigTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
@@ -30,12 +36,12 @@ class GenerateFeature extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty feature file in suite';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
         $filename = $input->getArgument('feature');
@@ -43,17 +49,17 @@ class GenerateFeature extends Command
         $config = $this->getSuiteConfig($suite);
         $this->createDirectoryFor($config['path'], $filename);
 
-        $gen = new Feature(basename($filename));
+        $feature = new Feature(basename($filename));
         if (!preg_match('~\.feature$~', $filename)) {
             $filename .= '.feature';
         }
-        $full_path = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
-        $res = $this->createFile($full_path, $gen->produce());
+        $fullPath = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
+        $res = $this->createFile($fullPath, $feature->produce());
         if (!$res) {
             $output->writeln("<error>Feature $filename already exists</error>");
             return 1;
         }
-        $output->writeln("<info>Feature was created in $full_path</info>");
+        $output->writeln("<info>Feature was created in $fullPath</info>");
         return 0;
     }
 }

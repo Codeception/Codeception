@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 if (!class_exists('Stecman\Component\Symfony\Console\BashCompletion\Completion')) {
@@ -8,9 +11,9 @@ if (!class_exists('Stecman\Component\Symfony\Console\BashCompletion\Completion')
 
 use Codeception\Configuration;
 use Stecman\Component\Symfony\Console\BashCompletion\Completion as ConsoleCompletion;
+use Stecman\Component\Symfony\Console\BashCompletion\Completion\ShellPathCompletion;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionHandler;
-use Stecman\Component\Symfony\Console\BashCompletion\Completion\ShellPathCompletion;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,7 +62,7 @@ class Completion extends CompletionCommand
         ]);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('generate-hook') && $input->getOption('use-vendor-bin')) {
             global $argv;

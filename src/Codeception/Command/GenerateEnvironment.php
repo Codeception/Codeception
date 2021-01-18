@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -17,24 +20,24 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GenerateEnvironment extends Command
 {
-    use Shared\FileSystem;
-    use Shared\Config;
+    use Shared\FileSystemTrait;
+    use Shared\ConfigTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('env', InputArgument::REQUIRED, 'Environment name'),
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty environment config';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $conf = $this->getGlobalConfig();
+        $config = $this->getGlobalConfig();
         if (!Configuration::envsDir()) {
             throw new ConfigurationException(
                 "Path for environments configuration is not set.\n"
@@ -42,7 +45,7 @@ class GenerateEnvironment extends Command
                 . "envs: tests/_envs"
             );
         }
-        $relativePath = $conf['paths']['envs'];
+        $relativePath = $config['paths']['envs'];
         $env = $input->getArgument('env');
         $file = "$env.yml";
 

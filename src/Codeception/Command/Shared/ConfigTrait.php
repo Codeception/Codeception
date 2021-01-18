@@ -1,35 +1,47 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command\Shared;
 
 use Codeception\Configuration;
+use InvalidArgumentException;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
+use function array_merge_recursive;
+use function array_pop;
+use function array_shift;
+use function class_exists;
+use function count;
+use function explode;
+use function str_repeat;
+use function ucfirst;
 
-trait Config
+trait ConfigTrait
 {
-    protected function getSuiteConfig($suite)
+    protected function getSuiteConfig($suite): array
     {
         return Configuration::suiteSettings($suite, $this->getGlobalConfig());
     }
 
-    protected function getGlobalConfig($conf = null)
+    protected function getGlobalConfig($conf = null): array
     {
         return Configuration::config($conf);
     }
 
-    protected function getSuites($conf = null)
+    protected function getSuites($conf = null): array
     {
         return Configuration::suites();
     }
 
-    protected function overrideConfig($configOptions)
+    protected function overrideConfig($configOptions): array
     {
         $updatedConfig = [];
         foreach ($configOptions as $option) {
             $keys = explode(': ', $option);
             if (count($keys) < 2) {
-                throw new \InvalidArgumentException('--config-option should have config passed as "key:value"');
+                throw new InvalidArgumentException('--config-option should have config passed as "key:value"');
             }
             $value = array_pop($keys);
             $yaml = '';
@@ -47,7 +59,7 @@ trait Config
         return Configuration::append($updatedConfig);
     }
 
-    protected function enableExtensions($extensions)
+    protected function enableExtensions($extensions): array
     {
         $config = ['extensions' => ['enabled' => []]];
         foreach ($extensions as $name) {

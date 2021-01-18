@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -7,6 +10,7 @@ use Codeception\Lib\Generator\Actor as ActorGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use function implode;
 
 /**
  * Generates Actor classes (initially Guy classes) from suite configs.
@@ -18,9 +22,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Build extends Command
 {
-    use Shared\Config;
-    use Shared\FileSystem;
+    use Shared\ConfigTrait;
+    use Shared\FileSystemTrait;
 
+    /**
+     * @var string
+     */
     protected $inheritedMethodTemplate = ' * @method void %s(%s)';
 
     /**
@@ -28,27 +35,27 @@ class Build extends Command
      */
     protected $output;
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates base classes for all suites';
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
         $this->buildActorsForConfig();
         return 0;
     }
-    
-    private function buildActor(array $settings)
+
+    private function buildActor(array $settings): bool
     {
         $actorGenerator = new ActorGenerator($settings);
         $this->output->writeln(
             '<info>' . Configuration::config()['namespace'] . '\\' . $actorGenerator->getActorName()
             . "</info> includes modules: " . implode(', ', $actorGenerator->getModules())
         );
-        
+
         $content = $actorGenerator->produce();
 
         $file = $this->createDirectoryFor(
@@ -58,8 +65,8 @@ class Build extends Command
         $file .=  '.php';
         return $this->createFile($file, $content);
     }
-    
-    private function buildActions(array $settings)
+
+    private function buildActions(array $settings): bool
     {
         $actionsGenerator = new ActionsGenerator($settings);
         $content = $actionsGenerator->produce();
@@ -74,7 +81,7 @@ class Build extends Command
         return $this->createFile($file, $content, true);
     }
 
-    private function buildSuiteActors()
+    private function buildSuiteActors(): void
     {
         $suites = $this->getSuites();
         if (!empty($suites)) {
@@ -87,17 +94,17 @@ class Build extends Command
             }
             $this->buildActions($settings);
             $actorBuilt = $this->buildActor($settings);
-            
+
             if ($actorBuilt) {
                 $this->output->writeln("{$settings['actor']}.php created.");
             }
         }
     }
-    
-    protected function buildActorsForConfig($configFile = null)
+
+    protected function buildActorsForConfig($configFile = null): void
     {
         $config = $this->getGlobalConfig($configFile);
-        
+
         $dir = Configuration::projectDir();
         $this->buildSuiteActors();
 

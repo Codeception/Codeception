@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Template\Bootstrap as BootstrapTemplate;
@@ -23,8 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Bootstrap extends Command
 {
-
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition(
             [
@@ -41,12 +43,12 @@ class Bootstrap extends Command
         );
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return "Creates default test suites and generates all required files";
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $bootstrap = new BootstrapTemplate($input, $output);
         if ($input->getArgument('path')) {

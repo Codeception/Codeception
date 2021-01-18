@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -7,6 +10,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function codecept_data_dir;
+use function codecept_output_dir;
+use function codecept_root_dir;
+use function count;
+use function implode;
+use function preg_replace;
+use function print_r;
 
 /**
  * Validates and prints Codeception config.
@@ -31,10 +41,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ConfigValidate extends Command
 {
-    use Shared\Config;
-    use Shared\Style;
+    use Shared\ConfigTrait;
+    use Shared\StyleTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition(
             [
@@ -46,13 +56,12 @@ class ConfigValidate extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Validates and prints config to screen';
     }
 
-
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
 
@@ -99,7 +108,7 @@ class ConfigValidate extends Command
         return 0;
     }
 
-    protected function formatOutput($config)
+    protected function formatOutput($config): ?string
     {
         $output = print_r($config, true);
         return preg_replace('~\[(.*?)\] =>~', "<fg=yellow>$1</fg=yellow> =>", $output);

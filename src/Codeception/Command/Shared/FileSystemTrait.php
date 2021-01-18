@@ -1,13 +1,25 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command\Shared;
 
 use Codeception\Util\Shared\Namespaces;
+use function file_exists;
+use function file_put_contents;
+use function mkdir;
+use function pathinfo;
+use function preg_replace;
+use function rtrim;
+use function str_replace;
+use function strpos;
+use function strrev;
 
-trait FileSystem
+trait FileSystemTrait
 {
     use Namespaces;
 
-    protected function createDirectoryFor($basePath, $className = '')
+    protected function createDirectoryFor(string $basePath, string $className = ''): string
     {
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR);
         if ($className) {
@@ -22,7 +34,7 @@ trait FileSystem
         return $basePath;
     }
 
-    protected function completeSuffix($filename, $suffix)
+    protected function completeSuffix(string $filename, string $suffix): string
     {
         if (strpos(strrev($filename), strrev($suffix)) === 0) {
             $filename .= '.php';
@@ -37,13 +49,13 @@ trait FileSystem
         return $filename;
     }
 
-    protected function removeSuffix($classname, $suffix)
+    protected function removeSuffix(string $classname, string $suffix): string
     {
         $classname = preg_replace('~\.php$~', '', $classname);
         return preg_replace("~$suffix$~", '', $classname);
     }
 
-    protected function createFile($filename, $contents, $force = false, $flags = null)
+    protected function createFile(string $filename, string $contents, bool $force = false, int $flags = 0): bool
     {
         if (file_exists($filename) && !$force) {
             return false;
