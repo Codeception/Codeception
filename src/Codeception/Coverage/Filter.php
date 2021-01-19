@@ -137,7 +137,7 @@ class Filter
         return $this;
     }
 
-    protected function matchWildcardPattern($pattern): Finder
+    protected function matchWildcardPattern(string $pattern): Finder
     {
         $finder = Finder::create();
         $fileOrDir = str_replace('\\', '/', $pattern);

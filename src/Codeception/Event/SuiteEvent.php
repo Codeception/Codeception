@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Event;
 
+use Codeception\Suite;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestSuite;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -35,7 +36,10 @@ class SuiteEvent extends Event
         $this->settings = $settings;
     }
 
-    public function getSuite(): TestSuite
+    /**
+     * @return Suite|TestSuite
+     */
+    public function getSuite()
     {
         return $this->suite;
     }
@@ -45,7 +49,7 @@ class SuiteEvent extends Event
         return $this->result;
     }
 
-    public function getSettings(): array
+    public function getSettings(): ?array
     {
         return $this->settings;
     }

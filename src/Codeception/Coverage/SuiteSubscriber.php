@@ -52,7 +52,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
      */
     protected $modules = [];
     /**
-     * @var CodeCoverage
+     * @var CodeCoverage|null
      */
     protected $coverage;
     /**

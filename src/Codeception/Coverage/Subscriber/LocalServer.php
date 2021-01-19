@@ -178,9 +178,6 @@ class LocalServer extends SuiteSubscriber
 
     /**
      * Allows Translating Remote Paths To Local (IE: When Using Docker)
-     *
-     * @param CodeCoverage $coverage
-     * @return $this
      */
     protected function preProcessCoverage(CodeCoverage $coverage): self
     {
