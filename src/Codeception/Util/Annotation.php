@@ -4,6 +4,17 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use ReflectionClass;
+use function get_class;
+use function in_array;
+use function is_object;
+use function json_decode;
+use function preg_match;
+use function preg_match_all;
+use function sprintf;
+use function substr;
+use function trim;
+
 /**
  * Simple annotation parser. Take only key-value annotations for methods or class.
  */

@@ -4,6 +4,19 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use ArrayAccess;
+use Iterator;
+use JsonSerializable;
+use function array_keys;
+use function call_user_func_array;
+use function count;
+use function is_array;
+use function is_object;
+use function is_scalar;
+use function method_exists;
+use function property_exists;
+use function range;
+
 /**
  * Class to represent any type of content.
  * This class can act as an object, array, or string.

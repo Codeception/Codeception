@@ -5,6 +5,14 @@ declare(strict_types=1);
 namespace Codeception\Util;
 
 use Codeception\Step\Action;
+use Exception;
+use function call_user_func_array;
+use function codecept_debug;
+use function get_class;
+use function implode;
+use function is_array;
+use function sprintf;
+use function str_replace;
 
 /**
  * Class for defining an array actions to be executed inside `performOn` of WebDriver

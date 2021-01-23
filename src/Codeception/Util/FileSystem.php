@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use function basename;
+use function rmdir;
+use function unlink;
+
 /**
  * Set of functions to work with Filesystem
  *

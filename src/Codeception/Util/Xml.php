@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use DOMDocument;
+use DOMNode;
+use function is_array;
+
 class Xml
 {
     /**

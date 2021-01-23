@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use function array_key_exists;
+use function explode;
+use function is_array;
+use function preg_match_all;
+use function sprintf;
+use function str_replace;
+
 /**
  * Basic template engine used for generating initial Cept/Cest/Test files.
  */

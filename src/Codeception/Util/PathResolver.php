@@ -5,6 +5,18 @@ declare(strict_types=1);
 namespace Codeception\Util;
 
 use Codeception\Exception\ConfigurationException;
+use function array_fill;
+use function array_filter;
+use function array_merge;
+use function array_shift;
+use function count;
+use function explode;
+use function implode;
+use function preg_match;
+use function preg_quote;
+use function preg_replace;
+use function strlen;
+use function substr;
 
 class PathResolver
 {

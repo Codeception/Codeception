@@ -4,10 +4,26 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use DOMDocument;
+use DOMXPath;
+use Exception;
 use Facebook\WebDriver\WebDriverBy;
+use InvalidArgumentException;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\CssSelector\XPath\Translator;
+use function abs;
+use function class_exists;
+use function func_get_args;
+use function implode;
+use function is_array;
+use function is_int;
+use function is_string;
+use function key;
+use function preg_match;
+use function sprintf;
+use function strpos;
+use function strtolower;
 
 /**
  * Set of useful functions for using CSS and XPath locators.

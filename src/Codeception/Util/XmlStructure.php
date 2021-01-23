@@ -6,9 +6,11 @@ namespace Codeception\Util;
 
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocatorException;
+use Codeception\Util\Soap as SoapXmlUtil;
+use DOMDocument;
+use DOMNode;
+use DOMXPath;
 use Symfony\Component\CssSelector\CssSelectorConverter;
-use Symfony\Component\CssSelector\Exception\ParseException;
-use Codeception\Util\Soap as XmlUtils;
 
 class XmlStructure
 {

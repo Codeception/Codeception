@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use function array_unshift;
+use function file_exists;
+use function rtrim;
+use function spl_autoload_register;
+use function str_replace;
+use function trim;
+
 /**
  * Autoloader, which is fully compatible with PSR-4,
  * and can be used to autoload your `Helper`, `Page`, and `Step` classes.

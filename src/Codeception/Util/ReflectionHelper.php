@@ -5,9 +5,27 @@ declare(strict_types=1);
 namespace Codeception\Util;
 
 use ReflectionException;
+use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionProperty;
-use ReflectionMethod;
+use function array_filter;
+use function array_keys;
+use function array_map;
+use function array_pop;
+use function count;
+use function explode;
+use function get_class;
+use function implode;
+use function in_array;
+use function is_array;
+use function is_null;
+use function is_string;
+use function json_encode;
+use function method_exists;
+use function range;
+use function strpos;
+use function substr;
+use function var_export;
 
 /**
  * This class contains helper methods to help with common Reflection tasks.

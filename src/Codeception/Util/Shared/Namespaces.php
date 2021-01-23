@@ -4,6 +4,15 @@ declare(strict_types=1);
 
 namespace Codeception\Util\Shared;
 
+use function array_filter;
+use function array_pop;
+use function array_shift;
+use function count;
+use function explode;
+use function implode;
+use function ltrim;
+use function str_replace;
+
 trait Namespaces
 {
     protected function breakParts($class)

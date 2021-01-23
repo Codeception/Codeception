@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use function array_intersect;
+use function array_keys;
+use function count;
+use function is_array;
+use function is_numeric;
+use function min;
+use function range;
+
 class ArrayContainsComparator
 {
     /**

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use RuntimeException;
+
 /**
  * Really basic class to store data in global array and use it in Cests/Tests.
  *

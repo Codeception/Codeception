@@ -7,6 +7,7 @@ namespace Codeception\Util;
 use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
+use function array_key_exists;
 use function get_class;
 use function get_parent_class;
 use function gettype;
