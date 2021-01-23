@@ -25,7 +25,16 @@ class Module implements EventSubscriberInterface
         Events::SUITE_AFTER  => 'afterSuite'
     ];
 
+    /** @var \Codeception\Module[] */
     protected $modules = [];
+
+    /**
+     * @param \Codeception\Module[] $modules
+     */
+    public function __construct(array $modules = [])
+    {
+        $this->modules = $modules;
+    }
 
     public function beforeSuite(SuiteEvent $e)
     {
@@ -41,7 +50,7 @@ class Module implements EventSubscriberInterface
 
     public function afterSuite()
     {
-        foreach ($this->modules as $module) {
+        foreach (array_reverse($this->modules) as $module) {
             $module->_afterSuite();
         }
     }
@@ -62,7 +71,7 @@ class Module implements EventSubscriberInterface
         if (!$e->getTest() instanceof TestInterface) {
             return;
         }
-        foreach ($this->modules as $module) {
+        foreach (array_reverse($this->modules) as $module) {
             $module->_after($e->getTest());
             $module->_resetConfig();
         }
@@ -73,7 +82,7 @@ class Module implements EventSubscriberInterface
         if (!$e->getTest() instanceof TestInterface) {
             return;
         }
-        foreach ($this->modules as $module) {
+        foreach (array_reverse($this->modules) as $module) {
             $module->_failed($e->getTest(), $e->getFail());
         }
     }
@@ -87,7 +96,7 @@ class Module implements EventSubscriberInterface
 
     public function afterStep(StepEvent $e)
     {
-        foreach ($this->modules as $module) {
+        foreach (array_reverse($this->modules) as $module) {
             $module->_afterStep($e->getStep(), $e->getTest());
         }
     }
