@@ -117,7 +117,6 @@ class Run extends Command
      */
     protected $output;
 
-
     /**
      * Sets Run arguments
      * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
@@ -456,9 +455,28 @@ class Run extends Command
             }
         }
 
-        // Run single test without included tests
-        if (! Configuration::isEmpty() && strpos($suite, $config['paths']['tests']) === 0) {
-            return $this->matchTestFromFilename($suite, $config['paths']['tests']);
+        if (! Configuration::isEmpty()) {
+            // Run single test without included tests
+            if (strpos($suite, $config['paths']['tests']) === 0) {
+                return $this->matchTestFromFilename($suite, $config['paths']['tests']);
+            }
+
+            // Run single test from working directory
+            $realTestDir = realpath(Configuration::testsDir());
+            $cwd = getcwd();
+            if (strpos($realTestDir, $cwd) === 0) {
+                $file = $suite;
+                if (strpos($file, ':') !== false) {
+                    list($file) = explode(':', $suite, -1);
+                }
+                $realPath = $cwd . DIRECTORY_SEPARATOR . $file;
+                if (file_exists($realPath) || is_dir($realPath)) {
+                    return $this->matchTestFromFilename(
+                        $cwd . DIRECTORY_SEPARATOR . $suite,
+                        $realTestDir
+                    );
+                }
+            }
         }
     }
 
@@ -486,7 +504,6 @@ class Run extends Command
             }
         }
     }
-
 
     protected function currentNamespace()
     {
