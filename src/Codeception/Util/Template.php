@@ -26,7 +26,7 @@ class Template
      *
      * @param $template
      */
-    public function __construct($template, $placeholderStart = '{{', $placeholderEnd = '}}')
+    public function __construct($template, string $placeholderStart = '{{', string $placeholderEnd = '}}')
     {
         $this->template         = $template;
         $this->placeholderStart = $placeholderStart;
@@ -35,12 +35,8 @@ class Template
 
     /**
      * Replaces {{var}} string with provided value
-     *
-     * @param $var
-     * @param $val
-     * @return $this
      */
-    public function place($var, $val)
+    public function place($var, $val): self
     {
         $this->vars[$var] = $val;
         return $this;
@@ -51,11 +47,14 @@ class Template
      *
      * @param array $vars
      */
-    public function setVars(array $vars)
+    public function setVars(array $vars): void
     {
         $this->vars = $vars;
     }
 
+    /**
+     * @return mixed|void
+     */
     public function getVar($name)
     {
         if (isset($this->vars[$name])) {

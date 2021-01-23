@@ -23,7 +23,7 @@ class Fixtures
 {
     protected static $fixtures = [];
 
-    public static function add($name, $data)
+    public static function add($name, $data): void
     {
         self::$fixtures[$name] = $data;
     }
@@ -31,13 +31,13 @@ class Fixtures
     public static function get($name)
     {
         if (!self::exists($name)) {
-            throw new \RuntimeException("$name not found in fixtures");
+            throw new RuntimeException("{$name} not found in fixtures");
         }
 
         return self::$fixtures[$name];
     }
 
-    public static function cleanup($name = null)
+    public static function cleanup($name = null): void
     {
         if (self::exists($name)) {
             unset(self::$fixtures[$name]);
@@ -47,7 +47,7 @@ class Fixtures
         self::$fixtures = [];
     }
 
-    public static function exists($name)
+    public static function exists($name): bool
     {
         return isset(self::$fixtures[$name]);
     }

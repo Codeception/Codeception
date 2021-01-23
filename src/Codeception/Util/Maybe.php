@@ -34,10 +34,19 @@ use function range;
  * ?>
  * ```
  */
-class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
+class Maybe implements ArrayAccess, Iterator, JsonSerializable
 {
+    /**
+     * @var int
+     */
     protected $position = 0;
+    /**
+     * @var null|object
+     */
     protected $val = null;
+    /**
+     * @var null
+     */
     protected $assocArray = null;
 
     public function __construct($val = null)
@@ -49,7 +58,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         $this->position = 0;
     }
 
-    private function isAssocArray($arr)
+    private function isAssocArray($arr): bool
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
@@ -70,7 +79,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         return $this->val;
     }
 
-    public function __get($key)
+    public function __get($key): Maybe
     {
         if ($this->val === null) {
             return new Maybe();
@@ -116,40 +125,38 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 
     public function __unset($key)
     {
-        if (is_object($this->val)) {
-            if (isset($this->val->{$key}) || property_exists($this->val, $key)) {
-                unset($this->val->{$key});
-                return;
-            }
+        if (is_object($this->val) && (isset($this->val->{$key}) || property_exists($this->val, $key))) {
+            unset($this->val->{$key});
+            return;
         }
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
-        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
+        if (is_array($this->val) || ($this->val instanceof ArrayAccess)) {
             return isset($this->val[$offset]);
         }
         return false;
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): Maybe
     {
-        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
+        if (is_array($this->val) || $this->val instanceof ArrayAccess) {
             return $this->val[$offset];
         }
         return new Maybe();
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
-        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
+        if (is_array($this->val) || ($this->val instanceof ArrayAccess)) {
             $this->val[$offset] = $value;
         }
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
-        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
+        if (is_array($this->val) || ($this->val instanceof ArrayAccess)) {
             unset($this->val[$offset]);
         }
     }
@@ -172,7 +179,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Return the current element
      * @link http://php.net/manual/en/iterator.current.php
-     * @return mixed Can return any type.
+     * @return null|mixed Can return any type.
      */
     public function current()
     {
@@ -193,7 +200,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      * @link http://php.net/manual/en/iterator.next.php
      * @return void Any returned value is ignored.
      */
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }
@@ -202,7 +209,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Return the key of the current element
      * @link http://php.net/manual/en/iterator.key.php
-     * @return mixed scalar on success, or null on failure.
+     * @return mixed|int|string scalar on success, or null on failure.
      */
     public function key()
     {
@@ -221,7 +228,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      * @return boolean The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      */
-    public function valid()
+    public function valid(): ?bool
     {
         if (!is_array($this->val)) {
             return null;
@@ -240,7 +247,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      * @link http://php.net/manual/en/iterator.rewind.php
      * @return void Any returned value is ignored.
      */
-    public function rewind()
+    public function rewind(): void
     {
         if (is_array($this->val)) {
             $this->assocArray = $this->isAssocArray($this->val);

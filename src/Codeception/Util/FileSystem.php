@@ -12,19 +12,18 @@ use function unlink;
 
 /**
  * Set of functions to work with Filesystem
- *
  */
 class FileSystem
 {
     /**
      * @param $path
      */
-    public static function doEmptyDir($path)
+    public static function doEmptyDir($path): void
     {
-        /** @var $iterator \RecursiveIteratorIterator|\SplFileObject[] */
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($path),
-            \RecursiveIteratorIterator::CHILD_FIRST
+        /** @var $iterator RecursiveIteratorIterator|\SplFileObject[] */
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($path),
+            RecursiveIteratorIterator::CHILD_FIRST
         );
 
         foreach ($iterator as $path) {
@@ -41,11 +40,7 @@ class FileSystem
         }
     }
 
-    /**
-     * @param $dir
-     * @return bool
-     */
-    public static function deleteDir($dir)
+    public static function deleteDir($dir): bool
     {
         if (!file_exists($dir)) {
             return true;
@@ -77,10 +72,6 @@ class FileSystem
         return @rmdir($dir);
     }
 
-    /**
-     * @param $src
-     * @param $dst
-     */
     public static function copyDir($src, $dst)
     {
         $dir = opendir($src);

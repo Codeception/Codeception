@@ -13,12 +13,12 @@ namespace Codeception\Util;
  */
 class Soap extends Xml
 {
-    public static function request()
+    public static function request(): XmlBuilder
     {
         return new XmlBuilder();
     }
 
-    public static function response()
+    public static function response(): XmlBuilder
     {
         return new XmlBuilder();
     }

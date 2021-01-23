@@ -25,12 +25,11 @@ class PathResolver
      * @param string $path
      * @param string $projDir
      * @param string $dirSep
-     * @return string
      */
-    public static function getRelativeDir($path, $projDir, $dirSep = DIRECTORY_SEPARATOR)
+    public static function getRelativeDir(string $path, string $projDir, string $dirSep = DIRECTORY_SEPARATOR): string
     {
         // ensure $projDir ends with a trailing $dirSep
-        $projDir = preg_replace('/'.preg_quote($dirSep, '/').'*$/', $dirSep, $projDir);
+        $projDir = preg_replace('/'. preg_quote($dirSep, '/').'*$/', $dirSep, $projDir);
         // if $path is a within $projDir
         if (self::fsCaseStrCmp(substr($path, 0, strlen($projDir)), $projDir, $dirSep) == 0) {
             // simply chop it off the front
@@ -60,19 +59,19 @@ class PathResolver
         $relProjDirParts = array_filter(explode($dirSep, substr($projDir, strlen($projDirAbsPrefix['wholePrefix']))), 'strlen');
         // While there are any, peel off any common parent directories
         // from the beginning of the $projDir and $path
-        while ((count($relPathParts) > 0) && (count($relProjDirParts) > 0) &&
+        while (($relPathParts !== []) && ($relProjDirParts !== []) &&
             (self::fsCaseStrCmp($relPathParts[0], $relProjDirParts[0], $dirSep) == 0)
         ) {
             array_shift($relPathParts);
             array_shift($relProjDirParts);
         }
-        if (count($relProjDirParts) > 0) {
+        if ($relProjDirParts !== []) {
             // prefix $relPath with '..' for all remaining unmatched $projDir
             // subdirectories
             $relPathParts = array_merge(array_fill(0, count($relProjDirParts), '..'), $relPathParts);
         }
         // only append a trailing seperator if one is already present
-        $trailingSep = preg_match('/'.preg_quote($dirSep, '/').'$/', $path) ? $dirSep : '';
+        $trailingSep = preg_match('/'. preg_quote($dirSep, '/').'$/', $path) ? $dirSep : '';
         // convert array of dir paths back into a string path
         return implode($dirSep, $relPathParts).$trailingSep;
     }
@@ -85,7 +84,7 @@ class PathResolver
      * @param string $dirSep
      * @return int -1 / 0 / 1 for < / = / > respectively
      */
-    private static function fsCaseStrCmp($str1, $str2, $dirSep = DIRECTORY_SEPARATOR)
+    private static function fsCaseStrCmp(string $str1, string $str2, string $dirSep = DIRECTORY_SEPARATOR): int
     {
         $cmpFn = self::isWindows($dirSep) ? 'strcasecmp' : 'strcmp';
         return $cmpFn($str1, $str2);
@@ -110,16 +109,16 @@ class PathResolver
      *
      * @param string $path
      * @param string $dirSep
-     * @return string
+     * @return array<string, mixed>
      */
-    private static function getPathAbsolutenessPrefix($path, $dirSep = DIRECTORY_SEPARATOR)
+    private static function getPathAbsolutenessPrefix(string $path, string $dirSep = DIRECTORY_SEPARATOR): array
     {
         $devLetterPrefixPattern = '';
         if (self::isWindows($dirSep)) {
             $devLetterPrefixPattern = '([A-Za-z]:|)';
         }
         $matches = [];
-        if (!preg_match('/^'.$devLetterPrefixPattern.preg_quote($dirSep, '/').'?/', $path, $matches)) {
+        if (!preg_match('/^'.$devLetterPrefixPattern. preg_quote($dirSep, '/').'?/', $path, $matches)) {
             // This should match, even if it matches 0 characters
             throw new ConfigurationException("INTERNAL ERROR: This must be a regex problem.");
         }
@@ -132,14 +131,13 @@ class PathResolver
      * Are we in a Windows style filesystem?
      *
      * @param string $dirSep
-     * @return bool
      */
-    private static function isWindows($dirSep = DIRECTORY_SEPARATOR)
+    private static function isWindows(string $dirSep = DIRECTORY_SEPARATOR): bool
     {
         return ($dirSep == '\\');
     }
 
-    public static function isPathAbsolute($path)
+    public static function isPathAbsolute($path): bool
     {
         if (DIRECTORY_SEPARATOR === '/') {
             return substr($path, 0, 1) === DIRECTORY_SEPARATOR;

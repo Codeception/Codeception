@@ -62,17 +62,15 @@ class Locator
      * @param $selector1
      * @param $selector2
      *
-     * @throws \Exception
-     *
-     * @return string
+     * @throws Exception
      */
-    public static function combine($selector1, $selector2)
+    public static function combine($selector1, $selector2): string
     {
         $selectors = func_get_args();
         foreach ($selectors as $k => $v) {
             $selectors[$k] = self::toXPath($v);
             if (!$selectors[$k]) {
-                throw new \Exception("$v is invalid CSS or XPath");
+                throw new Exception("{$v} is invalid CSS or XPath");
             }
         }
         return implode(' | ', $selectors);
@@ -92,10 +90,8 @@ class Locator
      * @static
      *
      * @param $url
-     *
-     * @return string
      */
-    public static function href($url)
+    public static function href($url): string
     {
         return sprintf('//a[@href=normalize-space(%s)]', Translator::getXpathLiteral($url));
     }
@@ -118,10 +114,8 @@ class Locator
      * @static
      *
      * @param $index
-     *
-     * @return string
      */
-    public static function tabIndex($index)
+    public static function tabIndex($index): string
     {
         return sprintf('//*[@tabindex = normalize-space(%d)]', $index);
     }
@@ -138,19 +132,18 @@ class Locator
      *
      * @param $value
      *
-     * @return string
      */
-    public static function option($value)
+    public static function option($value): string
     {
         return sprintf('//option[.=normalize-space("%s")]', $value);
     }
 
-    protected static function toXPath($selector)
+    protected static function toXPath(string $selector): ?string
     {
         try {
             $xpath = (new CssSelectorConverter())->toXPath($selector);
             return $xpath;
-        } catch (ParseException $e) {
+        } catch (ParseException $parseException) {
             if (self::isXPath($selector)) {
                 return $selector;
             }
@@ -172,10 +165,8 @@ class Locator
      *
      * @param $element
      * @param $attributes
-     *
-     * @return string
      */
-    public static function find($element, array $attributes)
+    public static function find($element, array $attributes): string
     {
         $operands = [];
         foreach ($attributes as $attribute => $value) {
@@ -199,10 +190,8 @@ class Locator
      * ```
      *
      * @param $selector
-     *
-     * @return bool
      */
-    public static function isCSS($selector)
+    public static function isCSS($selector): bool
     {
         try {
             (new CssSelectorConverter())->toXPath($selector);
@@ -223,21 +212,18 @@ class Locator
      * ```
      *
      * @param $locator
-     *
-     * @return bool
      */
-    public static function isXPath($locator)
+    public static function isXPath($locator): bool
     {
-        $document = new \DOMDocument('1.0', 'UTF-8');
-        $xpath = new \DOMXPath($document);
-        return @$xpath->evaluate($locator, $document) !== false;
+        $domDocument = new DOMDocument('1.0', 'UTF-8');
+        $domxPath = new DOMXPath($domDocument);
+        return @$domxPath->evaluate($locator, $domDocument) !== false;
     }
 
     /**
      * @param $locator
-     * @return bool
      */
-    public static function isPrecise($locator)
+    public static function isPrecise($locator): bool
     {
         if (is_array($locator)) {
             return true;
@@ -266,9 +252,8 @@ class Locator
      *
      * @param $id
      *
-     * @return bool
      */
-    public static function isID($id)
+    public static function isID($id): bool
     {
         return (bool)preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
     }
@@ -284,9 +269,8 @@ class Locator
      * ```
      *
      * @param $class
-     * @return bool
      */
-    public static function isClass($class)
+    public static function isClass($class): bool
     {
         return (bool)preg_match('~^\.[\w\.\-\[\]\=\^\~\:]+$~', $class);
     }
@@ -306,12 +290,11 @@ class Locator
      * @param $element
      * @param $text
      *
-     * @return string
      */
-    public static function contains($element, $text)
+    public static function contains($element, $text): string
     {
         $text = Translator::getXpathLiteral($text);
-        return sprintf('%s[%s]', self::toXPath($element), "contains(., $text)");
+        return sprintf('%s[%s]', self::toXPath($element), "contains(., {$text})");
     }
 
     /**
@@ -330,18 +313,18 @@ class Locator
      * ```
      *
      * @param string $element CSS or XPath locator
-     * @param int $position xpath index
+     * @param int|string $position xPath index
      *
      * @return mixed
      */
-    public static function elementAt($element, $position)
+    public static function elementAt(string $element, $position): string
     {
         if (is_int($position) && $position < 0) {
-            $position++; // -1 points to the last element
-            $position = 'last()-'.abs($position);
+            ++$position; // -1 points to the last element
+            $position = 'last()-'. abs($position);
         }
         if ($position === 0) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 '0 is not valid element position. XPath expects first element to have index 1'
             );
         }
@@ -394,26 +377,22 @@ class Locator
      * Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string represenation
      *
      * @param $selector
-     *
-     * @return string
      */
-    public static function humanReadableString($selector)
+    public static function humanReadableString($selector): string
     {
         if (is_string($selector)) {
-            return "'$selector'";
+            return "'{$selector}'";
         }
         if (is_array($selector)) {
             $type = strtolower(key($selector));
             $locator = $selector[$type];
-            return "$type '$locator'";
+            return "{$type} '{$locator}'";
         }
-        if (class_exists('\Facebook\WebDriver\WebDriverBy')) {
-            if ($selector instanceof WebDriverBy) {
-                $type = $selector->getMechanism();
-                $locator = $selector->getValue();
-                return "$type '$locator'";
-            }
+        if (class_exists('\Facebook\WebDriver\WebDriverBy') && $selector instanceof WebDriverBy) {
+            $type = $selector->getMechanism();
+            $locator = $selector->getValue();
+            return "{$type} '{$locator}'";
         }
-        throw new \InvalidArgumentException("Unrecognized selector");
+        throw new InvalidArgumentException("Unrecognized selector");
     }
 }

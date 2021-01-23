@@ -54,24 +54,26 @@ use function str_replace;
  */
 class ActionSequence
 {
+    /**
+     * @var Action[]
+     */
     protected $actions = [];
 
     /**
      * Creates an instance
-     * @return ActionSequence
      */
-    public static function build()
+    public static function build(): ActionSequence
     {
         return new self;
     }
 
-    public function __call($action, $arguments)
+    public function __call($action, $arguments): self
     {
         $this->addAction($action, $arguments);
         return $this;
     }
 
-    protected function addAction($action, $arguments)
+    protected function addAction($action, $arguments): void
     {
         if (!is_array($arguments)) {
             $arguments = [$arguments];
@@ -84,9 +86,8 @@ class ActionSequence
      * where key is action, and value is action arguments
      *
      * @param array $actions
-     * @return $this
      */
-    public function fromArray(array $actions)
+    public function fromArray(array $actions): self
     {
         foreach ($actions as $action => $arguments) {
             $this->addAction($action, $arguments);
@@ -96,9 +97,10 @@ class ActionSequence
 
     /**
      * Returns a list of logged actions as associative array
-     * @return array
+     *
+     * @return Action[]
      */
-    public function toArray()
+    public function getActions(): array
     {
         return $this->actions;
     }
@@ -108,27 +110,26 @@ class ActionSequence
      *
      * @param $context
      */
-    public function run($context)
+    public function run($context): void
     {
         foreach ($this->actions as $step) {
-            /** @var $step Action  **/
-            codecept_debug("- $step");
+            codecept_debug("- {$step}");
             try {
                 call_user_func_array([$context, $step->getAction()], $step->getArguments());
-            } catch (\Exception $e) {
-                $class = get_class($e); // rethrow exception for a specific action
-                throw new $class($e->getMessage() . "\nat $step");
+            } catch (Exception $exception) {
+                $class = get_class($exception); // rethrow exception for a specific action
+                throw new $class($exception->getMessage() . "\nat {$step}");
             }
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $actionsLog = [];
 
         foreach ($this->actions as $step) {
             $args = str_replace('"', "'", $step->getArgumentsAsString(20));
-            $actionsLog[] = $step->getAction() . ": $args";
+            $actionsLog[] = $step->getAction() . ": {$args}";
         }
 
         return implode(', ', $actionsLog);

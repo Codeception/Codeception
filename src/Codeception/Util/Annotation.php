@@ -20,15 +20,22 @@ use function trim;
  */
 class Annotation
 {
+    /**
+     * @var ReflectionClass[]
+     */
     protected static $reflectedClasses = [];
+    /**
+     * @var string
+     */
     protected static $regex = '/@%s(?:[ \t]*(.*?))?[ \t]*(?:\*\/)?\r?$/m';
     protected static $lastReflected = null;
-
     /**
-     * @var \ReflectionClass
+     * @var ReflectionClass
      */
     protected $reflectedClass;
-
+    /**
+     * @var ReflectionClass|\ReflectionMethod
+     */
     protected $currentReflectedItem;
 
     /**
@@ -41,22 +48,16 @@ class Annotation
      * Annotation::forClass('MyTestCase')->fetch('guy');
      * Annotation::forClass('MyTestCase')->method('testData')->fetch('depends');
      * Annotation::forClass('MyTestCase')->method('testData')->fetchAll('depends');
-     *
-     * ?>
      * ```
-     *
-     * @param $class
-     *
-     * @return $this
      */
-    public static function forClass($class)
+    public static function forClass($class): Annotation
     {
         if (is_object($class)) {
             $class = get_class($class);
         }
 
         if (!isset(static::$reflectedClasses[$class])) {
-            static::$reflectedClasses[$class] = new \ReflectionClass($class);
+            static::$reflectedClasses[$class] = new ReflectionClass($class);
         }
 
         return new static(static::$reflectedClasses[$class]);
@@ -68,7 +69,7 @@ class Annotation
      *
      * @return $this
      */
-    public static function forMethod($class, $method)
+    public static function forMethod($class, $method): self
     {
         return self::forClass($class)->method($method);
     }
@@ -94,10 +95,10 @@ class Annotation
      * @param $docblock
      * @return array
      */
-    public static function fetchAllAnnotationsFromDocblock($docblock)
+    public static function fetchAllAnnotationsFromDocblock($docblock): array
     {
         $annotations = [];
-        if (!preg_match_all(sprintf(self::$regex, '(\w+)'), $docblock, $matched)) {
+        if (!preg_match_all(sprintf(self::$regex, '(\w+)'), (string)$docblock, $matched)) {
             return $annotations;
         }
         foreach ($matched[1] as $k => $annotation) {
@@ -110,17 +111,13 @@ class Annotation
     }
 
 
-    public function __construct(\ReflectionClass $class)
+    public function __construct(ReflectionClass $reflectionClass)
     {
-        $this->currentReflectedItem = $this->reflectedClass = $class;
+        $this->currentReflectedItem = $reflectionClass;
+        $this->reflectedClass = $reflectionClass;
     }
 
-    /**
-     * @param $method
-     *
-     * @return $this
-     */
-    public function method($method)
+    public function method($method): self
     {
         $this->currentReflectedItem = $this->reflectedClass->getMethod($method);
         return $this;
@@ -128,24 +125,20 @@ class Annotation
 
     /**
      * @param $annotation
-     * @return null
+     * @return mixed|null
      */
     public function fetch($annotation)
     {
-        $docBlock = $this->currentReflectedItem->getDocComment();
+        $docBlock = (string) $this->currentReflectedItem->getDocComment();
         if (preg_match(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
         }
         return null;
     }
 
-    /**
-     * @param $annotation
-     * @return array
-     */
-    public function fetchAll($annotation)
+    public function fetchAll($annotation): array
     {
-        $docBlock = $this->currentReflectedItem->getDocComment();
+        $docBlock = (string) $this->currentReflectedItem->getDocComment();
         if (preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
         }

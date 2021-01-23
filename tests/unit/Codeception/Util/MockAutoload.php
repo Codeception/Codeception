@@ -11,7 +11,7 @@ class MockAutoload extends Autoload
         self::$files = $files;
     }
 
-    protected static function requireFile($file)
+    protected static function requireFile($file): bool
     {
         return in_array($file, self::$files);
     }

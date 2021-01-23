@@ -16,12 +16,10 @@ use function is_object;
 class ReflectionPropertyAccessor
 {
     /**
-     * @param object $obj
-     * @param string $field
      * @return mixed
      * @throws ReflectionException
      */
-    public function getProperty($obj, $field)
+    public function getProperty(object $obj, string $field)
     {
         if (!$obj || !is_object($obj)) {
             throw new InvalidArgumentException('Cannot get property "' . $field . '" of "' . gettype($obj) . '", expecting object');
@@ -40,19 +38,15 @@ class ReflectionPropertyAccessor
     }
 
     /**
-     * @param object|null $obj
-     * @param string $class
-     * @param array $data
-     * @return object|null
      * @throws ReflectionException
      */
-    private function setPropertiesForClass($obj, $class, array $data)
+    private function setPropertiesForClass(?object $obj, string $class, array $data): ?object
     {
-        $reflectedEntity = new ReflectionClass($class);
+        $reflectionClass = new ReflectionClass($class);
 
-        if (!$obj) {
+        if ($obj === null) {
             $constructorParameters = [];
-            $constructor = $reflectedEntity->getConstructor();
+            $constructor = $reflectionClass->getConstructor();
             if (null !== $constructor) {
                 foreach ($constructor->getParameters() as $parameter) {
                     if ($parameter->isOptional()) {
@@ -67,10 +61,10 @@ class ReflectionPropertyAccessor
                 }
             }
 
-            $obj = $reflectedEntity->newInstance(...$constructorParameters);
+            $obj = $reflectionClass->newInstance(...$constructorParameters);
         }
 
-        foreach ($reflectedEntity->getProperties() as $property) {
+        foreach ($reflectionClass->getProperties() as $property) {
             if (isset($data[$property->name])) {
                 $property->setAccessible(true);
                 $property->setValue($obj, $data[$property->name]);
@@ -80,11 +74,9 @@ class ReflectionPropertyAccessor
     }
 
     /**
-     * @param object|null $obj
-     * @param array $data
      * @throws ReflectionException
      */
-    public function setProperties($obj, array $data)
+    public function setProperties(?object $obj, array $data): void
     {
         if (!$obj || !is_object($obj)) {
             throw new InvalidArgumentException('Cannot set properties for "' . gettype($obj) . '", expecting object');
@@ -97,12 +89,9 @@ class ReflectionPropertyAccessor
     }
 
     /**
-     * @param string $class
-     * @param array $data
-     * @return object
      * @throws ReflectionException
      */
-    public function createWithProperties($class, array $data)
+    public function createWithProperties(string $class, array $data): ?object
     {
         $obj = null;
         do {

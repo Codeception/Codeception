@@ -24,9 +24,9 @@ class Uri
      *
      * @param string $baseUri the base URL
      * @param string $uri the URL to merge
-     * @return array the merged array
+     * @return string the merged array
      */
-    public static function mergeUrls($baseUri, $uri)
+    public static function mergeUrls(string $baseUri, string $uri): string
     {
         $base = new Psr7Uri($baseUri);
         $parts = parse_url($uri);
@@ -36,12 +36,12 @@ class Uri
         if ($parts === false) {
             $parts = parse_url($base.$uri);
         }
-        
+
         if ($parts === false) {
-            throw new \InvalidArgumentException("Invalid URI $uri");
+            throw new InvalidArgumentException("Invalid URI {$uri}");
         }
 
-        if (isset($parts['host']) and isset($parts['scheme'])) {
+        if (isset($parts['host']) && isset($parts['scheme'])) {
             // if this is an absolute url, replace with it
             return $uri;
         }
@@ -56,7 +56,7 @@ class Uri
             $path = $parts['path'];
             $basePath = $base->getPath();
             if ((strpos($path, '/') !== 0) && !empty($path)) {
-                if ($basePath) {
+                if ($basePath !== '') {
                     // if it ends with a slash, relative paths are below it
                     if (preg_match('~/$~', $basePath)) {
                         $path = $basePath . $path;
@@ -86,10 +86,8 @@ class Uri
 
     /**
      * Retrieve /path?query#fragment part of URL
-     * @param $url
-     * @return string
      */
-    public static function retrieveUri($url)
+    public static function retrieveUri(string $url): string
     {
         $uri = new Psr7Uri($url);
         return (string)(new Psr7Uri())
@@ -98,11 +96,11 @@ class Uri
             ->withFragment($uri->getFragment());
     }
 
-    public static function retrieveHost($url)
+    public static function retrieveHost($url): string
     {
         $urlParts = parse_url($url);
-        if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
-            throw new \InvalidArgumentException("Wrong URL passes, host and scheme not set");
+        if (!isset($urlParts['host']) || !isset($urlParts['scheme'])) {
+            throw new InvalidArgumentException("Wrong URL passes, host and scheme not set");
         }
         $host = $urlParts['scheme'] . '://' . $urlParts['host'];
         if (isset($urlParts['port'])) {
@@ -111,7 +109,7 @@ class Uri
         return $host;
     }
 
-    public static function appendPath($url, $path)
+    public static function appendPath($url, $path): string
     {
         $uri = new Psr7Uri($url);
         $cutUrl = (string)$uri->withQuery('')->withFragment('');

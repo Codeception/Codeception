@@ -74,57 +74,42 @@ use Exception;
 class XmlBuilder
 {
     /**
-     * @var \DOMDocument
+     * @var DOMDocument
      */
     protected $__dom__;
 
     /**
-     * @var \DOMElement
+     * @var DOMElement
      */
     protected $__currentNode__;
 
 
     public function __construct()
     {
-        $this->__dom__ = new \DOMDocument();
+        $this->__dom__ = new DOMDocument();
         $this->__currentNode__ = $this->__dom__;
     }
 
     /**
      * Appends child node
-     *
-     * @param $tag
-     *
-     * @return XmlBuilder
      */
-    public function __get($tag)
+    public function __get(string $tag): XmlBuilder
     {
-        $node = $this->__dom__->createElement($tag);
-        $this->__currentNode__->appendChild($node);
-        $this->__currentNode__ = $node;
+        $domElement = $this->__dom__->createElement($tag);
+        $this->__currentNode__->appendChild($domElement);
+        $this->__currentNode__ = $domElement;
         return $this;
     }
 
-    /**
-     * @param $val
-     *
-     * @return XmlBuilder
-     */
-    public function val($val)
+    public function val($val): self
     {
         $this->__currentNode__->nodeValue = $val;
-        return $this;
     }
 
     /**
      * Sets attribute for current node
-     *
-     * @param $attr
-     * @param $val
-     *
-     * @return XmlBuilder
      */
-    public function attr($attr, $val)
+    public function attr(string $attr, string $val): self
     {
         $this->__currentNode__->setAttribute($attr, $val);
         return $this;
@@ -132,10 +117,8 @@ class XmlBuilder
 
     /**
      * Traverses to parent
-     *
-     * @return XmlBuilder
      */
-    public function parent()
+    public function parent(): self
     {
         $this->__currentNode__ = $this->__currentNode__->parentNode;
         return $this;
@@ -145,11 +128,10 @@ class XmlBuilder
      * Traverses to parent with $name
      *
      * @param $tag
-     *
      * @return XmlBuilder
-     * @throws \Exception
+     * @throws Exception
      */
-    public function parents($tag)
+    public function parents($tag): self
     {
         $traverseNode = $this->__currentNode__;
         $elFound = false;
@@ -163,7 +145,7 @@ class XmlBuilder
         }
 
         if (!$elFound) {
-            throw new \Exception("Parent $tag not found in XML");
+            throw new Exception("Parent {$tag} not found in XML");
         }
 
         return $this;
@@ -174,10 +156,7 @@ class XmlBuilder
         return $this->__dom__->saveXML();
     }
 
-    /**
-     * @return \DOMDocument
-     */
-    public function getDom()
+    public function getDom(): DOMDocument
     {
         return $this->__dom__;
     }
