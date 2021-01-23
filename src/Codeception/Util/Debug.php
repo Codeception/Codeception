@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 use Codeception\Lib\Console\Output;

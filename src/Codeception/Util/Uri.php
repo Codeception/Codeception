@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 use GuzzleHttp\Psr7\Uri as Psr7Uri;
