@@ -1,12 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Event;
 
+use PHPUnit\Framework\Test as PHPUnitTest;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class TestEvent extends Event
 {
     /**
-     * @var \PHPUnit\Framework\Test
+     * @var PHPUnitTest
      */
     protected $test;
 
@@ -15,16 +19,13 @@ class TestEvent extends Event
      */
     protected $time;
 
-    public function __construct(\PHPUnit\Framework\Test $test, $time = 0)
+    public function __construct(PHPUnitTest $test, ?float $time = 0)
     {
         $this->test = $test;
         $this->time = $time;
     }
 
-    /**
-     * @return float
-     */
-    public function getTime()
+    public function getTime(): float
     {
         return $this->time;
     }

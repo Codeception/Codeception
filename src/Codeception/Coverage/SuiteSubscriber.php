@@ -1,20 +1,33 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Coverage;
 
 use Codeception\Configuration;
 use Codeception\Coverage\Subscriber\Printer;
-use Codeception\Lib\Interfaces\Remote;
+use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ModuleException;
+use Codeception\Lib\Interfaces\Remote as RemoteInterface;
 use Codeception\Stub;
 use Codeception\Subscriber\Shared\StaticEvents;
+use Exception;
 use PHPUnit\Framework\CodeCoverageException;
+use PHPUnit\Framework\TestResult;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Driver\Driver as CodeCoverageDriver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use function array_keys;
+use function method_exists;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface
 {
     use StaticEvents;
 
+    /**
+     * @var array
+     */
     protected $defaultSettings = [
         'enabled'        => false,
         'remote'         => false,
@@ -26,31 +39,62 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         'work_dir'       => null,
         'cookie_domain'  => null,
     ];
-
+    /**
+     * @var array
+     */
     protected $settings = [];
+    /**
+     * @var array
+     */
     protected $filters = [];
+    /**
+     * @var array
+     */
     protected $modules = [];
-
+    /**
+     * @var CodeCoverage|null
+     */
     protected $coverage;
+    /**
+     * @var string
+     */
     protected $logDir;
+    /**
+     * @var array
+     */
     protected $options;
+    /**
+     * @var array
+     */
     public static $events = [];
 
     abstract protected function isEnabled();
 
-    public function __construct($options = [])
+    /**
+     * SuiteSubscriber constructor.
+     *
+     * @param array $options
+     * @throws ConfigurationException
+     */
+    public function __construct(array $options = [])
     {
         $this->options = $options;
         $this->logDir = Configuration::outputDir();
     }
 
-    protected function applySettings($settings)
+    /**
+     * @param array $settings
+     * @throws Exception
+     */
+    protected function applySettings(array $settings): void
     {
         try {
             $this->coverage = PhpCodeCoverageFactory::build();
         } catch (CodeCoverageException $e) {
-            throw new \Exception(
-                'XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini'
+            throw new Exception(
+                'XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini',
+                $e->getCode(),
+                $e
             );
         }
 
@@ -77,21 +121,25 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
 
     /**
      * @param array $modules
-     * @return \Codeception\Lib\Interfaces\Remote|null
+     * @return RemoteInterface|null
      */
-    protected function getServerConnectionModule(array $modules)
+    protected function getServerConnectionModule(array $modules): ?RemoteInterface
     {
         foreach ($modules as $module) {
-            if ($module instanceof Remote) {
+            if ($module instanceof RemoteInterface) {
                 return $module;
             }
         }
         return null;
     }
 
-    public function applyFilter(\PHPUnit\Framework\TestResult $result)
+    /**
+     * @param TestResult $result
+     * @throws ConfigurationException|ModuleException|Exception
+     */
+    public function applyFilter(TestResult $result): void
     {
-        $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
+        $driver = Stub::makeEmpty(CodeCoverageDriver::class);
         $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
 
         Filter::setup($this->coverage)
@@ -101,7 +149,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         $result->setCodeCoverage($this->coverage);
     }
 
-    protected function mergeToPrint($coverage)
+    protected function mergeToPrint(CodeCoverage $coverage): void
     {
         Printer::$coverage->merge($coverage);
     }

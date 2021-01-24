@@ -1,10 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Event;
+
+use Exception;
+use PHPUnit\Framework\Test as PHPUnitTest;
 
 class FailEvent extends TestEvent
 {
     /**
-     * @var \Exception
+     * @var Exception
      */
     protected $fail;
 
@@ -13,19 +19,19 @@ class FailEvent extends TestEvent
      */
     protected $count;
 
-    public function __construct(\PHPUnit\Framework\Test $test, $time, $e, $count = 0)
+    public function __construct(PHPUnitTest $test, ?float $time, Exception $e, int $count = 0)
     {
         parent::__construct($test, $time);
         $this->fail = $e;
         $this->count = $count;
     }
 
-    public function getCount()
+    public function getCount(): int
     {
         return $this->count;
     }
 
-    public function getFail()
+    public function getFail(): Exception
     {
         return $this->fail;
     }
