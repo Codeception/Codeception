@@ -13,7 +13,6 @@ use Exception;
  * With no XML line actually written!
  * Uses DOM extension to manipulate XML data.
  *
- *
  * ```php
  * <?php
  * $xml = new \Codeception\Util\XmlBuilder();
@@ -69,25 +68,24 @@ use Exception;
  *  * `$xml->getDom` - get a DOMDocument object
  *  * `$xml->__toString` - get a string representation of XML.
  *
- * [Source code](https://github.com/Codeception/Codeception/blob/4.0/src/Codeception/Util/XmlBuilder.php)
+ * [Source code](https://github.com/Codeception/Codeception/blob/5.0/src/Codeception/Util/XmlBuilder.php)
  */
 class XmlBuilder
 {
     /**
      * @var DOMDocument
      */
-    protected $__dom__;
+    protected $dom;
 
     /**
      * @var DOMElement
      */
-    protected $__currentNode__;
-
+    protected $currentNode;
 
     public function __construct()
     {
-        $this->__dom__ = new DOMDocument();
-        $this->__currentNode__ = $this->__dom__;
+        $this->dom = new DOMDocument();
+        $this->currentNode = $this->dom;
     }
 
     /**
@@ -95,15 +93,15 @@ class XmlBuilder
      */
     public function __get(string $tag): XmlBuilder
     {
-        $domElement = $this->__dom__->createElement($tag);
-        $this->__currentNode__->appendChild($domElement);
-        $this->__currentNode__ = $domElement;
+        $domElement = $this->dom->createElement($tag);
+        $this->currentNode->appendChild($domElement);
+        $this->currentNode = $domElement;
         return $this;
     }
 
     public function val($val): self
     {
-        $this->__currentNode__->nodeValue = $val;
+        $this->currentNode->nodeValue = $val;
     }
 
     /**
@@ -111,7 +109,7 @@ class XmlBuilder
      */
     public function attr(string $attr, string $val): self
     {
-        $this->__currentNode__->setAttribute($attr, $val);
+        $this->currentNode->setAttribute($attr, $val);
         return $this;
     }
 
@@ -120,25 +118,25 @@ class XmlBuilder
      */
     public function parent(): self
     {
-        $this->__currentNode__ = $this->__currentNode__->parentNode;
+        $this->currentNode = $this->currentNode->parentNode;
         return $this;
     }
 
     /**
      * Traverses to parent with $name
      *
-     * @param $tag
+     * @param string $tag
      * @return XmlBuilder
      * @throws Exception
      */
-    public function parents($tag): self
+    public function parents(string $tag): self
     {
-        $traverseNode = $this->__currentNode__;
+        $traverseNode = $this->currentNode;
         $elFound = false;
         while ($traverseNode->parentNode) {
             $traverseNode = $traverseNode->parentNode;
             if ($traverseNode->tagName == $tag) {
-                $this->__currentNode__ = $traverseNode;
+                $this->currentNode = $traverseNode;
                 $elFound = true;
                 break;
             }
@@ -153,11 +151,11 @@ class XmlBuilder
 
     public function __toString()
     {
-        return $this->__dom__->saveXML();
+        return $this->dom->saveXML();
     }
 
     public function getDom(): DOMDocument
     {
-        return $this->__dom__;
+        return $this->dom;
     }
 }

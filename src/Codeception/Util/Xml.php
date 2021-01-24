@@ -34,9 +34,9 @@ class Xml
      * @static
      *
      * @param XmlBuilder|DOMDocument $xml
-     * @return DOMDocument|DOMNode
+     * @return DOMDocument
      */
-    public static function toXml($xml)
+    public static function toXml($xml): DOMDocument
     {
         if ($xml instanceof XmlBuilder) {
             return $xml->getDom();

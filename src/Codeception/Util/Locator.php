@@ -41,7 +41,6 @@ class Locator
      * use \Codeception\Util\Locator;
      *
      * $I->see('Title', Locator::combine('h1','h2','h3'));
-     * ?>
      * ```
      *
      * This will search for `Title` text in either `h1`, `h2`, or `h3` tag.
@@ -52,16 +51,13 @@ class Locator
      * use \Codeception\Util\Locator;
      *
      * $I->fillField(Locator::combine('form input[type=text]','//form/textarea[2]'), 'qwerty');
-     * ?>
      * ```
      *
      * As a result the Locator will produce a mixed XPath value that will be used in fillField action.
      *
      * @static
-     *
      * @param $selector1
      * @param $selector2
-     *
      * @throws Exception
      */
     public static function combine($selector1, $selector2): string
@@ -84,14 +80,10 @@ class Locator
      * use \Codeception\Util\Locator;
      *
      * $I->see('Log In', Locator::href('/login.php'));
-     * ?>
      * ```
-     *
      * @static
-     *
-     * @param $url
      */
-    public static function href($url): string
+    public static function href(string $url): string
     {
         return sprintf('//a[@href=normalize-space(%s)]', Translator::getXpathLiteral($url));
     }
@@ -108,14 +100,10 @@ class Locator
      * $I->fillField(Locator::tabIndex(1), 'davert');
      * $I->fillField(Locator::tabIndex(2) , 'qwerty');
      * $I->click('Login');
-     * ?>
      * ```
-     *
      * @static
-     *
-     * @param $index
      */
-    public static function tabIndex($index): string
+    public static function tabIndex(int $index): string
     {
         return sprintf('//*[@tabindex = normalize-space(%d)]', $index);
     }
@@ -129,11 +117,8 @@ class Locator
      *
      * $I->seeElement(Locator::option('Male'), '#select-gender');
      * ```
-     *
-     * @param $value
-     *
      */
-    public static function option($value): string
+    public static function option(string $value): string
     {
         return sprintf('//option[.=normalize-space("%s")]', $value);
     }
@@ -160,13 +145,9 @@ class Locator
      *
      * $I->seeElement(Locator::find('img', ['title' => 'diagram']));
      * ```
-     *
      * @static
-     *
-     * @param $element
-     * @param $attributes
      */
-    public static function find($element, array $attributes): string
+    public static function find(string $element, array $attributes): string
     {
         $operands = [];
         foreach ($attributes as $attribute => $value) {
@@ -188,10 +169,8 @@ class Locator
      * Locator::isCSS('body') => true
      * Locator::isCSS('//body/p/user') => false
      * ```
-     *
-     * @param $selector
      */
-    public static function isCSS($selector): bool
+    public static function isCSS(string $selector): bool
     {
         try {
             (new CssSelectorConverter())->toXPath($selector);
@@ -210,10 +189,8 @@ class Locator
      * Locator::isXPath('body') => false
      * Locator::isXPath('//body/p/user') => true
      * ```
-     *
-     * @param $locator
      */
-    public static function isXPath($locator): bool
+    public static function isXPath(string $locator): bool
     {
         $domDocument = new DOMDocument('1.0', 'UTF-8');
         $domxPath = new DOMXPath($domDocument);
@@ -221,7 +198,7 @@ class Locator
     }
 
     /**
-     * @param $locator
+     * @param array|WebDriverBy|string $locator
      */
     public static function isPrecise($locator): bool
     {
@@ -249,11 +226,8 @@ class Locator
      * Locator::isID('body') => false
      * Locator::isID('//body/p/user') => false
      * ```
-     *
-     * @param $id
-     *
      */
-    public static function isID($id): bool
+    public static function isID(string $id): bool
     {
         return (bool)preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
     }
@@ -267,10 +241,8 @@ class Locator
      * Locator::isClass('body') => false
      * Locator::isClass('//body/p/user') => false
      * ```
-     *
-     * @param $class
      */
-    public static function isClass($class): bool
+    public static function isClass(string $class): bool
     {
         return (bool)preg_match('~^\.[\w\.\-\[\]\=\^\~\:]+$~', $class);
     }
@@ -286,12 +258,8 @@ class Locator
      * Locator::contains('label', 'Name'); // label containing name
      * Locator::contains('div[@contenteditable=true]', 'hello world');
      * ```
-     *
-     * @param $element
-     * @param $text
-     *
      */
-    public static function contains($element, $text): string
+    public static function contains(string $element, string $text): string
     {
         $text = Translator::getXpathLiteral($text);
         return sprintf('%s[%s]', self::toXPath($element), "contains(., {$text})");
@@ -314,8 +282,7 @@ class Locator
      *
      * @param string $element CSS or XPath locator
      * @param int|string $position xPath index
-     *
-     * @return mixed
+     * @return string
      */
     public static function elementAt(string $element, $position): string
     {
@@ -342,12 +309,8 @@ class Locator
      *
      * Locator::firstElement('//table/tr');
      * ```
-     *
-     * @param $element
-     *
-     * @return mixed
      */
-    public static function firstElement($element)
+    public static function firstElement(string $element): string
     {
         return self::elementAt($element, 1);
     }
@@ -363,20 +326,17 @@ class Locator
      *
      * Locator::lastElement('//table/tr');
      * ```
-     *
-     * @param $element
-     *
-     * @return mixed
      */
-    public static function lastElement($element)
+    public static function lastElement(string $element): string
     {
         return self::elementAt($element, 'last()');
     }
 
     /**
-     * Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string represenation
+     * Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string representation
      *
-     * @param $selector
+     * @param string|array $selector
+     * @return string
      */
     public static function humanReadableString($selector): string
     {

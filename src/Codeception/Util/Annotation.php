@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Util;
 
 use ReflectionClass;
+use ReflectionMethod;
 use function get_class;
 use function in_array;
 use function is_object;
@@ -34,7 +35,7 @@ class Annotation
      */
     protected $reflectedClass;
     /**
-     * @var ReflectionClass|\ReflectionMethod
+     * @var ReflectionClass|ReflectionMethod
      */
     protected $currentReflectedItem;
 
@@ -49,6 +50,8 @@ class Annotation
      * Annotation::forClass('MyTestCase')->method('testData')->fetch('depends');
      * Annotation::forClass('MyTestCase')->method('testData')->fetchAll('depends');
      * ```
+     * @param object|string $class
+     * @return static
      */
     public static function forClass($class): Annotation
     {
@@ -64,24 +67,19 @@ class Annotation
     }
 
     /**
-     * @param $class
-     * @param $method
-     *
-     * @return $this
+     * @param object|string $class
+     * @param string $method
+     * @return Annotation
      */
-    public static function forMethod($class, $method): self
+    public static function forMethod($class, string $method): self
     {
         return self::forClass($class)->method($method);
     }
 
     /**
      * Parses raw comment for annotations
-     *
-     * @param $docblock
-     * @param $annotation
-     * @return array
      */
-    public static function fetchAnnotationsFromDocblock($annotation, $docblock)
+    public static function fetchAnnotationsFromDocblock(string $annotation, string $docblock): array
     {
         if (preg_match_all(sprintf(self::$regex, $annotation), $docblock, $matched)) {
             return $matched[1];
@@ -91,11 +89,8 @@ class Annotation
 
     /**
      * Fetches all available annotations
-     *
-     * @param $docblock
-     * @return array
      */
-    public static function fetchAllAnnotationsFromDocblock($docblock): array
+    public static function fetchAllAnnotationsFromDocblock(string $docblock): array
     {
         $annotations = [];
         if (!preg_match_all(sprintf(self::$regex, '(\w+)'), (string)$docblock, $matched)) {
@@ -117,17 +112,13 @@ class Annotation
         $this->reflectedClass = $reflectionClass;
     }
 
-    public function method($method): self
+    public function method(string $method): self
     {
         $this->currentReflectedItem = $this->reflectedClass->getMethod($method);
         return $this;
     }
 
-    /**
-     * @param $annotation
-     * @return mixed|null
-     */
-    public function fetch($annotation)
+    public function fetch(string $annotation): ?string
     {
         $docBlock = (string) $this->currentReflectedItem->getDocComment();
         if (preg_match(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
@@ -136,7 +127,7 @@ class Annotation
         return null;
     }
 
-    public function fetchAll($annotation): array
+    public function fetchAll(string $annotation): array
     {
         $docBlock = (string) $this->currentReflectedItem->getDocComment();
         if (preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
@@ -155,10 +146,10 @@ class Annotation
      * Either JSON or Doctrine-annotation style allowed
      * Returns null if not a valid array data
      *
-     * @param $annotation
+     * @param string $annotation
      * @return array|mixed|string
      */
-    public static function arrayValue($annotation)
+    public static function arrayValue(string $annotation)
     {
         $annotation = trim($annotation);
         $openingBrace = substr($annotation, 0, 1);

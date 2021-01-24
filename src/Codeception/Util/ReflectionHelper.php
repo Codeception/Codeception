@@ -72,29 +72,15 @@ class ReflectionHelper
      * Returns class name without namespace
      *
      * (does not use reflection actually)
-     *
-     * @param $object
-     * @return mixed
      */
-    public static function getClassShortName($object): string
+    public static function getClassShortName(object $object): string
     {
         $path = explode('\\', get_class($object));
         return array_pop($path);
     }
 
-    /**
-     * Adapted from https://github.com/Behat/Behat/pull/1313
-     */
     public static function getClassFromParameter(ReflectionParameter $parameter): ?string
     {
-        if (PHP_VERSION_ID < 70100) {
-            $class = $parameter->getClass();
-            if ($class !== null) {
-                return $class->name;
-            }
-            return null;
-        }
-
         $type = $parameter->getType();
         if ($type === null || $type->isBuiltin()) {
             return null;
@@ -113,12 +99,8 @@ class ReflectionHelper
 
     /**
      * Infer default parameter from the reflection object and format it as PHP (code) string
-     *
-     * @param ReflectionParameter $param
-     *
-     * @return string
      */
-    public static function getDefaultValue(ReflectionParameter $parameter)
+    public static function getDefaultValue(ReflectionParameter $parameter): string
     {
         if ($parameter->isDefaultValueAvailable()) {
             if (method_exists($parameter, 'isDefaultValueConstant') && $parameter->isDefaultValueConstant()) {
@@ -136,11 +118,6 @@ class ReflectionHelper
             }
 
             return self::phpEncodeValue($parameter->getDefaultValue());
-        }
-
-        // Default to 'null' for PHP versions < 7.1.
-        if (PHP_VERSION_ID < 70100) {
-            return 'null';
         }
 
         $type = $parameter->getType();
@@ -191,9 +168,6 @@ class ReflectionHelper
 
     /**
      * Recursively PHP encode an array
-     *
-     * @param array $array
-     *
      */
     public static function phpEncodeArray(array $array): string
     {

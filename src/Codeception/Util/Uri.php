@@ -96,7 +96,7 @@ class Uri
             ->withFragment($uri->getFragment());
     }
 
-    public static function retrieveHost($url): string
+    public static function retrieveHost(string $url): string
     {
         $urlParts = parse_url($url);
         if (!isset($urlParts['host']) || !isset($urlParts['scheme'])) {
@@ -109,7 +109,7 @@ class Uri
         return $host;
     }
 
-    public static function appendPath($url, $path): string
+    public static function appendPath(string $url, string $path): string
     {
         $uri = new Psr7Uri($url);
         $cutUrl = (string)$uri->withQuery('')->withFragment('');

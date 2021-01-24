@@ -14,21 +14,18 @@ use RuntimeException;
  * Fixtures::add('user1', ['name' => 'davert']);
  * Fixtures::get('user1');
  * Fixtures::exists('user1');
- *
- * ?>
  * ```
- *
  */
 class Fixtures
 {
     protected static $fixtures = [];
 
-    public static function add($name, $data): void
+    public static function add(string $name, $data): void
     {
         self::$fixtures[$name] = $data;
     }
 
-    public static function get($name)
+    public static function get(string $name)
     {
         if (!self::exists($name)) {
             throw new RuntimeException("{$name} not found in fixtures");
@@ -37,7 +34,7 @@ class Fixtures
         return self::$fixtures[$name];
     }
 
-    public static function cleanup($name = null): void
+    public static function cleanup(string $name = ''): void
     {
         if (self::exists($name)) {
             unset(self::$fixtures[$name]);
@@ -47,7 +44,7 @@ class Fixtures
         self::$fixtures = [];
     }
 
-    public static function exists($name): bool
+    public static function exists(string $name): bool
     {
         return isset(self::$fixtures[$name]);
     }

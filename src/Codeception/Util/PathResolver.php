@@ -22,9 +22,6 @@ class PathResolver
 {
     /**
      * Returns path to a given directory relative to $projDir.
-     * @param string $path
-     * @param string $projDir
-     * @param string $dirSep
      */
     public static function getRelativeDir(string $path, string $projDir, string $dirSep = DIRECTORY_SEPARATOR): string
     {
@@ -109,7 +106,7 @@ class PathResolver
      *
      * @param string $path
      * @param string $dirSep
-     * @return array<string, mixed>
+     * @return array<string, string>
      */
     private static function getPathAbsolutenessPrefix(string $path, string $dirSep = DIRECTORY_SEPARATOR): array
     {
@@ -129,15 +126,13 @@ class PathResolver
 
     /**
      * Are we in a Windows style filesystem?
-     *
-     * @param string $dirSep
      */
     private static function isWindows(string $dirSep = DIRECTORY_SEPARATOR): bool
     {
         return ($dirSep == '\\');
     }
 
-    public static function isPathAbsolute($path): bool
+    public static function isPathAbsolute(string $path): bool
     {
         if (DIRECTORY_SEPARATOR === '/') {
             return substr($path, 0, 1) === DIRECTORY_SEPARATOR;

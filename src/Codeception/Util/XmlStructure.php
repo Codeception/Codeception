@@ -24,7 +24,7 @@ class XmlStructure
         $this->xml = SoapXmlUtil::toXml($xml);
     }
 
-    public function matchesXpath($xpath): bool
+    public function matchesXpath(string $xpath): bool
     {
         $domXpath = new DOMXPath($this->xml);
         $res = $domXpath->query($xpath);

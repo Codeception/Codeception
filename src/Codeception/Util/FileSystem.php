@@ -15,10 +15,7 @@ use function unlink;
  */
 class FileSystem
 {
-    /**
-     * @param $path
-     */
-    public static function doEmptyDir($path): void
+    public static function doEmptyDir(string $path): void
     {
         /** @var $iterator RecursiveIteratorIterator|\SplFileObject[] */
         $iterator = new RecursiveIteratorIterator(
@@ -40,7 +37,7 @@ class FileSystem
         }
     }
 
-    public static function deleteDir($dir): bool
+    public static function deleteDir(string $dir): bool
     {
         if (!file_exists($dir)) {
             return true;
@@ -72,7 +69,7 @@ class FileSystem
         return @rmdir($dir);
     }
 
-    public static function copyDir($src, $dst)
+    public static function copyDir(string $src, string $dst): void
     {
         $dir = opendir($src);
         @mkdir($dst);
