@@ -335,7 +335,7 @@ class Locator
     /**
      * Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string representation
      *
-     * @param string|array $selector
+     * @param string|array|WebDriverBy $selector
      * @return string
      */
     public static function humanReadableString($selector): string

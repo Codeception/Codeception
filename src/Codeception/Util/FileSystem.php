@@ -17,7 +17,6 @@ class FileSystem
 {
     public static function doEmptyDir(string $path): void
     {
-        /** @var $iterator RecursiveIteratorIterator|\SplFileObject[] */
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($path),
             RecursiveIteratorIterator::CHILD_FIRST

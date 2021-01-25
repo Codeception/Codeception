@@ -149,7 +149,7 @@ class XmlBuilder
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->dom->saveXML();
     }

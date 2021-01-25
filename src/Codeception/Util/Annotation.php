@@ -145,11 +145,8 @@ class Annotation
      * Returns an associative array value of annotation
      * Either JSON or Doctrine-annotation style allowed
      * Returns null if not a valid array data
-     *
-     * @param string $annotation
-     * @return array|mixed|string
      */
-    public static function arrayValue(string $annotation)
+    public static function arrayValue(string $annotation): ?array
     {
         $annotation = trim($annotation);
         $openingBrace = substr($annotation, 0, 1);

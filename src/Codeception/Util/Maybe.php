@@ -49,7 +49,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
      */
     protected $assocArray = null;
 
-    public function __construct($val = null)
+    public function __construct(?array $val = null)
     {
         $this->val = $val;
         if (is_array($this->val)) {
@@ -58,28 +58,21 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
         $this->position = 0;
     }
 
-    private function isAssocArray($arr): bool
+    private function isAssocArray(array $arr): bool
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->val === null) {
-            return "?";
-        }
-        if (is_scalar($this->val)) {
-            return (string)$this->val;
+            return '?';
         }
 
-        if (is_object($this->val) && method_exists($this->val, '__toString')) {
-            return $this->val->__toString();
-        }
-
-        return $this->val;
+        return (string)$this->val;
     }
 
-    public function __get($key): Maybe
+    public function __get(string $key): Maybe
     {
         if ($this->val === null) {
             return new Maybe();
@@ -94,7 +87,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
         return $this->val->key;
     }
 
-    public function __set($key, $val)
+    public function __set(string $key, $val)
     {
         if ($this->val === null) {
             return;
@@ -108,7 +101,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
         $this->val->key = $val;
     }
 
-    public function __call($method, $args)
+    public function __call(string $method, array $args)
     {
         if ($this->val === null) {
             return new Maybe();
@@ -123,7 +116,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
         }
     }
 
-    public function __unset($key)
+    public function __unset(string $key)
     {
         if (is_object($this->val) && (isset($this->val->{$key}) || property_exists($this->val, $key))) {
             unset($this->val->{$key});
@@ -209,7 +202,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Return the key of the current element
      * @link http://php.net/manual/en/iterator.key.php
-     * @return mixed|int|string scalar on success, or null on failure.
+     * @return int|string|null scalar on success, or null on failure.
      */
     public function key()
     {

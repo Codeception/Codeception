@@ -150,17 +150,16 @@ class ReflectionHelper
      * PHP encode value
      *
      * @param mixed $value
-     *
-     * @return string|bool
+     * @return string
      */
-    public static function phpEncodeValue($value)
+    public static function phpEncodeValue($value): string
     {
         if (is_array($value)) {
             return self::phpEncodeArray($value);
         }
 
         if (is_string($value)) {
-            return json_encode($value);
+            return json_encode($value, JSON_THROW_ON_ERROR);
         }
 
         return var_export($value, true);
