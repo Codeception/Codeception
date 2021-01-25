@@ -56,11 +56,11 @@ class Locator
      * As a result the Locator will produce a mixed XPath value that will be used in fillField action.
      *
      * @static
-     * @param $selector1
-     * @param $selector2
+     * @param string $selector1
+     * @param string $selector2
      * @throws Exception
      */
-    public static function combine($selector1, $selector2): string
+    public static function combine(string $selector1, string $selector2): string
     {
         $selectors = func_get_args();
         foreach ($selectors as $k => $v) {
