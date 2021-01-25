@@ -1,63 +1,57 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocatorException;
+use Codeception\Util\Soap as SoapXmlUtil;
+use DOMDocument;
+use DOMNode;
+use DOMXPath;
 use Symfony\Component\CssSelector\CssSelectorConverter;
-use Symfony\Component\CssSelector\Exception\ParseException;
-use Codeception\Util\Soap as XmlUtils;
 
 class XmlStructure
 {
     /**
-     * @var \DOMDocument|\DOMNode
+     * @var DOMDocument|DOMNode
      */
     protected $xml;
-    
+
     public function __construct($xml)
     {
-        $this->xml = XmlUtils::toXml($xml);
+        $this->xml = SoapXmlUtil::toXml($xml);
     }
 
-    public function matchesXpath($xpath)
+    public function matchesXpath(string $xpath): bool
     {
-        $path = new \DOMXPath($this->xml);
-        $res = $path->query($xpath);
+        $domXpath = new DOMXPath($this->xml);
+        $res = $domXpath->query($xpath);
         if ($res === false) {
             throw new MalformedLocatorException($xpath);
         }
         return $res->length > 0;
     }
 
-    /**
-     * @param $cssOrXPath
-     * @return \DOMElement
-     */
-    public function matchElement($cssOrXPath)
+    public function matchElement(string $cssOrXPath): ?DOMNode
     {
-        $xpath = new \DOMXpath($this->xml);
-        try {
-            $selector = (new CssSelectorConverter())->toXPath($cssOrXPath);
-            $els = $xpath->query($selector);
-            if ($els) {
-                return $els->item(0);
-            }
-        } catch (ParseException $e) {
+        $domXpath = new DOMXpath($this->xml);
+        $selector = (new CssSelectorConverter())->toXPath($cssOrXPath);
+        $els = $domXpath->query($selector);
+        if ($els) {
+            return $els->item(0);
         }
-        $els = $xpath->query($cssOrXPath);
-        if ($els->length) {
+        $els = $domXpath->query($cssOrXPath);
+        if ($els->length !== 0) {
             return $els->item(0);
         }
         throw new ElementNotFound($cssOrXPath);
     }
-    /**
 
-     * @param $xml
-     * @return bool
-     */
-    public function matchXmlStructure($xml)
+    public function matchXmlStructure($xml): bool
     {
-        $xml = XmlUtils::toXml($xml);
+        $xml = SoapXmlUtil::toXml($xml);
         $root = $xml->firstChild;
         $els = $this->xml->getElementsByTagName($root->nodeName);
         if (empty($els)) {
@@ -71,7 +65,7 @@ class XmlStructure
         return $matches;
     }
 
-    protected function matchForNode($schema, $xml)
+    protected function matchForNode($schema, $xml): bool
     {
         foreach ($schema->childNodes as $node1) {
             $matched = false;

@@ -1,5 +1,15 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
+
+use function array_key_exists;
+use function explode;
+use function is_array;
+use function preg_match_all;
+use function sprintf;
+use function str_replace;
 
 /**
  * Basic template engine used for generating initial Cept/Cest/Test files.
@@ -11,12 +21,7 @@ class Template
     protected $placeholderStart;
     protected $placeholderEnd;
 
-    /**
-     * Takes a template string
-     *
-     * @param $template
-     */
-    public function __construct($template, $placeholderStart = '{{', $placeholderEnd = '}}')
+    public function __construct(string $template, string $placeholderStart = '{{', string $placeholderEnd = '}}')
     {
         $this->template         = $template;
         $this->placeholderStart = $placeholderStart;
@@ -25,12 +30,8 @@ class Template
 
     /**
      * Replaces {{var}} string with provided value
-     *
-     * @param $var
-     * @param $val
-     * @return $this
      */
-    public function place($var, $val)
+    public function place(string $var, $val): self
     {
         $this->vars[$var] = $val;
         return $this;
@@ -41,24 +42,23 @@ class Template
      *
      * @param array $vars
      */
-    public function setVars(array $vars)
+    public function setVars(array $vars): void
     {
         $this->vars = $vars;
     }
 
-    public function getVar($name)
+    public function getVar(string $name)
     {
         if (isset($this->vars[$name])) {
             return $this->vars[$name];
         }
+        return null;
     }
 
     /**
      * Fills up template string with placed variables.
-     *
-     * @return mixed
      */
-    public function produce()
+    public function produce(): string
     {
         $result = $this->template;
         $regex = sprintf('~%s([\w\.]+)%s~m', $this->placeholderStart, $this->placeholderEnd);

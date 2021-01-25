@@ -1,11 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
+
+use DOMDocument;
+use DOMElement;
+use Exception;
 
 /**
  * That's a pretty simple yet powerful class to build XML structures in jQuery-like style.
  * With no XML line actually written!
  * Uses DOM extension to manipulate XML data.
- *
  *
  * ```php
  * <?php
@@ -62,116 +68,94 @@ namespace Codeception\Util;
  *  * `$xml->getDom` - get a DOMDocument object
  *  * `$xml->__toString` - get a string representation of XML.
  *
- * [Source code](https://github.com/Codeception/Codeception/blob/4.0/src/Codeception/Util/XmlBuilder.php)
+ * [Source code](https://github.com/Codeception/Codeception/blob/5.0/src/Codeception/Util/XmlBuilder.php)
  */
 class XmlBuilder
 {
     /**
-     * @var \DOMDocument
+     * @var DOMDocument
      */
-    protected $__dom__;
+    protected $dom;
 
     /**
-     * @var \DOMElement
+     * @var DOMElement
      */
-    protected $__currentNode__;
-
+    protected $currentNode;
 
     public function __construct()
     {
-        $this->__dom__ = new \DOMDocument();
-        $this->__currentNode__ = $this->__dom__;
+        $this->dom = new DOMDocument();
+        $this->currentNode = $this->dom;
     }
 
     /**
      * Appends child node
-     *
-     * @param $tag
-     *
-     * @return XmlBuilder
      */
-    public function __get($tag)
+    public function __get(string $tag): XmlBuilder
     {
-        $node = $this->__dom__->createElement($tag);
-        $this->__currentNode__->appendChild($node);
-        $this->__currentNode__ = $node;
+        $domElement = $this->dom->createElement($tag);
+        $this->currentNode->appendChild($domElement);
+        $this->currentNode = $domElement;
         return $this;
     }
 
-    /**
-     * @param $val
-     *
-     * @return XmlBuilder
-     */
-    public function val($val)
+    public function val($val): self
     {
-        $this->__currentNode__->nodeValue = $val;
-        return $this;
+        $this->currentNode->nodeValue = $val;
     }
 
     /**
      * Sets attribute for current node
-     *
-     * @param $attr
-     * @param $val
-     *
-     * @return XmlBuilder
      */
-    public function attr($attr, $val)
+    public function attr(string $attr, string $val): self
     {
-        $this->__currentNode__->setAttribute($attr, $val);
+        $this->currentNode->setAttribute($attr, $val);
         return $this;
     }
 
     /**
      * Traverses to parent
-     *
-     * @return XmlBuilder
      */
-    public function parent()
+    public function parent(): self
     {
-        $this->__currentNode__ = $this->__currentNode__->parentNode;
+        $this->currentNode = $this->currentNode->parentNode;
         return $this;
     }
 
     /**
      * Traverses to parent with $name
      *
-     * @param $tag
-     *
+     * @param string $tag
      * @return XmlBuilder
-     * @throws \Exception
+     * @throws Exception
      */
-    public function parents($tag)
+    public function parents(string $tag): self
     {
-        $traverseNode = $this->__currentNode__;
+        $traverseNode = $this->currentNode;
         $elFound = false;
         while ($traverseNode->parentNode) {
             $traverseNode = $traverseNode->parentNode;
             if ($traverseNode->tagName == $tag) {
-                $this->__currentNode__ = $traverseNode;
+                $this->currentNode = $traverseNode;
                 $elFound = true;
                 break;
             }
         }
 
         if (!$elFound) {
-            throw new \Exception("Parent $tag not found in XML");
+            throw new Exception("Parent {$tag} not found in XML");
         }
 
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->__dom__->saveXML();
+        return $this->dom->saveXML();
     }
 
-    /**
-     * @return \DOMDocument
-     */
-    public function getDom()
+    public function getDom(): DOMDocument
     {
-        return $this->__dom__;
+        return $this->dom;
     }
 }
