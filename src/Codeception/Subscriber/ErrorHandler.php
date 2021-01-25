@@ -80,7 +80,8 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
-        throw new \PHPUnit\Framework\Exception($errstr, $errno);
+        $relativePath = codecept_relative_path($errfile);
+        throw new \PHPUnit\Framework\Exception("$errstr at $relativePath:$errline", $errno);
     }
 
     public function shutdownHandler()
