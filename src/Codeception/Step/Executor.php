@@ -1,15 +1,21 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Step;
 
+use Closure;
 use Codeception\Step as CodeceptionStep;
 use Codeception\Lib\ModuleContainer;
 
 class Executor extends CodeceptionStep
 {
+    /**
+     * @var Closure|null
+     */
+    protected $callable;
 
-    protected $callable = null;
-
-    public function __construct(\Closure $callable, $arguments = [])
+    public function __construct(Closure $callable, array $arguments = [])
     {
         parent::__construct('execute callable function', []);
 

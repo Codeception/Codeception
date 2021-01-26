@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Step;
 
 use Codeception\Util\Template;

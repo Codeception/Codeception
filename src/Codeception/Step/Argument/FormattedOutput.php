@@ -9,15 +9,11 @@ interface FormattedOutput
 {
     /**
      * Returns the argument's value formatted for output.
-     *
-     * @return string
      */
-    public function getOutput();
+    public function getOutput(): string;
 
     /**
      * Returns the argument's literal value.
-     *
-     * @return string
      */
-    public function __toString();
+    public function __toString(): string;
 }
