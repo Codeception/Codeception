@@ -470,7 +470,8 @@ class Run extends Command
                     list($file) = explode(':', $suite, -1);
                 }
                 $realPath = $cwd . DIRECTORY_SEPARATOR . $file;
-                if (file_exists($realPath) || is_dir($realPath)) {
+                if (file_exists($realPath) && strpos($realPath, $realTestDir) === 0) {
+                    //only match test if file is in tests directory
                     return $this->matchTestFromFilename(
                         $cwd . DIRECTORY_SEPARATOR . $suite,
                         $realTestDir

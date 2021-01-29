@@ -25,6 +25,16 @@ class RunCest
     }
 
     /**
+     * https://github.com/Codeception/Codeception/issues/6103
+     */
+    public function runSuiteWhenNameMatchesExistingDirectory(\CliGuy $I)
+    {
+        $I->amInPath(codecept_data_dir('dir_matches_suite'));
+        $I->executeCommand('run api');
+        $I->seeInShellOutput('SuccessCest');
+    }
+
+    /**
      * @group reports
      * @group core
      *
