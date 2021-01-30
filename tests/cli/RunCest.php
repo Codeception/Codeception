@@ -41,6 +41,13 @@ class RunCest
         $I->seeInShellOutput('SuccessCest');
     }
 
+    public function filterTestsWithoutSpecifyingSuite(\CliGuy $I)
+    {
+        $I->amInPath(codecept_data_dir('dir_matches_suite'));
+        $I->executeCommand('run :^Success');
+        $I->seeInShellOutput('SuccessCest');
+    }
+
     /**
      * @group reports
      * @group core

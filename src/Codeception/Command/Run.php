@@ -385,10 +385,10 @@ class Run extends Command
         }
 
         if ($test) {
-            $filter = $this->matchFilteredTestName($test);
-            $userOptions['filter'] = $filter;
+            $userOptions['filter'] = $this->matchFilteredTestName($test);
+        } elseif ($suite) {
+            $userOptions['filter'] = $this->matchFilteredTestName($suite);
         }
-
         if (!$this->options['silent'] && $config['settings']['shuffle']) {
             $this->output->writeln(
                 "[Seed] <info>" . $userOptions['seed'] . "</info>"
