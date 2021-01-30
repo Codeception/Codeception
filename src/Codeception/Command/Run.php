@@ -538,6 +538,10 @@ class Run extends Command
 
     protected function matchTestFromFilename($filename, $testsPath)
     {
+        if ($filename === $testsPath) {
+            //codecept run tests
+            return ['','',null];
+        }
         $testsPath = str_replace(['//', '\/', '\\'], '/', $testsPath);
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
         $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);

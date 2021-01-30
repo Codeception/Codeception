@@ -34,6 +34,13 @@ class RunCest
         $I->seeInShellOutput('SuccessCest');
     }
 
+    public function runTestsDoesntFail(\CliGuy $I)
+    {
+        $I->amInPath(codecept_data_dir('dir_matches_suite'));
+        $I->executeCommand('run tests');
+        $I->seeInShellOutput('SuccessCest');
+    }
+
     /**
      * @group reports
      * @group core
