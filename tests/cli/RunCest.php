@@ -44,17 +44,17 @@ class RunCest
     public function runTestsWithFilterDoesntFail(\CliGuy $I)
     {
         $I->amInPath(codecept_data_dir('dir_matches_suite'));
-        $I->executeCommand('run tests:^Success');
+        $I->executeCommand('run tests:^success');
         $I->seeInShellOutput('SuccessCest');
 
-        $I->executeCommand('run tests/:^Success');
+        $I->executeCommand('run tests/:^success');
         $I->seeInShellOutput('SuccessCest');
     }
 
     public function filterTestsWithoutSpecifyingSuite(\CliGuy $I)
     {
         $I->amInPath(codecept_data_dir('dir_matches_suite'));
-        $I->executeCommand('run :^Success');
+        $I->executeCommand('run :^success');
         $I->seeInShellOutput('SuccessCest');
     }
 
