@@ -540,7 +540,14 @@ class Run extends Command
     {
         $filter = '';
         if (strpos($filename, ':') !== false) {
-            list($filename, $filter) = explode(':', $filename, 2);
+            if ((PHP_OS === 'Windows' || PHP_OS === 'WINNT') && $filename[1] === ':') {
+                // match C:\...
+                list($drive, $path, $filter) = explode(':', $filename, 3);
+                $filename = $drive . ':' . $path;
+            } else {
+                list($filename, $filter) = explode(':', $filename, 2);
+            }
+
             if ($filter) {
                 $filter = ':' . $filter;
             }
