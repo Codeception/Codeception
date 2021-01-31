@@ -538,19 +538,31 @@ class Run extends Command
 
     protected function matchTestFromFilename($filename, $testsPath)
     {
-        if ($filename === $testsPath) {
-            //codecept run tests
-            return ['','',null];
+        $filter = '';
+        if (strpos($filename, ':') !== false) {
+            list($filename, $filter) = explode(':', $filename, 2);
+            if ($filter) {
+                $filter = ':' . $filter;
+            }
         }
+
         $testsPath = str_replace(['//', '\/', '\\'], '/', $testsPath);
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
+
+        if (rtrim($filename, '/') === $testsPath) {
+            //codecept run tests
+            return ['', '', $filter];
+        }
         $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
 
         if (!$res) {
             throw new \InvalidArgumentException("Test file can't be matched");
         }
         if (!isset($matches[2])) {
-            $matches[2] = null;
+            $matches[2] = '';
+        }
+        if ($filter) {
+            $matches[2] .= $filter;
         }
 
         return $matches;
