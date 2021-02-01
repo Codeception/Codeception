@@ -1,3 +1,10 @@
+#### 4.1.17
+
+* Fix `codecept run suite` when suite name matches directory (bug introduced in 4.1.16)
+* `codecept run tests` is equivalent to `codecept run`
+* `codecept run :filter` works without specifying suite #6105
+* `codecept run tests:filter` works too
+
 #### 4.1.16
 
 * Detect the suite from a test path relative to the current working dir (#6051)
