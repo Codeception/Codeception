@@ -385,10 +385,10 @@ class Run extends Command
         }
 
         if ($test) {
-            $filter = $this->matchFilteredTestName($test);
-            $userOptions['filter'] = $filter;
+            $userOptions['filter'] = $this->matchFilteredTestName($test);
+        } elseif ($suite) {
+            $userOptions['filter'] = $this->matchFilteredTestName($suite);
         }
-
         if (!$this->options['silent'] && $config['settings']['shuffle']) {
             $this->output->writeln(
                 "[Seed] <info>" . $userOptions['seed'] . "</info>"
@@ -470,7 +470,8 @@ class Run extends Command
                     list($file) = explode(':', $suite, -1);
                 }
                 $realPath = $cwd . DIRECTORY_SEPARATOR . $file;
-                if (file_exists($realPath) || is_dir($realPath)) {
+                if (file_exists($realPath) && strpos($realPath, $realTestDir) === 0) {
+                    //only match test if file is in tests directory
                     return $this->matchTestFromFilename(
                         $cwd . DIRECTORY_SEPARATOR . $suite,
                         $realTestDir
@@ -537,15 +538,38 @@ class Run extends Command
 
     protected function matchTestFromFilename($filename, $testsPath)
     {
+        $filter = '';
+        if (strpos($filename, ':') !== false) {
+            if ((PHP_OS === 'Windows' || PHP_OS === 'WINNT') && $filename[1] === ':') {
+                // match C:\...
+                list($drive, $path, $filter) = explode(':', $filename, 3);
+                $filename = $drive . ':' . $path;
+            } else {
+                list($filename, $filter) = explode(':', $filename, 2);
+            }
+
+            if ($filter) {
+                $filter = ':' . $filter;
+            }
+        }
+
         $testsPath = str_replace(['//', '\/', '\\'], '/', $testsPath);
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
+
+        if (rtrim($filename, '/') === $testsPath) {
+            //codecept run tests
+            return ['', '', $filter];
+        }
         $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
 
         if (!$res) {
             throw new \InvalidArgumentException("Test file can't be matched");
         }
         if (!isset($matches[2])) {
-            $matches[2] = null;
+            $matches[2] = '';
+        }
+        if ($filter) {
+            $matches[2] .= $filter;
         }
 
         return $matches;
