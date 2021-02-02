@@ -66,16 +66,16 @@ EOF;
         }
     }
 
-    public static function getTemplate(Template $template)
+    public static function getTemplate(Template $template): ?Template
     {
         $action = $template->getVar('action');
 
         if ((strpos($action, 'have') === 0) || (strpos($action, 'am') === 0)) {
-            return; // dont retry conditions
+            return null; // dont retry conditions
         }
 
         if (strpos($action, 'wait') === 0) {
-            return; // dont retry waiters
+            return null; // dont retry waiters
         }
 
         $doc = "* Executes $action and retries on failure.";

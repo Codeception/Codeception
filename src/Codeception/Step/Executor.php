@@ -11,7 +11,7 @@ use Codeception\Lib\ModuleContainer;
 class Executor extends CodeceptionStep
 {
     /**
-     * @var Closure|null
+     * @var Closure
      */
     protected $callable;
 

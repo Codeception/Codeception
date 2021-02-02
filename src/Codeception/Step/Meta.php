@@ -18,18 +18,18 @@ class Meta extends CodeceptionStep
     {
     }
 
-    public function setTraceInfo($file, $line): void
+    public function setTraceInfo(string $file, int $line): void
     {
         $this->file = $file;
         $this->line = $line;
     }
 
-    public function setPrefix($actor): void
+    public function setPrefix(string $actor): void
     {
         $this->prefix = $actor;
     }
 
-    public function getArgumentsAsString($maxLength = 200): string
+    public function getArgumentsAsString($maxLength = self::DEFAULT_MAX_LENGTH): string
     {
         $argumentBackup = $this->arguments;
         $lastArgAsString = '';
@@ -43,7 +43,7 @@ class Meta extends CodeceptionStep
         return $result;
     }
 
-    public function setFailed($failed): void
+    public function setFailed(bool $failed): void
     {
         $this->failed = $failed;
     }
