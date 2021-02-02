@@ -59,7 +59,7 @@ class BeforeAfterTest implements EventSubscriberInterface
         $this->runHooks('afterClass');
     }
 
-    protected function runHooks($hookName): void
+    protected function runHooks(string $hookName): void
     {
         foreach ($this->hooks as $className => $hook) {
             foreach ($hook[$hookName] as $method) {

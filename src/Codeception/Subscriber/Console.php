@@ -165,7 +165,7 @@ class Console implements EventSubscriberInterface
      */
     protected $messageFactory;
 
-    public function __construct($options)
+    public function __construct(array $options)
     {
         $this->prepareOptions($options);
         $this->output = new Output($options);
@@ -273,9 +273,6 @@ class Console implements EventSubscriberInterface
         $this->failedStep[] = $step;
     }
 
-    /**
-     * @param PrintResultEvent $event
-     */
     public function afterResult(PrintResultEvent $event): void
     {
         $result = $event->getResult();
@@ -462,35 +459,35 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    public function printException($e, $cause = null): void
+    public function printException($exception, string $cause = null): void
     {
-        if ($e instanceof \PHPUnit\Framework\SkippedTestError || $e instanceof \PHPUnit\Framework_IncompleteTestError) {
-            if ($e->getMessage() !== '') {
-                $this->message(OutputFormatter::escape($e->getMessage()))->prepend("\n")->writeln();
+        if ($exception instanceof \PHPUnit\Framework\SkippedTestError || $exception instanceof \PHPUnit\Framework_IncompleteTestError) {
+            if ($exception->getMessage() !== '') {
+                $this->message(OutputFormatter::escape($exception->getMessage()))->prepend("\n")->writeln();
             }
 
             return;
         }
 
-        $class = $e instanceof \PHPUnit\Framework\ExceptionWrapper
-            ? $e->getClassname()
-            : get_class($e);
+        $class = $exception instanceof \PHPUnit\Framework\ExceptionWrapper
+            ? $exception->getClassname()
+            : get_class($exception);
 
         if (strpos($class, 'Codeception\Exception') === 0) {
             $class = substr($class, strlen('Codeception\Exception\\'));
         }
 
         $this->output->writeln('');
-        $message = $this->message(OutputFormatter::escape($e->getMessage()));
+        $message = $this->message(OutputFormatter::escape($exception->getMessage()));
 
-        if ($e instanceof \PHPUnit\Framework\ExpectationFailedException) {
-            $comparisonFailure = $e->getComparisonFailure();
+        if ($exception instanceof \PHPUnit\Framework\ExpectationFailedException) {
+            $comparisonFailure = $exception->getComparisonFailure();
             if ($comparisonFailure !== null) {
                 $message->append($this->messageFactory->prepareComparisonFailureMessage($comparisonFailure));
             }
         }
 
-        $isFailure = $e instanceof \PHPUnit\Framework\AssertionFailedError
+        $isFailure = $exception instanceof \PHPUnit\Framework\AssertionFailedError
             || $class === \PHPUnit\Framework\ExpectationFailedException::class
             || $class === \PHPUnit\Framework\AssertionFailedError::class;
 
@@ -713,7 +710,7 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    private function prepareOptions($options): void
+    private function prepareOptions(array $options): void
     {
         $this->options = array_merge($this->options, $options);
         $this->debug = $this->options['debug'] || $this->options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;

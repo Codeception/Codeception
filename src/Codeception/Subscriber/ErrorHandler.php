@@ -94,23 +94,23 @@ class ErrorHandler implements EventSubscriberInterface
         $this->initialized = true;
     }
 
-    public function errorHandler($errno, $errstr, $errfile, $errline, $context = [])
+    public function errorHandler(int $errNum, string $errMsg, string $errFile, string $errLine, array $context = []): bool
     {
-        if (E_USER_DEPRECATED === $errno) {
-            $this->handleDeprecationError($errno, $errstr, $errfile, $errline, $context);
-            return;
+        if (E_USER_DEPRECATED === $errNum) {
+            $this->handleDeprecationError($errNum, $errMsg, $errFile, $errLine, $context);
+            return true;
         }
 
-        if ((error_reporting() & $errno) === 0) {
+        if ((error_reporting() & $errNum) === 0) {
             // This error code is not included in error_reporting
             return false;
         }
 
-        if (strpos($errstr, 'Cannot modify header information') !== false) {
+        if (strpos($errMsg, 'Cannot modify header information') !== false) {
             return false;
         }
 
-        throw new \PHPUnit\Framework\Exception($errstr, $errno);
+        throw new \PHPUnit\Framework\Exception($errMsg, $errNum);
     }
 
     public function shutdownHandler(): void
@@ -169,7 +169,7 @@ class ErrorHandler implements EventSubscriberInterface
         }
     }
 
-    private function handleDeprecationError($type, $message, $file, $line, $context): void
+    private function handleDeprecationError(int $type, string $message, string $file, string $line, array $context): void
     {
         if (($this->errorLevel & $type) === 0) {
             return;

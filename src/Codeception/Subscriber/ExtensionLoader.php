@@ -59,7 +59,7 @@ class ExtensionLoader implements EventSubscriberInterface
         $this->config = Configuration::config();
     }
 
-    public function bootGlobalExtensions($options): void
+    public function bootGlobalExtensions(array $options): void
     {
         $this->options = $options;
         $this->globalExtensions = $this->bootExtensions($this->config);
@@ -97,10 +97,11 @@ class ExtensionLoader implements EventSubscriberInterface
     }
 
     /**
+     * @param array $config
      * @return array<class-string, EventSubscriberInterface>
      * @throws ConfigurationException
      */
-    protected function bootExtensions($config): array
+    protected function bootExtensions(array $config): array
     {
         $extensions = [];
 
@@ -127,7 +128,7 @@ class ExtensionLoader implements EventSubscriberInterface
         return $extensions;
     }
 
-    private function getExtensionConfig($extension, $config)
+    private function getExtensionConfig(string $extension, array $config): array
     {
         $extensionConfig = isset($config['extensions']['config'][$extension])
             ? $config['extensions']['config'][$extension]

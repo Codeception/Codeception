@@ -69,7 +69,7 @@ class AutoRebuild implements EventSubscriberInterface
         }
     }
 
-    protected function generateActorActions($actorActionsFile, $settings): void
+    protected function generateActorActions(string $actorActionsFile, array $settings): void
     {
         if (!file_exists(Configuration::supportDir() . '_generated')) {
             @mkdir(Configuration::supportDir() . '_generated');
