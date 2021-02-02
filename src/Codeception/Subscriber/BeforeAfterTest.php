@@ -3,25 +3,43 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
+use PHPUnit\Framework\Test;
+use Rector\Core\Tests\Issues\Issue4191\DoNotDuplicateComment\Fixture\a;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use function call_user_func;
+use function get_class;
+use function is_callable;
+use function strstr;
 
 class BeforeAfterTest implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
+    /**
+     * @var array<string, string|int[]|string[]>
+     */
     public static $events = [
         Events::SUITE_BEFORE => 'beforeClass',
         Events::SUITE_AFTER  => ['afterClass', 100]
     ];
 
+    /**
+     * @var array
+     */
     protected $hooks = [];
+    /**
+     * @var array
+     */
     protected $startedTests = [];
+    /**
+     * @var array
+     */
     protected $unsuccessfulTests = [];
 
-    public function beforeClass(SuiteEvent $e)
+    public function beforeClass(SuiteEvent $event): void
     {
-        foreach ($e->getSuite()->tests() as $test) {
-            /** @var $test \PHPUnit\Framework\Test  * */
+        foreach ($event->getSuite()->tests() as $test) {
+            /** @var Test test **/
             if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
                 $potentialTestClass = strstr($test->getName(), '::', true);
                 $this->hooks[$potentialTestClass] = \PHPUnit\Util\Test::getHookMethods($potentialTestClass);
@@ -33,13 +51,12 @@ class BeforeAfterTest implements EventSubscriberInterface
         $this->runHooks('beforeClass');
     }
 
-
-    public function afterClass(SuiteEvent $e)
+    public function afterClass(SuiteEvent $event): void
     {
         $this->runHooks('afterClass');
     }
 
-    protected function runHooks($hookName)
+    protected function runHooks($hookName): void
     {
         foreach ($this->hooks as $className => $hook) {
             foreach ($hook[$hookName] as $method) {

@@ -7,19 +7,26 @@ use Codeception\Test\Interfaces\Dependent;
 use Codeception\TestInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Codeception\Events;
+use function in_array;
 
 class Dependencies implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
+    /**
+     * @var array<string, string>
+     */
     static $events = [
         Events::TEST_START => 'testStart',
         Events::TEST_SUCCESS => 'testSuccess'
     ];
 
+    /**
+     * @var string[]
+     */
     protected $successfulTests = [];
 
-    public function testStart(TestEvent $event)
+    public function testStart(TestEvent $event): void
     {
         $test = $event->getTest();
         if (!$test instanceof Dependent) {
@@ -29,13 +36,13 @@ class Dependencies implements EventSubscriberInterface
         $testSignatures = $test->fetchDependencies();
         foreach ($testSignatures as $signature) {
             if (!in_array($signature, $this->successfulTests)) {
-                $test->getMetadata()->setSkip("This test depends on $signature to pass");
+                $test->getMetadata()->setSkip("This test depends on {$signature} to pass");
                 return;
             }
         }
     }
 
-    public function testSuccess(TestEvent $event)
+    public function testSuccess(TestEvent $event): void
     {
         $test = $event->getTest();
         if (!$test instanceof TestInterface) {

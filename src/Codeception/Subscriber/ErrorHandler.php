@@ -5,11 +5,28 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Notification;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use function call_user_func;
+use function class_exists;
+use function count;
+use function error_get_last;
+use function error_reporting;
+use function getenv;
+use function in_array;
+use function is_array;
+use function is_object;
+use function register_shutdown_function;
+use function restore_error_handler;
+use function set_error_handler;
+use function sprintf;
+use function strpos;
 
 class ErrorHandler implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
+    /**
+     * @var array<string, string>
+     */
     public static $events = [
         Events::SUITE_BEFORE => 'handle',
         Events::SUITE_AFTER  => 'onFinish'
@@ -25,9 +42,19 @@ class ErrorHandler implements EventSubscriberInterface
      */
     private $initialized = false;
 
+    /**
+     * @var bool
+     */
     private $deprecationsInstalled = false;
+
+    /**
+     * @var callable|null
+     */
     private $oldHandler;
 
+    /**
+     * @var bool
+     */
     private $suiteFinished = false;
 
     /**
@@ -40,14 +67,14 @@ class ErrorHandler implements EventSubscriberInterface
         $this->errorLevel = E_ALL & ~E_STRICT & ~E_DEPRECATED;
     }
 
-    public function onFinish(SuiteEvent $e)
+    public function onFinish(SuiteEvent $event): void
     {
         $this->suiteFinished = true;
     }
 
-    public function handle(SuiteEvent $e)
+    public function handle(SuiteEvent $event): void
     {
-        $settings = $e->getSettings();
+        $settings = $event->getSettings();
         if ($settings['error_level']) {
             $this->errorLevel = eval("return {$settings['error_level']};");
         }
@@ -64,14 +91,14 @@ class ErrorHandler implements EventSubscriberInterface
         $this->initialized = true;
     }
 
-    public function errorHandler($errno, $errstr, $errfile, $errline, $context = array())
+    public function errorHandler($errno, $errstr, $errfile, $errline, $context = [])
     {
         if (E_USER_DEPRECATED === $errno) {
             $this->handleDeprecationError($errno, $errstr, $errfile, $errline, $context);
             return;
         }
 
-        if (!(error_reporting() & $errno)) {
+        if ((error_reporting() & $errno) === 0) {
             // This error code is not included in error_reporting
             return false;
         }
@@ -83,7 +110,7 @@ class ErrorHandler implements EventSubscriberInterface
         throw new \PHPUnit\Framework\Exception($errstr, $errno);
     }
 
-    public function shutdownHandler()
+    public function shutdownHandler(): void
     {
         if ($this->deprecationsInstalled) {
             restore_error_handler();
@@ -116,7 +143,7 @@ class ErrorHandler implements EventSubscriberInterface
         echo sprintf("%s \nin %s:%d\n", $error['message'], $error['file'], $error['line']);
     }
 
-    private function registerDeprecationErrorHandler()
+    private function registerDeprecationErrorHandler(): void
     {
         if (class_exists('\Symfony\Bridge\PhpUnit\DeprecationErrorHandler') && 'disabled' !== getenv('SYMFONY_DEPRECATIONS_HELPER')) {
             // DeprecationErrorHandler only will be installed if array('PHPUnit\Util\ErrorHandler', 'handleError')
@@ -139,15 +166,15 @@ class ErrorHandler implements EventSubscriberInterface
         }
     }
 
-    private function handleDeprecationError($type, $message, $file, $line, $context)
+    private function handleDeprecationError($type, $message, $file, $line, $context): void
     {
-        if (!($this->errorLevel & $type)) {
+        if (($this->errorLevel & $type) === 0) {
             return;
         }
         if ($this->deprecationsInstalled && $this->oldHandler) {
             call_user_func($this->oldHandler, $type, $message, $file, $line, $context);
             return;
         }
-        Notification::deprecate("$message", "$file:$line");
+        Notification::deprecate("{$message}", "{$file}:{$line}");
     }
 }

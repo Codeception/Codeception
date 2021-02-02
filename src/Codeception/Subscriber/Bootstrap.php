@@ -11,13 +11,16 @@ class Bootstrap implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
+    /**
+     * @var array<string, string>
+     */
     public static $events = [
         Events::SUITE_INIT => 'loadBootstrap',
     ];
 
-    public function loadBootstrap(SuiteEvent $e)
+    public function loadBootstrap(SuiteEvent $event): void
     {
-        $settings = $e->getSettings();
+        $settings = $event->getSettings();
 
         if (!isset($settings['bootstrap'])) {
             return;
