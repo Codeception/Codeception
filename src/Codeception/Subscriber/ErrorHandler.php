@@ -25,7 +25,7 @@ use function strpos;
 
 class ErrorHandler implements EventSubscriberInterface
 {
-    use Shared\StaticEvents;
+    use Shared\StaticEventsTrait;
 
     /**
      * @var array<string, string>

@@ -14,7 +14,7 @@ use function in_array;
 
 class Dependencies implements EventSubscriberInterface
 {
-    use Shared\StaticEvents;
+    use Shared\StaticEventsTrait;
 
     /**
      * @var array<string, string>

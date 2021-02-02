@@ -16,7 +16,7 @@ use function strstr;
 
 class BeforeAfterTest implements EventSubscriberInterface
 {
-    use Shared\StaticEvents;
+    use Shared\StaticEventsTrait;
 
     /**
      * @var array<string, string|int[]|string[]>

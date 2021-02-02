@@ -18,7 +18,7 @@ use function reset;
 
 class ExtensionLoader implements EventSubscriberInterface
 {
-    use Shared\StaticEvents;
+    use Shared\StaticEventsTrait;
 
     /**
      * @var array<string, string>

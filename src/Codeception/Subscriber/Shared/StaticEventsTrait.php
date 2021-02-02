@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Subscriber\Shared;
 
-trait StaticEvents
+trait StaticEventsTrait
 {
     public static function getSubscribedEvents(): array
     {
