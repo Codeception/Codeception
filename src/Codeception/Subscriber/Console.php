@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Subscriber;
 
 use Codeception\Event\FailEvent;
@@ -181,7 +184,7 @@ class Console implements EventSubscriberInterface
             if (!$this->options[$report]) {
                 continue;
             }
-            $path = $this->absolutePath($this->options[$report]);
+            $path = $this->absolutePath((string)$this->options[$report]);
             $this->reports[] = sprintf(
                 "- <bold>%s</bold> report generated in <comment>file://%s</comment>",
                 strtoupper($report),
@@ -552,7 +555,7 @@ class Console implements EventSubscriberInterface
             }
             ++$i;
 
-            $message = $this->message($i)->prepend('#')->width(4);
+            $message = $this->message((string)$i)->prepend('#')->width(4);
 
             if (!isset($step['file'])) {
                 foreach (['class', 'type', 'function'] as $info) {
@@ -595,9 +598,9 @@ class Console implements EventSubscriberInterface
             }
 
             $message = $this
-                ->message($stepNumber)
+                ->message((string)$stepNumber)
                 ->prepend(' ')
-                ->width(strlen($length))
+                ->width(strlen((string)$length))
                 ->append(". ");
             $message->append(OutputFormatter::escape($step->getPhpCode($this->width - $message->getLength())));
 
