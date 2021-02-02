@@ -97,14 +97,14 @@ class Module implements EventSubscriberInterface
     public function beforeStep(StepEvent $event): void
     {
         foreach ($this->modules as $module) {
-            $module->_beforeStep($event->getStep(), $event->getTest());
+            $module->_beforeStep($event->getStep());
         }
     }
 
     public function afterStep(StepEvent $event): void
     {
         foreach (array_reverse($this->modules) as $module) {
-            $module->_afterStep($event->getStep(), $event->getTest());
+            $module->_afterStep($event->getStep());
         }
     }
 }
