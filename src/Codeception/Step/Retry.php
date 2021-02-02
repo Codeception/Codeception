@@ -1,15 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Step;
 
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Template;
+use Exception;
+use function codecept_debug;
+use function strpos;
+use function ucfirst;
+use function usleep;
 
 class Retry extends Assertion implements GeneratedStep
 {
-
+    /**
+     * @var string
+     */
     protected static $methodTemplate = <<<EOF
-    
+
     /**
      * [!] Method is generated.
      * 
@@ -45,28 +54,28 @@ EOF;
             try {
                 $this->isTry = $retry < $this->retryNum;
                 return parent::run($container);
-            } catch (\Exception $e) {
-                $retry++;
+            } catch (Exception $e) {
+                ++$retry;
                 if (!$this->isTry) {
                     throw $e;
                 }
-                codecept_debug("Retrying #$retry in ${interval}ms");
+                codecept_debug("Retrying #{$retry} in ${interval}ms");
                 usleep($interval * 1000);
                 $interval *= 2;
             }
         }
     }
 
-    public static function getTemplate(Template $template)
+    public static function getTemplate(Template $template): ?Template
     {
         $action = $template->getVar('action');
 
         if ((strpos($action, 'have') === 0) || (strpos($action, 'am') === 0)) {
-            return; // dont retry conditions
+            return null; // dont retry conditions
         }
 
         if (strpos($action, 'wait') === 0) {
-            return; // dont retry waiters
+            return null; // dont retry waiters
         }
 
         $doc = "* Executes $action and retries on failure.";

@@ -1,8 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Step;
 
-use Codeception\Step;
+use Codeception\Step as CodeceptionStep;
 
-class Action extends Step
+class Action extends CodeceptionStep
 {
 }
