@@ -43,16 +43,10 @@ class Unit implements LoaderInterface
 
     protected function createTestFromPhpUnitMethod(\ReflectionClass $class, \ReflectionMethod $method)
     {
-        if (method_exists(\PHPUnit\Util\Test::class, 'isTestMethod')) {
-            //PHPUnit >=8.2
-            if (!\PHPUnit\Util\Test::isTestMethod($method)) {
-                return;
-            }
-            $test = (new \PHPUnit\Framework\TestBuilder)->build($class, $method->name);
-        } else {
-            throw new \Exception('Unsupported version of PHPUnit, where is isTestMethod method?');
+        if (!\PHPUnit\Util\Test::isTestMethod($method)) {
+            return;
         }
-
+        $test = (new \PHPUnit\Framework\TestBuilder)->build($class, $method->name);
 
         if ($test instanceof \PHPUnit\Framework\DataProviderTestSuite) {
             foreach ($test->tests() as $t) {
