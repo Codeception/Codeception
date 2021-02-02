@@ -15,7 +15,6 @@ class Cept implements LoaderInterface
 
     function loadTests($file)
     {
-        Parser::validate($file);
         $name = basename($file, 'Cept.php');
 
         $cept = new CeptFormat($name, $file);
