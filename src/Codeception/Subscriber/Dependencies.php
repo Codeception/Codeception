@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Codeception\Subscriber;
 
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\Dependent;
 use Codeception\TestInterface;
+use PHPUnit\Framework\SelfDescribing;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Codeception\Events;
 use function in_array;
 
 class Dependencies implements EventSubscriberInterface
@@ -47,6 +48,7 @@ class Dependencies implements EventSubscriberInterface
 
     public function testSuccess(TestEvent $event): void
     {
+        /** @var SelfDescribing $test */
         $test = $event->getTest();
         if (!$test instanceof TestInterface) {
             return;

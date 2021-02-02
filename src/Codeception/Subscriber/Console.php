@@ -22,9 +22,15 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\Debug;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\ExceptionWrapper;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\SelfDescribing;
-use Symfony\Component\Console\Output\OutputInterface;
+use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Framework_IncompleteTestError;
+use PHPUnit\Util\Filter as PHPUnitFilter;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function array_count_values;
 use function array_map;
@@ -233,6 +239,7 @@ class Console implements EventSubscriberInterface
     public function startTest(TestEvent $event): void
     {
         $this->conditionalFails = [];
+        /** @var SelfDescribing $test */
         $test = $event->getTest();
         $this->printedTest = $test;
         $this->message = null;
@@ -422,6 +429,7 @@ class Console implements EventSubscriberInterface
 
     public function printFail(FailEvent $event): void
     {
+        /** @var SelfDescribing|TestInterface $failedTest */
         $failedTest = $event->getTest();
         $fail = $event->getFail();
 
@@ -461,7 +469,7 @@ class Console implements EventSubscriberInterface
 
     public function printException($exception, string $cause = null): void
     {
-        if ($exception instanceof \PHPUnit\Framework\SkippedTestError || $exception instanceof \PHPUnit\Framework_IncompleteTestError) {
+        if ($exception instanceof SkippedTestError || $exception instanceof Framework_IncompleteTestError) {
             if ($exception->getMessage() !== '') {
                 $this->message(OutputFormatter::escape($exception->getMessage()))->prepend("\n")->writeln();
             }
@@ -469,7 +477,7 @@ class Console implements EventSubscriberInterface
             return;
         }
 
-        $class = $exception instanceof \PHPUnit\Framework\ExceptionWrapper
+        $class = $exception instanceof ExceptionWrapper
             ? $exception->getClassname()
             : get_class($exception);
 
@@ -480,16 +488,16 @@ class Console implements EventSubscriberInterface
         $this->output->writeln('');
         $message = $this->message(OutputFormatter::escape($exception->getMessage()));
 
-        if ($exception instanceof \PHPUnit\Framework\ExpectationFailedException) {
+        if ($exception instanceof ExpectationFailedException) {
             $comparisonFailure = $exception->getComparisonFailure();
             if ($comparisonFailure !== null) {
                 $message->append($this->messageFactory->prepareComparisonFailureMessage($comparisonFailure));
             }
         }
 
-        $isFailure = $exception instanceof \PHPUnit\Framework\AssertionFailedError
-            || $class === \PHPUnit\Framework\ExpectationFailedException::class
-            || $class === \PHPUnit\Framework\AssertionFailedError::class;
+        $isFailure = $exception instanceof AssertionFailedError
+            || $class === ExpectationFailedException::class
+            || $class === AssertionFailedError::class;
 
         if (!$isFailure) {
             $message->prepend("[{$class}] ")->block('error');
@@ -522,7 +530,7 @@ class Console implements EventSubscriberInterface
 
             return;
         }
-        if (!$fail instanceof \PHPUnit\Framework\AssertionFailedError) {
+        if (!$fail instanceof AssertionFailedError) {
             $this->printExceptionTrace($fail);
 
             return;
@@ -533,17 +541,17 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
 
-        if ($exception instanceof \PHPUnit\Framework\SkippedTestError || $exception instanceof \PHPUnit\Framework_IncompleteTestError) {
+        if ($exception instanceof SkippedTestError || $exception instanceof Framework_IncompleteTestError) {
             return;
         }
 
         if ($this->rawStackTrace) {
-            $this->message(OutputFormatter::escape(\PHPUnit\Util\Filter::getFilteredStacktrace($exception, true, false)))->writeln();
+            $this->message(OutputFormatter::escape(PHPUnitFilter::getFilteredStacktrace($exception, true, false)))->writeln();
 
             return;
         }
 
-        $trace = \PHPUnit\Util\Filter::getFilteredStacktrace($exception, false);
+        $trace = PHPUnitFilter::getFilteredStacktrace($exception, false);
 
         $i = 0;
         foreach ($trace as $step) {
@@ -668,6 +676,7 @@ class Console implements EventSubscriberInterface
 
     protected function writelnFinishedTest(TestEvent $event, Message $result): void
     {
+        /** @var SelfDescribing $test */
         $test = $event->getTest();
         if ($this->isDetailed($test)) {
             return;

@@ -7,7 +7,6 @@ namespace Codeception\Subscriber;
 use Codeception\Configuration;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
-use Codeception\Exception\ConfigurationException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Bootstrap implements EventSubscriberInterface

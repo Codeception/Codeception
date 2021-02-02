@@ -6,8 +6,9 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
-use PHPUnit\Framework\Test;
-use Rector\Core\Tests\Issues\Issue4191\DoNotDuplicateComment\Fixture\a;
+use PHPUnit\Framework\Test as PHPUnitTest;
+use PHPUnit\Framework\TestSuite\DataProvider;
+use PHPUnit\Util\Test as TestUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function call_user_func;
 use function get_class;
@@ -42,14 +43,14 @@ class BeforeAfterTest implements EventSubscriberInterface
     public function beforeClass(SuiteEvent $event): void
     {
         foreach ($event->getSuite()->tests() as $test) {
-            /** @var Test test **/
-            if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
+            /** @var PHPUnitTest test **/
+            if ($test instanceof DataProvider) {
                 $potentialTestClass = strstr($test->getName(), '::', true);
-                $this->hooks[$potentialTestClass] = \PHPUnit\Util\Test::getHookMethods($potentialTestClass);
+                $this->hooks[$potentialTestClass] = TestUtil::getHookMethods($potentialTestClass);
             }
 
             $testClass = get_class($test);
-            $this->hooks[$testClass] = \PHPUnit\Util\Test::getHookMethods($testClass);
+            $this->hooks[$testClass] = TestUtil::getHookMethods($testClass);
         }
         $this->runHooks('beforeClass');
     }

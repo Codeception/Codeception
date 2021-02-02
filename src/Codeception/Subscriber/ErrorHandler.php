@@ -7,6 +7,8 @@ namespace Codeception\Subscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Notification;
+use PHPUnit\Framework\Exception as PHPUnitException;
+use Symfony\Bridge\PhpUnit\DeprecationErrorHandler as SymfonyDeprecationErrorHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function call_user_func;
 use function class_exists;
@@ -110,7 +112,7 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
-        throw new \PHPUnit\Framework\Exception($errMsg, $errNum);
+        throw new PHPUnitException($errMsg, $errNum);
     }
 
     public function shutdownHandler(): void
@@ -165,7 +167,7 @@ class ErrorHandler implements EventSubscriberInterface
             }
 
             $this->deprecationsInstalled = true;
-            \Symfony\Bridge\PhpUnit\DeprecationErrorHandler::register(getenv('SYMFONY_DEPRECATIONS_HELPER'));
+            SymfonyDeprecationErrorHandler::register(getenv('SYMFONY_DEPRECATIONS_HELPER'));
         }
     }
 
