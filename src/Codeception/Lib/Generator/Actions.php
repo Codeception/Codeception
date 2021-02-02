@@ -212,21 +212,14 @@ EOF;
 
     private function createReturnTypeHint(\ReflectionMethod $refMethod)
     {
-        if (PHP_VERSION_ID < 70000) {
-            return '';
-        }
-
         $returnType = $refMethod->getReturnType();
 
         if ($returnType === null) {
             return '';
         }
 
-        if (PHP_VERSION_ID < 70100) {
-            $returnTypeString = (string)$returnType;
-        } else {
-            $returnTypeString = $returnType->getName();
-        }
+        $returnTypeString = $returnType->getName();
+
         return sprintf(
             ': %s%s%s',
             $returnType->allowsNull() ? '?' : '',

@@ -43,13 +43,7 @@ class Unit implements LoaderInterface
 
     protected function createTestFromPhpUnitMethod(\ReflectionClass $class, \ReflectionMethod $method)
     {
-        if (method_exists(\PHPUnit\Framework\TestSuite::class, 'isTestMethod')) {
-            //PHPUnit <8.2
-            if (!\PHPUnit\Framework\TestSuite::isTestMethod($method)) {
-                return;
-            }
-            $test = \PHPUnit\Framework\TestSuite::createTest($class, $method->name);
-        } elseif (method_exists(\PHPUnit\Util\Test::class, 'isTestMethod')) {
+        if (method_exists(\PHPUnit\Util\Test::class, 'isTestMethod')) {
             //PHPUnit >=8.2
             if (!\PHPUnit\Util\Test::isTestMethod($method)) {
                 return;

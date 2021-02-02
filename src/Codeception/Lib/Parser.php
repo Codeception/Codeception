@@ -119,9 +119,6 @@ class Parser
 
     public static function load($file)
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            self::validate($file);
-        }
         try {
             self::includeFile($file);
         } catch (\ParseError $e) {

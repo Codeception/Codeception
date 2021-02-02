@@ -386,12 +386,7 @@ EOF
         $I->executeCommand('run unit DependsTest --no-exit');
         $I->seeInShellOutput('Skipped: 1');
         $I->executeCommand('run unit --no-exit');
-        if (version_compare(\PHPUnit\Runner\Version::id(), '7.5.5', '<')) {
-            $I->seeInShellOutput('Skipped: 2');
-        } else {
-            //one test fails with Warning instead of Skipped with  PHPUnit >= 7.5.5
-            $I->seeInShellOutput('Skipped: 1');
-        }
+        $I->seeInShellOutput('Skipped: 1');
     }
 
     public function runGherkinTest(CliGuy $I)
@@ -553,18 +548,6 @@ EOF
         $I->seeInShellOutput('See file found "testcasethree.txt"');
         $I->seeInShellOutput('Tests: 3,');
         $I->seeInShellOutput('Failures: 2.');
-    }
-
-    public function runWarningTests(CliGuy $I, \Codeception\Scenario $scenario)
-    {
-        if (version_compare(\PHPUnit\Runner\Version::id(), '9.5.0', '>=')) {
-            $scenario->skip('This warning is an error since PHPUnit 9.5');
-        }
-        $I->executeCommand('run unit WarningTest.php', false);
-        $I->seeInShellOutput('There was 1 warning');
-        $I->seeInShellOutput('WarningTest::testWarningInvalidDataProvider');
-        $I->seeInShellOutput('Tests: 1,');
-        $I->seeInShellOutput('Warnings: 1.');
     }
 
     /**
@@ -803,10 +786,6 @@ EOF
    */
   public function runHtmlCheckReport(\CliGuy $I, \Codeception\Example $example, Scenario $scenario)
   {
-    if (version_compare(phpversion(), '7.0', '<')) {
-      $scenario->skip('This test fails due to another Codeception bug that only happens with PHP 5.6: the execution of single CEST test cases does not work');
-    }
-
     /** @var TestHtmlReportRegexBuilder $testBuilder */
     $testBuilder = $example['testHtmlReportRegexBuilder'];
     $testClass = $testBuilder->getTestClass();
