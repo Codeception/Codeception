@@ -16,7 +16,7 @@ class Bootstrap implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    protected static $events = [
         Events::SUITE_INIT => 'loadBootstrap',
     ];
 

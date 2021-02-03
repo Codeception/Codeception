@@ -22,7 +22,7 @@ class BeforeAfterTest implements EventSubscriberInterface
     /**
      * @var array<string, string|int[]|string[]>
      */
-    public static $events = [
+    protected static $events = [
         Events::SUITE_BEFORE => 'beforeClass',
         Events::SUITE_AFTER  => ['afterClass', 100]
     ];

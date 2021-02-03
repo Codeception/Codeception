@@ -21,7 +21,7 @@ class Module implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    protected static $events = [
         Events::TEST_BEFORE  => 'before',
         Events::TEST_AFTER   => 'after',
         Events::STEP_BEFORE  => 'beforeStep',

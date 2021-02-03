@@ -32,7 +32,7 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    protected static $events = [
         Events::SUITE_BEFORE => 'handle',
         Events::SUITE_AFTER  => 'onFinish'
     ];

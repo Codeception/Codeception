@@ -62,7 +62,7 @@ class Console implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    protected static $events = [
         Events::SUITE_BEFORE       => 'beforeSuite',
         Events::SUITE_AFTER        => 'afterSuite',
         Events::TEST_START         => 'startTest',
@@ -121,7 +121,7 @@ class Console implements EventSubscriberInterface
      */
     protected $traceLength = 5;
     /**
-     * @var int|null|string|bool
+     * @var int
      */
     protected $width;
 
@@ -627,10 +627,7 @@ class Console implements EventSubscriberInterface
         $this->output->writeln("");
     }
 
-    /**
-     * @return int|string|bool
-     */
-    public function detectWidth()
+    public function detectWidth(): int
     {
         $this->width = 60;
         if (!$this->isWin()
@@ -640,7 +637,7 @@ class Console implements EventSubscriberInterface
         ) {
             // try to get terminal width from ENV variable (bash), see also https://github.com/Codeception/Codeception/issues/3788
             if (getenv('COLUMNS')) {
-                $this->width = getenv('COLUMNS');
+                $this->width = (int) getenv('COLUMNS');
             } else {
                 $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
             }

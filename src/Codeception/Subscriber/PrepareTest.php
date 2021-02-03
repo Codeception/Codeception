@@ -18,7 +18,7 @@ class PrepareTest implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    protected static $events = [
         Events::TEST_BEFORE => 'prepare',
     ];
 
