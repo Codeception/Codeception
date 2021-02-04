@@ -3,8 +3,16 @@ namespace Codeception\Test;
 
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionHelper;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Exception;
+use PHPUnit\Framework\ExceptionWrapper;
+use PHPUnit\Framework\TestResult;
 use SebastianBergmann\Timer\Duration;
 use SebastianBergmann\Timer\Timer;
+use Throwable;
+use function array_reverse;
+use function class_exists;
+use function method_exists;
 
 /**
  * The most simple testcase (with only one test in it) which can be executed by PHPUnit/Codeception.
@@ -24,7 +32,13 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     use Feature\MetadataCollector;
     use Feature\IgnoreIfMetadataBlocked;
 
+    /**
+     * @var TestResult|null
+     */
     private $testResult;
+    /**
+     * @var bool
+     */
     private $ignored = false;
 
     /**
@@ -39,9 +53,21 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
       'errorLogger'
     ];
 
+    /**
+     * @var string
+     */
     const STATUS_FAIL = 'fail';
+    /**
+     * @var string
+     */
     const STATUS_ERROR = 'error';
+    /**
+     * @var string
+     */
     const STATUS_OK = 'ok';
+    /**
+     * @var string
+     */
     const STATUS_PENDING = 'pending';
 
     /**
@@ -61,11 +87,8 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     /**
      * Runs a test and collects its result in a TestResult instance.
      * Executes before/after hooks coming from traits.
-     *
-     * @param  \PHPUnit\Framework\TestResult $result
-     * @return \PHPUnit\Framework\TestResult
      */
-    final public function run(\PHPUnit\Framework\TestResult $result = null): \PHPUnit\Framework\TestResult
+    final public function run(TestResult $result = null): TestResult
     {
         $this->testResult = $result;
 
@@ -97,23 +120,16 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
             try {
                 $this->test();
                 $status = self::STATUS_OK;
-            } catch (\PHPUnit\Framework\AssertionFailedError $e) {
+            } catch (AssertionFailedError $assertionFailedError) {
                 $status = self::STATUS_FAIL;
-            } catch (\PHPUnit\Framework\Exception $e) {
+            } catch (Exception $exception) {
                 $status = self::STATUS_ERROR;
-            } catch (\Throwable $e) {
-                $e     = new \PHPUnit\Framework\ExceptionWrapper($e);
-                $status = self::STATUS_ERROR;
-            } catch (\Exception $e) {
-                $e     = new \PHPUnit\Framework\ExceptionWrapper($e);
+            } catch (Throwable $throwable) {
+                $throwable = new ExceptionWrapper($throwable);
                 $status = self::STATUS_ERROR;
             }
 
-            if (null !== $timer) {
-                $time = $timer->stop()->asSeconds();
-            } else {
-                $time = Timer::stop();
-            }
+            $time = null !== $timer ? $timer->stop()->asSeconds() : Timer::stop();
         }
 
         foreach (array_reverse($this->hooks) as $hook) {
@@ -126,26 +142,23 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         return $result;
     }
 
-    public function getTestResultObject()
+    public function getTestResultObject(): TestResult
     {
         return $this->testResult;
     }
 
     /**
      * This class represents exactly one test
-     * @return int
      */
-    public function count()
+    public function count(): int
     {
         return 1;
     }
 
     /**
      * Should a test be skipped (can be set from hooks)
-     *
-     * @param boolean $ignored
      */
-    protected function ignore($ignored)
+    protected function ignore(bool $ignored)
     {
         $this->ignored = $ignored;
     }

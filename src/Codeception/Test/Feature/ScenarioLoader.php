@@ -12,20 +12,14 @@ trait ScenarioLoader
      */
     private $scenario;
 
-    /**
-     * @return Metadata
-     */
-    abstract public function getMetadata();
+    abstract public function getMetadata(): Metadata;
 
-    protected function createScenario()
+    protected function createScenario(): void
     {
         $this->scenario = new Scenario($this);
     }
 
-    /**
-     * @return Scenario
-     */
-    public function getScenario()
+    public function getScenario(): Scenario
     {
         return $this->scenario;
     }
@@ -35,7 +29,7 @@ trait ScenarioLoader
         return $this->getScenario()->getFeature();
     }
 
-    public function getScenarioText($format = 'text')
+    public function getScenarioText(string $format = 'text'): string
     {
         $code = $this->getSourceCode();
         $this->getParser()->parseFeature($code);
@@ -46,9 +40,6 @@ trait ScenarioLoader
         return $this->getScenario()->getText();
     }
 
-    /**
-     * @return Parser
-     */
-    abstract protected function getParser();
+    abstract protected function getParser(): Parser;
     abstract public function getSourceCode();
 }

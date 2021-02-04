@@ -4,26 +4,32 @@ namespace Codeception\Test;
 use Codeception\Configuration;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Di;
-use Codeception\Lib\Notification;
+use Codeception\Module;
+use Codeception\PHPUnit\TestCase;
 use Codeception\Scenario;
+use Codeception\Test\Feature\Stub;
 use Codeception\TestInterface;
+use function get_class;
+use function lcfirst;
+use function method_exists;
+use function strpos;
 
 /**
  * Represents tests from PHPUnit compatible format.
  */
-class Unit extends \Codeception\PHPUnit\TestCase implements
+class Unit extends TestCase implements
     Interfaces\Reported,
     Interfaces\Dependent,
     TestInterface
 {
-    use \Codeception\Test\Feature\Stub;
+    use Stub;
 
     /**
      * @var Metadata
      */
     private $metadata;
 
-    public function getMetadata()
+    public function getMetadata(): Metadata
     {
         if (!$this->metadata) {
             $this->metadata = new Metadata();
@@ -43,7 +49,7 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
             return;
         }
 
-        /** @var $di Di  **/
+        /** @var Di $di **/
         $di = $this->getMetadata()->getService('di');
         $di->set(new Scenario($this));
 
@@ -76,12 +82,7 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
     {
     }
 
-    /**
-     * @param $module
-     * @return \Codeception\Module
-     * @throws ModuleException
-     */
-    public function getModule($module)
+    public function getModule($module): Module
     {
         $modules = $this->getMetadata()->getCurrent('modules');
         if (!isset($modules[$module])) {
@@ -93,15 +94,12 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
     /**
      * Returns current values
      */
-    public function getCurrent($current)
+    public function getCurrent($current): ?array
     {
         return $this->getMetadata()->getCurrent($current);
     }
 
-    /**
-     * @return array
-     */
-    public function getReportFields()
+    public function getReportFields(): array
     {
         return [
             'name'    => $this->getName(),
@@ -110,12 +108,12 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
         ];
     }
 
-    public function fetchDependencies()
+    public function fetchDependencies(): array
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
-            if ((strpos($required, ':') === false) and method_exists($this, $required)) {
-                $required = get_class($this) . ":$required";
+            if (strpos($required, ':') === false && method_exists($this, $required)) {
+                $required = get_class($this) . ":{$required}";
             }
             $names[] = $required;
         }
@@ -124,9 +122,8 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
 
     /**
      * Reset PHPUnit's dependencies
-     * @return bool
      */
-    public function handleDependencies()
+    public function handleDependencies(): bool
     {
         $dependencies = $this->fetchDependencies();
         if (empty($dependencies)) {

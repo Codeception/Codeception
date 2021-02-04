@@ -1,7 +1,9 @@
 <?php
 namespace Codeception\Test\Interfaces;
 
-interface Descriptive extends \PHPUnit\Framework\SelfDescribing
+use PHPUnit\Framework\SelfDescribing;
+
+interface Descriptive extends SelfDescribing
 {
     public function getFileName();
 

@@ -10,12 +10,12 @@ trait MetadataCollector
      */
     private $metadata;
 
-    protected function setMetadata(Metadata $metadata)
+    protected function setMetadata(Metadata $metadata): void
     {
         $this->metadata = $metadata;
     }
 
-    public function getMetadata()
+    public function getMetadata(): Metadata
     {
         return $this->metadata;
     }

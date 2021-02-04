@@ -2,8 +2,11 @@
 namespace Codeception\Test;
 
 use Codeception\Exception\TestParseException;
-use Codeception\Lib\Parser;
 use Codeception\Lib\Console\Message;
+use Codeception\Lib\Parser;
+use ParseError;
+use function basename;
+use function file_get_contents;
 
 /**
  * Executes tests delivered in Cept format.
@@ -28,24 +31,22 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         $this->parser = new Parser($this->getScenario(), $this->getMetadata());
     }
 
-    public function preload()
+    public function preload(): void
     {
         $this->getParser()->prepareToRun($this->getSourceCode());
     }
 
-    public function test()
+    public function test(): void
     {
-        $scenario = $this->getScenario();
         $testFile = $this->getMetadata()->getFilename();
-        /** @noinspection PhpIncludeInspection */
         try {
             require $testFile;
-        } catch (\ParseError $e) {
-            throw new TestParseException($testFile, $e->getMessage(), $e->getLine());
+        } catch (ParseError $error) {
+            throw new TestParseException($testFile, $error->getMessage(), $error->getLine());
         }
     }
 
-    public function getSignature()
+    public function getSignature(): string
     {
         return $this->getMetadata()->getName() . 'Cept';
     }
@@ -55,12 +56,15 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         return $this->getSignature() . ': ' . Message::ucfirst($this->getFeature());
     }
 
+    /**
+     * @return string|false
+     */
     public function getSourceCode()
     {
         return file_get_contents($this->getFileName());
     }
 
-    public function getReportFields()
+    public function getReportFields(): array
     {
         return [
             'name' => basename($this->getFileName(), 'Cept.php'),
@@ -69,15 +73,12 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         ];
     }
 
-    /**
-     * @return Parser
-     */
-    protected function getParser()
+    protected function getParser(): Parser
     {
         return $this->parser;
     }
 
-    public function fetchDependencies()
+    public function fetchDependencies(): array
     {
         return $this->getMetadata()->getDependencies();
     }

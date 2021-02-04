@@ -1,25 +1,24 @@
 <?php
 namespace Codeception\Test\Feature;
 
-use Codeception\Test\Test as CodeceptionTest;
+use Codeception\Test\Test as CodeceptTest;
+use PHPUnit\Framework\TestResult;
+use Throwable;
 
 trait ErrorLogger
 {
-    /**
-     * @return \PHPUnit\Framework\TestResult
-     */
-    abstract public function getTestResultObject();
+    abstract public function getTestResultObject(): TestResult;
 
-    public function errorLoggerEnd($status, $time, $exception = null)
+    public function errorLoggerEnd(string $status, float $time, Throwable $exception = null): void
     {
         if (!$exception) {
             return;
         }
 
-        if ($status === CodeceptionTest::STATUS_ERROR) {
+        if ($status === CodeceptTest::STATUS_ERROR) {
              $this->getTestResultObject()->addError($this, $exception, $time);
         }
-        if ($status === CodeceptionTest::STATUS_FAIL) {
+        if ($status === CodeceptTest::STATUS_FAIL) {
             $this->getTestResultObject()->addFailure($this, $exception, $time);
         }
     }

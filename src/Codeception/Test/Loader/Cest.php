@@ -6,31 +6,46 @@ use Codeception\Lib\Parser;
 use Codeception\Test\Cest as CestFormat;
 use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
+use PHPUnit\Framework\DataProviderTestSuite;
+use ReflectionClass;
+use ReflectionException;
+use function array_map;
+use function count;
+use function get_class_methods;
+use function strlen;
+use function strpos;
+use function substr;
 
 class Cest implements LoaderInterface
 {
+    /**
+     * @var DataProviderTestSuite[]|CestFormat[]
+     */
     protected $tests = [];
 
-    public function getTests()
+    /**
+     * @return DataProviderTestSuite[]|CestFormat[]
+     */
+    public function getTests(): array
     {
         return $this->tests;
     }
 
-    public function getPattern()
+    public function getPattern(): string
     {
         return '~Cest\.php$~';
     }
 
-    public function loadTests($file)
+    public function loadTests(string $filename): void
     {
-        Parser::load($file);
-        $testClasses = Parser::getClassesFromFile($file);
+        Parser::load($filename);
+        $testClasses = Parser::getClassesFromFile($filename);
 
         foreach ($testClasses as $testClass) {
             if (substr($testClass, -strlen('Cest')) !== 'Cest') {
                 continue;
             }
-            if (!(new \ReflectionClass($testClass))->isInstantiable()) {
+            if (!(new ReflectionClass($testClass))->isInstantiable()) {
                 continue;
             }
             $unit = new $testClass;
@@ -44,7 +59,7 @@ class Cest implements LoaderInterface
 
                 // example Annotation
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
-                if (count($rawExamples)) {
+                if (count($rawExamples) > 0) {
                     $examples = array_map(
                         function ($v) {
                             return Annotation::arrayValue($v);
@@ -66,37 +81,37 @@ class Cest implements LoaderInterface
                         foreach ($data as $example) {
                             $examples[] = $example;
                         }
-                    } catch (\ReflectionException $e) {
+                    } catch (ReflectionException $e) {
                         throw new TestParseException(
-                            $file,
-                            "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable.\n" .
+                            $filename,
+                            "DataProvider '{$dataMethod}' for {$testClass}->{$method} is invalid or not callable.\n" .
                             "Make sure that the dataprovider exist within the test class."
                         );
                     }
                 }
 
-                if (count($examples)) {
-                    $dataProvider = new \PHPUnit\Framework\DataProviderTestSuite();
+                if (!empty($examples)) {
+                    $dataProvider = new DataProviderTestSuite();
                     $index = 0;
                     foreach ($examples as $k => $example) {
                         if ($example === null) {
                             throw new TestParseException(
-                                $file,
-                                "Example for $testClass->$method contains invalid data:\n" .
+                                $filename,
+                                "Example for {$testClass}->{$method} contains invalid data:\n" .
                                 $rawExamples[$k] . "\n" .
-                                "Make sure this is a valid JSON (Hint: \"-char for strings) or a single-line annotation in Doctrine-style"
+                                'Make sure this is a valid JSON (Hint: "-char for strings) or a single-line annotation in Doctrine-style'
                             );
                         }
-                        $test = new CestFormat($unit, $method, $file);
+                        $test = new CestFormat($unit, $method, $filename);
                         $test->getMetadata()->setCurrent(['example' => $example]);
                         $test->getMetadata()->setIndex($index);
                         $dataProvider->addTest($test);
-                        $index++;
+                        ++$index;
                     }
                     $this->tests[] = $dataProvider;
                     continue;
                 }
-                $this->tests[] = new CestFormat($unit, $method, $file);
+                $this->tests[] = new CestFormat($unit, $method, $filename);
             }
         }
     }

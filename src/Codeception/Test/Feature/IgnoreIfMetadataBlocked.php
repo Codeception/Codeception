@@ -2,22 +2,19 @@
 namespace Codeception\Test\Feature;
 
 use Codeception\Test\Metadata;
+use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Framework\TestResult;
 
 trait IgnoreIfMetadataBlocked
 {
-    /**
-     * @return Metadata
-     */
-    abstract public function getMetadata();
+    abstract public function getMetadata(): Metadata;
 
-    abstract protected function ignore($ignored);
+    abstract protected function ignore(bool $ignored);
 
-    /**
-     * @return \PHPUnit\Framework\TestResult
-     */
-    abstract protected function getTestResultObject();
+    abstract protected function getTestResultObject(): TestResult;
 
-    protected function ignoreIfMetadataBlockedStart()
+    protected function ignoreIfMetadataBlockedStart(): void
     {
         if (!$this->getMetadata()->isBlocked()) {
             return;
@@ -26,11 +23,13 @@ trait IgnoreIfMetadataBlocked
         $this->ignore(true);
 
         if ($this->getMetadata()->getSkip() !== null) {
-            $this->getTestResultObject()->addFailure($this, new \PHPUnit\Framework\SkippedTestError((string)$this->getMetadata()->getSkip()), 0);
+            $skippedTestError = new SkippedTestError((string)$this->getMetadata()->getSkip());
+            $this->getTestResultObject()->addFailure($this, $skippedTestError, 0);
             return;
         }
         if ($this->getMetadata()->getIncomplete() !== null) {
-            $this->getTestResultObject()->addFailure($this, new \PHPUnit\Framework\IncompleteTestError((string)$this->getMetadata()->getIncomplete()), 0);
+            $incompleteTestError = new IncompleteTestError((string)$this->getMetadata()->getIncomplete());
+            $this->getTestResultObject()->addFailure($this, $incompleteTestError, 0);
             return;
         }
     }

@@ -3,9 +3,18 @@ namespace Codeception\Test;
 
 use Codeception\Test\Loader\Cept as CeptLoader;
 use Codeception\Test\Loader\Cest as CestLoader;
-use Codeception\Test\Loader\Unit as UnitLoader;
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
+use Codeception\Test\Loader\Unit as UnitLoader;
+use Exception;
 use Symfony\Component\Finder\Finder;
+use function array_merge;
+use function file_exists;
+use function getcwd;
+use function is_dir;
+use function preg_match;
+use function str_replace;
+use function strlen;
+use function substr;
 
 /**
  * Loads all Codeception supported test formats from a directory.
@@ -15,7 +24,6 @@ use Symfony\Component\Finder\Finder;
  * $testLoader = new \Codeception\TestLoader('tests/unit');
  * $testLoader->loadTests();
  * $tests = $testLoader->getTests();
- * ?>
  * ```
  * You can load specific file
  *
@@ -25,7 +33,6 @@ use Symfony\Component\Finder\Finder;
  * $testLoader->loadTest('UserTest.php');
  * $testLoader->loadTest('PostTest.php');
  * $tests = $testLoader->getTests();
- * ?>
  * ```
  * or a subdirectory
  *
@@ -34,13 +41,18 @@ use Symfony\Component\Finder\Finder;
  * $testLoader = new \Codeception\TestLoader('tests/unit');
  * $testLoader->loadTest('models'); // all tests from tests/unit/models
  * $tests = $testLoader->getTests();
- * ?>
  * ```
  *
  */
 class Loader
 {
+    /**
+     * @var Cept[]|Cest[]|Gherkin[]|Unit[]
+     */
     protected $formats = [];
+    /**
+     * @var array
+     */
     protected $tests = [];
     protected $path;
 
@@ -60,17 +72,17 @@ class Loader
         }
     }
 
-    public function getTests()
+    public function getTests(): array
     {
         return $this->tests;
     }
 
-    protected function relativeName($file)
+    protected function relativeName(string $file): string
     {
         return str_replace([$this->path, '\\'], ['', '/'], $file);
     }
 
-    protected function findPath($path)
+    protected function findPath(string $path): string
     {
         if (!file_exists($path)
             && substr($path, -strlen('.php')) !== '.php'
@@ -82,7 +94,7 @@ class Loader
         return $path;
     }
 
-    protected function makePath($originalPath)
+    protected function makePath(string $originalPath): string
     {
         $path = $this->path . $this->relativeName($originalPath);
 
@@ -93,18 +105,18 @@ class Loader
         }
 
         if (!file_exists($path)) {
-            throw new \Exception("File or path $originalPath not found");
+            throw new \Exception("File or path {$originalPath} not found");
         }
 
         return $path;
     }
 
-    public function loadTest($path)
+    public function loadTest(string $path): void
     {
         $path = $this->makePath($path);
 
         foreach ($this->formats as $format) {
-            /** @var $format Loader  **/
+            /** @var Loader $format **/
             if (preg_match($format->getPattern(), $path)) {
                 $format->loadTests($path);
                 $this->tests = $format->getTests();
@@ -119,19 +131,20 @@ class Loader
             $this->path = $currentPath;
             return;
         }
-        throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
+        throw new Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
     }
 
-    public function loadTests($fileName = null)
+    public function loadTests(string $fileName = null): void
     {
         if ($fileName) {
-            return $this->loadTest($fileName);
+            $this->loadTest($fileName);
+            return;
         }
 
         $finder = Finder::create()->files()->sortByName()->in($this->path)->followLinks();
 
         foreach ($this->formats as $format) {
-            /** @var $format Loader  **/
+            /** @var Loader $format **/
             $formatFinder = clone($finder);
             $testFiles = $formatFinder->name($format->getPattern());
             foreach ($testFiles as $test) {

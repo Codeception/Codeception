@@ -1,27 +1,33 @@
 <?php
 namespace Codeception\Test\Loader;
 
-use Codeception\Lib\Parser;
 use Codeception\Test\Cept as CeptFormat;
+use function basename;
 
 class Cept implements LoaderInterface
 {
+    /**
+     * @var CeptFormat[]
+     */
     protected $tests = [];
 
-    public function getPattern()
+    public function getPattern(): string
     {
         return '~Cept\.php$~';
     }
 
-    function loadTests($file)
+    function loadTests(string $filename): void
     {
-        $name = basename($file, 'Cept.php');
+        $name = basename($filename, 'Cept.php');
 
-        $cept = new CeptFormat($name, $file);
+        $cept = new CeptFormat($name, $filename);
         $this->tests[] = $cept;
     }
 
-    public function getTests()
+    /**
+     * @return CeptFormat[]
+     */
+    public function getTests(): array
     {
         return $this->tests;
     }

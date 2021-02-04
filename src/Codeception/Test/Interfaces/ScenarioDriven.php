@@ -1,16 +1,15 @@
 <?php
 namespace Codeception\Test\Interfaces;
 
+use Codeception\Scenario;
+
 interface ScenarioDriven
 {
     public function getFeature();
 
-    /**
-     * @return \Codeception\Scenario
-     */
-    public function getScenario();
+    public function getScenario(): Scenario;
 
-    public function getScenarioText($format = 'text');
+    public function getScenarioText(string $format = 'text');
 
     public function preload();
 

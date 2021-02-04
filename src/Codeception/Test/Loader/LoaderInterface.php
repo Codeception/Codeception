@@ -3,7 +3,7 @@ namespace Codeception\Test\Loader;
 
 interface LoaderInterface
 {
-    public function loadTests($filename);
+    public function loadTests(string $filename);
 
     public function getTests();
 
