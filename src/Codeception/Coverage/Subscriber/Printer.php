@@ -10,7 +10,7 @@ use Codeception\Coverage\PhpCodeCoverageFactory;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
-use Codeception\Subscriber\Shared\StaticEvents;
+use Codeception\Subscriber\Shared\StaticEventsTrait;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Report\Clover as CloverReport;
@@ -29,7 +29,7 @@ use function strpos;
 
 class Printer implements EventSubscriberInterface
 {
-    use StaticEvents;
+    use StaticEventsTrait;
 
     /**
      * @var array<string, string>

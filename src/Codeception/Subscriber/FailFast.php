@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
@@ -7,15 +10,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FailFast implements EventSubscriberInterface
 {
-    use Shared\StaticEvents;
+    use Shared\StaticEventsTrait;
 
-    public static $events = [
+    /**
+     * @var array<string, string>
+     */
+    protected static $events = [
         Events::SUITE_BEFORE => 'stopOnFail',
     ];
 
-    public function stopOnFail(SuiteEvent $e)
+    public function stopOnFail(SuiteEvent $event): void
     {
-        $e->getResult()->stopOnError(true);
-        $e->getResult()->stopOnFailure(true);
+        $event->getResult()->stopOnError(true);
+        $event->getResult()->stopOnFailure(true);
     }
 }

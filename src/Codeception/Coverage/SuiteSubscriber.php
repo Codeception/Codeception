@@ -10,7 +10,7 @@ use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
 use Codeception\Stub;
-use Codeception\Subscriber\Shared\StaticEvents;
+use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Exception;
 use PHPUnit\Framework\CodeCoverageException;
 use PHPUnit\Framework\TestResult;
@@ -23,7 +23,7 @@ use function method_exists;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface
 {
-    use StaticEvents;
+    use StaticEventsTrait;
 
     /**
      * @var array
