@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Test\Loader;
 
 use Codeception\Lib\Parser;
@@ -75,7 +78,8 @@ class Unit implements LoaderInterface
         $dependencies = \PHPUnit\Util\Test::getDependencies($className, $methodName);
         $test->setDependencies($dependencies);
         if ($test instanceof UnitFormat) {
-            $test->getMetadata()->setParamsFromAnnotations(Annotation::forMethod($test, $methodName)->raw());
+            $annotations = Annotation::forMethod($test, $methodName)->raw();
+            $test->getMetadata()->setParamsFromAnnotations($annotations);
             $test->getMetadata()->setFilename(Descriptor::getTestFileName($test));
         }
     }

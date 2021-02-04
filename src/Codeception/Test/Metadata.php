@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Test;
 
 use Codeception\Exception\InjectionException;
@@ -168,7 +171,7 @@ class Metadata
         return $this->reports;
     }
 
-    public function addReport($type, $report): void
+    public function addReport(string $type, $report): void
     {
         $this->reports[$type] = $report;
     }
@@ -177,7 +180,7 @@ class Metadata
      * Returns test params like: env, group, skip, incomplete, etc
      * Can return by annotation or return all if no key passed
      */
-    public function getParam($key = null): ?array
+    public function getParam(string $key = null): ?array
     {
         if ($key) {
             if (isset($this->params[$key])) {
@@ -191,7 +194,7 @@ class Metadata
 
     public function setParamsFromAnnotations($annotations): void
     {
-        $params = Annotation::fetchAllAnnotationsFromDocblock($annotations);
+        $params = Annotation::fetchAllAnnotationsFromDocblock((string)$annotations);
         $this->params = array_merge_recursive($this->params, $params);
 
         // set singular value for some params
@@ -200,7 +203,7 @@ class Metadata
         }
     }
 
-    public function setParams($params): void
+    public function setParams(array $params): void
     {
         $this->params = array_merge_recursive($this->params, $params);
     }

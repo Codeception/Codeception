@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Test;
 
 use Codeception\Configuration;
@@ -94,7 +97,7 @@ class Unit extends TestCase implements
     /**
      * Returns current values
      */
-    public function getCurrent($current): ?array
+    public function getCurrent(?string $current): ?array
     {
         return $this->getMetadata()->getCurrent($current);
     }

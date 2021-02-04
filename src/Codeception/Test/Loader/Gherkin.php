@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Test\Loader;
 
 use Behat\Gherkin\Filter\RoleFilter;

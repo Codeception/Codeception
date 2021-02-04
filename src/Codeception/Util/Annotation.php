@@ -136,6 +136,9 @@ class Annotation
         return [];
     }
 
+    /**
+     * @return string|false
+     */
     public function raw()
     {
         return $this->currentReflectedItem->getDocComment();

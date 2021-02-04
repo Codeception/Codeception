@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Test\Loader;
 
 use Codeception\Test\Cept as CeptFormat;
@@ -16,7 +19,7 @@ class Cept implements LoaderInterface
         return '~Cept\.php$~';
     }
 
-    function loadTests(string $filename): void
+    public function loadTests(string $filename): void
     {
         $name = basename($filename, 'Cept.php');
 
