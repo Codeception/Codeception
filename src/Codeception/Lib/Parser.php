@@ -101,27 +101,8 @@ class Parser
         $this->scenario->addStep(new \Codeception\Step\Comment($comment, []));
     }
 
-    public static function validate($file)
-    {
-        $config = Configuration::config();
-        if (empty($config['settings']['lint'])) { // lint disabled in config
-            return;
-        }
-        if (!function_exists('exec')) {
-            //exec function is disabled #3324
-            return;
-        }
-        exec("php -l " . escapeshellarg($file) . " 2>&1", $output, $code);
-        if ($code !== 0) {
-            throw new TestParseException($file, implode("\n", $output));
-        }
-    }
-
     public static function load($file)
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            self::validate($file);
-        }
         try {
             self::includeFile($file);
         } catch (\ParseError $e) {

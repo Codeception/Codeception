@@ -33,15 +33,3 @@ if (isset($argv)) {
 if (isset($_SERVER['argv'])) {
     $_SERVER['argv'] = array_values(array_diff($_SERVER['argv'], ['--no-redirect']));
 }
-
-// @codingStandardsIgnoreStart
-// compat
-if (PHP_MAJOR_VERSION < 7) {
-    if (false === interface_exists('Throwable', false)) {
-        interface Throwable {};
-    }
-    if (false === class_exists('ParseError', false)) {
-        class ParseError extends \Exception {};
-    }
-}
-// @codingStandardsIgnoreEnd

@@ -132,9 +132,6 @@ EOF;
 
     public function testParseFileWithAnonymousClass()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $this->markTestSkipped('only for php 7');
-        }
         $classes = Parser::getClassesFromFile(codecept_data_dir('php70Test'));
         $this->assertEquals(['php70Test'], $classes);
     }
@@ -154,9 +151,6 @@ EOF;
      */
     public function testModernValidation()
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $this->markTestSkipped();
-        }
         $this->expectException('Codeception\Exception\TestParseException');
         Parser::load(codecept_data_dir('Invalid.php'));
     }
