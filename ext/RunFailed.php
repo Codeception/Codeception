@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Extension;
 
 use Codeception\Event\PrintResultEvent;

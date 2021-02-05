@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Extension;
 
 use Codeception\Event\StepEvent;
@@ -364,7 +366,7 @@ EOF;
         }
         $links = '';
 
-        if (count($this->slides) > 0) {
+        if (!empty($this->slides)) {
             foreach ($this->recordedTests as $suiteName => $suite) {
                 $links .= "<ul><li><b>{$suiteName}</b></li><ul>";
                 foreach ($suite as $fileName => $tests) {

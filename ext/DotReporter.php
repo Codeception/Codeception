@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Extension;
 
 use Codeception\Event\FailEvent;
@@ -92,12 +95,12 @@ class DotReporter extends Extension
         $this->printChar('.');
     }
 
-    public function fail(): void
+    public function fail(FailEvent $event): void
     {
         $this->printChar('<error>F</error>');
     }
 
-    public function error(): void
+    public function error(FailEvent $event): void
     {
         $this->printChar('<error>E</error>');
     }
