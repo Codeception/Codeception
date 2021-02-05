@@ -5,6 +5,15 @@ use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
 use Codeception\Extension;
 use Codeception\Test\Descriptor;
+use function array_key_exists;
+use function file_put_contents;
+use function implode;
+use function is_file;
+use function realpath;
+use function str_replace;
+use function strlen;
+use function substr;
+use function unlink;
 
 /**
  * Saves failed tests into tests/_output/failed in order to rerun failed tests.
@@ -32,6 +41,9 @@ use Codeception\Test\Descriptor;
  */
 class RunFailed extends Extension
 {
+    /**
+     * @var array<string, string>
+     */
     public static $events = [
         Events::RESULT_PRINT_AFTER => 'saveFailed'
     ];
@@ -39,7 +51,7 @@ class RunFailed extends Extension
     /** @var string filename/groupname for failed tests */
     protected $group = 'failed';
 
-    public function _initialize()
+    public function _initialize(): void
     {
         if (array_key_exists('fail-group', $this->config) && $this->config['fail-group']) {
             $this->group = $this->config['fail-group'];
@@ -48,10 +60,10 @@ class RunFailed extends Extension
         $this->_reconfigure(['groups' => [$this->group => $logPath . $this->group]]);
     }
 
-    public function saveFailed(PrintResultEvent $e)
+    public function saveFailed(PrintResultEvent $event): void
     {
         $file = $this->getLogDir() . $this->group;
-        $result = $e->getResult();
+        $result = $event->getResult();
         if ($result->wasSuccessful()) {
             if (is_file($file)) {
                 unlink($file);
@@ -69,10 +81,10 @@ class RunFailed extends Extension
         file_put_contents($file, implode("\n", $output));
     }
 
-    protected function localizePath($path)
+    protected function localizePath(string $path): string
     {
         $root = realpath($this->getRootDir()) . DIRECTORY_SEPARATOR;
-        if (substr($path, 0, strlen($root)) == $root) {
+        if (substr($path, 0, strlen($root)) === $root) {
             return substr($path, strlen($root));
         }
         return $path;
