@@ -12,6 +12,9 @@ use function array_unique;
 
 class Metadata
 {
+    /**
+     * @var string
+     */
     protected $name;
     /**
      * @var string

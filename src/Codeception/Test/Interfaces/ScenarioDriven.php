@@ -6,7 +6,7 @@ use Codeception\Scenario;
 
 interface ScenarioDriven
 {
-    public function getFeature(): string;
+    public function getFeature(): ?string;
 
     public function getScenario(): Scenario;
 
