@@ -10,11 +10,9 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\TestResult;
-use SebastianBergmann\Timer\Duration;
 use SebastianBergmann\Timer\Timer;
 use Throwable;
 use function array_reverse;
-use function class_exists;
 use function method_exists;
 
 /**
@@ -98,10 +96,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         $status = self::STATUS_PENDING;
         $time = 0;
         $e = null;
-        $timer = null;
-        if (class_exists(Duration::class)) {
-            $timer = new Timer();
-        }
+        $timer = new Timer();
 
         $result->startTest($this);
 
@@ -114,11 +109,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         $failedToStart = ReflectionHelper::readPrivateProperty($result, 'lastTestFailed');
 
         if (!$this->ignored && !$failedToStart) {
-            if (null !== $timer) {
-                $timer->start();
-            } else {
-                Timer::start();
-            }
+            $timer->start();
 
             try {
                 $this->test();
@@ -132,7 +123,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
                 $status = self::STATUS_ERROR;
             }
 
-            $time = null !== $timer ? $timer->stop()->asSeconds() : Timer::stop();
+            $time = $timer->stop()->asSeconds();
         }
 
         foreach (array_reverse($this->hooks) as $hook) {
@@ -161,7 +152,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     /**
      * Should a test be skipped (can be set from hooks)
      */
-    protected function ignore(bool $ignored)
+    protected function ignore(bool $ignored): void
     {
         $this->ignored = $ignored;
     }

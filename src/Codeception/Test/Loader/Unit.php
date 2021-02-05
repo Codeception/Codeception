@@ -9,7 +9,7 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Unit as UnitFormat;
 use Codeception\Util\Annotation;
 use PHPUnit\Framework\DataProviderTestSuite;
-use PHPUnit\Framework\Test;
+use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestBuilder;
 use ReflectionClass;
 use ReflectionMethod;
@@ -71,7 +71,7 @@ class Unit implements LoaderInterface
         return $test;
     }
 
-    protected function enhancePhpunitTest(Test $test): void
+    protected function enhancePhpunitTest(PHPUnitTest $test): void
     {
         $className = get_class($test);
         $methodName = $test->getName(false);

@@ -13,7 +13,7 @@ trait IgnoreIfMetadataBlocked
 {
     abstract public function getMetadata(): Metadata;
 
-    abstract protected function ignore(bool $ignored);
+    abstract protected function ignore(bool $ignored): void;
 
     abstract protected function getTestResultObject(): TestResult;
 

@@ -27,7 +27,7 @@ trait ScenarioLoader
         return $this->scenario;
     }
 
-    public function getFeature()
+    public function getFeature(): string
     {
         return $this->getScenario()->getFeature();
     }
@@ -44,5 +44,5 @@ trait ScenarioLoader
     }
 
     abstract protected function getParser(): Parser;
-    abstract public function getSourceCode();
+    abstract public function getSourceCode(): string;
 }

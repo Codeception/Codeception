@@ -16,6 +16,7 @@ use Codeception\Step\Comment;
 use Codeception\Step\Meta;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Interfaces\ScenarioDriven;
+use Exception;
 use function array_merge;
 use function array_pop;
 use function array_shift;
@@ -215,7 +216,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         return $this->getFeature() . ': ' . $this->getScenarioTitle();
     }
 
-    public function getFeature()
+    public function getFeature(): string
     {
         return $this->getMetadata()->getFeature();
     }
@@ -230,17 +231,18 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         return $this->scenario;
     }
 
-    /**
-     * @param string $format
-     * @return string|false
-     */
-    public function getScenarioText(string $format = 'text')
+    public function getScenarioText(string $format = 'text'): string
     {
-        return file_get_contents($this->getFileName());
+        $fileName = $this->getFileName();
+        if (!$scenarioText = file_get_contents($fileName)) {
+            throw new Exception("Could not get scenario {$fileName}, please check its permissions.");
+        }
+        return $scenarioText;
     }
 
-    public function getSourceCode(): void
+    public function getSourceCode(): string
     {
+        return '';
     }
 
     public function getScenarioNode(): ScenarioNode

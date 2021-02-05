@@ -6,7 +6,7 @@ use PHPUnit\Framework\SelfDescribing;
 
 interface Descriptive extends SelfDescribing
 {
-    public function getFileName();
+    public function getFileName(): string;
 
-    public function getSignature();
+    public function getSignature(): string;
 }

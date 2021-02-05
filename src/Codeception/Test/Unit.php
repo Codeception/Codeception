@@ -85,7 +85,7 @@ class Unit extends TestCase implements
     {
     }
 
-    public function getModule($module): Module
+    public function getModule(string $module): Module
     {
         $modules = $this->getMetadata()->getCurrent('modules');
         if (!isset($modules[$module])) {
@@ -96,8 +96,11 @@ class Unit extends TestCase implements
 
     /**
      * Returns current values
+     *
+     * @param string|null $current
+     * @return mixed
      */
-    public function getCurrent(?string $current): ?array
+    public function getCurrent(?string $current)
     {
         return $this->getMetadata()->getCurrent($current);
     }

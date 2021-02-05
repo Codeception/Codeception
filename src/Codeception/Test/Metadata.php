@@ -13,7 +13,13 @@ use function array_unique;
 class Metadata
 {
     protected $name;
+    /**
+     * @var string
+     */
     protected $filename;
+    /**
+     * @var string|null
+     */
     protected $feature;
     protected $index;
 
@@ -41,7 +47,7 @@ class Metadata
      */
     protected $reports = [];
 
-    public function getEnv()
+    public function getEnv(): array
     {
         return $this->params['env'];
     }
@@ -51,34 +57,37 @@ class Metadata
         return array_unique($this->params['group']);
     }
 
-    public function setGroups($groups): void
+    /**
+     * @param string[] $groups
+     */
+    public function setGroups(array $groups): void
     {
         $this->params['group'] = array_merge($this->params['group'], $groups);
     }
 
-    public function getSkip()
+    public function getSkip(): ?string
     {
         return $this->params['skip'];
     }
 
-    public function setSkip($skip): void
+    public function setSkip(string $skip): void
     {
         $this->params['skip'] = $skip;
     }
 
-    public function getIncomplete()
+    public function getIncomplete(): ?string
     {
         return $this->params['incomplete'];
     }
 
-    public function setIncomplete($incomplete): void
+    public function setIncomplete(string $incomplete): void
     {
         $this->params['incomplete'] = $incomplete;
     }
 
     /**
      * @param string|null $key
-     * @return string|array|null
+     * @return mixed
      */
     public function getCurrent(?string $key = null)
     {
@@ -100,17 +109,17 @@ class Metadata
         $this->current = array_merge($this->current, $currents);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
@@ -125,7 +134,7 @@ class Metadata
         return $this->index;
     }
 
-    public function setFilename($filename): void
+    public function setFilename(string $filename): void
     {
         $this->filename = $filename;
     }
@@ -140,17 +149,17 @@ class Metadata
         return $this->getSkip() !== null || $this->getIncomplete() !== null;
     }
 
-    public function getFeature()
+    public function getFeature(): ?string
     {
         return $this->feature;
     }
 
-    public function setFeature($feature): void
+    public function setFeature(?string $feature): void
     {
         $this->feature = $feature;
     }
 
-    public function getService($service): object
+    public function getService(string $service): object
     {
         if (!isset($this->services[$service])) {
             throw new InjectionException("Service {$service} is not defined and can't be accessed from a test");
@@ -179,8 +188,11 @@ class Metadata
     /**
      * Returns test params like: env, group, skip, incomplete, etc
      * Can return by annotation or return all if no key passed
+     *
+     * @param string|null $key
+     * @return mixed
      */
-    public function getParam(string $key = null): ?array
+    public function getParam(string $key = null)
     {
         if ($key) {
             if (isset($this->params[$key])) {

@@ -6,13 +6,13 @@ use Codeception\Scenario;
 
 interface ScenarioDriven
 {
-    public function getFeature();
+    public function getFeature(): string;
 
     public function getScenario(): Scenario;
 
-    public function getScenarioText(string $format = 'text');
+    public function getScenarioText(string $format = 'text'): string;
 
-    public function preload();
+    public function preload(): void;
 
-    public function getSourceCode();
+    public function getSourceCode(): string;
 }

@@ -84,11 +84,8 @@ class Descriptor
 
     /**
      * Provides a test file name relative to Codeception root
-     *
-     * @param SelfDescribing $testCase
-     * @return string|false
      */
-    public static function getTestFileName(SelfDescribing $testCase)
+    public static function getTestFileName(SelfDescribing $testCase): string
     {
         if ($testCase instanceof Descriptive) {
             return codecept_relative_path(realpath($testCase->getFileName()));

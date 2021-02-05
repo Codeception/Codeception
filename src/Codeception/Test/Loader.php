@@ -7,6 +7,7 @@ namespace Codeception\Test;
 use Codeception\Test\Loader\Cept as CeptLoader;
 use Codeception\Test\Loader\Cest as CestLoader;
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
+use Codeception\Test\Loader\LoaderInterface;
 use Codeception\Test\Loader\Unit as UnitLoader;
 use Exception;
 use Symfony\Component\Finder\Finder;
@@ -50,13 +51,16 @@ use function substr;
 class Loader
 {
     /**
-     * @var Cept[]|Cest[]|Gherkin[]|Unit[]
+     * @var LoaderInterface[]
      */
     protected $formats = [];
     /**
      * @var array
      */
     protected $tests = [];
+    /**
+     * @var string
+     */
     protected $path;
 
     public function __construct(array $suiteSettings)

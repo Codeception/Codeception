@@ -7,6 +7,7 @@ namespace Codeception\Test;
 use Codeception\Exception\TestParseException;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Parser;
+use Exception;
 use ParseError;
 use function basename;
 use function file_get_contents;
@@ -59,12 +60,13 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         return $this->getSignature() . ': ' . Message::ucfirst($this->getFeature());
     }
 
-    /**
-     * @return string|false
-     */
-    public function getSourceCode()
+    public function getSourceCode(): string
     {
-        return file_get_contents($this->getFileName());
+        $fileName = $this->getFileName();
+        if (!$sourceCode = file_get_contents($fileName)) {
+            throw new Exception("Could not get content of file {$fileName}, please check its permissions.");
+        }
+        return $sourceCode;
     }
 
     public function getReportFields(): array
