@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Codeception\Event;
 
-use Exception;
 use PHPUnit\Framework\Test as PHPUnitTest;
+use Throwable;
 
 class FailEvent extends TestEvent
 {
     /**
-     * @var Exception
+     * @var Throwable
      */
     protected $fail;
 
@@ -19,7 +19,7 @@ class FailEvent extends TestEvent
      */
     protected $count;
 
-    public function __construct(PHPUnitTest $test, ?float $time, Exception $e, int $count = 0)
+    public function __construct(PHPUnitTest $test, ?float $time, Throwable $e, int $count = 0)
     {
         parent::__construct($test, $time);
         $this->fail = $e;
@@ -31,7 +31,7 @@ class FailEvent extends TestEvent
         return $this->count;
     }
 
-    public function getFail(): Exception
+    public function getFail(): Throwable
     {
         return $this->fail;
     }
