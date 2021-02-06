@@ -1,16 +1,34 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Lib\Console\Message;
+use PHPUnit\Framework\Constraint\Constraint;
+use function codecept_output_dir;
+use function mb_stripos;
+use function mb_strlen;
+use function mb_substr;
+use function preg_replace;
+use function sprintf;
+use function strtr;
+use function trim;
 
-class Page extends \PHPUnit\Framework\Constraint\Constraint
+class Page extends Constraint
 {
+    /**
+     * @var string
+     */
     protected $uri;
+    /**
+     * @var string
+     */
     protected $string;
 
-    public function __construct($string, $uri = '')
+    public function __construct(string $string, string $uri = '')
     {
-        $this->string = $this->normalizeText((string)$string);
+        $this->string = $this->normalizeText($string);
         $this->uri = $uri;
     }
 
@@ -22,17 +40,13 @@ class Page extends \PHPUnit\Framework\Constraint\Constraint
      *
      * @return bool
      */
-    protected function matches($other) : bool
+    protected function matches($other): bool
     {
         $other = $this->normalizeText($other);
-        return mb_stripos($other, $this->string, null, 'UTF-8') !== false;
+        return mb_stripos($other, $this->string, 0, 'UTF-8') !== false;
     }
 
-    /**
-     * @param $text
-     * @return string
-     */
-    private function normalizeText($text)
+    private function normalizeText(string $text): string
     {
         $text = strtr($text, "\r\n", "  ");
         return trim(preg_replace('/\\s{2,}/', ' ', $text));
@@ -40,10 +54,8 @@ class Page extends \PHPUnit\Framework\Constraint\Constraint
 
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
-    public function toString() : string
+    public function toString(): string
     {
         return sprintf(
             'contains "%s"',
@@ -66,13 +78,13 @@ class Page extends \PHPUnit\Framework\Constraint\Constraint
         return $message->getMessage() . $this->toString();
     }
 
-    protected function uriMessage($onPage = "")
+    protected function uriMessage(string $onPage = ''): Message
     {
         if (!$this->uri) {
             return new Message('');
         }
         $message = new Message($this->uri);
-        $message->prepend(" $onPage ");
+        $message->prepend(" {$onPage} ");
         return $message;
     }
 }
