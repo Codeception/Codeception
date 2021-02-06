@@ -27,7 +27,7 @@ use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTestError;
-use PHPUnit\Framework_IncompleteTestError;
+use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Util\Filter as PHPUnitFilter;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -469,7 +469,7 @@ class Console implements EventSubscriberInterface
 
     public function printException($exception, string $cause = null): void
     {
-        if ($exception instanceof SkippedTestError || $exception instanceof Framework_IncompleteTestError) {
+        if ($exception instanceof SkippedTestError || $exception instanceof IncompleteTestError) {
             if ($exception->getMessage() !== '') {
                 $this->message(OutputFormatter::escape($exception->getMessage()))->prepend("\n")->writeln();
             }
@@ -541,7 +541,7 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
 
-        if ($exception instanceof SkippedTestError || $exception instanceof Framework_IncompleteTestError) {
+        if ($exception instanceof SkippedTestError || $exception instanceof IncompleteTestError) {
             return;
         }
 
