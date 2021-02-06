@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Extension;
 
 use Codeception\Event\FailEvent;
@@ -12,6 +15,10 @@ use Codeception\Extension;
 use Codeception\Test\Descriptor;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
+use function class_exists;
+use function function_exists;
+use function str_replace;
+use function ucfirst;
 
 /**
  * Log suites/tests/steps using Monolog library.
@@ -38,6 +45,9 @@ use Monolog\Handler\RotatingFileHandler;
  */
 class Logger extends Extension
 {
+    /**
+     * @var array<string, string>
+     */
     public static $events = [
         Events::SUITE_BEFORE    => 'beforeSuite',
         Events::TEST_BEFORE     => 'beforeTest',
@@ -50,6 +60,9 @@ class Logger extends Extension
         Events::TEST_SKIPPED    => 'testSkipped',
     ];
 
+    /**
+     * @var RotatingFileHandler
+     */
     protected $logHandler;
 
     /**
@@ -57,14 +70,20 @@ class Logger extends Extension
      */
     protected static $logger;
 
+    /**
+     * @var string
+     */
     protected $path;
 
+    /**
+     * @var array<string, int>
+     */
     protected $config = ['max_files' => 3];
 
-    public function _initialize()
+    public function _initialize(): void
     {
         if (!class_exists('\Monolog\Logger')) {
-            throw new ConfigurationException("Logger extension requires Monolog library to be installed");
+            throw new ConfigurationException('Logger extension requires Monolog library to be installed');
         }
         $this->path = $this->getLogDir();
 
@@ -80,67 +99,67 @@ class Logger extends Extension
         self::$logger->pushHandler($logHandler);
     }
 
-    public static function getLogger()
+    public static function getLogger(): \Monolog\Logger
     {
         return self::$logger;
     }
 
-    public function beforeSuite(SuiteEvent $e)
+    public function beforeSuite(SuiteEvent $event): void
     {
-        $suiteLogFile = str_replace('\\', '_', $e->getSuite()->getName()) . '.log';
+        $suiteLogFile = str_replace('\\', '_', $event->getSuite()->getName()) . '.log';
         $this->logHandler = new RotatingFileHandler($this->path . $suiteLogFile, $this->config['max_files']);
     }
 
-    public function beforeTest(TestEvent $e)
+    public function beforeTest(TestEvent $event): void
     {
-        self::$logger = new \Monolog\Logger(Descriptor::getTestFullName($e->getTest()));
+        self::$logger = new \Monolog\Logger(Descriptor::getTestFullName($event->getTest()));
         self::$logger->pushHandler($this->logHandler);
         self::$logger->info('------------------------------------');
-        self::$logger->info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
+        self::$logger->info('STARTED: ' . ucfirst(Descriptor::getTestAsString($event->getTest())));
     }
 
-    public function afterTest(TestEvent $e)
+    public function afterTest(TestEvent $event): void
     {
     }
 
-    public function endTest(TestEvent $e)
+    public function endTest(TestEvent $event): void
     {
-        self::$logger->info("PASSED");
+        self::$logger->info('PASSED');
     }
 
-    public function testFail(FailEvent $e)
+    public function testFail(FailEvent $event): void
     {
-        self::$logger->alert($e->getFail()->getMessage());
-        self::$logger->info("# FAILED #");
+        self::$logger->alert($event->getFail()->getMessage());
+        self::$logger->info('# FAILED #');
     }
 
-    public function testError(FailEvent $e)
+    public function testError(FailEvent $event): void
     {
-        self::$logger->alert($e->getFail()->getMessage());
-        self::$logger->info("# ERROR #");
+        self::$logger->alert($event->getFail()->getMessage());
+        self::$logger->info('# ERROR #');
     }
 
-    public function testSkipped(FailEvent $e)
+    public function testSkipped(FailEvent $event): void
     {
-        self::$logger->info("# Skipped #");
+        self::$logger->info('# Skipped #');
     }
 
-    public function testIncomplete(FailEvent $e)
+    public function testIncomplete(FailEvent $event): void
     {
-        self::$logger->info("# Incomplete #");
+        self::$logger->info('# Incomplete #');
     }
 
-    public function beforeStep(StepEvent $e)
+    public function beforeStep(StepEvent $event): void
     {
-        self::$logger->info((string) $e->getStep());
+        self::$logger->info((string) $event->getStep());
     }
 }
 
 if (!function_exists('codecept_log')) {
-    function codecept_log()
+    function codecept_log(): \Monolog\Logger
     {
         return Logger::getLogger();
     }
 } else {
-    throw new ExtensionException('Codeception\Extension\Logger', "function 'codecept_log' already defined");
+    throw new ExtensionException(Logger::class, "function 'codecept_log' already defined");
 }
