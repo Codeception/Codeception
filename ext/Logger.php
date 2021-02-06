@@ -60,6 +60,9 @@ class Logger extends Extension
         Events::TEST_SKIPPED    => 'testSkipped',
     ];
 
+    /**
+     * @var RotatingFileHandler
+     */
     protected $logHandler;
 
     /**
@@ -67,6 +70,9 @@ class Logger extends Extension
      */
     protected static $logger;
 
+    /**
+     * @var string
+     */
     protected $path;
 
     /**

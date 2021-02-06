@@ -638,10 +638,7 @@ EOF;
         return basename($event->getTest()->getMetadata()->getFilename()) . '_' . preg_replace('/[^A-Za-z0-9\-\_]/', '_', $event->getTest()->getMetadata()->getName());
     }
 
-    /**
-     * @param string $message
-     */
-    protected function writeln($message): void
+    protected function writeln(string $message): void
     {
         parent::writeln(
             $this->ansi

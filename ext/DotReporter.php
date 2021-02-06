@@ -110,7 +110,7 @@ class DotReporter extends Extension
         $this->printChar('S');
     }
 
-    protected function printChar($char): void
+    protected function printChar(string $char): void
     {
         if ($this->currentPos >= $this->width) {
             $this->writeln('');
