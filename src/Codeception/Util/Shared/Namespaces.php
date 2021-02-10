@@ -6,7 +6,6 @@ namespace Codeception\Util\Shared;
 
 use function array_filter;
 use function array_pop;
-use function array_shift;
 use function explode;
 use function implode;
 use function ltrim;
@@ -16,15 +15,9 @@ trait Namespaces
 {
     protected function breakParts(string $class)
     {
-        $class      = str_replace('/', '\\', $class);
-        $namespaces = explode('\\', $class);
-        if (!empty($namespaces)) {
-            $namespaces[0] = ltrim($namespaces[0], '\\');
-        }
-        if (!$namespaces[0]) {
-            array_shift($namespaces);
-        } // remove empty namespace caused of \\
-        return $namespaces;
+        // removing leading slashes and dots first
+        $class = str_replace('/', '\\', ltrim($class, './\\'));
+        return explode('\\', $class);
     }
 
     protected function getShortClassName(string $class): string

@@ -22,6 +22,11 @@ class ModuleContainer
      */
     const MODULE_NAMESPACE = '\\Codeception\\Module\\';
 
+    /**
+     * @var integer
+     */
+    const MAXIMUM_LEVENSHTEIN_DISTANCE = 5;
+
     public static $packages = [
         'AMQP' => 'codeception/module-amqp',
         'Apc' => 'codeception/module-apc',
@@ -275,10 +280,35 @@ class ModuleContainer
     public function getModule($moduleName)
     {
         if (!$this->hasModule($moduleName)) {
-            throw new ModuleException(__CLASS__, "Module $moduleName couldn't be connected");
+            $this->throwMissingModuleExceptionWithSuggestion(__CLASS__, $moduleName);
         }
 
         return $this->modules[$moduleName];
+    }
+
+    public function throwMissingModuleExceptionWithSuggestion($className, $moduleName)
+    {
+        $suggestedModuleNameInfo = $this->getModuleSuggestion($moduleName);
+        throw new ModuleException($className, "Module $moduleName couldn't be connected" . $suggestedModuleNameInfo);
+    }
+
+    protected function getModuleSuggestion($missingModuleName)
+    {
+        $shortestLevenshteinDistance = null;
+        $suggestedModuleName = null;
+        foreach ($this->modules as $moduleName => $module) {
+            $levenshteinDistance = levenshtein($missingModuleName, $moduleName);
+            if ($shortestLevenshteinDistance === null || $levenshteinDistance <= $shortestLevenshteinDistance) {
+                $shortestLevenshteinDistance = $levenshteinDistance;
+                $suggestedModuleName = $moduleName;
+            }
+        }
+
+        if ($suggestedModuleName !== null && $shortestLevenshteinDistance <= self::MAXIMUM_LEVENSHTEIN_DISTANCE) {
+            return " (did you mean '$suggestedModuleName'?)";
+        }
+
+        return '';
     }
 
     /**

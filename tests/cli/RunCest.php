@@ -25,6 +25,40 @@ class RunCest
     }
 
     /**
+     * https://github.com/Codeception/Codeception/issues/6103
+     */
+    public function runSuiteWhenNameMatchesExistingDirectory(\CliGuy $I)
+    {
+        $I->amInPath(codecept_data_dir('dir_matches_suite'));
+        $I->executeCommand('run api');
+        $I->seeInShellOutput('SuccessCest');
+    }
+
+    public function runTestsDoesntFail(\CliGuy $I)
+    {
+        $I->amInPath(codecept_data_dir('dir_matches_suite'));
+        $I->executeCommand('run tests');
+        $I->seeInShellOutput('SuccessCest');
+    }
+
+    public function runTestsWithFilterDoesntFail(\CliGuy $I)
+    {
+        $I->amInPath(codecept_data_dir('dir_matches_suite'));
+        $I->executeCommand('run tests:^success');
+        $I->seeInShellOutput('SuccessCest');
+
+        $I->executeCommand('run tests/:^success');
+        $I->seeInShellOutput('SuccessCest');
+    }
+
+    public function filterTestsWithoutSpecifyingSuite(\CliGuy $I)
+    {
+        $I->amInPath(codecept_data_dir('dir_matches_suite'));
+        $I->executeCommand('run :^success');
+        $I->seeInShellOutput('SuccessCest');
+    }
+
+    /**
      * @group reports
      * @group core
      *

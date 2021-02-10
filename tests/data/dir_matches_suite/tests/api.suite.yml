@@ -1,0 +1,4 @@
+class_name: ApiTester
+modules:
+    enabled:
+        - Asserts

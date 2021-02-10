@@ -112,7 +112,8 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
-        throw new PHPUnitException($errMsg, $errNum);
+        $relativePath = codecept_relative_path($errFile);
+        throw new PHPUnitException("$errMsg at $relativePath:$errLine", $errNum);
     }
 
     public function shutdownHandler(): void

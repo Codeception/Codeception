@@ -1,3 +1,27 @@
+#### 4.1.17
+
+* Fix `codecept run suite` when suite name matches directory (bug introduced in 4.1.16)
+* `codecept run tests` is equivalent to `codecept run`
+* `codecept run :filter` works without specifying suite #6105
+* `codecept run tests:filter` works too
+
+#### 4.1.16
+
+* Detect the suite from a test path relative to the current working dir (#6051)
+* GroupManager: Fixed bug introduced in 4.1.15
+* Show location of warning in error message (#6090)
+
+#### 4.1.15
+
+* GroupManager: Show which group contains a missing file #5938
+* Ignore . namespace in generators when someone pass path as a class name, e.g. ./foo #5818
+* Removed "Running with seed" from CLI report (#6088) by @eXorus
+* Suggest most similar module in missing module exception #6079 by @c33s
+
+#### 4.1.14
+
+* Improved compatibility logic for Symfony EventDispatcher
+
 #### 4.1.13
 
 * Gherkin: Fixed loading methods from namespaced helper classes #6057
@@ -76,3 +100,28 @@
 #### 4.1.0
 
 * Support for PHPUnit 9
+
+#### 4.0.3
+
+* Fixed command autocompletion #5806 by @svycka
+
+#### 4.0.2
+
+* Fixed errors in bootstrap scripts #5806
+
+#### 4.0.1
+
+* Fixed error reporting error in upgrade4 script
+* Symfony 5 compatibility: Improved detection of event-dispatcher version
+
+#### 4.0.0
+
+* Extracted modules from Codeception core to separate repository
+* Separated building of phar files and documentation from Codeception core.
+* Implemented upgrade script
+* Support for Symfony 5
+* Support for phpdotenv v4 by @sunspikes
+* New Feature: Ability to stash/unstash commands in interactive mode by @pohnean
+* [Fixtures] Cleanup by name @soupli
+* GroupManager throws exception if path used in group configuration does not exist.
+* GroupManager supports absolute and backtracking (..) paths in group files.
