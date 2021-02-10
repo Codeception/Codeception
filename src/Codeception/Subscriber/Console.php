@@ -551,7 +551,7 @@ class Console implements EventSubscriberInterface
         $inspector = new Inspector($exception);
 
         $writer->ignoreFilesIn([
-            '/vendor\/codeception\/',
+            '/vendor\/codeception/',
             '/vendor\/phpunit\/phpunit\/src/',
             '/vendor\/mockery\/mockery/',
             '/vendor\/laravel\/framework\/src\/Illuminate\/Testing/',
