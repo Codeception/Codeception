@@ -166,4 +166,19 @@ class IncludedCest
         $I->seeInShellOutput('Jazz\\Pianist\\TestGuy');
         $I->seeInShellOutput('Shire\\TestGuy');
     }
+
+	/**
+      * @before moveToIncluded
+      * @param CliGuy $I
+      */
+    public function cleanIncluded(\CliGuy $I)
+    {
+         $I->executeCommand('clean');
+         $I->seeInShellOutput('included/_log');
+         $I->seeInShellOutput('included/jazz/tests/_log');
+         $I->seeInShellOutput('included/jazz/pianist/tests/_log');
+         $I->seeInShellOutput('included/shire/tests/_log');
+         $I->seeInShellOutput('Done');
+    }
+
 }
