@@ -1,36 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\PHPUnit\Util\Log;
 
 use Codeception\Test\Descriptor;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\Test as PHPUnitTest;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestFailure;
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\Warning;
+use PHPUnit\Util\Printer;
+use Symfony\Component\Yaml\Dumper as SymfonyYamlDumper;
+use Throwable;
+use function explode;
+use function sprintf;
+use function trim;
 
 /**
  * A TestListener that generates a logfile of the
  * test execution using the Test Anything Protocol (TAP).
  */
-class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListener
+class TAP extends Printer implements TestListener
 {
     /**
      * @var int
      */
     protected $testNumber = 0;
-
     /**
      * @var int
      */
     protected $testSuiteLevel = 0;
-
     /**
      * @var bool
      */
     protected $testSuccessful = true;
 
     /**
-     * Constructor.
+     * TAP constructor.
      *
-     * @param mixed $out
-     *
-     * @throws \PHPUnit\Framework\Throwable
+     * @param resource|string|null $out
      */
     public function __construct($out = null)
     {
@@ -41,11 +53,11 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
     /**
      * An error occurred.
      *
-     * @param \PHPUnit\Framework\Test $test
-     * @param Throwable $e
+     * @param PHPUnitTest $test
+     * @param Throwable $t
      * @param float $time
      */
-    public function addError(\PHPUnit\Framework\Test $test, \Throwable $e, float $time): void
+    public function addError(PHPUnitTest $test, Throwable $t, float $time): void
     {
         $this->writeNotOk($test, 'Error');
     }
@@ -53,11 +65,11 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
     /**
      * A warning occurred.
      *
-     * @param \PHPUnit\Framework\Test $test
-     * @param \PHPUnit\Framework\Warning $e
+     * @param PHPUnitTest $test
+     * @param Warning $e
      * @param float $time
      */
-    public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, float $time): void
+    public function addWarning(PHPUnitTest $test, Warning $e, float $time): void
     {
         $this->writeNotOk($test, 'Warning');
     }
@@ -65,20 +77,17 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
     /**
      * A failure occurred.
      *
-     * @param \PHPUnit\Framework\Test $test
-     * @param \PHPUnit\Framework\AssertionFailedError $e
+     * @param PHPUnitTest $test
+     * @param AssertionFailedError $e
      * @param float $time
      */
-    public function addFailure(
-        \PHPUnit\Framework\Test $test,
-        \PHPUnit\Framework\AssertionFailedError $e,
-        float $time
-    ): void{
+    public function addFailure(PHPUnitTest $test, AssertionFailedError $e, float $time): void
+    {
         $this->writeNotOk($test, 'Failure');
 
         $message = explode(
             "\n",
-            \PHPUnit\Framework\TestFailure::exceptionToString($e)
+            TestFailure::exceptionToString($e)
         );
 
         $diagnostic = [
@@ -86,7 +95,7 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
             'severity' => 'fail'
         ];
 
-        if ($e instanceof \PHPUnit\Framework\ExpectationFailedThrowable) {
+        if ($e instanceof ExpectationFailedException) {
             $cf = $e->getComparisonFailure();
 
             if ($cf !== null) {
@@ -97,12 +106,12 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
             }
         }
 
-        $yaml = new \Symfony\Component\Yaml\Dumper;
+        $yamlDumper = new SymfonyYamlDumper;
 
         $this->write(
             sprintf(
                 "  ---\n%s  ...\n",
-                $yaml->dump($diagnostic, 2, 2)
+                $yamlDumper->dump($diagnostic, 2, 2)
             )
         );
     }
@@ -110,11 +119,11 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
     /**
      * Incomplete test.
      *
-     * @param \PHPUnit\Framework\Test $test
-     * @param \Throwable $e
+     * @param PHPUnitTest $test
+     * @param AssertionFailedError|Throwable $t
      * @param float $time
      */
-    public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time): void
+    public function addIncompleteTest(PHPUnitTest $test, Throwable $t, float $time): void
     {
         $this->writeNotOk($test, '', 'TODO Incomplete Test');
     }
@@ -122,17 +131,17 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
     /**
      * Risky test.
      *
-     * @param \PHPUnit\Framework\Test $test
-     * @param Throwable $e
+     * @param PHPUnitTest $test
+     * @param Throwable $t
      * @param float $time
      */
-    public function addRiskyTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time): void
+    public function addRiskyTest(PHPUnitTest $test, Throwable $t, float $time): void
     {
         $this->write(
             sprintf(
                 "ok %d - # RISKY%s\n",
                 $this->testNumber,
-                $e->getMessage() != '' ? ' ' . $e->getMessage() : ''
+                $t->getMessage() != '' ? ' ' . $t->getMessage() : ''
             )
         );
 
@@ -142,17 +151,17 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
     /**
      * Skipped test.
      *
-     * @param \PHPUnit\Framework\Test $test
-     * @param Throwable $e
+     * @param PHPUnitTest $test
+     * @param Throwable $t
      * @param float $time
      */
-    public function addSkippedTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time): void
+    public function addSkippedTest(PHPUnitTest $test, Throwable $t, float $time): void
     {
         $this->write(
             sprintf(
                 "ok %d - # SKIP%s\n",
                 $this->testNumber,
-                $e->getMessage() != '' ? ' ' . $e->getMessage() : ''
+                $t->getMessage() != '' ? ' ' . $t->getMessage() : ''
             )
         );
 
@@ -162,22 +171,21 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
     /**
      * A testsuite started.
      *
-     * @param \PHPUnit\Framework\TestSuite $suite
+     * @param TestSuite $suite
      */
-    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
+    public function startTestSuite(TestSuite $suite): void
     {
-        $this->testSuiteLevel++;
+        ++$this->testSuiteLevel;
     }
 
     /**
      * A testsuite ended.
      *
-     * @param \PHPUnit\Framework\TestSuite $suite
+     * @param TestSuite $suite
      */
-    public function endTestSuite(\PHPUnit\Framework\TestSuite $suite): void
+    public function endTestSuite(TestSuite $suite): void
     {
-        $this->testSuiteLevel--;
-
+        --$this->testSuiteLevel;
         if ($this->testSuiteLevel == 0) {
             $this->write(sprintf("1..%d\n", $this->testNumber));
         }
@@ -186,23 +194,23 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
     /**
      * A test started.
      *
-     * @param \PHPUnit\Framework\Test $test
+     * @param PHPUnitTest $test
      */
-    public function startTest(\PHPUnit\Framework\Test $test): void
+    public function startTest(PHPUnitTest $test): void
     {
-        $this->testNumber++;
+        ++$this->testNumber;
         $this->testSuccessful = true;
     }
 
     /**
      * A test ended.
      *
-     * @param \PHPUnit\Framework\Test $test
+     * @param PHPUnitTest|TestCase $test
      * @param float $time
      */
-    public function endTest(\PHPUnit\Framework\Test $test, float $time): void
+    public function endTest(PHPUnitTest $test, float $time): void
     {
-        if ($this->testSuccessful === true) {
+        if ($this->testSuccessful) {
             $this->write(
                 sprintf(
                     "ok %d - %s\n",
@@ -215,12 +223,7 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
         $this->writeDiagnostics($test);
     }
 
-    /**
-     * @param \PHPUnit\Framework\Test $test
-     * @param string $prefix
-     * @param string $directive
-     */
-    protected function writeNotOk(\PHPUnit\Framework\Test $test, $prefix = '', $directive = '')
+    protected function writeNotOk(PHPUnitTest $test, string $prefix = '', string $directive = ''): void
     {
         $this->write(
             sprintf(
@@ -235,12 +238,9 @@ class TAP extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListen
         $this->testSuccessful = false;
     }
 
-    /**
-     * @param \PHPUnit\Framework\Test $test
-     */
-    private function writeDiagnostics(\PHPUnit\Framework\Test $test)
+    private function writeDiagnostics(PHPUnitTest $test): void
     {
-        if (!$test instanceof \PHPUnit\Framework\TestCase) {
+        if (!$test instanceof TestCase) {
             return;
         }
 
