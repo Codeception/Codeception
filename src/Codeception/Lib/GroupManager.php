@@ -64,7 +64,7 @@ class GroupManager
             if (is_array($tests)) {
                 foreach ($tests as $test) {
                     $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $test);
-                    $this->testsInGroups[$group][] = $this->normalizeFilePath($file);
+                    $this->testsInGroups[$group][] = $this->normalizeFilePath($file, $group);
                 }
             } elseif (is_file(Configuration::projectDir() . $tests)) {
                 $handle = @fopen(Configuration::projectDir() . $tests, "r");
@@ -78,7 +78,7 @@ class GroupManager
                         }
 
                         $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], trim($test));
-                        $this->testsInGroups[$group][] = $this->normalizeFilePath($file);
+                        $this->testsInGroups[$group][] = $this->normalizeFilePath($file, $group);
                     }
                     fclose($handle);
                 }
@@ -88,45 +88,47 @@ class GroupManager
 
     /**
      * @param string $file
+     * @param string $group
      * @return false|string
      * @throws ConfigurationException
      */
-    private function normalizeFilePath($file)
+    private function normalizeFilePath($file, $group)
     {
         $pathParts = explode(':', $file);
         if (codecept_is_path_absolute($file)) {
             if ($file[0] === '/' && count($pathParts) > 1) {
                 //take segment before first :
-                $this->checkIfFileExists($pathParts[0]);
+                $this->checkIfFileExists($pathParts[0], $group);
                 return sprintf('%s:%s', realpath($pathParts[0]), $pathParts[1]);
             } else if (count($pathParts) > 2) {
                 //on Windows take segment before second :
                 $fullPath = $pathParts[0] . ':' . $pathParts[1];
-                $this->checkIfFileExists($fullPath);
+                $this->checkIfFileExists($fullPath, $group);
                 return sprintf('%s:%s', realpath($fullPath), $pathParts[2]);
             }
 
-            $this->checkIfFileExists($file);
+            $this->checkIfFileExists($file, $group);
             return realpath($file);
         } elseif (strpos($file, ':') === false) {
             $dirtyPath = Configuration::projectDir() . $file;
-            $this->checkIfFileExists($dirtyPath);
+            $this->checkIfFileExists($dirtyPath, $group);
             return realpath($dirtyPath);
         }
 
         $dirtyPath = Configuration::projectDir() . $pathParts[0];
-        $this->checkIfFileExists($dirtyPath);
+        $this->checkIfFileExists($dirtyPath, $group);
         return sprintf('%s:%s', realpath($dirtyPath), $pathParts[1]);
     }
 
     /**
      * @param string $path
+     * @param string $group
      * @throws ConfigurationException
      */
-    private function checkIfFileExists($path)
+    private function checkIfFileExists($path, $group)
     {
         if (!file_exists($path)) {
-            throw new ConfigurationException('GroupManager: File or directory ' . $path . ' does not exist');
+            throw new ConfigurationException('GroupManager: File or directory ' . $path . ' set in ' . $group. ' group does not exist');
         }
     }
 

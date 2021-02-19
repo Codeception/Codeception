@@ -337,7 +337,7 @@ abstract class Module
     protected function getModule($name)
     {
         if (!$this->hasModule($name)) {
-            throw new Exception\ModuleException(__CLASS__, "Module $name couldn't be connected");
+            $this->moduleContainer->throwMissingModuleExceptionWithSuggestion(__CLASS__, $name);
         }
         return $this->moduleContainer->getModule($name);
     }
