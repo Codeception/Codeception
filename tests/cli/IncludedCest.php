@@ -173,12 +173,14 @@ class IncludedCest
       */
     public function cleanIncluded(\CliGuy $I)
     {
-         $I->executeCommand('clean');
-         $I->seeInShellOutput('included/_log');
-         $I->seeInShellOutput('included/jazz/tests/_log');
-         $I->seeInShellOutput('included/jazz/pianist/tests/_log');
-         $I->seeInShellOutput('included/shire/tests/_log');
-         $I->seeInShellOutput('Done');
+        $ds = DIRECTORY_SEPARATOR;
+
+        $I->executeCommand('clean');
+        $I->seeInShellOutput("included{$ds}_log");
+        $I->seeInShellOutput("included{$ds}jazz{$ds}tests/_log");
+        $I->seeInShellOutput("included{$ds}jazz{$ds}pianist{$ds}tests/_log");
+        $I->seeInShellOutput("included{$ds}shire{$ds}tests/_log");
+        $I->seeInShellOutput('Done');
     }
 
 }
