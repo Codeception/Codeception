@@ -6,6 +6,7 @@ namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Util\Locator;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverElement;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use function is_string;
@@ -19,7 +20,7 @@ class WebDriverNot extends WebDriver
     }
 
     /**
-     * @param mixed $nodes
+     * @param WebDriverElement[] $nodes
      * @param string|array|WebDriverBy $selector
      * @param ComparisonFailure|null $comparisonFailure
      */

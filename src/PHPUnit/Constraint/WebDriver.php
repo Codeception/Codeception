@@ -8,6 +8,7 @@ use Codeception\Exception\ElementNotFound;
 use Codeception\Lib\Console\Message;
 use Codeception\Util\Locator;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverElement;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use function count;
@@ -16,6 +17,10 @@ use function strpos;
 
 class WebDriver extends Page
 {
+    /**
+     * @param WebDriverElement[] $nodes
+     * @return bool
+     */
     protected function matches($nodes): bool
     {
         if (count($nodes) === 0) {
@@ -26,7 +31,6 @@ class WebDriver extends Page
         }
 
         foreach ($nodes as $node) {
-            /** @var \WebDriverElement $node **/
             if (!$node->isDisplayed()) {
                 continue;
             }
@@ -38,7 +42,7 @@ class WebDriver extends Page
     }
 
     /**
-     * @param mixed $nodes
+     * @param WebDriverElement[] $nodes
      * @param string|array|WebDriverBy $selector
      * @param ComparisonFailure|null $comparisonFailure
      */
@@ -66,6 +70,10 @@ class WebDriver extends Page
         );
     }
 
+    /**
+     * @param WebDriverElement[] $nodes
+     * @return string
+     */
     protected function failureDescription($nodes): string
     {
         $desc = '';
@@ -75,14 +83,18 @@ class WebDriver extends Page
         return $desc;
     }
 
-    protected function nodesList($nodes, $contains = null): string
+    /**
+     * @param WebDriverElement[] $nodes
+     * @param string|null $contains
+     * @return string
+     */
+    protected function nodesList(array $nodes, string $contains = null): string
     {
         $output = "";
         foreach ($nodes as $node) {
-            if ($contains && strpos($node->getText(), (string) $contains) === false) {
+            if ($contains && strpos($node->getText(), $contains) === false) {
                 continue;
             }
-            /** @var \WebDriverElement $node **/
             $message = new Message("\n+ <%s> %s");
             $output .= $message->with($node->getTagName(), $node->getText());
         }

@@ -11,13 +11,17 @@ use Symfony\Component\DomCrawler\Crawler as SymfonyCrawler;
 
 class CrawlerNot extends Crawler
 {
+    /**
+     * @param SymfonyCrawler $nodes
+     * @return bool
+     */
     protected function matches($nodes): bool
     {
         return !parent::matches($nodes);
     }
 
     /**
-     * @param mixed $nodes
+     * @param SymfonyCrawler $nodes
      * @param string|array|WebDriverBy $selector
      * @param ComparisonFailure|null $comparisonFailure
      */
@@ -29,7 +33,6 @@ class CrawlerNot extends Crawler
                 $comparisonFailure
             );
         }
-        /** @var SymfonyCrawler $nodes **/
 
         $output = "There was '{$selector}' element";
         $output .= $this->uriMessage('on page');

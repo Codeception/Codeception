@@ -6,6 +6,7 @@ namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Exception\ElementNotFound;
 use Codeception\Lib\Console\Message;
+use DOMElement;
 use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
@@ -14,9 +15,12 @@ use function strpos;
 
 class Crawler extends Page
 {
-    protected function matches($nodes) : bool
+    /**
+     * @param SymfonyDomCrawler $nodes
+     * @return bool
+     */
+    protected function matches($nodes): bool
     {
-        /** @var SymfonyDomCrawler $nodes **/
         if (!$nodes->count()) {
             return false;
         }
@@ -33,13 +37,12 @@ class Crawler extends Page
     }
 
     /**
-     * @param mixed $nodes
-     * @param string|array|WebDriverBy $selector
+     * @param SymfonyDomCrawler $nodes
+     * @param string $selector
      * @param ComparisonFailure|null $comparisonFailure
      */
-    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null):void
+    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null): void
     {
-        /** @var SymfonyDomCrawler $nodes **/
         if (!$nodes->count()) {
             throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
         }
@@ -62,7 +65,11 @@ class Crawler extends Page
         );
     }
 
-    protected function failureDescription($other) : string
+    /**
+     * @param DOMElement[] $other
+     * @return string
+     */
+    protected function failureDescription($other): string
     {
         $description = '';
         foreach ($other as $o) {
@@ -71,11 +78,11 @@ class Crawler extends Page
         return $description;
     }
 
-    protected function nodesList(SymfonyDomCrawler $domCrawler, $contains = null): string
+    protected function nodesList(SymfonyDomCrawler $domCrawler, string $contains = null): string
     {
         $output = '';
         foreach ($domCrawler as $node) {
-            if ($contains && strpos($node->nodeValue, (string) $contains) === false) {
+            if ($contains && strpos($node->nodeValue, $contains) === false) {
                 continue;
             }
             $output .= "\n+ " . $node->C14N();

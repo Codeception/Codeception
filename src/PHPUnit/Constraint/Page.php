@@ -36,8 +36,7 @@ class Page extends Constraint
      * Evaluates the constraint for parameter $other. Returns true if the
      * constraint is met, false otherwise.
      *
-     * @param mixed $other Value or object to evaluate.
-     *
+     * @param string $other Value or object to evaluate.
      * @return bool
      */
     protected function matches($other): bool
@@ -63,7 +62,11 @@ class Page extends Constraint
         );
     }
 
-    protected function failureDescription($pageContent) : string
+    /**
+     * @param string $pageContent
+     * @return string
+     */
+    protected function failureDescription($pageContent): string
     {
         $message = $this->uriMessage('on page');
         $message->append("\n--> ");
