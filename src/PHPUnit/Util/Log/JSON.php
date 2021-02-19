@@ -45,10 +45,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * An error occurred.
-     *
-     * @param TestCase|PHPUnitTest $test
-     * @param Throwable $t
-     * @param float $time
      */
     public function addError(PHPUnitTest $test, Throwable $t, float $time): void
     {
@@ -65,10 +61,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * A warning occurred.
-     *
-     * @param TestCase|PHPUnitTest $test
-     * @param Warning $e
-     * @param float $time
      */
     public function addWarning(PHPUnitTest $test, Warning $e, float $time): void
     {
@@ -85,10 +77,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * A failure occurred.
-     *
-     * @param TestCase|PHPUnitTest $test
-     * @param AssertionFailedError $e
-     * @param float $time
      */
     public function addFailure(PHPUnitTest $test, AssertionFailedError $e, float $time): void
     {
@@ -105,10 +93,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * Incomplete test.
-     *
-     * @param TestCase|PHPUnitTest $test
-     * @param AssertionFailedError|Throwable $t
-     * @param float $time
      */
     public function addIncompleteTest(PHPUnitTest $test, Throwable $t, float $time): void
     {
@@ -125,10 +109,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * Risky test.
-     *
-     * @param TestCase|PHPUnitTest $test
-     * @param Throwable $t
-     * @param float $time
      */
     public function addRiskyTest(PHPUnitTest $test, Throwable $t, float $time): void
     {
@@ -145,10 +125,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * Skipped test.
-     *
-     * @param TestCase|PHPUnitTest $test
-     * @param Throwable $t
-     * @param float $time
      */
     public function addSkippedTest(PHPUnitTest $test, Throwable $t, float $time): void
     {
@@ -165,8 +141,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * A testsuite started.
-     *
-     * @param TestSuite $suite
      */
     public function startTestSuite(TestSuite $suite): void
     {
@@ -184,8 +158,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * A testsuite ended.
-     *
-     * @param TestSuite $suite
      */
     public function endTestSuite(TestSuite $suite): void
     {
@@ -196,8 +168,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * A test started.
-     *
-     * @param PHPUnitTest $test
      */
     public function startTest(PHPUnitTest $test): void
     {
@@ -215,9 +185,6 @@ class JSON extends Printer implements TestListener
 
     /**
      * A test ended.
-     *
-     * @param PHPUnitTest|TestCase $test
-     * @param float $time
      */
     public function endTest(PHPUnitTest $test, float $time): void
     {
