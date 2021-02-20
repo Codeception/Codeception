@@ -92,7 +92,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     public function test(): void
     {
         $this->makeContexts();
-        $description = explode("\n", $this->featureNode->getDescription());
+        $description = explode("\n", (string)$this->featureNode->getDescription());
         foreach ($description as $line) {
             $this->getScenario()->runStep(new Comment($line));
         }
