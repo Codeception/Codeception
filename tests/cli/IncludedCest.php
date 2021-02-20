@@ -6,7 +6,6 @@ class IncludedCest
     {
         $logDir = codecept_root_dir('tests/data/included/_log');
         \Codeception\Util\FileSystem::doEmptyDir($logDir);
-        file_put_contents($logDir . '/.gitkeep', '');
     }
 
     /**
