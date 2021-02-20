@@ -166,4 +166,21 @@ class IncludedCest
         $I->seeInShellOutput('Jazz\\Pianist\\TestGuy');
         $I->seeInShellOutput('Shire\\TestGuy');
     }
+
+	/**
+      * @before moveToIncluded
+      * @param CliGuy $I
+      */
+    public function cleanIncluded(\CliGuy $I)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        $I->executeCommand('clean');
+        $I->seeInShellOutput("included{$ds}_log");
+        $I->seeInShellOutput("included{$ds}jazz{$ds}tests/_log");
+        $I->seeInShellOutput("included{$ds}jazz{$ds}pianist{$ds}tests/_log");
+        $I->seeInShellOutput("included{$ds}shire{$ds}tests/_log");
+        $I->seeInShellOutput('Done');
+    }
+
 }
