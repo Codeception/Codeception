@@ -15,7 +15,7 @@ abstract class GroupObject extends Extension
     {
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         $inheritedEvents = parent::getSubscribedEvents();
         $events = [];
