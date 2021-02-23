@@ -9,7 +9,7 @@ class ExecutorTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider valuesProvider
      */
-    public function testRun(bool $returnValue): void
+    public function testRun(bool $returnValue)
     {
         $expected = $returnValue;
 

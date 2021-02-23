@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 class TestTest extends \Codeception\Test\Unit
 {
-    public function testReportedInterface(): void
+    public function testReportedInterface()
     {
         $this->assertInstanceOf(\Codeception\Test\Interfaces\Reported::class, $this);
         $this->assertEquals([

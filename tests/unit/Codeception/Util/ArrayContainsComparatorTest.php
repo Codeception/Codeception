@@ -25,7 +25,7 @@ class ArrayContainsComparatorTest extends \Codeception\Test\Unit
     }
 
     // tests
-    public function testInclusion(): void
+    public function testInclusion()
     {
         $this->assertTrue($this->ary->containsArray(['name' => 'Davert']));
         $this->assertTrue($this->ary->containsArray(['user' => ['name' => 'Davert']]));

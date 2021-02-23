@@ -11,7 +11,7 @@ class GenerateGroupTest extends BaseCommandRunner
      */
     public $log = [];
 
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\GenerateGroup::class);
         $this->config = [
@@ -22,7 +22,7 @@ class GenerateGroupTest extends BaseCommandRunner
         ];
     }
 
-    public function testBasic(): void
+    public function testBasic()
     {
         $this->execute(['group' => 'Core']);
 
@@ -36,7 +36,7 @@ class GenerateGroupTest extends BaseCommandRunner
         $this->assertIsValidPhp($generated['content']);
     }
 
-    public function testNamespace(): void
+    public function testNamespace()
     {
         $this->config['namespace'] = 'Shire';
         $this->execute(['group' => 'Core']);

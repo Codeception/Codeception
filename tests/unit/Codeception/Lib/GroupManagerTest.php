@@ -16,7 +16,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
     protected $manager;
 
     // tests
-    public function testGroupsFromArray(): void
+    public function testGroupsFromArray()
     {
         $this->manager = new GroupManager(['important' => ['tests/data/group_manager_test/UserTest.php:testName', 'tests/data/group_manager_test/PostTest.php']]);
         $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php', 'testName');
@@ -27,14 +27,14 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertNotContains('important', $this->manager->groupsForTest($test3));
     }
 
-    public function testRealPathForFileWithMethodName(): void
+    public function testRealPathForFileWithMethodName()
     {
         $this->manager = new GroupManager(['important' => ['tests/data/group_manager_test/PostTest.php:testName']]);
         $test = $this->makeTestCase('tests/data/group_manager_test/PostTest.php', 'testName');
         $this->assertContains('important', $this->manager->groupsForTest($test));
     }
 
-    public function testGroupsFromFile(): void
+    public function testGroupsFromFile()
     {
         $this->manager = new GroupManager(['important' => 'tests/data/group_manager_test/test_groups']);
         $test1 = $this->makeTestCase('tests/data/group_manager_test//UserTest.php', 'testName');
@@ -45,7 +45,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertNotContains('important', $this->manager->groupsForTest($test3));
     }
 
-    public function testGroupWithRelativePathsFromFile(): void
+    public function testGroupWithRelativePathsFromFile()
     {
         $this->manager = new GroupManager(['important' => 'tests/data/group_manager_test/relative_paths']);
         $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php', 'testName');
@@ -56,21 +56,21 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertNotContains('important', $this->manager->groupsForTest($test3));
     }
 
-    public function testGroupsFromFileOnWindows(): void
+    public function testGroupsFromFileOnWindows()
     {
         $this->manager = new GroupManager(['important' => 'tests//data/group_manager_test/group_3']);
         $test = $this->makeTestCase('tests/data/group_manager_test/WinTest.php');
         $this->assertContains('important', $this->manager->groupsForTest($test));
     }
 
-    public function testGroupsFromArrayOnWindows(): void
+    public function testGroupsFromArrayOnWindows()
     {
         $this->manager = new GroupManager(['important' => ['tests\data\group_manager_test\WinTest.php']]);
         $test = $this->makeTestCase('tests/data/group_manager_test/WinTest.php');
         $this->assertContains('important', $this->manager->groupsForTest($test));
     }
 
-    public function testGroupsByPattern(): void
+    public function testGroupsByPattern()
     {
         $this->manager = new GroupManager(['group_*' => 'tests/data/group_manager_test/group_*']);
         $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php');
@@ -79,7 +79,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertContains('group_2', $this->manager->groupsForTest($test2));
     }
 
-    public function testGroupsByDifferentPattern(): void
+    public function testGroupsByDifferentPattern()
     {
         $this->manager = new GroupManager(['g_*' => 'tests/data/group_manager_test/group_*']);
         $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php');
@@ -88,7 +88,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertContains('g_2', $this->manager->groupsForTest($test2));
     }
 
-    public function testGroupsFileHandlesWhitespace(): void
+    public function testGroupsFileHandlesWhitespace()
     {
         $this->manager = new GroupManager(['whitespace_group_test' => 'tests/data/group_manager_test/whitespace_group_test']);
         $goodTest = $this->makeTestCase('tests/data/group_manager_test/UserTest.php');
@@ -98,7 +98,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertEmpty($this->manager->groupsForTest($badTest));
     }
 
-    public function testLoadSpecificScenarioFromFile(): void
+    public function testLoadSpecificScenarioFromFile()
     {
         $this->manager = new GroupManager(['gherkinGroup1' => 'tests/data/group_manager_test/gherkinGroup1']);
         $loader = new GherkinLoader();
@@ -107,7 +107,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertContains('gherkinGroup1', $this->manager->groupsForTest($test));
     }
 
-    public function testLoadSpecificScenarioWithMultibyteStringFromFile(): void
+    public function testLoadSpecificScenarioWithMultibyteStringFromFile()
     {
         $this->manager = new GroupManager(['gherkinGroup2' => 'tests/data/group_manager_test/gherkinGroup2']);
         $loader = new GherkinLoader();
@@ -116,7 +116,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertContains('gherkinGroup2', $this->manager->groupsForTest($test));
     }
 
-    public function testThrowsExceptionIfDirectoryDoesNotExists(): void
+    public function testThrowsExceptionIfDirectoryDoesNotExists()
     {
         $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessage('tests/data/missing-directory');
@@ -124,7 +124,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         new GroupManager(['invalidGroup' => ['tests/data/missing-directory']]);
     }
 
-    public function testThrowsExceptionIfDirectoryDoesNotExistsWithColonAndTestName(): void
+    public function testThrowsExceptionIfDirectoryDoesNotExistsWithColonAndTestName()
     {
         $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessage('tests/data/missing-directory');
@@ -132,7 +132,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         new GroupManager(['invalidGroup' => ['tests/data/missing-directory:testName']]);
     }
 
-    public function testThrowsExceptionIfDirectoryInGroupFileDoesNotExists(): void
+    public function testThrowsExceptionIfDirectoryInGroupFileDoesNotExists()
     {
         $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessage('tests/data/missing-directory');

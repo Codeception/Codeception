@@ -14,18 +14,18 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
      */
     private $originalErrorLevel;
 
-    public function _setUp(): void
+    public function _setUp()
     {
         $this->originalErrorLevel = error_reporting();
     }
 
-    public function _tearDown(): void
+    public function _tearDown()
     {
         // Deprecation message test changes error_level
         error_reporting($this->originalErrorLevel);
     }
 
-    public function testDeprecationMessagesRespectErrorLevelSetting(): void
+    public function testDeprecationMessagesRespectErrorLevelSetting()
     {
         $errorHandler = new ErrorHandler();
 
@@ -41,7 +41,7 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
         $this->assertEquals([], Notification::all(), 'Deprecation message was added to notifications');
     }
 
-    public function testShowsLocationOfWarning(): void
+    public function testShowsLocationOfWarning()
     {
         $this->expectException(\PHPUnit\Framework\Exception::class);
         $SEP = DIRECTORY_SEPARATOR;

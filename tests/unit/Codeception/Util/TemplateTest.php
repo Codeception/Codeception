@@ -6,28 +6,28 @@ namespace Codeception\Util;
 
 class TemplateTest extends \PHPUnit\Framework\TestCase
 {
-    public function testTemplateCanPassValues(): void
+    public function testTemplateCanPassValues()
     {
         $template = new Template("hello, {{name}}");
         $template->place('name', 'davert');
         $this->assertEquals('hello, davert', $template->produce());
     }
 
-    public function testTemplateCanHaveOtherPlaceholder(): void
+    public function testTemplateCanHaveOtherPlaceholder()
     {
         $template = new Template("hello, %name%", '%', '%');
         $template->place('name', 'davert');
         $this->assertEquals('hello, davert', $template->produce());
     }
 
-    public function testTemplateSupportsDotNotationForArrays(): void
+    public function testTemplateSupportsDotNotationForArrays()
     {
         $template = new Template("hello, {{user.data.name}}");
         $template->place('user', ['data' => ['name' => 'davert']]);
         $this->assertEquals('hello, davert', $template->produce());
     }
 
-    public function testShouldSkipUnmatchedPlaceholder(): void
+    public function testShouldSkipUnmatchedPlaceholder()
     {
         $template = new Template("hello, {{name}}");
         $this->assertEquals('hello, {{name}}', $template->produce());

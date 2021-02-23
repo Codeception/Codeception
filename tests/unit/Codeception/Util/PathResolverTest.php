@@ -10,7 +10,7 @@ class PathResolverTest extends \Codeception\Test\Unit
      * @dataProvider getRelativeDirTestData
      * @group core
      */
-    public function testGetRelativeDir(string $path, string $projDir, string $dirSep, string $expectedOutput): void
+    public function testGetRelativeDir(string $path, string $projDir, string $dirSep, string $expectedOutput)
     {
         $relativeDir = PathResolver::getRelativeDir($path, $projDir, $dirSep);
         $this->assertEquals($expectedOutput, $relativeDir);

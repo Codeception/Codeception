@@ -9,12 +9,12 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
      */
     public $config = [];
 
-    public function _setUp(): void
+    public function _setUp()
     {
         $this->config = \Codeception\Configuration::config();
     }
 
-    protected function _tearDown(): void
+    protected function _tearDown()
     {
         \Codeception\Module\UniversalFramework::$includeInheritedActions = true;
         \Codeception\Module\UniversalFramework::$onlyActions = [];
@@ -24,7 +24,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testSuites(): void
+    public function testSuites()
     {
         $suites = \Codeception\Configuration::suites();
         $this->assertContains('unit', $suites);
@@ -34,7 +34,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testFunctionForStrippingClassNames(): void
+    public function testFunctionForStrippingClassNames()
     {
         $matches = [];
         $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', '\\Codeception\\Module\\UserHelper', $matches));
@@ -46,7 +46,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testModules(): void
+    public function testModules()
     {
         $settings = ['modules' => ['enabled' => ['EmulateModuleHelper']]];
         $modules = \Codeception\Configuration::modules($settings);
@@ -62,7 +62,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testDefaultCustomCommandConfig(): void
+    public function testDefaultCustomCommandConfig()
     {
         $defaultConfig = \Codeception\Configuration::$defaultConfig;
 

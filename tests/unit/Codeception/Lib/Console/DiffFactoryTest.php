@@ -21,7 +21,7 @@ class DiffFactoryTest extends \Codeception\Test\Unit
         $this->diffFactory = new DiffFactory();
     }
 
-    public function testItCreatesMessageForComparisonFailure(): void
+    public function testItCreatesMessageForComparisonFailure()
     {
         $expectedDiff = $this->getExpectedDiff();
         $failure = $this->createFailure();

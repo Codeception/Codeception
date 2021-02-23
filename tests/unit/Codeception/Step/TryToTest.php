@@ -14,7 +14,7 @@ class TryToTest extends \PHPUnit\Framework\TestCase
      */
     protected $shouldFail = true;
 
-    public function testTryToShouldReturnSuccess(): void
+    public function testTryToShouldReturnSuccess()
     {
         // create an empty container with this class as a module
         $moduleContainer = Stub::make(ModuleContainer::class, [
@@ -27,7 +27,7 @@ class TryToTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($val);
     }
 
-    public function testTryStepShouldNotFailStep(): void
+    public function testTryStepShouldNotFailStep()
     {
         // run an action from this class
         $tryTo = new \Codeception\Step\TryTo('_executeFailedCode', []);
@@ -39,7 +39,7 @@ class TryToTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($tryTo->hasFailed(), 'successful retry still marks test as failed');
     }
 
-    public function _executeFailedCode(): void
+    public function _executeFailedCode()
     {
         throw new \Exception('Error');
     }

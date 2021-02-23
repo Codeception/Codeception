@@ -25,7 +25,7 @@ class ColorizerTest extends Unit
         $this->colorizer = new Colorizer();
     }
 
-    public function testItAddFormatToDiffMessage(): void
+    public function testItAddFormatToDiffMessage()
     {
         $toColorizeInput = <<<PLAIN
 foo

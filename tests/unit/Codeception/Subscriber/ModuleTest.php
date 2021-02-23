@@ -24,13 +24,13 @@ class ModuleTest extends Unit
     /** @var Prophet */
     private $prophet;
 
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->prophet = new Prophet();
         CodeceptionModuleStub::$callOrderSequence = 1;
     }
 
-    public function testBeforeSuiteDoesNothingWhenEventSuiteHasIncorrectType(): void
+    public function testBeforeSuiteDoesNothingWhenEventSuiteHasIncorrectType()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -52,7 +52,7 @@ class ModuleTest extends Unit
         $this->assertEquals(0, $module3->getCallOrder());
     }
 
-    public function testBeforeSuite(): void
+    public function testBeforeSuite()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -86,7 +86,7 @@ class ModuleTest extends Unit
         $this->assertEquals(3, $module3->getCallOrder());
     }
 
-    public function testAfterSuite(): void
+    public function testAfterSuite()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -109,7 +109,7 @@ class ModuleTest extends Unit
         $this->assertEquals(1, $module3->getCallOrder());
     }
 
-    public function testBeforeDoesNothingWhenEventTestHasIncorrectType(): void
+    public function testBeforeDoesNothingWhenEventTestHasIncorrectType()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -137,7 +137,7 @@ class ModuleTest extends Unit
         $this->assertEquals(0, $module3->getCallOrder());
     }
 
-    public function testBefore(): void
+    public function testBefore()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -165,7 +165,7 @@ class ModuleTest extends Unit
         $this->assertEquals(3, $module3->getCallOrder());
     }
 
-    public function testAfterDoesNothingWhenEventTestHasIncorrectType(): void
+    public function testAfterDoesNothingWhenEventTestHasIncorrectType()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -193,7 +193,7 @@ class ModuleTest extends Unit
         $this->assertEquals(0, $module3->getCallOrder());
     }
 
-    public function testAfter(): void
+    public function testAfter()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -221,7 +221,7 @@ class ModuleTest extends Unit
         $this->assertEquals(1, $module3->getCallOrder());
     }
 
-    public function testFailedDoesNothingWhenEventTestHasIncorrectType(): void
+    public function testFailedDoesNothingWhenEventTestHasIncorrectType()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -250,7 +250,7 @@ class ModuleTest extends Unit
         $this->assertEquals(0, $module3->getCallOrder());
     }
 
-    public function testFailed(): void
+    public function testFailed()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -279,7 +279,7 @@ class ModuleTest extends Unit
         $this->assertEquals(1, $module3->getCallOrder());
     }
 
-    public function testBeforeStep(): void
+    public function testBeforeStep()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -308,7 +308,7 @@ class ModuleTest extends Unit
         $this->assertEquals(3, $module3->getCallOrder());
     }
 
-    public function testAfterStep(): void
+    public function testAfterStep()
     {
         /** @var ModuleContainer $moduleContainer */
         $moduleContainer = $this->prophet->prophesize(ModuleContainer::class)->reveal();
@@ -356,7 +356,7 @@ class CodeceptionModuleStub extends \Codeception\Module
      *
      * @param array $settings
      */
-    public function _beforeSuite($settings = []): void
+    public function _beforeSuite($settings = [])
     {
         $this->callOrder = static::$callOrderSequence++;
         parent::_beforeSuite($settings);
@@ -365,13 +365,13 @@ class CodeceptionModuleStub extends \Codeception\Module
     /**
      * **HOOK** executed after suite
      */
-    public function _afterSuite(): void
+    public function _afterSuite()
     {
         $this->callOrder = static::$callOrderSequence++;
         parent::_afterSuite();
     }
 
-    public function _before(TestInterface $test): void
+    public function _before(TestInterface $test)
     {
         $this->callOrder = static::$callOrderSequence++;
         parent::_before($test);
@@ -382,7 +382,7 @@ class CodeceptionModuleStub extends \Codeception\Module
      *
      * @param TestInterface $test
      */
-    public function _after(TestInterface $test): void
+    public function _after(TestInterface $test)
     {
         $this->callOrder = static::$callOrderSequence++;
         parent::_after($test);
@@ -394,7 +394,7 @@ class CodeceptionModuleStub extends \Codeception\Module
      * @param TestInterface $test
      * @param Exception $fail
      */
-    public function _failed(TestInterface $test, $fail): void
+    public function _failed(TestInterface $test, $fail)
     {
         $this->callOrder = static::$callOrderSequence++;
         parent::_failed($test, $fail);
@@ -405,7 +405,7 @@ class CodeceptionModuleStub extends \Codeception\Module
      *
      * @param Step $step
      */
-    public function _beforeStep(Step $step): void
+    public function _beforeStep(Step $step)
     {
         $this->callOrder = static::$callOrderSequence++;
         parent::_beforeStep($step);
@@ -416,7 +416,7 @@ class CodeceptionModuleStub extends \Codeception\Module
      *
      * @param Step $step
      */
-    public function _afterStep(Step $step): void
+    public function _afterStep(Step $step)
     {
         $this->callOrder = static::$callOrderSequence++;
         parent::_afterStep($step);

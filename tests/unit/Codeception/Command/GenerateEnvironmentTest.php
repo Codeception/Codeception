@@ -6,7 +6,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GenerateEnvironmentTest extends BaseCommandRunner
 {
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\GenerateEnvironment::class);
         $this->config = [
@@ -16,14 +16,14 @@ class GenerateEnvironmentTest extends BaseCommandRunner
         ];
     }
 
-    public function testCreated(): void
+    public function testCreated()
     {
         $this->execute(['env' => 'firefox']);
         $this->assertStringContainsString('firefox config was created in tests/_envs/firefox.yml', $this->output);
         $this->assertEquals('tests/_envs/firefox.yml', $this->filename);
     }
 
-    public function testFailed(): void
+    public function testFailed()
     {
         $this->makeCommand(\Codeception\Command\GenerateEnvironment::class, false);
         $this->execute(['env' => 'firefox']);

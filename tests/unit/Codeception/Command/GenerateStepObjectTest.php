@@ -11,7 +11,7 @@ class GenerateStepObjectTest extends BaseCommandRunner
      */
     public $log = [];
 
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\GenerateStepObject::class);
         $this->config = [
@@ -20,7 +20,7 @@ class GenerateStepObjectTest extends BaseCommandRunner
         ];
     }
 
-    public function testBasic(): void
+    public function testBasic()
     {
         $this->execute(['suite' => 'shire', 'step' => 'Login', '--silent' => true]);
 
@@ -33,7 +33,7 @@ class GenerateStepObjectTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testNamespace(): void
+    public function testNamespace()
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(['suite' => 'shire', 'step' => 'Login', '--silent' => true]);
@@ -46,7 +46,7 @@ class GenerateStepObjectTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testCreateInSubpath(): void
+    public function testCreateInSubpath()
     {
         $this->execute(['suite' => 'shire', 'step' => 'User/Login', '--silent' => true]);
         $generated = $this->log[0];

@@ -11,7 +11,7 @@ require_once __DIR__ . '/ReflectionTestClass.php';
 
 class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
 {
-    public function testReadPrivateProperty(): void
+    public function testReadPrivateProperty()
     {
         $expected = 'fooBar123';
 
@@ -36,7 +36,7 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testInvokePrivateMethod(): void
+    public function testInvokePrivateMethod()
     {
         $expected = "I'm a cat!";
 
@@ -61,7 +61,7 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testGetClassShortName(): void
+    public function testGetClassShortName()
     {
         $this->assertEquals(
             'ReflectionTestClass',
@@ -74,7 +74,7 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testGetClassFromParameter(): void
+    public function testGetClassFromParameter()
     {
         $object = new ReflectionTestClass();
         $object->setValue('elephant');
@@ -100,7 +100,7 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testGetDefaultValue(): void
+    public function testGetDefaultValue()
     {
         $object = new ReflectionTestClass();
         $object->setValue('elephant');
@@ -141,7 +141,7 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testPhpEncodeValue(): void
+    public function testPhpEncodeValue()
     {
         $this->assertEquals(
             '0',
@@ -169,7 +169,7 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testPhpEncodeArray(): void
+    public function testPhpEncodeArray()
     {
         $this->assertEquals(
             '["foo" => "bar"]',

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 class ScenarioTest extends \PHPUnit\Framework\TestCase
 {
-    public function testGetHtml(): void
+    public function testGetHtml()
     {
         $step1 = $this->getMockBuilder(\Codeception\Step::class)
             ->setConstructorArgs(['Do some testing', ['arg1', 'arg2']])
@@ -27,7 +27,7 @@ class ScenarioTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testScenarioCurrentNameReturnsTestName(): void
+    public function testScenarioCurrentNameReturnsTestName()
     {
         $cept = new \Codeception\Test\Cept('successfulLogin', 'successfulLoginCept.php');
         $scenario = new \Codeception\Scenario($cept);

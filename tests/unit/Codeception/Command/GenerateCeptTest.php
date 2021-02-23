@@ -7,7 +7,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 class GenerateCeptTest extends BaseCommandRunner
 {
 
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\GenerateCept::class);
         $this->config = [
@@ -16,7 +16,7 @@ class GenerateCeptTest extends BaseCommandRunner
         ];
     }
 
-    public function testGenerateBasic(): void
+    public function testGenerateBasic()
     {
         $this->execute(['suite' => 'shire', 'test' => 'HomeCanInclude12Dwarfs']);
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
@@ -25,7 +25,7 @@ class GenerateCeptTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testGenerateWithSuffix(): void
+    public function testGenerateWithSuffix()
     {
         $this->execute(['suite' => 'shire', 'test' => 'HomeCanInclude12DwarfsCept']);
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
@@ -35,7 +35,7 @@ class GenerateCeptTest extends BaseCommandRunner
     /**
      * @group command
      */
-    public function testGenerateWithFullName(): void
+    public function testGenerateWithFullName()
     {
         $this->execute(['suite' => 'shire', 'test' => 'HomeCanInclude12DwarfsCept.php']);
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
@@ -45,7 +45,7 @@ class GenerateCeptTest extends BaseCommandRunner
     /**
      * @group command
      */
-    public function testGenerateWithGuyNamespaced(): void
+    public function testGenerateWithGuyNamespaced()
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(['suite' => 'shire', 'test' => 'HomeCanInclude12Dwarfs']);

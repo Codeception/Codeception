@@ -7,12 +7,12 @@ namespace Codeception;
 class ApplicationTest extends \Codeception\PHPUnit\TestCase
 {
 
-    public static function _setUpBeforeClass(): void
+    public static function _setUpBeforeClass()
     {
         require_once \Codeception\Configuration::dataDir() . 'register_command/examples/MyCustomCommand.php';
     }
 
-    public function testRegisterCustomCommand(): void
+    public function testRegisterCustomCommand()
     {
         \Codeception\Configuration::append(['extensions' => [
             'commands' => [

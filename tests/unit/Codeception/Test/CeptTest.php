@@ -8,7 +8,7 @@ class CeptTest extends \Codeception\Test\Unit
     /**
      * @group core
      */
-    public function testCeptNamings(): void
+    public function testCeptNamings()
     {
         $cept = new \Codeception\Test\Cept('AutoRebuild', 'tests/cli/AutoRebuildCept.php');
 

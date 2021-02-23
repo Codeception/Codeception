@@ -6,7 +6,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GenerateCestTest extends BaseCommandRunner
 {
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\GenerateCest::class);
         $this->config = [
@@ -18,7 +18,7 @@ class GenerateCestTest extends BaseCommandRunner
     /**
      * @group command
      */
-    public function testBasic(): void
+    public function testBasic()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
         $this->assertEquals('tests/shire/HallUnderTheHillCest.php', $this->filename);
@@ -32,7 +32,7 @@ class GenerateCestTest extends BaseCommandRunner
     /**
      * @group command
      */
-    public function testNamespaced(): void
+    public function testNamespaced()
     {
         $this->config['namespace'] = 'Shire';
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
@@ -44,7 +44,7 @@ class GenerateCestTest extends BaseCommandRunner
     /**
      * @group command
      */
-    public function testGenerateWithFullName(): void
+    public function testGenerateWithFullName()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest.php']);
         $this->assertEquals('tests/shire/HomeCanInclude12DwarfsCest.php', $this->filename);
@@ -53,14 +53,14 @@ class GenerateCestTest extends BaseCommandRunner
     /**
      * @group command
      */
-    public function testGenerateWithSuffix(): void
+    public function testGenerateWithSuffix()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest']);
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCest.php');
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testGenerateWithGuyNamespaced(): void
+    public function testGenerateWithGuyNamespaced()
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillCest']);
@@ -71,7 +71,7 @@ class GenerateCestTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testCreateWithNamespace(): void
+    public function testCreateWithNamespace()
     {
         $this->execute(['suite' => 'shire', 'class' => 'MiddleEarth\HallUnderTheHillCest']);
         $this->assertEquals('tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->filename);
@@ -80,7 +80,7 @@ class GenerateCestTest extends BaseCommandRunner
         $this->assertStringContainsString('Test was created in tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->output);
     }
 
-    public function testGenerateWithSuiteNamespace(): void
+    public function testGenerateWithSuiteNamespace()
 	{
         $this->config['suite_namespace'] = 'MiddleEarth\\Bosses\\';
         $this->config['namespace'] = 'MiddleEarth';

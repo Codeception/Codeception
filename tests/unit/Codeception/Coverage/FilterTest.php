@@ -17,13 +17,13 @@ class FilterTest extends \Codeception\Test\Unit
      */
     protected $filter;
 
-    protected function _before(): void
+    protected function _before()
     {
         $driver = Stub::makeEmpty(\SebastianBergmann\CodeCoverage\Driver\Driver::class);
         $this->filter = new Filter(new CodeCoverage($driver, new CodeCoverageFilter()));
     }
 
-    public function testWhitelistFilterApplied(): void
+    public function testWhitelistFilterApplied()
     {
         $config = [
             'coverage' => [
@@ -48,7 +48,7 @@ class FilterTest extends \Codeception\Test\Unit
         $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/unit/CodeGuy.php')));
     }
 
-    public function testShortcutFilter(): void
+    public function testShortcutFilter()
     {
         $config = ['coverage' => [
             'include' => ['tests/*'],

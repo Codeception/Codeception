@@ -14,7 +14,7 @@ class RetryTest extends \PHPUnit\Framework\TestCase
      */
     protected $shouldFail = true;
 
-    public function testRetryStepShouldNotFailStep(): void
+    public function testRetryStepShouldNotFailStep()
     {
         // create an empty container with this class as a module
         $moduleContainer = Stub::make(ModuleContainer::class, [
@@ -27,7 +27,7 @@ class RetryTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($retry->hasFailed(), 'successful retry still marks test as failed');
     }
 
-    public function _executeFailedCode(): void
+    public function _executeFailedCode()
     {
         if (!$this->shouldFail) {
             return;

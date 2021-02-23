@@ -11,7 +11,7 @@ class MockAutoload extends Autoload
      */
     protected static $files = [];
 
-    public static function setFiles(array $files): void
+    public static function setFiles(array $files)
     {
         self::$files = $files;
     }

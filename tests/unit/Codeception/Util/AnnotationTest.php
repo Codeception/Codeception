@@ -14,7 +14,7 @@ use \Codeception\Util\Annotation;
 class AnnotationTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testClassAnnotation(): void
+    public function testClassAnnotation()
     {
         $this->assertEquals('davert', Annotation::forClass(__CLASS__)->fetch('author'));
         $this->assertEquals('codeception', Annotation::forClass(__CLASS__)->fetch('tag'));
@@ -25,19 +25,19 @@ class AnnotationTest extends \PHPUnit\Framework\TestCase
      * @param $var2
      * @return null
      */
-    public function testMethodAnnotation(): void
+    public function testMethodAnnotation()
     {
         $this->assertEquals('null', Annotation::forClass(__CLASS__)
                 ->method('testMethodAnnotation')
                 ->fetch('return'));
     }
 
-    public function testMultipleClassAnnotations(): void
+    public function testMultipleClassAnnotations()
     {
         $this->assertEquals(['codeception', 'tdd'], Annotation::forClass(__CLASS__)->fetchAll('tag'));
     }
 
-    public function testMultipleMethodAnnotations(): void
+    public function testMultipleMethodAnnotations()
     {
         $this->assertEquals(
             ['$var1', '$var2'],
@@ -45,7 +45,7 @@ class AnnotationTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testGetAnnotationsFromDocBlock(): void
+    public function testGetAnnotationsFromDocBlock()
     {
         $docblock = <<<EOF
 @user davert
@@ -58,7 +58,7 @@ EOF;
     }
 
 
-    public function testGetAllAnnotationsFromDocBlock(): void
+    public function testGetAllAnnotationsFromDocBlock()
     {
         $docblock = <<<EOF
 @user davert
@@ -75,20 +75,20 @@ EOF;
 
     }
 
-    public function testValueToSupportJson(): void
+    public function testValueToSupportJson()
     {
         $values = Annotation::arrayValue('{ "code": "200", "user": "davert", "email": "davert@gmail.com" }');
         $this->assertEquals(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
     }
 
-    public function testValueToSupportAnnotationStyle(): void
+    public function testValueToSupportAnnotationStyle()
     {
         $values = Annotation::arrayValue('( code="200", user="davert", email = "davert@gmail.com")');
         $this->assertEquals(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
     }
 
     /** @value foobar */
-    public function testSingleLineAnnotation(): void
+    public function testSingleLineAnnotation()
     {
         $this->assertEquals('foobar', Annotation::forClass(__CLASS__)
                 ->method('testSingleLineAnnotation')

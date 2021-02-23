@@ -14,18 +14,18 @@ class ReplHistoryTest extends Unit
      */
     protected $replHistory;
 
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->replHistory = ReplHistory::getInstance();
     }
 
-    protected function _tearDown(): void
+    protected function _tearDown()
     {
         $this->replHistory->clear();
     }
 
     // tests
-    public function testAdd(): void
+    public function testAdd()
     {
         $this->replHistory->add('$I->click(".something")');
         $this->replHistory->add('$I->anotherCommand()');
@@ -36,7 +36,7 @@ class ReplHistoryTest extends Unit
         $this->assertEquals('$I->anotherCommand()', $commands[1]);
     }
 
-    public function testClear(): void
+    public function testClear()
     {
         $this->replHistory->add('$I->click(".command-1")');
         $this->replHistory->add('$I->click(".command-2")');
@@ -47,7 +47,7 @@ class ReplHistoryTest extends Unit
         $this->assertCount(0, $this->replHistory->getAll());
     }
 
-    public function testSave(): void
+    public function testSave()
     {
         $this->replHistory->add('$I->click(".command-1");');
         $this->replHistory->add('$I->click(".command-2");');

@@ -12,14 +12,14 @@ class StubTest extends \Codeception\PHPUnit\TestCase
      */
     protected $dummy;
 
-    public function _setUp(): void
+    public function _setUp()
     {
         $conf = \Codeception\Configuration::config();
         require_once $file = \Codeception\Configuration::dataDir().'DummyClass.php';
         $this->dummy = new DummyClass(true);
     }
 
-    public function testMakeEmpty(): void
+    public function testMakeEmpty()
     {
         $dummy = Stub::makeEmpty('DummyClass');
         $this->assertInstanceOf('DummyClass', $dummy);
@@ -27,7 +27,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertNull($dummy->helloWorld());
     }
 
-    public function testMakeEmptyMethodReplaced(): void
+    public function testMakeEmptyMethodReplaced()
     {
         $dummy = Stub::makeEmpty('DummyClass', ['helloWorld' => function () {
             return 'good bye world';
@@ -35,39 +35,39 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertMethodReplaced($dummy);
     }
 
-    public function testMakeEmptyMethodSimplyReplaced(): void
+    public function testMakeEmptyMethodSimplyReplaced()
     {
         $dummy = Stub::makeEmpty('DummyClass', ['helloWorld' => 'good bye world']);
         $this->assertMethodReplaced($dummy);
     }
 
-    public function testMakeEmptyExcept(): void
+    public function testMakeEmptyExcept()
     {
         $dummy = Stub::makeEmptyExcept('DummyClass', 'helloWorld');
         $this->assertEquals($this->dummy->helloWorld(), $dummy->helloWorld());
         $this->assertNull($dummy->goodByeWorld());
     }
 
-    public function testMakeEmptyExceptPropertyReplaced(): void
+    public function testMakeEmptyExceptPropertyReplaced()
     {
         $dummy = Stub::makeEmptyExcept('DummyClass', 'getCheckMe', ['checkMe' => 'checked!']);
         $this->assertEquals('checked!', $dummy->getCheckMe());
     }
 
-    public function testMakeEmptyExceptMagicalPropertyReplaced(): void
+    public function testMakeEmptyExceptMagicalPropertyReplaced()
     {
         $dummy = Stub::makeEmptyExcept('DummyClass', 'getCheckMeToo', ['checkMeToo' => 'checked!']);
         $this->assertEquals('checked!', $dummy->getCheckMeToo());
     }
 
-    public function testFactory(): void
+    public function testFactory()
     {
         $dummies = Stub::factory('DummyClass', 2);
         $this->assertCount(2, $dummies);
         $this->assertInstanceOf('DummyClass', $dummies[0]);
     }
 
-    public function testMake(): void
+    public function testMake()
     {
         $dummy = Stub::make('DummyClass', ['goodByeWorld' => function () {
             return 'hello world';
@@ -76,7 +76,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertEquals("hello world", $dummy->goodByeWorld());
     }
 
-    public function testMakeMethodReplaced(): void
+    public function testMakeMethodReplaced()
     {
         $dummy = Stub::make('DummyClass', ['helloWorld' => function () {
             return 'good bye world';
@@ -84,19 +84,19 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertMethodReplaced($dummy);
     }
 
-    public function testMakeWithMagicalPropertiesReplaced(): void
+    public function testMakeWithMagicalPropertiesReplaced()
     {
         $dummy = Stub::make('DummyClass', ['checkMeToo' => 'checked!']);
         $this->assertEquals('checked!', $dummy->checkMeToo);
     }
 
-    public function testMakeMethodSimplyReplaced(): void
+    public function testMakeMethodSimplyReplaced()
     {
         $dummy = Stub::make('DummyClass', ['helloWorld' => 'good bye world']);
         $this->assertMethodReplaced($dummy);
     }
 
-    public function testCopy(): void
+    public function testCopy()
     {
         $dummy = Stub::copy($this->dummy, ['checkMe' => 'checked!']);
         $this->assertEquals('checked!', $dummy->getCheckMe());
@@ -104,7 +104,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertEquals('checked!', $dummy->getCheckMeToo());
     }
 
-    public function testConstruct(): void
+    public function testConstruct()
     {
         $dummy = Stub::construct('DummyClass', ['checkMe' => 'checked!']);
         $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
@@ -120,7 +120,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertEquals(false, $dummy->targetMethod());
     }
 
-    public function testConstructMethodReplaced(): void
+    public function testConstructMethodReplaced()
     {
         $dummy = Stub::construct(
             'DummyClass',
@@ -132,26 +132,26 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertMethodReplaced($dummy);
     }
 
-    public function testConstructMethodSimplyReplaced(): void
+    public function testConstructMethodSimplyReplaced()
     {
         $dummy = Stub::make('DummyClass', ['helloWorld' => 'good bye world']);
         $this->assertMethodReplaced($dummy);
     }
 
-    public function testConstructEmpty(): void
+    public function testConstructEmpty()
     {
         $dummy = Stub::constructEmpty('DummyClass', ['checkMe' => 'checked!']);
         $this->assertNull($dummy->getCheckMe());
     }
 
-    public function testConstructEmptyExcept(): void
+    public function testConstructEmptyExcept()
     {
         $dummy = Stub::constructEmptyExcept('DummyClass', 'getCheckMe', ['checkMe' => 'checked!']);
         $this->assertNull($dummy->targetMethod());
         $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
     }
 
-    public function testUpdate(): void
+    public function testUpdate()
     {
         $dummy = Stub::construct('DummyClass');
         Stub::update($dummy, ['checkMe' => 'done']);
@@ -160,7 +160,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertEquals('done', $dummy->getCheckMeToo());
     }
 
-    public function testStubsFromObject(): void
+    public function testStubsFromObject()
     {
         $dummy = Stub::make(new \DummyClass());
         $this->assertInstanceOf(
@@ -206,7 +206,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertObjectHasAttribute('__mocked', $dummy);
     }
 
-    protected function assertMethodReplaced($dummy): void
+    protected function assertMethodReplaced($dummy)
     {
         $this->assertTrue(method_exists($dummy, 'helloWorld'));
         $this->assertNotEquals($this->dummy->helloWorld(), $dummy->helloWorld());
@@ -241,7 +241,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     /**
      * @dataProvider matcherAndFailMessageProvider
      */
-    public function testMockedMethodIsCalledFail($stubMarshaler, $failMessage): void
+    public function testMockedMethodIsCalledFail($stubMarshaler, $failMessage)
     {
         $mock = Stub::makeEmptyExcept('DummyClass', 'call', ['targetMethod' => $stubMarshaler], $this);
         $mock->goodByeWorld();
@@ -259,12 +259,12 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->resetMockObjects();
     }
 
-    private function thenWeMustCallMethodForException($mock): void
+    private function thenWeMustCallMethodForException($mock)
     {
         $mock->call();
     }
 
-    private function thenWeDontCallAnyMethodForExceptionJustVerify($mock): void
+    private function thenWeDontCallAnyMethodForExceptionJustVerify($mock)
     {
         $mock->__phpunit_verify();
         $this->fail('Expected exception');
@@ -277,7 +277,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         return 0 == $matcher->getInvocationCount();
     }
 
-    private function resetMockObjects(): void
+    private function resetMockObjects()
     {
         $refl = new ReflectionObject($this);
         $refl = $refl->getParentClass()->getParentClass();
@@ -311,7 +311,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     /**
      * @dataProvider matcherProvider
      */
-    public function testMethodMatcherWithMake($count, $matcher, $expected = false): void
+    public function testMethodMatcherWithMake($count, $matcher, $expected = false)
     {
         $dummy = Stub::make('DummyClass', ['goodByeWorld' => $matcher], $this);
 
@@ -321,7 +321,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     /**
      * @dataProvider matcherProvider
      */
-    public function testMethodMatcherWithMakeEmpty($count, $matcher): void
+    public function testMethodMatcherWithMakeEmpty($count, $matcher)
     {
         $dummy = Stub::makeEmpty('DummyClass', ['goodByeWorld' => $matcher], $this);
 
@@ -331,7 +331,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     /**
      * @dataProvider matcherProvider
      */
-    public function testMethodMatcherWithMakeEmptyExcept($count, $matcher): void
+    public function testMethodMatcherWithMakeEmptyExcept($count, $matcher)
     {
         $dummy = Stub::makeEmptyExcept('DummyClass', 'getCheckMe', ['goodByeWorld' => $matcher], $this);
 
@@ -341,7 +341,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     /**
      * @dataProvider matcherProvider
      */
-    public function testMethodMatcherWithConstruct($count, $matcher): void
+    public function testMethodMatcherWithConstruct($count, $matcher)
     {
         $dummy = Stub::construct('DummyClass', [], ['goodByeWorld' => $matcher], $this);
 
@@ -351,7 +351,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     /**
      * @dataProvider matcherProvider
      */
-    public function testMethodMatcherWithConstructEmpty($count, $matcher): void
+    public function testMethodMatcherWithConstructEmpty($count, $matcher)
     {
         $dummy = Stub::constructEmpty('DummyClass', [], ['goodByeWorld' => $matcher], $this);
 
@@ -361,7 +361,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     /**
      * @dataProvider matcherProvider
      */
-    public function testMethodMatcherWithConstructEmptyExcept($count, $matcher): void
+    public function testMethodMatcherWithConstructEmptyExcept($count, $matcher)
     {
         $dummy = Stub::constructEmptyExcept(
             'DummyClass',
@@ -374,7 +374,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->repeatCall($count, [$dummy, 'goodByeWorld']);
     }
 
-    private function repeatCall($count, $callable, $expected = false): void
+    private function repeatCall($count, $callable, $expected = false)
     {
         for ($i = 0; $i < $count; $i++) {
             $actual = call_user_func($callable);
@@ -384,7 +384,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         }
     }
 
-    public function testConsecutive(): void
+    public function testConsecutive()
     {
         $dummy = Stub::make('DummyClass', ['helloWorld' => Stub::consecutive('david', 'emma', 'sam', 'amy')]);
 
@@ -397,7 +397,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $this->assertNull($dummy->helloWorld());
     }
 
-    public function testStubPrivateProperties(): void
+    public function testStubPrivateProperties()
     {
         $tester = Stub::construct(
             'MyClassWithPrivateProperties',

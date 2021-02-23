@@ -57,7 +57,7 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
         $this->output = $commandTester->getDisplay();
     }
 
-    protected function makeCommand($className, $saved = true, $extraMethods = []): void
+    protected function makeCommand($className, $saved = true, $extraMethods = [])
     {
         if (!$this->config) {
             $this->config = [];
@@ -103,7 +103,7 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    protected function assertIsValidPhp($php): void
+    protected function assertIsValidPhp($php)
     {
         $tempFile = tempnam(sys_get_temp_dir(), 'CodeceptionUnitTest');
         file_put_contents($tempFile, $php);

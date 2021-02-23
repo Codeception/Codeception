@@ -11,12 +11,12 @@ class DiTest extends \Codeception\Test\Unit
      */
     protected $di;
 
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->di = new Di();
     }
 
-    protected function injectionShouldFail(string $msg = ''): void
+    protected function injectionShouldFail(string $msg = '')
     {
         $this->expectException(\Codeception\Exception\InjectionException::class);
         if ($msg !== '') {
@@ -24,7 +24,7 @@ class DiTest extends \Codeception\Test\Unit
         }
     }
 
-    public function testFailDependenciesCyclic(): void
+    public function testFailDependenciesCyclic()
     {
         require_once codecept_data_dir().'FailDependenciesCyclic.php';
         $this->injectionShouldFail(
@@ -33,14 +33,14 @@ class DiTest extends \Codeception\Test\Unit
         $this->di->instantiate('FailDependenciesCyclic\IncorrectDependenciesClass');
     }
 
-    public function testFailDependenciesInChain(): void
+    public function testFailDependenciesInChain()
     {
         require_once codecept_data_dir().'FailDependenciesInChain.php';
         $this->injectionShouldFail('Failed to resolve dependency \'FailDependenciesInChain\AnotherClass\'');
         $this->di->instantiate('FailDependenciesInChain\IncorrectDependenciesClass');
     }
 
-    public function testFailDependenciesNonExistent(): void
+    public function testFailDependenciesNonExistent()
     {
         require_once codecept_data_dir().'FailDependenciesNonExistent.php';
         if (PHP_MAJOR_VERSION < 8) {
@@ -52,7 +52,7 @@ class DiTest extends \Codeception\Test\Unit
         $this->di->instantiate('FailDependenciesNonExistent\IncorrectDependenciesClass');
     }
 
-    public function testFailDependenciesPrimitiveParam(): void
+    public function testFailDependenciesPrimitiveParam()
     {
         require_once codecept_data_dir().'FailDependenciesPrimitiveParam.php';
         $this->injectionShouldFail("Parameter 'required' must have default value");

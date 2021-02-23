@@ -6,7 +6,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GeneratePageObjectTest extends BaseCommandRunner
 {
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\GeneratePageObject::class);
         $this->config = [
@@ -17,7 +17,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
         ];
     }
 
-    public function testBasic(): void
+    public function testBasic()
     {
         unset($this->config['actor']);
         $this->execute(['suite' => 'Login'], false);
@@ -28,7 +28,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testNamespace(): void
+    public function testNamespace()
     {
         unset($this->config['actor']);
         $this->config['namespace'] = 'MiddleEarth';
@@ -40,7 +40,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testCreateForSuite(): void
+    public function testCreateForSuite()
     {
         $this->execute(['suite' => 'shire', 'page' => 'Login']);
         $this->assertEquals(\Codeception\Configuration::supportDir().'Page/Shire/Login.php', $this->filename);
@@ -51,7 +51,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testCreateForSuiteWithNamespace(): void
+    public function testCreateForSuiteWithNamespace()
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(['suite' => 'shire', 'page' => 'Login']);
@@ -63,7 +63,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testCreateInSubpath(): void
+    public function testCreateInSubpath()
     {
         $this->execute(['suite' => 'User/View']);
         $this->assertEquals(\Codeception\Configuration::supportDir().'Page/User/View.php', $this->filename);

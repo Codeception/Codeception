@@ -17,7 +17,7 @@ class StepTest extends \PHPUnit\Framework\TestCase
         return $this->getMockBuilder(\Codeception\Step::class)->setConstructorArgs($args)->setMethods(null)->getMock();
     }
 
-    public function testGetArguments(): void
+    public function testGetArguments()
     {
         //facebook/php-webdriver is no longer a dependency of core so this behaviour can't be tested anymore
         //$by = WebDriverBy::cssSelector('.something');
@@ -46,7 +46,7 @@ class StepTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('["' . $className . '","testGetArguments"]', $step->getArgumentsAsString());
     }
 
-    public function testGetHtml(): void
+    public function testGetHtml()
     {
         $step = $this->getStep(['Do some testing', ['arg1', 'arg2']]);
         $this->assertSame('I do some testing <span style="color: #732E81">&quot;arg1&quot;,&quot;arg2&quot;</span>', $step->getHtml());
@@ -59,7 +59,7 @@ class StepTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('I do some testing <span style="color: #732E81">&quot;' . $argument . '&quot;</span>', $step->getHtml());
     }
 
-    public function testLongArguments(): void
+    public function testLongArguments()
     {
         $step = $this->getStep(['have in database', [str_repeat('a', 2000)]]);
         $output = $step->toString(200);
@@ -79,42 +79,42 @@ class StepTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('have in database "bbbbbbbbbbbbbbbbbbbbbbbbbb...",1', $output);
     }
 
-    public function testArrayAsArgument(): void
+    public function testArrayAsArgument()
     {
         $step = $this->getStep(['see array', [[1,2,3], 'two']]);
         $output = $step->toString(200);
         $this->assertEquals('see array [1,2,3],"two"', $output);
     }
 
-    public function testSingleQuotedStringAsArgument(): void
+    public function testSingleQuotedStringAsArgument()
     {
         $step = $this->getStep(['see array', [[1,2,3], "'two'"]]);
         $output = $step->toString(200);
         $this->assertEquals('see array [1,2,3],"\'two\'"', $output);
     }
 
-    public function testSeeUppercaseText(): void
+    public function testSeeUppercaseText()
     {
         $step = $this->getStep(['see', ['UPPER CASE']]);
         $output = $step->toString(200);
         $this->assertEquals('see "UPPER CASE"', $output);
     }
 
-    public function testMultiByteTextLengthIsMeasuredCorrectly(): void
+    public function testMultiByteTextLengthIsMeasuredCorrectly()
     {
         $step = $this->getStep(['see', ['ŽŽŽŽŽŽŽŽŽŽ', 'AAAAAAAAAAA']]);
         $output = $step->toString(30);
         $this->assertEquals('see "ŽŽŽŽŽŽŽŽŽŽ","AAAAAAAAAAA"', $output);
     }
 
-    public function testAmOnUrl(): void
+    public function testAmOnUrl()
     {
         $step = $this->getStep(['amOnUrl', ['http://www.example.org/test']]);
         $output = $step->toString(200);
         $this->assertEquals('am on url "http://www.example.org/test"', $output);
     }
 
-    public function testNoArgs(): void
+    public function testNoArgs()
     {
         $step = $this->getStep(['acceptPopup', []]);
         $output = $step->toString(200);
@@ -124,14 +124,14 @@ class StepTest extends \PHPUnit\Framework\TestCase
 
     }
 
-    public function testSeeMultiLineStringInSingleLine(): void
+    public function testSeeMultiLineStringInSingleLine()
     {
         $step = $this->getStep(['see', ["aaaa\nbbbb\nc"]]);
         $output = $step->toString(200);
         $this->assertEquals('see "aaaa\nbbbb\nc"', $output);
     }
 
-    public function testFormattedOutput(): void
+    public function testFormattedOutput()
     {
         $argument = Stub::makeEmpty(\Codeception\Step\Argument\FormattedOutput::class);
         $argument->method('getOutput')->willReturn('some formatted output');

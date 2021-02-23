@@ -9,7 +9,7 @@ use Codeception\Util\MockAutoload as Autoload;
 class AutoloadTest extends \Codeception\PHPUnit\TestCase
 {
 
-    protected function _setUp(): void
+    protected function _setUp()
     {
         Autoload::setFiles([
             '/vendor/foo.bar/src/ClassName.php',
@@ -31,7 +31,7 @@ class AutoloadTest extends \Codeception\PHPUnit\TestCase
         Autoload::addNamespace('', '/vendor/src');
     }
 
-    public function testExistingFile(): void
+    public function testExistingFile()
     {
         $actual = Autoload::load('Foo\Bar\ClassName');
         $expect = '/vendor/foo.bar/src/ClassName.php';
@@ -42,20 +42,20 @@ class AutoloadTest extends \Codeception\PHPUnit\TestCase
         $this->assertSame($expect, $actual);
     }
 
-    public function testMissingFile(): void
+    public function testMissingFile()
     {
         $actual = Autoload::load('No_Vendor\No_Package\NoClass');
         $this->assertFalse($actual);
     }
 
-    public function testDeepFile(): void
+    public function testDeepFile()
     {
         $actual = Autoload::load('Foo\Bar\Baz\Dib\Zim\Gir\ClassName');
         $expect = '/vendor/foo.bar.baz.dib.zim.gir/src/ClassName.php';
         $this->assertSame($expect, $actual);
     }
 
-    public function testConfusion(): void
+    public function testConfusion()
     {
         $actual = Autoload::load('Foo\Bar\DoomClassName');
         $expect = '/vendor/foo.bar/src/DoomClassName.php';
@@ -66,7 +66,7 @@ class AutoloadTest extends \Codeception\PHPUnit\TestCase
         $this->assertSame($expect, $actual);
     }
 
-    public function testEmptyPrefix(): void
+    public function testEmptyPrefix()
     {
         $actual = Autoload::load('ClassName');
         $expect = '/vendor/src/ClassName.php';

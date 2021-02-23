@@ -12,7 +12,7 @@ class BuildTest extends BaseCommandRunner
      */
     public $log = [];
 
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\Build::class);
         $this->config = [
@@ -23,7 +23,7 @@ class BuildTest extends BaseCommandRunner
         ];
     }
 
-    public function testBuild(): void
+    public function testBuild()
     {
         $this->execute();
         $this->assertStringContainsString('class HobbitGuy extends \Codeception\Actor', $this->content);
@@ -44,7 +44,7 @@ class BuildTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testBuildNamespacedActor(): void
+    public function testBuildNamespacedActor()
     {
         $this->config['namespace'] = 'Shire';
         $this->execute();

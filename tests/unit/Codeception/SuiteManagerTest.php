@@ -27,7 +27,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
      */
     protected $runner;
 
-    public function _setUp(): void
+    public function _setUp()
     {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
@@ -42,7 +42,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testRun(): void
+    public function testRun()
     {
         $events = [];
         $eventListener = function ($event, $eventName) use (&$events) {
@@ -62,7 +62,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testFewTests(): void
+    public function testFewTests()
     {
         $file = \Codeception\Configuration::dataDir().'SimpleCest.php';
 
@@ -81,7 +81,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
      *
      * @group core
      */
-    public function testAddCestWithEnv(): void
+    public function testAddCestWithEnv()
     {
         $file = \Codeception\Configuration::dataDir().'SimpleNamespacedTest.php';
         $this->suiteman->loadTests($file);
@@ -95,13 +95,13 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->assertEquals(3, $newSuiteMan->getSuite()->count());
     }
 
-    public function testDependencyResolution(): void
+    public function testDependencyResolution()
     {
         $this->suiteman->loadTests(codecept_data_dir().'SimpleWithDependencyInjectionCest.php');
         $this->assertEquals(3, $this->suiteman->getSuite()->count());
     }
 
-    public function testGroupEventsAreFired(): void
+    public function testGroupEventsAreFired()
     {
         $events = [];
         $eventListener = function ($event, $eventName) use (&$events) {

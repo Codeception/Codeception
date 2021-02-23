@@ -11,7 +11,7 @@ class CestTest extends \Codeception\Test\Unit
     /**
      * @group core
      */
-    public function testCestNamings(): void
+    public function testCestNamings()
     {
         $klass = new stdClass();
         $cest = new \Codeception\Test\Cest($klass, 'user', 'tests/cli/BootstrapCest.php');

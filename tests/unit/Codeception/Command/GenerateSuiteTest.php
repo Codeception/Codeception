@@ -15,12 +15,12 @@ class GenerateSuiteTest extends BaseCommandRunner
      */
     public $config = ['actor_suffix' => 'Guy'];
 
-    protected function _setUp(): void
+    protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\GenerateSuite::class);
     }
 
-    public function testBasic(): void
+    public function testBasic()
     {
         $this->execute(['suite' => 'shire', 'actor' => 'Hobbit'], false);
 
@@ -43,7 +43,7 @@ class GenerateSuiteTest extends BaseCommandRunner
         $this->assertStringContainsString('class Shire extends \Codeception\Module', $helper['content']);
     }
 
-    public function testGuyWithSuffix(): void
+    public function testGuyWithSuffix()
     {
         $this->execute(['suite' => 'shire', 'actor' => 'HobbitTester'], false);
 
