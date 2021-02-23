@@ -114,12 +114,12 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
             try {
                 $this->test();
                 $status = self::STATUS_OK;
-            } catch (AssertionFailedError $assertionFailedError) {
+            } catch (AssertionFailedError $e) {
                 $status = self::STATUS_FAIL;
-            } catch (Exception $exception) {
+            } catch (Exception $e) {
                 $status = self::STATUS_ERROR;
-            } catch (Throwable $throwable) {
-                $throwable = new ExceptionWrapper($throwable);
+            } catch (Throwable $e) {
+                $e = new ExceptionWrapper($e);
                 $status = self::STATUS_ERROR;
             }
 

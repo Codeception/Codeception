@@ -42,6 +42,7 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
 
     public function test(): void
     {
+        $scenario = $this->getScenario();
         $testFile = $this->getMetadata()->getFilename();
         try {
             require $testFile;
