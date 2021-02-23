@@ -193,11 +193,11 @@ class JSON extends Printer implements TestListener
         }
     }
 
-    protected function writeCase(string $status, float $time, array $trace = [], string $message = '', ?TestCase $test = null): void
+    protected function writeCase(string $status, float $time, array $trace = [], string $message = '', ?PHPUnitTest $test = null): void
     {
         $output = '';
-        // take care of TestSuite producing error (e.g. by running into exception) as TestSuite doesn't have hasOutput
-        if ($test !== null && method_exists($test, 'hasOutput') && $test->hasOutput()) {
+        // take care of TestSuite producing error (e.g. by running into exception)
+        if ($test instanceof TestCase && $test->hasOutput()) {
             $output = $test->getActualOutput();
         }
         $this->addLogEvent(
