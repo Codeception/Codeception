@@ -11,7 +11,8 @@ class Test
     use Shared\Classname;
 
     protected $template = <<<EOF
-<?php {{namespace}}
+<?php
+{{namespace}}
 class {{name}}Test extends \Codeception\Test\Unit
 {
 {{tester}}
