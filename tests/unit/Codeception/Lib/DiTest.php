@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib;
 
 class DiTest extends \Codeception\Test\Unit
@@ -7,21 +10,21 @@ class DiTest extends \Codeception\Test\Unit
      * @var Di
      */
     protected $di;
-    
-    protected function _setUp()
+
+    protected function _setUp(): void
     {
         $this->di = new Di();
     }
 
-    protected function injectionShouldFail($msg = '')
+    protected function injectionShouldFail(string $msg = ''): void
     {
-        $this->expectException('Codeception\Exception\InjectionException');
-        if ($msg) {
+        $this->expectException(\Codeception\Exception\InjectionException::class);
+        if ($msg !== '') {
             $this->expectExceptionMessage($msg);
         }
     }
 
-    public function testFailDependenciesCyclic()
+    public function testFailDependenciesCyclic(): void
     {
         require_once codecept_data_dir().'FailDependenciesCyclic.php';
         $this->injectionShouldFail(
@@ -30,14 +33,14 @@ class DiTest extends \Codeception\Test\Unit
         $this->di->instantiate('FailDependenciesCyclic\IncorrectDependenciesClass');
     }
 
-    public function testFailDependenciesInChain()
+    public function testFailDependenciesInChain(): void
     {
         require_once codecept_data_dir().'FailDependenciesInChain.php';
         $this->injectionShouldFail('Failed to resolve dependency \'FailDependenciesInChain\AnotherClass\'');
         $this->di->instantiate('FailDependenciesInChain\IncorrectDependenciesClass');
     }
 
-    public function testFailDependenciesNonExistent()
+    public function testFailDependenciesNonExistent(): void
     {
         require_once codecept_data_dir().'FailDependenciesNonExistent.php';
         if (PHP_MAJOR_VERSION < 8) {
@@ -49,10 +52,10 @@ class DiTest extends \Codeception\Test\Unit
         $this->di->instantiate('FailDependenciesNonExistent\IncorrectDependenciesClass');
     }
 
-    public function testFailDependenciesPrimitiveParam()
+    public function testFailDependenciesPrimitiveParam(): void
     {
         require_once codecept_data_dir().'FailDependenciesPrimitiveParam.php';
-        $this->injectionShouldFail('Parameter \'required\' must have default value');
+        $this->injectionShouldFail("Parameter 'required' must have default value");
         $this->di->instantiate('FailDependenciesPrimitiveParam\IncorrectDependenciesClass');
     }
 }

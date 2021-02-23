@@ -1,10 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 use Codeception\Codecept;
 
 class ReflectionTestClass
 {
+    /**
+     * @var string
+     */
     const FOO = 'bar';
 
     private $value = 'test';

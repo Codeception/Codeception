@@ -1,11 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 class CeptTest extends \Codeception\Test\Unit
 {
 
     /**
      * @group core
      */
-    public function testCeptNamings()
+    public function testCeptNamings(): void
     {
         $cept = new \Codeception\Test\Cept('AutoRebuild', 'tests/cli/AutoRebuildCept.php');
 

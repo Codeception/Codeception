@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Class GherkinTest
  * @group gherkin
@@ -15,7 +17,7 @@ class GherkinTest extends \Codeception\Test\Unit
      */
     protected $loader;
 
-    protected function _before()
+    protected function _before(): void
     {
         $this->loader = new \Codeception\Test\Loader\Gherkin(
             [
@@ -30,7 +32,7 @@ class GherkinTest extends \Codeception\Test\Unit
         self::$calls = '';
     }
 
-    protected function getServices()
+    protected function getServices(): array
     {
         return [
             'di'         => new \Codeception\Lib\Di(),
@@ -39,23 +41,21 @@ class GherkinTest extends \Codeception\Test\Unit
         ];
     }
 
-    public function testLoadGherkin()
+    public function testLoadGherkin(): void
     {
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $tests = $this->loader->getTests();
         $this->assertCount(1, $tests);
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test = $tests[0];
         $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
         $this->assertEquals('Refund item', $test->getFeature());
     }
 
-    public function testGherkinScenario()
+    public function testGherkinScenario(): void
     {
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $tests = $this->loader->getTests();
         $this->assertCount(1, $tests);
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test = $tests[0];
         $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
         $this->assertEquals('Jeff returns a faulty microwave', $test->getScenarioTitle());
@@ -64,17 +64,16 @@ class GherkinTest extends \Codeception\Test\Unit
     /**
      * @depends testLoadGherkin
      */
-    public function testLoadWithContexts()
+    public function testLoadWithContexts(): void
     {
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
         $this->assertEquals('abc', self::$calls);
     }
 
-    public function testBadRegex()
+    public function testBadRegex(): void
     {
         $this->expectException(\Codeception\Exception\ParseException::class);
 
@@ -89,12 +88,11 @@ class GherkinTest extends \Codeception\Test\Unit
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
     }
 
-    public function testTags()
+    public function testTags(): void
     {
         $this->loader = new \Codeception\Test\Loader\Gherkin(
             [
@@ -110,13 +108,12 @@ class GherkinTest extends \Codeception\Test\Unit
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
         $this->assertEquals('aXc', self::$calls);
     }
 
-    public function testRoles()
+    public function testRoles(): void
     {
         $this->loader = new \Codeception\Test\Loader\Gherkin(
             [
@@ -132,14 +129,13 @@ class GherkinTest extends \Codeception\Test\Unit
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
         $this->assertEquals('aXc', self::$calls);
     }
 
 
-    public function testMatchingPatterns()
+    public function testMatchingPatterns(): void
     {
         $pattern = 'hello :name, are you from :place?';
         $regex = $this->loader->makePlaceholderPattern($pattern);
@@ -158,7 +154,7 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->assertRegExp($regex, 'there should be 1000 cows');
     }
 
-    public function testGherkinCurrencySymbols()
+    public function testGherkinCurrencySymbols(): void
     {
         $pattern = 'I have :money in my pocket';
         $regex = $this->loader->makePlaceholderPattern($pattern);
@@ -181,7 +177,7 @@ class GherkinTest extends \Codeception\Test\Unit
 
     }
 
-    public function testMatchingEscapedPatterns()
+    public function testMatchingEscapedPatterns(): void
     {
         $pattern = 'use password ":pass"';
         $regex = $this->loader->makePlaceholderPattern($pattern);
@@ -191,7 +187,7 @@ class GherkinTest extends \Codeception\Test\Unit
     /**
      * @Issue #3051
      */
-    public function testSimilarSteps()
+    public function testSimilarSteps(): void
     {
         $pattern = 'there is a User called :arg1';
         $regex = $this->loader->makePlaceholderPattern($pattern);
@@ -199,7 +195,7 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->assertNotRegExp($regex, 'there is a User called "John" and surname "Smith"');
     }
 
-    public function testMultipleSteps()
+    public function testMultipleSteps(): void
     {
         $patterns = array_keys($this->loader->getSteps()['default']);
         $this->assertContains('/^he returns the microwave$/u', $patterns);
@@ -213,7 +209,7 @@ class GherkinTestContext
     /**
      * @Given Jeff has bought a microwave for :param
      */
-    public function hasBoughtMicrowave()
+    public function hasBoughtMicrowave(): void
     {
         GherkinTest::$calls .= 'a';
     }
@@ -222,7 +218,7 @@ class GherkinTestContext
      * @When he returns the microwave
      * @Then microwave is brought back
      */
-    public function heReturns()
+    public function heReturns(): void
     {
         GherkinTest::$calls .= 'b';
     }
@@ -230,7 +226,7 @@ class GherkinTestContext
     /**
      * @Then Jeff should be refunded $100
      */
-    public function beRefunded()
+    public function beRefunded(): void
     {
         GherkinTest::$calls .= 'c';
     }
@@ -243,7 +239,7 @@ class TagGherkinContext
     /**
      * @When he returns the microwave
      */
-    public function heReturns()
+    public function heReturns(): void
     {
         GherkinTest::$calls .= 'X';
     }
@@ -255,7 +251,7 @@ class GherkinInvalidContext
     /**
      * @Given /I (?:use:am connected to) the database (?db:.+)/i
      */
-    public function notWorks()
+    public function notWorks(): void
     {
     }
 }

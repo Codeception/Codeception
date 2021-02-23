@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception;
 
 class ApplicationTest extends \Codeception\PHPUnit\TestCase
 {
 
-    public static function _setUpBeforeClass()
+    public static function _setUpBeforeClass(): void
     {
         require_once \Codeception\Configuration::dataDir() . 'register_command/examples/MyCustomCommand.php';
     }
 
-    public function testRegisterCustomCommand()
+    public function testRegisterCustomCommand(): void
     {
-        \Codeception\Configuration::append(array('extensions' => array(
-            'commands' => array(
-                'Project\Command\MyCustomCommand'))));
+        \Codeception\Configuration::append(['extensions' => [
+            'commands' => [
+                'Project\Command\MyCustomCommand']]]);
 
         $application = new Application();
         $application->registerCustomCommands();

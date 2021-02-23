@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
 
 class ConfigurationTest extends \Codeception\PHPUnit\TestCase
 {
+    /**
+     * @var array
+     */
+    public $config = [];
 
-    public function _setUp()
+    public function _setUp(): void
     {
         $this->config = \Codeception\Configuration::config();
     }
 
-    protected function _tearDown()
+    protected function _tearDown(): void
     {
         \Codeception\Module\UniversalFramework::$includeInheritedActions = true;
         \Codeception\Module\UniversalFramework::$onlyActions = [];
@@ -19,7 +24,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testSuites()
+    public function testSuites(): void
     {
         $suites = \Codeception\Configuration::suites();
         $this->assertContains('unit', $suites);
@@ -29,9 +34,9 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testFunctionForStrippingClassNames()
+    public function testFunctionForStrippingClassNames(): void
     {
-        $matches = array();
+        $matches = [];
         $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', '\\Codeception\\Module\\UserHelper', $matches));
         $this->assertEquals('UserHelper', $matches[1]);
         $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', 'UserHelper', $matches));
@@ -41,15 +46,15 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testModules()
+    public function testModules(): void
     {
-        $settings = array('modules' => array('enabled' => array('EmulateModuleHelper')));
+        $settings = ['modules' => ['enabled' => ['EmulateModuleHelper']]];
         $modules = \Codeception\Configuration::modules($settings);
         $this->assertContains('EmulateModuleHelper', $modules);
-        $settings = array('modules' => array(
-            'enabled' => array('EmulateModuleHelper'),
-            'disabled' => array('EmulateModuleHelper'),
-        ));
+        $settings = ['modules' => [
+            'enabled' => ['EmulateModuleHelper'],
+            'disabled' => ['EmulateModuleHelper'],
+        ]];
         $modules = \Codeception\Configuration::modules($settings);
         $this->assertNotContains('EmulateModuleHelper', $modules);
     }
@@ -57,7 +62,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testDefaultCustomCommandConfig()
+    public function testDefaultCustomCommandConfig(): void
     {
         $defaultConfig = \Codeception\Configuration::$defaultConfig;
 

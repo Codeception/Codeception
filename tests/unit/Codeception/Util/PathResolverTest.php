@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 class PathResolverTest extends \Codeception\Test\Unit
@@ -8,7 +10,7 @@ class PathResolverTest extends \Codeception\Test\Unit
      * @dataProvider getRelativeDirTestData
      * @group core
      */
-    public function testGetRelativeDir($path, $projDir, $dirSep, $expectedOutput)
+    public function testGetRelativeDir(string $path, string $projDir, string $dirSep, string $expectedOutput): void
     {
         $relativeDir = PathResolver::getRelativeDir($path, $projDir, $dirSep);
         $this->assertEquals($expectedOutput, $relativeDir);
@@ -19,7 +21,7 @@ class PathResolverTest extends \Codeception\Test\Unit
      *
      * @return array(array(strings))
      */
-    public function getRelativeDirTestData()
+    public function getRelativeDirTestData(): array
     {
         return [
             // Unix style paths:

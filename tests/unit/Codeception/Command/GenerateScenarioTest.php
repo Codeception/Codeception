@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Codeception\Lib\ModuleContainer;
 use Codeception\Stub;
 
@@ -7,36 +9,43 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GenerateScenarioTest extends BaseCommandRunner
 {
-
+    /**
+     * @var array
+     */
+    public $modules = [];
+    /**
+     * @var array
+     */
+    public $actions = [];
     /**
      * @var ModuleContainer
      */
     protected $moduleContainer;
 
-    protected function _setUp()
+    protected function _setUp(): void
     {
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), []);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), []);
         $this->moduleContainer->create('EmulateModuleHelper');
 
         $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
         $this->filename = null;
 
-        $this->makeCommand('\Codeception\Command\GenerateScenarios');
-        $this->config = array(
-            'paths' => array(
+        $this->makeCommand(\Codeception\Command\GenerateScenarios::class);
+        $this->config = [
+            'paths' => [
                 'tests' => 'tests/data/claypit/tests/',
                 'data' => '_data',
 
-            ),
+            ],
             'class_name' => 'DumbGuy',
             'path' => 'tests/data/claypit/tests/dummy/'
-        );
+        ];
     }
 
-    public function testBasic()
+    public function testBasic(): void
     {
-        $this->execute(array('suite' => 'dummy'));
+        $this->execute(['suite' => 'dummy']);
         $file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt';
         $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
@@ -45,7 +54,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertStringContainsString('* File_Exists generated', $this->output);
     }
 
-    public function testMultipleTestsGeneration()
+    public function testMultipleTestsGeneration(): void
     {
         $this->execute(['suite' => 'dummy']);
         $this->assertArrayHasKey(codecept_root_dir().'tests/data/scenarios/dummy/Another.optimistic.txt', $this->saved);
@@ -58,9 +67,9 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertStringContainsString('* File_Exists generated', $this->output);
     }
 
-    public function testHtml()
+    public function testHtml(): void
     {
-        $this->execute(array('suite' => 'dummy', '--format' => 'html'));
+        $this->execute(['suite' => 'dummy', '--format' => 'html']);
         $file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.html';
         $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
@@ -69,12 +78,12 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertStringContainsString('* File_Exists generated', $this->output);
     }
 
-    public function testOneFile()
+    public function testOneFile(): void
     {
         $this->config['path'] = 'tests/data/claypit/tests/skipped/';
         $this->config['class_name'] = 'SkipGuy';
 
-        $this->execute(array('suite' => 'skipped', '--single-file' => true));
+        $this->execute(['suite' => 'skipped', '--single-file' => true]);
         $this->assertEquals(codecept_root_dir().'tests/data/scenarios/skipped.txt', $this->filename);
         $this->assertStringContainsString('I WANT TO SKIP IT', $this->content);
         $this->assertStringContainsString('I WANT TO MAKE IT INCOMPLETE', $this->content);
@@ -82,12 +91,12 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertStringContainsString('* Incomplete_Me rendered', $this->output);
     }
 
-    public function testOneFileWithHtml()
+    public function testOneFileWithHtml(): void
     {
         $this->config['path'] = 'tests/data/claypit/tests/skipped/';
         $this->config['class_name'] = 'SkipGuy';
 
-        $this->execute(array('suite' => 'skipped', '--single-file' => true, '--format' => 'html'));
+        $this->execute(['suite' => 'skipped', '--single-file' => true, '--format' => 'html']);
         $this->assertEquals(codecept_root_dir().'tests/data/scenarios/skipped.html', $this->filename);
         $this->assertStringContainsString('<h3>I WANT TO MAKE IT INCOMPLETE</h3>', $this->content);
         $this->assertStringContainsString('<h3>I WANT TO SKIP IT</h3>', $this->content);
@@ -97,9 +106,9 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->assertStringContainsString('* Incomplete_Me rendered', $this->output);
     }
 
-    public function testDifferentPath()
+    public function testDifferentPath(): void
     {
-        $this->execute(array('suite' => 'dummy', '--single-file' => true, '--path' => 'docs'));
+        $this->execute(['suite' => 'dummy', '--single-file' => true, '--path' => 'docs']);
         $this->assertEquals('docs/dummy.txt', $this->filename);
         $this->assertStringContainsString('I WANT TO CHECK CONFIG EXISTS', $this->content);
         $this->assertStringContainsString('* File_Exists rendered', $this->output);

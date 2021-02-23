@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Console;
 
 use Codeception\Test\Unit;
@@ -22,7 +25,7 @@ class ColorizerTest extends Unit
         $this->colorizer = new Colorizer();
     }
 
-    public function testItAddFormatToDiffMessage()
+    public function testItAddFormatToDiffMessage(): void
     {
         $toColorizeInput = <<<PLAIN
 foo

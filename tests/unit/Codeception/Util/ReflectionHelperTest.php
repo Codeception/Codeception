@@ -1,14 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 use ReflectionException;
 use ReflectionParameter;
 
-require_once 'ReflectionTestClass.php';
+require_once __DIR__ . '/ReflectionTestClass.php';
 
 class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
 {
-    public function testReadPrivateProperty()
+    public function testReadPrivateProperty(): void
     {
         $expected = 'fooBar123';
 
@@ -33,7 +36,7 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testInvokePrivateMethod()
+    public function testInvokePrivateMethod(): void
     {
         $expected = "I'm a cat!";
 
@@ -58,7 +61,7 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testGetClassShortName()
+    public function testGetClassShortName(): void
     {
         $this->assertEquals(
             'ReflectionTestClass',
@@ -71,74 +74,74 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testGetClassFromParameter()
+    public function testGetClassFromParameter(): void
     {
         $object = new ReflectionTestClass();
         $object->setValue('elephant');
 
         $this->assertEquals(
-            'Codeception\Util\Debug',
-            ReflectionHelper::getClassFromParameter(new ReflectionParameter(array($object, 'setDebug'), 0))
+            \Codeception\Util\Debug::class,
+            ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 0))
         );
 
         $this->assertEquals(
             null,
-            ReflectionHelper::getClassFromParameter(new ReflectionParameter(array($object, 'setDebug'), 1))
+            ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 1))
         );
 
         $this->assertEquals(
             null,
-            ReflectionHelper::getClassFromParameter(new ReflectionParameter(array($object, 'setDebug'), 'flavor'))
+            ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 'flavor'))
         );
 
         $this->assertEquals(
             null,
-            ReflectionHelper::getClassFromParameter(new ReflectionParameter(array($object, 'setInt'), 'i'))
+            ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setInt'], 'i'))
         );
     }
 
-    public function testGetDefaultValue()
+    public function testGetDefaultValue(): void
     {
         $object = new ReflectionTestClass();
         $object->setValue('elephant');
 
         $this->assertEquals(
             'null',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setDebug'), 0))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setDebug'], 0))
         );
 
         $this->assertEquals(
             '\Codeception\Util\ReflectionTestClass::FOO',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setDebug'), 1))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setDebug'], 1))
         );
 
         $this->assertEquals(
             '\Codeception\Util\ReflectionTestClass::FOO',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setDebug'), 'flavor'))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setDebug'], 'flavor'))
         );
 
         $this->assertEquals(
             '\Codeception\Codecept::VERSION',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setFlavorImportedDefault'), 'flavor'))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setFlavorImportedDefault'], 'flavor'))
         );
 
         $this->assertEquals(
             "''",
-            ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setValue'), 0))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setValue'], 0))
         );
 
         $this->assertEquals(
             '0',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setInt'), 0))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setInt'], 0))
         );
 
         $this->assertEquals(
             'null',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter(array($object, 'setMixed'), 0))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setMixed'], 0))
         );
     }
 
-    public function testPhpEncodeValue()
+    public function testPhpEncodeValue(): void
     {
         $this->assertEquals(
             '0',
@@ -166,7 +169,7 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    public function testPhpEncodeArray()
+    public function testPhpEncodeArray(): void
     {
         $this->assertEquals(
             '["foo" => "bar"]',

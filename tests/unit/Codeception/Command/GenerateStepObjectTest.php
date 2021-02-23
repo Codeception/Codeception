@@ -1,21 +1,28 @@
 <?php
+
+declare(strict_types=1);
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GenerateStepObjectTest extends BaseCommandRunner
 {
+    /**
+     * @var array
+     */
+    public $log = [];
 
-    protected function _setUp()
+    protected function _setUp(): void
     {
-        $this->makeCommand('\Codeception\Command\GenerateStepObject');
-        $this->config = array(
+        $this->makeCommand(\Codeception\Command\GenerateStepObject::class);
+        $this->config = [
             'actor' => 'HobbitGuy',
             'path' => 'tests/shire',
-        );
+        ];
     }
 
-    public function testBasic()
+    public function testBasic(): void
     {
-        $this->execute(array('suite' => 'shire', 'step' => 'Login', '--silent' => true));
+        $this->execute(['suite' => 'shire', 'step' => 'Login', '--silent' => true]);
 
         $generated = $this->log[0];
         $this->assertEquals(\Codeception\Configuration::supportDir().'Step/Shire/Login.php', $generated['filename']);
@@ -26,10 +33,10 @@ class GenerateStepObjectTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testNamespace()
+    public function testNamespace(): void
     {
         $this->config['namespace'] = 'MiddleEarth';
-        $this->execute(array('suite' => 'shire', 'step' => 'Login', '--silent' => true));
+        $this->execute(['suite' => 'shire', 'step' => 'Login', '--silent' => true]);
         $generated = $this->log[0];
         $this->assertEquals(\Codeception\Configuration::supportDir().'Step/Shire/Login.php', $generated['filename']);
         $this->assertStringContainsString('namespace MiddleEarth\Step\Shire;', $generated['content']);
@@ -39,9 +46,9 @@ class GenerateStepObjectTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testCreateInSubpath()
+    public function testCreateInSubpath(): void
     {
-        $this->execute(array('suite' => 'shire', 'step' => 'User/Login', '--silent' => true));
+        $this->execute(['suite' => 'shire', 'step' => 'User/Login', '--silent' => true]);
         $generated = $this->log[0];
         $this->assertEquals(
             \Codeception\Configuration::supportDir().'Step/Shire/User/Login.php',

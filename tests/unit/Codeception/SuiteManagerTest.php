@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 if (!defined('PHPUNIT_TESTSUITE')) {
     define('PHPUNIT_TESTSUITE', true);
 }
@@ -24,14 +27,14 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
      */
     protected $runner;
 
-    public function _setUp()
+    public function _setUp(): void
     {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
         $settings['actor'] = 'CodeGuy';
         $this->suiteman = new \Codeception\SuiteManager($this->dispatcher, 'suite', $settings);
-        
-        $printer = \Codeception\Stub::makeEmpty('PHPUnit\TextUI\ResultPrinter');
+
+        $printer = \Codeception\Stub::makeEmpty(\PHPUnit\TextUI\ResultPrinter::class);
         $this->runner = new \Codeception\PHPUnit\Runner;
         $this->runner->setPrinter($printer);
     }
@@ -39,7 +42,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testRun()
+    public function testRun(): void
     {
         $events = [];
         $eventListener = function ($event, $eventName) use (&$events) {
@@ -47,6 +50,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         };
         $this->dispatcher->addListener('suite.before', $eventListener);
         $this->dispatcher->addListener('suite.after', $eventListener);
+
         $this->suiteman->run(
             $this->runner,
             new \PHPUnit\Framework\TestResult,
@@ -58,7 +62,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testFewTests()
+    public function testFewTests(): void
     {
         $file = \Codeception\Configuration::dataDir().'SimpleCest.php';
 
@@ -77,7 +81,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
      *
      * @group core
      */
-    public function testAddCestWithEnv()
+    public function testAddCestWithEnv(): void
     {
         $file = \Codeception\Configuration::dataDir().'SimpleNamespacedTest.php';
         $this->suiteman->loadTests($file);
@@ -91,13 +95,13 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->assertEquals(3, $newSuiteMan->getSuite()->count());
     }
 
-    public function testDependencyResolution()
+    public function testDependencyResolution(): void
     {
         $this->suiteman->loadTests(codecept_data_dir().'SimpleWithDependencyInjectionCest.php');
         $this->assertEquals(3, $this->suiteman->getSuite()->count());
     }
 
-    public function testGroupEventsAreFired()
+    public function testGroupEventsAreFired(): void
     {
         $events = [];
         $eventListener = function ($event, $eventName) use (&$events) {

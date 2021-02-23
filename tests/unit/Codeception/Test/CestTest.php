@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Class CestTest
  */
@@ -9,7 +11,7 @@ class CestTest extends \Codeception\Test\Unit
     /**
      * @group core
      */
-    public function testCestNamings()
+    public function testCestNamings(): void
     {
         $klass = new stdClass();
         $cest = new \Codeception\Test\Cest($klass, 'user', 'tests/cli/BootstrapCest.php');

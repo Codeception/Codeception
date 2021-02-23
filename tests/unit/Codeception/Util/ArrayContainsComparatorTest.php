@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 class ArrayContainsComparatorTest extends \Codeception\Test\Unit
@@ -22,7 +25,7 @@ class ArrayContainsComparatorTest extends \Codeception\Test\Unit
     }
 
     // tests
-    public function testInclusion()
+    public function testInclusion(): void
     {
         $this->assertTrue($this->ary->containsArray(['name' => 'Davert']));
         $this->assertTrue($this->ary->containsArray(['user' => ['name' => 'Davert']]));

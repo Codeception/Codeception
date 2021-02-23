@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 class UriTest extends \Codeception\Test\Unit
 {
     // tests
-    public function testUrlMerge()
+    public function testUrlMerge(): void
     {
         $this->assertEquals(
             'http://codeception.com/quickstart',
@@ -28,7 +31,7 @@ class UriTest extends \Codeception\Test\Unit
     /**
      * @Issue https://github.com/Codeception/Codeception/pull/2141
      */
-    public function testMergingScheme()
+    public function testMergingScheme(): void
     {
         $this->assertEquals(
             'https://google.com/account/',
@@ -44,7 +47,7 @@ class UriTest extends \Codeception\Test\Unit
     /**
      * @Issue https://github.com/Codeception/Codeception/pull/2841
      */
-    public function testMergingPath()
+    public function testMergingPath(): void
     {
         $this->assertEquals('/form/?param=1#anchor', Uri::mergeUrls('/form/?param=1', '#anchor'));
         $this->assertEquals('/form/?param=1#anchor2', Uri::mergeUrls('/form/?param=1#anchor1', '#anchor2'));
@@ -55,7 +58,7 @@ class UriTest extends \Codeception\Test\Unit
     /**
      * @Issue https://github.com/Codeception/Codeception/pull/4847
      */
-    public function testMergingNonParsingPath()
+    public function testMergingNonParsingPath(): void
     {
         $this->assertEquals('/3.0/en/index/page:5', Uri::mergeUrls('https://cakephp.org/', '/3.0/en/index/page:5'));
     }
@@ -63,7 +66,7 @@ class UriTest extends \Codeception\Test\Unit
     /**
      * @Issue https://github.com/Codeception/Codeception/pull/2499
      */
-    public function testAppendAnchor()
+    public function testAppendAnchor(): void
     {
         $this->assertEquals(
             'http://codeception.com/quickstart#anchor',
@@ -76,7 +79,7 @@ class UriTest extends \Codeception\Test\Unit
         );
     }
 
-    public function testAppendPath()
+    public function testAppendPath(): void
     {
         $this->assertEquals(
             'http://codeception.com/quickstart/path',
@@ -89,7 +92,7 @@ class UriTest extends \Codeception\Test\Unit
         );
     }
 
-    public function testAppendEmptyPath()
+    public function testAppendEmptyPath(): void
     {
         $this->assertEquals(
             'http://codeception.com/quickstart',
@@ -97,7 +100,7 @@ class UriTest extends \Codeception\Test\Unit
         );
     }
 
-    public function testAppendPathRemovesQueryStringAndAnchor()
+    public function testAppendPathRemovesQueryStringAndAnchor(): void
     {
         $this->assertEquals(
             'http://codeception.com/quickstart',
@@ -105,14 +108,14 @@ class UriTest extends \Codeception\Test\Unit
         );
     }
 
-    public function testMergeUrlsWhenBaseUriHasNoTrailingSlashAndUriPathHasNoLeadingSlash()
+    public function testMergeUrlsWhenBaseUriHasNoTrailingSlashAndUriPathHasNoLeadingSlash(): void
     {
         $this->assertEquals(
             'http://codeception.com/test',
             Uri::mergeUrls('http://codeception.com', 'test'));
     }
 
-    public function testMergeUrlsWhenBaseUriEndsWithSlashButUriPathHasNoLeadingSlash()
+    public function testMergeUrlsWhenBaseUriEndsWithSlashButUriPathHasNoLeadingSlash(): void
     {
         $this->assertEquals(
             'http://codeception.com/test',

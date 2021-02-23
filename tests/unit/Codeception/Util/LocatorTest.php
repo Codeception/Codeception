@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 use Codeception\Util\Locator;
 use Facebook\WebDriver\WebDriverBy;
 
 class LocatorTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testCombine()
+    public function testCombine(): void
     {
         $result = Locator::combine('//button[@value="Click Me"]', '//a[.="Click Me"]');
         $this->assertEquals('//button[@value="Click Me"] | //a[.="Click Me"]', $result);
@@ -21,33 +23,33 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         $this->assertNotEmpty($xml->xpath($result));
     }
 
-    public function testHref()
+    public function testHref(): void
     {
         $xml = new SimpleXMLElement("<root><a href='/logout'>Click Me</a></root>");
         $this->assertNotEmpty($xml->xpath(Locator::href('/logout')));
     }
 
-    public function testTabIndex()
+    public function testTabIndex(): void
     {
         $xml = new SimpleXMLElement("<root><a href='#' tabindex='2'>Click Me</a></root>");
         $this->assertNotEmpty($xml->xpath(Locator::tabIndex(2)));
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $xml = new SimpleXMLElement("<root><a href='#' tabindex='2'>Click Me</a></root>");
-        $this->assertNotEmpty($xml->xpath(Locator::find('a', array('href' => '#'))));
-        $this->assertNotEmpty($xml->xpath(Locator::find('a', array('href', 'tabindex' => '2'))));
+        $this->assertNotEmpty($xml->xpath(Locator::find('a', ['href' => '#'])));
+        $this->assertNotEmpty($xml->xpath(Locator::find('a', ['href', 'tabindex' => '2'])));
     }
 
-    public function testIsXPath()
+    public function testIsXPath(): void
     {
         $this->assertTrue(Locator::isXPath("//hr[@class='edge' and position()=1]"));
         $this->assertFalse(Locator::isXPath("and position()=1]"));
         $this->assertTrue(Locator::isXPath('//table[parent::div[@class="pad"] and not(@id)]//a'));
     }
 
-    public function testIsId()
+    public function testIsId(): void
     {
         $this->assertTrue(Locator::isID('#username'));
         $this->assertTrue(Locator::isID('#user.name'));
@@ -57,7 +59,7 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse(Locator::isID('hello'));
     }
 
-    public function testIsClass()
+    public function testIsClass(): void
     {
         $this->assertTrue(Locator::isClass('.username'));
         $this->assertTrue(Locator::isClass('.name'));
@@ -67,14 +69,14 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse(Locator::isClass('hello'));
     }
 
-    public function testContains()
+    public function testContains(): void
     {
         $this->assertEquals(
-            'descendant-or-self::label[contains(., \'enter a name\')]',
+            "descendant-or-self::label[contains(., 'enter a name')]",
             Locator::contains('label', 'enter a name')
         );
         $this->assertEquals(
-            'descendant-or-self::label[@id = \'user\'][contains(., \'enter a name\')]',
+            "descendant-or-self::label[@id = 'user'][contains(., 'enter a name')]",
             Locator::contains('label#user', 'enter a name')
         );
         $this->assertEquals(
@@ -83,7 +85,7 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testHumanReadableString()
+    public function testHumanReadableString(): void
     {
         $this->assertEquals("'string selector'", Locator::humanReadableString("string selector"));
         $this->assertEquals("css '.something'", Locator::humanReadableString(['css' => '.something']));
@@ -97,7 +99,7 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testLocatingElementPosition()
+    public function testLocatingElementPosition(): void
     {
         $this->assertEquals('(descendant-or-self::p)[position()=1]', Locator::firstElement('p'));
         $this->assertEquals('(descendant-or-self::p)[position()=last()]', Locator::lastElement('p'));

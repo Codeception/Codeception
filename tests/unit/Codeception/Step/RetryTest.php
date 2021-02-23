@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Step;
 
 use Codeception\Lib\ModuleContainer;
@@ -6,9 +9,12 @@ use Codeception\Stub;
 
 class RetryTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var bool
+     */
     protected $shouldFail = true;
 
-    public function testRetryStepShouldNotFailStep()
+    public function testRetryStepShouldNotFailStep(): void
     {
         // create an empty container with this class as a module
         $moduleContainer = Stub::make(ModuleContainer::class, [
@@ -21,7 +27,7 @@ class RetryTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($retry->hasFailed(), 'successful retry still marks test as failed');
     }
 
-    public function _executeFailedCode()
+    public function _executeFailedCode(): void
     {
         if (!$this->shouldFail) {
             return;

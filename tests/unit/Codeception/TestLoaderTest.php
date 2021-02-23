@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Class TestLoaderTest
  * @group load
@@ -11,7 +13,7 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
      */
     protected $testLoader;
 
-    protected function _setUp()
+    protected function _setUp(): void
     {
         $this->testLoader = new \Codeception\Test\Loader(['path' => \Codeception\Configuration::dataDir()]);
     }
@@ -19,25 +21,25 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testAddCept()
+    public function testAddCept(): void
     {
         $this->testLoader->loadTest('SimpleCept.php');
         $this->assertCount(1, $this->testLoader->getTests());
     }
 
-    public function testAddTest()
+    public function testAddTest(): void
     {
         $this->testLoader->loadTest('SimpleTest.php');
         $this->assertCount(1, $this->testLoader->getTests());
     }
 
-    public function testAddCeptAbsolutePath()
+    public function testAddCeptAbsolutePath(): void
     {
         $this->testLoader->loadTest(codecept_data_dir('SimpleCept.php'));
         $this->assertCount(1, $this->testLoader->getTests());
     }
 
-    public function testAddCeptWithoutExtension()
+    public function testAddCeptWithoutExtension(): void
     {
         $this->testLoader->loadTest('SimpleCept');
         $this->assertCount(1, $this->testLoader->getTests());
@@ -46,7 +48,7 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testLoadFileWithFewCases()
+    public function testLoadFileWithFewCases(): void
     {
         $this->testLoader->loadTest('SimpleNamespacedTest.php');
         $this->assertCount(3, $this->testLoader->getTests());
@@ -55,14 +57,14 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
     /**
      * @group core
      */
-    public function testLoadAllTests()
+    public function testLoadAllTests(): void
     {
         // to autoload dependencies
         Codeception\Util\Autoload::addNamespace(
             'Math',
             codecept_data_dir().'claypit/tests/_support/Math'
         );
-        Codeception\Util\Autoload::addNamespace('Codeception\Module', codecept_data_dir().'claypit/tests/_support');
+        Codeception\Util\Autoload::addNamespace(\Codeception\Module::class, codecept_data_dir().'claypit/tests/_support');
 
         $this->testLoader = new \Codeception\Test\Loader(['path' => codecept_data_dir().'claypit/tests']);
         $this->testLoader->loadTests();
@@ -76,7 +78,10 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         $this->assertContainsTestName('MathTest:testAll', $testNames);
     }
 
-    protected function getTestNames($tests)
+    /**
+     * @return string[]
+     */
+    protected function getTestNames($tests): array
     {
         $testNames = [];
         foreach ($tests as $test) {
@@ -85,12 +90,12 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         return $testNames;
     }
 
-    protected function assertContainsTestName($name, $testNames)
+    protected function assertContainsTestName($name, $testNames): void
     {
-        $this->assertContains($name, $testNames, "$name not found in tests");
+        $this->assertContains($name, $testNames, "{$name} not found in tests");
     }
 
-    public function testDataProviderReturningArray()
+    public function testDataProviderReturningArray(): void
     {
         $this->testLoader->loadTest('SimpleWithDataProviderArrayCest.php');
         $tests = $this->testLoader->getTests();
@@ -100,7 +105,7 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         $this->assertEquals(5, $firstTest->count());
     }
 
-    public function testDataProviderReturningGenerator()
+    public function testDataProviderReturningGenerator(): void
     {
         $this->testLoader->loadTest('SimpleWithDataProviderYieldGeneratorCest.php');
         $tests = $this->testLoader->getTests();

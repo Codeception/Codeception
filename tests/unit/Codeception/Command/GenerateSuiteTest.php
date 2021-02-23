@@ -1,18 +1,28 @@
 <?php
+
+declare(strict_types=1);
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GenerateSuiteTest extends BaseCommandRunner
 {
+    /**
+     * @var array
+     */
+    public $log = [];
+    /**
+     * @var array<string, string>
+     */
     public $config = ['actor_suffix' => 'Guy'];
 
-    protected function _setUp()
+    protected function _setUp(): void
     {
-        $this->makeCommand('\Codeception\Command\GenerateSuite');
+        $this->makeCommand(\Codeception\Command\GenerateSuite::class);
     }
 
-    public function testBasic()
+    public function testBasic(): void
     {
-        $this->execute(array('suite' => 'shire', 'actor' => 'Hobbit'), false);
+        $this->execute(['suite' => 'shire', 'actor' => 'Hobbit'], false);
 
         $configFile = $this->log[1];
 
@@ -33,9 +43,9 @@ class GenerateSuiteTest extends BaseCommandRunner
         $this->assertStringContainsString('class Shire extends \Codeception\Module', $helper['content']);
     }
 
-    public function testGuyWithSuffix()
+    public function testGuyWithSuffix(): void
     {
-        $this->execute(array('suite' => 'shire', 'actor' => 'HobbitTester'), false);
+        $this->execute(['suite' => 'shire', 'actor' => 'HobbitTester'], false);
 
         $configFile = $this->log[1];
         $conf = \Symfony\Component\Yaml\Yaml::parse($configFile['content']);

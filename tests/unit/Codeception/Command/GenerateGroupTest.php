@@ -1,23 +1,30 @@
 <?php
+
+declare(strict_types=1);
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GenerateGroupTest extends BaseCommandRunner
 {
+    /**
+     * @var array
+     */
+    public $log = [];
 
-    protected function _setUp()
+    protected function _setUp(): void
     {
-        $this->makeCommand('\Codeception\Command\GenerateGroup');
-        $this->config = array(
+        $this->makeCommand(\Codeception\Command\GenerateGroup::class);
+        $this->config = [
             'class_name' => 'HobbitGuy',
             'path' => 'tests/shire',
-            'paths' => array('support' => 'tests/_support','tests' => 'tests'),
-            'settings' => array('bootstrap' => '_bootstrap.php')
-        );
+            'paths' => ['support' => 'tests/_support','tests' => 'tests'],
+            'settings' => ['bootstrap' => '_bootstrap.php']
+        ];
     }
 
-    public function testBasic()
+    public function testBasic(): void
     {
-        $this->execute(array('group' => 'Core'));
+        $this->execute(['group' => 'Core']);
 
         $generated = $this->log[0];
         $this->assertEquals(\Codeception\Configuration::supportDir().'Group/Core.php', $generated['filename']);
@@ -29,10 +36,10 @@ class GenerateGroupTest extends BaseCommandRunner
         $this->assertIsValidPhp($generated['content']);
     }
 
-    public function testNamespace()
+    public function testNamespace(): void
     {
         $this->config['namespace'] = 'Shire';
-        $this->execute(array('group' => 'Core'));
+        $this->execute(['group' => 'Core']);
 
         $generated = $this->log[0];
         $this->assertEquals(\Codeception\Configuration::supportDir().'Group/Core.php', $generated['filename']);
