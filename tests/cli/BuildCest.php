@@ -76,8 +76,8 @@ class BuildCest
     
     public function noReturnForVoidType(CliGuy $I, Scenario $scenario)
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $scenario->skip('Does not work in PHP < 7');
+        if (PHP_VERSION_ID < 70100) {
+            $scenario->skip('Does not work in PHP < 7.1');
         }
 
         $I->wantToTest('no return keyword generated for void typehint');
