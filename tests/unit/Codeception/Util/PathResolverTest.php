@@ -19,7 +19,7 @@ class PathResolverTest extends \Codeception\Test\Unit
     /**
      * data provider for testGetRelativeDir
      *
-     * @return array(array(strings))
+     * @return string[][]
      */
     public function getRelativeDirTestData(): array
     {
