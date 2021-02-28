@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 use Codeception\Lib\Parser;
 
 /**
@@ -16,7 +19,10 @@ class ParserTest extends \Codeception\Test\Unit
      * @var \Codeception\Scenario
      */
     protected $scenario;
-    
+
+    /**
+     * @var \Codeception\Test\Metadata
+     */
     protected $testMetadata;
 
     protected function _before()

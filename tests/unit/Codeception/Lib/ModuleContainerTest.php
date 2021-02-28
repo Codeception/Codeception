@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib;
 
 use Codeception\Exception\ModuleException;
@@ -388,7 +391,7 @@ class ModuleContainerTest extends Unit
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('Codeception\Lib\HelperModule');
-        
+
         $message = "Codeception\Lib\ModuleContainer: Module $wrongModule couldn't be connected (did you mean '$correctModule'?)";
         $this->expectException('\Codeception\Exception\ModuleException');
         $this->expectExceptionMessage($message);
@@ -427,7 +430,7 @@ class HelperModule extends \Codeception\Module
 
 class ConflictedModule extends \Codeception\Module implements ConflictsWithModule
 {
-    public function _conflicts()
+    public function _conflicts(): string
     {
         return 'Cli';
     }
@@ -435,7 +438,7 @@ class ConflictedModule extends \Codeception\Module implements ConflictsWithModul
 
 class ConflictedModule2 extends \Codeception\Module implements ConflictsWithModule
 {
-    public function _conflicts()
+    public function _conflicts(): string
     {
         return '\Codeception\Module\Cli';
     }
@@ -443,7 +446,7 @@ class ConflictedModule2 extends \Codeception\Module implements ConflictsWithModu
 
 class ConflictedModule3 extends \Codeception\Module implements ConflictsWithModule
 {
-    public function _conflicts()
+    public function _conflicts(): string
     {
         return 'Codeception\Lib\Interfaces\Web';
     }
@@ -451,7 +454,7 @@ class ConflictedModule3 extends \Codeception\Module implements ConflictsWithModu
 
 class DependencyModule extends \Codeception\Module implements DependsOnModule
 {
-    public function _depends()
+    public function _depends(): array
     {
         return ['Codeception\Lib\ConflictedModule' => 'Error message'];
     }
@@ -463,7 +466,7 @@ class DependencyModule extends \Codeception\Module implements DependsOnModule
 
 class PartedModule extends \Codeception\Module implements \Codeception\Lib\Interfaces\PartedModule
 {
-    public function _parts()
+    public function _parts(): array
     {
         return ['one'];
     }

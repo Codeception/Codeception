@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 use \Codeception\Util\Annotation;
 
 /**
@@ -31,13 +34,13 @@ class AnnotationTest extends \PHPUnit\Framework\TestCase
 
     public function testMultipleClassAnnotations()
     {
-        $this->assertEquals(array('codeception', 'tdd'), Annotation::forClass(__CLASS__)->fetchAll('tag'));
+        $this->assertEquals(['codeception', 'tdd'], Annotation::forClass(__CLASS__)->fetchAll('tag'));
     }
 
     public function testMultipleMethodAnnotations()
     {
         $this->assertEquals(
-            array('$var1', '$var2'),
+            ['$var1', '$var2'],
             Annotation::forClass(__CLASS__)->method('testMethodAnnotation')->fetchAll('param')
         );
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Codeception\Stub;
 use Facebook\WebDriver\WebDriverBy;
 use Codeception\Step;
@@ -12,7 +14,7 @@ class StepTest extends \PHPUnit\Framework\TestCase
      */
     protected function getStep($args)
     {
-        return $this->getMockBuilder('\Codeception\Step')->setConstructorArgs($args)->setMethods(null)->getMock();
+        return $this->getMockBuilder(\Codeception\Step::class)->setConstructorArgs($args)->setMethods(null)->getMock();
     }
 
     public function testGetArguments()
@@ -32,7 +34,7 @@ class StepTest extends \PHPUnit\Framework\TestCase
         $step = $this->getStep([null, [[$this, 'testGetArguments']]]);
         $this->assertEquals('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [['PDO', 'getAvailableDrivers']]]);
+        $step = $this->getStep([null, [[\PDO::class, 'getAvailableDrivers']]]);
         $this->assertEquals('["PDO","getAvailableDrivers"]', $step->getArgumentsAsString());
 
         $step = $this->getStep([null, [[Stub::make($this, []), 'testGetArguments']]]);
@@ -131,7 +133,7 @@ class StepTest extends \PHPUnit\Framework\TestCase
 
     public function testFormattedOutput()
     {
-        $argument = Stub::makeEmpty('\Codeception\Step\Argument\FormattedOutput');
+        $argument = Stub::makeEmpty(\Codeception\Step\Argument\FormattedOutput::class);
         $argument->method('getOutput')->willReturn('some formatted output');
 
         $step = $this->getStep(['argument', [$argument]]);

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Console;
 
 class MessageTest extends \Codeception\Test\Unit

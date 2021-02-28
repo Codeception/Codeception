@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GenerateTestTest extends BaseCommandRunner
@@ -6,16 +9,16 @@ class GenerateTestTest extends BaseCommandRunner
 
     protected function _setUp()
     {
-        $this->makeCommand('\Codeception\Command\GenerateTest');
-        $this->config = array(
+        $this->makeCommand(\Codeception\Command\GenerateTest::class);
+        $this->config = [
             'actor' => 'HobbitGuy',
             'path' => 'tests/shire',
-        );
+        ];
     }
 
     public function testBasic()
     {
-        $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHill'));
+        $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
         $this->assertEquals('tests/shire/HallUnderTheHillTest.php', $this->filename);
         $this->assertStringContainsString('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
         $this->assertStringContainsString('Test was created in tests/shire/HallUnderTheHillTest.php', $this->output);
@@ -25,14 +28,14 @@ class GenerateTestTest extends BaseCommandRunner
 
     public function testCreateWithSuffix()
     {
-        $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHillTest'));
+        $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillTest']);
         $this->assertEquals('tests/shire/HallUnderTheHillTest.php', $this->filename);
         $this->assertStringContainsString('Test was created in tests/shire/HallUnderTheHillTest.php', $this->output);
     }
 
     public function testCreateWithNamespace()
     {
-        $this->execute(array('suite' => 'shire', 'class' => 'MiddleEarth\HallUnderTheHillTest'));
+        $this->execute(['suite' => 'shire', 'class' => 'MiddleEarth\HallUnderTheHillTest']);
         $this->assertEquals('tests/shire/MiddleEarth/HallUnderTheHillTest.php', $this->filename);
         $this->assertStringContainsString('namespace MiddleEarth;', $this->content);
         $this->assertStringContainsString('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
@@ -41,7 +44,7 @@ class GenerateTestTest extends BaseCommandRunner
 
     public function testCreateWithExtension()
     {
-        $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHillTest.php'));
+        $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillTest.php']);
         $this->assertEquals('tests/shire/HallUnderTheHillTest.php', $this->filename);
         $this->assertStringContainsString('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
         $this->assertStringContainsString('protected $tester;', $this->content);
@@ -51,7 +54,7 @@ class GenerateTestTest extends BaseCommandRunner
 
     public function testValidPHP()
     {
-        $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHill'));
+        $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
         $this->assertIsValidPhp($this->content);
     }
 }

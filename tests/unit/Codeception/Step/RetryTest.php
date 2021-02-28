@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Step;
 
 use Codeception\Lib\ModuleContainer;
@@ -6,6 +9,9 @@ use Codeception\Stub;
 
 class RetryTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var bool
+     */
     protected $shouldFail = true;
 
     public function testRetryStepShouldNotFailStep()

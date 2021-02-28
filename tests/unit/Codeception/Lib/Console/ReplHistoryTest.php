@@ -1,4 +1,8 @@
-<?php namespace Codeception\Lib\Console;
+<?php
+
+declare(strict_types=1);
+
+namespace Codeception\Lib\Console;
 
 use Codeception\Configuration;
 use Codeception\Test\Unit;

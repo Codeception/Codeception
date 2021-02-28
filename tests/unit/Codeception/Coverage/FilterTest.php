@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Coverage;
 
 use Codeception\Stub;
@@ -16,7 +19,7 @@ class FilterTest extends \Codeception\Test\Unit
 
     protected function _before()
     {
-        $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
+        $driver = Stub::makeEmpty(\SebastianBergmann\CodeCoverage\Driver\Driver::class);
         $this->filter = new Filter(new CodeCoverage($driver, new CodeCoverageFilter()));
     }
 
@@ -58,10 +61,7 @@ class FilterTest extends \Codeception\Test\Unit
         $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/unit/CodeGuy.php')));
     }
 
-    /**
-     * @return string
-     */
-    private function getFilterMethod()
+    private function getFilterMethod(): string
     {
         $filterMethod = 'isFiltered';
         if (method_exists($this->filter->getFilter(), 'isExcluded')) {

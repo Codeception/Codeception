@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 class CeptTest extends \Codeception\Test\Unit
 {
 

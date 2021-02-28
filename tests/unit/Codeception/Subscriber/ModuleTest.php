@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Subscriber;
 
 use Codeception\Event\FailEvent;
@@ -344,10 +346,7 @@ class CodeceptionModuleStub extends \Codeception\Module
     /** @var int */
     private $callOrder = 0;
 
-    /**
-     * @return int
-     */
-    public function getCallOrder()
+    public function getCallOrder(): int
     {
         return $this->callOrder;
     }

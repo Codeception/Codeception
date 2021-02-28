@@ -1,10 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 use Codeception\Codecept;
 
 class ReflectionTestClass
 {
+    /**
+     * @var string
+     */
     const FOO = 'bar';
 
     private $value = 'test';
@@ -45,12 +51,12 @@ class ReflectionTestClass
         return $this;
     }
 
-    static public function setFlavor(string $flavor = self::FOO): void
+    static public function setFlavor(string $flavor = self::FOO)
     {
         self::$flavorOfTheWeek = $flavor;
     }
 
-    public function setFlavorImportedDefault(string $flavor = Codecept::VERSION): void
+    public function setFlavorImportedDefault(string $flavor = Codecept::VERSION)
     {
         self::$flavorOfTheWeek = $flavor;
     }

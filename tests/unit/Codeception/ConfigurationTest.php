@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
 
 class ConfigurationTest extends \Codeception\PHPUnit\TestCase
 {
+    /**
+     * @var array
+     */
+    public $config = [];
 
     public function _setUp()
     {
@@ -31,7 +36,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
      */
     public function testFunctionForStrippingClassNames()
     {
-        $matches = array();
+        $matches = [];
         $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', '\\Codeception\\Module\\UserHelper', $matches));
         $this->assertEquals('UserHelper', $matches[1]);
         $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', 'UserHelper', $matches));
@@ -43,13 +48,13 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
      */
     public function testModules()
     {
-        $settings = array('modules' => array('enabled' => array('EmulateModuleHelper')));
+        $settings = ['modules' => ['enabled' => ['EmulateModuleHelper']]];
         $modules = \Codeception\Configuration::modules($settings);
         $this->assertContains('EmulateModuleHelper', $modules);
-        $settings = array('modules' => array(
-            'enabled' => array('EmulateModuleHelper'),
-            'disabled' => array('EmulateModuleHelper'),
-        ));
+        $settings = ['modules' => [
+            'enabled' => ['EmulateModuleHelper'],
+            'disabled' => ['EmulateModuleHelper'],
+        ]];
         $modules = \Codeception\Configuration::modules($settings);
         $this->assertNotContains('EmulateModuleHelper', $modules);
     }

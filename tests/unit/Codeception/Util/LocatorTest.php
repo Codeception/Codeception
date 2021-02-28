@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Codeception\Util\Locator;
 use Facebook\WebDriver\WebDriverBy;
 
@@ -36,8 +38,8 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
     public function testFind()
     {
         $xml = new SimpleXMLElement("<root><a href='#' tabindex='2'>Click Me</a></root>");
-        $this->assertNotEmpty($xml->xpath(Locator::find('a', array('href' => '#'))));
-        $this->assertNotEmpty($xml->xpath(Locator::find('a', array('href', 'tabindex' => '2'))));
+        $this->assertNotEmpty($xml->xpath(Locator::find('a', ['href' => '#'])));
+        $this->assertNotEmpty($xml->xpath(Locator::find('a', ['href', 'tabindex' => '2'])));
     }
 
     public function testIsXPath()
@@ -70,11 +72,11 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
     public function testContains()
     {
         $this->assertEquals(
-            'descendant-or-self::label[contains(., \'enter a name\')]',
+            "descendant-or-self::label[contains(., 'enter a name')]",
             Locator::contains('label', 'enter a name')
         );
         $this->assertEquals(
-            'descendant-or-self::label[@id = \'user\'][contains(., \'enter a name\')]',
+            "descendant-or-self::label[@id = 'user'][contains(., 'enter a name')]",
             Locator::contains('label#user', 'enter a name')
         );
         $this->assertEquals(

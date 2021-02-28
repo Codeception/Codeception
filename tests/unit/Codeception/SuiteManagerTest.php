@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 if (!defined('PHPUNIT_TESTSUITE')) {
     define('PHPUNIT_TESTSUITE', true);
 }
@@ -30,8 +33,8 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
         $settings['actor'] = 'CodeGuy';
         $this->suiteman = new \Codeception\SuiteManager($this->dispatcher, 'suite', $settings);
-        
-        $printer = \Codeception\Stub::makeEmpty('PHPUnit\TextUI\ResultPrinter');
+
+        $printer = \Codeception\Stub::makeEmpty(\PHPUnit\TextUI\ResultPrinter::class);
         $this->runner = new \Codeception\PHPUnit\Runner;
         $this->runner->setPrinter($printer);
     }
@@ -47,6 +50,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         };
         $this->dispatcher->addListener('suite.before', $eventListener);
         $this->dispatcher->addListener('suite.after', $eventListener);
+
         $this->suiteman->run(
             $this->runner,
             new \PHPUnit\Framework\TestResult,

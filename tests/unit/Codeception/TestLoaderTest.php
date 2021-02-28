@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Class TestLoaderTest
  * @group load
@@ -62,7 +64,7 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
             'Math',
             codecept_data_dir().'claypit/tests/_support/Math'
         );
-        Codeception\Util\Autoload::addNamespace('Codeception\Module', codecept_data_dir().'claypit/tests/_support');
+        Codeception\Util\Autoload::addNamespace(\Codeception\Module::class, codecept_data_dir().'claypit/tests/_support');
 
         $this->testLoader = new \Codeception\Test\Loader(['path' => codecept_data_dir().'claypit/tests']);
         $this->testLoader->loadTests();
@@ -76,7 +78,10 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         $this->assertContainsTestName('MathTest:testAll', $testNames);
     }
 
-    protected function getTestNames($tests)
+    /**
+     * @return string[]
+     */
+    protected function getTestNames($tests): array
     {
         $testNames = [];
         foreach ($tests as $test) {
@@ -87,7 +92,7 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
 
     protected function assertContainsTestName($name, $testNames)
     {
-        $this->assertContains($name, $testNames, "$name not found in tests");
+        $this->assertContains($name, $testNames, "{$name} not found in tests");
     }
 
     public function testDataProviderReturningArray()

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib;
 
 class DiTest extends \Codeception\Test\Unit
@@ -7,16 +10,16 @@ class DiTest extends \Codeception\Test\Unit
      * @var Di
      */
     protected $di;
-    
+
     protected function _setUp()
     {
         $this->di = new Di();
     }
 
-    protected function injectionShouldFail($msg = '')
+    protected function injectionShouldFail(string $msg = '')
     {
-        $this->expectException('Codeception\Exception\InjectionException');
-        if ($msg) {
+        $this->expectException(\Codeception\Exception\InjectionException::class);
+        if ($msg !== '') {
             $this->expectExceptionMessage($msg);
         }
     }
@@ -52,7 +55,7 @@ class DiTest extends \Codeception\Test\Unit
     public function testFailDependenciesPrimitiveParam()
     {
         require_once codecept_data_dir().'FailDependenciesPrimitiveParam.php';
-        $this->injectionShouldFail('Parameter \'required\' must have default value');
+        $this->injectionShouldFail("Parameter 'required' must have default value");
         $this->di->instantiate('FailDependenciesPrimitiveParam\IncorrectDependenciesClass');
     }
 }

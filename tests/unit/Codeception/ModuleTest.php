@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Codeception\Stub;
 
 class ModuleTest extends \Codeception\PHPUnit\TestCase
@@ -22,8 +24,11 @@ class ModuleTest extends \Codeception\PHPUnit\TestCase
 
 class ModuleStub extends \Codeception\Module implements \Codeception\Lib\Interfaces\RequiresPackage
 {
-    public function _requires()
+    /**
+     * @return array<string, string>
+     */
+    public function _requires(): array
     {
-        return ['no\such\class' => '"error"', 'Codeception\Module' => '"installed"'];
+        return ['no\such\class' => '"error"', \Codeception\Module::class => '"installed"'];
     }
 }
