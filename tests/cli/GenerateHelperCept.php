@@ -1,4 +1,5 @@
 <?php
+
 $I = new CliGuy\GeneratorSteps($scenario);
 $I->wantTo('generate helper');
 $I->amInPath('tests/data/sandbox');

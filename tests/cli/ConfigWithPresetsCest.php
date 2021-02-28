@@ -1,6 +1,8 @@
 <?php
 
-class ConfigWithPresetsCest
+declare(strict_types=1);
+
+final class ConfigWithPresetsCest
 {
     public function loadWithPresets(CliGuy $I)
     {
@@ -8,5 +10,4 @@ class ConfigWithPresetsCest
         $I->executeCommand('run -c codeception.yml');
         $I->seeInShellOutput('OK (1 test');
     }
-
 }

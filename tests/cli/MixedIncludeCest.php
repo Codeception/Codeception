@@ -1,11 +1,14 @@
 <?php
-class MixedIncludeCest
+
+declare(strict_types=1);
+
+final class MixedIncludeCest
 {
     /**
      * @after checkAllSuitesExecuted
      * @param CliGuy $I
      */
-    public function runIncludedSuites(\CliGuy $I)
+    public function runIncludedSuites(CliGuy $I)
     {
         $I->amInPath('tests/data/included_mix');
         $I->executeCommand('run');
@@ -13,14 +16,14 @@ class MixedIncludeCest
 
     /**
      * @after checkAllSuitesExecuted
-     * @param \CliGuy $I
+     * @param CliGuy $I
      */
-    public function runIncludedSuiteFromCurrentDir(\CliGuy $I)
+    public function runIncludedSuiteFromCurrentDir(CliGuy $I)
     {
         $I->executeCommand('run -c tests/data/included_mix');
     }
 
-    protected function checkAllSuitesExecuted(\CliGuy $I)
+    private function checkAllSuitesExecuted(CliGuy $I)
     {
         $I->seeInShellOutput('AcmePack.unit Tests (1)');
         $I->seeInShellOutput('Unit Tests (1)');

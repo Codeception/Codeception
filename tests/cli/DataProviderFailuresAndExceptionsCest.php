@@ -1,12 +1,10 @@
 <?php
 
-class DataProviderFailuresAndExceptionsCest
-{
+declare(strict_types=1);
 
-    /**
-     * @param CliGuy $I
-     */
-    protected function moveToPath(\CliGuy $I)
+final class DataProviderFailuresAndExceptionsCest
+{
+    private function moveToPath(CliGuy $I)
     {
         $I->amInPath('tests/data/dataprovider_failures_and_exceptions');
     }
@@ -19,7 +17,7 @@ class DataProviderFailuresAndExceptionsCest
      * @param CliGuy $I
      * @before moveToPath
      */
-    public function runTestWithDataProvidersFailureStdout(\CliGuy $I)
+    public function runTestWithDataProvidersFailureStdout(CliGuy $I)
     {
         /**
          * On windows /dev/null is NUL so detect running OS and return the appropriate string for redirection.
@@ -40,11 +38,11 @@ class DataProviderFailuresAndExceptionsCest
      * @param CliGuy $I
      * @before moveToPath
      */
-    public function runTestWithDataProvidersFailureStderr(\CliGuy $I)
+    public function runTestWithDataProvidersFailureStderr(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersFailureCest 2>&1',false);
-        $I->seeInShellOutput('Couldn\'t parse test');
-        $I->seeInShellOutput('DataProvider \'rectangle\' for DataProvidersFailureCest->testIsTriangle');
+        $I->seeInShellOutput("Couldn't parse test");
+        $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle");
         $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
         $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
@@ -66,11 +64,11 @@ class DataProviderFailuresAndExceptionsCest
      * @param CliGuy $I
      * @before moveToPath
      */
-    public function runTestWithDataProvidersFailureStderrVerbose(\CliGuy $I)
+    public function runTestWithDataProvidersFailureStderrVerbose(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersFailureCest -v 2>&1',false);
-        $I->seeInShellOutput('Couldn\'t parse test');
-        $I->seeInShellOutput('DataProvider \'rectangle\' for DataProvidersFailureCest->testIsTriangle');
+        $I->seeInShellOutput("Couldn't parse test");
+        $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle");
         $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
         $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
@@ -84,7 +82,6 @@ class DataProviderFailuresAndExceptionsCest
         $I->seeInShellOutput('[Codeception\Exception\TestParseException]');
         $I->seeInShellOutput('Exception trace');
         $I->seeResultCodeIs(1);
-
     }
 
     /**
@@ -95,7 +92,7 @@ class DataProviderFailuresAndExceptionsCest
      * @param CliGuy $I
      * @before moveToPath
      */
-    public function runTestWithDataProvidersExceptionStdout(\CliGuy $I)
+    public function runTestWithDataProvidersExceptionStdout(CliGuy $I)
     {
         /**
          * On windows /dev/null is NUL so detect running OS and return the appropriate string for redirection.
@@ -116,7 +113,7 @@ class DataProviderFailuresAndExceptionsCest
      * @param CliGuy $I
      * @before moveToPath
      */
-    public function runTestWithDataProvidersExceptionStderr(\CliGuy $I)
+    public function runTestWithDataProvidersExceptionStderr(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersExceptionCest 2>&1', false);
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
@@ -128,15 +125,14 @@ class DataProviderFailuresAndExceptionsCest
         $I->dontSeeInShellOutput('OK');
         // We should not see the messages related to a failure to parse the dataProvider function
         $I->dontSeeInShellOutput('[Codeception\Exception\TestParseException]');
-        $I->dontSeeInShellOutput('Couldn\'t parse test');
-        $I->dontSeeInShellOutput('DataProvider \'rectangle\' for DataProvidersFailureCest->testIsTriangle ');
+        $I->dontSeeInShellOutput("Couldn't parse test");
+        $I->dontSeeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle ");
 
         // We should just see the message
         $I->seeInShellOutput('Something went wrong!!!');
         // We don't have the verbose flag set, so there should be no trace.
         $I->dontSeeInShellOutput('Exception trace:');
         $I->seeResultCodeIs(1);
-
     }
 
     /**
@@ -145,7 +141,7 @@ class DataProviderFailuresAndExceptionsCest
      * @param CliGuy $I
      * @before moveToPath
      */
-    public function runTestWithDataProvidersExceptionStderrVerbose(\CliGuy $I)
+    public function runTestWithDataProvidersExceptionStderrVerbose(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersExceptionCest -v 2>&1', false);
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
@@ -157,8 +153,8 @@ class DataProviderFailuresAndExceptionsCest
         $I->dontSeeInShellOutput('OK');
         // We should not see the messages related to a failure to parse the dataProvider function
         $I->dontSeeInShellOutput('[Codeception\Exception\TestParseException]');
-        $I->dontSeeInShellOutput('Couldn\'t parse test');
-        $I->dontSeeInShellOutput('DataProvider \'rectangle\' for DataProvidersFailureCest->testIsTriangle is ');
+        $I->dontSeeInShellOutput("Couldn't parse test");
+        $I->dontSeeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle is ");
 
         // We should just see the message
         $I->seeInShellOutput('Something went wrong!!!');

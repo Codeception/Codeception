@@ -1,6 +1,8 @@
 <?php
 
-class RetryCest
+declare(strict_types=1);
+
+final class RetryCest
 {
     public function _before(CliGuy $I)
     {
@@ -28,7 +30,6 @@ class RetryCest
         $I->seeInShellOutput('Retrying #2');
     }
 
-
     public function checkTheTestFailsEvenWhenRetriesByInterval(CliGuy $I)
     {
         $I->executeFailCommand('run --debug -g fail2');
@@ -44,5 +45,4 @@ class RetryCest
         $I->seeInShellOutput('Failed to perform');
         $I->seeResultCodeIs(0);
     }
-
 }
