@@ -37,10 +37,10 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     public function testFunctionForStrippingClassNames()
     {
         $matches = [];
-        $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', '\\Codeception\\Module\\UserHelper', $matches));
-        $this->assertEquals('UserHelper', $matches[1]);
-        $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', 'UserHelper', $matches));
-        $this->assertEquals('UserHelper', $matches[1]);
+        $this->assertSame(1, preg_match('~\\\\?(\\w*?Helper)$~', '\\Codeception\\Module\\UserHelper', $matches));
+        $this->assertSame('UserHelper', $matches[1]);
+        $this->assertSame(1, preg_match('~\\\\?(\\w*?Helper)$~', 'UserHelper', $matches));
+        $this->assertSame('UserHelper', $matches[1]);
     }
 
     /**

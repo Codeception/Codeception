@@ -46,6 +46,6 @@ COLORED;
         $actual = $this->colorizer->colorize($toColorizeInput);
 
 
-        $this->assertEquals($expectedColorized, $actual, 'it should add the format tags');
+        $this->assertSame($expectedColorized, $actual, 'it should add the format tags');
     }
 }

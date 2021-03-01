@@ -21,8 +21,8 @@ class MathTest extends \Codeception\Test\Unit
 
     public function testAll()
     {
-        $this->assertEquals(3, $this->calc->add(1, 2));
-        $this->assertEquals(1, $this->calc->subtract(3, 2));
-        $this->assertEquals(75, $this->calc->squareOfCircle(5));
+        $this->assertSame(3, $this->calc->add(1, 2));
+        $this->assertSame(1, $this->calc->subtract(3, 2));
+        $this->assertSame(75, $this->calc->squareOfCircle(5));
     }
 }

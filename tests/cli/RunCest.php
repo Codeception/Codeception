@@ -616,7 +616,7 @@ EOF
         $newOutput = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
         $newOutput = preg_replace('~\(\d\.\d+s\)~m', '', $newOutput);
 
-        $I->assertEquals($output, $newOutput, 'order of tests is the same');
+        $I->assertSame($output, $newOutput, 'order of tests is the same');
 
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
         $newOutput = $I->grabFromOutput('/---\n((.|\n)*?)---/m');

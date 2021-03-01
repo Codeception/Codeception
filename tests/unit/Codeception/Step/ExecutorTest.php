@@ -18,7 +18,7 @@ class ExecutorTest extends \PHPUnit\Framework\TestCase
         });
         $actual = $executor->run();
 
-        $this->assertEquals($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     /**

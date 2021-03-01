@@ -18,19 +18,19 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         $object = new ReflectionTestClass();
         $object->setValue($expected);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             ReflectionHelper::readPrivateProperty($object, 'value', ReflectionTestClass::class)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             ReflectionHelper::readPrivateProperty($object, 'value', null)
         );
 
         $this->expectException(ReflectionException::class);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             ReflectionHelper::readPrivateProperty($object, 'value', '')
         );
@@ -43,19 +43,19 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         $object = new ReflectionTestClass();
         $object->setValue($expected);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             ReflectionHelper::invokePrivateMethod($object, 'getSecret', ['cat'], ReflectionTestClass::class)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             ReflectionHelper::invokePrivateMethod($object, 'getSecret', ['cat'], null)
         );
 
         $this->expectException(ReflectionException::class);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             ReflectionHelper::invokePrivateMethod($object, 'getSecret', ['cat'], '')
         );
@@ -63,12 +63,12 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
 
     public function testGetClassShortName()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'ReflectionTestClass',
             ReflectionHelper::getClassShortName(new ReflectionTestClass())
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'ReflectionHelper',
             ReflectionHelper::getClassShortName(new ReflectionHelper())
         );
@@ -79,22 +79,22 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         $object = new ReflectionTestClass();
         $object->setValue('elephant');
 
-        $this->assertEquals(
+        $this->assertSame(
             \Codeception\Util\Debug::class,
             ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 0))
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             null,
             ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 1))
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             null,
             ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 'flavor'))
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             null,
             ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setInt'], 'i'))
         );
@@ -105,37 +105,37 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
         $object = new ReflectionTestClass();
         $object->setValue('elephant');
 
-        $this->assertEquals(
+        $this->assertSame(
             'null',
             ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setDebug'], 0))
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '\Codeception\Util\ReflectionTestClass::FOO',
             ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setDebug'], 1))
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '\Codeception\Util\ReflectionTestClass::FOO',
             ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setDebug'], 'flavor'))
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '\Codeception\Codecept::VERSION',
             ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setFlavorImportedDefault'], 'flavor'))
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             "''",
             ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setValue'], 0))
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '0',
             ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setInt'], 0))
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'null',
             ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setMixed'], 0))
         );
@@ -143,27 +143,27 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
 
     public function testPhpEncodeValue()
     {
-        $this->assertEquals(
+        $this->assertSame(
             '0',
             ReflectionHelper::phpEncodeValue(0)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '1',
             ReflectionHelper::phpEncodeValue(1)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '"\\u00fcber"',
             ReflectionHelper::phpEncodeValue('über')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '["foo" => "bar"]',
             ReflectionHelper::phpEncodeValue(['foo' => 'bar'])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '["foo" => "bar", "baz" => ["cat", "dog"]]',
             ReflectionHelper::phpEncodeValue(['foo' => 'bar', 'baz' => ['cat', 'dog']])
         );
@@ -171,12 +171,12 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
 
     public function testPhpEncodeArray()
     {
-        $this->assertEquals(
+        $this->assertSame(
             '["foo" => "bar"]',
             ReflectionHelper::phpEncodeArray(['foo' => 'bar'])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '["foo" => "bar", "baz" => ["cat", "dog"]]',
             ReflectionHelper::phpEncodeArray(['foo' => 'bar', 'baz' => ['cat', 'dog']])
         );

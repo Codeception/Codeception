@@ -27,7 +27,7 @@ class GenerateGroupTest extends BaseCommandRunner
         $this->execute(['group' => 'Core']);
 
         $generated = $this->log[0];
-        $this->assertEquals(\Codeception\Configuration::supportDir().'Group/Core.php', $generated['filename']);
+        $this->assertSame(\Codeception\Configuration::supportDir().'Group/Core.php', $generated['filename']);
         $this->assertStringContainsString('namespace Group;', $generated['content']);
         $this->assertStringContainsString('class Core', $generated['content']);
         $this->assertStringContainsString('public function _before', $generated['content']);
@@ -42,7 +42,7 @@ class GenerateGroupTest extends BaseCommandRunner
         $this->execute(['group' => 'Core']);
 
         $generated = $this->log[0];
-        $this->assertEquals(\Codeception\Configuration::supportDir().'Group/Core.php', $generated['filename']);
+        $this->assertSame(\Codeception\Configuration::supportDir().'Group/Core.php', $generated['filename']);
         $this->assertStringContainsString('namespace Shire\Group;', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
     }

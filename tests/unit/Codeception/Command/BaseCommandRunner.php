@@ -110,6 +110,6 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
         exec('php -l ' . $tempFile, $output, $code);
         unlink($tempFile);
 
-        $this->assertEquals(0, $code, $php);
+        $this->assertSame(0, $code, $php);
     }
 }

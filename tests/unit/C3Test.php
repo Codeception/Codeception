@@ -56,7 +56,7 @@ class C3Test extends \Codeception\PHPUnit\TestCase
         $cc_file = $this->c3_dir . 'dummy.txt';
         file_put_contents($cc_file, 'nothing');
         include $this->c3;
-        $this->assertEquals('clear', $route);
+        $this->assertSame('clear', $route);
         $this->assertFileNotExists($cc_file);
     }
 
@@ -64,7 +64,7 @@ class C3Test extends \Codeception\PHPUnit\TestCase
     {
         $_SERVER['REQUEST_URI'] = '/c3/report/html';
         include $this->c3;
-        $this->assertEquals('html', $route);
+        $this->assertSame('html', $route);
         $this->assertFileExists($this->c3_dir . 'codecoverage.tar');
     }
 
@@ -72,7 +72,7 @@ class C3Test extends \Codeception\PHPUnit\TestCase
     {
         $_SERVER['REQUEST_URI'] = '/c3/report/clover';
         include $this->c3;
-        $this->assertEquals('clover', $route);
+        $this->assertSame('clover', $route);
         $this->assertFileExists($this->c3_dir . 'codecoverage.clover.xml');
     }
 
@@ -80,7 +80,7 @@ class C3Test extends \Codeception\PHPUnit\TestCase
     {
         $_SERVER['REQUEST_URI'] = '/c3/report/serialized';
         include $this->c3;
-        $this->assertEquals('serialized', $route);
+        $this->assertSame('serialized', $route);
         $this->assertInstanceOf('PHP_CodeCoverage', $codeCoverage);
     }
 }
