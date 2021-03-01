@@ -209,7 +209,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     protected function assertMethodReplaced($dummy)
     {
         $this->assertTrue(method_exists($dummy, 'helloWorld'));
-        $this->assertNotEquals($this->dummy->helloWorld(), $dummy->helloWorld());
+        $this->assertNotSame($this->dummy->helloWorld(), $dummy->helloWorld());
         $this->assertSame($dummy->helloWorld(), 'good bye world');
     }
 
