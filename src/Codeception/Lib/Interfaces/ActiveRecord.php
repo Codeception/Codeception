@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Lib\Interfaces;
 
 interface ActiveRecord extends ORM

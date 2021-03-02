@@ -1,16 +1,37 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
 use Codeception\Configuration;
 use Codeception\Lib\Di;
+use Codeception\Lib\Friend;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Template;
+use ReflectionClass;
+use ReflectionMethod;
 
 class Actor
 {
+    /**
+     * @var Di
+     */
+    public $di;
+
+    /**
+     * @var ModuleContainer
+     */
+    public $moduleContainer;
+
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
 <?php
+
+declare(strict_types=1);
 {{hasNamespace}}
 
 /**
@@ -30,10 +51,19 @@ class {{actor}} extends \Codeception\Actor
 
 EOF;
 
+    /**
+     * @var string
+     */
     protected $inheritedMethodTemplate = ' * @method {{return}} {{method}}({{params}})';
 
     protected $settings;
+    /**
+     * @var array
+     */
     protected $modules;
+    /**
+     * @var array
+     */
     protected $actions;
 
     public function __construct($settings)
@@ -51,7 +81,7 @@ EOF;
         $this->actions = $this->moduleContainer->getActions();
     }
 
-    public function produce()
+    public function produce(): string
     {
         $namespace = rtrim($this->settings['namespace'], '\\');
 
@@ -60,18 +90,18 @@ EOF;
         }
 
         return (new Template($this->template))
-            ->place('hasNamespace', $namespace ? "namespace $namespace;" : '')
+            ->place('hasNamespace', $namespace ? "namespace {$namespace};" : '')
             ->place('actor', $this->settings['actor'])
             ->place('inheritedMethods', $this->prependAbstractActorDocBlocks())
             ->produce();
     }
 
-    protected function prependAbstractActorDocBlocks()
+    protected function prependAbstractActorDocBlocks(): string
     {
         $inherited = [];
 
-        $class = new \ReflectionClass('\Codeception\\Actor');
-        $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $class = new ReflectionClass(\Codeception\Actor::class);
+        $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
             if ($method->name == '__call') {
@@ -82,7 +112,7 @@ EOF;
             } // skipping magic
             $returnType = 'void';
             if ($method->name == 'haveFriend') {
-                $returnType = '\Codeception\Lib\Friend';
+                $returnType = Friend::class;
             }
             $params = $this->getParamsString($method);
             $inherited[] = (new Template($this->inheritedMethodTemplate))
@@ -95,11 +125,7 @@ EOF;
         return implode("\n", $inherited);
     }
 
-    /**
-     * @param \ReflectionMethod $refMethod
-     * @return array
-     */
-    protected function getParamsString(\ReflectionMethod $refMethod)
+    protected function getParamsString(ReflectionMethod $refMethod): string
     {
         $params = [];
         foreach ($refMethod->getParameters() as $param) {
@@ -117,7 +143,10 @@ EOF;
         return $this->settings['actor'];
     }
 
-    public function getModules()
+    /**
+     * @return string[]
+     */
+    public function getModules(): array
     {
         return array_keys($this->modules);
     }

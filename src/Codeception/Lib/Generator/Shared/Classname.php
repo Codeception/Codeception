@@ -1,11 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator\Shared;
 
 trait Classname
 {
-    protected function removeSuffix($classname, $suffix)
+    protected function removeSuffix(string $classname, string $suffix)
     {
         $classname = preg_replace('~\.php$~', '', $classname);
-        return preg_replace("~$suffix$~", '', $classname);
+        return preg_replace("~{$suffix}$~", '', $classname);
     }
 }

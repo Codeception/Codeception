@@ -1,11 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib;
 
-use Codeception\Configuration;
 use Codeception\Exception\TestParseException;
 use Codeception\Scenario;
-use Codeception\Step;
+use Codeception\Step\Action;
+use Codeception\Step\Comment;
 use Codeception\Test\Metadata;
+use Exception;
+use ParseError;
 
 class Parser
 {
@@ -25,13 +30,13 @@ class Parser
         $this->metadata = $metadata;
     }
 
-    public function prepareToRun($code)
+    public function prepareToRun($code): void
     {
         $this->parseFeature($code);
         $this->parseScenarioOptions($code);
     }
 
-    public function parseFeature($code)
+    public function parseFeature($code): void
     {
         $matches = [];
         $code = $this->stripComments($code);
@@ -47,12 +52,12 @@ class Parser
         }
     }
 
-    public function parseScenarioOptions($code)
+    public function parseScenarioOptions($code): void
     {
         $this->metadata->setParamsFromAnnotations($this->matchComments($code));
     }
 
-    public function parseSteps($code)
+    public function parseSteps($code): void
     {
         // parse per line
         $friends = [];
@@ -70,7 +75,7 @@ class Parser
                     continue;
                 }
                 $isFriend = true;
-                $this->addCommentStep("\n----- $friend does -----");
+                $this->addCommentStep("\n----- {$friend} does -----");
                 continue;
             }
 
@@ -87,32 +92,35 @@ class Parser
         }
     }
 
-    protected function addStep($matches)
+    protected function addStep($matches): void
     {
         list($m, $action, $params) = $matches;
         if (in_array($action, ['wantTo', 'wantToTest'])) {
             return;
         }
-        $this->scenario->addStep(new Step\Action($action, explode(',', $params)));
+        $this->scenario->addStep(new Action($action, explode(',', $params)));
     }
 
-    protected function addCommentStep($comment)
+    protected function addCommentStep($comment): void
     {
-        $this->scenario->addStep(new \Codeception\Step\Comment($comment, []));
+        $this->scenario->addStep(new Comment($comment, []));
     }
 
-    public static function load($file)
+    public static function load($file): void
     {
         try {
             self::includeFile($file);
-        } catch (\ParseError $e) {
-            throw new TestParseException($file, $e->getMessage(), $e->getLine());
-        } catch (\Exception $e) {
+        } catch (ParseError $e) {
+            throw new TestParseException($file, $e->getMessage(), (string)$e->getLine());
+        } catch (Exception $e) {
             // file is valid otherwise
         }
     }
 
-    public static function getClassesFromFile($file)
+    /**
+     * @return string[]
+     */
+    public static function getClassesFromFile($file): array
     {
         $sourceCode = file_get_contents($file);
         $classes = [];
@@ -120,10 +128,10 @@ class Parser
         $tokenCount = count($tokens);
         $namespace = '';
 
-        for ($i = 0; $i < $tokenCount; $i++) {
+        for ($i = 0; $i < $tokenCount; ++$i) {
             if ($tokens[$i][0] === T_NAMESPACE) {
                 $namespace = '';
-                for ($j = $i + 1; $j < $tokenCount; $j++) {
+                for ($j = $i + 1; $j < $tokenCount; ++$j) {
                     if ($tokens[$j] === '{' || $tokens[$j] === ';') {
                         break;
                     }
@@ -141,7 +149,7 @@ class Parser
                 if ($tokens[$i - 2][0] === T_NEW) {
                     continue;
                 }
-                if ($tokens[$i - 1][0] === T_WHITESPACE and $tokens[$i - 2][0] === T_DOUBLE_COLON) {
+                if ($tokens[$i - 1][0] === T_WHITESPACE && $tokens[$i - 2][0] === T_DOUBLE_COLON) {
                     continue;
                 }
                 if ($tokens[$i - 1][0] === T_DOUBLE_COLON) {
@@ -157,7 +165,7 @@ class Parser
     /*
      * Include in different scope to prevent included file from affecting $file variable
      */
-    private static function includeFile($file)
+    private static function includeFile($file): void
     {
         include_once $file;
     }
@@ -173,7 +181,7 @@ class Parser
         return $code; // remove block comment
     }
 
-    protected function matchComments($code)
+    protected function matchComments($code): string
     {
         $matches = [];
         $comments = '';

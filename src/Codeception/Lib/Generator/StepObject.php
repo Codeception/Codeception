@@ -1,17 +1,27 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
 use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class StepObject
 {
     use Namespaces;
-    use Shared\Classname;
+    use Classname;
 
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
 <?php
+
+declare(strict_types=1);
+
 namespace {{namespace}};
 
 class {{name}} extends {{actorClass}}
@@ -20,6 +30,9 @@ class {{name}} extends {{actorClass}}
 }
 EOF;
 
+    /**
+     * @var string
+     */
     protected $actionTemplate = <<<EOF
 
     public function {{action}}()
@@ -29,18 +42,34 @@ EOF;
 
 EOF;
 
+    /**
+     * @var array
+     */
     protected $settings;
+
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var string
+     */
     protected $actions = '';
 
-    public function __construct($settings, $name)
+    /**
+     * @var string
+     */
+    public $namespace;
+
+    public function __construct(array $settings, string $name)
     {
         $this->settings = $settings;
         $this->name = $this->getShortClassName($name);
         $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Step\\' . $name);
     }
 
-    public function produce()
+    public function produce(): string
     {
         $actor = $this->settings['actor'];
         if (!$actor) {
@@ -59,7 +88,7 @@ EOF;
             ->produce();
     }
 
-    public function createAction($action)
+    public function createAction($action): void
     {
         $this->actions .= (new Template($this->actionTemplate))
             ->place('action', $action)

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
 use Codeception\Util\Shared\Namespaces;
@@ -8,8 +11,14 @@ class Snapshot
 {
     use Namespaces;
 
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
 <?php
+
+declare(strict_types=1);
+
 namespace {{namespace}};
 
 class {{name}} extends \\Codeception\\Snapshot
@@ -24,6 +33,9 @@ class {{name}} extends \\Codeception\\Snapshot
 }
 EOF;
 
+    /**
+     * @var string
+     */
     protected $actionsTemplate = <<<EOF
     /**
      * @var \\{{actorClass}};
@@ -36,18 +48,29 @@ EOF;
     }
 EOF;
 
+    /**
+     * @var string
+     */
     protected $namespace;
+
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var array
+     */
     protected $settings;
 
-    public function __construct($settings, $name)
+    public function __construct(array $settings, string $name)
     {
         $this->settings = $settings;
         $this->name = $this->getShortClassName($name);
         $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Snapshot\\' . $name);
     }
 
-    public function produce()
+    public function produce(): string
     {
         return (new Template($this->template))
             ->place('namespace', $this->namespace)
@@ -56,7 +79,7 @@ EOF;
             ->produce();
     }
 
-    protected function produceActions()
+    protected function produceActions(): string
     {
         if (!isset($this->settings['actor'])) {
             return ''; // no actor in suite

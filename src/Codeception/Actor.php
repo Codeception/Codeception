@@ -20,10 +20,7 @@ abstract class Actor
         $this->scenario = $scenario;
     }
 
-    /**
-     * @return \Codeception\Scenario
-     */
-    protected function getScenario()
+    protected function getScenario(): Scenario
     {
         return $this->scenario;
     }

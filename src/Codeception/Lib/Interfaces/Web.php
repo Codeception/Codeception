@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Lib\Interfaces;
 
 interface Web
@@ -81,7 +82,7 @@ interface Web
      * @param array|string $selector optional
      */
     public function dontSee($text, $selector = null);
-    
+
     /**
      * Checks that the current page contains the given string in its
      * raw source code.
@@ -306,7 +307,6 @@ interface Web
      * $I->click('Logout', '#nav');
      * // using strict locator
      * $I->click(['link' => 'Login']);
-     * ?>
      * ```
      *
      * @param $link
@@ -322,7 +322,6 @@ interface Web
      * <?php
      * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
      * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
-     * ?>
      * ```
      *
      * @param string $text
@@ -338,7 +337,6 @@ interface Web
      * <?php
      * $I->dontSeeLink('Logout'); // I suppose user is not logged in
      * $I->dontSeeLink('Checkout now', '/store/cart.php');
-     * ?>
      * ```
      *
      * @param string $text
@@ -355,7 +353,6 @@ interface Web
      * $I->seeInCurrentUrl('home');
      * // to match: /users/1
      * $I->seeInCurrentUrl('/users/');
-     * ?>
      * ```
      *
      * @param string $uri
@@ -370,7 +367,6 @@ interface Web
      * <?php
      * // to match root url
      * $I->seeCurrentUrlEquals('/');
-     * ?>
      * ```
      *
      * @param string $uri
@@ -384,7 +380,6 @@ interface Web
      * <?php
      * // to match root url
      * $I->seeCurrentUrlMatches('~^/users/(\d+)~');
-     * ?>
      * ```
      *
      * @param string $uri
@@ -397,7 +392,6 @@ interface Web
      * ``` php
      * <?php
      * $I->dontSeeInCurrentUrl('/users/');
-     * ?>
      * ```
      *
      * @param string $uri
@@ -412,7 +406,6 @@ interface Web
      * <?php
      * // current url is not root
      * $I->dontSeeCurrentUrlEquals('/');
-     * ?>
      * ```
      *
      * @param string $uri
@@ -426,7 +419,6 @@ interface Web
      * <?php
      * // to match root url
      * $I->dontSeeCurrentUrlMatches('~^/users/(\d+)~');
-     * ?>
      * ```
      *
      * @param string $uri
@@ -441,7 +433,6 @@ interface Web
      * <?php
      * $user_id = $I->grabFromCurrentUrl('~^/user/(\d+)/~');
      * $uri = $I->grabFromCurrentUrl();
-     * ?>
      * ```
      *
      * @param string $uri optional
@@ -458,7 +449,6 @@ interface Web
      * $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
      * $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
-     * ?>
      * ```
      *
      * @param $checkbox
@@ -472,7 +462,6 @@ interface Web
      * <?php
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
-     * ?>
      * ```
      *
      * @param $checkbox
@@ -491,7 +480,6 @@ interface Web
      * $I->seeInField('#searchform input','Search');
      * $I->seeInField('//form/*[@name=search]','Search');
      * $I->seeInField(['name' => 'search'], 'Search');
-     * ?>
      * ```
      *
      * @param $field
@@ -511,7 +499,6 @@ interface Web
      * $I->dontSeeInField('#searchform input','Search');
      * $I->dontSeeInField('//form/*[@name=search]','Search');
      * $I->dontSeeInField(['name' => 'search'], 'Search');
-     * ?>
      * ```
      *
      * @param $field
@@ -529,7 +516,6 @@ interface Web
      *      'input1' => 'value',
      *      'input2' => 'other value',
      * ]);
-     * ?>
      * ```
      *
      * For multi-select elements, or to check values of multiple elements with the same name, an
@@ -547,7 +533,6 @@ interface Web
      *          'another checked value',
      *      ],
      * ]);
-     * ?>
      * ```
      *
      * Additionally, checkbox values can be checked with a boolean.
@@ -558,7 +543,6 @@ interface Web
      *      'checkbox1' => true,        // passes if checked
      *      'checkbox2' => false,       // passes if unchecked
      * ]);
-     * ?>
      * ```
      *
      * Pair this with submitForm for quick testing magic.
@@ -574,7 +558,6 @@ interface Web
      * $I->submitForm('//form[@id=my-form]', $form, 'submitButton');
      * // $I->amOnPage('/path/to/form-page') may be needed
      * $I->seeInFormFields('//form[@id=my-form]', $form);
-     * ?>
      * ```
      *
      * @param $formSelector
@@ -592,7 +575,6 @@ interface Web
      *      'input1' => 'non-existent value',
      *      'input2' => 'other non-existent value',
      * ]);
-     * ?>
      * ```
      *
      * To check that an element hasn't been assigned any one of many values, an array can be passed
@@ -606,7 +588,6 @@ interface Web
      *          'And this value shouldn\'t be set',
      *      ],
      * ]);
-     * ?>
      * ```
      *
      * Additionally, checkbox values can be checked with a boolean.
@@ -617,7 +598,6 @@ interface Web
      *      'checkbox1' => true,        // fails if checked
      *      'checkbox2' => false,       // fails if unchecked
      * ]);
-     * ?>
      * ```
      *
      * @param $formSelector
@@ -633,7 +613,6 @@ interface Web
      * $I->selectOption('form select[name=account]', 'Premium');
      * $I->selectOption('form input[name=payment]', 'Monthly');
      * $I->selectOption('//form/select[@name=account]', 'Monthly');
-     * ?>
      * ```
      *
      * Provide an array for the second argument to select multiple options:
@@ -641,7 +620,6 @@ interface Web
      * ``` php
      * <?php
      * $I->selectOption('Which OS do you use?', array('Windows','Linux'));
-     * ?>
      * ```
      *
      * Or provide an associative array for the second argument to specifically define which selection method should be used:
@@ -650,7 +628,6 @@ interface Web
      * <?php
      * $I->selectOption('Which OS do you use?', array('text' => 'Windows')); // Only search by text 'Windows'
      * $I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only search by value 'windows'
-     * ?>
      * ```
      *
      * @param $select
@@ -664,7 +641,6 @@ interface Web
      * ``` php
      * <?php
      * $I->checkOption('#agree');
-     * ?>
      * ```
      *
      * @param $option
@@ -677,7 +653,6 @@ interface Web
      * ``` php
      * <?php
      * $I->uncheckOption('#notify');
-     * ?>
      * ```
      *
      * @param $option
@@ -691,14 +666,13 @@ interface Web
      * <?php
      * $I->fillField("//input[@type='text']", "Hello World!");
      * $I->fillField(['name' => 'email'], 'jon@mail.com');
-     * ?>
      * ```
      *
      * @param $field
      * @param $value
      */
     public function fillField($field, $value);
-    
+
     /**
      * Attaches a file relative to the Codeception `_data` directory to the given file upload field.
      *
@@ -706,7 +680,6 @@ interface Web
      * <?php
      * // file is stored in 'tests/_data/prices.xls'
      * $I->attachFile('input[@type="file"]', 'prices.xls');
-     * ?>
      * ```
      *
      * @param $field
@@ -724,7 +697,6 @@ interface Web
      * $heading = $I->grabTextFrom('h1');
      * $heading = $I->grabTextFrom('descendant-or-self::h1');
      * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
-     * ?>
      * ```
      *
      * @param $cssOrXPathOrRegex
@@ -743,7 +715,6 @@ interface Web
      * $name = $I->grabValueFrom('input[name=username]');
      * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
      * $name = $I->grabValueFrom(['name' => 'username']);
-     * ?>
      * ```
      *
      * @param $field
@@ -760,7 +731,6 @@ interface Web
      * ``` php
      * <?php
      * $I->grabAttributeFrom('#tooltip', 'title');
-     * ?>
      * ```
      *
      *
@@ -770,7 +740,7 @@ interface Web
      * @return mixed
      */
     public function grabAttributeFrom($cssOrXpath, $attribute);
-    
+
     /**
      * Grabs either the text content, or attribute values, of nodes
      * matched by $cssOrXpath and returns them as an array.
@@ -788,7 +758,6 @@ interface Web
      *
      * // would return ['#first', '#second', '#third']
      * $aLinks = $I->grabMultiple('a', 'href');
-     * ?>
      * ```
      *
      * @param $cssOrXpath
@@ -810,7 +779,6 @@ interface Web
      *
      * // strict locator in first arg, attributes in second
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
-     * ?>
      * ```
      *
      * @param $selector
@@ -829,7 +797,6 @@ interface Web
      * $I->dontSeeElement('//form/input[1]');
      * $I->dontSeeElement('input', ['name' => 'login']);
      * $I->dontSeeElement('input', ['value' => '123456']);
-     * ?>
      * ```
      *
      * @param $selector
@@ -844,7 +811,6 @@ interface Web
      * <?php
      * $I->seeNumberOfElements('tr', 10);
      * $I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
-     * ?>
      * ```
      * @param $selector
      * @param mixed $expected int or int[]
@@ -857,7 +823,6 @@ interface Web
      * ``` php
      * <?php
      * $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
-     * ?>
      * ```
      *
      * @param $selector
@@ -873,7 +838,6 @@ interface Web
      * ``` php
      * <?php
      * $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
-     * ?>
      * ```
      *
      * @param $selector
@@ -889,7 +853,6 @@ interface Web
      * ``` php
      * <?php
      * $I->seeInTitle('Blog - Post #1');
-     * ?>
      * ```
      *
      * @param $title
@@ -914,7 +877,6 @@ interface Web
      * ``` php
      * <?php
      * $I->seeCookie('PHPSESSID');
-     * ?>
      * ```
      *
      * @param $cookie
@@ -941,7 +903,6 @@ interface Web
      * ``` php
      * <?php
      * $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
-     * ?>
      * ```
      *
      * @param $name

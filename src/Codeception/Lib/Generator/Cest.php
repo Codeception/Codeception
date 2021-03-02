@@ -1,15 +1,22 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
 use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class Cest
 {
-    use Shared\Classname;
+    use Classname;
     use Namespaces;
 
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
 <?php {{namespace}}
 
@@ -27,16 +34,23 @@ class {{name}}Cest
 
 EOF;
 
+    /**
+     * @var array
+     */
     protected $settings;
+
+    /**
+     * @var string
+     */
     protected $name;
 
-    public function __construct($className, $settings)
+    public function __construct(string $className, array $settings)
     {
         $this->name = $this->removeSuffix($className, 'Cest');
         $this->settings = $settings;
     }
 
-    public function produce()
+    public function produce(): string
     {
         $actor = $this->settings['actor'];
         if (!$actor) {
@@ -51,7 +65,7 @@ EOF;
 
         $ns = $this->getNamespaceHeader($namespace.'\\'.$this->name);
 
-        if ($namespace) {
+        if ($namespace !== '') {
             $ns .= "use ".$this->settings['namespace'].'\\'.$actor.";";
         }
 

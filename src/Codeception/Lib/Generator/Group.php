@@ -1,16 +1,26 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class Group
 {
     use Namespaces;
-    use Shared\Classname;
+    use Classname;
 
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
 <?php
+
+declare(strict_types=1);
+
 namespace {{namespace}};
 
 use \Codeception\Event\TestEvent;
@@ -39,20 +49,30 @@ class {{class}} extends \Codeception\Platform\Group
 
 EOF;
 
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var string
+     */
     protected $namespace;
+
+    /**
+     * @var array
+     */
     protected $settings;
 
-    public function __construct($settings, $name)
+    public function __construct(array $settings, string $name)
     {
         $this->settings = $settings;
         $this->name = $name;
         $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Group\\' . $name);
     }
 
-    public function produce()
+    public function produce(): string
     {
-        $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $this->name);
         return (new Template($this->template))
             ->place('class', ucfirst($this->name))
             ->place('name', $this->name)
