@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
@@ -8,6 +10,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class Acceptance extends InitTemplate
 {
+    /**
+     * @var string
+     */
     protected $configTemplate = <<<EOF
 # suite config
 suites:
@@ -48,6 +53,9 @@ settings:
     lint: true
 EOF;
 
+    /**
+     * @var string
+     */
     protected $firstTest = <<<EOF
 <?php
 class LoginCest 
@@ -68,7 +76,6 @@ class LoginCest
     }       
 }
 EOF;
-
 
     public function setup()
     {
@@ -94,7 +101,7 @@ EOF;
         $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->gitIgnore($outputDir);
         $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
-        $this->sayInfo("Created test directories inside at $dir");
+        $this->sayInfo("Created test directories inside at {$dir}");
 
         if (!class_exists('\\Codeception\\Module\\WebDriver')) {
             // composer version
@@ -107,9 +114,9 @@ EOF;
             ->place('baseDir', $dir)
             ->produce();
 
-        if ($this->namespace) {
+        if ($this->namespace !== '') {
             $namespace = rtrim($this->namespace, '\\');
-            $configFile = "namespace: $namespace\n" . $configFile;
+            $configFile = "namespace: {$namespace}\n" . $configFile;
         }
 
         $this->createFile('codeception.yml', $configFile);
@@ -126,7 +133,7 @@ EOF;
         $this->say();
         $this->say("<bold>Next steps:</bold>");
         $this->say('1. Launch Selenium Server and webserver');
-        $this->say("2. Edit <bold>$dir/LoginCest.php</bold> to test login of your application");
+        $this->say("2. Edit <bold>{$dir}/LoginCest.php</bold> to test login of your application");
         $this->say("3. Run tests using: <comment>codecept run</comment>");
         $this->say();
         $this->say("HINT: Add '\\Codeception\\Step\\Retry' trait to AcceptanceTester class to enable auto-retries");
