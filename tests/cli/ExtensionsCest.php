@@ -1,8 +1,9 @@
 <?php
 
-class ExtensionsCest
+declare(strict_types=1);
+
+final class ExtensionsCest
 {
-    // tests
     public function useAlternativeFormatter(CliGuy $I)
     {
         $I->wantTo('use alternative formatter delivered through extensions');
@@ -87,6 +88,4 @@ class ExtensionsCest
         $I->seeInShellOutput('Config1: black_value');
         $I->seeInShellOutput('Config2: value2');
     }
-
-
 }

@@ -1,7 +1,9 @@
 <?php
-class RunEnvironmentCest
-{
 
+declare(strict_types=1);
+
+final class RunEnvironmentCest
+{
     public function testDevEnvironment(CliGuy $I)
     {
         $I->wantTo('execute test in --dev environment');

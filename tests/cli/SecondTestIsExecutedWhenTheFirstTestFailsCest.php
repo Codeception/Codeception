@@ -1,6 +1,8 @@
 <?php
 
-class SecondTestIsExecutedWhenTheFirstTestFailsCest
+declare(strict_types=1);
+
+final class SecondTestIsExecutedWhenTheFirstTestFailsCest
 {
     public function testIsExecuted(CliGuy $I)
     {
