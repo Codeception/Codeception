@@ -1,9 +1,11 @@
 <?php
+
+declare(strict_types=1);
 // @group core
 
 use Codeception\Scenario;
 
-class BuildCest
+final class BuildCest
 {
     /** @var string */
     private $originalCliHelperContents;
@@ -50,7 +52,7 @@ class BuildCest
         $I->seeInThisFile('public function grabFromOutput($regex): int');
         $I->seeInThisFile('return $match[1]');
     }
-    
+
     public function noReturnForVoidType(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('no return keyword generated for void typehint');

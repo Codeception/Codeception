@@ -1,6 +1,8 @@
 <?php
 
-class ConfigValidateCest
+declare(strict_types=1);
+
+final class ConfigValidateCest
 {
     public function _before(CliGuy $I)
     {

@@ -1,8 +1,10 @@
 <?php
 
-class RunSingleTestWithIncludeCest
+declare(strict_types=1);
+
+final class RunSingleTestWithIncludeCest
 {
-    public function run(\CliGuy $I)
+    public function run(CliGuy $I)
     {
         $I->amInPath('tests/data/single_test_with_include');
         $I->wantTo('execute one test with include in config');

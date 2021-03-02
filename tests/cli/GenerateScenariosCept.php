@@ -1,4 +1,5 @@
 <?php
+
 $I = new CliGuy($scenario);
 $I->wantTo('generate test scenario');
 $I->amInPath('tests/data/sandbox');
