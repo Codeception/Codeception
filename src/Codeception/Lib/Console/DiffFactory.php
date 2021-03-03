@@ -7,19 +7,11 @@ namespace Codeception\Lib\Console;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Diff\Differ;
 
-/**
- * DiffFactory
- **/
 class DiffFactory
 {
-    public function createDiff(ComparisonFailure $failure): ?string
+    public function createDiff(ComparisonFailure $failure): string
     {
-        $diff = $this->getDiff($failure->getExpectedAsString(), $failure->getActualAsString());
-        if ($diff === '') {
-            return null;
-        }
-
-        return $diff;
+        return $this->getDiff($failure->getExpectedAsString(), $failure->getActualAsString());
     }
 
     private function getDiff(string $expected = '', string $actual = ''): string

@@ -27,7 +27,7 @@ class DiffFactoryTest extends \Codeception\Test\Unit
         $failure = $this->createFailure();
         $message = $this->diffFactory->createDiff($failure);
 
-        $this->assertEquals($expectedDiff, (string) $message, 'The diff should be generated.');
+        $this->assertEquals($expectedDiff, $message, 'The diff should be generated.');
     }
 
     protected function createFailure(): \SebastianBergmann\Comparator\ComparisonFailure

@@ -280,7 +280,7 @@ class ModuleContainer
         throw new ModuleException($className, "Module {$moduleName} couldn't be connected" . $suggestedModuleNameInfo);
     }
 
-    protected function getModuleSuggestion($missingModuleName): string
+    protected function getModuleSuggestion(string $missingModuleName): string
     {
         $shortestLevenshteinDistance = null;
         $suggestedModuleName = null;

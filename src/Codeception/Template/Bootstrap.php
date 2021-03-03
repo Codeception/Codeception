@@ -84,7 +84,7 @@ class Bootstrap extends InitTemplate
          $this->gitIgnore('tests/_support/_generated');
     }
 
-    protected function createFunctionalSuite($actor = 'Functional'): void
+    protected function createFunctionalSuite(string $actor = 'Functional'): void
     {
         $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
@@ -106,7 +106,7 @@ EOF;
         $this->say("tests/functional.suite.yml written <- functional tests suite configuration");
     }
 
-    protected function createAcceptanceSuite($actor = 'Acceptance'): void
+    protected function createAcceptanceSuite(string $actor = 'Acceptance'): void
     {
         $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
@@ -128,7 +128,7 @@ EOF;
         $this->say("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
     }
 
-    protected function createUnitSuite($actor = 'Unit'): void
+    protected function createUnitSuite(string $actor = 'Unit'): void
     {
         $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
@@ -171,7 +171,7 @@ EOF;
         $this->createFile('codeception.yml', $str);
     }
 
-    protected function createSuite($suite, $actor, $config): void
+    protected function createSuite(string $suite, string $actor, string $config): void
     {
         $this->createDirectoryFor("tests/{$suite}", "{$suite}.suite.yml");
         $this->createHelper($actor, $this->supportDir);

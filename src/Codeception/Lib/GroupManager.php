@@ -172,10 +172,12 @@ class GroupManager
                     $groups[] = $group;
                 }
                 if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
-                    $firstTest = $test->testAt(0);
-                    $firstTestName = $firstTest->getName(false);
-                    if ($firstTest != false && $firstTest instanceof TestInterface && strpos($filename . ':' . $firstTestName, (string) $testPattern) === 0) {
-                        $groups[] = $group;
+                    if ($firstTest = $test->testAt(0)) {
+                        $firstTestName = $firstTest->getName(false);
+                        $startsWithPattern = strpos($filename . ':' . $firstTestName, (string) $testPattern) === 0;
+                        if ($firstTest instanceof TestInterface & $startsWithPattern) {
+                            $groups[] = $group;
+                        }
                     }
                 }
             }

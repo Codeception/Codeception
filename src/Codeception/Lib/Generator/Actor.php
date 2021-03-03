@@ -56,11 +56,16 @@ EOF;
      */
     protected $inheritedMethodTemplate = ' * @method {{return}} {{method}}({{params}})';
 
+    /**
+     * @var array
+     */
     protected $settings;
+
     /**
      * @var array
      */
     protected $modules;
+
     /**
      * @var array
      */

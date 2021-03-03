@@ -22,6 +22,9 @@ class Parser
      * @var Metadata
      */
     protected $metadata;
+    /**
+     * @var string
+     */
     protected $code;
 
     public function __construct(Scenario $scenario, Metadata $metadata)
@@ -30,13 +33,13 @@ class Parser
         $this->metadata = $metadata;
     }
 
-    public function prepareToRun($code): void
+    public function prepareToRun(string $code): void
     {
         $this->parseFeature($code);
         $this->parseScenarioOptions($code);
     }
 
-    public function parseFeature($code): void
+    public function parseFeature(string $code): void
     {
         $matches = [];
         $code = $this->stripComments($code);
@@ -52,12 +55,12 @@ class Parser
         }
     }
 
-    public function parseScenarioOptions($code): void
+    public function parseScenarioOptions(string $code): void
     {
         $this->metadata->setParamsFromAnnotations($this->matchComments($code));
     }
 
-    public function parseSteps($code): void
+    public function parseSteps(string $code): void
     {
         // parse per line
         $friends = [];
@@ -92,7 +95,7 @@ class Parser
         }
     }
 
-    protected function addStep($matches): void
+    protected function addStep(string $matches): void
     {
         list($m, $action, $params) = $matches;
         if (in_array($action, ['wantTo', 'wantToTest'])) {
@@ -101,12 +104,12 @@ class Parser
         $this->scenario->addStep(new Action($action, explode(',', $params)));
     }
 
-    protected function addCommentStep($comment): void
+    protected function addCommentStep(string $comment): void
     {
         $this->scenario->addStep(new Comment($comment, []));
     }
 
-    public static function load($file): void
+    public static function load(string $file): void
     {
         try {
             self::includeFile($file);
@@ -120,7 +123,7 @@ class Parser
     /**
      * @return string[]
      */
-    public static function getClassesFromFile($file): array
+    public static function getClassesFromFile(string $file): array
     {
         $sourceCode = file_get_contents($file);
         $classes = [];
@@ -165,23 +168,19 @@ class Parser
     /*
      * Include in different scope to prevent included file from affecting $file variable
      */
-    private static function includeFile($file): void
+    private static function includeFile(string $file): void
     {
         include_once $file;
     }
 
-    /**
-     * @param $code
-     * @return mixed
-     */
-    protected function stripComments($code)
+    protected function stripComments(string $code): string
     {
         $code = preg_replace('~\/\/.*?$~m', '', $code); // remove inline comments
         $code = preg_replace('~\/*\*.*?\*\/~ms', '', $code);
         return $code; // remove block comment
     }
 
-    protected function matchComments($code): string
+    protected function matchComments(string $code): string
     {
         $matches = [];
         $comments = '';
