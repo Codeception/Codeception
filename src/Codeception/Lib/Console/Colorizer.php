@@ -1,15 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Console;
 
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class Colorizer
 {
-    /**
-     * @param string $string
-     * @return string
-     */
-    public function colorize($string = '')
+    public function colorize(string $string = ''): string
     {
         $fp = fopen('php://memory', 'r+');
         fwrite($fp, $string);

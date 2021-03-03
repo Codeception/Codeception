@@ -40,12 +40,12 @@ class Scenario
         $this->test = $test;
     }
 
-    public function setFeature($feature)
+    public function setFeature(string $feature): void
     {
         $this->metadata->setFeature($feature);
     }
 
-    public function getFeature()
+    public function getFeature(): string
     {
         return $this->metadata->getFeature();
     }

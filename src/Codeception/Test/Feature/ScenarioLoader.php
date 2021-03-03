@@ -27,7 +27,7 @@ trait ScenarioLoader
         return $this->scenario;
     }
 
-    public function getFeature(): ?string
+    public function getFeature(): string
     {
         return $this->getScenario()->getFeature();
     }

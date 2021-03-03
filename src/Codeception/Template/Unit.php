@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
@@ -8,6 +10,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class Unit extends InitTemplate
 {
+    /**
+     * @var string
+     */
     protected $configTemplate = <<<EOF
 suites:
     unit:
@@ -24,6 +29,9 @@ paths:
      
 EOF;
 
+    /**
+     * @var string
+     */
     protected $testerAndModules = <<<EOF
         actor: UnitTester
         modules:
@@ -40,7 +48,7 @@ EOF;
         $this->say();
         $dir = $this->ask("Where tests will be stored?", 'tests');
 
-        if (!$this->namespace) {
+        if ($this->namespace === '') {
             $this->namespace = $this->ask("Enter a default namespace for tests (or skip this step)");
         }
 
@@ -57,14 +65,14 @@ EOF;
             ->place('tester', $haveTester ? $this->testerAndModules : '')
             ->produce();
 
-        if ($this->namespace) {
+        if ($this->namespace !== '') {
             $namespace = rtrim($this->namespace, '\\');
-            $configFile = "namespace: $namespace\n" . $configFile;
+            $configFile = "namespace: {$namespace}\n" . $configFile;
         }
 
         $this->createFile('codeception.yml', $configFile);
 
-        if (!class_exists('\\Codeception\\Module\\Asserts')) {
+        if (!class_exists(\Codeception\Module\Asserts::class)) {
             $this->addModulesToComposer(['Asserts']);
         }
 
@@ -74,7 +82,7 @@ EOF;
         }
 
         $this->gitIgnore($outputDir);
-        $this->sayInfo("Created test directory inside at $dir");
+        $this->sayInfo("Created test directory inside at {$dir}");
 
         $this->say();
         $this->saySuccess("INSTALLATION COMPLETE");

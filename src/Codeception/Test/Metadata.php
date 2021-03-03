@@ -21,9 +21,9 @@ class Metadata
      */
     protected $filename;
     /**
-     * @var string|null
+     * @var string
      */
-    protected $feature;
+    protected $feature = '';
     protected $index;
 
     /**
@@ -152,12 +152,12 @@ class Metadata
         return $this->getSkip() !== null || $this->getIncomplete() !== null;
     }
 
-    public function getFeature(): ?string
+    public function getFeature(): string
     {
         return $this->feature;
     }
 
-    public function setFeature(?string $feature): void
+    public function setFeature(string $feature): void
     {
         $this->feature = $feature;
     }

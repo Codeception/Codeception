@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Connector\Shared;
 
 /**
@@ -14,12 +17,8 @@ trait PhpSuperGlobalsConverter
     /**
      * Rearrange files array to be compatible with PHP $_FILES superglobal structure
      * @see https://bugs.php.net/bug.php?id=25589
-     *
-     * @param array $requestFiles
-     *
-     * @return array
      */
-    protected function remapFiles(array $requestFiles)
+    protected function remapFiles(array $requestFiles): array
     {
         $files = $this->rearrangeFiles($requestFiles);
 
@@ -30,17 +29,13 @@ trait PhpSuperGlobalsConverter
      * Escape high-level variable name with dots, underscores and other "special" chars
      * to be compatible with PHP "bug"
      * @see https://bugs.php.net/bug.php?id=40000
-     *
-     * @param array $parameters
-     *
-     * @return array
      */
-    protected function remapRequestParameters(array $parameters)
+    protected function remapRequestParameters(array $parameters): array
     {
         return $this->replaceSpaces($parameters);
     }
 
-    private function rearrangeFiles($requestFiles)
+    private function rearrangeFiles(array $requestFiles): array
     {
         $files = [];
         foreach ($requestFiles as $name => $info) {
@@ -104,10 +99,9 @@ trait PhpSuperGlobalsConverter
      * @see https://bugs.php.net/bug.php?id=40000
      *
      * @param array $parameters Array of request parameters to be converted
-     *
      * @return array
      */
-    private function replaceSpaces($parameters)
+    private function replaceSpaces(array $parameters): array
     {
         $qs = http_build_query($parameters, '', '&');
         parse_str($qs, $output);

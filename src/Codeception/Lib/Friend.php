@@ -1,23 +1,39 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib;
 
 use Codeception\Actor;
 use Codeception\Exception\TestRuntimeException;
+use Codeception\Lib\Interfaces\MultiSession;
 
 class Friend
 {
+    /**
+     * @var string
+     */
     protected $name;
+    /**
+     * @var Actor
+     */
     protected $actor;
+    /**
+     * @var array
+     */
     protected $data = [];
+    /**
+     * @var array|null
+     */
     protected $multiSessionModules = [];
 
-    public function __construct($name, Actor $actor, $modules = [])
+    public function __construct(string $name, Actor $actor, array $modules = [])
     {
         $this->name = $name;
         $this->actor = $actor;
 
         $this->multiSessionModules = array_filter($modules, function ($m) {
-            return $m instanceof Interfaces\MultiSession;
+            return $m instanceof MultiSession;
         });
 
         if (empty($this->multiSessionModules)) {
@@ -52,22 +68,22 @@ class Friend
         return $ret;
     }
 
-    public function isGoingTo($argumentation)
+    public function isGoingTo(string $argumentation): void
     {
         $this->actor->amGoingTo($argumentation);
     }
 
-    public function expects($prediction)
+    public function expects(string $prediction): void
     {
         $this->actor->expect($prediction);
     }
 
-    public function expectsTo($prediction)
+    public function expectsTo(string $prediction): void
     {
         $this->actor->expectTo($prediction);
     }
 
-    public function leave()
+    public function leave(): void
     {
         foreach ($this->multiSessionModules as $module) {
             if (isset($this->data[$module->_getName()])) {

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
 use Codeception\Exception\ConfigurationException;
@@ -6,7 +9,9 @@ use Codeception\Util\Template;
 
 class Cept
 {
-
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
 <?php {{use}}
 \$I = new {{actor}}(\$scenario);
@@ -14,14 +19,17 @@ class Cept
 
 EOF;
 
+    /**
+     * @var array
+     */
     protected $settings;
 
-    public function __construct($settings)
+    public function __construct(array $settings)
     {
         $this->settings = $settings;
     }
 
-    public function produce()
+    public function produce(): string
     {
         $actor = $this->settings['actor'];
         if (!$actor) {

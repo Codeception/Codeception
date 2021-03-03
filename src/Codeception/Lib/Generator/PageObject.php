@@ -1,16 +1,26 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class PageObject
 {
     use Namespaces;
-    use Shared\Classname;
+    use Classname;
 
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
 <?php
+
+declare(strict_types=1);
+
 namespace {{namespace}};
 
 class {{class}}
@@ -39,6 +49,9 @@ class {{class}}
 
 EOF;
 
+    /**
+     * @var string
+     */
     protected $actionsTemplate = <<<EOF
     /**
      * @var \\{{actorClass}};
@@ -52,19 +65,34 @@ EOF;
 
 EOF;
 
+    /**
+     * @var string
+     */
     protected $actions = '';
+
+    /**
+     * @var array
+     */
     protected $settings;
+
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var string
+     */
     protected $namespace;
 
-    public function __construct($settings, $name)
+    public function __construct(array $settings, string $name)
     {
         $this->settings = $settings;
         $this->name = $this->getShortClassName($name);
         $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Page\\' . $name);
     }
 
-    public function produce()
+    public function produce(): string
     {
         return (new Template($this->template))
             ->place('namespace', $this->namespace)
@@ -73,7 +101,7 @@ EOF;
             ->produce();
     }
 
-    protected function produceActions()
+    protected function produceActions(): string
     {
         if (!isset($this->settings['actor'])) {
             return ''; // global pageobject

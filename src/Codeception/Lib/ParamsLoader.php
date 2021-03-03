@@ -1,12 +1,23 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib;
 
 use Codeception\Exception\ConfigurationException;
+use Dotenv\Dotenv;
+use Dotenv\Repository\Adapter\EnvConstAdapter;
+use Dotenv\Repository\Adapter\ServerConstAdapter;
+use Dotenv\Repository\RepositoryBuilder;
+use SimpleXMLElement;
 use Symfony\Component\Yaml\Yaml;
 
 class ParamsLoader
 {
     protected $paramStorage;
+    /**
+     * @var string|null
+     */
     protected $paramsFile;
 
     public function load($paramStorage)
@@ -48,10 +59,10 @@ class ParamsLoader
                 return $this->loadXmlFile();
             }
         } catch (\Exception $e) {
-            throw new ConfigurationException("Failed loading params from $paramStorage\n" . $e->getMessage());
+            throw new ConfigurationException("Failed loading params from {$paramStorage}\n" . $e->getMessage());
         }
 
-        throw new ConfigurationException("Params can't be loaded from `$paramStorage`.");
+        throw new ConfigurationException("Params can't be loaded from `{$paramStorage}`.");
     }
 
     public function loadArray()
@@ -78,9 +89,9 @@ class ParamsLoader
         return $params;
     }
 
-    protected function loadXmlFile()
+    protected function loadXmlFile(): array
     {
-        $paramsToArray = function (\SimpleXMLElement $params) use (&$paramsToArray) {
+        $paramsToArray = function (SimpleXMLElement $params) use (&$paramsToArray) {
             $a = [];
             foreach ($params as $param) {
                 $key = isset($param['key']) ? (string) $param['key'] : $param->getName();
@@ -112,23 +123,23 @@ class ParamsLoader
         return $paramsToArray(simplexml_load_file($this->paramsFile));
     }
 
-    protected function loadDotEnvFile()
+    protected function loadDotEnvFile(): array
     {
-        if (class_exists('Dotenv\Repository\RepositoryBuilder')) {
-            if (method_exists('Dotenv\Repository\RepositoryBuilder', 'createWithNoAdapters')) {
+        if (class_exists(RepositoryBuilder::class)) {
+            if (method_exists(RepositoryBuilder::class, 'createWithNoAdapters')) {
                 //dotenv v5
-                $repository = \Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
-                    ->addAdapter(\Dotenv\Repository\Adapter\EnvConstAdapter::class)
-                    ->addAdapter(\Dotenv\Repository\Adapter\ServerConstAdapter::class)
+                $repository = RepositoryBuilder::createWithNoAdapters()
+                    ->addAdapter(EnvConstAdapter::class)
+                    ->addAdapter(ServerConstAdapter::class)
                     ->make();
-                $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
+                $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
             } else {
                 //dotenv v4
-                $repository = \Dotenv\Repository\RepositoryBuilder::create()
-                    ->withReaders([new \Dotenv\Repository\Adapter\ServerConstAdapter()])
+                $repository = RepositoryBuilder::create()
+                    ->withReaders([new ServerConstAdapter()])
                     ->immutable()
                     ->make();
-                $dotEnv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
+                $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
             }
             $dotEnv->load();
             return $_SERVER;
@@ -140,7 +151,7 @@ class ParamsLoader
         );
     }
 
-    protected function loadEnvironmentVars()
+    protected function loadEnvironmentVars(): array
     {
         return $_SERVER;
     }

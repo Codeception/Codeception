@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Template;
 
 use Codeception\Configuration;
@@ -6,7 +9,13 @@ use Codeception\InitTemplate;
 
 class Upgrade4 extends InitTemplate
 {
-    const SURVEY_LINK = 'http://bit.ly/codecept-survey';
+    /**
+     * @var string
+     */
+    const SURVEY_LINK = 'https://bit.ly/codecept-survey';
+    /**
+     * @var string
+     */
     const DONATE_LINK = 'https://opencollective.com/codeception';
 
     public function setup()
@@ -58,11 +67,11 @@ class Upgrade4 extends InitTemplate
         $this->say('');
         $this->say('<bold>' . self::DONATE_LINK . '</bold>');
         $this->say('');
-        $this->say('It\'s ok to pay for reliable software.');
+        $this->say("It's ok to pay for reliable software.");
         $this->say('Talk to your manager & support further development of Codeception!');
     }
 
-    private function isInstalled()
+    private function isInstalled(): bool
     {
         try {
             $this->checkInstalled();

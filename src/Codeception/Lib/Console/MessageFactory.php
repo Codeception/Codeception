@@ -1,11 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Console;
 
 use SebastianBergmann\Comparator\ComparisonFailure;
 
-/**
- * MessageFactory
- **/
 class MessageFactory
 {
     /**
@@ -22,10 +22,6 @@ class MessageFactory
      */
     protected $colorizer;
 
-    /**
-     * MessageFactory constructor.
-     * @param Output $output
-     */
     public function __construct(Output $output)
     {
         $this->output = $output;
@@ -33,27 +29,19 @@ class MessageFactory
         $this->colorizer = new Colorizer();
     }
 
-    /**
-     * @param string $text
-     * @return Message
-     */
-    public function message($text = '')
+    public function message(string $text = ''): Message
     {
         return new Message($text, $this->output);
     }
 
-    /**
-     * @param ComparisonFailure $failure
-     * @return string
-     */
-    public function prepareComparisonFailureMessage(ComparisonFailure $failure)
+    public function prepareComparisonFailureMessage(ComparisonFailure $failure): string
     {
         $diff = $this->diffFactory->createDiff($failure);
-        if (!$diff) {
+        if ($diff !== '') {
             return '';
         }
         $diff = $this->colorizer->colorize($diff);
 
-        return "\n<comment>- Expected</comment> | <info>+ Actual</info>\n$diff";
+        return "\n<comment>- Expected</comment> | <info>+ Actual</info>\n{$diff}";
     }
 }
