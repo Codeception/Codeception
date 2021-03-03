@@ -38,18 +38,18 @@ class ParserTest extends \Codeception\Test\Unit
     {
         $code = "<?php\n \\\$I->wantTo('run this test'); ";
         $this->parser->parseFeature($code);
-        $this->assertEquals('run this test', $this->scenario->getFeature());
+        $this->assertSame('run this test', $this->scenario->getFeature());
 
         $code = "<?php\n \\\$I->wantToTest('this run'); ";
         $this->parser->parseFeature($code);
-        $this->assertEquals('test this run', $this->scenario->getFeature());
+        $this->assertSame('test this run', $this->scenario->getFeature());
     }
 
     public function testParsingWithWhitespace()
     {
         $code = "<?php\n \\\$I->wantTo( 'run this test' ); ";
         $this->parser->parseFeature($code);
-        $this->assertEquals('run this test', $this->scenario->getFeature());
+        $this->assertSame('run this test', $this->scenario->getFeature());
     }
 
     public function testScenarioOptions()
@@ -127,19 +127,19 @@ EOF;
     public function testParseFile()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('SimpleTest.php'));
-        $this->assertEquals(['SampleTest'], $classes);
+        $this->assertSame(['SampleTest'], $classes);
     }
 
     public function testParseFileWithClass()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('php55Test'));
-        $this->assertEquals(['php55Test'], $classes);
+        $this->assertSame(['php55Test'], $classes);
     }
 
     public function testParseFileWithAnonymousClass()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('php70Test'));
-        $this->assertEquals(['php70Test'], $classes);
+        $this->assertSame(['php70Test'], $classes);
     }
     
     /*
@@ -148,7 +148,7 @@ EOF;
     public function testParseFileWhichUnsetsFileVariable()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('unsetFile.php'));
-        $this->assertEquals([], $classes);
+        $this->assertSame([], $classes);
     }
 
     /**

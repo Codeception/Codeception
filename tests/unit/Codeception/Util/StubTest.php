@@ -44,20 +44,20 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     public function testMakeEmptyExcept()
     {
         $dummy = Stub::makeEmptyExcept('DummyClass', 'helloWorld');
-        $this->assertEquals($this->dummy->helloWorld(), $dummy->helloWorld());
+        $this->assertSame($this->dummy->helloWorld(), $dummy->helloWorld());
         $this->assertNull($dummy->goodByeWorld());
     }
 
     public function testMakeEmptyExceptPropertyReplaced()
     {
         $dummy = Stub::makeEmptyExcept('DummyClass', 'getCheckMe', ['checkMe' => 'checked!']);
-        $this->assertEquals('checked!', $dummy->getCheckMe());
+        $this->assertSame('checked!', $dummy->getCheckMe());
     }
 
     public function testMakeEmptyExceptMagicalPropertyReplaced()
     {
         $dummy = Stub::makeEmptyExcept('DummyClass', 'getCheckMeToo', ['checkMeToo' => 'checked!']);
-        $this->assertEquals('checked!', $dummy->getCheckMeToo());
+        $this->assertSame('checked!', $dummy->getCheckMeToo());
     }
 
     public function testFactory()
@@ -72,8 +72,8 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         $dummy = Stub::make('DummyClass', ['goodByeWorld' => function () {
             return 'hello world';
         }]);
-        $this->assertEquals($this->dummy->helloWorld(), $dummy->helloWorld());
-        $this->assertEquals("hello world", $dummy->goodByeWorld());
+        $this->assertSame($this->dummy->helloWorld(), $dummy->helloWorld());
+        $this->assertSame("hello world", $dummy->goodByeWorld());
     }
 
     public function testMakeMethodReplaced()
@@ -87,7 +87,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     public function testMakeWithMagicalPropertiesReplaced()
     {
         $dummy = Stub::make('DummyClass', ['checkMeToo' => 'checked!']);
-        $this->assertEquals('checked!', $dummy->checkMeToo);
+        $this->assertSame('checked!', $dummy->checkMeToo);
     }
 
     public function testMakeMethodSimplyReplaced()
@@ -99,15 +99,15 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     public function testCopy()
     {
         $dummy = Stub::copy($this->dummy, ['checkMe' => 'checked!']);
-        $this->assertEquals('checked!', $dummy->getCheckMe());
+        $this->assertSame('checked!', $dummy->getCheckMe());
         $dummy = Stub::copy($this->dummy, ['checkMeToo' => 'checked!']);
-        $this->assertEquals('checked!', $dummy->getCheckMeToo());
+        $this->assertSame('checked!', $dummy->getCheckMeToo());
     }
 
     public function testConstruct()
     {
         $dummy = Stub::construct('DummyClass', ['checkMe' => 'checked!']);
-        $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
+        $this->assertSame('constructed: checked!', $dummy->getCheckMe());
 
         $dummy = Stub::construct(
             'DummyClass',
@@ -116,8 +116,8 @@ class StubTest extends \Codeception\PHPUnit\TestCase
                 return false;
             }]
         );
-        $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
-        $this->assertEquals(false, $dummy->targetMethod());
+        $this->assertSame('constructed: checked!', $dummy->getCheckMe());
+        $this->assertSame(false, $dummy->targetMethod());
     }
 
     public function testConstructMethodReplaced()
@@ -148,16 +148,16 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     {
         $dummy = Stub::constructEmptyExcept('DummyClass', 'getCheckMe', ['checkMe' => 'checked!']);
         $this->assertNull($dummy->targetMethod());
-        $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
+        $this->assertSame('constructed: checked!', $dummy->getCheckMe());
     }
 
     public function testUpdate()
     {
         $dummy = Stub::construct('DummyClass');
         Stub::update($dummy, ['checkMe' => 'done']);
-        $this->assertEquals('done', $dummy->getCheckMe());
+        $this->assertSame('done', $dummy->getCheckMe());
         Stub::update($dummy, ['checkMeToo' => 'done']);
-        $this->assertEquals('done', $dummy->getCheckMeToo());
+        $this->assertSame('done', $dummy->getCheckMeToo());
     }
 
     public function testStubsFromObject()
@@ -209,8 +209,8 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     protected function assertMethodReplaced($dummy)
     {
         $this->assertTrue(method_exists($dummy, 'helloWorld'));
-        $this->assertNotEquals($this->dummy->helloWorld(), $dummy->helloWorld());
-        $this->assertEquals($dummy->helloWorld(), 'good bye world');
+        $this->assertNotSame($this->dummy->helloWorld(), $dummy->helloWorld());
+        $this->assertSame($dummy->helloWorld(), 'good bye world');
     }
 
     public static function matcherAndFailMessageProvider(): array
@@ -379,7 +379,7 @@ class StubTest extends \Codeception\PHPUnit\TestCase
         for ($i = 0; $i < $count; $i++) {
             $actual = call_user_func($callable);
             if ($expected) {
-                $this->assertEquals($expected, $actual);
+                $this->assertSame($expected, $actual);
             }
         }
     }
@@ -388,10 +388,10 @@ class StubTest extends \Codeception\PHPUnit\TestCase
     {
         $dummy = Stub::make('DummyClass', ['helloWorld' => Stub::consecutive('david', 'emma', 'sam', 'amy')]);
 
-        $this->assertEquals('david', $dummy->helloWorld());
-        $this->assertEquals('emma', $dummy->helloWorld());
-        $this->assertEquals('sam', $dummy->helloWorld());
-        $this->assertEquals('amy', $dummy->helloWorld());
+        $this->assertSame('david', $dummy->helloWorld());
+        $this->assertSame('emma', $dummy->helloWorld());
+        $this->assertSame('sam', $dummy->helloWorld());
+        $this->assertSame('amy', $dummy->helloWorld());
 
         // Expected null value when no more values
         $this->assertNull($dummy->helloWorld());
@@ -410,15 +410,15 @@ class StubTest extends \Codeception\PHPUnit\TestCase
                  }
             ]
         );
-        $this->assertEquals('gamma', $tester->getName());
-        $this->assertEquals('randomstuff', $tester->getRandomName());
-        $this->assertEquals('ticky2', $tester->getT());
+        $this->assertSame('gamma', $tester->getName());
+        $this->assertSame('randomstuff', $tester->getRandomName());
+        $this->assertSame('ticky2', $tester->getT());
     }
 
     public function testStubMakeEmptyInterface()
     {
         $stub = Stub::makeEmpty('\Countable', ['count' => 5]);
-        $this->assertEquals(5, $stub->count());
+        $this->assertSame(5, $stub->count());
     }
 }
 

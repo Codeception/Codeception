@@ -11,10 +11,10 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
     public function testCombine()
     {
         $result = Locator::combine('//button[@value="Click Me"]', '//a[.="Click Me"]');
-        $this->assertEquals('//button[@value="Click Me"] | //a[.="Click Me"]', $result);
+        $this->assertSame('//button[@value="Click Me"] | //a[.="Click Me"]', $result);
 
         $result = Locator::combine('button[value="Click Me"]', '//a[.="Click Me"]');
-        $this->assertEquals('descendant-or-self::button[@value = \'Click Me\'] | //a[.="Click Me"]', $result);
+        $this->assertSame('descendant-or-self::button[@value = \'Click Me\'] | //a[.="Click Me"]', $result);
 
         $xml = new SimpleXMLElement("<root><button value='Click Me' /></root>");
         $this->assertNotEmpty($xml->xpath($result));
@@ -71,15 +71,15 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testContains()
     {
-        $this->assertEquals(
+        $this->assertSame(
             "descendant-or-self::label[contains(., 'enter a name')]",
             Locator::contains('label', 'enter a name')
         );
-        $this->assertEquals(
+        $this->assertSame(
             "descendant-or-self::label[@id = 'user'][contains(., 'enter a name')]",
             Locator::contains('label#user', 'enter a name')
         );
-        $this->assertEquals(
+        $this->assertSame(
             '//label[@for="name"][contains(., \'enter a name\')]',
             Locator::contains('//label[@for="name"]', 'enter a name')
         );
@@ -87,10 +87,10 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testHumanReadableString()
     {
-        $this->assertEquals("'string selector'", Locator::humanReadableString("string selector"));
-        $this->assertEquals("css '.something'", Locator::humanReadableString(['css' => '.something']));
+        $this->assertSame("'string selector'", Locator::humanReadableString("string selector"));
+        $this->assertSame("css '.something'", Locator::humanReadableString(['css' => '.something']));
         //WebDriver is no longer a dependency of core, so this can't be testedI
-        //$this->assertEquals("css selector '.something'", Locator::humanReadableString(WebDriverBy::cssSelector('.something')) );
+        //$this->assertSame("css selector '.something'", Locator::humanReadableString(WebDriverBy::cssSelector('.something')) );
 
         try {
             Locator::humanReadableString(null);
@@ -101,10 +101,10 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
 
     public function testLocatingElementPosition()
     {
-        $this->assertEquals('(descendant-or-self::p)[position()=1]', Locator::firstElement('p'));
-        $this->assertEquals('(descendant-or-self::p)[position()=last()]', Locator::lastElement('p'));
-        $this->assertEquals('(descendant-or-self::p)[position()=1]', Locator::elementAt('p', 1));
-        $this->assertEquals('(descendant-or-self::p)[position()=last()-0]', Locator::elementAt('p', -1));
-        $this->assertEquals('(descendant-or-self::p)[position()=last()-1]', Locator::elementAt('p', -2));
+        $this->assertSame('(descendant-or-self::p)[position()=1]', Locator::firstElement('p'));
+        $this->assertSame('(descendant-or-self::p)[position()=last()]', Locator::lastElement('p'));
+        $this->assertSame('(descendant-or-self::p)[position()=1]', Locator::elementAt('p', 1));
+        $this->assertSame('(descendant-or-self::p)[position()=last()-0]', Locator::elementAt('p', -1));
+        $this->assertSame('(descendant-or-self::p)[position()=last()-1]', Locator::elementAt('p', -2));
     }
 }

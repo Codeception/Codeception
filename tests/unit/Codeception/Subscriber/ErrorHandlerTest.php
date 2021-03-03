@@ -38,7 +38,7 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
         Notification::all(); //clear the messages
         $errorHandler->errorHandler(E_USER_DEPRECATED, 'deprecated message', __FILE__, (string)__LINE__, []);
 
-        $this->assertEquals([], Notification::all(), 'Deprecation message was added to notifications');
+        $this->assertSame([], Notification::all(), 'Deprecation message was added to notifications');
     }
 
     public function testShowsLocationOfWarning()

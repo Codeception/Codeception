@@ -38,7 +38,7 @@ abstract class Snapshot
      */
     protected function assertData($data)
     {
-        $this->assertEquals($this->dataSet, $data, 'Snapshot doesn\'t match real data');
+        $this->assertSame($this->dataSet, $data, 'Snapshot doesn\'t match real data');
     }
 
     /**

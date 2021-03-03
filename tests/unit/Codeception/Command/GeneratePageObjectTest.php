@@ -21,7 +21,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
     {
         unset($this->config['actor']);
         $this->execute(['suite' => 'Login'], false);
-        $this->assertEquals(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);
+        $this->assertSame(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);
         $this->assertStringContainsString('class Login', $this->content);
         $this->assertStringContainsString('public static', $this->content);
         $this->assertStringNotContainsString('public function __construct', $this->content);
@@ -33,7 +33,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
         unset($this->config['actor']);
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(['suite' => 'Login'], false);
-        $this->assertEquals(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);
+        $this->assertSame(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);
         $this->assertStringContainsString('namespace MiddleEarth\Page;', $this->content);
         $this->assertStringContainsString('class Login', $this->content);
         $this->assertStringContainsString('public static', $this->content);
@@ -43,7 +43,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
     public function testCreateForSuite()
     {
         $this->execute(['suite' => 'shire', 'page' => 'Login']);
-        $this->assertEquals(\Codeception\Configuration::supportDir().'Page/Shire/Login.php', $this->filename);
+        $this->assertSame(\Codeception\Configuration::supportDir().'Page/Shire/Login.php', $this->filename);
         $this->assertStringContainsString('namespace Page\Shire;', $this->content);
         $this->assertStringContainsString('class Login', $this->content);
         $this->assertStringContainsString('protected $hobbitGuy;', $this->content);
@@ -55,7 +55,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(['suite' => 'shire', 'page' => 'Login']);
-        $this->assertEquals(\Codeception\Configuration::supportDir().'Page/Shire/Login.php', $this->filename);
+        $this->assertSame(\Codeception\Configuration::supportDir().'Page/Shire/Login.php', $this->filename);
         $this->assertStringContainsString('namespace MiddleEarth\Page\Shire;', $this->content);
         $this->assertStringContainsString('class Login', $this->content);
         $this->assertStringContainsString('protected $hobbitGuy;', $this->content);
@@ -66,7 +66,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
     public function testCreateInSubpath()
     {
         $this->execute(['suite' => 'User/View']);
-        $this->assertEquals(\Codeception\Configuration::supportDir().'Page/User/View.php', $this->filename);
+        $this->assertSame(\Codeception\Configuration::supportDir().'Page/User/View.php', $this->filename);
         $this->assertIsValidPhp($this->content);
     }
 }

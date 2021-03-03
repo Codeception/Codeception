@@ -84,7 +84,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->config['class_name'] = 'SkipGuy';
 
         $this->execute(['suite' => 'skipped', '--single-file' => true]);
-        $this->assertEquals(codecept_root_dir().'tests/data/scenarios/skipped.txt', $this->filename);
+        $this->assertSame(codecept_root_dir().'tests/data/scenarios/skipped.txt', $this->filename);
         $this->assertStringContainsString('I WANT TO SKIP IT', $this->content);
         $this->assertStringContainsString('I WANT TO MAKE IT INCOMPLETE', $this->content);
         $this->assertStringContainsString('* Skip_Me rendered', $this->output);
@@ -97,7 +97,7 @@ class GenerateScenarioTest extends BaseCommandRunner
         $this->config['class_name'] = 'SkipGuy';
 
         $this->execute(['suite' => 'skipped', '--single-file' => true, '--format' => 'html']);
-        $this->assertEquals(codecept_root_dir().'tests/data/scenarios/skipped.html', $this->filename);
+        $this->assertSame(codecept_root_dir().'tests/data/scenarios/skipped.html', $this->filename);
         $this->assertStringContainsString('<h3>I WANT TO MAKE IT INCOMPLETE</h3>', $this->content);
         $this->assertStringContainsString('<h3>I WANT TO SKIP IT</h3>', $this->content);
         $this->assertStringContainsString('<body><h3>', $this->content);
@@ -109,7 +109,7 @@ class GenerateScenarioTest extends BaseCommandRunner
     public function testDifferentPath()
     {
         $this->execute(['suite' => 'dummy', '--single-file' => true, '--path' => 'docs']);
-        $this->assertEquals('docs/dummy.txt', $this->filename);
+        $this->assertSame('docs/dummy.txt', $this->filename);
         $this->assertStringContainsString('I WANT TO CHECK CONFIG EXISTS', $this->content);
         $this->assertStringContainsString('* File_Exists rendered', $this->output);
     }

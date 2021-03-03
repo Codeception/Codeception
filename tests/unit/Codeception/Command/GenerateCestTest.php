@@ -21,7 +21,7 @@ class GenerateCestTest extends BaseCommandRunner
     public function testBasic()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
-        $this->assertEquals('tests/shire/HallUnderTheHillCest.php', $this->filename);
+        $this->assertSame('tests/shire/HallUnderTheHillCest.php', $this->filename);
 
         $this->assertStringContainsString('class HallUnderTheHillCest', $this->content);
         $this->assertStringContainsString('public function _before(HobbitGuy $I)', $this->content);
@@ -47,7 +47,7 @@ class GenerateCestTest extends BaseCommandRunner
     public function testGenerateWithFullName()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest.php']);
-        $this->assertEquals('tests/shire/HomeCanInclude12DwarfsCest.php', $this->filename);
+        $this->assertSame('tests/shire/HomeCanInclude12DwarfsCest.php', $this->filename);
     }
 
     /**
@@ -56,7 +56,7 @@ class GenerateCestTest extends BaseCommandRunner
     public function testGenerateWithSuffix()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest']);
-        $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCest.php');
+        $this->assertSame($this->filename, 'tests/shire/HomeCanInclude12DwarfsCest.php');
         $this->assertIsValidPhp($this->content);
     }
 
@@ -64,7 +64,7 @@ class GenerateCestTest extends BaseCommandRunner
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillCest']);
-        $this->assertEquals($this->filename, 'tests/shire/HallUnderTheHillCest.php');
+        $this->assertSame($this->filename, 'tests/shire/HallUnderTheHillCest.php');
         $this->assertStringContainsString('namespace MiddleEarth;', $this->content);
         $this->assertStringContainsString('use MiddleEarth\\HobbitGuy;', $this->content);
         $this->assertStringContainsString('public function tryToTest(HobbitGuy $I)', $this->content);
@@ -74,7 +74,7 @@ class GenerateCestTest extends BaseCommandRunner
     public function testCreateWithNamespace()
     {
         $this->execute(['suite' => 'shire', 'class' => 'MiddleEarth\HallUnderTheHillCest']);
-        $this->assertEquals('tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->filename);
+        $this->assertSame('tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->filename);
         $this->assertStringContainsString('namespace MiddleEarth;', $this->content);
         $this->assertStringContainsString('class HallUnderTheHillCest', $this->content);
         $this->assertStringContainsString('Test was created in tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->output);
@@ -86,7 +86,7 @@ class GenerateCestTest extends BaseCommandRunner
         $this->config['namespace'] = 'MiddleEarth';
         $this->config['actor'] = 'HobbitGuy';
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillCest']);
-        $this->assertEquals($this->filename, 'tests/shire/HallUnderTheHillCest.php');
+        $this->assertSame($this->filename, 'tests/shire/HallUnderTheHillCest.php');
         $this->assertStringContainsString('namespace MiddleEarth\\Bosses;', $this->content);
         $this->assertStringContainsString('use MiddleEarth\\HobbitGuy', $this->content);
         $this->assertStringContainsString('public function tryToTest(HobbitGuy $I)', $this->content);
