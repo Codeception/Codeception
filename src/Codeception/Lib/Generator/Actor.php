@@ -71,7 +71,7 @@ EOF;
      */
     protected $actions;
 
-    public function __construct($settings)
+    public function __construct(array $settings)
     {
         $this->settings = $settings;
         $this->di = new Di();
