@@ -90,7 +90,7 @@ function testPasswordField()
        'password' => '123456'
     ));
     $form = data::get('form');
-    $this->assertEquals('123456', $form['password']);
+    $this->assertSame('123456', $form['password']);
 }
 ?>
 ```

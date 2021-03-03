@@ -46,7 +46,7 @@ class JsonContains extends Constraint
         $comparator = new ArrayComparator();
         $comparator->setFactory(new Factory);
         try {
-            $comparator->assertEquals($this->expected, $jsonResponseArray->toArray());
+            $comparator->assertSame($this->expected, $jsonResponseArray->toArray());
         } catch (ComparisonFailure $failure) {
             throw new ExpectationFailedException(
                 "Response JSON does not contain the provided JSON\n",

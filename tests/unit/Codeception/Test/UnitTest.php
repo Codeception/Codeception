@@ -7,10 +7,10 @@ class TestTest extends \Codeception\Test\Unit
     public function testReportedInterface()
     {
         $this->assertInstanceOf(\Codeception\Test\Interfaces\Reported::class, $this);
-        $this->assertEquals([
-            'file' => __FILE__,
+        $this->assertSame([
             'name' => 'testReportedInterface',
-            'class' => 'TestTest'
+            'class' => 'TestTest',
+            'file' => __FILE__
         ], $this->getReportFields());
     }
 }

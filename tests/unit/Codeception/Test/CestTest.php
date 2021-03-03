@@ -18,17 +18,17 @@ class CestTest extends \Codeception\Test\Unit
 
         $path = 'tests' . DIRECTORY_SEPARATOR . 'cli' . DIRECTORY_SEPARATOR;
 
-        $this->assertEquals(
+        $this->assertSame(
             $path . 'BootstrapCest.php',
             \Codeception\Test\Descriptor::getTestFileName($cest)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $path . 'BootstrapCest.php:user',
             \Codeception\Test\Descriptor::getTestFullName($cest)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'stdClass:user',
             \Codeception\Test\Descriptor::getTestSignature($cest)
         );

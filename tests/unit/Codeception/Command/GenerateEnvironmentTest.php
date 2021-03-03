@@ -20,7 +20,7 @@ class GenerateEnvironmentTest extends BaseCommandRunner
     {
         $this->execute(['env' => 'firefox']);
         $this->assertStringContainsString('firefox config was created in tests/_envs/firefox.yml', $this->output);
-        $this->assertEquals('tests/_envs/firefox.yml', $this->filename);
+        $this->assertSame('tests/_envs/firefox.yml', $this->filename);
     }
 
     public function testFailed()

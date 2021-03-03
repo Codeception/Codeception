@@ -19,7 +19,7 @@ class GenerateCeptTest extends BaseCommandRunner
     public function testGenerateBasic()
     {
         $this->execute(['suite' => 'shire', 'test' => 'HomeCanInclude12Dwarfs']);
-        $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
+        $this->assertSame($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
         $this->assertStringContainsString('$I = new HobbitGuy($scenario);', $this->content);
         $this->assertStringContainsString('Test was created in tests/shire/HomeCanInclude12DwarfsCept.php', $this->output);
         $this->assertIsValidPhp($this->content);
@@ -28,7 +28,7 @@ class GenerateCeptTest extends BaseCommandRunner
     public function testGenerateWithSuffix()
     {
         $this->execute(['suite' => 'shire', 'test' => 'HomeCanInclude12DwarfsCept']);
-        $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
+        $this->assertSame($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
         $this->assertIsValidPhp($this->content);
     }
 
@@ -38,7 +38,7 @@ class GenerateCeptTest extends BaseCommandRunner
     public function testGenerateWithFullName()
     {
         $this->execute(['suite' => 'shire', 'test' => 'HomeCanInclude12DwarfsCept.php']);
-        $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
+        $this->assertSame($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
         $this->assertIsValidPhp($this->content);
     }
 
@@ -49,7 +49,7 @@ class GenerateCeptTest extends BaseCommandRunner
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(['suite' => 'shire', 'test' => 'HomeCanInclude12Dwarfs']);
-        $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
+        $this->assertSame($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
         $this->assertStringContainsString('use MiddleEarth\HobbitGuy;', $this->content);
         $this->assertStringContainsString('$I = new HobbitGuy($scenario);', $this->content);
         $this->assertIsValidPhp($this->content);

@@ -47,9 +47,9 @@ class ModuleTest extends Unit
         $subject = new Module();
         $subject->beforeSuite($suiteEvent);
 
-        $this->assertEquals(0, $module1->getCallOrder());
-        $this->assertEquals(0, $module2->getCallOrder());
-        $this->assertEquals(0, $module3->getCallOrder());
+        $this->assertSame(0, $module1->getCallOrder());
+        $this->assertSame(0, $module2->getCallOrder());
+        $this->assertSame(0, $module3->getCallOrder());
     }
 
     public function testBeforeSuite()
@@ -81,9 +81,9 @@ class ModuleTest extends Unit
         $subject = new Module();
         $subject->beforeSuite($suiteEvent);
 
-        $this->assertEquals(1, $module1->getCallOrder());
-        $this->assertEquals(2, $module2->getCallOrder());
-        $this->assertEquals(3, $module3->getCallOrder());
+        $this->assertSame(1, $module1->getCallOrder());
+        $this->assertSame(2, $module2->getCallOrder());
+        $this->assertSame(3, $module3->getCallOrder());
     }
 
     public function testAfterSuite()
@@ -104,9 +104,9 @@ class ModuleTest extends Unit
         );
         $subject->afterSuite();
 
-        $this->assertEquals(3, $module1->getCallOrder());
-        $this->assertEquals(2, $module2->getCallOrder());
-        $this->assertEquals(1, $module3->getCallOrder());
+        $this->assertSame(3, $module1->getCallOrder());
+        $this->assertSame(2, $module2->getCallOrder());
+        $this->assertSame(1, $module3->getCallOrder());
     }
 
     public function testBeforeDoesNothingWhenEventTestHasIncorrectType()
@@ -132,9 +132,9 @@ class ModuleTest extends Unit
         );
         $subject->before($testEvent);
 
-        $this->assertEquals(0, $module1->getCallOrder());
-        $this->assertEquals(0, $module2->getCallOrder());
-        $this->assertEquals(0, $module3->getCallOrder());
+        $this->assertSame(0, $module1->getCallOrder());
+        $this->assertSame(0, $module2->getCallOrder());
+        $this->assertSame(0, $module3->getCallOrder());
     }
 
     public function testBefore()
@@ -160,9 +160,9 @@ class ModuleTest extends Unit
         );
         $subject->before($testEvent);
 
-        $this->assertEquals(1, $module1->getCallOrder());
-        $this->assertEquals(2, $module2->getCallOrder());
-        $this->assertEquals(3, $module3->getCallOrder());
+        $this->assertSame(1, $module1->getCallOrder());
+        $this->assertSame(2, $module2->getCallOrder());
+        $this->assertSame(3, $module3->getCallOrder());
     }
 
     public function testAfterDoesNothingWhenEventTestHasIncorrectType()
@@ -188,9 +188,9 @@ class ModuleTest extends Unit
         );
         $subject->after($testEvent);
 
-        $this->assertEquals(0, $module1->getCallOrder());
-        $this->assertEquals(0, $module2->getCallOrder());
-        $this->assertEquals(0, $module3->getCallOrder());
+        $this->assertSame(0, $module1->getCallOrder());
+        $this->assertSame(0, $module2->getCallOrder());
+        $this->assertSame(0, $module3->getCallOrder());
     }
 
     public function testAfter()
@@ -216,9 +216,9 @@ class ModuleTest extends Unit
         );
         $subject->after($testEvent);
 
-        $this->assertEquals(3, $module1->getCallOrder());
-        $this->assertEquals(2, $module2->getCallOrder());
-        $this->assertEquals(1, $module3->getCallOrder());
+        $this->assertSame(3, $module1->getCallOrder());
+        $this->assertSame(2, $module2->getCallOrder());
+        $this->assertSame(1, $module3->getCallOrder());
     }
 
     public function testFailedDoesNothingWhenEventTestHasIncorrectType()
@@ -245,9 +245,9 @@ class ModuleTest extends Unit
         );
         $subject->failed($failed);
 
-        $this->assertEquals(0, $module1->getCallOrder());
-        $this->assertEquals(0, $module2->getCallOrder());
-        $this->assertEquals(0, $module3->getCallOrder());
+        $this->assertSame(0, $module1->getCallOrder());
+        $this->assertSame(0, $module2->getCallOrder());
+        $this->assertSame(0, $module3->getCallOrder());
     }
 
     public function testFailed()
@@ -274,9 +274,9 @@ class ModuleTest extends Unit
         );
         $subject->failed($failed);
 
-        $this->assertEquals(3, $module1->getCallOrder());
-        $this->assertEquals(2, $module2->getCallOrder());
-        $this->assertEquals(1, $module3->getCallOrder());
+        $this->assertSame(3, $module1->getCallOrder());
+        $this->assertSame(2, $module2->getCallOrder());
+        $this->assertSame(1, $module3->getCallOrder());
     }
 
     public function testBeforeStep()
@@ -303,9 +303,9 @@ class ModuleTest extends Unit
         );
         $subject->beforeStep($stepEvent);
 
-        $this->assertEquals(1, $module1->getCallOrder());
-        $this->assertEquals(2, $module2->getCallOrder());
-        $this->assertEquals(3, $module3->getCallOrder());
+        $this->assertSame(1, $module1->getCallOrder());
+        $this->assertSame(2, $module2->getCallOrder());
+        $this->assertSame(3, $module3->getCallOrder());
     }
 
     public function testAfterStep()
@@ -332,9 +332,9 @@ class ModuleTest extends Unit
         );
         $subject->afterStep($stepEvent);
 
-        $this->assertEquals(3, $module1->getCallOrder());
-        $this->assertEquals(2, $module2->getCallOrder());
-        $this->assertEquals(1, $module3->getCallOrder());
+        $this->assertSame(3, $module1->getCallOrder());
+        $this->assertSame(2, $module2->getCallOrder());
+        $this->assertSame(1, $module3->getCallOrder());
     }
 }
 

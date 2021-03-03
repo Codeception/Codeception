@@ -31,7 +31,7 @@ final class BuildCest
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeInThisFile('seeFileFound(');
-        $I->seeInThisFile('public function assertEquals($expected, $actual, $message = "") {');
+        $I->seeInThisFile('public function assertSame($expected, $actual, $message = "") {');
     }
 
     public function usesTypehintsWherePossible(CliGuy $I, Scenario $scenario)

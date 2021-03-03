@@ -20,6 +20,6 @@ class MyCustomCommandTest extends \Codeception\PHPUnit\TestCase
     public function testHasCommandName()
     {
         $commandName = MyCustomCommand::getCommandName();
-        $this->assertEquals('myProject:myCommand', $commandName);
+        $this->assertSame('myProject:myCommand', $commandName);
     }
 }
