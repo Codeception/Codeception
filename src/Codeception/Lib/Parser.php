@@ -95,7 +95,7 @@ class Parser
         }
     }
 
-    protected function addStep(string $matches): void
+    protected function addStep(array $matches): void
     {
         list($m, $action, $params) = $matches;
         if (in_array($action, ['wantTo', 'wantToTest'])) {
