@@ -1,21 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception;
 
+use Exception;
 use Codeception\Exception\ConfigurationException;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\ArgvInput as SymfonyArgvInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
 
     /**
-     * @var ArgvInput
+     * @var SymfonyArgvInput|null
      */
     protected $coreArguments = null;
 
@@ -25,9 +28,8 @@ class Application extends BaseApplication
      *  extensions:
      *      commands:
      *          - Project\Command\MyCustomCommand
-     *
      */
-    public function registerCustomCommands()
+    public function registerCustomCommands(): void
     {
         try {
             $this->readCustomCommandsFromConfig();
@@ -37,15 +39,15 @@ class Application extends BaseApplication
             }
             $this->renderExceptionWrapper($e, new ConsoleOutput());
             exit(1);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->renderExceptionWrapper($e, new ConsoleOutput());
             exit(1);
         }
     }
 
-    public function renderExceptionWrapper(\Exception $e, OutputInterface $output)
+    public function renderExceptionWrapper(Exception $e, OutputInterface $output): void
     {
-        if (method_exists('Symfony\Component\Console\Application', 'renderException')) {
+        if (method_exists(\Symfony\Component\Console\Application::class, 'renderException')) {
             //Symfony 5
             parent::renderException($e, $output);
         } else {
@@ -58,9 +60,9 @@ class Application extends BaseApplication
      *
      * @throws ConfigurationException
      */
-    protected function readCustomCommandsFromConfig()
+    protected function readCustomCommandsFromConfig(): void
     {
-        $this->getCoreArguments(); // Maybe load outside configfile
+        $this->getCoreArguments(); // Maybe load outside config file
 
         $config = Configuration::config();
 
@@ -77,21 +79,19 @@ class Application extends BaseApplication
     /**
      * Validate and get the name of the command
      *
-     * @param CustomCommandInterface $commandClass
-     *
-     * @throws ConfigurationException
-     *
+     * @param CustomCommandInterface|string $commandClass
      * @return string
+     * @throws ConfigurationException
      */
-    protected function getCustomCommandName($commandClass)
+    protected function getCustomCommandName($commandClass): string
     {
         if (!class_exists($commandClass)) {
-            throw new ConfigurationException("Extension: Command class $commandClass not found");
+            throw new ConfigurationException("Extension: Command class {$commandClass} not found");
         }
 
         $interfaces = class_implements($commandClass);
 
-        if (!in_array('Codeception\CustomCommandInterface', $interfaces)) {
+        if (!in_array(CustomCommandInterface::class, $interfaces)) {
             throw new ConfigurationException("Extension: Command {$commandClass} must implement " .
                                              "the interface `Codeception\\CustomCommandInterface`");
         }
@@ -104,7 +104,7 @@ class Application extends BaseApplication
      *
      * @inheritDoc
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null)
+    public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
         if ($input === null) {
             $input = $this->getCoreArguments();
@@ -119,10 +119,8 @@ class Application extends BaseApplication
 
     /**
      * Add global a --config option.
-     *
-     * @return InputDefinition
      */
-    protected function getDefaultInputDefinition()
+    protected function getDefaultInputDefinition(): InputDefinition
     {
         $inputDefinition = parent::getDefaultInputDefinition();
         $inputDefinition->addOption(
@@ -139,10 +137,8 @@ class Application extends BaseApplication
      * -cfile.yml|dir
      * --config file.yml|dir
      * --config=file.yml|dir
-     *
-     * @return ArgvInput
      */
-    protected function getCoreArguments()
+    protected function getCoreArguments(): SymfonyArgvInput
     {
         if ($this->coreArguments !== null) {
             return $this->coreArguments;
@@ -152,7 +148,7 @@ class Application extends BaseApplication
         if (isset($_SERVER['argv'])) {
             $argv = $_SERVER['argv'];
 
-            for ($i = 0; $i < count($argv); $i++) {
+            for ($i = 0; $i < count($argv); ++$i) {
                 if (preg_match('/^(?:-([^c-]*)?c|--config(?:=|$))(.*)$/', $argv[$i], $match)) {
                     if (!empty($match[2])) { //same index
                         $this->preloadConfiguration($match[2]);
@@ -168,17 +164,16 @@ class Application extends BaseApplication
             }
         }
 
-        return $this->coreArguments = new ArgvInput($argvWithoutConfig);
+        return $this->coreArguments = new SymfonyArgvInput($argvWithoutConfig);
     }
 
     /**
      * Pre load Configuration, the config option is use.
      *
      * @param string $configFile Path to Configuration
-     *
      * @throws ConfigurationException
      */
-    protected function preloadConfiguration($configFile)
+    protected function preloadConfiguration(string $configFile): void
     {
         try {
             Configuration::config($configFile);

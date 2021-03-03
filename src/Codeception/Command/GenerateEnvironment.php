@@ -38,7 +38,7 @@ class GenerateEnvironment extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = $this->getGlobalConfig();
-        if (!Configuration::envsDir()) {
+        if (Configuration::envsDir() === '') {
             throw new ConfigurationException(
                 "Path for environments configuration is not set.\n"
                 . "Please specify envs path in your `codeception.yml`\n \n"

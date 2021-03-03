@@ -1,9 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception;
 
+use ArrayAccess;
+use Countable;
+use IteratorAggregate;
+use PHPUnit\Framework\AssertionFailedError;
+use ArrayIterator;
 use Traversable;
 
-class Example implements \ArrayAccess, \Countable, \IteratorAggregate
+class Example implements ArrayAccess, Countable, IteratorAggregate
 {
     protected $data;
 
@@ -24,7 +32,7 @@ class Example implements \ArrayAccess, \Countable, \IteratorAggregate
      * The return value will be casted to boolean if non-boolean was returned.
      * @since 5.0.0
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->data);
     }
@@ -41,7 +49,7 @@ class Example implements \ArrayAccess, \Countable, \IteratorAggregate
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
-            throw new \PHPUnit\Framework\AssertionFailedError("Example $offset doesn't exist");
+            throw new AssertionFailedError(sprintf('Example %s doesn\'t exist', $offset));
         };
         return $this->data[$offset];
     }
@@ -58,7 +66,7 @@ class Example implements \ArrayAccess, \Countable, \IteratorAggregate
      * @return void
      * @since 5.0.0
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->data[$offset] = $value;
     }
@@ -72,7 +80,7 @@ class Example implements \ArrayAccess, \Countable, \IteratorAggregate
      * @return void
      * @since 5.0.0
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->data[$offset]);
     }
@@ -86,7 +94,7 @@ class Example implements \ArrayAccess, \Countable, \IteratorAggregate
      * The return value is cast to an integer.
      * @since 5.1.0
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
@@ -98,8 +106,8 @@ class Example implements \ArrayAccess, \Countable, \IteratorAggregate
      * <b>Traversable</b>
      * @since 5.0.0
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->data);
+        return new ArrayIterator($this->data);
     }
 }

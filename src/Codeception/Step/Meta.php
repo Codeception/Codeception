@@ -29,7 +29,7 @@ class Meta extends CodeceptionStep
         $this->prefix = $actor;
     }
 
-    public function getArgumentsAsString($maxLength = self::DEFAULT_MAX_LENGTH): string
+    public function getArgumentsAsString(int $maxLength = self::DEFAULT_MAX_LENGTH): string
     {
         $argumentBackup = $this->arguments;
         $lastArgAsString = '';

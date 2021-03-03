@@ -31,7 +31,7 @@ abstract class Extension implements EventSubscriberInterface
     /**
      * @var array
      */
-    protected $options;
+    protected $options = [];
     /**
      * @var Output
      */
@@ -39,7 +39,7 @@ abstract class Extension implements EventSubscriberInterface
     /**
      * @var array
      */
-    protected $globalConfig;
+    protected $globalConfig = [];
     /**
      * @var array
      */

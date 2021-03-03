@@ -35,10 +35,16 @@ class Retry extends Assertion implements GeneratedStep
     }
 EOF;
 
+    /**
+     * @var int
+     */
     private $retryNum;
+    /**
+     * @var int
+     */
     private $retryInterval;
 
-    public function __construct($action, array $arguments, $retryNum, $retryInterval)
+    public function __construct($action, array $arguments, int $retryNum, int $retryInterval)
     {
         $this->action = $action;
         $this->arguments = $arguments;

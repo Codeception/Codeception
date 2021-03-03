@@ -23,7 +23,7 @@ trait MetadataCollector
         return $this->metadata;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->getMetadata()->getName();
     }

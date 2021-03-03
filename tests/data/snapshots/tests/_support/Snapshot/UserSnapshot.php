@@ -1,14 +1,18 @@
 <?php
+
 namespace Snapshot;
 
-class UserSnapshot extends \Codeception\Snapshot
+use Codeception\Snapshot;
+use DataTester;
+
+class UserSnapshot extends Snapshot
 {
     /**
      * @var DataTester
      */
     protected $dataTester;
 
-    public function __construct(\DataTester $I)
+    public function __construct(DataTester $I)
     {
         $this->dataTester = $I;
     }
