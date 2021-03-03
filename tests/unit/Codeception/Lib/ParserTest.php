@@ -83,11 +83,11 @@ EOF;
     {
         $code = "<?php\n //\\\$I->wantTo('run this test'); ";
         $this->parser->parseFeature($code);
-        $this->assertNull($this->scenario->getFeature());
+        $this->assertEmpty($this->scenario->getFeature());
 
         $code = "<?php\n /*\n \\\$I->wantTo('run this test'); \n */";
         $this->parser->parseFeature($code);
-        $this->assertNull($this->scenario->getFeature());
+        $this->assertEmpty($this->scenario->getFeature());
     }
 
     public function testScenarioSkipOptionsHandled()

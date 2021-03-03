@@ -124,9 +124,9 @@ class Message
         return mb_strwidth($includeTags ? $this->message : strip_tags($this->message), 'utf-8');
     }
 
-    public static function ucfirst(?string $text): string
+    public static function ucfirst(string $text): string
     {
-        return mb_strtoupper(mb_substr((string)$text, 0, 1, 'utf-8'), 'utf-8') . mb_substr((string)$text, 1, null, 'utf-8');
+        return mb_strtoupper(mb_substr($text, 0, 1, 'utf-8'), 'utf-8') . mb_substr($text, 1, null, 'utf-8');
     }
 
     public function __toString(): string
