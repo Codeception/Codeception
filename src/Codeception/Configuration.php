@@ -200,8 +200,13 @@ class Configuration
         self::prepareParams($tempConfig);
 
         // load config using params
-        $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromContents($distConfigContents, $configDistFile));
-        $config = self::mergeConfigs($config, self::getConfFromContents($configContents, $configFile));
+        $config = self::$defaultConfig;
+        if (file_exists($configDistFile)) {
+            $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromContents($distConfigContents, $configDistFile));
+        }
+        if (file_exists($configFile)) {
+            $config = self::mergeConfigs($config, self::getConfFromContents($configContents, $configFile));
+        }
 
         if ($config == self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
