@@ -45,13 +45,13 @@ class Application extends BaseApplication
         }
     }
 
-    public function renderExceptionWrapper(Exception $e, OutputInterface $output): void
+    public function renderExceptionWrapper(Exception $exception, OutputInterface $output): void
     {
         if (method_exists(\Symfony\Component\Console\Application::class, 'renderException')) {
             //Symfony 5
-            parent::renderException($e, $output);
+            parent::renderException($exception, $output);
         } else {
-            parent::renderThrowable($e, $output);
+            parent::renderThrowable($exception, $output);
         }
     }
 

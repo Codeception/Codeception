@@ -111,7 +111,8 @@ abstract class InitTemplate
      * $this->ask('do you want to proceed (y/n)', true);
      * ```
      *
-     * @param array|bool|string $answer
+     * @param string $question
+     * @param array|bool|null $answer
      * @return mixed|string
      */
     protected function ask(string $question, $answer = null)

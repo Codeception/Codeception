@@ -94,7 +94,7 @@ class SuiteManager
         $this->suite = $this->createSuite($name);
     }
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::MODULE_INIT);
         foreach ($this->moduleContainer->all() as $module) {
@@ -110,7 +110,7 @@ class SuiteManager
         ini_set('xdebug.show_exception_trace', '0'); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
-    public function loadTests(string $path = null)
+    public function loadTests(string $path = null): void
     {
         $testLoader = new Loader($this->settings);
         $testLoader->loadTests($path);
@@ -128,7 +128,7 @@ class SuiteManager
     /**
      * @param TestInterface|DataProviderTestSuite $test
      */
-    protected function addToSuite($test)
+    protected function addToSuite($test): void
     {
         $this->configureTest($test);
 
@@ -205,7 +205,7 @@ class SuiteManager
             : $this->settings['actor'];
     }
 
-    protected function checkEnvironmentExists(TestInterface $test)
+    protected function checkEnvironmentExists(TestInterface $test): void
     {
         $envs = $test->getMetadata()->getEnv();
         if (empty($envs)) {
@@ -243,7 +243,7 @@ class SuiteManager
     /**
      * @param TestInterface|ScenarioDriven $test
      */
-    protected function configureTest($test)
+    protected function configureTest($test): void
     {
         if (!$test instanceof TestInterface) {
             return;

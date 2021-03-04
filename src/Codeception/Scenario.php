@@ -16,23 +16,23 @@ use Codeception\Test\Metadata;
 
 class Scenario
 {
-
     /**
      * @var TestInterface
      */
     protected $test;
+
     /**
      * @var Metadata
      */
     protected $metadata;
 
     /**
-     * @var    array
+     * @var array
      */
     protected $steps = [];
 
     /**
-     * @var    string
+     * @var string
      */
     protected $feature;
 
@@ -62,7 +62,7 @@ class Scenario
         return $this->metadata->getGroups();
     }
 
-    public function current($key)
+    public function current(?string $key)
     {
         return $this->metadata->getCurrent($key);
     }

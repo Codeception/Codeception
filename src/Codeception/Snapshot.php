@@ -54,7 +54,7 @@ abstract class Snapshot
      * Performs assertion on saved data set against current dataset.
      * Can be overridden to implement custom assertion
      *
-     * @param $data
+     * @param mixed $data
      */
     protected function assertData($data): void
     {

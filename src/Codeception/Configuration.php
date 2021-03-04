@@ -456,11 +456,11 @@ class Configuration
      * Loads configuration from Yaml file or returns given value if the file doesn't exist
      *
      * @param string $filename filename
-     * @param mixed $nonExistentValue value used if filename is not found
+     * @param array|null $nonExistentValue value used if filename is not found
      * @return array|null
      * @throws ConfigurationException
      */
-    protected static function getConfFromFile(string $filename, $nonExistentValue = []): ?array
+    protected static function getConfFromFile(string $filename, ?array $nonExistentValue = []): ?array
     {
         if (file_exists($filename)) {
             $yaml = file_get_contents($filename);

@@ -98,7 +98,7 @@ class Codecept
      */
     protected $extensions = [];
 
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         $this->result = new TestResult;
         $this->dispatcher = new EventDispatcher();

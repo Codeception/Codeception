@@ -31,10 +31,24 @@ abstract class Step
 
     protected $debugOutput;
 
+    /**
+     * @var bool
+     */
     public $executed = false;
 
+    /**
+     * @var string|int|null
+     */
     protected $line = null;
+
+    /**
+     * @var string|null
+     */
     protected $file = null;
+
+    /**
+     * @var string
+     */
     protected $prefix = 'I';
 
     /**
@@ -42,7 +56,14 @@ abstract class Step
      */
     protected $metaStep = null;
 
+    /**
+     * @var bool
+     */
     protected $failed = false;
+
+    /**
+     * @var bool
+     */
     protected $isTry = false;
 
     public function __construct(?string $action, array $arguments = [])
@@ -51,7 +72,7 @@ abstract class Step
         $this->arguments = $arguments;
     }
 
-    public function saveTrace()
+    public function saveTrace(): void
     {
         $stack = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
 
@@ -70,7 +91,7 @@ abstract class Step
         $this->addMetaStep($traceLine, $stack);
     }
 
-    private function isTestFile($file)
+    private function isTestFile(string $file)
     {
         return preg_match('~[^\\'.DIRECTORY_SEPARATOR.'](Cest|Cept|Test).php$~', $file);
     }
@@ -152,7 +173,11 @@ abstract class Step
         return implode(',', $arguments);
     }
 
-    protected function stringifyArgument($argument)
+    /**
+     * @param string|resource|array|object $argument
+     * @return string
+     */
+    protected function stringifyArgument($argument): string
     {
         if (is_string($argument)) {
             return '"' . strtr($argument, ["\n" => '\n', "\r" => '\r', "\t" => ' ']) . '"';
@@ -176,10 +201,13 @@ abstract class Step
             }
         }
         $arg_str = json_encode($argument, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $arg_str = str_replace('\"', '"', $arg_str);
-        return $arg_str;
+        return str_replace('\"', '"', $arg_str);
     }
 
+    /**
+     * @param Closure|MockObject $argument
+     * @return string
+     */
     protected function getClassName($argument): string
     {
         if ($argument instanceof Closure) {

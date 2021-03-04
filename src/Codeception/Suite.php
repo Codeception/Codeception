@@ -20,7 +20,7 @@ class Suite extends TestSuite
      */
     protected $baseName;
 
-    public function reorderDependencies()
+    public function reorderDependencies(): void
     {
         $tests = [];
         foreach ($this->tests as $test) {
@@ -60,7 +60,7 @@ class Suite extends TestSuite
         return $tests;
     }
 
-    protected function findMatchedTest($testSignature): SelfDescribing
+    protected function findMatchedTest(string $testSignature): SelfDescribing
     {
         /** @var SelfDescribing $test */
         foreach ($this->tests as $test) {
@@ -76,7 +76,7 @@ class Suite extends TestSuite
         return $this->modules;
     }
 
-    public function setModules(array $modules)
+    public function setModules(array $modules): void
     {
         $this->modules = $modules;
     }

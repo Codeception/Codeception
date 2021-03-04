@@ -349,7 +349,7 @@ abstract class Module
         return null;
     }
 
-    protected function scalarizeArray($array)
+    protected function scalarizeArray(array $array): array
     {
         foreach ($array as $k => $v) {
             if (!is_null($v) && !is_scalar($v)) {
