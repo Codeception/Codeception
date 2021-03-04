@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace Codeception;
 
-use Codeception\PHPUnit\Runner;
-use PHPUnit\Framework\TestResult;
-use Codeception\PHPUnit\Listener;
-use Codeception\Subscriber\GracefulTermination;
-use Codeception\Subscriber\ErrorHandler;
-use Codeception\Subscriber\Dependencies;
-use Codeception\Subscriber\Bootstrap;
-use Codeception\Subscriber\PrepareTest;
-use Codeception\Subscriber\Module;
-use Codeception\Subscriber\BeforeAfterTest;
-use Codeception\Subscriber\AutoRebuild;
-use Codeception\Subscriber\Console;
-use Codeception\Subscriber\FailFast;
 use Codeception\Coverage\Subscriber\Local;
 use Codeception\Coverage\Subscriber\LocalServer;
-use Codeception\Coverage\Subscriber\RemoteServer;
 use Codeception\Coverage\Subscriber\Printer;
+use Codeception\Coverage\Subscriber\RemoteServer;
 use Codeception\Event\PrintResultEvent;
-use Codeception\PHPUnit\ResultPrinter\UI as UIResultPrinter;
 use Codeception\Exception\ConfigurationException;
+use Codeception\PHPUnit\Listener;
+use Codeception\PHPUnit\ResultPrinter\UI as UIResultPrinter;
+use Codeception\PHPUnit\Runner;
+use Codeception\Subscriber\AutoRebuild;
+use Codeception\Subscriber\BeforeAfterTest;
+use Codeception\Subscriber\Bootstrap;
+use Codeception\Subscriber\Console;
+use Codeception\Subscriber\Dependencies;
+use Codeception\Subscriber\ErrorHandler;
 use Codeception\Subscriber\ExtensionLoader;
+use Codeception\Subscriber\FailFast;
+use Codeception\Subscriber\GracefulTermination;
+use Codeception\Subscriber\Module;
+use Codeception\Subscriber\PrepareTest;
+use PHPUnit\Framework\TestResult;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept

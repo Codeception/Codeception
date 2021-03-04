@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace Codeception;
 
+use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\ParamsLoader;
 use Codeception\PHPUnit\Log\JUnit as JUnitLog;
+use Codeception\PHPUnit\Log\PhpUnit as PhpUnitLog;
 use Codeception\PHPUnit\ResultPrinter\HTML as HTMLResultPrinter;
 use Codeception\PHPUnit\ResultPrinter\Report as ReportPrinter;
-use Codeception\PHPUnit\Util\Log\TAP as TAPLog;
 use Codeception\PHPUnit\Util\Log\JSON as JSONLog;
-use Codeception\PHPUnit\Log\PhpUnit as PhpUnitLog;
+use Codeception\PHPUnit\Util\Log\TAP as TAPLog;
 use Codeception\Step\ConditionalAssertion;
+use Codeception\Util\Autoload;
 use Codeception\Util\PathResolver;
+use Codeception\Util\Template;
 use Exception;
 use InvalidArgumentException;
-use Codeception\Exception\ConfigurationException;
-use Codeception\Lib\Notification;
-use Codeception\Lib\ParamsLoader;
-use Codeception\Util\Autoload;
-use Codeception\Util\Template;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Exception\ParseException;

@@ -6,8 +6,8 @@ namespace Codeception;
 
 use Closure;
 use Codeception\Lib\Actor\Shared\Comment;
-use Codeception\Step\Executor;
 use Codeception\Lib\Actor\Shared\Pause;
+use Codeception\Step\Executor;
 use RuntimeException;
 
 abstract class Actor

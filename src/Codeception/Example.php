@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Codeception;
 
 use ArrayAccess;
+use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use PHPUnit\Framework\AssertionFailedError;
-use ArrayIterator;
 use Traversable;
 
 class Example implements ArrayAccess, Countable, IteratorAggregate

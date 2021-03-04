@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Codeception;
 
-use Codeception\Exception\ModuleConfigException;
-use Exception;
 use ArrayAccess;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\RequiresPackage;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Shared\Asserts;
+use Exception;
 
 /**
  * Basic class for Modules and Helpers.

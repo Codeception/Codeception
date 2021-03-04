@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Codeception;
 
-use Exception;
 use Codeception\Exception\ConfigurationException;
+use Exception;
 use Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Input\ArgvInput as SymfonyArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Input\ArgvInput as SymfonyArgvInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication

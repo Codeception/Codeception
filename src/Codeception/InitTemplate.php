@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Codeception;
 
-use Codeception\Lib\Generator\Helper;
-use Exception;
-use Codeception\Lib\Generator\Actor;
-use Codeception\Lib\Generator\Actions;
 use Codeception\Command\Shared\FileSystemTrait;
 use Codeception\Command\Shared\StyleTrait;
+use Codeception\Lib\Generator\Actions;
+use Codeception\Lib\Generator\Actor;
+use Codeception\Lib\Generator\Helper;
 use Codeception\Lib\ModuleContainer;
+use Exception;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

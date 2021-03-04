@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Codeception;
 
-use Codeception\Exception\InjectionException;
-use Codeception\Step\Meta;
-use Exception;
-use Codeception\Step\Comment;
-use PHPUnit\Framework\SkippedTestError;
-use PHPUnit\Framework\IncompleteTestError;
 use Codeception\Event\StepEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
+use Codeception\Exception\InjectionException;
+use Codeception\Step\Comment;
+use Codeception\Step\Meta;
 use Codeception\Test\Metadata;
+use Exception;
+use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\SkippedTestError;
 
 class Scenario
 {
