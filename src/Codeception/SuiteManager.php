@@ -37,11 +37,6 @@ class SuiteManager
     protected $groupManager;
 
     /**
-     * @var Loader
-     */
-    protected $testLoader;
-
-    /**
      * @var ModuleContainer
      */
     protected $moduleContainer;

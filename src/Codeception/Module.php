@@ -269,7 +269,7 @@ abstract class Module
     /**
      * Print debug message to the screen.
      *
-     * @param array|string $message
+     * @param mixed $message
      */
     protected function debug($message): void
     {
@@ -280,7 +280,7 @@ abstract class Module
      * Print debug message with a title
      *
      * @param string $title
-     * @param array|object $message
+     * @param mixed $message
      */
     protected function debugSection(string $title, $message): void
     {
@@ -336,7 +336,7 @@ abstract class Module
      * Get config values or specific config item.
      *
      * @param string|null $key
-     * @return array|bool|null the config item's value or null if it doesn't exist
+     * @return mixed the config item's value or null if it doesn't exist
      */
     public function _getConfig(string $key = null)
     {

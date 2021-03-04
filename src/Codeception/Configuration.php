@@ -27,7 +27,7 @@ use Symfony\Component\Yaml\Yaml;
 class Configuration
 {
     /**
-     * @var int[]|string[]
+     * @var string[]
      */
     protected static $suites = [];
 
@@ -77,8 +77,6 @@ class Configuration
      * @var bool
      */
     public static $lock = false;
-
-    protected static $di;
 
     /**
      * @var array Default config
@@ -634,8 +632,8 @@ class Configuration
     }
 
     /**
-     * @param array|bool $a1
-     * @param array|bool $a2
+     * @param array|bool|null $a1
+     * @param array|bool|null $a2
      * @return array|bool
      */
     public static function mergeConfigs($a1, $a2)

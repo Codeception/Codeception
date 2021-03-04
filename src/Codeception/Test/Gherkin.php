@@ -174,7 +174,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
             // pretend it is inline argument
             $stepText .= ' ""';
         }
-        $this->getScenario()->comment(null); // make metastep to be printed even if no steps in it
+        $this->getScenario()->comment(''); // make metastep to be printed even if no steps in it
         foreach ($this->steps as $pattern => $context) {
             $matches = [];
             if (!preg_match($pattern, $stepText, $matches)) {

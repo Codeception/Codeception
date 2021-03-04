@@ -20,7 +20,7 @@ abstract class Step
     const STACK_POSITION = 3;
 
     /**
-     * @var string|null
+     * @var string
      */
     protected $action;
 
@@ -66,7 +66,7 @@ abstract class Step
      */
     protected $isTry = false;
 
-    public function __construct(?string $action, array $arguments = [])
+    public function __construct(string $action, array $arguments = [])
     {
         $this->action = $action;
         $this->arguments = $arguments;

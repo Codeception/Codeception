@@ -30,7 +30,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      * </p>
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
+     * @since PHP 5.0.0
      */
     public function offsetExists($offset): bool
     {
@@ -44,7 +44,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      * The offset to retrieve.
      * </p>
      * @return mixed Can return all value types.
-     * @since 5.0.0
+     * @since PHP 5.0.0
      */
     public function offsetGet($offset)
     {
@@ -64,7 +64,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      * The value to set.
      * </p>
      * @return void
-     * @since 5.0.0
+     * @since PHP 5.0.0
      */
     public function offsetSet($offset, $value): void
     {
@@ -78,7 +78,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      * The offset to unset.
      * </p>
      * @return void
-     * @since 5.0.0
+     * @since PHP 5.0.0
      */
     public function offsetUnset($offset): void
     {
@@ -92,7 +92,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      * </p>
      * <p>
      * The return value is cast to an integer.
-     * @since 5.1.0
+     * @since PHP 5.1.0
      */
     public function count(): int
     {
@@ -104,7 +104,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
      * <b>Traversable</b>
-     * @since 5.0.0
+     * @since PHP 5.0.0
      */
     public function getIterator(): Traversable
     {

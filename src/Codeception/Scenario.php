@@ -140,7 +140,7 @@ class Scenario
         return mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "\r\n\r\n" . $text . "\r\n\r\n";
     }
 
-    public function comment(?string $comment): void
+    public function comment(string $comment): void
     {
         $this->runStep(new Comment($comment, []));
     }
