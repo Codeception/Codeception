@@ -2,46 +2,44 @@
 
 declare(strict_types=1);
 
+use Codeception\Step\Argument\FormattedOutput;
 use Codeception\Stub;
 use Facebook\WebDriver\WebDriverBy;
 use Codeception\Step;
+use PHPUnit\Framework\TestCase;
 
-class StepTest extends \PHPUnit\Framework\TestCase
+class StepTest extends TestCase
 {
-    /**
-     * @param $args
-     * @return Codeception\Step
-     */
-    protected function getStep($args)
+    protected function getStep(array $args): Step
     {
-        return $this->getMockBuilder(\Codeception\Step::class)->setConstructorArgs($args)->setMethods(null)->getMock();
+        return $this->getMockBuilder(Step::class)->setConstructorArgs($args)->setMethods()->getMock();
     }
 
     public function testGetArguments()
     {
         //facebook/php-webdriver is no longer a dependency of core so this behaviour can't be tested anymore
         //$by = WebDriverBy::cssSelector('.something');
-        //$step = $this->getStep([null, [$by]]);
+        //$step = $this->getStep(['', [$by]]);
         //$this->assertSame('"' . Locator::humanReadableString($by) . '"', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [['just', 'array']]]);
+        $step = $this->getStep(['', [['just', 'array']]]);
         $this->assertSame('["just","array"]', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [function () {
+        $step = $this->getStep(['', [function () {
         }]]);
         $this->assertSame('"Closure"', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [[$this, 'testGetArguments']]]);
+        $step = $this->getStep(['', [[$this, 'testGetArguments']]]);
         $this->assertSame('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [[\PDO::class, 'getAvailableDrivers']]]);
+        $step = $this->getStep(['', [[PDO::class, 'getAvailableDrivers']]]);
         $this->assertSame('["PDO","getAvailableDrivers"]', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [[Stub::make($this, []), 'testGetArguments']]]);
+        $step = $this->getStep(['', [[Stub::make($this, []), 'testGetArguments']]]);
         $this->assertSame('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
 
         $mock = $this->createMock(get_class($this));
-        $step = $this->getStep([null, [[$mock, 'testGetArguments']]]);
+        $step = $this->getStep(['', [[$mock, 'testGetArguments']]]);
         $className = get_class($mock);
         $this->assertSame('["' . $className . '","testGetArguments"]', $step->getArgumentsAsString());
     }
@@ -133,7 +131,7 @@ class StepTest extends \PHPUnit\Framework\TestCase
 
     public function testFormattedOutput()
     {
-        $argument = Stub::makeEmpty(\Codeception\Step\Argument\FormattedOutput::class);
+        $argument = Stub::makeEmpty(FormattedOutput::class);
         $argument->method('getOutput')->willReturn('some formatted output');
 
         $step = $this->getStep(['argument', [$argument]]);
