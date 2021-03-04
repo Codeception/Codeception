@@ -425,10 +425,10 @@ class Configuration
      *
      * @param string $contents Yaml config file contents
      * @param string $filename which is supposed to be loaded
-     * @return array|null
+     * @return array
      * @throws ConfigurationException
      */
-    protected static function getConfFromContents(string $contents, string $filename = '(.yml)'): ?array
+    protected static function getConfFromContents(string $contents, string $filename = '(.yml)'): array
     {
         if (self::$params) {
             $template = new Template($contents, '%', '%');
@@ -437,7 +437,7 @@ class Configuration
         }
 
         try {
-            return Yaml::parse($contents);
+            $conf = Yaml::parse($contents);
         } catch (ParseException $exception) {
             throw new ConfigurationException(
                 sprintf(
@@ -447,6 +447,10 @@ class Configuration
                 )
             );
         }
+        if ($conf === null) {
+            throw new ConfigurationException("Configuration file {$filename} is empty.");
+        }
+        return $conf;
     }
 
     /**
