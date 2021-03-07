@@ -476,7 +476,7 @@ class Configuration
     }
 
     /**
-     * @return int[]|string[]
+     * @return string[]
      */
     public static function suites(): array
     {

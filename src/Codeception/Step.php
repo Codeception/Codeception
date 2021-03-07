@@ -174,7 +174,7 @@ abstract class Step
     }
 
     /**
-     * @param string|resource|array|object $argument
+     * @param mixed $argument
      * @return string
      */
     protected function stringifyArgument($argument): string
@@ -204,11 +204,7 @@ abstract class Step
         return str_replace('\"', '"', $arg_str);
     }
 
-    /**
-     * @param Closure|MockObject $argument
-     * @return string
-     */
-    protected function getClassName($argument): string
+    protected function getClassName(object $argument): string
     {
         if ($argument instanceof Closure) {
             return 'Closure';
