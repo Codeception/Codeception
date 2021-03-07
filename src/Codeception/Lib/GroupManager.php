@@ -149,7 +149,7 @@ class GroupManager
         if ($test instanceof \PHPUnit\Framework\TestCase) {
             $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups(get_class($test), $test->getName(false)));
         }
-        if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
+        if ($test instanceof \PHPUnit\Framework\DataProviderTestSuite) {
             $firstTest = $test->testAt(0);
             if ($firstTest != false && $firstTest instanceof TestInterface) {
                 $groups = array_merge($groups, $firstTest->getMetadata()->getGroups());
@@ -169,7 +169,7 @@ class GroupManager
                     && mb_strtolower($filename . ':' . $test->getMetadata()->getFeature()) === mb_strtolower($testPattern)) {
                     $groups[] = $group;
                 }
-                if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
+                if ($test instanceof \PHPUnit\Framework\DataProviderTestSuite) {
                     $firstTest = $test->testAt(0);
                     if ($firstTest != false && $firstTest instanceof TestInterface) {
                         if (strpos($filename . ':' . $firstTest->getName(false), $testPattern) === 0) {
