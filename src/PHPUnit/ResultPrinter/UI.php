@@ -64,7 +64,13 @@ class UI extends \PHPUnit\TextUI\DefaultResultPrinter
     public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
         if ($test instanceof \PHPUnit\Framework\TestCase or $test instanceof \Codeception\Test\Test) {
-            $this->numAssertions += $test->getNumAssertions();
+            if (method_exists($test, 'numberOfAssertionsPerformed')) {
+                // PHPUnit 10
+                $this->numAssertions += $test->numberOfAssertionsPerformed();
+            } else {
+                // PHPUnit 9
+                $this->numAssertions += $test->getNumAssertions();
+            }
         }
 
         $this->lastTestFailed = false;

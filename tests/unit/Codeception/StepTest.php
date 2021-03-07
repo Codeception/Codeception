@@ -12,7 +12,10 @@ class StepTest extends TestCase
 {
     protected function getStep(array $args): Step
     {
-        return $this->getMockBuilder(Step::class)->setConstructorArgs($args)->setMethods()->getMock();
+        return $this->getMockBuilder('\Codeception\Step')
+            ->setConstructorArgs($args)
+            ->onlyMethods([])
+            ->getMock();
     }
 
     public function testGetArguments()

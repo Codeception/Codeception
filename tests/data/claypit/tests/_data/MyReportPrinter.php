@@ -8,16 +8,33 @@ class MyReportPrinter extends ResultPrinter implements ConsolePrinter
     public function endTest(\PHPUnit\Framework\Test $test, float $time): void
     {
         $name = \Codeception\Test\Descriptor::getTestAsString($test);
-        if ($this->testStatus == BaseTestRunner::STATUS_FAILURE) {
-            $this->write('×');
-        } elseif ($this->testStatus == BaseTestRunner::STATUS_SKIPPED) {
-            $this->write('S');
-        } elseif ($this->testStatus == BaseTestRunner::STATUS_INCOMPLETE) {
-            $this->write('I');
-        } elseif ($this->testStatus == BaseTestRunner::STATUS_ERROR) {
-            $this->write('E');
+
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            if ($this->testStatus == BaseTestRunner::STATUS_FAILURE) {
+                $this->write('×');
+            } elseif ($this->testStatus == BaseTestRunner::STATUS_SKIPPED) {
+                $this->write('S');
+            } elseif ($this->testStatus == BaseTestRunner::STATUS_INCOMPLETE) {
+                $this->write('I');
+            } elseif ($this->testStatus == BaseTestRunner::STATUS_ERROR) {
+                $this->write('E');
+            } else {
+                $this->write('✔');
+            }
         } else {
-            $this->write('✔');
+            // PHPUnit 10
+            if ($this->testStatus->isFailure()) {
+                $this->write('×');
+            } elseif ($this->testStatus->isSkipped()) {
+                $this->write('S');
+            } elseif ($this->testStatus->isIncomplete()) {
+                $this->write('I');
+            } elseif ($this->testStatus->isError()) {
+                $this->write('E');
+            } else {
+                $this->write('✔');
+            }
         }
 
         if (strlen($name) > 75) {

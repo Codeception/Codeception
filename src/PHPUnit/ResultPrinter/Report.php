@@ -1,10 +1,10 @@
 <?php
 namespace Codeception\PHPUnit\ResultPrinter;
 
-use Codeception\Lib\Console\Output;
 use Codeception\PHPUnit\ConsolePrinter;
 use Codeception\PHPUnit\ResultPrinter;
 use Codeception\Test\Descriptor;
+use PHPUnit\Runner\BaseTestRunner;
 
 class Report extends ResultPrinter implements ConsolePrinter
 {
@@ -15,21 +15,43 @@ class Report extends ResultPrinter implements ConsolePrinter
     public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
         $name = Descriptor::getTestAsString($test);
-        $success = ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_PASSED);
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            $success = $this->testStatus == BaseTestRunner::STATUS_PASSED;
+        } else {
+            // PHPUnit 10
+            $success = $this->testStatus->isSuccess();
+        }
         if ($success) {
             $this->successful++;
         }
 
-        if ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE) {
-            $status = "\033[41;37mFAIL\033[0m";
-        } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_SKIPPED) {
-            $status = 'Skipped';
-        } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_INCOMPLETE) {
-            $status = 'Incomplete';
-        } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_ERROR) {
-            $status = 'ERROR';
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            if ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE) {
+                $status = "\033[41;37mFAIL\033[0m";
+            } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_SKIPPED) {
+                $status = 'Skipped';
+            } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_INCOMPLETE) {
+                $status = 'Incomplete';
+            } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_ERROR) {
+                $status = 'ERROR';
+            } else {
+                $status = 'Ok';
+            }
         } else {
-            $status = 'Ok';
+            // PHPUnit 10
+            if ($this->testStatus->isFailure()) {
+                $status = "\033[41;37mFAIL\033[0m";
+            } elseif ($this->testStatus->isSkipped()) {
+                $status = 'Skipped';
+            } elseif ($this->testStatus->isIncomplete()) {
+                $status = 'Incomplete';
+            } elseif ($this->testStatus->isError()) {
+                $status = 'ERROR';
+            } else {
+                $status = 'Ok';
+            }
         }
 
         if (strlen($name) > 75) {

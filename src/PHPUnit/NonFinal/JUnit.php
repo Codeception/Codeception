@@ -324,7 +324,11 @@ class JUnit extends Printer implements TestListener
     {
         $numAssertions = 0;
 
-        if (\method_exists($test, 'getNumAssertions')) {
+        if (\method_exists($test, 'numberOfAssertionsPerformed')) {
+            // PHPUnit 10
+            $numAssertions = $test->numberOfAssertionsPerformed();
+        } else {
+            // PHPUnit 9
             $numAssertions = $test->getNumAssertions();
         }
 

@@ -7,8 +7,10 @@ namespace Codeception\Test\Feature;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\StrictCoverage;
 use Codeception\Test\Test as CodeceptTest;
-use PHP_CodeCoverage_Exception;
+use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Runner\CodeCoverage as PHPUnitCoverage;
+use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
 trait CodeCoverage
 {
@@ -16,18 +18,39 @@ trait CodeCoverage
 
     public function codeCoverageStart(): void
     {
-        $codeCoverage = $this->getTestResultObject()->getCodeCoverage();
-        if (!$codeCoverage) {
-            return;
+        $testResult = $this->getTestResultObject();
+        if (method_exists($testResult, 'getCodeCoverage')) {
+            // PHPUnit 9
+            $codeCoverage = $testResult->getCodeCoverage();
+            if (!$codeCoverage) {
+                return;
+            }
+        } else {
+            // PHPUnit 10
+            if (!PHPUnitCoverage::isActive()) {
+                return;
+            }
+            $codeCoverage = PHPUnitCoverage::instance();
         }
+
         $codeCoverage->start(Descriptor::getTestSignature($this));
     }
 
     public function codeCoverageEnd(string $status, float $time): void
     {
-        $codeCoverage = $this->getTestResultObject()->getCodeCoverage();
-        if (!$codeCoverage) {
-            return;
+        $testResult = $this->getTestResultObject();
+        if (method_exists($testResult, 'getCodeCoverage')) {
+            // PHPUnit 9
+            $codeCoverage = $testResult->getCodeCoverage();
+            if (!$codeCoverage) {
+                return;
+            }
+        } else {
+            // PHPUnit 10
+            if (!PHPUnitCoverage::isActive()) {
+                return;
+            }
+            $codeCoverage = PHPUnitCoverage::instance();
         }
 
         if ($this instanceof StrictCoverage) {
@@ -40,7 +63,7 @@ trait CodeCoverage
 
         try {
             $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
-        } catch (PHP_CodeCoverage_Exception $exception) {
+        } catch (CodeCoverageException $exception) {
             if ($status === CodeceptTest::STATUS_OK) {
                 $this->getTestResultObject()->addError($this, $exception, $time);
             }
