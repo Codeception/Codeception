@@ -83,8 +83,8 @@ class Cest extends Test implements
     public function getSpecFromMethod(): string
     {
         $text = $this->testMethod;
-        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
+        $text = preg_replace('#([A-Z]+)([A-Z][a-z])#', '\\1 \\2', $text);
+        $text = preg_replace('#([a-z\d])([A-Z])#', '\\1 \\2', $text);
         return strtolower($text);
     }
 
@@ -206,7 +206,7 @@ class Cest extends Test implements
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
             if (strpos($required, ':') === false && method_exists($this->getTestClass(), $required)) {
-                $required = get_class($this->getTestClass()) . ":$required";
+                $required = get_class($this->getTestClass()) . ":{$required}";
             }
             $names[] = $required;
         }

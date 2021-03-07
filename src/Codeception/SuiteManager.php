@@ -60,6 +60,7 @@ class SuiteManager
      * @var string
      */
     protected $path = '';
+
     protected $printer = null;
 
     protected $env = null;
@@ -67,7 +68,7 @@ class SuiteManager
     /**
      * @var array
      */
-    protected $settings;
+    protected $settings = [];
 
     public function __construct(EventDispatcher $dispatcher, string $name, array $settings)
     {
@@ -123,7 +124,7 @@ class SuiteManager
     /**
      * @param TestInterface|DataProviderTestSuite $test
      */
-    protected function addToSuite($test): void
+    protected function addToSuite(\PHPUnit\Framework\Test $test): void
     {
         $this->configureTest($test);
 
@@ -152,9 +153,9 @@ class SuiteManager
     protected function createSuite(string $name): Suite
     {
         $suite = new Suite();
-        $suite->setBaseName(preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
+        $suite->setBaseName(preg_replace('#\s.+$#', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
-            $name = $this->settings['namespace'] . ".$name";
+            $name = $this->settings['namespace'] . ".{$name}";
         }
         $suite->setName($name);
         if (isset($this->settings['backup_globals'])) {
@@ -210,11 +211,10 @@ class SuiteManager
             Notification::warning("Environments are not configured", Descriptor::getTestFullName($test));
             return;
         }
-        $availableEnvironments = array_keys($this->settings['env']);
         $listedEnvironments = explode(',', implode(',', $envs));
         foreach ($listedEnvironments as $env) {
-            if (!in_array($env, $availableEnvironments)) {
-                Notification::warning("Environment $env was not configured but used in test", Descriptor::getTestFullName($test));
+            if (!array_key_exists($env, $this->settings['env'])) {
+                Notification::warning("Environment {$env} was not configured but used in test", Descriptor::getTestFullName($test));
             }
         }
     }

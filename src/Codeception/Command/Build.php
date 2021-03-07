@@ -109,7 +109,7 @@ class Build extends Command
         $this->buildSuiteActors();
 
         foreach ($config['include'] as $subConfig) {
-            $this->output->writeln("\n<comment>Included Configuration: $subConfig</comment>");
+            $this->output->writeln("\n<comment>Included Configuration: {$subConfig}</comment>");
             $this->buildActorsForConfig($dir . DIRECTORY_SEPARATOR . $subConfig);
         }
     }

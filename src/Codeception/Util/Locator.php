@@ -56,8 +56,6 @@ class Locator
      * As a result the Locator will produce a mixed XPath value that will be used in fillField action.
      *
      * @static
-     * @param string $selector1
-     * @param string $selector2
      * @throws Exception
      */
     public static function combine(string $selector1, string $selector2): string
@@ -126,8 +124,7 @@ class Locator
     protected static function toXPath(string $selector): ?string
     {
         try {
-            $xpath = (new CssSelectorConverter())->toXPath($selector);
-            return $xpath;
+            return (new CssSelectorConverter())->toXPath($selector);
         } catch (ParseException $parseException) {
             if (self::isXPath($selector)) {
                 return $selector;
@@ -244,7 +241,7 @@ class Locator
      */
     public static function isClass(string $class): bool
     {
-        return (bool)preg_match('~^\.[\w\.\-\[\]\=\^\~\:]+$~', $class);
+        return (bool)preg_match('#^\.[\w\.\-\[\]\=\^\~\:]+$#', $class);
     }
 
     /**
@@ -282,7 +279,6 @@ class Locator
      *
      * @param string $element CSS or XPath locator
      * @param int|string $position xPath index
-     * @return string
      */
     public static function elementAt(string $element, $position): string
     {
@@ -336,7 +332,6 @@ class Locator
      * Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string representation
      *
      * @param string|array|WebDriverBy $selector
-     * @return string
      */
     public static function humanReadableString($selector): string
     {

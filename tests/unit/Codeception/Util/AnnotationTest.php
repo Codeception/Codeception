@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use \Codeception\Util\Annotation;
+use Codeception\Util\Annotation;
 
 /**
  * Class AnnotationTest

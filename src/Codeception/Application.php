@@ -80,7 +80,6 @@ class Application extends BaseApplication
      * Validate and get the name of the command
      *
      * @param CustomCommandInterface|string $commandClass
-     * @return string
      * @throws ConfigurationException
      */
     protected function getCustomCommandName($commandClass): string
@@ -149,7 +148,7 @@ class Application extends BaseApplication
             $argv = $_SERVER['argv'];
 
             for ($i = 0; $i < count($argv); ++$i) {
-                if (preg_match('/^(?:-([^c-]*)?c|--config(?:=|$))(.*)$/', $argv[$i], $match)) {
+                if (preg_match('#^(?:-([^c-]*)?c|--config(?:=|$))(.*)$#', $argv[$i], $match)) {
                     if (!empty($match[2])) { //same index
                         $this->preloadConfiguration($match[2]);
                     } elseif (isset($argv[$i + 1])) { //next index

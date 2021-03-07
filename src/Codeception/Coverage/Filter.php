@@ -54,8 +54,6 @@ class Filter
     }
 
     /**
-     * @param array $config
-     * @return Filter
      * @throws ConfigurationException
      */
     public function whiteList(array $config): self
@@ -124,8 +122,6 @@ class Filter
     }
 
     /**
-     * @param array $config
-     * @return Filter
      * @throws ModuleException
      */
     public function blackList(array $config): self
@@ -144,7 +140,7 @@ class Filter
         $parts = explode('/', $fileOrDir);
         $file = array_pop($parts);
         $finder->name($file);
-        if (count($parts) > 0) {
+        if ($parts !== []) {
             $lastPath = array_pop($parts);
             if ($lastPath === '*') {
                 $finder->in(Configuration::projectDir() . implode('/', $parts));

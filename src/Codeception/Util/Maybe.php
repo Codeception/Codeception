@@ -12,8 +12,6 @@ use function call_user_func_array;
 use function count;
 use function is_array;
 use function is_object;
-use function is_scalar;
-use function method_exists;
 use function property_exists;
 use function range;
 
@@ -78,10 +76,8 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
             return new Maybe();
         }
 
-        if (is_object($this->val)) {
-            if (isset($this->val->{$key}) || property_exists($this->val, $key)) {
-                return $this->val->{$key};
-            }
+        if (is_object($this->val) && (isset($this->val->{$key}) || property_exists($this->val, $key))) {
+            return $this->val->{$key};
         }
 
         return $this->val->key;
@@ -154,13 +150,13 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
         }
     }
 
-    public function __value()
+    public function value(): ?object
     {
         $val = $this->val;
         if (is_array($val)) {
             foreach ($val as $k => $v) {
                 if ($v instanceof self) {
-                    $v = $v->__value();
+                    $v = $v->value();
                 }
                 $val[$k] = $v;
             }
@@ -256,6 +252,6 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
      */
     public function jsonSerialize()
     {
-        return $this->__value();
+        return $this->value();
     }
 }

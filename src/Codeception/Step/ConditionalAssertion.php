@@ -27,7 +27,7 @@ class ConditionalAssertion extends Assertion implements GeneratedStep
     public function getAction(): string
     {
         $action = 'can' . ucfirst($this->action);
-        return (string)preg_replace('/^canDont/', 'cant', $action);
+        return (string)preg_replace('#^canDont#', 'cant', $action);
     }
 
     public function getHumanizedAction(): string

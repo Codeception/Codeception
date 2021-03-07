@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Codeception\Stub;
 use Codeception\Application;
+use Codeception\Stub;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class BaseCommandRunner extends \Codeception\PHPUnit\TestCase

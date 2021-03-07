@@ -14,6 +14,7 @@ use Exception;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionType;
 
 class Actions
 {
@@ -74,7 +75,7 @@ EOF;
     /**
      * @var array
      */
-    protected $settings;
+    protected $settings = [];
 
     /**
      * @var array
@@ -84,7 +85,7 @@ EOF;
     /**
      * @var array
      */
-    protected $actions;
+    protected $actions = [];
 
     /**
      * @var int
@@ -202,8 +203,6 @@ EOF;
     }
 
     /**
-     * @param ReflectionClass $class
-     * @param ReflectionMethod $refMethod
      * @return string|false
      * @throws ReflectionException
      */
@@ -251,7 +250,7 @@ EOF;
     {
         $returnType = $refMethod->getReturnType();
 
-        if ($returnType === null) {
+        if (!$returnType instanceof ReflectionType) {
             return '';
         }
 

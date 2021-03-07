@@ -76,9 +76,6 @@ class PathResolver
      * FileSystem Case String Compare
      * compare two strings with the filesystem's case-sensitiveness
      *
-     * @param string $str1
-     * @param string $str2
-     * @param string $dirSep
      * @return int -1 / 0 / 1 for < / = / > respectively
      */
     private static function fsCaseStrCmp(string $str1, string $str2, string $dirSep = DIRECTORY_SEPARATOR): int
@@ -104,8 +101,6 @@ class PathResolver
      *         on the device or '' to indicate a path relative
      *         to the device's CWD
      *
-     * @param string $path
-     * @param string $dirSep
      * @return array<string, string>
      */
     private static function getPathAbsolutenessPrefix(string $path, string $dirSep = DIRECTORY_SEPARATOR): array

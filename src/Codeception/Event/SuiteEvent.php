@@ -22,7 +22,7 @@ class SuiteEvent extends Event
     protected $result;
 
     /**
-     * @var array
+     * @var array|null
      */
     protected $settings = [];
 

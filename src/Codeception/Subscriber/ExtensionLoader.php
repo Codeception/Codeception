@@ -31,7 +31,7 @@ class ExtensionLoader implements EventSubscriberInterface
     /**
      * @var array
      */
-    protected $config;
+    protected $config = [];
 
     /**
      * @var array
@@ -97,7 +97,6 @@ class ExtensionLoader implements EventSubscriberInterface
     }
 
     /**
-     * @param array $config
      * @return array<class-string, EventSubscriberInterface>
      * @throws ConfigurationException
      */

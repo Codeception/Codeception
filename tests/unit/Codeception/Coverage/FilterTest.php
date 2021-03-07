@@ -6,8 +6,6 @@ namespace Codeception\Coverage;
 
 use Codeception\Stub;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Driver\Driver;
-
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
 class FilterTest extends \Codeception\Test\Unit

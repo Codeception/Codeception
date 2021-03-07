@@ -68,7 +68,6 @@ class Scenario
     }
 
     /**
-     * @param Step $step
      * @return array|bool|null
      * @throws InjectionException
      */

@@ -70,7 +70,6 @@ class Message
 
     /**
      * @param Message|string $string
-     * @return Message
      */
     public function prepend($string): self
     {
@@ -83,7 +82,6 @@ class Message
 
     /**
      * @param Message|string $string
-     * @return Message
      */
     public function append($string): self
     {

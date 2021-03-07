@@ -13,7 +13,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function codecept_data_dir;
 use function codecept_output_dir;
 use function codecept_root_dir;
-use function count;
 use function implode;
 use function preg_replace;
 use function print_r;
@@ -66,11 +65,11 @@ class ConfigValidate extends Command
         $this->addStyles($output);
 
         if ($suite = $input->getArgument('suite')) {
-            $output->write("Validating <bold>$suite</bold> config... ");
+            $output->write("Validating <bold>{$suite}</bold> config... ");
             $config = $this->getSuiteConfig($suite);
             $output->writeln("Ok");
             $output->writeln("------------------------------\n");
-            $output->writeln("<info>$suite Suite Config</info>:\n");
+            $output->writeln("<info>{$suite} Suite Config</info>:\n");
             $output->writeln($this->formatOutput($config));
 
             return 0;
@@ -79,7 +78,7 @@ class ConfigValidate extends Command
         $output->write("Validating global config... ");
         $config = $this->getGlobalConfig();
         $output->writeln($input->getOption('override'));
-        if (count($input->getOption('override'))) {
+        if (!empty($input->getOption('override'))) {
             $config = $this->overrideConfig($input->getOption('override'));
         }
         $suites = Configuration::suites();
@@ -98,7 +97,7 @@ class ConfigValidate extends Command
         $output->writeln("<info>Available suites</info>: " . implode(', ', $suites));
 
         foreach ($suites as $suite) {
-            $output->write("Validating suite <bold>$suite</bold>... ");
+            $output->write("Validating suite <bold>{$suite}</bold>... ");
             $this->getSuiteConfig($suite);
             $output->writeln('Ok');
         }
@@ -111,6 +110,6 @@ class ConfigValidate extends Command
     protected function formatOutput($config): ?string
     {
         $output = print_r($config, true);
-        return preg_replace('~\[(.*?)\] =>~', "<fg=yellow>$1</fg=yellow> =>", $output);
+        return preg_replace('#\[(.*?)\] =>#', "<fg=yellow>$1</fg=yellow> =>", $output);
     }
 }

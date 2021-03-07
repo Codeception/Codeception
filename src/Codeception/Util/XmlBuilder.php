@@ -99,7 +99,7 @@ class XmlBuilder
         return $this;
     }
 
-    public function val($val): self
+    public function val($val): void
     {
         $this->currentNode->nodeValue = $val;
     }
@@ -125,8 +125,6 @@ class XmlBuilder
     /**
      * Traverses to parent with $name
      *
-     * @param string $tag
-     * @return XmlBuilder
      * @throws Exception
      */
     public function parents(string $tag): self
@@ -135,7 +133,7 @@ class XmlBuilder
         $elFound = false;
         while ($traverseNode->parentNode) {
             $traverseNode = $traverseNode->parentNode;
-            if ($traverseNode->tagName == $tag) {
+            if ($traverseNode->tagName === $tag) {
                 $this->currentNode = $traverseNode;
                 $elFound = true;
                 break;

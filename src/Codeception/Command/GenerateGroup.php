@@ -48,11 +48,11 @@ class GenerateGroup extends Command
         $res = $this->createFile($filename, $group->produce());
 
         if (!$res) {
-            $output->writeln("<error>Group $filename already exists</error>");
+            $output->writeln("<error>Group {$filename} already exists</error>");
             return 1;
         }
 
-        $output->writeln("<info>Group extension was created in $filename</info>");
+        $output->writeln("<info>Group extension was created in {$filename}</info>");
         $output->writeln(
             'To use this group extension, include it to "extensions" option of global Codeception config.'
         );

@@ -18,6 +18,9 @@ use RuntimeException;
  */
 class Fixtures
 {
+    /**
+     * @var array
+     */
     protected static $fixtures = [];
 
     public static function add(string $name, $data): void

@@ -75,9 +75,9 @@ class Descriptor
     public static function getTestCaseNameAsString(string $testCaseName): string
     {
         $text = $testCaseName;
-        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        $text = preg_replace('/^test /', '', $text);
+        $text = preg_replace('#([A-Z]+)([A-Z][a-z])#', '\\1 \\2', $text);
+        $text = preg_replace('#([a-z\d])([A-Z])#', '\\1 \\2', $text);
+        $text = preg_replace('#^test #', '', $text);
         $text = ucfirst(strtolower($text));
         return str_replace(['::', 'with data set'], [':', '|'], $text);
     }
@@ -100,7 +100,7 @@ class Descriptor
         }
         if ($testCase instanceof Descriptive) {
             $signature = $testCase->getSignature(); // cut everything before ":" from signature
-            return self::getTestFileName($testCase) . ':' . preg_replace('~^(.*?):~', '', $signature);
+            return self::getTestFileName($testCase) . ':' . preg_replace('#^(.*?):#', '', $signature);
         }
         if ($testCase instanceof TestCase) {
             return self::getTestFileName($testCase) . ':' . $testCase->getName(false);

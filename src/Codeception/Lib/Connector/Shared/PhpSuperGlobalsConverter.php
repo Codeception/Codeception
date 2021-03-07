@@ -99,7 +99,6 @@ trait PhpSuperGlobalsConverter
      * @see https://bugs.php.net/bug.php?id=40000
      *
      * @param array $parameters Array of request parameters to be converted
-     * @return array
      */
     private function replaceSpaces(array $parameters): array
     {

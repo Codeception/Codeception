@@ -17,7 +17,6 @@ class ModuleConflictException extends Exception
      *
      * @param object|string $module
      * @param object|string $conflicted
-     * @param string $additional
      */
     public function __construct($module, $conflicted, string $additional = '')
     {

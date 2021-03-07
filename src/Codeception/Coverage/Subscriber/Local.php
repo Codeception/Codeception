@@ -30,7 +30,7 @@ class Local extends SuiteSubscriber
 
     protected function isEnabled(): bool
     {
-        return $this->module === null && $this->settings['enabled'];
+        return !$this->module instanceof Remote && $this->settings['enabled'];
     }
 
     public function beforeSuite(SuiteEvent $event): void

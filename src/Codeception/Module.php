@@ -104,7 +104,6 @@ abstract class Module
      * }
      * ```
      *
-     * @param array $config
      * @throws ModuleConfigException|ModuleException
      */
     public function _setConfig(array $config): void
@@ -128,7 +127,6 @@ abstract class Module
      * }
      * ```
      *
-     * @param array $config
      * @throws ModuleConfigException|ModuleException
      */
     public function _reconfigure(array $config): void
@@ -162,7 +160,7 @@ abstract class Module
     protected function validateConfig(): void
     {
         $fields = array_keys($this->config);
-        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
+        if (array_intersect($this->requiredFields, $fields) !== $this->requiredFields) {
             throw new ModuleConfigException(
                 get_class($this),
                 "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
@@ -258,11 +256,8 @@ abstract class Module
 
     /**
      * **HOOK** executed when test fails but before `_after`
-     *
-     * @param TestInterface $test
-     * @param Exception $fail
      */
-    public function _failed(TestInterface $test, $fail)
+    public function _failed(TestInterface $test, \Exception $fail)
     {
     }
 
@@ -279,7 +274,6 @@ abstract class Module
     /**
      * Print debug message with a title
      *
-     * @param string $title
      * @param mixed $message
      */
     protected function debugSection(string $title, $message): void
@@ -287,7 +281,7 @@ abstract class Module
         if (is_array($message) || is_object($message)) {
             $message = stripslashes(json_encode($message, JSON_THROW_ON_ERROR));
         }
-        $this->debug("[{$title}] $message");
+        $this->debug("[{$title}] {$message}");
     }
 
     /**

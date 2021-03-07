@@ -89,7 +89,6 @@ class Metadata
     }
 
     /**
-     * @param string|null $key
      * @return mixed
      */
     public function getCurrent(?string $key = null)

@@ -55,10 +55,10 @@ class GenerateTest extends Command
         $res = $this->createFile($filename, $test->produce());
 
         if (!$res) {
-            $output->writeln("<error>Test $filename already exists</error>");
+            $output->writeln("<error>Test {$filename} already exists</error>");
             return 1;
         }
-        $output->writeln("<info>Test was created in $filename</info>");
+        $output->writeln("<info>Test was created in {$filename}</info>");
         return 0;
     }
 }

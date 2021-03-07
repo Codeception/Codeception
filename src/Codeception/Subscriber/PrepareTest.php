@@ -40,7 +40,6 @@ class PrepareTest implements EventSubscriberInterface
 
         foreach ($prepareMethods as $method) {
 
-            /** @var \Codeception\Module $module **/
             if ($test instanceof Cest) {
                 $di->injectDependencies($test->getTestClass(), $method);
             }

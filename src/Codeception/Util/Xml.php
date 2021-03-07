@@ -10,14 +10,6 @@ use function is_array;
 
 class Xml
 {
-    /**
-     * @static
-     *
-     * @param DOMDocument $xml
-     * @param DOMNode $domNode
-     * @param array $array
-     * @return DOMDocument
-     */
     public static function arrayToXml(DOMDocument $xml, DOMNode $domNode, array $array = []): DOMDocument
     {
         foreach ($array as $el => $val) {
@@ -31,10 +23,7 @@ class Xml
     }
 
     /**
-     * @static
-     *
      * @param XmlBuilder|DOMDocument $xml
-     * @return DOMDocument
      */
     public static function toXml($xml): DOMDocument
     {

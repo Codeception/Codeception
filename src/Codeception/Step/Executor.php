@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Codeception\Step;
 
 use Closure;
-use Codeception\Step as CodeceptionStep;
 use Codeception\Lib\ModuleContainer;
+use Codeception\Step as CodeceptionStep;
 
 class Executor extends CodeceptionStep
 {

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Codeception\Lib;
 
-use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
-use Codeception\Test\Unit;
 use Codeception\Stub;
+use Codeception\Test\Unit;
 
 // @codingStandardsIgnoreFile
 class ModuleContainerTest extends Unit

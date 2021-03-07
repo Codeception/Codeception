@@ -84,18 +84,15 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
             ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 0))
         );
 
-        $this->assertSame(
-            null,
+        $this->assertNull(
             ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 1))
         );
 
-        $this->assertSame(
-            null,
+        $this->assertNull(
             ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 'flavor'))
         );
 
-        $this->assertSame(
-            null,
+        $this->assertNull(
             ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setInt'], 'i'))
         );
     }

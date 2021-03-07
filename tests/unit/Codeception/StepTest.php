@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use Codeception\Step;
 use Codeception\Step\Argument\FormattedOutput;
 use Codeception\Stub;
 use Facebook\WebDriver\WebDriverBy;
-use Codeception\Step;
 use PHPUnit\Framework\TestCase;
 
 class StepTest extends TestCase

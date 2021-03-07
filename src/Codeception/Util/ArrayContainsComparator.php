@@ -95,9 +95,6 @@ class ArrayContainsComparator
     }
 
     /**
-     * @param array $arr1
-     * @param array $arr2
-     *
      * @return array|bool|null
      */
     private function associativeArrayIntersect(array $arr1, array $arr2)

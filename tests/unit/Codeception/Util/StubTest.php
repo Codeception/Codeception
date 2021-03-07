@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use \Codeception\Stub;
-use \Codeception\Stub\Expected;
+use Codeception\Stub;
+use Codeception\Stub\Expected;
 
 class StubTest extends \Codeception\PHPUnit\TestCase
 {

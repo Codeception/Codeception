@@ -51,7 +51,6 @@ class Annotation
      * Annotation::forClass('MyTestCase')->method('testData')->fetchAll('depends');
      * ```
      * @param object|string $class
-     * @return static
      */
     public static function forClass($class): Annotation
     {
@@ -68,8 +67,6 @@ class Annotation
 
     /**
      * @param object|string $class
-     * @param string $method
-     * @return Annotation
      */
     public static function forMethod($class, string $method): self
     {
@@ -156,12 +153,12 @@ class Annotation
 
         // json-style data format
         if (in_array($openingBrace, ['{', '['])) {
-            return json_decode($annotation, true);
+            return json_decode($annotation, true, 512, JSON_THROW_ON_ERROR);
         }
 
         // doctrine-style data format
         if ($openingBrace === '(') {
-            preg_match_all('~(\w+)\s*?=\s*?"(.*?)"\s*?[,)]~', $annotation, $matches, PREG_SET_ORDER);
+            preg_match_all('#(\w+)\s*?=\s*?"(.*?)"\s*?[,)]#', $annotation, $matches, PREG_SET_ORDER);
             $data = [];
             foreach ($matches as $item) {
                 $data[$item[1]] = $item[2];

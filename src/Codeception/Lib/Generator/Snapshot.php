@@ -61,7 +61,7 @@ EOF;
     /**
      * @var array
      */
-    protected $settings;
+    protected $settings = [];
 
     public function __construct(array $settings, string $name)
     {

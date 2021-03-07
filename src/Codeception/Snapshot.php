@@ -97,7 +97,7 @@ abstract class Snapshot
     protected function getFileName(): string
     {
         if (!$this->fileName) {
-            $this->fileName = preg_replace('/\W/', '.', get_class($this)) . '.' . $this->extension;
+            $this->fileName = preg_replace('#\W#', '.', get_class($this)) . '.' . $this->extension;
         }
         return codecept_data_dir() . $this->fileName;
     }

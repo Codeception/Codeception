@@ -56,7 +56,7 @@ class Printer implements EventSubscriberInterface
     /**
      * @var array
      */
-    protected $options;
+    protected $options = [];
     /**
      * @var string
      */

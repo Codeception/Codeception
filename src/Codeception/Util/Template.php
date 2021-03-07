@@ -16,9 +16,21 @@ use function str_replace;
  */
 class Template
 {
+    /**
+     * @var string
+     */
     protected $template;
+    /**
+     * @var array
+     */
     protected $vars = [];
+    /**
+     * @var string
+     */
     protected $placeholderStart;
+    /**
+     * @var string
+     */
     protected $placeholderEnd;
 
     public function __construct(string $template, string $placeholderStart = '{{', string $placeholderEnd = '}}')
@@ -40,7 +52,6 @@ class Template
     /**
      * Sets all template vars
      *
-     * @param array $vars
      */
     public function setVars(array $vars): void
     {

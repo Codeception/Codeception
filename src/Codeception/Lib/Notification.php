@@ -23,7 +23,7 @@ class Notification
 
     private static function formatMessage(string $message, string $location = ''): string
     {
-        if ($location) {
+        if ($location !== '') {
             return "<bold>{$message}</bold> <info>{$location}</info>";
         }
         return $message;

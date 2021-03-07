@@ -97,7 +97,6 @@ class Unit extends TestCase implements
     /**
      * Returns current values
      *
-     * @param string|null $current
      * @return mixed
      */
     public function getCurrent(?string $current)

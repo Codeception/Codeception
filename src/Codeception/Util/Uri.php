@@ -58,7 +58,7 @@ class Uri
             if ((strpos($path, '/') !== 0) && !empty($path)) {
                 if ($basePath !== '') {
                     // if it ends with a slash, relative paths are below it
-                    if (preg_match('~/$~', $basePath)) {
+                    if (preg_match('#/$#', $basePath)) {
                         $path = $basePath . $path;
                     } else {
                         // remove double slashes

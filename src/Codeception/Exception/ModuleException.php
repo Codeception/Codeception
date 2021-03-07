@@ -21,7 +21,6 @@ class ModuleException extends Exception
      * ModuleException constructor.
      *
      * @param object|string $module
-     * @param string $message
      */
     public function __construct($module, string $message)
     {
@@ -31,6 +30,6 @@ class ModuleException extends Exception
         $module = ltrim(str_replace('Codeception\Module\\', '', $module), '\\');
         $this->module = $module;
         parent::__construct($message);
-        $this->message = "$module: {$this->message}";
+        $this->message = "{$module}: {$this->message}";
     }
 }
