@@ -14,6 +14,7 @@ use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Exception;
 use PHPUnit\Framework\CodeCoverageException;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Runner\CodeCoverage as RunnerCodeCoverage;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Driver\Driver as CodeCoverageDriver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
@@ -104,16 +105,11 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }
-        if (method_exists($this->coverage, 'setProcessUncoveredFilesFromWhitelist')) {
-            //php-code-coverage 8 or older
-            $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
+
+        if ($this->settings['show_uncovered']) {
+            $this->coverage->processUncoveredFiles();
         } else {
-            //php-code-coverage 9+
-            if ($this->settings['show_uncovered']) {
-                $this->coverage->processUncoveredFiles();
-            } else {
-                $this->coverage->doNotProcessUncoveredFiles();
-            }
+            $this->coverage->doNotProcessUncoveredFiles();
         }
     }
 
@@ -133,13 +129,19 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     public function applyFilter(TestResult $result): void
     {
         $driver = Stub::makeEmpty(CodeCoverageDriver::class);
-        $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
+        if (method_exists($result, 'setCodeCoverage')) {
+            // PHPUnit 9
+            $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
+        }
 
         Filter::setup($this->coverage)
             ->whiteList($this->filters)
             ->blackList($this->filters);
 
-        $result->setCodeCoverage($this->coverage);
+        if (method_exists($result, 'setCodeCoverage')) {
+            // PHPUnit 9
+            $result->setCodeCoverage($this->coverage);
+        }
     }
 
     protected function mergeToPrint(CodeCoverage $coverage): void

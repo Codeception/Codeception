@@ -10,10 +10,18 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Runner\Version;
 use SebastianBergmann\Timer\Timer;
 use Throwable;
 use function array_reverse;
 use function method_exists;
+
+// One way to implement different interfaces
+if (Version::series() < 10) {
+    require_once __DIR__ . '/TestWrapperPHPUnit9.php';
+} else {
+    require_once __DIR__ . '/TestWrapperPHPUnit10.php';
+}
 
 /**
  * The most simple testcase (with only one test in it) which can be executed by PHPUnit/Codeception.
@@ -25,7 +33,7 @@ use function method_exists;
  *
  * Inherited class must implement `test` method.
  */
-abstract class Test implements TestInterface, Interfaces\Descriptive
+abstract class Test extends TestWrapper implements TestInterface, Interfaces\Descriptive
 {
     use Feature\AssertionCounter;
     use Feature\CodeCoverage;
@@ -89,7 +97,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      * Runs a test and collects its result in a TestResult instance.
      * Executes before/after hooks coming from traits.
      */
-    final public function run(TestResult $result = null): TestResult
+    final public function realRun(TestResult $result = null): TestResult
     {
         $this->testResult = $result;
 
@@ -133,6 +141,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         }
 
         $result->endTest($this, $time);
+
         return $result;
     }
 

@@ -9,6 +9,8 @@ use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\PathResolver;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Framework\TestStatus\TestStatus;
+use PHPUnit\Runner\BaseTestRunner;
 use SebastianBergmann\Template\Template;
 
 class HTML extends CodeceptionResultPrinter
@@ -70,7 +72,13 @@ class HTML extends CodeceptionResultPrinter
     public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
         $steps = [];
-        $success = ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_PASSED);
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            $success = $this->testStatus == BaseTestRunner::STATUS_PASSED;
+        } else {
+            // PHPUnit 10
+            $success = $this->testStatus->isSuccess();
+        }
         if ($success) {
             $this->successful++;
         }
@@ -80,21 +88,37 @@ class HTML extends CodeceptionResultPrinter
         }
         $this->timeTaken += $time;
 
-        switch ($this->testStatus) {
-            case \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE:
-                $scenarioStatus = 'scenarioFailed';
-                break;
-            case \PHPUnit\Runner\BaseTestRunner::STATUS_SKIPPED:
-                $scenarioStatus = 'scenarioSkipped';
-                break;
-            case \PHPUnit\Runner\BaseTestRunner::STATUS_INCOMPLETE:
-                $scenarioStatus = 'scenarioIncomplete';
-                break;
-            case \PHPUnit\Runner\BaseTestRunner::STATUS_ERROR:
-                $scenarioStatus = 'scenarioFailed';
-                break;
-            default:
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 10
+            switch ($this->testStatus) {
+                case BaseTestRunner::STATUS_FAILURE:
+                    $scenarioStatus = 'scenarioFailed';
+                    break;
+                case BaseTestRunner::STATUS_SKIPPED:
+                    $scenarioStatus = 'scenarioSkipped';
+                    break;
+                case BaseTestRunner::STATUS_INCOMPLETE:
+                    $scenarioStatus = 'scenarioIncomplete';
+                    break;
+                case BaseTestRunner::STATUS_ERROR:
+                    $scenarioStatus = 'scenarioFailed';
+                    break;
+                default:
+                    $scenarioStatus = 'scenarioSuccess';
+            }
+        } else {
+            // PHPUnit 10
+            if ($this->testStatus->isSuccess()) {
                 $scenarioStatus = 'scenarioSuccess';
+            } else if ($this->testStatus->isFailure() || $this->testStatus->isError()) {
+                $scenarioStatus = 'scenarioFailed';
+            } else if ($this->testStatus->isSkipped()) {
+                $scenarioStatus = 'scenarioSkipped';
+            } else if ($this->testStatus->isIncomplete()) {
+                $scenarioStatus = 'scenarioIncomplete';
+            } else {
+                $scenarioStatus = 'scenarioSuccess';
+            }
         }
 
         $stepsBuffer = '';

@@ -6,6 +6,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\TestInterface;
+use PHPUnit\Framework\TestResult;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Listener implements \PHPUnit\Framework\TestListener
@@ -93,15 +94,33 @@ class Listener implements \PHPUnit\Framework\TestListener
             return;
         }
 
+        /**
+         * @var $testResult TestResult
+         */
+        if (method_exists($test, 'getTestResultObject')) {
+            // PHPUnit 9 or Codeception's own test types
+            $testResult = $test->getTestResultObject();
+        } else {
+            // PHPUnit\Framework\TestCase since PHPUnit 10
+            // unavailable before test is executed
+            $testResult = $test->result();
+        }
+
         try {
             $this->startedTests[] = spl_object_hash($test);
             $this->fire(Events::TEST_BEFORE, new TestEvent($test));
         } catch (\PHPUnit\Framework\IncompleteTestError $e) {
-            $test->getTestResultObject()->addFailure($test, $e, 0);
+            if ($testResult !== null) {
+                $testResult->addFailure($test, $e, 0);
+            }
         } catch (\PHPUnit\Framework\SkippedTestError $e) {
-            $test->getTestResultObject()->addFailure($test, $e, 0);
+            if ($testResult !== null) {
+                $testResult->addFailure($test, $e, 0);
+            }
         } catch (\Throwable $e) {
-            $test->getTestResultObject()->addError($test, $e, 0);
+            if ($testResult !== null) {
+                $testResult->addError($test, $e, 0);
+            }
         }
     }
 

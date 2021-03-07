@@ -4,6 +4,7 @@ namespace Codeception\PHPUnit;
 use \PHPUnit\Framework\AssertionFailedError;
 use \PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Framework\TestStatus\TestStatus;
 use \PHPUnit\Runner\BaseTestRunner;
 
 class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
@@ -17,7 +18,13 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addError(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
-        $this->testStatus = \PHPUnit\Runner\BaseTestRunner::STATUS_ERROR;
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            $this->testStatus = BaseTestRunner::STATUS_ERROR;
+        } else {
+            // PHPUnit 10
+            $this->testStatus = TestStatus::error($e->getMessage());
+        }
         $this->failed++;
     }
 
@@ -30,7 +37,13 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time) : void
     {
-        $this->testStatus = \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE;
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            $this->testStatus = BaseTestRunner::STATUS_FAILURE;
+        } else {
+            // PHPUnit 10
+            $this->testStatus = TestStatus::failure($e->getMessage());
+        }
         $this->failed++;
     }
 
@@ -43,7 +56,13 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, float $time): void
     {
-        $this->testStatus = \PHPUnit\Runner\BaseTestRunner::STATUS_WARNING;
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            $this->testStatus = BaseTestRunner::STATUS_WARNING;
+        } else {
+            // PHPUnit 10
+            $this->testStatus = TestStatus::warning($e->getMessage());
+        }
         $this->warned++;
     }
 
@@ -56,7 +75,13 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
-        $this->testStatus = \PHPUnit\Runner\BaseTestRunner::STATUS_INCOMPLETE;
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            $this->testStatus = BaseTestRunner::STATUS_INCOMPLETE;
+        } else {
+            // PHPUnit 10
+            $this->testStatus = TestStatus::incomplete($e->getMessage());
+        }
         $this->incomplete++;
     }
 
@@ -71,7 +96,13 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addRiskyTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
-        $this->testStatus = \PHPUnit\Runner\BaseTestRunner::STATUS_RISKY;
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            $this->testStatus = BaseTestRunner::STATUS_RISKY;
+        } else {
+            // PHPUnit 10
+            $this->testStatus = TestStatus::risky($e->getMessage());
+        }
         $this->risky++;
     }
 
@@ -81,18 +112,28 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      * @param \PHPUnit\Framework\Test $test
      * @param \Throwable $e
      * @param float $time
-     *
-     * @since  Method available since Release 3.0.0
      */
     public function addSkippedTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
-        $this->testStatus = \PHPUnit\Runner\BaseTestRunner::STATUS_SKIPPED;
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            $this->testStatus = BaseTestRunner::STATUS_SKIPPED;
+        } else {
+            // PHPUnit 10
+            $this->testStatus = TestStatus::skipped($e->getMessage());
+        }
         $this->skipped++;
     }
 
     public function startTest(\PHPUnit\Framework\Test $test) : void
     {
-        $this->testStatus = \PHPUnit\Runner\BaseTestRunner::STATUS_PASSED;
+        if (class_exists(BaseTestRunner::class)) {
+            // PHPUnit 9
+            $this->testStatus = BaseTestRunner::STATUS_PASSED;
+        } else {
+            // PHPUnit 10
+            $this->testStatus = TestStatus::success();
+        }
     }
 
     public function printResult(TestResult $result): void

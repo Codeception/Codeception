@@ -8,6 +8,7 @@ use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Interfaces\Remote;
+use PHPUnit\Runner\CodeCoverage as PHPUnitCodeCoverage;
 
 /**
  * Collects code coverage from unit and functional tests.
@@ -48,6 +49,17 @@ class Local extends SuiteSubscriber
         if (!$this->isEnabled()) {
             return;
         }
-        $this->mergeToPrint($event->getResult()->getCodeCoverage());
+        $testResult = $event->getResult();
+
+        if (method_exists($testResult, 'getCodeCoverage')) {
+            // PHPUnit 9
+            $codeCoverage = $testResult->getCodeCoverage();
+        } else {
+            // PHPUnit 10
+            $codeCoverage = PHPUnitCodeCoverage::instance();
+            PHPUnitCodeCoverage::deactivate();
+        }
+
+        $this->mergeToPrint($codeCoverage);
     }
 }

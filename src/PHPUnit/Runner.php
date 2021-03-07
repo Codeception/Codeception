@@ -3,6 +3,7 @@ namespace Codeception\PHPUnit;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
+use ReflectionProperty;
 
 class Runner extends NonFinal\TestRunner
 {
@@ -32,6 +33,11 @@ class Runner extends NonFinal\TestRunner
     public function phpUnitOverriders()
     {
         require_once __DIR__ . DIRECTORY_SEPARATOR . 'Overrides/Filter.php';
+    }
+
+    public function setPrinter($printer)
+    {
+        $this->printer = $printer;
     }
 
     /**
@@ -117,8 +123,22 @@ class Runner extends NonFinal\TestRunner
         $suite->run($result);
         unset($suite);
 
-        foreach ($arguments['listeners'] as $listener) {
-            $result->removeListener($listener);
+        if (method_exists($result, 'removeListener')) {
+            // PHPUnit 9
+            foreach ($arguments['listeners'] as $listener) {
+                $result->removeListener($listener);
+            }
+        } else {
+            // PHPUnit 10+
+            $property = new ReflectionProperty($result, 'listeners');
+            $property->setAccessible(true);
+            $resultListeners = $property->getValue($result);
+            foreach ($resultListeners as $key => $_listener) {
+                if (in_array($_listener, $arguments['listeners'], true)) {
+                    unset($resultListeners[$key]);
+                }
+            }
+            $property->setValue($result, $resultListeners);
         }
 
         return $result;
