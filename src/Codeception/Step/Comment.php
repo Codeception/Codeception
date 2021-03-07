@@ -15,17 +15,17 @@ class Comment extends CodeceptionStep
         return (string) $this->getAction();
     }
 
-    public function toString($maxLength): string
+    public function toString(int $maxLength): string
     {
         return mb_strcut((string) $this, 0, $maxLength, 'utf-8');
     }
 
-    public function getHtml($highlightColor = '#732E81'): string
+    public function getHtml(string $highlightColor = '#732E81'): string
     {
         return '<strong>' . $this->getAction() . '</strong>';
     }
 
-    public function getPhpCode($maxLength): string
+    public function getPhpCode(int $maxLength): string
     {
         return '// ' . $this->getAction();
     }

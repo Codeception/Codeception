@@ -1,15 +1,26 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception;
 
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\Dependent;
+use PHPUnit\Framework\SelfDescribing;
+use PHPUnit\Framework\TestSuite;
 
-class Suite extends \PHPUnit\Framework\TestSuite
+class Suite extends TestSuite
 {
+    /**
+     * @var array
+     */
     protected $modules;
+    /**
+     * @var string
+     */
     protected $baseName;
 
-    public function reorderDependencies()
+    public function reorderDependencies(): void
     {
         $tests = [];
         foreach ($this->tests as $test) {
@@ -28,7 +39,11 @@ class Suite extends \PHPUnit\Framework\TestSuite
         $this->tests = $queue;
     }
 
-    protected function getDependencies($test)
+    /**
+     * @param Dependent|SelfDescribing $test
+     * @return array
+     */
+    protected function getDependencies($test): array
     {
         if (!$test instanceof Dependent) {
             return [$test];
@@ -45,8 +60,9 @@ class Suite extends \PHPUnit\Framework\TestSuite
         return $tests;
     }
 
-    protected function findMatchedTest($testSignature)
+    protected function findMatchedTest(string $testSignature): SelfDescribing
     {
+        /** @var SelfDescribing $test */
         foreach ($this->tests as $test) {
             $signature = Descriptor::getTestSignature($test);
             if ($signature === $testSignature) {
@@ -55,34 +71,22 @@ class Suite extends \PHPUnit\Framework\TestSuite
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getModules()
+    public function getModules(): array
     {
         return $this->modules;
     }
 
-    /**
-     * @param mixed $modules
-     */
-    public function setModules($modules)
+    public function setModules(array $modules): void
     {
         $this->modules = $modules;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBaseName()
+    public function getBaseName(): string
     {
         return $this->baseName;
     }
 
-    /**
-     * @param mixed $baseName
-     */
-    public function setBaseName($baseName)
+    public function setBaseName(string $baseName): void
     {
         $this->baseName = $baseName;
     }

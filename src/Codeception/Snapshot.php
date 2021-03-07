@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception;
 
 use Codeception\Exception\ContentNotFound;
@@ -11,22 +13,40 @@ abstract class Snapshot
 {
     use Asserts;
 
+    /**
+     * @var string|null
+     */
     protected $fileName;
 
+    /**
+     * @var null
+     */
     protected $dataSet;
 
+    /**
+     * @var bool|null
+     */
     protected $refresh;
 
+    /**
+     * @var bool
+     */
     protected $showDiff = false;
 
+    /**
+     * @var bool
+     */
     protected $saveAsJson = true;
 
+    /**
+     * @var string
+     */
     protected $extension = 'json';
 
     /**
      * Should return data from current test run
      *
-     * @return mixed
+     * @return string|false
      */
     abstract protected function fetchData();
 
@@ -34,24 +54,24 @@ abstract class Snapshot
      * Performs assertion on saved data set against current dataset.
      * Can be overridden to implement custom assertion
      *
-     * @param $data
+     * @param mixed $data
      */
-    protected function assertData($data)
+    protected function assertData($data): void
     {
-        $this->assertSame($this->dataSet, $data, 'Snapshot doesn\'t match real data');
+        $this->assertSame($this->dataSet, $data, "Snapshot doesn't match real data");
     }
 
     /**
      * Loads data set from file.
      */
-    protected function load()
+    protected function load(): void
     {
         if (!file_exists($this->getFileName())) {
             return;
         }
         $fileContents = file_get_contents($this->getFileName());
         if ($this->saveAsJson) {
-            $fileContents = json_decode($fileContents);
+            $fileContents = json_decode($fileContents, false, 512, JSON_THROW_ON_ERROR);
         }
         $this->dataSet = $fileContents;
         if (!$this->dataSet) {
@@ -62,21 +82,19 @@ abstract class Snapshot
     /**
      * Saves data set to file
      */
-    protected function save()
+    protected function save(): void
     {
         $fileContents = $this->dataSet;
         if ($this->saveAsJson) {
-            $fileContents = json_encode($fileContents);
+            $fileContents = json_encode($fileContents, JSON_THROW_ON_ERROR);
         }
         file_put_contents($this->getFileName(), $fileContents);
     }
 
     /**
      * If no filename is defined, generates one from class name
-     *
-     * @return string
      */
-    protected function getFileName()
+    protected function getFileName(): string
     {
         if (!$this->fileName) {
             $this->fileName = preg_replace('/\W/', '.', get_class($this)) . '.' . $this->extension;
@@ -87,7 +105,7 @@ abstract class Snapshot
     /**
      * Performs assertion for data sets
      */
-    public function assert()
+    public function assert(): void
     {
         // fetch data
         $data = $this->fetchData();
@@ -133,30 +151,24 @@ abstract class Snapshot
 
     /**
      * Force update snapshot data.
-     *
-     * @param bool $refresh
      */
-    public function shouldRefreshSnapshot($refresh = true)
+    public function shouldRefreshSnapshot(bool $refresh = true): void
     {
         $this->refresh = $refresh;
     }
 
     /**
      * Show detailed diff if snapshot test fails
-     *
-     * @param bool $showDiff
      */
-    public function shouldShowDiffOnFail($showDiff = true)
+    public function shouldShowDiffOnFail(bool $showDiff = true): void
     {
         $this->showDiff = $showDiff;
     }
 
     /**
      * json_encode/json_decode the snapshot data on storing/reading.
-     *
-     * @param bool $saveAsJson
      */
-    public function shouldSaveAsJson($saveAsJson = true)
+    public function shouldSaveAsJson(bool $saveAsJson = true): void
     {
         $this->saveAsJson = $saveAsJson;
     }
@@ -167,16 +179,13 @@ abstract class Snapshot
      *
      * The file extension will not perform any formatting in the data,
      * it is only used as the snapshot file extension.
-     *
-     * @param string $fileExtension
-     * @return void
      */
-    public function setSnapshotFileExtension($fileExtension = 'json')
+    public function setSnapshotFileExtension(string $fileExtension = 'json'): void
     {
         $this->extension = $fileExtension;
     }
 
-    private function printDebug($message)
+    private function printDebug(string $message): void
     {
         Debug::debug(get_class($this) . ': ' . $message);
     }

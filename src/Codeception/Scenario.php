@@ -1,39 +1,46 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception;
 
 use Codeception\Event\StepEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
+use Codeception\Exception\InjectionException;
+use Codeception\Step\Comment;
+use Codeception\Step\Meta;
 use Codeception\Test\Metadata;
+use Exception;
+use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\SkippedTestError;
 
 class Scenario
 {
-
     /**
      * @var TestInterface
      */
     protected $test;
+
     /**
      * @var Metadata
      */
     protected $metadata;
 
     /**
-     * @var    array
+     * @var array
      */
     protected $steps = [];
 
     /**
-     * @var    string
+     * @var string
      */
     protected $feature;
 
+    /**
+     * @var Meta|null
+     */
     protected $metaStep;
 
-    /**
-     * Constructor
-     *
-     * @param TestInterface $test
-     */
     public function __construct(TestInterface $test)
     {
         $this->metadata = $test->getMetadata();
@@ -50,20 +57,25 @@ class Scenario
         return $this->metadata->getFeature();
     }
 
-    public function getGroups()
+    public function getGroups(): array
     {
         return $this->metadata->getGroups();
     }
 
-    public function current($key)
+    public function current(?string $key)
     {
         return $this->metadata->getCurrent($key);
     }
 
+    /**
+     * @param Step $step
+     * @return array|bool|null
+     * @throws InjectionException
+     */
     public function runStep(Step $step)
     {
         $step->saveTrace();
-        if ($this->metaStep instanceof Step\Meta) {
+        if ($this->metaStep instanceof Meta) {
             $step->setMetaStep($this->metaStep);
         }
         $this->steps[] = $step;
@@ -73,39 +85,37 @@ class Scenario
         $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_BEFORE);
         try {
             $result = $step->run($this->metadata->getService('modules'));
-        } catch (ConditionalAssertionFailed $f) {
+        } catch (ConditionalAssertionFailed $failed) {
             $result = $this->test->getTestResultObject();
             if (is_null($result)) {
                 $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
-                throw $f;
+                throw $failed;
             } else {
-                $result->addFailure(clone($this->test), $f, $result->time());
+                $result->addFailure(clone($this->test), $failed, $result->time());
             }
-        } catch (\Exception $e) {
+        } catch (Exception $exception) {
             $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
-            throw $e;
+            throw $exception;
         }
         $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
         $step->executed = true;
         return $result;
     }
 
-    public function addStep(Step $step)
+    public function addStep(Step $step): void
     {
         $this->steps[] = $step;
     }
 
     /**
      * Returns the steps of this scenario.
-     *
-     * @return array
      */
-    public function getSteps()
+    public function getSteps(): array
     {
         return $this->steps;
     }
 
-    public function getHtml()
+    public function getHtml(): string
     {
         $text = '';
         foreach ($this->getSteps() as $step) {
@@ -117,54 +127,46 @@ class Scenario
             }
         }
         $text = str_replace(['"\'', '\'"'], ["'", "'"], $text);
-        $text = "<h3>" . mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "</h3>" . $text;
-        return $text;
+        return "<h3>" . mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "</h3>" . $text;
     }
 
-    public function getText()
+    public function getText(): string
     {
         $text = '';
         foreach ($this->getSteps() as $step) {
-            $text .= $step->getPrefix() . "$step \r\n";
+            $text .= $step->getPrefix() . "{$step} \r\n";
         }
         $text = trim(str_replace(['"\'', '\'"'], ["'", "'"], $text));
-        $text = mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "\r\n\r\n" . $text . "\r\n\r\n";
-        return $text;
+        return mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "\r\n\r\n" . $text . "\r\n\r\n";
     }
 
-    public function comment($comment)
+    public function comment(string $comment): void
     {
-        $this->runStep(new \Codeception\Step\Comment($comment, []));
+        $this->runStep(new Comment($comment, []));
     }
 
-    public function skip($message = '')
+    public function skip(string $message = ''): void
     {
-        throw new \PHPUnit\Framework\SkippedTestError($message);
+        throw new SkippedTestError($message);
     }
 
-    public function incomplete($message = '')
+    public function incomplete(string $message = ''): void
     {
-        throw new \PHPUnit\Framework\IncompleteTestError($message);
+        throw new IncompleteTestError($message);
     }
 
-    public function __call($method, $args)
+    public function __call(string $method, array $args)
     {
         // all methods were deprecated and removed from here
-        trigger_error("Codeception: \$scenario->$method() has been deprecated and removed. Use annotations to pass scenario params", E_USER_DEPRECATED);
+        trigger_error(sprintf('Codeception: $scenario->%s() has been deprecated and removed. Use annotations to pass scenario params', $method), E_USER_DEPRECATED);
     }
 
-    /**
-     * @param Step\Meta $metaStep
-     */
-    public function setMetaStep($metaStep)
+    public function setMetaStep(?Meta $metaStep): void
     {
         $this->metaStep = $metaStep;
     }
 
-    /**
-     * @return Step\Meta
-     */
-    public function getMetaStep()
+    public function getMetaStep(): ?Meta
     {
         return $this->metaStep;
     }

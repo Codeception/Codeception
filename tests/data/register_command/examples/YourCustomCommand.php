@@ -21,10 +21,8 @@ class YourCustomCommand extends Command implements CustomCommandInterface
 
     /**
      * returns the name of the command
-     *
-     * @return string
      */
-    public static function getCommandName()
+    public static function getCommandName(): string
     {
         return "myProject:yourCommand";
     }

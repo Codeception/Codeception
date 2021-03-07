@@ -1,11 +1,14 @@
 <?php
 
-class SkipGroup extends \Codeception\GroupObject
+use Codeception\Event\TestEvent;
+use Codeception\GroupObject;
+
+class SkipGroup extends GroupObject
 {
     public static $group = 'abc';
 
-    public function _before(\Codeception\Event\TestEvent $e)
+    public function _before(TestEvent $event)
     {
-        $e->getTest()->markTestSkipped('WE SKIP TEST');
+        $event->getTest()->markTestSkipped('WE SKIP TEST');
     }
 }

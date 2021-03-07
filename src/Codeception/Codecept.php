@@ -1,25 +1,51 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception;
 
+use Codeception\Coverage\Subscriber\Local;
+use Codeception\Coverage\Subscriber\LocalServer;
+use Codeception\Coverage\Subscriber\Printer;
+use Codeception\Coverage\Subscriber\RemoteServer;
+use Codeception\Event\PrintResultEvent;
 use Codeception\Exception\ConfigurationException;
+use Codeception\PHPUnit\Listener;
+use Codeception\PHPUnit\ResultPrinter\UI as UIResultPrinter;
+use Codeception\PHPUnit\Runner;
+use Codeception\Subscriber\AutoRebuild;
+use Codeception\Subscriber\BeforeAfterTest;
+use Codeception\Subscriber\Bootstrap;
+use Codeception\Subscriber\Console;
+use Codeception\Subscriber\Dependencies;
+use Codeception\Subscriber\ErrorHandler;
 use Codeception\Subscriber\ExtensionLoader;
+use Codeception\Subscriber\FailFast;
+use Codeception\Subscriber\GracefulTermination;
+use Codeception\Subscriber\Module;
+use Codeception\Subscriber\PrepareTest;
+use PHPUnit\Framework\TestResult;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
+    /**
+     * @var string
+     */
     const VERSION = '5.0.0';
 
     /**
-     * @var \Codeception\PHPUnit\Runner
+     * @var Runner
      */
     protected $runner;
+
     /**
-     * @var \PHPUnit\Framework\TestResult
+     * @var TestResult
      */
     protected $result;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @var EventDispatcher
      */
     protected $dispatcher;
 
@@ -62,6 +88,9 @@ class Codecept
         'quiet'           => false,
     ];
 
+    /**
+     * @var array
+     */
     protected $config = [];
 
     /**
@@ -69,9 +98,9 @@ class Codecept
      */
     protected $extensions = [];
 
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
-        $this->result = new \PHPUnit\Framework\TestResult;
+        $this->result = new TestResult;
         $this->dispatcher = new EventDispatcher();
         $this->extensionLoader = new ExtensionLoader($this->dispatcher);
 
@@ -89,56 +118,54 @@ class Codecept
     /**
      * Merges given options with default values and current configuration
      *
-     * @param array $options options
-     * @return array
      * @throws ConfigurationException
      */
-    protected function mergeOptions($options)
+    protected function mergeOptions(array $options): array
     {
         $config = Configuration::config();
         $baseOptions = array_merge($this->options, $config['settings']);
         return array_merge($baseOptions, $options);
     }
 
-    protected function registerPHPUnitListeners()
+    protected function registerPHPUnitListeners(): void
     {
-        $listener = new PHPUnit\Listener($this->dispatcher);
+        $listener = new Listener($this->dispatcher);
         $this->result->addListener($listener);
     }
 
-    public function registerSubscribers()
+    public function registerSubscribers(): void
     {
         // required
-        $this->dispatcher->addSubscriber(new Subscriber\GracefulTermination());
-        $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
-        $this->dispatcher->addSubscriber(new Subscriber\Dependencies());
-        $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
-        $this->dispatcher->addSubscriber(new Subscriber\PrepareTest());
-        $this->dispatcher->addSubscriber(new Subscriber\Module());
-        $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterTest());
+        $this->dispatcher->addSubscriber(new GracefulTermination());
+        $this->dispatcher->addSubscriber(new ErrorHandler());
+        $this->dispatcher->addSubscriber(new Dependencies());
+        $this->dispatcher->addSubscriber(new Bootstrap());
+        $this->dispatcher->addSubscriber(new PrepareTest());
+        $this->dispatcher->addSubscriber(new Module());
+        $this->dispatcher->addSubscriber(new BeforeAfterTest());
 
         // optional
         if (!$this->options['no-rebuild']) {
-            $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
+            $this->dispatcher->addSubscriber(new AutoRebuild());
         }
         if (!$this->options['silent']) {
-            $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
+            $this->dispatcher->addSubscriber(new Console($this->options));
         }
         if ($this->options['fail-fast']) {
-            $this->dispatcher->addSubscriber(new Subscriber\FailFast());
+            $this->dispatcher->addSubscriber(new FailFast());
         }
 
         if ($this->options['coverage']) {
-            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Local($this->options));
-            $this->dispatcher->addSubscriber(new Coverage\Subscriber\LocalServer($this->options));
-            $this->dispatcher->addSubscriber(new Coverage\Subscriber\RemoteServer($this->options));
-            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Printer($this->options));
+            $this->dispatcher->addSubscriber(new Local($this->options));
+            $this->dispatcher->addSubscriber(new LocalServer($this->options));
+            $this->dispatcher->addSubscriber(new RemoteServer($this->options));
+            $this->dispatcher->addSubscriber(new Printer($this->options));
         }
         $this->dispatcher->addSubscriber($this->extensionLoader);
         $this->extensionLoader->registerGlobalExtensions();
     }
 
-    public function run($suite, $test = null, array $config = null)
+    public function run(string $suite, string $test = null, array $config = null): void
     {
         ini_set(
             'memory_limit',
@@ -190,7 +217,7 @@ class Codecept
         }
     }
 
-    public function runSuite($settings, $suite, $test = null)
+    public function runSuite(array $settings, string $suite, string $test = null): TestResult
     {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
         $suiteManager->initialize();
@@ -201,12 +228,12 @@ class Codecept
         return $this->result;
     }
 
-    public static function versionString()
+    public static function versionString(): string
     {
         return 'Codeception PHP Testing Framework v' . self::VERSION;
     }
 
-    public function printResult()
+    public function printResult(): void
     {
         $result = $this->getResult();
         $result->flushListeners();
@@ -214,34 +241,28 @@ class Codecept
         $printer = $this->runner->getPrinter();
         $printer->printResult($result);
 
-        $this->dispatcher->dispatch(new Event\PrintResultEvent($result, $printer), Events::RESULT_PRINT_AFTER);
+        $this->dispatcher->dispatch(new PrintResultEvent($result, $printer), Events::RESULT_PRINT_AFTER);
     }
 
-    /**
-     * @return \PHPUnit\Framework\TestResult
-     */
-    public function getResult()
+    public function getResult(): TestResult
     {
         return $this->result;
     }
 
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
 
-    /**
-     * @return EventDispatcher
-     */
-    public function getDispatcher()
+    public function getDispatcher(): EventDispatcher
     {
         return $this->dispatcher;
     }
 
-    protected function registerPrinter()
+    protected function registerPrinter(): void
     {
-        $printer = new PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
-        $this->runner = new PHPUnit\Runner();
+        $printer = new UIResultPrinter($this->dispatcher, $this->options);
+        $this->runner = new Runner();
         $this->runner->setPrinter($printer);
     }
 }
