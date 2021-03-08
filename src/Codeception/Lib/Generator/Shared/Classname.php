@@ -9,6 +9,6 @@ trait Classname
     protected function removeSuffix(string $classname, string $suffix)
     {
         $classname = preg_replace('#\.php$#', '', $classname);
-        return preg_replace("~{$suffix}$~", '', $classname);
+        return preg_replace("#{$suffix}$#", '', $classname);
     }
 }

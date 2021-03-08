@@ -470,7 +470,7 @@ class Run extends Command
                 if ($suiteConfig['path'] === '.') {
                     $testsPath = $config['paths']['tests'];
                 }
-                if (preg_match("~^{$testsPath}/(.*?)$~", $suite, $matches)) {
+                if (preg_match("#^{$testsPath}/(.*?)$#", $suite, $matches)) {
                     $matches[2] = $matches[1];
                     $matches[1] = $s;
                     return $matches;
@@ -584,7 +584,7 @@ class Run extends Command
             //codecept run tests
             return ['', '', $filter];
         }
-        $res = preg_match("~^{$testsPath}/(.*?)(?>/(.*))?$~", $filename, $matches);
+        $res = preg_match("#^{$testsPath}/(.*?)(?>/(.*))?$#", $filename, $matches);
 
         if (!$res) {
             throw new InvalidArgumentException("Test file can't be matched");

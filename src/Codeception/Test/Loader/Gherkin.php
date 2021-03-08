@@ -173,7 +173,7 @@ class Gherkin implements LoaderInterface
 
             // params converting from :param to match 11 and "aaa" and "aaa\"aaa"
             $pattern = preg_replace('#"?\\\:(\w+)"?#', $replacePattern, $pattern);
-            $pattern = "/^{$pattern}$/u";
+            $pattern = "#^{$pattern}$#u";
             // validating this pattern is slow, so we skip it now
         }
         return $pattern;

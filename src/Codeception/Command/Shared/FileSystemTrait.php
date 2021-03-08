@@ -52,7 +52,7 @@ trait FileSystemTrait
     protected function removeSuffix(string $classname, string $suffix): string
     {
         $classname = preg_replace('#\.php$#', '', $classname);
-        return preg_replace("~{$suffix}$~", '', $classname);
+        return preg_replace("#{$suffix}$#", '', $classname);
     }
 
     protected function createFile(string $filename, string $contents, bool $force = false, int $flags = 0): bool

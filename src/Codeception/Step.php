@@ -99,7 +99,7 @@ abstract class Step
 
     private function isTestFile(string $file)
     {
-        return preg_match('~[^\\'.DIRECTORY_SEPARATOR.'](Cest|Cept|Test).php$~', $file);
+        return preg_match('#[^\\'.DIRECTORY_SEPARATOR.'](Cest|Cept|Test).php$#', $file);
     }
 
     public function getName(): string
