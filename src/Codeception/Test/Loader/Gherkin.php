@@ -179,7 +179,7 @@ class Gherkin implements LoaderInterface
         return $pattern;
     }
 
-    private function validatePattern($pattern): void
+    private function validatePattern(string $pattern): void
     {
         if (strpos($pattern, '/') !== 0) {
             return; // not a user-regex but a string with placeholder
