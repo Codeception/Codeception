@@ -10,6 +10,8 @@ class DryRunCest
     {
         $I->executeCommand('dry-run scenario ExamplesCest --no-ansi');
         $I->seeInShellOutput('ExamplesCest: Files exists annotation');
+        $I->seeInShellOutput('I see file found "scenario.suite.yml"');
+        $I->seeInShellOutput('I see file found "dummy.suite.yml"');
     }
 
     public function runFeature(CliGuy $I)
