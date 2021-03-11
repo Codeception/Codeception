@@ -1,3 +1,9 @@
+#### 4.1.18
+
+* Fix cleanup of included test directories #6117 by @rolandsaven
+* Clean command will not delete .gitkeep files in _output directory #6118
+* Add line break between opening tag and namespace in generated Cest and Test files #6072
+
 #### 4.1.17
 
 * Fix `codecept run suite` when suite name matches directory (bug introduced in 4.1.16)

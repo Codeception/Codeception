@@ -150,13 +150,6 @@ class GroupManager
         if ($test instanceof TestCase) {
             $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups(get_class($test), $test->getName(false)));
         }
-        if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
-            $firstTest = $test->testAt(0);
-            if ($firstTest != false && $firstTest instanceof TestInterface) {
-                $groups = array_merge($groups, $firstTest->getMetadata()->getGroups());
-                $filename = Descriptor::getTestFileName($firstTest);
-            }
-        }
 
         foreach ($this->testsInGroups as $group => $tests) {
             foreach ($tests as $testPattern) {
@@ -170,15 +163,6 @@ class GroupManager
                 if ($test instanceof Gherkin
                     && mb_strtolower($filename . ':' . $test->getMetadata()->getFeature()) === mb_strtolower($testPattern)) {
                     $groups[] = $group;
-                }
-                if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
-                    if ($firstTest = $test->testAt(0)) {
-                        $firstTestName = $firstTest->getName(false);
-                        $startsWithPattern = strpos($filename . ':' . $firstTestName, (string) $testPattern) === 0;
-                        if ($firstTest instanceof TestInterface & $startsWithPattern) {
-                            $groups[] = $group;
-                        }
-                    }
                 }
             }
         }
