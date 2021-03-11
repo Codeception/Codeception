@@ -12,6 +12,7 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
 use PHPUnit\Framework\DataProviderTestSuite;
+use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestSuite;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -103,12 +104,11 @@ class SuiteManager
         $this->suite->reorderDependencies();
     }
 
-    /**
-     * @param TestInterface|DataProviderTestSuite $test
-     */
-    protected function addToSuite(\PHPUnit\Framework\Test $test): void
+    protected function addToSuite(PHPUnitTest $test): void
     {
-        $this->configureTest($test);
+        if ($test instanceof TestInterface) {
+            $this->configureTest($test);
+        }
 
         if ($test instanceof DataProviderTestSuite) {
             foreach ($test->tests() as $t) {
@@ -116,6 +116,7 @@ class SuiteManager
             }
             return;
         }
+
         if ($test instanceof TestInterface) {
             $this->checkEnvironmentExists($test);
             if (!$this->isExecutedInCurrentEnvironment($test)) {
@@ -217,14 +218,8 @@ class SuiteManager
         return false;
     }
 
-    /**
-     * @param TestInterface|ScenarioDriven $test
-     */
-    protected function configureTest($test): void
+    protected function configureTest(TestInterface $test): void
     {
-        if (!$test instanceof TestInterface) {
-            return;
-        }
         $test->getMetadata()->setServices([
             'di' => clone($this->di),
             'dispatcher' => $this->dispatcher,
