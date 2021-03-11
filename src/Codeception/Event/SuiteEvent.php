@@ -22,7 +22,7 @@ class SuiteEvent extends Event
     protected $result;
 
     /**
-     * @var array|null
+     * @var array
      */
     protected $settings = [];
 
@@ -49,7 +49,7 @@ class SuiteEvent extends Event
         return $this->result;
     }
 
-    public function getSettings(): ?array
+    public function getSettings(): array
     {
         return $this->settings;
     }

@@ -72,10 +72,10 @@ class ModuleTest extends Unit
         );
         $suite = $suite->reveal();
 
-
         /** @var SuiteEvent|ObjectProphecy $suiteEvent */
         $suiteEvent = $this->prophet->prophesize(SuiteEvent::class);
         $suiteEvent->getSuite()->willReturn($suite);
+        $suiteEvent->getSettings()->willReturn([]);
         $suiteEvent = $suiteEvent->reveal();
 
         $subject = new Module();
