@@ -22,11 +22,6 @@ class BeforeAfterTest implements EventSubscriberInterface
     {
         foreach ($e->getSuite()->tests() as $test) {
             /** @var $test \PHPUnit\Framework\Test  * */
-            if ($test instanceof \PHPUnit\Framework\DataProviderTestSuite) {
-                $potentialTestClass = strstr($test->getName(), '::', true);
-                $this->hooks[$potentialTestClass] = \PHPUnit\Util\Test::getHookMethods($potentialTestClass);
-            }
-
             $testClass = get_class($test);
             $this->hooks[$testClass] = \PHPUnit\Util\Test::getHookMethods($testClass);
         }

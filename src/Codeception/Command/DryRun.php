@@ -85,13 +85,6 @@ class DryRun extends Command
         $this->dispatch($dispatcher, Events::SUITE_INIT, new SuiteEvent($suiteManager->getSuite(), null, $settings));
         $this->dispatch($dispatcher, Events::SUITE_BEFORE, new SuiteEvent($suiteManager->getSuite(), null, $settings));
         foreach ($tests as $test) {
-            if ($test instanceof \PHPUnit\Framework\DataProviderTestSuite) {
-                foreach ($test as $t) {
-                    if ($t instanceof Test) {
-                        $this->dryRunTest($output, $dispatcher, $t);
-                    }
-                }
-            }
             if ($test instanceof Test and $test instanceof ScenarioDriven) {
                 $this->dryRunTest($output, $dispatcher, $test);
             }
