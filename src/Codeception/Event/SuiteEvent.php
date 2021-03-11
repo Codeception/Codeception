@@ -36,10 +36,7 @@ class SuiteEvent extends Event
         $this->settings = $settings;
     }
 
-    /**
-     * @return Suite|TestSuite
-     */
-    public function getSuite()
+    public function getSuite(): TestSuite
     {
         return $this->suite;
     }
