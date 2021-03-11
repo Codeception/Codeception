@@ -16,7 +16,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
-
     /**
      * @var SymfonyArgvInput|null
      */
@@ -79,10 +78,10 @@ class Application extends BaseApplication
     /**
      * Validate and get the name of the command
      *
-     * @param CustomCommandInterface|string $commandClass
+     * @param class-string $commandClass A class that implement the `\Codeception\CustomCommandInterface`.
      * @throws ConfigurationException
      */
-    protected function getCustomCommandName($commandClass): string
+    protected function getCustomCommandName(string $commandClass): string
     {
         if (!class_exists($commandClass)) {
             throw new ConfigurationException("Extension: Command class {$commandClass} not found");
