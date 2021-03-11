@@ -215,7 +215,7 @@ class LocalServer extends SuiteSubscriber
         $okHeaders = array_filter(
             $http_response_header,
             function ($h) {
-                return preg_match('~^HTTP(.*?)\s200~', $h);
+                return preg_match('#^HTTP(.*?)\s200#', $h);
             }
         );
         if (empty($okHeaders)) {
@@ -234,7 +234,7 @@ class LocalServer extends SuiteSubscriber
             'CodeCoverage_Suite'  => $this->suiteName,
             'CodeCoverage_Config' => $this->settings['remote_config']
         ];
-        $value = json_encode($value);
+        $value = json_encode($value, JSON_THROW_ON_ERROR);
 
         if ($this->module instanceof WebDriverModule) {
             $this->module->amOnPage('/');
@@ -308,7 +308,7 @@ class LocalServer extends SuiteSubscriber
 
     protected function addC3AccessHeader(string $header, string $value): void
     {
-        $headerString = "$header: $value\r\n";
+        $headerString = "{$header}: {$value}\r\n";
         if (strpos($this->c3Access['http']['header'], $headerString) === false) {
             $this->c3Access['http']['header'] .= $headerString;
         }

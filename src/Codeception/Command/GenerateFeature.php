@@ -50,16 +50,16 @@ class GenerateFeature extends Command
         $this->createDirectoryFor($config['path'], $filename);
 
         $feature = new Feature(basename($filename));
-        if (!preg_match('~\.feature$~', $filename)) {
+        if (!preg_match('#\.feature$#', $filename)) {
             $filename .= '.feature';
         }
         $fullPath = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
         $res = $this->createFile($fullPath, $feature->produce());
         if (!$res) {
-            $output->writeln("<error>Feature $filename already exists</error>");
+            $output->writeln("<error>Feature {$filename} already exists</error>");
             return 1;
         }
-        $output->writeln("<info>Feature was created in $fullPath</info>");
+        $output->writeln("<info>Feature was created in {$fullPath}</info>");
         return 0;
     }
 }

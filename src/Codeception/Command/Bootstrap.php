@@ -38,7 +38,7 @@ class Bootstrap extends Command
                     'Namespace to add for actor classes and helpers'
                 ),
                 new InputOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Tester'),
-                new InputOption('empty', 'e', InputOption::VALUE_NONE, 'Don\'t create standard suites')
+                new InputOption('empty', 'e', InputOption::VALUE_NONE, "Don't create standard suites")
             ]
         );
     }

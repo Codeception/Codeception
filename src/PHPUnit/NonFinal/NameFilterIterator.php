@@ -106,7 +106,7 @@ class NameFilterIterator extends RecursiveFilterIterator
             } // Handles:
             //  * testDetermineJsonError@JSON_ERROR_NONE
             //  * testDetermineJsonError@JSON.*
-            elseif (\preg_match('/^(.*?)@(.+)$/', $filter, $matches)) {
+            elseif (\preg_match('#^(.*?)@(.+)$#', $filter, $matches)) {
                 $filter = \sprintf(
                     '%s.*with data set "%s"$',
                     $matches[1],

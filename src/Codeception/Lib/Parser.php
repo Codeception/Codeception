@@ -43,12 +43,12 @@ class Parser
     {
         $matches = [];
         $code = $this->stripComments($code);
-        $res = preg_match("~\\\$I->wantTo\\(\s*?['\"](.*?)['\"]\s*?\\);~", $code, $matches);
+        $res = preg_match("#\\\$I->wantTo\\(\\s*?['\"](.*?)['\"]\\s*?\\);#", $code, $matches);
         if ($res) {
             $this->scenario->setFeature($matches[1]);
             return;
         }
-        $res = preg_match("~\\\$I->wantToTest\\(['\"](.*?)['\"]\\);~", $code, $matches);
+        $res = preg_match("#\\\$I->wantToTest\\(['\"](.*?)['\"]\\);#", $code, $matches);
         if ($res) {
             $this->scenario->setFeature("test " . $matches[1]);
             return;
@@ -68,11 +68,11 @@ class Parser
         $isFriend = false;
         foreach ($lines as $line) {
             // friends
-            if (preg_match("~\\\$I->haveFriend\((.*?)\);~", $line, $matches)) {
+            if (preg_match("#\\\$I->haveFriend\\((.*?)\\);#", $line, $matches)) {
                 $friends[] = trim($matches[1], '\'"');
             }
             // friend's section start
-            if (preg_match("~\\\$(.*?)->does\(~", $line, $matches)) {
+            if (preg_match("#\\\$(.*?)->does\\(#", $line, $matches)) {
                 $friend = $matches[1];
                 if (!in_array($friend, $friends)) {
                     continue;
@@ -83,7 +83,7 @@ class Parser
             }
 
             // actions
-            if (preg_match("~\\\$I->(.*)\((.*?)\);~", $line, $matches)) {
+            if (preg_match("#\\\$I->(.*)\\((.*?)\\);#", $line, $matches)) {
                 $this->addStep($matches);
             }
 
@@ -97,7 +97,7 @@ class Parser
 
     protected function addStep(array $matches): void
     {
-        list($m, $action, $params) = $matches;
+        [$m, $action, $params] = $matches;
         if (in_array($action, ['wantTo', 'wantToTest'])) {
             return;
         }
@@ -175,8 +175,8 @@ class Parser
 
     protected function stripComments(string $code): string
     {
-        $code = preg_replace('~\/\/.*?$~m', '', $code); // remove inline comments
-        $code = preg_replace('~\/*\*.*?\*\/~ms', '', $code);
+        $code = preg_replace('#\/\/.*?$#m', '', $code); // remove inline comments
+        $code = preg_replace('#\/*\*.*?\*\/#ms', '', $code);
         return $code; // remove block comment
     }
 
@@ -184,13 +184,13 @@ class Parser
     {
         $matches = [];
         $comments = '';
-        $hasLineComment = preg_match_all('~\/\/(.*?)$~m', $code, $matches);
+        $hasLineComment = preg_match_all('#\/\/(.*?)$#m', $code, $matches);
         if ($hasLineComment) {
             foreach ($matches[1] as $line) {
                 $comments .= $line."\n";
             }
         }
-        $hasBlockComment = preg_match('~\/*\*(.*?)\*\/~ms', $code, $matches);
+        $hasBlockComment = preg_match('#\/*\*(.*?)\*\/#ms', $code, $matches);
         if ($hasBlockComment) {
             $comments .= $matches[1]."\n";
         }

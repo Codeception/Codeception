@@ -53,7 +53,7 @@ class ApiCest
 EOF;
 
 
-    public function setup()
+    public function setup(): void
     {
         $this->checkInstalled();
         $this->say("Let's prepare Codeception for REST API testing");

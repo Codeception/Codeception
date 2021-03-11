@@ -14,7 +14,7 @@ class Suite extends TestSuite
     /**
      * @var array
      */
-    protected $modules;
+    protected $modules = [];
     /**
      * @var string
      */
@@ -41,7 +41,6 @@ class Suite extends TestSuite
 
     /**
      * @param Dependent|SelfDescribing $test
-     * @return array
      */
     protected function getDependencies($test): array
     {

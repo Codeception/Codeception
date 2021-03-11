@@ -21,10 +21,10 @@ class Colorizer
 
             switch ($char) {
                 case '+':
-                    $line = "<info>$line</info>";
+                    $line = "<info>{$line}</info>";
                     break;
                 case '-':
-                    $line = "<comment>$line</comment>";
+                    $line = "<comment>{$line}</comment>";
                     break;
             }
 

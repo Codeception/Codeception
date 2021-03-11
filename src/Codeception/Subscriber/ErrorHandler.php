@@ -113,7 +113,7 @@ class ErrorHandler implements EventSubscriberInterface
         }
 
         $relativePath = codecept_relative_path($errFile);
-        throw new PHPUnitException("$errMsg at $relativePath:$errLine", $errNum);
+        throw new PHPUnitException("{$errMsg} at {$relativePath}:{$errLine}", $errNum);
     }
 
     public function shutdownHandler(): void
@@ -162,7 +162,7 @@ class ErrorHandler implements EventSubscriberInterface
                 && is_array($old)
                 && count($old) > 0
                 && is_object($old[0])
-                && get_class($old[0]) === 'Symfony\Component\Debug\ErrorHandler'
+                && $old[0] instanceof \Symfony\Component\Debug\ErrorHandler
             ) {
                 restore_error_handler();
             }

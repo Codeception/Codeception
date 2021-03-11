@@ -26,7 +26,7 @@ class Bootstrap extends InitTemplate
      */
     protected $envsDir = 'tests/_envs';
 
-    public function setup()
+    public function setup(): void
     {
         $this->checkInstalled($this->workDir);
 
@@ -94,7 +94,7 @@ class Bootstrap extends InitTemplate
 # Include one of framework modules (Symfony, Yii2, Laravel, Phalcon4) to use it
 # Remove this suite if you don't use frameworks
 
-actor: $actor{$this->actorSuffix}
+actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         # add a framework module here
@@ -115,7 +115,7 @@ EOF;
 # Perform tests in browser using the WebDriver or PhpBrowser.
 # If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
-actor: $actor{$this->actorSuffix}
+actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         - PhpBrowser:
@@ -135,7 +135,7 @@ EOF;
 #
 # Suite for unit or integration tests.
 
-actor: $actor{$this->actorSuffix}
+actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         - Asserts

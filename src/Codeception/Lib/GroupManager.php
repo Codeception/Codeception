@@ -23,7 +23,7 @@ class GroupManager
     /**
      * @var string[]
      */
-    protected $configuredGroups;
+    protected $configuredGroups = [];
 
     /**
      * @var mixed[][]

@@ -51,10 +51,10 @@ class GenerateCept extends Command
         $fullPath = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
         $res = $this->createFile($fullPath, $cept->produce());
         if (!$res) {
-            $output->writeln("<error>Test $filename already exists</error>");
+            $output->writeln("<error>Test {$filename} already exists</error>");
             return 1;
         }
-        $output->writeln("<info>Test was created in $fullPath</info>");
+        $output->writeln("<info>Test was created in {$fullPath}</info>");
         return 0;
     }
 }

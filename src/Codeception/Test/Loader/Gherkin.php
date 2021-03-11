@@ -75,7 +75,7 @@ class Gherkin implements LoaderInterface
     public function __construct($settings = [])
     {
         $this->settings = Configuration::mergeConfigs(self::$defaultSettings, $settings);
-        if (!class_exists('Behat\Gherkin\Keywords\ArrayKeywords')) {
+        if (!class_exists(\Behat\Gherkin\Keywords\ArrayKeywords::class)) {
             throw new TestParseException('Feature file can only be parsed with Behat\Gherkin library. Please install `behat/gherkin` with Composer');
         }
         $gherkin = new ReflectionClass(\Behat\Gherkin\Gherkin::class);
@@ -162,8 +162,8 @@ class Gherkin implements LoaderInterface
         if (strpos($pattern, '/') !== 0) {
             $pattern = preg_quote($pattern);
 
-            $pattern = preg_replace('~(\w+)\/(\w+)~', '(?:$1|$2)', $pattern); // or
-            $pattern = preg_replace('~\\\\\((\w)\\\\\)~', '$1?', $pattern); // (s)
+            $pattern = preg_replace('#(\w+)\/(\w+)#', '(?:$1|$2)', $pattern); // or
+            $pattern = preg_replace('#\\\\\((\w)\\\\\)#', '$1?', $pattern); // (s)
 
             $replacePattern = sprintf(
                 '(?|\"%s\"|%s)',
@@ -172,14 +172,14 @@ class Gherkin implements LoaderInterface
             ); // or matching numbers with optional $ or € chars
 
             // params converting from :param to match 11 and "aaa" and "aaa\"aaa"
-            $pattern = preg_replace('~"?\\\:(\w+)"?~', $replacePattern, $pattern);
-            $pattern = "/^{$pattern}$/u";
+            $pattern = preg_replace('#"?\\\:(\w+)"?#', $replacePattern, $pattern);
+            $pattern = "#^{$pattern}$#u";
             // validating this pattern is slow, so we skip it now
         }
         return $pattern;
     }
 
-    private function validatePattern($pattern): void
+    private function validatePattern(string $pattern): void
     {
         if (strpos($pattern, '/') !== 0) {
             return; // not a user-regex but a string with placeholder
@@ -193,7 +193,7 @@ class Gherkin implements LoaderInterface
     {
         $featureNode = $this->parser->parse(file_get_contents($filename), $filename);
 
-        if ($featureNode === null) {
+        if (!$featureNode instanceof \Behat\Gherkin\Node\FeatureNode) {
             return;
         }
 

@@ -16,7 +16,6 @@ class ModuleRequireException extends Exception
      * ModuleRequireException constructor.
      *
      * @param object|string $module
-     * @param string $message
      */
     public function __construct($module, string $message)
     {

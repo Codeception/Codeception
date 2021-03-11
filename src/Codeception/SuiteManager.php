@@ -12,15 +12,13 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
 use PHPUnit\Framework\DataProviderTestSuite;
+use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestSuite;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
 {
-    public static $environment;
-    public static $name;
-
     /**
      * @var TestSuite
      */
@@ -47,34 +45,20 @@ class SuiteManager
     protected $di;
 
     /**
-     * @var array
-     */
-    protected $tests = [];
-
-    /**
-     * @var bool
-     */
-    protected $debug = false;
-
-    /**
      * @var string
      */
-    protected $path = '';
-    protected $printer = null;
-
-    protected $env = null;
+    protected $env = '';
 
     /**
      * @var array
      */
-    protected $settings;
+    protected $settings = [];
 
     public function __construct(EventDispatcher $dispatcher, string $name, array $settings)
     {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
         $this->di = new Di();
-        $this->path = $settings['path'];
         $this->groupManager = new GroupManager($settings['groups']);
         $this->moduleContainer = new ModuleContainer($this->di, $settings);
 
@@ -120,12 +104,11 @@ class SuiteManager
         $this->suite->reorderDependencies();
     }
 
-    /**
-     * @param TestInterface|DataProviderTestSuite $test
-     */
-    protected function addToSuite($test): void
+    protected function addToSuite(PHPUnitTest $test): void
     {
-        $this->configureTest($test);
+        if ($test instanceof TestInterface) {
+            $this->configureTest($test);
+        }
 
         if ($test instanceof DataProviderTestSuite) {
             foreach ($test->tests() as $t) {
@@ -133,6 +116,7 @@ class SuiteManager
             }
             return;
         }
+
         if ($test instanceof TestInterface) {
             $this->checkEnvironmentExists($test);
             if (!$this->isExecutedInCurrentEnvironment($test)) {
@@ -152,9 +136,9 @@ class SuiteManager
     protected function createSuite(string $name): Suite
     {
         $suite = new Suite();
-        $suite->setBaseName(preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
+        $suite->setBaseName(preg_replace('#\s.+$#', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
-            $name = $this->settings['namespace'] . ".$name";
+            $name = $this->settings['namespace'] . ".{$name}";
         }
         $suite->setName($name);
         if (isset($this->settings['backup_globals'])) {
@@ -210,11 +194,10 @@ class SuiteManager
             Notification::warning("Environments are not configured", Descriptor::getTestFullName($test));
             return;
         }
-        $availableEnvironments = array_keys($this->settings['env']);
         $listedEnvironments = explode(',', implode(',', $envs));
         foreach ($listedEnvironments as $env) {
-            if (!in_array($env, $availableEnvironments)) {
-                Notification::warning("Environment $env was not configured but used in test", Descriptor::getTestFullName($test));
+            if (!array_key_exists($env, $this->settings['env'])) {
+                Notification::warning("Environment {$env} was not configured but used in test", Descriptor::getTestFullName($test));
             }
         }
     }
@@ -225,7 +208,7 @@ class SuiteManager
         if (empty($envs)) {
             return true;
         }
-        $currentEnvironments = explode(',', (string) $this->env);
+        $currentEnvironments = explode(',', $this->env);
         foreach ($envs as $envList) {
             $envList = explode(',', $envList);
             if (count($envList) == count(array_intersect($currentEnvironments, $envList))) {
@@ -235,14 +218,8 @@ class SuiteManager
         return false;
     }
 
-    /**
-     * @param TestInterface|ScenarioDriven $test
-     */
-    protected function configureTest($test): void
+    protected function configureTest(TestInterface $test): void
     {
-        if (!$test instanceof TestInterface) {
-            return;
-        }
         $test->getMetadata()->setServices([
             'di' => clone($this->di),
             'dispatcher' => $this->dispatcher,

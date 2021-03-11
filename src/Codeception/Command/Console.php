@@ -114,7 +114,7 @@ class Console extends Command
 
         $this->listenToSignals();
 
-        $output->writeln("<info>Interactive console started for suite $suiteName</info>");
+        $output->writeln("<info>Interactive console started for suite {$suiteName}</info>");
         $output->writeln("<info>Try Codeception commands without writing a test</info>");
 
         $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResult(), $settings);
@@ -130,6 +130,7 @@ class Console extends Command
 
         $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_AFTER);
         $eventDispatcher->dispatch(new SuiteEvent($this->suite), Events::SUITE_AFTER);
+
         $output->writeln("<info>Bye-bye!</info>");
         return 0;
     }

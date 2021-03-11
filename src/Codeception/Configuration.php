@@ -286,7 +286,6 @@ class Configuration
 
     /**
      * @param string|false $bootstrap
-     * @param string $path
      * @throws ConfigurationException
      */
     public static function loadBootstrap($bootstrap, string $path): void
@@ -323,7 +322,7 @@ class Configuration
 
         /** @var SplFileInfo $suite */
         foreach ($suites as $suite) {
-            preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
+            preg_match('#(.*?)(\.suite|\.suite\.dist)\.yml#', $suite->getFilename(), $matches);
             self::$suites[$matches[1]] = $matches[1];
         }
     }
@@ -332,7 +331,6 @@ class Configuration
      * Returns suite configuration. Requires suite name and global config used (Configuration::config)
      *
      * @throws Exception
-     * @return array
      */
     public static function suiteSettings(string $suite, array $config): array
     {
@@ -430,7 +428,6 @@ class Configuration
      *
      * @param string $contents Yaml config file contents
      * @param string $filename which is supposed to be loaded
-     * @return array
      * @throws ConfigurationException
      */
     protected static function getConfFromContents(string $contents, string $filename = '(.yml)'): array
@@ -463,7 +460,6 @@ class Configuration
      *
      * @param string $filename filename
      * @param array|null $nonExistentValue value used if filename is not found
-     * @return array|null
      * @throws ConfigurationException
      */
     protected static function getConfFromFile(string $filename, ?array $nonExistentValue = []): ?array
@@ -487,7 +483,6 @@ class Configuration
      * Return list of enabled modules according suite config.
      *
      * @param array $settings suite settings
-     * @return array
      */
     public static function modules(array $settings): array
     {
@@ -709,9 +704,8 @@ class Configuration
         }
 
         $settings = self::mergeConfigs($settings, $suiteDistConf);
-        $settings = self::mergeConfigs($settings, $suiteConf);
 
-        return $settings;
+        return self::mergeConfigs($settings, $suiteConf);
     }
 
     /**
@@ -739,7 +733,7 @@ class Configuration
      */
     protected static function expandWildcardsFor(string $include): array
     {
-        if (1 !== preg_match('/[\?\.\*]/', $include)) {
+        if (1 !== preg_match('#[\?\.\*]#', $include)) {
             return [$include,];
         }
 

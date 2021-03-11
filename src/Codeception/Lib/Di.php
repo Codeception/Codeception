@@ -34,11 +34,7 @@ class Di
         $this->fallback = $fallback;
     }
 
-    /**
-     * @param string $className
-     * @return object|bool|null
-     */
-    public function get(string $className)
+    public function get(string $className): ?object
     {
         // normalize namespace
         $className = ltrim($className, '\\');
@@ -51,9 +47,9 @@ class Di
     }
 
     /**
-     * @param string $className
      * @param array|null $constructorArgs
      * @param string $injectMethodName Method which will be invoked after object creation;
+
      *                                 Resolved dependencies will be passed to it as arguments
      * @throws InjectionException|ReflectionException
      * @return null|object
@@ -72,7 +68,7 @@ class Di
                 return $this->container[$className];
             }
 
-            throw new InjectionException("Failed to resolve cyclic dependencies for class '$className'");
+            throw new InjectionException("Failed to resolve cyclic dependencies for class '{$className}'");
         }
 
         // get class from parent container
@@ -112,7 +108,6 @@ class Di
     /**
      * @param $object
      * @param string $injectMethodName Method which will be invoked with resolved dependencies as its arguments
-     * @param array $defaults
      * @throws InjectionException|ReflectionException
      */
     public function injectDependencies($object, string $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME, array $defaults = []): void
@@ -136,7 +131,7 @@ class Di
                 $msg .= '; '. $e->getPrevious();
             }
             throw new InjectionException(
-                "Failed to inject dependencies in instance of '{$reflectedObject->name}'. $msg"
+                "Failed to inject dependencies in instance of '{$reflectedObject->name}'. {$msg}"
             );
         }
 

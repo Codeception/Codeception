@@ -102,7 +102,7 @@ EOF;
         $pattern = $step->getText();
 
         // match numbers (not in quotes)
-        if (preg_match_all('~([\d\.])(?=([^"]*"[^"]*")*[^"]*$)~', $pattern, $matches)) {
+        if (preg_match_all('#([\d\.])(?=([^"]*"[^"]*")*[^"]*$)#', $pattern, $matches)) {
             foreach ($matches[1] as $num => $param) {
                 ++$num;
                 $args[] = '$num' . $num;
@@ -111,7 +111,7 @@ EOF;
         }
 
         // match quoted string
-        if (preg_match_all('~"(.*?)"~', $pattern, $matches)) {
+        if (preg_match_all('#"(.*?)"#', $pattern, $matches)) {
             foreach ($matches[1] as $num => $param) {
                 ++$num;
                 $args[] = '$arg' . $num;
@@ -128,7 +128,7 @@ EOF;
             return;
         }
 
-        $methodName = preg_replace('~(\s+?|\'|\"|\W)~', '', ucwords(preg_replace('~"(.*?)"|\d+~', '', $step->getText())));
+        $methodName = preg_replace('#(\s+?|\'|\"|\W)#', '', ucwords(preg_replace('#"(.*?)"|\d+#', '', $step->getText())));
         if (empty($methodName)) {
             $methodName = 'step_' . substr(sha1($pattern), 0, 9);
         }

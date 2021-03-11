@@ -42,7 +42,7 @@ EOF;
 EOF;
 
 
-    public function setup()
+    public function setup(): void
     {
         $this->sayInfo('This will install Codeception for unit testing only');
         $this->say();

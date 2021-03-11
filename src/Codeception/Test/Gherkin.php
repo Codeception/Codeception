@@ -144,7 +144,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     private function contextAsString($context): string
     {
         if (is_array($context) && count($context) === 2) {
-            list($class, $method) = $context;
+            [$class, $method] = $context;
 
             if (is_string($class) && is_string($method)) {
                 return $class . ':' . $method;

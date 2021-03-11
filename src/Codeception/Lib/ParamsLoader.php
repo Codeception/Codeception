@@ -39,23 +39,23 @@ class ParamsLoader
         }
 
         try {
-            if (preg_match('~\.ya?ml$~', $paramStorage)) {
+            if (preg_match('#\.ya?ml$#', $paramStorage)) {
                 return $this->loadYamlFile();
             }
 
-            if (preg_match('~\.ini$~', $paramStorage)) {
+            if (preg_match('#\.ini$#', $paramStorage)) {
                 return $this->loadIniFile();
             }
 
-            if (preg_match('~\.php$~', $paramStorage)) {
+            if (preg_match('#\.php$#', $paramStorage)) {
                 return $this->loadPhpFile();
             }
 
-            if (preg_match('~(\.env(\.|$))~', $paramStorage)) {
+            if (preg_match('#(\.env(\.|$))#', $paramStorage)) {
                 return $this->loadDotEnvFile();
             }
 
-            if (preg_match('~\.xml$~', $paramStorage)) {
+            if (preg_match('#\.xml$#', $paramStorage)) {
                 return $this->loadXmlFile();
             }
         } catch (\Exception $e) {

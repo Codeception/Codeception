@@ -8,6 +8,7 @@ use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionProperty;
+use ReflectionType;
 use function array_filter;
 use function array_keys;
 use function array_map;
@@ -82,7 +83,7 @@ class ReflectionHelper
     public static function getClassFromParameter(ReflectionParameter $parameter): ?string
     {
         $type = $parameter->getType();
-        if ($type === null || $type->isBuiltin()) {
+        if (!$type instanceof ReflectionType || $type->isBuiltin()) {
             return null;
         }
         $typeString = $type->getName();
@@ -106,7 +107,7 @@ class ReflectionHelper
             if (method_exists($parameter, 'isDefaultValueConstant') && $parameter->isDefaultValueConstant()) {
                 $constName = $parameter->getDefaultValueConstantName();
                 if (false !== strpos($constName, '::')) {
-                    list($class, $const) = explode('::', $constName);
+                    [$class, $const] = explode('::', $constName);
                     if (in_array($class, ['self', 'static'])) {
                         $constName = '\\' . $parameter->getDeclaringClass()->getName() . '::' . $const;
                     } elseif (substr($class, 0, 1) !== '\\') {
@@ -150,7 +151,6 @@ class ReflectionHelper
      * PHP encode value
      *
      * @param mixed $value
-     * @return string
      */
     public static function phpEncodeValue($value): string
     {

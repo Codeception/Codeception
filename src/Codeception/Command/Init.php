@@ -43,13 +43,13 @@ class Init extends Command
             $className = 'Codeception\Template\\' . ucfirst($template);
 
             if (!class_exists($className)) {
-                throw new Exception("Template from a $className can't be loaded; Init can't be executed");
+                throw new Exception("Template from a {$className} can't be loaded; Init can't be executed");
             }
         }
 
         $initProcess = new $className($input, $output);
         if (!$initProcess instanceof InitTemplate) {
-            throw new Exception("$className is not a valid template");
+            throw new Exception("{$className} is not a valid template");
         }
         if ($path = $input->getOption('path')) {
             $initProcess->initDir($path);

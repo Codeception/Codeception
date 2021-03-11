@@ -103,9 +103,6 @@ class ModuleContainer
     /**
      * Create a module.
      *
-     * @param string $moduleName
-     * @param bool $active
-     * @return object|null
      * @throws ConfigurationException
      * @throws InjectionException
      * @throws ModuleException

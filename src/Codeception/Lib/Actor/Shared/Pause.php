@@ -117,7 +117,7 @@ trait Pause
                 return;
             }
             try {
-                $value = eval("return \$I->$command;");
+                $value = eval("return \$I->{$command};");
                 if ($value) {
                     $result = $value;
                     if (!is_object($result)) {

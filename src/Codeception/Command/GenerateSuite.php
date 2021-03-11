@@ -53,7 +53,7 @@ class GenerateSuite extends Command
         $actor = $input->getArgument('actor');
 
         if ($this->containsInvalidCharacters($suite)) {
-            $output->writeln("<error>Suite name '$suite' contains invalid characters. ([A-Za-z0-9_]).</error>");
+            $output->writeln("<error>Suite name '{$suite}' contains invalid characters. ([A-Za-z0-9_]).</error>");
             return 1;
         }
 
@@ -64,7 +64,7 @@ class GenerateSuite extends Command
 
         $dir = Configuration::testsDir();
         if (file_exists($dir . $suite . '.suite.yml')) {
-            throw new Exception("Suite configuration file '$suite.suite.yml' already exists.");
+            throw new Exception("Suite configuration file '{$suite}.suite.yml' already exists.");
         }
 
         $this->createDirectoryFor($dir . $suite);
@@ -82,8 +82,8 @@ class GenerateSuite extends Command
 
         $file = $this->createDirectoryFor(
             Configuration::supportDir() . "Helper",
-            "$helperName.php"
-        ) . "$helperName.php";
+            "{$helperName}.php"
+        ) . "{$helperName}.php";
 
         $helper = new HelperGenerator($helperName, $config['namespace']);
         // generate helper
@@ -92,7 +92,7 @@ class GenerateSuite extends Command
             $helper->produce()
         );
 
-        $output->writeln("Helper <info>" . $helper->getHelperName() . "</info> was created in $file");
+        $output->writeln("Helper <info>" . $helper->getHelperName() . "</info> was created in {$file}");
 
         $yamlSuiteConfigTemplate = <<<EOF
 actor: {{actor}}
@@ -122,16 +122,16 @@ EOF;
 
         $this->createFile($file, $content);
 
-        $output->writeln("Actor <info>" . $actor . "</info> was created in $file");
+        $output->writeln("Actor <info>" . $actor . "</info> was created in {$file}");
 
-        $output->writeln("Suite config <info>$suite.suite.yml</info> was created.");
+        $output->writeln("Suite config <info>{$suite}.suite.yml</info> was created.");
         $output->writeln(' ');
         $output->writeln("Next steps:");
-        $output->writeln("1. Edit <bold>$suite.suite.yml</bold> to enable modules for this suite");
+        $output->writeln("1. Edit <bold>{$suite}.suite.yml</bold> to enable modules for this suite");
         $output->writeln("2. Create first test with <bold>generate:cest testName</bold> ( or test|cept) command");
-        $output->writeln("3. Run tests of this suite with <bold>codecept run $suite</bold> command");
+        $output->writeln("3. Run tests of this suite with <bold>codecept run {$suite}</bold> command");
 
-        $output->writeln("<info>Suite $suite generated</info>");
+        $output->writeln("<info>Suite {$suite} generated</info>");
         return 0;
     }
 

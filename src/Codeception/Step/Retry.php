@@ -65,7 +65,7 @@ EOF;
                 if (!$this->isTry) {
                     throw $e;
                 }
-                codecept_debug("Retrying #{$retry} in ${interval}ms");
+                codecept_debug("Retrying #{$retry} in {$interval}ms");
                 usleep($interval * 1000);
                 $interval *= 2;
             }
@@ -84,7 +84,7 @@ EOF;
             return null; // dont retry waiters
         }
 
-        $doc = "* Executes $action and retries on failure.";
+        $doc = "* Executes {$action} and retries on failure.";
 
         return (new Template(self::$methodTemplate))
             ->place('method', $template->getVar('method'))

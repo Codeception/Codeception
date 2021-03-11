@@ -111,7 +111,6 @@ abstract class InitTemplate
      * $this->ask('do you want to proceed (y/n)', true);
      * ```
      *
-     * @param string $question
      * @param array|bool|null $answer
      * @return mixed|string
      */
@@ -195,7 +194,7 @@ abstract class InitTemplate
             $gen->produce()
         );
         require_once $file;
-        $this->sayInfo("{$name} helper has been created in $dir");
+        $this->sayInfo("{$name} helper has been created in {$dir}");
     }
 
     /**

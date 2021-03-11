@@ -26,6 +26,7 @@ class ModuleTest extends Unit
 
     protected function _setUp()
     {
+        $this->markTestIncomplete('TODO: Replace Prophet');
         $this->prophet = new Prophet();
         CodeceptionModuleStub::$callOrderSequence = 1;
     }
@@ -72,10 +73,10 @@ class ModuleTest extends Unit
         );
         $suite = $suite->reveal();
 
-
         /** @var SuiteEvent|ObjectProphecy $suiteEvent */
         $suiteEvent = $this->prophet->prophesize(SuiteEvent::class);
         $suiteEvent->getSuite()->willReturn($suite);
+        $suiteEvent->getSettings()->willReturn([]);
         $suiteEvent = $suiteEvent->reveal();
 
         $subject = new Module();

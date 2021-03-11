@@ -13,7 +13,6 @@ use PHPUnit\Framework\DataProviderTestSuite;
 use ReflectionClass;
 use ReflectionException;
 use function array_map;
-use function count;
 use function get_class_methods;
 use function strlen;
 use function strpos;
@@ -62,7 +61,7 @@ class Cest implements LoaderInterface
 
                 // example Annotation
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
-                if (count($rawExamples) > 0) {
+                if ($rawExamples !== []) {
                     $examples = array_map(
                         function ($v) {
                             return Annotation::arrayValue($v);

@@ -65,7 +65,7 @@ class GenerateScenarios extends Command
 
         if (!is_writable($path)) {
             throw new ConfigurationException(
-                "Path $path is not writable. Please, set valid permissions for folder to store scenarios."
+                "Path {$path} is not writable. Please, set valid permissions for folder to store scenarios."
             );
         }
 
@@ -98,11 +98,11 @@ class GenerateScenarios extends Command
 
             if ($input->getOption('single-file')) {
                 $scenarios .= $feature;
-                $output->writeln("* $name rendered");
+                $output->writeln("* {$name} rendered");
             } else {
                 $feature = $this->decorate($feature, $format);
                 $this->createFile($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
-                $output->writeln("* $name generated");
+                $output->writeln("* {$name} generated");
             }
         }
 
@@ -118,7 +118,7 @@ class GenerateScenarios extends Command
             case 'text':
                 return $text;
             case 'html':
-                return "<html><body>$text</body></html>";
+                return "<html><body>{$text}</body></html>";
         }
     }
 
@@ -140,11 +140,10 @@ class GenerateScenarios extends Command
 
     private function underscore(string $name): string
     {
-        $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1_\\2', $name);
-        $name = preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $name);
+        $name = preg_replace('#([A-Z]+)([A-Z][a-z])#', '\\1_\\2', $name);
+        $name = preg_replace('#([a-z\d])([A-Z])#', '\\1_\\2', $name);
         $name = str_replace(['/', '\\'], ['.', '.'], $name);
-        $name = preg_replace('/_Cept$/', '', $name);
-        $name = preg_replace('/_Cest$/', '', $name);
-        return $name;
+        $name = preg_replace('#_Cept$#', '', $name);
+        return preg_replace('#_Cest$#', '', $name);
     }
 }

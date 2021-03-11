@@ -51,17 +51,17 @@ class GenerateCest extends Command
         $filename = $path . $filename;
 
         if (file_exists($filename)) {
-            $output->writeln("<error>Test $filename already exists</error>");
+            $output->writeln("<error>Test {$filename} already exists</error>");
             return 1;
         }
         $cest = new CestGenerator($class, $config);
         $res = $this->createFile($filename, $cest->produce());
         if (!$res) {
-            $output->writeln("<error>Test $filename already exists</error>");
+            $output->writeln("<error>Test {$filename} already exists</error>");
             return 1;
         }
 
-        $output->writeln("<info>Test was created in $filename</info>");
+        $output->writeln("<info>Test was created in {$filename}</info>");
         return 0;
     }
 }

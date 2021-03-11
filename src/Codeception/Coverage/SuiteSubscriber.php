@@ -62,7 +62,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     /**
      * @var array
      */
-    protected $options;
+    protected $options = [];
     /**
      * @var array
      */
@@ -73,7 +73,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     /**
      * SuiteSubscriber constructor.
      *
-     * @param array $options
      * @throws ConfigurationException
      */
     public function __construct(array $options = [])
@@ -83,7 +82,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param array $settings
      * @throws Exception
      */
     protected function applySettings(array $settings): void
@@ -119,10 +117,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param array $modules
-     * @return RemoteInterface|null
-     */
     protected function getServerConnectionModule(array $modules): ?RemoteInterface
     {
         foreach ($modules as $module) {
@@ -134,7 +128,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param TestResult $result
      * @throws ConfigurationException|ModuleException|Exception
      */
     public function applyFilter(TestResult $result): void

@@ -14,7 +14,7 @@ trait ErrorLogger
 
     public function errorLoggerEnd(string $status, float $time, Throwable $exception = null): void
     {
-        if (!$exception) {
+        if ($exception === null) {
             return;
         }
 

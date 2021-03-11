@@ -71,10 +71,10 @@ class GenerateStepObject extends Command
         $res = $this->createFile($filename, $stepObject->produce());
 
         if (!$res) {
-            $output->writeln("<error>StepObject $filename already exists</error>");
+            $output->writeln("<error>StepObject {$filename} already exists</error>");
             return 1;
         }
-        $output->writeln("<info>StepObject was created in $filename</info>");
+        $output->writeln("<info>StepObject was created in {$filename}</info>");
         return 0;
     }
 }

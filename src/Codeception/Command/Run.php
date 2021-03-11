@@ -262,8 +262,6 @@ class Run extends Command
     /**
      * Executes Run
      *
-     * @param InputInterface $input
-     * @param OutputInterface $output
      * @return int|null|void
      * @throws ConfigurationException|ParseException
      */
@@ -282,7 +280,7 @@ class Run extends Command
         $config = $this->getGlobalConfig();
 
         // update config from options
-        if (count($this->options['override'])) {
+        if (!empty($this->options['override'])) {
             $config = $this->overrideConfig($this->options['override']);
         }
         if ($this->options['ext']) {
@@ -385,7 +383,7 @@ class Run extends Command
                         $testsPath = $include . DIRECTORY_SEPARATOR.  $config['paths']['tests'];
 
                         try {
-                            list(, $suite, $test) = $this->matchTestFromFilename($suite, $testsPath);
+                            [, $suite, $test] = $this->matchTestFromFilename($suite, $testsPath);
                             $isIncludeTest = true;
                         } catch (InvalidArgumentException $e) {
                             // Incorrect include match, continue trying to find one
@@ -394,7 +392,7 @@ class Run extends Command
                     } else {
                         $result = $this->matchSingleTest($suite, $config);
                         if ($result) {
-                            list(, $suite, $test) = $result;
+                            [, $suite, $test] = $result;
                         }
                     }
                 }
@@ -406,7 +404,7 @@ class Run extends Command
             } elseif (!empty($suite)) {
                 $result = $this->matchSingleTest($suite, $config);
                 if ($result) {
-                    list(, $suite, $test) = $result;
+                    [, $suite, $test] = $result;
                 }
             }
         }
@@ -458,7 +456,7 @@ class Run extends Command
     {
         // Workaround when codeception.yml is inside tests directory and tests path is set to "."
         // @see https://github.com/Codeception/Codeception/issues/4432
-        if (isset($config['paths']['tests']) && $config['paths']['tests'] === '.' && !preg_match('~^\.[/\\\]~', $suite)) {
+        if (isset($config['paths']['tests']) && $config['paths']['tests'] === '.' && !preg_match('#^\.[/\\\]#', $suite)) {
             $suite = './' . $suite;
         }
 
@@ -472,7 +470,7 @@ class Run extends Command
                 if ($suiteConfig['path'] === '.') {
                     $testsPath = $config['paths']['tests'];
                 }
-                if (preg_match("~^$testsPath/(.*?)$~", $suite, $matches)) {
+                if (preg_match("#^{$testsPath}/(.*?)$#", $suite, $matches)) {
                     $matches[2] = $matches[1];
                     $matches[1] = $s;
                     return $matches;
@@ -492,7 +490,7 @@ class Run extends Command
             if (strpos($realTestDir, $cwd) === 0) {
                 $file = $suite;
                 if (strpos($file, ':') !== false) {
-                    list($file) = explode(':', $suite, -1);
+                    [$file] = explode(':', $suite, -1);
                 }
                 $realPath = $cwd . DIRECTORY_SEPARATOR . $file;
                 if (file_exists($realPath) && strpos($realPath, $realTestDir) === 0) {
@@ -511,8 +509,6 @@ class Run extends Command
     /**
      * Runs included suites recursively
      *
-     * @param array $suites
-     * @param string $parentDir
      * @throws ConfigurationException
      */
     protected function runIncludedSuites(array $suites, string $parentDir): void
@@ -524,7 +520,7 @@ class Run extends Command
 
             $namespace = $this->currentNamespace();
             $this->output->writeln(
-                "\n<fg=white;bg=magenta>\n[$namespace]: tests from $currentDir\n</fg=white;bg=magenta>"
+                "\n<fg=white;bg=magenta>\n[{$namespace}]: tests from {$currentDir}\n</fg=white;bg=magenta>"
             );
 
             $this->executed += $this->runSuites($suites, $this->options['skip']);
@@ -570,13 +566,13 @@ class Run extends Command
         if (strpos($filename, ':') !== false) {
             if ((PHP_OS === 'Windows' || PHP_OS === 'WINNT') && $filename[1] === ':') {
                 // match C:\...
-                list($drive, $path, $filter) = explode(':', $filename, 3);
+                [$drive, $path, $filter] = explode(':', $filename, 3);
                 $filename = $drive . ':' . $path;
             } else {
-                list($filename, $filter) = explode(':', $filename, 2);
+                [$filename, $filter] = explode(':', $filename, 2);
             }
 
-            if ($filter) {
+            if ($filter !== '') {
                 $filter = ':' . $filter;
             }
         }
@@ -588,7 +584,7 @@ class Run extends Command
             //codecept run tests
             return ['', '', $filter];
         }
-        $res = preg_match("~^$testsPath/(.*?)(?>/(.*))?$~", $filename, $matches);
+        $res = preg_match("#^{$testsPath}/(.*?)(?>/(.*))?$#", $filename, $matches);
 
         if (!$res) {
             throw new InvalidArgumentException("Test file can't be matched");
@@ -596,7 +592,7 @@ class Run extends Command
         if (!isset($matches[2])) {
             $matches[2] = '';
         }
-        if ($filter) {
+        if ($filter !== '') {
             $matches[2] .= $filter;
         }
 
@@ -607,7 +603,7 @@ class Run extends Command
     {
         $testParts = explode(':', $path, 2);
         if (count($testParts) > 1) {
-            list($path, $filter) = $testParts;
+            [$path, $filter] = $testParts;
             // use carat to signify start of string like in normal regex
             // phpunit --filter matches against the fully qualified method name, so tests actually begin with :
             $caratPos = strpos($filter, '^');
@@ -621,7 +617,6 @@ class Run extends Command
     }
 
     /**
-     * @param InputInterface $input
      * @return string[]
      */
     protected function passedOptionKeys(InputInterface $input): array
@@ -630,7 +625,7 @@ class Run extends Command
         $request = (string)$input;
         $tokens = explode(' ', $request);
         foreach ($tokens as $token) {
-            $token = preg_replace('~=.*~', '', $token); // strip = from options
+            $token = preg_replace('#=.*#', '', $token); // strip = from options
 
             if (empty($token)) {
                 continue;
@@ -651,11 +646,9 @@ class Run extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param array $options
      * @return array<string, bool>
      */
-    protected function booleanOptions(InputInterface $input, $options = []): array
+    protected function booleanOptions(InputInterface $input, array $options = []): array
     {
         $values = [];
         $request = (string)$input;
@@ -671,7 +664,6 @@ class Run extends Command
     }
 
     /**
-     * @param string $ext
      * @throws Exception
      */
     private function ensurePhpExtIsAvailable(string $ext): void

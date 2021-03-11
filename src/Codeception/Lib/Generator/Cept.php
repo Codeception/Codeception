@@ -22,7 +22,7 @@ EOF;
     /**
      * @var array
      */
-    protected $settings;
+    protected $settings = [];
 
     public function __construct(array $settings)
     {
@@ -38,7 +38,7 @@ EOF;
         $use = '';
         if (! empty($this->settings['namespace'])) {
             $namespace = rtrim($this->settings['namespace'], '\\');
-            $use = "use {$namespace}\\$actor;";
+            $use = "use {$namespace}\\{$actor};";
         }
 
         return (new Template($this->template))

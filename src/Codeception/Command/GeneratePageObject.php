@@ -67,10 +67,10 @@ class GeneratePageObject extends Command
         $res = $this->createFile($filename, $pageObject->produce());
 
         if (!$res) {
-            $output->writeln("<error>PageObject $filename already exists</error>");
+            $output->writeln("<error>PageObject {$filename} already exists</error>");
             return 1;
         }
-        $output->writeln("<info>PageObject was created in $filename</info>");
+        $output->writeln("<info>PageObject was created in {$filename}</info>");
         return 0;
     }
 }

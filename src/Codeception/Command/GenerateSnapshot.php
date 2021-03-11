@@ -68,10 +68,10 @@ class GenerateSnapshot extends Command
         $res = $this->createFile($filename, $snapshot->produce());
 
         if (!$res) {
-            $output->writeln("<error>Snapshot $filename already exists</error>");
+            $output->writeln("<error>Snapshot {$filename} already exists</error>");
             return 1;
         }
-        $output->writeln("<info>Snapshot was created in $filename</info>");
+        $output->writeln("<info>Snapshot was created in {$filename}</info>");
         return 0;
     }
 }

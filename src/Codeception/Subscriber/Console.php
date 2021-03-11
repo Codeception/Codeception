@@ -644,7 +644,7 @@ class Console implements EventSubscriberInterface
         } elseif ($this->isWin() && (PHP_SAPI === "cli")) {
             exec('mode con', $output);
             if (isset($output[4])) {
-                preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
+                preg_match('#^ +.* +(\d+)$#', $output[4], $matches);
                 if (!empty($matches[1])) {
                     $this->width = (int) $matches[1];
                 }
@@ -663,7 +663,7 @@ class Console implements EventSubscriberInterface
         $prefix = ($this->output->isInteractive() && !$this->isDetailed($test) && $inProgress) ? '- ' : '';
 
         $testString = Descriptor::getTestAsString($test);
-        $testString = preg_replace('~^([^:]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
+        $testString = preg_replace('#^([^:]+):\s#', "<focus>$1{$this->chars['of']}</focus> ", $testString);
 
         $this
             ->message($testString)

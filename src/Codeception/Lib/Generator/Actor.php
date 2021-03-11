@@ -59,17 +59,17 @@ EOF;
     /**
      * @var array
      */
-    protected $settings;
+    protected $settings = [];
 
     /**
      * @var array
      */
-    protected $modules;
+    protected $modules = [];
 
     /**
      * @var array
      */
-    protected $actions;
+    protected $actions = [];
 
     public function __construct(array $settings)
     {
@@ -95,7 +95,7 @@ EOF;
         }
 
         return (new Template($this->template))
-            ->place('hasNamespace', $namespace ? "namespace {$namespace};" : '')
+            ->place('hasNamespace', $namespace !== '' ? "namespace {$namespace};" : '')
             ->place('actor', $this->settings['actor'])
             ->place('inheritedMethods', $this->prependAbstractActorDocBlocks())
             ->produce();

@@ -15,8 +15,14 @@ use RuntimeException;
 
 abstract class Step
 {
+    /**
+     * @var int
+     */
     const DEFAULT_MAX_LENGTH = 200;
 
+    /**
+     * @var int
+     */
     const STACK_POSITION = 3;
 
     /**
@@ -27,7 +33,7 @@ abstract class Step
     /**
      * @var array
      */
-    protected $arguments;
+    protected $arguments = [];
 
     protected $debugOutput;
 
@@ -52,7 +58,7 @@ abstract class Step
     protected $prefix = 'I';
 
     /**
-     * @var MetaStep
+     * @var MetaStep|null
      */
     protected $metaStep = null;
 
@@ -93,7 +99,7 @@ abstract class Step
 
     private function isTestFile(string $file)
     {
-        return preg_match('~[^\\'.DIRECTORY_SEPARATOR.'](Cest|Cept|Test).php$~', $file);
+        return preg_match('#[^\\'.DIRECTORY_SEPARATOR.'](Cest|Cept|Test).php$#', $file);
     }
 
     public function getName(): string
@@ -102,7 +108,7 @@ abstract class Step
         return end($class);
     }
 
-    public function getAction(): ?string
+    public function getAction(): string
     {
         return $this->action;
     }
@@ -153,7 +159,7 @@ abstract class Step
             $lengthRemaining = $maxLength;
             $argumentsRemaining = $argumentCount;
             foreach ($arguments as $key => $argument) {
-                $argumentsRemaining--;
+                --$argumentsRemaining;
                 if (mb_strlen($argument, 'utf-8') > $allowedLength) {
                     $arguments[$key] = mb_substr($argument, 0, (int) $allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
                     $lengthRemaining -= ($allowedLength + 1);
@@ -175,7 +181,6 @@ abstract class Step
 
     /**
      * @param mixed $argument
-     * @return string
      */
     protected function stringifyArgument($argument): string
     {
@@ -207,8 +212,8 @@ abstract class Step
     protected function getClassName(object $argument): string
     {
         if ($argument instanceof Closure) {
-            return 'Closure';
-        } elseif ($argument instanceof MockObject && isset($argument->__mocked)) {
+            return \Closure::class;
+        } elseif ($argument instanceof MockObject && (property_exists($argument, '__mocked') && $argument->__mocked !== null)) {
             return $this->formatClassName($argument->__mocked);
         }
 
@@ -224,9 +229,7 @@ abstract class Step
     {
         $result = "\${$this->prefix}->" . $this->getAction() . '(';
         $maxLength = $maxLength - mb_strlen($result, 'utf-8') - 1;
-
-        $result .= $this->getHumanizedArguments($maxLength) .')';
-        return $result;
+        return $result . ($this->getHumanizedArguments($maxLength) .')');
     }
 
     public function getMetaStep(): ?MetaStep
@@ -273,9 +276,9 @@ abstract class Step
 
     protected function humanize(string $text): string
     {
-        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        $text = preg_replace('~\bdont\b~', 'don\'t', $text);
+        $text = preg_replace('#([A-Z]+)([A-Z][a-z])#', '\\1 \\2', $text);
+        $text = preg_replace('#([a-z\d])([A-Z])#', '\\1 \\2', $text);
+        $text = preg_replace('#\bdont\b#', "don't", $text);
         return mb_strtolower($text, 'UTF-8');
     }
 
@@ -286,7 +289,7 @@ abstract class Step
     public function run(ModuleContainer $container = null)
     {
         $this->executed = true;
-        if (!$container) {
+        if ($container === null) {
             return null;
         }
         $activeModule = $container->moduleForAction($this->action);
@@ -302,7 +305,7 @@ abstract class Step
                 throw $e;
             }
             $this->failed = true;
-            if ($this->getMetaStep()) {
+            if ($this->getMetaStep() !== null) {
                 $this->getMetaStep()->setFailed(true);
             }
             throw $e;
@@ -316,7 +319,7 @@ abstract class Step
      */
     protected function addMetaStep(array $step, array $stack): void
     {
-        if (($this->isTestFile($this->file)) || ($step['class'] == 'Codeception\Scenario')) {
+        if (($this->isTestFile($this->file)) || ($step['class'] == \Codeception\Scenario::class)) {
             return;
         }
 
@@ -325,8 +328,8 @@ abstract class Step
         // get into test file and retrieve its actual call
         while (isset($stack[$i])) {
             $step = $stack[$i];
-            $i--;
-            if (!isset($step['file']) or !isset($step['function']) or !isset($step['class'])) {
+            --$i;
+            if (!isset($step['file']) || !isset($step['function']) || !isset($step['class'])) {
                 continue;
             }
 
@@ -341,7 +344,7 @@ abstract class Step
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // page objects or other classes should not be included with "I"
-            if (!in_array('Codeception\Actor', class_parents($step['class']))) {
+            if (!in_array(\Codeception\Actor::class, class_parents($step['class']))) {
                 if (isset($step['object'])) {
                     $this->metaStep->setPrefix(get_class($step['object']) . ':');
                     return;

@@ -151,7 +151,6 @@ class Loader
         $finder = Finder::create()->files()->sortByName()->in($this->path)->followLinks();
 
         foreach ($this->formats as $format) {
-            /** @var Loader $format **/
             $formatFinder = clone($finder);
             $testFiles = $formatFinder->name($format->getPattern());
             foreach ($testFiles as $test) {

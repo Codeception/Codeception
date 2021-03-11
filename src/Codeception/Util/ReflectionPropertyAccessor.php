@@ -40,7 +40,7 @@ class ReflectionPropertyAccessor
     /**
      * @throws ReflectionException
      */
-    private function setPropertiesForClass(?object $obj, string $class, array $data): ?object
+    private function setPropertiesForClass(?object $obj, string $class, array $data): object
     {
         $reflectionClass = new ReflectionClass($class);
 

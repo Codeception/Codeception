@@ -52,7 +52,7 @@ trait ConfigTrait
             try {
                 $config = Yaml::parse($yaml);
             } catch (ParseException $e) {
-                throw new \Codeception\Exception\ParseException("Overridden config can't be parsed: \n$yaml\n" . $e->getParsedLine());
+                throw new \Codeception\Exception\ParseException("Overridden config can't be parsed: \n{$yaml}\n" . $e->getParsedLine());
             }
             $updatedConfig = array_merge_recursive($updatedConfig, $config);
         }
@@ -66,7 +66,7 @@ trait ConfigTrait
             if (!class_exists($name)) {
                 $className = 'Codeception\\Extension\\' . ucfirst($name);
                 if (!class_exists($className)) {
-                    throw new InvalidOptionException("Extension $name can't be loaded (tried by $name and $className)");
+                    throw new InvalidOptionException("Extension {$name} can't be loaded (tried by {$name} and {$className})");
                 }
                 $config['extensions']['enabled'][] = $className;
                 continue;

@@ -18,7 +18,7 @@ class Upgrade4 extends InitTemplate
      */
     const DONATE_LINK = 'https://opencollective.com/codeception';
 
-    public function setup()
+    public function setup(): void
     {
         if (!$this->isInstalled()) {
             $this->sayWarning('Codeception is not installed in this dir.');

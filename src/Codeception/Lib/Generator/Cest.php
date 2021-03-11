@@ -37,7 +37,7 @@ EOF;
     /**
      * @var array
      */
-    protected $settings;
+    protected $settings = [];
 
     /**
      * @var string

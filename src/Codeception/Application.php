@@ -16,7 +16,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
-
     /**
      * @var SymfonyArgvInput|null
      */
@@ -79,11 +78,10 @@ class Application extends BaseApplication
     /**
      * Validate and get the name of the command
      *
-     * @param CustomCommandInterface|string $commandClass
-     * @return string
+     * @param class-string $commandClass A class that implement the `\Codeception\CustomCommandInterface`.
      * @throws ConfigurationException
      */
-    protected function getCustomCommandName($commandClass): string
+    protected function getCustomCommandName(string $commandClass): string
     {
         if (!class_exists($commandClass)) {
             throw new ConfigurationException("Extension: Command class {$commandClass} not found");
@@ -149,7 +147,7 @@ class Application extends BaseApplication
             $argv = $_SERVER['argv'];
 
             for ($i = 0; $i < count($argv); ++$i) {
-                if (preg_match('/^(?:-([^c-]*)?c|--config(?:=|$))(.*)$/', $argv[$i], $match)) {
+                if (preg_match('#^(?:-([^c-]*)?c|--config(?:=|$))(.*)$#', $argv[$i], $match)) {
                     if (!empty($match[2])) { //same index
                         $this->preloadConfiguration($match[2]);
                     } elseif (isset($argv[$i + 1])) { //next index
