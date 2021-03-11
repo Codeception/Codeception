@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class CleanCest
+final class CleanCest
 {
     public function cleanDoesNotDeleteGitKeepFiles(\CliGuy $I)
     {
