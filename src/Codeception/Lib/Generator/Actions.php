@@ -193,11 +193,16 @@ EOF;
     {
         $params = [];
         foreach ($refMethod->getParameters() as $param) {
+            $type = '';
+            $reflectionType = $param->getType();
+            if ($reflectionType !== null) {
+                $type = $this->stringifyType($reflectionType) . ' ';
+            }
             if ($param->isOptional()) {
-                $params[] = '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
+                $params[] = $type . '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
-                $params[] = '$' . $param->name;
-            };
+                $params[] = $type . '$' . $param->name;
+            }
         }
         return implode(', ', $params);
     }
@@ -253,13 +258,22 @@ EOF;
         if (!$returnType instanceof ReflectionType) {
             return '';
         }
+        return ': ' . $this->stringifyType($returnType);
+    }
 
-        $returnTypeString = $returnType->getName();
+    private function stringifyType(\ReflectionType $type): string
+    {
+        if ($type instanceof \ReflectionUnionType) {
+            $types = $type->getTypes();
+            return implode('|', $types);
+        }
+
+        $returnTypeString = $type->getName();
 
         return sprintf(
-            ': %s%s%s',
-            $returnType->allowsNull() ? '?' : '',
-            $returnType->isBuiltin() ? '' : '\\',
+            '%s%s%s',
+            $type->allowsNull() ? '?' : '',
+            $type->isBuiltin() ? '' : '\\',
             $returnTypeString
         );
     }

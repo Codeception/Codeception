@@ -18,8 +18,8 @@ class Cest
      * @var string
      */
     protected $template = <<<EOF
-<?php {{namespace}}
-
+<?php
+{{namespace}}
 class {{name}}Cest
 {
     public function _before({{actor}} \$I)

@@ -6,14 +6,11 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
-use PHPUnit\Framework\Test as PHPUnitTest;
-use PHPUnit\Framework\TestSuite\DataProvider;
 use PHPUnit\Util\Test as TestUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function call_user_func;
 use function get_class;
 use function is_callable;
-use function strstr;
 
 class BeforeAfterTest implements EventSubscriberInterface
 {
@@ -35,20 +32,10 @@ class BeforeAfterTest implements EventSubscriberInterface
      * @var array
      */
     protected $startedTests = [];
-    /**
-     * @var array
-     */
-    protected $unsuccessfulTests = [];
 
     public function beforeClass(SuiteEvent $event): void
     {
         foreach ($event->getSuite()->tests() as $test) {
-            /** @var PHPUnitTest test **/
-            if ($test instanceof DataProvider) {
-                $potentialTestClass = strstr($test->getName(), '::', true);
-                $this->hooks[$potentialTestClass] = TestUtil::getHookMethods($potentialTestClass);
-            }
-
             $testClass = get_class($test);
             $this->hooks[$testClass] = TestUtil::getHookMethods($testClass);
         }

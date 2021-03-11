@@ -24,7 +24,7 @@ class FileSystem
 
         foreach ($iterator as $path) {
             $basename = basename((string)$path);
-            if ($basename === '.' || $basename === '..' || $basename === '.gitignore') {
+            if ($basename === '.' || $basename === '..' || $basename === '.gitignore' || $basename === '.gitkeep') {
                 continue;
             }
 

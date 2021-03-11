@@ -16,7 +16,6 @@ use Codeception\Test\Test;
 use Codeception\Util\Maybe;
 use Exception;
 use InvalidArgumentException;
-use PHPUnit\Framework\TestSuite\DataProvider as PHPUnitDataProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -93,13 +92,6 @@ class DryRun extends Command
         $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_BEFORE);
 
         foreach ($tests as $test) {
-            if ($test instanceof PHPUnitDataProvider) {
-                foreach ($test as $t) {
-                    if ($t instanceof Test) {
-                        $this->dryRunTest($output, $eventDispatcher, $t);
-                    }
-                }
-            }
             if ($test instanceof Test && $test instanceof ScenarioDriven) {
                 $this->dryRunTest($output, $eventDispatcher, $test);
             }
