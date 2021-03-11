@@ -8,6 +8,7 @@ use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Interfaces\Remote;
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use PHPUnit\Runner\CodeCoverage as PHPUnitCodeCoverage;
 
 /**
@@ -51,11 +52,9 @@ class Local extends SuiteSubscriber
         }
         $testResult = $event->getResult();
 
-        if (method_exists($testResult, 'getCodeCoverage')) {
-            // PHPUnit 9
+        if (PHPUnit9::getCodeCoverageMethodExists($testResult)) {
             $codeCoverage = $testResult->getCodeCoverage();
         } else {
-            // PHPUnit 10
             $codeCoverage = PHPUnitCodeCoverage::instance();
             PHPUnitCodeCoverage::deactivate();
         }

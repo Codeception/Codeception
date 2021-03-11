@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Codeception\Test\Feature;
 
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\StrictCoverage;
 use Codeception\Test\Test as CodeceptTest;
-use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Runner\CodeCoverage as PHPUnitCoverage;
-use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
+use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
 
 trait CodeCoverage
 {
@@ -19,14 +19,12 @@ trait CodeCoverage
     public function codeCoverageStart(): void
     {
         $testResult = $this->getTestResultObject();
-        if (method_exists($testResult, 'getCodeCoverage')) {
-            // PHPUnit 9
+        if (PHPUnit9::getCodeCoverageMethodExists($testResult)) {
             $codeCoverage = $testResult->getCodeCoverage();
             if (!$codeCoverage) {
                 return;
             }
         } else {
-            // PHPUnit 10
             if (!PHPUnitCoverage::isActive()) {
                 return;
             }
@@ -39,14 +37,12 @@ trait CodeCoverage
     public function codeCoverageEnd(string $status, float $time): void
     {
         $testResult = $this->getTestResultObject();
-        if (method_exists($testResult, 'getCodeCoverage')) {
-            // PHPUnit 9
+        if (PHPUnit9::getCodeCoverageMethodExists($testResult)) {
             $codeCoverage = $testResult->getCodeCoverage();
             if (!$codeCoverage) {
                 return;
             }
         } else {
-            // PHPUnit 10
             if (!PHPUnitCoverage::isActive()) {
                 return;
             }

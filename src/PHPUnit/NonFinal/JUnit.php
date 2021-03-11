@@ -9,6 +9,7 @@
  */
 namespace Codeception\PHPUnit\NonFinal;
 
+use Codeception\PHPUnit\Compatibility\PHPUnit10;
 use DOMDocument;
 use DOMElement;
 use PHPUnit\Framework\AssertionFailedError;
@@ -324,11 +325,9 @@ class JUnit extends Printer implements TestListener
     {
         $numAssertions = 0;
 
-        if (\method_exists($test, 'numberOfAssertionsPerformed')) {
-            // PHPUnit 10
+        if (PHPUnit10::numberOfAssertionsPerformedMethodExists($test)) {
             $numAssertions = $test->numberOfAssertionsPerformed();
         } else {
-            // PHPUnit 9
             $numAssertions = $test->getNumAssertions();
         }
 
