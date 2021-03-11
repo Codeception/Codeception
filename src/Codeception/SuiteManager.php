@@ -18,9 +18,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
 {
-    public static $environment;
-    public static $name;
-
     /**
      * @var TestSuite
      */
@@ -47,23 +44,9 @@ class SuiteManager
     protected $di;
 
     /**
-     * @var array
-     */
-    protected $tests = [];
-
-    /**
-     * @var bool
-     */
-    protected $debug = false;
-
-    /**
      * @var string
      */
-    protected $path = '';
-
-    protected $printer = null;
-
-    protected $env = null;
+    protected $env = '';
 
     /**
      * @var array
@@ -75,7 +58,6 @@ class SuiteManager
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
         $this->di = new Di();
-        $this->path = $settings['path'];
         $this->groupManager = new GroupManager($settings['groups']);
         $this->moduleContainer = new ModuleContainer($this->di, $settings);
 
@@ -225,7 +207,7 @@ class SuiteManager
         if (empty($envs)) {
             return true;
         }
-        $currentEnvironments = explode(',', (string) $this->env);
+        $currentEnvironments = explode(',', $this->env);
         foreach ($envs as $envList) {
             $envList = explode(',', $envList);
             if (count($envList) == count(array_intersect($currentEnvironments, $envList))) {

@@ -68,7 +68,7 @@ class Scenario
     }
 
     /**
-     * @return array|bool|null
+     * @return mixed
      * @throws InjectionException
      */
     public function runStep(Step $step)

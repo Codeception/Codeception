@@ -34,9 +34,6 @@ class Di
         $this->fallback = $fallback;
     }
 
-    /**
-     * @return object|bool|null
-     */
     public function get(string $className): ?object
     {
         // normalize namespace
@@ -51,7 +48,8 @@ class Di
 
     /**
      * @param array|null $constructorArgs
-     * @param string $injectMethodName Method which will be invoked after object creation;
+     * @param string $injectMethodName Method which will be invoked after object creation;
+
      *                                 Resolved dependencies will be passed to it as arguments
      * @throws InjectionException|ReflectionException
      * @return null|object
