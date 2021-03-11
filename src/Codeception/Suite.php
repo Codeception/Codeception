@@ -51,7 +51,7 @@ class Suite extends TestSuite
         $tests = [];
         foreach ($test->fetchDependencies() as $requiredTestName) {
             $required = $this->findMatchedTest($requiredTestName);
-            if (!$required) {
+            if ($required === null) {
                 continue;
             }
             $tests = array_merge($tests, $this->getDependencies($required));
@@ -60,7 +60,7 @@ class Suite extends TestSuite
         return $tests;
     }
 
-    protected function findMatchedTest(string $testSignature): SelfDescribing
+    protected function findMatchedTest(string $testSignature): ?SelfDescribing
     {
         /** @var SelfDescribing $test */
         foreach ($this->tests as $test) {
@@ -69,6 +69,8 @@ class Suite extends TestSuite
                 return $test;
             }
         }
+
+        return null;
     }
 
     public function getModules(): array
