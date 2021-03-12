@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\TestResult;
-use PHPUnit\Runner\Version;
 use SebastianBergmann\Timer\Timer;
 use Throwable;
 use function array_reverse;
 use function method_exists;
 
 // One way to implement different interfaces
-if (Version::series() < 10) {
+if (PHPUnit9::isCurrentVersion()) {
     require_once __DIR__ . '/TestWrapperPHPUnit9.php';
 } else {
     require_once __DIR__ . '/TestWrapperPHPUnit10.php';

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\PHPUnit\Compatibility;
 
 use PHPUnit\Runner\BaseTestRunner;
+use PHPUnit\Runner\Version;
 use function method_exists;
 
 class PHPUnit9
@@ -32,5 +33,10 @@ class PHPUnit9
     public static function setCodeCoverageMethodExists(object $testResult): bool
     {
         return method_exists($testResult, 'setCodeCoverage');
+    }
+
+    public static function isCurrentVersion(): bool
+    {
+        return Version::series() < 10;
     }
 }
