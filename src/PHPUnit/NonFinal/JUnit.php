@@ -328,6 +328,7 @@ class JUnit extends Printer implements TestListener
         if (PHPUnit10::numberOfAssertionsPerformedMethodExists($test)) {
             $numAssertions = $test->numberOfAssertionsPerformed();
         } else {
+            // PHPUnit 9 or Cest or Cept or Gherkin
             $numAssertions = $test->getNumAssertions();
         }
 
