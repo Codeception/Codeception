@@ -27,9 +27,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * * `codecept run -v`:
  * * `codecept run --steps`: print step-by-step execution
- * * `codecept run -vv`:
- * * `codecept run --debug`: print steps and debug information
- * * `codecept run -vvv`: print internal debug information
+ * * `codecept run -vv`: print steps and debug information
+ * * `codecept run --debug`: alias for `-vv`
+ * * `codecept run -vvv`: print Codeception-internal debug information
  *
  * Load config:
  *
@@ -66,9 +66,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --json                Generate Json Log (default: "report.json")
  *  --colors              Use colors in output
  *  --no-colors           Force no colors in output (useful to override config file)
- *  --silent              Only outputs suite names and final results
+ *  --silent              Only outputs suite names and final results. Almost the same as `--quiet`
  *  --steps               Show steps in output
- *  --debug (-d)          Show debug and scenario output
+ *  --debug (-d)          Alias for `-vv`
  *  --bootstrap           Execute bootstrap script before the test
  *  --coverage            Run with code coverage (default: "coverage.serialized")
  *  --coverage-html       Generate CodeCoverage HTML report in path (default: "coverage")
@@ -84,8 +84,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  *  --fail-fast (-f)      Stop after first failure
  *  --no-rebuild          Do not rebuild actor classes on start
  *  --help (-h)           Display this help message.
- *  --quiet (-q)          Do not output any message.
- *  --verbose (-v|vv|vvv) Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+ *  --quiet (-q)          Do not output any message. Almost the same as `--silent`
+ *  --verbose (-v|vv|vvv) Increase the verbosity of messages: `v` for normal output, `vv` for steps and debug, `vvv` for Codeception-internal debug
  *  --version (-V)        Display this application version.
  *  --ansi                Force ANSI output.
  *  --no-ansi             Disable ANSI output.
