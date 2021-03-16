@@ -690,7 +690,7 @@ interface Web
      * ``` php
      * <?php
      * $I->fillField("//input[@type='text']", "Hello World!");
-     * $I->fillField(['name' => 'email'], 'jon@mail.com');
+     * $I->fillField(['name' => 'email'], 'jon@example.com');
      * ?>
      * ```
      *
