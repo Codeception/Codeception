@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\PHPUnit\ResultPrinter;
 
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\PHPUnit\ResultPrinter as CodeceptionResultPrinter;
 use Codeception\Step;
 use Codeception\Step\Meta;
@@ -72,11 +73,9 @@ class HTML extends CodeceptionResultPrinter
     public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
         $steps = [];
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             $success = $this->testStatus == BaseTestRunner::STATUS_PASSED;
         } else {
-            // PHPUnit 10
             $success = $this->testStatus->isSuccess();
         }
         if ($success) {
@@ -88,9 +87,9 @@ class HTML extends CodeceptionResultPrinter
         }
         $this->timeTaken += $time;
 
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 10
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             switch ($this->testStatus) {
+                case BaseTestRunner::STATUS_ERROR:
                 case BaseTestRunner::STATUS_FAILURE:
                     $scenarioStatus = 'scenarioFailed';
                     break;
@@ -100,14 +99,10 @@ class HTML extends CodeceptionResultPrinter
                 case BaseTestRunner::STATUS_INCOMPLETE:
                     $scenarioStatus = 'scenarioIncomplete';
                     break;
-                case BaseTestRunner::STATUS_ERROR:
-                    $scenarioStatus = 'scenarioFailed';
-                    break;
                 default:
                     $scenarioStatus = 'scenarioSuccess';
             }
         } else {
-            // PHPUnit 10
             if ($this->testStatus->isSuccess()) {
                 $scenarioStatus = 'scenarioSuccess';
             } else if ($this->testStatus->isFailure() || $this->testStatus->isError()) {

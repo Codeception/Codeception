@@ -3,6 +3,7 @@ namespace Codeception\PHPUnit;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use ReflectionProperty;
 
 class Runner extends NonFinal\TestRunner
@@ -121,13 +122,11 @@ class Runner extends NonFinal\TestRunner
         $suite->run($result);
         unset($suite);
 
-        if (method_exists($result, 'removeListener')) {
-            // PHPUnit 9
+        if (PHPUnit9::removeListenerMethodExists($result)) {
             foreach ($arguments['listeners'] as $listener) {
                 $result->removeListener($listener);
             }
         } else {
-            // PHPUnit 10+
             $property = new ReflectionProperty($result, 'listeners');
             $property->setAccessible(true);
             $resultListeners = $property->getValue($result);

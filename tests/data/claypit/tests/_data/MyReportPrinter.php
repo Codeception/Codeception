@@ -9,8 +9,7 @@ class MyReportPrinter extends ResultPrinter implements ConsolePrinter
     {
         $name = \Codeception\Test\Descriptor::getTestAsString($test);
 
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (\Codeception\PHPUnit\Compatibility\PHPUnit9::baseTestRunnerClassExists()) {
             if ($this->testStatus == BaseTestRunner::STATUS_FAILURE) {
                 $this->write('×');
             } elseif ($this->testStatus == BaseTestRunner::STATUS_SKIPPED) {
@@ -23,7 +22,6 @@ class MyReportPrinter extends ResultPrinter implements ConsolePrinter
                 $this->write('✔');
             }
         } else {
-            // PHPUnit 10
             if ($this->testStatus->isFailure()) {
                 $this->write('×');
             } elseif ($this->testStatus->isSkipped()) {
