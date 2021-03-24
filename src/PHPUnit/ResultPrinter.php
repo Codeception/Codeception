@@ -1,11 +1,10 @@
 <?php
 namespace Codeception\PHPUnit;
 
-use \PHPUnit\Framework\AssertionFailedError;
-use \PHPUnit\Framework\Test;
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestStatus\TestStatus;
-use \PHPUnit\Runner\BaseTestRunner;
+use PHPUnit\Runner\BaseTestRunner;
 
 class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
 {
@@ -18,11 +17,9 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addError(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             $this->testStatus = BaseTestRunner::STATUS_ERROR;
         } else {
-            // PHPUnit 10
             $this->testStatus = TestStatus::error($e->getMessage());
         }
         $this->failed++;
@@ -37,11 +34,9 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time) : void
     {
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             $this->testStatus = BaseTestRunner::STATUS_FAILURE;
         } else {
-            // PHPUnit 10
             $this->testStatus = TestStatus::failure($e->getMessage());
         }
         $this->failed++;
@@ -56,11 +51,9 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, float $time): void
     {
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             $this->testStatus = BaseTestRunner::STATUS_WARNING;
         } else {
-            // PHPUnit 10
             $this->testStatus = TestStatus::warning($e->getMessage());
         }
         $this->warned++;
@@ -75,11 +68,9 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             $this->testStatus = BaseTestRunner::STATUS_INCOMPLETE;
         } else {
-            // PHPUnit 10
             $this->testStatus = TestStatus::incomplete($e->getMessage());
         }
         $this->incomplete++;
@@ -96,11 +87,9 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addRiskyTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             $this->testStatus = BaseTestRunner::STATUS_RISKY;
         } else {
-            // PHPUnit 10
             $this->testStatus = TestStatus::risky($e->getMessage());
         }
         $this->risky++;
@@ -115,11 +104,9 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
      */
     public function addSkippedTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
     {
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             $this->testStatus = BaseTestRunner::STATUS_SKIPPED;
         } else {
-            // PHPUnit 10
             $this->testStatus = TestStatus::skipped($e->getMessage());
         }
         $this->skipped++;
@@ -127,11 +114,9 @@ class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
 
     public function startTest(\PHPUnit\Framework\Test $test) : void
     {
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             $this->testStatus = BaseTestRunner::STATUS_PASSED;
         } else {
-            // PHPUnit 10
             $this->testStatus = TestStatus::success();
         }
     }

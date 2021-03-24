@@ -9,18 +9,17 @@ use Codeception\Coverage\Subscriber\Printer;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\Stub;
 use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Exception;
 use PHPUnit\Framework\CodeCoverageException;
 use PHPUnit\Framework\TestResult;
-use PHPUnit\Runner\CodeCoverage as RunnerCodeCoverage;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Driver\Driver as CodeCoverageDriver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function array_keys;
-use function method_exists;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface
 {
@@ -129,8 +128,8 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     public function applyFilter(TestResult $result): void
     {
         $driver = Stub::makeEmpty(CodeCoverageDriver::class);
-        if (method_exists($result, 'setCodeCoverage')) {
-            // PHPUnit 9
+
+        if (PHPUnit9::setCodeCoverageMethodExists($result)) {
             $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
         }
 
@@ -138,8 +137,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
             ->whiteList($this->filters)
             ->blackList($this->filters);
 
-        if (method_exists($result, 'setCodeCoverage')) {
-            // PHPUnit 9
+        if (PHPUnit9::setCodeCoverageMethodExists($result)) {
             $result->setCodeCoverage($this->coverage);
         }
     }

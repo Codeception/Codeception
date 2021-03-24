@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\PHPUnit\ResultPrinter;
 
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\PHPUnit\ConsolePrinter;
 use Codeception\PHPUnit\ResultPrinter;
 use Codeception\Test\Descriptor;
@@ -15,32 +16,33 @@ class Report extends ResultPrinter implements ConsolePrinter
     public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
     {
         $name = Descriptor::getTestAsString($test);
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
+        if (PHPUnit9::baseTestRunnerClassExists()) {
             $success = $this->testStatus == BaseTestRunner::STATUS_PASSED;
         } else {
-            // PHPUnit 10
             $success = $this->testStatus->isSuccess();
         }
         if ($success) {
             $this->successful++;
         }
 
-        if (class_exists(BaseTestRunner::class)) {
-            // PHPUnit 9
-            if ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE) {
-                $status = "\033[41;37mFAIL\033[0m";
-            } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_SKIPPED) {
-                $status = 'Skipped';
-            } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_INCOMPLETE) {
-                $status = 'Incomplete';
-            } elseif ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_ERROR) {
-                $status = 'ERROR';
-            } else {
-                $status = 'Ok';
+        if (PHPUnit9::baseTestRunnerClassExists()) {
+            switch ($this->testStatus) {
+                case BaseTestRunner::STATUS_ERROR:
+                    $status = 'ERROR';
+                    break;
+                case BaseTestRunner::STATUS_FAILURE:
+                    $status = "\033[41;37mFAIL\033[0m";
+                    break;
+                case BaseTestRunner::STATUS_SKIPPED:
+                    $status = 'Skipped';
+                    break;
+                case BaseTestRunner::STATUS_INCOMPLETE:
+                    $status = 'Incomplete';
+                    break;
+                default:
+                    $status = 'Ok';
             }
         } else {
-            // PHPUnit 10
             if ($this->testStatus->isFailure()) {
                 $status = "\033[41;37mFAIL\033[0m";
             } elseif ($this->testStatus->isSkipped()) {
