@@ -16,8 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Usage:
  *
  * * `codecept run acceptance`: run all acceptance tests
- * * `codecept run tests/acceptance/MyCept.php`: run only MyCept
- * * `codecept run acceptance MyCept`: same as above
+ * * `codecept run tests/acceptance/MyCest.php`: run only MyCest
+ * * `codecept run acceptance MyCest`: same as above
  * * `codecept run acceptance MyCest:myTestInIt`: run one test from a Cest
  * * `codecept run acceptance checkout.feature`: run feature-file
  * * `codecept run acceptance -g slow`: run tests from *slow* group
