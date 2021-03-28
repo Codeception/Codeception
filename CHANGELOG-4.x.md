@@ -1,3 +1,12 @@
+#### 4.1.19
+
+* Action file generator supports PHP 8 union types
+* Action file generator generates typehints for method parameters
+* Removed dead code related to DataProviderTestSuite
+* Removed documentation related to Cept format
+* Deprecated generate:cept command
+* Documentation improvements
+
 #### 4.1.18
 
 * Fix cleanup of included test directories #6117 by @rolandsaven
