@@ -1,3 +1,7 @@
+#### 4.1.20
+
+* Fix compatibility with PHP 7.0 (#6154)
+
 #### 4.1.19
 
 * Action file generator supports PHP 8 union types
