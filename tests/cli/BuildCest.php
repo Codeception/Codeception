@@ -94,4 +94,41 @@ class BuildCest
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeInThisFile('public function seeDirFound($dir): void');
     }
+
+    public function generateNullableParametersOnPHP70(CliGuy $I, Scenario $scenario)
+    {
+        if (PHP_VERSION_ID < 70000 || PHP_VERSION_ID >= 70100) {
+            $scenario->skip('For PHP 7.0 only');
+        }
+
+        $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
+        $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(\Directory $dir = null)', $cliHelperContents);
+        file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
+
+        $I->runShellCommand('php codecept build');
+        $I->seeInShellOutput('generated successfully');
+        $I->seeInSupportDir('CliGuy.php');
+        $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
+        $I->seeInThisFile('use _generated\CliGuyActions');
+        $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
+        $I->seeInThisFile('public function seeDirFound(\Directory $dir = NULL)');
+    }
+
+    public function generateNullableParametersOnPHP71AndLater(CliGuy $I, Scenario $scenario)
+    {
+        if (PHP_VERSION_ID < 70100) {
+            $scenario->skip('Does not work in PHP < 7.1');
+        }
+        $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
+        $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(\Directory $dir = null): ?bool', $cliHelperContents);
+        file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
+
+        $I->runShellCommand('php codecept build');
+        $I->seeInShellOutput('generated successfully');
+        $I->seeInSupportDir('CliGuy.php');
+        $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
+        $I->seeInThisFile('use _generated\CliGuyActions');
+        $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
+        $I->seeInThisFile('public function seeDirFound(?\Directory $dir = NULL): ?bool');
+    }
 }
