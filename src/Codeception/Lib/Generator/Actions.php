@@ -233,25 +233,25 @@ EOF;
     }
 
     /**
-     * @param \ReflectionType $returnType
+     * @param \ReflectionType $type
      * @return string
      */
-    private function stringifyType(\ReflectionType $returnType)
+    private function stringifyType(\ReflectionType $type)
     {
-        if ($returnType instanceof \ReflectionUnionType) {
-            $types = $returnType->getTypes();
+        if ($type instanceof \ReflectionUnionType) {
+            $types = $type->getTypes();
             return implode('|', $types);
         }
 
         if (PHP_VERSION_ID < 70100) {
-            $returnTypeString = (string)$returnType;
+            $returnTypeString = (string)$type;
         } else {
-            $returnTypeString = $returnType->getName();
+            $returnTypeString = $type->getName();
         }
         return sprintf(
             '%s%s%s',
-            $returnType->allowsNull() ? '?' : '',
-            $returnType->isBuiltin() ? '' : '\\',
+            (PHP_VERSION_ID >= 70100 && $type->allowsNull()) ? '?' : '',
+            $type->isBuiltin() ? '' : '\\',
             $returnTypeString
         );
     }
