@@ -6,8 +6,8 @@ namespace Codeception\Coverage;
 
 use Codeception\PHPUnit\Compatibility\PHPUnit10;
 use PHPUnit\Runner\CodeCoverage as PHPUnitCodeCoverage;
+use SebastianBergmann\CodeCoverage\Driver\Selector;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
 class PhpCodeCoverageFactory
@@ -22,7 +22,7 @@ class PhpCodeCoverageFactory
             return PHPUnitCodeCoverage::instance();
         } else {
             $filter = new CodeCoverageFilter();
-            $driver = Driver::forLineCoverage($filter);
+            $driver = (new Selector)->forLineCoverage($filter);
 
             return new CodeCoverage($driver, $filter);
         }
