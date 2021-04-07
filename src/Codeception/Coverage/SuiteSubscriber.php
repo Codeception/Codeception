@@ -38,6 +38,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         'c3_url'         => null,
         'work_dir'       => null,
         'cookie_domain'  => null,
+        'path_coverage'  => false,
     ];
     /**
      * @var array
