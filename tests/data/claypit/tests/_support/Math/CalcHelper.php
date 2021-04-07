@@ -13,12 +13,18 @@ class CalcHelper extends \Codeception\Module
      */
     protected $subtractor;
 
+    /**
+     * @var Divider
+     */
+    protected $divider;
+
     protected $pi = 3;
 
-    protected function _inject(Adder $adder, Subtractor $subtractor)
+    protected function _inject(Adder $adder, Subtractor $subtractor, Divider $divider)
     {
         $this->adder = $adder;
         $this->subtractor = $subtractor;
+        $this->divider = $divider;
     }
 
     public function add($a, $b)
@@ -29,6 +35,11 @@ class CalcHelper extends \Codeception\Module
     public function subtract($a, $b)
     {
         return $this->subtractor->perform($a, $b);
+    }
+
+    public function divide($a, $b)
+    {
+        return $this->divider->perfom($a, $b);
     }
 
     public function squareOfCircle($radius)

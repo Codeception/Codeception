@@ -23,6 +23,7 @@ class MathTest extends \Codeception\Test\Unit
     {
         $this->assertSame(3, $this->calc->add(1, 2));
         $this->assertSame(1, $this->calc->subtract(3, 2));
+        $this->assertSame(5, $this->calc->divide(10, 2));
         $this->assertSame(75, $this->calc->squareOfCircle(5));
     }
 }
