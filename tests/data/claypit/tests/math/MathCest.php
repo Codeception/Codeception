@@ -32,6 +32,11 @@ class MathCest
         $I->assertSame(12, $this->calc->squareOfCircle(2));
     }
 
+    public function testDivision(MathTester $I)
+    {
+        $I->assertSame(5, $this->calc->divide(10, 2));
+    }
+
     public function testTrigonometry(MathTester $I, \Page\Math\Trigonometry $t)
     {
         $I->assertLessThan(0.9, $t->tan(0.5));
