@@ -6,3 +6,4 @@ coverage:
     include:
         - 'tests/_support/Math/Adder.php'
         - 'tests/_support/Math/Substractor.php'
+        - 'tests/_support/Math/Divider.php'
