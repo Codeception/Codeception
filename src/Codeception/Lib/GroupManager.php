@@ -6,12 +6,15 @@ namespace Codeception\Lib;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Gherkin;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\TestInterface;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Metadata\GroupsFacade;
+use PHPUnit\Util\Test as TestUtil;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -157,12 +160,12 @@ class GroupManager
         if ($test instanceof Reported) {
             $info = $test->getReportFields();
             if (isset($info['class'])) {
-                $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups($info['class'], $info['name']));
+                $groups = array_merge($groups, $this->getGroupsForMethod($info['class'], $info['name']));
             }
             $filename = str_replace(['\\\\', '//', '/./'], ['\\', '/', '/'], $info['file']);
         }
         if ($test instanceof TestCase) {
-            $groups = array_merge($groups, \PHPUnit\Util\Test::getGroups(get_class($test), $test->getName(false)));
+            $groups = array_merge($groups, $this->getGroupsForMethod(get_class($test), $test->getName(false)));
         }
 
         foreach ($this->testsInGroups as $group => $tests) {
@@ -181,5 +184,20 @@ class GroupManager
             }
         }
         return array_unique($groups);
+    }
+
+    private function getGroupsForMethod(string $className, string $methodName): array
+    {
+        if (strpos($methodName, ' ') !== false) {
+            // strip ' with data set #0' from method name when data provide is used
+            $methodName = substr($methodName, 0, strpos($methodName, ' '));
+        }
+        if (!method_exists($className, $methodName)) {
+            return [];
+        }
+        if (PHPUnit9::getGroupsMethodExists()) {
+            return TestUtil::getGroups($className, $methodName);
+        }
+        return (new GroupsFacade)->groups($className, $methodName);
     }
 }

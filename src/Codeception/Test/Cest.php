@@ -7,11 +7,13 @@ namespace Codeception\Test;
 use Codeception\Example;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Parser;
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\Step\Comment;
 use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
 use Exception;
 use LogicException;
+use PHPUnit\Metadata\CodeCoverageFacade;
 use ReflectionMethod;
 use function array_slice;
 use function file;
@@ -225,7 +227,10 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        return \PHPUnit\Util\Test::getLinesToBeCovered($class, $method);
+        if (PHPUnit9::getLinesToBeCoveredMethodExists()) {
+            return \PHPUnit\Util\Test::getLinesToBeCovered($class, $method);
+        }
+        return (new CodeCoverageFacade)->linesToBeCovered($class, $method);
     }
 
     public function getLinesToBeUsed(): array
@@ -233,6 +238,9 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        return \PHPUnit\Util\Test::getLinesToBeUsed($class, $method);
+        if (PHPUnit9::getLinesToBeUsedMethodExists()) {
+            return \PHPUnit\Util\Test::getLinesToBeUsed($class, $method);
+        }
+        return (new CodeCoverageFacade)->linesToBeUsed($class, $method);
     }
 }
