@@ -201,6 +201,13 @@ class LocalServer extends SuiteSubscriber
             // we need to separate coverage cookies by host; we can't separate cookies by port.
             $cookieDomain = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
         }
+        
+        $cookieParams = [];
+        if ($cookieDomain !== 'localhost') {
+            $cookieParams['domain'] = $cookieDomain;
+        }
+
+        $this->module->setCookie(self::COVERAGE_COOKIE, $value, $cookieParams);
 
         $this->module->setCookie(self::COVERAGE_COOKIE, $value, ['domain' => $cookieDomain]);
 
