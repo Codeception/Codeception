@@ -9,6 +9,7 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\RemoteException;
+use Facebook\WebDriver\Exception\NoSuchAlertException;
 
 /**
  * When collecting code coverage data from local server HTTP requests are sent to c3.php file.
@@ -237,6 +238,17 @@ class LocalServer extends SuiteSubscriber
 
     protected function fetchErrors()
     {
+        // Calling grabCookie() while an alert is present dismisses the alert
+        // @see https://github.com/Codeception/Codeception/issues/1485
+        try {
+            $alert = $this->module->webDriver->switchTo()->alert();
+            $alert->getText();
+            // If this succeeds an alert is present, abort
+            return;
+        } catch (NoSuchAlertException $e) {
+            // No alert present, continue
+        }
+
         try {
             $error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR);
         } catch (ModuleException $e) {
