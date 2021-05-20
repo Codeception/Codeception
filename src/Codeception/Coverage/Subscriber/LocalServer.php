@@ -209,8 +209,6 @@ class LocalServer extends SuiteSubscriber
 
         $this->module->setCookie(self::COVERAGE_COOKIE, $value, $cookieParams);
 
-        $this->module->setCookie(self::COVERAGE_COOKIE, $value, ['domain' => $cookieDomain]);
-
         // putting in configuration ensures the cookie is used for all sessions of a MultiSession test
 
         $cookies = $this->module->_getConfig('cookies');
