@@ -240,13 +240,15 @@ class LocalServer extends SuiteSubscriber
     {
         // Calling grabCookie() while an alert is present dismisses the alert
         // @see https://github.com/Codeception/Codeception/issues/1485
-        try {
-            $alert = $this->module->webDriver->switchTo()->alert();
-            $alert->getText();
-            // If this succeeds an alert is present, abort
-            return;
-        } catch (NoSuchAlertException $e) {
-            // No alert present, continue
+        if ($this->module instanceof \Codeception\Module\WebDriver) {
+            try {
+                $alert = $this->module->webDriver->switchTo()->alert();
+                $alert->getText();
+                // If this succeeds an alert is present, abort
+                return;
+            } catch (NoSuchAlertException $e) {
+                // No alert present, continue
+            }
         }
 
         try {
