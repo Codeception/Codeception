@@ -14,10 +14,8 @@ interface Web
      * // opens /register page
      * $I->amOnPage('/register');
      * ```
-     *
-     * @param string $page
      */
-    public function amOnPage($page);
+    public function amOnPage(string $page): void;
 
     /**
      * Checks that the current page contains the given string (case insensitive).
@@ -47,10 +45,9 @@ interface Web
      *
      * For checking the raw source code, use `seeInSource()`.
      *
-     * @param string $text
      * @param array|string $selector optional
      */
-    public function see($text, $selector = null);
+    public function see(string $text, $selector = null): void;
 
     /**
      * Checks that the current page doesn't contain the text specified (case insensitive).
@@ -78,10 +75,9 @@ interface Web
      *
      * For checking the raw source code, use `seeInSource()`.
      *
-     * @param string $text
      * @param array|string $selector optional
      */
-    public function dontSee($text, $selector = null);
+    public function dontSee(string $text, $selector = null): void;
 
     /**
      * Checks that the current page contains the given string in its
@@ -91,10 +87,8 @@ interface Web
      * <?php
      * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     *
-     * @param      $raw
      */
-    public function seeInSource($raw);
+    public function seeInSource(string $raw): void;
 
     /**
      * Checks that the current page contains the given string in its
@@ -104,10 +98,8 @@ interface Web
      * <?php
      * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
      * ```
-     *
-     * @param      $raw
      */
-    public function dontSeeInSource($raw);
+    public function dontSeeInSource(string $raw): void;
 
     /**
      * Submits the given form on the page, with the given form
@@ -275,12 +267,8 @@ interface Web
      *     ]
      * ]);
      * ```
-     *
-     * @param $selector
-     * @param $params
-     * @param $button
      */
-    public function submitForm($selector, array $params, $button = null);
+    public function submitForm($selector, array $params, string $button = null): void;
 
     /**
      * Perform a click on a link or a button, given by a locator.
@@ -309,10 +297,9 @@ interface Web
      * $I->click(['link' => 'Login']);
      * ```
      *
-     * @param $link
-     * @param $context
+     * @param string|array $link
      */
-    public function click($link, $context = null);
+    public function click($link, $context = null): void;
 
     /**
      * Checks that there's a link with the specified text.
@@ -323,11 +310,8 @@ interface Web
      * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
      * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
      * ```
-     *
-     * @param string $text
-     * @param string $url optional
      */
-    public function seeLink($text, $url = null);
+    public function seeLink(string $text, string $url = null): void;
 
     /**
      * Checks that the page doesn't contain a link with the given string.
@@ -338,11 +322,8 @@ interface Web
      * $I->dontSeeLink('Logout'); // I suppose user is not logged in
      * $I->dontSeeLink('Checkout now', '/store/cart.php');
      * ```
-     *
-     * @param string $text
-     * @param string $url optional
      */
-    public function dontSeeLink($text, $url = null);
+    public function dontSeeLink(string $text, string $url = ''): void;
 
     /**
      * Checks that current URI contains the given string.
@@ -354,10 +335,8 @@ interface Web
      * // to match: /users/1
      * $I->seeInCurrentUrl('/users/');
      * ```
-     *
-     * @param string $uri
      */
-    public function seeInCurrentUrl($uri);
+    public function seeInCurrentUrl(string $uri): void;
 
     /**
      * Checks that the current URL is equal to the given string.
@@ -368,10 +347,8 @@ interface Web
      * // to match root url
      * $I->seeCurrentUrlEquals('/');
      * ```
-     *
-     * @param string $uri
      */
-    public function seeCurrentUrlEquals($uri);
+    public function seeCurrentUrlEquals(string $uri): void;
 
     /**
      * Checks that the current URL matches the given regular expression.
@@ -381,10 +358,8 @@ interface Web
      * // to match root url
      * $I->seeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     *
-     * @param string $uri
      */
-    public function seeCurrentUrlMatches($uri);
+    public function seeCurrentUrlMatches(string $uri): void;
 
     /**
      * Checks that the current URI doesn't contain the given string.
@@ -393,10 +368,8 @@ interface Web
      * <?php
      * $I->dontSeeInCurrentUrl('/users/');
      * ```
-     *
-     * @param string $uri
      */
-    public function dontSeeInCurrentUrl($uri);
+    public function dontSeeInCurrentUrl(string $uri): void;
 
     /**
      * Checks that the current URL doesn't equal the given string.
@@ -407,10 +380,8 @@ interface Web
      * // current url is not root
      * $I->dontSeeCurrentUrlEquals('/');
      * ```
-     *
-     * @param string $uri
      */
-    public function dontSeeCurrentUrlEquals($uri);
+    public function dontSeeCurrentUrlEquals(string $uri): void;
 
     /**
      * Checks that current url doesn't match the given regular expression.
@@ -420,10 +391,8 @@ interface Web
      * // to match root url
      * $I->dontSeeCurrentUrlMatches('~^/users/(\d+)~');
      * ```
-     *
-     * @param string $uri
      */
-    public function dontSeeCurrentUrlMatches($uri);
+    public function dontSeeCurrentUrlMatches(string $uri): void;
 
     /**
      * Executes the given regular expression against the current URI and returns the first capturing group.
@@ -435,11 +404,9 @@ interface Web
      * $uri = $I->grabFromCurrentUrl();
      * ```
      *
-     * @param string $uri optional
-     *
      * @return mixed
      */
-    public function grabFromCurrentUrl($uri = null);
+    public function grabFromCurrentUrl(string $uri = null);
 
     /**
      * Checks that the specified checkbox is checked.
@@ -450,10 +417,8 @@ interface Web
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
      * $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
      * ```
-     *
-     * @param $checkbox
      */
-    public function seeCheckboxIsChecked($checkbox);
+    public function seeCheckboxIsChecked($checkbox): void;
 
     /**
      * Check that the specified checkbox is unchecked.
@@ -463,10 +428,8 @@ interface Web
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
      * ```
-     *
-     * @param $checkbox
      */
-    public function dontSeeCheckboxIsChecked($checkbox);
+    public function dontSeeCheckboxIsChecked(string $checkbox): void;
 
     /**
      * Checks that the given input field or textarea *equals* (i.e. not just contains) the given value.
@@ -482,10 +445,9 @@ interface Web
      * $I->seeInField(['name' => 'search'], 'Search');
      * ```
      *
-     * @param $field
-     * @param $value
+     * @param string|array $field
      */
-    public function seeInField($field, $value);
+    public function seeInField($field, $value): void;
 
     /**
      * Checks that an input field or textarea doesn't contain the given value.
@@ -501,10 +463,9 @@ interface Web
      * $I->dontSeeInField(['name' => 'search'], 'Search');
      * ```
      *
-     * @param $field
-     * @param $value
+     * @param string|array $field
      */
-    public function dontSeeInField($field, $value);
+    public function dontSeeInField($field, $value): void;
 
     /**
      * Checks if the array of form parameters (name => value) are set on the form matched with the
@@ -555,15 +516,12 @@ interface Web
      *      'checkbox1' => true,
      *      // ...
      * ];
-     * $I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+     * $I->submitForm('//form[@id=my-form]', string $form, 'submitButton');
      * // $I->amOnPage('/path/to/form-page') may be needed
-     * $I->seeInFormFields('//form[@id=my-form]', $form);
+     * $I->seeInFormFields('//form[@id=my-form]', string $form);
      * ```
-     *
-     * @param $formSelector
-     * @param $params
      */
-    public function seeInFormFields($formSelector, array $params);
+    public function seeInFormFields($formSelector, array $params): void;
 
     /**
      * Checks if the array of form parameters (name => value) are not set on the form matched with
@@ -599,11 +557,8 @@ interface Web
      *      'checkbox2' => false,       // fails if unchecked
      * ]);
      * ```
-     *
-     * @param $formSelector
-     * @param $params
      */
-    public function dontSeeInFormFields($formSelector, array $params);
+    public function dontSeeInFormFields($formSelector, array $params): void;
 
     /**
      * Selects an option in a select tag or in radio button group.
@@ -629,11 +584,8 @@ interface Web
      * $I->selectOption('Which OS do you use?', array('text' => 'Windows')); // Only search by text 'Windows'
      * $I->selectOption('Which OS do you use?', array('value' => 'windows')); // Only search by value 'windows'
      * ```
-     *
-     * @param $select
-     * @param $option
      */
-    public function selectOption($select, $option);
+    public function selectOption($select, $option): void;
 
     /**
      * Ticks a checkbox. For radio buttons, use the `selectOption` method instead.
@@ -642,10 +594,8 @@ interface Web
      * <?php
      * $I->checkOption('#agree');
      * ```
-     *
-     * @param $option
      */
-    public function checkOption($option);
+    public function checkOption($option): void;
 
     /**
      * Unticks a checkbox.
@@ -654,10 +604,8 @@ interface Web
      * <?php
      * $I->uncheckOption('#notify');
      * ```
-     *
-     * @param $option
      */
-    public function uncheckOption($option);
+    public function uncheckOption($option): void;
 
     /**
      * Fills a text field or textarea with the given string.
@@ -668,10 +616,9 @@ interface Web
      * $I->fillField(['name' => 'email'], 'jon@mail.com');
      * ```
      *
-     * @param $field
-     * @param $value
+     * @param string|array $field
      */
-    public function fillField($field, $value);
+    public function fillField($field, $value): void;
 
     /**
      * Attaches a file relative to the Codeception `_data` directory to the given file upload field.
@@ -681,11 +628,8 @@ interface Web
      * // file is stored in 'tests/_data/prices.xls'
      * $I->attachFile('input[@type="file"]', 'prices.xls');
      * ```
-     *
-     * @param $field
-     * @param $filename
      */
-    public function attachFile($field, $filename);
+    public function attachFile($field, string $filename): void;
 
     /**
      * Finds and returns the text contents of the given element.
@@ -698,8 +642,6 @@ interface Web
      * $heading = $I->grabTextFrom('descendant-or-self::h1');
      * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
      * ```
-     *
-     * @param $cssOrXPathOrRegex
      *
      * @return mixed
      */
@@ -717,12 +659,9 @@ interface Web
      * $name = $I->grabValueFrom(['name' => 'username']);
      * ```
      *
-     * @param $field
-     *
      * @return mixed
      */
     public function grabValueFrom($field);
-
 
     /**
      * Grabs the value of the given attribute value from the given element.
@@ -733,13 +672,9 @@ interface Web
      * $I->grabAttributeFrom('#tooltip', 'title');
      * ```
      *
-     *
-     * @param $cssOrXpath
-     * @param $attribute
-     *
      * @return mixed
      */
-    public function grabAttributeFrom($cssOrXpath, $attribute);
+    public function grabAttributeFrom($cssOrXpath, string $attribute);
 
     /**
      * Grabs either the text content, or attribute values, of nodes
@@ -760,11 +695,9 @@ interface Web
      * $aLinks = $I->grabMultiple('a', 'href');
      * ```
      *
-     * @param $cssOrXpath
-     * @param $attribute
      * @return string[]
      */
-    public function grabMultiple($cssOrXpath, $attribute = null);
+    public function grabMultiple($cssOrXpath, string $attribute = null): array;
 
     /**
      * Checks that the given element exists on the page and is visible.
@@ -781,11 +714,9 @@ interface Web
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
      * ```
      *
-     * @param $selector
-     * @param array $attributes
      * @return
      */
-    public function seeElement($selector, $attributes = []);
+    public function seeElement($selector, array $attributes = []): void;
 
     /**
      * Checks that the given element is invisible or not present on the page.
@@ -799,10 +730,8 @@ interface Web
      * $I->dontSeeElement('input', ['value' => '123456']);
      * ```
      *
-     * @param $selector
-     * @param array $attributes
      */
-    public function dontSeeElement($selector, $attributes = []);
+    public function dontSeeElement($selector, array $attributes = []): void;
 
     /**
      * Checks that there are a certain number of elements matched by the given locator on the page.
@@ -812,10 +741,10 @@ interface Web
      * $I->seeNumberOfElements('tr', 10);
      * $I->seeNumberOfElements('tr', [0,10]); // between 0 and 10 elements
      * ```
-     * @param $selector
-     * @param mixed $expected int or int[]
+     *
+     * @param int|int[] $expected
      */
-    public function seeNumberOfElements($selector, $expected);
+    public function seeNumberOfElements($selector, $expected): void;
 
     /**
      * Checks that the given option is selected.
@@ -825,12 +754,9 @@ interface Web
      * $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
      * ```
      *
-     * @param $selector
-     * @param $optionText
-     *
      * @return mixed
      */
-    public function seeOptionIsSelected($selector, $optionText);
+    public function seeOptionIsSelected($selector, string $optionText);
 
     /**
      * Checks that the given option is not selected.
@@ -840,12 +766,9 @@ interface Web
      * $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
      * ```
      *
-     * @param $selector
-     * @param $optionText
-     *
      * @return mixed
      */
-    public function dontSeeOptionIsSelected($selector, $optionText);
+    public function dontSeeOptionIsSelected($selector, string $optionText);
 
     /**
      * Checks that the page title contains the given string.
@@ -855,20 +778,16 @@ interface Web
      * $I->seeInTitle('Blog - Post #1');
      * ```
      *
-     * @param $title
-     *
      * @return mixed
      */
-    public function seeInTitle($title);
+    public function seeInTitle(string $title);
 
     /**
      * Checks that the page title does not contain the given string.
      *
-     * @param $title
-     *
      * @return mixed
      */
-    public function dontSeeInTitle($title);
+    public function dontSeeInTitle(string $title);
 
     /**
      * Checks that a cookie with the given name is set.
@@ -879,22 +798,17 @@ interface Web
      * $I->seeCookie('PHPSESSID');
      * ```
      *
-     * @param $cookie
-     * @param array $params
      * @return mixed
      */
-    public function seeCookie($cookie, array $params = []);
+    public function seeCookie(string $cookie, array $params = []);
 
     /**
      * Checks that there isn't a cookie with the given name.
      * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
-     * @param $cookie
-     *
-     * @param array $params
      * @return mixed
      */
-    public function dontSeeCookie($cookie, array $params = []);
+    public function dontSeeCookie(string $cookie, array $params = []);
 
     /**
      * Sets a cookie with the given name and value.
@@ -905,41 +819,31 @@ interface Web
      * $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
      * ```
      *
-     * @param $name
-     * @param $val
-     * @param array $params
-     *
      * @return mixed
      */
-    public function setCookie($name, $val, array $params = []);
+    public function setCookie(string $name, ?string $val, array $params = []);
 
     /**
      * Unsets cookie with the given name.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      *
-     * @param $cookie
-     *
-     * @param array $params
      * @return mixed
      */
-    public function resetCookie($cookie, array $params = []);
+    public function resetCookie(string $cookie, array $params = []);
 
     /**
      * Grabs a cookie value.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      * If the cookie is set by an ajax request (XMLHttpRequest), there might be some delay caused by the browser, so try `$I->wait(0.1)`.
      *
-     * @param $cookie
-     *
-     * @param array $params
      * @return mixed
      */
-    public function grabCookie($cookie, array $params = []);
+    public function grabCookie(string $cookie, array $params = []);
 
     /**
      * Grabs current page source code.
      *
      * @return string Current page source code.
      */
-    public function grabPageSource();
+    public function grabPageSource(): string;
 }

@@ -22,5 +22,5 @@ namespace Codeception\Lib\Interfaces;
  */
 interface PartedModule
 {
-    public function _parts();
+    public function _parts(): array;
 }

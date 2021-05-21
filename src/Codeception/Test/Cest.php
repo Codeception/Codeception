@@ -213,7 +213,7 @@ class Cest extends Test implements
         return $names;
     }
 
-    public function getLinesToBeCovered()
+    public function getLinesToBeCovered(): array
     {
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();

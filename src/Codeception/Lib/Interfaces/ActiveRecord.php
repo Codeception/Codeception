@@ -4,11 +4,11 @@ namespace Codeception\Lib\Interfaces;
 
 interface ActiveRecord extends ORM
 {
-    public function haveRecord($model, $attributes = []);
+    public function haveRecord(string $model, array $attributes = []): void;
 
-    public function seeRecord($model, $attributes = []);
+    public function seeRecord(string $model, array $attributes = []): void;
 
-    public function dontSeeRecord($model, $attributes = []);
+    public function dontSeeRecord(string $model, array $attributes = []): void;
 
-    public function grabRecord($model, $attributes = []);
+    public function grabRecord(string $model, array $attributes = []);
 }

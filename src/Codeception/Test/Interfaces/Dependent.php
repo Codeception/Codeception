@@ -4,5 +4,5 @@ namespace Codeception\Test\Interfaces;
 
 interface Dependent
 {
-    public function fetchDependencies();
+    public function fetchDependencies(): array;
 }
