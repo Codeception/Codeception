@@ -11,9 +11,8 @@ interface PageSourceSaver
      * $this->getModule('{{MODULE_NAME}}')->_savePageSource(codecept_output_dir().'page.html');
      * ```
      * @api
-     * @param $filename
      */
-    public function _savePageSource($filename);
+    public function _savePageSource(string $filename): void;
 
     /**
      * Use this method within an [interactive pause](https://codeception.com/docs/02-GettingStarted#Interactive-Pause) to save the HTML source code of the current page.
@@ -25,8 +24,6 @@ interface PageSourceSaver
      * $I->makeHtmlSnapshot();
      * // saved to: tests/_output/debug/2017-05-26_14-24-11_4b3403665fea6.html
      * ```
-     *
-     * @param null $name
      */
-    public function makeHtmlSnapshot($name = null);
+    public function makeHtmlSnapshot(string $name = null): void;
 }

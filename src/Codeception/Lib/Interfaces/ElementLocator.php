@@ -2,6 +2,8 @@
 
 namespace Codeception\Lib\Interfaces;
 
+use Symfony\Component\DomCrawler\Crawler;
+
 interface ElementLocator
 {
     /**
@@ -26,8 +28,7 @@ interface ElementLocator
      * PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` instances
      *
      * @api
-     * @param $locator
-     * @return array of interactive elements
+     * @return Crawler|array of interactive elements
      */
-    public function _findElements($locator);
+    public function _findElements(array $locator);
 }
