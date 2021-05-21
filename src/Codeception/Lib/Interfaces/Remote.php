@@ -10,33 +10,31 @@ interface Remote
      *
      * ``` php
      * <?php
-     * // If config is: 'http://mysite.com'
-     * // or config is: 'http://www.mysite.com'
-     * // or config is: 'http://company.mysite.com'
+     * // If config is: 'https://mysite.com'
+     * // or config is: 'https://www.mysite.com'
+     * // or config is: 'https://company.mysite.com'
      *
      * $I->amOnSubdomain('user');
      * $I->amOnPage('/');
-     * // moves to http://user.mysite.com/
-     * ?>
+     * // moves to https://user.mysite.com/
      * ```
      *
      * @param $subdomain
      *
      * @return mixed
      */
-    public function amOnSubdomain($subdomain);
+    public function amOnSubdomain(string $subdomain): void;
 
     /**
      * Open web page at the given absolute URL and sets its hostname as the base host.
      *
      * ``` php
      * <?php
-     * $I->amOnUrl('http://codeception.com');
-     * $I->amOnPage('/quickstart'); // moves to http://codeception.com/quickstart
-     * ?>
+     * $I->amOnUrl('https://codeception.com');
+     * $I->amOnPage('/quickstart'); // moves to https://codeception.com/quickstart
      * ```
      */
-    public function amOnUrl($url);
+    public function amOnUrl(string $url): void;
 
     public function _getUrl();
 }
