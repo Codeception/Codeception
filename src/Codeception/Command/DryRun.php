@@ -68,7 +68,7 @@ class DryRun extends Command
 
         $dispatcher = new EventDispatcher();
         $dispatcher->addSubscriber(new ConsolePrinter([
-            'colors' => !$input->getOption('no-ansi'),
+            'colors'    => (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi')),
             'steps'     => true,
             'verbosity' => OutputInterface::VERBOSITY_VERBOSE,
         ]));
