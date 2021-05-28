@@ -36,11 +36,11 @@
         "squizlabs/php_codesniffer": "~2.0",
         "vlucas/phpdotenv": "^2.0 | ^3.0 | ^4.0 | ^5.0",
         "symfony/process": ">=2.7 <6.0",
-        "codeception/module-asserts": "*@dev",
-        "codeception/module-cli": "*@dev",
-        "codeception/module-db": "*@dev",
-        "codeception/module-filesystem": "*@dev",
-        "codeception/module-phpbrowser": "*@dev",
+        "codeception/module-asserts": "1.*@dev",
+        "codeception/module-cli": "1.*@dev",
+        "codeception/module-db": "1.*@dev",
+        "codeception/module-filesystem": "1.*@dev",
+        "codeception/module-phpbrowser": "1.*@dev",
         "codeception/util-universalframework": "*@dev"
     },
     "suggest": {
