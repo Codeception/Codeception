@@ -1,3 +1,22 @@
+#### 4.1.21
+
+* Fix `dry-run` compatibility with symfony/console 5.3
+* Coverage: Don't attempt to set cookie domain when it is "localhost" (#6210) by @marcovtwout
+* Coverage: Don't attempt to read cookies while an alert is open (#6211) by @marcovtwout
+
+#### 4.1.20
+
+* Fix compatibility with PHP 7.0 (#6154)
+
+#### 4.1.19
+
+* Action file generator supports PHP 8 union types
+* Action file generator generates typehints for method parameters
+* Removed dead code related to DataProviderTestSuite
+* Removed documentation related to Cept format
+* Deprecated generate:cept command
+* Documentation improvements
+
 #### 4.1.18
 
 * Fix cleanup of included test directories #6117 by @rolandsaven

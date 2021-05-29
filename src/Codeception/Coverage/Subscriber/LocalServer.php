@@ -14,6 +14,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\RemoteException;
 use Codeception\Lib\Interfaces\Web as WebInterface;
 use Codeception\Module\WebDriver as WebDriverModule;
+use Facebook\WebDriver\Exception\NoSuchAlertException;
 use RuntimeException;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use function array_filter;
@@ -248,8 +249,13 @@ class LocalServer extends SuiteSubscriber
             // we need to separate coverage cookies by host; we can't separate cookies by port.
             $cookieDomain = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
         }
+        
+        $cookieParams = [];
+        if ($cookieDomain !== 'localhost') {
+            $cookieParams['domain'] = $cookieDomain;
+        }
 
-        $this->module->setCookie(self::COVERAGE_COOKIE, $value, ['domain' => $cookieDomain]);
+        $this->module->setCookie(self::COVERAGE_COOKIE, $value, $cookieParams);
 
         // putting in configuration ensures the cookie is used for all sessions of a MultiSession test
 
@@ -284,6 +290,19 @@ class LocalServer extends SuiteSubscriber
 
     protected function fetchErrors(): void
     {
+        // Calling grabCookie() while an alert is present dismisses the alert
+        // @see https://github.com/Codeception/Codeception/issues/1485
+        if ($this->module instanceof WebDriverModule) {
+            try {
+                $alert = $this->module->webDriver->switchTo()->alert();
+                $alert->getText();
+                // If this succeeds an alert is present, abort
+                return;
+            } catch (NoSuchAlertException $e) {
+                // No alert present, continue
+            }
+        }
+
         try {
             $error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR);
         } catch (ModuleException $e) {
