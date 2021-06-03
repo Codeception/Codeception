@@ -29,7 +29,6 @@ use function range;
  * <?php
  * $user = new Maybe;
  * $user->posts->comments->count();
- * ?>
  * ```
  */
 class Maybe implements ArrayAccess, Iterator, JsonSerializable
@@ -39,7 +38,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
      */
     protected $position = 0;
     /**
-     * @var null|object
+     * @var mixed
      */
     protected $val = null;
     /**
@@ -47,7 +46,10 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
      */
     protected $assocArray = null;
 
-    public function __construct(?array $val = null)
+    /**
+     * @param mixed $val
+     */
+    public function __construct($val = null)
     {
         $this->val = $val;
         if (is_array($this->val)) {
@@ -150,7 +152,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
         }
     }
 
-    public function value(): ?object
+    public function value()
     {
         $val = $this->val;
         if (is_array($val)) {
