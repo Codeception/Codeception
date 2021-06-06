@@ -22,7 +22,7 @@ use function mkdir;
 use function preg_replace;
 
 /**
- * Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
+ * Generates user-friendly text scenarios from scenario-driven tests (Cest).
  *
  * * `codecept g:scenarios acceptance` - for all acceptance tests
  * * `codecept g:scenarios acceptance --format html` - in html format

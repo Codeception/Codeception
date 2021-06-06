@@ -33,9 +33,9 @@ class BuildTest extends BaseCommandRunner
 
         $this->content = $this->log[0]['content'];
         // methods from Filesystem module
-        $this->assertStringContainsString('public function amInPath($path)', $this->content);
-        $this->assertStringContainsString('public function copyDir($src, $dst)', $this->content);
-        $this->assertStringContainsString('public function seeInThisFile($text)', $this->content);
+        $this->assertStringContainsString('public function amInPath(string $path): void', $this->content);
+        $this->assertStringContainsString('public function copyDir(string $src, string $dst): void', $this->content);
+        $this->assertStringContainsString('public function seeInThisFile(string $text): void', $this->content);
 
         // methods from EmulateHelper
         $this->assertStringContainsString('public function seeEquals($expected, $actual)', $this->content);
