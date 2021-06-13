@@ -6,9 +6,21 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * Original namespace: PHPUnit\Runner\Filter
  */
 namespace Codeception\PHPUnit\NonFinal;
 
+use function end;
+use function implode;
+use function preg_match;
+use function sprintf;
+use function str_replace;
+use Exception;
+use PHPUnit\Framework\ErrorTestCase;
+use PHPUnit\Framework\SelfDescribing;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\WarningTestCase;
 use PHPUnit\Util\RegularExpression;
@@ -20,23 +32,14 @@ use RecursiveIterator;
  */
 class NameFilterIterator extends RecursiveFilterIterator
 {
-    /**
-     * @var string
-     */
-    protected $filter;
+    private ?string $filter = null;
+
+    private ?int $filterMin = null;
+
+    private ?int $filterMax = null;
 
     /**
-     * @var int
-     */
-    protected $filterMin;
-
-    /**
-     * @var int
-     */
-    protected $filterMax;
-
-    /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(RecursiveIterator $iterator, string $filter)
     {
@@ -56,22 +59,20 @@ class NameFilterIterator extends RecursiveFilterIterator
             return true;
         }
 
-        $tmp = \PHPUnit\Util\Test::describe($test);
+        $tmp = $this->describe($test);
 
-        if ($test instanceof WarningTestCase) {
+        if ($test instanceof ErrorTestCase || $test instanceof WarningTestCase) {
             $name = $test->getMessage();
+        } elseif ($tmp[0] !== '') {
+            $name = implode('::', $tmp);
         } else {
-            if ($tmp[0] !== '') {
-                $name = \implode('::', $tmp);
-            } else {
-                $name = $tmp[1];
-            }
+            $name = $tmp[1];
         }
 
-        $accepted = @\preg_match($this->filter, $name, $matches);
+        $accepted = @preg_match($this->filter, $name, $matches);
 
         if ($accepted && isset($this->filterMax)) {
-            $set      = \end($matches);
+            $set      = end($matches);
             $accepted = $set >= $this->filterMin && $set <= $this->filterMax;
         }
 
@@ -79,25 +80,25 @@ class NameFilterIterator extends RecursiveFilterIterator
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function setFilter(string $filter): void
+    private function setFilter(string $filter): void
     {
         if (RegularExpression::safeMatch($filter, '') === false) {
             // Handles:
             //  * testAssertEqualsSucceeds#4
             //  * testAssertEqualsSucceeds#4-8
-            if (\preg_match('/^(.*?)#(\d+)(?:-(\d+))?$/', $filter, $matches)) {
+            if (preg_match('/^(.*?)#(\d+)(?:-(\d+))?$/', $filter, $matches)) {
                 if (isset($matches[3]) && $matches[2] < $matches[3]) {
-                    $filter = \sprintf(
+                    $filter = sprintf(
                         '%s.*with data set #(\d+)$',
                         $matches[1]
                     );
 
-                    $this->filterMin = $matches[2];
-                    $this->filterMax = $matches[3];
+                    $this->filterMin = (int) $matches[2];
+                    $this->filterMax = (int) $matches[3];
                 } else {
-                    $filter = \sprintf(
+                    $filter = sprintf(
                         '%s.*with data set #%s$',
                         $matches[1],
                         $matches[2]
@@ -106,8 +107,8 @@ class NameFilterIterator extends RecursiveFilterIterator
             } // Handles:
             //  * testDetermineJsonError@JSON_ERROR_NONE
             //  * testDetermineJsonError@JSON.*
-            elseif (\preg_match('#^(.*?)@(.+)$#', $filter, $matches)) {
-                $filter = \sprintf(
+            elseif (preg_match('/^(.*?)@(.+)$/', $filter, $matches)) {
+                $filter = sprintf(
                     '%s.*with data set "%s"$',
                     $matches[1],
                     $matches[2]
@@ -116,13 +117,32 @@ class NameFilterIterator extends RecursiveFilterIterator
 
             // Escape delimiters in regular expression. Do NOT use preg_quote,
             // to keep magic characters.
-            $filter = \sprintf('/%s/i', \str_replace(
-                '/',
-                '\\/',
-                $filter
-            ));
+            $filter = sprintf(
+                '/%s/i',
+                str_replace(
+                    '/',
+                    '\\/',
+                    $filter
+                )
+            );
         }
 
         $this->filter = $filter;
+    }
+
+    /**
+     * @psalm-return array{0: string, 1: string}
+     */
+    private function describe(Test $test): array
+    {
+        if ($test instanceof TestCase) {
+            return [$test::class, $test->getName()];
+        }
+
+        if ($test instanceof SelfDescribing) {
+            return ['', $test->toString()];
+        }
+
+        return ['', $test::class];
     }
 }

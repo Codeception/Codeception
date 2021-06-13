@@ -6,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * Original namespace: PHPUnit\TextUI
  */
 namespace Codeception\PHPUnit\NonFinal;
 
@@ -15,55 +17,50 @@ use const PHP_SAPI;
 use const PHP_VERSION;
 use function array_diff;
 use function array_map;
+use function array_merge;
 use function assert;
-use function class_exists;
-use function count;
+use function defined;
 use function dirname;
 use function htmlspecialchars;
 use function is_array;
+use function is_file;
 use function is_int;
-use function is_string;
 use function mt_srand;
 use function range;
 use function realpath;
 use function sprintf;
 use function time;
+use PHPUnit\Event;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestSuite;
+use PHPUnit\Logging\JunitXmlLogger;
+use PHPUnit\Logging\TeamCityLogger;
+use PHPUnit\Logging\TestDox\CliTestDoxPrinter;
+use PHPUnit\Logging\TestDox\HtmlResultPrinter;
+use PHPUnit\Logging\TestDox\TextResultPrinter;
+use PHPUnit\Logging\TestDox\XmlResultPrinter;
 use PHPUnit\Runner\AfterLastTestHook;
 use PHPUnit\Runner\BeforeFirstTestHook;
 use PHPUnit\Runner\CodeCoverage;
 use PHPUnit\Runner\DefaultTestResultCache;
-//use PHPUnit\Runner\Extension\ExtensionHandler;
-use PHPUnit\Runner\Filter\ExcludeGroupFilterIterator;
+use PHPUnit\Runner\Extension\ExtensionHandler;
 use PHPUnit\Runner\Filter\Factory;
-use PHPUnit\Runner\Filter\IncludeGroupFilterIterator;
-use PHPUnit\Runner\Filter\NameFilterIterator;
 use PHPUnit\Runner\Hook;
 use PHPUnit\Runner\NullTestResultCache;
+use PHPUnit\Runner\PlainTextTracer;
 use PHPUnit\Runner\ResultCacheExtension;
 use PHPUnit\Runner\TestHook;
 use PHPUnit\Runner\TestListenerAdapter;
 use PHPUnit\Runner\TestSuiteSorter;
 use PHPUnit\Runner\Version;
-use PHPUnit\TextUI\DefaultResultPrinter;
-use PHPUnit\TextUI\ResultPrinter;
 use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\FilterMapper;
 use PHPUnit\TextUI\XmlConfiguration\Configuration;
 use PHPUnit\TextUI\XmlConfiguration\Loader;
 use PHPUnit\TextUI\XmlConfiguration\PhpHandler;
 use PHPUnit\Util\Filesystem;
-use PHPUnit\Util\Log\JUnit;
-use PHPUnit\Util\Log\TeamCity;
 use PHPUnit\Util\Printer;
-use PHPUnit\Util\TestDox\CliTestDoxPrinter;
-use PHPUnit\Util\TestDox\HtmlResultPrinter;
-use PHPUnit\Util\TestDox\TextResultPrinter;
-use PHPUnit\Util\TestDox\XmlResultPrinter;
 use PHPUnit\Util\Xml\SchemaDetector;
-use ReflectionClass;
-use ReflectionException;
 use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 use SebastianBergmann\CodeCoverage\Report\Clover as CloverReport;
@@ -83,26 +80,18 @@ use SebastianBergmann\Timer\Timer;
  */
 class TestRunner
 {
-    public const SUCCESS_EXIT = 0;
+    private ?CodeCoverageFilter $codeCoverageFilter;
 
-    public const FAILURE_EXIT = 1;
+    private ?ResultPrinter $printer = null;
 
-    public const EXCEPTION_EXIT = 2;
-
-    private static $versionStringPrinted = false;
-
-    private $codeCoverageFilter = null;
-
-    protected $printer = null;
-
-    private $messagePrinted = false;
+    private bool $messagePrinted = false;
 
     /**
-     * @var Hook[]
+     * @psalm-var list<Hook>
      */
-    private $extensions = [];
+    private array $extensions = [];
 
-    private $timer;
+    private Timer $timer;
 
     public function __construct(CodeCoverageFilter $filter = null)
     {
@@ -117,15 +106,18 @@ class TestRunner
     /**
      * @throws \PHPUnit\Runner\Exception
      * @throws \PHPUnit\TextUI\XmlConfiguration\Exception
+     * @throws \PHPUnit\Util\Exception
      * @throws Exception
      */
-    public function run(TestSuite $suite, array $arguments = [], array $warnings = [], bool $exit = true): TestResult
+    public function run(TestSuite $suite, array &$arguments = [], array $warnings = []): TestResult
     {
         if (isset($arguments['configuration'])) {
             $GLOBALS['__PHPUNIT_CONFIGURATION_FILE'] = $arguments['configuration'];
         }
 
         $this->handleConfiguration($arguments);
+
+        $warnings = array_merge($warnings, $arguments['warnings']);
 
         if (is_int($arguments['columns']) && $arguments['columns'] < 16) {
             $arguments['columns']   = 16;
@@ -140,8 +132,8 @@ class TestRunner
             $suite->setBackupGlobals(true);
         }
 
-        if ($arguments['backupStaticAttributes'] === true) {
-            $suite->setBackupStaticAttributes(true);
+        if ($arguments['backupStaticProperties'] === true) {
+            $suite->setBackupStaticProperties(true);
         }
 
         if ($arguments['beStrictAboutChangesToGlobalState'] === true) {
@@ -179,6 +171,13 @@ class TestRunner
             $sorter = new TestSuiteSorter($cache);
 
             $sorter->reorderTestsInSuite($suite, $arguments['executionOrder'], $arguments['resolveDependencies'], $arguments['executionOrderDefects']);
+
+            Event\Facade::emitter()->testSuiteSorted(
+                $arguments['executionOrder'],
+                $arguments['executionOrderDefects'],
+                $arguments['resolveDependencies']
+            );
+
             $originalExecutionOrder = $sorter->getOriginalExecutionOrder();
 
             unset($sorter);
@@ -264,32 +263,15 @@ class TestRunner
             $result->registerMockObjectsFromTestArgumentsRecursively();
         }
 
-        if ($this->printer === null) {
-            if (isset($arguments['printer'])) {
-                if ($arguments['printer'] instanceof ResultPrinter) {
-                    $this->printer = $arguments['printer'];
-                } elseif (is_string($arguments['printer']) && class_exists($arguments['printer'], false)) {
-                    try {
-                        $reflector = new ReflectionClass($arguments['printer']);
+        $printerClassName = DefaultResultPrinter::class;
 
-                        if ($reflector->implementsInterface(ResultPrinter::class)) {
-                            $this->printer = $this->createPrinter($arguments['printer'], $arguments);
-                        }
-
-                        // @codeCoverageIgnoreStart
-                    } catch (ReflectionException $e) {
-                        throw new Exception(
-                            $e->getMessage(),
-                            (int) $e->getCode(),
-                            $e
-                        );
-                    }
-                    // @codeCoverageIgnoreEnd
-                }
-            } else {
-                $this->printer = $this->createPrinter(DefaultResultPrinter::class, $arguments);
-            }
+        if (isset($arguments['teamCityPrinter']) && $arguments['teamCityPrinter'] === true) {
+            $printerClassName = TeamCityLogger::class;
+        } elseif (isset($arguments['testdoxPrinter']) && $arguments['testdoxPrinter'] === true) {
+            $printerClassName = CliTestDoxPrinter::class;
         }
+
+        $this->printer = $this->createPrinter($printerClassName, $arguments);
 
         if (isset($originalExecutionOrder) && $this->printer instanceof CliTestDoxPrinter) {
             assert($this->printer instanceof CliTestDoxPrinter);
@@ -298,11 +280,21 @@ class TestRunner
             $this->printer->setShowProgressAnimation(!$arguments['noInteraction']);
         }
 
+        if (isset($arguments['plainTextTrace'])) {
+            if (is_file($arguments['plainTextTrace'])) {
+                unlink($arguments['plainTextTrace']);
+            }
+
+            Event\Facade::registerTracer(
+                new PlainTextTracer($arguments['plainTextTrace'])
+            );
+        }
+
+        Event\Facade::seal();
+
         $this->printer->write(
             Version::getVersionString() . "\n"
         );
-
-        self::$versionStringPrinted = true;
 
         foreach ($arguments['listeners'] as $listener) {
             $result->addListener($listener);
@@ -344,13 +336,13 @@ class TestRunner
 
         if (isset($arguments['teamcityLogfile'])) {
             $result->addListener(
-                new TeamCity($arguments['teamcityLogfile'])
+                new TeamCityLogger($arguments['teamcityLogfile'])
             );
         }
 
         if (isset($arguments['junitLogfile'])) {
             $result->addListener(
-                new JUnit(
+                new JunitXmlLogger(
                     $arguments['junitLogfile'],
                     $arguments['reportUselessTests']
                 )
@@ -468,12 +460,6 @@ class TestRunner
                         } else {
                             CodeCoverage::instance()->excludeUncoveredFiles();
                         }
-
-                        if ($codeCoverageConfiguration->processUncoveredFiles()) {
-                            CodeCoverage::instance()->processUncoveredFiles();
-                        } else {
-                            CodeCoverage::instance()->doNotProcessUncoveredFiles();
-                        }
                     }
                 }
 
@@ -543,10 +529,6 @@ class TestRunner
             $warnings[] = 'opcache.save_comments=0 set; annotations will not work';
         }
 
-        if (isset($arguments['conflictBetweenPrinterClassAndTestdox'])) {
-            $warnings[] = 'Directives printerClass and testdox are mutually exclusive';
-        }
-
         foreach ($warnings as $warning) {
             $this->writeMessage('Warning', $warning);
         }
@@ -574,8 +556,6 @@ class TestRunner
 
         $result->beStrictAboutTestsThatDoNotTestAnything($arguments['reportUselessTests']);
         $result->beStrictAboutOutputDuringTests($arguments['disallowTestOutput']);
-        $result->beStrictAboutTodoAnnotatedTests($arguments['disallowTodoAnnotatedTests']);
-        $result->beStrictAboutResourceUsageDuringSmallTests($arguments['beStrictAboutResourceUsageDuringSmallTests']);
 
         if ($arguments['enforceTimeLimit'] === true && !(new Invoker)->canInvokeWithTimeout()) {
             $this->writeMessage('Error', 'PHP extension pcntl is required for enforcing time limits');
@@ -612,7 +592,15 @@ class TestRunner
             $this->write(PHP_EOL);
         }
 
+        Event\Facade::emitter()->testSuiteStarted($suite->getName());
+
         $suite->run($result);
+
+        Event\Facade::emitter()->testSuiteFinished(
+            $suite->getName(),
+            $result,
+            CodeCoverage::isActive() ? CodeCoverage::instance() : null
+        );
 
         foreach ($this->extensions as $extension) {
             if ($extension instanceof AfterLastTestHook) {
@@ -744,40 +732,6 @@ class TestRunner
             }
         }
 
-        if ($exit) {
-            if (isset($arguments['failOnEmptyTestSuite']) && $arguments['failOnEmptyTestSuite'] === true && count($result) === 0) {
-                exit(self::FAILURE_EXIT);
-            }
-
-            if ($result->wasSuccessfulIgnoringWarnings()) {
-                if ($arguments['failOnRisky'] && !$result->allHarmless()) {
-                    exit(self::FAILURE_EXIT);
-                }
-
-                if ($arguments['failOnWarning'] && $result->warningCount() > 0) {
-                    exit(self::FAILURE_EXIT);
-                }
-
-                if ($arguments['failOnIncomplete'] && $result->notImplementedCount() > 0) {
-                    exit(self::FAILURE_EXIT);
-                }
-
-                if ($arguments['failOnSkipped'] && $result->skippedCount() > 0) {
-                    exit(self::FAILURE_EXIT);
-                }
-
-                exit(self::SUCCESS_EXIT);
-            }
-
-            if ($result->errorCount() > 0) {
-                exit(self::EXCEPTION_EXIT);
-            }
-
-            if ($result->failureCount() > 0) {
-                exit(self::FAILURE_EXIT);
-            }
-        }
-
         return $result;
     }
 
@@ -803,13 +757,22 @@ class TestRunner
      * @throws \PHPUnit\TextUI\XmlConfiguration\Exception
      * @throws Exception
      */
-    protected function handleConfiguration(array &$arguments): void
+    private function handleConfiguration(array &$arguments): void
     {
         if (!isset($arguments['configurationObject']) && isset($arguments['configuration'])) {
             $arguments['configurationObject'] = (new Loader)->load($arguments['configuration']);
         }
 
-        $arguments['debug']     = $arguments['debug'] ?? false;
+        if (!isset($arguments['warnings'])) {
+            $arguments['warnings'] = [];
+        }
+
+        $arguments['debug'] = $arguments['debug'] ?? false;
+
+        if ($arguments['debug'] && !defined('PHPUNIT_TESTSUITE')) {
+            $arguments['warnings'][] = 'The --debug option is deprecated';
+        }
+
         $arguments['filter']    = $arguments['filter'] ?? false;
         $arguments['listeners'] = $arguments['listeners'] ?? [];
 
@@ -865,7 +828,7 @@ class TestRunner
             $phpunitConfiguration = $arguments['configurationObject']->phpunit();
 
             $arguments['backupGlobals']                                   = $arguments['backupGlobals'] ?? $phpunitConfiguration->backupGlobals();
-            $arguments['backupStaticAttributes']                          = $arguments['backupStaticAttributes'] ?? $phpunitConfiguration->backupStaticProperties();
+            $arguments['backupStaticProperties']                          = $arguments['backupStaticProperties'] ?? $phpunitConfiguration->backupStaticProperties();
             $arguments['beStrictAboutChangesToGlobalState']               = $arguments['beStrictAboutChangesToGlobalState'] ?? $phpunitConfiguration->beStrictAboutChangesToGlobalState();
             $arguments['cacheResult']                                     = $arguments['cacheResult'] ?? $phpunitConfiguration->cacheResult();
             $arguments['colors']                                          = $arguments['colors'] ?? $phpunitConfiguration->colors();
@@ -895,8 +858,6 @@ class TestRunner
             $arguments['strictCoverage']                                  = $arguments['strictCoverage'] ?? $phpunitConfiguration->beStrictAboutCoversAnnotation();
             $arguments['ignoreDeprecatedCodeUnitsFromCodeCoverage']       = $arguments['ignoreDeprecatedCodeUnitsFromCodeCoverage'] ?? $codeCoverageConfiguration->ignoreDeprecatedCodeUnits();
             $arguments['disallowTestOutput']                              = $arguments['disallowTestOutput'] ?? $phpunitConfiguration->beStrictAboutOutputDuringTests();
-            $arguments['disallowTodoAnnotatedTests']                      = $arguments['disallowTodoAnnotatedTests'] ?? $phpunitConfiguration->beStrictAboutTodoAnnotatedTests();
-            $arguments['beStrictAboutResourceUsageDuringSmallTests']      = $arguments['beStrictAboutResourceUsageDuringSmallTests'] ?? $phpunitConfiguration->beStrictAboutResourceUsageDuringSmallTests();
             $arguments['verbose']                                         = $arguments['verbose'] ?? $phpunitConfiguration->verbose();
             $arguments['reverseDefectList']                               = $arguments['reverseDefectList'] ?? $phpunitConfiguration->reverseDefectList();
             $arguments['forceCoversAnnotation']                           = $arguments['forceCoversAnnotation'] ?? $phpunitConfiguration->forceCoversAnnotation();
@@ -922,10 +883,6 @@ class TestRunner
                 $arguments['executionOrderDefects'] = $phpunitConfiguration->defectsFirst() ? TestSuiteSorter::ORDER_DEFECTS_FIRST : TestSuiteSorter::ORDER_DEFAULT;
             }
 
-            if ($phpunitConfiguration->conflictBetweenPrinterClassAndTestdox()) {
-                $arguments['conflictBetweenPrinterClassAndTestdox'] = true;
-            }
-
             $groupCliArgs = [];
 
             if (!empty($arguments['groups'])) {
@@ -942,9 +899,9 @@ class TestRunner
                 $arguments['excludeGroups'] = array_diff($groupConfiguration->exclude()->asArrayOfStrings(), $groupCliArgs);
             }
 
-//            foreach ($arguments['configurationObject']->extensions() as $extension) {
-//                (new ExtensionHandler)->registerExtension($extension, $this);
-//            }
+            foreach ($arguments['configurationObject']->extensions() as $extension) {
+                (new ExtensionHandler)->registerExtension($extension, $this);
+            }
 
             foreach ($arguments['unavailableExtensions'] as $extension) {
                 $arguments['warnings'][] = sprintf(
@@ -995,18 +952,17 @@ class TestRunner
             }
         }
 
-//        $extensionHandler = new ExtensionHandler;
-//
-//        foreach ($arguments['extensions'] as $extension) {
-//            $extensionHandler->registerExtension($extension, $this);
-//        }
+        $extensionHandler = new ExtensionHandler;
+
+        foreach ($arguments['extensions'] as $extension) {
+            $extensionHandler->registerExtension($extension, $this);
+        }
 
         unset($extensionHandler);
 
         $arguments['backupGlobals']                                   = $arguments['backupGlobals'] ?? null;
-        $arguments['backupStaticAttributes']                          = $arguments['backupStaticAttributes'] ?? null;
+        $arguments['backupStaticProperties']                          = $arguments['backupStaticProperties'] ?? null;
         $arguments['beStrictAboutChangesToGlobalState']               = $arguments['beStrictAboutChangesToGlobalState'] ?? null;
-        $arguments['beStrictAboutResourceUsageDuringSmallTests']      = $arguments['beStrictAboutResourceUsageDuringSmallTests'] ?? false;
         $arguments['cacheResult']                                     = $arguments['cacheResult'] ?? true;
         $arguments['colors']                                          = $arguments['colors'] ?? DefaultResultPrinter::COLOR_DEFAULT;
         $arguments['columns']                                         = $arguments['columns'] ?? 80;
@@ -1016,7 +972,6 @@ class TestRunner
         $arguments['convertWarningsToExceptions']                     = $arguments['convertWarningsToExceptions'] ?? true;
         $arguments['crap4jThreshold']                                 = $arguments['crap4jThreshold'] ?? 30;
         $arguments['disallowTestOutput']                              = $arguments['disallowTestOutput'] ?? false;
-        $arguments['disallowTodoAnnotatedTests']                      = $arguments['disallowTodoAnnotatedTests'] ?? false;
         $arguments['defaultTimeLimit']                                = $arguments['defaultTimeLimit'] ?? 0;
         $arguments['enforceTimeLimit']                                = $arguments['enforceTimeLimit'] ?? false;
         $arguments['excludeGroups']                                   = $arguments['excludeGroups'] ?? [];
@@ -1066,22 +1021,19 @@ class TestRunner
         $filterFactory = new Factory;
 
         if (!empty($arguments['excludeGroups'])) {
-            $filterFactory->addFilter(
-                new ReflectionClass(ExcludeGroupFilterIterator::class),
+            $filterFactory->addExcludeGroupFilter(
                 $arguments['excludeGroups']
             );
         }
 
         if (!empty($arguments['groups'])) {
-            $filterFactory->addFilter(
-                new ReflectionClass(IncludeGroupFilterIterator::class),
+            $filterFactory->addIncludeGroupFilter(
                 $arguments['groups']
             );
         }
 
         if (!empty($arguments['testsCovering'])) {
-            $filterFactory->addFilter(
-                new ReflectionClass(IncludeGroupFilterIterator::class),
+            $filterFactory->addIncludeGroupFilter(
                 array_map(
                     static function (string $name): string {
                         return '__phpunit_covers_' . $name;
@@ -1092,8 +1044,7 @@ class TestRunner
         }
 
         if (!empty($arguments['testsUsing'])) {
-            $filterFactory->addFilter(
-                new ReflectionClass(IncludeGroupFilterIterator::class),
+            $filterFactory->addIncludeGroupFilter(
                 array_map(
                     static function (string $name): string {
                         return '__phpunit_uses_' . $name;
@@ -1104,8 +1055,7 @@ class TestRunner
         }
 
         if ($arguments['filter']) {
-            $filterFactory->addFilter(
-                new ReflectionClass(NameFilterIterator::class),
+            $filterFactory->addNameFilter(
                 $arguments['filter']
             );
         }
@@ -1130,9 +1080,12 @@ class TestRunner
         $this->messagePrinted = true;
     }
 
-    private function createPrinter(string $class, array $arguments): ResultPrinter
+    /**
+     * @psalm-param class-string $className
+     */
+    private function createPrinter(string $className, array $arguments): ResultPrinter
     {
-        $object = new $class(
+        $object = new $className(
             (isset($arguments['stderr']) && $arguments['stderr'] === true) ? 'php://stderr' : null,
             $arguments['verbose'],
             $arguments['colors'],
