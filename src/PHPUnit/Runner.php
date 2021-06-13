@@ -4,6 +4,9 @@ namespace Codeception\PHPUnit;
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 use Codeception\PHPUnit\Compatibility\PHPUnit9;
+use PHPUnit\Runner\Filter\ExcludeGroupFilterIterator;
+use PHPUnit\Runner\Filter\Factory;
+use PHPUnit\Runner\Filter\IncludeGroupFilterIterator;
 use ReflectionProperty;
 
 class Runner extends NonFinal\TestRunner
@@ -53,33 +56,59 @@ class Runner extends NonFinal\TestRunner
 
         $filterAdded = false;
 
-        $filterFactory = new \PHPUnit\Runner\Filter\Factory();
+        $filterFactory = new Factory();
         if ($arguments['groups']) {
             $filterAdded = true;
-            $filterFactory->addFilter(
-                new \ReflectionClass('PHPUnit\Runner\Filter\IncludeGroupFilterIterator'),
+            $this->addFilterToFactory(
+                $filterFactory,
+                IncludeGroupFilterIterator::class,
                 $arguments['groups']
             );
         }
 
         if ($arguments['excludeGroups']) {
             $filterAdded = true;
-            $filterFactory->addFilter(
-                new \ReflectionClass('PHPUnit\Runner\Filter\ExcludeGroupFilterIterator'),
+            $this->addFilterToFactory(
+                $filterFactory,
+                ExcludeGroupFilterIterator::class,
                 $arguments['excludeGroups']
             );
         }
 
         if ($arguments['filter']) {
             $filterAdded = true;
-            $filterFactory->addFilter(
-                new \ReflectionClass('Codeception\PHPUnit\FilterTest'),
+            $this->addFilterToFactory(
+                $filterFactory,
+                FilterTest::class,
                 $arguments['filter']
             );
         }
 
         if ($filterAdded) {
             $suite->injectFilter($filterFactory);
+        }
+    }
+
+    private function addFilterToFactory(Factory $filterFactory, string $filterClass, $filterParameter)
+    {
+        $filterReflectionClass = new \ReflectionClass($filterClass);
+
+        if (PHPUnit9::addFilterMethodExists()) {
+            $filterFactory->addFilter(
+                $filterReflectionClass,
+                $filterParameter
+            );
+        } else {
+            $property = new ReflectionProperty(get_class($filterFactory), 'filters');
+            $property->setAccessible(true);
+
+            $filters = $property->getValue($filterFactory);
+            $filters []= [
+                $filterReflectionClass,
+                $filterParameter,
+            ];
+            $property->setValue($filterFactory, $filters);
+            $property->setAccessible(false);
         }
     }
 

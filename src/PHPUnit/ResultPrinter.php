@@ -4,9 +4,15 @@ namespace Codeception\PHPUnit;
 use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestStatus\TestStatus;
+use PHPUnit\Logging\TestDox\TestDoxPrinter;
 use PHPUnit\Runner\BaseTestRunner;
+use PHPUnit\Util\TestDox\ResultPrinter as TestDoxResultPrinter;
 
-class ResultPrinter extends \PHPUnit\Util\TestDox\ResultPrinter
+if (!class_exists(TestDoxPrinter::class)) {
+    class_alias(TestDoxResultPrinter::class, TestDoxPrinter::class);
+}
+
+class ResultPrinter extends TestDoxPrinter
 {
     /**
      * An error occurred.

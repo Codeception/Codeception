@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace Codeception\PHPUnit\Compatibility;
 
 use PHPUnit\Runner\BaseTestRunner;
+use PHPUnit\Runner\Filter\Factory;
 use PHPUnit\Runner\Version;
 use PHPUnit\Util\Test as TestUtil;
 use function method_exists;
 
 class PHPUnit9
 {
+    public static function addFilterMethodExists()
+    {
+        return method_exists(Factory::class, 'addFilter');
+    }
+
     public static function baseTestRunnerClassExists(): bool
     {
         return class_exists(BaseTestRunner::class);
@@ -60,6 +66,13 @@ class PHPUnit9
     {
         return method_exists(TestUtil::class, 'getDependencies');
     }
+
+    public static function parseTestMethodAnnotationsMethodExists()
+    {
+        return method_exists(TestUtil::class, 'parseTestMethodAnnotations');
+    }
+
+
 
     public static function isCurrentVersion(): bool
     {
