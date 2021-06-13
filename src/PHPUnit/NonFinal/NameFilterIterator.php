@@ -32,11 +32,20 @@ use RecursiveIterator;
  */
 class NameFilterIterator extends RecursiveFilterIterator
 {
-    private ?string $filter = null;
+    /**
+     * @var string
+     */
+    protected $filter;
 
-    private ?int $filterMin = null;
+    /**
+     * @var int
+     */
+    protected $filterMin;
 
-    private ?int $filterMax = null;
+    /**
+     * @var int
+     */
+    protected $filterMax;
 
     /**
      * @throws Exception
@@ -136,13 +145,13 @@ class NameFilterIterator extends RecursiveFilterIterator
     private function describe(Test $test): array
     {
         if ($test instanceof TestCase) {
-            return [$test::class, $test->getName()];
+            return [get_class($test), $test->getName()];
         }
 
         if ($test instanceof SelfDescribing) {
             return ['', $test->toString()];
         }
 
-        return ['', $test::class];
+        return ['', get_class($test)];
     }
 }

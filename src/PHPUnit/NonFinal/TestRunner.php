@@ -54,6 +54,8 @@ use PHPUnit\Runner\TestHook;
 use PHPUnit\Runner\TestListenerAdapter;
 use PHPUnit\Runner\TestSuiteSorter;
 use PHPUnit\Runner\Version;
+use PHPUnit\TextUI\DefaultResultPrinter;
+use PHPUnit\TextUI\ResultPrinter;
 use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\FilterMapper;
 use PHPUnit\TextUI\XmlConfiguration\Configuration;
 use PHPUnit\TextUI\XmlConfiguration\Loader;
@@ -80,18 +82,31 @@ use SebastianBergmann\Timer\Timer;
  */
 class TestRunner
 {
-    private ?CodeCoverageFilter $codeCoverageFilter;
-
-    private ?ResultPrinter $printer = null;
-
-    private bool $messagePrinted = false;
+    /**
+     * @var CodeCoverageFilter
+     */
+    private $codeCoverageFilter;
 
     /**
+     * @var ResultPrinter
+     */
+    protected $printer;
+
+    /**
+     * @var bool
+     */
+    private $messagePrinted = false;
+
+    /**
+     * @var Hook[]
      * @psalm-var list<Hook>
      */
-    private array $extensions = [];
+    private $extensions = [];
 
-    private Timer $timer;
+    /**
+     * @var Timer
+     */
+    private $timer;
 
     public function __construct(CodeCoverageFilter $filter = null)
     {
@@ -757,7 +772,7 @@ class TestRunner
      * @throws \PHPUnit\TextUI\XmlConfiguration\Exception
      * @throws Exception
      */
-    private function handleConfiguration(array &$arguments): void
+    protected function handleConfiguration(array &$arguments): void
     {
         if (!isset($arguments['configurationObject']) && isset($arguments['configuration'])) {
             $arguments['configurationObject'] = (new Loader)->load($arguments['configuration']);
@@ -899,9 +914,9 @@ class TestRunner
                 $arguments['excludeGroups'] = array_diff($groupConfiguration->exclude()->asArrayOfStrings(), $groupCliArgs);
             }
 
-            foreach ($arguments['configurationObject']->extensions() as $extension) {
-                (new ExtensionHandler)->registerExtension($extension, $this);
-            }
+//            foreach ($arguments['configurationObject']->extensions() as $extension) {
+//                (new ExtensionHandler)->registerExtension($extension, $this);
+//            }
 
             foreach ($arguments['unavailableExtensions'] as $extension) {
                 $arguments['warnings'][] = sprintf(
@@ -954,9 +969,9 @@ class TestRunner
 
         $extensionHandler = new ExtensionHandler;
 
-        foreach ($arguments['extensions'] as $extension) {
-            $extensionHandler->registerExtension($extension, $this);
-        }
+//        foreach ($arguments['extensions'] as $extension) {
+//            $extensionHandler->registerExtension($extension, $this);
+//        }
 
         unset($extensionHandler);
 

@@ -37,55 +37,77 @@ use Throwable;
  */
 class JUnit extends Printer implements TestListener
 {
-    private DOMDocument $document;
+    /**
+     * @var DOMDocument
+     */
+    protected $document;
 
-    private DOMElement $root;
+    /**
+     * @var DOMElement
+     */
+    protected $root;
 
-    private bool $reportRiskyTests;
+    /**
+     * @var bool
+     */
+    protected $reportRiskyTests;
 
     /**
      * @var DOMElement[]
      */
-    private array $testSuites = [];
+    protected $testSuites = [];
 
     /**
+     * @var int[]
      * @psalm-var array<int,int>
      */
-    private array $testSuiteTests = [0];
+    protected $testSuiteTests = [0];
 
     /**
+     * @var int[]
      * @psalm-var array<int,int>
      */
-    private array $testSuiteAssertions = [0];
+    protected $testSuiteAssertions = [0];
 
     /**
+     * @var int[]
      * @psalm-var array<int,int>
      */
-    private array $testSuiteErrors = [0];
+    protected $testSuiteErrors = [0];
 
     /**
+     * @var int[]
      * @psalm-var array<int,int>
      */
-    private array $testSuiteWarnings = [0];
+    protected $testSuiteWarnings = [0];
 
     /**
+     * @var int[]
      * @psalm-var array<int,int>
      */
-    private array $testSuiteFailures = [0];
+    protected $testSuiteFailures = [0];
 
     /**
+     * @var int[]
      * @psalm-var array<int,int>
      */
-    private array $testSuiteSkipped = [0];
+    protected $testSuiteSkipped = [0];
 
     /**
+     * @var int[]
      * @psalm-var array<int,int>
      */
-    private array $testSuiteTimes = [0];
+    protected $testSuiteTimes = [0];
 
-    private int $testSuiteLevel = 0;
+    /**
+     * @var int
+     */
+    protected $testSuiteLevel = 0;
 
-    private ?DOMElement $currentTestCase = null;
+    /**
+     * @var DOMElement
+     */
+    protected $currentTestCase = null;
 
     /**
      * @param null|mixed $out
@@ -315,6 +337,9 @@ class JUnit extends Printer implements TestListener
 
         if (method_exists($test, 'numberOfAssertionsPerformed')) {
             $numAssertions = $test->numberOfAssertionsPerformed();
+        } elseif (method_exists($test, 'getNumAssertions')) {
+            // PHPUnit 9 or Cest or Cept or Gherkin
+            $numAssertions = $test->getNumAssertions();
         }
 
         $this->testSuiteAssertions[$this->testSuiteLevel] += $numAssertions;
@@ -387,7 +412,7 @@ class JUnit extends Printer implements TestListener
         if ($t instanceof ExceptionWrapper) {
             $fault->setAttribute('type', $t->getClassName());
         } else {
-            $fault->setAttribute('type', $t::class);
+            $fault->setAttribute('type', get_class($t));
         }
 
         $this->currentTestCase->appendChild($fault);
