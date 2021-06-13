@@ -13,7 +13,7 @@ use Codeception\Test\Interfaces\Reported;
 use Codeception\TestInterface;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Metadata\GroupsFacade;
+use PHPUnit\Metadata\Api\Groups;
 use PHPUnit\Util\Test as TestUtil;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -198,6 +198,6 @@ class GroupManager
         if (PHPUnit9::getGroupsMethodExists()) {
             return TestUtil::getGroups($className, $methodName);
         }
-        return (new GroupsFacade)->groups($className, $methodName);
+        return (new Groups)->groups($className, $methodName);
     }
 }

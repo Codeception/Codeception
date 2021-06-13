@@ -56,6 +56,11 @@ class PHPUnit9
         return method_exists(TestUtil::class, 'getLinesToBeUsed');
     }
 
+    public static function getDependenciesMethodExists()
+    {
+        return method_exists(TestUtil::class, 'getDependencies');
+    }
+
     public static function isCurrentVersion(): bool
     {
         return Version::series() < 10;

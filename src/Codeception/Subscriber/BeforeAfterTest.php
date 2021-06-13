@@ -7,7 +7,7 @@ namespace Codeception\Subscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\PHPUnit\Compatibility\PHPUnit9;
-use PHPUnit\Metadata\HookFacade;
+use PHPUnit\Metadata\Api\HookMethods;
 use PHPUnit\Util\Test as TestUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function call_user_func;
@@ -37,7 +37,7 @@ class BeforeAfterTest implements EventSubscriberInterface
             if (PHPUnit9::getHookMethodsMethodExists()) {
                 $this->hooks[$testClass] = TestUtil::getHookMethods($testClass);
             } else {
-                $this->hooks[$testClass] = (new HookFacade)->hookMethods($testClass);
+                $this->hooks[$testClass] = (new HookMethods)->hookMethods($testClass);
             }
         }
         $this->runHooks('beforeClass');
