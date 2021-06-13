@@ -55,12 +55,19 @@ jobs:
       - name: Install PHPUnit 10 on PHP 8.0
         if: matrix.php == '8.0'
         run: |
-          composer require --no-update "phpunit/phpunit:dev-master as 9.5.99"
+          composer require --no-update "sebastian/cli-parser:dev-master as 2.9.99"
           composer require --no-update "sebastian/code-unit:dev-master as 2.9.99"
+          composer require --no-update "sebastian/comparator:dev-master as 5.9.99"
           composer require --no-update "sebastian/complexity:dev-master as 3.9.99"
+          composer require --no-update "sebastian/exporter:dev-master as 5.9.99"
           composer require --no-update "sebastian/lines-of-code:dev-master as 2.9.99"
+          composer require --no-update "sebastian/type:dev-master as 3.9.99"
           composer require --no-update "sebastian/version:dev-master as 4.9.99"
           composer require --no-update "phpunit/php-code-coverage:dev-master as 10.9.99"
+          composer require --no-update "phpunit/php-file-iterator:dev-master as 4.9.99"
+          composer require --no-update "phpunit/php-invoker:dev-master as 4.9.99"
+          composer require --no-update "phpunit/php-timer:dev-master as 6.9.99"
+          composer require --no-update "phpunit/phpunit:dev-master as 9.5.99"
 
       - name: Composer install
         run: composer install --prefer-source --no-interaction --no-progress --optimize-autoloader --ansi
