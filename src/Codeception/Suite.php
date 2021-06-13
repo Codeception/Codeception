@@ -18,7 +18,7 @@ class Suite extends TestSuite
     public function reorderDependencies(): void
     {
         $tests = [];
-        foreach ($this->tests as $test) {
+        foreach ($this->tests() as $test) {
             $tests = array_merge($tests, $this->getDependencies($test));
         }
 
@@ -31,7 +31,7 @@ class Suite extends TestSuite
             $hashes[] = spl_object_hash($test);
             $queue[] = $test;
         }
-        $this->tests = $queue;
+        $this->setTests($queue);
     }
 
     /**
@@ -57,7 +57,7 @@ class Suite extends TestSuite
     protected function findMatchedTest(string $testSignature): ?SelfDescribing
     {
         /** @var SelfDescribing $test */
-        foreach ($this->tests as $test) {
+        foreach ($this->tests() as $test) {
             $signature = Descriptor::getTestSignature($test);
             if ($signature === $testSignature) {
                 return $test;
