@@ -90,9 +90,9 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         }
 
         if ($this->settings['show_uncovered']) {
-            $this->coverage->processUncoveredFiles();
+            $this->coverage->includeUncoveredFiles();
         } else {
-            $this->coverage->doNotProcessUncoveredFiles();
+            $this->coverage->excludeUncoveredFiles();
         }
     }
 
