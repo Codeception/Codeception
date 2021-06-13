@@ -10,6 +10,7 @@
 
 // $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 1;
 
+use PHPUnit\Runner\CodeCoverage as CodeCoverageRunner;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
@@ -24,7 +25,9 @@ if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
 
     if ($cookie) {
         foreach ($cookie as $key => $value) {
-            $_SERVER["HTTP_X_CODECEPTION_" . strtoupper($key)] = $value;
+            if (!empty($value)) {
+                $_SERVER["HTTP_X_CODECEPTION_" . strtoupper($key)] = $value;
+            }
         }
     }
 }
@@ -51,6 +54,23 @@ if (!function_exists('__c3_error')) {
     }
 }
 
+// Autoload Codeception classes
+if (!class_exists('\\Codeception\\Codecept') || !function_exists('codecept_is_path_absolute')) {
+    if (file_exists(__DIR__ . '/codecept.phar')) {
+        require_once 'phar://' . __DIR__ . '/codecept.phar/autoload.php';
+    } elseif (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
+        require_once __DIR__ . '/vendor/autoload.php';
+        // Required to load some methods only available at codeception/autoload.php
+        if (stream_resolve_include_path(__DIR__ . '/vendor/codeception/codeception/autoload.php')) {
+            require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
+        }
+    } elseif (stream_resolve_include_path('Codeception/autoload.php')) {
+        require_once 'Codeception/autoload.php';
+    } else {
+        __c3_error('Codeception is not loaded. Please check that either PHAR or Composer package can be used');
+    }
+}
+
 // phpunit codecoverage shimming
 if (!class_exists('PHP_CodeCoverage') and class_exists('SebastianBergmann\CodeCoverage\CodeCoverage')) {
     class_alias('SebastianBergmann\CodeCoverage\CodeCoverage', 'PHP_CodeCoverage');
@@ -67,40 +87,23 @@ if (!class_exists('PHPUnit_Runner_Version') && class_exists('PHPUnit\Runner\Vers
     class_alias('PHPUnit\Runner\Version', 'PHPUnit_Runner_Version');
 }
 
-// Autoload Codeception classes
-if (!class_exists('\\Codeception\\Codecept')) {
-    if (file_exists(__DIR__ . '/codecept.phar')) {
-        require_once 'phar://' . __DIR__ . '/codecept.phar/autoload.php';
-    } elseif (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
-        require_once __DIR__ . '/vendor/autoload.php';
-        // Required to load some methods only available at codeception/autoload.php
-        if (stream_resolve_include_path(__DIR__ . '/vendor/codeception/codeception/autoload.php')) {
-            require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
-        }
-    } elseif (stream_resolve_include_path('Codeception/autoload.php')) {
-        require_once 'Codeception/autoload.php';
-    } else {
-        __c3_error('Codeception is not loaded. Please check that either PHAR or Composer package can be used');
-    }
-}
-
 // Load Codeception Config
-$config_dist_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
-$config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.yml';
+$configDistFile = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
+$configFile = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.yml';
 
 if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'])) {
-    $config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
+    $configFile = realpath(__DIR__) . DIRECTORY_SEPARATOR . $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
 }
-if (file_exists($config_file)) {
+if (file_exists($configFile)) {
     // Use codeception.yml for configuration.
-} elseif (file_exists($config_dist_file)) {
+} elseif (file_exists($configDistFile)) {
     // Use codeception.dist.yml for configuration.
-    $config_file = $config_dist_file;
+    $configFile = $configDistFile;
 } else {
-    __c3_error(sprintf("Codeception config file '%s' not found", $config_file));
+    __c3_error(sprintf("Codeception config file '%s' not found", $configFile));
 }
 try {
-    \Codeception\Configuration::config($config_file);
+    \Codeception\Configuration::config($configFile);
 } catch (\Exception $e) {
     __c3_error($e->getMessage());
 }
@@ -170,6 +173,17 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.crap4j.xml';
     }
 
+    function __c3_build_cobertura_report(PHP_CodeCoverage $codeCoverage, $path): string
+    {
+        if (!class_exists(\SebastianBergmann\CodeCoverage\Report\Cobertura::class)) {
+            throw new Exception("Cobertura report requires php-code-coverage >= 9.2");
+        }
+        $writer = new \SebastianBergmann\CodeCoverage\Report\Cobertura();
+        $writer->process($codeCoverage, $path . '.cobertura.xml');
+
+        return $path . '.cobertura.xml';
+    }
+
     function __c3_build_phpunit_report(PHP_CodeCoverage $codeCoverage, $path): string
     {
         $writer = new PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
@@ -232,16 +246,32 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             }
 
             return array($phpCoverage, $file);
-        } else {
-            if (method_exists(Driver::class, 'forLineCoverage')) {
-                //php-code-coverage 9+
+        }
+
+        $pathCoverage = false;
+        if (isset($coverageConfiguration['path_coverage'])) {
+            $pathCoverage = (bool)$coverageConfiguration['path_coverage'];
+        }
+
+        if (class_exists(CodeCoverageRunner::class)) {
+            //PHPUnit 10+
+            if (!CodeCoverageRunner::isActive()) {
                 $filter = new CodeCoverageFilter();
-                $driver = Driver::forLineCoverage($filter);
-                $phpCoverage = new PHP_CodeCoverage($driver, $filter);
-            } else {
-                //php-code-coverage 8 or older
-                $phpCoverage = new PHP_CodeCoverage();
+                CodeCoverageRunner::activate($filter, $pathCoverage);
             }
+            $phpCoverage = CodeCoverageRunner::instance();
+        } elseif (method_exists(Driver::class, 'forLineCoverage')) {
+            //php-code-coverage 9
+            $filter = new CodeCoverageFilter();
+            if ($pathCoverage) {
+                $driver = Driver::forLineAndPathCoverage($filter);
+            } else {
+                $driver = Driver::forLineCoverage($filter);
+            }
+            $phpCoverage = new PHP_CodeCoverage($driver, $filter);
+        } else {
+            //php-code-coverage 8 or older
+            $phpCoverage = new PHP_CodeCoverage();
         }
 
         if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'])) {
@@ -289,20 +319,20 @@ if (!is_dir(C3_CODECOVERAGE_MEDIATE_STORAGE)) {
 // evaluate base path for c3-related files
 $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
 
-$requested_c3_report = (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false);
+$requestedC3Report = (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false);
 
-$complete_report = $current_report = $path . '.serialized';
-if ($requested_c3_report) {
+$completeReport = $currentReport = $path . '.serialized';
+if ($requestedC3Report) {
     set_time_limit(0);
 
-    $route = ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/');
+    $route = ltrim(strrchr(rtrim($_SERVER['REQUEST_URI'], '/'), '/'), '/');
 
     if ($route === 'clear') {
         __c3_clear();
         return __c3_exit();
     }
 
-    [$codeCoverage, ] = __c3_factory($complete_report);
+    [$codeCoverage, ] = __c3_factory($completeReport);
 
     switch ($route) {
         case 'html':
@@ -328,7 +358,7 @@ if ($requested_c3_report) {
             return __c3_exit();
         case 'serialized':
             try {
-                __c3_send_file($complete_report);
+                __c3_send_file($completeReport);
             } catch (Exception $e) {
                 __c3_error($e->getMessage());
             }
@@ -340,19 +370,24 @@ if ($requested_c3_report) {
                 __c3_error($e->getMessage());
             }
             return __c3_exit();
+        case 'cobertura':
+            try {
+                __c3_send_file(__c3_build_cobertura_report($codeCoverage, $path));
+            } catch (Exception $e) {
+                __c3_error($e->getMessage());
+            }
+            return __c3_exit();
     }
-
 } else {
     [$codeCoverage, ] = __c3_factory(null);
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
     if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG', $_SERVER)) {
         register_shutdown_function(
-            function () use ($codeCoverage, $current_report) {
-
+            function () use ($codeCoverage, $currentReport) {
                 $codeCoverage->stop();
-                if (!file_exists(dirname($current_report))) { // verify directory exists
-                    if (!mkdir(dirname($current_report), 0777, true)) {
-                        __c3_error("Can't write CodeCoverage report into $current_report");
+                if (!file_exists(dirname($currentReport))) { // verify directory exists
+                    if (!mkdir(dirname($currentReport), 0777, true)) {
+                        __c3_error("Can't write CodeCoverage report into $currentReport");
                     }
                 }
 
@@ -369,11 +404,11 @@ if ($requested_c3_report) {
                 // read/write to the file at the same time as this request (leading to a corrupt file). flock() is a
                 // blocking call, so it waits until an exclusive lock can be acquired before continuing.
 
-                [$existingCodeCoverage, $file] = __c3_factory($current_report, true);
+                [$existingCodeCoverage, $file] = __c3_factory($currentReport, true);
                 $existingCodeCoverage->merge($codeCoverage);
 
                 if ($file === null) {
-                    file_put_contents($current_report, serialize($existingCodeCoverage), LOCK_EX);
+                    file_put_contents($currentReport, serialize($existingCodeCoverage), LOCK_EX);
                 } else {
                     fseek($file, 0);
                     fwrite($file, serialize($existingCodeCoverage));
