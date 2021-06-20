@@ -115,10 +115,10 @@ final class RunCest
         $I->seeInShellOutput('PHPUNIT-XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
-        $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        $I->seeThisFileMatches('/<testsuite name="dummy" tests="6" assertions="3" errors="0"( warnings="0")? failures="0" skipped="0" time=/');
         $I->seeThisFileMatches('/<testsuite name="AnotherCest" file=".*?AnotherCest.php"/');
         $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php"/');
-        $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php" tests="2" assertions="2" errors="0"( warnings="0")? failures="0" skipped="0" time=/');
         //FileExistsCept file
         $I->seeInThisFile('<testsuite name="FileExists"');
         $I->seeInThisFile('<testcase name="FileExists"');
@@ -136,10 +136,11 @@ final class RunCest
         $I->seeInShellOutput('PHPUNIT-XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
-        $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        $I->seeInThisFile('');
+        $I->seeThisFileMatches('/<testsuite name="dummy" tests="6" assertions="3" errors="0"( warnings="0")? failures="0" skipped="0" time=/');
         $I->seeThisFileMatches('/<testsuite name="AnotherCest" file=".*?AnotherCest.php"/');
         $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php"/');
-        $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php" tests="2" assertions="2" errors="0"( warnings="0")? failures="0" skipped="0" time=/');
         //FileExistsCept file
         $I->seeInThisFile('<testsuite name="FileExists"');
         $I->seeInThisFile('<testcase name="FileExists"');

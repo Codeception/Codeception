@@ -4,7 +4,7 @@ namespace Codeception\PHPUnit;
 use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestStatus\TestStatus;
-use PHPUnit\Logging\TestDox\TestDoxPrinter;
+use PHPUnit\Logging\TestDox\ResultPrinter as TestDoxPrinter;
 use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\TestDox\ResultPrinter as TestDoxResultPrinter;
 

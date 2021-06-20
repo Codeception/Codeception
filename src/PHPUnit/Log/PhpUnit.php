@@ -38,6 +38,7 @@ class PhpUnit extends \Codeception\PHPUnit\NonFinal\JUnit
             $this->testSuiteErrors[self::FILE_LEVEL]     = 0;
             $this->testSuiteFailures[self::FILE_LEVEL]   = 0;
             $this->testSuiteSkipped[self::FILE_LEVEL]    = 0;
+            $this->testSuiteWarnings[self::FILE_LEVEL]   = 0;
 
             $this->testSuiteLevel = self::FILE_LEVEL;
 
