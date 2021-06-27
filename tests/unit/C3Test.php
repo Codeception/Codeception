@@ -33,6 +33,10 @@ class C3Test extends \Codeception\PHPUnit\TestCase
         unset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG']);
         unset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
         \Codeception\Util\FileSystem::deleteDir($this->c3_dir);
+
+        if (\Codeception\PHPUnit\Compatibility\PHPUnit10::codeCoverageRunnerClassExists()) {
+            \PHPUnit\Runner\CodeCoverage::deactivate();
+        }
     }
 
     public function testC3CodeCoverageStarted()
