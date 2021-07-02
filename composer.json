@@ -20,7 +20,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "codeception/lib-asserts": "^1.0",
-        "guzzlehttp/psr7": "~1.4",
+        "guzzlehttp/psr7": "^1.4 | ^2.0",
         "symfony/finder": ">=2.7 <6.0",
         "symfony/console": ">=2.7 <6.0",
         "symfony/event-dispatcher": ">=2.7 <6.0",
