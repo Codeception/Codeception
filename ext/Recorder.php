@@ -166,7 +166,7 @@ class Recorder extends \Codeception\Extension
 </head>
 <body>
     <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="navbar-header">
             <a class="navbar-brand" href="../records.html"></span>Recorded Tests</a>
         </div>
@@ -246,7 +246,7 @@ EOF;
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Recorded Tests
             </a>

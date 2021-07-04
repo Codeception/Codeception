@@ -21,7 +21,7 @@
         "ext-mbstring": "*",
         "phpunit/phpunit": "^9.5",
         "codeception/lib-asserts": "^1.13",
-        "guzzlehttp/psr7": "^1.7",
+        "guzzlehttp/psr7": "^1.7 | ^2.0",
         "symfony/finder": ">=4.4 <6.0",
         "symfony/console": ">=4.4 <6.0",
         "symfony/event-dispatcher": ">=4.4 <6.0",
