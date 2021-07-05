@@ -170,6 +170,9 @@ class Parser
             }
         }
 
+        $tokens = null;
+        gc_mem_caches();
+
         return $classes;
     }
 
