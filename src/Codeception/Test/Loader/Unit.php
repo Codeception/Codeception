@@ -9,9 +9,11 @@ use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Unit as UnitFormat;
 use Codeception\Util\Annotation;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestBuilder;
+use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\Dependencies;
 use ReflectionClass;
 use ReflectionMethod;
@@ -57,6 +59,12 @@ class Unit implements LoaderInterface
      */
     protected function createTestFromPhpUnitMethod(ReflectionClass $class, ReflectionMethod $method)
     {
+        if ($method->getDeclaringClass()->getName() === Assert::class) {
+            return null;
+        }
+        if ($method->getDeclaringClass()->getName() === TestCase::class) {
+            return null;
+        }
         if (!\PHPUnit\Util\Test::isTestMethod($method)) {
             return null;
         }
