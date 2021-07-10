@@ -4,6 +4,7 @@ namespace Codeception\PHPUnit\ResultPrinter;
 use Codeception\Event\FailEvent;
 use Codeception\Events;
 use Codeception\PHPUnit\Compatibility\PHPUnit10;
+use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\Test\Unit;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -17,7 +18,13 @@ class UI extends \PHPUnit\TextUI\DefaultResultPrinter
 
     public function __construct(EventDispatcher $dispatcher, $options, $out = null)
     {
-        parent::__construct($out, $options['verbosity'] > OutputInterface::VERBOSITY_NORMAL, $options['colors'] ? 'always' : 'never');
+        if (PHPUnit9::isCurrentVersion()) {
+            $colors = $options['colors'] ? 'always' : 'never';
+        } else {
+            $colors = $options['colors'];
+        }
+
+        parent::__construct($out, $options['verbosity'] > OutputInterface::VERBOSITY_NORMAL, $colors);
         $this->dispatcher = $dispatcher;
     }
 
