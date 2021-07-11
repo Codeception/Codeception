@@ -12,8 +12,6 @@ class Runner extends NonFinal\TestRunner
         'xml'         => false,
         'phpunit-xml' => false,
         'html'        => false,
-        'tap'         => false,
-        'json'        => false,
         'report'      => false
     ];
 
@@ -161,17 +159,6 @@ class Runner extends NonFinal\TestRunner
             self::$persistentListeners[] = $this->instantiateReporter(
                 'phpunit-xml',
                 [$this->absolutePath($arguments['phpunit-xml']), (bool)$arguments['log_incomplete_skipped']]
-            );
-        }
-        if ($arguments['tap']) {
-            codecept_debug('Printing TAP report into ' . $arguments['tap']);
-            self::$persistentListeners[] = $this->instantiateReporter('tap', [$this->absolutePath($arguments['tap'])]);
-        }
-        if ($arguments['json']) {
-            codecept_debug('Printing JSON report into ' . $arguments['json']);
-            self::$persistentListeners[] = $this->instantiateReporter(
-                'json',
-                [$this->absolutePath($arguments['json'])]
             );
         }
 

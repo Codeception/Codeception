@@ -10,8 +10,6 @@ use Codeception\PHPUnit\Log\JUnit as JUnitLog;
 use Codeception\PHPUnit\Log\PhpUnit as PhpUnitLog;
 use Codeception\PHPUnit\ResultPrinter\HTML as HTMLResultPrinter;
 use Codeception\PHPUnit\ResultPrinter\Report as ReportPrinter;
-use Codeception\PHPUnit\Util\Log\JSON as JSONLog;
-use Codeception\PHPUnit\Util\Log\TAP as TAPLog;
 use Codeception\Step\ConditionalAssertion;
 use Codeception\Util\Autoload;
 use Codeception\Util\PathResolver;
@@ -97,8 +95,6 @@ class Configuration
             'xml'         => JUnitLog::class,
             'html'        => HTMLResultPrinter::class,
             'report'      => ReportPrinter::class,
-            'tap'         => TAPLog::class,
-            'json'        => JSONLog::class,
             'phpunit-xml' => PhpUnitLog::class,
         ],
         'groups'     => [],

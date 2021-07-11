@@ -89,8 +89,6 @@ use function substr_replace;
  *  --xml                 Generate JUnit XML Log (default: "report.xml")
  *  --phpunit-xml         Generate PhpUnit XML Log (default: "phpunit-report.xml")
  *  --no-redirect         Do not redirect to Composer-installed version in vendor/codeception
- *  --tap                 Generate Tap Log (default: "report.tap.log")
- *  --json                Generate Json Log (default: "report.json")
  *  --colors              Use colors in output
  *  --no-colors           Force no colors in output (useful to override config file)
  *  --silent              Only outputs suite names and final results. Almost the same as `--quiet`
@@ -159,8 +157,6 @@ class Run extends Command
             new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html'),
             new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
             new InputOption('phpunit-xml', '', InputOption::VALUE_OPTIONAL, 'Generate PhpUnit XML Log', 'phpunit-report.xml'),
-            new InputOption('tap', '', InputOption::VALUE_OPTIONAL, 'Generate Tap Log', 'report.tap.log'),
-            new InputOption('json', '', InputOption::VALUE_OPTIONAL, 'Generate Json Log', 'report.json'),
             new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
             new InputOption(
                 'no-colors',
@@ -313,8 +309,6 @@ class Run extends Command
                 'xml' => 'report.xml',
                 'phpunit-xml' => 'phpunit-report.xml',
                 'html' => 'report.html',
-                'json' => 'report.json',
-                'tap' => 'report.tap.log',
                 'coverage' => 'coverage.serialized',
                 'coverage-xml' => 'coverage.xml',
                 'coverage-html' => 'coverage',
