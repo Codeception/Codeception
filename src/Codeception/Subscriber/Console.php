@@ -161,8 +161,6 @@ class Console implements EventSubscriberInterface
         'xml'           => null,
         'phpunit-xml'   => null,
         'html'          => null,
-        'tap'           => null,
-        'json'          => null,
         'no-artifacts'  => false,
     ];
 
@@ -186,7 +184,7 @@ class Console implements EventSubscriberInterface
             $this->chars['fail'] = '✖';
         }
 
-        foreach (['html', 'xml', 'phpunit-xml', 'tap', 'json'] as $report) {
+        foreach (['html', 'xml', 'phpunit-xml'] as $report) {
             if (!$this->options[$report]) {
                 continue;
             }

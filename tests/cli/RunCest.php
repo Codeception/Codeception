@@ -71,32 +71,6 @@ final class RunCest
         $I->seeFileFound('report.html', 'tests/_output');
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
-    public function runJsonReport(CliGuy $I)
-    {
-        $I->wantTo('check json reports');
-        $I->executeCommand('run dummy --json');
-        $I->seeFileFound('report.json', 'tests/_output');
-        $I->seeInThisFile('"suite":');
-        $I->seeInThisFile('"dummy"');
-        $I->assertNotNull(json_decode(file_get_contents('tests/_output/report.json')));
-    }
-
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
-    public function runTapReport(CliGuy $I)
-    {
-        $I->wantTo('check tap reports');
-        $I->executeCommand('run dummy --tap');
-        $I->seeFileFound('report.tap.log', 'tests/_output');
-    }
 
     /**
      * @group reports
