@@ -1,11 +1,16 @@
 <?php
 
-class v5Cest
+final class v5Cest
 {
+    public function _before(CliGuy $I)
+    {
+        $bootstrapPath = 'tests/data/sandbox/boot'.uniqid();
+        @mkdir($bootstrapPath, 0777, true);
+        $I->amInPath($bootstrapPath);
+    }
+
     public function bootstrapCodecept5(CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox');
-        $I->cleanDir('.');
         $I->executeCommand('bootstrap');
         $I->executeCommand('g:suite Api');
         $I->executeCommand('g:cest Api Resource');
@@ -42,8 +47,6 @@ class v5Cest
 
     public function bootstrapCodecept5WithNamespace(CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox');
-        $I->cleanDir('.');
         $I->executeCommand('bootstrap --namespace Codecept5');
         $I->executeCommand('g:suite Api');
         $I->executeCommand('g:feature Acceptance UserStory');
