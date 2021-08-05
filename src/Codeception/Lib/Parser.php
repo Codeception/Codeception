@@ -170,6 +170,11 @@ class Parser
             }
         }
 
+        if (PHP_MAJOR_VERSION > 5) {
+            $tokens = null;
+            gc_mem_caches();
+        }
+
         return $classes;
     }
 
