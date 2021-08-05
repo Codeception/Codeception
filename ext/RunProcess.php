@@ -107,4 +107,26 @@ class RunProcess extends Extension
         }
         $this->processes = [];
     }
+
+    /**
+     * Disable the deserialization of the class to prevent attacker executing
+     * code by leveraging the __destruct method.
+     *
+     * @see https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection
+     */
+    public function __sleep()
+    {
+        throw new \BadMethodCallException('Cannot serialize ' . __CLASS__);
+    }
+
+    /**
+     * Disable the deserialization of the class to prevent attacker executing
+     * code by leveraging the __destruct method.
+     *
+     * @see https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection
+     */
+    public function __wakeup()
+    {
+        throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
+    }
 }
