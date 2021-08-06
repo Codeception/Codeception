@@ -1,3 +1,7 @@
+#### 3.1.3
+
+* Security fix: Disable deserialization of RunProcess class (#6241)
+
 #### 3.1.2
 
 * [Doctrine2] Support non-entity doctrine @id on the haveInRepository debug message by @Basster 
