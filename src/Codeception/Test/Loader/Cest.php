@@ -63,7 +63,7 @@ class Cest implements LoaderInterface
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
                 if ($rawExamples !== []) {
                     $examples = array_map(
-                        function ($v) {
+                        function ($v): ?array {
                             return Annotation::arrayValue($v);
                         },
                         $rawExamples

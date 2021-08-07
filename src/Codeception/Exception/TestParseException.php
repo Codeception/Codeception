@@ -16,7 +16,7 @@ class TestParseException extends Exception
             $this->message = "Couldn't parse test '{$fileName}'";
         }
         if ($errors) {
-            $this->message .= "\n{$errors}";
+            $this->message .= PHP_EOL . $errors;
         }
     }
 }

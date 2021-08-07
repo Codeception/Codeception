@@ -25,7 +25,7 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
      */
     protected $parser;
 
-    public function __construct($name, $file)
+    public function __construct(string $name, string $file)
     {
         $metadata = new Metadata();
         $metadata->setName($name);
@@ -47,7 +47,7 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         try {
             require $testFile;
         } catch (ParseError $error) {
-            throw new TestParseException($testFile, $error->getMessage(), $error->getLine());
+            throw new TestParseException($testFile, $error->getMessage(), (string) $error->getLine());
         }
     }
 
@@ -70,6 +70,9 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         return $sourceCode;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getReportFields(): array
     {
         return [

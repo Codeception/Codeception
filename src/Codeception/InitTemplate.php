@@ -251,6 +251,9 @@ abstract class InitTemplate
         $this->sayInfo("Actions have been loaded");
     }
 
+    /**
+     * @return void|int
+     */
     protected function addModulesToComposer(array $modules)
     {
         $packages = ModuleContainer::$packages;

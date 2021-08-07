@@ -61,7 +61,7 @@ class ReflectionPropertyAccessor
                 }
             }
 
-            $obj = $reflectionClass->newInstance(...$constructorParameters);
+            $obj = $reflectionClass->newInstance($constructorParameters);
         }
 
         foreach ($reflectionClass->getProperties() as $property) {

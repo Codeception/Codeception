@@ -327,6 +327,7 @@ class Configuration
      * Returns suite configuration. Requires suite name and global config used (Configuration::config)
      *
      * @throws Exception
+     * @return array<string, string>
      */
     public static function suiteSettings(string $suite, array $config): array
     {
@@ -490,7 +491,7 @@ class Configuration
                 $settings['modules']['enabled'],
                 array_keys($settings['modules']['enabled'])
             ),
-            function ($m) use ($settings) {
+            function ($m) use ($settings): bool {
                 if (!isset($settings['modules']['disabled'])) {
                     return true;
                 }

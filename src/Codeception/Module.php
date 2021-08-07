@@ -212,10 +212,8 @@ abstract class Module
 
     /**
      * **HOOK** executed before suite
-     *
-     * @param array $settings
      */
-    public function _beforeSuite($settings = [])
+    public function _beforeSuite(array $settings = [])
     {
     }
 

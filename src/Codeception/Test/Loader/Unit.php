@@ -53,6 +53,9 @@ class Unit implements LoaderInterface
         return $this->tests;
     }
 
+    /**
+     * @return DataProviderTestSuite|PHPUnitTest|null
+     */
     protected function createTestFromPhpUnitMethod(ReflectionClass $class, ReflectionMethod $method)
     {
         if (!\PHPUnit\Util\Test::isTestMethod($method)) {

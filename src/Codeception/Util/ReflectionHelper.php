@@ -170,7 +170,7 @@ class ReflectionHelper
      */
     public static function phpEncodeArray(array $array): string
     {
-        $isPlainArray = function (array $value) {
+        $isPlainArray = function (array $value): bool {
             return (($value === [])
                 || (
                     (array_keys($value) === range(0, count($value) - 1))
@@ -183,7 +183,7 @@ class ReflectionHelper
         }
 
         $values = array_map(
-            function ($key) use ($array) {
+            function ($key) use ($array): string {
                 return self::phpEncodeValue($key) . ' => ' . self::phpEncodeValue($array[$key]);
             },
             array_keys($array)

@@ -42,9 +42,12 @@ class Cest extends Test implements
      */
     protected $parser;
     protected $testClassInstance;
+    /**
+     * @var string
+     */
     protected $testMethod;
 
-    public function __construct($testClass, $methodName, $fileName)
+    public function __construct($testClass, string $methodName, string $fileName)
     {
         $metadata = new Metadata();
         $metadata->setName($methodName);
@@ -114,7 +117,7 @@ class Cest extends Test implements
         }
     }
 
-    protected function executeBeforeMethods($testMethod, $I): void
+    protected function executeBeforeMethods(?string $testMethod, $I): void
     {
         $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['before'])) {
@@ -123,7 +126,7 @@ class Cest extends Test implements
             }
         }
     }
-    protected function executeAfterMethods($testMethod, $I): void
+    protected function executeAfterMethods(?string $testMethod, $I): void
     {
         $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['after'])) {
@@ -181,7 +184,7 @@ class Cest extends Test implements
         return $this->testClassInstance;
     }
 
-    public function getTestMethod()
+    public function getTestMethod(): string
     {
         return $this->testMethod;
     }

@@ -80,6 +80,9 @@ class Autoload
         }
     }
 
+    /**
+     * @return string|false
+     */
     public static function load($class)
     {
         // the current namespace prefix

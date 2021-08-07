@@ -74,6 +74,9 @@ class LocalServer extends SuiteSubscriber
      */
     const COVERAGE_COOKIE_ERROR = 'CODECEPTION_CODECOVERAGE_ERROR';
 
+    /**
+     * @var string|null
+     */
     protected $suiteName;
     /**
      * @var array
@@ -206,6 +209,9 @@ class LocalServer extends SuiteSubscriber
         return $this;
     }
 
+    /**
+     * @return string|false
+     */
     protected function c3Request(string $action)
     {
         $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');

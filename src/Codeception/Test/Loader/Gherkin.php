@@ -116,7 +116,7 @@ class Gherkin implements LoaderInterface
 
             // Add namespace prefix
             $namespace = $this->settings['gherkin']['contexts']['namespace_prefix'];
-            $dynamicContexts = array_map(function ($path) use ($namespace) {
+            $dynamicContexts = array_map(function ($path) use ($namespace): string {
                 return $namespace . $path;
             }, $files);
 

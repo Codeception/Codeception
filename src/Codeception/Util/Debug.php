@@ -28,7 +28,7 @@ class Debug
     /**
      * Prints data to screen. Message can be any time of data
      *
-     * @param $message
+     * @param mixed $message
      */
     public static function debug($message): void
     {

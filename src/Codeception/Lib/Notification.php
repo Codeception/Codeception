@@ -29,6 +29,9 @@ class Notification
         return $message;
     }
 
+    /**
+     * @return string[]
+     */
     public static function all(): array
     {
         $messages = self::$messages;
