@@ -76,7 +76,10 @@ class Output extends ConsoleOutput
         return $message;
     }
 
-    public function debug(string $message): void
+    /**
+     * @param mixed $message
+     */
+    public function debug($message): void
     {
         $message = print_r($message, true);
         $message = str_replace("\n", "\n  ", $message);

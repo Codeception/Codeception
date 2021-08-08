@@ -47,7 +47,7 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         try {
             require $testFile;
         } catch (ParseError $error) {
-            throw new TestParseException($testFile, $error->getMessage(), (string) $error->getLine());
+            throw new TestParseException($testFile, $error->getMessage(), $error->getLine());
         }
     }
 

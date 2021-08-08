@@ -83,7 +83,7 @@ class Autoload
     /**
      * @return string|false
      */
-    public static function load($class)
+    public static function load(string $class)
     {
         // the current namespace prefix
         $prefix = $class;

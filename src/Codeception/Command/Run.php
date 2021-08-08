@@ -475,15 +475,15 @@ class Run extends Command
             }
 
             // Run single test from working directory
-            $realTestDir = realpath(Configuration::testsDir());
-            $cwd = getcwd();
-            if (strpos($realTestDir, (string) $cwd) === 0) {
+            $realTestDir = (string) realpath(Configuration::testsDir());
+            $cwd = (string) getcwd();
+            if (strpos($realTestDir, $cwd) === 0) {
                 $file = $suite;
                 if (strpos($file, ':') !== false) {
                     [$file] = explode(':', $suite, -1);
                 }
                 $realPath = $cwd . DIRECTORY_SEPARATOR . $file;
-                if (file_exists($realPath) && strpos($realPath, (string) $realTestDir) === 0) {
+                if (file_exists($realPath) && strpos($realPath, $realTestDir) === 0) {
                     //only match test if file is in tests directory
                     return $this->matchTestFromFilename(
                         $cwd . DIRECTORY_SEPARATOR . $suite,
@@ -553,7 +553,7 @@ class Run extends Command
     /**
      * @return string[]
      */
-    protected function matchTestFromFilename($filename, $testsPath): array
+    protected function matchTestFromFilename(string $filename, string $testsPath): array
     {
         $filter = '';
         if (strpos($filename, ':') !== false) {
