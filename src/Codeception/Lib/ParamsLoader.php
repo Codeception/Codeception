@@ -143,15 +143,14 @@ class ParamsLoader
                     ->addAdapter(EnvConstAdapter::class)
                     ->addAdapter(ServerConstAdapter::class)
                     ->make();
-                $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
             } else {
                 //dotenv v4
                 $repository = RepositoryBuilder::create()
                     ->withReaders([new ServerConstAdapter()])
                     ->immutable()
                     ->make();
-                $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
             }
+            $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
             $dotEnv->load();
             return $_SERVER;
         }

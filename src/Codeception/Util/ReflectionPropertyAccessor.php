@@ -21,9 +21,6 @@ class ReflectionPropertyAccessor
      */
     public function getProperty(object $obj, string $field)
     {
-        if (!$obj || !is_object($obj)) {
-            throw new InvalidArgumentException('Cannot get property "' . $field . '" of "' . gettype($obj) . '", expecting object');
-        }
         $class = get_class($obj);
         do {
             $reflectedEntity = new ReflectionClass($class);

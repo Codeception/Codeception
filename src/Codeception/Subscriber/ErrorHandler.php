@@ -18,7 +18,6 @@ use function error_reporting;
 use function getenv;
 use function in_array;
 use function is_array;
-use function is_object;
 use function register_shutdown_function;
 use function restore_error_handler;
 use function set_error_handler;
@@ -161,7 +160,6 @@ class ErrorHandler implements EventSubscriberInterface
             if ($old
                 && is_array($old)
                 && count($old) > 0
-                && is_object($old[0])
                 && $old[0] instanceof \Symfony\Component\Debug\ErrorHandler
             ) {
                 restore_error_handler();

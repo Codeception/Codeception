@@ -25,9 +25,9 @@ use Codeception\Util\Debug;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTestError;
-use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Util\Filter as PHPUnitFilter;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -371,7 +371,7 @@ class Console implements EventSubscriberInterface
         if (!$test instanceof ScenarioDriven) {
             return false;
         }
-        return (bool) $this->steps;
+        return $this->steps;
     }
 
     public function beforeStep(StepEvent $event): void
@@ -530,8 +530,6 @@ class Console implements EventSubscriberInterface
         }
         if (!$fail instanceof AssertionFailedError) {
             $this->printExceptionTrace($fail);
-
-            return;
         }
     }
 

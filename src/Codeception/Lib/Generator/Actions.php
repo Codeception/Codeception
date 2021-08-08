@@ -261,7 +261,7 @@ EOF;
         return ': ' . $this->stringifyType($returnType);
     }
 
-    private function stringifyType(\ReflectionType $type): string
+    private function stringifyType(ReflectionType $type): string
     {
         if ($type instanceof \ReflectionUnionType) {
             $types = $type->getTypes();

@@ -72,8 +72,7 @@ class Output extends ConsoleOutput
     protected function clean(string $message): string
     {
         // clear json serialization
-        $message = str_replace('\/', '/', $message);
-        return $message;
+        return str_replace('\/', '/', $message);
     }
 
     /**

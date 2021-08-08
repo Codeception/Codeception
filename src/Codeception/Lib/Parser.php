@@ -51,7 +51,6 @@ class Parser
         $res = preg_match("#\\\$I->wantToTest\\(['\"](.*?)['\"]\\);#", $code, $matches);
         if ($res) {
             $this->scenario->setFeature("test " . $matches[1]);
-            return;
         }
     }
 

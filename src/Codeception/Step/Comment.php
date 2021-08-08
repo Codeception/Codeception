@@ -12,7 +12,7 @@ class Comment extends CodeceptionStep
 {
     public function __toString(): string
     {
-        return (string) $this->getAction();
+        return $this->getAction();
     }
 
     public function toString(int $maxLength): string

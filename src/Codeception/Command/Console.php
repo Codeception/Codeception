@@ -96,7 +96,7 @@ class Console extends Command
 
         $this->actions = array_keys($moduleContainer->getActions());
 
-        $this->test = new Cept(null, null);
+        $this->test = new Cept('', '');
         $this->test->getMetadata()->setServices([
            'dispatcher' => $eventDispatcher,
            'modules' =>  $moduleContainer

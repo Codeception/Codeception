@@ -19,9 +19,6 @@ interface Remote
      * // moves to https://user.mysite.com/
      * ```
      *
-     * @param $subdomain
-     *
-     * @return mixed
      */
     public function amOnSubdomain(string $subdomain): void;
 

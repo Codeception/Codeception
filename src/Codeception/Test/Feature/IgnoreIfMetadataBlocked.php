@@ -33,7 +33,6 @@ trait IgnoreIfMetadataBlocked
         if ($this->getMetadata()->getIncomplete() !== null) {
             $incompleteTestError = new IncompleteTestError((string)$this->getMetadata()->getIncomplete());
             $this->getTestResultObject()->addFailure($this, $incompleteTestError, 0);
-            return;
         }
     }
 }

@@ -720,7 +720,6 @@ interface Web
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
      * ```
      *
-     * @return
      */
     public function seeElement($selector, array $attributes = []): void;
 

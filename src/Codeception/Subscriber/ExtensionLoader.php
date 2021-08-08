@@ -129,9 +129,7 @@ class ExtensionLoader implements EventSubscriberInterface
 
     private function getExtensionConfig(string $extension, array $config): array
     {
-        $extensionConfig = isset($config['extensions']['config'][$extension])
-            ? $config['extensions']['config'][$extension]
-            : [];
+        $extensionConfig = $config['extensions']['config'][$extension] ?? [];
 
         if (!isset($config['extensions']['enabled'])) {
             return $extensionConfig;

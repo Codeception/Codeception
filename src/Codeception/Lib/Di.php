@@ -38,7 +38,7 @@ class Di
     {
         // normalize namespace
         $className = ltrim($className, '\\');
-        return isset($this->container[$className]) ? $this->container[$className] : null;
+        return $this->container[$className] ?? null;
     }
 
     public function set(object $class): void
@@ -47,9 +47,7 @@ class Di
     }
 
     /**
-     * @param array|null $constructorArgs
      * @param string $injectMethodName Method which will be invoked after object creation;
-
      *                                 Resolved dependencies will be passed to it as arguments
      * @throws InjectionException|ReflectionException
      * @return null|object
@@ -106,16 +104,11 @@ class Di
     }
 
     /**
-     * @param $object
      * @param string $injectMethodName Method which will be invoked with resolved dependencies as its arguments
      * @throws InjectionException|ReflectionException
      */
-    public function injectDependencies($object, string $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME, array $defaults = []): void
+    public function injectDependencies(object $object, string $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME, array $defaults = []): void
     {
-        if (!is_object($object)) {
-            return;
-        }
-
         $reflectedObject = new ReflectionObject($object);
         $reflectionObjectHasMethod = $reflectedObject->hasMethod($injectMethodName);
         if (!$reflectionObjectHasMethod) {

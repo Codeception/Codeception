@@ -118,7 +118,6 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
     {
         if (is_object($this->val) && (isset($this->val->{$key}) || property_exists($this->val, $key))) {
             unset($this->val->{$key});
-            return;
         }
     }
 
