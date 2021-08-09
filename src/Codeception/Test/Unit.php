@@ -43,10 +43,14 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
             return;
         }
 
+        try {
         /** @var $di Di  **/
         $di = $this->getMetadata()->getService('di');
         $di->set(new Scenario($this));
-
+        } catch (InjectionException $exception) {
+            $this->_before();
+            return;            
+        }
         // auto-inject $tester property
         if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor_suffix']))) {
             $this->$property = $di->instantiate($this->getMetadata()->getCurrent('actor'));
