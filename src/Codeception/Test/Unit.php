@@ -49,7 +49,7 @@ class Unit extends \Codeception\PHPUnit\TestCase implements
         $di->set(new Scenario($this));
         } catch (InjectionException $exception) {
             $this->_before();
-            return;            
+            return;
         }
         // auto-inject $tester property
         if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor_suffix']))) {
