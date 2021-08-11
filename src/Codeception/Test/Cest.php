@@ -117,7 +117,7 @@ class Cest extends Test implements
         }
     }
 
-    protected function executeBeforeMethods(?string $testMethod, $I): void
+    protected function executeBeforeMethods(string $testMethod, $I): void
     {
         $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['before'])) {
@@ -126,7 +126,8 @@ class Cest extends Test implements
             }
         }
     }
-    protected function executeAfterMethods(?string $testMethod, $I): void
+
+    protected function executeAfterMethods(string $testMethod, $I): void
     {
         $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['after'])) {
