@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Codeception\Event;
 
-use Codeception\Suite;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestSuite;
 use Symfony\Contracts\EventDispatcher\Event;

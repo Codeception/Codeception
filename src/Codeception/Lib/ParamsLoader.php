@@ -9,17 +9,25 @@ use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\EnvConstAdapter;
 use Dotenv\Repository\Adapter\ServerConstAdapter;
 use Dotenv\Repository\RepositoryBuilder;
+use Exception;
 use SimpleXMLElement;
 use Symfony\Component\Yaml\Yaml;
 
 class ParamsLoader
 {
+    /**
+     * @var array|string|null
+     */
     protected $paramStorage;
     /**
      * @var string|null
      */
     protected $paramsFile;
 
+    /**
+     * @param array|string $paramStorage
+     * @return mixed
+     */
     public function load($paramStorage)
     {
         $this->paramsFile = null;
@@ -58,7 +66,7 @@ class ParamsLoader
             if (preg_match('#\.xml$#', $paramStorage)) {
                 return $this->loadXmlFile();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new ConfigurationException("Failed loading params from {$paramStorage}\n" . $e->getMessage());
         }
 
@@ -70,6 +78,9 @@ class ParamsLoader
         return $this->paramStorage;
     }
 
+    /**
+     * @return array|false
+     */
     protected function loadIniFile()
     {
         return parse_ini_file($this->paramsFile);
@@ -91,7 +102,7 @@ class ParamsLoader
 
     protected function loadXmlFile(): array
     {
-        $paramsToArray = function (SimpleXMLElement $params) use (&$paramsToArray) {
+        $paramsToArray = function (SimpleXMLElement $params) use (&$paramsToArray): array {
             $a = [];
             foreach ($params as $param) {
                 $key = isset($param['key']) ? (string) $param['key'] : $param->getName();
@@ -132,15 +143,14 @@ class ParamsLoader
                     ->addAdapter(EnvConstAdapter::class)
                     ->addAdapter(ServerConstAdapter::class)
                     ->make();
-                $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
             } else {
                 //dotenv v4
                 $repository = RepositoryBuilder::create()
                     ->withReaders([new ServerConstAdapter()])
                     ->immutable()
                     ->make();
-                $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
             }
+            $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
             $dotEnv->load();
             return $_SERVER;
         }

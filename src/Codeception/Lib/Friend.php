@@ -54,7 +54,7 @@ class Friend
                 continue;
             }
             $module->_loadSession($this->data[$name]);
-        };
+        }
 
         $this->actor->comment(strtoupper("{$this->name} does ---"));
         $ret = $closure($this->actor);
@@ -64,7 +64,7 @@ class Friend
             $name = $module->_getName();
             $this->data[$name] = $module->_backupSession();
             $module->_loadSession($currentUserData[$name]);
-        };
+        }
         return $ret;
     }
 

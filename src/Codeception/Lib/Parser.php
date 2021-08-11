@@ -51,7 +51,6 @@ class Parser
         $res = preg_match("#\\\$I->wantToTest\\(['\"](.*?)['\"]\\);#", $code, $matches);
         if ($res) {
             $this->scenario->setFeature("test " . $matches[1]);
-            return;
         }
     }
 
@@ -114,7 +113,7 @@ class Parser
         try {
             self::includeFile($file);
         } catch (ParseError $e) {
-            throw new TestParseException($file, $e->getMessage(), (string)$e->getLine());
+            throw new TestParseException($file, $e->getMessage(), $e->getLine());
         } catch (Exception $e) {
             // file is valid otherwise
         }

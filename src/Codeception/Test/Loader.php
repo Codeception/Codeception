@@ -112,7 +112,7 @@ class Loader
         }
 
         if (!file_exists($path)) {
-            throw new \Exception("File or path {$originalPath} not found");
+            throw new Exception("File or path {$originalPath} not found");
         }
 
         return $path;

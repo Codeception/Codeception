@@ -138,7 +138,7 @@ EOF;
                 $params[] = '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
                 $params[] = '$' . $param->name;
-            };
+            }
         }
         return implode(', ', $params);
     }

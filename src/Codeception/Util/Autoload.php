@@ -80,7 +80,10 @@ class Autoload
         }
     }
 
-    public static function load($class)
+    /**
+     * @return string|false
+     */
+    public static function load(string $class)
     {
         // the current namespace prefix
         $prefix = $class;

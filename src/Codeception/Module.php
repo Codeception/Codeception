@@ -212,10 +212,8 @@ abstract class Module
 
     /**
      * **HOOK** executed before suite
-     *
-     * @param array $settings
      */
-    public function _beforeSuite($settings = [])
+    public function _beforeSuite(array $settings = [])
     {
     }
 
@@ -257,7 +255,7 @@ abstract class Module
     /**
      * **HOOK** executed when test fails but before `_after`
      */
-    public function _failed(TestInterface $test, \Exception $fail)
+    public function _failed(TestInterface $test, Exception $fail)
     {
     }
 

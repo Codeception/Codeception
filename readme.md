@@ -55,14 +55,14 @@ php composer.phar require "codeception/module-phpbrowser"
 
 ### Phar
 
-Download [codecept.phar](http://codeception.com/codecept.phar)
+Download [codecept.phar](https://codeception.com/codecept.phar)
 
 Copy it into your project.
 
 You can also make Codeception an executable and it put it into your `$PATH`, for instance:
 
 ```
-wget http://codeception.com/codecept.phar
+wget https://codeception.com/codecept.phar
 
 chmod +x codecept.phar
 
@@ -78,7 +78,7 @@ Run CLI utility:
 php codecept.phar
 ```
 
-See also [Installation](http://codeception.com/install) | **[QuickStart](http://codeception.com/quickstart)**
+See also [Installation](https://codeception.com/install) | **[QuickStart](https://codeception.com/quickstart)**
 
 ## Getting Started
 
@@ -92,12 +92,12 @@ This will create a default directory structure and default test suites.
 
 ## Documentation
 
-[View Documentation](http://codeception.com/docs/01-Introduction)
+[View Documentation](https://codeception.com/docs/01-Introduction)
 
 The documentation source files can be found at https://github.com/Codeception/codeception.github.com/tree/master/docs/.
 
 ## License
 MIT
 
-(c) [Codeception Team](http://codeception.com/credits)
+(c) [Codeception Team](https://codeception.com/credits)
 2011-2020

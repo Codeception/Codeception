@@ -74,7 +74,10 @@ class LocalServer extends SuiteSubscriber
      */
     const COVERAGE_COOKIE_ERROR = 'CODECEPTION_CODECOVERAGE_ERROR';
 
-    protected $suiteName;
+    /**
+     * @var string
+     */
+    protected $suiteName = '';
     /**
      * @var array
      */
@@ -206,11 +209,14 @@ class LocalServer extends SuiteSubscriber
         return $this;
     }
 
+    /**
+     * @return string|false
+     */
     protected function c3Request(string $action)
     {
         $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
         $context = stream_context_create($this->c3Access);
-        $c3Url = $this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl();
+        $c3Url = $this->settings['c3_url'] ?: $this->module->_getUrl();
         $contents = file_get_contents($c3Url . '/c3/report/' . $action, false, $context);
 
         $okHeaders = array_filter(
@@ -241,13 +247,13 @@ class LocalServer extends SuiteSubscriber
             $this->module->amOnPage('/');
         }
 
-        $cookieDomain = isset($this->settings['cookie_domain']) ? $this->settings['cookie_domain'] : null;
+        $cookieDomain = $this->settings['cookie_domain'] ?? null;
 
         if (!$cookieDomain) {
-            $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
+            $c3Url = parse_url($this->settings['c3_url'] ?: $this->module->_getUrl());
 
             // we need to separate coverage cookies by host; we can't separate cookies by port.
-            $cookieDomain = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
+            $cookieDomain = $c3Url['host'] ?? 'localhost';
         }
         
         $cookieParams = [];

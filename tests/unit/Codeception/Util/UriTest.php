@@ -10,20 +10,20 @@ class UriTest extends \Codeception\Test\Unit
     public function testUrlMerge()
     {
         $this->assertSame(
-            'http://codeception.com/quickstart',
-            Uri::mergeUrls('http://codeception.com/hello', '/quickstart'),
+            'https://codeception.com/quickstart',
+            Uri::mergeUrls('https://codeception.com/hello', '/quickstart'),
             'merge paths'
         );
 
         $this->assertSame(
-            'http://codeception.com/hello/davert',
-            Uri::mergeUrls('http://codeception.com/hello/world', 'davert'),
+            'https://codeception.com/hello/davert',
+            Uri::mergeUrls('https://codeception.com/hello/world', 'davert'),
             'merge relative urls'
         );
 
         $this->assertSame(
             'https://github.com/codeception/codeception',
-            Uri::mergeUrls('http://codeception.com/hello/world', 'https://github.com/codeception/codeception'),
+            Uri::mergeUrls('https://codeception.com/hello/world', 'https://github.com/codeception/codeception'),
             'merge absolute urls'
         );
     }
@@ -69,57 +69,57 @@ class UriTest extends \Codeception\Test\Unit
     public function testAppendAnchor()
     {
         $this->assertSame(
-            'http://codeception.com/quickstart#anchor',
-            Uri::appendPath('http://codeception.com/quickstart', '#anchor')
+            'https://codeception.com/quickstart#anchor',
+            Uri::appendPath('https://codeception.com/quickstart', '#anchor')
         );
 
         $this->assertSame(
-            'http://codeception.com/quickstart#anchor',
-            Uri::appendPath('http://codeception.com/quickstart#first', '#anchor')
+            'https://codeception.com/quickstart#anchor',
+            Uri::appendPath('https://codeception.com/quickstart#first', '#anchor')
         );
     }
 
     public function testAppendPath()
     {
         $this->assertSame(
-            'http://codeception.com/quickstart/path',
-            Uri::appendPath('http://codeception.com/quickstart', 'path')
+            'https://codeception.com/quickstart/path',
+            Uri::appendPath('https://codeception.com/quickstart', 'path')
         );
 
         $this->assertSame(
-            'http://codeception.com/quickstart/path',
-            Uri::appendPath('http://codeception.com/quickstart', '/path')
+            'https://codeception.com/quickstart/path',
+            Uri::appendPath('https://codeception.com/quickstart', '/path')
         );
     }
 
     public function testAppendEmptyPath()
     {
         $this->assertSame(
-            'http://codeception.com/quickstart',
-            Uri::appendPath('http://codeception.com/quickstart', '')
+            'https://codeception.com/quickstart',
+            Uri::appendPath('https://codeception.com/quickstart', '')
         );
     }
 
     public function testAppendPathRemovesQueryStringAndAnchor()
     {
         $this->assertSame(
-            'http://codeception.com/quickstart',
-            Uri::appendPath('http://codeception.com/quickstart?a=b#c', '')
+            'https://codeception.com/quickstart',
+            Uri::appendPath('https://codeception.com/quickstart?a=b#c', '')
         );
     }
 
     public function testMergeUrlsWhenBaseUriHasNoTrailingSlashAndUriPathHasNoLeadingSlash()
     {
         $this->assertSame(
-            'http://codeception.com/test',
-            Uri::mergeUrls('http://codeception.com', 'test'));
+            'https://codeception.com/test',
+            Uri::mergeUrls('https://codeception.com', 'test'));
     }
 
     public function testMergeUrlsWhenBaseUriEndsWithSlashButUriPathHasNoLeadingSlash()
     {
         $this->assertSame(
-            'http://codeception.com/test',
-            Uri::mergeUrls('http://codeception.com/', 'test'));
+            'https://codeception.com/test',
+            Uri::mergeUrls('https://codeception.com/', 'test'));
     }
 
 }

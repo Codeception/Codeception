@@ -321,11 +321,7 @@ class Run extends Command
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
         $userOptions['ansi'] = (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi'));
 
-        if (!$this->options['seed']) {
-            $userOptions['seed'] = rand();
-        } else {
-            $userOptions['seed'] = (int) $this->options['seed'];
-        }
+        $userOptions['seed'] = $this->options['seed'] ? (int) $this->options['seed'] : rand();
         if ($this->options['no-colors'] || !$userOptions['ansi']) {
             $userOptions['colors'] = false;
         }
@@ -479,8 +475,8 @@ class Run extends Command
             }
 
             // Run single test from working directory
-            $realTestDir = realpath(Configuration::testsDir());
-            $cwd = getcwd();
+            $realTestDir = (string) realpath(Configuration::testsDir());
+            $cwd = (string) getcwd();
             if (strpos($realTestDir, $cwd) === 0) {
                 $file = $suite;
                 if (strpos($file, ':') !== false) {
@@ -554,7 +550,10 @@ class Run extends Command
         return $executed;
     }
 
-    protected function matchTestFromFilename($filename, $testsPath)
+    /**
+     * @return string[]
+     */
+    protected function matchTestFromFilename(string $filename, string $testsPath): array
     {
         $filter = '';
         if (strpos($filename, ':') !== false) {

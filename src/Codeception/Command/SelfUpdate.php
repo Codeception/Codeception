@@ -46,7 +46,7 @@ class SelfUpdate extends Command
      */
     protected function configure(): void
     {
-        $this->filename = isset($_SERVER['argv'][0]) ? $_SERVER['argv'][0] : Phar::running(false);
+        $this->filename = $_SERVER['argv'][0] ?? Phar::running(false);
         $this
             ->setAliases(array('selfupdate'))
             ->setDescription(

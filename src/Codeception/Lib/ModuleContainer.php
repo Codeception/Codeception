@@ -216,7 +216,7 @@ class ModuleContainer
         // Do not include hidden methods, methods with a name starting with an underscore
         if (strpos($method->name, '_') === 0) {
             return false;
-        };
+        }
 
         // If a part is configured for the module, only include actions from that part
         if ($configuredParts) {
@@ -440,9 +440,7 @@ class ModuleContainer
      */
     private function getModuleConfig(string $moduleName): array
     {
-        $config = isset($this->config['modules']['config'][$moduleName])
-            ? $this->config['modules']['config'][$moduleName]
-            : [];
+        $config = $this->config['modules']['config'][$moduleName] ?? [];
 
         if (!isset($this->config['modules']['enabled'])) {
             return $config;

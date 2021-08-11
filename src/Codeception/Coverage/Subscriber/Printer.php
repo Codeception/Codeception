@@ -145,7 +145,7 @@ class Printer implements EventSubscriberInterface
             $this->settings['low_limit'],
             $this->settings['high_limit'],
             sprintf(
-                ', <a href="http://codeception.com">Codeception</a> and <a href="http://phpunit.de/">PHPUnit %s</a>',
+                ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit %s</a>',
                 PHPUnitVersion::id()
             )
         );

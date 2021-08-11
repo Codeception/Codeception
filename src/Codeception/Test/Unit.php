@@ -142,11 +142,7 @@ class Unit extends TestCase implements
             if (strpos($dependency, '::') === false) {         // check it is method of same class
                 $dependency = get_class($this) . '::' . $dependency;
             }
-            if (isset($passed[$dependency])) {
-                $dependencyInput[] = $passed[$dependency]['result'];
-            } else {
-                $dependencyInput[] = null;
-            }
+            $dependencyInput[] = isset($passed[$dependency]) ? $passed[$dependency]['result'] : null;
         }
         $this->setDependencyInput($dependencyInput);
         return true;

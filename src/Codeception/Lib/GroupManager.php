@@ -30,6 +30,9 @@ class GroupManager
      */
     protected $testsInGroups = [];
 
+    /**
+     * @param string[] $groups
+     */
     public function __construct(array $groups)
     {
         $this->configuredGroups = $groups;

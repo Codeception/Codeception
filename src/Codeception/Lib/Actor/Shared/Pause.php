@@ -8,6 +8,7 @@ use Codeception\Lib\Console\ReplHistory;
 use Codeception\Util\Debug;
 use Exception;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Throwable;
 
 trait Pause
 {
@@ -131,9 +132,9 @@ trait Pause
                 }
             } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
                 $output->writeln("<error>fail</error> " . $fail->getMessage());
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $output->writeln("<error>error</error> " . $e->getMessage());
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $output->writeln("<error>syntax error</error> " . $e->getMessage());
             }
         } while (true);

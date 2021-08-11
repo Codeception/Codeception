@@ -90,7 +90,7 @@ class Annotation
     public static function fetchAllAnnotationsFromDocblock(string $docblock): array
     {
         $annotations = [];
-        if (!preg_match_all(sprintf(self::$regex, '(\w+)'), (string)$docblock, $matched)) {
+        if (!preg_match_all(sprintf(self::$regex, '(\w+)'), $docblock, $matched)) {
             return $annotations;
         }
         foreach ($matched[1] as $k => $annotation) {
@@ -98,7 +98,7 @@ class Annotation
                 $annotations[$annotation] = [];
             }
             $annotations[$annotation][] = $matched[2][$k];
-        };
+        }
         return $annotations;
     }
 

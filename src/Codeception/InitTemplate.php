@@ -251,7 +251,7 @@ abstract class InitTemplate
         $this->sayInfo("Actions have been loaded");
     }
 
-    protected function addModulesToComposer(array $modules)
+    protected function addModulesToComposer(array $modules): ?int
     {
         $packages = ModuleContainer::$packages;
         $section = null;
@@ -269,7 +269,7 @@ abstract class InitTemplate
                 $composer[$section][$package] = "^1.0.0";
             }
             $this->say('');
-            return;
+            return null;
         }
         $composer = json_decode(file_get_contents('composer.json'), true, 512, JSON_THROW_ON_ERROR);
         if ($composer === null) {
@@ -311,7 +311,7 @@ abstract class InitTemplate
             exec('composer update', $output, $status);
             if ($status !== 0) {
                 $this->sayInfo('Composer installation failed. Please check composer.json and try to run "composer update" manually');
-                return;
+                return null;
             }
             if (!empty($composer['config']['vendor_dir'])) {
                 $this->updateComposerClassMap($composer['config']['vendor_dir']);

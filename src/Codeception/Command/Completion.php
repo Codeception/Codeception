@@ -11,6 +11,7 @@ if (!class_exists(\Stecman\Component\Symfony\Console\BashCompletion\Completion::
 
 use Codeception\Configuration;
 use Stecman\Component\Symfony\Console\BashCompletion\Completion as ConsoleCompletion;
+use Stecman\Component\Symfony\Console\BashCompletion\Completion\CompletionInterface as ConsoleCompletionInterface;
 use Stecman\Component\Symfony\Console\BashCompletion\Completion\ShellPathCompletion;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionHandler;
@@ -43,21 +44,21 @@ class Completion extends CompletionCommand
             $handler->addHandler(new ConsoleCompletion(
                 $suiteCommand,
                 'suite',
-                ConsoleCompletion::TYPE_ARGUMENT,
+                ConsoleCompletionInterface::TYPE_ARGUMENT,
                 Configuration::suites()
             ));
         }
 
         $handler->addHandlers([
             new ShellPathCompletion(
-                ConsoleCompletion::ALL_COMMANDS,
+                ConsoleCompletionInterface::ALL_COMMANDS,
                 'path',
-                ConsoleCompletion::TYPE_ARGUMENT
+                ConsoleCompletionInterface::TYPE_ARGUMENT
             ),
             new ShellPathCompletion(
-                ConsoleCompletion::ALL_COMMANDS,
+                ConsoleCompletionInterface::ALL_COMMANDS,
                 'test',
-                ConsoleCompletion::TYPE_ARGUMENT
+                ConsoleCompletionInterface::TYPE_ARGUMENT
             ),
         ]);
     }

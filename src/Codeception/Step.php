@@ -164,7 +164,7 @@ abstract class Step
                     $arguments[$key] = mb_substr($argument, 0, (int) $allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
                     $lengthRemaining -= ($allowedLength + 1);
                 } else {
-                    $lengthRemaining -= (mb_strlen($arguments[$key], 'utf-8') + 1);
+                    $lengthRemaining -= (mb_strlen($argument, 'utf-8') + 1);
                     //recalculate allowed length because this argument was short
                     if ($argumentsRemaining > 0) {
                         $allowedLength = floor(($lengthRemaining - $argumentsRemaining + 1) / $argumentsRemaining);
@@ -212,7 +212,7 @@ abstract class Step
     protected function getClassName(object $argument): string
     {
         if ($argument instanceof Closure) {
-            return \Closure::class;
+            return Closure::class;
         } elseif ($argument instanceof MockObject && (property_exists($argument, '__mocked') && $argument->__mocked !== null)) {
             return $this->formatClassName($argument->__mocked);
         }

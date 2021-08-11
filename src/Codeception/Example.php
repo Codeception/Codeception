@@ -44,7 +44,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
     {
         if (!$this->offsetExists($offset)) {
             throw new AssertionFailedError(sprintf("Example %s doesn't exist", $offset));
-        };
+        }
         return $this->data[$offset];
     }
 
