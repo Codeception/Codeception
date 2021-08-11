@@ -15,6 +15,12 @@ if (!class_exists(TestDoxPrinter::class)) {
 class ResultPrinter extends TestDoxPrinter
 {
     /**
+     * Removed in PHPUnit 10
+     * @var int
+     */
+    protected $successful = 0;
+
+    /**
      * An error occurred.
      *
      * @param \PHPUnit\Framework\Test $test

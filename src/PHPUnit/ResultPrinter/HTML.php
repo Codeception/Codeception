@@ -10,7 +10,6 @@ use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\PathResolver;
 use PHPUnit\Framework\TestResult;
-use PHPUnit\Framework\TestStatus\TestStatus;
 use PHPUnit\Runner\BaseTestRunner;
 use SebastianBergmann\Template\Template;
 
@@ -47,7 +46,7 @@ class HTML extends CodeceptionResultPrinter
      * Constructor.
      *
      * @param  mixed $out
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct($out = null)
     {

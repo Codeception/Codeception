@@ -16,7 +16,7 @@ class UI extends \PHPUnit\TextUI\DefaultResultPrinter
      */
     protected $dispatcher;
 
-    public function __construct(EventDispatcher $dispatcher, $options, $out = null)
+    public function __construct(EventDispatcher $dispatcher, $options, $out = 'php://stdout')
     {
         if (PHPUnit9::isCurrentVersion()) {
             $colors = $options['colors'] ? 'always' : 'never';
