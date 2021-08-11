@@ -8,10 +8,7 @@ use Exception;
 
 class TestParseException extends Exception
 {
-    /**
-     * @param int|string $line
-     */
-    public function __construct(string $fileName, string $errors = null, $line = null)
+    public function __construct(string $fileName, string $errors = null, ?int $line = null)
     {
         $this->message = "Couldn't parse test '{$fileName}'";
         if ($line !== null) {
