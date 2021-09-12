@@ -131,6 +131,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         return $this->testResult;
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * This class represents exactly one test
      * @return int
