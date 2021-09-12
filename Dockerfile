@@ -32,7 +32,7 @@ RUN pecl install \
         memcached \
         mongodb \
         soap \
-        xdebug-2.9.5 && \
+        xdebug-3.0.4 && \
     docker-php-ext-enable \
         apcu.so \
         memcached.so \
