@@ -153,7 +153,7 @@ class HTML extends CodeceptionResultPrinter
 
         $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';
 
-        $testString = htmlspecialchars(ucfirst(Descriptor::getTestAsString($test)));
+        $testString = htmlspecialchars(ucfirst(Descriptor::getTestAsString($test)), ENT_QUOTES | ENT_SUBSTITUTE);
         $testString = preg_replace('~^([\s\w\\\]+):\s~', '<span class="quiet">$1 &raquo;</span> ', $testString);
 
         $scenarioTemplate->setVar(
@@ -303,7 +303,7 @@ class HTML extends CodeceptionResultPrinter
             $msg .= $exception->getComparisonFailure()->getDiff();
         }
         $msg = str_replace(['<info>','</info>','<bold>','</bold>'], ['','','',''], $msg);
-        return htmlentities($msg);
+        return htmlentities($msg, ENT_QUOTES | ENT_SUBSTITUTE);
     }
 
     public function printResult(TestResult $result): void

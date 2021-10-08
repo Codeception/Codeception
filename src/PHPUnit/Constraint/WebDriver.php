@@ -34,7 +34,7 @@ class WebDriver extends Page
             if (!$node->isDisplayed()) {
                 continue;
             }
-            if (parent::matches(htmlspecialchars_decode($node->getText()))) {
+            if (parent::matches(htmlspecialchars_decode($node->getText(), ENT_QUOTES | ENT_SUBSTITUTE))) {
                 return true;
             }
         }

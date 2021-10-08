@@ -95,7 +95,7 @@ class ErrorHandler implements EventSubscriberInterface
         $this->initialized = true;
     }
 
-    public function errorHandler(int $errNum, string $errMsg, string $errFile, string $errLine, array $context = []): bool
+    public function errorHandler(int $errNum, string $errMsg, string $errFile, int $errLine, array $context = []): bool
     {
         if (E_USER_DEPRECATED === $errNum) {
             $this->handleDeprecationError($errNum, $errMsg, $errFile, $errLine, $context);
@@ -170,7 +170,7 @@ class ErrorHandler implements EventSubscriberInterface
         }
     }
 
-    private function handleDeprecationError(int $type, string $message, string $file, string $line, array $context): void
+    private function handleDeprecationError(int $type, string $message, string $file, int $line, array $context): void
     {
         if (($this->errorLevel & $type) === 0) {
             return;

@@ -831,7 +831,7 @@ class TestRunner extends BaseTestRunner
     protected function write(string $buffer): void
     {
         if (\PHP_SAPI != 'cli' && \PHP_SAPI != 'phpdbg') {
-            $buffer = \htmlspecialchars($buffer);
+            $buffer = \htmlspecialchars($buffer, ENT_QUOTES | ENT_SUBSTITUTE);
         }
 
         if ($this->printer !== null) {
