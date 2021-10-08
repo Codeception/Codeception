@@ -33,3 +33,7 @@ if (isset($argv)) {
 if (isset($_SERVER['argv'])) {
     $_SERVER['argv'] = array_values(array_diff($_SERVER['argv'], ['--no-redirect']));
 }
+
+if (!class_exists(PHPUnit\Framework\SkippedTestError::class)) {
+    class_alias(\PHPUnit\Framework\SkippedWithMessageException::class, PHPUnit\Framework\SkippedTestError::class);
+}

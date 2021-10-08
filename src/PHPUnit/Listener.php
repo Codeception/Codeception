@@ -109,11 +109,11 @@ class Listener implements \PHPUnit\Framework\TestListener
         try {
             $this->startedTests[] = spl_object_hash($test);
             $this->fire(Events::TEST_BEFORE, new TestEvent($test));
-        } catch (\PHPUnit\Framework\IncompleteTestError $e) {
+        } catch (\PHPUnit\Framework\IncompleteTestError | \PHPUnit\Framework\IncompleteTest $e) {
             if ($testResult !== null) {
                 $testResult->addFailure($test, $e, 0);
             }
-        } catch (\PHPUnit\Framework\SkippedTestError $e) {
+        } catch (\PHPUnit\Framework\SkippedTestError | \PHPUnit\Framework\Exception\Skipped\SkippedTest $e) {
             if ($testResult !== null) {
                 $testResult->addFailure($test, $e, 0);
             }
