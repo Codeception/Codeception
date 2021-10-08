@@ -361,7 +361,7 @@ class Console implements EventSubscriberInterface
         if (isset($this->options['editorUrl']) and is_string($this->options['editorUrl'])) {
             $filePath = codecept_absolute_path(Descriptor::getTestFileName($failedTest));
             $message = str_replace('%%file%%', $filePath, $this->options['editorUrl']);
-            $line = 0;
+            $line = 1;
             foreach ($fail->getTrace() as $trace) {
                 if (isset($trace['file']) and $filePath === $trace['file'] and isset($trace['line'])) {
                     $line = $trace['line'];
