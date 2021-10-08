@@ -786,7 +786,6 @@ EOF
         $builder = (new HtmlReportRegexBuilder())->addTest($testBuilder);
         $I->seeThisFileMatches($builder->build());
     }
-
 }
 
 
