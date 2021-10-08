@@ -367,7 +367,9 @@ class Console implements EventSubscriberInterface
                     $line = $trace['line'];
                 }
             }
-            $message = str_replace(['%%file%%', '%%line%%'], [$filePath, $line], $this->options['editorUrl']);
+            if ($line > 1) {
+                $message = str_replace(['%%file%%', '%%line%%'], [$filePath, $line], $this->options['editorUrl']);
+            }
         } else {
             $message = codecept_relative_path(Descriptor::getTestFullName($failedTest));
         }
