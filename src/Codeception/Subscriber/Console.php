@@ -358,7 +358,7 @@ class Console implements EventSubscriberInterface
         $this->output->writeln('');
 
         // Clickable `editorUrl`:
-        if (isset($this->options['editorUrl']) and is_string($this->options['editorUrl'])) {
+        if (isset($this->options['editorUrl']) && is_string($this->options['editorUrl'])) {
             $filePath = codecept_absolute_path(Descriptor::getTestFileName($failedTest));
             $message = str_replace('%%file%%', $filePath, $this->options['editorUrl']);
             $line = 1;
