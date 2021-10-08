@@ -356,8 +356,23 @@ class Console implements EventSubscriberInterface
         $this->output->write($e->getCount() . ") ");
         $this->writeCurrentTest($failedTest, false);
         $this->output->writeln('');
+
+        // Clickable `editorUrl`:
+        if (isset($this->options['editorUrl']) and is_string($this->options['editorUrl'])) {
+            $filePath = codecept_absolute_path(Descriptor::getTestFileName($failedTest));
+            $message = str_replace('%%file%%', $filePath, $this->options['editorUrl']);
+            $line = 0;
+            foreach ($fail->getTrace() as $trace) {
+                if (isset($trace['file']) and $filePath === $trace['file'] and isset($trace['line'])) {
+                    $line = $trace['line'];
+                }
+            }
+            $message = str_replace(['%%file%%', '%%line%%'], [$filePath, $line], $this->options['editorUrl']);
+        } else {
+            $message = codecept_relative_path(Descriptor::getTestFullName($failedTest));
+        }
         $this->message("<error> Test </error> ")
-            ->append(codecept_relative_path(Descriptor::getTestFullName($failedTest)))
+            ->append($message)
             ->write();
 
         if ($failedTest instanceof ScenarioDriven) {
