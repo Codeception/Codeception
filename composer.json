@@ -60,7 +60,8 @@
             "Codeception\\": "src/Codeception",
             "Codeception\\PHPUnit\\": "src/PHPUnit",
             "Codeception\\Extension\\": "ext"
-        }
+        },
+        "files": ["functions.php"]
     },
     "autoload-dev": {
         "classmap": [
