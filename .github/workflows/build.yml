@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ["7.3", "7.4", "8.0"]
+        php: ["7.3", "7.4", "8.0", "8.1"]
 
     steps:
       - name: Checkout
@@ -101,7 +101,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        php: ["7.3", "7.4", "8.0"]
+        php: ["7.3", "7.4", "8.0", "8.1"]
 
     steps:
       - name: Checkout
@@ -137,6 +137,6 @@ jobs:
 
       - name: Run tests cli
         run: php codecept run cli --skip-group coverage
-        
+
       - name: Run tests unit
         run: php codecept run unit -g core -g appveyor
