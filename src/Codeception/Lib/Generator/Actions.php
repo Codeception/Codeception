@@ -103,7 +103,7 @@ EOF;
 
         $this->imports = array_unique($this->imports);
         $this->imports = array_diff($this->imports, ['object']); // do not add "object" to the use statements
-        $importStatements = array_map(static function ($item){
+        $importStatements = array_map(static function ($item) {
             return "use $item;\n";
         }, $this->imports);
 
