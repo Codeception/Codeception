@@ -359,7 +359,21 @@ class Configuration
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
             . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
 
+        if (!isset($settings['additional_paths']) || !is_array($settings['additional_paths'])) {
+            $settings['additional_paths'] = [];
+        }
 
+        foreach ($settings['additional_paths'] as $key => $path) {
+            if (!is_string($path)) {
+                unset($settings['additional_paths'][$key]);
+            }
+
+            $preparePath = str_replace('/', DIRECTORY_SEPARATOR, $path);
+
+            $settings['additional_paths'][$key] = self::$dir . DIRECTORY_SEPARATOR . $preparePath;
+        }
+
+        $settings['additional_paths'] = array_values($settings['additional_paths']);
 
         return $settings;
     }

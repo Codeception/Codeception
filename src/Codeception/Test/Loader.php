@@ -43,10 +43,12 @@ class Loader
     protected $formats = [];
     protected $tests = [];
     protected $path;
+    protected $additionalPaths;
 
     public function __construct(array $suiteSettings)
     {
         $this->path = $suiteSettings['path'];
+        $this->additionalPaths = isset($suiteSettings['additional_paths']) ? $suiteSettings['additional_paths'] : [];
         $this->formats = [
             new CeptLoader(),
             new CestLoader(),
@@ -128,7 +130,12 @@ class Loader
             return $this->loadTest($fileName);
         }
 
-        $finder = Finder::create()->files()->sortByName()->in($this->path)->followLinks();
+        $paths = array_merge(
+            [$this->path],
+            $this->additionalPaths
+        );
+
+        $finder = Finder::create()->files()->sortByName()->in($paths)->followLinks();
 
         foreach ($this->formats as $format) {
             /** @var $format Loader  **/

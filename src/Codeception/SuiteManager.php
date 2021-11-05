@@ -51,6 +51,7 @@ class SuiteManager
     protected $tests = [];
     protected $debug = false;
     protected $path = '';
+    protected $additionalPaths = [];
     protected $printer = null;
 
     protected $env = null;
@@ -62,6 +63,7 @@ class SuiteManager
         $this->dispatcher = $dispatcher;
         $this->di = new Di();
         $this->path = $settings['path'];
+        $this->additionalPaths = isset($settings['additional_paths']) ? $settings['additional_paths'] : [];
         $this->groupManager = new GroupManager($settings['groups']);
         $this->moduleContainer = new ModuleContainer($this->di, $settings);
 
