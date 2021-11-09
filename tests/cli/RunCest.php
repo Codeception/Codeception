@@ -296,7 +296,7 @@ class RunCest
         $I->seeInShellOutput("OK");
     }
 
-    public function runTestWithFailFast(\CliGuy $I)
+    public function runTestWithFailFastDefault(\CliGuy $I)
     {
         $I->executeCommand('run unit --skip-group error --no-exit');
         $I->seeInShellOutput('FailingTest: Me');
@@ -304,6 +304,14 @@ class RunCest
         $I->executeCommand('run unit --fail-fast --skip-group error --no-exit');
         $I->seeInShellOutput('There was 1 failure');
         $I->dontSeeInShellOutput("PassingTest: Me");
+    }
+
+    public function runTestWithFailFastCustom(\CliGuy $I)
+    {
+        $I->executeCommand('run unit tests/unit/FailingTest.php --fail-fast=2 --no-exit');
+        $I->seeInShellOutput('There were 2 failures');
+        $I->executeCommand('run unit tests/unit/FailingTest.php --no-exit');
+        $I->seeInShellOutput('There were 3 failures');
     }
 
     public function runWithCustomOutputPath(\CliGuy $I)

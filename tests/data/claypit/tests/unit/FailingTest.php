@@ -7,4 +7,13 @@ class FailingTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse(true);
     }
 
+    public function testMeTwo()
+    {
+        $this->assertFalse(true);
+    }
+
+    public function testMeThree()
+    {
+        $this->assertFalse(true);
+    }
 }
