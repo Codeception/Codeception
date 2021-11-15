@@ -1,4 +1,4 @@
-<?php 
+<?php
 use Codeception\PHPUnit\ConsolePrinter;
 use Codeception\PHPUnit\ResultPrinter;
 
@@ -33,7 +33,7 @@ class MyReportPrinter extends ResultPrinter implements ConsolePrinter
 
     public function printResult(\PHPUnit\Framework\TestResult $result): void
     {
-        
+
     }
 
 }

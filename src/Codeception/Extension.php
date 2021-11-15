@@ -96,14 +96,14 @@ abstract class Extension implements EventSubscriberInterface
      */
     protected function write($message): void
     {
-        if (!$this->options['silent']) {
+        if (!$this->options['silent'] && $message) {
             $this->output->write($message);
         }
     }
 
     protected function writeln(string $message): void
     {
-        if (!$this->options['silent']) {
+        if (!$this->options['silent'] && $message) {
             $this->output->writeln($message);
         }
     }
