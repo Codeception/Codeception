@@ -256,7 +256,7 @@ class Configuration
 
         if ($config['settings']['bootstrap']) {
             $bootstrap = self::$config['settings']['bootstrap'];
-            Notification::deprecate("'settings: bootstrap: $bootstrap' option is deprecated! Replace it with: 'bootstrap: $bootstrap' (not under settings section). See https://bit.ly/2YrRzVc ");
+            Notification::deprecate("'settings: bootstrap: $bootstrap' option is deprecated! Replace it with: 'bootstrap: $bootstrap' (not under settings section). See: https://codeception.com/docs/reference/Configuration");
             try {
                 self::loadBootstrap($bootstrap, self::testsDir());
             } catch (ConfigurationException $exception) {
