@@ -19,6 +19,8 @@ suites:
                 - REST:
                     url: {{url}}
                     depends: PhpBrowser
+        step_decorators:
+            - \Codeception\Step\AsJson
 
 paths:
     tests: {{baseDir}}
