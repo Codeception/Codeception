@@ -69,12 +69,5 @@
             "tests/data/claypit/tests/_data"
         ]
     },
-    "extra": {
-        "branch-alias": {
-        }
-    },
-    "bin":["codecept"],
-    "config": {
-        "platform": {}
-    }
+    "bin":["codecept"]
 }
