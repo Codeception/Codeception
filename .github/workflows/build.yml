@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ["7.3", "7.4", "8.0"]
+        php: ['7.4', '8.0', '8.1']
 
     steps:
       - name: Checkout
@@ -58,15 +58,15 @@ jobs:
       - name: Test that failing test really fails
         run: if php codecept run -c tests/data/claypit/ scenario FailedCept -vvv; then echo "Test hasn't failed"; false; fi;
 
-      - name: Run tests without code coverage on PHP 7.3, 7.4
-        if: matrix.php == '7.3' || matrix.php == '7.4'
+      - name: Run tests without code coverage on PHP 8.0
+        if: matrix.php == '8.0'
         run: |
           php -S 127.0.0.1:8008 -t tests/data/app >/dev/null 2>&1 &
           php codecept build
           php codecept run cli,unit
 
-      - name: Run tests with code coverage on PHP 7.2, 8.0
-        if: matrix.php == '7.2' || matrix.php == '8.0'
+      - name: Run tests with code coverage on PHP 7.4, 8.1
+        if: matrix.php == '7.4' || matrix.php == '8.1'
         run: |
           php -S 127.0.0.1:8008 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
           php codecept build
@@ -101,7 +101,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        php: ["7.3", "7.4", "8.0"]
+        php: ['7.4', '8.0', '8.1']
 
     steps:
       - name: Checkout
