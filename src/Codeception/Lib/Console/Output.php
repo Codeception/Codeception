@@ -15,26 +15,17 @@ class Output extends ConsoleOutput
     /**
      * @var array<string, int|bool>
      */
-    protected $config = [
+    protected array $config = [
         'colors'      => true,
         'verbosity'   => self::VERBOSITY_NORMAL,
         'interactive' => true
     ];
 
-    /**
-     * @var SymfonyFormatterHelper
-     */
-    public $formatHelper;
+    public SymfonyFormatterHelper $formatHelper;
 
-    /**
-     * @var bool
-     */
-    public $waitForDebugOutput = true;
+    public bool $waitForDebugOutput = true;
 
-    /**
-     * @var bool
-     */
-    protected $isInteractive = false;
+    protected bool $isInteractive = false;
 
     public function __construct(array $config)
     {
@@ -59,7 +50,6 @@ class Output extends ConsoleOutput
         $formatter->setStyle('info', new OutputFormatterStyle('green'));
 
         $this->formatHelper = new SymfonyFormatterHelper();
-
 
         parent::__construct($this->config['verbosity'], $this->config['colors'], $formatter);
     }

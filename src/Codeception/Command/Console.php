@@ -33,26 +33,18 @@ use function pcntl_signal;
  */
 class Console extends Command
 {
-    /**
-     * @var Cept|null
-     */
-    protected $test;
-    /**
-     * @var Codecept|null
-     */
-    protected $codecept;
-    /**
-     * @var Suite|null
-     */
-    protected $suite;
-    /**
-     * @var OutputInterface|null
-     */
-    protected $output;
+    protected ?Cept $test = null;
+
+    protected ?Codecept $codecept = null;
+
+    protected ?Suite $suite = null;
+
+    protected ?OutputInterface $output = null;
+
     /**
      * @var string[]
      */
-    protected $actions = [];
+    protected array $actions = [];
 
     protected function configure(): void
     {
@@ -132,7 +124,7 @@ class Console extends Command
         $eventDispatcher->dispatch(new SuiteEvent($this->suite), Events::SUITE_AFTER);
 
         $output->writeln("<info>Bye-bye!</info>");
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function listenToSignals(): void

@@ -37,16 +37,19 @@ class Cest extends Test implements
     Interfaces\StrictCoverage
 {
     use Feature\ScenarioLoader;
-    /**
-     * @var Parser
-     */
-    protected $parser;
-    protected $testClassInstance;
-    /**
-     * @var string
-     */
-    protected $testMethod;
 
+    protected Parser $parser;
+
+    /**
+     * @var object|string
+     */
+    protected $testClassInstance;
+
+    protected string $testMethod;
+
+    /**
+     * @param object|string $testClass
+     */
     public function __construct($testClass, string $methodName, string $fileName)
     {
         $metadata = new Metadata();

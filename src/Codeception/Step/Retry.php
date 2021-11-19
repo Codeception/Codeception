@@ -14,10 +14,7 @@ use function usleep;
 
 class Retry extends Assertion implements GeneratedStep
 {
-    /**
-     * @var string
-     */
-    protected static $methodTemplate = <<<EOF
+    protected static string $methodTemplate = <<<EOF
 
     /**
      * [!] Method is generated.
@@ -35,14 +32,9 @@ class Retry extends Assertion implements GeneratedStep
     }
 EOF;
 
-    /**
-     * @var int
-     */
-    private $retryNum;
-    /**
-     * @var int
-     */
-    private $retryInterval;
+    private int $retryNum;
+
+    private int $retryInterval;
 
     public function __construct($action, array $arguments, int $retryNum, int $retryInterval)
     {

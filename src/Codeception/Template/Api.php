@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
+use Codeception\Module\PhpBrowser;
 use Codeception\Util\Template;
 use Symfony\Component\Yaml\Yaml;
 
 class Api extends InitTemplate
 {
-    /**
-     * @var string
-     */
-    protected $configTemplate = <<<EOF
+    protected string $configTemplate = <<<EOF
 # suite config
 suites:
     api:
@@ -36,10 +34,7 @@ settings:
     lint: true
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $firstTest = <<<EOF
+    protected string $firstTest = <<<EOF
 <?php
 class ApiCest 
 {    
@@ -52,18 +47,17 @@ class ApiCest
 }
 EOF;
 
-
-    public function setup(): void
+    public function setup()
     {
         $this->checkInstalled();
         $this->say("Let's prepare Codeception for REST API testing");
-        $this->say("");
+        $this->say('');
 
         $dir = $this->ask("Where tests will be stored?", 'tests');
 
         $url = $this->ask("Start url for tests", "http://localhost/api");
 
-        if (!class_exists('\\Codeception\\Module\\REST') || !class_exists(\Codeception\Module\PhpBrowser::class)) {
+        if (!class_exists('\\Codeception\\Module\\REST') || !class_exists(PhpBrowser::class)) {
             $this->addModulesToComposer(['REST', 'PhpBrowser']);
         }
 
@@ -89,11 +83,9 @@ EOF;
         $this->createHelper('Api', $supportDir);
         $this->createActor('ApiTester', $supportDir, Yaml::parse($configFile)['suites']['api']);
 
-
         $this->sayInfo("Created global config codeception.yml inside the root directory");
         $this->createFile($dir . DIRECTORY_SEPARATOR . 'ApiCest.php', $this->firstTest);
         $this->sayInfo("Created a demo test ApiCest.php");
-
 
         $this->say();
         $this->saySuccess("INSTALLATION COMPLETE");

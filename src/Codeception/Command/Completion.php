@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Command;
 
-if (!class_exists(\Stecman\Component\Symfony\Console\BashCompletion\Completion::class)) {
+if (!class_exists(ConsoleCompletion::class)) {
     echo "Please install `stecman/symfony-console-completion\n` to enable auto completion";
     return;
 }
@@ -15,13 +15,14 @@ use Stecman\Component\Symfony\Console\BashCompletion\Completion\CompletionInterf
 use Stecman\Component\Symfony\Console\BashCompletion\Completion\ShellPathCompletion;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionHandler;
+use Symfony\Component\Console\Input\InputDefinition as SymfonyInputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Completion extends CompletionCommand
 {
-    protected function configureCompletion(CompletionHandler $handler)
+    protected function configureCompletion(CompletionHandler $handler): void
     {
         // Can't set for all commands, because it wouldn't work well with generate:suite
         $suiteCommands = [
@@ -71,10 +72,10 @@ class Completion extends CompletionCommand
         }
 
         parent::execute($input, $output);
-        return 0;
+        return Command::SUCCESS;
     }
 
-    protected function createDefinition()
+    protected function createDefinition(): SymfonyInputDefinition
     {
         $definition = parent::createDefinition();
         $definition->addOption(new InputOption(

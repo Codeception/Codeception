@@ -55,6 +55,6 @@ class Init extends Command
             $initProcess->initDir($path);
         }
         $initProcess->setup();
-        return 0;
+        return Command::SUCCESS;
     }
 }

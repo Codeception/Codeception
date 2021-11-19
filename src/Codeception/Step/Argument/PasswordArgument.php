@@ -6,10 +6,7 @@ namespace Codeception\Step\Argument;
 
 class PasswordArgument implements FormattedOutput
 {
-    /**
-     * @var string
-     */
-    private $password;
+    private string $password;
 
     public function __construct(string $password)
     {

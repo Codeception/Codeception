@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
+use Codeception\Module\Asserts;
 use Codeception\Util\Template;
 use Symfony\Component\Yaml\Yaml;
 
 class Unit extends InitTemplate
 {
-    /**
-     * @var string
-     */
-    protected $configTemplate = <<<EOF
+    protected string $configTemplate = <<<EOF
 suites:
     unit:
         path: .
@@ -29,10 +27,7 @@ paths:
      
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $testerAndModules = <<<EOF
+    protected string $testerAndModules = <<<EOF
         actor: UnitTester
         modules:
             enabled:
@@ -41,8 +36,7 @@ EOF;
         step_decorators: ~ 
 EOF;
 
-
-    public function setup(): void
+    public function setup()
     {
         $this->sayInfo('This will install Codeception for unit testing only');
         $this->say();
@@ -72,7 +66,7 @@ EOF;
 
         $this->createFile('codeception.yml', $configFile);
 
-        if (!class_exists(\Codeception\Module\Asserts::class)) {
+        if (!class_exists(Asserts::class)) {
             $this->addModulesToComposer(['Asserts']);
         }
 

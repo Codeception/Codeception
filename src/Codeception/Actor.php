@@ -15,10 +15,7 @@ abstract class Actor
     use Comment;
     use Pause;
 
-    /**
-     * @var Scenario
-     */
-    protected $scenario;
+    protected Scenario $scenario;
 
     public function __construct(Scenario $scenario)
     {
@@ -49,7 +46,7 @@ abstract class Actor
     /**
      * Lazy-execution given anonymous function
      */
-    public function execute(Closure $callable): Actor
+    public function execute(Closure $callable): self
     {
         $this->scenario->addStep(new Executor($callable, []));
         $callable();

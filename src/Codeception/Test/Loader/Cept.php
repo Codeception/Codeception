@@ -12,7 +12,7 @@ class Cept implements LoaderInterface
     /**
      * @var CeptFormat[]
      */
-    protected $tests = [];
+    protected array $tests = [];
 
     public function getPattern(): string
     {

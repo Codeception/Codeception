@@ -23,7 +23,7 @@ class Cest implements LoaderInterface
     /**
      * @var DataProviderTestSuite[]|CestFormat[]
      */
-    protected $tests = [];
+    protected array $tests = [];
 
     /**
      * @return DataProviderTestSuite[]|CestFormat[]
@@ -63,9 +63,7 @@ class Cest implements LoaderInterface
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
                 if ($rawExamples !== []) {
                     $examples = array_map(
-                        function ($v): ?array {
-                            return Annotation::arrayValue($v);
-                        },
+                        fn($v): ?array => Annotation::arrayValue($v),
                         $rawExamples
                     );
                 }

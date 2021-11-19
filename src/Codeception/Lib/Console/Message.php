@@ -8,14 +8,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Message
 {
-    /**
-     * @var Output|null
-     */
-    protected $output;
-    /**
-     * @var string
-     */
-    protected $message;
+    protected ?Output $output;
+
+    protected string $message;
 
     public function __construct(string $message, Output $output = null)
     {

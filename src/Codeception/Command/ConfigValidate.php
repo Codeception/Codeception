@@ -72,7 +72,7 @@ class ConfigValidate extends Command
             $output->writeln("<info>{$suite} Suite Config</info>:\n");
             $output->writeln($this->formatOutput($config));
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $output->write("Validating global config... ");
@@ -102,14 +102,13 @@ class ConfigValidate extends Command
             $output->writeln('Ok');
         }
 
-
         $output->writeln("Execute <info>codecept config:validate [<suite>]</info> to see config for a suite");
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function formatOutput($config): ?string
     {
         $output = print_r($config, true);
-        return preg_replace('#\[(.*?)\] =>#', "<fg=yellow>$1</fg=yellow> =>", $output);
+        return preg_replace('#\[(.*?)] =>#', "<fg=yellow>$1</fg=yellow> =>", $output);
     }
 }

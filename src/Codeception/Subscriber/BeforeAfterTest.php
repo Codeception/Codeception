@@ -19,19 +19,14 @@ class BeforeAfterTest implements EventSubscriberInterface
     /**
      * @var array<string, string|int[]|string[]>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_BEFORE => 'beforeClass',
         Events::SUITE_AFTER  => ['afterClass', 100]
     ];
 
-    /**
-     * @var array
-     */
-    protected $hooks = [];
-    /**
-     * @var array
-     */
-    protected $startedTests = [];
+    protected array $hooks = [];
+
+    protected array $startedTests = [];
 
     public function beforeClass(SuiteEvent $event): void
     {

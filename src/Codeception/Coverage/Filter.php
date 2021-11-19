@@ -20,20 +20,11 @@ use function strpos;
 
 class Filter
 {
-    /**
-     * @var CodeCoverage|null
-     */
-    protected $phpCodeCoverage = null;
+    protected ?CodeCoverage $phpCodeCoverage = null;
 
-    /**
-     * @var Filter
-     */
-    protected static $c3;
+    protected static ?Filter $c3 = null;
 
-    /**
-     * @var \SebastianBergmann\CodeCoverage\Filter|null
-     */
-    protected $filter = null;
+    protected ?\SebastianBergmann\CodeCoverage\Filter $filter = null;
 
     public function __construct(CodeCoverage $phpCoverage)
     {

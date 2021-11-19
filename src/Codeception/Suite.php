@@ -11,14 +11,9 @@ use PHPUnit\Framework\TestSuite;
 
 class Suite extends TestSuite
 {
-    /**
-     * @var array
-     */
-    protected $modules = [];
-    /**
-     * @var string
-     */
-    protected $baseName;
+    protected array $modules = [];
+
+    protected ?string $baseName = null;
 
     public function reorderDependencies(): void
     {

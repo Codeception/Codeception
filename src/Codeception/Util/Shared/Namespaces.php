@@ -13,7 +13,10 @@ use function str_replace;
 
 trait Namespaces
 {
-    protected function breakParts(string $class)
+    /**
+     * @return string[]
+     */
+    protected function breakParts(string $class): array
     {
         // removing leading slashes and dots first
         $class = str_replace('/', '\\', ltrim($class, './\\'));
@@ -41,7 +44,7 @@ trait Namespaces
         return "namespace {$str};\n";
     }
 
-    protected function getNamespaces(string $class)
+    protected function getNamespaces(string $class): array
     {
         $namespaces = $this->breakParts($class);
         array_pop($namespaces);

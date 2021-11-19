@@ -23,12 +23,9 @@ class GroupManager
     /**
      * @var string[]
      */
-    protected $configuredGroups = [];
+    protected array $configuredGroups = [];
 
-    /**
-     * @var mixed[][]
-     */
-    protected $testsInGroups = [];
+    protected array $testsInGroups = [];
 
     /**
      * @param string[] $groups
@@ -64,7 +61,7 @@ class GroupManager
 
             $i = 1;
             foreach ($files as $file) {
-                /** @var SplFileInfo $file * */
+                /** @var SplFileInfo $file */
                 $this->configuredGroups[str_replace('*', (string)$i, $group)] = dirname($pattern) . DIRECTORY_SEPARATOR . $file->getRelativePathname();
                 ++$i;
             }

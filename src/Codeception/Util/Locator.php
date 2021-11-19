@@ -226,7 +226,7 @@ class Locator
      */
     public static function isID(string $id): bool
     {
-        return (bool)preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
+        return (bool)preg_match('~^#[\w.\-\[\]=^\~:]+$~', $id);
     }
 
     /**
@@ -241,7 +241,7 @@ class Locator
      */
     public static function isClass(string $class): bool
     {
-        return (bool)preg_match('#^\.[\w\.\-\[\]\=\^\~\:]+$#', $class);
+        return (bool)preg_match('#^\.[\w.\-\[\]=^~:]+$#', $class);
     }
 
     /**

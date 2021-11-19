@@ -27,10 +27,7 @@ class Unit extends TestCase implements
 {
     use Stub;
 
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    private ?Metadata $metadata = null;
 
     public function getMetadata(): Metadata
     {
@@ -52,7 +49,7 @@ class Unit extends TestCase implements
             return;
         }
 
-        /** @var Di $di **/
+        /** @var Di $di */
         $di = $this->getMetadata()->getService('di');
         $di->set(new Scenario($this));
 

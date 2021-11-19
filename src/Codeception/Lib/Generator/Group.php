@@ -13,10 +13,7 @@ class Group
     use Namespaces;
     use Classname;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php
 
 declare(strict_types=1);
@@ -49,20 +46,11 @@ class {{class}} extends \Codeception\Platform\Group
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected string $namespace;
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
     public function __construct(array $settings, string $name)
     {

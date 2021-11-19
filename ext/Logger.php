@@ -48,7 +48,7 @@ class Logger extends Extension
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    public static array $events = [
         Events::SUITE_BEFORE    => 'beforeSuite',
         Events::TEST_BEFORE     => 'beforeTest',
         Events::TEST_AFTER      => 'afterTest',
@@ -60,25 +60,16 @@ class Logger extends Extension
         Events::TEST_SKIPPED    => 'testSkipped',
     ];
 
-    /**
-     * @var RotatingFileHandler
-     */
-    protected $logHandler;
+    protected ?RotatingFileHandler $logHandler = null;
 
-    /**
-     * @var \Monolog\Logger
-     */
-    protected static $logger;
+    protected static ?\Monolog\Logger $logger = null;
 
-    /**
-     * @var string
-     */
-    protected $path;
+    protected ?string $path = null;
 
     /**
      * @var array<string, int>
      */
-    protected $config = ['max_files' => 3];
+    protected array $config = ['max_files' => 3];
 
     public function _initialize(): void
     {

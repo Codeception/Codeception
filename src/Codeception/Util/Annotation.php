@@ -6,6 +6,7 @@ namespace Codeception\Util;
 
 use ReflectionClass;
 use ReflectionMethod;
+use Reflector;
 use function get_class;
 use function in_array;
 use function is_object;
@@ -24,20 +25,16 @@ class Annotation
     /**
      * @var ReflectionClass[]
      */
-    protected static $reflectedClasses = [];
-    /**
-     * @var string
-     */
-    protected static $regex = '/@%s(?:[ \t]*(.*?))?[ \t]*(?:\*\/)?\r?$/m';
-    protected static $lastReflected = null;
-    /**
-     * @var ReflectionClass
-     */
-    protected $reflectedClass;
+    protected static array $reflectedClasses = [];
+
+    protected static string $regex = '/@%s(?:[ \t]*(.*?))?[ \t]*(?:\*\/)?\r?$/m';
+
+    protected ReflectionClass $reflectedClass;
+
     /**
      * @var ReflectionClass|ReflectionMethod
      */
-    protected $currentReflectedItem;
+    protected Reflector $currentReflectedItem;
 
     /**
      * Grabs annotation values.
@@ -52,7 +49,7 @@ class Annotation
      * ```
      * @param object|string $class
      */
-    public static function forClass($class): Annotation
+    public static function forClass($class): self
     {
         if (is_object($class)) {
             $class = get_class($class);
@@ -101,7 +98,6 @@ class Annotation
         }
         return $annotations;
     }
-
 
     public function __construct(ReflectionClass $reflectionClass)
     {

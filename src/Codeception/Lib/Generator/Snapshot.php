@@ -11,10 +11,7 @@ class Snapshot
 {
     use Namespaces;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php
 
 declare(strict_types=1);
@@ -33,10 +30,7 @@ class {{name}} extends \\Codeception\\Snapshot
 }
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $actionsTemplate = <<<EOF
+    protected string $actionsTemplate = <<<EOF
     /**
      * @var \\{{actorClass}};
      */
@@ -48,20 +42,11 @@ EOF;
     }
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected string $namespace;
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
     public function __construct(array $settings, string $name)
     {

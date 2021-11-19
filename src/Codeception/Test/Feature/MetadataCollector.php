@@ -8,10 +8,7 @@ use Codeception\Test\Metadata;
 
 trait MetadataCollector
 {
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    private Metadata $metadata;
 
     protected function setMetadata(Metadata $metadata): void
     {

@@ -18,15 +18,12 @@ class Local extends SuiteSubscriber
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    public static array $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::SUITE_AFTER  => 'afterSuite',
     ];
 
-    /**
-     * @var Remote
-     */
-    protected $module;
+    protected ?Remote $module = null;
 
     protected function isEnabled(): bool
     {

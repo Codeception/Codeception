@@ -21,7 +21,7 @@ class Module implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::TEST_BEFORE  => 'before',
         Events::TEST_AFTER   => 'after',
         Events::STEP_BEFORE  => 'beforeStep',
@@ -33,7 +33,7 @@ class Module implements EventSubscriberInterface
     ];
 
     /** @var \Codeception\Module[] */
-    protected $modules = [];
+    protected array $modules = [];
 
     /**
      * @param \Codeception\Module[] $modules

@@ -20,16 +20,19 @@ use function ucfirst;
 
 trait ConfigTrait
 {
-    protected function getSuiteConfig($suite): array
+    protected function getSuiteConfig(string $suite): array
     {
         return Configuration::suiteSettings($suite, $this->getGlobalConfig());
     }
 
-    protected function getGlobalConfig($conf = null): array
+    protected function getGlobalConfig(string $conf = null): array
     {
         return Configuration::config($conf);
     }
 
+    /**
+     * @return string[]
+     */
     protected function getSuites($conf = null): array
     {
         return Configuration::suites();

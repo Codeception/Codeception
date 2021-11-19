@@ -31,14 +31,14 @@ class ModuleContainer
     const MODULE_NAMESPACE = '\\Codeception\\Module\\';
 
     /**
-     * @var integer
+     * @var int
      */
     const MAXIMUM_LEVENSHTEIN_DISTANCE = 5;
 
     /**
      * @var array<string, string>
      */
-    public static $packages = [
+    public static array $packages = [
         'AMQP' => 'codeception/module-amqp',
         'Apc' => 'codeception/module-apc',
         'Asserts' => 'codeception/module-asserts',
@@ -66,31 +66,15 @@ class ModuleContainer
         'ZF2' => 'codeception/module-zf2',
     ];
 
-    /**
-     * @var array
-     */
-    private $config = [];
+    private array $config;
 
-    /**
-     * @var Di
-     */
-    private $di;
+    private Di $di;
 
-    /**
-     * @var array
-     */
-    private $modules = [];
+    private array $modules = [];
 
-    /**
-     * @var array
-     */
-    private $active = [];
+    private array $active = [];
 
-    /**
-     * @var array
-     */
-    private $actions = [];
-
+    private array $actions = [];
 
     public function __construct(Di $di, array $config)
     {
@@ -130,7 +114,7 @@ class ModuleContainer
             // Explicitly setting $config to null skips this validation.
             $config = null;
         }
-        $this->modules[$moduleName] = $this->di->instantiate($moduleClass, [$this, $config], (string)false);
+        $this->modules[$moduleName] = $this->di->instantiate($moduleClass, [$this, $config], 'false');
 
         $module = $this->modules[$moduleName];
 
@@ -191,7 +175,7 @@ class ModuleContainer
     /**
      * Should a method be included as an action?
      */
-    private function includeMethodAsAction(Module $module, ReflectionMethod $method, ?array $configuredParts = null): bool
+    private function includeMethodAsAction(Module $module, ReflectionMethod $method, array $configuredParts = null): bool
     {
         // Filter out excluded actions
         if ($module::$excludeActions && in_array($method->name, $module::$excludeActions)) {
@@ -299,7 +283,7 @@ class ModuleContainer
     /**
      * Get the module for an action.
      *
-     * @return Module|null
+     * @var Module|null
      */
     public function moduleForAction(string $action)
     {
@@ -352,9 +336,7 @@ class ModuleContainer
             throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
         }
 
-        $dependencies = array_map(function ($dependency) {
-            return $this->create($dependency, false);
-        }, $this->getConfiguredDependencies($moduleName));
+        $dependencies = array_map(fn($dependency): ?object => $this->create($dependency, false), $this->getConfiguredDependencies($moduleName));
 
         call_user_func_array([$module, '_inject'], $dependencies);
     }

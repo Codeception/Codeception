@@ -26,7 +26,7 @@ class AutoRebuild implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_INIT => 'updateActor'
     ];
 
@@ -53,7 +53,7 @@ class AutoRebuild implements EventSubscriberInterface
         $handle = @fopen($actorActionsFile, "r");
         if ($handle && is_writable($actorActionsFile)) {
             $line = @fgets($handle);
-            if (preg_match('#\[STAMP\] ([a-f0-9]*)#', $line, $matches)) {
+            if (preg_match('#\[STAMP] ([a-f0-9]*)#', $line, $matches)) {
                 $hash = $matches[1];
                 $currentHash = Actions::genHash($modules, $settings);
 

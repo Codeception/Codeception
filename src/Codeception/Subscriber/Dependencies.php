@@ -20,7 +20,7 @@ class Dependencies implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::TEST_START => 'testStart',
         Events::TEST_SUCCESS => 'testSuccess'
     ];
@@ -28,7 +28,7 @@ class Dependencies implements EventSubscriberInterface
     /**
      * @var string[]
      */
-    protected $successfulTests = [];
+    protected array $successfulTests = [];
 
     public function testStart(TestEvent $event): void
     {

@@ -47,9 +47,9 @@ class GenerateCept extends Command
         $res = $this->createFile($fullPath, $cept->produce());
         if (!$res) {
             $output->writeln("<error>Test {$filename} already exists</error>");
-            return 1;
+            return Command::FAILURE;
         }
         $output->writeln("<info>Test was created in {$fullPath}</info>");
-        return 0;
+        return Command::SUCCESS;
     }
 }

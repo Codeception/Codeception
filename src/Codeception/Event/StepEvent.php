@@ -10,15 +10,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class StepEvent extends Event
 {
-    /**
-     * @var Step
-     */
-    protected $step;
+    protected Step $step;
 
-    /**
-     * @var TestInterface
-     */
-    protected $test;
+    protected TestInterface $test;
 
     public function __construct(TestInterface $test, Step $step)
     {

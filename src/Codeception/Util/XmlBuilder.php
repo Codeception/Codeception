@@ -72,15 +72,9 @@ use Exception;
  */
 class XmlBuilder
 {
-    /**
-     * @var DOMDocument
-     */
-    protected $dom;
+    protected DOMDocument $dom;
 
-    /**
-     * @var DOMElement
-     */
-    protected $currentNode;
+    protected DOMElement $currentNode;
 
     public function __construct()
     {

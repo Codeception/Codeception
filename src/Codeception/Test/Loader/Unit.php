@@ -17,10 +17,7 @@ use function get_class;
 
 class Unit implements LoaderInterface
 {
-    /**
-     * @var array
-     */
-    protected $tests = [];
+    protected array $tests = [];
 
     public function getPattern(): string
     {

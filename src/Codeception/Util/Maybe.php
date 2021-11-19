@@ -33,18 +33,14 @@ use function range;
  */
 class Maybe implements ArrayAccess, Iterator, JsonSerializable
 {
-    /**
-     * @var int
-     */
-    protected $position = 0;
+    protected int $position = 0;
+
     /**
      * @var mixed
      */
     protected $val = null;
-    /**
-     * @var null
-     */
-    protected $assocArray = null;
+
+    protected ?bool $assocArray = null;
 
     /**
      * @param mixed $val

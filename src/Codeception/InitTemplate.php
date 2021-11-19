@@ -47,30 +47,15 @@ abstract class InitTemplate
      */
     const GIT_IGNORE = '.gitignore';
 
-    /**
-     * @var string
-     */
-    protected $namespace = '';
+    protected string $namespace = '';
 
-    /**
-     * @var string
-     */
-    protected $actorSuffix = 'Tester';
+    protected string $actorSuffix = 'Tester';
 
-    /**
-     * @var string
-     */
-    protected $workDir = '.';
+    protected string $workDir = '.';
 
-    /**
-     * @var InputInterface
-     */
-    protected $input;
+    protected InputInterface $input;
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    protected OutputInterface $output;
 
     public function __construct(InputInterface $input, OutputInterface $output)
     {

@@ -8,19 +8,11 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 
 class MessageFactory
 {
-    /**
-     * @var DiffFactory
-     */
-    protected $diffFactory;
-    /**
-     * @var Output
-     */
-    private $output;
+    protected DiffFactory $diffFactory;
 
-    /**
-     * @var Colorizer
-     */
-    protected $colorizer;
+    private Output $output;
+
+    protected Colorizer $colorizer;
 
     public function __construct(Output $output)
     {

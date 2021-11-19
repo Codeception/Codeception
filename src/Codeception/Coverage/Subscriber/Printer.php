@@ -34,14 +34,11 @@ class Printer implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    public static array $events = [
         Events::RESULT_PRINT_AFTER => 'printResult'
     ];
 
-    /**
-     * @var array
-     */
-    protected $settings = [
+    protected array $settings = [
         'enabled'           => true,
         'low_limit'         => 35,
         'high_limit'        => 70,
@@ -49,22 +46,13 @@ class Printer implements EventSubscriberInterface
         'show_only_summary' => false
     ];
 
-    /**
-     * @var CodeCoverage
-     */
-    public static $coverage;
-    /**
-     * @var array
-     */
-    protected $options = [];
-    /**
-     * @var string
-     */
-    protected $logDir;
-    /**
-     * @var array
-     */
-    protected $destination = [];
+    public static CodeCoverage $coverage;
+
+    protected array $options = [];
+
+    protected string $logDir;
+
+    protected array $destination = [];
 
     public function __construct(array $options)
     {

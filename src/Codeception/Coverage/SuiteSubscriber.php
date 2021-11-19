@@ -25,10 +25,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
 {
     use StaticEventsTrait;
 
-    /**
-     * @var array
-     */
-    protected $defaultSettings = [
+    protected array $defaultSettings = [
         'enabled'        => false,
         'remote'         => false,
         'local'          => false,
@@ -39,34 +36,20 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         'work_dir'       => null,
         'cookie_domain'  => null,
     ];
-    /**
-     * @var array
-     */
-    protected $settings = [];
-    /**
-     * @var array
-     */
-    protected $filters = [];
-    /**
-     * @var array
-     */
-    protected $modules = [];
-    /**
-     * @var CodeCoverage|null
-     */
-    protected $coverage;
-    /**
-     * @var string
-     */
-    protected $logDir;
-    /**
-     * @var array
-     */
-    protected $options = [];
-    /**
-     * @var array
-     */
-    public static $events = [];
+
+    protected array $settings = [];
+
+    protected array $filters = [];
+
+    protected array $modules = [];
+
+    protected ?CodeCoverage $coverage = null;
+
+    protected string $logDir;
+
+    protected array $options = [];
+
+    public static array $events = [];
 
     abstract protected function isEnabled();
 

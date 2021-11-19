@@ -16,7 +16,6 @@ class ModuleConfigException extends Exception
      * ModuleConfigException constructor.
      *
      * @param object|string $module
-     * @param Exception|null $previous
      */
     public function __construct($module, string $message, Exception $previous = null)
     {

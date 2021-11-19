@@ -14,18 +14,11 @@ use ParseError;
 
 class Parser
 {
-    /**
-     * @var Scenario
-     */
-    protected $scenario;
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
-    /**
-     * @var string
-     */
-    protected $code;
+    protected Scenario $scenario;
+
+    protected Metadata $metadata;
+
+    protected string $code;
 
     public function __construct(Scenario $scenario, Metadata $metadata)
     {
@@ -179,22 +172,21 @@ class Parser
 
     protected function stripComments(string $code): string
     {
-        $code = preg_replace('#\/\/.*?$#m', '', $code); // remove inline comments
-        $code = preg_replace('#\/*\*.*?\*\/#ms', '', $code);
-        return $code; // remove block comment
+        $code = preg_replace('#//.*?$#m', '', $code); // remove inline comments
+        return preg_replace('#/*\*.*?\*/#ms', '', $code); // remove block comment
     }
 
     protected function matchComments(string $code): string
     {
         $matches = [];
         $comments = '';
-        $hasLineComment = preg_match_all('#\/\/(.*?)$#m', $code, $matches);
+        $hasLineComment = preg_match_all('#//(.*?)$#m', $code, $matches);
         if ($hasLineComment) {
             foreach ($matches[1] as $line) {
                 $comments .= $line."\n";
             }
         }
-        $hasBlockComment = preg_match('#\/*\*(.*?)\*\/#ms', $code, $matches);
+        $hasBlockComment = preg_match('#/*\*(.*?)\*/#ms', $code, $matches);
         if ($hasBlockComment) {
             $comments .= $matches[1]."\n";
         }

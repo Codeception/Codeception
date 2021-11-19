@@ -19,10 +19,8 @@ class ParamsLoader
      * @var array|string|null
      */
     protected $paramStorage;
-    /**
-     * @var string|null
-     */
-    protected $paramsFile;
+
+    protected ?string $paramsFile = null;
 
     /**
      * @param array|string $paramStorage
@@ -73,6 +71,9 @@ class ParamsLoader
         throw new ConfigurationException("Params can't be loaded from `{$paramStorage}`.");
     }
 
+    /**
+     * @return array|string|null
+     */
     public function loadArray()
     {
         return $this->paramStorage;

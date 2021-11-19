@@ -9,10 +9,7 @@ use Codeception\Scenario;
 
 trait Friend
 {
-    /**
-     * @var array
-     */
-    protected $friends = [];
+    protected array $friends = [];
 
     abstract protected function getScenario(): Scenario;
 

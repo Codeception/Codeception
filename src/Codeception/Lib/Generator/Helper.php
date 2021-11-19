@@ -11,10 +11,7 @@ class Helper
 {
     use Namespaces;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php
 
 declare(strict_types=1);
@@ -29,15 +26,9 @@ class {{name}} extends \\Codeception\\Module
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected string $namespace;
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
     public function __construct(string $name, string $namespace = '')
     {

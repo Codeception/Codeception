@@ -14,10 +14,7 @@ class StepObject
     use Namespaces;
     use Classname;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php
 
 declare(strict_types=1);
@@ -30,10 +27,7 @@ class {{name}} extends {{actorClass}}
 }
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $actionTemplate = <<<EOF
+    protected string $actionTemplate = <<<EOF
 
     public function {{action}}()
     {
@@ -42,25 +36,13 @@ EOF;
 
 EOF;
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var string
-     */
-    protected $actions = '';
+    protected string $actions = '';
 
-    /**
-     * @var string
-     */
-    public $namespace;
+    public string $namespace;
 
     public function __construct(array $settings, string $name)
     {

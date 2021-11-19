@@ -26,7 +26,7 @@ class SimpleReporter extends Extension
      *
      * @var array<string, string>
      */
-    public static $events = [
+    public static array $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_END     => 'after',
         Events::TEST_SUCCESS => 'success',

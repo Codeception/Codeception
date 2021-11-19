@@ -57,9 +57,9 @@ class GenerateFeature extends Command
         $res = $this->createFile($fullPath, $feature->produce());
         if (!$res) {
             $output->writeln("<error>Feature {$filename} already exists</error>");
-            return 1;
+            return Command::FAILURE;
         }
         $output->writeln("<info>Feature was created in {$fullPath}</info>");
-        return 0;
+        return Command::SUCCESS;
     }
 }

@@ -15,10 +15,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  */
 class Debug
 {
-    /**
-     * @var Output null
-     */
-    protected static $output = null;
+    protected static ?Output $output = null;
 
     public static function setOutput(Output $output): void
     {

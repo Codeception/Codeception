@@ -18,19 +18,16 @@ class PrepareTest implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::TEST_BEFORE => 'prepare',
     ];
 
-    /**
-     * @var array
-     */
-    protected $modules = [];
+    protected array $modules = [];
 
     public function prepare(TestEvent $event): void
     {
         $test = $event->getTest();
-        /** @var $di Di  **/
+        /** @var Di $di */
         $prepareMethods = $test->getMetadata()->getParam('prepare');
 
         if (!$prepareMethods) {

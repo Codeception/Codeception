@@ -12,24 +12,15 @@ use function array_unique;
 
 class Metadata
 {
-    /**
-     * @var string
-     */
-    protected $name;
-    /**
-     * @var string
-     */
-    protected $filename;
-    /**
-     * @var string
-     */
-    protected $feature = '';
-    protected $index;
+    protected ?string $name = null;
 
-    /**
-     * @var array
-     */
-    protected $params = [
+    protected ?string $filename = null;
+
+    protected string $feature = '';
+
+    protected ?int $index = null;
+
+    protected array $params = [
         'env' => [],
         'group' => [],
         'depends' => [],
@@ -37,18 +28,11 @@ class Metadata
         'incomplete' => null
     ];
 
-    /**
-     * @var array
-     */
-    protected $current = [];
-    /**
-     * @var array
-     */
-    protected $services = [];
-    /**
-     * @var array
-     */
-    protected $reports = [];
+    protected array $current = [];
+
+    protected array $services = [];
+
+    protected array $reports = [];
 
     public function getEnv(): array
     {
@@ -126,12 +110,12 @@ class Metadata
         return $this->filename;
     }
 
-    public function setIndex($index): void
+    public function setIndex(int $index): void
     {
         $this->index = $index;
     }
 
-    public function getIndex()
+    public function getIndex(): ?int
     {
         return $this->index;
     }
@@ -188,10 +172,9 @@ class Metadata
     }
 
     /**
-     * Returns test params like: env, group, skip, incomplete, etc
+     * Returns test params like: env, group, skip, incomplete, etc.
      * Can return by annotation or return all if no key passed
      *
-     * @param string|null $key
      * @return mixed
      */
     public function getParam(string $key = null)

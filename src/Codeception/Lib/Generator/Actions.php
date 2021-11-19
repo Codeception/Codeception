@@ -8,6 +8,7 @@ use Codeception\Codecept;
 use Codeception\Configuration;
 use Codeception\Lib\Di;
 use Codeception\Lib\ModuleContainer;
+use Codeception\Step\GeneratedStep;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Template;
 use Exception;
@@ -15,23 +16,15 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionType;
+use ReflectionUnionType;
 
 class Actions
 {
-    /**
-     * @var Di
-     */
-    public $di;
+    public Di $di;
 
-    /**
-     * @var ModuleContainer
-     */
-    public $moduleContainer;
+    public ModuleContainer $moduleContainer;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php  //[STAMP] {{hash}}
 namespace {{namespace}}_generated;
 
@@ -51,10 +44,7 @@ trait {{name}}Actions
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $methodTemplate = <<<EOF
+    protected string $methodTemplate = <<<EOF
 
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -67,35 +57,20 @@ EOF;
     }
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
+
+    protected array $settings = [];
+
+    protected array $modules = [];
+
+    protected array $actions = [];
+
+    protected int $numMethods = 0;
 
     /**
-     * @var array
+     * @var GeneratedStep[]
      */
-    protected $settings = [];
-
-    /**
-     * @var array
-     */
-    protected $modules = [];
-
-    /**
-     * @var array
-     */
-    protected $actions = [];
-
-    /**
-     * @var int
-     */
-    protected $numMethods = 0;
-
-    /**
-     * @var array GeneratedStep[]
-     */
-    protected $generatedSteps = [];
+    protected array $generatedSteps = [];
 
     public function __construct(array $settings)
     {
@@ -112,7 +87,6 @@ EOF;
 
         $this->generatedSteps = (array) $settings['step_decorators'];
     }
-
 
     public function produce(): string
     {
@@ -263,7 +237,7 @@ EOF;
 
     private function stringifyType(ReflectionType $type): string
     {
-        if ($type instanceof \ReflectionUnionType) {
+        if ($type instanceof ReflectionUnionType) {
             $types = $type->getTypes();
             return implode('|', $types);
         }

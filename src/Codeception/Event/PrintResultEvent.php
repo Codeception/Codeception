@@ -10,15 +10,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PrintResultEvent extends Event
 {
-    /**
-     * @var TestResult
-     */
-    protected $result;
+    protected TestResult $result;
 
-    /**
-     * @var Printer
-     */
-    protected $printer;
+    protected Printer $printer;
 
     public function __construct(TestResult $testResult, Printer $printer)
     {

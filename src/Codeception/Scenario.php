@@ -16,30 +16,15 @@ use PHPUnit\Framework\SkippedTestError;
 
 class Scenario
 {
-    /**
-     * @var TestInterface
-     */
-    protected $test;
+    protected TestInterface $test;
 
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
+    protected Metadata $metadata;
 
-    /**
-     * @var array
-     */
-    protected $steps = [];
+    protected array $steps = [];
 
-    /**
-     * @var string
-     */
-    protected $feature;
+    protected string $feature;
 
-    /**
-     * @var Meta|null
-     */
-    protected $metaStep;
+    protected ?Meta $metaStep = null;
 
     public function __construct(TestInterface $test)
     {

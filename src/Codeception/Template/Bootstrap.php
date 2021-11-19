@@ -4,29 +4,23 @@ declare(strict_types=1);
 
 namespace Codeception\Template;
 
+use Codeception\Extension\RunFailed;
 use Codeception\InitTemplate;
+use Codeception\Module\Asserts;
+use Codeception\Module\PhpBrowser;
 use Symfony\Component\Yaml\Yaml;
 
 class Bootstrap extends InitTemplate
 {
-    /**
-     * @var string
-     */
-    protected $supportDir = 'tests/_support';
-    /**
-     * @var string
-     */
-    protected $outputDir = 'tests/_output';
-    /**
-     * @var string
-     */
-    protected $dataDir = 'tests/_data';
-    /**
-     * @var string
-     */
-    protected $envsDir = 'tests/_envs';
+    protected string $supportDir = 'tests/_support';
 
-    public function setup(): void
+    protected string $outputDir = 'tests/_output';
+
+    protected string $dataDir = 'tests/_data';
+
+    protected string $envsDir = 'tests/_envs';
+
+    public function setup()
     {
         $this->checkInstalled($this->workDir);
 
@@ -52,7 +46,7 @@ class Bootstrap extends InitTemplate
             return;
         }
 
-        if (!class_exists(\Codeception\Module\Asserts::class) || !class_exists(\Codeception\Module\PhpBrowser::class)) {
+        if (!class_exists(Asserts::class) || !class_exists(PhpBrowser::class)) {
             $this->addModulesToComposer(['PhpBrowser', 'Asserts']);
         }
 
@@ -159,7 +153,7 @@ EOF;
             ],
             'actor_suffix' => 'Tester',
             'extensions' => [
-                'enabled' => [\Codeception\Extension\RunFailed::class]
+                'enabled' => [RunFailed::class]
             ]
         ];
 

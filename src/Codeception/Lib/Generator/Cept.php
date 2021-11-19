@@ -9,20 +9,14 @@ use Codeception\Util\Template;
 
 class Cept
 {
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php {{use}}
 \$I = new {{actor}}(\$scenario);
 \$I->wantTo('perform actions and see result');
 
 EOF;
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
     public function __construct(array $settings)
     {
