@@ -79,6 +79,7 @@ jobs:
         run: php codecept run -c vendor/codeception/module-filesystem/
 
       - name: Run module-db sqlite tests
+        if: matrix.php != '8.1'
         run: php codecept run -c vendor/codeception/module-db/ unit :Sqlite
 
       - name: Run module-phpbrowser tests
@@ -136,6 +137,7 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Run tests cli
+        if: matrix.php != '8.1'
         run: php codecept run cli --skip-group coverage
         
       - name: Run tests unit
