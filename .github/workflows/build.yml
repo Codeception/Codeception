@@ -137,6 +137,6 @@ jobs:
 
       - name: Run tests cli
         run: php codecept run cli --skip-group coverage
-        
+
       - name: Run tests unit
         run: php codecept run unit -g core -g appveyor

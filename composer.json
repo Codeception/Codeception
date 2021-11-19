@@ -12,7 +12,7 @@
             "homepage":"http://codegyre.com"
         }
     ],
-    "minimum-stability": "RC",
+    "minimum-stability": "beta",
 
     "require": {
         "php": ">=7.3.0 <9.0",
@@ -22,17 +22,17 @@
         "phpunit/phpunit": "^9.5",
         "codeception/lib-asserts": "^1.13",
         "guzzlehttp/psr7": "^1.7 | ^2.0",
-        "symfony/finder": ">=4.4 <6.0",
-        "symfony/console": ">=4.4 <6.0",
-        "symfony/event-dispatcher": ">=4.4 <6.0",
-        "symfony/yaml": ">=4.4 <6.0",
-        "symfony/css-selector": ">=4.4 <6.0",
+        "symfony/finder": ">=4.4 <7.0",
+        "symfony/console": ">=4.4 <7.0",
+        "symfony/event-dispatcher": ">=4.4 <7.0",
+        "symfony/yaml": ">=4.4 <7.0",
+        "symfony/css-selector": ">=4.4 <7.0",
         "behat/gherkin": "^4.6.2",
         "codeception/stub": "^3.7"
     },
     "require-dev": {
         "vlucas/phpdotenv": "^4.0 | ^5.0",
-        "symfony/process": ">=4.4 <6.0",
+        "symfony/process": ">=4.4 <7.0",
         "codeception/lib-innerbrowser": "*@dev",
         "codeception/module-asserts": "*@dev",
         "codeception/module-cli": "*@dev",
@@ -49,7 +49,7 @@
         "stecman/symfony-console-completion": "For BASH autocompletion"
     },
     "replace": {
-      "codeception/phpunit-wrapper": "*"
+        "codeception/phpunit-wrapper": "*"
     },
 
     "autoload": {
@@ -69,12 +69,5 @@
             "tests/data/claypit/tests/_data"
         ]
     },
-    "extra": {
-        "branch-alias": {
-        }
-    },
-    "bin":["codecept"],
-    "config": {
-        "platform": {}
-    }
+    "bin":["codecept"]
 }
