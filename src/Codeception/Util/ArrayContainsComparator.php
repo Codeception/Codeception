@@ -14,10 +14,7 @@ use function range;
 
 class ArrayContainsComparator
 {
-    /**
-     * @var array
-     */
-    protected $haystack = [];
+    protected array $haystack;
 
     public function __construct(array $haystack)
     {

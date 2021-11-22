@@ -31,7 +31,7 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_BEFORE => 'handle',
         Events::SUITE_AFTER  => 'onFinish'
     ];
@@ -39,32 +39,26 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var bool $stopped to keep shutdownHandler from possible looping.
      */
-    private $stopped = false;
+    private bool $stopped = false;
 
     /**
      * @var bool $initialized to avoid double error handler substitution
      */
-    private $initialized = false;
+    private bool $initialized = false;
 
-    /**
-     * @var bool
-     */
-    private $deprecationsInstalled = false;
+    private bool $deprecationsInstalled = false;
 
     /**
      * @var callable|null
      */
     private $oldHandler;
 
-    /**
-     * @var bool
-     */
-    private $suiteFinished = false;
+    private bool $suiteFinished = false;
 
     /**
-     * @var int stores bitmask for errors
+     * @var int Stores bitmask for errors
      */
-    private $errorLevel;
+    private int $errorLevel;
 
     public function __construct()
     {

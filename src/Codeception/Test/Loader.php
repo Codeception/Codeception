@@ -53,15 +53,11 @@ class Loader
     /**
      * @var LoaderInterface[]
      */
-    protected $formats = [];
-    /**
-     * @var array
-     */
-    protected $tests = [];
-    /**
-     * @var string
-     */
-    protected $path;
+    protected array $formats = [];
+
+    protected array $tests = [];
+
+    protected ?string $path = null;
 
     public function __construct(array $suiteSettings)
     {
@@ -123,7 +119,7 @@ class Loader
         $path = $this->makePath($path);
 
         foreach ($this->formats as $format) {
-            /** @var Loader $format **/
+            /** @var Loader $format */
             if (preg_match($format->getPattern(), $path)) {
                 $format->loadTests($path);
                 $this->tests = $format->getTests();

@@ -34,30 +34,15 @@ class Codecept
      */
     const VERSION = '5.0.0';
 
-    /**
-     * @var Runner
-     */
-    protected $runner;
+    protected ?Runner $runner = null;
 
-    /**
-     * @var TestResult
-     */
-    protected $result;
+    protected TestResult $result;
 
-    /**
-     * @var EventDispatcher
-     */
-    protected $dispatcher;
+    protected EventDispatcher $dispatcher;
 
-    /**
-     * @var ExtensionLoader
-     */
-    protected $extensionLoader;
+    protected ExtensionLoader $extensionLoader;
 
-    /**
-     * @var array
-     */
-    protected $options = [
+    protected array $options = [
         'silent'          => false,
         'debug'           => false,
         'steps'           => false,
@@ -86,15 +71,9 @@ class Codecept
         'quiet'           => false,
     ];
 
-    /**
-     * @var array
-     */
-    protected $config = [];
+    protected array $config = [];
 
-    /**
-     * @var array
-     */
-    protected $extensions = [];
+    protected array $extensions = [];
 
     public function __construct(array $options = [])
     {

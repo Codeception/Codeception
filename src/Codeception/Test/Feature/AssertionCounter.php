@@ -8,10 +8,7 @@ use PHPUnit\Framework\Assert;
 
 trait AssertionCounter
 {
-    /**
-     * @var int
-     */
-    protected $numAssertions = 0;
+    protected int $numAssertions = 0;
 
     public function getNumAssertions(): int
     {

@@ -14,45 +14,23 @@ use Codeception\Test\Loader;
 use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestResult;
-use PHPUnit\Framework\TestSuite;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
 {
-    /**
-     * @var TestSuite
-     */
-    protected $suite = null;
+    protected ?Suite $suite = null;
 
-    /**
-     * @var EventDispatcher|null
-     */
-    protected $dispatcher = null;
+    protected ?EventDispatcher $dispatcher = null;
 
-    /**
-     * @var GroupManager
-     */
-    protected $groupManager;
+    protected GroupManager $groupManager;
 
-    /**
-     * @var ModuleContainer
-     */
-    protected $moduleContainer;
+    protected ModuleContainer $moduleContainer;
 
-    /**
-     * @var Di
-     */
-    protected $di;
+    protected Di $di;
 
-    /**
-     * @var string
-     */
-    protected $env = '';
+    protected string $env = '';
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
     public function __construct(EventDispatcher $dispatcher, string $name, array $settings)
     {
@@ -151,7 +129,6 @@ class SuiteManager
         $suite->setModules($this->moduleContainer->all());
         return $suite;
     }
-
 
     public function run(PHPUnit\Runner $runner, TestResult $result, array $options): void
     {

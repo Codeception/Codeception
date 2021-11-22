@@ -14,10 +14,7 @@ class Cest
     use Classname;
     use Namespaces;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php
 {{namespace}}
 class {{name}}Cest
@@ -34,15 +31,9 @@ class {{name}}Cest
 
 EOF;
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected ?string $name;
 
     public function __construct(string $className, array $settings)
     {

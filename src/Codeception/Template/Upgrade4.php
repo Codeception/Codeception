@@ -6,6 +6,7 @@ namespace Codeception\Template;
 
 use Codeception\Configuration;
 use Codeception\InitTemplate;
+use Exception;
 
 class Upgrade4 extends InitTemplate
 {
@@ -18,7 +19,7 @@ class Upgrade4 extends InitTemplate
      */
     const DONATE_LINK = 'https://opencollective.com/codeception';
 
-    public function setup(): void
+    public function setup()
     {
         if (!$this->isInstalled()) {
             $this->sayWarning('Codeception is not installed in this dir.');
@@ -46,7 +47,7 @@ class Upgrade4 extends InitTemplate
             $this->sayError("No suites found in current config.");
             $this->sayWarning('If you use sub-configs with `include` option, run this script on subconfigs:');
             $this->sayWarning('Example: php vendor/bin/codecept init upgrade4 -c backend/');
-            throw new \Exception("No suites found, can't upgrade");
+            throw new Exception("No suites found, can't upgrade");
         }
         foreach (Configuration::suites() as $suite) {
             $suiteConfig = Configuration::suiteSettings($suite, $config);
@@ -75,7 +76,7 @@ class Upgrade4 extends InitTemplate
     {
         try {
             $this->checkInstalled();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return true;
         }
         return false;

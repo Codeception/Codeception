@@ -12,10 +12,7 @@ use function str_replace;
 
 class ModuleException extends Exception
 {
-    /**
-     * @var string
-     */
-    protected $module;
+    protected string $module;
 
     /**
      * ModuleException constructor.

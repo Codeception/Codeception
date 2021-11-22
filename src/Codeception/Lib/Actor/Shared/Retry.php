@@ -6,14 +6,9 @@ namespace Codeception\Lib\Actor\Shared;
 
 trait Retry
 {
-    /**
-     * @var int
-     */
-    protected $retryNum = 1;
-    /**
-     * @var int
-     */
-    protected $retryInterval = 100;
+    protected int $retryNum = 1;
+
+    protected int $retryInterval = 100;
 
     /**
      * Configure number of retries and initial interval.

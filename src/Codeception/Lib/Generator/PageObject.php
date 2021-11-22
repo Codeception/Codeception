@@ -13,10 +13,7 @@ class PageObject
     use Namespaces;
     use Classname;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php
 
 declare(strict_types=1);
@@ -49,10 +46,7 @@ class {{class}}
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $actionsTemplate = <<<EOF
+    protected string $actionsTemplate = <<<EOF
     /**
      * @var \\{{actorClass}};
      */
@@ -65,25 +59,13 @@ EOF;
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $actions = '';
+    protected string $actions = '';
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected string $namespace;
 
     public function __construct(array $settings, string $name)
     {

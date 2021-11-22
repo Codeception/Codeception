@@ -14,10 +14,7 @@ class Test
     use Namespaces;
     use Classname;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php
 {{namespace}}
 class {{name}}Test extends \Codeception\Test\Unit
@@ -39,10 +36,7 @@ class {{name}}Test extends \Codeception\Test\Unit
 }
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $testerTemplate = <<<EOF
+    protected string $testerTemplate = <<<EOF
     /**
      * @var \{{actorClass}}
      */
@@ -50,15 +44,9 @@ EOF;
     
 EOF;
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected ?string $name;
 
     public function __construct(array $settings, string $name)
     {

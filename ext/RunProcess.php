@@ -60,12 +60,12 @@ class RunProcess extends Extension
     /**
      * @var array<string, int>
      */
-    protected $config = ['sleep' => 0];
+    protected array $config = ['sleep' => 0];
 
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_BEFORE => 'runProcess',
         Events::SUITE_AFTER => 'stopProcess'
     ];
@@ -73,7 +73,7 @@ class RunProcess extends Extension
     /**
      * @var Process[]
      */
-    private $processes = [];
+    private array $processes = [];
 
     public function _initialize(): void
     {
@@ -108,7 +108,7 @@ class RunProcess extends Extension
     public function stopProcess(): void
     {
         foreach (array_reverse($this->processes) as $process) {
-            /** @var $process Process  **/
+            /** @var Process $process */
             if (!$process->isRunning()) {
                 continue;
             }

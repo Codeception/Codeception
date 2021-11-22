@@ -7,6 +7,11 @@ namespace Codeception\Lib\Actor\Shared;
 use Codeception\Lib\Console\ReplHistory;
 use Codeception\Util\Debug;
 use Exception;
+use Hoa\Console\Console as HoaConsole;
+use Hoa\Console\Cursor;
+use Hoa\Console\Readline\Autocompleter\Word;
+use Hoa\Console\Readline\Readline;
+use PHPUnit\Framework\AssertionFailedError;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Throwable;
 
@@ -26,16 +31,16 @@ trait Pause
 
         $I = $this;
         $output = new ConsoleOutput();
-        $readline = new \Hoa\Console\Readline\Readline();
+        $readline = new Readline();
 
         $readline->setAutocompleter(
-            new \Hoa\Console\Readline\Autocompleter\Word(get_class_methods($this))
+            new Word(get_class_methods($this))
         );
 
-        $stashFn = function (\Hoa\Console\Readline\Readline $self, $isManual = true) {
+        $stashFn = function (Readline $self, $isManual = true) {
             $lastCommand = $self->previousHistory();
 
-            \Hoa\Console\Cursor::clear('↔');
+            Cursor::clear('↔');
 
             if (strlen($lastCommand) > 0) {
                 ReplHistory::getInstance()->add("\$I->{$lastCommand};");
@@ -45,28 +50,28 @@ trait Pause
             }
 
             if ($isManual) {
-                \Hoa\Console\Console::getOutput()->writeAll($self->getPrefix() . $self->getLine());
+                HoaConsole::getOutput()->writeAll($self->getPrefix() . $self->getLine());
             }
 
             $self->nextHistory();
 
-            return \Hoa\Console\Readline\Readline::STATE_CONTINUE;
+            return Readline::STATE_CONTINUE;
         };
 
-        $clearStashFn = function (\Hoa\Console\Readline\Readline $self) {
+        $clearStashFn = function (Readline $self) {
             ReplHistory::getInstance()->clear();
 
-            \Hoa\Console\Cursor::clear('↔');
+            Cursor::clear('↔');
 
             codecept_debug("Stash cleared.");
 
-            \Hoa\Console\Console::getOutput()->writeAll($self->getPrefix() . $self->getLine());
+            HoaConsole::getOutput()->writeAll($self->getPrefix() . $self->getLine());
 
-            return \Hoa\Console\Readline\Readline::STATE_CONTINUE;
+            return Readline::STATE_CONTINUE;
         };
 
-        $viewStashedFn = function (\Hoa\Console\Readline\Readline $self) use ($output) {
-            \Hoa\Console\Cursor::clear('↔');
+        $viewStashedFn = function (Readline $self) use ($output) {
+            Cursor::clear('↔');
             $stashedCommands = ReplHistory::getInstance()->getAll();
 
             if (!empty($stashedCommands)) {
@@ -76,24 +81,24 @@ trait Pause
                 codecept_debug("No commands stashed.");
             }
 
-            \Hoa\Console\Console::getOutput()->writeAll($self->getPrefix() . $self->getLine());
+            HoaConsole::getOutput()->writeAll($self->getPrefix() . $self->getLine());
 
-            return \Hoa\Console\Readline\Readline::STATE_CONTINUE;
+            return Readline::STATE_CONTINUE;
         };
 
-        $toggleAutoStashFn = function (\Hoa\Console\Readline\Readline $self) use (&$autoStash) {
-            \Hoa\Console\Cursor::clear('↔');
+        $toggleAutoStashFn = function (Readline $self) use (&$autoStash) {
+            Cursor::clear('↔');
 
             $autoStash = !$autoStash;
 
             codecept_debug("Autostash " . ($autoStash ? 'enabled' : 'disabled') . '.');
 
-            \Hoa\Console\Console::getOutput()->writeAll($self->getPrefix() . $self->getLine());
+            HoaConsole::getOutput()->writeAll($self->getPrefix() . $self->getLine());
 
-            return \Hoa\Console\Readline\Readline::STATE_CONTINUE;
+            return Readline::STATE_CONTINUE;
         };
 
-        $tput = \Hoa\Console\Console::getTput();
+        $tput = HoaConsole::getTput();
         $readline->addMapping($tput->get('key_f5'), $stashFn);
         $readline->addMapping($tput->get('key_f6'), $toggleAutoStashFn);
         $readline->addMapping($tput->get('key_f8'), $viewStashedFn);
@@ -130,7 +135,7 @@ trait Pause
                 if ($autoStash) {
                     call_user_func($stashFn, $readline, false);
                 }
-            } catch (\PHPUnit\Framework\AssertionFailedError $fail) {
+            } catch (AssertionFailedError $fail) {
                 $output->writeln("<error>fail</error> " . $fail->getMessage());
             } catch (Exception $e) {
                 $output->writeln("<error>error</error> " . $e->getMessage());

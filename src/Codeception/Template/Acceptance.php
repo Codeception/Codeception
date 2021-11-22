@@ -10,10 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class Acceptance extends InitTemplate
 {
-    /**
-     * @var string
-     */
-    protected $configTemplate = <<<EOF
+    protected string $configTemplate = <<<EOF
 # suite config
 suites:
     acceptance:
@@ -53,10 +50,7 @@ settings:
     lint: true
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $firstTest = <<<EOF
+    protected string $firstTest = <<<EOF
 <?php
 class LoginCest 
 {    
@@ -77,12 +71,12 @@ class LoginCest
 }
 EOF;
 
-    public function setup(): void
+    public function setup()
     {
         $this->checkInstalled();
         $this->say("Let's prepare Codeception for acceptance testing");
         $this->say("Create your tests and run them in real browser");
-        $this->say("");
+        $this->say('');
 
         $dir = $this->ask("Where tests will be stored?", 'tests');
 

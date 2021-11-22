@@ -15,7 +15,7 @@ class FailFast implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_BEFORE => 'stopOnFail',
     ];
 

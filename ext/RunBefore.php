@@ -42,20 +42,16 @@ use function sleep;
  */
 class RunBefore extends Extension
 {
-    /**
-     * @var array
-     */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_BEFORE => 'runBefore'
     ];
 
-    /** @var array[] */
-    private $processes = [];
+    private array $processes = [];
 
     public function _initialize(): void
     {

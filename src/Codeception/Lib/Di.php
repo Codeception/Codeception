@@ -22,12 +22,9 @@ class Di
     /**
      * @var object[]
      */
-    protected $container = [];
+    protected array $container = [];
 
-    /**
-     * @var Di
-     */
-    protected $fallback;
+    protected ?Di $fallback = null;
 
     public function __construct(Di $fallback = null)
     {
@@ -50,13 +47,12 @@ class Di
      * @param string $injectMethodName Method which will be invoked after object creation;
      *                                 Resolved dependencies will be passed to it as arguments
      * @throws InjectionException|ReflectionException
-     * @return null|object
      */
     public function instantiate(
         string $className,
         array $constructorArgs = null,
         string $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME
-    ) {
+    ): ?object {
         // normalize namespace
         $className = ltrim($className, '\\');
 

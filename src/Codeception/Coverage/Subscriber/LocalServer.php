@@ -74,29 +74,21 @@ class LocalServer extends SuiteSubscriber
      */
     const COVERAGE_COOKIE_ERROR = 'CODECEPTION_CODECOVERAGE_ERROR';
 
-    /**
-     * @var string
-     */
-    protected $suiteName = '';
-    /**
-     * @var array
-     */
-    protected $c3Access = [
+    protected string $suiteName = '';
+
+    protected array $c3Access = [
         'http' => [
             'method' => "GET",
             'header' => ''
         ]
     ];
 
-    /**
-     * @var WebInterface
-     */
-    protected $module;
+    protected ?WebInterface $module = null;
 
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    public static array $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_BEFORE  => 'beforeTest',
         Events::STEP_AFTER   => 'afterStep',
@@ -159,7 +151,7 @@ class LocalServer extends SuiteSubscriber
 
         $retries = 5;
         while (!file_exists($coverageFile) && --$retries >= 0) {
-            $seconds = (int) 0.5 * 1000000; // 0.5 sec
+            $seconds = (int) 0.5 * 1_000_000; // 0.5 sec
             usleep($seconds);
         }
 
@@ -221,9 +213,7 @@ class LocalServer extends SuiteSubscriber
 
         $okHeaders = array_filter(
             $http_response_header,
-            function ($h) {
-                return preg_match('#^HTTP(.*?)\s200#', $h);
-            }
+            fn($h) => preg_match('#^HTTP(.*?)\s200#', $h)
         );
         if (empty($okHeaders)) {
             throw new RemoteException("Request was not successful. See response header: " . $http_response_header[0]);

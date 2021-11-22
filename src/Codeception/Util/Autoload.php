@@ -17,16 +17,13 @@ use function trim;
  */
 class Autoload
 {
-    /**
-     * @var bool
-     */
-    protected static $registered = false;
+    protected static bool $registered = false;
+
     /**
      * An associative array where the key is a namespace prefix and the value
      * is an array of base directories for classes in that namespace.
-     * @var array
      */
-    protected static $map = [];
+    protected static array $map = [];
 
     private function __construct()
     {
@@ -129,7 +126,7 @@ class Autoload
      *
      * @param string $prefix The namespace prefix.
      * @param string $relativeClass The relative class name.
-     * @return bool|string Boolean false if no mapped file can be loaded, or the name of the mapped file that was loaded.
+     * @return string|false Boolean false if no mapped file can be loaded, or the name of the mapped file that was loaded.
      */
     protected static function loadMappedFile(string $prefix, string $relativeClass)
     {

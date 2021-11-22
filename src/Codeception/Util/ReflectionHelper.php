@@ -39,7 +39,7 @@ class ReflectionHelper
      * @return mixed
      * @throws ReflectionException
      */
-    public static function readPrivateProperty(object $object, string $property, ?string $class = null)
+    public static function readPrivateProperty(object $object, string $property, string $class = null)
     {
         if (is_null($class)) {
             $class = $object;
@@ -57,7 +57,7 @@ class ReflectionHelper
      * @return mixed
      * @throws ReflectionException
      */
-    public static function invokePrivateMethod(object $object, string $method, array $args = [], ?string $class = null)
+    public static function invokePrivateMethod(object $object, string $method, array $args = [], string $class = null)
     {
         if (is_null($class)) {
             $class = $object;
@@ -170,22 +170,17 @@ class ReflectionHelper
      */
     public static function phpEncodeArray(array $array): string
     {
-        $isPlainArray = function (array $value): bool {
-            return (($value === [])
-                || (
-                    (array_keys($value) === range(0, count($value) - 1))
-                    && ([] === array_filter(array_keys($value), 'is_string')))
-            );
-        };
+        $isPlainArray = fn(array $value): bool => ($value === [])
+            || (
+                (array_keys($value) === range(0, count($value) - 1))
+                && ([] === array_filter(array_keys($value), 'is_string')));
 
         if ($isPlainArray($array)) {
             return '[' . implode(', ', array_map([self::class, 'phpEncodeValue'], $array)) . ']';
         }
 
         $values = array_map(
-            function ($key) use ($array): string {
-                return self::phpEncodeValue($key) . ' => ' . self::phpEncodeValue($array[$key]);
-            },
+            fn($key): string => self::phpEncodeValue($key) . ' => ' . self::phpEncodeValue($array[$key]),
             array_keys($array)
         );
 

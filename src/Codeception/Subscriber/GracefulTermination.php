@@ -24,10 +24,7 @@ class GracefulTermination implements EventSubscriberInterface
      */
     const ASYNC_SIGNAL_HANDLING_FUNC = 'pcntl_async_signals';
 
-    /**
-     * @var SuiteEvent
-     */
-    protected $suiteEvent;
+    protected ?SuiteEvent $suiteEvent = null;
 
     public function handleSuite(SuiteEvent $event): void
     {

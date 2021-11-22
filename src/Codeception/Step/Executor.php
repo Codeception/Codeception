@@ -10,10 +10,7 @@ use Codeception\Step as CodeceptionStep;
 
 class Executor extends CodeceptionStep
 {
-    /**
-     * @var Closure
-     */
-    protected $callable;
+    protected Closure $callable;
 
     public function __construct(Closure $callable, array $arguments = [])
     {

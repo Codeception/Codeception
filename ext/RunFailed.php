@@ -47,12 +47,12 @@ class RunFailed extends Extension
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    public static array $events = [
         Events::RESULT_PRINT_AFTER => 'saveFailed'
     ];
 
     /** @var string filename/groupname for failed tests */
-    protected $group = 'failed';
+    protected string $group = 'failed';
 
     public function _initialize(): void
     {

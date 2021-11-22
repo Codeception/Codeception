@@ -13,6 +13,9 @@ use Traversable;
 
 class Example implements ArrayAccess, Countable, IteratorAggregate
 {
+    /**
+     * @var mixed
+     */
     protected $data;
 
     public function __construct($data)
@@ -25,7 +28,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      *
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $offset <p>An offset to check for.</p>
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      * The return value will be casted to boolean if non-boolean was returned.
      */
     public function offsetExists($offset): bool

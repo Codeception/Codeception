@@ -15,20 +15,11 @@ use ReflectionMethod;
 
 class Actor
 {
-    /**
-     * @var Di
-     */
-    public $di;
+    public Di $di;
 
-    /**
-     * @var ModuleContainer
-     */
-    public $moduleContainer;
+    public ModuleContainer $moduleContainer;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php
 
 declare(strict_types=1);
@@ -51,25 +42,13 @@ class {{actor}} extends \Codeception\Actor
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $inheritedMethodTemplate = ' * @method {{return}} {{method}}({{params}})';
+    protected string $inheritedMethodTemplate = ' * @method {{return}} {{method}}({{params}})';
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
-    /**
-     * @var array
-     */
-    protected $modules = [];
+    protected array $modules = [];
 
-    /**
-     * @var array
-     */
-    protected $actions = [];
+    protected array $actions = [];
 
     public function __construct(array $settings)
     {

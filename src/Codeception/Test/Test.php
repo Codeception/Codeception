@@ -33,21 +33,14 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     use Feature\MetadataCollector;
     use Feature\IgnoreIfMetadataBlocked;
 
-    /**
-     * @var TestResult|null
-     */
-    private $testResult;
-    /**
-     * @var bool
-     */
-    private $ignored = false;
+    private ?TestResult $testResult = null;
+
+    private bool $ignored = false;
 
     /**
      * Enabled traits with methods to be called before and after the test.
-     *
-     * @var array
      */
-    protected $hooks = [
+    protected array $hooks = [
       'ignoreIfMetadataBlocked',
       'codeCoverage',
       'assertionCounter',
@@ -80,8 +73,6 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
 
     /**
      * Test representation
-     *
-     * @return mixed
      */
     abstract public function toString(): string;
 

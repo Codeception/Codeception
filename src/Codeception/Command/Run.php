@@ -122,28 +122,21 @@ use function substr_replace;
 class Run extends Command
 {
     use Shared\ConfigTrait;
-    /**
-     * @var Codecept
-     */
-    protected $codecept;
+
+    protected ?Codecept $codecept = null;
 
     /**
-     * @var integer of executed suites
+     * @var int Executed suites
      */
-    protected $executed = 0;
+    protected int $executed = 0;
 
-    /**
-     * @var array of options (command run)
-     */
-    protected $options = [];
+    protected array $options = [];
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    protected ?OutputInterface $output = null;
 
     /**
      * Sets Run arguments
+     *
      * @throws SymfonyConsoleInvalidArgumentException
      */
     protected function configure(): void
@@ -439,7 +432,7 @@ class Run extends Command
         if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessful()) {
             exit(1);
         }
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function matchSingleTest($suite, $config): ?array

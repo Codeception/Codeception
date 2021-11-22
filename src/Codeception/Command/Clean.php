@@ -30,7 +30,7 @@ class Clean extends Command
         $projectDir = Configuration::projectDir();
         $this->cleanProjectsRecursively($output, $projectDir);
         $output->writeln("Done");
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function cleanProjectsRecursively(OutputInterface $output, string $projectDir): void

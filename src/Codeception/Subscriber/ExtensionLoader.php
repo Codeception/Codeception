@@ -23,35 +23,20 @@ class ExtensionLoader implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::MODULE_INIT => 'registerSuiteExtensions',
         Events::SUITE_AFTER  => 'stopSuiteExtensions'
     ];
 
-    /**
-     * @var array
-     */
-    protected $config = [];
+    protected array $config = [];
 
-    /**
-     * @var array
-     */
-    protected $options = [];
+    protected array $options = [];
 
-    /**
-     * @var array
-     */
-    protected $globalExtensions = [];
+    protected array $globalExtensions = [];
 
-    /**
-     * @var array
-     */
-    protected $suiteExtensions = [];
+    protected array $suiteExtensions = [];
 
-    /**
-     * @var EventDispatcher
-     */
-    protected $dispatcher;
+    protected EventDispatcher $dispatcher;
 
     public function __construct(EventDispatcher $eventDispatcher)
     {

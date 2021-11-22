@@ -14,7 +14,6 @@ class ExtensionException extends Exception
      * ExtensionException constructor.
      *
      * @param object|string $extension
-     * @param Exception|null $previous
      */
     public function __construct($extension, string $message, Exception $previous = null)
     {

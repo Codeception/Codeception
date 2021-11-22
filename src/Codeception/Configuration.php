@@ -26,59 +26,53 @@ class Configuration
     /**
      * @var string[]
      */
-    protected static $suites = [];
+    protected static array $suites = [];
 
     /**
-     * @var array Current configuration
+     * @var array|null Current configuration
      */
-    protected static $config = null;
+    protected static ?array $config = null;
 
     /**
      * @var array environmental files configuration cache
      */
-    protected static $envConfig = [];
+    protected static array $envConfig = [];
 
     /**
-     * @var string Directory containing main configuration file.
+     * @var string|false|null Directory containing main configuration file.
      * @see self::projectDir()
      */
     protected static $dir = null;
 
     /**
-     * @var string Current project output directory.
+     * @var string|null Current project output directory.
      */
-    protected static $outputDir = null;
+    protected static ?string $outputDir = null;
 
     /**
-     * @var string Current project data directory. This directory is used to hold
+     * @var string|null Current project data directory. This directory is used to hold
      * sql dumps and other things needed for current project tests.
      */
-    protected static $dataDir = null;
+    protected static ?string $dataDir = null;
 
     /**
-     * @var string Directory with test support files like Actors, Helpers, PageObjects, etc
+     * @var string|null Directory with test support files like Actors, Helpers, PageObjects, etc
      */
-    protected static $supportDir = null;
+    protected static ?string $supportDir = null;
 
     /**
-     * @var string Directory containing environment configuration files.
+     * @var string|null Directory containing environment configuration files.
      */
-    protected static $envsDir = null;
+    protected static ?string $envsDir = null;
 
     /**
-     * @var string Directory containing tests and suites of the current project.
+     * @var string|null Directory containing tests and suites of the current project.
      */
-    protected static $testsDir = null;
+    protected static ?string $testsDir = null;
 
-    /**
-     * @var bool
-     */
-    public static $lock = false;
+    public static bool $lock = false;
 
-    /**
-     * @var array Default config
-     */
-    public static $defaultConfig = [
+    public static array $defaultConfig = [
         'actor_suffix'=> 'Tester',
         'namespace'  => '',
         'include'    => [],
@@ -116,10 +110,7 @@ class Configuration
         'gherkin'    => []
     ];
 
-    /**
-     * @var array
-     */
-    public static $defaultSuiteSettings = [
+    public static array $defaultSuiteSettings = [
         'actor'       => null,
         'class_name'  => null, // Codeception <2.3 compatibility
         'modules'     => [
@@ -141,10 +132,7 @@ class Configuration
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     ];
 
-    /**
-     * @var array|null
-     */
-    protected static $params;
+    protected static ?array $params = null;
 
     /**
      * Loads global config file which is `codeception.yml` by default.
@@ -294,7 +282,6 @@ class Configuration
             ? $bootstrap
             : rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $bootstrap;
 
-
         if (!file_exists($bootstrap)) {
             throw new ConfigurationException("Bootstrap file {$bootstrap} can't be loaded");
         }
@@ -373,14 +360,14 @@ class Configuration
             . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
 
 
-
         return $settings;
     }
 
     /**
      * Loads environments configuration from set directory
      *
-     * @param string $path path to the directory
+     * @param string $path Path to the directory
+     * @return array<string, array>
      */
     protected static function loadEnvConfigs(string $path): array
     {
@@ -455,8 +442,7 @@ class Configuration
     /**
      * Loads configuration from Yaml file or returns given value if the file doesn't exist
      *
-     * @param string $filename filename
-     * @param array|null $nonExistentValue value used if filename is not found
+     * @param array|null $nonExistentValue Value used if filename is not found
      * @throws ConfigurationException
      */
     protected static function getConfFromFile(string $filename, ?array $nonExistentValue = []): ?array
@@ -479,15 +465,13 @@ class Configuration
     /**
      * Return list of enabled modules according suite config.
      *
-     * @param array $settings suite settings
+     * @param array $settings Suite settings
      */
     public static function modules(array $settings): array
     {
         return array_filter(
             array_map(
-                function ($m) {
-                    return is_array($m) ? key($m) : $m;
-                },
+                fn($m) => is_array($m) ? key($m) : $m,
                 $settings['modules']['enabled'],
                 array_keys($settings['modules']['enabled'])
             ),
@@ -577,7 +561,6 @@ class Configuration
     {
         return self::$dir . DIRECTORY_SEPARATOR;
     }
-
 
     /**
      * Returns path to tests directory
@@ -727,10 +710,11 @@ class Configuration
      * Returns the expanded paths or the original if not a wildcard.
      *
      * @throws ConfigurationException
+     * @return string[]
      */
     protected static function expandWildcardsFor(string $include): array
     {
-        if (1 !== preg_match('#[\?\.\*]#', $include)) {
+        if (1 !== preg_match('#[?.*]#', $include)) {
             return [$include,];
         }
 

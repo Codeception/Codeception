@@ -9,15 +9,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class TestEvent extends Event
 {
-    /**
-     * @var PHPUnitTest
-     */
-    protected $test;
+    protected PHPUnitTest $test;
 
-    /**
-     * @var float Time taken
-     */
-    protected $time;
+    protected ?float $time; // Time taken
 
     public function __construct(PHPUnitTest $test, ?float $time = 0)
     {
@@ -30,10 +24,7 @@ class TestEvent extends Event
         return $this->time;
     }
 
-    /**
-     * @return \Codeception\TestInterface
-     */
-    public function getTest()
+    public function getTest(): PHPUnitTest
     {
         return $this->test;
     }

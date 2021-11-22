@@ -20,10 +20,7 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
 {
     use Feature\ScenarioLoader;
 
-    /**
-     * @var Parser
-     */
-    protected $parser;
+    protected Parser $parser;
 
     public function __construct(string $name, string $file)
     {

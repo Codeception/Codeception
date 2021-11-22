@@ -17,6 +17,7 @@ use Codeception\Lib\Notification;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Step\ConditionalAssertion;
+use Codeception\Step\Meta;
 use Codeception\Suite;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
@@ -62,7 +63,7 @@ class Console implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_BEFORE       => 'beforeSuite',
         Events::SUITE_AFTER        => 'afterSuite',
         Events::TEST_START         => 'startTest',
@@ -79,81 +80,56 @@ class Console implements EventSubscriberInterface
         Events::RESULT_PRINT_AFTER => 'afterResult',
     ];
 
-    /**
-     * @var Step
-     */
-    protected $metaStep;
+    protected ?Meta $metaStep = null;
 
-    /**
-     * @var Message
-     */
-    protected $message;
-    /**
-     * @var bool
-     */
-    protected $steps = true;
-    /**
-     * @var bool
-     */
-    protected $debug = false;
-    /**
-     * @var bool
-     */
-    protected $ansi = true;
-    /**
-     * @var bool
-     */
-    protected $silent = false;
-    /**
-     * @var bool
-     */
-    protected $lastTestFailed = false;
-    /**
-     * @var TestInterface|null
-     */
-    protected $printedTest;
-    /**
-     * @var bool
-     */
-    protected $rawStackTrace = false;
-    /**
-     * @var int
-     */
-    protected $traceLength = 5;
-    /**
-     * @var int
-     */
-    protected $width;
+    protected ?Message $message;
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    protected bool $steps = true;
+
+    protected bool $debug = false;
+
+    protected bool $ansi = true;
+
+    protected bool $silent = false;
+
+    protected bool $lastTestFailed = false;
+
+    protected ?SelfDescribing $printedTest = null;
+
+    protected bool $rawStackTrace = false;
+
+    protected int $traceLength = 5;
+
+    protected ?int $width = null;
+
+    protected OutputInterface $output;
+
     /**
      * @var ConditionalAssertion[]
      */
-    protected $conditionalFails = [];
+    protected array $conditionalFails = [];
+
     /**
      * @var Step[]
      */
-    protected $failedStep = [];
+    protected array $failedStep = [];
+
     /**
      * @var string[]
      */
-    protected $reports = [];
-    /**
-     * @var string
-     */
-    protected $namespace = '';
+    protected array $reports = [];
+
+    protected string $namespace = '';
+
     /**
      * @var array<string, string>
      */
-    protected $chars = ['success' => '+', 'fail' => 'x', 'of' => ':'];
+    protected array $chars = ['success' => '+', 'fail' => 'x', 'of' => ':'];
 
     /**
      * @var array<string, int|bool|null>
      */
-    protected $options = [
+    protected array $options = [
         'debug'         => false,
         'ansi'          => false,
         'steps'         => true,
@@ -164,10 +140,7 @@ class Console implements EventSubscriberInterface
         'no-artifacts'  => false,
     ];
 
-    /**
-     * @var MessageFactory
-     */
-    protected $messageFactory;
+    protected MessageFactory $messageFactory;
 
     public function __construct(array $options)
     {
@@ -217,9 +190,7 @@ class Console implements EventSubscriberInterface
                 implode(
                     ', ',
                     array_map(
-                        function ($module) {
-                            return $module->_getName();
-                        },
+                        fn($module) => $module->_getName(),
                         $event->getSuite()->getModules()
                     )
                 )
@@ -591,9 +562,7 @@ class Console implements EventSubscriberInterface
         $this->message("\nScenario Steps:\n")->style('comment')->writeln();
 
         foreach ($trace as $step) {
-            /**
-             * @var $step Step
-             */
+            /** @var Step $step */
             if (!$step->__toString()) {
                 continue;
             }

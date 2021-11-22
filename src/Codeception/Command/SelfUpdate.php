@@ -37,9 +37,8 @@ class SelfUpdate extends Command
 
     /**
      * Holds the current script filename.
-     * @var string
      */
-    protected $filename;
+    protected string $filename;
 
     /**
      * {@inheritdoc}
@@ -102,9 +101,9 @@ class SelfUpdate extends Command
                     $e->getMessage()
                 )
             );
-            return 1;
+            return Command::FAILURE;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

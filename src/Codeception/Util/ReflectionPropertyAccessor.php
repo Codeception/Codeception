@@ -88,7 +88,7 @@ class ReflectionPropertyAccessor
     /**
      * @throws ReflectionException
      */
-    public function createWithProperties(string $class, array $data): ?object
+    public function createWithProperties(string $class, array $data): object
     {
         $obj = null;
         do {

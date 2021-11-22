@@ -8,6 +8,7 @@ use Behat\Gherkin\Filter\RoleFilter;
 use Behat\Gherkin\Keywords\ArrayKeywords as GherkinKeywords;
 use Behat\Gherkin\Lexer as GherkinLexer;
 use Behat\Gherkin\Node\ExampleNode;
+use Behat\Gherkin\Node\FeatureNode;
 use Behat\Gherkin\Node\OutlineNode;
 use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\ScenarioNode;
@@ -37,10 +38,7 @@ use function strpos;
 
 class Gherkin implements LoaderInterface
 {
-    /**
-     * @var array
-     */
-    protected static $defaultSettings = [
+    protected static array $defaultSettings = [
         'namespace' => '',
         'actor' => '',
         'gherkin' => [
@@ -55,27 +53,18 @@ class Gherkin implements LoaderInterface
     /**
      * @var GherkinFormat[]
      */
-    protected $tests = [];
+    protected array $tests = [];
 
-    /**
-     * @var GherkinParser
-     */
-    protected $parser;
+    protected GherkinParser $parser;
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
-    /**
-     * @var array
-     */
-    protected $steps = [];
+    protected array $steps = [];
 
     public function __construct($settings = [])
     {
         $this->settings = Configuration::mergeConfigs(self::$defaultSettings, $settings);
-        if (!class_exists(\Behat\Gherkin\Keywords\ArrayKeywords::class)) {
+        if (!class_exists(GherkinKeywords::class)) {
             throw new TestParseException('Feature file can only be parsed with Behat\Gherkin library. Please install `behat/gherkin` with Composer');
         }
         $gherkin = new ReflectionClass(\Behat\Gherkin\Gherkin::class);
@@ -116,9 +105,7 @@ class Gherkin implements LoaderInterface
 
             // Add namespace prefix
             $namespace = $this->settings['gherkin']['contexts']['namespace_prefix'];
-            $dynamicContexts = array_map(function ($path) use ($namespace): string {
-                return $namespace . $path;
-            }, $files);
+            $dynamicContexts = array_map(fn($path): string => $namespace . $path, $files);
 
             $this->addSteps($dynamicContexts);
         }
@@ -162,7 +149,7 @@ class Gherkin implements LoaderInterface
         if (strpos($pattern, '/') !== 0) {
             $pattern = preg_quote($pattern);
 
-            $pattern = preg_replace('#(\w+)\/(\w+)#', '(?:$1|$2)', $pattern); // or
+            $pattern = preg_replace('#(\w+)/(\w+)#', '(?:$1|$2)', $pattern); // or
             $pattern = preg_replace('#\\\\\((\w)\\\\\)#', '$1?', $pattern); // (s)
 
             $replacePattern = sprintf(
@@ -193,12 +180,12 @@ class Gherkin implements LoaderInterface
     {
         $featureNode = $this->parser->parse(file_get_contents($filename), $filename);
 
-        if (!$featureNode instanceof \Behat\Gherkin\Node\FeatureNode) {
+        if (!$featureNode instanceof FeatureNode) {
             return;
         }
 
         foreach ($featureNode->getScenarios() as $scenarioNode) {
-            /** @var $scenarioNode ScenarioInterface * */
+            /** @var ScenarioInterface $scenarioNode */
             $steps = $this->steps['default']; // load default context
 
             foreach (array_merge($scenarioNode->getTags(), $featureNode->getTags()) as $tag) { // load tag contexts
@@ -218,7 +205,7 @@ class Gherkin implements LoaderInterface
 
             if ($scenarioNode instanceof OutlineNode) {
                 foreach ($scenarioNode->getExamples() as $example) {
-                    /** @var $example ExampleNode  **/
+                    /** @var ExampleNode $example */
                     $params = implode(', ', $example->getTokens());
                     $exampleNode = new ScenarioNode(
                         $scenarioNode->getTitle() . " | {$params}",

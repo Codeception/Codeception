@@ -10,31 +10,20 @@ use Codeception\Lib\Interfaces\MultiSession;
 
 class Friend
 {
-    /**
-     * @var string
-     */
-    protected $name;
-    /**
-     * @var Actor
-     */
-    protected $actor;
-    /**
-     * @var array
-     */
-    protected $data = [];
-    /**
-     * @var array|null
-     */
-    protected $multiSessionModules = [];
+    protected string $name;
+
+    protected Actor $actor;
+
+    protected array $data = [];
+
+    protected array $multiSessionModules = [];
 
     public function __construct(string $name, Actor $actor, array $modules = [])
     {
         $this->name = $name;
         $this->actor = $actor;
 
-        $this->multiSessionModules = array_filter($modules, function ($m) {
-            return $m instanceof MultiSession;
-        });
+        $this->multiSessionModules = array_filter($modules, fn($m): bool => $m instanceof MultiSession);
 
         if (empty($this->multiSessionModules)) {
             throw new TestRuntimeException("No multisession modules used. Can't instantiate friend");

@@ -25,52 +25,26 @@ abstract class Step
      */
     const STACK_POSITION = 3;
 
-    /**
-     * @var string
-     */
-    protected $action;
+    protected string $action;
 
-    /**
-     * @var array
-     */
-    protected $arguments = [];
+    protected array $arguments;
 
-    protected $debugOutput;
-
-    /**
-     * @var bool
-     */
-    public $executed = false;
+    public bool $executed = false;
 
     /**
      * @var string|int|null
      */
     protected $line = null;
 
-    /**
-     * @var string|null
-     */
-    protected $file = null;
+    protected ?string $file = null;
 
-    /**
-     * @var string
-     */
-    protected $prefix = 'I';
+    protected string $prefix = 'I';
 
-    /**
-     * @var MetaStep|null
-     */
-    protected $metaStep = null;
+    protected ?MetaStep $metaStep = null;
 
-    /**
-     * @var bool
-     */
-    protected $failed = false;
+    protected bool $failed = false;
 
-    /**
-     * @var bool
-     */
-    protected $isTry = false;
+    protected bool $isTry = false;
 
     public function __construct(string $action, array $arguments = [])
     {
@@ -145,7 +119,7 @@ abstract class Step
 
         if ($totalLength > $maxLength && $maxLength > 0) {
             //sort arguments from shortest to longest
-            uasort($arguments, function ($arg1, $arg2) {
+            uasort($arguments, function ($arg1, $arg2): int {
                 $length1 = mb_strlen($arg1, 'utf-8');
                 $length2 = mb_strlen($arg2, 'utf-8');
                 if ($length1 === $length2) {
@@ -283,7 +257,6 @@ abstract class Step
     }
 
     /**
-     * @param ModuleContainer|null $container
      * @return mixed
      */
     public function run(ModuleContainer $container = null)
@@ -319,7 +292,7 @@ abstract class Step
      */
     protected function addMetaStep(array $step, array $stack): void
     {
-        if (($this->isTestFile($this->file)) || ($step['class'] == \Codeception\Scenario::class)) {
+        if (($this->isTestFile($this->file)) || ($step['class'] == Scenario::class)) {
             return;
         }
 
@@ -338,13 +311,11 @@ abstract class Step
             }
 
             // in case arguments were passed by reference, copy args array to ensure dereference.  array_values() does not dereference values
-            $this->metaStep = new Step\Meta($step['function'], array_map(function ($i) {
-                return $i;
-            }, array_values($step['args'])));
+            $this->metaStep = new Step\Meta($step['function'], array_map(fn($i) => $i, array_values($step['args'])));
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // page objects or other classes should not be included with "I"
-            if (!in_array(\Codeception\Actor::class, class_parents($step['class']))) {
+            if (!in_array(Actor::class, class_parents($step['class']))) {
                 if (isset($step['object'])) {
                     $this->metaStep->setPrefix(get_class($step['object']) . ':');
                     return;

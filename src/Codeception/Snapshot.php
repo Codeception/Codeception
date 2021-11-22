@@ -13,35 +13,20 @@ abstract class Snapshot
 {
     use Asserts;
 
-    /**
-     * @var string|null
-     */
-    protected $fileName;
+    protected ?string $fileName = null;
 
     /**
-     * @var null
+     * @var string|false
      */
     protected $dataSet;
 
-    /**
-     * @var bool|null
-     */
-    protected $refresh;
+    protected ?bool $refresh = null;
 
-    /**
-     * @var bool
-     */
-    protected $showDiff = false;
+    protected bool $showDiff = false;
 
-    /**
-     * @var bool
-     */
-    protected $saveAsJson = true;
+    protected bool $saveAsJson = true;
 
-    /**
-     * @var string
-     */
-    protected $extension = 'json';
+    protected string $extension = 'json';
 
     /**
      * Should return data from current test run

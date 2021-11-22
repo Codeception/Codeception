@@ -16,10 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
-    /**
-     * @var SymfonyArgvInput|null
-     */
-    protected $coreArguments = null;
+    protected ?SymfonyArgvInput $coreArguments = null;
 
     /**
      * Register commands from config file
@@ -46,7 +43,7 @@ class Application extends BaseApplication
 
     public function renderExceptionWrapper(Exception $exception, OutputInterface $output): void
     {
-        if (method_exists(\Symfony\Component\Console\Application::class, 'renderException')) {
+        if (method_exists(BaseApplication::class, 'renderException')) {
             //Symfony 5
             parent::renderException($exception, $output);
         } else {
