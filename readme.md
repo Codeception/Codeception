@@ -100,4 +100,4 @@ The documentation source files can be found at https://github.com/Codeception/co
 MIT
 
 (c) [Codeception Team](http://codeception.com/credits)
-2011-2020
+2011-2021
