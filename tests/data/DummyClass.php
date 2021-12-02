@@ -3,22 +3,24 @@
 class DummyClass
 {
     protected $checkMe = 1;
-    protected $properties = array('checkMeToo' => 1);
+    protected array $properties = array('checkMeToo' => 1);
 
     function __construct($checkMe = 1)
     {
         $this->checkMe = "constructed: ".$checkMe;
     }
 
-    public function helloWorld() {
+    public function helloWorld(): string
+    {
         return "hello";
     }
 
-    public function goodByeWorld() {
+    public function goodByeWorld(): string
+    {
         return "good bye";
     }
 
-    protected function notYourBusinessWorld()
+    protected function notYourBusinessWorld(): string
     {
         return "goAway";
     }
@@ -31,12 +33,14 @@ class DummyClass
         return $this->checkMeToo;
     }
 
-    public function call() {
+    public function call(): bool
+    {
         $this->targetMethod();
         return true;
     }
 
-    public function targetMethod() {
+    public function targetMethod(): bool
+    {
         return true;
     }
 
@@ -60,7 +64,8 @@ class DummyClass
         return $this->isMagical($name) && isset($this->properties[$name]);
     }
 
-    private function isMagical($name) {
+    private function isMagical($name): bool
+    {
         $reflectionClass = new \ReflectionClass($this);
         return !$reflectionClass->hasProperty($name);
     }

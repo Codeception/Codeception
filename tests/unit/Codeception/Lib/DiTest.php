@@ -11,7 +11,7 @@ class DiTest extends \Codeception\Test\Unit
     /**
      * @var Di
      */
-    protected $di;
+    protected Di $di;
 
     protected function _setUp()
     {

@@ -18,7 +18,7 @@ class SimpleWithDataProviderArrayCest
         })->seeResultEquals(2);
     }
 
-    protected function getTestData()
+    protected function getTestData(): array
     {
         return [
             ['foo', 'bar'],

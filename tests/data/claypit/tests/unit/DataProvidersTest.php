@@ -5,7 +5,7 @@ class DataProvidersTest extends \Codeception\Test\Unit
    /**
     * @var \CodeGuy
     */
-    protected $codeGuy;
+    protected CodeGuy $codeGuy;
 
     /**
      * @group data-providers
@@ -16,7 +16,7 @@ class DataProvidersTest extends \Codeception\Test\Unit
         $this->assertTrue($a + $b > $c and $c+$b > $a and $a + $c > $b);
     }
 
-    public function triangles()
+    public function triangles(): array
     {
         return array(
             'real triangle' => array(3,4,5),

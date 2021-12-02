@@ -12,7 +12,7 @@ class RetryTest extends \PHPUnit\Framework\TestCase
     /**
      * @var bool
      */
-    protected $shouldFail = true;
+    protected bool $shouldFail = true;
 
     public function testRetryStepShouldNotFailStep()
     {

@@ -24,7 +24,7 @@ class EntityWithUuid
         $this->id = Uuid::uuid4();
     }
 
-    public function getId()
+    public function getId(): UuidInterface
     {
         return $this->id;
     }

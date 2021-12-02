@@ -8,16 +8,18 @@ class DummyClass
     {
         $this->checkMe = "constructed: ".$checkMe;
     }
-    
-    public function helloWorld() {
+
+    public function helloWorld(): string
+    {
         return "hello";
     }
-    
-    public function goodByeWorld() {
+
+    public function goodByeWorld(): string
+    {
         return "good bye";
     }
 
-    protected function notYourBusinessWorld()
+    protected function notYourBusinessWorld(): string
     {
         return "goAway";
     }
@@ -25,13 +27,15 @@ class DummyClass
     public function getCheckMe() {
         return $this->checkMe;
     }
-    
-    public function call() {
+
+    public function call(): bool
+    {
         $this->targetMethod();
         return true;
     }
-    
-    public function targetMethod() {
+
+    public function targetMethod(): bool
+    {
         return true;
     }
 

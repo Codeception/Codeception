@@ -7,7 +7,7 @@ class MathCest
     /**
      * @var Calc
      */
-    protected $calc;
+    protected Calc $calc;
 
     protected function _inject(Calc $calc)
     {

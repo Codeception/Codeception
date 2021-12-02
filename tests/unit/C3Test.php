@@ -7,12 +7,12 @@ class C3Test extends \Codeception\PHPUnit\TestCase
     /**
      * @var string
      */
-    public $c3 = null;
+    public ?string $c3 = null;
 
     /**
      * @var string
      */
-    public $c3_dir = null;
+    public ?string $c3_dir = null;
 
     protected function _setUp()
     {

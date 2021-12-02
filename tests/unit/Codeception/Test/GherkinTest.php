@@ -10,12 +10,12 @@ class GherkinTest extends \Codeception\Test\Unit
 {
 
     protected $feature;
-    public static $calls = '';
+    public static string $calls = '';
 
     /**
      * @var \Codeception\Test\Loader\Gherkin
      */
-    protected $loader;
+    protected \Codeception\Test\Loader\Gherkin $loader;
 
     protected function _before()
     {

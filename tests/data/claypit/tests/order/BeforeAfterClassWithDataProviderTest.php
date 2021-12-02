@@ -18,13 +18,13 @@ class BeforeAfterClassWithDataProviderTest extends \Codeception\Test\Unit
 	 *
 	 * @param string $letter
 	 */
-	public function testAbc($letter)
+	public function testAbc(string $letter)
 	{
 		\Codeception\Module\OrderHelper::appendToFile($letter);
 	}
 
-	public static function getAbc()
-	{
+	public static function getAbc(): array
+    {
 		return [['A'], ['B'], ['C']];
 	}
 

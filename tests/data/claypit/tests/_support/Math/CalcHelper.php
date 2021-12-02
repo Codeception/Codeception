@@ -6,14 +6,14 @@ class CalcHelper extends \Codeception\Module
     /**
      * @var Adder
      */
-    protected $adder;
+    protected Adder $adder;
 
     /**
      * @var Subtractor
      */
-    protected $subtractor;
+    protected Subtractor $subtractor;
 
-    protected $pi = 3;
+    protected int $pi = 3;
 
     protected function _inject(Adder $adder, Subtractor $subtractor)
     {

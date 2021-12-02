@@ -13,17 +13,17 @@ class ParserTest extends \Codeception\Test\Unit
     /**
      * @var Parser
      */
-    protected $parser;
+    protected Parser $parser;
 
     /**
      * @var \Codeception\Scenario
      */
-    protected $scenario;
+    protected \Codeception\Scenario $scenario;
 
     /**
      * @var \Codeception\Test\Metadata
      */
-    protected $testMetadata;
+    protected \Codeception\Test\Metadata $testMetadata;
 
     protected function _before()
     {
@@ -141,7 +141,7 @@ EOF;
         $classes = Parser::getClassesFromFile(codecept_data_dir('php70Test'));
         $this->assertSame(['php70Test'], $classes);
     }
-    
+
     /*
      * https://github.com/Codeception/Codeception/issues/1779
      */

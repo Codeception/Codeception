@@ -809,8 +809,8 @@ class HtmlReportRegexBuilder
 
 class TestHtmlReportRegexBuilder
 {
-    private $testClass;
-    private $testCase;
+    private string $testClass;
+    private string $testCase;
     private $stepsRegex;
 
     public function __construct(string $testClass, string $testCase)

@@ -10,7 +10,7 @@ class UserSnapshot extends Snapshot
     /**
      * @var DataTester
      */
-    protected $dataTester;
+    protected DataTester $dataTester;
 
     public function __construct(DataTester $I)
     {

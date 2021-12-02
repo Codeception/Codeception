@@ -14,9 +14,10 @@ use \Codeception\Event\TestEvent;
  */
 class CountEvents extends \Codeception\GroupObject
 {
+    /** @var string */
     public static $group = 'countevents';
-    public static $beforeCount = 0;
-    public static $afterCount = 0;
+    public static int $beforeCount = 0;
+    public static int $afterCount = 0;
 
     public function _before(TestEvent $event)
     {

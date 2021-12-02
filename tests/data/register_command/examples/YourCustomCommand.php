@@ -66,7 +66,7 @@ class YourCustomCommand extends Command implements CustomCommandInterface
      *
      * @see setCode()
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         $messageEnd = "!" . PHP_EOL;
 

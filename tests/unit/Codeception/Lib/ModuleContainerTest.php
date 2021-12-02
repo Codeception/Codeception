@@ -16,7 +16,7 @@ class ModuleContainerTest extends Unit
     /**
      * @var ModuleContainer
      */
-    protected $moduleContainer;
+    protected ModuleContainer $moduleContainer;
 
     protected function _setUp()
     {

@@ -7,6 +7,7 @@ use Codeception\Extension;
 
 class SuiteExtension extends Extension
 {
+    /** @var array */
     public static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::SUITE_AFTER => 'afterSuite',
@@ -14,6 +15,7 @@ class SuiteExtension extends Extension
         Events::TEST_AFTER => 'afterTest',
     ];
 
+    /** @var array */
     protected $config = ['config1' => 'novalue', 'config2' => 'novalue'];
 
     public function beforeSuite(SuiteEvent $e )

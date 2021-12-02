@@ -13,7 +13,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
     /**
      * @var \Codeception\Lib\GroupManager
      */
-    protected $manager;
+    protected GroupManager $manager;
 
     // tests
     public function testGroupsFromArray()

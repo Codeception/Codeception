@@ -7,6 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class VerbosityLevelOutput extends Extension
 {
+    /** @var array */
     public static $events = [
         Events::RESULT_PRINT_AFTER => 'printResult',
     ];

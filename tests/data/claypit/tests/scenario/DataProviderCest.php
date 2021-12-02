@@ -52,7 +52,7 @@ class DataProviderCest
         * @group dataprovider
         * @depends DataProviderCest:testDependsWithDataProvider
         */
-       public function testDependsOnTestWithDataProvider()
+       public function testDependsOnTestWithDataProvider(): bool
        {
            return true;
        }
@@ -67,7 +67,7 @@ class DataProviderCest
       /**
        * @return array
        */
-      public function __exampleDataSource()
+      public function __exampleDataSource(): array
       {
           return[
               ['path' => ".", 'file' => "scenario.suite.yml"],
@@ -79,7 +79,7 @@ class DataProviderCest
       /**
        * @return array
        */
-      protected function protectedDataSource()
+      protected function protectedDataSource(): array
       {
           return[
               ['path' => ".", 'file' => "scenario.suite.yml"],

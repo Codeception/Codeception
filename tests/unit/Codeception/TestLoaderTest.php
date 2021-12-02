@@ -11,7 +11,7 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
     /**
      * @var \Codeception\Test\Loader
      */
-    protected $testLoader;
+    protected \Codeception\Test\Loader $testLoader;
 
     protected function _setUp()
     {

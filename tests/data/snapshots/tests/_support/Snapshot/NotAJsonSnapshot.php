@@ -11,7 +11,7 @@ class NotAJsonSnapshot extends \Codeception\Snapshot
     /**
      * @var string
      */
-    public $sourceFile;
+    public string $sourceFile;
 
     public function __construct(\DataTester $I)
     {

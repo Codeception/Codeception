@@ -1,13 +1,14 @@
 <?php
 namespace Codeception\Module;
 
-// here you can define custom functions for PowerGuy 
+// here you can define custom functions for PowerGuy
 
 class PowerHelper extends \Codeception\Module
 {
+    /** @var array */
     protected $config = array('has_power' => false);
 
-    public function _hasPower()
+    public function _hasPower(): bool
     {
         return $this->config['has_power'];
     }

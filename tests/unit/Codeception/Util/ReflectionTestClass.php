@@ -13,9 +13,9 @@ class ReflectionTestClass
      */
     const FOO = 'bar';
 
-    private $value = 'test';
+    private string $value = 'test';
     protected $obj = null;
-    static $flavorOfTheWeek = '';
+    static string $flavorOfTheWeek = '';
 
     public function setInt(int $i): self
     {

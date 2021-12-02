@@ -21,7 +21,7 @@ class SimpleWithDataProviderYieldGeneratorCest
     /**
      * @return Generator
      */
-    protected function getTestData()
+    protected function getTestData(): Generator
     {
         yield ['foo', 'bar'];
         yield [1, 2];

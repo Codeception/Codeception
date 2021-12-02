@@ -3,7 +3,7 @@
 class SimpleCest
 {
 
-    public $class = 'DummyClass';
+    public string $class = 'DummyClass';
 
     public function helloWorld(\CodeGuy $I) {
         $I->execute(function() { return 2+2; })

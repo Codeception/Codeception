@@ -6,7 +6,7 @@ class DependencyForCest
     /**
      * @group dataprovider
      */
-    public function forTestPurpose()
+    public function forTestPurpose(): int
     {
         return 1;
     }

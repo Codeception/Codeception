@@ -11,31 +11,31 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|null
      */
-    protected $command;
+    protected ?\PHPUnit\Framework\MockObject\MockObject $command;
     /**
      * @var string
      */
-    public $filename = "";
+    public string $filename = "";
     /**
      * @var string
      */
-    public $content = "";
+    public string $content = "";
     /**
      * @var string
      */
-    public $output = "";
+    public string $output = "";
     /**
      * @var array
      */
-    public $config = [];
+    public array $config = [];
     /**
      * @var array
      */
-    public $saved = [];
+    public array $saved = [];
     /**
      * @var string
      */
-    protected $commandName = 'do:stuff';
+    protected string $commandName = 'do:stuff';
 
     protected function execute($args = [], $isSuite = true)
     {

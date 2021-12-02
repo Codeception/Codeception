@@ -9,11 +9,11 @@ class GenerateSuiteTest extends BaseCommandRunner
     /**
      * @var array
      */
-    public $log = [];
+    public array $log = [];
     /**
      * @var array<string, string>
      */
-    public $config = ['actor_suffix' => 'Guy'];
+    public array $config = ['actor_suffix' => 'Guy'];
 
     protected function _setUp()
     {

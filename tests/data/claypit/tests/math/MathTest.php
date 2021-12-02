@@ -7,12 +7,12 @@ class MathTest extends \Codeception\Test\Unit
    /**
     * @var \MathTester
     */
-    protected $tester;
+    protected MathTester $tester;
 
     /**
      * @var Calc
      */
-    protected $calc;
+    protected Calc $calc;
 
     protected function _inject(Calc $calc)
     {

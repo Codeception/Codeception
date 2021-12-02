@@ -9,7 +9,7 @@ class ArrayContainsComparatorTest extends \Codeception\Test\Unit
     /**
      * @var ArrayContainsComparator
      */
-    protected $ary;
+    protected ArrayContainsComparator $ary;
 
     protected function _before()
     {

@@ -7,7 +7,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
     /**
      * @var array
      */
-    public $config = [];
+    public array $config = [];
 
     public function _setUp()
     {

@@ -12,7 +12,7 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
     /**
      * @var int|null
      */
-    private $originalErrorLevel;
+    private ?int $originalErrorLevel;
 
     public function _setUp()
     {

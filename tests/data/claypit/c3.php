@@ -65,7 +65,7 @@ if (!class_exists('PHP_CodeCoverage') and class_exists('SebastianBergmann\CodeCo
 // phpunit version
 if (!class_exists('PHPUnit_Runner_Version') && class_exists('PHPUnit\Runner\Version')) {
     class_alias('PHPUnit\Runner\Version', 'PHPUnit_Runner_Version');
-}    
+}
 
 // Autoload Codeception classes
 if (!class_exists('\\Codeception\\Codecept')) {
@@ -123,7 +123,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
     define('C3_CODECOVERAGE_PROJECT_ROOT', Codeception\Configuration::projectDir());
     define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
 
-    function __c3_build_html_report(PHP_CodeCoverage $codeCoverage, $path)
+    function __c3_build_html_report(PHP_CodeCoverage $codeCoverage, $path): string
     {
         $writer = new PHP_CodeCoverage_Report_HTML();
         $writer->process($codeCoverage, $path . 'html');
@@ -154,7 +154,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.tar';
     }
 
-    function __c3_build_clover_report(PHP_CodeCoverage $codeCoverage, $path)
+    function __c3_build_clover_report(PHP_CodeCoverage $codeCoverage, $path): string
     {
         $writer = new PHP_CodeCoverage_Report_Clover();
         $writer->process($codeCoverage, $path . '.clover.xml');
@@ -162,7 +162,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.clover.xml';
     }
 
-    function __c3_build_crap4j_report(PHP_CodeCoverage $codeCoverage, $path)
+    function __c3_build_crap4j_report(PHP_CodeCoverage $codeCoverage, $path): string
     {
         $writer = new PHP_CodeCoverage_Report_Crap4j();
         $writer->process($codeCoverage, $path . '.crap4j.xml');
@@ -170,7 +170,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.crap4j.xml';
     }
 
-    function __c3_build_phpunit_report(PHP_CodeCoverage $codeCoverage, $path)
+    function __c3_build_phpunit_report(PHP_CodeCoverage $codeCoverage, $path): string
     {
         $writer = new PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
         $writer->process($codeCoverage, $path . 'phpunit');
@@ -215,7 +215,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
      * @param bool $lock Lock the file for writing?
      * @return [null|PHP_CodeCoverage|\SebastianBergmann\CodeCoverage\CodeCoverage, resource]
      */
-    function __c3_factory($filename, $lock=false)
+    function __c3_factory($filename, bool $lock = false): array
     {
         $file = null;
         if ($filename !== null && is_readable($filename)) {
@@ -229,7 +229,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             } else {
                 $phpCoverage = unserialize(file_get_contents($filename));
             }
-            
+
             return array($phpCoverage, $file);
         } else {
             if (method_exists(Driver::class, 'forLineCoverage')) {

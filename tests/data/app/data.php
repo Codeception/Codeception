@@ -1,7 +1,7 @@
 <?php
 class data {
 
-    public static $filename = '/db';
+    public static string $filename = '/db';
 
     public static function get($key) {
         $data = self::load();
