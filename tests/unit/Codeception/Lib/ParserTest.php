@@ -157,7 +157,7 @@ EOF;
      */
     public function testModernValidation()
     {
-        $this->expectException('Codeception\Exception\TestParseException');
+        $this->expectException(\Codeception\Exception\TestParseException::class);
         Parser::load(codecept_data_dir('Invalid.php'));
     }
 
@@ -167,7 +167,7 @@ EOF;
     public function testClassesFromFile()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('DummyClass.php'));
-        $this->assertContains('DummyClass', $classes);
+        $this->assertContains(\DummyClass::class, $classes);
         $classes = Parser::getClassesFromFile(codecept_data_dir('SimpleWithDependencyInjectionCest.php'));
         $this->assertContains('simpleDI\\LoadedTestWithDependencyInjectionCest', $classes);
         $this->assertContains('simpleDI\\AnotherCest', $classes);

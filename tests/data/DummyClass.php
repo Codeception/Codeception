@@ -2,7 +2,11 @@
 
 class DummyClass
 {
+    /**
+     * @var int|string
+     */
     protected $checkMe = 1;
+
     protected array $properties = array('checkMeToo' => 1);
 
     function __construct($checkMe = 1)
@@ -25,7 +29,7 @@ class DummyClass
         return "goAway";
     }
 
-    public function getCheckMe() {
+    public function getCheckMe(): string {
         return $this->checkMe;
     }
 
@@ -44,7 +48,7 @@ class DummyClass
         return true;
     }
 
-    public function exceptionalMethod() {
+    public function exceptionalMethod(): void {
         throw new Exception('Catch it!');
     }
 

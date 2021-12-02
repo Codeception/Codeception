@@ -10,6 +10,7 @@ class GenerateSuiteTest extends BaseCommandRunner
      * @var array
      */
     public array $log = [];
+
     /**
      * @var array<string, string>
      */

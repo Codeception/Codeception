@@ -32,6 +32,7 @@ class RetryTest extends \PHPUnit\Framework\TestCase
         if (!$this->shouldFail) {
             return;
         }
+
         $this->shouldFail = false;
         throw new \Exception('Error');
     }

@@ -87,10 +87,11 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         foreach ($tests as $test) {
             $testNames[] = \Codeception\Test\Descriptor::getTestSignature($test);
         }
+
         return $testNames;
     }
 
-    protected function assertContainsTestName($name, $testNames)
+    protected function assertContainsTestName($name, iterable $testNames)
     {
         $this->assertContains($name, $testNames, "{$name} not found in tests");
     }

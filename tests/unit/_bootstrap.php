@@ -4,7 +4,7 @@
 
 function make_container()
 {
-    return \Codeception\Stub::make('Codeception\Lib\ModuleContainer');
+    return \Codeception\Stub::make(\Codeception\Lib\ModuleContainer::class);
 }
 
 require_once \Codeception\Configuration::dataDir() . 'DummyOverloadableClass.php';

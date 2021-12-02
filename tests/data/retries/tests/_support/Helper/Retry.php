@@ -9,6 +9,7 @@ use PHPUnit\Framework\AssertionFailedError;
 class Retry extends \Codeception\Module
 {
     protected int $fails = 0;
+
     protected ?float $time = null;
 
     public function _before(\Codeception\TestInterface $test)
@@ -20,7 +21,7 @@ class Retry extends \Codeception\Module
     public function failAt($amount = 3)
     {
         if ($this->fails < $amount) {
-            $this->fails++;
+            ++$this->fails;
             throw new AssertionFailedError('Failed as expected');
         }
     }

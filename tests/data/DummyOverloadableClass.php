@@ -2,7 +2,11 @@
 
 class DummyOverloadableClass
 {
+    /**
+     * @var int|string
+     */
     protected $checkMe = 1;
+
     protected array $properties = array('checkMeToo' => 1);
 
     function __construct($checkMe = 1)
@@ -25,7 +29,7 @@ class DummyOverloadableClass
         return "goAway";
     }
 
-    public function getCheckMe() {
+    public function getCheckMe(): string {
         return $this->checkMe;
     }
 
@@ -45,7 +49,7 @@ class DummyOverloadableClass
         return true;
     }
 
-    public function exceptionalMethod() {
+    public function exceptionalMethod(): void {
         throw new Exception('Catch it!');
     }
 
@@ -54,11 +58,10 @@ class DummyOverloadableClass
         $return = null;
         if ($name === '__mocked') {
             $return = $this->__mocked ?? null;
-        } else {
-            if ($this->__isset($name)) {
-                $return = $this->properties[$name];
-            }
+        } elseif ($this->__isset($name)) {
+            $return = $this->properties[$name];
         }
+
         return $return;
     }
 

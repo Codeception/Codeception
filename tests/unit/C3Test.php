@@ -59,7 +59,7 @@ class C3Test extends \Codeception\PHPUnit\TestCase
         file_put_contents($cc_file, 'nothing');
         include $this->c3;
         $this->assertSame('clear', $route);
-        $this->assertFileNotExists($cc_file);
+        $this->assertFileDoesNotExist($cc_file);
     }
 
     public function testCodeCoverageHtmlReport()

@@ -18,10 +18,7 @@ class SimpleWithDataProviderYieldGeneratorCest
         })->seeResultEquals(2);
     }
 
-    /**
-     * @return Generator
-     */
-    protected function getTestData(): Generator
+    protected function getTestData(): Iterator
     {
         yield ['foo', 'bar'];
         yield [1, 2];

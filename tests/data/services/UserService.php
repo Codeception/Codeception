@@ -23,8 +23,8 @@ class UserService
 
     public static function validateName($name): bool
     {
-        if ($name == 'admin') return false;
-        return true;
+        return $name != 'admin';
+
     }
 
 }

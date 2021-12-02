@@ -12,32 +12,38 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|null
      */
     protected ?\PHPUnit\Framework\MockObject\MockObject $command = null;
+
     /**
      * @var string
      */
     public string $filename = "";
+
     /**
      * @var string
      */
     public string $content = "";
+
     /**
      * @var string
      */
     public string $output = "";
+
     /**
      * @var array
      */
     public array $config = [];
+
     /**
      * @var array
      */
     public array $saved = [];
+
     /**
      * @var string
      */
     protected string $commandName = 'do:stuff';
 
-    protected function execute($args = [], $isSuite = true)
+    protected function execute(array $args = [], $isSuite = true)
     {
         $app = new Application();
         $app->add($this->command);
@@ -66,25 +72,26 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
         $self = $this;
 
         $mockedMethods = [
-            'createFile' => function ($file, $output) use ($self, $saved) {
+            'createFile' => function (string $file, string $output) use ($self, $saved): bool {
                 if (!$saved) {
                     return false;
                 }
+
                 $self->filename = $file;
                 $self->content = $output;
                 $self->log[] = ['filename' => $file, 'content' => $output];
                 $self->saved[$file] = $output;
                 return true;
             },
-            'getGlobalConfig' => fn() => $self->config,
-            'getSuiteConfig'  => fn() => $self->config,
-            'createDirectoryFor' => function ($path, $testName) {
+            'getGlobalConfig' => fn(): array => $self->config,
+            'getSuiteConfig'  => fn(): array => $self->config,
+            'createDirectoryFor' => function ($path, $testName): string {
                 $path = rtrim($path, DIRECTORY_SEPARATOR);
                 $testName = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $testName);
                 return pathinfo($path . DIRECTORY_SEPARATOR . $testName, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
             },
-            'getSuites'       => fn() => ['shire'],
-            'getApplication'  => fn() => new \Codeception\Util\Maybe
+            'getSuites'       => fn(): array => ['shire'],
+            'getApplication'  => fn(): \Codeception\Util\Maybe => new \Codeception\Util\Maybe
         ];
         $mockedMethods = array_merge($mockedMethods, $extraMethods);
 
@@ -95,7 +102,7 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
         );
     }
 
-    protected function assertIsValidPhp($php)
+    protected function assertIsValidPhp(string $php)
     {
         $tempFile = tempnam(sys_get_temp_dir(), 'CodeceptionUnitTest');
         file_put_contents($tempFile, $php);

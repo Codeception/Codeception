@@ -140,6 +140,7 @@ class TestGuy extends \Codeception\Actor
     public function canSeeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
     }
+
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -184,6 +185,7 @@ class TestGuy extends \Codeception\Actor
     public function canSeeFileContentsEqual($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args()));
     }
+
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -226,6 +228,7 @@ class TestGuy extends \Codeception\Actor
     public function cantSeeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
     }
+
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -277,6 +280,7 @@ class TestGuy extends \Codeception\Actor
     public function canSeeFileFound($filename, string $path = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
     }
+
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -311,6 +315,7 @@ class TestGuy extends \Codeception\Actor
     public function cantSeeFileFound($filename, string $path = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeFileFound', func_get_args()));
     }
+
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -368,6 +373,7 @@ class TestGuy extends \Codeception\Actor
     public function canSeeEquals($expected, $actual) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeEquals', func_get_args()));
     }
+
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *

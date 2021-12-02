@@ -13,6 +13,9 @@ use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @see \Project\Command\MyCustomCommandTest
+ */
 class MyCustomCommand extends Command implements CustomCommandInterface
 {
 
@@ -66,7 +69,7 @@ class MyCustomCommand extends Command implements CustomCommandInterface
      *
      * @see setCode()
      */
-    protected function execute(InputInterface $input, OutputInterface $output): ?int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $messageEnd = "!" . PHP_EOL;
 

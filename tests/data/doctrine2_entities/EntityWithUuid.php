@@ -17,7 +17,7 @@ class EntityWithUuid
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id;
+    private ?UuidInterface $id = null;
 
     public function __construct()
     {

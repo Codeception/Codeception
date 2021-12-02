@@ -103,6 +103,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->manager = new GroupManager(['gherkinGroup1' => 'tests/data/group_manager_test/gherkinGroup1']);
         $loader = new GherkinLoader();
         $loader->loadTests(codecept_absolute_path('tests/data/refund.feature'));
+
         $test = $loader->getTests()[0];
         $this->assertContains('gherkinGroup1', $this->manager->groupsForTest($test));
     }
@@ -112,6 +113,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->manager = new GroupManager(['gherkinGroup2' => 'tests/data/group_manager_test/gherkinGroup2']);
         $loader = new GherkinLoader();
         $loader->loadTests(codecept_absolute_path('tests/data/refund2.feature'));
+
         $test = $loader->getTests()[0];
         $this->assertContains('gherkinGroup2', $this->manager->groupsForTest($test));
     }

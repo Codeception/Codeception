@@ -66,6 +66,7 @@ class FilterTest extends \Codeception\Test\Unit
             //php-code-coverage 9+
             $filterMethod = 'isExcluded';
         }
+
         return $filterMethod;
     }
 }

@@ -50,6 +50,7 @@ class DiTest extends \Codeception\Test\Unit
         } else {
             $expectedExceptionMessage = 'Class "FailDependenciesNonExistent\NonExistentClass" does not exist';
         }
+
         $this->injectionShouldFail($expectedExceptionMessage);
         $this->di->instantiate('FailDependenciesNonExistent\IncorrectDependenciesClass');
     }

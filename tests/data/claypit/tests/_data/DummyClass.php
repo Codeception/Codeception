@@ -2,6 +2,9 @@
 
 class DummyClass
 {
+    /**
+     * @var int|string
+     */
     protected $checkMe = 1;
 
     function __construct($checkMe = 1)

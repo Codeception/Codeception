@@ -23,8 +23,8 @@ class ApplicationTest extends \Codeception\PHPUnit\TestCase
 
         try {
             $application->find('myProject:myCommand');
-        } catch (\Exception $e) {
-            $this->fail($e->getMessage());
+        } catch (\Exception $exception) {
+            $this->fail($exception->getMessage());
         }
     }
 }

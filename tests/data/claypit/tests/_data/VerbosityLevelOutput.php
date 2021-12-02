@@ -19,9 +19,9 @@ class VerbosityLevelOutput extends Extension
 
         if ($this->options['verbosity'] <= OutputInterface::VERBOSITY_NORMAL) {
             $this->writeln('Low verbosity');
-        } else if ($this->options['verbosity'] == OutputInterface::VERBOSITY_VERBOSE) {
+        } elseif ($this->options['verbosity'] == OutputInterface::VERBOSITY_VERBOSE) {
             $this->writeln('Medium verbosity');
-        } else if ($this->options['verbosity'] == OutputInterface::VERBOSITY_VERY_VERBOSE) {
+        } elseif ($this->options['verbosity'] == OutputInterface::VERBOSITY_VERY_VERBOSE) {
             $this->writeln('High verbosity');
         } else {
             $this->writeln('Extreme verbosity');
