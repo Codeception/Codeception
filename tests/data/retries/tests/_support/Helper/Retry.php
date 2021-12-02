@@ -9,7 +9,7 @@ use PHPUnit\Framework\AssertionFailedError;
 class Retry extends \Codeception\Module
 {
     protected int $fails = 0;
-    protected $time;
+    protected ?float $time = null;
 
     public function _before(\Codeception\TestInterface $test)
     {

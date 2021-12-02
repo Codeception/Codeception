@@ -5,7 +5,7 @@ namespace Shire\Codeception\Module;
 
 class EmulateModuleHelper extends \Codeception\Module
 {
-    public $assertions = 0;
+    public int $assertions = 0;
 
     public function seeEquals($expected, $actual)
     {

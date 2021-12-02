@@ -53,7 +53,7 @@ class DummyOverloadableClass
         //seeing as we're not implementing __set here, add check for __mocked
         $return = null;
         if ($name === '__mocked') {
-            $return = isset($this->__mocked) ? $this->__mocked : null;
+            $return = $this->__mocked ?? null;
         } else {
             if ($this->__isset($name)) {
                 $return = $this->properties[$name];

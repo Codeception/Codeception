@@ -33,6 +33,6 @@ class CalcHelper extends \Codeception\Module
 
     public function squareOfCircle($radius)
     {
-        return $this->pi * pow($radius, 2);
+        return $this->pi * $radius ** 2;
     }
 }

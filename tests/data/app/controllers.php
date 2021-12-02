@@ -130,9 +130,9 @@ class cookies {
     }
 
     function POST() {
-        setcookie('f', 'b', time() + 60, null, null, false, true);
-        setcookie('foo', 'bar1', time() + 60, null, 'sub.localhost', false, true);
-        setcookie('baz', 'bar2', time() + 60,  null, 'sub.localhost', false, true);
+        setcookie('f', 'b', ['expires' => time() + 60, 'path' => null, 'domain' => null, 'secure' => false, 'httponly' => true]);
+        setcookie('foo', 'bar1', ['expires' => time() + 60, 'path' => null, 'domain' => 'sub.localhost', 'secure' => false, 'httponly' => true]);
+        setcookie('baz', 'bar2', ['expires' => time() + 60, 'path' => null, 'domain' => 'sub.localhost', 'secure' => false, 'httponly' => true]);
         data::set('form', $_POST);
         include __DIR__.'/view/cookies.php';
     }

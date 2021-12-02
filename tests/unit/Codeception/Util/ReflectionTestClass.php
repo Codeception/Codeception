@@ -11,10 +11,10 @@ class ReflectionTestClass
     /**
      * @var string
      */
-    const FOO = 'bar';
+    public const FOO = 'bar';
 
     private string $value = 'test';
-    protected $obj = null;
+    protected ?Debug $obj = null;
     static string $flavorOfTheWeek = '';
 
     public function setInt(int $i): self

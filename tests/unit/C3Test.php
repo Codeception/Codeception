@@ -37,6 +37,7 @@ class C3Test extends \Codeception\PHPUnit\TestCase
 
     public function testC3CodeCoverageStarted()
     {
+        $codeCoverage = null;
         $_SERVER['REQUEST_URI'] = '/';
         include $this->c3;
         $this->assertInstanceOf('PHP_CodeCoverage', $codeCoverage);
@@ -52,6 +53,7 @@ class C3Test extends \Codeception\PHPUnit\TestCase
 
     public function testCodeCoverageCleanup()
     {
+        $route = null;
         $_SERVER['REQUEST_URI'] = '/c3/report/clear';
         $cc_file = $this->c3_dir . 'dummy.txt';
         file_put_contents($cc_file, 'nothing');
@@ -62,6 +64,7 @@ class C3Test extends \Codeception\PHPUnit\TestCase
 
     public function testCodeCoverageHtmlReport()
     {
+        $route = null;
         $_SERVER['REQUEST_URI'] = '/c3/report/html';
         include $this->c3;
         $this->assertSame('html', $route);
@@ -70,6 +73,7 @@ class C3Test extends \Codeception\PHPUnit\TestCase
 
     public function testCodeCoverageXmlReport()
     {
+        $route = null;
         $_SERVER['REQUEST_URI'] = '/c3/report/clover';
         include $this->c3;
         $this->assertSame('clover', $route);
@@ -78,6 +82,8 @@ class C3Test extends \Codeception\PHPUnit\TestCase
 
     public function testCodeCoverageSerializedReport()
     {
+        $route = null;
+        $codeCoverage = null;
         $_SERVER['REQUEST_URI'] = '/c3/report/serialized';
         include $this->c3;
         $this->assertSame('serialized', $route);

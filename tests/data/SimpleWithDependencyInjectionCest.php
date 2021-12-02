@@ -5,7 +5,7 @@ namespace simpleDI {
 
     class LoadedTestWithDependencyInjectionCest
     {
-        public $a;
+        public ?Needed $a = null;
 
         public function __construct($optional = 'abc') {}
         public function _inject(Needed $a) { $this->a = $a; }

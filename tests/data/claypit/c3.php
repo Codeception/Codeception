@@ -14,12 +14,12 @@ use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
 if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
-    $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true);
+    $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true, 512, JSON_THROW_ON_ERROR);
 
     // fix for improperly encoded JSON in Code Coverage cookie with WebDriver.
     // @see https://github.com/Codeception/Codeception/issues/874
     if (!is_array($cookie)) {
-        $cookie = json_decode($cookie, true);
+        $cookie = json_decode($cookie, true, 512, JSON_THROW_ON_ERROR);
     }
 
     if ($cookie) {
@@ -217,6 +217,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
      */
     function __c3_factory($filename, bool $lock = false): array
     {
+        $settings = null;
         $file = null;
         if ($filename !== null && is_readable($filename)) {
             if ($lock) {
@@ -301,7 +302,7 @@ if ($requested_c3_report) {
         return __c3_exit();
     }
 
-    list($codeCoverage, ) = __c3_factory($complete_report);
+    [$codeCoverage, ] = __c3_factory($complete_report);
 
     switch ($route) {
         case 'html':
@@ -342,7 +343,7 @@ if ($requested_c3_report) {
     }
 
 } else {
-    list($codeCoverage, ) = __c3_factory(null);
+    [$codeCoverage, ] = __c3_factory(null);
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
     if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG', $_SERVER)) {
         register_shutdown_function(
@@ -368,7 +369,7 @@ if ($requested_c3_report) {
                 // read/write to the file at the same time as this request (leading to a corrupt file). flock() is a
                 // blocking call, so it waits until an exclusive lock can be acquired before continuing.
 
-                list($existingCodeCoverage, $file) = __c3_factory($current_report, true);
+                [$existingCodeCoverage, $file] = __c3_factory($current_report, true);
                 $existingCodeCoverage->merge($codeCoverage);
 
                 if ($file === null) {

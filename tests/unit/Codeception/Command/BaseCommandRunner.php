@@ -11,7 +11,7 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|null
      */
-    protected ?\PHPUnit\Framework\MockObject\MockObject $command;
+    protected ?\PHPUnit\Framework\MockObject\MockObject $command = null;
     /**
      * @var string
      */
@@ -76,23 +76,15 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
                 $self->saved[$file] = $output;
                 return true;
             },
-            'getGlobalConfig' => function () use ($self) {
-                return $self->config;
-            },
-            'getSuiteConfig'  => function () use ($self) {
-                return $self->config;
-            },
+            'getGlobalConfig' => fn() => $self->config,
+            'getSuiteConfig'  => fn() => $self->config,
             'createDirectoryFor' => function ($path, $testName) {
                 $path = rtrim($path, DIRECTORY_SEPARATOR);
                 $testName = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $testName);
                 return pathinfo($path . DIRECTORY_SEPARATOR . $testName, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
             },
-            'getSuites'       => function () {
-                return ['shire'];
-            },
-            'getApplication'  => function () {
-                return new \Codeception\Util\Maybe;
-            }
+            'getSuites'       => fn() => ['shire'],
+            'getApplication'  => fn() => new \Codeception\Util\Maybe
         ];
         $mockedMethods = array_merge($mockedMethods, $extraMethods);
 

@@ -3,7 +3,7 @@ require_once __DIR__.'/../app/data.php';
 
 class UserModel
 {
-    protected $id;
+    protected ?string $id = null;
     protected array $data = array();
     protected bool $saved = false;
 
