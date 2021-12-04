@@ -17,7 +17,7 @@ class Di
     /**
      * @var string
      */
-    const DEFAULT_INJECT_METHOD_NAME = '_inject';
+    public const DEFAULT_INJECT_METHOD_NAME = '_inject';
 
     /**
      * @var object[]

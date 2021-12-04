@@ -49,30 +49,30 @@ class LocalServer extends SuiteSubscriber
     /**
      * @var string
      */
-    const COVERAGE_HEADER = 'X-Codeception-CodeCoverage';
+    public const COVERAGE_HEADER = 'X-Codeception-CodeCoverage';
     /**
      * @var string
      */
-    const COVERAGE_HEADER_ERROR = 'X-Codeception-CodeCoverage-Error';
+    public const COVERAGE_HEADER_ERROR = 'X-Codeception-CodeCoverage-Error';
     /**
      * @var string
      */
-    const COVERAGE_HEADER_CONFIG = 'X-Codeception-CodeCoverage-Config';
+    public const COVERAGE_HEADER_CONFIG = 'X-Codeception-CodeCoverage-Config';
     /**
      * @var string
      */
-    const COVERAGE_HEADER_SUITE = 'X-Codeception-CodeCoverage-Suite';
+    public const COVERAGE_HEADER_SUITE = 'X-Codeception-CodeCoverage-Suite';
 
     // cookie names
 
     /**
      * @var string
      */
-    const COVERAGE_COOKIE = 'CODECEPTION_CODECOVERAGE';
+    public const COVERAGE_COOKIE = 'CODECEPTION_CODECOVERAGE';
     /**
      * @var string
      */
-    const COVERAGE_COOKIE_ERROR = 'CODECEPTION_CODECOVERAGE_ERROR';
+    public const COVERAGE_COOKIE_ERROR = 'CODECEPTION_CODECOVERAGE_ERROR';
 
     protected string $suiteName = '';
 

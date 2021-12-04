@@ -50,19 +50,19 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     /**
      * @var string
      */
-    const STATUS_FAIL = 'fail';
+    public const STATUS_FAIL = 'fail';
     /**
      * @var string
      */
-    const STATUS_ERROR = 'error';
+    public const STATUS_ERROR = 'error';
     /**
      * @var string
      */
-    const STATUS_OK = 'ok';
+    public const STATUS_OK = 'ok';
     /**
      * @var string
      */
-    const STATUS_PENDING = 'pending';
+    public const STATUS_PENDING = 'pending';
 
     /**
      * Everything inside this method is treated as a test.
