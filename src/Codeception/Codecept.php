@@ -32,7 +32,7 @@ class Codecept
     /**
      * @var string
      */
-    const VERSION = '5.0.0';
+    public const VERSION = '5.0.0';
 
     protected ?Runner $runner = null;
 

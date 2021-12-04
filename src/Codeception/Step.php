@@ -18,12 +18,12 @@ abstract class Step
     /**
      * @var int
      */
-    const DEFAULT_MAX_LENGTH = 200;
+    public const DEFAULT_MAX_LENGTH = 200;
 
     /**
      * @var int
      */
-    const STACK_POSITION = 3;
+    public const STACK_POSITION = 3;
 
     protected string $action;
 

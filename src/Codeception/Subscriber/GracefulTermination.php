@@ -18,11 +18,11 @@ class GracefulTermination implements EventSubscriberInterface
     /**
      * @var string
      */
-    const SIGNAL_FUNC = 'pcntl_signal';
+    public const SIGNAL_FUNC = 'pcntl_signal';
     /**
      * @var string
      */
-    const ASYNC_SIGNAL_HANDLING_FUNC = 'pcntl_async_signals';
+    public const ASYNC_SIGNAL_HANDLING_FUNC = 'pcntl_async_signals';
 
     protected ?SuiteEvent $suiteEvent = null;
 

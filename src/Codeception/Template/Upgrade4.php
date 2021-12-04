@@ -13,11 +13,11 @@ class Upgrade4 extends InitTemplate
     /**
      * @var string
      */
-    const SURVEY_LINK = 'https://bit.ly/codecept-survey';
+    public const SURVEY_LINK = 'https://bit.ly/codecept-survey';
     /**
      * @var string
      */
-    const DONATE_LINK = 'https://opencollective.com/codeception';
+    public const DONATE_LINK = 'https://opencollective.com/codeception';
 
     public function setup()
     {

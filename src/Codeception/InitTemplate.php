@@ -45,7 +45,7 @@ abstract class InitTemplate
     /**
      * @var string
      */
-    const GIT_IGNORE = '.gitignore';
+    public const GIT_IGNORE = '.gitignore';
 
     protected string $namespace = '';
 

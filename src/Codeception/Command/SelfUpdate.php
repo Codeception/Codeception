@@ -25,15 +25,15 @@ class SelfUpdate extends Command
     /**
      * @var string
      */
-    const NAME = 'Codeception';
+    public const NAME = 'Codeception';
     /**
      * @var string
      */
-    const GITHUB_REPO = 'Codeception/Codeception';
+    public const GITHUB_REPO = 'Codeception/Codeception';
     /**
      * @var string
      */
-    const PHAR_URL = 'https://codeception.com/php73/';
+    public const PHAR_URL = 'https://codeception.com/php73/';
 
     /**
      * Holds the current script filename.

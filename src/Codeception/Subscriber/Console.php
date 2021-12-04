@@ -82,7 +82,7 @@ class Console implements EventSubscriberInterface
 
     protected ?Meta $metaStep = null;
 
-    protected ?Message $message;
+    protected ?Message $message = null;
 
     protected bool $steps = true;
 

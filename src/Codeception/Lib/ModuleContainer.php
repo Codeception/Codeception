@@ -28,12 +28,12 @@ class ModuleContainer
     /**
      * @var string
      */
-    const MODULE_NAMESPACE = '\\Codeception\\Module\\';
+    public const MODULE_NAMESPACE = '\\Codeception\\Module\\';
 
     /**
      * @var int
      */
-    const MAXIMUM_LEVENSHTEIN_DISTANCE = 5;
+    public const MAXIMUM_LEVENSHTEIN_DISTANCE = 5;
 
     /**
      * @var array<string, string>
