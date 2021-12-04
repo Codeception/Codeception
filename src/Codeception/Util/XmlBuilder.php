@@ -74,7 +74,10 @@ class XmlBuilder
 {
     protected DOMDocument $dom;
 
-    protected DOMElement $currentNode;
+    /**
+     * @var DOMElement|DOMDocument
+     */
+    protected $currentNode;
 
     public function __construct()
     {
