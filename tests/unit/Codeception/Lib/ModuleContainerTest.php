@@ -16,11 +16,11 @@ class ModuleContainerTest extends Unit
     /**
      * @var ModuleContainer
      */
-    protected $moduleContainer;
+    protected ModuleContainer $moduleContainer;
 
     protected function _setUp()
     {
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), []);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), []);
     }
 
     protected function _tearDown()
@@ -66,7 +66,7 @@ class ModuleContainerTest extends Unit
      */
     public function testActionsInExtendedModule()
     {
-        $this->moduleContainer->create('\Codeception\Module\UniversalFramework');
+        $this->moduleContainer->create(\Codeception\Module\UniversalFramework::class);
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayHasKey('amOnPage', $actions);
         $this->assertArrayHasKey('see', $actions);
@@ -79,7 +79,7 @@ class ModuleContainerTest extends Unit
     public function testActionsInExtendedButNotInheritedModule()
     {
         \Codeception\Module\UniversalFramework::$includeInheritedActions = false;
-        $this->moduleContainer->create('\Codeception\Module\UniversalFramework');
+        $this->moduleContainer->create(\Codeception\Module\UniversalFramework::class);
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayNotHasKey('amOnPage', $actions);
         $this->assertArrayNotHasKey('see', $actions);
@@ -94,7 +94,7 @@ class ModuleContainerTest extends Unit
     {
         \Codeception\Module\UniversalFramework::$includeInheritedActions = false;
         \Codeception\Module\UniversalFramework::$onlyActions = ['see'];
-        $this->moduleContainer->create('\Codeception\Module\UniversalFramework');
+        $this->moduleContainer->create(\Codeception\Module\UniversalFramework::class);
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayNotHasKey('amOnPage', $actions);
         $this->assertArrayHasKey('see', $actions);
@@ -107,7 +107,7 @@ class ModuleContainerTest extends Unit
     public function testActionsExplicitlySetForNotInheritedModule()
     {
         \Codeception\Module\UniversalFramework::$onlyActions = ['see'];
-        $this->moduleContainer->create('\Codeception\Module\UniversalFramework');
+        $this->moduleContainer->create(\Codeception\Module\UniversalFramework::class);
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayNotHasKey('amOnPage', $actions);
         $this->assertArrayHasKey('see', $actions);
@@ -118,7 +118,7 @@ class ModuleContainerTest extends Unit
      */
     public function testCreateModuleWithoutRequiredFields()
     {
-        $this->expectException('\Codeception\Exception\ModuleConfigException');
+        $this->expectException(\Codeception\Exception\ModuleConfigException::class);
         $this->moduleContainer->create('Codeception\Lib\StubModule');
     }
 
@@ -138,7 +138,7 @@ class ModuleContainerTest extends Unit
             ]
         ];
 
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $module = $this->moduleContainer->create('Codeception\Lib\StubModule');
 
         $this->assertSame('firstValue', $module->_getFirstField());
@@ -160,7 +160,7 @@ class ModuleContainerTest extends Unit
                 ]
             ]
         ];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $module = $this->moduleContainer->create('Codeception\Lib\StubModule');
         $module->_reconfigure(['firstField' => '1st', 'secondField' => '2nd']);
         $this->assertSame('1st', $module->_getFirstField());
@@ -172,7 +172,7 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByModuleName()
     {
-        $this->expectException('Codeception\Exception\ModuleConflictException');
+        $this->expectException(\Codeception\Exception\ModuleConflictException::class);
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule');
         $this->moduleContainer->create('Cli');
         $this->moduleContainer->validateConflicts();
@@ -181,7 +181,7 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByClass()
     {
-        $this->expectException('Codeception\Exception\ModuleConflictException');
+        $this->expectException(\Codeception\Exception\ModuleConflictException::class);
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule2');
         $this->moduleContainer->create('Cli');
         $this->moduleContainer->validateConflicts();
@@ -189,9 +189,9 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByInterface()
     {
-        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+        $this->markTestSkipped("This test uses modules that aren't loaded for core tests");
 
-        $this->expectException('Codeception\Exception\ModuleConflictException');
+        $this->expectException(\Codeception\Exception\ModuleConflictException::class);
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule3');
         $this->moduleContainer->create('Symfony2');
         $this->moduleContainer->validateConflicts();
@@ -199,9 +199,9 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsByWebInterface()
     {
-        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+        $this->markTestSkipped("This test uses modules that aren't loaded for core tests");
 
-        $this->expectException('Codeception\Exception\ModuleConflictException');
+        $this->expectException(\Codeception\Exception\ModuleConflictException::class);
         $this->moduleContainer->create('Laravel5');
         $this->moduleContainer->create('Symfony2');
         $this->moduleContainer->validateConflicts();
@@ -209,7 +209,7 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsForREST()
     {
-        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+        $this->markTestSkipped("This test uses modules that aren't loaded for core tests");
 
         $config = ['modules' =>
             ['config' => [
@@ -219,7 +219,7 @@ class ModuleContainerTest extends Unit
                 ]
             ]
         ];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('ZF2');
         $this->moduleContainer->create('REST');
         $this->moduleContainer->validateConflicts();
@@ -227,7 +227,7 @@ class ModuleContainerTest extends Unit
 
     public function testConflictsOnDependentModules()
     {
-        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+        $this->markTestSkipped("This test uses modules that aren't loaded for core tests");
 
         $config = ['modules' =>
             ['config' => [
@@ -238,7 +238,7 @@ class ModuleContainerTest extends Unit
                 ]
             ]
         ];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('WebDriver');
         $this->moduleContainer->create('REST');
         $this->moduleContainer->validateConflicts();
@@ -246,7 +246,7 @@ class ModuleContainerTest extends Unit
 
     public function testNoConflictsForPartedModules()
     {
-        $this->markTestSkipped('This test uses modules that aren\'t loaded for core tests');
+        $this->markTestSkipped("This test uses modules that aren't loaded for core tests");
 
         $config = ['modules' =>
             ['config' => [
@@ -256,7 +256,7 @@ class ModuleContainerTest extends Unit
                 ]
             ]
         ];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('Laravel5');
         $this->moduleContainer->create('Symfony2');
         $this->moduleContainer->validateConflicts();
@@ -264,7 +264,7 @@ class ModuleContainerTest extends Unit
 
     public function testModuleDependenciesFail()
     {
-        $this->expectException('Codeception\Exception\ModuleRequireException');
+        $this->expectException(\Codeception\Exception\ModuleRequireException::class);
         $this->moduleContainer->create('Codeception\Lib\DependencyModule');
     }
 
@@ -278,7 +278,7 @@ class ModuleContainerTest extends Unit
                 ]
             ]
         ]];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('Codeception\Lib\DependencyModule');
         $this->moduleContainer->hasModule('\Codeception\Lib\DependencyModule');
     }
@@ -294,8 +294,9 @@ class ModuleContainerTest extends Unit
                 ]
             ]
         ];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('\Codeception\Lib\PartedModule');
+
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayHasKey('partOne', $actions);
         $this->assertArrayNotHasKey('partTwo', $actions);
@@ -311,8 +312,9 @@ class ModuleContainerTest extends Unit
                 ]
             ]
         ];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('\Codeception\Lib\PartedModule');
+
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayHasKey('partTwo', $actions);
         $this->assertArrayNotHasKey('partOne', $actions);
@@ -330,8 +332,9 @@ class ModuleContainerTest extends Unit
                 ],
             ]
         ];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('\Codeception\Lib\PartedModule');
+
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayHasKey('partOne', $actions);
         $this->assertArrayNotHasKey('partTwo', $actions);
@@ -351,7 +354,7 @@ class ModuleContainerTest extends Unit
             ]
         ];
 
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $module = $this->moduleContainer->create('Codeception\Lib\StubModule');
 
         $this->assertSame('firstValue', $module->_getFirstField());
@@ -365,7 +368,7 @@ class ModuleContainerTest extends Unit
                 'depends' => 'Codeception\Lib\ConflictedModule'
             ]]],
         ]];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('Codeception\Lib\DependencyModule');
         $this->moduleContainer->hasModule('\Codeception\Lib\DependencyModule');
     }
@@ -375,7 +378,7 @@ class ModuleContainerTest extends Unit
         $config = ['modules' => [
             'enabled' => ['Codeception\Lib\HelperModule'],
         ]];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('Codeception\Lib\HelperModule');
         $this->moduleContainer->hasModule('Codeception\Lib\HelperModule');
     }
@@ -388,11 +391,11 @@ class ModuleContainerTest extends Unit
         $config = ['modules' => [
             'enabled' => [$correctModule],
         ]];
-        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('Codeception\Lib\HelperModule');
 
-        $message = "Codeception\Lib\ModuleContainer: Module $wrongModule couldn't be connected (did you mean '$correctModule'?)";
-        $this->expectException('\Codeception\Exception\ModuleException');
+        $message = "Codeception\Lib\ModuleContainer: Module {$wrongModule} couldn't be connected (did you mean '{$correctModule}'?)";
+        $this->expectException(\Codeception\Exception\ModuleException::class);
         $this->expectExceptionMessage($message);
         $this->moduleContainer->getModule($wrongModule);
     }
@@ -400,6 +403,9 @@ class ModuleContainerTest extends Unit
 
 class StubModule extends \Codeception\Module
 {
+    /**
+     * @var string[]
+     */
     protected $requiredFields = [
         'firstField',
         'secondField',
@@ -421,6 +427,7 @@ class StubModule extends \Codeception\Module
 
 class HelperModule extends \Codeception\Module
 {
+    public \Codeception\Lib\ConflictedModule $module;
     public function _inject(ConflictedModule $module)
     {
         $this->module = $module;
@@ -439,7 +446,7 @@ class ConflictedModule2 extends \Codeception\Module implements ConflictsWithModu
 {
     public function _conflicts(): string
     {
-        return '\Codeception\Module\Cli';
+        return \Codeception\Module\Cli::class;
     }
 }
 
@@ -447,7 +454,7 @@ class ConflictedModule3 extends \Codeception\Module implements ConflictsWithModu
 {
     public function _conflicts(): string
     {
-        return 'Codeception\Lib\Interfaces\Web';
+        return \Codeception\Lib\Interfaces\Web::class;
     }
 }
 
@@ -465,6 +472,9 @@ class DependencyModule extends \Codeception\Module implements DependsOnModule
 
 class PartedModule extends \Codeception\Module implements \Codeception\Lib\Interfaces\PartedModule
 {
+    /**
+     * @return string[]
+     */
     public function _parts(): array
     {
         return ['one'];

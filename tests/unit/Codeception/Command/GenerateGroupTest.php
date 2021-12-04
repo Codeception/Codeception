@@ -9,7 +9,7 @@ class GenerateGroupTest extends BaseCommandRunner
     /**
      * @var array
      */
-    public $log = [];
+    public array $log = [];
 
     protected function _setUp()
     {

@@ -11,7 +11,7 @@ class DataProvidersFailureCest
         $I->amGoingTo("Fail before I get here.");
     }
 
-    public function triangles()
+    public function triangles(): array
     {
         return array(
             'real triangle' => array(3,4,5),

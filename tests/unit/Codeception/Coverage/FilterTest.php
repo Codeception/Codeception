@@ -13,7 +13,7 @@ class FilterTest extends \Codeception\Test\Unit
     /**
      * @var Filter
      */
-    protected $filter;
+    protected Filter $filter;
 
     protected function _before()
     {
@@ -66,6 +66,7 @@ class FilterTest extends \Codeception\Test\Unit
             //php-code-coverage 9+
             $filterMethod = 'isExcluded';
         }
+
         return $filterMethod;
     }
 }

@@ -5,14 +5,14 @@ class UserService
     /**
      * @var UserModel
      */
-    protected $user;
+    protected UserModel $user;
 
     function __construct(UserModel $user)
     {
         $this->user = $user;
     }
 
-    function create($name)
+    function create($name): bool
     {
         $this->user->setName($name);
         $this->user->set('role','user');
@@ -21,10 +21,10 @@ class UserService
         return true;
     }
 
-    public static function validateName($name)
+    public static function validateName($name): bool
     {
-        if ($name == 'admin') return false;
-        return true;
+        return $name != 'admin';
+
     }
 
 }

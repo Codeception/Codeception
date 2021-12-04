@@ -14,8 +14,8 @@ suites:
                 - Asserts
                 - Db:
                     dsn: sqlite:tests/_data/snapshot_test.db
-                    user:
-                    password:
+                    user: ''
+                    password: ''
 
 actor_suffix: Tester
 extensions:

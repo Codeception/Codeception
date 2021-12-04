@@ -5,6 +5,7 @@ use Codeception\GroupObject;
 
 class SkipGroup extends GroupObject
 {
+    /** @var string */
     public static $group = 'abc';
 
     public function _before(TestEvent $event)

@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Module;
 
-class MessageHelper extends \Codeception\Module
+use Codeception\Module;
+
+class MessageHelper extends Module
 {
+    /** @var array */
     protected $config = [
         'message1' => 'DEFAULT MESSAGE1.',
         'message2' => 'DEFAULT MESSAGE2.',
@@ -11,7 +16,7 @@ class MessageHelper extends \Codeception\Module
         'message4' => 'DEFAULT MESSAGE4.',
     ];
 
-    public function getMessage($name)
+    public function getMessage($name): string
     {
         return $this->config[$name];
     }

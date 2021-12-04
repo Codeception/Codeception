@@ -3,15 +3,15 @@
 class SimpleCest
 {
 
-    public $class = 'DummyClass';
+    public string $class = \DummyClass::class;
 
     public function helloWorld(\CodeGuy $I) {
-        $I->execute(function() { return 2+2; })
+        $I->execute(fn(): int => 2+2)
             ->seeResultEquals('4');
     }
 
     public function goodByeWorld(\CodeGuy $I) {
-        $I->execute(function() { return 2+2; })
+        $I->execute(fn(): int => 2+2)
             ->seeResultNotEquals('3');
     }
 

@@ -23,7 +23,7 @@ class CliGuy extends \Codeception\Actor
     /**
      * @param $file
      */
-    public function seeInSupportDir($file)
+    public function seeInSupportDir(string $file)
     {
         $this->seeFileFound($file, 'tests/support');
     }

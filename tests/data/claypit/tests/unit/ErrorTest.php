@@ -17,7 +17,7 @@ class ErrorTest extends \Codeception\Test\Unit
 {
 
     /**
-     * @var \UnitTester
+     * @var \UnitTester|\CodeGuy
      */
     protected $tester;
 

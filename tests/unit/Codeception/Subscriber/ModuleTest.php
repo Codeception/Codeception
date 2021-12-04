@@ -22,7 +22,7 @@ use Prophecy\Prophet;
 class ModuleTest extends Unit
 {
     /** @var Prophet */
-    private $prophet;
+    private Prophet $prophet;
 
     protected function _setUp()
     {
@@ -342,10 +342,10 @@ class ModuleTest extends Unit
 class CodeceptionModuleStub extends \Codeception\Module
 {
     /** @var int */
-    public static $callOrderSequence = 1;
+    public static int $callOrderSequence = 1;
 
     /** @var int */
-    private $callOrder = 0;
+    private int $callOrder = 0;
 
     public function getCallOrder(): int
     {
@@ -357,7 +357,7 @@ class CodeceptionModuleStub extends \Codeception\Module
      *
      * @param array $settings
      */
-    public function _beforeSuite($settings = [])
+    public function _beforeSuite(array $settings = [])
     {
         $this->callOrder = static::$callOrderSequence++;
         parent::_beforeSuite($settings);
@@ -395,7 +395,7 @@ class CodeceptionModuleStub extends \Codeception\Module
      * @param TestInterface $test
      * @param Exception $fail
      */
-    public function _failed(TestInterface $test, $fail)
+    public function _failed(TestInterface $test, Exception $fail)
     {
         $this->callOrder = static::$callOrderSequence++;
         parent::_failed($test, $fail);

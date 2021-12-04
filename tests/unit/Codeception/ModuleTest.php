@@ -11,13 +11,14 @@ class ModuleTest extends \Codeception\PHPUnit\TestCase
         $module = Stub::make('ModuleStub');
         try {
             $module->_setConfig([]);
-        } catch (\Exception $e) {
-            $this->assertStringContainsString('"error"', $e->getMessage());
-            $this->assertStringContainsString('no\such\class', $e->getMessage());
-            $this->assertStringContainsString('composer', $e->getMessage());
-            $this->assertStringNotContainsString('installed', $e->getMessage());
+        } catch (\Exception $exception) {
+            $this->assertStringContainsString('"error"', $exception->getMessage());
+            $this->assertStringContainsString('no\such\class', $exception->getMessage());
+            $this->assertStringContainsString('composer', $exception->getMessage());
+            $this->assertStringNotContainsString('installed', $exception->getMessage());
             return;
         }
+
         $this->fail('no exception thrown');
     }
 }

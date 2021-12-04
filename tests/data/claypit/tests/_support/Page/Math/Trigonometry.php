@@ -4,7 +4,7 @@ namespace Page\Math;
 class Trigonometry
 {
     // include url of current page
-    public static $URL = '';
+    public static string $URL = '';
 
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
@@ -17,7 +17,7 @@ class Trigonometry
      * You can append any additional parameter to URL
      * and use it in tests like: Page\Edit::route('/123-post');
      */
-    public static function route($param)
+    public static function route($param): string
     {
         return static::$URL.$param;
     }
@@ -25,14 +25,14 @@ class Trigonometry
     /**
      * @var \MathTester;
      */
-    protected $mathTester;
+    protected \MathTester $mathTester;
 
     public function __construct(\MathTester $I)
     {
         $this->mathTester = $I;
     }
 
-    public function tan($arg)
+    public function tan($arg): float
     {
         $this->mathTester->expect('i get tan of '.$arg);
         return tan($arg);

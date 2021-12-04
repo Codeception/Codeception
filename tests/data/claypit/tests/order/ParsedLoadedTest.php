@@ -1,4 +1,5 @@
 <?php
+
 \Codeception\Module\OrderHelper::appendToFile('P'); // parsed
 
 class ParsedLoadedTest  extends \PHPUnit\Framework\TestCase

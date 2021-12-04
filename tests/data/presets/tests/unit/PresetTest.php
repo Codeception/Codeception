@@ -1,11 +1,12 @@
 <?php
 
-class PresetTest extends \Codeception\Test\Unit
+use Codeception\Test\Unit;
+
+class PresetTest extends Unit
 {
     public function testSomeFeature()
     {
-        $this->assertSame(true, true);
-        $this->assertNotSame(true, false);
+        $this->assertTrue(true);
+        $this->assertFalse(false);
     }
-
 }

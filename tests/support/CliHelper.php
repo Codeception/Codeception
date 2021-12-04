@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-// here you can define custom functions for CliGuy 
+// here you can define custom functions for CliGuy
 
 class CliHelper extends \Codeception\Module
 {
@@ -24,7 +24,7 @@ class CliHelper extends \Codeception\Module
         chdir(\Codeception\Configuration::projectDir());
     }
 
-    public function executeCommand($command, $fail = true, $phpOptions = '')
+    public function executeCommand($command, bool $fail = true, $phpOptions = '')
     {
         $this->getModule('Cli')->runShellCommand('php ' . $phpOptions . ' ' . \Codeception\Configuration::projectDir() . 'codecept ' . $command . ' -n', $fail);
     }
@@ -34,6 +34,9 @@ class CliHelper extends \Codeception\Module
         $this->getModule('Cli')->runShellCommand('php '.\Codeception\Configuration::projectDir().'codecept '.$command.' -n', false);
     }
 
+    /**
+     * @return string
+     */
     public function grabFromOutput($regex)
     {
         $match = [];
@@ -41,6 +44,7 @@ class CliHelper extends \Codeception\Module
         if (!$found) {
             return '';
         }
+
         return $match[1];
     }
 

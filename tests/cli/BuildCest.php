@@ -8,7 +8,7 @@ use Codeception\Scenario;
 final class BuildCest
 {
     /** @var string */
-    private $originalCliHelperContents;
+    private string $originalCliHelperContents;
 
     public function _before()
     {

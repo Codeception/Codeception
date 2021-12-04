@@ -12,6 +12,7 @@ class index {
 class info {
     function GET() {
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) data::set('ajax',array('GET'));
+
         data::set('params', $_GET);
         include __DIR__.'/view/info.php';
     }
@@ -130,9 +131,9 @@ class cookies {
     }
 
     function POST() {
-        setcookie('f', 'b', time() + 60, null, null, false, true);
-        setcookie('foo', 'bar1', time() + 60, null, 'sub.localhost', false, true);
-        setcookie('baz', 'bar2', time() + 60,  null, 'sub.localhost', false, true);
+        setcookie('f', 'b', ['expires' => time() + 60, 'path' => null, 'domain' => null, 'secure' => false, 'httponly' => true]);
+        setcookie('foo', 'bar1', ['expires' => time() + 60, 'path' => null, 'domain' => 'sub.localhost', 'secure' => false, 'httponly' => true]);
+        setcookie('baz', 'bar2', ['expires' => time() + 60, 'path' => null, 'domain' => 'sub.localhost', 'secure' => false, 'httponly' => true]);
         data::set('form', $_POST);
         include __DIR__.'/view/cookies.php';
     }
@@ -161,6 +162,7 @@ class form {
         if (empty($matches[1])) {
             $url = 'index';
         }
+
         include __DIR__.'/view/form/'.$url.'.php';
     }
 
@@ -191,6 +193,7 @@ class search {
         if (isset($_GET['searchQuery']) && $_GET['searchQuery'] == 'test') {
             $result = 'Success';
         }
+
         data::set('params', $_GET);
         include __DIR__.'/view/search.php';
     }
@@ -204,10 +207,12 @@ class httpAuth {
             echo 'Unauthorized';
             return;
         }
+
         if ($_SERVER['PHP_AUTH_PW'] == 'password') {
             echo "Welcome, " . $_SERVER['PHP_AUTH_USER'];
             return;
         }
+
         echo "Forbidden";
     }
 }
@@ -259,6 +264,7 @@ class userAgent {
         echo $_SERVER['HTTP_USER_AGENT'];
     }
 }
+
 class minimal {
     function GET() {
         include __DIR__.'/view/minimal.php';

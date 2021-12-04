@@ -5,18 +5,18 @@ class DataProvidersTest extends \Codeception\Test\Unit
    /**
     * @var \CodeGuy
     */
-    protected $codeGuy;
+    protected CodeGuy $codeGuy;
 
     /**
      * @group data-providers
      * @dataProvider triangles
      */
-    public function testIsTriangle($a, $b, $c)
+    public function testIsTriangle(int $a, int $b, int $c)
     {
-        $this->assertTrue($a + $b > $c and $c+$b > $a and $a + $c > $b);
+        $this->assertTrue($a + $b > $c && $c+$b > $a && $a + $c > $b);
     }
 
-    public function triangles()
+    public function triangles(): array
     {
         return array(
             'real triangle' => array(3,4,5),

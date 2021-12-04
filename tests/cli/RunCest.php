@@ -300,7 +300,7 @@ final class RunCest
         $I->seeInShellOutput('Helllo!');
         $I->expect('Exceptions are not wrapped into ExceptionWrapper');
         $I->dontSeeInShellOutput('PHPUnit_Framework_ExceptionWrapper');
-        $I->seeInShellOutput('RuntimeException');
+        $I->seeInShellOutput(\RuntimeException::class);
     }
 
     public function runTestsWithSteps(CliGuy $I)
@@ -323,6 +323,7 @@ EOF
         if (!extension_loaded('xdebug')) {
             $scenario->skip("Xdebug not loaded");
         }
+
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
         $I->seeInShellOutput(<<<EOF
 FailedCept: Fail when file is not found
@@ -359,7 +360,7 @@ Scenario --
  I see code coverage files are present
    I see file found "c3.php"
    I see file found "composer.json"
-   I see in this file "$file"
+   I see in this file "{$file}"
 EOF
         );
     }
@@ -403,7 +404,7 @@ EOF
     {
         $I->executeCommand('run scenario File.feature -v');
         $I->seeInShellOutput('OK, but incomplete');
-        $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
+        $I->seeInShellOutput("Step definition for `I have only idea of what's going on here` not found in contexts");
     }
 
     public function runFailingGherkinTest(CliGuy $I)
@@ -478,6 +479,7 @@ EOF
         if (!class_exists('PHPUnit_Util_Log_TeamCity')) {
             throw new \PHPUnit\Framework\SkippedTestError('Reporter does not exist for this PHPUnit version');
         }
+
         $I->executeCommand('run scenario --report -o "reporters: report: PHPUnit_Util_Log_TeamCity" --no-exit');
         $I->seeInShellOutput('##teamcity[testStarted');
         $I->dontSeeInShellOutput('............Ok');
@@ -559,21 +561,25 @@ EOF
         if (DIRECTORY_SEPARATOR === '\\') {
             $scenario->skip('Failing on Windows. Need to investigate');
         }
+
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
         $I->seeInShellOutput('Seed');
+
         $output = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
-        $output = preg_replace('~\(\d\.\d+s\)~m', '', $output);
+        $output = preg_replace('#\(\d\.\d+s\)#m', '', $output);
+
         $seed = $I->grabFromOutput('~\[Seed\] (.*)~');
 
         $I->executeCommand('run unit -o "settings: shuffle: true" --seed ' . $seed, false);
         $newOutput = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
-        $newOutput = preg_replace('~\(\d\.\d+s\)~m', '', $newOutput);
+        $newOutput = preg_replace('#\(\d\.\d+s\)#m', '', $newOutput);
 
         $I->assertSame($output, $newOutput, 'order of tests is the same');
 
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
+
         $newOutput = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
-        $newOutput = preg_replace('~\(\d\.\d+s\)~m', '', $newOutput);
+        $newOutput = preg_replace('#\(\d\.\d+s\)#m', '', $newOutput);
 
         $I->assertNotSame($output, $newOutput, 'order of tests is the same');
     }
@@ -624,9 +630,10 @@ EOF
         $I->wantTo('execute tests with PhpBrowser with html output and check html');
         $I->executeFailCommand('run phpbrowser_html_report --html');
         $I->seeResultCodeIsNot(0);
+
         $expectedRelReportPath     = 'tests/_output';
         $expectedReportFilename    = 'CodeceptionIssue5568Cest.failureShouldCreateHtmlSnapshot.fail.html';
-        $expectedReportAbsFilename = join(DIRECTORY_SEPARATOR, [
+        $expectedReportAbsFilename = implode(DIRECTORY_SEPARATOR, [
             getcwd(),
             $expectedRelReportPath,
             $expectedReportFilename
@@ -800,7 +807,7 @@ class HtmlReportRegexBuilder
         return '/' . $this->regex . '/s';
     }
 
-    public function addTest(TestHtmlReportRegexBuilder $testBuilder): HtmlReportRegexBuilder
+    public function addTest(TestHtmlReportRegexBuilder $testBuilder): self
     {
         $this->regex .= $testBuilder->build();
         return $this;
@@ -809,8 +816,10 @@ class HtmlReportRegexBuilder
 
 class TestHtmlReportRegexBuilder
 {
-    private $testClass;
-    private $testCase;
+    private string $testClass;
+
+    private string $testCase;
+
     private $stepsRegex;
 
     public function __construct(string $testClass, string $testCase)
@@ -837,16 +846,17 @@ class TestHtmlReportRegexBuilder
         return $this->getTestClass() . ':' . $this->getTestCase();
     }
 
-    public function addStep(string $step, ?string $arg = null): TestHtmlReportRegexBuilder
+    public function addStep(string $step, ?string $arg = null): self
     {
         $this->stepsRegex .=  '.*?' . 'stepName ' . '.*?' . $step;
         if ($arg) {
             $this->stepsRegex .= '.*?' . '>&quot;' . $arg . '&quot;';
         }
+
         return $this;
     }
 
-    public function addMetaStep(string $step): TestHtmlReportRegexBuilder
+    public function addMetaStep(string $step): self
     {
         $this->addStep(preg_quote($step));
         $this->stepsRegex .=  '.*?substeps ';
@@ -861,6 +871,7 @@ class TestHtmlReportRegexBuilder
         } else {
             $regex .= '.*?';
         }
+
         return $regex;
     }
 }

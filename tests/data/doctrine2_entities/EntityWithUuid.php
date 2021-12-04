@@ -17,14 +17,14 @@ class EntityWithUuid
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    private $id;
+    private ?UuidInterface $id = null;
 
     public function __construct()
     {
         $this->id = Uuid::uuid4();
     }
 
-    public function getId()
+    public function getId(): UuidInterface
     {
         return $this->id;
     }

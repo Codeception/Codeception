@@ -7,7 +7,7 @@ class SimpleTest extends \Codeception\Test\Unit
     /**
      * @var \Jazz\UnitGuy
      */
-    protected $guy;
+    protected UnitGuy $guy;
 
     // tests
     public function testSimple()

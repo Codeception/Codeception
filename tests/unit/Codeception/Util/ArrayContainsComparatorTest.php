@@ -9,7 +9,7 @@ class ArrayContainsComparatorTest extends \Codeception\Test\Unit
     /**
      * @var ArrayContainsComparator
      */
-    protected $ary;
+    protected ArrayContainsComparator $ary;
 
     protected function _before()
     {
@@ -84,6 +84,7 @@ class ArrayContainsComparatorTest extends \Codeception\Test\Unit
         $expectedArray = ['foo', 'bar', 'foo'];
         $this->assertTrue($comparator->containsArray($expectedArray));
     }
+
     /**
      * @issue https://github.com/Codeception/Codeception/issues/2630
      */

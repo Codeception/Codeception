@@ -15,17 +15,17 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
     /**
      * @var \Codeception\SuiteManager
      */
-    protected $suiteman;
+    protected \Codeception\SuiteManager $suiteman;
 
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
-    protected $dispatcher;
+    protected \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher;
 
     /**
      * @var \Codeception\PHPUnit\Runner
      */
-    protected $runner;
+    protected \Codeception\PHPUnit\Runner $runner;
 
     public function _setUp()
     {

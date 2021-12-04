@@ -12,15 +12,17 @@ class GenerateScenarioTest extends BaseCommandRunner
     /**
      * @var array
      */
-    public $modules = [];
+    public array $modules = [];
+
     /**
      * @var array
      */
-    public $actions = [];
+    public array $actions = [];
+
     /**
      * @var ModuleContainer
      */
-    protected $moduleContainer;
+    protected ModuleContainer $moduleContainer;
 
     protected function _setUp()
     {
@@ -29,7 +31,7 @@ class GenerateScenarioTest extends BaseCommandRunner
 
         $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
-        $this->filename = null;
+        $this->filename = '';
 
         $this->makeCommand(\Codeception\Command\GenerateScenarios::class);
         $this->config = [

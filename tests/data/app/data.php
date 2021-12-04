@@ -1,7 +1,7 @@
 <?php
 class data {
 
-    public static $filename = '/db';
+    public static string $filename = '/db';
 
     public static function get($key) {
         $data = self::load();
@@ -27,11 +27,12 @@ class data {
         self::save(array());
     }
 
-    protected static function load()
+    protected static function load(): array
     {
         $data = file_get_contents(__DIR__.self::$filename);
         $data = $data ? unserialize($data) : $data = array();
         if (!is_array($data)) $data = array();
+
         return $data;
     }
 

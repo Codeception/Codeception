@@ -8,6 +8,7 @@ class WarningTest extends \Codeception\Test\Unit
     {
         $this->assertTrue(true);
     }
+
     public function dependentProvider()
     {
         throw new Exception;

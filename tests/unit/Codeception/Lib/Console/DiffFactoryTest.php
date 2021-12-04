@@ -14,7 +14,7 @@ class DiffFactoryTest extends \Codeception\Test\Unit
     /**
      * @var DiffFactory
      */
-    protected $diffFactory;
+    protected DiffFactory $diffFactory;
 
     protected function _setUp()
     {

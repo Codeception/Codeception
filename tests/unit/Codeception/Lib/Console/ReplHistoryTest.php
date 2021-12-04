@@ -12,7 +12,7 @@ class ReplHistoryTest extends Unit
     /**
      * @var ReplHistory
      */
-    protected $replHistory;
+    protected ReplHistory $replHistory;
 
     protected function _setUp()
     {

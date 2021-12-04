@@ -14,7 +14,7 @@ class ColorizerTest extends Unit
     /**
      * @var Colorizer
      */
-    protected $colorizer;
+    protected Colorizer $colorizer;
 
     /**
      *
