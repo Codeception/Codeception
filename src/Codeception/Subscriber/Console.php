@@ -566,8 +566,8 @@ class Console implements EventSubscriberInterface
                     } else {
                         $lineString = $step->getFilePath() . ':' . $step->getLineNumber();
                     }
+                    $message->append(" at <info>$lineString</info>");
                 }
-                $message->append(" at <info>$lineString</info>");
             }
 
             $stepNumber--;
