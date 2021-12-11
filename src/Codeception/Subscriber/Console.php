@@ -362,7 +362,7 @@ class Console implements EventSubscriberInterface
             $filePath = codecept_absolute_path(Descriptor::getTestFileName($failedTest));
             $line = 1;
             foreach ($fail->getTrace() as $trace) {
-                if (isset($trace['file']) and $filePath === $trace['file'] and isset($trace['line'])) {
+                if (isset($trace['file']) && $filePath === $trace['file'] && isset($trace['line'])) {
                     $line = $trace['line'];
                 }
             }
