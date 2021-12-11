@@ -508,7 +508,7 @@ class Console implements EventSubscriberInterface
             }
 
             // Clickable `editorUrl`:
-            if (isset($this->options['editorUrl']) and is_string($this->options['editorUrl'])) {
+            if (isset($this->options['editorUrl']) && is_string($this->options['editorUrl'])) {
                 $lineString = str_replace(['%%file%%', '%%line%%'], [$step['file'], $step['line']], $this->options['editorUrl']);
             } else {
                 $lineString = $step['file'] . ':' . $step['line'];
