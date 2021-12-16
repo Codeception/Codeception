@@ -186,7 +186,7 @@ class IncludedCest
     {
         $I->executeCommand("run -g group", false);
         $I->dontSeeInShellOutput('No tests executed');
-        $I->seeInShellOutput('1 test');
+        $I->seeInShellOutput('2 tests');
     }
 
 }
