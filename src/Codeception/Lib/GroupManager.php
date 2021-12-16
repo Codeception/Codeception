@@ -18,8 +18,12 @@ class GroupManager
     protected $configuredGroups;
     protected $testsInGroups = [];
 
+    protected $rootDir;
+
+
     public function __construct(array $groups)
     {
+        $this->rootDir = Configuration::baseDir();
         $this->configuredGroups = $groups;
         $this->loadGroupsByPattern();
         $this->loadConfiguredGroupSettings();
@@ -42,12 +46,19 @@ class GroupManager
             if (strpos($group, '*') === false) {
                 continue;
             }
+            $path = dirname($pattern);
+            if (!\Codeception\Util\PathResolver::isPathAbsolute($pattern)) {
+                $path = $this->rootDir . $path;
+            }
+
             $files = Finder::create()->files()
                 ->name(basename($pattern))
                 ->sortByName()
-                ->in(Configuration::projectDir().dirname($pattern));
+                ->in($path);
 
             $i = 1;
+
+
             foreach ($files as $file) {
                 /** @var SplFileInfo $file * */
                 $this->configuredGroups[str_replace('*', $i, $group)] = dirname($pattern).DIRECTORY_SEPARATOR.$file->getRelativePathname();
@@ -66,8 +77,15 @@ class GroupManager
                     $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $test);
                     $this->testsInGroups[$group][] = $this->normalizeFilePath($file, $group);
                 }
-            } elseif (is_file(Configuration::projectDir() . $tests)) {
-                $handle = @fopen(Configuration::projectDir() . $tests, "r");
+                continue;
+            }
+
+            $path = $tests;
+            if (!codecept_is_path_absolute($tests)) {
+                $path = $this->rootDir . $tests;
+            }
+            if (is_file($path)) {
+                $handle = @fopen($path, "r");
                 if ($handle) {
                     while (($test = fgets($handle, 4096)) !== false) {
                         // if the current line is blank then we need to move to the next line
@@ -95,6 +113,8 @@ class GroupManager
     private function normalizeFilePath($file, $group)
     {
         $pathParts = explode(':', $file);
+
+
         if (codecept_is_path_absolute($file)) {
             if ($file[0] === '/' && count($pathParts) > 1) {
                 //take segment before first :
@@ -110,12 +130,12 @@ class GroupManager
             $this->checkIfFileExists($file, $group);
             return realpath($file);
         } elseif (strpos($file, ':') === false) {
-            $dirtyPath = Configuration::projectDir() . $file;
+            $dirtyPath = $this->rootDir . $file;
             $this->checkIfFileExists($dirtyPath, $group);
             return realpath($dirtyPath);
         }
 
-        $dirtyPath = Configuration::projectDir() . $pathParts[0];
+        $dirtyPath = $this->rootDir . $pathParts[0];
         $this->checkIfFileExists($dirtyPath, $group);
         return sprintf('%s:%s', realpath($dirtyPath), $pathParts[1]);
     }

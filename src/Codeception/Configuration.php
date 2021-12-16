@@ -33,6 +33,12 @@ class Configuration
     protected static $dir = null;
 
     /**
+     * @var string Directory of a base configuration file for the project with includes.
+     * @see self::projectDir()
+     */
+    protected static $baseDir = null;
+
+    /**
      * @var string Current project output directory.
      */
     protected static $outputDir = null;
@@ -157,6 +163,11 @@ class Configuration
 
         $dir = realpath(dirname($configFile));
         self::$dir = $dir;
+
+        // set the one default base directory for included setup
+        if (!self::$baseDir) {
+            self::$baseDir = $dir;
+        }
 
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 
@@ -566,6 +577,17 @@ class Configuration
     public static function projectDir()
     {
         return self::$dir . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Returns path to the base dir for config which consists with included setup
+     * Returns path to `codeception.yml` which was executed.
+     * If config doesn't have "include" section the result is the same as `projectDir()`
+     * @return string
+     */
+    public static function baseDir()
+    {
+        return self::$baseDir . DIRECTORY_SEPARATOR;
     }
 
 
