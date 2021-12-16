@@ -18,18 +18,12 @@ class GroupManager
     protected $configuredGroups;
     protected $testsInGroups = [];
 
-    protected static $rootDir;
+    protected $rootDir;
 
-    public static function setRootDir($dir)
-    {
-        self::$rootDir = $dir;
-    }
 
     public function __construct(array $groups)
     {
-        if (!self::$rootDir) {
-            self::$rootDir = codecept_root_dir();
-        }
+        $this->rootDir = Configuration::baseDir();
         $this->configuredGroups = $groups;
         $this->loadGroupsByPattern();
         $this->loadConfiguredGroupSettings();
@@ -54,7 +48,7 @@ class GroupManager
             }
             $path = dirname($pattern);
             if (!\Codeception\Util\PathResolver::isPathAbsolute($pattern)) {
-                $path = self::$rootDir . $path;
+                $path = $this->rootDir . $path;
             }
 
             $files = Finder::create()->files()
@@ -88,7 +82,7 @@ class GroupManager
 
             $path = $tests;
             if (!codecept_is_path_absolute($tests)) {
-                $path = self::$rootDir . $tests;
+                $path = $this->rootDir . $tests;
             }
             if (is_file($path)) {
                 $handle = @fopen($path, "r");
@@ -136,12 +130,12 @@ class GroupManager
             $this->checkIfFileExists($file, $group);
             return realpath($file);
         } elseif (strpos($file, ':') === false) {
-            $dirtyPath = self::$rootDir . $file;
+            $dirtyPath = $this->rootDir . $file;
             $this->checkIfFileExists($dirtyPath, $group);
             return realpath($dirtyPath);
         }
 
-        $dirtyPath = self::$rootDir . $pathParts[0];
+        $dirtyPath = $this->rootDir . $pathParts[0];
         $this->checkIfFileExists($dirtyPath, $group);
         return sprintf('%s:%s', realpath($dirtyPath), $pathParts[1]);
     }
