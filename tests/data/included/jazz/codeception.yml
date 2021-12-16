@@ -4,6 +4,7 @@ paths:
     log: tests/_log
     data: tests/_data
     helpers: tests/_helpers
+bootstrap: functional/_bootstrap.php
 settings:
     suite_class: \PHPUnit_Framework_TestSuite
     colors: true
