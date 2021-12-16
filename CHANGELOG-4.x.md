@@ -1,3 +1,7 @@
+#### 4.1.24
+
+* Fixed running tests from group files in included configs (#6292) by @DavertMik
+
 #### 4.1.23
 
 * Compatibility with PHP 8.1 (#6252)
