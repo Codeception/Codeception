@@ -3,6 +3,7 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
+use Codeception\Lib\GroupManager;
 use Codeception\Util\PathResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -489,9 +490,23 @@ class Run extends Command
      */
     protected function runIncludedSuites($suites, $parent_dir)
     {
+        $defaultConfig = Configuration::config();
+        $absolutePath = \Codeception\Configuration::projectDir();
+        if (!empty($defaultConfig['groups'])) {
+            GroupManager::setRootDir($absolutePath);
+        }
+
         foreach ($suites as $relativePath) {
             $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
             $config = Configuration::config($current_dir);
+
+            if (!empty($defaultConfig['groups'])) {
+                $groups = array_map(function($g) use ($absolutePath) {
+                    return $absolutePath . $g;
+                }, $defaultConfig['groups']);
+                Configuration::append(['groups' => $groups]);
+            }
+
             $suites = Configuration::suites();
 
             $namespace = $this->currentNamespace();

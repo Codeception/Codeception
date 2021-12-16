@@ -2,6 +2,10 @@ include:
   - jazz
   - jazz/pianist
   - shire
+
+groups:
+  group: group.txt
+
 paths:
   log: "_log"
 settings:

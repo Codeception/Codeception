@@ -182,4 +182,11 @@ class IncludedCest
         $I->seeInShellOutput('Done');
     }
 
+    public function runIncludedGroup(\CliGuy $I)
+    {
+        $I->executeCommand("run -g group", false);
+        $I->dontSeeInShellOutput('No tests executed');
+        $I->seeInShellOutput('1 test');
+    }
+
 }

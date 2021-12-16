@@ -5,7 +5,6 @@ paths:
     data: tests/_data
     helpers: tests/_helpers
 settings:
-    bootstrap: _bootstrap.php
     suite_class: \PHPUnit_Framework_TestSuite
     colors: true
     memory_limit: 1024M
