@@ -492,9 +492,6 @@ class Run extends Command
     {
         $defaultConfig = Configuration::config();
         $absolutePath = \Codeception\Configuration::projectDir();
-        if (!empty($defaultConfig['groups'])) {
-            GroupManager::setRootDir($absolutePath);
-        }
 
         foreach ($suites as $relativePath) {
             $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;

@@ -182,6 +182,10 @@ class IncludedCest
         $I->seeInShellOutput('Done');
     }
 
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
     public function runIncludedGroup(\CliGuy $I)
     {
         $I->executeCommand("run -g group", false);
