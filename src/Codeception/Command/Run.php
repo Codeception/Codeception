@@ -106,7 +106,7 @@ use function substr_replace;
  *  --skip (-s)           Skip selected suites (multiple values allowed)
  *  --skip-group (-x)     Skip selected groups (multiple values allowed)
  *  --env                 Run tests in selected environments. (multiple values allowed, environments can be merged with ',')
- *  --fail-fast (-f)      Stop after first failure
+ *  --fail-fast (-f)      Stop after nth failure (defaults to 1)
  *  --no-rebuild          Do not rebuild actor classes on start
  *  --help (-h)           Display this help message.
  *  --quiet (-q)          Do not output any message. Almost the same as `--silent`
@@ -229,7 +229,7 @@ class Run extends Command
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
                 'Run tests in selected environments.'
             ),
-            new InputOption('fail-fast', 'f', InputOption::VALUE_NONE, 'Stop after first failure'),
+            new InputOption('fail-fast', 'f', InputOption::VALUE_OPTIONAL, 'Stop after nth failure'),
             new InputOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start'),
             new InputOption(
                 'seed',
@@ -332,6 +332,10 @@ class Run extends Command
         }
         if (!$userOptions['ansi'] && $input->getOption('colors')) {
             $userOptions['colors'] = true; // turn on colors even in non-ansi mode if strictly passed
+        }
+        // array key will exist if fail-fast option is used
+        if (array_key_exists('fail-fast', $userOptions)) {
+            $userOptions['fail-fast'] = (int) $this->options['fail-fast'] ?: 1;
         }
 
         $suite = $input->getArgument('suite');
@@ -496,9 +500,20 @@ class Run extends Command
      */
     protected function runIncludedSuites(array $suites, string $parentDir): void
     {
+        $defaultConfig = Configuration::config();
+        $absolutePath = Configuration::projectDir();
+
         foreach ($suites as $relativePath) {
             $currentDir = rtrim($parentDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
             $config = Configuration::config($currentDir);
+
+            if (!empty($defaultConfig['groups'])) {
+                $groups = array_map(function ($g) use ($absolutePath) {
+                    return $absolutePath . $g;
+                }, $defaultConfig['groups']);
+                Configuration::append(['groups' => $groups]);
+            }
+
             $suites = Configuration::suites();
 
             $namespace = $this->currentNamespace();

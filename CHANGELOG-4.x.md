@@ -1,3 +1,17 @@
+#### 4.1.24
+
+* Fixed running tests from group files in included configs (#6292) by @DavertMik
+
+#### 4.1.23
+
+* Compatibility with PHP 8.1 (#6252)
+* Added optional value to fail-fast option (#6275) by #Verest
+* Code coverage covers .php files only (#6265)
+* Functions are autoloaded by composer (#6263) by @StuTheWebGuy
+* Fixed broken URL in bootstrap deprecation message by @p810
+* `codecept init api` adds AsJson decorators to suite configuration (See https://github.com/Codeception/module-rest/releases/tag/1.4.1)
+* Dockerfile upgraded to use xdebug 3.0.4 (#6250) by @PavelBulat
+
 #### 4.1.22
 
 * Security fix: Disable deserialization of RunProcess class (#6241)

@@ -39,13 +39,19 @@ class Configuration
     protected static array $envConfig = [];
 
     /**
-     * @var string|false|null Directory containing main configuration file.
+     * @var string|null Directory containing main configuration file.
      * @see self::projectDir()
      */
     protected static $dir = null;
 
     /**
-     * @var string|null Current project output directory.
+     * @var string|null Directory of a base configuration file for the project with includes.
+     * @see self::projectDir()
+     */
+    protected static ?string $baseDir = null;
+
+    /**
+     * @var string Current project output directory.
      */
     protected static ?string $outputDir = null;
 
@@ -159,12 +165,18 @@ class Configuration
         }
 
         $dir = realpath(dirname($configFile));
-        self::$dir = $dir;
+        if ($dir !== false) {
+            self::$dir = $dir;
+            $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
+        }
 
-        $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
-
-        if (!file_exists($configDistFile) && !file_exists($configFile)) {
+        if (!file_exists($configFile) && (!isset($configDistFile) || !file_exists($configDistFile))) {
             throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
+        }
+
+        // set the one default base directory for included setup
+        if (!self::$baseDir) {
+            self::$baseDir = $dir;
         }
 
         // Preload config to retrieve params such that they are applied to codeception config file below
@@ -560,6 +572,16 @@ class Configuration
     public static function projectDir(): string
     {
         return self::$dir . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Returns path to the base dir for config which consists with included setup
+     * Returns path to `codeception.yml` which was executed.
+     * If config doesn't have "include" section the result is the same as `projectDir()`
+     */
+    public static function baseDir(): string
+    {
+        return self::$baseDir . DIRECTORY_SEPARATOR;
     }
 
     /**

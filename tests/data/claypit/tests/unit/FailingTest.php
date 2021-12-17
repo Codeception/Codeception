@@ -6,5 +6,4 @@ class FailingTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertFalse(true);
     }
-
 }

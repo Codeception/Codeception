@@ -129,6 +129,9 @@ class Filter
         $fileOrDir = str_replace('\\', '/', $pattern);
         $parts = explode('/', $fileOrDir);
         $file = array_pop($parts);
+        if ($file === '*') {
+            $file = '*.php';
+        }
         $finder->name($file);
         if ($parts !== []) {
             $lastPath = array_pop($parts);
