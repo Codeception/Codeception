@@ -7,6 +7,7 @@ namespace Codeception\Subscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use PHPUnit\Framework\TestResult;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FailFast implements EventSubscriberInterface
@@ -22,15 +23,15 @@ class FailFast implements EventSubscriberInterface
         Events::SUITE_BEFORE => 'cacheSuite'
     ];
 
-    private $failureCount = 0;
+    private int $failureCount = 0;
 
-    private $stopFailureCount;
+    private int $stopFailureCount;
 
-    private $suiteCache;
+    private ?TestResult $suiteCache = null;
 
-    public function __construct($stopFailureCount)
+    public function __construct(int $stopFailureCount)
     {
-        $this->stopFailureCount = (int) $stopFailureCount;
+        $this->stopFailureCount = $stopFailureCount;
     }
 
     public function cacheSuite(SuiteEvent $e): void

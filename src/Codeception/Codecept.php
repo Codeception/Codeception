@@ -63,7 +63,7 @@ class Codecept
         'excludeGroups'   => null,
         'filter'          => null,
         'env'             => null,
-        'fail-fast'       => false,
+        'fail-fast'       => 0,
         'ansi'            => true,
         'verbosity'       => 1,
         'interactive'     => true,
@@ -128,7 +128,7 @@ class Codecept
         if (!$this->options['silent']) {
             $this->dispatcher->addSubscriber(new Console($this->options));
         }
-        if ($this->options['fail-fast']) {
+        if ($this->options['fail-fast'] > 0) {
             $this->dispatcher->addSubscriber(new FailFast($this->options['fail-fast']));
         }
 
