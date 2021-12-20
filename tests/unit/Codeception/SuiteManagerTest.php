@@ -87,6 +87,10 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
      */
     public function testAddCestWithEnv()
     {
+        if (version_compare(phpversion(), '8.1', '>=') && PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped("Temporary disabled for windows php version 8.1 and greater.");
+        }
+
         $file = \Codeception\Configuration::dataDir().'SimpleNamespacedTest.php';
         $this->suiteman->loadTests($file);
         $this->assertSame(3, $this->suiteman->getSuite()->count());
