@@ -29,7 +29,11 @@ class BuildCest
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeInThisFile('seeFileFound(');
-        $I->seeInThisFile('public function assertEquals($expected, $actual, $message = "") {');
+        if (PHP_VERSION_ID < 70400) {
+            $I->seeInThisFile('public function assertEquals($expected, $actual, $message = "") {');
+        } else {
+            $I->seeInThisFile('public function assertEquals($expected, $actual, string $message = "") {');
+        }
     }
 
     public function usesTypehintsWherePossible(CliGuy $I, Scenario $scenario)
