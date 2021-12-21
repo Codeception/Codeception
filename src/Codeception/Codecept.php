@@ -133,7 +133,7 @@ class Codecept
             $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
         }
         if ($this->options['fail-fast']) {
-            $this->dispatcher->addSubscriber(new Subscriber\FailFast($this->options['fail-fast']));
+            $this->dispatcher->addSubscriber(new Subscriber\FailFast());
         }
 
         if ($this->options['coverage']) {
