@@ -98,6 +98,3 @@ The documentation source files can be found at https://github.com/Codeception/co
 
 ## License
 MIT
-
-(c) [Codeception Team](https://codeception.com/credits)
-2011-2020
