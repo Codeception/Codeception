@@ -62,8 +62,7 @@ class GroupManager
                 $filename = $file->getRelativePathname();
                 $regex = "/".str_replace("*", "(.*)", $group)."/";
                 preg_match_all($regex, $filename, $matches, PREG_SET_ORDER, 0);
-                if (isset($matches[0][1]))
-                {
+                if (isset($matches[0][1])) {
                     $this->configuredGroups[str_replace('*', $matches[0][1], $group)] = dirname($pattern).DIRECTORY_SEPARATOR.$file->getRelativePathname();
                 }
             }
