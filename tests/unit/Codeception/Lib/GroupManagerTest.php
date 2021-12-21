@@ -76,11 +76,23 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertContains('group_2', $this->manager->groupsForTest($test2));
     }
 
+
+    public function testGroupsByPatternWithMultipleDigits()
+    {
+        $this->manager = new GroupManager(['group_chunk_*' => 'tests/data/group_manager_test/group_chunk_*']);
+        $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php');
+        $test2 = $this->makeTestCase('tests/data/group_manager_test/PostTest.php');
+
+        $this->assertContains('group_chunk_1_1', $this->manager->groupsForTest($test1));
+        $this->assertContains('group_chunk_1_2', $this->manager->groupsForTest($test2));
+    }
+
     public function testGroupsByDifferentPattern()
     {
         $this->manager = new GroupManager(['g_*' => 'tests/data/group_manager_test/group_*']);
         $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php');
         $test2 = $this->makeTestCase('tests/data/group_manager_test/PostTest.php');
+        codecept_debug($this->manager->groupsForTest($test1));
         $this->assertContains('g_1', $this->manager->groupsForTest($test1));
         $this->assertContains('g_2', $this->manager->groupsForTest($test2));
     }
