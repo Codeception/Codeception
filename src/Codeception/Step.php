@@ -79,10 +79,27 @@ abstract class Step
         return $this->action;
     }
 
+    /**
+     * @deprecated To be removed in Codeception 5.0
+     */
     public function getLine()
     {
         if ($this->line && $this->file) {
             return codecept_relative_path($this->file) . ':' . $this->line;
+        }
+    }
+
+    public function getFilePath()
+    {
+        if ($this->file) {
+            return codecept_relative_path($this->file);
+        }
+    }
+
+    public function getLineNumber()
+    {
+        if ($this->line) {
+            return $this->line;
         }
     }
 

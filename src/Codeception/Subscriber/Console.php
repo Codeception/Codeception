@@ -165,7 +165,7 @@ class Console implements EventSubscriberInterface
         $this->printedTest = $test;
         $this->message = null;
 
-        if (!$this->output->isInteractive() and !$this->isDetailed($test)) {
+        if (!$this->output->isInteractive() && !$this->isDetailed($test)) {
             return;
         }
         $this->writeCurrentTest($test);
@@ -207,7 +207,7 @@ class Console implements EventSubscriberInterface
     public function afterResult(PrintResultEvent $event)
     {
         $result = $event->getResult();
-        if ($result->skippedCount() + $result->notImplementedCount() > 0 and $this->options['verbosity'] < OutputInterface::VERBOSITY_VERBOSE) {
+        if ($result->skippedCount() + $result->notImplementedCount() > 0 && $this->options['verbosity'] < OutputInterface::VERBOSITY_VERBOSE) {
             $this->output->writeln("run with `-v` to get more info about skipped or incomplete tests");
         }
         foreach ($this->reports as $message) {
@@ -303,7 +303,7 @@ class Console implements EventSubscriberInterface
             return;
         }
         $metaStep = $e->getStep()->getMetaStep();
-        if ($metaStep and $this->metaStep != $metaStep) {
+        if ($metaStep && $this->metaStep != $metaStep) {
             $this->message(' ' . $metaStep->getPrefix())
                 ->style('bold')
                 ->append($metaStep->__toString())
@@ -316,7 +316,7 @@ class Console implements EventSubscriberInterface
 
     private function printStep(Step $step)
     {
-        if ($step instanceof Comment and $step->__toString() == '') {
+        if ($step instanceof Comment && $step->__toString() == '') {
             return; // don't print empty comments
         }
         $msg = $this->message(' ');
@@ -356,8 +356,22 @@ class Console implements EventSubscriberInterface
         $this->output->write($e->getCount() . ") ");
         $this->writeCurrentTest($failedTest, false);
         $this->output->writeln('');
+
+        // Clickable `editorUrl`:
+        if (isset($this->options['editorUrl']) && is_string($this->options['editorUrl'])) {
+            $filePath = codecept_absolute_path(Descriptor::getTestFileName($failedTest));
+            $line = 1;
+            foreach ($fail->getTrace() as $trace) {
+                if (isset($trace['file']) && $filePath === $trace['file'] && isset($trace['line'])) {
+                    $line = $trace['line'];
+                }
+            }
+            $message = str_replace(['%%file%%', '%%line%%'], [$filePath, $line], $this->options['editorUrl']);
+        } else {
+            $message = codecept_relative_path(Descriptor::getTestFullName($failedTest));
+        }
         $this->message("<error> Test </error> ")
-            ->append(codecept_relative_path(Descriptor::getTestFullName($failedTest)))
+            ->append($message)
             ->write();
 
         if ($failedTest instanceof ScenarioDriven) {
@@ -492,7 +506,14 @@ class Console implements EventSubscriberInterface
                 $message->writeln();
                 continue;
             }
-            $message->append($step['file'] . ':' . $step['line']);
+
+            // Clickable `editorUrl`:
+            if (isset($this->options['editorUrl']) && is_string($this->options['editorUrl'])) {
+                $lineString = str_replace(['%%file%%', '%%line%%'], [$step['file'], $step['line']], $this->options['editorUrl']);
+            } else {
+                $lineString = $step['file'] . ':' . $step['line'];
+            }
+            $message->append($lineString);
             $message->writeln();
         }
 
@@ -536,9 +557,17 @@ class Console implements EventSubscriberInterface
                 $message->style('bold');
             }
 
-            $line = $step->getLine();
-            if ($line and (!$step instanceof Comment)) {
-                $message->append(" at <info>$line</info>");
+            if (!$step instanceof Comment) {
+                $filePath = $step->getFilePath();
+                if ($filePath) {
+                    // Clickable `editorUrl`:
+                    if (isset($this->options['editorUrl']) && is_string($this->options['editorUrl'])) {
+                        $lineString = str_replace(['%%file%%', '%%line%%'], [codecept_absolute_path($step->getFilePath()), $step->getLineNumber()], $this->options['editorUrl']);
+                    } else {
+                        $lineString = $step->getFilePath() . ':' . $step->getLineNumber();
+                    }
+                    $message->append(" at <info>$lineString</info>");
+                }
             }
 
             $stepNumber--;
@@ -587,7 +616,7 @@ class Console implements EventSubscriberInterface
      */
     protected function writeCurrentTest(\PHPUnit\Framework\SelfDescribing $test, $inProgress = true)
     {
-        $prefix = ($this->output->isInteractive() and !$this->isDetailed($test) and $inProgress) ? '- ' : '';
+        $prefix = ($this->output->isInteractive() && !$this->isDetailed($test) && $inProgress) ? '- ' : '';
 
         $testString = Descriptor::getTestAsString($test);
         $testString = preg_replace('~^([^:]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
