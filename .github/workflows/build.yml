@@ -13,6 +13,7 @@ jobs:
     env:
       extensions: curl, mbstring, openssl, pdo, pdo_sqlite
       SYMFONY_DEPRECATIONS_HELPER: weak
+      COMPOSER_ROOT_VERSION: 4.1
 
     runs-on: ${{ matrix.os }}
 
@@ -82,6 +83,7 @@ jobs:
     env:
       extensions: curl, mbstring, openssl, pdo, pdo_sqlite
       SYMFONY_DEPRECATIONS_HELPER: weak
+      COMPOSER_ROOT_VERSION: 4.1
 
     runs-on: ${{ matrix.os }}
 
