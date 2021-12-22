@@ -1,3 +1,8 @@
+#### 4.1.27
+
+* Renamed editorUrl setting to editor_url for consistency
+* Fixed wildcard matching of group files (#6302) by @DavertMik
+
 #### 4.1.26
 
 * Added editorUrl setting to codeception.yml (#6261) by @ThomasLandauer
