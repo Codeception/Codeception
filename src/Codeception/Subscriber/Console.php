@@ -107,7 +107,8 @@ class Console implements EventSubscriberInterface
             $this->chars['success'] = '✔';
             $this->chars['fail'] = '✖';
         }
-        
+
+        // Allow custom "success" and "fail" characters:
         if (is_string($this->options['chars_success'])) {
             $this->chars['success'] = $this->options['chars_success'];
         }
