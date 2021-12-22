@@ -357,8 +357,8 @@ class Console implements EventSubscriberInterface
         $this->writeCurrentTest($failedTest, false);
         $this->output->writeln('');
 
-        // Clickable `editorUrl`:
-        if (isset($this->options['editorUrl']) && is_string($this->options['editorUrl'])) {
+        // Clickable `editor_url`:
+        if (isset($this->options['editor_url']) && is_string($this->options['editor_url'])) {
             $filePath = codecept_absolute_path(Descriptor::getTestFileName($failedTest));
             $line = 1;
             foreach ($fail->getTrace() as $trace) {
@@ -366,7 +366,7 @@ class Console implements EventSubscriberInterface
                     $line = $trace['line'];
                 }
             }
-            $message = str_replace(['%%file%%', '%%line%%'], [$filePath, $line], $this->options['editorUrl']);
+            $message = str_replace(['%%file%%', '%%line%%'], [$filePath, $line], $this->options['editor_url']);
         } else {
             $message = codecept_relative_path(Descriptor::getTestFullName($failedTest));
         }
@@ -507,9 +507,9 @@ class Console implements EventSubscriberInterface
                 continue;
             }
 
-            // Clickable `editorUrl`:
-            if (isset($this->options['editorUrl']) && is_string($this->options['editorUrl'])) {
-                $lineString = str_replace(['%%file%%', '%%line%%'], [$step['file'], $step['line']], $this->options['editorUrl']);
+            // Clickable `editor_url`:
+            if (isset($this->options['editor_url']) && is_string($this->options['editor_url'])) {
+                $lineString = str_replace(['%%file%%', '%%line%%'], [$step['file'], $step['line']], $this->options['editor_url']);
             } else {
                 $lineString = $step['file'] . ':' . $step['line'];
             }
@@ -560,9 +560,9 @@ class Console implements EventSubscriberInterface
             if (!$step instanceof Comment) {
                 $filePath = $step->getFilePath();
                 if ($filePath) {
-                    // Clickable `editorUrl`:
-                    if (isset($this->options['editorUrl']) && is_string($this->options['editorUrl'])) {
-                        $lineString = str_replace(['%%file%%', '%%line%%'], [codecept_absolute_path($step->getFilePath()), $step->getLineNumber()], $this->options['editorUrl']);
+                    // Clickable `editor_url`:
+                    if (isset($this->options['editor_url']) && is_string($this->options['editor_url'])) {
+                        $lineString = str_replace(['%%file%%', '%%line%%'], [codecept_absolute_path($step->getFilePath()), $step->getLineNumber()], $this->options['editor_url']);
                     } else {
                         $lineString = $step->getFilePath() . ':' . $step->getLineNumber();
                     }
