@@ -92,7 +92,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->manager = new GroupManager(['g_*' => 'tests/data/group_manager_test/group_*']);
         $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php');
         $test2 = $this->makeTestCase('tests/data/group_manager_test/PostTest.php');
-        codecept_debug($this->manager->groupsForTest($test1));
+
         $this->assertContains('g_1', $this->manager->groupsForTest($test1));
         $this->assertContains('g_2', $this->manager->groupsForTest($test2));
     }
