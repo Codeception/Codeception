@@ -107,6 +107,13 @@ class Console implements EventSubscriberInterface
             $this->chars['success'] = '✔';
             $this->chars['fail'] = '✖';
         }
+        
+        if (is_string($this->options['chars_success'])) {
+            $this->chars['success'] = $this->options['chars_success'];
+        }
+        if (is_string($this->options['chars_fail'])) {
+            $this->chars['fail'] = $this->options['chars_fail'];
+        }
 
         foreach (['html', 'xml', 'phpunit-xml', 'tap', 'json'] as $report) {
             if (!$this->options[$report]) {
