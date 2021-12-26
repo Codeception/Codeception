@@ -351,6 +351,7 @@ class Console implements EventSubscriberInterface
             return;
         }
         $metaStep = $event->getStep()->getMetaStep();
+
         if ($metaStep && $this->metaStep != $metaStep) {
             $this->message(' ' . $metaStep->getPrefix())
                 ->style('bold')
@@ -405,8 +406,22 @@ class Console implements EventSubscriberInterface
         $this->output->write($event->getCount() . ") ");
         $this->writeCurrentTest($failedTest, false);
         $this->output->writeln('');
+
+        // Clickable `editor_url`:
+        if (isset($this->options['editor_url']) && is_string($this->options['editor_url'])) {
+            $filePath = codecept_absolute_path(Descriptor::getTestFileName($failedTest));
+            $line = 1;
+            foreach ($fail->getTrace() as $trace) {
+                if (isset($trace['file']) && $filePath === $trace['file'] && isset($trace['line'])) {
+                    $line = $trace['line'];
+                }
+            }
+            $message = str_replace(['%%file%%', '%%line%%'], [$filePath, $line], $this->options['editor_url']);
+        } else {
+            $message = codecept_relative_path(Descriptor::getTestFullName($failedTest));
+        }
         $this->message("<error> Test </error> ")
-            ->append(codecept_relative_path(Descriptor::getTestFullName($failedTest)))
+            ->append($message)
             ->write();
 
         if ($failedTest instanceof ScenarioDriven) {
@@ -539,7 +554,14 @@ class Console implements EventSubscriberInterface
                 $message->writeln();
                 continue;
             }
-            $message->append($step['file'] . ':' . $step['line']);
+
+            // Clickable `editor_url`:
+            if (isset($this->options['editor_url']) && is_string($this->options['editor_url'])) {
+                $lineString = str_replace(['%%file%%', '%%line%%'], [$step['file'], $step['line']], $this->options['editor_url']);
+            } else {
+                $lineString = $step['file'] . ':' . $step['line'];
+            }
+            $message->append($lineString);
             $message->writeln();
         }
 
@@ -578,9 +600,17 @@ class Console implements EventSubscriberInterface
                 $message->style('bold');
             }
 
-            $line = $step->getLine();
-            if ($line && !$step instanceof Comment) {
-                $message->append(" at <info>{$line}</info>");
+            if (!$step instanceof Comment) {
+                $filePath = $step->getFilePath();
+                if ($filePath) {
+                    // Clickable `editor_url`:
+                    if (isset($this->options['editor_url']) && is_string($this->options['editor_url'])) {
+                        $lineString = str_replace(['%%file%%', '%%line%%'], [codecept_absolute_path($step->getFilePath()), $step->getLineNumber()], $this->options['editor_url']);
+                    } else {
+                        $lineString = $step->getFilePath() . ':' . $step->getLineNumber();
+                    }
+                    $message->append(" at <info>$lineString</info>");
+                }
             }
 
             --$stepNumber;

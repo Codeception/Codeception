@@ -1,3 +1,18 @@
+#### 4.1.27
+
+* Renamed editorUrl setting to editor_url for consistency
+* Fixed wildcard matching of group files (#6302) by @DavertMik
+
+#### 4.1.26
+
+* Added editorUrl setting to codeception.yml (#6261) by @ThomasLandauer
+* Reverted optional value to fail-fast option because it was breaking change (#6290)
+* Fixed E_DEPRECATED warnings in Example class on PHP 8.1 (#6298) by @fabacino
+
+#### 4.1.25
+
+* Updated dependencies (#6296) by @TavoNiievez
+
 #### 4.1.24
 
 * Fixed running tests from group files in included configs (#6292) by @DavertMik

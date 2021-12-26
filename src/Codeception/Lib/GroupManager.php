@@ -64,14 +64,15 @@ class GroupManager
                 ->sortByName()
                 ->in($path);
 
-            $i = 1;
-
-
             foreach ($files as $file) {
-                /** @var SplFileInfo $file */
-                $this->configuredGroups[str_replace('*', (string)$i, $group)] = dirname($pattern) . DIRECTORY_SEPARATOR . $file->getRelativePathname();
-                ++$i;
+                /** @var SplFileInfo $file * */
+                $prefix = str_replace('*', '', $group);
+                $pathPrefix = str_replace('*', '', basename($pattern));
+                $groupName = $prefix . str_replace($pathPrefix, '', $file->getRelativePathname());
+
+                $this->configuredGroups[$groupName] = dirname($pattern) . DIRECTORY_SEPARATOR . $file->getRelativePathname();
             }
+
             unset($this->configuredGroups[$group]);
         }
     }

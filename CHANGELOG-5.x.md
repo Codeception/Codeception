@@ -12,3 +12,4 @@
   - Codeception\Platform\Group
   - Codeception\TestCase
 * Introduced strict types in the code base.
+* Added optional value to fail-fast option (#6275) by #Verest

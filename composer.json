@@ -20,7 +20,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "phpunit/phpunit": "^9.5",
-        "codeception/lib-asserts": "^1.13",
+        "codeception/lib-asserts": "^1.13 | 2.0.*@dev",
         "guzzlehttp/psr7": "^1.7 | ^2.0",
         "symfony/finder": ">=4.4 <7.0",
         "symfony/console": ">=4.4 <7.0",
@@ -28,7 +28,7 @@
         "symfony/yaml": ">=4.4 <7.0",
         "symfony/css-selector": ">=4.4 <7.0",
         "behat/gherkin": "^4.6.2",
-        "codeception/stub": "^3.7"
+        "codeception/stub": "^3.7 | ^4.0"
     },
     "require-dev": {
         "vlucas/phpdotenv": "^4.0 | ^5.0",
