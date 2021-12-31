@@ -46,7 +46,7 @@ class ConfigValidate extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Validates and prints config to screen';
     }

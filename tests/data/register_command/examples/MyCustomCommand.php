@@ -46,7 +46,7 @@ class MyCustomCommand extends Command implements CustomCommandInterface
      *
      * @return string The description for the command
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return "This is my command to say hello";
     }

@@ -34,7 +34,7 @@ class GenerateSuite extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates new test suite';
     }

@@ -27,7 +27,7 @@ class GenerateHelper extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates new helper';
     }

@@ -41,7 +41,7 @@ class Bootstrap extends Command
         );
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return "Creates default test suites and generates all required files";
     }

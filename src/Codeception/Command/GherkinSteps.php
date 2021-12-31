@@ -33,7 +33,7 @@ class GherkinSteps extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Prints all defined feature steps';
     }

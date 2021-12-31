@@ -24,7 +24,7 @@ class Init extends Command
         );
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return "Creates test suites by a template";
     }

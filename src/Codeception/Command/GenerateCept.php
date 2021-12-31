@@ -23,7 +23,7 @@ class GenerateCept extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty Cept file in suite';
     }

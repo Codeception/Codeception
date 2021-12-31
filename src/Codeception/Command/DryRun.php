@@ -45,7 +45,7 @@ class DryRun extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Prints step-by-step scenario-driven test or a feature';
     }

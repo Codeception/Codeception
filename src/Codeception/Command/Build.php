@@ -28,7 +28,7 @@ class Build extends Command
      */
     protected $output;
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates base classes for all suites';
     }

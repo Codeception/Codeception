@@ -46,7 +46,7 @@ class Console extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Launches interactive test console';
     }

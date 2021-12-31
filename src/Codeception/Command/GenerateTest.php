@@ -29,7 +29,7 @@ class GenerateTest extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty unit test file in suite';
     }

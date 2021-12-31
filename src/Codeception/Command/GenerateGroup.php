@@ -25,7 +25,7 @@ class GenerateGroup extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates Group subscriber';
     }

@@ -17,7 +17,7 @@ class Clean extends Command
 {
     use Shared\Config;
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Recursively cleans log and generated code';
     }

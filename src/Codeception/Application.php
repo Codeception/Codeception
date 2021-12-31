@@ -104,7 +104,7 @@ class Application extends BaseApplication
      *
      * @inheritDoc
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null)
+    public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
         if ($input === null) {
             $input = $this->getCoreArguments();
@@ -122,7 +122,7 @@ class Application extends BaseApplication
      *
      * @return InputDefinition
      */
-    protected function getDefaultInputDefinition()
+    protected function getDefaultInputDefinition(): InputDefinition
     {
         $inputDefinition = parent::getDefaultInputDefinition();
         $inputDefinition->addOption(

@@ -31,7 +31,7 @@ class GenerateSnapshot extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty Snapshot class';
     }

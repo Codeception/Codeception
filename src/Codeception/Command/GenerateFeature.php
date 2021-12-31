@@ -30,7 +30,7 @@ class GenerateFeature extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty feature file in suite';
     }
