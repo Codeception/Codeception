@@ -4,28 +4,21 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
-use Codeception\PHPUnit\Compatibility\PHPUnit9;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
+use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestResult;
 use SebastianBergmann\Timer\Timer;
 use Throwable;
 use function array_reverse;
 use function method_exists;
 
-// One way to implement different interfaces
-if (PHPUnit9::isCurrentVersion()) {
-    require_once __DIR__ . '/TestWrapperPHPUnit9.php';
-} else {
-    require_once __DIR__ . '/TestWrapperPHPUnit10.php';
-}
 
 /**
- * The most simple testcase (with only one test in it) which can be executed by PHPUnit/Codeception.
- * It can be extended with included traits. Turning on/off a trait should not break class functionality.
+ * The most simple testcase (with only one test in it) which can be executed by PHPUnit/Codeception. * It can be extended with included traits. Turning on/off a trait should not break class functionality.
  *
  * Class has exactly one method to be executed for testing, wrapped with before/after callbacks delivered from included traits.
  * A trait providing before/after callback should contain corresponding protected methods: `{traitName}Start` and `{traitName}End`,
@@ -33,7 +26,7 @@ if (PHPUnit9::isCurrentVersion()) {
  *
  * Inherited class must implement `test` method.
  */
-abstract class Test extends TestWrapper implements TestInterface, Interfaces\Descriptive
+abstract class Test implements PHPUnitTest, TestInterface, Interfaces\Descriptive
 {
     use Feature\AssertionCounter;
     use Feature\CodeCoverage;
@@ -88,7 +81,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
      * Runs a test and collects its result in a TestResult instance.
      * Executes before/after hooks coming from traits.
      */
-    final public function realRun(TestResult $result = null): TestResult
+    final public function run(TestResult $result): void
     {
         $this->testResult = $result;
 
@@ -132,8 +125,6 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
         }
 
         $result->endTest($this, $time);
-
-        return $result;
     }
 
     public function getTestResultObject(): TestResult

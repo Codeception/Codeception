@@ -9,7 +9,7 @@ use Codeception\Test\Unit;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class UI extends \PHPUnit\TextUI\DefaultResultPrinter
+class ResultPrinter
 {
     /**
      * @var EventDispatcher
@@ -18,11 +18,7 @@ class UI extends \PHPUnit\TextUI\DefaultResultPrinter
 
     public function __construct(EventDispatcher $dispatcher, $options, $out = 'php://stdout')
     {
-        if (PHPUnit9::isCurrentVersion()) {
-            $colors = $options['colors'] ? 'always' : 'never';
-        } else {
-            $colors = $options['colors'];
-        }
+        $colors = $options['colors'];
 
         parent::__construct($out, $options['verbosity'] > OutputInterface::VERBOSITY_NORMAL, $colors);
         $this->dispatcher = $dispatcher;

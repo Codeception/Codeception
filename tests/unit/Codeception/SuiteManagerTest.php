@@ -34,9 +34,9 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $settings['actor'] = 'CodeGuy';
         $this->suiteman = new \Codeception\SuiteManager($this->dispatcher, 'suite', $settings);
 
-        $printer = \Codeception\Stub::makeEmpty(\PHPUnit\TextUI\ResultPrinter::class);
+        //$printer = \Codeception\Stub::makeEmpty(\PHPUnit\TextUI\ResultPrinter::class);
         $this->runner = new \Codeception\PHPUnit\Runner;
-        $this->runner->setPrinter($printer);
+        //$this->runner->setPrinter($printer);
     }
 
     /**
@@ -122,8 +122,8 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
 
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
         $result = new \PHPUnit\Framework\TestResult;
-        $listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
-        $result->addListener($listener);
+        //$listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
+        //$result->addListener($listener);
         $this->suiteman->run(
             $this->runner,
             $result,

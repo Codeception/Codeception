@@ -10,8 +10,6 @@ use Codeception\Coverage\Subscriber\Printer;
 use Codeception\Coverage\Subscriber\RemoteServer;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Exception\ConfigurationException;
-use Codeception\PHPUnit\Listener;
-use Codeception\PHPUnit\ResultPrinter\UI as UIResultPrinter;
 use Codeception\PHPUnit\Runner;
 use Codeception\Subscriber\AutoRebuild;
 use Codeception\Subscriber\BeforeAfterTest;
@@ -24,7 +22,9 @@ use Codeception\Subscriber\FailFast;
 use Codeception\Subscriber\GracefulTermination;
 use Codeception\Subscriber\Module;
 use Codeception\Subscriber\PrepareTest;
+use PHPUnit\Event\Facade;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\TextUI\Configuration\Registry;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
@@ -74,9 +74,15 @@ class Codecept
     protected array $config = [];
 
     protected array $extensions = [];
+    private ResultPrinter $printer;
 
     public function __construct(array $options = [])
     {
+        //$cliConfiguration = new \PHPUnit\TextUI\CliArguments\Configuration();
+        $cliConfiguration = (new \PHPUnit\TextUI\CliArguments\Builder())->fromParameters([],[]);
+        $xmlConfiguration = \PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration::create();
+        Registry::init($cliConfiguration, $xmlConfiguration);
+
         $this->result = new TestResult;
         $this->dispatcher = new EventDispatcher();
         $this->extensionLoader = new ExtensionLoader($this->dispatcher);
@@ -88,8 +94,9 @@ class Codecept
         $this->options = $this->mergeOptions($options); // options updated from config
 
         $this->registerSubscribers();
-        $this->registerPHPUnitListeners();
+        $this->registerPHPUnitHooks();
         $this->registerPrinter();
+        Facade::seal();
     }
 
     /**
@@ -104,10 +111,10 @@ class Codecept
         return array_merge($baseOptions, $options);
     }
 
-    protected function registerPHPUnitListeners(): void
+    protected function registerPHPUnitHooks(): void
     {
-        $listener = new Listener($this->dispatcher);
-        $this->result->addListener($listener);
+        $eventDispatcher = new \Codeception\EventDispatcher\EventDispatcher($this->dispatcher);
+        $eventDispatcher->registerSubscribers();
     }
 
     public function registerSubscribers(): void
@@ -213,12 +220,9 @@ class Codecept
     public function printResult(): void
     {
         $result = $this->getResult();
-        $result->flushListeners();
+        $this->printer->printResult($result);
 
-        $printer = $this->runner->getPrinter();
-        $printer->printResult($result);
-
-        $this->dispatcher->dispatch(new PrintResultEvent($result, $printer), Events::RESULT_PRINT_AFTER);
+        $this->dispatcher->dispatch(new PrintResultEvent($result, $this->printer), Events::RESULT_PRINT_AFTER);
     }
 
     public function getResult(): TestResult
@@ -238,8 +242,7 @@ class Codecept
 
     protected function registerPrinter(): void
     {
-        $printer = new UIResultPrinter($this->dispatcher, $this->options);
+        $this->printer = new ResultPrinter($this->dispatcher, $this->options);
         $this->runner = new Runner();
-        $this->runner->setPrinter($printer);
     }
 }

@@ -37,27 +37,15 @@ class Runner extends NonFinal\TestRunner
         require_once __DIR__ . DIRECTORY_SEPARATOR . 'Overrides/Filter.php';
     }
 
-    public function setPrinter($printer)
-    {
-        $this->printer = $printer;
-    }
-
-    /**
-     * @return null|\PHPUnit\TextUI\ResultPrinter
-     */
-    public function getPrinter()
-    {
-        return $this->printer;
-    }
-
     public function prepareSuite(\PHPUnit\Framework\Test $suite, array &$arguments)
     {
-        $this->handleConfiguration($arguments);
+        // TODO: pass $arguments to Configuration Registry
+        // $this->handleConfiguration($arguments);
 
         $filterAdded = false;
 
         $filterFactory = new Factory();
-        if ($arguments['groups']) {
+        if (!empty($arguments['groups'])) {
             $filterAdded = true;
             $this->addFilterToFactory(
                 $filterFactory,
@@ -66,7 +54,7 @@ class Runner extends NonFinal\TestRunner
             );
         }
 
-        if ($arguments['excludeGroups']) {
+        if (!empty($arguments['excludeGroups'])) {
             $filterAdded = true;
             $this->addFilterToFactory(
                 $filterFactory,
@@ -75,7 +63,7 @@ class Runner extends NonFinal\TestRunner
             );
         }
 
-        if ($arguments['filter']) {
+        if (!empty($arguments['filter'])) {
             $filterAdded = true;
             $this->addFilterToFactory(
                 $filterFactory,
@@ -119,53 +107,39 @@ class Runner extends NonFinal\TestRunner
     ) {
         unset($GLOBALS['app']); // hook for not to serialize globals
 
-        $result->convertErrorsToExceptions(false);
-
-        if (isset($arguments['report_useless_tests'])) {
-            $result->beStrictAboutTestsThatDoNotTestAnything((bool)$arguments['report_useless_tests']);
-        }
-
-        if (isset($arguments['disallow_test_output'])) {
-            $result->beStrictAboutOutputDuringTests((bool)$arguments['disallow_test_output']);
-        }
+//        $result->convertErrorsToExceptions(false);
+//
+//        if (isset($arguments['report_useless_tests'])) {
+//            $result->beStrictAboutTestsThatDoNotTestAnything((bool)$arguments['report_useless_tests']);
+//        }
+//
+//        if (isset($arguments['disallow_test_output'])) {
+//            $result->beStrictAboutOutputDuringTests((bool)$arguments['disallow_test_output']);
+//        }
 
         if (empty(self::$persistentListeners)) {
             $this->applyReporters($result, $arguments);
         }
 
-        if (class_exists('\Symfony\Bridge\PhpUnit\SymfonyTestsListener')) {
-            $arguments['listeners'] = isset($arguments['listeners']) ? $arguments['listeners'] : [];
-
-            $listener = new \Symfony\Bridge\PhpUnit\SymfonyTestsListener();
-            $listener->globalListenerDisabled();
-            $arguments['listeners'][] = $listener;
-        }
-
-        $arguments['listeners'][] = $this->printer;
-
-        // clean up listeners between suites
-        foreach ($arguments['listeners'] as $listener) {
-            $result->addListener($listener);
-        }
 
         $suite->run($result);
         unset($suite);
-
-        if (PHPUnit9::removeListenerMethodExists($result)) {
-            foreach ($arguments['listeners'] as $listener) {
-                $result->removeListener($listener);
-            }
-        } else {
-            $property = new ReflectionProperty($result, 'listeners');
-            $property->setAccessible(true);
-            $resultListeners = $property->getValue($result);
-            foreach ($resultListeners as $key => $_listener) {
-                if (in_array($_listener, $arguments['listeners'], true)) {
-                    unset($resultListeners[$key]);
-                }
-            }
-            $property->setValue($result, $resultListeners);
-        }
+//
+//        if (PHPUnit9::removeListenerMethodExists($result)) {
+//            foreach ($arguments['listeners'] as $listener) {
+//                $result->removeListener($listener);
+//            }
+//        } else {
+//            $property = new ReflectionProperty($result, 'listeners');
+//            $property->setAccessible(true);
+//            $resultListeners = $property->getValue($result);
+//            foreach ($resultListeners as $key => $_listener) {
+//                if (in_array($_listener, $arguments['listeners'], true)) {
+//                    unset($resultListeners[$key]);
+//                }
+//            }
+//            $property->setValue($result, $resultListeners);
+//        }
 
         return $result;
     }
@@ -211,10 +185,6 @@ class Runner extends NonFinal\TestRunner
         }
 
         foreach (self::$persistentListeners as $listener) {
-            if ($listener instanceof ConsolePrinter) {
-                $this->printer = $listener;
-                continue;
-            }
             $result->addListener($listener);
         }
     }
