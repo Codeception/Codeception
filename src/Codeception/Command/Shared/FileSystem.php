@@ -43,7 +43,7 @@ trait FileSystem
         return preg_replace("~$suffix$~", '', $classname);
     }
 
-    protected function createFile($filename, $contents, $force = false, $flags = null)
+    protected function createFile($filename, $contents, $force = false, $flags = 0)
     {
         if (file_exists($filename) && !$force) {
             return false;
