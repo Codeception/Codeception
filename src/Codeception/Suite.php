@@ -19,7 +19,7 @@ class Suite extends \PHPUnit\Framework\TestSuite
         $queue = [];
         $hashes = [];
         foreach ($tests as $test) {
-            if (in_array(spl_object_hash($test), $hashes)) {
+            if (in_array(spl_object_hash($test), $hashes, true)) {
                 continue;
             }
             $hashes[] = spl_object_hash($test);
