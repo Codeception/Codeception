@@ -1,3 +1,8 @@
+#### 4.1.28
+
+* Strictly compare test hashes to avoid skipping tests #6320 by @michel-cetina
+* Fixed deprecation message in codecept build #6311 by @barmax
+
 #### 4.1.27
 
 * Renamed editorUrl setting to editor_url for consistency
