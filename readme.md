@@ -97,4 +97,4 @@ This will create a default directory structure and default test suites.
 The documentation source files can be found at https://github.com/Codeception/codeception.github.com/tree/master/docs/.
 
 ## License
-MIT
+[MIT](https://github.com/Codeception/Codeception/blob/master/LICENSE)
