@@ -9,6 +9,7 @@
  */
 namespace Codeception\PHPUnit\NonFinal;
 
+use Codeception\Util\StackTraceFilter;
 use DOMDocument;
 use DOMElement;
 use PHPUnit\Framework\AssertionFailedError;
@@ -19,7 +20,6 @@ use PHPUnit\Framework\TestFailure;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
-use PHPUnit\Util\Filter;
 use PHPUnit\Util\Printer;
 use PHPUnit\Util\Xml;
 use ReflectionClass;
@@ -186,7 +186,7 @@ class JUnit extends Printer implements TestListener
             'error',
             Xml::prepareString(
                 "Risky Test\n" .
-                Filter::getFilteredStacktrace($t)
+                StackTraceFilter::getFilteredStacktrace($t)
             )
         );
 
@@ -406,7 +406,7 @@ class JUnit extends Printer implements TestListener
         }
 
         $buffer .= TestFailure::exceptionToString($t) . "\n" .
-            Filter::getFilteredStacktrace($t);
+            StackTraceFilter::getFilteredStacktrace($t);
 
         $fault = $this->document->createElement(
             $type,

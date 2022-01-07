@@ -1,16 +1,18 @@
 <?php
-namespace PHPUnit\Util;
-// @codingStandardsIgnoreStart
-class Filter
+
+declare(strict_types=1);
+
+namespace Codeception\Util;
+
+class StackTraceFilter
 {
-    // @codingStandardsIgnoreEnd
     protected static $filteredClassesPattern = [
         'Symfony\Component\Console',
         'Codeception\Command\\',
         'Codeception\TestCase\\',
     ];
 
-    public static function getFilteredStackTrace($e, $asString = true, $filter = true)
+    public static function getFilteredStackTrace(\Throwable $e, bool $asString = true, bool $filter = true): string
     {
         $stackTrace = $asString ? '' : [];
 
@@ -51,7 +53,7 @@ class Filter
         return $stackTrace;
     }
 
-    protected static function classIsFiltered($step)
+    protected static function classIsFiltered(array $step): bool
     {
         if (!isset($step['class'])) {
             return false;
@@ -66,7 +68,7 @@ class Filter
         return false;
     }
 
-    protected static function fileIsFiltered($step)
+    protected static function fileIsFiltered(array $step): bool
     {
         if (!isset($step['file'])) {
             return false;
@@ -96,14 +98,7 @@ class Filter
         return false;
     }
 
-    /**
-     * @param array  $trace
-     * @param string $file
-     * @param int    $line
-     *
-     * @return bool
-     */
-    private static function frameExists(array $trace, $file, $line)
+    private static function frameExists(array $trace, string $file, int $line): bool
     {
         foreach ($trace as $frame) {
             if (isset($frame['file']) && $frame['file'] == $file &&

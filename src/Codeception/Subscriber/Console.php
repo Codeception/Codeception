@@ -23,6 +23,7 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\Debug;
+use Codeception\Util\StackTraceFilter;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -528,12 +529,12 @@ class Console implements EventSubscriberInterface
         }
 
         if ($this->rawStackTrace) {
-            $this->message(OutputFormatter::escape(PHPUnitFilter::getFilteredStacktrace($exception, true, false)))->writeln();
+            $this->message(OutputFormatter::escape(StackTrathceFilter::getFilteredStacktrace($exception, true, false)))->writeln();
 
             return;
         }
 
-        $trace = PHPUnitFilter::getFilteredStacktrace($exception, false);
+        $trace = StackTraceFilter::getFilteredStacktrace($exception, false);
 
         $i = 0;
         foreach ($trace as $step) {
