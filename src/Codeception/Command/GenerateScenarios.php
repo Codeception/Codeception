@@ -35,12 +35,12 @@ class GenerateScenarios extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates text representation for all scenarios';
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
 

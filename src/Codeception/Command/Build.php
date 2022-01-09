@@ -28,19 +28,18 @@ class Build extends Command
      */
     protected $output;
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates base classes for all suites';
     }
 
-
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
         $this->buildActorsForConfig();
         return 0;
     }
-    
+
     private function buildActor(array $settings)
     {
         $actorGenerator = new ActorGenerator($settings);
@@ -48,7 +47,7 @@ class Build extends Command
             '<info>' . Configuration::config()['namespace'] . '\\' . $actorGenerator->getActorName()
             . "</info> includes modules: " . implode(', ', $actorGenerator->getModules())
         );
-        
+
         $content = $actorGenerator->produce();
 
         $file = $this->createDirectoryFor(
@@ -58,7 +57,7 @@ class Build extends Command
         $file .=  '.php';
         return $this->createFile($file, $content);
     }
-    
+
     private function buildActions(array $settings)
     {
         $actionsGenerator = new ActionsGenerator($settings);
@@ -87,17 +86,17 @@ class Build extends Command
             }
             $this->buildActions($settings);
             $actorBuilt = $this->buildActor($settings);
-            
+
             if ($actorBuilt) {
                 $this->output->writeln("{$settings['actor']}.php created.");
             }
         }
     }
-    
+
     protected function buildActorsForConfig($configFile = null)
     {
         $config = $this->getGlobalConfig($configFile);
-        
+
         $dir = Configuration::projectDir();
         $this->buildSuiteActors();
 

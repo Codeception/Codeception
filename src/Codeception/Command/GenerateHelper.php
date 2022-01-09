@@ -27,12 +27,12 @@ class GenerateHelper extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates new helper';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $name = ucfirst($input->getArgument('name'));
         $config = $this->getGlobalConfig();

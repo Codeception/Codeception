@@ -46,12 +46,12 @@ class Console extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Launches interactive test console';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suiteName = $input->getArgument('suite');
         $this->output = $output;

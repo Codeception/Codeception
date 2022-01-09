@@ -228,7 +228,7 @@ class Run extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Runs the test suites';
     }
