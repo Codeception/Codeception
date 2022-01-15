@@ -87,16 +87,11 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }
-        if (method_exists($this->coverage, 'setProcessUncoveredFilesFromWhitelist')) {
-            //php-code-coverage 8 or older
-            $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
+
+        if ($this->settings['show_uncovered']) {
+            $this->coverage->includeUncoveredFiles();
         } else {
-            //php-code-coverage 9+
-            if ($this->settings['show_uncovered']) {
-                $this->coverage->processUncoveredFiles();
-            } else {
-                $this->coverage->doNotProcessUncoveredFiles();
-            }
+            $this->coverage->excludeUncoveredFiles();
         }
     }
 
