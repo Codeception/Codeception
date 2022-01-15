@@ -29,7 +29,7 @@ class MessageFactory
     public function prepareComparisonFailureMessage(ComparisonFailure $failure): string
     {
         $diff = $this->diffFactory->createDiff($failure);
-        if ($diff !== '') {
+        if ($diff === '') {
             return '';
         }
         $diff = $this->colorizer->colorize($diff);
