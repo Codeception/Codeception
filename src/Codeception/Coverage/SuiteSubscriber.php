@@ -108,16 +108,11 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     /**
      * @throws ConfigurationException|ModuleException|Exception
      */
-    public function applyFilter(TestResult $result): void
+    public function applyFilter(): void
     {
-        $driver = Stub::makeEmpty(CodeCoverageDriver::class);
-        $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
-
         Filter::setup($this->coverage)
             ->whiteList($this->filters)
             ->blackList($this->filters);
-
-        $result->setCodeCoverage($this->coverage);
     }
 
     protected function mergeToPrint(CodeCoverage $coverage): void
