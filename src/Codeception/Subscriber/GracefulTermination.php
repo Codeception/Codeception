@@ -7,6 +7,7 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
+use Codeception\Util\ReflectionHelper;
 use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function function_exists;
@@ -46,8 +47,7 @@ class GracefulTermination implements EventSubscriberInterface
     public function terminate(): void
     {
         if ($this->suiteEvent) {
-            $this->suiteEvent->getResult()->stopOnError(true);
-            $this->suiteEvent->getResult()->stopOnFailure(true);
+            ReflectionHelper::setPrivateProperty($this->suiteEvent->getResult(), 'stop', true);
         }
         throw new RuntimeException(
             "\n\n---------------------------\nTESTS EXECUTION TERMINATED\n---------------------------\n"
