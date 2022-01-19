@@ -105,6 +105,7 @@ final class IncludedCest
 
     /**
      * @before moveToIncluded
+     * @group reports
      * @param CliGuy $I
      */
     public function runIncludedWithXmlOutput(CliGuy $I)
@@ -122,6 +123,7 @@ final class IncludedCest
 
     /**
      * @before moveToIncluded
+     * @group reports
      * @param CliGuy $I
      */
     public function runIncludedWithHtmlOutput(CliGuy $I)

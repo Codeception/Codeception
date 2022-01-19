@@ -1,5 +1,7 @@
 <?php
 
+// @group reports
+
 $testsPath = __DIR__ . '/../';
 
 $I = new CliGuy($scenario);

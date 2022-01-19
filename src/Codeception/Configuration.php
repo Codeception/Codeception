@@ -87,12 +87,6 @@ class Configuration
             'config'   => [],
             'commands' => [],
         ],
-        'reporters'  => [
-            'xml'         => JUnitLog::class,
-            'html'        => HTMLResultPrinter::class,
-            'report'      => ReportPrinter::class,
-            'phpunit-xml' => PhpUnitLog::class,
-        ],
         'groups'     => [],
         'bootstrap'  => false,
         'settings'   => [

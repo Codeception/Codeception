@@ -269,6 +269,9 @@ final class RunCest
         $I->seeInShellOutput('There were 3 failures');
     }
 
+    /**
+     * @group reports
+     */
     public function runWithCustomOutputPath(CliGuy $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
@@ -484,8 +487,9 @@ EOF
 
     public function overrideConfigOptionsToChangeReporter(CliGuy $I)
     {
+        // @TODO: make this test work with PHPUnit 10
         if (!class_exists('PHPUnit_Util_Log_TeamCity')) {
-            throw new \PHPUnit\Framework\SkippedTestError('Reporter does not exist for this PHPUnit version');
+            throw new \PHPUnit\Framework\SkippedWithMessageException('Reporter does not exist for this PHPUnit version');
         }
 
         $I->executeCommand('run scenario --report -o "reporters: report: PHPUnit_Util_Log_TeamCity" --no-exit');

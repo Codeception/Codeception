@@ -10,6 +10,12 @@ use Codeception\Coverage\Subscriber\Printer as CoveragePrinter;
 use Codeception\Coverage\Subscriber\RemoteServer;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Exception\ConfigurationException;
+use Codeception\Reporter\HtmlReporter;
+use Codeception\Reporter\JsonReporter;
+use Codeception\Reporter\JUnitReporter;
+use Codeception\Reporter\PhpUnitReporter;
+use Codeception\Reporter\ReportPrinter;
+use Codeception\Reporter\TapReporter;
 use Codeception\Subscriber\AutoRebuild;
 use Codeception\Subscriber\BeforeAfterTest;
 use Codeception\Subscriber\Bootstrap;
@@ -24,6 +30,7 @@ use Codeception\Subscriber\PrepareTest;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\TextUI\Configuration\Registry;
 use PHPUnit\Util\Printer as PHPUnitPrinter;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
@@ -44,40 +51,43 @@ class Codecept
     private PHPUnitPrinter $printer;
 
     protected array $options = [
-        'silent'          => false,
-        'debug'           => false,
-        'steps'           => false,
-        'html'            => false,
-        'xml'             => false,
-        'phpunit-xml'     => false,
-        'no-redirect'     => true,
-        'report'          => false,
-        'colors'          => false,
-        'coverage'        => false,
-        'coverage-xml'    => false,
-        'coverage-html'   => false,
-        'coverage-text'   => false,
-        'coverage-crap4j' => false,
+        'silent'             => false,
+        'debug'              => false,
+        'steps'              => false,
+        'html'               => false,
+        'xml'                => false,
+        'phpunit-xml'        => false,
+        'no-redirect'        => true,
+        'report'             => false,
+        'colors'             => false,
+        'coverage'           => false,
+        'coverage-xml'       => false,
+        'coverage-html'      => false,
+        'coverage-text'      => false,
+        'coverage-crap4j'    => false,
         'coverage-cobertura' => false,
-        'coverage-phpunit'=> false,
-        'groups'          => null,
-        'excludeGroups'   => null,
-        'filter'          => null,
-        'env'             => null,
-        'fail-fast'       => 0,
-        'ansi'            => true,
-        'verbosity'       => 1,
-        'interactive'     => true,
-        'no-rebuild'      => false,
-        'quiet'           => false,
+        'coverage-phpunit'   => false,
+        'groups'             => null,
+        'excludeGroups'      => null,
+        'filter'             => null,
+        'env'                => null,
+        'fail-fast'          => 0,
+        'ansi'               => true,
+        'verbosity'          => 1,
+        'interactive'        => true,
+        'no-rebuild'         => false,
+        'quiet'              => false,
     ];
 
     protected array $config = [];
 
     protected array $extensions = [];
 
-    public function __construct(array $options = [])
+    private OutputInterface $output;
+
+    public function __construct(array $options = [], OutputInterface $output)
     {
+        $this->output = $output;
 
 // TODO: implement these options
 //        if (isset($arguments['report_useless_tests'])) {
@@ -95,13 +105,13 @@ class Codecept
         $baseOptions = $this->mergeOptions($options);
         $this->extensionLoader->bootGlobalExtensions($baseOptions); // extensions may override config
 
-        $this->config = Configuration::config();
+        $this->config  = Configuration::config();
         $this->options = $this->mergeOptions($options); // options updated from config
 
         // TODO: implement options
         // $printer = new UIResultPrinter($this->dispatcher, $this->options);
         $this->printer = new PHPUnitPrinter('php://stdout');
-        $this->runner = new TestRunner();
+        $this->runner  = new TestRunner();
         $this->registerSubscribers();
     }
 
@@ -124,7 +134,7 @@ class Codecept
      */
     protected function mergeOptions(array $options): array
     {
-        $config = Configuration::config();
+        $config      = Configuration::config();
         $baseOptions = array_merge($this->options, $config['settings']);
         return array_merge($baseOptions, $options);
     }
@@ -157,8 +167,45 @@ class Codecept
             $this->dispatcher->addSubscriber(new RemoteServer($this->options));
             $this->dispatcher->addSubscriber(new CoveragePrinter($this->options));
         }
+
+        $this->registerReporters();
+
         $this->dispatcher->addSubscriber($this->extensionLoader);
         $this->extensionLoader->registerGlobalExtensions();
+    }
+
+    private function registerReporters(): void
+    {
+        // TODO implement custom reporters
+        if ($this->options['report']) {
+            $this->dispatcher->addSubscriber(new ReportPrinter($this->options));
+        }
+        if ($this->options['html']) {
+            codecept_debug('Printing HTML report into ' . $this->options['html']);
+            $this->dispatcher->addSubscriber(
+                new HtmlReporter($this->absolutePath($this->options['html']))
+            );
+        }
+        if ($this->options['xml']) {
+            codecept_debug('Printing JUNIT report into ' . $this->options['xml']);
+            $this->dispatcher->addSubscriber(
+                new JUnitReporter($this->absolutePath($this->options['xml']))
+            );
+        }
+        if ($this->options['phpunit-xml']) {
+            codecept_debug('Printing PHPUNIT report into ' . $this->options['phpunit-xml']);
+            $this->dispatcher->addSubscriber(
+                new PhpUnitReporter($this->absolutePath($this->options['phpunit-xml']))
+            );
+        }
+    }
+
+    private function absolutePath(string $path): string
+    {
+        if ((strpos($path, '/') === 0) or (strpos($path, ':') === 1)) { // absolute path
+            return $path;
+        }
+        return Configuration::outputDir() . $path;
     }
 
     public function run(string $suite, string $test = null, array $config = null): void
@@ -180,7 +227,7 @@ class Codecept
 
         // Iterate over all unique environment sets and runs the given suite with each of the merged configurations.
         foreach (array_unique($selectedEnvironments) as $envList) {
-            $envSet = explode(',', $envList);
+            $envSet         = explode(',', $envList);
             $suiteEnvConfig = $config;
 
             // contains a list of the environments used in this suite configuration env set.
@@ -196,7 +243,7 @@ class Codecept
 
                     // Merge configuration consecutively with already build configuration
                     $suiteEnvConfig = Configuration::mergeConfigs($suiteEnvConfig, $config['env'][$currentEnv]);
-                    $envConfigs[] = $currentEnv;
+                    $envConfigs[]   = $currentEnv;
                 }
             }
 
