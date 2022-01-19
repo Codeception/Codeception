@@ -30,7 +30,6 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTest;
-use PHPUnit\Framework\TestFailure;
 use SebastianBergmann\Timer\Duration;
 use SebastianBergmann\Timer\ResourceUsageFormatter;
 use SebastianBergmann\Timer\Timer;
@@ -673,7 +672,7 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
 
-        if ($exception instanceof SkippedTestError || $exception instanceof IncompleteTestError) {
+        if ($exception instanceof SkippedTest || $exception instanceof IncompleteTestError) {
             return;
         }
 
