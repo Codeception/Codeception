@@ -12,7 +12,10 @@ class StackTraceFilter
         'Codeception\TestCase\\',
     ];
 
-    public static function getFilteredStackTrace(\Throwable $e, bool $asString = true, bool $filter = true): string
+    /**
+     * @return array|string
+     */
+    public static function getFilteredStackTrace(\Throwable $e, bool $asString = true, bool $filter = true)
     {
         $stackTrace = $asString ? '' : [];
 

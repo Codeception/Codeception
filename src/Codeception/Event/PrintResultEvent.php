@@ -10,14 +10,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PrintResultEvent extends Event
 {
-    protected TestResult $result;
-
-    protected Printer $printer;
-
-    public function __construct(TestResult $testResult, Printer $printer)
+    public function __construct(
+        protected TestResult $testResult,
+        protected Printer $printer)
     {
-        $this->result = $testResult;
-        $this->printer = $printer;
     }
 
     public function getPrinter(): Printer
@@ -27,6 +23,6 @@ class PrintResultEvent extends Event
 
     public function getResult(): TestResult
     {
-        return $this->result;
+        return $this->testResult;
     }
 }

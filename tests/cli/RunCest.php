@@ -384,7 +384,7 @@ EOF
         $I->executeCommand('run unit DependsTest --no-exit');
         $I->seeInShellOutput('Skipped: 1');
         $I->executeCommand('run unit --no-exit');
-        $I->seeInShellOutput('Skipped: 1');
+        $I->seeInShellOutput('Skipped: 2');
     }
 
     public function runGherkinTest(CliGuy $I)

@@ -433,7 +433,7 @@ class Run extends Command
 
         $this->codecept->printResult();
 
-        if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessful()) {
+        if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessfulIgnoringWarnings()) {
             exit(1);
         }
         return Command::SUCCESS;

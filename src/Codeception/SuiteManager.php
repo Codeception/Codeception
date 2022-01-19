@@ -113,7 +113,7 @@ class SuiteManager
 
     protected function createSuite(string $name): Suite
     {
-        $suite = new Suite();
+        $suite = new Suite($this->dispatcher);
         $suite->setBaseName(preg_replace('#\s.+$#', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
             $name = $this->settings['namespace'] . ".{$name}";
@@ -130,7 +130,7 @@ class SuiteManager
         return $suite;
     }
 
-    public function run(PHPUnit\Runner $runner, TestResult $result, array $options): void
+    public function run(TestRunner $runner, TestResult $result, array $options): void
     {
         $runner->prepareSuite($this->suite, $options);
         $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_BEFORE);

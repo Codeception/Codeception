@@ -6,10 +6,6 @@ namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\ParamsLoader;
-use Codeception\PHPUnit\Log\JUnit as JUnitLog;
-use Codeception\PHPUnit\Log\PhpUnit as PhpUnitLog;
-use Codeception\PHPUnit\ResultPrinter\HTML as HTMLResultPrinter;
-use Codeception\PHPUnit\ResultPrinter\Report as ReportPrinter;
 use Codeception\Step\ConditionalAssertion;
 use Codeception\Util\Autoload;
 use Codeception\Util\PathResolver;

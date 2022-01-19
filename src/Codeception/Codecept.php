@@ -6,13 +6,10 @@ namespace Codeception;
 
 use Codeception\Coverage\Subscriber\Local;
 use Codeception\Coverage\Subscriber\LocalServer;
-use Codeception\Coverage\Subscriber\Printer;
+use Codeception\Coverage\Subscriber\Printer as CoveragePrinter;
 use Codeception\Coverage\Subscriber\RemoteServer;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Exception\ConfigurationException;
-use Codeception\PHPUnit\Listener;
-use Codeception\PHPUnit\ResultPrinter\UI as UIResultPrinter;
-use Codeception\PHPUnit\Runner;
 use Codeception\Subscriber\AutoRebuild;
 use Codeception\Subscriber\BeforeAfterTest;
 use Codeception\Subscriber\Bootstrap;
@@ -25,6 +22,8 @@ use Codeception\Subscriber\GracefulTermination;
 use Codeception\Subscriber\Module;
 use Codeception\Subscriber\PrepareTest;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\TextUI\Configuration\Registry;
+use PHPUnit\Util\Printer as PHPUnitPrinter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
@@ -34,13 +33,15 @@ class Codecept
      */
     public const VERSION = '5.0.0';
 
-    protected ?Runner $runner = null;
+    protected ?TestRunner $runner = null;
 
     protected TestResult $result;
 
     protected EventDispatcher $dispatcher;
 
     protected ExtensionLoader $extensionLoader;
+
+    private PHPUnitPrinter $printer;
 
     protected array $options = [
         'silent'          => false,
@@ -77,7 +78,17 @@ class Codecept
 
     public function __construct(array $options = [])
     {
-        $this->result = new TestResult;
+
+// TODO: implement these options
+//        if (isset($arguments['report_useless_tests'])) {
+//            $result->beStrictAboutTestsThatDoNotTestAnything((bool)$arguments['report_useless_tests']);
+//        }
+//
+//        if (isset($arguments['disallow_test_output'])) {
+//            $result->beStrictAboutOutputDuringTests((bool)$arguments['disallow_test_output']);
+//        }
+
+        $this->result = $this->initializeTestResult();
         $this->dispatcher = new EventDispatcher();
         $this->extensionLoader = new ExtensionLoader($this->dispatcher);
 
@@ -87,9 +98,23 @@ class Codecept
         $this->config = Configuration::config();
         $this->options = $this->mergeOptions($options); // options updated from config
 
+        // TODO: implement options
+        // $printer = new UIResultPrinter($this->dispatcher, $this->options);
+        $this->printer = new PHPUnitPrinter('php://stdout');
+        $this->runner = new TestRunner();
         $this->registerSubscribers();
-        $this->registerPHPUnitListeners();
-        $this->registerPrinter();
+    }
+
+    private function initializeTestResult(): TestResult
+    {
+        /*
+         * Configuration must be registered, but TestResult only cares about stopOnError,
+         * stopOnFailure and other stopOn settings that we don't set
+         */
+        $cliConfiguration = (new \PHPUnit\TextUI\CliArguments\Builder())->fromParameters([], []);
+        $xmlConfiguration = \PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration::create();
+        Registry::init($cliConfiguration, $xmlConfiguration);
+        return new TestResult;
     }
 
     /**
@@ -102,12 +127,6 @@ class Codecept
         $config = Configuration::config();
         $baseOptions = array_merge($this->options, $config['settings']);
         return array_merge($baseOptions, $options);
-    }
-
-    protected function registerPHPUnitListeners(): void
-    {
-        $listener = new Listener($this->dispatcher);
-        $this->result->addListener($listener);
     }
 
     public function registerSubscribers(): void
@@ -136,7 +155,7 @@ class Codecept
             $this->dispatcher->addSubscriber(new Local($this->options));
             $this->dispatcher->addSubscriber(new LocalServer($this->options));
             $this->dispatcher->addSubscriber(new RemoteServer($this->options));
-            $this->dispatcher->addSubscriber(new Printer($this->options));
+            $this->dispatcher->addSubscriber(new CoveragePrinter($this->options));
         }
         $this->dispatcher->addSubscriber($this->extensionLoader);
         $this->extensionLoader->registerGlobalExtensions();
@@ -213,12 +232,7 @@ class Codecept
     public function printResult(): void
     {
         $result = $this->getResult();
-        $result->flushListeners();
-
-        $printer = $this->runner->getPrinter();
-        $printer->printResult($result);
-
-        $this->dispatcher->dispatch(new PrintResultEvent($result, $printer), Events::RESULT_PRINT_AFTER);
+        $this->dispatcher->dispatch(new PrintResultEvent($result, $this->printer), Events::RESULT_PRINT_AFTER);
     }
 
     public function getResult(): TestResult
@@ -234,12 +248,5 @@ class Codecept
     public function getDispatcher(): EventDispatcher
     {
         return $this->dispatcher;
-    }
-
-    protected function registerPrinter(): void
-    {
-        $printer = new UIResultPrinter($this->dispatcher, $this->options);
-        $this->runner = new Runner();
-        $this->runner->setPrinter($printer);
     }
 }

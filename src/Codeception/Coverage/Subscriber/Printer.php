@@ -78,6 +78,7 @@ class Printer implements EventSubscriberInterface
 
     public function printResult(PrintResultEvent $event): void
     {
+        // TODO: Stop using PHPUnit printer
         $printer = $event->getPrinter();
         if (!$this->settings['enabled']) {
             $printer->write("\nCodeCoverage is disabled in `codeception.yml` config\n");
