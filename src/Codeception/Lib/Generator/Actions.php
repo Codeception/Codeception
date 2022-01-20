@@ -250,7 +250,7 @@ EOF;
         }
         return sprintf(
             '%s%s%s',
-            (PHP_VERSION_ID >= 70100 && $type->allowsNull()) ? '?' : '',
+            (PHP_VERSION_ID >= 70100 && $type->allowsNull() && $returnTypeString !== 'mixed') ? '?' : '',
             $type->isBuiltin() ? '' : '\\',
             $returnTypeString
         );
