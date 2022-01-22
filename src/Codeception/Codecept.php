@@ -22,6 +22,7 @@ use Codeception\Subscriber\BeforeAfterTest;
 use Codeception\Subscriber\Bootstrap;
 use Codeception\Subscriber\Console;
 use Codeception\Subscriber\Dependencies;
+use Codeception\Subscriber\Deprecation;
 use Codeception\Subscriber\ErrorHandler;
 use Codeception\Subscriber\ExtensionLoader;
 use Codeception\Subscriber\FailFast;
@@ -167,14 +168,16 @@ class Codecept
             $this->dispatcher->addSubscriber(new CoveragePrinter($this->options));
         }
 
-        $this->registerReporters();
-
         $this->dispatcher->addSubscriber($this->extensionLoader);
         $this->extensionLoader->registerGlobalExtensions();
 
         if (!$this->options['silent'] && !$this->isConsolePrinterSubscribed()) {
             $this->dispatcher->addSubscriber(new Console($this->options));
         }
+
+        $this->dispatcher->addSubscriber(new Deprecation($this->options));
+
+        $this->registerReporters();
     }
 
     private function isConsolePrinterSubscribed(): bool

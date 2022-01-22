@@ -13,11 +13,11 @@ use Codeception\Events;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\MessageFactory;
 use Codeception\Lib\Console\Output;
-use Codeception\Lib\Notification;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Step\ConditionalAssertion;
 use Codeception\Step\Meta;
+use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Codeception\Suite;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
@@ -37,7 +37,6 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use function array_count_values;
 use function array_map;
 use function array_merge;
 use function array_reverse;
@@ -62,7 +61,7 @@ use function ucfirst;
 
 class Console implements EventSubscriberInterface
 {
-    use Shared\StaticEventsTrait;
+    use StaticEventsTrait;
 
     /**
      * @var array<string, string>
@@ -96,8 +95,6 @@ class Console implements EventSubscriberInterface
     protected bool $ansi = true;
 
     protected bool $silent = false;
-
-    protected bool $lastTestFailed = false;
 
     protected ?SelfDescribing $printedTest = null;
 
@@ -337,12 +334,6 @@ class Console implements EventSubscriberInterface
         foreach ($defects as $defect) {
             $event = new FailEvent($defect->failedTest(), null, $defect->thrownException(), $i++);
             $this->printFail($event);
-            // @TODO: fix customer reporters
-//            $this->dispatch(
-//                $this->dispatcher,
-//                Events::TEST_FAIL_PRINT,
-//                $event
-//            );
         }
     }
 
@@ -537,13 +528,6 @@ class Console implements EventSubscriberInterface
     public function afterSuite(SuiteEvent $event): void
     {
         $this->message()->width($this->width, '-')->writeln();
-        $messages = Notification::all();
-        foreach (array_count_values($messages) as $message => $count) {
-            if ($count > 1) {
-                $message = $count . 'x ' . $message;
-            }
-            $this->output->notification($message);
-        }
     }
 
     public function printFail(FailEvent $event): void
