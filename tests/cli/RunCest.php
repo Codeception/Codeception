@@ -153,7 +153,7 @@ final class RunCest
      */
     public function runCustomReport(CliGuy $I)
     {
-        $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
+        $I->executeCommand('run dummy --ext=MyReportPrinter -c codeception_custom_report.yml');
         $I->seeInShellOutput('FileExistsCept: Check config exists');
         $I->dontSeeInShellOutput('Ok');
     }

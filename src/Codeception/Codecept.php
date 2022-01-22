@@ -10,6 +10,7 @@ use Codeception\Coverage\Subscriber\Printer as CoveragePrinter;
 use Codeception\Coverage\Subscriber\RemoteServer;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\Interfaces\ConsolePrinter;
 use Codeception\Reporter\HtmlReporter;
 use Codeception\Reporter\JsonReporter;
 use Codeception\Reporter\JUnitReporter;
@@ -154,9 +155,7 @@ class Codecept
         if (!$this->options['no-rebuild']) {
             $this->dispatcher->addSubscriber(new AutoRebuild());
         }
-        if (!$this->options['silent']) {
-            $this->dispatcher->addSubscriber(new Console($this->options));
-        }
+
         if ($this->options['fail-fast'] > 0) {
             $this->dispatcher->addSubscriber(new FailFast($this->options['fail-fast']));
         }
@@ -172,11 +171,29 @@ class Codecept
 
         $this->dispatcher->addSubscriber($this->extensionLoader);
         $this->extensionLoader->registerGlobalExtensions();
+
+        if (!$this->options['silent'] && !$this->isConsolePrinterSubscribed()) {
+            $this->dispatcher->addSubscriber(new Console($this->options));
+        }
+    }
+
+    private function isConsolePrinterSubscribed(): bool
+    {
+        foreach ($this->dispatcher->getListeners() as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                if ($listener instanceof ConsolePrinter) {
+                    return true;
+                }
+                if (is_array($listener) && $listener[0] instanceof ConsolePrinter) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private function registerReporters(): void
     {
-        // TODO implement custom reporters
         if ($this->options['report']) {
             $this->dispatcher->addSubscriber(new ReportPrinter($this->options));
         }

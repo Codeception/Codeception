@@ -8,8 +8,9 @@ settings:
     colors: false
     silent: false
     log: false
-reporters:
-    report: MyReportPrinter
+extensions:
+    enabled:
+        - MyReportPrinter
 modules:
     config:
         Db:

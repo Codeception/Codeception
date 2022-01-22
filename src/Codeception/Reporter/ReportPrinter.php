@@ -8,12 +8,12 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\Output;
+use Codeception\Lib\Interfaces\ConsolePrinter;
 use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Codeception\Test\Descriptor;
 use PHPUnit\Framework\Test;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ReportPrinter implements EventSubscriberInterface
+class ReportPrinter implements ConsolePrinter
 {
     use StaticEventsTrait;
 

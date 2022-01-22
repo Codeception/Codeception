@@ -33,8 +33,8 @@ final class ConfigValidateCest
 
     public function validatesConfigWithOverrideOption(CliGuy $I)
     {
-        $I->executeCommand('config:validate -o "reporters: report: \Custom\Reporter" --no-ansi');
-        $I->seeInShellOutput('report => \Custom\Reporter');
+        $I->executeCommand('config:validate -o "params: foo: bar" --no-ansi');
+        $I->seeInShellOutput('foo => bar');
     }
 
 }

@@ -324,9 +324,6 @@ class Run extends Command
         if ($this->options['skip-group']) {
             $userOptions['excludeGroups'] = $this->options['skip-group'];
         }
-        if ($this->options['report']) {
-            $userOptions['silent'] = true;
-        }
         if ($this->options['coverage-xml'] || $this->options['coverage-html'] || $this->options['coverage-text'] || $this->options['coverage-crap4j'] || $this->options['coverage-phpunit']) {
             $this->options['coverage'] = true;
         }

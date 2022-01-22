@@ -18,7 +18,7 @@ final class SecondTestIsExecutedWhenTheFirstTestFailsCest
     {
         $I->wantTo('see that all start and end events are emitted');
         $I->amInPath('tests/data/first_test_fails');
-        $I->executeFailCommand('run --xml --no-ansi --report -o "reporters: report: CustomReporter"');
+        $I->executeFailCommand('run --xml --no-ansi --ext CustomReporter');
         $I->seeInShellOutput('STARTED: twoTestsCest: Failing');
         $I->seeInShellOutput('ENDED: twoTestsCest: Failing');
         $I->seeInShellOutput('STARTED: twoTestsCest: Successful');
