@@ -485,16 +485,14 @@ EOF
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
     }
 
-    public function overrideConfigOptionsToChangeReporter(CliGuy $I)
+    public function reportersConfigurationSectionIsNotSupported(CliGuy $I)
     {
-        // @TODO: make this test work with PHPUnit 10
-        if (!class_exists('PHPUnit_Util_Log_TeamCity')) {
-            throw new \PHPUnit\Framework\SkippedWithMessageException('Reporter does not exist for this PHPUnit version');
-        }
-
         $I->executeCommand('run scenario --report -o "reporters: report: PHPUnit_Util_Log_TeamCity" --no-exit');
-        $I->seeInShellOutput('##teamcity[testStarted');
-        $I->dontSeeInShellOutput('............Ok');
+        $I->seeInShellOutput(
+            "WARNING: 'reporters' option is not supported! Custom reporters must be reimplemented as extensions."
+        );
+        $I->seeInShellOutput('............Ok');
+        $I->dontSeeInShellOutput('##teamcity[testStarted');
     }
 
     public function overrideModuleOptions(CliGuy $I)

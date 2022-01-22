@@ -11,6 +11,7 @@ use Codeception\Coverage\Subscriber\RemoteServer;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\Interfaces\ConsolePrinter;
+use Codeception\Lib\Notification;
 use Codeception\Reporter\HtmlReporter;
 use Codeception\Reporter\JsonReporter;
 use Codeception\Reporter\JUnitReporter;
@@ -197,6 +198,12 @@ class Codecept
 
     private function registerReporters(): void
     {
+        if (isset($this->config['reporters'])) {
+            Notification::warning(
+                "'reporters' option is not supported! Custom reporters must be reimplemented as extensions.",
+                ''
+            );
+        }
         if ($this->options['report']) {
             $this->dispatcher->addSubscriber(new ReportPrinter($this->options));
         }
