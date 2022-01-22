@@ -404,7 +404,7 @@ class Run extends Command
             );
         }
 
-        $this->codecept = new Codecept($userOptions, $output);
+        $this->codecept = new Codecept($userOptions);
 
         if ($suite && $test) {
             $this->codecept->run($suite, $test, $config);

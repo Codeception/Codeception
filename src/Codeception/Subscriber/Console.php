@@ -166,18 +166,6 @@ class Console implements EventSubscriberInterface
             $this->chars['success'] = '✔';
             $this->chars['fail'] = '✖';
         }
-
-        foreach (['html', 'xml', 'phpunit-xml'] as $report) {
-            if (!$this->options[$report]) {
-                continue;
-            }
-            $path = $this->absolutePath((string)$this->options[$report]);
-            $this->reports[] = sprintf(
-                "- <bold>%s</bold> report generated in <comment>file://%s</comment>",
-                strtoupper($report),
-                $path
-            );
-        }
     }
 
     // triggered for scenario based tests: cept, cest
@@ -291,9 +279,6 @@ class Console implements EventSubscriberInterface
 
         if ($result->skippedCount() + $result->notImplementedCount() > 0 && !$verbose) {
             $this->output->writeln("run with `-v` to get more info about skipped or incomplete tests");
-        }
-        foreach ($this->reports as $message) {
-            $this->output->writeln($message);
         }
     }
 

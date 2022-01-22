@@ -13,6 +13,9 @@ class PhpUnitReporter extends JUnitReporter
     const SUITE_LEVEL = 1;
     const FILE_LEVEL  = 2;
 
+    protected string $reportFileParam = 'phpunit-xml';
+    protected string $reportName = 'PHPUNIT XML';
+
     private ?string $currentFile = null;
     private DOMElement $currentFileSuiteElement;
 

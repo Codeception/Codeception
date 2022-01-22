@@ -7,6 +7,7 @@ use Codeception\Event\PrintResultEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Lib\Console\Output;
 use Codeception\Step;
 use Codeception\Step\Meta;
 use Codeception\Subscriber\Shared\StaticEventsTrait;
@@ -48,10 +49,17 @@ class HtmlReporter implements EventSubscriberInterface
     private string $reportFile;
 
     private Timer $timer;
+    private Output $output;
 
-    public function __construct(string $reportFile)
+    public function __construct(array $options, Output $output)
     {
-        $this->reportFile = $reportFile;
+        $this->output = $output;
+
+        $this->reportFile = $options['html'];
+        if (!codecept_is_path_absolute($this->reportFile)) {
+            $this->reportFile = codecept_output_dir($this->reportFile);
+        }
+        codecept_debug(sprintf("Printing HTML report to %s", $this->reportFile));
 
         $this->templatePath = sprintf(
             '%s%stemplate%s',
@@ -194,9 +202,6 @@ class HtmlReporter implements EventSubscriberInterface
         $this->scenarios .= $scenarioTemplate->render();
     }
 
-
-
-
     /**
      * @param $step
      * @return string
@@ -269,5 +274,9 @@ class HtmlReporter implements EventSubscriberInterface
         );
 
         file_put_contents($this->reportFile, $scenariosTemplate->render());
+        $this->output->message(
+            "- <bold>HTML</bold> report generated in <comment>file://%s</comment>",
+            $this->reportFile
+        )->writeln();
     }
 }

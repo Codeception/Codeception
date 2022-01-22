@@ -10,6 +10,7 @@ use Codeception\Coverage\Subscriber\Printer as CoveragePrinter;
 use Codeception\Coverage\Subscriber\RemoteServer;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Exception\ConfigurationException;
+use Codeception\Lib\Console\Output;
 use Codeception\Lib\Interfaces\ConsolePrinter;
 use Codeception\Lib\Notification;
 use Codeception\Reporter\HtmlReporter;
@@ -88,9 +89,8 @@ class Codecept
 
     private OutputInterface $output;
 
-    public function __construct(array $options = [], OutputInterface $output)
+    public function __construct(array $options = [])
     {
-        $this->output = $output;
 
 // TODO: implement these options
 //        if (isset($arguments['report_useless_tests'])) {
@@ -110,6 +110,8 @@ class Codecept
 
         $this->config  = Configuration::config();
         $this->options = $this->mergeOptions($options); // options updated from config
+
+        $this->output = new Output($this->options);
 
         // TODO: implement options
         // $printer = new UIResultPrinter($this->dispatcher, $this->options);
@@ -169,6 +171,10 @@ class Codecept
             $this->dispatcher->addSubscriber(new CoveragePrinter($this->options));
         }
 
+        if ($this->options['report']) {
+            $this->dispatcher->addSubscriber(new ReportPrinter($this->options));
+        }
+
         $this->dispatcher->addSubscriber($this->extensionLoader);
         $this->extensionLoader->registerGlobalExtensions();
 
@@ -204,25 +210,19 @@ class Codecept
                 ''
             );
         }
-        if ($this->options['report']) {
-            $this->dispatcher->addSubscriber(new ReportPrinter($this->options));
-        }
         if ($this->options['html']) {
-            codecept_debug('Printing HTML report into ' . $this->options['html']);
             $this->dispatcher->addSubscriber(
-                new HtmlReporter($this->absolutePath($this->options['html']))
+                new HtmlReporter($this->options, $this->output)
             );
         }
         if ($this->options['xml']) {
-            codecept_debug('Printing JUNIT report into ' . $this->options['xml']);
             $this->dispatcher->addSubscriber(
-                new JUnitReporter($this->absolutePath($this->options['xml']))
+                new JUnitReporter($this->options, $this->output)
             );
         }
         if ($this->options['phpunit-xml']) {
-            codecept_debug('Printing PHPUNIT report into ' . $this->options['phpunit-xml']);
             $this->dispatcher->addSubscriber(
-                new PhpUnitReporter($this->absolutePath($this->options['phpunit-xml']))
+                new PhpUnitReporter($this->options, $this->output)
             );
         }
     }

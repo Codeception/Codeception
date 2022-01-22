@@ -77,7 +77,7 @@ class Console extends Command
 
         Debug::setOutput(new Output($options));
 
-        $this->codecept = new Codecept($options, $output);
+        $this->codecept = new Codecept($options);
         $eventDispatcher = $this->codecept->getDispatcher();
 
         $suiteManager = new SuiteManager($eventDispatcher, $suiteName, $settings);

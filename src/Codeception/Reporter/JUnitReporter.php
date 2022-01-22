@@ -2,12 +2,12 @@
 
 namespace Codeception\Reporter;
 
-use Codeception\Configuration;
 use Codeception\Event\FailEvent;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Lib\Console\Output;
 use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Util\StackTraceFilter;
@@ -44,6 +44,10 @@ class JUnitReporter implements EventSubscriberInterface
         Events::TEST_WARNING       => 'testWarning',
         Events::RESULT_PRINT_AFTER => 'afterResult',
     ];
+
+    protected string $reportFileParam = 'xml';
+
+    protected string $reportName = 'JUNIT XML';
 
     protected bool $isStrict = false;
 
@@ -106,11 +110,19 @@ class JUnitReporter implements EventSubscriberInterface
 
     private string $reportFile;
 
-    public function __construct(string $reportFile)
-    {
-        $this->reportFile = $reportFile;
+    private Output $output;
 
-        $this->isStrict = Configuration::config()['settings']['strict_xml'];
+    public function __construct(array $options, Output $output)
+    {
+        $this->output = $output;
+
+        $this->reportFile = $options[$this->reportFileParam];
+        if (!codecept_is_path_absolute($this->reportFile)) {
+            $this->reportFile = codecept_output_dir($this->reportFile);
+        }
+        codecept_debug(sprintf("Printing %s report to %s", $this->reportName, $this->reportFile));
+
+        $this->isStrict = $options['strict_xml'];
 
         $this->document = new DOMDocument('1.0', 'UTF-8');
         $this->document->formatOutput = true;
@@ -122,6 +134,12 @@ class JUnitReporter implements EventSubscriberInterface
     public function afterResult(PrintResultEvent $event): void
     {
         file_put_contents($this->reportFile, $this->document->saveXML());
+        $this->output->message(
+            "- <bold>%s</bold> report generated in <comment>file://%s</comment>",
+            $this->reportName,
+            $this->reportFile
+        )
+        ->writeln();
     }
 
     public function beforeSuite(SuiteEvent $event): void

@@ -112,7 +112,7 @@ final class RunCest
     {
         $I->wantTo('check phpunit xml reports');
         $I->executeCommand('run dummy --phpunit-xml');
-        $I->seeInShellOutput('PHPUNIT-XML report generated in');
+        $I->seeInShellOutput('PHPUNIT XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
@@ -133,7 +133,7 @@ final class RunCest
     {
         $I->wantTo('check phpunit xml in strict mode');
         $I->executeCommand('run dummy --phpunit-xml -c codeception_strict_xml.yml');
-        $I->seeInShellOutput('PHPUNIT-XML report generated in');
+        $I->seeInShellOutput('PHPUNIT XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
