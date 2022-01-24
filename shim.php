@@ -37,7 +37,7 @@ namespace {
     class_alias('Codeception\TestInterface', 'Codeception\TestCase');
 
     //Compatibility with Symfony 5
-    if (!class_exists('Symfony\Component\EventDispatcher\Event') && class_exists('Symfony\Contracts\EventDispatcher\Event')) {
-        class_alias('Symfony\Contracts\EventDispatcher\Event', 'Symfony\Component\EventDispatcher\Event');
+    if (!class_exists('Symfony\Contracts\EventDispatcher\Event') && class_exists('Symfony\Component\EventDispatcher\Event')) {
+        class_alias('Symfony\Component\EventDispatcher\Event', 'Symfony\Contracts\EventDispatcher\Event');
     }
 }
