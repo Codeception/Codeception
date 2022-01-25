@@ -52,8 +52,6 @@ class Codecept
 
     protected ExtensionLoader $extensionLoader;
 
-    private PHPUnitPrinter $printer;
-
     protected array $options = [
         'silent'             => false,
         'debug'              => false,
@@ -87,7 +85,7 @@ class Codecept
 
     protected array $extensions = [];
 
-    private OutputInterface $output;
+    private Output $output;
 
     public function __construct(array $options = [])
     {
@@ -113,9 +111,6 @@ class Codecept
 
         $this->output = new Output($this->options);
 
-        // TODO: implement options
-        // $printer = new UIResultPrinter($this->dispatcher, $this->options);
-        $this->printer = new PHPUnitPrinter('php://stdout');
         $this->runner  = new TestRunner();
         $this->registerSubscribers();
     }
@@ -168,7 +163,7 @@ class Codecept
             $this->dispatcher->addSubscriber(new Local($this->options));
             $this->dispatcher->addSubscriber(new LocalServer($this->options));
             $this->dispatcher->addSubscriber(new RemoteServer($this->options));
-            $this->dispatcher->addSubscriber(new CoveragePrinter($this->options));
+            $this->dispatcher->addSubscriber(new CoveragePrinter($this->options, $this->output));
         }
 
         if ($this->options['report']) {
@@ -306,7 +301,7 @@ class Codecept
     public function printResult(): void
     {
         $result = $this->getResult();
-        $this->dispatcher->dispatch(new PrintResultEvent($result, $this->printer), Events::RESULT_PRINT_AFTER);
+        $this->dispatcher->dispatch(new PrintResultEvent($result), Events::RESULT_PRINT_AFTER);
     }
 
     public function getResult(): TestResult
