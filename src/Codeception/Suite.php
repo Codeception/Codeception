@@ -178,13 +178,6 @@ class Suite extends TestSuite
         $time = $timer->stop()->asSeconds();
         $test->addToAssertionCount(Assert::getCount());
 
-        // TODO: pass configuration from Codecept
-//        if ($this->configuration->reportUselessTests() &&
-//            $test->numberOfAssertionsPerformed() === 0) {
-//            $risky = true;
-//        }
-
-
         if ($collectCodeCoverage) {
             $append           = !$risky && !$incomplete && !$skipped;
             $linesToBeCovered = [];

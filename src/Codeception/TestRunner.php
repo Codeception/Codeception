@@ -22,9 +22,6 @@ class TestRunner
 
     public function prepareSuite(\PHPUnit\Framework\Test $suite, array $arguments)
     {
-        // TODO: handle configuration
-        // $this->handleConfiguration($arguments);
-
         $filterAdded = false;
 
         $filterFactory = new Factory();

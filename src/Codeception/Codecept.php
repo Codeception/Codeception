@@ -89,16 +89,6 @@ class Codecept
 
     public function __construct(array $options = [])
     {
-
-// TODO: implement these options
-//        if (isset($arguments['report_useless_tests'])) {
-//            $result->beStrictAboutTestsThatDoNotTestAnything((bool)$arguments['report_useless_tests']);
-//        }
-//
-//        if (isset($arguments['disallow_test_output'])) {
-//            $result->beStrictAboutOutputDuringTests((bool)$arguments['disallow_test_output']);
-//        }
-
         $this->result = $this->initializeTestResult();
         $this->dispatcher = new EventDispatcher();
         $this->extensionLoader = new ExtensionLoader($this->dispatcher);
