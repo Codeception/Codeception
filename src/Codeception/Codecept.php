@@ -44,8 +44,6 @@ class Codecept
      */
     public const VERSION = '5.0.0';
 
-    protected ?TestRunner $runner = null;
-
     protected TestResult $result;
 
     protected EventDispatcher $dispatcher;
@@ -101,7 +99,6 @@ class Codecept
 
         $this->output = new Output($this->options);
 
-        $this->runner  = new TestRunner();
         $this->registerSubscribers();
     }
 
@@ -279,7 +276,7 @@ class Codecept
         srand($this->options['seed']);
         $suiteManager->loadTests($test);
         srand();
-        $suiteManager->run($this->runner, $this->result, $this->options);
+        $suiteManager->run($this->result, $this->options);
         return $this->result;
     }
 

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Codeception\SuiteManager;
-use Codeception\TestRunner;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 if (!defined('PHPUNIT_TESTSUITE')) {
@@ -20,7 +19,6 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
     protected SuiteManager $suiteman;
 
     protected EventDispatcher $dispatcher;
-    protected TestRunner $runner;
 
     public function _setUp()
     {
@@ -28,8 +26,6 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
         $settings['actor'] = 'CodeGuy';
         $this->suiteman = new SuiteManager($this->dispatcher, 'suite', $settings);
-
-        $this->runner = new TestRunner();
     }
 
     /**
@@ -45,7 +41,6 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->dispatcher->addListener('suite.after', $eventListener);
 
         $this->suiteman->run(
-            $this->runner,
             new \PHPUnit\Framework\TestResult,
             ['colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
         );
@@ -116,7 +111,6 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
         $result = new \PHPUnit\Framework\TestResult;
         $this->suiteman->run(
-            $this->runner,
             $result,
             ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
         );

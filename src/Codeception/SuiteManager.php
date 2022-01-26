@@ -8,12 +8,17 @@ use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
+use Codeception\PHPUnit\FilterTest;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
 use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Runner\Filter\ExcludeGroupFilterIterator;
+use PHPUnit\Runner\Filter\Factory;
+use PHPUnit\Runner\Filter\IncludeGroupFilterIterator;
+use ReflectionProperty;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
@@ -130,15 +135,69 @@ class SuiteManager
         return $suite;
     }
 
-    public function run(TestRunner $runner, TestResult $result, array $options): void
+    public function run(TestResult $result, array $options): void
     {
-        $runner->prepareSuite($this->suite, $options);
+        $this->prepareSuite($this->suite, $options);
         $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_BEFORE);
         try {
-            $runner->doEnhancedRun($this->suite, $result, $options);
+            unset($GLOBALS['app']); // hook for not to serialize globals
+            $this->suite->run($result);
         } finally {
             $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_AFTER);
         }
+    }
+
+    public function prepareSuite(PHPUnitTest $suite, array $options): void
+    {
+        $filterAdded = false;
+
+        $filterFactory = new Factory();
+        if (!empty($options['groups'])) {
+            $filterAdded = true;
+            $this->addFilterToFactory(
+                $filterFactory,
+                IncludeGroupFilterIterator::class,
+                $options['groups']
+            );
+        }
+
+        if (!empty($options['excludeGroups'])) {
+            $filterAdded = true;
+            $this->addFilterToFactory(
+                $filterFactory,
+                ExcludeGroupFilterIterator::class,
+                $options['excludeGroups']
+            );
+        }
+
+        if (!empty($options['filter'])) {
+            $filterAdded = true;
+            $this->addFilterToFactory(
+                $filterFactory,
+                FilterTest::class,
+                $options['filter']
+            );
+        }
+
+        if ($filterAdded) {
+            $suite->injectFilter($filterFactory);
+        }
+    }
+
+    private function addFilterToFactory(Factory $filterFactory, string $filterClass, $filterParameter)
+    {
+        $filterReflectionClass = new \ReflectionClass($filterClass);
+
+        $property = new ReflectionProperty(get_class($filterFactory), 'filters');
+        $property->setAccessible(true);
+
+        $filters = $property->getValue($filterFactory);
+        $filters []= [
+            $filterReflectionClass,
+            $filterParameter,
+        ];
+        $property->setValue($filterFactory, $filters);
+        $property->setAccessible(false);
     }
 
     public function getSuite(): Suite
