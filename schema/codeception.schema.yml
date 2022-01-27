@@ -1,0 +1,231 @@
+$id: 'https://codeception.com/1/codeception.schema.yml'
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+title: 'codeception.dist.yml'
+description: 'Schema definition for Codeception main configuration YAML file.'
+
+definitions:
+    actor_suffix:
+        type: string
+        default: 'Tester'
+
+    namespace:
+        type: string
+        default: ''
+
+    include:
+        type: array
+        default: []
+
+    paths:
+        type: object
+        additionalProperties:
+            type: string
+        properties:
+            test:
+                type: string
+            log:
+                type: string
+            data:
+                type: string
+            support:
+                type: string
+
+    extends:
+        # @todo
+        oneOf:
+            -
+                type: 'null'
+            -
+                type: string
+
+    suite:
+        type: object
+        additionalProperties: true
+        properties:
+            path:
+                type: string
+
+    suites:
+        type: object
+        additionalProperties:
+            '$ref': '#/definitions/suite'
+
+    modules:
+        type: object
+        additionalProperties: true
+        properties:
+            config:
+                type: object
+                additionalProperties: true
+
+    extensions:
+        type: object
+        additionalProperties: true
+        properties:
+            enabled:
+                type: array
+                items:
+                    type: string
+            config:
+                type: object
+                additionalProperties: true
+            commands:
+                type: object
+                additionalProperties: true
+
+    reporters:
+        type: object
+        description: |
+            https://codeception.com/docs/08-Customization#custom-reporters
+        additionalProperties:
+            type: string
+        examples:
+            -
+                xml: Codeception\PHPUnit\Log\JUnit
+                html: Codeception\PHPUnit\ResultPrinter\HTML
+                report: Codeception\PHPUnit\ResultPrinter\Report
+                tap: PHPUnit\Util\Log\TAP
+                json: PHPUnit\Util\Log\JSON
+                phpunit-xml: Codeception\PHPUnit\Log\PhpUnit
+
+    groups:
+        # @todo
+        type: array
+        default: []
+
+    bootstrap:
+        oneOf:
+            -
+                type: 'null'
+            -
+                type: 'string'
+
+    settings:
+        type: object
+        additionalProperties: true
+        properties:
+            colors:
+                type: boolean
+                default: true
+            bootstrap:
+                deprecationMessage: 'Use #/bootstrap instead.'
+                oneOf:
+                    -
+                        type: 'null'
+                    -
+                        type: 'string'
+            strict_xml:
+                type: boolean
+                default: false
+            lint:
+                type: boolean
+                default: true
+            backup_globals:
+                type: boolean
+                default: true
+            log_incomplete_skipped:
+                type: boolean
+                default: false
+            report_useless_tests:
+                type: boolean
+                default: false
+            disallow_test_output:
+                type: boolean
+                default: false
+            be_strict_about_changes_to_global_state:
+                type: boolean
+                default: false
+            shuffle:
+                type: boolean
+                default: false
+            suite_class:
+                type: string
+            memory_limit:
+                type: string
+            log:
+                type: boolean
+
+    coverage:
+        type: object
+        additionalProperties: true
+        properties:
+            enabled:
+                type: boolean
+            show_uncovered:
+                type: boolean
+            low_limit:
+                type: integer
+                minimum: 0
+                maximum: 100
+            high_limit:
+                type: integer
+                minimum: 0
+                maximum: 100
+            include:
+                '$ref': '#/definitions/path_pattern_list'
+            whitelist:
+                type: object
+                additionalProperties: true
+                properties:
+                    include:
+                        '$ref': '#/definitions/path_pattern_list'
+
+    params:
+        # @todo
+        type: object
+        additionalProperties: true
+
+    gherkin:
+        # @todo
+        type: object
+        additionalProperties: true
+
+    actor:
+        type: string
+
+    step_decorators:
+        type: array
+        items:
+            type: string
+
+    path_pattern_list:
+        type: array
+        items:
+            type: string
+
+type: object
+properties:
+    actor_suffix:
+        '$ref': '#/definitions/actor_suffix'
+    namespace:
+        '$ref': '#/definitions/namespace'
+    include:
+        '$ref': '#/definitions/include'
+    paths:
+        '$ref': '#/definitions/paths'
+    extends:
+        '$ref': '#/definitions/extends'
+    suites:
+        '$ref': '#/definitions/suites'
+    modules:
+        '$ref': '#/definitions/modules'
+    extensions:
+        '$ref': '#/definitions/extensions'
+    reporters:
+        '$ref': '#/definitions/reporters'
+    groups:
+        '$ref': '#/definitions/groups'
+    bootstrap:
+        '$ref': '#/definitions/bootstrap'
+    settings:
+        '$ref': '#/definitions/settings'
+    coverage:
+        '$ref': '#/definitions/coverage'
+    params:
+        '$ref': '#/definitions/params'
+    gherkin:
+        '$ref': '#/definitions/gherkin'
+    actor:
+        '$ref': '#/definitions/actor'
+    step_decorators:
+        '$ref': '#/definitions/step_decorators'
