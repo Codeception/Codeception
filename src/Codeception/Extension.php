@@ -41,7 +41,7 @@ abstract class Extension implements EventSubscriberInterface
      */
     protected $globalConfig = [];
     /**
-     * @var array
+     * @var Array<string,Module>
      */
     private $modules = [];
 

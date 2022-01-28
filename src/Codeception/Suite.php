@@ -40,6 +40,9 @@ use Throwable;
 
 class Suite extends TestSuite
 {
+    /**
+     * @var Array<string, Module>
+     */
     protected array $modules = [];
 
     protected ?string $baseName = null;
@@ -307,11 +310,17 @@ class Suite extends TestSuite
         return null;
     }
 
+    /**
+     * @return Array<string,Module>
+     */
     public function getModules(): array
     {
         return $this->modules;
     }
 
+    /**
+     * @param Array<string,Module> $modules
+     */
     public function setModules(array $modules): void
     {
         $this->modules = $modules;
