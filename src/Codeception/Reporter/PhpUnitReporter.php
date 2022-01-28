@@ -17,7 +17,6 @@ class PhpUnitReporter extends JUnitReporter
     protected string $reportName = 'PHPUNIT XML';
 
     private ?string $currentFile = null;
-    private DOMElement $currentFileSuiteElement;
 
     public function startTest(TestEvent $event): void
     {
@@ -31,7 +30,7 @@ class PhpUnitReporter extends JUnitReporter
 
         if ($filename !== $this->currentFile) {
             if ($this->currentFile !== null) {
-                parent::afterSuite(new SuiteEvent(new TestSuite($this->currentFile)));
+                parent::afterSuite(new SuiteEvent());
             }
 
             //initialize all values to avoid warnings
@@ -73,7 +72,7 @@ class PhpUnitReporter extends JUnitReporter
         if ($suite->getName()) {
             if ($this->currentFile) {
                 //close last file in the test suite
-                parent::afterSuite(new SuiteEvent(new TestSuite($this->currentFile)));
+                parent::afterSuite(new SuiteEvent($suite));
                 $this->currentFile = null;
             }
             $this->testSuiteLevel = self::SUITE_LEVEL;
