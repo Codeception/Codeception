@@ -6,18 +6,25 @@ namespace Codeception;
 
 use Codeception\Coverage\Subscriber\Local;
 use Codeception\Coverage\Subscriber\LocalServer;
-use Codeception\Coverage\Subscriber\Printer;
+use Codeception\Coverage\Subscriber\Printer as CoveragePrinter;
 use Codeception\Coverage\Subscriber\RemoteServer;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Exception\ConfigurationException;
-use Codeception\PHPUnit\Listener;
-use Codeception\PHPUnit\ResultPrinter\UI as UIResultPrinter;
-use Codeception\PHPUnit\Runner;
+use Codeception\Lib\Console\Output;
+use Codeception\Lib\Interfaces\ConsolePrinter;
+use Codeception\Lib\Notification;
+use Codeception\Reporter\HtmlReporter;
+use Codeception\Reporter\JsonReporter;
+use Codeception\Reporter\JUnitReporter;
+use Codeception\Reporter\PhpUnitReporter;
+use Codeception\Reporter\ReportPrinter;
+use Codeception\Reporter\TapReporter;
 use Codeception\Subscriber\AutoRebuild;
 use Codeception\Subscriber\BeforeAfterTest;
 use Codeception\Subscriber\Bootstrap;
 use Codeception\Subscriber\Console;
 use Codeception\Subscriber\Dependencies;
+use Codeception\Subscriber\Deprecation;
 use Codeception\Subscriber\ErrorHandler;
 use Codeception\Subscriber\ExtensionLoader;
 use Codeception\Subscriber\FailFast;
@@ -25,6 +32,9 @@ use Codeception\Subscriber\GracefulTermination;
 use Codeception\Subscriber\Module;
 use Codeception\Subscriber\PrepareTest;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\TextUI\Configuration\Registry;
+use PHPUnit\Util\Printer as PHPUnitPrinter;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
@@ -34,8 +44,6 @@ class Codecept
      */
     public const VERSION = '5.0.0';
 
-    protected ?Runner $runner = null;
-
     protected TestResult $result;
 
     protected EventDispatcher $dispatcher;
@@ -43,53 +51,67 @@ class Codecept
     protected ExtensionLoader $extensionLoader;
 
     protected array $options = [
-        'silent'          => false,
-        'debug'           => false,
-        'steps'           => false,
-        'html'            => false,
-        'xml'             => false,
-        'phpunit-xml'     => false,
-        'no-redirect'     => true,
-        'report'          => false,
-        'colors'          => false,
-        'coverage'        => false,
-        'coverage-xml'    => false,
-        'coverage-html'   => false,
-        'coverage-text'   => false,
-        'coverage-crap4j' => false,
+        'silent'             => false,
+        'debug'              => false,
+        'steps'              => false,
+        'html'               => false,
+        'xml'                => false,
+        'phpunit-xml'        => false,
+        'no-redirect'        => true,
+        'report'             => false,
+        'colors'             => false,
+        'coverage'           => false,
+        'coverage-xml'       => false,
+        'coverage-html'      => false,
+        'coverage-text'      => false,
+        'coverage-crap4j'    => false,
         'coverage-cobertura' => false,
-        'coverage-phpunit'=> false,
-        'groups'          => null,
-        'excludeGroups'   => null,
-        'filter'          => null,
-        'env'             => null,
-        'fail-fast'       => 0,
-        'ansi'            => true,
-        'verbosity'       => 1,
-        'interactive'     => true,
-        'no-rebuild'      => false,
-        'quiet'           => false,
+        'coverage-phpunit'   => false,
+        'groups'             => null,
+        'excludeGroups'      => null,
+        'filter'             => null,
+        'env'                => null,
+        'fail-fast'          => 0,
+        'ansi'               => true,
+        'verbosity'          => 1,
+        'interactive'        => true,
+        'no-rebuild'         => false,
+        'quiet'              => false,
     ];
 
     protected array $config = [];
 
     protected array $extensions = [];
 
+    private Output $output;
+
     public function __construct(array $options = [])
     {
-        $this->result = new TestResult;
+        $this->result = $this->initializeTestResult();
         $this->dispatcher = new EventDispatcher();
         $this->extensionLoader = new ExtensionLoader($this->dispatcher);
 
         $baseOptions = $this->mergeOptions($options);
         $this->extensionLoader->bootGlobalExtensions($baseOptions); // extensions may override config
 
-        $this->config = Configuration::config();
+        $this->config  = Configuration::config();
         $this->options = $this->mergeOptions($options); // options updated from config
 
+        $this->output = new Output($this->options);
+
         $this->registerSubscribers();
-        $this->registerPHPUnitListeners();
-        $this->registerPrinter();
+    }
+
+    private function initializeTestResult(): TestResult
+    {
+        /*
+         * Configuration must be registered, but TestResult only cares about stopOnError,
+         * stopOnFailure and other stopOn settings that we don't set
+         */
+        $cliConfiguration = (new \PHPUnit\TextUI\CliArguments\Builder())->fromParameters([], []);
+        $xmlConfiguration = \PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration::create();
+        Registry::init($cliConfiguration, $xmlConfiguration);
+        return new TestResult;
     }
 
     /**
@@ -99,15 +121,9 @@ class Codecept
      */
     protected function mergeOptions(array $options): array
     {
-        $config = Configuration::config();
+        $config      = Configuration::config();
         $baseOptions = array_merge($this->options, $config['settings']);
         return array_merge($baseOptions, $options);
-    }
-
-    protected function registerPHPUnitListeners(): void
-    {
-        $listener = new Listener($this->dispatcher);
-        $this->result->addListener($listener);
     }
 
     public function registerSubscribers(): void
@@ -125,9 +141,7 @@ class Codecept
         if (!$this->options['no-rebuild']) {
             $this->dispatcher->addSubscriber(new AutoRebuild());
         }
-        if (!$this->options['silent']) {
-            $this->dispatcher->addSubscriber(new Console($this->options));
-        }
+
         if ($this->options['fail-fast'] > 0) {
             $this->dispatcher->addSubscriber(new FailFast($this->options['fail-fast']));
         }
@@ -136,10 +150,71 @@ class Codecept
             $this->dispatcher->addSubscriber(new Local($this->options));
             $this->dispatcher->addSubscriber(new LocalServer($this->options));
             $this->dispatcher->addSubscriber(new RemoteServer($this->options));
-            $this->dispatcher->addSubscriber(new Printer($this->options));
+            $this->dispatcher->addSubscriber(new CoveragePrinter($this->options, $this->output));
         }
+
+        if ($this->options['report']) {
+            $this->dispatcher->addSubscriber(new ReportPrinter($this->options));
+        }
+
         $this->dispatcher->addSubscriber($this->extensionLoader);
         $this->extensionLoader->registerGlobalExtensions();
+
+        if (!$this->options['silent'] && !$this->isConsolePrinterSubscribed()) {
+            $this->dispatcher->addSubscriber(new Console($this->options));
+        }
+
+        $this->dispatcher->addSubscriber(new Deprecation($this->options));
+
+        $this->registerReporters();
+    }
+
+    private function isConsolePrinterSubscribed(): bool
+    {
+        foreach ($this->dispatcher->getListeners() as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                if ($listener instanceof ConsolePrinter) {
+                    return true;
+                }
+                if (is_array($listener) && $listener[0] instanceof ConsolePrinter) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private function registerReporters(): void
+    {
+        if (isset($this->config['reporters'])) {
+            Notification::warning(
+                "'reporters' option is not supported! Custom reporters must be reimplemented as extensions.",
+                ''
+            );
+        }
+        if ($this->options['html']) {
+            $this->dispatcher->addSubscriber(
+                new HtmlReporter($this->options, $this->output)
+            );
+        }
+        if ($this->options['xml']) {
+            $this->dispatcher->addSubscriber(
+                new JUnitReporter($this->options, $this->output)
+            );
+        }
+        if ($this->options['phpunit-xml']) {
+            $this->dispatcher->addSubscriber(
+                new PhpUnitReporter($this->options, $this->output)
+            );
+        }
+    }
+
+    private function absolutePath(string $path): string
+    {
+        if ((strpos($path, '/') === 0) or (strpos($path, ':') === 1)) { // absolute path
+            return $path;
+        }
+        return Configuration::outputDir() . $path;
     }
 
     public function run(string $suite, string $test = null, array $config = null): void
@@ -161,7 +236,7 @@ class Codecept
 
         // Iterate over all unique environment sets and runs the given suite with each of the merged configurations.
         foreach (array_unique($selectedEnvironments) as $envList) {
-            $envSet = explode(',', $envList);
+            $envSet         = explode(',', $envList);
             $suiteEnvConfig = $config;
 
             // contains a list of the environments used in this suite configuration env set.
@@ -177,7 +252,7 @@ class Codecept
 
                     // Merge configuration consecutively with already build configuration
                     $suiteEnvConfig = Configuration::mergeConfigs($suiteEnvConfig, $config['env'][$currentEnv]);
-                    $envConfigs[] = $currentEnv;
+                    $envConfigs[]   = $currentEnv;
                 }
             }
 
@@ -201,7 +276,7 @@ class Codecept
         srand($this->options['seed']);
         $suiteManager->loadTests($test);
         srand();
-        $suiteManager->run($this->runner, $this->result, $this->options);
+        $suiteManager->run($this->result, $this->options);
         return $this->result;
     }
 
@@ -213,12 +288,7 @@ class Codecept
     public function printResult(): void
     {
         $result = $this->getResult();
-        $result->flushListeners();
-
-        $printer = $this->runner->getPrinter();
-        $printer->printResult($result);
-
-        $this->dispatcher->dispatch(new PrintResultEvent($result, $printer), Events::RESULT_PRINT_AFTER);
+        $this->dispatcher->dispatch(new PrintResultEvent($result), Events::RESULT_PRINT_AFTER);
     }
 
     public function getResult(): TestResult
@@ -234,12 +304,5 @@ class Codecept
     public function getDispatcher(): EventDispatcher
     {
         return $this->dispatcher;
-    }
-
-    protected function registerPrinter(): void
-    {
-        $printer = new UIResultPrinter($this->dispatcher, $this->options);
-        $this->runner = new Runner();
-        $this->runner->setPrinter($printer);
     }
 }

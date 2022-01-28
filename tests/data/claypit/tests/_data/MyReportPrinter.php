@@ -1,35 +1,69 @@
 <?php
-use Codeception\PHPUnit\ConsolePrinter;
-use Codeception\PHPUnit\ResultPrinter;
-use PHPUnit\Runner\BaseTestRunner;
 
-class MyReportPrinter extends ResultPrinter implements ConsolePrinter
+use Codeception\Event\FailEvent;
+use Codeception\Event\TestEvent;
+use Codeception\Events;
+use Codeception\Lib\Interfaces\ConsolePrinter;
+use Codeception\Test\Descriptor;
+use PHPUnit\Framework\Test;
+
+class MyReportPrinter extends \Codeception\Extension implements ConsolePrinter
 {
-    public function endTest(\PHPUnit\Framework\Test $test, float $time): void
-    {
-        $name = \Codeception\Test\Descriptor::getTestAsString($test);
-        if ($this->testStatus == BaseTestRunner::STATUS_FAILURE) {
-            $this->write('×');
-        } elseif ($this->testStatus == BaseTestRunner::STATUS_SKIPPED) {
-            $this->write('S');
-        } elseif ($this->testStatus == BaseTestRunner::STATUS_INCOMPLETE) {
-            $this->write('I');
-        } elseif ($this->testStatus == BaseTestRunner::STATUS_ERROR) {
-            $this->write('E');
-        } else {
-            $this->write('✔');
-        }
+    /**
+     * @var array<string, string>
+     */
+    protected static array $events = [
+        Events::TEST_SUCCESS       => 'testSuccess',
+        Events::TEST_FAIL          => 'testFailure',
+        Events::TEST_ERROR         => 'testError',
+        Events::TEST_WARNING       => 'testWarning',
+        Events::TEST_INCOMPLETE    => 'testSkipped',
+        Events::TEST_SKIPPED       => 'testIncomplete',
+    ];
 
+    public function testSuccess(TestEvent $event): void
+    {
+        $this->write('✔');
+        $this->printTestName($event->getTest());
+    }
+
+    public function testError(FailEvent $event): void
+    {
+        $this->write('E');
+        $this->printTestName($event->getTest());
+    }
+
+    public function testFailure(FailEvent $event): void
+    {
+        $this->write('×');
+        $this->printTestName($event->getTest());
+    }
+
+    public function testWarning(FailEvent $event): void
+    {
+        $this->write('W');
+        $this->printTestName($event->getTest());
+    }
+
+    public function testSkipped(FailEvent $event): void
+    {
+        $this->write('S');
+        $this->printTestName($event->getTest());
+    }
+
+    public function testIncomplete(FailEvent $event): void
+    {
+        $this->write('I');
+        $this->printTestName($event->getTest());
+    }
+
+    private function printTestName(Test $test)
+    {
+        $name = Descriptor::getTestAsString($test);
         if (strlen($name) > 75) {
             $name = substr($name, 0, 70);
         }
 
-        $this->write(" {$name} \n");
+        $this->output->writeln(" {$name} ");
     }
-
-    public function printResult(\PHPUnit\Framework\TestResult $result): void
-    {
-
-    }
-
 }

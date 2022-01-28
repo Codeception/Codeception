@@ -13,27 +13,30 @@ use Codeception\Events;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\MessageFactory;
 use Codeception\Lib\Console\Output;
-use Codeception\Lib\Notification;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Step\ConditionalAssertion;
 use Codeception\Step\Meta;
+use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Codeception\Suite;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\Debug;
+use Codeception\Util\StackTraceFilter;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SelfDescribing;
-use PHPUnit\Framework\SkippedTestError;
-use PHPUnit\Util\Filter as PHPUnitFilter;
+use PHPUnit\Framework\SkippedTest;
+use SebastianBergmann\Timer\Duration;
+use SebastianBergmann\Timer\ResourceUsageFormatter;
+use SebastianBergmann\Timer\Timer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use function array_count_values;
 use function array_map;
 use function array_merge;
 use function array_reverse;
@@ -58,7 +61,7 @@ use function ucfirst;
 
 class Console implements EventSubscriberInterface
 {
-    use Shared\StaticEventsTrait;
+    use StaticEventsTrait;
 
     /**
      * @var array<string, string>
@@ -68,6 +71,7 @@ class Console implements EventSubscriberInterface
         Events::SUITE_AFTER        => 'afterSuite',
         Events::TEST_START         => 'startTest',
         Events::TEST_END           => 'endTest',
+        Events::TEST_AFTER         => 'afterTest',
         Events::STEP_BEFORE        => 'beforeStep',
         Events::STEP_AFTER         => 'afterStep',
         Events::TEST_SUCCESS       => 'testSuccess',
@@ -91,8 +95,6 @@ class Console implements EventSubscriberInterface
     protected bool $ansi = true;
 
     protected bool $silent = false;
-
-    protected bool $lastTestFailed = false;
 
     protected ?SelfDescribing $printedTest = null;
 
@@ -142,8 +144,16 @@ class Console implements EventSubscriberInterface
 
     protected MessageFactory $messageFactory;
 
+    private Timer $timer;
+
+    private int $assertionCount = 0;
+
+    private bool $firstDefectType = true;
+
     public function __construct(array $options)
     {
+        $this->timer = new Timer();
+        $this->timer->start();
         $this->prepareOptions($options);
         $this->output = new Output($options);
         $this->messageFactory = new MessageFactory($this->output);
@@ -155,18 +165,6 @@ class Console implements EventSubscriberInterface
         if ($this->options['ansi'] && !$this->isWin()) {
             $this->chars['success'] = '✔';
             $this->chars['fail'] = '✖';
-        }
-
-        foreach (['html', 'xml', 'phpunit-xml'] as $report) {
-            if (!$this->options[$report]) {
-                continue;
-            }
-            $path = $this->absolutePath((string)$this->options[$report]);
-            $this->reports[] = sprintf(
-                "- <bold>%s</bold> report generated in <comment>file://%s</comment>",
-                strtoupper($report),
-                $path
-            );
         }
     }
 
@@ -249,15 +247,142 @@ class Console implements EventSubscriberInterface
         $this->failedStep[] = $step;
     }
 
+    public function afterTest(TestEvent $event)
+    {
+        $test = $event->getTest();
+
+        if (method_exists($test, 'numberOfAssertionsPerformed')) {
+            $this->assertionCount += $test->numberOfAssertionsPerformed();
+        }
+
+    }
+
     public function afterResult(PrintResultEvent $event): void
     {
+        $duration = $this->timer->stop();
         $result = $event->getResult();
-        if ($result->skippedCount() + $result->notImplementedCount() > 0 && $this->options['verbosity'] < OutputInterface::VERBOSITY_VERBOSE) {
+        $verbose = $this->options['verbosity'] >= OutputInterface::VERBOSITY_VERBOSE;
+
+        $outputFormatter = $this->output->getFormatter();
+        $outputFormatter->setStyle('warning', new OutputFormatterStyle('black', 'yellow'));
+        $outputFormatter->setStyle('success', new OutputFormatterStyle('black', 'green'));
+        $this->printResourceUsage($duration);
+        $this->output->writeln('');
+
+        $this->printDefects($result->errors(), 'error');
+        $this->printDefects($result->failures(), 'failure');
+        if ($verbose) {
+            $this->printDefects($result->notImplemented(), 'incomplete test');
+            $this->printDefects($result->skipped(), 'skipped test');
+        }
+        $this->printFooter($event);
+
+        if ($result->skippedCount() + $result->notImplementedCount() > 0 && !$verbose) {
             $this->output->writeln("run with `-v` to get more info about skipped or incomplete tests");
         }
-        foreach ($this->reports as $message) {
-            $this->output->writeln($message);
+    }
+
+    private function printResourceUsage(Duration $duration): void
+    {
+        $formatter = new ResourceUsageFormatter();
+        $this->message($formatter->resourceUsage($duration))->writeln();
+    }
+
+    private function printDefects(array $defects, string $type): void
+    {
+        $count = count($defects);
+
+        if ($count == 0) {
+            return;
         }
+
+        if ($this->firstDefectType) {
+            $this->firstDefectType = false;
+        } else {
+            $this->message("\n---------")->writeln();
+        }
+
+        $this->message('')->writeln();
+
+        $this->message(
+            sprintf(
+                "There %s %d %s%s:",
+                ($count == 1) ? 'was' : 'were',
+                $count,
+                $type,
+                ($count == 1) ? '' : 's'
+            )
+        )->writeln();
+
+        $i = 1;
+
+        foreach ($defects as $defect) {
+            $event = new FailEvent($defect->failedTest(), null, $defect->thrownException(), $i++);
+            $this->printFail($event);
+        }
+    }
+
+    private function printFooter(PrintResultEvent $event): void
+    {
+        $result = $event->getResult();
+        $testCount = $result->count();
+
+        $this->message('')->writeln();
+
+        if ($testCount === 0) {
+            $this->message('No tests executed!')->style('warning')->writeln();
+            return;
+        }
+
+        if ($result->wasSuccessfulAndNoTestIsRiskyOrSkippedOrIncomplete()) {
+            $message = sprintf(
+                'OK (%d test%s, %d assertion%s)',
+                $testCount,
+                $testCount === 1 ? '' : 's',
+                $this->assertionCount,
+                $this->assertionCount === 1 ? '' : 's'
+            );
+            $this->message($message)->style('success')->writeln();
+            return;
+        }
+
+        $style = 'error';
+        if ($result->wasSuccessful()) {
+            $style = 'warning';
+            $this->message('OK, but incomplete, skipped, or risky tests!')->style($style)->writeln();
+        } elseif ($result->errorCount()) {
+            $this->message('ERRORS!')->style($style)->writeln();
+        } elseif ($result->failureCount()) {
+            $this->message('FAILURES!')->style($style)->writeln();
+        } elseif ($result->warningCount()) {
+            $style = 'warning';
+            $this->message('WARNINGS!')->style($style)->writeln();
+        }
+
+        $counts = [
+            sprintf("Tests: %s", $testCount),
+            sprintf("Assertions: %s", $this->assertionCount),
+        ];
+        if ($result->errorCount() > 0) {
+            $counts []= sprintf("Errors: %s", $result->errorCount());
+        }
+        if ($result->failureCount() > 0) {
+            $counts []= sprintf("Failures: %s", $result->failureCount());
+        }
+        if ($result->warningCount() > 0) {
+            $counts []= sprintf("Warnings: %s", $result->warningCount());
+        }
+        if ($result->skippedCount() > 0) {
+            $counts []= sprintf("Skipped: %s", $result->skippedCount());
+        }
+        if ($result->notImplementedCount() > 0) {
+            $counts []= sprintf("Incomplete: %s", $result->notImplementedCount());
+        }
+        if ($result->riskyCount() > 0) {
+            $counts []= sprintf("Risky: %s", $result->riskyCount());
+        }
+
+        $this->message(implode(', ', $counts) . '.')->style($style)->writeln();
     }
 
     private function absolutePath(string $path): string
@@ -388,13 +513,6 @@ class Console implements EventSubscriberInterface
     public function afterSuite(SuiteEvent $event): void
     {
         $this->message()->width($this->width, '-')->writeln();
-        $messages = Notification::all();
-        foreach (array_count_values($messages) as $message => $count) {
-            if ($count > 1) {
-                $message = $count . 'x ' . $message;
-            }
-            $this->output->notification($message);
-        }
     }
 
     public function printFail(FailEvent $event): void
@@ -453,7 +571,7 @@ class Console implements EventSubscriberInterface
 
     public function printException($exception, string $cause = null): void
     {
-        if ($exception instanceof SkippedTestError || $exception instanceof IncompleteTestError) {
+        if ($exception instanceof SkippedTest || $exception instanceof IncompleteTestError) {
             if ($exception->getMessage() !== '') {
                 $this->message(OutputFormatter::escape($exception->getMessage()))->prepend("\n")->writeln();
             }
@@ -523,17 +641,17 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
 
-        if ($exception instanceof SkippedTestError || $exception instanceof IncompleteTestError) {
+        if ($exception instanceof SkippedTest || $exception instanceof IncompleteTestError) {
             return;
         }
 
         if ($this->rawStackTrace) {
-            $this->message(OutputFormatter::escape(PHPUnitFilter::getFilteredStacktrace($exception, true, false)))->writeln();
+            $this->message(OutputFormatter::escape(StackTraceFilter::getFilteredStacktrace($exception, true, false)))->writeln();
 
             return;
         }
 
-        $trace = PHPUnitFilter::getFilteredStacktrace($exception, false);
+        $trace = StackTraceFilter::getFilteredStacktrace($exception, false);
 
         $i = 0;
         foreach ($trace as $step) {

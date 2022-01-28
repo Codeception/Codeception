@@ -1,54 +1,65 @@
 <?php
-namespace Codeception\PHPUnit\ResultPrinter;
 
-use Codeception\PHPUnit\ResultPrinter as CodeceptionResultPrinter;
+namespace Codeception\Reporter;
+
+use Codeception\Event\FailEvent;
+use Codeception\Event\PrintResultEvent;
+use Codeception\Event\SuiteEvent;
+use Codeception\Event\TestEvent;
+use Codeception\Events;
+use Codeception\Lib\Console\Output;
 use Codeception\Step;
 use Codeception\Step\Meta;
+use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\PathResolver;
-use PHPUnit\Framework\TestResult;
+use PHPUnit\Framework\Test;
 use SebastianBergmann\Template\Template;
+use SebastianBergmann\Timer\Timer;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class HTML extends CodeceptionResultPrinter
+class HtmlReporter implements EventSubscriberInterface
 {
-    /**
-     * @var boolean
-     */
-    protected $printsHTML = true;
+    use StaticEventsTrait;
 
     /**
-     * @var integer
+     * @var array<string, string>
      */
-    protected $id = 0;
+    protected static array $events = [
+        Events::SUITE_BEFORE       => 'beforeSuite',
+        Events::RESULT_PRINT_AFTER => 'afterResult',
+        Events::TEST_SUCCESS       => 'testSuccess',
+        Events::TEST_FAIL          => 'testFailure',
+        Events::TEST_ERROR         => 'testError',
+        Events::TEST_INCOMPLETE    => 'testSkipped',
+        Events::TEST_SKIPPED       => 'testSkipped',
+        Events::TEST_WARNING       => 'testWarning',
+    ];
 
-    /**
-     * @var string
-     */
-    protected $scenarios = '';
+    protected int $id = 0;
 
-    /**
-     * @var string
-     */
-    protected $templatePath;
+    protected string $scenarios = '';
 
-    /**
-     * @var int
-     */
-    protected $timeTaken = 0;
+    protected string $templatePath;
 
-    protected $failures = [];
+    protected array $failures = [];
 
-    /**
-     * Constructor.
-     *
-     * @param  mixed $out
-     * @throws InvalidArgumentException
-     */
-    public function __construct($out = null)
+    private string $reportFile;
+
+    private Timer $timer;
+    private Output $output;
+
+    public function __construct(array $options, Output $output)
     {
-        parent::__construct($out);
+        $this->output = $output;
+
+        $this->reportFile = $options['html'];
+        if (!codecept_is_path_absolute($this->reportFile)) {
+            $this->reportFile = codecept_output_dir($this->reportFile);
+        }
+        codecept_debug(sprintf("Printing HTML report to %s", $this->reportFile));
 
         $this->templatePath = sprintf(
             '%s%stemplate%s',
@@ -56,45 +67,63 @@ class HTML extends CodeceptionResultPrinter
             DIRECTORY_SEPARATOR,
             DIRECTORY_SEPARATOR
         );
+
+        $this->timer = new Timer();
+        $this->timer->start();
     }
 
-    /**
-     * Handler for 'start class' event.
-     *
-     * @param  string $name
-     */
-    protected function startClass(string $name):void
+    public function beforeSuite(SuiteEvent $event) : void
     {
+        $suite = $event->getSuite();
+        if (!$suite->getName()) {
+            return;
+        }
+
+        $suiteTemplate = new Template(
+            $this->templatePath . 'suite.html'
+        );
+
+        $suiteTemplate->setVar(['suite' => ucfirst($suite->getName())]);
+
+        $this->scenarios .= $suiteTemplate->render();
     }
 
-    public function endTest(\PHPUnit\Framework\Test $test, float $time) : void
+    public function testSuccess(TestEvent $event): void
+    {
+        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioSuccess');
+    }
+
+    public function testError(FailEvent $event): void
+    {
+        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioFailed');
+    }
+
+    public function testFailure(FailEvent $event): void
+    {
+        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioFailed');
+    }
+
+    public function testWarning(FailEvent $event): void
+    {
+        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioSuccess');
+    }
+
+    public function testSkipped(FailEvent $event): void
+    {
+        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioSkipped');
+    }
+
+    public function testIncomplete(FailEvent $event): void
+    {
+        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioIncomplete');
+    }
+
+    public function printTestResult(Test $test, float $time, string $scenarioStatus) : void
     {
         $steps = [];
-        $success = ($this->testStatus == \PHPUnit\Runner\BaseTestRunner::STATUS_PASSED);
-        if ($success) {
-            $this->successful++;
-        }
 
         if ($test instanceof ScenarioDriven) {
             $steps = $test->getScenario()->getSteps();
-        }
-        $this->timeTaken += $time;
-
-        switch ($this->testStatus) {
-            case \PHPUnit\Runner\BaseTestRunner::STATUS_FAILURE:
-                $scenarioStatus = 'scenarioFailed';
-                break;
-            case \PHPUnit\Runner\BaseTestRunner::STATUS_SKIPPED:
-                $scenarioStatus = 'scenarioSkipped';
-                break;
-            case \PHPUnit\Runner\BaseTestRunner::STATUS_INCOMPLETE:
-                $scenarioStatus = 'scenarioIncomplete';
-                break;
-            case \PHPUnit\Runner\BaseTestRunner::STATUS_ERROR:
-                $scenarioStatus = 'scenarioFailed';
-                break;
-            default:
-                $scenarioStatus = 'scenarioSuccess';
         }
 
         $stepsBuffer = '';
@@ -173,106 +202,6 @@ class HTML extends CodeceptionResultPrinter
         $this->scenarios .= $scenarioTemplate->render();
     }
 
-    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite) : void
-    {
-        $suiteTemplate = new Template(
-            $this->templatePath . 'suite.html'
-        );
-        if (!$suite->getName()) {
-            return;
-        }
-
-        $suiteTemplate->setVar(['suite' => ucfirst($suite->getName())]);
-
-        $this->scenarios .= $suiteTemplate->render();
-    }
-
-    /**
-     * Handler for 'end run' event.
-     */
-    protected function endRun():void
-    {
-        $scenarioHeaderTemplate = new Template(
-            $this->templatePath . 'scenario_header.html'
-        );
-
-        $status = !$this->failed
-            ? '<span style="color: green">OK</span>'
-            : '<span style="color: #e74c3c">FAILED</span>';
-
-
-        $scenarioHeaderTemplate->setVar(
-            [
-                'name'   => 'Codeception Results',
-                'status' => $status,
-                'time'   => round($this->timeTaken, 1)
-            ]
-        );
-
-        $header = $scenarioHeaderTemplate->render();
-
-        $scenariosTemplate = new Template(
-            $this->templatePath . 'scenarios.html'
-        );
-
-        $scenariosTemplate->setVar(
-            [
-                'header'              => $header,
-                'scenarios'           => $this->scenarios,
-                'successfulScenarios' => $this->successful,
-                'failedScenarios'     => $this->failed,
-                'skippedScenarios'    => $this->skipped,
-                'incompleteScenarios' => $this->incomplete
-            ]
-        );
-
-        $this->write($scenariosTemplate->render());
-    }
-
-    /**
-     * An error occurred.
-     *
-     * @param \PHPUnit\Framework\Test $test
-     * @param \Exception $e
-     * @param float $time
-     */
-    public function addError(\PHPUnit\Framework\Test $test, \Throwable $e, float $time) : void
-    {
-        $this->failures[Descriptor::getTestSignatureUnique($test)][] = $this->cleanMessage($e);
-        parent::addError($test, $e, $time);
-    }
-
-    /**
-     * A failure occurred.
-     *
-     * @param \PHPUnit\Framework\Test                 $test
-     * @param \PHPUnit\Framework\AssertionFailedError $e
-     * @param float                                  $time
-     */
-    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time) : void
-    {
-        $this->failures[Descriptor::getTestSignatureUnique($test)][] = $this->cleanMessage($e);
-        parent::addFailure($test, $e, $time);
-    }
-
-    /**
-     * Starts test
-     *
-     * @param \PHPUnit\Framework\Test $test
-     */
-    public function startTest(\PHPUnit\Framework\Test $test):void
-    {
-        $name = Descriptor::getTestSignatureUnique($test);
-        if (isset($this->failures[$name])) {
-            // test failed in before hook
-            return;
-        }
-
-        // start test and mark initialize as passed
-        parent::startTest($test);
-    }
-
-
     /**
      * @param $step
      * @return string
@@ -306,7 +235,48 @@ class HTML extends CodeceptionResultPrinter
         return htmlentities($msg, ENT_QUOTES | ENT_SUBSTITUTE);
     }
 
-    public function printResult(TestResult $result): void
+    public function afterResult(PrintResultEvent $event): void
     {
+        $timeTaken = $this->timer->stop()->asString();
+        $result = $event->getResult();
+
+        $scenarioHeaderTemplate = new Template(
+            $this->templatePath . 'scenario_header.html'
+        );
+
+        $status = $result->wasSuccessfulIgnoringWarnings()
+            ? '<span style="color: green">OK</span>'
+            : '<span style="color: #e74c3c">FAILED</span>';
+
+        $scenarioHeaderTemplate->setVar(
+            [
+                'name'   => 'Codeception Results',
+                'status' => $status,
+                'time'   => $timeTaken
+            ]
+        );
+
+        $header = $scenarioHeaderTemplate->render();
+
+        $scenariosTemplate = new Template(
+            $this->templatePath . 'scenarios.html'
+        );
+
+        $scenariosTemplate->setVar(
+            [
+                'header'              => $header,
+                'scenarios'           => $this->scenarios,
+                'successfulScenarios' => count($result->passed()),
+                'failedScenarios'     => $result->failureCount(),
+                'skippedScenarios'    => $result->skippedCount(),
+                'incompleteScenarios' => $result->notImplementedCount()
+            ]
+        );
+
+        file_put_contents($this->reportFile, $scenariosTemplate->render());
+        $this->output->message(
+            "- <bold>HTML</bold> report generated in <comment>file://%s</comment>",
+            $this->reportFile
+        )->writeln();
     }
 }

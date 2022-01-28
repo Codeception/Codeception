@@ -6,10 +6,6 @@ namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\ParamsLoader;
-use Codeception\PHPUnit\Log\JUnit as JUnitLog;
-use Codeception\PHPUnit\Log\PhpUnit as PhpUnitLog;
-use Codeception\PHPUnit\ResultPrinter\HTML as HTMLResultPrinter;
-use Codeception\PHPUnit\ResultPrinter\Report as ReportPrinter;
 use Codeception\Step\ConditionalAssertion;
 use Codeception\Util\Autoload;
 use Codeception\Util\PathResolver;
@@ -91,12 +87,6 @@ class Configuration
             'config'   => [],
             'commands' => [],
         ],
-        'reporters'  => [
-            'xml'         => JUnitLog::class,
-            'html'        => HTMLResultPrinter::class,
-            'report'      => ReportPrinter::class,
-            'phpunit-xml' => PhpUnitLog::class,
-        ],
         'groups'     => [],
         'bootstrap'  => false,
         'settings'   => [
@@ -105,9 +95,6 @@ class Configuration
             'strict_xml'                => false,
             'lint'                      => true,
             'backup_globals'            => true,
-            'log_incomplete_skipped'    => false,
-            'report_useless_tests'      => false,
-            'disallow_test_output'      => false,
             'be_strict_about_changes_to_global_state' => false,
             'shuffle'     => false,
         ],

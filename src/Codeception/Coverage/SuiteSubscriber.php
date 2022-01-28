@@ -35,6 +35,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
         'c3_url'         => null,
         'work_dir'       => null,
         'cookie_domain'  => null,
+        'path_coverage'  => false,
     ];
 
     protected array $settings = [];
@@ -87,16 +88,11 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }
-        if (method_exists($this->coverage, 'setProcessUncoveredFilesFromWhitelist')) {
-            //php-code-coverage 8 or older
-            $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
+
+        if ($this->settings['show_uncovered']) {
+            $this->coverage->includeUncoveredFiles();
         } else {
-            //php-code-coverage 9+
-            if ($this->settings['show_uncovered']) {
-                $this->coverage->processUncoveredFiles();
-            } else {
-                $this->coverage->doNotProcessUncoveredFiles();
-            }
+            $this->coverage->excludeUncoveredFiles();
         }
     }
 
@@ -113,16 +109,11 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     /**
      * @throws ConfigurationException|ModuleException|Exception
      */
-    public function applyFilter(TestResult $result): void
+    public function applyFilter(): void
     {
-        $driver = Stub::makeEmpty(CodeCoverageDriver::class);
-        $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
-
         Filter::setup($this->coverage)
             ->whiteList($this->filters)
             ->blackList($this->filters);
-
-        $result->setCodeCoverage($this->coverage);
     }
 
     protected function mergeToPrint(CodeCoverage $coverage): void

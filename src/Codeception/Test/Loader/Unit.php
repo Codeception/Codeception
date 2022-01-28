@@ -11,6 +11,7 @@ use Codeception\Util\Annotation;
 use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestBuilder;
+use PHPUnit\Metadata\Api\Dependencies;
 use ReflectionClass;
 use ReflectionMethod;
 use function get_class;
@@ -75,7 +76,7 @@ class Unit implements LoaderInterface
     {
         $className = get_class($test);
         $methodName = $test->getName(false);
-        $dependencies = \PHPUnit\Util\Test::getDependencies($className, $methodName);
+        $dependencies = Dependencies::dependencies($className, $methodName);
         $test->setDependencies($dependencies);
         if ($test instanceof UnitFormat) {
             $annotations = Annotation::forMethod($test, $methodName)->raw();

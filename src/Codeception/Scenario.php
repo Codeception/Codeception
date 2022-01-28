@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Codeception;
 
+use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Exception\InjectionException;
 use Codeception\Step\Comment;
 use Codeception\Step\Meta;
 use Codeception\Test\Metadata;
-use Exception;
 use PHPUnit\Framework\IncompleteTestError;
-use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Framework\SkippedWithMessageException;
 
 class Scenario
 {
@@ -69,19 +69,13 @@ class Scenario
         $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_BEFORE);
         try {
             $result = $step->run($this->metadata->getService('modules'));
-        } catch (ConditionalAssertionFailed $failed) {
-            $result = $this->test->getTestResultObject();
-            if (is_null($result)) {
-                $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
-                throw $failed;
-            } else {
-                $result->addFailure(clone($this->test), $failed, $result->time());
-            }
-        } catch (Exception $exception) {
+        } catch (ConditionalAssertionFailed $f) {
+            $testResult = $this->test->getTestResultObject();
+            $testResult->addFailure(clone($this->test), $f, $testResult->time());
+            $dispatcher->dispatch(new FailEvent($this->test, $testResult->time(), $f), Events::TEST_FAIL);
+        } finally {
             $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
-            throw $exception;
         }
-        $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
         $step->executed = true;
         return $result;
     }
@@ -131,7 +125,7 @@ class Scenario
 
     public function skip(string $message = ''): void
     {
-        throw new SkippedTestError($message);
+        throw new SkippedWithMessageException($message);
     }
 
     public function incomplete(string $message = ''): void

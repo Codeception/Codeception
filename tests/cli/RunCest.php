@@ -112,7 +112,7 @@ final class RunCest
     {
         $I->wantTo('check phpunit xml reports');
         $I->executeCommand('run dummy --phpunit-xml');
-        $I->seeInShellOutput('PHPUNIT-XML report generated in');
+        $I->seeInShellOutput('PHPUNIT XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
@@ -133,7 +133,7 @@ final class RunCest
     {
         $I->wantTo('check phpunit xml in strict mode');
         $I->executeCommand('run dummy --phpunit-xml -c codeception_strict_xml.yml');
-        $I->seeInShellOutput('PHPUNIT-XML report generated in');
+        $I->seeInShellOutput('PHPUNIT XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
@@ -153,7 +153,7 @@ final class RunCest
      */
     public function runCustomReport(CliGuy $I)
     {
-        $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
+        $I->executeCommand('run dummy --ext=MyReportPrinter -c codeception_custom_report.yml');
         $I->seeInShellOutput('FileExistsCept: Check config exists');
         $I->dontSeeInShellOutput('Ok');
     }
@@ -269,6 +269,9 @@ final class RunCest
         $I->seeInShellOutput('There were 3 failures');
     }
 
+    /**
+     * @group reports
+     */
     public function runWithCustomOutputPath(CliGuy $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
@@ -384,7 +387,7 @@ EOF
         $I->executeCommand('run unit DependsTest --no-exit');
         $I->seeInShellOutput('Skipped: 1');
         $I->executeCommand('run unit --no-exit');
-        $I->seeInShellOutput('Skipped: 1');
+        $I->seeInShellOutput('Skipped: 2');
     }
 
     public function runGherkinTest(CliGuy $I)
@@ -482,15 +485,14 @@ EOF
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
     }
 
-    public function overrideConfigOptionsToChangeReporter(CliGuy $I)
+    public function reportersConfigurationSectionIsNotSupported(CliGuy $I)
     {
-        if (!class_exists('PHPUnit_Util_Log_TeamCity')) {
-            throw new \PHPUnit\Framework\SkippedTestError('Reporter does not exist for this PHPUnit version');
-        }
-
         $I->executeCommand('run scenario --report -o "reporters: report: PHPUnit_Util_Log_TeamCity" --no-exit');
-        $I->seeInShellOutput('##teamcity[testStarted');
-        $I->dontSeeInShellOutput('............Ok');
+        $I->seeInShellOutput(
+            "WARNING: 'reporters' option is not supported! Custom reporters must be reimplemented as extensions."
+        );
+        $I->seeInShellOutput('............Ok');
+        $I->dontSeeInShellOutput('##teamcity[testStarted');
     }
 
     public function overrideModuleOptions(CliGuy $I)

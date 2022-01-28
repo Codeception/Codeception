@@ -52,6 +52,23 @@ class ReflectionHelper
     }
 
     /**
+     * Set a private property of an object.
+     *
+     * @throws ReflectionException
+     */
+    public static function setPrivateProperty(object $object, string $property, $value, string $class = null): void
+    {
+        if (is_null($class)) {
+            $class = $object;
+        }
+
+        $property = new ReflectionProperty($class, $property);
+        $property->setAccessible(true);
+
+        $property->setValue($object, $value);
+    }
+
+    /**
      * Invoke a private method of an object.
      *
      * @return mixed

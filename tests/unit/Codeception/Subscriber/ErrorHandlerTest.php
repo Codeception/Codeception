@@ -6,6 +6,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Notification;
 use Codeception\Subscriber\ErrorHandler;
 use Codeception\Suite;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
 {
@@ -29,7 +30,9 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
     {
         $errorHandler = new ErrorHandler();
 
-        $suiteEvent = new SuiteEvent(new Suite(), null, ['error_level' => 'E_ERROR']);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
+
+        $suiteEvent = new SuiteEvent(new Suite($eventDispatcher), null, ['error_level' => 'E_ERROR']);
         $errorHandler->handle($suiteEvent);
 
         //Satisfying The Premature Exit Handling

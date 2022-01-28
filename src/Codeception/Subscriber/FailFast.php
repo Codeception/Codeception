@@ -7,6 +7,7 @@ namespace Codeception\Subscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\TestResult;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -44,7 +45,7 @@ class FailFast implements EventSubscriberInterface
         $this->failureCount++;
 
         if ($this->failureCount >= $this->stopFailureCount) {
-            $this->suiteCache->stop();
+            ReflectionHelper::setPrivateProperty($this->suiteCache, 'stop', true);
         }
     }
 }

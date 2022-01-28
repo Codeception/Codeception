@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Codeception\SuiteManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 if (!defined('PHPUNIT_TESTSUITE')) {
     define('PHPUNIT_TESTSUITE', true);
 }
@@ -12,31 +15,17 @@ if (!defined('PHPUNIT_TESTSUITE')) {
  */
 class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
 {
-    /**
-     * @var \Codeception\SuiteManager
-     */
-    protected \Codeception\SuiteManager $suiteman;
 
-    /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
-     */
-    protected \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher;
+    protected SuiteManager $suiteman;
 
-    /**
-     * @var \Codeception\PHPUnit\Runner
-     */
-    protected \Codeception\PHPUnit\Runner $runner;
+    protected EventDispatcher $dispatcher;
 
     public function _setUp()
     {
-        $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
+        $this->dispatcher = new EventDispatcher;
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
         $settings['actor'] = 'CodeGuy';
-        $this->suiteman = new \Codeception\SuiteManager($this->dispatcher, 'suite', $settings);
-
-        $printer = \Codeception\Stub::makeEmpty(\PHPUnit\TextUI\ResultPrinter::class);
-        $this->runner = new \Codeception\PHPUnit\Runner;
-        $this->runner->setPrinter($printer);
+        $this->suiteman = new SuiteManager($this->dispatcher, 'suite', $settings);
     }
 
     /**
@@ -52,7 +41,6 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->dispatcher->addListener('suite.after', $eventListener);
 
         $this->suiteman->run(
-            $this->runner,
             new \PHPUnit\Framework\TestResult,
             ['colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
         );
@@ -94,7 +82,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $file = \Codeception\Configuration::dataDir().'SimpleNamespacedTest.php';
         $this->suiteman->loadTests($file);
         $this->assertSame(3, $this->suiteman->getSuite()->count());
-        $newSuiteMan = new \Codeception\SuiteManager(
+        $newSuiteMan = new SuiteManager(
             $this->dispatcher,
             'suite',
             \Codeception\Configuration::$defaultSuiteSettings
@@ -122,10 +110,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
 
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
         $result = new \PHPUnit\Framework\TestResult;
-        $listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
-        $result->addListener($listener);
         $this->suiteman->run(
-            $this->runner,
             $result,
             ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
         );

@@ -12,6 +12,9 @@ use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
 use Exception;
 use LogicException;
+use PHPUnit\Metadata\Annotation\Parser\Registry as AnnotationRegistry;
+use PHPUnit\Metadata\Api\CodeCoverage;
+use PHPUnit\Metadata\Parser\Registry;
 use ReflectionMethod;
 use function array_slice;
 use function file;
@@ -122,20 +125,18 @@ class Cest extends Test implements
 
     protected function executeBeforeMethods(string $testMethod, $I): void
     {
-        $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
-        if (!empty($annotations['method']['before'])) {
-            foreach ($annotations['method']['before'] as $m) {
-                $this->executeContextMethod(trim($m), $I);
+        foreach (AnnotationRegistry::getInstance()->forMethod(get_class($this->testClassInstance), $testMethod)->symbolAnnotations() as $annotation => $values) {
+            if ($annotation === 'before') {
+                $this->executeContextMethod(trim($values[0]), $I);
             }
         }
     }
 
     protected function executeAfterMethods(string $testMethod, $I): void
     {
-        $annotations = \PHPUnit\Util\Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
-        if (!empty($annotations['method']['after'])) {
-            foreach ($annotations['method']['after'] as $m) {
-                $this->executeContextMethod(trim($m), $I);
+        foreach (AnnotationRegistry::getInstance()->forMethod(get_class($this->testClassInstance), $testMethod)->symbolAnnotations() as $annotation => $values) {
+            if ($annotation === 'after') {
+                $this->executeContextMethod(trim($values[0]), $I);
             }
         }
     }
@@ -225,7 +226,7 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        return \PHPUnit\Util\Test::getLinesToBeCovered($class, $method);
+        return (new CodeCoverage)->linesToBeCovered($class, $method);
     }
 
     public function getLinesToBeUsed(): array
@@ -233,6 +234,6 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        return \PHPUnit\Util\Test::getLinesToBeUsed($class, $method);
+        return (new CodeCoverage)->linesToBeUsed($class, $method);
     }
 }
