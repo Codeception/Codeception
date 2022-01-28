@@ -16,7 +16,7 @@ class SuiteExtension extends Extension
     ];
 
     /** @var array */
-    protected $config = ['config1' => 'novalue', 'config2' => 'novalue'];
+    protected array $config = ['config1' => 'novalue', 'config2' => 'novalue'];
 
     public function beforeSuite(SuiteEvent $e )
     {

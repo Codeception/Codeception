@@ -25,16 +25,16 @@ use function is_array;
 abstract class Extension implements EventSubscriberInterface
 {
     /**
-     * @var array
+     * @var array<int|string, mixed>
      */
-    protected $config = [];
+    protected array $config = [];
 
     protected Output $output;
 
     protected array $globalConfig = [];
 
     /**
-     * @var Array<string,Module>
+     * @var array<string, Module>
      */
     private array $modules = [];
 
