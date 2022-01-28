@@ -1,7 +1,7 @@
 #### 5.0.0
 
 * Decoupled test execution and reporting from PHPUnit
-* Custom reporters implementing TestListener are no longer supported and must be converted to Exceptions.
+* Custom reporters implementing TestListener are no longer supported and must be converted to Extensions.
 * Added path_coverage setting to enable path and branch coverage #6158 by @s0lus
 * Added optional value to fail-fast option (#6275) by #Verest
 * Removed JSON and TAP loggers
