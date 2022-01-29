@@ -195,4 +195,16 @@ final class IncludedCest
         $I->seeInShellOutput('2 tests');
     }
 
+    /**
+     * @param CliGuy $I
+     */
+    public function includedSuitesAreNotRunTwice (CliGuy $I) {
+
+        $I->amInPath('tests/data/included_two_config_files');
+        $I->executeCommand('run');
+        $I->seeInShellOutput('FooTest');
+        $I->seeInShellOutput('BarTest');
+        $I->seeInShellOutput('2 tests');
+        $I->dontSeeInShellOutput('4 tests');
+    }
 }

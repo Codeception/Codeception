@@ -246,7 +246,7 @@ EOF;
 
         return sprintf(
             '%s%s%s',
-            $type->allowsNull() ? '?' : '',
+            ($type->allowsNull() && $returnTypeString !== 'mixed') ? '?' : '',
             $type->isBuiltin() ? '' : '\\',
             $returnTypeString
         );

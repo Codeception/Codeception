@@ -172,4 +172,13 @@ EOF;
         $this->assertContains('simpleDI\\LoadedTestWithDependencyInjectionCest', $classes);
         $this->assertContains('simpleDI\\AnotherCest', $classes);
     }
+
+    /**
+     * @group core
+     */
+    public function testNamedParameterNamedClassIsNotClass()
+    {
+        $classes = Parser::getClassesFromFile(codecept_data_dir('namedParameter.php'));
+        $this->assertEquals([], $classes);
+    }
 }
