@@ -1,3 +1,9 @@
+#### 4.1.29
+
+* Fixed duplicate test runs when codeception.yml and codeception.dist.yml are present in multi-app setup by @calvinalkan
+* Action generator handles mixed type correctly
+* Parser fix to allow named parameters named class and namespace
+
 #### 4.1.28
 
 * Strictly compare test hashes to avoid skipping tests #6320 by @michel-cetina
