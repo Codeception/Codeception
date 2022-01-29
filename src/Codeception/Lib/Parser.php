@@ -141,6 +141,14 @@ class Parser
 
         for ($i = 0; $i < $tokenCount; $i++) {
             if ($tokens[$i][0] === T_NAMESPACE) {
+                if ($tokens[$i + 1] === ':') {
+                    //named parameter foo(namespace: $var)
+                    continue;
+                }
+                if ($tokens[$i + 2] === ':' && $tokens[$i + 1][0] === T_WHITESPACE) {
+                    //named parameter foo(namespace : $var)
+                    continue;
+                }
                 $namespace = '';
                 for ($j = $i + 1; $j < $tokenCount; $j++) {
                     if ($tokens[$j] === '{' || $tokens[$j] === ';') {
@@ -153,6 +161,14 @@ class Parser
             }
 
             if ($tokens[$i][0] === T_CLASS) {
+                if ($tokens[$i + 1] === ':') {
+                    //named parameter foo(class: $var)
+                    continue;
+                }
+                if ($tokens[$i + 2] === ':' && $tokens[$i + 1][0] === T_WHITESPACE) {
+                    //named parameter foo(class : $var)
+                    continue;
+                }
                 if (!isset($tokens[$i - 2])) {
                     $classes[] = $namespace . $tokens[$i + 2][1];
                     continue;
