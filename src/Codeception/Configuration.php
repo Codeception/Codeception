@@ -688,6 +688,11 @@ class Configuration
                 ? $suiteConf['extends'] // If path is absolute – use it
                 : realpath($suiteDir . DIRECTORY_SEPARATOR . $suiteConf['extends']); // Otherwise try to locate it in the suite dir
 
+            if ($presetFilePath === false) {
+                throw new ConfigurationException(
+                    sprintf("Configuration file %s does not exist", $suiteConf['extends'])
+                );
+            }
             if (file_exists($presetFilePath)) {
                 $settings = self::mergeConfigs(self::getConfFromFile($presetFilePath), $settings);
             }
