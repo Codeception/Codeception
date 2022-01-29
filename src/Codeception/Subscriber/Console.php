@@ -546,7 +546,14 @@ class Console implements EventSubscriberInterface
         } else {
             $message = codecept_relative_path(Descriptor::getTestFullName($failedTest));
         }
-        $this->message("<error> Test </error> ")
+        $testStyle = 'error';
+        if ($fail instanceof SkippedTest
+            || $fail instanceof IncompleteTestError
+            || $fail instanceof RiskyTest) {
+            $testStyle = 'warning';
+        }
+
+        $this->message(' Test  ')->style($testStyle)
             ->append($message)
             ->write();
 
