@@ -12,6 +12,7 @@ settings:
     log: true
     lint: false
     be_strict_about_changes_to_global_state: false
+    report_useless_tests: true
 
 modules:
     config:

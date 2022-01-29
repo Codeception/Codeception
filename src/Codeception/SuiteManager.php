@@ -147,8 +147,9 @@ class SuiteManager
         }
     }
 
-    public function prepareSuite(PHPUnitTest $suite, array $options): void
+    public function prepareSuite(Suite $suite, array $options): void
     {
+        $suite->reportUselessTests((bool)($this->settings['report_useless_tests'] ?? false));
         $filterAdded = false;
 
         $filterFactory = new Factory();

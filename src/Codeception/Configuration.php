@@ -96,6 +96,7 @@ class Configuration
             'strict_xml'                => false,
             'lint'                      => true,
             'backup_globals'            => true,
+            'report_useless_tests'      => false,
             'be_strict_about_changes_to_global_state' => false,
             'shuffle'     => false,
         ],

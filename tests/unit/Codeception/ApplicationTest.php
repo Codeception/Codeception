@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Codeception;
 
+use Symfony\Component\Console\Command\Command;
+
 class ApplicationTest extends \Codeception\PHPUnit\TestCase
 {
 
@@ -22,7 +24,8 @@ class ApplicationTest extends \Codeception\PHPUnit\TestCase
         $application->registerCustomCommands();
 
         try {
-            $application->find('myProject:myCommand');
+            $command = $application->find('myProject:myCommand');
+            $this->assertInstanceOf(Command::class, $command);
         } catch (\Exception $exception) {
             $this->fail($exception->getMessage());
         }
