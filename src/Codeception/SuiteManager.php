@@ -8,7 +8,7 @@ use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
-use Codeception\PHPUnit\FilterTest;
+use Codeception\Test\Filter\NameFilterIterator;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
@@ -175,7 +175,7 @@ class SuiteManager
             $filterAdded = true;
             $this->addFilterToFactory(
                 $filterFactory,
-                FilterTest::class,
+                NameFilterIterator::class,
                 $options['filter']
             );
         }
