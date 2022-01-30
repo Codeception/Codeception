@@ -251,9 +251,9 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     public function getReportFields(): array
     {
         return [
-            'file'    => $this->getFileName(),
             'name'    => $this->toString(),
-            'feature' => $this->getFeature()
+            'feature' => $this->getFeature(),
+            'file'    => $this->getFileName(),
         ];
     }
 }
