@@ -19,6 +19,8 @@ use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\InvalidCoversTargetException;
+use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
+use PHPUnit\Framework\RiskyDueToUnexpectedAssertionsException;
 use PHPUnit\Framework\RiskyDueToUnintentionallyCoveredCodeException;
 use PHPUnit\Framework\RiskyTest;
 use PHPUnit\Framework\SelfDescribing;
@@ -49,10 +51,17 @@ class Suite extends TestSuite
 
     private EventDispatcher $dispatcher;
 
+    private bool $reportUselessTests = false;
+
     public function __construct(EventDispatcher $eventDispatcher)
     {
         $this->dispatcher = $eventDispatcher;
         parent::__construct('', '');
+    }
+
+    public function reportUselessTests(bool $enabled): void
+    {
+        $this->reportUselessTests = $enabled;
     }
 
     public function run(TestResult $result): void
@@ -96,6 +105,7 @@ class Suite extends TestSuite
                 $this->runPhpUnitTest($test, $result);
             } elseif ($test instanceof Test) {
                 $test->setEventDispatcher($this->dispatcher);
+                $test->reportUselessTests($this->reportUselessTests);
                 $test->run($result);
             }
         }
@@ -116,7 +126,7 @@ class Suite extends TestSuite
         $failure    = false;
         $warning    = false;
         $incomplete = false;
-        $risky      = false;
+        $useless      = false;
         $skipped    = false;
 
         $result->startTest($test);
@@ -148,7 +158,7 @@ class Suite extends TestSuite
             $failure = true;
 
             if ($e instanceof RiskyTest) {
-                $risky = true;
+                $useless = true;
             } elseif ($e instanceof IncompleteTestError) {
                 $incomplete = true;
             } elseif ($e instanceof SkippedTest) {
@@ -181,8 +191,18 @@ class Suite extends TestSuite
         $time = $timer->stop()->asSeconds();
         $test->addToAssertionCount(Assert::getCount());
 
+        if ($this->reportUselessTests &&
+            !$incomplete &&
+            !$skipped &&
+            !$test->doesNotPerformAssertions() &&
+            $test->numberOfAssertionsPerformed() === 0) {
+            $failure = true;
+            $useless = true;
+            $e = new RiskyBecauseNoAssertionsWerePerformedException;
+        }
+
         if ($collectCodeCoverage) {
-            $append           = !$risky && !$incomplete && !$skipped;
+            $append           = !$useless && !$incomplete && !$skipped;
             $linesToBeCovered = [];
             $linesToBeUsed    = [];
 
@@ -232,8 +252,10 @@ class Suite extends TestSuite
             $result->addFailure($test, $e, $time);
             if ($skipped) {
                 $eventType = Events::TEST_SKIPPED;
-            } elseif($incomplete) {
+            } elseif ($incomplete) {
                 $eventType = Events::TEST_INCOMPLETE;
+            } elseif ($useless) {
+                $eventType = Events::TEST_USELESS;
             } else {
                 $eventType = Events::TEST_FAIL;
             }
@@ -241,12 +263,17 @@ class Suite extends TestSuite
             $result->addWarning($test, $e, $time);
             $eventType = Events::TEST_WARNING;
         } elseif (isset($unintentionallyCoveredCodeError)) {
-            $result->addFailure(
-                $test,
-                $unintentionallyCoveredCodeError,
-                $time
-            );
+            $e = $unintentionallyCoveredCodeError;
+            $result->addFailure($test, $unintentionallyCoveredCodeError, $time);
             $eventType = Events::TEST_ERROR;
+        } elseif ($this->reportUselessTests &&
+            $test->doesNotPerformAssertions() &&
+            $test->numberOfAssertionsPerformed() > 0) {
+            $e = new RiskyDueToUnexpectedAssertionsException(
+                $test->numberOfAssertionsPerformed()
+            );
+            $result->addFailure($test, $e, $time);
+            $eventType = Events::TEST_USELESS;
         } else {
             $eventType = Events::TEST_SUCCESS;
         }

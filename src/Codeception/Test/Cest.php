@@ -197,10 +197,10 @@ class Cest extends Test implements
     public function getReportFields(): array
     {
         return [
-            'file'    => $this->getFileName(),
             'name'    => $this->getTestMethod(),
             'class'   => get_class($this->getTestClass()),
-            'feature' => $this->getFeature()
+            'file'    => $this->getFileName(),
+            'feature' => $this->getFeature(),
         ];
     }
 

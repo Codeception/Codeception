@@ -2,6 +2,7 @@
 
 * Decoupled test execution and reporting from PHPUnit
 * Custom reporters implementing TestListener are no longer supported and must be converted to Extensions.
+* Tests of all formats are reported as useless if they perform no assertions and reports_useless_tests setting is enabled.
 * Added path_coverage setting to enable path and branch coverage #6158 by @s0lus
 * Added optional value to fail-fast option (#6275) by #Verest
 * Removed JSON and TAP loggers

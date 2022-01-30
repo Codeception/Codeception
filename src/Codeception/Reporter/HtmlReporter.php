@@ -33,8 +33,9 @@ class HtmlReporter implements EventSubscriberInterface
         Events::TEST_SUCCESS       => 'testSuccess',
         Events::TEST_FAIL          => 'testFailure',
         Events::TEST_ERROR         => 'testError',
-        Events::TEST_INCOMPLETE    => 'testSkipped',
+        Events::TEST_INCOMPLETE    => 'testIncomplete',
         Events::TEST_SKIPPED       => 'testSkipped',
+        Events::TEST_USELESS       => 'testUseless',
         Events::TEST_WARNING       => 'testWarning',
     ];
 
@@ -116,6 +117,11 @@ class HtmlReporter implements EventSubscriberInterface
     public function testIncomplete(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioIncomplete');
+    }
+
+    public function testUseless(FailEvent $event): void
+    {
+        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioUseless');
     }
 
     public function printTestResult(Test $test, float $time, string $scenarioStatus) : void
@@ -269,7 +275,8 @@ class HtmlReporter implements EventSubscriberInterface
                 'successfulScenarios' => count($result->passed()),
                 'failedScenarios'     => $result->failureCount(),
                 'skippedScenarios'    => $result->skippedCount(),
-                'incompleteScenarios' => $result->notImplementedCount()
+                'incompleteScenarios' => $result->notImplementedCount(),
+                'uselessScenarios'    => $result->riskyCount(),
             ]
         );
 

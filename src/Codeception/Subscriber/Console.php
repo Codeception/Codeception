@@ -28,6 +28,7 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\RiskyTest;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTest;
 use SebastianBergmann\Timer\Duration;
@@ -80,6 +81,7 @@ class Console implements EventSubscriberInterface
         Events::TEST_INCOMPLETE    => 'testIncomplete',
         Events::TEST_SKIPPED       => 'testSkipped',
         Events::TEST_WARNING       => 'testWarning',
+        Events::TEST_USELESS       => 'testUseless',
         Events::TEST_FAIL_PRINT    => 'printFail',
         Events::RESULT_PRINT_AFTER => 'afterResult',
     ];
@@ -271,6 +273,7 @@ class Console implements EventSubscriberInterface
 
         $this->printDefects($result->errors(), 'error');
         $this->printDefects($result->failures(), 'failure');
+        $this->printDefects($result->risky(), 'useless test');
         if ($verbose) {
             $this->printDefects($result->notImplemented(), 'incomplete test');
             $this->printDefects($result->skipped(), 'skipped test');
@@ -349,7 +352,7 @@ class Console implements EventSubscriberInterface
         $style = 'error';
         if ($result->wasSuccessful()) {
             $style = 'warning';
-            $this->message('OK, but incomplete, skipped, or risky tests!')->style($style)->writeln();
+            $this->message('OK, but incomplete, skipped, or useless tests!')->style($style)->writeln();
         } elseif ($result->errorCount()) {
             $this->message('ERRORS!')->style($style)->writeln();
         } elseif ($result->failureCount()) {
@@ -379,7 +382,7 @@ class Console implements EventSubscriberInterface
             $counts []= sprintf("Incomplete: %s", $result->notImplementedCount());
         }
         if ($result->riskyCount() > 0) {
-            $counts []= sprintf("Risky: %s", $result->riskyCount());
+            $counts []= sprintf("Useless: %s", $result->riskyCount());
         }
 
         $this->message(implode(', ', $counts) . '.')->style($style)->writeln();
@@ -462,6 +465,11 @@ class Console implements EventSubscriberInterface
         $this->writelnFinishedTest($event, $this->message('I')->style('pending'));
     }
 
+    public function testUseless(FailEvent $event): void
+    {
+        $this->writelnFinishedTest($event, $this->message('U')->style('pending'));
+    }
+
     protected function isDetailed($test): bool
     {
         if (!$test instanceof ScenarioDriven) {
@@ -538,7 +546,14 @@ class Console implements EventSubscriberInterface
         } else {
             $message = codecept_relative_path(Descriptor::getTestFullName($failedTest));
         }
-        $this->message("<error> Test </error> ")
+        $testStyle = 'error';
+        if ($fail instanceof SkippedTest
+            || $fail instanceof IncompleteTestError
+            || $fail instanceof RiskyTest) {
+            $testStyle = 'warning';
+        }
+
+        $this->message(' Test  ')->style($testStyle)
             ->append($message)
             ->write();
 
@@ -641,7 +656,9 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
 
-        if ($exception instanceof SkippedTest || $exception instanceof IncompleteTestError) {
+        if ($exception instanceof SkippedTest
+            || $exception instanceof IncompleteTestError
+            || $exception instanceof RiskyTest) {
             return;
         }
 

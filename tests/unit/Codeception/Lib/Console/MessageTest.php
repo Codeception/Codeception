@@ -21,6 +21,7 @@ class MessageTest extends \Codeception\Test\Unit
     // @codingStandardsIgnoreStart
     public function testVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestName()
     {
+        $this->expectNotToPerformAssertions();
         // @codingStandardsIgnoreEnd
     }
 

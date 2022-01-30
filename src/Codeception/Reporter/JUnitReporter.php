@@ -41,6 +41,7 @@ class JUnitReporter implements EventSubscriberInterface
         Events::TEST_ERROR         => 'testError',
         Events::TEST_INCOMPLETE    => 'testSkipped',
         Events::TEST_SKIPPED       => 'testSkipped',
+        Events::TEST_USELESS       => 'testUseless',
         Events::TEST_WARNING       => 'testWarning',
         Events::RESULT_PRINT_AFTER => 'afterResult',
     ];
@@ -51,62 +52,58 @@ class JUnitReporter implements EventSubscriberInterface
 
     protected bool $isStrict = false;
 
+    /**
+     * @var string[]
+     */
     protected array $strictAttributes = ['file', 'name', 'class'];
 
-    /**
-     * @var DOMDocument
-     */
-    protected $document;
+    protected DOMDocument $document;
 
-    /**
-     * @var DOMElement
-     */
-    protected $root;
+    protected DOMElement $root;
 
     /**
      * @var DOMElement[]
      */
-    protected $testSuites = [];
+    protected array $testSuites = [];
 
     /**
      * @var int[]
      */
-    protected $testSuiteTests = [0];
+    protected array $testSuiteTests = [0];
 
     /**
      * @var int[]
      */
-    protected $testSuiteAssertions = [0];
+    protected array $testSuiteAssertions = [0];
 
     /**
      * @var int[]
      */
-    protected $testSuiteErrors = [0];
+    protected array $testSuiteErrors = [0];
 
     /**
      * @var int[]
      */
-    protected $testSuiteFailures = [0];
+    protected array $testSuiteFailures = [0];
 
     /**
      * @var int[]
      */
-    protected $testSuiteSkipped = [0];
+    protected array $testSuiteSkipped = [0];
 
     /**
      * @var int[]
      */
-    protected $testSuiteTimes = [0];
+    protected array $testSuiteUseless = [0];
 
     /**
-     * @var int
+     * @var int[]
      */
-    protected $testSuiteLevel = 0;
+    protected array $testSuiteTimes = [0];
 
-    /**
-     * @var DOMElement
-     */
-    protected $currentTestCase;
+    protected int $testSuiteLevel = 0;
+
+    protected ?DOMElement $currentTestCase;
 
     private string $reportFile;
 
@@ -161,6 +158,7 @@ class JUnitReporter implements EventSubscriberInterface
         $this->testSuiteErrors[$this->testSuiteLevel]     = 0;
         $this->testSuiteFailures[$this->testSuiteLevel]   = 0;
         $this->testSuiteSkipped[$this->testSuiteLevel]    = 0;
+        $this->testSuiteUseless[$this->testSuiteLevel]    = 0;
         $this->testSuiteTimes[$this->testSuiteLevel]      = 0;
     }
 
@@ -192,6 +190,11 @@ class JUnitReporter implements EventSubscriberInterface
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
+            'useless',
+            (string) $this->testSuiteUseless[$this->testSuiteLevel]
+        );
+
+        $this->testSuites[$this->testSuiteLevel]->setAttribute(
             'time',
             sprintf('%F', $this->testSuiteTimes[$this->testSuiteLevel])
         );
@@ -202,6 +205,7 @@ class JUnitReporter implements EventSubscriberInterface
             $this->testSuiteErrors[$this->testSuiteLevel - 1] += $this->testSuiteErrors[$this->testSuiteLevel];
             $this->testSuiteFailures[$this->testSuiteLevel - 1] += $this->testSuiteFailures[$this->testSuiteLevel];
             $this->testSuiteSkipped[$this->testSuiteLevel - 1] += $this->testSuiteSkipped[$this->testSuiteLevel];
+            $this->testSuiteUseless[$this->testSuiteLevel - 1] += $this->testSuiteUseless[$this->testSuiteLevel];
             $this->testSuiteTimes[$this->testSuiteLevel - 1] += $this->testSuiteTimes[$this->testSuiteLevel];
         }
 
@@ -336,6 +340,18 @@ class JUnitReporter implements EventSubscriberInterface
         $this->currentTestCase->appendChild($skipped);
 
         $this->testSuiteSkipped[$this->testSuiteLevel]++;
+    }
+
+    public function testUseless(FailEvent $event): void
+    {
+        if ($this->currentTestCase === null) {
+            return;
+        }
+
+        $error = $this->document->createElement('error', 'Useless Test');
+        $this->currentTestCase->appendChild($error);
+
+        $this->testSuiteUseless[$this->testSuiteLevel]++;
     }
 
     /**

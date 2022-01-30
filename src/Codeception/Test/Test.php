@@ -13,6 +13,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
+use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
 use PHPUnit\Framework\TestResult;
 use SebastianBergmann\Timer\Timer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -72,6 +73,8 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      */
     public const STATUS_PENDING = 'pending';
 
+    private bool $reportUselessTests = false;
+
     /**
      * Everything inside this method is treated as a test.
      *
@@ -83,6 +86,11 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      * Test representation
      */
     abstract public function toString(): string;
+
+    public function reportUselessTests(bool $enabled): void
+    {
+        $this->reportUselessTests = $enabled;
+    }
 
     public function setEventDispatcher(EventDispatcher $eventDispatcher): void
     {
@@ -143,6 +151,12 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
 
             $time = $timer->stop()->asSeconds();
             $this->assertionCount = Assert::getCount();
+
+            if ($this->reportUselessTests && $this->assertionCount === 0 && $eventType === Events::TEST_SUCCESS) {
+                $eventType = Events::TEST_USELESS;
+                $e = new RiskyBecauseNoAssertionsWerePerformedException;
+                $result->addFailure($this, $e, $time);
+            }
 
             if ($eventType === Events::TEST_SUCCESS) {
                 $this->fire($eventType, new TestEvent($this, $time));

@@ -280,7 +280,7 @@ class ModuleContainerTest extends Unit
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('Codeception\Lib\DependencyModule');
-        $this->moduleContainer->hasModule('\Codeception\Lib\DependencyModule');
+        $this->assertFalse($this->moduleContainer->hasModule('\Codeception\Lib\DependencyModule'));
     }
 
     public function testModuleParts1()
@@ -370,7 +370,7 @@ class ModuleContainerTest extends Unit
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('Codeception\Lib\DependencyModule');
-        $this->moduleContainer->hasModule('\Codeception\Lib\DependencyModule');
+        $this->assertFalse($this->moduleContainer->hasModule('\Codeception\Lib\DependencyModule'));
     }
 
     public function testInjectModuleIntoHelper()
@@ -380,7 +380,7 @@ class ModuleContainerTest extends Unit
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('Codeception\Lib\HelperModule');
-        $this->moduleContainer->hasModule('Codeception\Lib\HelperModule');
+        $this->assertTrue($this->moduleContainer->hasModule('Codeception\Lib\HelperModule'));
     }
 
     public function testSuggestMissingModule()
