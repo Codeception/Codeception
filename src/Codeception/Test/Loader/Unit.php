@@ -9,6 +9,7 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Unit as UnitFormat;
 use Codeception\Util\Annotation;
 use PHPUnit\Framework\DataProviderTestSuite;
+use PHPUnit\Framework\ErrorTestCase;
 use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestBuilder;
 use PHPUnit\Metadata\Api\Dependencies;
@@ -63,7 +64,9 @@ class Unit implements LoaderInterface
 
         if ($test instanceof DataProviderTestSuite) {
             foreach ($test->tests() as $t) {
-                $this->enhancePhpunitTest($t);
+                if (!$t instanceof ErrorTestCase) {
+                    $this->enhancePhpunitTest($t);
+                }
             }
             return $test;
         }

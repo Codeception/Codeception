@@ -6,6 +6,7 @@ namespace Codeception\PHPUnit;
 
 use Codeception\PHPUnit\NonFinal\NameFilterIterator;
 use Codeception\Test\Descriptor;
+use PHPUnit\Framework\ErrorTestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\WarningTestCase;
 use function end;
@@ -37,9 +38,9 @@ class FilterTest extends NameFilterIterator
 
         $accepted = preg_match($this->filter, $name, $matches);
 
-        // This fix the issue when an invalid DataProvider method generate a warning
+        // This fix the issue when an invalid DataProvider method generates error or warning
         // See https://github.com/Codeception/Codeception/issues/4888
-        if ($test instanceof WarningTestCase) {
+        if ($test instanceof ErrorTestCase || $test instanceof WarningTestCase) {
             $message = $test->getMessage();
             $accepted = preg_match($this->filter, $message, $matches);
         }
