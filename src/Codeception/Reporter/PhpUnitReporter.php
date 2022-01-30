@@ -40,6 +40,7 @@ class PhpUnitReporter extends JUnitReporter
             $this->testSuiteErrors[self::FILE_LEVEL]     = 0;
             $this->testSuiteFailures[self::FILE_LEVEL]   = 0;
             $this->testSuiteSkipped[self::FILE_LEVEL]    = 0;
+            $this->testSuiteUseless[self::FILE_LEVEL]    = 0;
 
             $this->testSuiteLevel = self::FILE_LEVEL;
 

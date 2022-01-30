@@ -24,25 +24,21 @@ class ReportPrinter implements ConsolePrinter
         Events::TEST_SUCCESS       => 'testSuccess',
         Events::TEST_FAIL          => 'testFailure',
         Events::TEST_ERROR         => 'testError',
-        Events::TEST_INCOMPLETE    => 'testSkipped',
+        Events::TEST_INCOMPLETE    => 'testIncomplete',
         Events::TEST_SKIPPED       => 'testSkipped',
         Events::TEST_WARNING       => 'testWarning',
+        Events::TEST_USELESS       => 'testUseless',
         Events::RESULT_PRINT_AFTER => 'afterResult',
     ];
 
     private Output $output;
-
     private int $successfulCount = 0;
-
     private int $errorCount = 0;
-
     private int $failureCount = 0;
-
     private int $warningCount = 0;
-
     private int $skippedCount = 0;
-
     private int $incompleteCount = 0;
+    private int $uselessCount = 0;
 
     public function __construct(array $options)
     {
@@ -90,6 +86,12 @@ class ReportPrinter implements ConsolePrinter
         $this->incompleteCount++;
     }
 
+    public function testUseless(FailEvent $event): void
+    {
+        $this->printTestResult($event->getTest(), 'Useless');
+        $this->uselessCount++;
+    }
+
     private function printTestResult(Test $test, string $status): void
     {
         $name = Descriptor::getTestAsString($test);
@@ -120,6 +122,9 @@ class ReportPrinter implements ConsolePrinter
         }
         if ($this->skippedCount > 0) {
             $counts []= sprintf("Skipped: %s", $this->skippedCount);
+        }
+        if ($this->uselessCount > 0) {
+            $counts []= sprintf("Useless: %s", $this->uselessCount);
         }
 
         $this->output->writeln("\nCodeception Results");

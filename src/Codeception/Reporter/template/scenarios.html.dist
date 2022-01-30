@@ -96,6 +96,7 @@
 		 td.scenarioFailed { color: red }
 		 .scenarioSkipped { color: teal; }
 		 .scenarioIncomplete { color: gray; }
+		 .scenarioUseless { color: orange; }
 		 .scenarioStepsTable { margin-left: 10px; display: none; color: #333; }
 
 		 #stepContainerSummary {
@@ -213,6 +214,7 @@
      <li> <a href="#" title="Failed" onClick="toggleScenarios('scenarioFailed', this.parentElement)"><strong>✗</strong> {failedScenarios}</a></li>
      <li> <a href="#" title="Skipped" onClick="toggleScenarios('scenarioSkipped', this.parentElement)"><strong>S</strong> {skippedScenarios}</a></li>
      <li> <a href="#" title="Incomplete" onClick="toggleScenarios('scenarioIncomplete', this.parentElement)"><strong>I</strong> {incompleteScenarios}</a></li>
+     <li> <a href="#" title="Useless" onClick="toggleScenarios('scenarioUseless', this.parentElement)"><strong>U</strong> {uselessScenarios}</a></li>
    </ul>
  <div class="layout">
  {header}
@@ -239,6 +241,10 @@
        <tr>
         <td class="scenarioIncomplete">Incomplete scenarios:</td>
         <td class="scenarioIncompleteValue"><strong>{incompleteScenarios}</strong></td>
+       </tr>
+       <tr>
+        <td class="scenarioUseless">Useless scenarios:</td>
+        <td class="scenarioUselessValue"><strong>{uselessScenarios}</strong></td>
        </tr>
       </table>
      </div>
