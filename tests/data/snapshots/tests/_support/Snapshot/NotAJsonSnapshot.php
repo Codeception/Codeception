@@ -5,16 +5,13 @@ use DataTester;
 
 class NotAJsonSnapshot extends \Codeception\Snapshot
 {
-    protected DataTester $dataTester;
-
     /**
      * @var string
      */
     public string $sourceFile;
 
-    public function __construct(DataTester $I)
+    public function __construct(protected DataTester $dataTester)
     {
-        $this->dataTester = $I;
         $this->shouldSaveAsJson(false);
         $this->setSnapshotFileExtension('xml');
     }

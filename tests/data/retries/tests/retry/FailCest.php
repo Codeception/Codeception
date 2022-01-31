@@ -5,7 +5,6 @@ class FailCest
     /**
      * @group pass
      * @group pass1
-     * @param RetryTester $I
      */
     public function passNum(RetryTester $I)
     {
@@ -15,7 +14,6 @@ class FailCest
 
     /**
      * @group fail1
-     * @param RetryTester $I
      */
     public function failNum(RetryTester $I)
     {
@@ -36,7 +34,6 @@ class FailCest
 
     /**
      * @group fail2
-     * @param RetryTester $I
      */
     public function failNum2(RetryTester $I)
     {

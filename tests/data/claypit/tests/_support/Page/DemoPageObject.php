@@ -2,21 +2,15 @@
 
 namespace Page;
 
+use DumbGuy;
+
 class DemoPageObject {
 
-  /**
-   * @var \DumbGuy
-   */
-  private \DumbGuy $I;
-
-  public function __construct(\DumbGuy $I) {
-    $this->I = $I;
+  public function __construct(private DumbGuy $I)
+  {
   }
 
-  /**
-   * @return \DumbGuy
-   */
-  public function getActor(): \DumbGuy
+  public function getActor(): DumbGuy
   {
     return $this->I;
   }

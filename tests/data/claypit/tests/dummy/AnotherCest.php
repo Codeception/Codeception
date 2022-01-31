@@ -5,7 +5,6 @@ class AnotherCest
 
     /**
      * @group ok
-     * @param DumbGuy $I
      */
     public function optimistic(DumbGuy $I) {
         $I->expect('everything is ok');

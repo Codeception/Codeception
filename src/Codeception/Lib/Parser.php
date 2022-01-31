@@ -132,7 +132,7 @@ class Parser
                     if ($tokens[$j] === '{' || $tokens[$j] === ';') {
                         break;
                     }
-                    if ($tokens[$j][0] === T_STRING || (PHP_MAJOR_VERSION >= 8 && $tokens[$j][0] === T_NAME_QUALIFIED)) {
+                    if ($tokens[$j][0] === T_STRING || $tokens[$j][0] === T_NAME_QUALIFIED) {
                         $namespace .= $tokens[$j][1] . '\\';
                     }
                 }
@@ -164,10 +164,8 @@ class Parser
             }
         }
 
-        if (PHP_MAJOR_VERSION > 5) {
-            $tokens = null;
-            gc_mem_caches();
-        }
+        $tokens = null;
+        gc_mem_caches();
 
         return $classes;
     }

@@ -11,7 +11,6 @@ class PowerUpCest
 
     /**
      * @prepare drinkBluePotion
-     * @param PowerGuy $I
      */
     public function iGotBluePotion(PowerGuy $I)
     {

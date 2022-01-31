@@ -95,7 +95,7 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         try {
             Locator::humanReadableString(null);
             $this->fail("Expected exception when calling humanReadableString() with invalid selector");
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
         }
     }
 

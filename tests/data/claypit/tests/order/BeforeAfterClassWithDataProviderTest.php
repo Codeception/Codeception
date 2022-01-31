@@ -16,7 +16,6 @@ class BeforeAfterClassWithDataProviderTest extends \Codeception\Test\Unit
 	/**
 	 * @dataProvider getAbc
 	 *
-	 * @param string $letter
 	 */
 	public function testAbc(string $letter)
 	{

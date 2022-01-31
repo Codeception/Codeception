@@ -16,7 +16,6 @@ class FailedCest {
     /**
      * @before a
      * @after b
-     * @param OrderGuy $I
      */
     public function useVariousWrappersForOrder(OrderGuy $I)
     {
@@ -24,9 +23,6 @@ class FailedCest {
         throw new Exception('Ups');
     }
 
-    /**
-     * @param OrderGuy $I
-     */
     protected function _failed(OrderGuy $I)
     {
         $I->appendToFile('F');
