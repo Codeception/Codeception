@@ -76,7 +76,7 @@ class Upgrade4 extends InitTemplate
     {
         try {
             $this->checkInstalled();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return true;
         }
         return false;

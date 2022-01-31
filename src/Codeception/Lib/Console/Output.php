@@ -90,7 +90,7 @@ class Output extends ConsoleOutput
 
     public function exception(Exception $exception): void
     {
-        $class = get_class($exception);
+        $class = $exception::class;
 
         $this->writeln("");
         $this->writeln(sprintf('(![ %s ]!)', $class));

@@ -44,13 +44,10 @@ EOF;
     
 EOF;
 
-    protected array $settings = [];
-
     protected ?string $name;
 
-    public function __construct(array $settings, string $name)
+    public function __construct(protected array $settings, string $name)
     {
-        $this->settings = $settings;
         $this->name = $this->removeSuffix($name, 'Test');
     }
 

@@ -135,9 +135,9 @@ EOF;
             ->place('return', $returnType === ': void' ? '' : 'return ')
             ->place('params', $params);
 
-        if (0 === strpos($refMethod->name, 'see')) {
+        if (str_starts_with($refMethod->name, 'see')) {
             $type = 'Assertion';
-        } elseif (0 === strpos($refMethod->name, 'am')) {
+        } elseif (str_starts_with($refMethod->name, 'am')) {
             $type = 'Condition';
         } else {
             $type = 'Action';
@@ -182,10 +182,9 @@ EOF;
     }
 
     /**
-     * @return string|false
      * @throws ReflectionException
      */
-    protected function addDoc(ReflectionClass $class, ReflectionMethod $refMethod)
+    protected function addDoc(ReflectionClass $class, ReflectionMethod $refMethod): string|false
     {
         $doc = $refMethod->getDocComment();
 
@@ -214,7 +213,7 @@ EOF;
     {
         $actions = [];
         foreach ($modules as $moduleName => $module) {
-            $actions[$moduleName] = get_class_methods(get_class($module));
+            $actions[$moduleName] = get_class_methods($module::class);
         }
 
         return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']) . implode(',', (array) $settings['step_decorators']));

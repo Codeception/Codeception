@@ -53,13 +53,10 @@ abstract class InitTemplate
 
     protected string $workDir = '.';
 
-    protected InputInterface $input;
-
     protected OutputInterface $output;
 
-    public function __construct(InputInterface $input, OutputInterface $output)
+    public function __construct(protected InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
         $this->addStyles($output);
         $this->output = $output;
     }

@@ -10,13 +10,10 @@ class MessageFactory
 {
     protected DiffFactory $diffFactory;
 
-    private Output $output;
-
     protected Colorizer $colorizer;
 
-    public function __construct(Output $output)
+    public function __construct(private Output $output)
     {
-        $this->output = $output;
         $this->diffFactory = new DiffFactory();
         $this->colorizer = new Colorizer();
     }

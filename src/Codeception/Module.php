@@ -25,11 +25,6 @@ abstract class Module
     use Asserts;
 
     /**
-     * @var ModuleContainer
-     */
-    protected $moduleContainer;
-
-    /**
      * By setting it to false module wan't inherit methods of parent class.
      *
      * @var bool
@@ -83,10 +78,8 @@ abstract class Module
      * Requires module container (to provide access between modules of suite) and config.
      *
      */
-    public function __construct(ModuleContainer $moduleContainer, ?array $config = null)
+    public function __construct(protected ModuleContainer $moduleContainer, ?array $config = null)
     {
-        $this->moduleContainer = $moduleContainer;
-
         $this->backupConfig = $this->config;
         if (is_array($config)) {
             $this->_setConfig($config);
@@ -162,7 +155,7 @@ abstract class Module
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) !== $this->requiredFields) {
             throw new ModuleConfigException(
-                get_class($this),
+                $this::class,
                 "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
                 "Please, update the configuration and set all the required fields\n\n"
             );
@@ -186,9 +179,9 @@ abstract class Module
      */
     public function _getName(): string
     {
-        $moduleName = '\\' . get_class($this);
+        $moduleName = '\\' . $this::class;
 
-        if (strpos($moduleName, ModuleContainer::MODULE_NAMESPACE) === 0) {
+        if (str_starts_with($moduleName, ModuleContainer::MODULE_NAMESPACE)) {
             return substr($moduleName, strlen(ModuleContainer::MODULE_NAMESPACE));
         }
 

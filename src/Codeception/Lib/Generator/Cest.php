@@ -31,14 +31,11 @@ class {{name}}Cest
 
 EOF;
 
-    protected array $settings = [];
-
     protected ?string $name;
 
-    public function __construct(string $className, array $settings)
+    public function __construct(string $className, protected array $settings)
     {
         $this->name = $this->removeSuffix($className, 'Cest');
-        $this->settings = $settings;
     }
 
     public function produce(): string

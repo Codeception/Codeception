@@ -46,7 +46,6 @@ use function codecept_output_dir;
 use function codecept_relative_path;
 use function count;
 use function exec;
-use function get_class;
 use function getenv;
 use function implode;
 use function number_format;
@@ -390,7 +389,7 @@ class Console implements EventSubscriberInterface
 
     private function absolutePath(string $path): string
     {
-        if (strpos($path, '/') === 0 || strpos($path, ':') === 1) { // absolute path
+        if (str_starts_with($path, '/') || strpos($path, ':') === 1) { // absolute path
             return $path;
         }
 
@@ -596,9 +595,9 @@ class Console implements EventSubscriberInterface
 
         $class = $exception instanceof ExceptionWrapper
             ? $exception->getClassname()
-            : get_class($exception);
+            : $exception::class;
 
-        if (strpos($class, 'Codeception\Exception') === 0) {
+        if (str_starts_with($class, 'Codeception\Exception')) {
             $class = substr($class, strlen('Codeception\Exception\\'));
         }
 

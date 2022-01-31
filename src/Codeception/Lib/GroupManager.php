@@ -21,19 +21,13 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class GroupManager
 {
-    /**
-     * @var string[]
-     */
-    protected array $configuredGroups = [];
-
     protected array $testsInGroups = [];
 
     protected string $rootDir;
 
-    public function __construct(array $groups)
+    public function __construct(protected array $configuredGroups)
     {
         $this->rootDir = Configuration::baseDir();
-        $this->configuredGroups = $groups;
         $this->loadGroupsByPattern();
         $this->loadConfiguredGroupSettings();
     }
@@ -52,7 +46,7 @@ class GroupManager
     protected function loadGroupsByPattern(): void
     {
         foreach ($this->configuredGroups as $group => $pattern) {
-            if (strpos($group, '*') === false) {
+            if (!str_contains($group, '*')) {
                 continue;
             }
             $path = dirname($pattern);
@@ -131,7 +125,7 @@ class GroupManager
 
             $this->checkIfFileExists($file, $group);
             return realpath($file);
-        } elseif (strpos($file, ':') === false) {
+        } elseif (!str_contains($file, ':')) {
             $dirtyPath = $this->rootDir . $file;
             $this->checkIfFileExists($dirtyPath, $group);
             return realpath($dirtyPath);
@@ -164,7 +158,7 @@ class GroupManager
             $filename = str_replace(['\\\\', '//', '/./'], ['\\', '/', '/'], $info['file']);
         }
         if ($test instanceof TestCase) {
-            $groups = array_merge($groups, $this->getGroupsForMethod(get_class($test), $test->getName(false)));
+            $groups = array_merge($groups, $this->getGroupsForMethod($test::class, $test->getName(false)));
         }
 
         foreach ($this->testsInGroups as $group => $tests) {
@@ -173,7 +167,7 @@ class GroupManager
                     $groups[] = $group;
                 }
                 $testName = $test->getName(false);
-                if (strpos($filename . ':' . $testName, (string) $testPattern) === 0) {
+                if (str_starts_with($filename . ':' . $testName, (string) $testPattern)) {
                     $groups[] = $group;
                 }
                 if ($test instanceof Gherkin
@@ -187,7 +181,7 @@ class GroupManager
 
     private function getGroupsForMethod(string $className, string $methodName): array
     {
-        if (strpos($methodName, ' ') !== false) {
+        if (str_contains($methodName, ' ')) {
             // strip ' with data set #0' from method name when data provide is used
             $methodName = substr($methodName, 0, strpos($methodName, ' '));
         }

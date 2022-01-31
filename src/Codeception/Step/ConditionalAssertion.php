@@ -10,7 +10,6 @@ use Codeception\Util\Template;
 use PHPUnit\Framework\AssertionFailedError;
 use function preg_replace;
 use function str_replace;
-use function strpos;
 use function ucfirst;
 
 class ConditionalAssertion extends Assertion implements GeneratedStep
@@ -39,14 +38,14 @@ class ConditionalAssertion extends Assertion implements GeneratedStep
     {
         $action = $template->getVar('action');
 
-        if ((0 !== strpos($action, 'see')) && (0 !== strpos($action, 'dontSee'))) {
+        if ((!str_starts_with($action, 'see')) && (!str_starts_with($action, 'dontSee'))) {
             return null;
         }
 
         $conditionalDoc = "* [!] Conditional Assertion: Test won't be stopped on fail\n     " . $template->getVar('doc');
 
         $prefix = 'can';
-        if (strpos($action, 'dontSee') === 0) {
+        if (str_starts_with($action, 'dontSee')) {
             $prefix = 'cant';
             $action = str_replace('dont', '', $action);
         }
@@ -59,6 +58,6 @@ class ConditionalAssertion extends Assertion implements GeneratedStep
 
     public function match(string $name): bool
     {
-        return 0 === strpos($name, 'see') || 0 === strpos($name, 'dontSee');
+        return str_starts_with($name, 'see') || str_starts_with($name, 'dontSee');
     }
 }

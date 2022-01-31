@@ -270,10 +270,9 @@ class Configuration
     }
 
     /**
-     * @param string|false $bootstrap
      * @throws ConfigurationException
      */
-    public static function loadBootstrap($bootstrap, string $path): void
+    public static function loadBootstrap(string|false $bootstrap, string $path): void
     {
         if (!$bootstrap) {
             return;
@@ -628,9 +627,8 @@ class Configuration
     /**
      * @param array|bool|null $a1
      * @param array|bool|null $a2
-     * @return array|bool
      */
-    public static function mergeConfigs($a1, $a2)
+    public static function mergeConfigs($a1, $a2): array|bool|null|string
     {
         if (!is_array($a1)) {
             return $a2;
@@ -738,7 +736,7 @@ class Configuration
             $configFiles = Finder::create()->files()
                 ->name('/codeception(\.dist\.yml|\.yml)/')
                 ->in(self::$dir . DIRECTORY_SEPARATOR . $include);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             throw new ConfigurationException(
                 "Configuration file(s) could not be found in \"{$include}\"."
             );

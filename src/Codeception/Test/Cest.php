@@ -14,7 +14,6 @@ use Exception;
 use LogicException;
 use PHPUnit\Metadata\Annotation\Parser\Registry as AnnotationRegistry;
 use PHPUnit\Metadata\Api\CodeCoverage;
-use PHPUnit\Metadata\Parser\Registry;
 use ReflectionMethod;
 use function array_slice;
 use function file;

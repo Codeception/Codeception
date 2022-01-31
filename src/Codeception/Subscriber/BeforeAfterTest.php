@@ -9,7 +9,6 @@ use Codeception\Events;
 use PHPUnit\Metadata\Api\HookMethods;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function call_user_func;
-use function get_class;
 use function is_callable;
 
 class BeforeAfterTest implements EventSubscriberInterface
@@ -31,7 +30,7 @@ class BeforeAfterTest implements EventSubscriberInterface
     public function beforeClass(SuiteEvent $event): void
     {
         foreach ($event->getSuite()->tests() as $test) {
-            $testClass = get_class($test);
+            $testClass = $test::class;
             $this->hooks[$testClass] = (new HookMethods)->hookMethods($testClass);
         }
         $this->runHooks('beforeClass');

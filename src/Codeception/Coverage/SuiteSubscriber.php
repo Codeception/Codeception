@@ -9,17 +9,12 @@ use Codeception\Coverage\Subscriber\Printer;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
-use Codeception\Stub;
 use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Exception;
 use PHPUnit\Framework\CodeCoverageException;
-use PHPUnit\Framework\TestResult;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Driver\Driver as CodeCoverageDriver;
-use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function array_keys;
-use function method_exists;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface
 {
@@ -48,8 +43,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
 
     protected string $logDir;
 
-    protected array $options = [];
-
     public static array $events = [];
 
     abstract protected function isEnabled();
@@ -59,9 +52,8 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
      *
      * @throws ConfigurationException
      */
-    public function __construct(array $options = [])
+    public function __construct(protected array $options = [])
     {
-        $this->options = $options;
         $this->logDir = Configuration::outputDir();
     }
 

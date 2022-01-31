@@ -49,13 +49,10 @@ class Suite extends TestSuite
 
     protected ?string $baseName = null;
 
-    private EventDispatcher $dispatcher;
-
     private bool $reportUselessTests = false;
 
-    public function __construct(EventDispatcher $eventDispatcher)
+    public function __construct(private EventDispatcher $dispatcher)
     {
-        $this->dispatcher = $eventDispatcher;
         parent::__construct('', '');
     }
 
@@ -241,7 +238,7 @@ class Suite extends TestSuite
                 );
             } catch (OriginalCodeCoverageException $cce) {
                 $error = true;
-                $e = $e ?? $cce;
+                $e ??= $cce;
             }
         }
 

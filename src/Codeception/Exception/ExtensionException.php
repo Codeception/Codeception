@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Codeception\Exception;
 
 use Exception;
-use function get_class;
 use function is_object;
 
 class ExtensionException extends Exception
@@ -19,7 +18,7 @@ class ExtensionException extends Exception
     {
         parent::__construct($message, $previous);
         if (is_object($extension)) {
-            $extension = get_class($extension);
+            $extension = $extension::class;
         }
         $this->message = $extension . "\n\n" . $this->message;
     }

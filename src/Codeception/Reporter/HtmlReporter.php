@@ -50,12 +50,9 @@ class HtmlReporter implements EventSubscriberInterface
     private string $reportFile;
 
     private Timer $timer;
-    private Output $output;
 
-    public function __construct(array $options, Output $output)
+    public function __construct(array $options, private Output $output)
     {
-        $this->output = $output;
-
         $this->reportFile = $options['html'];
         if (!codecept_is_path_absolute($this->reportFile)) {
             $this->reportFile = codecept_output_dir($this->reportFile);

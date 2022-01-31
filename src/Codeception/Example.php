@@ -13,14 +13,8 @@ use Traversable;
 
 class Example implements ArrayAccess, Countable, IteratorAggregate
 {
-    /**
-     * @var mixed
-     */
-    protected $data;
-
-    public function __construct($data)
+    public function __construct(protected $data)
     {
-        $this->data = $data;
     }
 
     #[\ReturnTypeWillChange]

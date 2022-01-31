@@ -24,7 +24,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use function ini_set;
 use function preg_match;
 use function str_replace;
-use function strpos;
 
 /**
  * Shows step by step execution process for scenario driven tests without actually running them.
@@ -67,7 +66,7 @@ class DryRun extends Command
             'memory_limit',
             $config['settings']['memory_limit'] ?? '1024M'
         );
-        if (! Configuration::isEmpty() && ! $test && strpos($suite, (string) $config['paths']['tests']) === 0) {
+        if (! Configuration::isEmpty() && ! $test && str_starts_with($suite, (string) $config['paths']['tests'])) {
             [, $suite, $test] = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
         $settings = $this->getSuiteConfig($suite);
@@ -117,7 +116,7 @@ class DryRun extends Command
         $eventDispatcher->dispatch(new TestEvent($test), Events::TEST_BEFORE);
         try {
             $test->test();
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
         $eventDispatcher->dispatch(new TestEvent($test), Events::TEST_AFTER);
         $eventDispatcher->dispatch(new TestEvent($test), Events::TEST_END);

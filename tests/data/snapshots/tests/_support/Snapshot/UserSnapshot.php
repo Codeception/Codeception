@@ -17,7 +17,7 @@ class UserSnapshot extends Snapshot
         $this->dataTester = $I;
     }
 
-    protected function fetchData()
+    protected function fetchData(): array|string|false
     {
         return $this->dataTester->grabColumnFromDatabase('users', 'email');
     }

@@ -40,7 +40,7 @@ class Di
 
     public function set(object $class): void
     {
-        $this->container[get_class($class)] = $class;
+        $this->container[$class::class] = $class;
     }
 
     /**

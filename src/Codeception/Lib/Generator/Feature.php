@@ -18,11 +18,8 @@ Feature: {{name}}
 
 EOF;
 
-    protected string $name;
-
-    public function __construct(string $name)
+    public function __construct(protected string $name)
     {
-        $this->name = $name;
     }
 
     public function produce(): string

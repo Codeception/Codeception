@@ -23,10 +23,9 @@ class ParamsLoader
     protected ?string $paramsFile = null;
 
     /**
-     * @param array|string $paramStorage
      * @return mixed
      */
-    public function load($paramStorage)
+    public function load(array|string $paramStorage)
     {
         $this->paramsFile = null;
         $this->paramStorage = $paramStorage;
@@ -79,10 +78,7 @@ class ParamsLoader
         return $this->paramStorage;
     }
 
-    /**
-     * @return array|false
-     */
-    protected function loadIniFile()
+    protected function loadIniFile(): array|false
     {
         return parse_ini_file($this->paramsFile);
     }
@@ -109,24 +105,12 @@ class ParamsLoader
                 $key = isset($param['key']) ? (string) $param['key'] : $param->getName();
                 $type = isset($param['type']) ? (string) $param['type'] : 'string';
                 $value = (string) $param;
-                switch ($type) {
-                    case 'bool':
-                    case 'boolean':
-                    case 'int':
-                    case 'integer':
-                    case 'float':
-                    case 'double':
-                        $a[$key] = settype($value, $type);
-                        break;
-                    case 'constant':
-                        $a[$key] = constant($value);
-                        break;
-                    case 'collection':
-                        $a[$key] = $paramsToArray($param);
-                        break;
-                    default:
-                        $a[$key] = (string) $param;
-                }
+                $a[$key] = match ($type) {
+                    'bool', 'boolean', 'int', 'integer', 'float', 'double' => settype($value, $type),
+                    'constant' => constant($value),
+                    'collection' => $paramsToArray($param),
+                    default => (string) $param,
+                };
             }
 
             return $a;

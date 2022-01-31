@@ -15,11 +15,8 @@ abstract class Actor
     use Comment;
     use Pause;
 
-    protected Scenario $scenario;
-
-    public function __construct(Scenario $scenario)
+    public function __construct(protected Scenario $scenario)
     {
-        $this->scenario = $scenario;
     }
 
     protected function getScenario(): Scenario
@@ -39,7 +36,7 @@ abstract class Actor
 
     public function __call(string $method, array $arguments)
     {
-        $class = get_class($this);
+        $class = $this::class;
         throw new RuntimeException("Call to undefined method {$class}::{$method}");
     }
 

@@ -12,7 +12,6 @@ use function pathinfo;
 use function preg_replace;
 use function rtrim;
 use function str_replace;
-use function strpos;
 use function strrev;
 
 trait FileSystemTrait
@@ -36,13 +35,13 @@ trait FileSystemTrait
 
     protected function completeSuffix(string $filename, string $suffix): string
     {
-        if (strpos(strrev($filename), strrev($suffix)) === 0) {
+        if (str_starts_with(strrev($filename), strrev($suffix))) {
             $filename .= '.php';
         }
-        if (strpos(strrev($filename), strrev($suffix . '.php')) !== 0) {
+        if (!str_starts_with(strrev($filename), strrev($suffix . '.php'))) {
             $filename .= $suffix . '.php';
         }
-        if (strpos(strrev($filename), strrev('.php')) !== 0) {
+        if (!str_starts_with(strrev($filename), strrev('.php'))) {
             $filename .= '.php';
         }
 

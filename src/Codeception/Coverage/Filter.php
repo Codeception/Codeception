@@ -16,19 +16,15 @@ use function implode;
 use function is_array;
 use function method_exists;
 use function str_replace;
-use function strpos;
 
 class Filter
 {
-    protected ?CodeCoverage $phpCodeCoverage = null;
-
     protected static ?Filter $c3 = null;
 
     protected ?\SebastianBergmann\CodeCoverage\Filter $filter = null;
 
-    public function __construct(CodeCoverage $phpCoverage)
+    public function __construct(protected ?CodeCoverage $phpCodeCoverage)
     {
-        $this->phpCodeCoverage = $phpCoverage;
         $this->filter = $this->phpCodeCoverage->filter();
     }
 
@@ -68,7 +64,7 @@ class Filter
                 throw new ConfigurationException('Error parsing yaml. Config `whitelist: include:` should be an array');
             }
             foreach ($coverage['whitelist']['include'] as $fileOrDir) {
-                $finder = strpos($fileOrDir, '*') === false
+                $finder = !str_contains($fileOrDir, '*')
                     ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
@@ -90,7 +86,7 @@ class Filter
             }
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 try {
-                    $finder = strpos($fileOrDir, '*') === false
+                    $finder = !str_contains($fileOrDir, '*')
                         ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
@@ -103,7 +99,7 @@ class Filter
                             $filter->excludeFile($file);
                         }
                     }
-                } catch (DirectoryNotFoundException $e) {
+                } catch (DirectoryNotFoundException) {
                     continue;
                 }
             }

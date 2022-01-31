@@ -19,7 +19,7 @@ class NotAJsonSnapshot extends \Codeception\Snapshot
         $this->setSnapshotFileExtension('xml');
     }
 
-    protected function fetchData()
+    protected function fetchData(): array|string|false
     {
         return file_get_contents(codecept_data_dir($this->sourceFile));
     }

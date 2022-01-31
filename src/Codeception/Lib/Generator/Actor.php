@@ -44,15 +44,12 @@ EOF;
 
     protected string $inheritedMethodTemplate = ' * @method {{return}} {{method}}({{params}})';
 
-    protected array $settings = [];
-
     protected array $modules = [];
 
     protected array $actions = [];
 
-    public function __construct(array $settings)
+    public function __construct(protected array $settings)
     {
-        $this->settings = $settings;
         $this->di = new Di();
         $this->moduleContainer = new ModuleContainer($this->di, $settings);
 

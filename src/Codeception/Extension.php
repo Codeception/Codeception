@@ -29,10 +29,6 @@ abstract class Extension implements EventSubscriberInterface
      */
     protected $config = [];
     /**
-     * @var array
-     */
-    protected $options = [];
-    /**
      * @var Output
      */
     protected $output;
@@ -45,10 +41,9 @@ abstract class Extension implements EventSubscriberInterface
      */
     private $modules = [];
 
-    public function __construct(array $config, array $options)
+    public function __construct(array $config, protected array $options)
     {
         $this->config = array_merge($this->config, $config);
-        $this->options = $options;
         $this->output = new Output($options);
         $this->_initialize();
     }
@@ -91,10 +86,7 @@ abstract class Extension implements EventSubscriberInterface
         $this->_reconfigure(); // hook for BC only.
     }
 
-    /**
-     * @param string|iterable $message
-     */
-    protected function write($message): void
+    protected function write(iterable|string $message): void
     {
         if (!$this->options['silent'] && $message) {
             $this->output->write($message);

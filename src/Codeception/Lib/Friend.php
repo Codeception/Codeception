@@ -10,19 +10,12 @@ use Codeception\Lib\Interfaces\MultiSession;
 
 class Friend
 {
-    protected string $name;
-
-    protected Actor $actor;
-
     protected array $data = [];
 
     protected array $multiSessionModules = [];
 
-    public function __construct(string $name, Actor $actor, array $modules = [])
+    public function __construct(protected string $name, protected Actor $actor, array $modules = [])
     {
-        $this->name = $name;
-        $this->actor = $actor;
-
         $this->multiSessionModules = array_filter($modules, fn($m): bool => $m instanceof MultiSession);
 
         if (empty($this->multiSessionModules)) {
