@@ -116,29 +116,15 @@ class ParamsLoader
 
     protected function loadDotEnvFile(): array
     {
-        if (class_exists(RepositoryBuilder::class)) {
-            if (method_exists(RepositoryBuilder::class, 'createWithNoAdapters')) {
-                //dotenv v5
-                $repository = RepositoryBuilder::createWithNoAdapters()
-                    ->addAdapter(EnvConstAdapter::class)
-                    ->addAdapter(ServerConstAdapter::class)
-                    ->make();
-            } else {
-                //dotenv v4
-                $repository = RepositoryBuilder::create()
-                    ->withReaders([new ServerConstAdapter()])
-                    ->immutable()
-                    ->make();
-            }
-            $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
-            $dotEnv->load();
-            return $_SERVER;
+        if (!class_exists(Dotenv::class)) {
+            throw new ConfigurationException(
+                "`vlucas/phpdotenv` library is required to parse .env files.\n" .
+                "Please install it via composer: composer require vlucas/phpdotenv"
+            );
         }
 
-        throw new ConfigurationException(
-            "`vlucas/phpdotenv` library is required to parse .env files.\n" .
-            "Please install it via composer: composer require vlucas/phpdotenv"
-        );
+        // Dotenv v5 & v4
+        return Dotenv::createArrayBacked(codecept_root_dir(), $this->paramStorage)->load();
     }
 
     protected function loadEnvironmentVars(): array
