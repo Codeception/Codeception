@@ -93,10 +93,9 @@ abstract class InitTemplate
      * $this->ask('do you want to proceed (y/n)', true);
      * ```
      *
-     * @param array|bool|null $answer
      * @return mixed|string
      */
-    protected function ask(string $question, $answer = null)
+    protected function ask(string $question, bool|array $answer = null): mixed
     {
         $question = "? {$question}";
         $dialog = new QuestionHelper();

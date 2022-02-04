@@ -28,18 +28,15 @@ abstract class Extension implements EventSubscriberInterface
      * @var array
      */
     protected $config = [];
-    /**
-     * @var Output
-     */
-    protected $output;
-    /**
-     * @var array
-     */
-    protected $globalConfig = [];
+
+    protected Output $output;
+
+    protected array $globalConfig = [];
+
     /**
      * @var Array<string,Module>
      */
-    private $modules = [];
+    private array $modules = [];
 
     public function __construct(array $config, protected array $options)
     {

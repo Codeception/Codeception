@@ -47,9 +47,8 @@ class Annotation
      * Annotation::forClass('MyTestCase')->method('testData')->fetch('depends');
      * Annotation::forClass('MyTestCase')->method('testData')->fetchAll('depends');
      * ```
-     * @param object|string $class
      */
-    public static function forClass($class): self
+    public static function forClass(object|string $class): self
     {
         if (is_object($class)) {
             $class = get_class($class);
@@ -62,10 +61,7 @@ class Annotation
         return new static(static::$reflectedClasses[$class]);
     }
 
-    /**
-     * @param object|string $class
-     */
-    public static function forMethod($class, string $method): self
+    public static function forMethod(object|string $class, string $method): self
     {
         return self::forClass($class)->method($method);
     }
@@ -129,10 +125,7 @@ class Annotation
         return [];
     }
 
-    /**
-     * @return string|false
-     */
-    public function raw()
+    public function raw(): string|false
     {
         return $this->currentReflectedItem->getDocComment();
     }

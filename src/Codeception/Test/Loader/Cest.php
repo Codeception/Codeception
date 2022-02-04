@@ -44,7 +44,7 @@ class Cest implements LoaderInterface
         $testClasses = Parser::getClassesFromFile($filename);
 
         foreach ($testClasses as $testClass) {
-            if (substr($testClass, -strlen('Cest')) !== 'Cest') {
+            if (!str_ends_with($testClass, 'Cest')) {
                 continue;
             }
             if (!(new ReflectionClass($testClass))->isInstantiable()) {
@@ -54,7 +54,7 @@ class Cest implements LoaderInterface
 
             $methods = get_class_methods($testClass);
             foreach ($methods as $method) {
-                if (strpos($method, '_') === 0) {
+                if (str_starts_with($method, '_')) {
                     continue;
                 }
                 $examples = [];

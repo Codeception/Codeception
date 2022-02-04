@@ -15,17 +15,11 @@ use Symfony\Component\Yaml\Yaml;
 
 class ParamsLoader
 {
-    /**
-     * @var array|string|null
-     */
-    protected $paramStorage;
+    protected string|array|null $paramStorage;
 
     protected ?string $paramsFile = null;
 
-    /**
-     * @return mixed
-     */
-    public function load(array|string $paramStorage)
+    public function load(array|string $paramStorage): mixed
     {
         $this->paramsFile = null;
         $this->paramStorage = $paramStorage;
@@ -70,10 +64,7 @@ class ParamsLoader
         throw new ConfigurationException("Params can't be loaded from `{$paramStorage}`.");
     }
 
-    /**
-     * @return array|string|null
-     */
-    public function loadArray()
+    public function loadArray(): array|string|null
     {
         return $this->paramStorage;
     }

@@ -649,7 +649,7 @@ class Run extends Command
         $values = [];
         $request = (string)$input;
         foreach ($options as $option => $defaultValue) {
-            if (strpos($request, sprintf('--%s', (string) $option))) {
+            if (strpos($request, sprintf('--%s', $option))) {
                 $values[$option] = $input->getOption($option) ?: $defaultValue;
             } else {
                 $values[$option] = false;

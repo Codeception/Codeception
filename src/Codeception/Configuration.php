@@ -39,7 +39,7 @@ class Configuration
      * @var string|null Directory containing main configuration file.
      * @see self::projectDir()
      */
-    protected static $dir = null;
+    protected static ?string $dir = null;
 
     /**
      * @var string|null Directory of a base configuration file for the project with includes.
@@ -319,7 +319,7 @@ class Configuration
     public static function suiteSettings(string $suite, array $config): array
     {
         // cut namespace name from suite name
-        if ($suite != $config['namespace'] && substr($suite, 0, strlen($config['namespace'])) == $config['namespace']) {
+        if ($suite != $config['namespace'] && str_starts_with($suite, $config['namespace'])) {
             $suite = substr($suite, strlen($config['namespace']));
         }
 
@@ -624,11 +624,7 @@ class Configuration
         return self::$config;
     }
 
-    /**
-     * @param array|bool|null $a1
-     * @param array|bool|null $a2
-     */
-    public static function mergeConfigs($a1, $a2): array
+    public static function mergeConfigs(bool|array|null $a1, bool|array|null $a2): array
     {
         if (!is_array($a1)) {
             return $a2;

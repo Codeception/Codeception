@@ -26,46 +26,32 @@ abstract class Module
 
     /**
      * By setting it to false module wan't inherit methods of parent class.
-     *
-     * @var bool
      */
-    public static $includeInheritedActions = true;
+    public static bool $includeInheritedActions = true;
 
     /**
      * Allows to explicitly set what methods have this class.
-     *
-     * @var array
      */
-    public static $onlyActions = [];
+    public static array $onlyActions = [];
 
     /**
      * Allows to explicitly exclude actions from module.
-     *
-     * @var array
      */
-    public static $excludeActions = [];
+    public static array $excludeActions = [];
 
     /**
      * Allows to rename actions
-     *
-     * @var array
      */
-    public static $aliases = [];
+    public static array $aliases = [];
 
-    /**
-     * @var array
-     */
-    protected $storage = [];
+    protected array $storage = [];
 
     /**
      * @var array
      */
     protected $config = [];
 
-    /**
-     * @var array
-     */
-    protected $backupConfig = [];
+    protected array $backupConfig = [];
 
     /**
      * @var array
@@ -76,7 +62,6 @@ abstract class Module
      * Module constructor.
      *
      * Requires module container (to provide access between modules of suite) and config.
-     *
      */
     public function __construct(protected ModuleContainer $moduleContainer, ?array $config = null)
     {
@@ -254,20 +239,16 @@ abstract class Module
 
     /**
      * Print debug message to the screen.
-     *
-     * @param mixed $message
      */
-    protected function debug($message): void
+    protected function debug(mixed $message): void
     {
         codecept_debug($message);
     }
 
     /**
      * Print debug message with a title
-     *
-     * @param mixed $message
      */
-    protected function debugSection(string $title, $message): void
+    protected function debugSection(string $title, mixed $message): void
     {
         if (is_array($message) || is_object($message)) {
             $message = stripslashes(json_encode($message, JSON_THROW_ON_ERROR));
@@ -323,7 +304,7 @@ abstract class Module
      * @param string|null $key
      * @return mixed the config item's value or null if it doesn't exist
      */
-    public function _getConfig(string $key = null)
+    public function _getConfig(string $key = null): mixed
     {
         if (!$key) {
             return $this->config;

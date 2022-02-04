@@ -28,10 +28,7 @@ abstract class Step implements Stringable
 
     public bool $executed = false;
 
-    /**
-     * @var string|int|null
-     */
-    protected $line = null;
+    protected string|int|null $line = null;
 
     protected ?string $file = null;
 
@@ -165,10 +162,7 @@ abstract class Step implements Stringable
         return implode(',', $arguments);
     }
 
-    /**
-     * @param mixed $argument
-     */
-    protected function stringifyArgument($argument): string
+    protected function stringifyArgument(mixed $argument): string
     {
         if (is_string($argument)) {
             return '"' . strtr($argument, ["\n" => '\n', "\r" => '\r', "\t" => ' ']) . '"';
@@ -290,9 +284,7 @@ abstract class Step implements Stringable
                 throw $e;
             }
             $this->failed = true;
-            if ($this->getMetaStep() !== null) {
-                $this->getMetaStep()->setFailed(true);
-            }
+            $this->getMetaStep()?->setFailed(true);
             throw $e;
         }
         return $res;

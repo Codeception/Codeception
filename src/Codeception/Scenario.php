@@ -53,10 +53,9 @@ class Scenario
     }
 
     /**
-     * @return mixed
      * @throws InjectionException
      */
-    public function runStep(Step $step)
+    public function runStep(Step $step): mixed
     {
         $step->saveTrace();
         if ($this->metaStep instanceof Meta) {

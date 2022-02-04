@@ -15,6 +15,7 @@ use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
 use PHPUnit\Framework\TestResult;
+use RuntimeException;
 use SebastianBergmann\Timer\Timer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Throwable;
@@ -206,7 +207,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     protected function fire(string $eventType, TestEvent $event): void
     {
         if ($this->eventDispatcher === null) {
-            throw new \RuntimeException('EventDispatcher must be injected before running test');
+            throw new RuntimeException('EventDispatcher must be injected before running test');
         }
         $test = $event->getTest();
         if ($test instanceof TestInterface) {

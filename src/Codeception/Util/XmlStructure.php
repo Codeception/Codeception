@@ -14,10 +14,7 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
 
 class XmlStructure
 {
-    /**
-     * @var DOMDocument|DOMNode
-     */
-    protected $xml;
+    protected DOMDocument|DOMNode $xml;
 
     public function __construct($xml)
     {

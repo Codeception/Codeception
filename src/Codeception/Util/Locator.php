@@ -194,10 +194,7 @@ class Locator
         return @$domxPath->evaluate($locator, $domDocument) !== false;
     }
 
-    /**
-     * @param array|WebDriverBy|string $locator
-     */
-    public static function isPrecise($locator): bool
+    public static function isPrecise(WebDriverBy|array|string $locator): bool
     {
         if (is_array($locator)) {
             return true;
@@ -208,7 +205,7 @@ class Locator
         if (Locator::isID($locator)) {
             return true;
         }
-        if (strpos($locator, '//') === 0) {
+        if (str_starts_with($locator, '//')) {
             return true; // simple xpath check
         }
         return false;
@@ -280,7 +277,7 @@ class Locator
      * @param string $element CSS or XPath locator
      * @param int|string $position xPath index
      */
-    public static function elementAt(string $element, $position): string
+    public static function elementAt(string $element, int|string $position): string
     {
         if (is_int($position) && $position < 0) {
             ++$position; // -1 points to the last element
@@ -330,10 +327,8 @@ class Locator
 
     /**
      * Transforms strict locator, \Facebook\WebDriver\WebDriverBy into a string representation
-     *
-     * @param string|array|WebDriverBy $selector
      */
-    public static function humanReadableString($selector): string
+    public static function humanReadableString(WebDriverBy|array|string $selector): string
     {
         if (is_string($selector)) {
             return "'{$selector}'";

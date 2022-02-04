@@ -22,10 +22,7 @@ class Xml
         return $xml;
     }
 
-    /**
-     * @param XmlBuilder|DOMDocument $xml
-     */
-    public static function toXml($xml): DOMDocument
+    public static function toXml(DOMDocument|XmlBuilder $xml): DOMDocument
     {
         if ($xml instanceof XmlBuilder) {
             return $xml->getDom();

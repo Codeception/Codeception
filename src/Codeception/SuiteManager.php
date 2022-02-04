@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestResult;
 use PHPUnit\Runner\Filter\ExcludeGroupFilterIterator;
 use PHPUnit\Runner\Filter\Factory;
 use PHPUnit\Runner\Filter\IncludeGroupFilterIterator;
+use ReflectionClass;
 use ReflectionProperty;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -187,7 +188,7 @@ class SuiteManager
 
     private function addFilterToFactory(Factory $filterFactory, string $filterClass, $filterParameter)
     {
-        $filterReflectionClass = new \ReflectionClass($filterClass);
+        $filterReflectionClass = new ReflectionClass($filterClass);
 
         $property = new ReflectionProperty(get_class($filterFactory), 'filters');
         $property->setAccessible(true);

@@ -234,7 +234,7 @@ class JUnitReporter implements EventSubscriberInterface
         $testCase->setAttribute('name', $test->getName());
 
         $class      = new ReflectionClass($test);
-        $methodName = $test->getName(!$usesDataprovider);
+        $methodName = $test->getName();
 
         if ($class->hasMethod($methodName)) {
             $method = $class->getMethod($methodName);

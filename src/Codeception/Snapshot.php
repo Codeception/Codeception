@@ -36,10 +36,8 @@ abstract class Snapshot
     /**
      * Performs assertion on saved data set against current dataset.
      * Can be overridden to implement custom assertion
-     *
-     * @param mixed $data
      */
-    protected function assertData($data): void
+    protected function assertData(mixed $data): void
     {
         $this->assertSame($this->dataSet, $data, "Snapshot doesn't match real data");
     }

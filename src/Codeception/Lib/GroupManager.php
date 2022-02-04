@@ -166,7 +166,7 @@ class GroupManager
                 if ($filename == $testPattern) {
                     $groups[] = $group;
                 }
-                $testName = $test->getName(false);
+                $testName = $test->getName();
                 if (str_starts_with($filename . ':' . $testName, (string) $testPattern)) {
                     $groups[] = $group;
                 }
