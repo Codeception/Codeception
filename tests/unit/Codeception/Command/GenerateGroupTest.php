@@ -15,7 +15,7 @@ class GenerateGroupTest extends BaseCommandRunner
     {
         $this->makeCommand(\Codeception\Command\GenerateGroup::class);
         $this->config = [
-            'class_name' => 'HobbitGuy',
+            'actor' => 'HobbitGuy',
             'path' => 'tests/shire',
             'paths' => ['support' => 'tests/_support','tests' => 'tests'],
             'settings' => ['bootstrap' => '_bootstrap.php']

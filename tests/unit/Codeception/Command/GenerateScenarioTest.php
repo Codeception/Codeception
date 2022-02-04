@@ -40,7 +40,6 @@ class GenerateScenarioTest extends BaseCommandRunner
                 'data' => '_data',
 
             ],
-            'class_name' => 'DumbGuy',
             'path' => 'tests/data/claypit/tests/dummy/'
         ];
     }
@@ -83,7 +82,6 @@ class GenerateScenarioTest extends BaseCommandRunner
     public function testOneFile()
     {
         $this->config['path'] = 'tests/data/claypit/tests/skipped/';
-        $this->config['class_name'] = 'SkipGuy';
 
         $this->execute(['suite' => 'skipped', '--single-file' => true]);
         $this->assertSame(codecept_root_dir().'tests/data/scenarios/skipped.txt', $this->filename);
@@ -96,7 +94,6 @@ class GenerateScenarioTest extends BaseCommandRunner
     public function testOneFileWithHtml()
     {
         $this->config['path'] = 'tests/data/claypit/tests/skipped/';
-        $this->config['class_name'] = 'SkipGuy';
 
         $this->execute(['suite' => 'skipped', '--single-file' => true, '--format' => 'html']);
         $this->assertSame(codecept_root_dir().'tests/data/scenarios/skipped.html', $this->filename);

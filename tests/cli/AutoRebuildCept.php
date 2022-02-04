@@ -4,7 +4,7 @@ $I = new CliGuy($scenario);
 $I->wantTo('change configs and check that Guy is rebuilt');
 $I->amInPath('tests/data/sandbox');
 $I->writeToFile('tests/unit.suite.yml', <<<EOF
-class_name: CodeGuy
+actor: CodeGuy
 modules:
     enabled: [Cli, CodeHelper]
 EOF

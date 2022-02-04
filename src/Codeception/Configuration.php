@@ -107,7 +107,6 @@ class Configuration
 
     public static array $defaultSuiteSettings = [
         'actor'       => null,
-        'class_name'  => null, // Codeception <2.3 compatibility
         'modules'     => [
             'enabled' => [],
             'config'  => [],
@@ -342,11 +341,6 @@ class Configuration
         if (isset($config['paths']['envs'])) {
             $envConf = self::loadEnvConfigs(self::$dir . DIRECTORY_SEPARATOR . $config['paths']['envs']);
             $settings = self::mergeConfigs($settings, $envConf);
-        }
-
-        if (!$settings['actor']) {
-            // Codeception 2.2 compatibility
-            $settings['actor'] = $settings['class_name'];
         }
 
         if (!$settings['path']) {

@@ -120,6 +120,11 @@ class Gherkin implements LoaderInterface
         }
 
         foreach ($contexts as $context) {
+            if (is_string($context) && !class_exists($context)) {
+                throw new \InvalidArgumentException(
+                    sprintf("Context class %s does not exist", $context)
+                );
+            }
             $methods = get_class_methods($context);
             if ($methods === []) {
                 continue;

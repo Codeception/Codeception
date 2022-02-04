@@ -1,4 +1,4 @@
-class_name: DumbGuy
+actor: DumbGuy
 path: dummy
 modules:
     enabled: [Filesystem, DumbHelper]

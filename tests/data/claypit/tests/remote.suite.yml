@@ -1,4 +1,4 @@
-class_name: OtherGuy
+actor: OtherGuy
 modules:
     enabled: [PhpBrowser, Filesystem, OtherHelper]
     config:

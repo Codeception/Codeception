@@ -10,7 +10,7 @@ class GenerateEnvironmentTest extends BaseCommandRunner
     {
         $this->makeCommand(\Codeception\Command\GenerateEnvironment::class);
         $this->config = [
-            'class_name' => 'HobbitGuy',
+            'actor' => 'HobbitGuy',
             'path' => 'tests/shire',
             'paths' => ['envs' => 'tests/_envs','tests' => 'tests'],
         ];

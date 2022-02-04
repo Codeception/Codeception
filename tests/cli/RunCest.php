@@ -416,8 +416,8 @@ EOF
         $I->seeInShellOutput('Then there is a file "scenario.suite.yml"');
         $I->seeInShellOutput('And there are keywords in "scenario.suite.yml"');
         $I->seeInShellOutput(<<<EOF
-   | class_name | ScenarioGuy |
-   | enabled    | Filesystem  |
+   | actor   | ScenarioGuy |
+   | enabled | Filesystem  |
 EOF
         );
         $I->seeInShellOutput('PASSED');
