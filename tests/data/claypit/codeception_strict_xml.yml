@@ -1,13 +1,13 @@
 paths:
     tests: tests
-    log: tests/_output
+    output: tests/_output
     data: tests/_data
     helpers: tests/_support
 bootstrap: bootstrap_global.php
 settings:
     colors: false
     silent: false
-    log: false
+    output: false
     strict_xml: true
 modules:
     config:

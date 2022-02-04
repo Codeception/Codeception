@@ -2,6 +2,6 @@ include:
   - src/*/*Pack
   - src/*/*/*Pack
 paths:
-  log: "_log"
+  output: "_log"
 settings:
   colors: false

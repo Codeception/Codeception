@@ -7,6 +7,6 @@ groups:
   group: group.txt
 
 paths:
-  log: "_log"
+  output: "_log"
 settings:
   colors: false

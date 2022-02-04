@@ -208,11 +208,6 @@ class Configuration
 
         self::$config = $config;
 
-        // compatibility with suites created by Codeception < 2.3.0
-        if (!isset($config['paths']['output']) && isset($config['paths']['log'])) {
-            $config['paths']['output'] = $config['paths']['log'];
-        }
-
         if (isset(self::$config['actor'])) {
             self::$config['actor_suffix'] = self::$config['actor']; // old compatibility
         }

@@ -2,7 +2,7 @@ actor: Tester
 include:
   - src/*/*Pack
 paths:
-  log: "_log"
+  output: "_log"
   tests: "tests"
   data: "data"
   support: "support"
