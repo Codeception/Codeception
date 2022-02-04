@@ -123,7 +123,7 @@ class Suite extends TestSuite
         $failure    = false;
         $warning    = false;
         $incomplete = false;
-        $useless      = false;
+        $useless    = false;
         $skipped    = false;
 
         $result->startTest($test);
@@ -191,6 +191,9 @@ class Suite extends TestSuite
         if ($this->reportUselessTests &&
             !$incomplete &&
             !$skipped &&
+            !$error &&
+            !$failure &&
+            !$warning &&
             !$test->doesNotPerformAssertions() &&
             $test->numberOfAssertionsPerformed() === 0) {
             $failure = true;
