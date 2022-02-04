@@ -66,22 +66,15 @@ class ModuleContainer
         'ZF2' => 'codeception/module-zf2',
     ];
 
-    private array $config;
-
-    private Di $di;
-
     private array $modules = [];
 
     private array $active = [];
 
     private array $actions = [];
 
-    public function __construct(Di $di, array $config)
+    public function __construct(private Di $di, private array $config)
     {
-        $this->di = $di;
         $this->di->set($this);
-
-        $this->config = $config;
     }
 
     /**
@@ -192,13 +185,13 @@ class ModuleContainer
         // it should be included as an action.
         if (!$module::$includeInheritedActions &&
             !in_array($method->name, $module::$onlyActions) &&
-            $method->getDeclaringClass()->getName() != get_class($module)
+            $method->getDeclaringClass()->getName() != $module::class
         ) {
             return false;
         }
 
         // Do not include hidden methods, methods with a name starting with an underscore
-        if (strpos($method->name, '_') === 0) {
+        if (str_starts_with($method->name, '_')) {
             return false;
         }
 
@@ -218,7 +211,7 @@ class ModuleContainer
      */
     private function isHelper(string $moduleName): bool
     {
-        return strpos($moduleName, '\\') !== false;
+        return str_contains($moduleName, '\\');
     }
 
     /**
@@ -378,7 +371,7 @@ class ModuleContainer
         }
 
         if (!is_array($depends)) {
-            $message = sprintf("Method _depends of module '%s' must return an array", get_class($module));
+            $message = sprintf("Method _depends of module '%s' must return an array", $module::class);
             throw new ModuleException($module, $message);
         }
 

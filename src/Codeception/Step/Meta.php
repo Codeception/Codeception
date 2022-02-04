@@ -10,7 +10,6 @@ use function array_pop;
 use function end;
 use function is_string;
 use function str_replace;
-use function strpos;
 
 class Meta extends CodeceptionStep
 {
@@ -34,7 +33,7 @@ class Meta extends CodeceptionStep
         $argumentBackup = $this->arguments;
         $lastArgAsString = '';
         $lastArg = end($this->arguments);
-        if (is_string($lastArg) && strpos($lastArg, "\n")  !== false) {
+        if (is_string($lastArg) && str_contains($lastArg, "\n")) {
             $lastArgAsString = "\r\n   " . str_replace("\n", "\n   ", $lastArg);
             array_pop($this->arguments);
         }

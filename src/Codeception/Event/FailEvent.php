@@ -9,15 +9,9 @@ use Throwable;
 
 class FailEvent extends TestEvent
 {
-    protected Throwable $fail;
-
-    protected int $count;
-
-    public function __construct(PHPUnitTest $test, ?float $time, Throwable $e, int $count = 0)
+    public function __construct(PHPUnitTest $test, ?float $time, protected Throwable $fail, protected int $count = 0)
     {
         parent::__construct($test, $time);
-        $this->fail = $e;
-        $this->count = $count;
     }
 
     public function getCount(): int

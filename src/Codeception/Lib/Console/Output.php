@@ -65,10 +65,7 @@ class Output extends ConsoleOutput
         return str_replace('\/', '/', $message);
     }
 
-    /**
-     * @param mixed $message
-     */
-    public function debug($message): void
+    public function debug(mixed $message): void
     {
         $message = print_r($message, true);
         $message = str_replace("\n", "\n  ", $message);
@@ -90,7 +87,7 @@ class Output extends ConsoleOutput
 
     public function exception(Exception $exception): void
     {
-        $class = get_class($exception);
+        $class = $exception::class;
 
         $this->writeln("");
         $this->writeln(sprintf('(![ %s ]!)', $class));

@@ -14,7 +14,6 @@ use Exception;
 use LogicException;
 use PHPUnit\Metadata\Annotation\Parser\Registry as AnnotationRegistry;
 use PHPUnit\Metadata\Api\CodeCoverage;
-use PHPUnit\Metadata\Parser\Registry;
 use ReflectionMethod;
 use function array_slice;
 use function file;
@@ -43,17 +42,11 @@ class Cest extends Test implements
 
     protected Parser $parser;
 
-    /**
-     * @var object|string
-     */
-    protected $testClassInstance;
+    protected string|object $testClassInstance;
 
     protected string $testMethod;
 
-    /**
-     * @param object|string $testClass
-     */
-    public function __construct($testClass, string $methodName, string $fileName)
+    public function __construct(object|string $testClass, string $methodName, string $fileName)
     {
         $metadata = new Metadata();
         $metadata->setName($methodName);
@@ -184,7 +177,7 @@ class Cest extends Test implements
         return get_class($this->getTestClass()) . ":" . $this->getTestMethod();
     }
 
-    public function getTestClass()
+    public function getTestClass(): object|string
     {
         return $this->testClassInstance;
     }
@@ -213,7 +206,7 @@ class Cest extends Test implements
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
-            if (strpos($required, ':') === false && method_exists($this->getTestClass(), $required)) {
+            if (!str_contains($required, ':') && method_exists($this->getTestClass(), $required)) {
                 $required = get_class($this->getTestClass()) . ":{$required}";
             }
             $names[] = $required;

@@ -32,15 +32,11 @@ class Module implements EventSubscriberInterface
         Events::SUITE_AFTER  => 'afterSuite'
     ];
 
-    /** @var \Codeception\Module[] */
-    protected array $modules = [];
-
     /**
      * @param \Codeception\Module[] $modules
      */
-    public function __construct(array $modules = [])
+    public function __construct(protected array $modules = [])
     {
-        $this->modules = $modules;
     }
 
     public function beforeSuite(SuiteEvent $event): void

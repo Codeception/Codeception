@@ -146,7 +146,7 @@ class Gherkin implements LoaderInterface
         if (isset($this->settings['describe_steps'])) {
             return $pattern;
         }
-        if (strpos($pattern, '/') !== 0) {
+        if (!str_starts_with($pattern, '/')) {
             $pattern = preg_quote($pattern);
 
             $pattern = preg_replace('#(\w+)/(\w+)#', '(?:$1|$2)', $pattern); // or
@@ -168,7 +168,7 @@ class Gherkin implements LoaderInterface
 
     private function validatePattern(string $pattern): void
     {
-        if (strpos($pattern, '/') !== 0) {
+        if (!str_starts_with($pattern, '/')) {
             return; // not a user-regex but a string with placeholder
         }
         if (@preg_match($pattern, ' ') === false) {

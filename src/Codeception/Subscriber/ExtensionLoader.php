@@ -11,7 +11,6 @@ use Codeception\Exception\ConfigurationException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function class_exists;
-use function get_class;
 use function is_array;
 use function key;
 use function reset;
@@ -36,11 +35,8 @@ class ExtensionLoader implements EventSubscriberInterface
 
     protected array $suiteExtensions = [];
 
-    protected EventDispatcher $dispatcher;
-
-    public function __construct(EventDispatcher $eventDispatcher)
+    public function __construct(protected EventDispatcher $dispatcher)
     {
-        $this->dispatcher = $eventDispatcher;
         $this->config = Configuration::config();
     }
 
@@ -64,7 +60,7 @@ class ExtensionLoader implements EventSubscriberInterface
 
         $this->suiteExtensions = [];
         foreach ($extensions as $extension) {
-            $extensionClass = get_class($extension);
+            $extensionClass = $extension::class;
             if (isset($this->globalExtensions[$extensionClass])) {
                 continue; // already globally enabled
             }
@@ -107,7 +103,7 @@ class ExtensionLoader implements EventSubscriberInterface
                     "Class {$extensionClass} is not an EventListener. Please create it as Extension or GroupObject."
                 );
             }
-            $extensions[get_class($extension)] = $extension;
+            $extensions[$extension::class] = $extension;
         }
         return $extensions;
     }

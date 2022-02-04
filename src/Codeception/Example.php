@@ -13,39 +13,31 @@ use Traversable;
 
 class Example implements ArrayAccess, Countable, IteratorAggregate
 {
-    /**
-     * @var mixed
-     */
-    protected $data;
-
-    public function __construct($data)
+    public function __construct(protected $data)
     {
-        $this->data = $data;
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Whether a offset exists
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     * @link https://php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $offset <p>An offset to check for.</p>
      * @return bool true on success or false on failure.
      * The return value will be casted to boolean if non-boolean was returned.
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return array_key_exists($offset, $this->data);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Offset to retrieve
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * @link https://php.net/manual/en/arrayaccess.offsetget.php
      * @param mixed $offset <p>The offset to retrieve.</p>
      * @return mixed Can return all value types.
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         if (!$this->offsetExists($offset)) {
             throw new AssertionFailedError(sprintf("Example %s doesn't exist", $offset));
@@ -53,36 +45,33 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
         return $this->data[$offset];
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Offset to set
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * @link https://php.net/manual/en/arrayaccess.offsetset.php
      * @param mixed $offset <p>The offset to assign the value to.</p>
      * @param mixed $value <p>The value to set.</p>
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->data[$offset] = $value;
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Offset to unset
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * @link https://php.net/manual/en/arrayaccess.offsetunset.php
      * @param mixed $offset <p>The offset to unset.</p>
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->data[$offset]);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Count elements of an object
      *
-     * @link http://php.net/manual/en/countable.count.php
+     * @link https://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
      * The return value is cast to an integer.
      */
@@ -91,11 +80,10 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
         return count($this->data);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Retrieve an external iterator
      *
-     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @link https://php.net/manual/en/iteratoraggregate.getiterator.php
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
      * <b>Traversable</b>
      */

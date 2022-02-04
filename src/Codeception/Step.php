@@ -12,8 +12,9 @@ use Codeception\Util\Locator;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
+use Stringable;
 
-abstract class Step
+abstract class Step implements Stringable
 {
     /**
      * @var int
@@ -25,16 +26,9 @@ abstract class Step
      */
     public const STACK_POSITION = 3;
 
-    protected string $action;
-
-    protected array $arguments;
-
     public bool $executed = false;
 
-    /**
-     * @var string|int|null
-     */
-    protected $line = null;
+    protected string|int|null $line = null;
 
     protected ?string $file = null;
 
@@ -46,10 +40,8 @@ abstract class Step
 
     protected bool $isTry = false;
 
-    public function __construct(string $action, array $arguments = [])
+    public function __construct(protected string $action, protected array $arguments = [])
     {
-        $this->action = $action;
-        $this->arguments = $arguments;
     }
 
     public function saveTrace(): void
@@ -170,10 +162,7 @@ abstract class Step
         return implode(',', $arguments);
     }
 
-    /**
-     * @param mixed $argument
-     */
-    protected function stringifyArgument($argument): string
+    protected function stringifyArgument(mixed $argument): string
     {
         if (is_string($argument)) {
             return '"' . strtr($argument, ["\n" => '\n', "\r" => '\r', "\t" => ' ']) . '"';
@@ -190,7 +179,7 @@ abstract class Step
                 $argument = $argument->getOutput();
             } elseif (method_exists($argument, '__toString')) {
                 $argument = (string)$argument;
-            } elseif (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
+            } elseif ($argument::class == 'Facebook\WebDriver\WebDriverBy') {
                 $argument = Locator::humanReadableString($argument);
             } else {
                 $argument = $this->getClassName($argument);
@@ -208,7 +197,7 @@ abstract class Step
             return $this->formatClassName($argument->__mocked);
         }
 
-        return $this->formatClassName(get_class($argument));
+        return $this->formatClassName($argument::class);
     }
 
     protected function formatClassName(string $classname): string
@@ -295,9 +284,7 @@ abstract class Step
                 throw $e;
             }
             $this->failed = true;
-            if ($this->getMetaStep() !== null) {
-                $this->getMetaStep()->setFailed(true);
-            }
+            $this->getMetaStep()?->setFailed(true);
             throw $e;
         }
         return $res;
@@ -334,7 +321,7 @@ abstract class Step
             // page objects or other classes should not be included with "I"
             if (!in_array(Actor::class, class_parents($step['class']))) {
                 if (isset($step['object'])) {
-                    $this->metaStep->setPrefix(get_class($step['object']) . ':');
+                    $this->metaStep->setPrefix($step['object']::class . ':');
                     return;
                 }
 

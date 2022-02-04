@@ -61,15 +61,12 @@ EOF;
 
     protected string $actions = '';
 
-    protected array $settings = [];
-
     protected string $name;
 
     protected string $namespace;
 
-    public function __construct(array $settings, string $name)
+    public function __construct(protected array $settings, string $name)
     {
-        $this->settings = $settings;
         $this->name = $this->getShortClassName($name);
         $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Page\\' . $name);
     }

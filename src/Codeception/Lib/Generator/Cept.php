@@ -16,11 +16,8 @@ class Cept
 
 EOF;
 
-    protected array $settings = [];
-
-    public function __construct(array $settings)
+    public function __construct(protected array $settings)
     {
-        $this->settings = $settings;
     }
 
     public function produce(): string

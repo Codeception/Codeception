@@ -2,14 +2,8 @@
 
 class UserService
 {
-    /**
-     * @var UserModel
-     */
-    protected UserModel $user;
-
-    function __construct(UserModel $user)
+    function __construct(protected UserModel $user)
     {
-        $this->user = $user;
     }
 
     function create($name): bool

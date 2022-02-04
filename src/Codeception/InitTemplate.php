@@ -53,13 +53,10 @@ abstract class InitTemplate
 
     protected string $workDir = '.';
 
-    protected InputInterface $input;
-
     protected OutputInterface $output;
 
-    public function __construct(InputInterface $input, OutputInterface $output)
+    public function __construct(protected InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
         $this->addStyles($output);
         $this->output = $output;
     }
@@ -96,10 +93,9 @@ abstract class InitTemplate
      * $this->ask('do you want to proceed (y/n)', true);
      * ```
      *
-     * @param array|bool|null $answer
      * @return mixed|string
      */
-    protected function ask(string $question, $answer = null)
+    protected function ask(string $question, bool|array $answer = null): mixed
     {
         $question = "? {$question}";
         $dialog = new QuestionHelper();

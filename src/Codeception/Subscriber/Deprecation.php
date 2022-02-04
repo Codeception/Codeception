@@ -6,7 +6,6 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
-use Codeception\Lib\Console\MessageFactory;
 use Codeception\Lib\Console\Output;
 use Codeception\Lib\Notification;
 use Codeception\Subscriber\Shared\StaticEventsTrait;

@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use Throwable;
+
 class StackTraceFilter
 {
-    protected static $filteredClassesPattern = [
+    protected static array $filteredClassesPattern = [
         'Symfony\Component\Console',
         'Codeception\Command\\',
         'Codeception\TestCase\\',
     ];
 
-    /**
-     * @return array|string
-     */
-    public static function getFilteredStackTrace(\Throwable $e, bool $asString = true, bool $filter = true)
+    public static function getFilteredStackTrace(Throwable $e, bool $asString = true, bool $filter = true): array|string
     {
         $stackTrace = $asString ? '' : [];
 
@@ -64,7 +63,7 @@ class StackTraceFilter
         $className = $step['class'];
 
         foreach (self::$filteredClassesPattern as $filteredClassName) {
-            if (strpos($className, $filteredClassName) === 0) {
+            if (str_starts_with($className, $filteredClassName)) {
                 return true;
             }
         }
@@ -77,24 +76,24 @@ class StackTraceFilter
             return false;
         }
 
-        if (strpos($step['file'], 'codecept.phar/') !== false) {
+        if (str_contains($step['file'], 'codecept.phar/')) {
             return true;
         }
 
-        if (strpos($step['file'], 'vendor' . DIRECTORY_SEPARATOR . 'phpunit') !== false) {
+        if (str_contains($step['file'], 'vendor' . DIRECTORY_SEPARATOR . 'phpunit')) {
             return true;
         }
 
-        if (strpos($step['file'], 'vendor' . DIRECTORY_SEPARATOR . 'codeception') !== false) {
+        if (str_contains($step['file'], 'vendor' . DIRECTORY_SEPARATOR . 'codeception')) {
             return true;
         }
 
         $modulePath = 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR . 'Module';
-        if (strpos($step['file'], $modulePath) !== false) {
+        if (str_contains($step['file'], $modulePath)) {
             return false; // don`t filter modules
         }
 
-        if (strpos($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR) !== false) {
+        if (str_contains($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR)) {
             return true;
         }
 

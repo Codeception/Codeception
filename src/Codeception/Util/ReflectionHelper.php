@@ -36,10 +36,9 @@ class ReflectionHelper
     /**
      * Read a private property of an object.
      *
-     * @return mixed
      * @throws ReflectionException
      */
-    public static function readPrivateProperty(object $object, string $property, string $class = null)
+    public static function readPrivateProperty(object $object, string $property, string $class = null): mixed
     {
         if (is_null($class)) {
             $class = $object;
@@ -71,10 +70,9 @@ class ReflectionHelper
     /**
      * Invoke a private method of an object.
      *
-     * @return mixed
      * @throws ReflectionException
      */
-    public static function invokePrivateMethod(object $object, string $method, array $args = [], string $class = null)
+    public static function invokePrivateMethod(object $object, string $method, array $args = [], string $class = null): mixed
     {
         if (is_null($class)) {
             $class = $object;
@@ -123,11 +121,11 @@ class ReflectionHelper
         if ($parameter->isDefaultValueAvailable()) {
             if (method_exists($parameter, 'isDefaultValueConstant') && $parameter->isDefaultValueConstant()) {
                 $constName = $parameter->getDefaultValueConstantName();
-                if (false !== strpos($constName, '::')) {
+                if (str_contains($constName, '::')) {
                     [$class, $const] = explode('::', $constName);
                     if (in_array($class, ['self', 'static'])) {
                         $constName = '\\' . $parameter->getDeclaringClass()->getName() . '::' . $const;
-                    } elseif (substr($class, 0, 1) !== '\\') {
+                    } elseif (!str_starts_with($class, '\\')) {
                         $constName = '\\' . $constName;
                     }
                 }
@@ -145,31 +143,16 @@ class ReflectionHelper
         }
 
         // Default value should match the parameter type if 'null' is NOT allowed.
-        switch ($type->getName()) {
-            case 'string':
-                return "''";
-            case 'array':
-                return '[]';
-            case 'boolean':
-                return 'false';
-            case 'int':
-            case 'integer':
-            case 'float':
-            case 'double':
-            case 'number':
-            case 'numeric':
-                return '0';
-            default:
-                return 'null';
-        }
+        return match ($type->getName()) {
+            'string' => "''",
+            'array' => '[]',
+            'boolean' => 'false',
+            'int', 'integer', 'float', 'double', 'number', 'numeric' => '0',
+            default => 'null',
+        };
     }
 
-    /**
-     * PHP encode value
-     *
-     * @param mixed $value
-     */
-    public static function phpEncodeValue($value): string
+    public static function phpEncodeValue(mixed $value): string
     {
         if (is_array($value)) {
             return self::phpEncodeArray($value);

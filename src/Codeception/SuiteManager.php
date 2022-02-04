@@ -8,8 +8,8 @@ use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
-use Codeception\Test\Filter\NameFilterIterator;
 use Codeception\Test\Descriptor;
+use Codeception\Test\Filter\NameFilterIterator;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
 use PHPUnit\Framework\DataProviderTestSuite;
@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestResult;
 use PHPUnit\Runner\Filter\ExcludeGroupFilterIterator;
 use PHPUnit\Runner\Filter\Factory;
 use PHPUnit\Runner\Filter\IncludeGroupFilterIterator;
+use ReflectionClass;
 use ReflectionProperty;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -187,7 +188,7 @@ class SuiteManager
 
     private function addFilterToFactory(Factory $filterFactory, string $filterClass, $filterParameter)
     {
-        $filterReflectionClass = new \ReflectionClass($filterClass);
+        $filterReflectionClass = new ReflectionClass($filterClass);
 
         $property = new ReflectionProperty(get_class($filterFactory), 'filters');
         $property->setAccessible(true);

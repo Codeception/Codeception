@@ -91,12 +91,6 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         $this->assertSame("css '.something'", Locator::humanReadableString(['css' => '.something']));
         //WebDriver is no longer a dependency of core, so this can't be testedI
         //$this->assertSame("css selector '.something'", Locator::humanReadableString(WebDriverBy::cssSelector('.something')) );
-
-        try {
-            Locator::humanReadableString(null);
-            $this->fail("Expected exception when calling humanReadableString() with invalid selector");
-        } catch (\InvalidArgumentException $e) {
-        }
     }
 
     public function testLocatingElementPosition()

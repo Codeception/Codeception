@@ -72,10 +72,7 @@ class Metadata
         $this->params['incomplete'] = $incomplete;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCurrent(?string $key = null)
+    public function getCurrent(?string $key = null): mixed
     {
         if ($key) {
             if (isset($this->current[$key])) {
@@ -174,10 +171,8 @@ class Metadata
     /**
      * Returns test params like: env, group, skip, incomplete, etc.
      * Can return by annotation or return all if no key passed
-     *
-     * @return mixed
      */
-    public function getParam(string $key = null)
+    public function getParam(string $key = null): mixed
     {
         if ($key) {
             if (isset($this->params[$key])) {

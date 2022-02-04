@@ -39,7 +39,7 @@ class Configuration
      * @var string|null Directory containing main configuration file.
      * @see self::projectDir()
      */
-    protected static $dir = null;
+    protected static ?string $dir = null;
 
     /**
      * @var string|null Directory of a base configuration file for the project with includes.
@@ -270,10 +270,9 @@ class Configuration
     }
 
     /**
-     * @param string|false $bootstrap
      * @throws ConfigurationException
      */
-    public static function loadBootstrap($bootstrap, string $path): void
+    public static function loadBootstrap(string|false $bootstrap, string $path): void
     {
         if (!$bootstrap) {
             return;
@@ -320,7 +319,7 @@ class Configuration
     public static function suiteSettings(string $suite, array $config): array
     {
         // cut namespace name from suite name
-        if ($suite != $config['namespace'] && substr($suite, 0, strlen($config['namespace'])) == $config['namespace']) {
+        if ($suite != $config['namespace'] && str_starts_with($suite, $config['namespace'])) {
             $suite = substr($suite, strlen($config['namespace']));
         }
 
@@ -625,12 +624,7 @@ class Configuration
         return self::$config;
     }
 
-    /**
-     * @param array|bool|null $a1
-     * @param array|bool|null $a2
-     * @return array|bool
-     */
-    public static function mergeConfigs($a1, $a2)
+    public static function mergeConfigs(bool|array|null $a1, bool|array|null $a2): array
     {
         if (!is_array($a1)) {
             return $a2;
@@ -649,7 +643,7 @@ class Configuration
 
         // for associative arrays
         foreach ($a2 as $k2 => $v2) {
-            if (!isset($a1[$k2])) { // if no such key
+            if (!isset($a1[$k2]) || !is_array($a1[$k2])) { // if no such key
                 $res[$k2] = $v2;
                 unset($a1[$k2]);
                 continue;
@@ -738,7 +732,7 @@ class Configuration
             $configFiles = Finder::create()->files()
                 ->name('/codeception(\.dist\.yml|\.yml)/')
                 ->in(self::$dir . DIRECTORY_SEPARATOR . $include);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             throw new ConfigurationException(
                 "Configuration file(s) could not be found in \"{$include}\"."
             );

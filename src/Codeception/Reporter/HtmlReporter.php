@@ -50,12 +50,9 @@ class HtmlReporter implements EventSubscriberInterface
     private string $reportFile;
 
     private Timer $timer;
-    private Output $output;
 
-    public function __construct(array $options, Output $output)
+    public function __construct(array $options, private Output $output)
     {
-        $this->output = $output;
-
         $this->reportFile = $options['html'];
         if (!codecept_is_path_absolute($this->reportFile)) {
             $this->reportFile = codecept_output_dir($this->reportFile);
@@ -208,11 +205,7 @@ class HtmlReporter implements EventSubscriberInterface
         $this->scenarios .= $scenarioTemplate->render();
     }
 
-    /**
-     * @param $step
-     * @return string
-     */
-    protected function renderStep(Step $step)
+    protected function renderStep(Step $step): string
     {
         $stepTemplate = new Template($this->templatePath . 'step.html');
         $stepTemplate->setVar(['action' => $step->getHtml(), 'error' => $step->hasFailed() ? 'failedStep' : '']);
@@ -220,18 +213,16 @@ class HtmlReporter implements EventSubscriberInterface
     }
 
     /**
-     * @param $metaStep
      * @param $substepsBuffer
-     * @return string
      */
-    protected function renderSubsteps(Meta $metaStep, $substepsBuffer)
+    protected function renderSubsteps(Meta $metaStep, $substepsBuffer): string
     {
         $metaTemplate = new Template($this->templatePath . 'substeps.html');
         $metaTemplate->setVar(['metaStep' => $metaStep->getHtml(), 'error' => $metaStep->hasFailed() ? 'failedStep' : '', 'steps' => $substepsBuffer, 'id' => uniqid()]);
         return $metaTemplate->render();
     }
 
-    private function cleanMessage($exception)
+    private function cleanMessage($exception): string
     {
         $msg = $exception->getMessage();
         if ($exception instanceof \PHPUnit\Framework\ExpectationFailedException && $exception->getComparisonFailure()) {

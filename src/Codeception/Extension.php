@@ -28,27 +28,19 @@ abstract class Extension implements EventSubscriberInterface
      * @var array
      */
     protected $config = [];
-    /**
-     * @var array
-     */
-    protected $options = [];
-    /**
-     * @var Output
-     */
-    protected $output;
-    /**
-     * @var array
-     */
-    protected $globalConfig = [];
+
+    protected Output $output;
+
+    protected array $globalConfig = [];
+
     /**
      * @var Array<string,Module>
      */
-    private $modules = [];
+    private array $modules = [];
 
-    public function __construct(array $config, array $options)
+    public function __construct(array $config, protected array $options)
     {
         $this->config = array_merge($this->config, $config);
-        $this->options = $options;
         $this->output = new Output($options);
         $this->_initialize();
     }
@@ -92,19 +84,22 @@ abstract class Extension implements EventSubscriberInterface
     }
 
     /**
-     * @param string|iterable $message
+     * @param string|iterable $messages The message as an iterable of strings or a single string
      */
-    protected function write($message): void
+    protected function write(iterable|string $messages): void
     {
-        if (!$this->options['silent'] && $message) {
-            $this->output->write($message);
+        if (!$this->options['silent'] && $messages) {
+            $this->output->write($messages);
         }
     }
 
-    protected function writeln(string $message): void
+    /**
+     * @param string|iterable $messages The message as an iterable of strings or a single string
+     */
+    protected function writeln(iterable|string $messages): void
     {
-        if (!$this->options['silent'] && $message) {
-            $this->output->writeln($message);
+        if (!$this->options['silent'] && $messages) {
+            $this->output->writeln($messages);
         }
     }
 

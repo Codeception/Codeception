@@ -49,15 +49,10 @@ class Printer implements EventSubscriberInterface
 
     public static CodeCoverage $coverage;
 
-    protected array $options = [];
-
     protected string $logDir;
 
-    private Output $output;
-
-    public function __construct(array $options, Output $output)
+    public function __construct(protected array $options, private Output $output)
     {
-        $this->options = $options;
         $this->logDir = Configuration::outputDir();
         $this->settings = array_merge($this->settings, Configuration::config()['coverage']);
 
@@ -67,12 +62,11 @@ class Printer implements EventSubscriberInterface
         $filter = new Filter(self::$coverage);
         $filter->whiteList(Configuration::config());
         $filter->blackList(Configuration::config());
-        $this->output = $output;
     }
 
     protected function absolutePath(string $path): string
     {
-        if ((strpos($path, '/') === 0) || (strpos($path, ':') === 1)) { // absolute path
+        if ((str_starts_with($path, '/')) || (strpos($path, ':') === 1)) { // absolute path
             return $path;
         }
         return $this->logDir . $path;

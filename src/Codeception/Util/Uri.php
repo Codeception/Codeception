@@ -55,7 +55,7 @@ class Uri
         if (isset($parts['path'])) {
             $path = $parts['path'];
             $basePath = $base->getPath();
-            if ((strpos($path, '/') !== 0) && !empty($path)) {
+            if ((!str_starts_with($path, '/')) && !empty($path)) {
                 if ($basePath !== '') {
                     // if it ends with a slash, relative paths are below it
                     if (preg_match('#/$#', $basePath)) {

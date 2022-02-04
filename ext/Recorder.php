@@ -619,12 +619,12 @@ EOF;
         return basename($event->getTest()->getMetadata()->getFilename()) . '_' . preg_replace('/[^A-Za-z0-9\-\_]/', '_', $event->getTest()->getMetadata()->getName());
     }
 
-    protected function writeln(string $message): void
+    protected function writeln(iterable|string $messages): void
     {
         parent::writeln(
             $this->ansi
-            ? $message
-            : trim(preg_replace('/[ ]{2,}/', ' ', str_replace('⏺', '', $message)))
+            ? $messages
+            : trim(preg_replace('/[ ]{2,}/', ' ', str_replace('⏺', '', $messages)))
         );
     }
 

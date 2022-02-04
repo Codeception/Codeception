@@ -23,7 +23,6 @@ class ReorderCest {
     /**
      * @before a1
      * @after a5
-     * @param OrderGuy $I
      */
     public function useVariousWrappersForOrder(OrderGuy $I)
     {
@@ -33,7 +32,6 @@ class ReorderCest {
     /**
      * @before a4
      * @after a6
-     * @param OrderGuy $I
      */
     protected function a5(OrderGuy $I)
     {

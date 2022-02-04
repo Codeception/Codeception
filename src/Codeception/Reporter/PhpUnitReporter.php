@@ -5,8 +5,7 @@ namespace Codeception\Reporter;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Test\Interfaces\Reported;
-use DOMElement;
-use PHPUnit\Framework\TestSuite;
+use ReflectionClass;
 
 class PhpUnitReporter extends JUnitReporter
 {
@@ -24,7 +23,7 @@ class PhpUnitReporter extends JUnitReporter
         if (method_exists($test, 'getFileName') ) {
             $filename = $test->getFileName();
         } else {
-            $reflector = new \ReflectionClass($test);
+            $reflector = new ReflectionClass($test);
             $filename = $reflector->getFileName();
         }
 
@@ -52,7 +51,7 @@ class PhpUnitReporter extends JUnitReporter
                 $class = $reportFields['class'] ?? $reportFields['name'];
                 $currentFileSuiteElement->setAttribute('name', $class);
             } else {
-                $currentFileSuiteElement->setAttribute('name', get_class($test));
+                $currentFileSuiteElement->setAttribute('name', $test::class);
             }
 
             $currentFileSuiteElement->setAttribute('file', $filename);

@@ -26,14 +26,8 @@ class {{name}} extends \\Codeception\\Module
 
 EOF;
 
-    protected string $namespace;
-
-    protected string $name;
-
-    public function __construct(string $name, string $namespace = '')
+    public function __construct(protected string $name, protected string $namespace = '')
     {
-        $this->namespace = $namespace;
-        $this->name = $name;
     }
 
     public function produce(): string

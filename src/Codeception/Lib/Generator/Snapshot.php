@@ -46,11 +46,8 @@ EOF;
 
     protected string $name;
 
-    protected array $settings = [];
-
-    public function __construct(array $settings, string $name)
+    public function __construct(protected array $settings, string $name)
     {
-        $this->settings = $settings;
         $this->name = $this->getShortClassName($name);
         $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Snapshot\\' . $name);
     }

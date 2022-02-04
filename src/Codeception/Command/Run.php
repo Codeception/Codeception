@@ -354,7 +354,7 @@ class Run extends Command
 
                 foreach ($config['include'] as $include) {
                     // Find if the suite begins with an include path
-                    if (strpos($suite, (string) $include) === 0) {
+                    if (str_starts_with($suite, (string) $include)) {
                         // Use include config
                         $config = Configuration::config($projectDir.$include);
 
@@ -369,7 +369,7 @@ class Run extends Command
                         try {
                             [, $suite, $test] = $this->matchTestFromFilename($suite, $testsPath);
                             $isIncludeTest = true;
-                        } catch (InvalidArgumentException $e) {
+                        } catch (InvalidArgumentException) {
                             // Incorrect include match, continue trying to find one
                             continue;
                         }
@@ -464,20 +464,20 @@ class Run extends Command
 
         if (! Configuration::isEmpty()) {
             // Run single test without included tests
-            if (strpos($suite, (string)$config['paths']['tests']) === 0) {
+            if (str_starts_with($suite, (string)$config['paths']['tests'])) {
                 return $this->matchTestFromFilename($suite, $config['paths']['tests']);
             }
 
             // Run single test from working directory
             $realTestDir = (string) realpath(Configuration::testsDir());
             $cwd = (string) getcwd();
-            if (strpos($realTestDir, $cwd) === 0) {
+            if (str_starts_with($realTestDir, $cwd)) {
                 $file = $suite;
-                if (strpos($file, ':') !== false) {
+                if (str_contains($file, ':')) {
                     [$file] = explode(':', $suite, -1);
                 }
                 $realPath = $cwd . DIRECTORY_SEPARATOR . $file;
-                if (file_exists($realPath) && strpos($realPath, $realTestDir) === 0) {
+                if (file_exists($realPath) && str_starts_with($realPath, $realTestDir)) {
                     //only match test if file is in tests directory
                     return $this->matchTestFromFilename(
                         $cwd . DIRECTORY_SEPARATOR . $suite,
@@ -505,9 +505,7 @@ class Run extends Command
             $config = Configuration::config($currentDir);
 
             if (!empty($defaultConfig['groups'])) {
-                $groups = array_map(function ($g) use ($absolutePath) {
-                    return $absolutePath . $g;
-                }, $defaultConfig['groups']);
+                $groups = array_map(fn($g) => $absolutePath . $g, $defaultConfig['groups']);
                 Configuration::append(['groups' => $groups]);
             }
 
@@ -561,7 +559,7 @@ class Run extends Command
     protected function matchTestFromFilename(string $filename, string $testsPath): array
     {
         $filter = '';
-        if (strpos($filename, ':') !== false) {
+        if (str_contains($filename, ':')) {
             if ((PHP_OS === 'Windows' || PHP_OS === 'WINNT') && $filename[1] === ':') {
                 // match C:\...
                 [$drive, $path, $filter] = explode(':', $filename, 3);
@@ -633,7 +631,7 @@ class Run extends Command
                 break; // there should be no options after ' -- ', only arguments
             }
 
-            if (substr($token, 0, 2) === '--') {
+            if (str_starts_with($token, '--')) {
                 $options[] = substr($token, 2);
             } elseif ($token[0] === '-') {
                 $shortOption = substr($token, 1);
@@ -651,7 +649,7 @@ class Run extends Command
         $values = [];
         $request = (string)$input;
         foreach ($options as $option => $defaultValue) {
-            if (strpos($request, sprintf('--%s', (string) $option))) {
+            if (strpos($request, sprintf('--%s', $option))) {
                 $values[$option] = $input->getOption($option) ?: $defaultValue;
             } else {
                 $values[$option] = false;

@@ -24,7 +24,6 @@ class MessageCest
      *
      * @env env2,env1
      *
-     * @param MessageGuy $I
      */
     public function multipleEnvRequired(MessageGuy $I)
     {

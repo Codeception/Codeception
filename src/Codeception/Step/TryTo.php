@@ -8,7 +8,6 @@ use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Template;
 use Exception;
 use function codecept_debug;
-use function strpos;
 use function ucfirst;
 
 class TryTo extends Assertion implements GeneratedStep
@@ -29,15 +28,15 @@ class TryTo extends Assertion implements GeneratedStep
     {
         $action = $template->getVar('action');
 
-        if ((strpos($action, 'have') === 0) || (strpos($action, 'am') === 0)) {
+        if ((str_starts_with($action, 'have')) || (str_starts_with($action, 'am'))) {
             return null; // dont try on conditions
         }
 
-        if (strpos($action, 'wait') === 0) {
+        if (str_starts_with($action, 'wait')) {
             return null; // dont try on waiters
         }
 
-        if (strpos($action, 'grab') === 0) {
+        if (str_starts_with($action, 'grab')) {
             return null; // dont on grabbers
         }
 

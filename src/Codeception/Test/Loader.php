@@ -88,7 +88,7 @@ class Loader
     protected function findPath(string $path): string
     {
         if (!file_exists($path)
-            && substr($path, -strlen('.php')) !== '.php'
+            && !str_ends_with($path, '.php')
             && file_exists($newPath = $path . '.php')
         ) {
             return $newPath;

@@ -26,13 +26,10 @@ class FailFast implements EventSubscriberInterface
 
     private int $failureCount = 0;
 
-    private int $stopFailureCount;
-
     private ?TestResult $suiteCache = null;
 
-    public function __construct(int $stopFailureCount)
+    public function __construct(private int $stopFailureCount)
     {
-        $this->stopFailureCount = $stopFailureCount;
     }
 
     public function cacheSuite(SuiteEvent $e): void

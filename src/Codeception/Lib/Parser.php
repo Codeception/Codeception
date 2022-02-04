@@ -14,16 +14,10 @@ use ParseError;
 
 class Parser
 {
-    protected Scenario $scenario;
-
-    protected Metadata $metadata;
-
     protected string $code;
 
-    public function __construct(Scenario $scenario, Metadata $metadata)
+    public function __construct(protected Scenario $scenario, protected Metadata $metadata)
     {
-        $this->scenario = $scenario;
-        $this->metadata = $metadata;
     }
 
     public function prepareToRun(string $code): void
@@ -80,7 +74,7 @@ class Parser
             }
 
             // friend's section ends
-            if ($isFriend && strpos($line, '}') !== false) {
+            if ($isFriend && str_contains($line, '}')) {
                 $this->addCommentStep("-------- back to me\n");
                 $isFriend = false;
             }
@@ -107,7 +101,7 @@ class Parser
             self::includeFile($file);
         } catch (ParseError $e) {
             throw new TestParseException($file, $e->getMessage(), $e->getLine());
-        } catch (Exception $e) {
+        } catch (Exception) {
             // file is valid otherwise
         }
     }
@@ -138,7 +132,7 @@ class Parser
                     if ($tokens[$j] === '{' || $tokens[$j] === ';') {
                         break;
                     }
-                    if ($tokens[$j][0] === T_STRING || (PHP_MAJOR_VERSION >= 8 && $tokens[$j][0] === T_NAME_QUALIFIED)) {
+                    if ($tokens[$j][0] === T_STRING || $tokens[$j][0] === T_NAME_QUALIFIED) {
                         $namespace .= $tokens[$j][1] . '\\';
                     }
                 }
@@ -170,10 +164,8 @@ class Parser
             }
         }
 
-        if (PHP_MAJOR_VERSION > 5) {
-            $tokens = null;
-            gc_mem_caches();
-        }
+        $tokens = null;
+        gc_mem_caches();
 
         return $classes;
     }

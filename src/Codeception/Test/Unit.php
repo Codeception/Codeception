@@ -93,10 +93,8 @@ class Unit extends TestCase implements
 
     /**
      * Returns current values
-     *
-     * @return mixed
      */
-    public function getCurrent(?string $current)
+    public function getCurrent(?string $current): mixed
     {
         return $this->getMetadata()->getCurrent($current);
     }
@@ -114,7 +112,7 @@ class Unit extends TestCase implements
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
-            if (strpos($required, ':') === false && method_exists($this, $required)) {
+            if (!str_contains($required, ':') && method_exists($this, $required)) {
                 $required = get_class($this) . ":{$required}";
             }
             $names[] = $required;
@@ -136,7 +134,7 @@ class Unit extends TestCase implements
 
         foreach ($dependencies as $dependency) {
             $dependency = str_replace(':', '::', $dependency); // Codeception => PHPUnit format
-            if (strpos($dependency, '::') === false) {         // check it is method of same class
+            if (!str_contains($dependency, '::')) {         // check it is method of same class
                 $dependency = get_class($this) . '::' . $dependency;
             }
             $dependencyInput[] = isset($passed[$dependency]) ? $passed[$dependency]['result'] : null;

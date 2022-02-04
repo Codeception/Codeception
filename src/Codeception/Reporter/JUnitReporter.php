@@ -103,16 +103,12 @@ class JUnitReporter implements EventSubscriberInterface
 
     protected int $testSuiteLevel = 0;
 
-    protected ?DOMElement $currentTestCase;
+    protected ?DOMElement $currentTestCase = null;
 
     private string $reportFile;
 
-    private Output $output;
-
-    public function __construct(array $options, Output $output)
+    public function __construct(array $options, private Output $output)
     {
-        $this->output = $output;
-
         $this->reportFile = $options[$this->reportFileParam];
         if (!codecept_is_path_absolute($this->reportFile)) {
             $this->reportFile = codecept_output_dir($this->reportFile);
@@ -238,7 +234,7 @@ class JUnitReporter implements EventSubscriberInterface
         $testCase->setAttribute('name', $test->getName());
 
         $class      = new ReflectionClass($test);
-        $methodName = $test->getName(!$usesDataprovider);
+        $methodName = $test->getName();
 
         if ($class->hasMethod($methodName)) {
             $method = $class->getMethod($methodName);
@@ -383,7 +379,7 @@ class JUnitReporter implements EventSubscriberInterface
         if ($t instanceof ExceptionWrapper) {
             $fault->setAttribute('type', $t->getClassName());
         } else {
-            $fault->setAttribute('type', \get_class($t));
+            $fault->setAttribute('type', $t::class);
         }
 
         $this->currentTestCase->appendChild($fault);

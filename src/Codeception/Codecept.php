@@ -33,8 +33,6 @@ use Codeception\Subscriber\Module;
 use Codeception\Subscriber\PrepareTest;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\TextUI\Configuration\Registry;
-use PHPUnit\Util\Printer as PHPUnitPrinter;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
@@ -211,7 +209,7 @@ class Codecept
 
     private function absolutePath(string $path): string
     {
-        if ((strpos($path, '/') === 0) or (strpos($path, ':') === 1)) { // absolute path
+        if ((str_starts_with($path, '/')) or (strpos($path, ':') === 1)) { // absolute path
             return $path;
         }
         return Configuration::outputDir() . $path;

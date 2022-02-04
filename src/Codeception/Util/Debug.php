@@ -24,10 +24,8 @@ class Debug
 
     /**
      * Prints data to screen. Message can be any time of data
-     *
-     * @param mixed $message
      */
-    public static function debug($message): void
+    public static function debug(mixed $message): void
     {
         if (!self::$output) {
             return;

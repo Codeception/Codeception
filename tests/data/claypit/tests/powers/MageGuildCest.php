@@ -5,7 +5,6 @@ class MageGuildCest
     /**
      * @env magic
      * @env dark
-     * @param PowerGuy $I
      */
     public function darkPower(PowerGuy $I)
     {
@@ -15,7 +14,6 @@ class MageGuildCest
     /**
      * @env magic
      * @env white
-     * @param PowerGuy $I
      */
     public function whitePower(PowerGuy $I)
     {
@@ -25,7 +23,6 @@ class MageGuildCest
     /**
      * @env magic
      * @env green
-     * @param PowerGuy $I
      */
     public function greenPower(PowerGuy $I)
     {
@@ -35,7 +32,6 @@ class MageGuildCest
     /**
      * @env whisky
      * @env red
-     * @param PowerGuy $I
      */
     public function redLabel(PowerGuy $I)
     {
@@ -45,7 +41,6 @@ class MageGuildCest
     /**
      * @env dark
      * @env whisky
-     * @param PowerGuy $I
      */
     public function blackLabel(PowerGuy $I)
     {

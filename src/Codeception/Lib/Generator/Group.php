@@ -46,16 +46,10 @@ class {{class}} extends \Codeception\Platform\Group
 
 EOF;
 
-    protected string $name;
-
     protected string $namespace;
 
-    protected array $settings = [];
-
-    public function __construct(array $settings, string $name)
+    public function __construct(protected array $settings, protected string $name)
     {
-        $this->settings = $settings;
-        $this->name = $name;
         $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Group\\' . $name);
     }
 

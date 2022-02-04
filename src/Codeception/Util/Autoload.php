@@ -77,10 +77,7 @@ class Autoload
         }
     }
 
-    /**
-     * @return string|false
-     */
-    public static function load(string $class)
+    public static function load(string $class): string|false
     {
         // the current namespace prefix
         $prefix = $class;
@@ -110,7 +107,7 @@ class Autoload
 
         // backwards compatibility with old autoloader
         // :TODO: it should be removed
-        if (strpos($class, '\\') !== false) {
+        if (str_contains($class, '\\')) {
             $relative_class = substr(strrchr($class, '\\'), 1); // Foo\Bar\ClassName -> ClassName
             $mapped_file = self::loadMappedFile('\\', $relative_class);
             if ($mapped_file) {
@@ -128,7 +125,7 @@ class Autoload
      * @param string $relativeClass The relative class name.
      * @return string|false Boolean false if no mapped file can be loaded, or the name of the mapped file that was loaded.
      */
-    protected static function loadMappedFile(string $prefix, string $relativeClass)
+    protected static function loadMappedFile(string $prefix, string $relativeClass): string|false
     {
         if (!isset(self::$map[$prefix])) {
             return false;

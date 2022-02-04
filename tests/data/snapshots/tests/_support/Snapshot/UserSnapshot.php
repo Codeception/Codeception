@@ -7,17 +7,11 @@ use DataTester;
 
 class UserSnapshot extends Snapshot
 {
-    /**
-     * @var DataTester
-     */
-    protected DataTester $dataTester;
-
-    public function __construct(DataTester $I)
+    public function __construct(protected DataTester $dataTester)
     {
-        $this->dataTester = $I;
     }
 
-    protected function fetchData()
+    protected function fetchData(): array|string|false
     {
         return $this->dataTester->grabColumnFromDatabase('users', 'email');
     }

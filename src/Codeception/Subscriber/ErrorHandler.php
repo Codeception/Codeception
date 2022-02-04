@@ -22,7 +22,6 @@ use function register_shutdown_function;
 use function restore_error_handler;
 use function set_error_handler;
 use function sprintf;
-use function strpos;
 
 class ErrorHandler implements EventSubscriberInterface
 {
@@ -101,7 +100,7 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
-        if (strpos($errMsg, 'Cannot modify header information') !== false) {
+        if (str_contains($errMsg, 'Cannot modify header information')) {
             return false;
         }
 

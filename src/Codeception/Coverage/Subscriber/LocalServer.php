@@ -30,7 +30,6 @@ use function preg_match;
 use function rtrim;
 use function str_replace;
 use function stream_context_create;
-use function strpos;
 use function unserialize;
 use function usleep;
 
@@ -201,10 +200,7 @@ class LocalServer extends SuiteSubscriber
         return $this;
     }
 
-    /**
-     * @return string|false
-     */
-    protected function c3Request(string $action)
+    protected function c3Request(string $action): string|false
     {
         $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
         $context = stream_context_create($this->c3Access);
@@ -294,14 +290,14 @@ class LocalServer extends SuiteSubscriber
                 $alert->getText();
                 // If this succeeds an alert is present, abort
                 return;
-            } catch (NoSuchAlertException $e) {
+            } catch (NoSuchAlertException) {
                 // No alert present, continue
             }
         }
 
         try {
             $error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR);
-        } catch (ModuleException $e) {
+        } catch (ModuleException) {
             // when a new session is started we can't get cookies because there is no
             // current page, but there can be no code coverage error either
             $error = null;
@@ -315,7 +311,7 @@ class LocalServer extends SuiteSubscriber
     protected function getRemoteError(array $headers): void
     {
         foreach ($headers as $header) {
-            if (strpos($header, self::COVERAGE_HEADER_ERROR) === 0) {
+            if (str_starts_with($header, self::COVERAGE_HEADER_ERROR)) {
                 throw new RemoteException($header);
             }
         }
@@ -324,7 +320,7 @@ class LocalServer extends SuiteSubscriber
     protected function addC3AccessHeader(string $header, string $value): void
     {
         $headerString = "{$header}: {$value}\r\n";
-        if (strpos($this->c3Access['http']['header'], $headerString) === false) {
+        if (!str_contains($this->c3Access['http']['header'], $headerString)) {
             $this->c3Access['http']['header'] .= $headerString;
         }
     }

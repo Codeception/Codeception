@@ -1,6 +1,8 @@
 <?php
 namespace Page\Math;
 
+use MathTester;
+
 class Trigonometry
 {
     // include url of current page
@@ -22,14 +24,8 @@ class Trigonometry
         return static::$URL.$param;
     }
 
-    /**
-     * @var \MathTester;
-     */
-    protected \MathTester $mathTester;
-
-    public function __construct(\MathTester $I)
+    public function __construct(protected MathTester $mathTester)
     {
-        $this->mathTester = $I;
     }
 
     public function tan($arg): float
