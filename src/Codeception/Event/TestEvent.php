@@ -9,8 +9,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class TestEvent extends Event
 {
-    // Time taken
-
+    /**
+     * @param float|null $time Time taken
+     */
     public function __construct(protected PHPUnitTest $test, protected ?float $time = 0)
     {
     }

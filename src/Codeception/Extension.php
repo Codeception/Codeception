@@ -86,17 +86,23 @@ abstract class Extension implements EventSubscriberInterface
         $this->_reconfigure(); // hook for BC only.
     }
 
-    protected function write(iterable|string $message): void
+    /**
+     * @param string|iterable $messages The message as an iterable of strings or a single string
+     */
+    protected function write(iterable|string $messages): void
     {
-        if (!$this->options['silent'] && $message) {
-            $this->output->write($message);
+        if (!$this->options['silent'] && $messages) {
+            $this->output->write($messages);
         }
     }
 
-    protected function writeln(string $message): void
+    /**
+     * @param string|iterable $messages The message as an iterable of strings or a single string
+     */
+    protected function writeln(iterable|string $messages): void
     {
-        if (!$this->options['silent'] && $message) {
-            $this->output->writeln($message);
+        if (!$this->options['silent'] && $messages) {
+            $this->output->writeln($messages);
         }
     }
 

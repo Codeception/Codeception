@@ -17,7 +17,6 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
     {
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Whether a offset exists
      *
@@ -31,7 +30,6 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
         return array_key_exists($offset, $this->data);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Offset to retrieve
      *
@@ -47,7 +45,6 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
         return $this->data[$offset];
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Offset to set
      *
@@ -60,7 +57,6 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
         $this->data[$offset] = $value;
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Offset to unset
      *
@@ -72,7 +68,6 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
         unset($this->data[$offset]);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Count elements of an object
      *
@@ -85,7 +80,6 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
         return count($this->data);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * Retrieve an external iterator
      *

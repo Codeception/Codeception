@@ -628,7 +628,7 @@ class Configuration
      * @param array|bool|null $a1
      * @param array|bool|null $a2
      */
-    public static function mergeConfigs($a1, $a2): array|bool|null|string
+    public static function mergeConfigs($a1, $a2): array
     {
         if (!is_array($a1)) {
             return $a2;
@@ -647,7 +647,7 @@ class Configuration
 
         // for associative arrays
         foreach ($a2 as $k2 => $v2) {
-            if (!isset($a1[$k2])) { // if no such key
+            if (!isset($a1[$k2]) || !is_array($a1[$k2])) { // if no such key
                 $res[$k2] = $v2;
                 unset($a1[$k2]);
                 continue;
