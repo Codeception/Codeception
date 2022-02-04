@@ -208,10 +208,6 @@ class Configuration
 
         self::$config = $config;
 
-        if (isset(self::$config['actor'])) {
-            self::$config['actor_suffix'] = self::$config['actor']; // old compatibility
-        }
-
         if (!isset($config['paths']['support']) && isset($config['paths']['helpers'])) {
             $config['paths']['support'] = $config['paths']['helpers'];
         }

@@ -13,9 +13,10 @@
   - Codeception\Platform\Group
   - Codeception\TestCase
 * Removed `generate:cept` command
-* Removed settings `disallow_test_output`, `log_incomplete_skipped` and `report_useless_tests`.
+* Removed settings `disallow_test_output` and `log_incomplete_skipped`.
 * Removed setting `paths.log` (it was replaced by `paths.output` in Codeception 2.3)
 * Removed suite setting `class_name` (replaced by `actor` in Codeception 2.3)
+* Removed global setting `actor` (replaced by `actor_prefix` in Codeception 2.3)
 * Removed `Configuration::logDir` method (replaced by `Configuration::logDir` in 2.0)
 * Introduced strict types in the code base.
 * Compatible with PHPUnit 10 only
