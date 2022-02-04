@@ -133,15 +133,17 @@ class HtmlReporter implements EventSubscriberInterface
         $subStepsRendered = [];
 
         foreach ($steps as $step) {
-            if ($step->getMetaStep()) {
-                $key = $step->getMetaStep()->getLine() . $step->getMetaStep()->getAction();
+            $metaStep = $step->getMetaStep();
+            if ($metaStep) {
+                $key                      = $this->getMetaStepKey($metaStep);
                 $subStepsRendered[$key][] = $this->renderStep($step);
             }
         }
 
         foreach ($steps as $step) {
-            if ($step->getMetaStep()) {
-                $key = $step->getMetaStep()->getLine() . $step->getMetaStep()->getAction();
+            $metaStep = $step->getMetaStep();
+            if ($metaStep) {
+                $key = $this->getMetaStepKey($metaStep);
                 if (! empty($subStepsRendered[$key])) {
                     $subStepsBuffer = implode('', $subStepsRendered[$key]);
                     unset($subStepsRendered[$key]);
@@ -205,6 +207,20 @@ class HtmlReporter implements EventSubscriberInterface
         $this->scenarios .= $scenarioTemplate->render();
     }
 
+    private function getMetaStepKey(Meta $metaStep): string
+    {
+        $key = '';
+        $filePath = $metaStep->getFilePath();
+        if ($filePath !== null) {
+            $key = $filePath;
+            $lineNumber = $metaStep->getLineNumber();
+            if ($lineNumber !== null) {
+                $key .= ':' . $lineNumber;
+            }
+        }
+        return $key . $metaStep->getAction();
+    }
+
     protected function renderStep(Step $step): string
     {
         $stepTemplate = new Template($this->templatePath . 'step.html');
@@ -212,24 +228,11 @@ class HtmlReporter implements EventSubscriberInterface
         return $stepTemplate->render();
     }
 
-    /**
-     * @param $substepsBuffer
-     */
-    protected function renderSubsteps(Meta $metaStep, $substepsBuffer): string
+    protected function renderSubsteps(Meta $metaStep, string $substepsBuffer): string
     {
         $metaTemplate = new Template($this->templatePath . 'substeps.html');
         $metaTemplate->setVar(['metaStep' => $metaStep->getHtml(), 'error' => $metaStep->hasFailed() ? 'failedStep' : '', 'steps' => $substepsBuffer, 'id' => uniqid()]);
         return $metaTemplate->render();
-    }
-
-    private function cleanMessage($exception): string
-    {
-        $msg = $exception->getMessage();
-        if ($exception instanceof \PHPUnit\Framework\ExpectationFailedException && $exception->getComparisonFailure()) {
-            $msg .= $exception->getComparisonFailure()->getDiff();
-        }
-        $msg = str_replace(['<info>','</info>','<bold>','</bold>'], ['','','',''], $msg);
-        return htmlentities($msg, ENT_QUOTES | ENT_SUBSTITUTE);
     }
 
     public function afterResult(PrintResultEvent $event): void

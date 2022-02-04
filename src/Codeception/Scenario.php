@@ -20,6 +20,9 @@ class Scenario
 
     protected Metadata $metadata;
 
+    /**
+     * @var Step[]
+     */
     protected array $steps = [];
 
     protected string $feature;
@@ -86,6 +89,8 @@ class Scenario
 
     /**
      * Returns the steps of this scenario.
+     *
+     * @return Step[]
      */
     public function getSteps(): array
     {
@@ -96,7 +101,6 @@ class Scenario
     {
         $text = '';
         foreach ($this->getSteps() as $step) {
-            /** @var Step $step */
             if ($step->getName() !== 'Comment') {
                 $text .= $step->getHtml() . '<br/>';
             } else {
