@@ -136,12 +136,6 @@ class Scenario
         throw new IncompleteTestError($message);
     }
 
-    public function __call(string $method, array $args)
-    {
-        // all methods were deprecated and removed from here
-        trigger_error(sprintf('Codeception: $scenario->%s() has been deprecated and removed. Use annotations to pass scenario params', $method), E_USER_DEPRECATED);
-    }
-
     public function setMetaStep(?Meta $metaStep): void
     {
         $this->metaStep = $metaStep;
