@@ -90,6 +90,10 @@ class ParamsLoader
 
     protected function loadXmlFile(): array
     {
+        if (!extension_loaded('simplexml')) {
+            throw new ConfigurationException('`simplexml` extension is required to parse .xml files.');
+        }
+
         $paramsToArray = function (SimpleXMLElement $params) use (&$paramsToArray): array {
             $a = [];
             foreach ($params as $param) {

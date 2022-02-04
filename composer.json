@@ -51,6 +51,7 @@
         "phpunit/php-timer": "dev-master as 6.9.99"
     },
     "require-dev": {
+        "ext-simplexml": "*",
         "vlucas/phpdotenv": "^4.0 | ^5.0",
         "symfony/process": ">=4.4 <7.0",
         "codeception/lib-innerbrowser": "2.1.*@dev",
@@ -62,6 +63,7 @@
         "codeception/util-universalframework": "*@dev"
     },
     "suggest": {
+        "ext-simplexml": "For loading params from XML files",
         "hoa/console": "For interactive console functionality",
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
