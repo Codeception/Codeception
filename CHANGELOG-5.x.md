@@ -12,6 +12,7 @@
   - Codeception\Platform\Group
   - Codeception\Platform\Group
   - Codeception\TestCase
+* Removed generate:cept command
 * Removed settings disallow_test_output, log_incomplete_skipped and report_useless_tests.
 * Introduced strict types in the code base.
 * Compatible with PHPUnit 10 only

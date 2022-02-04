@@ -28,8 +28,6 @@ final class ConfigNoActorCest
     public function suitesWithoutActorGenerators(CliGuy $I)
     {
         $I->amInPath('tests/data/no_actor_suites');
-        $I->executeFailCommand('generate:cept unit Some');
-        $I->seeResultCodeIsNot(0);
         $I->executeFailCommand('generate:cest unit Some');
         $I->seeResultCodeIsNot(0);
         $I->executeFailCommand('generate:test unit Some');

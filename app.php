@@ -11,7 +11,6 @@ call_user_func(static function () {
     $app->add(new Codeception\Command\Init('init'));
     $app->add(new Codeception\Command\Console('console'));
     $app->add(new Codeception\Command\Bootstrap('bootstrap'));
-    $app->add(new Codeception\Command\GenerateCept('generate:cept'));
     $app->add(new Codeception\Command\GenerateCest('generate:cest'));
     $app->add(new Codeception\Command\GenerateTest('generate:test'));
     $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
