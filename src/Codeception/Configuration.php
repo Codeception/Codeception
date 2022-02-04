@@ -532,16 +532,6 @@ class Configuration
     }
 
     /**
-     * Compatibility alias to `Configuration::logDir()`
-     *
-     * @throws ConfigurationException
-     */
-    public static function logDir(): string
-    {
-        return self::outputDir();
-    }
-
-    /**
      * Returns path to the root of your project.
      * Basically returns path to current `codeception.yml` loaded.
      * Use this method instead of `__DIR__`, `getcwd()` or anything else.
