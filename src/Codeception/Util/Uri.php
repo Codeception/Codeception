@@ -11,7 +11,6 @@ use function ltrim;
 use function parse_url;
 use function preg_match;
 use function rtrim;
-use function strpos;
 
 class Uri
 {
@@ -34,7 +33,7 @@ class Uri
         //If the relative URL does not parse, attempt to parse the entire URL.
         //PHP Known bug ( https://bugs.php.net/bug.php?id=70942 )
         if ($parts === false) {
-            $parts = parse_url($base.$uri);
+            $parts = parse_url($base . $uri);
         }
 
         if ($parts === false) {
@@ -81,7 +80,7 @@ class Uri
             $base = $base->withFragment($parts['fragment']);
         }
 
-        return (string) $base;
+        return (string)$base;
     }
 
     /**
@@ -118,6 +117,6 @@ class Uri
             return $cutUrl . $path;
         }
 
-        return rtrim($cutUrl, '/') . '/'  . ltrim($path, '/');
+        return rtrim($cutUrl, '/') . '/' . ltrim($path, '/');
     }
 }

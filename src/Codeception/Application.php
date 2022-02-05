@@ -88,7 +88,7 @@ class Application extends BaseApplication
 
         if (!in_array(CustomCommandInterface::class, $interfaces)) {
             throw new ConfigurationException("Extension: Command {$commandClass} must implement " .
-                                             "the interface `Codeception\\CustomCommandInterface`");
+                "the interface `Codeception\\CustomCommandInterface`");
         }
 
         return $commandClass::getCommandName();

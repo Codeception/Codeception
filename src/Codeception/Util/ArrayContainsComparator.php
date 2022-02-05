@@ -32,11 +32,11 @@ class ArrayContainsComparator
     }
 
     /**
-     * @author nleippe@integr8ted.com
+     * @return array|bool
      * @author tiger.seo@gmail.com
      * @link https://www.php.net/manual/en/function.array-intersect-assoc.php#39822
      *
-     * @return array|bool
+     * @author nleippe@integr8ted.com
      */
     private function arrayIntersectRecursive(mixed $arr1, mixed $arr2): bool|array|null
     {
@@ -126,11 +126,11 @@ class ArrayContainsComparator
     private function isEqualValue($val1, $val2): bool
     {
         if (is_numeric($val1)) {
-            $val1 = (string) $val1;
+            $val1 = (string)$val1;
         }
 
         if (is_numeric($val2)) {
-            $val2 = (string) $val2;
+            $val2 = (string)$val2;
         }
 
         return $val1 === $val2;

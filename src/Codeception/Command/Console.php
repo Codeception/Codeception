@@ -90,8 +90,8 @@ class Console extends Command
 
         $this->test = new Cept('', '');
         $this->test->getMetadata()->setServices([
-           'dispatcher' => $eventDispatcher,
-           'modules' =>  $moduleContainer
+            'dispatcher' => $eventDispatcher,
+            'modules' => $moduleContainer
         ]);
 
         $scenario = new Scenario($this->test);
@@ -99,7 +99,7 @@ class Console extends Command
             throw new ConfigurationException("Interactive shell can't be started without an actor");
         }
         if (isset($config["namespace"])) {
-            $settings['actor'] = $config["namespace"] .'\\' . $settings['actor'];
+            $settings['actor'] = $config["namespace"] . '\\' . $settings['actor'];
         }
         $actor = $settings['actor'];
         $I = new $actor($scenario);

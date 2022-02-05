@@ -144,8 +144,8 @@ class Run extends Command
         $this->setDefinition([
             new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
             new InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
-            new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY  | InputOption::VALUE_REQUIRED, 'Override config values'),
-            new InputOption('ext', 'e', InputOption::VALUE_IS_ARRAY  | InputOption::VALUE_REQUIRED, 'Run with extension enabled'),
+            new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Override config values'),
+            new InputOption('ext', 'e', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run with extension enabled'),
             new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
             new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html'),
             new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
@@ -314,7 +314,7 @@ class Run extends Command
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
         $userOptions['ansi'] = (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi'));
 
-        $userOptions['seed'] = $this->options['seed'] ? (int) $this->options['seed'] : rand();
+        $userOptions['seed'] = $this->options['seed'] ? (int)$this->options['seed'] : rand();
         if ($this->options['no-colors'] || !$userOptions['ansi']) {
             $userOptions['colors'] = false;
         }
@@ -332,7 +332,7 @@ class Run extends Command
         }
         // array key will exist if fail-fast option is used
         if (array_key_exists('fail-fast', $userOptions)) {
-            $userOptions['fail-fast'] = (int) $this->options['fail-fast'] ?: 1;
+            $userOptions['fail-fast'] = (int)$this->options['fail-fast'] ?: 1;
         }
 
         $suite = $input->getArgument('suite');
@@ -354,9 +354,9 @@ class Run extends Command
 
                 foreach ($config['include'] as $include) {
                     // Find if the suite begins with an include path
-                    if (str_starts_with($suite, (string) $include)) {
+                    if (str_starts_with($suite, (string)$include)) {
                         // Use include config
-                        $config = Configuration::config($projectDir.$include);
+                        $config = Configuration::config($projectDir . $include);
 
                         if (!isset($config['paths']['tests'])) {
                             throw new RuntimeException(
@@ -364,7 +364,7 @@ class Run extends Command
                             );
                         }
 
-                        $testsPath = $include . DIRECTORY_SEPARATOR.  $config['paths']['tests'];
+                        $testsPath = $include . DIRECTORY_SEPARATOR . $config['paths']['tests'];
 
                         try {
                             [, $suite, $test] = $this->matchTestFromFilename($suite, $testsPath);
@@ -462,15 +462,15 @@ class Run extends Command
             }
         }
 
-        if (! Configuration::isEmpty()) {
+        if (!Configuration::isEmpty()) {
             // Run single test without included tests
             if (str_starts_with($suite, (string)$config['paths']['tests'])) {
                 return $this->matchTestFromFilename($suite, $config['paths']['tests']);
             }
 
             // Run single test from working directory
-            $realTestDir = (string) realpath(Configuration::testsDir());
-            $cwd = (string) getcwd();
+            $realTestDir = (string)realpath(Configuration::testsDir());
+            $cwd = (string)getcwd();
             if (str_starts_with($realTestDir, $cwd)) {
                 $file = $suite;
                 if (str_contains($file, ':')) {

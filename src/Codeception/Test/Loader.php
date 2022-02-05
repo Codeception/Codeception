@@ -17,8 +17,6 @@ use function getcwd;
 use function is_dir;
 use function preg_match;
 use function str_replace;
-use function strlen;
-use function substr;
 
 /**
  * Loads all Codeception supported test formats from a directory.

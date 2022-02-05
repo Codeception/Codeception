@@ -191,7 +191,7 @@ class Metadata
 
         // set singular value for some params
         foreach (['skip', 'incomplete'] as $single) {
-            $this->params[$single] = empty($this->params[$single]) ? null : (string) $this->params[$single][0];
+            $this->params[$single] = empty($this->params[$single]) ? null : (string)$this->params[$single][0];
         }
     }
 

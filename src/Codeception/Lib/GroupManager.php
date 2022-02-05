@@ -10,6 +10,7 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Gherkin;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\TestInterface;
+use Codeception\Util\PathResolver;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\Groups;
@@ -50,7 +51,7 @@ class GroupManager
                 continue;
             }
             $path = dirname($pattern);
-            if (!\Codeception\Util\PathResolver::isPathAbsolute($pattern)) {
+            if (!PathResolver::isPathAbsolute($pattern)) {
                 $path = $this->rootDir . $path;
             }
 
@@ -167,7 +168,7 @@ class GroupManager
                     $groups[] = $group;
                 }
                 $testName = $test->getName();
-                if (str_starts_with($filename . ':' . $testName, (string) $testPattern)) {
+                if (str_starts_with($filename . ':' . $testName, (string)$testPattern)) {
                     $groups[] = $group;
                 }
                 if ($test instanceof Gherkin

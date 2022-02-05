@@ -97,9 +97,9 @@ class ParamsLoader
         $paramsToArray = function (SimpleXMLElement $params) use (&$paramsToArray): array {
             $a = [];
             foreach ($params as $param) {
-                $key = isset($param['key']) ? (string) $param['key'] : $param->getName();
-                $type = isset($param['type']) ? (string) $param['type'] : 'string';
-                $value = (string) $param;
+                $key = isset($param['key']) ? (string)$param['key'] : $param->getName();
+                $type = isset($param['type']) ? (string)$param['type'] : 'string';
+                $value = (string)$param;
                 $a[$key] = match ($type) {
                     'bool', 'boolean', 'int', 'integer', 'float', 'double' => settype($value, $type),
                     'constant' => constant($value),

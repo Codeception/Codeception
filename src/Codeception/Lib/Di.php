@@ -50,7 +50,7 @@ class Di
      */
     public function instantiate(
         string $className,
-        array $constructorArgs = null,
+        array  $constructorArgs = null,
         string $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME
     ): ?object {
         // normalize namespace
@@ -117,7 +117,7 @@ class Di
         } catch (Exception $e) {
             $msg = $e->getMessage();
             if ($e->getPrevious() !== null) { // injection failed because PHP code is invalid. See #3869
-                $msg .= '; '. $e->getPrevious();
+                $msg .= '; ' . $e->getPrevious();
             }
             throw new InjectionException(
                 "Failed to inject dependencies in instance of '{$reflectedObject->name}'. {$msg}"

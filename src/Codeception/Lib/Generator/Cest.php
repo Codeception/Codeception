@@ -51,10 +51,10 @@ EOF;
             $namespace = rtrim($this->settings['namespace'], '\\');
         }
 
-        $ns = $this->getNamespaceHeader($namespace.'\\'.$this->name);
+        $ns = $this->getNamespaceHeader($namespace . '\\' . $this->name);
 
         if ($namespace !== '') {
-            $ns .= "use ".$this->settings['namespace'].'\\'.$actor.";";
+            $ns .= "use " . $this->settings['namespace'] . '\\' . $actor . ";";
         }
 
         return (new Template($this->template))

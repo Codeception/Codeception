@@ -150,7 +150,7 @@ class LocalServer extends SuiteSubscriber
 
         $retries = 5;
         while (!file_exists($coverageFile) && --$retries >= 0) {
-            $seconds = (int) 0.5 * 1_000_000; // 0.5 sec
+            $seconds = (int)0.5 * 1_000_000; // 0.5 sec
             usleep($seconds);
         }
 
@@ -168,7 +168,7 @@ class LocalServer extends SuiteSubscriber
         }
 
         $this->preProcessCoverage($coverage)
-             ->mergeToPrint($coverage);
+            ->mergeToPrint($coverage);
     }
 
     /**
@@ -181,9 +181,9 @@ class LocalServer extends SuiteSubscriber
             return $this;
         }
 
-        $workDir    = rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
+        $workDir = rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
         $projectDir = Configuration::projectDir();
-        $coverageData       = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
+        $coverageData = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
 
         codecept_debug("Replacing all instances of {$workDir} with {$projectDir}");
 
@@ -241,7 +241,7 @@ class LocalServer extends SuiteSubscriber
             // we need to separate coverage cookies by host; we can't separate cookies by port.
             $cookieDomain = $c3Url['host'] ?? 'localhost';
         }
-        
+
         $cookieParams = [];
         if ($cookieDomain !== 'localhost') {
             $cookieParams['domain'] = $cookieDomain;

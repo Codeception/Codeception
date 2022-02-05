@@ -225,7 +225,7 @@ class Configuration
         if (!empty($config['include'])) {
             self::$config = $config;
             if (!isset($config['paths']['tests'])) {
-                 return $config;
+                return $config;
             }
         }
 
@@ -303,8 +303,8 @@ class Configuration
     /**
      * Returns suite configuration. Requires suite name and global config used (Configuration::config)
      *
-     * @throws Exception
      * @return array<string, string>
+     * @throws Exception
      */
     public static function suiteSettings(string $suite, array $config): array
     {
@@ -472,7 +472,7 @@ class Configuration
     public static function isExtensionEnabled(string $extensionName): bool
     {
         return isset(self::$config['extensions']['enabled'])
-        && in_array($extensionName, self::$config['extensions']['enabled']);
+            && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
     /**
@@ -694,8 +694,8 @@ class Configuration
      * Finds config files in given wildcarded include path.
      * Returns the expanded paths or the original if not a wildcard.
      *
-     * @throws ConfigurationException
      * @return string[]
+     * @throws ConfigurationException
      */
     protected static function expandWildcardsFor(string $include): array
     {

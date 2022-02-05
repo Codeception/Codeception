@@ -20,7 +20,7 @@ class PhpUnitReporter extends JUnitReporter
     public function startTest(TestEvent $event): void
     {
         $test = $event->getTest();
-        if (method_exists($test, 'getFileName') ) {
+        if (method_exists($test, 'getFileName')) {
             $filename = $test->getFileName();
         } else {
             $reflector = new ReflectionClass($test);

@@ -74,7 +74,7 @@ class Filter
                         $filter->addFileToWhitelist($file);
                     } else {
                         //php-code-coverage 9+
-                        $filter->includeFile((string) $file);
+                        $filter->includeFile((string)$file);
                     }
                 }
             }
@@ -114,7 +114,7 @@ class Filter
     {
         if (isset($config['coverage']['blacklist'])) {
             throw new ModuleException($this, 'The blacklist functionality has been removed from PHPUnit 5,'
-            . ' please remove blacklist section from configuration.');
+                . ' please remove blacklist section from configuration.');
         }
         return $this;
     }

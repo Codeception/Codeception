@@ -27,8 +27,8 @@ interface ElementLocator
      * WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
      * PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` instances
      *
-     * @api
      * @return Crawler|array of interactive elements
+     * @api
      */
     public function _findElements(array $locator);
 }

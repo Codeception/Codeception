@@ -27,6 +27,7 @@ To enable BASH completion, install optional stecman/symfony-console-completion f
 
 END);
     }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("Install optional <comment>stecman/symfony-console-completion</comment>");

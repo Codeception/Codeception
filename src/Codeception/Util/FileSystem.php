@@ -48,7 +48,7 @@ class FileSystem
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $dir = str_replace('/', '\\', $dir);
-            exec('rd /s /q "'.$dir.'"');
+            exec('rd /s /q "' . $dir . '"');
             return true;
         }
 

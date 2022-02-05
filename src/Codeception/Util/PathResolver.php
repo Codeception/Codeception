@@ -26,7 +26,7 @@ class PathResolver
     public static function getRelativeDir(string $path, string $projDir, string $dirSep = DIRECTORY_SEPARATOR): string
     {
         // ensure $projDir ends with a trailing $dirSep
-        $projDir = preg_replace('/'. preg_quote($dirSep, '/').'*$/', $dirSep, $projDir);
+        $projDir = preg_replace('/' . preg_quote($dirSep, '/') . '*$/', $dirSep, $projDir);
         // if $path is a within $projDir
         if (self::fsCaseStrCmp(substr($path, 0, strlen($projDir)), $projDir, $dirSep) == 0) {
             // simply chop it off the front
@@ -68,10 +68,11 @@ class PathResolver
             $relPathParts = array_merge(array_fill(0, count($relProjDirParts), '..'), $relPathParts);
         }
         // only append a trailing seperator if one is already present
-        $trailingSep = preg_match('/'. preg_quote($dirSep, '/').'$/', $path) ? $dirSep : '';
+        $trailingSep = preg_match('/' . preg_quote($dirSep, '/') . '$/', $path) ? $dirSep : '';
         // convert array of dir paths back into a string path
-        return implode($dirSep, $relPathParts).$trailingSep;
+        return implode($dirSep, $relPathParts) . $trailingSep;
     }
+
     /**
      * FileSystem Case String Compare
      * compare two strings with the filesystem's case-sensitiveness
@@ -110,12 +111,12 @@ class PathResolver
             $devLetterPrefixPattern = '([A-Za-z]:|)';
         }
         $matches = [];
-        if (!preg_match('/^'.$devLetterPrefixPattern. preg_quote($dirSep, '/').'?/', $path, $matches)) {
+        if (!preg_match('/^' . $devLetterPrefixPattern . preg_quote($dirSep, '/') . '?/', $path, $matches)) {
             // This should match, even if it matches 0 characters
             throw new ConfigurationException("INTERNAL ERROR: This must be a regex problem.");
         }
         return [
-            'wholePrefix'  => $matches[0], // The optional device letter followed by the optional $dirSep
+            'wholePrefix' => $matches[0], // The optional device letter followed by the optional $dirSep
             'devicePrefix' => self::isWindows($dirSep) ? $matches[1] : ''];
     }
 

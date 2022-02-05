@@ -34,7 +34,6 @@ use function preg_replace;
 use function rtrim;
 use function sprintf;
 use function str_replace;
-use function strpos;
 
 class Gherkin implements LoaderInterface
 {

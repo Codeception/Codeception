@@ -51,10 +51,10 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      * Enabled traits with methods to be called before and after the test.
      */
     protected array $hooks = [
-      'ignoreIfMetadataBlocked',
-      'codeCoverage',
-      'assertionCounter',
-      'errorLogger'
+        'ignoreIfMetadataBlocked',
+        'codeCoverage',
+        'assertionCounter',
+        'errorLogger'
     ];
 
     /**
@@ -167,8 +167,8 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         }
 
         foreach (array_reverse($this->hooks) as $hook) {
-            if (method_exists($this, $hook.'End')) {
-                $this->{$hook.'End'}($status, $time, $e);
+            if (method_exists($this, $hook . 'End')) {
+                $this->{$hook . 'End'}($status, $time, $e);
             }
         }
 

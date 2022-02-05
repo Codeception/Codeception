@@ -69,13 +69,13 @@ class Bootstrap extends InitTemplate
 
     protected function createDirs(): void
     {
-         $this->createDirectoryFor('tests');
-         $this->createEmptyDirectory($this->outputDir);
-         $this->createEmptyDirectory($this->dataDir);
-         $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . '_generated');
-         $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . "Helper");
-         $this->gitIgnore('tests/_output');
-         $this->gitIgnore('tests/_support/_generated');
+        $this->createDirectoryFor('tests');
+        $this->createEmptyDirectory($this->outputDir);
+        $this->createEmptyDirectory($this->dataDir);
+        $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . '_generated');
+        $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . "Helper");
+        $this->gitIgnore('tests/_output');
+        $this->gitIgnore('tests/_support/_generated');
     }
 
     protected function createFunctionalSuite(string $actor = 'Functional'): void
