@@ -85,7 +85,7 @@ EOF;
         $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
 
-        $this->generatedSteps = (array) $settings['step_decorators'];
+        $this->generatedSteps = (array)$settings['step_decorators'];
     }
 
     public function produce(): string
@@ -216,7 +216,7 @@ EOF;
             $actions[$moduleName] = get_class_methods($module::class);
         }
 
-        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']) . implode(',', (array) $settings['step_decorators']));
+        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']) . implode(',', (array)$settings['step_decorators']));
     }
 
     public function getNumMethods(): int

@@ -43,7 +43,7 @@ EOF;
         $pattern = $loader->getPattern();
         $path = $settings['path'];
         if (!empty($test)) {
-            $path = $settings['path'].'/'.$test;
+            $path = $settings['path'] . '/' . $test;
             if (preg_match($pattern, $test)) {
                 $path = dirname($path);
                 $pattern = basename($test);
@@ -114,7 +114,7 @@ EOF;
             foreach ($matches[1] as $num => $param) {
                 ++$num;
                 $args[] = '$arg' . $num;
-                $pattern = str_replace('"'.$param.'"', ":arg{$num}", $pattern);
+                $pattern = str_replace('"' . $param . '"', ":arg{$num}", $pattern);
             }
         }
         // Has multiline argument at the end of step?

@@ -35,7 +35,7 @@ class Debug
 
     public static function isEnabled(): bool
     {
-        return (bool) self::$output;
+        return (bool)self::$output;
     }
 
     public static function confirm($question)

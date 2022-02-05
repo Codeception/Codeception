@@ -65,7 +65,7 @@ abstract class Step implements Stringable
 
     private function isTestFile(string $file)
     {
-        return preg_match('#[^\\'.DIRECTORY_SEPARATOR.'](Cest|Cept|Test).php$#', $file);
+        return preg_match('#[^\\' . DIRECTORY_SEPARATOR . '](Cest|Cept|Test).php$#', $file);
     }
 
     public function getName(): string
@@ -134,7 +134,7 @@ abstract class Step implements Stringable
             foreach ($arguments as $key => $argument) {
                 --$argumentsRemaining;
                 if (mb_strlen($argument, 'utf-8') > $allowedLength) {
-                    $arguments[$key] = mb_substr($argument, 0, (int) $allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
+                    $arguments[$key] = mb_substr($argument, 0, (int)$allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
                     $lengthRemaining -= ($allowedLength + 1);
                 } else {
                     $lengthRemaining -= (mb_strlen($argument, 'utf-8') + 1);
@@ -199,7 +199,7 @@ abstract class Step implements Stringable
     {
         $result = "\${$this->prefix}->" . $this->getAction() . '(';
         $maxLength = $maxLength - mb_strlen($result, 'utf-8') - 1;
-        return $result . ($this->getHumanizedArguments($maxLength) .')');
+        return $result . ($this->getHumanizedArguments($maxLength) . ')');
     }
 
     public function getMetaStep(): ?MetaStep

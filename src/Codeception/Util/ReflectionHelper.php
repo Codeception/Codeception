@@ -24,8 +24,6 @@ use function is_string;
 use function json_encode;
 use function method_exists;
 use function range;
-use function strpos;
-use function substr;
 use function var_export;
 
 /**

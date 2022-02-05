@@ -134,7 +134,7 @@ class ModuleContainer
             return false;
         }
 
-        return (bool) $module->_depends();
+        return (bool)$module->_depends();
     }
 
     /**

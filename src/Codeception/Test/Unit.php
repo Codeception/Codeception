@@ -15,7 +15,6 @@ use Codeception\TestInterface;
 use function get_class;
 use function lcfirst;
 use function method_exists;
-use function strpos;
 
 /**
  * Represents tests from PHPUnit compatible format.

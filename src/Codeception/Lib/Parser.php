@@ -191,12 +191,12 @@ class Parser
         $hasLineComment = preg_match_all('#//(.*?)$#m', $code, $matches);
         if ($hasLineComment) {
             foreach ($matches[1] as $line) {
-                $comments .= $line."\n";
+                $comments .= $line . "\n";
             }
         }
         $hasBlockComment = preg_match('#/*\*(.*?)\*/#ms', $code, $matches);
         if ($hasBlockComment) {
-            $comments .= $matches[1]."\n";
+            $comments .= $matches[1] . "\n";
         }
         return $comments;
     }

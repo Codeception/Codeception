@@ -52,8 +52,8 @@ class NameFilterIterator extends RecursiveFilterIterator
                         $matches[1]
                     );
 
-                    $this->filterMin = (int) $matches[2];
-                    $this->filterMax = (int) $matches[3];
+                    $this->filterMin = (int)$matches[2];
+                    $this->filterMax = (int)$matches[3];
                 } else {
                     $filter = sprintf(
                         '%s.*with data set #%s$',
@@ -115,6 +115,6 @@ class NameFilterIterator extends RecursiveFilterIterator
             $set = end($matches);
             $accepted = $set >= $this->filterMin && $set <= $this->filterMax;
         }
-        return (bool) $accepted;
+        return (bool)$accepted;
     }
 }

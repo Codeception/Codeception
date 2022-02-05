@@ -48,7 +48,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         $this->setMetadata(new Metadata());
         $this->scenario = new Scenario($this);
         $this->getMetadata()->setName($scenarioNode->getTitle());
-        $this->getMetadata()->setFeature((string) $featureNode->getTitle());
+        $this->getMetadata()->setFeature((string)$featureNode->getTitle());
         $this->getMetadata()->setFilename($featureNode->getFile());
     }
 
@@ -251,9 +251,9 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     public function getReportFields(): array
     {
         return [
-            'name'    => $this->toString(),
+            'name' => $this->toString(),
             'feature' => $this->getFeature(),
-            'file'    => $this->getFileName(),
+            'file' => $this->getFileName(),
         ];
     }
 }

@@ -24,7 +24,7 @@ class ExtensionLoader implements EventSubscriberInterface
      */
     protected static array $events = [
         Events::MODULE_INIT => 'registerSuiteExtensions',
-        Events::SUITE_AFTER  => 'stopSuiteExtensions'
+        Events::SUITE_AFTER => 'stopSuiteExtensions'
     ];
 
     protected array $config = [];

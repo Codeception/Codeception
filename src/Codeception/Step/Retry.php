@@ -76,6 +76,6 @@ EOF;
             ->place('module', $template->getVar('module'))
             ->place('params', $template->getVar('params'))
             ->place('doc', $doc)
-            ->place('action', 'retry'. ucfirst($action));
+            ->place('action', 'retry' . ucfirst($action));
     }
 }

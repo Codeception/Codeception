@@ -109,7 +109,7 @@ class Annotation
 
     public function fetch(string $annotation): ?string
     {
-        $docBlock = (string) $this->currentReflectedItem->getDocComment();
+        $docBlock = (string)$this->currentReflectedItem->getDocComment();
         if (preg_match(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
         }
@@ -118,7 +118,7 @@ class Annotation
 
     public function fetchAll(string $annotation): array
     {
-        $docBlock = (string) $this->currentReflectedItem->getDocComment();
+        $docBlock = (string)$this->currentReflectedItem->getDocComment();
         if (preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
         }

@@ -23,7 +23,6 @@ use function is_callable;
 use function method_exists;
 use function preg_replace;
 use function sprintf;
-use function strpos;
 use function strtolower;
 use function trim;
 
@@ -69,7 +68,7 @@ class Cest extends Test implements
         // add example params to feature
         if ($this->getMetadata()->getCurrent('example')) {
             $step = new Comment('', $this->getMetadata()->getCurrent('example'));
-            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | '. $step->getArgumentsAsString(100));
+            $this->getScenario()->setFeature($this->getScenario()->getFeature() . ' | ' . $step->getArgumentsAsString(100));
         }
     }
 
@@ -154,6 +153,7 @@ class Cest extends Test implements
         }
         $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance, $methodName, $context);
     }
+
     protected function executeTestMethod($I): void
     {
         if (!method_exists($this->testClassInstance, $this->testMethod)) {

@@ -31,7 +31,7 @@ class Upgrade4 extends InitTemplate
         $this->say('To make it better we need your feedback on it!');
         $this->say('');
         $this->say('Please take a minute and fill in a brief survey:');
-        $this->say('<bold>'  . self::SURVEY_LINK . '</bold>');
+        $this->say('<bold>' . self::SURVEY_LINK . '</bold>');
         sleep(5);
         $this->say('');
         $result = $this->ask('<question>Did you fill in the survey?</question>', true);

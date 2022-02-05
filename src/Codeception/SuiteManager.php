@@ -126,7 +126,7 @@ class SuiteManager
         }
         $suite->setName($name);
         if (isset($this->settings['backup_globals'])) {
-            $suite->setBackupGlobals((bool) $this->settings['backup_globals']);
+            $suite->setBackupGlobals((bool)$this->settings['backup_globals']);
         }
 
         if (isset($this->settings['be_strict_about_changes_to_global_state']) && method_exists($suite, 'setbeStrictAboutChangesToGlobalState')) {

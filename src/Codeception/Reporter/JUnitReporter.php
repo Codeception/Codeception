@@ -22,8 +22,10 @@ use PHPUnit\Util\Xml;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Throwable;
 use function method_exists;
 use function sprintf;
+use function str_replace;
 
 class JUnitReporter implements EventSubscriberInterface
 {
@@ -131,8 +133,7 @@ class JUnitReporter implements EventSubscriberInterface
             "- <bold>%s</bold> report generated in <comment>file://%s</comment>",
             $this->reportName,
             $this->reportFile
-        )
-        ->writeln();
+        )->writeln();
     }
 
     public function beforeSuite(SuiteEvent $event): void
@@ -162,32 +163,32 @@ class JUnitReporter implements EventSubscriberInterface
     {
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
             'tests',
-            (string) $this->testSuiteTests[$this->testSuiteLevel]
+            (string)$this->testSuiteTests[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
             'assertions',
-            (string) $this->testSuiteAssertions[$this->testSuiteLevel]
+            (string)$this->testSuiteAssertions[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
             'errors',
-            (string) $this->testSuiteErrors[$this->testSuiteLevel]
+            (string)$this->testSuiteErrors[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
             'failures',
-            (string) $this->testSuiteFailures[$this->testSuiteLevel]
+            (string)$this->testSuiteFailures[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
             'skipped',
-            (string) $this->testSuiteSkipped[$this->testSuiteLevel]
+            (string)$this->testSuiteSkipped[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
             'useless',
-            (string) $this->testSuiteUseless[$this->testSuiteLevel]
+            (string)$this->testSuiteUseless[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
@@ -240,9 +241,9 @@ class JUnitReporter implements EventSubscriberInterface
             $method = $class->getMethod($methodName);
 
             $testCase->setAttribute('class', $class->getName());
-            $testCase->setAttribute('classname', \str_replace('\\', '.', $class->getName()));
+            $testCase->setAttribute('classname', str_replace('\\', '.', $class->getName()));
             $testCase->setAttribute('file', $class->getFileName());
-            $testCase->setAttribute('line', (string) $method->getStartLine());
+            $testCase->setAttribute('line', (string)$method->getStartLine());
         }
 
         $this->currentTestCase = $testCase;
@@ -356,7 +357,7 @@ class JUnitReporter implements EventSubscriberInterface
      * @throws InvalidArgumentException
      * @throws ReflectionException
      */
-    private function doAddFault(Test $test, \Throwable $t, string $type): void
+    private function doAddFault(Test $test, Throwable $t, string $type): void
     {
         if ($this->currentTestCase === null) {
             return;

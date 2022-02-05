@@ -630,11 +630,11 @@ class Console implements EventSubscriberInterface
     public function printScenarioFail(ScenarioDriven $failedTest, $fail): void
     {
         if ($this->conditionalFails) {
-            $failedStep = (string) array_shift($this->conditionalFails);
+            $failedStep = (string)array_shift($this->conditionalFails);
         } else {
-            $failedStep = (string) $failedTest->getScenario()->getMetaStep();
+            $failedStep = (string)$failedTest->getScenario()->getMetaStep();
             if ($failedStep === '') {
-                $failedStep = (string) array_shift($this->failedStep);
+                $failedStep = (string)array_shift($this->failedStep);
             }
         }
 
@@ -766,16 +766,16 @@ class Console implements EventSubscriberInterface
         ) {
             // try to get terminal width from ENV variable (bash), see also https://github.com/Codeception/Codeception/issues/3788
             if (getenv('COLUMNS')) {
-                $this->width = (int) getenv('COLUMNS');
+                $this->width = (int)getenv('COLUMNS');
             } else {
-                $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
+                $this->width = (int)(`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
             }
         } elseif ($this->isWin() && (PHP_SAPI === "cli")) {
             exec('mode con', $output);
             if (isset($output[4])) {
                 preg_match('#^ +.* +(\d+)$#', $output[4], $matches);
                 if (!empty($matches[1])) {
-                    $this->width = (int) $matches[1];
+                    $this->width = (int)$matches[1];
                 }
             }
         }

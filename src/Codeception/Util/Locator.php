@@ -22,7 +22,6 @@ use function is_string;
 use function key;
 use function preg_match;
 use function sprintf;
-use function strpos;
 use function strtolower;
 
 /**
@@ -281,7 +280,7 @@ class Locator
     {
         if (is_int($position) && $position < 0) {
             ++$position; // -1 points to the last element
-            $position = 'last()-'. abs($position);
+            $position = 'last()-' . abs($position);
         }
         if ($position === 0) {
             throw new InvalidArgumentException(

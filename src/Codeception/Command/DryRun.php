@@ -66,7 +66,7 @@ class DryRun extends Command
             'memory_limit',
             $config['settings']['memory_limit'] ?? '1024M'
         );
-        if (! Configuration::isEmpty() && ! $test && str_starts_with($suite, (string) $config['paths']['tests'])) {
+        if (!Configuration::isEmpty() && !$test && str_starts_with($suite, (string)$config['paths']['tests'])) {
             [, $suite, $test] = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
         $settings = $this->getSuiteConfig($suite);

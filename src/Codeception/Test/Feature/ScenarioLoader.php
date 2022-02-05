@@ -41,5 +41,6 @@ trait ScenarioLoader
     }
 
     abstract protected function getParser(): Parser;
+
     abstract public function getSourceCode(): string;
 }

@@ -15,6 +15,7 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\PathResolver;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\Test;
 use SebastianBergmann\Template\Template;
 use SebastianBergmann\Timer\Timer;
@@ -70,7 +71,7 @@ class HtmlReporter implements EventSubscriberInterface
         $this->timer->start();
     }
 
-    public function beforeSuite(SuiteEvent $event) : void
+    public function beforeSuite(SuiteEvent $event): void
     {
         $suite = $event->getSuite();
         if (!$suite->getName()) {
@@ -121,7 +122,7 @@ class HtmlReporter implements EventSubscriberInterface
         $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioUseless');
     }
 
-    public function printTestResult(Test $test, float $time, string $scenarioStatus) : void
+    public function printTestResult(Test $test, float $time, string $scenarioStatus): void
     {
         $steps = [];
 
@@ -199,7 +200,7 @@ class HtmlReporter implements EventSubscriberInterface
                 'toggle'         => $toggle,
                 'failure'        => $failures,
                 'png'            => $png,
-                'html'            => $html,
+                'html'           => $html,
                 'time'           => round($time, 2)
             ]
         );

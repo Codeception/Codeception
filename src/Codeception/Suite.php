@@ -98,7 +98,7 @@ class Suite extends TestSuite
                 }
             }
 
-            if ($test instanceof TestCase)  {
+            if ($test instanceof TestCase) {
                 $this->runPhpUnitTest($test, $result);
             } elseif ($test instanceof Test) {
                 $test->setEventDispatcher($this->dispatcher);
