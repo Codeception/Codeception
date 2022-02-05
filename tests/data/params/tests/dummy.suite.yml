@@ -1,4 +1,4 @@
-class_name: DummyTester
+actor: DummyTester
 modules:
     enabled:
         - \Helper\Dummy:

@@ -20,6 +20,9 @@ class Scenario
 
     protected Metadata $metadata;
 
+    /**
+     * @var Step[]
+     */
     protected array $steps = [];
 
     protected string $feature;
@@ -86,6 +89,8 @@ class Scenario
 
     /**
      * Returns the steps of this scenario.
+     *
+     * @return Step[]
      */
     public function getSteps(): array
     {
@@ -96,7 +101,6 @@ class Scenario
     {
         $text = '';
         foreach ($this->getSteps() as $step) {
-            /** @var Step $step */
             if ($step->getName() !== 'Comment') {
                 $text .= $step->getHtml() . '<br/>';
             } else {
@@ -130,12 +134,6 @@ class Scenario
     public function incomplete(string $message = ''): void
     {
         throw new IncompleteTestError($message);
-    }
-
-    public function __call(string $method, array $args)
-    {
-        // all methods were deprecated and removed from here
-        trigger_error(sprintf('Codeception: $scenario->%s() has been deprecated and removed. Use annotations to pass scenario params', $method), E_USER_DEPRECATED);
     }
 
     public function setMetaStep(?Meta $metaStep): void

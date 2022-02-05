@@ -66,10 +66,6 @@ EOF;
     {
         $namespace = rtrim($this->settings['namespace'], '\\');
 
-        if (!isset($this->settings['actor']) && isset($this->settings['class_name'])) {
-            $this->settings['actor'] = $this->settings['class_name'];
-        }
-
         return (new Template($this->template))
             ->place('hasNamespace', $namespace !== '' ? "namespace {$namespace};" : '')
             ->place('actor', $this->settings['actor'])

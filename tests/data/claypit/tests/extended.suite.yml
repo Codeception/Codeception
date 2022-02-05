@@ -1,4 +1,4 @@
-class_name: ExtendedGuy
+actor: ExtendedGuy
 modules:
     enabled:
         - \Helper\Extended

@@ -30,7 +30,6 @@ class Completion extends CompletionCommand
             'config:validate',
             'console',
             'dry-run',
-            'generate:cept',
             'generate:cest',
             'generate:feature',
             'generate:phpunit',

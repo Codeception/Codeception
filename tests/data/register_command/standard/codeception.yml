@@ -2,7 +2,7 @@ actor: RegisterCommand
 bootstrap: _autoload.php
 paths:
     tests: tests
-    log: tests/_log
+    output: tests/_log
     data: tests/_data
     support: tests/_support
 settings:

@@ -1,4 +1,4 @@
-class_name: MathTester
+actor: MathTester
 modules:
     enabled: [Asserts]
 coverage:

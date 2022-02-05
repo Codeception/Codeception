@@ -2,4 +2,4 @@
 #
 # Suite for unit (internal) tests.
 
-class_name: UnitTester
+actor: UnitTester

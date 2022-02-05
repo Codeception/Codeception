@@ -1,4 +1,4 @@
-class_name: UnitGuy
+actor: UnitGuy
 modules:
     enabled:
         - \Jazz\Helper\Unit

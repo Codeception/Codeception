@@ -1,12 +1,12 @@
 paths:
     tests: tests
-    log: tests/_output
+    output: tests/_output
     data: tests/_data
     helpers: tests/_support
 settings:
     silent: false
     coloe
-    log: false
+    output: false
     strict_xml: true
 modules:
     config:

@@ -1,14 +1,14 @@
-class_name: MessageGuy
+actor: MessageGuy
 paths:
     tests: tests
-    log: tests/_log
+    output: tests/_log
     data: tests/_data
     helpers: tests/_helpers
     envs: tests/_envs
 
 settings:
     colors: false
-    log: false
+    output: false
 
 modules:
       enabled:

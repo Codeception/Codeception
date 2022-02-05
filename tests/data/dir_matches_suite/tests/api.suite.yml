@@ -1,4 +1,4 @@
-class_name: ApiTester
+actor: ApiTester
 modules:
     enabled:
         - Asserts

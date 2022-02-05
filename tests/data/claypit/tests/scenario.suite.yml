@@ -1,4 +1,4 @@
-class_name: ScenarioGuy
+actor: ScenarioGuy
 modules:
     enabled: [Filesystem, \Helper\Scenario]
 gherkin:

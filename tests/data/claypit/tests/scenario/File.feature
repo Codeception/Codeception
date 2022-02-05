@@ -8,8 +8,8 @@ Feature: Run gherkin
     When I am in current directory
     Then there is a file "scenario.suite.yml"
     And there are keywords in "scenario.suite.yml"
-      | class_name | ScenarioGuy |
-      | enabled   | Filesystem   |
+      | actor   | ScenarioGuy |
+      | enabled | Filesystem   |
 
 
   Scenario: Describe a new feature

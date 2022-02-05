@@ -1,4 +1,4 @@
-class_name: PowerGuy
+actor: PowerGuy
 modules:
     enabled: [PowerHelper, Asserts]
 env:

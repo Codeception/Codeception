@@ -1,7 +1,6 @@
 namespace: bar
 actor: Tester
 paths:
-  log: "_log"
   tests: "tests"
   data: "data"
   support: "support"
