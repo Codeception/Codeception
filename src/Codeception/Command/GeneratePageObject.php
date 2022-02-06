@@ -68,9 +68,9 @@ class GeneratePageObject extends Command
 
         if (!$res) {
             $output->writeln("<error>PageObject {$filename} already exists</error>");
-            return Command::FAILURE;
+            return 1;
         }
         $output->writeln("<info>PageObject was created in {$filename}</info>");
-        return Command::SUCCESS;
+        return 0;
     }
 }

@@ -101,9 +101,9 @@ class SelfUpdate extends Command
                     $e->getMessage()
                 )
             );
-            return Command::FAILURE;
+            return 1;
         }
 
-        return Command::SUCCESS;
+        return 0;
     }
 }

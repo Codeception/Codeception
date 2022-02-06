@@ -55,6 +55,6 @@ class Bootstrap extends Command
             $bootstrap->initDir($input->getArgument('path'));
         }
         $bootstrap->setup();
-        return Command::SUCCESS;
+        return 0;
     }
 }

@@ -54,10 +54,10 @@ class GenerateEnvironment extends Command
 
         if ($saved) {
             $output->writeln("<info>{$env} config was created in {$relativePath}/{$file}</info>");
-            return Command::SUCCESS;
+            return 0;
         } else {
             $output->writeln("<error>File {$relativePath}/{$file} already exists</error>");
-            return Command::FAILURE;
+            return 1;
         }
     }
 }

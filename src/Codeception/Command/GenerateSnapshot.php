@@ -69,9 +69,9 @@ class GenerateSnapshot extends Command
 
         if (!$res) {
             $output->writeln("<error>Snapshot {$filename} already exists</error>");
-            return Command::FAILURE;
+            return 1;
         }
         $output->writeln("<info>Snapshot was created in {$filename}</info>");
-        return Command::SUCCESS;
+        return 0;
     }
 }

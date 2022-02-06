@@ -71,7 +71,7 @@ class Completion extends CompletionCommand
         }
 
         parent::execute($input, $output);
-        return Command::SUCCESS;
+        return 0;
     }
 
     protected function createDefinition(): SymfonyInputDefinition

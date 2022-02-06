@@ -96,7 +96,7 @@ class DryRun extends Command
             }
         }
         $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite()), Events::SUITE_AFTER);
-        return Command::SUCCESS;
+        return 0;
     }
 
     protected function matchTestFromFilename($filename, $testsPath)

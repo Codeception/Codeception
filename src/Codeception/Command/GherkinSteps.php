@@ -70,6 +70,6 @@ class GherkinSteps extends Command
         if (!isset($table)) {
             $output->writeln("No steps are defined, start creating them by running <bold>gherkin:snippets</bold>");
         }
-        return Command::SUCCESS;
+        return 0;
     }
 }
