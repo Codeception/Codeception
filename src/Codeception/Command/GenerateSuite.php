@@ -54,7 +54,7 @@ class GenerateSuite extends Command
 
         if ($this->containsInvalidCharacters($suite)) {
             $output->writeln("<error>Suite name '{$suite}' contains invalid characters. ([A-Za-z0-9_]).</error>");
-            return Command::FAILURE;
+            return 1;
         }
 
         $config = $this->getGlobalConfig();
@@ -132,7 +132,7 @@ EOF;
         $output->writeln("3. Run tests of this suite with <bold>codecept run {$suite}</bold> command");
 
         $output->writeln("<info>Suite {$suite} generated</info>");
-        return Command::SUCCESS;
+        return 0;
     }
 
     private function containsInvalidCharacters(string $suite): bool

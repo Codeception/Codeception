@@ -72,9 +72,9 @@ class GenerateStepObject extends Command
 
         if (!$res) {
             $output->writeln("<error>StepObject {$filename} already exists</error>");
-            return Command::FAILURE;
+            return 1;
         }
         $output->writeln("<info>StepObject was created in {$filename}</info>");
-        return Command::SUCCESS;
+        return 0;
     }
 }

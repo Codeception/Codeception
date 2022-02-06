@@ -433,7 +433,7 @@ class Run extends Command
         if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessfulIgnoringWarnings()) {
             exit(1);
         }
-        return Command::SUCCESS;
+        return 0;
     }
 
     protected function matchSingleTest($suite, $config): ?array
