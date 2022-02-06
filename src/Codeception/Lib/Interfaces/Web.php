@@ -47,7 +47,7 @@ interface Web
      *
      * @param array|string $selector optional
      */
-    public function see(string $text, array|string $selector = null): void;
+    public function see(string $text, $selector = null): void;
 
     /**
      * Checks that the current page doesn't contain the text specified (case insensitive).
@@ -77,7 +77,7 @@ interface Web
      *
      * @param array|string $selector optional
      */
-    public function dontSee(string $text, array|string $selector = null): void;
+    public function dontSee(string $text, $selector = null): void;
 
     /**
      * Checks that the current page contains the given string in its

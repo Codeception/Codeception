@@ -30,5 +30,5 @@ interface ElementLocator
      * @return Crawler|array of interactive elements
      * @api
      */
-    public function _findElements(array $locator): array|Crawler;
+    public function _findElements(mixed $locator): iterable;
 }
