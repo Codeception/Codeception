@@ -301,8 +301,9 @@ interface Web
      * // using strict locator
      * $I->click(['link' => 'Login']);
      * ```
+     * @param string|array $link
      */
-    public function click(array|string $link, $context = null): void;
+    public function click($link, $context = null): void;
 
     /**
      * Checks that there's a link with the specified text.
@@ -445,8 +446,10 @@ interface Web
      * $I->seeInField('//form/*[@name=search]','Search');
      * $I->seeInField(['name' => 'search'], 'Search');
      * ```
+     *
+     * @param string|array $field
      */
-    public function seeInField(array|string $field, $value): void;
+    public function seeInField($field, $value): void;
 
     /**
      * Checks that an input field or textarea doesn't contain the given value.
@@ -461,8 +464,9 @@ interface Web
      * $I->dontSeeInField('//form/*[@name=search]','Search');
      * $I->dontSeeInField(['name' => 'search'], 'Search');
      * ```
+     * @param string|array $field
      */
-    public function dontSeeInField(array|string $field, $value): void;
+    public function dontSeeInField($field, $value): void;
 
     /**
      * Checks if the array of form parameters (name => value) are set on the form matched with the
@@ -612,8 +616,9 @@ interface Web
      * $I->fillField("//input[@type='text']", "Hello World!");
      * $I->fillField(['name' => 'email'], 'jon@example.com');
      * ```
+     * @param string|array $field
      */
-    public function fillField(array|string $field, $value): void;
+    public function fillField($field, $value): void;
 
     /**
      * Attaches a file relative to the Codeception `_data` directory to the given file upload field.
@@ -702,7 +707,6 @@ interface Web
      * // strict locator in first arg, attributes in second
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
      * ```
-     *
      */
     public function seeElement($selector, array $attributes = []): void;
 
@@ -717,7 +721,6 @@ interface Web
      * $I->dontSeeElement('input', ['name' => 'login']);
      * $I->dontSeeElement('input', ['value' => '123456']);
      * ```
-     *
      */
     public function dontSeeElement($selector, array $attributes = []): void;
 
@@ -741,8 +744,10 @@ interface Web
      * <?php
      * $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
      * ```
+     *
+     * @return mixed|void
      */
-    public function seeOptionIsSelected($selector, string $optionText): mixed;
+    public function seeOptionIsSelected($selector, string $optionText);
 
     /**
      * Checks that the given option is not selected.
@@ -751,8 +756,10 @@ interface Web
      * <?php
      * $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
      * ```
+     *
+     * @return mixed|void
      */
-    public function dontSeeOptionIsSelected($selector, string $optionText): mixed;
+    public function dontSeeOptionIsSelected($selector, string $optionText);
 
     /**
      * Checks that the page title contains the given string.
@@ -761,13 +768,17 @@ interface Web
      * <?php
      * $I->seeInTitle('Blog - Post #1');
      * ```
+     *
+     * @return mixed|void
      */
-    public function seeInTitle(string $title): mixed;
+    public function seeInTitle(string $title);
 
     /**
      * Checks that the page title does not contain the given string.
+     *
+     * @return mixed|void
      */
-    public function dontSeeInTitle(string $title): mixed;
+    public function dontSeeInTitle(string $title);
 
     /**
      * Checks that a cookie with the given name is set.
@@ -777,14 +788,18 @@ interface Web
      * <?php
      * $I->seeCookie('PHPSESSID');
      * ```
+     *
+     * @return mixed|void
      */
-    public function seeCookie(string $cookie, array $params = []): mixed;
+    public function seeCookie(string $cookie, array $params = []);
 
     /**
      * Checks that there isn't a cookie with the given name.
      * You can set additional cookie params like `domain`, `path` as array passed in last argument.
+     *
+     * @return mixed|void
      */
-    public function dontSeeCookie(string $cookie, array $params = []): mixed;
+    public function dontSeeCookie(string $cookie, array $params = []);
 
     /**
      * Sets a cookie with the given name and value.
@@ -794,14 +809,18 @@ interface Web
      * <?php
      * $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
      * ```
+     *
+     * @return mixed|void
      */
-    public function setCookie(string $name, ?string $val, array $params = []): mixed;
+    public function setCookie(string $name, ?string $val, array $params = []);
 
     /**
      * Unsets cookie with the given name.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
+     *
+     * @return mixed|void
      */
-    public function resetCookie(string $cookie, array $params = []): mixed;
+    public function resetCookie(string $cookie, array $params = []);
 
     /**
      * Grabs a cookie value.
