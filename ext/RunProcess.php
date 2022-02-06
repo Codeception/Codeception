@@ -58,7 +58,7 @@ use function sleep;
 class RunProcess extends Extension
 {
     /**
-     * @var array<string, int>
+     * @var array<int|string, mixed>
      */
     protected array $config = ['sleep' => 0];
 
