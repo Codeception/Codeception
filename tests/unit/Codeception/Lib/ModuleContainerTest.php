@@ -406,7 +406,7 @@ class StubModule extends \Codeception\Module
     /**
      * @var string[]
      */
-    protected $requiredFields = [
+    protected array $requiredFields = [
         'firstField',
         'secondField',
     ];

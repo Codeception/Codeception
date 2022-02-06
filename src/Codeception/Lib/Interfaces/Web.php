@@ -301,10 +301,8 @@ interface Web
      * // using strict locator
      * $I->click(['link' => 'Login']);
      * ```
-     *
-     * @param string|array $link
      */
-    public function click($link, $context = null): void;
+    public function click(array|string $link, $context = null): void;
 
     /**
      * Checks that there's a link with the specified text.
@@ -408,10 +406,8 @@ interface Web
      * $user_id = $I->grabFromCurrentUrl('~^/user/(\d+)/~');
      * $uri = $I->grabFromCurrentUrl();
      * ```
-     *
-     * @return mixed
      */
-    public function grabFromCurrentUrl(string $uri = null);
+    public function grabFromCurrentUrl(string $uri = null): mixed;
 
     /**
      * Checks that the specified checkbox is checked.
@@ -449,10 +445,8 @@ interface Web
      * $I->seeInField('//form/*[@name=search]','Search');
      * $I->seeInField(['name' => 'search'], 'Search');
      * ```
-     *
-     * @param string|array $field
      */
-    public function seeInField($field, $value): void;
+    public function seeInField(array|string $field, $value): void;
 
     /**
      * Checks that an input field or textarea doesn't contain the given value.
@@ -467,10 +461,8 @@ interface Web
      * $I->dontSeeInField('//form/*[@name=search]','Search');
      * $I->dontSeeInField(['name' => 'search'], 'Search');
      * ```
-     *
-     * @param string|array $field
      */
-    public function dontSeeInField($field, $value): void;
+    public function dontSeeInField(array|string $field, $value): void;
 
     /**
      * Checks if the array of form parameters (name => value) are set on the form matched with the
@@ -619,12 +611,9 @@ interface Web
      * <?php
      * $I->fillField("//input[@type='text']", "Hello World!");
      * $I->fillField(['name' => 'email'], 'jon@example.com');
-     * ?>
      * ```
-     *
-     * @param string|array $field
      */
-    public function fillField($field, $value): void;
+    public function fillField(array|string $field, $value): void;
 
     /**
      * Attaches a file relative to the Codeception `_data` directory to the given file upload field.
@@ -648,10 +637,8 @@ interface Web
      * $heading = $I->grabTextFrom('descendant-or-self::h1');
      * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
      * ```
-     *
-     * @return mixed
      */
-    public function grabTextFrom($cssOrXPathOrRegex);
+    public function grabTextFrom($cssOrXPathOrRegex): mixed;
 
     /**
      * Finds the value for the given form field.
@@ -664,10 +651,8 @@ interface Web
      * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
      * $name = $I->grabValueFrom(['name' => 'username']);
      * ```
-     *
-     * @return mixed
      */
-    public function grabValueFrom($field);
+    public function grabValueFrom($field): mixed;
 
     /**
      * Grabs the value of the given attribute value from the given element.
@@ -677,10 +662,8 @@ interface Web
      * <?php
      * $I->grabAttributeFrom('#tooltip', 'title');
      * ```
-     *
-     * @return mixed
      */
-    public function grabAttributeFrom($cssOrXpath, string $attribute);
+    public function grabAttributeFrom($cssOrXpath, string $attribute): mixed;
 
     /**
      * Grabs either the text content, or attribute values, of nodes
@@ -749,7 +732,7 @@ interface Web
      *
      * @param int|int[] $expected
      */
-    public function seeNumberOfElements($selector, $expected): void;
+    public function seeNumberOfElements($selector, array|int $expected): void;
 
     /**
      * Checks that the given option is selected.
@@ -758,10 +741,8 @@ interface Web
      * <?php
      * $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
      * ```
-     *
-     * @return mixed
      */
-    public function seeOptionIsSelected($selector, string $optionText);
+    public function seeOptionIsSelected($selector, string $optionText): mixed;
 
     /**
      * Checks that the given option is not selected.
@@ -770,10 +751,8 @@ interface Web
      * <?php
      * $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
      * ```
-     *
-     * @return mixed
      */
-    public function dontSeeOptionIsSelected($selector, string $optionText);
+    public function dontSeeOptionIsSelected($selector, string $optionText): mixed;
 
     /**
      * Checks that the page title contains the given string.
@@ -782,17 +761,13 @@ interface Web
      * <?php
      * $I->seeInTitle('Blog - Post #1');
      * ```
-     *
-     * @return mixed
      */
-    public function seeInTitle(string $title);
+    public function seeInTitle(string $title): mixed;
 
     /**
      * Checks that the page title does not contain the given string.
-     *
-     * @return mixed
      */
-    public function dontSeeInTitle(string $title);
+    public function dontSeeInTitle(string $title): mixed;
 
     /**
      * Checks that a cookie with the given name is set.
@@ -802,18 +777,14 @@ interface Web
      * <?php
      * $I->seeCookie('PHPSESSID');
      * ```
-     *
-     * @return mixed
      */
-    public function seeCookie(string $cookie, array $params = []);
+    public function seeCookie(string $cookie, array $params = []): mixed;
 
     /**
      * Checks that there isn't a cookie with the given name.
      * You can set additional cookie params like `domain`, `path` as array passed in last argument.
-     *
-     * @return mixed
      */
-    public function dontSeeCookie(string $cookie, array $params = []);
+    public function dontSeeCookie(string $cookie, array $params = []): mixed;
 
     /**
      * Sets a cookie with the given name and value.
@@ -823,27 +794,21 @@ interface Web
      * <?php
      * $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
      * ```
-     *
-     * @return mixed
      */
-    public function setCookie(string $name, ?string $val, array $params = []);
+    public function setCookie(string $name, ?string $val, array $params = []): mixed;
 
     /**
      * Unsets cookie with the given name.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
-     *
-     * @return mixed
      */
-    public function resetCookie(string $cookie, array $params = []);
+    public function resetCookie(string $cookie, array $params = []): mixed;
 
     /**
      * Grabs a cookie value.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      * If the cookie is set by an ajax request (XMLHttpRequest), there might be some delay caused by the browser, so try `$I->wait(0.1)`.
-     *
-     * @return mixed
      */
-    public function grabCookie(string $cookie, array $params = []);
+    public function grabCookie(string $cookie, array $params = []): mixed;
 
     /**
      * Grabs current page source code.

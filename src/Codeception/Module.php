@@ -46,17 +46,11 @@ abstract class Module
 
     protected array $storage = [];
 
-    /**
-     * @var array
-     */
-    protected $config = [];
+    protected array $config = [];
 
     protected array $backupConfig = [];
 
-    /**
-     * @var array
-     */
-    protected $requiredFields = [];
+    protected array $requiredFields = [];
 
     /**
      * Module constructor.

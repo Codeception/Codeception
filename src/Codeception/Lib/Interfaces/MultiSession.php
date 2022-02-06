@@ -8,7 +8,7 @@ interface MultiSession
 
     public function _loadSession($session): void;
 
-    public function _backupSession(): array;
+    public function _backupSession();
 
     public function _closeSession($session = null): void;
 

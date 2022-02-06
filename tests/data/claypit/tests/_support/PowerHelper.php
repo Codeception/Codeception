@@ -5,8 +5,7 @@ namespace Codeception\Module;
 
 class PowerHelper extends \Codeception\Module
 {
-    /** @var array */
-    protected $config = array('has_power' => false);
+    protected array $config = array('has_power' => false);
 
     public function _hasPower(): bool
     {

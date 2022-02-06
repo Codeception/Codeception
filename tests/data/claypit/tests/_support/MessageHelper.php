@@ -8,8 +8,7 @@ use Codeception\Module;
 
 class MessageHelper extends Module
 {
-    /** @var array */
-    protected $config = [
+    protected array $config = [
         'message1' => 'DEFAULT MESSAGE1.',
         'message2' => 'DEFAULT MESSAGE2.',
         'message3' => 'DEFAULT MESSAGE3.',
