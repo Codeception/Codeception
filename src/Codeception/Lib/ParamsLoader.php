@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Codeception\Lib;
 
 use Codeception\Exception\ConfigurationException;
-use Dotenv\Dotenv;
-use Dotenv\Repository\Adapter\EnvConstAdapter;
-use Dotenv\Repository\Adapter\ServerConstAdapter;
-use Dotenv\Repository\RepositoryBuilder;
+use Dotenv\Dotenv as PhpDotenv;
 use Exception;
 use SimpleXMLElement;
+use Symfony\Component\Dotenv\Dotenv as SymfonyDotenv;
 use Symfony\Component\Yaml\Yaml;
 
 class ParamsLoader
@@ -116,15 +114,20 @@ class ParamsLoader
 
     protected function loadDotEnvFile(): array
     {
-        if (!class_exists(Dotenv::class)) {
-            throw new ConfigurationException(
-                "`vlucas/phpdotenv` library is required to parse .env files.\n" .
-                "Please install it via composer: composer require vlucas/phpdotenv"
-            );
+        // vlucas/phpdotenv
+        if (class_exists(PhpDotenv::class)) {
+            return PhpDotenv::createArrayBacked(codecept_root_dir(), $this->paramStorage)->load();
         }
 
-        // Dotenv v5 & v4
-        return Dotenv::createArrayBacked(codecept_root_dir(), $this->paramStorage)->load();
+        // symfony/dotenv
+        if (class_exists(SymfonyDotenv::class)) {
+            return (new SymfonyDotenv())->parse(file_get_contents($this->paramsFile), $this->paramsFile);
+        }
+
+        throw new ConfigurationException(
+            "`vlucas/phpdotenv` or `symfony/dotenv` library is required to parse .env files.\n" .
+            "Please install it via composer, e.g.: composer require vlucas/phpdotenv"
+        );
     }
 
     protected function loadEnvironmentVars(): array
