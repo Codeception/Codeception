@@ -48,7 +48,7 @@ class GenerateSuite extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
-        $suite = (string)$input->getArgument('suite');
+        $suite = ucfirst((string)$input->getArgument('suite'));
         $actor = $input->getArgument('actor');
 
         if ($this->containsInvalidCharacters($suite)) {
@@ -58,7 +58,7 @@ class GenerateSuite extends Command
 
         $config = $this->getGlobalConfig();
         if (!$actor) {
-            $actor = ucfirst($suite) . $config['actor_suffix'];
+            $actor = $suite . $config['actor_suffix'];
         }
 
         $dir = Configuration::testsDir();
@@ -86,10 +86,10 @@ modules:
 EOF;
 
         $this->createFile(
-            $dir . ucfirst($suite) . '.suite.yml',
+            $dir . $suite . '.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
                 ->place('actor', $actor)
-                ->place('suite_namespace', $config['namespace']. '\\' . ucfirst($suite))
+                ->place('suite_namespace', $config['namespace']. '\\' . $suite)
                 ->produce()
         );
 

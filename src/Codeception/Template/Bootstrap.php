@@ -14,9 +14,9 @@ use Symfony\Component\Yaml\Yaml;
 class Bootstrap extends InitTemplate
 {
     // defaults
-    protected string $supportDir = 'tests/TestSupport';
+    protected string $supportDir = 'tests/Support';
 
-    protected string $dataDir = 'tests/TestSupport/Data';
+    protected string $dataDir = 'tests/Support/Data';
 
     protected string $envsDir = 'tests/_envs';
 
@@ -26,7 +26,7 @@ class Bootstrap extends InitTemplate
     // default since v5
     protected string $namespace = 'Tests';
 
-    protected string $supportNamespace = 'TestSupport';
+    protected string $supportNamespace = 'Support';
 
     public function setup(): void
     {

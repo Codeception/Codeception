@@ -28,7 +28,7 @@ suites:
             - Codeception\Step\TryTo
             - Codeception\Step\Retry
 
-support_namespace: TestSupport
+support_namespace: Support
 extensions:
     enabled: [Codeception\Extension\RunFailed]
 
@@ -41,8 +41,8 @@ gherkin: []
 paths:
     tests: {{baseDir}}
     output: {{baseDir}}/_output
-    data: {{baseDir}}/TestSupport/Data
-    support: {{baseDir}}/TestSupport
+    data: {{baseDir}}/Support/Data
+    support: {{baseDir}}/Support
     envs: {{baseDir}}/_envs
 
 settings:
@@ -95,7 +95,7 @@ EOF;
         $url = $this->ask("Start url for tests", "http://localhost");
 
         $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
-        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . 'TestSupport');
+        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . 'Support');
         $this->createEmptyDirectory($supportDir . DIRECTORY_SEPARATOR . 'Data');
         $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->gitIgnore($outputDir);

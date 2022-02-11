@@ -27,8 +27,8 @@ final class BootstrapCest
         $I->dontSeeInThisFile('namespace Generated\\');
         $this->checkFilesCreated($I);
 
-        $I->seeFileFound('AcceptanceTester.php', 'tests/TestSupport');
-        $I->seeInThisFile('namespace Generated\\TestSupport;');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/Support');
+        $I->seeInThisFile('namespace Generated\\Support;');
     }
 
     public function bootstrapWithNamespaceShortcut(CliGuy $I)
@@ -40,14 +40,14 @@ final class BootstrapCest
         $I->dontSeeInThisFile('namespace Generated\\');
         $this->checkFilesCreated($I);
 
-        $I->seeFileFound('AcceptanceTester.php', 'tests/TestSupport');
-        $I->seeInThisFile('namespace Generated\\TestSupport;');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/Support');
+        $I->seeInThisFile('namespace Generated\\Support;');
     }
 
     public function bootstrapWithActor(CliGuy $I)
     {
         $I->executeCommand('bootstrap --actor Ninja');
-        $I->seeFileFound('AcceptanceNinja.php', 'tests/TestSupport/');
+        $I->seeFileFound('AcceptanceNinja.php', 'tests/Support/');
     }
 
     public function bootstrapEmpty(CliGuy $I)
@@ -71,16 +71,16 @@ final class BootstrapCest
 
     private function checkFilesCreated(CliGuy $I)
     {
-        $I->seeDirFound('tests/TestSupport');
-        $I->seeDirFound('tests/TestSupport/Data');
+        $I->seeDirFound('tests/Support');
+        $I->seeDirFound('tests/Support/Data');
         $I->seeDirFound('tests/_output');
 
         $I->seeFileFound('Functional.suite.yml', 'tests');
         $I->seeFileFound('Acceptance.suite.yml', 'tests');
         $I->seeFileFound('Unit.suite.yml', 'tests');
 
-        $I->seeFileFound('AcceptanceTester.php', 'tests/TestSupport');
-        $I->seeFileFound('FunctionalTester.php', 'tests/TestSupport');
-        $I->seeFileFound('UnitTester.php', 'tests/TestSupport');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/Support');
+        $I->seeFileFound('FunctionalTester.php', 'tests/Support');
+        $I->seeFileFound('UnitTester.php', 'tests/Support');
     }
 }

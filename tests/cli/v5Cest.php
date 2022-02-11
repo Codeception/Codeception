@@ -23,25 +23,25 @@ final class v5Cest
         $I->openFile('codeception.yml');
         $I->seeInThisFile('namespace: Tests');
 
-        $I->openFile('tests/TestSupport/Helper/Api.php');
-        $I->seeInThisFile('namespace Tests\\TestSupport\\Helper');
+        $I->openFile('tests/Support/Helper/Api.php');
+        $I->seeInThisFile('namespace Tests\\Support\\Helper');
         $I->seeInThisFile('class Api');
 
-        $I->openFile('tests/TestSupport/AcceptanceTester.php');
-        $I->seeInThisFile('namespace Tests\\TestSupport');
+        $I->openFile('tests/Support/AcceptanceTester.php');
+        $I->seeInThisFile('namespace Tests\\Support');
         $I->seeInThisFile('use _generated\AcceptanceTesterActions');
 
-        $I->openFile('tests/TestSupport/FunctionalTester.php');
-        $I->seeInThisFile('namespace Tests\\TestSupport');
+        $I->openFile('tests/Support/FunctionalTester.php');
+        $I->seeInThisFile('namespace Tests\\Support');
 
         $I->openFile('tests/Api/ResourceCest.php');
         $I->seeInThisFile('namespace Tests\\Api;');
-        $I->seeInThisFile('use \Tests\TestSupport\ApiTester;');
+        $I->seeInThisFile('use \Tests\Support\ApiTester;');
         $I->seeInThisFile('public function tryToTest(ApiTester $I)');
 
         $I->openFile('tests/Api/ResourceTest.php');
         $I->seeInThisFile('namespace Tests\\Api;');
-        $I->seeInThisFile('use \Tests\TestSupport\ApiTester;');
+        $I->seeInThisFile('use \Tests\Support\ApiTester;');
         $I->seeInThisFile('protected ApiTester $tester;');
     }
 
@@ -59,25 +59,25 @@ final class v5Cest
         $I->openFile('codeception.yml');
         $I->seeInThisFile('namespace: Codecept5');
 
-        $I->openFile('tests/TestSupport/Helper/Api.php');
-        $I->seeInThisFile('namespace Codecept5\\TestSupport\\Helper');
+        $I->openFile('tests/Support/Helper/Api.php');
+        $I->seeInThisFile('namespace Codecept5\\Support\\Helper');
         $I->seeInThisFile('class Api');
 
-        $I->openFile('tests/TestSupport/AcceptanceTester.php');
-        $I->seeInThisFile('namespace Codecept5\\TestSupport');
+        $I->openFile('tests/Support/AcceptanceTester.php');
+        $I->seeInThisFile('namespace Codecept5\\Support');
         $I->seeInThisFile('use _generated\AcceptanceTesterActions');
 
-        $I->openFile('tests/TestSupport/FunctionalTester.php');
-        $I->seeInThisFile('namespace Codecept5\\TestSupport');
+        $I->openFile('tests/Support/FunctionalTester.php');
+        $I->seeInThisFile('namespace Codecept5\\Support');
 
         $I->openFile('tests/Api/ResourceCest.php');
         $I->seeInThisFile('namespace Codecept5\\Api;');
-        $I->seeInThisFile('use \Codecept5\TestSupport\ApiTester;');
+        $I->seeInThisFile('use \Codecept5\Support\ApiTester;');
         $I->seeInThisFile('public function tryToTest(ApiTester $I)');
 
         $I->openFile('tests/Api/ResourceTest.php');
         $I->seeInThisFile('namespace Codecept5\\Api;');
-        $I->seeInThisFile('use \Codecept5\TestSupport\ApiTester;');
+        $I->seeInThisFile('use \Codecept5\Support\ApiTester;');
         $I->seeInThisFile('protected ApiTester $tester;');
     }
 }

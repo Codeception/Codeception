@@ -51,7 +51,7 @@ abstract class InitTemplate
 
     protected string $actorSuffix = 'Tester';
 
-    protected string $supportNamespace = 'TestSupport';
+    protected string $supportNamespace = 'Support';
 
     protected string $workDir = '.';
 

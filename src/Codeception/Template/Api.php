@@ -28,8 +28,8 @@ suites:
 paths:
     tests: {{baseDir}}
     output: {{baseDir}}/_output
-    data: {{baseDir}}/TestSupport/Data
-    support: {{baseDir}}/TestSupport
+    data: {{baseDir}}/Support/Data
+    support: {{baseDir}}/Support
 
 settings:
     shuffle: false
@@ -68,7 +68,7 @@ EOF;
         }
 
         $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
-        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . 'TestSupport');
+        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . 'Support');
         $this->createEmptyDirectory($supportDir . DIRECTORY_SEPARATOR . 'Data');
         $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->gitIgnore($outputDir);

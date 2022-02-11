@@ -22,7 +22,7 @@ settings:
 paths:
     tests: {{dir}}
     output: {{dir}}/_output
-    support: {{dir}}/TestSupport
+    support: {{dir}}/Support
     data: {{dir}}
      
 EOF;
