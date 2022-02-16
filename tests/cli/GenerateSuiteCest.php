@@ -11,7 +11,7 @@ final class GenerateSuiteCest
         $I->seeFileFound('House.suite.yml', 'tests');
         $I->expect('actor class is generated');
         $I->seeInThisFile('actor: HouseGuy');
-        $I->seeDirFound('tests/house');
+        $I->seeDirFound('tests/House');
 
         $I->expect('suite is not created due to dashes');
         $I->executeCommand('generate:suite invalid-dash-suite', false);
@@ -24,7 +24,7 @@ final class GenerateSuiteCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('bootstrap --empty src/FooBar --namespace FooBar');
         $I->executeCommand('generate:suite house HouseGuy -c src/FooBar');
-        $I->seeDirFound('src/FooBar/tests/house');
+        $I->seeDirFound('src/FooBar/tests/House');
         $I->seeFileFound('House.suite.yml', 'src/FooBar/tests');
         $I->expect('guy class is generated');
         $I->seeInThisFile('actor: HouseGuy');

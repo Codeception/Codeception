@@ -26,11 +26,10 @@ final class WildcardIncludeCest
     private function checkAllSuitesExecuted(CliGuy $I)
     {
         $I->seeInShellOutput('[ToastPack]');
-        $I->seeInShellOutput('ToastPack.unit Tests');
+        $I->seeInShellOutput('Unit Tests (0)');
         $I->seeInShellOutput('[EwokPack]');
-        $I->seeInShellOutput('EwokPack.unit Tests');
+        $I->seeInShellOutput('Unit Tests (1)');
         $I->seeInShellOutput('[AcmePack]');
-        $I->seeInShellOutput('AcmePack.unit Tests');
         $I->dontSeeInShellOutput('[Spam]');
         $I->dontSeeInShellOutput('[SpamPack]');
     }

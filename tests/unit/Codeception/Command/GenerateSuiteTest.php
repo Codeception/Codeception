@@ -30,7 +30,7 @@ class GenerateSuiteTest extends BaseCommandRunner
         $this->assertSame(\Codeception\Configuration::projectDir().'tests/Shire.suite.yml', $configFile['filename']);
         $conf = \Symfony\Component\Yaml\Yaml::parse($configFile['content']);
         $this->assertSame('Hobbit', $conf['actor']);
-        $this->assertStringContainsString('Suite shire generated', $this->output);
+        $this->assertStringContainsString('Suite Shire generated', $this->output);
         $actor = $this->log[1];
         $this->assertSame(\Codeception\Configuration::supportDir().'Hobbit.php', $actor['filename']);
         $this->assertStringContainsString('class Hobbit extends \Codeception\Actor', $actor['content']);
