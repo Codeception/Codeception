@@ -110,6 +110,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
 
     protected function mergeToPrint(CodeCoverage $coverage): void
     {
-        Printer::$coverage->merge($coverage);
+        Printer::$coverage->setData($coverage->getData());
     }
 }
