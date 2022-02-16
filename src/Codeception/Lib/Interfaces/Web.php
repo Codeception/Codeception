@@ -301,7 +301,6 @@ interface Web
      * // using strict locator
      * $I->click(['link' => 'Login']);
      * ```
-     *
      * @param string|array $link
      */
     public function click($link, $context = null): void;
@@ -408,10 +407,8 @@ interface Web
      * $user_id = $I->grabFromCurrentUrl('~^/user/(\d+)/~');
      * $uri = $I->grabFromCurrentUrl();
      * ```
-     *
-     * @return mixed
      */
-    public function grabFromCurrentUrl(string $uri = null);
+    public function grabFromCurrentUrl(string $uri = null): mixed;
 
     /**
      * Checks that the specified checkbox is checked.
@@ -467,7 +464,6 @@ interface Web
      * $I->dontSeeInField('//form/*[@name=search]','Search');
      * $I->dontSeeInField(['name' => 'search'], 'Search');
      * ```
-     *
      * @param string|array $field
      */
     public function dontSeeInField($field, $value): void;
@@ -619,9 +615,7 @@ interface Web
      * <?php
      * $I->fillField("//input[@type='text']", "Hello World!");
      * $I->fillField(['name' => 'email'], 'jon@example.com');
-     * ?>
      * ```
-     *
      * @param string|array $field
      */
     public function fillField($field, $value): void;
@@ -648,10 +642,8 @@ interface Web
      * $heading = $I->grabTextFrom('descendant-or-self::h1');
      * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
      * ```
-     *
-     * @return mixed
      */
-    public function grabTextFrom($cssOrXPathOrRegex);
+    public function grabTextFrom($cssOrXPathOrRegex): mixed;
 
     /**
      * Finds the value for the given form field.
@@ -664,10 +656,8 @@ interface Web
      * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
      * $name = $I->grabValueFrom(['name' => 'username']);
      * ```
-     *
-     * @return mixed
      */
-    public function grabValueFrom($field);
+    public function grabValueFrom($field): mixed;
 
     /**
      * Grabs the value of the given attribute value from the given element.
@@ -677,10 +667,8 @@ interface Web
      * <?php
      * $I->grabAttributeFrom('#tooltip', 'title');
      * ```
-     *
-     * @return mixed
      */
-    public function grabAttributeFrom($cssOrXpath, string $attribute);
+    public function grabAttributeFrom($cssOrXpath, string $attribute): mixed;
 
     /**
      * Grabs either the text content, or attribute values, of nodes
@@ -719,7 +707,6 @@ interface Web
      * // strict locator in first arg, attributes in second
      * $I->seeElement(['css' => 'form input'], ['name' => 'login']);
      * ```
-     *
      */
     public function seeElement($selector, array $attributes = []): void;
 
@@ -734,7 +721,6 @@ interface Web
      * $I->dontSeeElement('input', ['name' => 'login']);
      * $I->dontSeeElement('input', ['value' => '123456']);
      * ```
-     *
      */
     public function dontSeeElement($selector, array $attributes = []): void;
 
@@ -749,7 +735,7 @@ interface Web
      *
      * @param int|int[] $expected
      */
-    public function seeNumberOfElements($selector, $expected): void;
+    public function seeNumberOfElements($selector, array|int $expected): void;
 
     /**
      * Checks that the given option is selected.
@@ -759,7 +745,7 @@ interface Web
      * $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
      * ```
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function seeOptionIsSelected($selector, string $optionText);
 
@@ -771,7 +757,7 @@ interface Web
      * $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
      * ```
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function dontSeeOptionIsSelected($selector, string $optionText);
 
@@ -783,14 +769,14 @@ interface Web
      * $I->seeInTitle('Blog - Post #1');
      * ```
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function seeInTitle(string $title);
 
     /**
      * Checks that the page title does not contain the given string.
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function dontSeeInTitle(string $title);
 
@@ -803,7 +789,7 @@ interface Web
      * $I->seeCookie('PHPSESSID');
      * ```
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function seeCookie(string $cookie, array $params = []);
 
@@ -811,7 +797,7 @@ interface Web
      * Checks that there isn't a cookie with the given name.
      * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function dontSeeCookie(string $cookie, array $params = []);
 
@@ -824,7 +810,7 @@ interface Web
      * $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
      * ```
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function setCookie(string $name, ?string $val, array $params = []);
 
@@ -832,7 +818,7 @@ interface Web
      * Unsets cookie with the given name.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      *
-     * @return mixed
+     * @return mixed|void
      */
     public function resetCookie(string $cookie, array $params = []);
 
@@ -840,10 +826,8 @@ interface Web
      * Grabs a cookie value.
      * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      * If the cookie is set by an ajax request (XMLHttpRequest), there might be some delay caused by the browser, so try `$I->wait(0.1)`.
-     *
-     * @return mixed
      */
-    public function grabCookie(string $cookie, array $params = []);
+    public function grabCookie(string $cookie, array $params = []): mixed;
 
     /**
      * Grabs current page source code.
