@@ -7,6 +7,7 @@ namespace Codeception\Lib\Generator;
 use Codeception\Configuration;
 use Codeception\Lib\Di;
 use Codeception\Lib\Friend;
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Template;
@@ -15,6 +16,8 @@ use ReflectionMethod;
 
 class Actor
 {
+    use Classname;
+
     public Di $di;
 
     public ModuleContainer $moduleContainer;
@@ -64,7 +67,7 @@ EOF;
 
     public function produce(): string
     {
-        $namespace = rtrim($this->settings['namespace'], '\\');
+        $namespace = trim($this->supportNamespace(), '\\');
 
         return (new Template($this->template))
             ->place('hasNamespace', $namespace !== '' ? "namespace {$namespace};" : '')

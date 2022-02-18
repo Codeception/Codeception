@@ -64,7 +64,8 @@
     },
     "conflict": {
         "codeception/lib-innerbrowser": "<3.0",
-        "codeception/module-phpbrowser": "<3.0"
+        "codeception/module-phpbrowser": "<3.0",
+        "codeception/module-filesystem": "<3.0"
     },
     "suggest": {
         "ext-simplexml": "For loading params from XML files",

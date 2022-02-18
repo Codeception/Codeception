@@ -8,45 +8,29 @@ use Codeception\Configuration;
 use Codeception\InitTemplate;
 use Exception;
 
-class Upgrade4 extends InitTemplate
+class Dependencies extends InitTemplate
 {
-    /**
-     * @var string
-     */
-    public const SURVEY_LINK = 'https://bit.ly/codecept-survey';
     /**
      * @var string
      */
     public const DONATE_LINK = 'https://opencollective.com/codeception';
 
-    public function setup()
+    public function setup(): void
     {
         if (!$this->isInstalled()) {
             $this->sayWarning('Codeception is not installed in this dir.');
             return;
         }
-        $this->sayInfo('Welcome to Codeception v4 Upgrade wizard!');
+        $this->sayInfo('Install Codeception Modules as Composer Packages');
         $this->say('');
-        $this->say('Codeception is maintained since 2011, is free & open-source.');
-        $this->say('To make it better we need your feedback on it!');
-        $this->say('');
-        $this->say('Please take a minute and fill in a brief survey:');
-        $this->say('<bold>' . self::SURVEY_LINK . '</bold>');
-        sleep(5);
-        $this->say('');
-        $result = $this->ask('<question>Did you fill in the survey?</question>', true);
-        if ($result) {
-            $this->say('Thank you! ');
-        } else {
-            $this->say('Anyway...');
-        }
+
         $config = Configuration::config();
         $modules = [];
         $suites = Configuration::suites();
         if (empty($suites)) {
             $this->sayError("No suites found in current config.");
             $this->sayWarning('If you use sub-configs with `include` option, run this script on subconfigs:');
-            $this->sayWarning('Example: php vendor/bin/codecept init upgrade4 -c backend/');
+            $this->sayWarning('Example: php vendor/bin/codecept init dependencies -c backend/');
             throw new Exception("No suites found, can't upgrade");
         }
         foreach (Configuration::suites() as $suite) {
@@ -57,11 +41,11 @@ class Upgrade4 extends InitTemplate
         $numPackages = $this->addModulesToComposer($modules);
 
         if ($numPackages === 0) {
-            $this->sayWarning("No upgrade needed! Everything is fine already");
+            $this->sayWarning("No change needed! Everything is installed");
             return;
         }
 
-        $this->saySuccess("Done upgrading!");
+        $this->saySuccess("Done installing!");
         $this->say('');
 
         $this->say('Please consider donating to Codeception on regular basis:');

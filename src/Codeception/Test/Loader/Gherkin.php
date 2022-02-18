@@ -16,6 +16,7 @@ use Behat\Gherkin\Parser as GherkinParser;
 use Codeception\Configuration;
 use Codeception\Exception\ParseException;
 use Codeception\Exception\TestParseException;
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Test\Gherkin as GherkinFormat;
 use Codeception\Util\Annotation;
 use ReflectionClass;
@@ -37,6 +38,8 @@ use function str_replace;
 
 class Gherkin implements LoaderInterface
 {
+    use Classname;
+
     protected static array $defaultSettings = [
         'namespace' => '',
         'actor' => '',
@@ -87,9 +90,7 @@ class Gherkin implements LoaderInterface
         }
 
         if (empty($this->steps) && empty($contexts['default']) && $this->settings['actor']) { // if no context is set, actor to be a context
-            $actorContext = $this->settings['namespace']
-                ? rtrim($this->settings['namespace'], '\\') . '\\' . rtrim($this->settings['actor'], '\\')
-                : $this->settings['actor'];
+            $actorContext = $this->supportNamespace() . $this->settings['actor'];
             if ($actorContext) {
                 $contexts['default'][] = $actorContext;
             }
@@ -124,7 +125,8 @@ class Gherkin implements LoaderInterface
                     sprintf("Context class %s does not exist", $context)
                 );
             }
-            $methods = get_class_methods($context);
+            $methods = get_class_methods((new \ReflectionClass($context))->newInstanceWithoutConstructor());
+
             if ($methods === []) {
                 continue;
             }

@@ -99,7 +99,7 @@ class Console extends Command
             throw new ConfigurationException("Interactive shell can't be started without an actor");
         }
         if (isset($config["namespace"])) {
-            $settings['actor'] = $config["namespace"] . '\\' . $settings['actor'];
+            $settings['actor'] = $config["namespace"] . '\\Support\\' . $settings['actor'];
         }
         $actor = $settings['actor'];
         $I = new $actor($scenario);

@@ -47,9 +47,11 @@ abstract class InitTemplate
      */
     public const GIT_IGNORE = '.gitignore';
 
-    protected string $namespace = '';
+    protected string $namespace = 'Tests';
 
     protected string $actorSuffix = 'Tester';
+
+    protected string $supportNamespace = 'Support';
 
     protected string $workDir = '.';
 
@@ -161,14 +163,15 @@ abstract class InitTemplate
     /**
      * Create a helper class inside a directory
      */
-    protected function createHelper(string $name, string $directory): void
+    protected function createHelper(string $name, string $directory, array $settings = []): void
     {
         $file = $this->createDirectoryFor(
             $dir = $directory . DIRECTORY_SEPARATOR . "Helper",
             "{$name}.php"
         ) . "{$name}.php";
 
-        $gen = new Helper($name, $this->namespace);
+        $gen = new Helper($settings, $name);
+
         // generate helper
         $this->createFile(
             $file,

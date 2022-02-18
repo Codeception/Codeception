@@ -44,7 +44,7 @@ class GenerateHelper extends Command
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Helper', $name);
         $filename = $path . $this->getShortClassName($name) . '.php';
 
-        $res = $this->createFile($filename, (new Helper($name, $config['namespace']))->produce());
+        $res = $this->createFile($filename, (new Helper($config, $name))->produce());
         if ($res) {
             $output->writeln("<info>Helper {$filename} created</info>");
             return 0;

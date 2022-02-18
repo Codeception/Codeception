@@ -25,7 +25,9 @@ final class MixedIncludeCest
 
     private function checkAllSuitesExecuted(CliGuy $I)
     {
-        $I->seeInShellOutput('AcmePack.unit Tests (1)');
         $I->seeInShellOutput('Unit Tests (1)');
+        $I->seeInShellOutput('SimpleTest: Something');
+        $I->seeInShellOutput('[AcmePack]: tests from');
+        $I->seeInShellOutput('BasicTest: Assert');
     }
 }

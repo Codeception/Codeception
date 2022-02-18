@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Codeception\Lib\Generator;
 
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class Snapshot
 {
     use Namespaces;
+    use Classname;
 
     protected string $template = <<<EOF
 <?php
@@ -49,7 +51,7 @@ EOF;
     public function __construct(protected array $settings, string $name)
     {
         $this->name = $this->getShortClassName($name);
-        $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Snapshot\\' . $name);
+        $this->namespace = $this->getNamespaceString($this->supportNamespace() . 'Snapshot\\' . $name);
     }
 
     public function produce(): string
@@ -68,10 +70,7 @@ EOF;
         }
 
         $actor = lcfirst($this->settings['actor']);
-        $actorClass = $this->settings['actor'];
-        if (!empty($this->settings['namespace'])) {
-            $actorClass = rtrim($this->settings['namespace'], '\\') . '\\' . $actorClass;
-        }
+        $actorClass = rtrim($this->supportNamespace(), '\\') . $this->settings['actor'];
 
         return (new Template($this->actionsTemplate))
             ->place('actorClass', $actorClass)

@@ -11,4 +11,22 @@ trait Classname
         $classname = preg_replace('#\.php$#', '', $classname);
         return preg_replace("#{$suffix}$#", '', $classname);
     }
+
+    protected function supportNamespace(): string
+    {
+        if (!isset($this->settings)) {
+            return "\\";
+        }
+
+        $namespace = "";
+
+        if ($this->settings['namespace']) {
+            $namespace .= '\\' . $this->settings['namespace'];
+        }
+
+        if (isset($this->settings['support_namespace'])) {
+            $namespace .= '\\' . $this->settings['support_namespace'];
+        }
+        return rtrim($namespace, '\\') . '\\';
+    }
 }
