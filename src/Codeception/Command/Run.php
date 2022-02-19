@@ -46,6 +46,9 @@ use function substr_replace;
  * * `codecept run tests/acceptance/MyCest.php`: run only MyCest
  * * `codecept run acceptance MyCest`: same as above
  * * `codecept run acceptance MyCest:myTestInIt`: run one test from a Cest
+ * * `codecept run acceptance MyCest:myTestInIt#1`: run one example or data provider item by number
+ * * `codecept run acceptance MyCest:myTestInIt#1-3`: run a range of examples or data provider items
+ * * `codecept run acceptance MyCest:myTestInIt@name.*`: run data provider items with matching names
  * * `codecept run acceptance checkout.feature`: run feature-file
  * * `codecept run acceptance -g slow`: run tests from *slow* group
  * * `codecept run unit,functional`: run only unit and functional suites
@@ -67,7 +70,6 @@ use function substr_replace;
  *
  * * `codecept run -o "settings: shuffle: true"`: enable shuffle
  * * `codecept run -o "settings: lint: false"`: disable linting
- * * `codecept run -o "reporters: report: \Custom\Reporter" --report`: use custom reporter
  *
  * Run with specific extension
  *

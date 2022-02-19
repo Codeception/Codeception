@@ -253,6 +253,55 @@ final class RunCest
         $I->seeInShellOutput("OK");
     }
 
+    public function filterTestsByDataProviderCaseNumber(CliGuy $I)
+    {
+        $I->executeCommand('run tests/unit/DataProvidersTest.php:#1');
+        $I->seeInShellOutput('Is triangle | #1');
+        $I->dontSeeInShellOutput('Is triangle | "real triangle"');
+        $I->dontSeeInShellOutput('Is triangle | #0');
+        $I->seeInShellOutput('DataProvidersTest');
+        $I->seeInShellOutput("OK (1 test, 1 assertion)");
+    }
+
+    public function filterTestsByDataProviderCaseNumberRange(CliGuy $I)
+    {
+        $I->executeCommand('run tests/unit/DataProvidersTest.php:#0-1');
+        $I->seeInShellOutput('Is triangle | #0');
+        $I->seeInShellOutput('Is triangle | #1');
+        $I->dontSeeInShellOutput('Is triangle | "real triangle"');
+        $I->seeInShellOutput('DataProvidersTest');
+        $I->seeInShellOutput("OK (2 tests, 2 assertions)");
+    }
+
+    public function filterTestsByDataProviderCaseName(CliGuy $I)
+    {
+        $I->executeCommand('run tests/unit/DataProvidersTest.php:@"real.*"');
+        $I->seeInShellOutput('Is triangle | "real triangle"');
+        $I->dontSeeInShellOutput('Is triangle | #0');
+        $I->dontSeeInShellOutput('Is triangle | #1');
+        $I->seeInShellOutput('DataProvidersTest');
+        $I->seeInShellOutput("OK (1 test, 1 assertion)");
+    }
+
+    public function filterCestsByDataProviderNumber(CliGuy $I)
+    {
+        $I->executeCommand('run tests/scenario/DataProviderCest.php:withProtectedDataProvider#1');
+        $I->seeInShellOutput('dummy.suite.yml');
+        $I->dontSeeInShellOutput('unit.suite.yml');
+        $I->dontSeeInShellOutput('summary.suite.yml');
+        $I->seeInShellOutput("OK (1 test, 1 assertion)");
+    }
+
+    public function filterCestsByExampleNumber(CliGuy $I)
+    {
+        $I->executeCommand('run tests/scenario/DataProviderCest.php:withDataProviderAndExample#0');
+        $I->seeInShellOutput('skipped.suite.yml');
+        $I->dontSeeInShellOutput('dummy.suite.yml');
+        $I->dontSeeInShellOutput('unit.suite.yml');
+        $I->dontSeeInShellOutput('summary.suite.yml');
+        $I->seeInShellOutput("OK (1 test, 1 assertion)");
+    }
+
     public function runOneGroupWithDataProviders(CliGuy $I)
     {
         $I->executeCommand('run unit -g data-providers');
