@@ -64,7 +64,7 @@
     },
     "conflict": {
         "codeception/lib-innerbrowser": "<3.0",
-        "codeception/module-phpbrowser": "<3.0",
+        "codeception/module-phpbrowser": "<2.5",
         "codeception/module-filesystem": "<3.0"
     },
     "suggest": {
