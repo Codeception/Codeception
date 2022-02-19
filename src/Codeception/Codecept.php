@@ -40,7 +40,7 @@ class Codecept
     /**
      * @var string
      */
-    public const VERSION = '5.0.0-alpha1';
+    public const VERSION = '5.0.0-alpha2';
 
     protected TestResult $result;
 
