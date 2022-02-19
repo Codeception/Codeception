@@ -7,7 +7,6 @@ namespace Codeception\Coverage;
 use Codeception\Configuration;
 use Codeception\Coverage\Subscriber\Printer;
 use Codeception\Exception\ConfigurationException;
-use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
 use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Exception;
@@ -96,16 +95,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
             }
         }
         return null;
-    }
-
-    /**
-     * @throws ConfigurationException|ModuleException|Exception
-     */
-    public function applyFilter(): void
-    {
-        Filter::setup($this->coverage)
-            ->whiteList($this->filters)
-            ->blackList($this->filters);
     }
 
     protected function mergeToPrint(CodeCoverage $coverage): void

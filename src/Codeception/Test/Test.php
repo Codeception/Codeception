@@ -76,6 +76,8 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
 
     private bool $reportUselessTests = false;
 
+    private bool $collectCodeCoverage = false;
+
     /**
      * Everything inside this method is treated as a test.
      *
@@ -87,6 +89,11 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      * Test representation
      */
     abstract public function toString(): string;
+
+    public function collectCodeCoverage(bool $enabled): void
+    {
+        $this->collectCodeCoverage = $enabled;
+    }
 
     public function reportUselessTests(bool $enabled): void
     {
@@ -117,6 +124,9 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
             $this->fire(Events::TEST_BEFORE, new TestEvent($this));
 
             foreach ($this->hooks as $hook) {
+                if ($hook === 'codeCoverage' && !$this->collectCodeCoverage) {
+                    continue;
+                }
                 if (method_exists($this, $hook . 'Start')) {
                     $this->{$hook . 'Start'}();
                 }
@@ -167,6 +177,9 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
         }
 
         foreach (array_reverse($this->hooks) as $hook) {
+            if ($hook === 'codeCoverage' && !$this->collectCodeCoverage) {
+                continue;
+            }
             if (method_exists($this, $hook . 'End')) {
                 $this->{$hook . 'End'}($status, $time, $e);
             }

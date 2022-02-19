@@ -28,7 +28,7 @@ class CoverGuy extends \Codeception\Actor
         $this->seeInShellOutput(
             <<<EOF
 info
-  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  4/  4)
+  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  3/  3)
 EOF
         );
     }

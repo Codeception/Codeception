@@ -17,7 +17,6 @@ trait CodeCoverage
 
     public function codeCoverageStart(): void
     {
-        $testResult = $this->getTestResultObject();
         if (!PHPUnitCoverage::isActive()) {
             return;
         }
@@ -27,7 +26,6 @@ trait CodeCoverage
 
     public function codeCoverageEnd(string $status, float $time): void
     {
-        $testResult = $this->getTestResultObject();
         if (!PHPUnitCoverage::isActive()) {
             return;
         }

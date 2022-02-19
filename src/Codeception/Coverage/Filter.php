@@ -34,11 +34,6 @@ class Filter
         return self::$c3;
     }
 
-    public function getPhpCodeCoverage(): ?CodeCoverage
-    {
-        return $this->phpCodeCoverage;
-    }
-
     /**
      * @throws ConfigurationException
      */
