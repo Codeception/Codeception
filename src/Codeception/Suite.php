@@ -51,6 +51,8 @@ class Suite extends TestSuite
 
     private bool $reportUselessTests = false;
 
+    private bool $collectCodeCoverage = false;
+
     public function __construct(private EventDispatcher $dispatcher)
     {
         parent::__construct('', '');
@@ -59,6 +61,11 @@ class Suite extends TestSuite
     public function reportUselessTests(bool $enabled): void
     {
         $this->reportUselessTests = $enabled;
+    }
+
+    public function collectCodeCoverage(bool $enabled): void
+    {
+        $this->collectCodeCoverage = $enabled;
     }
 
     public function run(TestResult $result): void
@@ -103,6 +110,7 @@ class Suite extends TestSuite
             } elseif ($test instanceof Test) {
                 $test->setEventDispatcher($this->dispatcher);
                 $test->reportUselessTests($this->reportUselessTests);
+                $test->collectCodeCoverage($this->collectCodeCoverage);
                 $test->run($result);
             }
         }

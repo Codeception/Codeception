@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Codeception\Coverage\Subscriber;
 
+use Codeception\Coverage\Filter;
 use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
+use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\Remote;
+use Exception;
 use PHPUnit\Runner\CodeCoverage as PHPUnitCodeCoverage;
 
 /**
@@ -31,6 +35,9 @@ class Local extends SuiteSubscriber
         return !$this->module instanceof Remote && $this->settings['enabled'];
     }
 
+    /**
+     * @throws ConfigurationException|ModuleException|Exception
+     */
     public function beforeSuite(SuiteEvent $event): void
     {
         $this->applySettings($event->getSettings());
@@ -38,7 +45,12 @@ class Local extends SuiteSubscriber
         if (!$this->isEnabled()) {
             return;
         }
-        $this->applyFilter();
+
+        $event->getSuite()->collectCodeCoverage(true);
+
+        Filter::setup($this->coverage)
+            ->whiteList($this->filters)
+            ->blackList($this->filters);
     }
 
     public function afterSuite(SuiteEvent $event): void
