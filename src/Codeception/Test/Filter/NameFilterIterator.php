@@ -36,15 +36,14 @@ class NameFilterIterator extends RecursiveFilterIterator
     }
 
     /**
-     * @TODO fix data provider matching for TestCase
      * @throws Exception
      */
     protected function setFilter(string $filter): void
     {
         if (RegularExpression::safeMatch($filter, '') === false) {
             // Handles:
-            //  * testAssertEqualsSucceeds#4
-            //  * testAssertEqualsSucceeds#4-8
+            //  * :testAssertEqualsSucceeds#4
+            //  * "testAssertEqualsSucceeds#4-8
             if (preg_match('/^(.*?)#(\d+)(?:-(\d+))?$/', $filter, $matches)) {
                 if (isset($matches[3]) && $matches[2] < $matches[3]) {
                     $filter = sprintf(
@@ -62,8 +61,8 @@ class NameFilterIterator extends RecursiveFilterIterator
                     );
                 }
             } // Handles:
-            //  * testDetermineJsonError@JSON_ERROR_NONE
-            //  * testDetermineJsonError@JSON.*
+            //  * :testDetermineJsonError@JSON_ERROR_NONE
+            //  * :testDetermineJsonError@JSON.*
             elseif (preg_match('/^(.*?)@(.+)$/', $filter, $matches)) {
                 $filter = sprintf(
                     '%s.*with data set "%s"$',
@@ -100,13 +99,7 @@ class NameFilterIterator extends RecursiveFilterIterator
         if ($test instanceof ErrorTestCase || $test instanceof WarningTestCase) {
             $name = $test->getMessage();
         } else {
-            $name = Descriptor::getTestSignature($test);
-            $index = Descriptor::getTestDataSetIndex($test);
-            // TODO fix getTestDataSetIndex for TestCase
-
-            if (!is_null($index)) {
-                $name .= " with data set #{$index}";
-            }
+            $name = Descriptor::getTestSignature($test) . Descriptor::getTestDataSetIndex($test);
         }
 
         $accepted = preg_match($this->filter, $name, $matches);

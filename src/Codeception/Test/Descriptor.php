@@ -6,6 +6,7 @@ namespace Codeception\Test;
 
 use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\Plain;
+use Codeception\TestInterface;
 use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\TestCase;
@@ -111,11 +112,21 @@ class Descriptor
     /**
      * Provides a test data set index
      */
-    public static function getTestDataSetIndex(SelfDescribing $testCase): ?int
+    public static function getTestDataSetIndex(SelfDescribing $testCase): string
     {
-        if ($testCase instanceof Descriptive) {
-            return $testCase->getMetadata()->getIndex();
+        if ($testCase instanceof TestCase) {
+            $index = $testCase->getDataSetAsString();
+            if ($index !== '') {
+                return $index;
+            }
         }
-        return null;
+        if ($testCase instanceof TestInterface) {
+            $index = $testCase->getMetadata()->getIndex();
+            if ($index === null) {
+                return '';
+            }
+            return " with data set #{$index}";
+        }
+        return '';
     }
 }
