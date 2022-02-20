@@ -52,7 +52,7 @@
     },
     "require-dev": {
         "ext-simplexml": "*",
-        "vlucas/phpdotenv": "^5.0",
+        "vlucas/phpdotenv": "^5.1",
         "symfony/process": ">=4.4 <7.0",
         "symfony/dotenv": ">=4.4 <7.0",
         "codeception/lib-innerbrowser": "*@dev",
