@@ -10,7 +10,7 @@ use Page\DemoPageObject;
  */
 class CodeceptionIssue4413Cest
 {
-  // #3410: original case 1
+    // #3410: original case 1
     public function twoCommentStepsInARow(DumbGuy $I)
     {
         $I->comment('no metaStep');
