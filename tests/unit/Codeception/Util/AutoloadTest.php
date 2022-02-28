@@ -8,7 +8,6 @@ use Codeception\Util\MockAutoload as Autoload;
 
 class AutoloadTest extends \Codeception\PHPUnit\TestCase
 {
-
     protected function _setUp()
     {
         Autoload::setFiles([

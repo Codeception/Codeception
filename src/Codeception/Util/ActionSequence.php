@@ -64,7 +64,7 @@ class ActionSequence
      */
     public static function build(): self
     {
-        return new self;
+        return new self();
     }
 
     public function __call(string $action, array $arguments): self

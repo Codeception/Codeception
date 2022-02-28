@@ -47,7 +47,7 @@ class SelfUpdate extends Command
     {
         $this->filename = $_SERVER['argv'][0] ?? Phar::running(false);
         $this
-            ->setAliases(array('selfupdate'))
+            ->setAliases(['selfupdate'])
             ->setDescription(
                 sprintf(
                     'Upgrade <comment>%s</comment> to the latest version',

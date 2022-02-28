@@ -20,8 +20,7 @@ class DumbGuy extends \Codeception\Actor
 {
     use _generated\DumbGuyActions;
 
-   /**
-    * Define custom actions here
-    */
-
+    /**
+     * Define custom actions here
+     */
 }

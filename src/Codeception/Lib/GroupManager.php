@@ -190,6 +190,6 @@ class GroupManager
             return [];
         }
 
-        return (new Groups)->groups($className, $methodName);
+        return (new Groups())->groups($className, $methodName);
     }
 }

@@ -28,8 +28,8 @@
      * glue::stick($urls);
      *
      */
-    class glue {
-
+    class glue
+    {
         /**
          * stick
          *
@@ -41,8 +41,8 @@
          * @throws  BadMethodCallException  Thrown if a corresponding GET,POST is not found
          *
          */
-        static function stick (array $urls) {
-
+        public static function stick(array $urls)
+        {
             $method = strtoupper($_SERVER['REQUEST_METHOD']);
             $path = $_SERVER['REQUEST_URI'];
 
@@ -56,7 +56,7 @@
                 if (preg_match("/{$regex}/i", $path, $matches)) {
                     $found = true;
                     if (class_exists($class)) {
-                        $obj = new $class;
+                        $obj = new $class();
                         if (method_exists($obj, $method)) {
                             $obj->$method($matches);
                         } else {

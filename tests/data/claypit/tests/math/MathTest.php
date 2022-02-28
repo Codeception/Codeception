@@ -4,9 +4,9 @@ use Math\CalcHelper as Calc;
 
 class MathTest extends \Codeception\Test\Unit
 {
-   /**
-    * @var \MathTester
-    */
+    /**
+     * @var \MathTester
+     */
     protected MathTester $tester;
 
     /**

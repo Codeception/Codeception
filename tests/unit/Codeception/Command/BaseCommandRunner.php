@@ -83,15 +83,15 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
                 $self->saved[$file] = $output;
                 return true;
             },
-            'getGlobalConfig' => fn(): array => $self->config,
-            'getSuiteConfig'  => fn(): array => $self->config,
+            'getGlobalConfig' => fn (): array => $self->config,
+            'getSuiteConfig'  => fn (): array => $self->config,
             'createDirectoryFor' => function ($path, $testName): string {
                 $path = rtrim($path, DIRECTORY_SEPARATOR);
                 $testName = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $testName);
                 return pathinfo($path . DIRECTORY_SEPARATOR . $testName, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
             },
-            'getSuites'       => fn(): array => ['shire'],
-            'getApplication'  => fn(): \Codeception\Util\Maybe => new \Codeception\Util\Maybe
+            'getSuites'       => fn (): array => ['shire'],
+            'getApplication'  => fn (): \Codeception\Util\Maybe => new \Codeception\Util\Maybe()
         ];
         $mockedMethods = array_merge($mockedMethods, $extraMethods);
 

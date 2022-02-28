@@ -5,20 +5,20 @@
  * @author    Tobias Matthaiou <tm@solutionDrive.de>
  * @date      27.01.16
  */
+
 namespace Project\Command;
 
-use \Symfony\Component\Console\Command\Command;
-use \Codeception\CustomCommandInterface;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
+use Codeception\CustomCommandInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @see \Project\Command\MyCustomCommandTest
  */
 class MyCustomCommand extends Command implements CustomCommandInterface
 {
-
     use \Codeception\Command\Shared\FileSystemTrait;
     use \Codeception\Command\Shared\ConfigTrait;
 
@@ -35,9 +35,9 @@ class MyCustomCommand extends Command implements CustomCommandInterface
      */
     protected function configure()
     {
-        $this->setDefinition(array(
+        $this->setDefinition([
             new InputOption('friendly', 'f', InputOption::VALUE_NONE, 'The Message will be friendly'),
-        ));
+        ]);
 
         parent::configure();
     }

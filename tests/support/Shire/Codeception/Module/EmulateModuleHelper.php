@@ -1,4 +1,5 @@
 <?php
+
 namespace Shire\Codeception\Module;
 
 // here you can define custom functions for CodeGuy

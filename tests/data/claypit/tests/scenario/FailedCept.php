@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 $I = new ScenarioGuy($scenario);
 $I->wantTo('fail when file is not found');
 $I->amInPath('.');

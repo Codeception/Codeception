@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 final class IncludedCest
 {
-
     public function _before()
     {
         $logDir = codecept_root_dir('tests/data/included/_log');
@@ -169,7 +168,7 @@ final class IncludedCest
         $I->seeInShellOutput('Shire\\TestGuy');
     }
 
-	/**
+    /**
       * @before moveToIncluded
       * @param CliGuy $I
       */
@@ -199,8 +198,8 @@ final class IncludedCest
     /**
      * @param CliGuy $I
      */
-    public function includedSuitesAreNotRunTwice (CliGuy $I) {
-
+    public function includedSuitesAreNotRunTwice(CliGuy $I)
+    {
         $I->amInPath('tests/data/included_two_config_files');
         $I->executeCommand('run');
         $I->seeInShellOutput('FooTest');

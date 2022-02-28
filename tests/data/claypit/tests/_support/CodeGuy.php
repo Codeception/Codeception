@@ -20,8 +20,7 @@ class CodeGuy extends \Codeception\Actor
 {
     use _generated\CodeGuyActions;
 
-   /**
-    * Define custom actions here
-    */
-
+    /**
+     * Define custom actions here
+     */
 }

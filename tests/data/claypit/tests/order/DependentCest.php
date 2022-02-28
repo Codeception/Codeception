@@ -1,14 +1,13 @@
 <?php
 
 
-class DependentCest {
-
+class DependentCest
+{
     /**
      * @depends firstOne
      */
     public function secondOne(OrderGuy $I)
     {
-
     }
 
     public function firstOne(OrderGuy $I)

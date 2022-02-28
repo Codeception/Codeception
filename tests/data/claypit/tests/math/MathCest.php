@@ -1,6 +1,6 @@
 <?php
 
-use \Math\CalcHelper as Calc;
+use Math\CalcHelper as Calc;
 
 class MathCest
 {

@@ -37,5 +37,4 @@ final class ConfigNoActorCest
         $I->dontSeeInThisFile('$tester');
         $I->deleteFile('tests/SomeTest.php');
     }
-
 }

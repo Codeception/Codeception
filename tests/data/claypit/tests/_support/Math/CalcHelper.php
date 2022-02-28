@@ -1,4 +1,5 @@
 <?php
+
 namespace Math;
 
 class CalcHelper extends \Codeception\Module

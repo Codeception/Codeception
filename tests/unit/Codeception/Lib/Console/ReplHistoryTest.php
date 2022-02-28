@@ -58,7 +58,9 @@ class ReplHistoryTest extends Unit
 
         $history = Configuration::outputDir() . 'stashed-commands';
         $this->assertFileExists($history);
-        $this->assertStringEqualsFile($history, <<<CONTENTS
+        $this->assertStringEqualsFile(
+            $history,
+            <<<CONTENTS
 \$I->click(".command-1");
 \$I->click(".command-2");
 \$I->click(".command-3");

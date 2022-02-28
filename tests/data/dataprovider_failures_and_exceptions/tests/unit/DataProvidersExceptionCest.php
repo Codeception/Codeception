@@ -2,7 +2,6 @@
 
 class DataProvidersExceptionCest
 {
-
     /**
      * @dataProvider triangles
      */
@@ -17,5 +16,4 @@ class DataProvidersExceptionCest
     {
         throw new \Exception("Something went wrong!!!");
     }
-
 }

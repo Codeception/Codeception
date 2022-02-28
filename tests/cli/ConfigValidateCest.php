@@ -36,5 +36,4 @@ final class ConfigValidateCest
         $I->executeCommand('config:validate -o "params: foo: bar" --no-ansi');
         $I->seeInShellOutput('foo => bar');
     }
-
 }

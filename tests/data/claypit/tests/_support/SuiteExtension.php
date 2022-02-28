@@ -18,7 +18,7 @@ class SuiteExtension extends Extension
     /** @var array */
     protected array $config = ['config1' => 'novalue', 'config2' => 'novalue'];
 
-    public function beforeSuite(SuiteEvent $e )
+    public function beforeSuite(SuiteEvent $e)
     {
         $this->writeln('Config1: ' . $this->config['config1']);
         $this->writeln('Config2: ' . $this->config['config2']);

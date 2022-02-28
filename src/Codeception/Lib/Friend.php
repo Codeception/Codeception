@@ -16,7 +16,7 @@ class Friend
 
     public function __construct(protected string $name, protected Actor $actor, array $modules = [])
     {
-        $this->multiSessionModules = array_filter($modules, fn($m): bool => $m instanceof MultiSession);
+        $this->multiSessionModules = array_filter($modules, fn ($m): bool => $m instanceof MultiSession);
 
         if (empty($this->multiSessionModules)) {
             throw new TestRuntimeException("No multisession modules used. Can't instantiate friend");

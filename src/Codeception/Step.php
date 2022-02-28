@@ -305,7 +305,7 @@ abstract class Step implements Stringable
             }
 
             // in case arguments were passed by reference, copy args array to ensure dereference.  array_values() does not dereference values
-            $this->metaStep = new Step\Meta($step['function'], array_map(fn($i) => $i, array_values($step['args'])));
+            $this->metaStep = new Step\Meta($step['function'], array_map(fn ($i) => $i, array_values($step['args'])));
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // page objects or other classes should not be included with "I"

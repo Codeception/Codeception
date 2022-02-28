@@ -9,5 +9,4 @@ class SkipByGroupTest extends \Codeception\Test\Unit
     {
         $this->assertTrue(true);
     }
-
 }

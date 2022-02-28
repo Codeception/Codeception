@@ -1,6 +1,7 @@
 <?php
-class ReorderCest {
 
+class ReorderCest
+{
     /**
      * @before a0
      * @after a2
@@ -47,5 +48,4 @@ class ReorderCest {
     {
         $I->appendToFile('6');
     }
-
 }

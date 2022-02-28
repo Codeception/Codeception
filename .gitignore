@@ -41,3 +41,5 @@ tests/data/snapshots/tests/_data/Snapshot.UserSnapshot.json
 .DS_Store
 robo.phar
 .env
+.php-cs-fixer.cache
+.php-cs-fixer.php

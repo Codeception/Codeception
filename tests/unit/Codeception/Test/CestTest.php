@@ -7,7 +7,6 @@ declare(strict_types=1);
  */
 class CestTest extends \Codeception\Test\Unit
 {
-
     /**
      * @group core
      */

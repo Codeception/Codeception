@@ -169,5 +169,4 @@ class GroupManagerTest extends \Codeception\Test\Unit
 
 class DescriptiveTestCase extends \Codeception\Test\Unit
 {
-
 }

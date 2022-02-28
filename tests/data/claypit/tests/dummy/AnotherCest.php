@@ -2,11 +2,11 @@
 
 class AnotherCest
 {
-
     /**
      * @group ok
      */
-    public function optimistic(DumbGuy $I) {
+    public function optimistic(DumbGuy $I)
+    {
         $I->expect('everything is ok');
     }
 
@@ -14,5 +14,4 @@ class AnotherCest
     {
         $I->expect('everything is bad');
     }
-
 }

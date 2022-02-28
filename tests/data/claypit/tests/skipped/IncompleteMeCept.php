@@ -1,4 +1,5 @@
 <?php
+
 // @group notorun
 // @incomplete
 $I = new SkipGuy($scenario);

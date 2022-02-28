@@ -1,4 +1,5 @@
 <?php
+
 class BasicTest extends \Codeception\Test\Unit
 {
     /**

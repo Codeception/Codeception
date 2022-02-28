@@ -1,8 +1,9 @@
 <?php
+
 class SampleTest extends \PHPUnit\Framework\TestCase
 {
-    public function testOfTest() {
+    public function testOfTest()
+    {
         $this->assertTrue(true);
     }
-    
 }

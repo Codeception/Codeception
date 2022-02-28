@@ -1,21 +1,18 @@
 <?php
-class SomeErrorClass {
 
-
+class SomeErrorClass
+{
     public function some_method()
     {
         $a = [];
 
         $a .= 'test';
-
     }
-
 }
 
 
 class ErrorTest extends \Codeception\Test\Unit
 {
-
     /**
      * @var \UnitTester|\CodeGuy
      */
@@ -24,13 +21,10 @@ class ErrorTest extends \Codeception\Test\Unit
     /**
      * @group error
      */
-    function testGetError()
+    public function testGetError()
     {
-
-        $test = new SomeErrorClass;
+        $test = new SomeErrorClass();
 
         $test->some_method();
-
     }
-
 }

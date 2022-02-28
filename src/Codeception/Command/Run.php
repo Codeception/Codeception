@@ -507,7 +507,7 @@ class Run extends Command
             $config = Configuration::config($currentDir);
 
             if (!empty($defaultConfig['groups'])) {
-                $groups = array_map(fn($g) => $absolutePath . $g, $defaultConfig['groups']);
+                $groups = array_map(fn ($g) => $absolutePath . $g, $defaultConfig['groups']);
                 Configuration::append(['groups' => $groups]);
             }
 

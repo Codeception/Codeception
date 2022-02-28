@@ -1,7 +1,7 @@
 <?php
-class FailedCest {
 
-
+class FailedCest
+{
     protected function a($I)
     {
         $I->appendToFile('a');
@@ -32,5 +32,4 @@ class FailedCest {
     {
         $I->appendToFile('S');
     }
-
 }

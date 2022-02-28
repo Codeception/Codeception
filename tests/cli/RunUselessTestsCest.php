@@ -14,11 +14,13 @@ class RunUselessTestsCest
         $I->seeInShellOutput('There were 4 useless tests:');
 
         if (DIRECTORY_SEPARATOR === '/') {
-            $I->seeInShellOutput('1) UselessCept: Make no assertions
+            $I->seeInShellOutput(
+                '1) UselessCept: Make no assertions
  Test  tests/unit/UselessCept.php
 This test did not perform any assertions'
             );
-            $I->seeInShellOutput('
+            $I->seeInShellOutput(
+                '
 2) UselessCest: Make no assertions
  Test  tests/unit/UselessCest.php:makeNoAssertions
 This test did not perform any assertions
@@ -27,12 +29,14 @@ Scenario Steps:
 
  1. // make no assertions'
             );
-            $I->seeInShellOutput('
+            $I->seeInShellOutput(
+                '
 3) UselessTest: Make no assertions
  Test  tests/unit/UselessTest.php:testMakeNoAssertions
 This test did not perform any assertions'
             );
-            $I->seeInShellOutput('
+            $I->seeInShellOutput(
+                '
 4) UselessTest: Make unexpected assertion
  Test  tests/unit/UselessTest.php:testMakeUnexpectedAssertion
 This test is annotated with "@doesNotPerformAssertions" but performed 1 assertions'
@@ -41,11 +45,13 @@ This test is annotated with "@doesNotPerformAssertions" but performed 1 assertio
             return;
         }
 
-        $I->seeInShellOutput('1) UselessCept: Make no assertions
+        $I->seeInShellOutput(
+            '1) UselessCept: Make no assertions
  Test  tests\unit\UselessCept.php
 This test did not perform any assertions'
         );
-        $I->seeInShellOutput('
+        $I->seeInShellOutput(
+            '
 2) UselessCest: Make no assertions
  Test  tests\unit\UselessCest.php:makeNoAssertions
 This test did not perform any assertions
@@ -54,12 +60,14 @@ Scenario Steps:
 
  1. // make no assertions'
         );
-        $I->seeInShellOutput('
+        $I->seeInShellOutput(
+            '
 3) UselessTest: Make no assertions
  Test  tests\unit\UselessTest.php:testMakeNoAssertions
 This test did not perform any assertions'
         );
-        $I->seeInShellOutput('
+        $I->seeInShellOutput(
+            '
 4) UselessTest: Make unexpected assertion
  Test  tests\unit\UselessTest.php:testMakeUnexpectedAssertion
 This test is annotated with "@doesNotPerformAssertions" but performed 1 assertions'
@@ -105,5 +113,5 @@ This test is annotated with "@doesNotPerformAssertions" but performed 1 assertio
         $I->seeInThisFile('UselessCest');
         $I->seeInThisFile('UselessTest');
         $I->seeInThisFile('UselessCept');
-   }
+    }
 }

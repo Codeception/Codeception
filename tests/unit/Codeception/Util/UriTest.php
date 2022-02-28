@@ -53,7 +53,7 @@ class UriTest extends \Codeception\Test\Unit
         $this->assertSame('/form/?param=1#anchor2', Uri::mergeUrls('/form/?param=1#anchor1', '#anchor2'));
         $this->assertSame('/form/?param=2', Uri::mergeUrls('/form/?param=1#anchor', '?param=2'));
         $this->assertSame('/page/', Uri::mergeUrls('/form/?param=1#anchor', '/page/'));
-    }   
+    }
 
     /**
      * @Issue https://github.com/Codeception/Codeception/pull/4847
@@ -112,14 +112,15 @@ class UriTest extends \Codeception\Test\Unit
     {
         $this->assertSame(
             'https://codeception.com/test',
-            Uri::mergeUrls('https://codeception.com', 'test'));
+            Uri::mergeUrls('https://codeception.com', 'test')
+        );
     }
 
     public function testMergeUrlsWhenBaseUriEndsWithSlashButUriPathHasNoLeadingSlash()
     {
         $this->assertSame(
             'https://codeception.com/test',
-            Uri::mergeUrls('https://codeception.com/', 'test'));
+            Uri::mergeUrls('https://codeception.com/', 'test')
+        );
     }
-
 }

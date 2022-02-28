@@ -79,7 +79,7 @@ class Di
 
         $reflectedConstructor = $reflectedClass->getConstructor();
         if (is_null($reflectedConstructor)) {
-            $object = new $className;
+            $object = new $className();
         } else {
             try {
                 if (!$constructorArgs) {

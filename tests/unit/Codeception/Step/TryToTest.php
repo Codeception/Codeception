@@ -43,5 +43,4 @@ class TryToTest extends \PHPUnit\Framework\TestCase
     {
         throw new \Exception('Error');
     }
-
 }

@@ -262,7 +262,7 @@ class JUnitReporter implements EventSubscriberInterface
 
         if (method_exists($test, 'getNumAssertions')) {
             $numAssertions = $test->getNumAssertions();
-        } else if (method_exists($test, 'numberOfAssertionsPerformed')) {
+        } elseif (method_exists($test, 'numberOfAssertionsPerformed')) {
             $numAssertions = $test->numberOfAssertionsPerformed();
         }
 

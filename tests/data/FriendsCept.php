@@ -1,4 +1,5 @@
 <?php
+
 $I = new WebGuy($scenario);
 $I->wantTo('call friends to try multi session');
 $I->amOnPage('/info');

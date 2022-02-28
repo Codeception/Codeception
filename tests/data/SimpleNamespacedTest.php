@@ -2,10 +2,10 @@
 /**
  * Also test multiple namespaces/classes per single file.
  */
+
 namespace SimpleA {
     class SimpleTest extends \Codeception\Test\Unit
     {
-
         public function testFoo(): bool
         {
             return true;
@@ -15,7 +15,6 @@ namespace SimpleA {
         {
             return true;
         }
-
     }
 }
 
@@ -26,7 +25,5 @@ namespace SimpleB {
         {
             return true;
         }
-
     }
 }
-

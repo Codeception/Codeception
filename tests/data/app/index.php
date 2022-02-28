@@ -1,5 +1,8 @@
 <?php
-if (!headers_sent()) header('Content-Type: text/html; charset=UTF-8');
+
+if (!headers_sent()) {
+    header('Content-Type: text/html; charset=UTF-8');
+}
 
 require_once __DIR__.'/../../../autoload.php';
 
@@ -13,7 +16,7 @@ require_once(__DIR__ . '/glue.php');
 require_once(__DIR__ . '/data.php');
 require_once(__DIR__ . '/controllers.php');
 
-$urls = array(
+$urls = [
     '/' => 'index',
     '/info' => 'info',
     '/cookies' => 'cookies',
@@ -49,6 +52,6 @@ $urls = array(
     '/basehref' => 'basehref',
     '/jserroronload' => 'jserroronload',
     '/minimal' => 'minimal',
-);
+];
 
 glue::stick($urls);

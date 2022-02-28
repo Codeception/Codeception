@@ -165,7 +165,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
 
             if ($this->reportUselessTests && $this->assertionCount === 0 && $eventType === Events::TEST_SUCCESS) {
                 $eventType = Events::TEST_USELESS;
-                $e = new RiskyBecauseNoAssertionsWerePerformedException;
+                $e = new RiskyBecauseNoAssertionsWerePerformedException();
                 $result->addFailure($this, $e, $time);
             }
 

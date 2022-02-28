@@ -1,7 +1,7 @@
 <?php
+
 class MageGuildCest
 {
-
     /**
      * @env magic
      * @env dark
@@ -51,5 +51,4 @@ class MageGuildCest
     {
         $I->castFireball();
     }
-
 }

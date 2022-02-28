@@ -31,7 +31,7 @@ class BeforeAfterTest implements EventSubscriberInterface
     {
         foreach ($event->getSuite()->tests() as $test) {
             $testClass = $test::class;
-            $this->hooks[$testClass] = (new HookMethods)->hookMethods($testClass);
+            $this->hooks[$testClass] = (new HookMethods())->hookMethods($testClass);
         }
         $this->runHooks('beforeClass');
     }
