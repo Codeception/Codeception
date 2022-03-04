@@ -168,17 +168,18 @@ class ReflectionHelper
      */
     public static function phpEncodeArray(array $array): string
     {
-        $isPlainArray = fn(array $value): bool => ($value === [])
+        $isPlainArray = fn (array $value): bool => ($value === [])
             || (
                 (array_keys($value) === range(0, count($value) - 1))
-                && ([] === array_filter(array_keys($value), 'is_string')));
+                && ([] === array_filter(array_keys($value), 'is_string'))
+            );
 
         if ($isPlainArray($array)) {
             return '[' . implode(', ', array_map([self::class, 'phpEncodeValue'], $array)) . ']';
         }
 
         $values = array_map(
-            fn($key): string => self::phpEncodeValue($key) . ' => ' . self::phpEncodeValue($array[$key]),
+            fn ($key): string => self::phpEncodeValue($key) . ' => ' . self::phpEncodeValue($array[$key]),
             array_keys($array)
         );
 

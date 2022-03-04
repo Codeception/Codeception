@@ -36,5 +36,4 @@ class RetryTest extends \PHPUnit\Framework\TestCase
         $this->shouldFail = false;
         throw new \Exception('Error');
     }
-
 }

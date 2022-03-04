@@ -122,7 +122,7 @@ class Suite extends TestSuite
     {
         Assert::resetCount();
 
-        $shouldCodeCoverageBeCollected = (new CodeCoverageMetadataApi)->shouldCodeCoverageBeCollectedFor(
+        $shouldCodeCoverageBeCollected = (new CodeCoverageMetadataApi())->shouldCodeCoverageBeCollectedFor(
             $test::class,
             $test->getName(false)
         );
@@ -154,7 +154,7 @@ class Suite extends TestSuite
             CodeCoverage::start($test);
         }
 
-        $timer = new Timer;
+        $timer = new Timer();
         $timer->start();
 
         try {
@@ -206,7 +206,7 @@ class Suite extends TestSuite
             $test->numberOfAssertionsPerformed() === 0) {
             $failure = true;
             $useless = true;
-            $e = new RiskyBecauseNoAssertionsWerePerformedException;
+            $e = new RiskyBecauseNoAssertionsWerePerformedException();
         }
 
         if ($collectCodeCoverage) {
@@ -216,12 +216,12 @@ class Suite extends TestSuite
 
             if ($append) {
                 try {
-                    $linesToBeCovered = (new CodeCoverageMetadataApi)->linesToBeCovered(
+                    $linesToBeCovered = (new CodeCoverageMetadataApi())->linesToBeCovered(
                         $test::class,
                         $test->getName(false)
                     );
 
-                    $linesToBeUsed = (new CodeCoverageMetadataApi)->linesToBeUsed(
+                    $linesToBeUsed = (new CodeCoverageMetadataApi())->linesToBeUsed(
                         $test::class,
                         $test->getName(false)
                     );

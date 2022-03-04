@@ -1,11 +1,12 @@
 <?php
+
 use Codeception\Event\TestEvent;
 use Codeception\GroupObject;
 
 class MyGroupHighlighter extends GroupObject
 {
     /** @var string */
-    static $group = 'notorun';
+    public static $group = 'notorun';
 
     public function _before(TestEvent $event)
     {

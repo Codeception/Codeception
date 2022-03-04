@@ -219,7 +219,7 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        return (new CodeCoverage)->linesToBeCovered($class, $method);
+        return (new CodeCoverage())->linesToBeCovered($class, $method);
     }
 
     public function getLinesToBeUsed(): array
@@ -227,6 +227,6 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        return (new CodeCoverage)->linesToBeUsed($class, $method);
+        return (new CodeCoverage())->linesToBeUsed($class, $method);
     }
 }

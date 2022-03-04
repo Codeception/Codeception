@@ -24,8 +24,8 @@ final class DataProviderFailuresAndExceptionsCest
          * As some systems have php_uname and co disabled, we use the DIRECTORY_SEPARATOR constant to
          * figure out if we are running on windows or not.
          */
-        $devNull = (DIRECTORY_SEPARATOR === '\\')?'NUL':'/dev/null';
-        $I->executeCommand('run -n -v unit DataProvidersFailureCest 2> '.$devNull,false);
+        $devNull = (DIRECTORY_SEPARATOR === '\\') ? 'NUL' : '/dev/null';
+        $I->executeCommand('run -n -v unit DataProvidersFailureCest 2> '.$devNull, false);
         // We should only see the version headers in stdout when there is this kind of failure.
         $I->canSeeShellOutputMatches('#^Codeception PHP Testing Framework v.+\nPowered by PHPUnit .+ by Sebastian Bergmann and contributors\.#');
         $I->seeResultCodeIs(1);
@@ -40,7 +40,7 @@ final class DataProviderFailuresAndExceptionsCest
      */
     public function runTestWithDataProvidersFailureStderr(CliGuy $I)
     {
-        $I->executeCommand('run -n unit DataProvidersFailureCest 2>&1',false);
+        $I->executeCommand('run -n unit DataProvidersFailureCest 2>&1', false);
         $I->seeInShellOutput("Couldn't parse test");
         $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle");
         $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
@@ -66,7 +66,7 @@ final class DataProviderFailuresAndExceptionsCest
      */
     public function runTestWithDataProvidersFailureStderrVerbose(CliGuy $I)
     {
-        $I->executeCommand('run -n unit DataProvidersFailureCest -v 2>&1',false);
+        $I->executeCommand('run -n unit DataProvidersFailureCest -v 2>&1', false);
         $I->seeInShellOutput("Couldn't parse test");
         $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle");
         $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
@@ -99,7 +99,7 @@ final class DataProviderFailuresAndExceptionsCest
          * As some systems have php_uname and co disabled, we use the DIRECTORY_SEPARATOR constant to
          * figure out if we are running on windows or not.
          */
-        $devNull = (DIRECTORY_SEPARATOR === '\\')?'NUL':'/dev/null';
+        $devNull = (DIRECTORY_SEPARATOR === '\\') ? 'NUL' : '/dev/null';
         $I->executeCommand('run -n unit DataProvidersExceptionCest -v 2> '.$devNull, false);
         // Depending on the test environment, we either see nothing or just the headers here.
         $I->canSeeShellOutputMatches('/^Codeception PHP Testing Framework v.+\nPowered by PHPUnit .+ by Sebastian Bergmann and contributors\./');

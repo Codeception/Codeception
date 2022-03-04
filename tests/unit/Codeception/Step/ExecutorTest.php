@@ -13,7 +13,7 @@ class ExecutorTest extends \PHPUnit\Framework\TestCase
     {
         $expected = $returnValue;
 
-        $executor = new \Codeception\Step\Executor(fn(): bool => $returnValue);
+        $executor = new \Codeception\Step\Executor(fn (): bool => $returnValue);
         $actual = $executor->run();
 
         $this->assertSame($expected, $actual);

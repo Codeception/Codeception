@@ -12,6 +12,6 @@ class InvalidDataProviderTest extends \Codeception\Test\Unit
 
     public function dependentProvider()
     {
-        throw new Exception;
+        throw new Exception();
     }
 }

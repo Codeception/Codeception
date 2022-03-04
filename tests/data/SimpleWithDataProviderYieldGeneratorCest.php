@@ -8,8 +8,9 @@ class SimpleWithDataProviderYieldGeneratorCest
      * @example ["fizz", "buzz"]
      * @example [null, "test"]
      */
-    public function helloWorld(\CodeGuy $I, \Codeception\Example $example) {
-        $I->execute(function($example) {
+    public function helloWorld(\CodeGuy $I, \Codeception\Example $example)
+    {
+        $I->execute(function ($example) {
             if (!is_array($example)) {
                 return false;
             }

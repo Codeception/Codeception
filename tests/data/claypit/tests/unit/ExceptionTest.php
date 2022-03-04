@@ -1,8 +1,8 @@
-<?php 
+<?php
+
 
 class ExceptionTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      * @group error
      */
@@ -10,4 +10,4 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
     {
         throw new \RuntimeException('Helllo!');
     }
-} 
+}

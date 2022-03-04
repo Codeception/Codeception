@@ -189,7 +189,7 @@ class Console implements EventSubscriberInterface
                 implode(
                     ', ',
                     array_map(
-                        fn($module) => $module->_getName(),
+                        fn ($module) => $module->_getName(),
                         $event->getSuite()->getModules()
                     )
                 )
@@ -255,7 +255,6 @@ class Console implements EventSubscriberInterface
         if (method_exists($test, 'numberOfAssertionsPerformed')) {
             $this->assertionCount += $test->numberOfAssertionsPerformed();
         }
-
     }
 
     public function afterResult(PrintResultEvent $event): void

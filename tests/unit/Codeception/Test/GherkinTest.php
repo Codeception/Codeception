@@ -8,7 +8,6 @@ declare(strict_types=1);
  */
 class GherkinTest extends \Codeception\Test\Unit
 {
-
     protected $feature;
 
     public static string $calls = '';
@@ -177,8 +176,6 @@ class GherkinTest extends \Codeception\Test\Unit
         $pattern = "there is a :arg1 product witch costs :arg2 €";
         $regex = $this->loader->makePlaceholderPattern($pattern);
         $this->assertMatchesRegularExpression($regex, 'there is a "football ball" product witch costs "1,5" €');
-
-
     }
 
     public function testMatchingEscapedPatterns()
@@ -209,7 +206,6 @@ class GherkinTest extends \Codeception\Test\Unit
 
 class GherkinTestContext
 {
-
     /**
      * @Given Jeff has bought a microwave for :param
      */
@@ -238,8 +234,6 @@ class GherkinTestContext
 
 class TagGherkinContext
 {
-
-
     /**
      * @When he returns the microwave
      */
@@ -251,7 +245,6 @@ class TagGherkinContext
 
 class GherkinInvalidContext
 {
-
     /**
      * @Given /I (?:use:am connected to) the database (?db:.+)/i
      */

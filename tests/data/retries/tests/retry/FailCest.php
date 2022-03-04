@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 
 class FailCest
 {
@@ -40,5 +41,4 @@ class FailCest
         $I->retry(3, 100);
         $I->retryFailFor(1);
     }
-
 }

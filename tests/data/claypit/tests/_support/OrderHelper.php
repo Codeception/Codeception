@@ -43,7 +43,7 @@ class OrderHelper extends Module
         $this->fail("intentionally");
     }
 
-    public function _beforeSuite($settings = array())
+    public function _beforeSuite($settings = [])
     {
         self::appendToFile('(');
     }

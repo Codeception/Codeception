@@ -6,7 +6,6 @@ namespace Codeception\Lib\Console;
 
 class MessageTest extends \Codeception\Test\Unit
 {
-
     // tests
     public function testCut()
     {
@@ -16,7 +15,7 @@ class MessageTest extends \Codeception\Test\Unit
         $message = new Message('очень длинный текст');
         $this->assertSame('очень длин', $message->cut(10)->getMessage());
     }
-    
+
     //test message cutting
     // @codingStandardsIgnoreStart
     public function testVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestName()

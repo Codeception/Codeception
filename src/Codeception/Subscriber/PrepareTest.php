@@ -42,7 +42,6 @@ class PrepareTest implements EventSubscriberInterface
         $di = $test->getMetadata()->getService('di');
 
         foreach ($prepareMethods as $method) {
-
             if ($test instanceof Cest) {
                 $di->injectDependencies($test->getTestClass(), $method);
             }

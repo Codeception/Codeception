@@ -107,7 +107,6 @@ class ReportPrinter implements ConsolePrinter
 
     public function afterResult(PrintResultEvent $event): void
     {
-
         $counts = [
             sprintf("Successful: %s", $this->successfulCount)
         ];

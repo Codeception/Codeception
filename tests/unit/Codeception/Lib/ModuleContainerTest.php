@@ -12,7 +12,6 @@ use Codeception\Test\Unit;
 // @codingStandardsIgnoreFile
 class ModuleContainerTest extends Unit
 {
-
     /**
      * @var ModuleContainer
      */

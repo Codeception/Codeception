@@ -122,7 +122,6 @@ class StepTest extends TestCase
         $this->assertSame('accept popup ', $output);
         $output = $step->toString(-5);
         $this->assertSame('accept popup ', $output);
-
     }
 
     public function testSeeMultiLineStringInSingleLine()

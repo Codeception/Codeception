@@ -631,7 +631,7 @@ EOF;
     private function appendErrorMessage(string $testPath, string $message): void
     {
         $this->errorMessages[$testPath] = array_merge(
-            array_key_exists($testPath, $this->errorMessages) ? $this->errorMessages[$testPath]: [],
+            array_key_exists($testPath, $this->errorMessages) ? $this->errorMessages[$testPath] : [],
             [$message]
         );
     }

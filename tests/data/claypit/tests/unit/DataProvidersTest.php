@@ -2,9 +2,9 @@
 
 class DataProvidersTest extends \Codeception\Test\Unit
 {
-   /**
-    * @var \CodeGuy
-    */
+    /**
+     * @var \CodeGuy
+     */
     protected CodeGuy $codeGuy;
 
     /**
@@ -18,11 +18,10 @@ class DataProvidersTest extends \Codeception\Test\Unit
 
     public function triangles(): array
     {
-        return array(
-            'real triangle' => array(3,4,5),
-            array(10,12,5),
-            array(7,10,15)
-        );
+        return [
+            'real triangle' => [3,4,5],
+            [10,12,5],
+            [7,10,15]
+        ];
     }
-
 }

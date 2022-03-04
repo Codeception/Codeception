@@ -20,8 +20,7 @@ class OrderGuy extends \Codeception\Actor
 {
     use _generated\OrderGuyActions;
 
-   /**
-    * Define custom actions here
-    */
-
+    /**
+     * Define custom actions here
+     */
 }

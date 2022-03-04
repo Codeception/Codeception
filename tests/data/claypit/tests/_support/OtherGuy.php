@@ -21,8 +21,7 @@ class OtherGuy extends \Codeception\Actor
     use _generated\OtherGuyActions;
     use \Codeception\Lib\Actor\Shared\Friend;
 
-   /**
-    * Define custom actions here
-    */
-
+    /**
+     * Define custom actions here
+     */
 }

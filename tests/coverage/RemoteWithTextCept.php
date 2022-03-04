@@ -1,4 +1,5 @@
 <?php
+
 $I = new CoverGuy($scenario);
 $I->wantTo('try generate remote codecoverage text report');
 $I->amInPath('tests/data/sandbox');

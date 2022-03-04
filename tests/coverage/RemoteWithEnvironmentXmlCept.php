@@ -1,4 +1,5 @@
 <?php
+
 $I = new CoverGuy($scenario);
 $I->wantTo('try generate codecoverage xml report with environment');
 $I->amInPath('tests/data/sandbox');

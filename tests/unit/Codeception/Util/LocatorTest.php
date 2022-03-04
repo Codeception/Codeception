@@ -7,7 +7,6 @@ use Facebook\WebDriver\WebDriverBy;
 
 class LocatorTest extends \PHPUnit\Framework\TestCase
 {
-
     public function testCombine()
     {
         $result = Locator::combine('//button[@value="Click Me"]', '//a[.="Click Me"]');

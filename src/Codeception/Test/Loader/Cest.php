@@ -47,7 +47,7 @@ class Cest implements LoaderInterface
             if (!(new ReflectionClass($testClass))->isInstantiable()) {
                 continue;
             }
-            $unit = new $testClass;
+            $unit = new $testClass();
 
             $methods = get_class_methods($testClass);
             foreach ($methods as $method) {
@@ -60,7 +60,7 @@ class Cest implements LoaderInterface
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
                 if ($rawExamples !== []) {
                     $examples = array_map(
-                        fn($v): ?array => Annotation::arrayValue($v),
+                        fn ($v): ?array => Annotation::arrayValue($v),
                         $rawExamples
                     );
                 }

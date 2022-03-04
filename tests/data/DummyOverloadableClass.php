@@ -7,9 +7,9 @@ class DummyOverloadableClass
      */
     protected $checkMe = 1;
 
-    protected array $properties = array('checkMeToo' => 1);
+    protected array $properties = ['checkMeToo' => 1];
 
-    function __construct($checkMe = 1)
+    public function __construct($checkMe = 1)
     {
         $this->checkMe = "constructed: ".$checkMe;
     }
@@ -29,7 +29,8 @@ class DummyOverloadableClass
         return "goAway";
     }
 
-    public function getCheckMe(): string {
+    public function getCheckMe(): string
+    {
         return $this->checkMe;
     }
 
@@ -49,11 +50,13 @@ class DummyOverloadableClass
         return true;
     }
 
-    public function exceptionalMethod(): void {
+    public function exceptionalMethod(): void
+    {
         throw new Exception('Catch it!');
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         //seeing as we're not implementing __set here, add check for __mocked
         $return = null;
         if ($name === '__mocked') {
@@ -65,7 +68,8 @@ class DummyOverloadableClass
         return $return;
     }
 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return $this->isMagical($name) && isset($this->properties[$name]);
     }
 

@@ -109,7 +109,7 @@ class Codecept
         $cliConfiguration = (new \PHPUnit\TextUI\CliArguments\Builder())->fromParameters([], []);
         $xmlConfiguration = \PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration::create();
         Registry::init($cliConfiguration, $xmlConfiguration);
-        return new TestResult;
+        return new TestResult();
     }
 
     /**

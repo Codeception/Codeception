@@ -1,7 +1,8 @@
 <?php
+
 namespace Group;
 
-use \Codeception\Event\TestEvent;
+use Codeception\Event\TestEvent;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.

@@ -1,4 +1,5 @@
 <?php
+
 namespace Page\Math;
 
 use MathTester;
@@ -37,7 +38,5 @@ class Trigonometry
     public function assertTanIsLessThen($tan, $val)
     {
         $this->mathTester->assertLessThan($val, $this->tan($tan));
-
     }
-
 }

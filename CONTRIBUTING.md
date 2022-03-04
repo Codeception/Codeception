@@ -6,7 +6,7 @@ Please check the guide for sending your contributions with Github at
 https://github.com/Codeception/Codeception/wiki/Git-workflow-for-Codeception-contributors
 
 ## Coding Standards
-All contributions must follow [PSR-2](https://www.php-fig.org/psr/psr-2/) coding standard.
+All contributions must follow [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard.
 
 ## Code
 **Bugfixes should be sent to the current stable branch, which is the same as major version number.**

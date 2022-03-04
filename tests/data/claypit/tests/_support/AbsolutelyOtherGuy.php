@@ -20,8 +20,7 @@ class AbsolutelyOtherGuy extends \Codeception\Actor
 {
     use _generated\AbsolutelyOtherGuyActions;
 
-   /**
-    * Define custom actions here
-    */
-
+    /**
+     * Define custom actions here
+     */
 }

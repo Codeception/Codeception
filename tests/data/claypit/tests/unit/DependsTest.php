@@ -1,6 +1,7 @@
 <?php
-class DependsTest extends \Codeception\Test\Unit {
 
+class DependsTest extends \Codeception\Test\Unit
+{
     /**
      * @group depends
      * @depends testOne
@@ -34,5 +35,4 @@ class DependsTest extends \Codeception\Test\Unit {
         $this->assertTrue(false);
         return 1;
     }
-
 }

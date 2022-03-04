@@ -30,5 +30,4 @@ class BeforeAfterClassTest extends \Codeception\Test\Unit
     {
         \Codeception\Module\OrderHelper::appendToFile('}');
     }
-
 }

@@ -6,7 +6,6 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class BuildTest extends BaseCommandRunner
 {
-
     /**
      * @var array
      */

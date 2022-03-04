@@ -1,13 +1,12 @@
-<?php 
+<?php
 
-class SimpleAdminGroupCest 
+
+class SimpleAdminGroupCest
 {
     /**
      * @group admin
      */
-    function testAdminGroup()
+    public function testAdminGroup()
     {
-
     }
-
 }

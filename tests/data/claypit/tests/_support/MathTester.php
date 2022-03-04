@@ -20,8 +20,7 @@ class MathTester extends \Codeception\Actor
 {
     use _generated\MathTesterActions;
 
-   /**
-    * Define custom actions here
-    */
-
+    /**
+     * Define custom actions here
+     */
 }

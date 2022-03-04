@@ -44,7 +44,7 @@ class JsonContains extends Constraint
         }
 
         $comparator = new ArrayComparator();
-        $comparator->setFactory(new Factory);
+        $comparator->setFactory(new Factory());
         try {
             $comparator->assertEquals($this->expected, $jsonResponseArray->toArray());
         } catch (ComparisonFailure $failure) {

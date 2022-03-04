@@ -120,7 +120,8 @@ EOF;
         $this->createActor('AcceptanceTester', $supportDir, Yaml::parse($configFile)['suites']['acceptance']);
 
         $this->sayInfo("Created global config codeception.yml inside the root directory");
-        $this->createFile($dir . DIRECTORY_SEPARATOR . 'LoginCest.php',
+        $this->createFile(
+            $dir . DIRECTORY_SEPARATOR . 'LoginCest.php',
             (new Template($this->firstTest))
                 ->place('namespace', $this->namespace)
                 ->place('support_namespace', $this->supportNamespace)

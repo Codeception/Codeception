@@ -7,7 +7,7 @@ class DummyClass
      */
     protected $checkMe = 1;
 
-    function __construct($checkMe = 1)
+    public function __construct($checkMe = 1)
     {
         $this->checkMe = "constructed: ".$checkMe;
     }
@@ -27,7 +27,8 @@ class DummyClass
         return "goAway";
     }
 
-    public function getCheckMe() {
+    public function getCheckMe()
+    {
         return $this->checkMe;
     }
 
@@ -42,8 +43,8 @@ class DummyClass
         return true;
     }
 
-    public function exceptionalMethod() {
+    public function exceptionalMethod()
+    {
         throw new Exception('Catch it!');
     }
-
 }

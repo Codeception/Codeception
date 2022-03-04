@@ -378,7 +378,8 @@ final class RunCest
     public function runTestsWithSteps(CliGuy $I)
     {
         $I->executeCommand('run scenario SuccessCept --steps');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
 Scenario --
  I am in path "."
  I see file found "scenario.suite.yml"
@@ -397,7 +398,8 @@ EOF
         }
 
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
 FailedCept: Fail when file is not found
 Signature: FailedCept
 Test: tests/scenario/FailedCept.php
@@ -408,7 +410,8 @@ Scenario --
 EOF
         );
         $I->expect('to see scenario trace');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
 Scenario Steps:
 
  2. \$I->seeFileFound("games.zip") at tests/scenario/FailedCept.php:5
@@ -426,7 +429,8 @@ EOF
 
         $file = "codeception" . DIRECTORY_SEPARATOR . "c3";
         $I->executeCommand('run scenario SubStepsCept --steps');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
 Scenario --
  I am in path "."
  I see code coverage files are present
@@ -454,7 +458,8 @@ EOF
     public function runGherkinTest(CliGuy $I)
     {
         $I->executeCommand('run scenario File.feature --steps');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
  In order to test a feature
  As a user
  I need to be able to see output
@@ -464,7 +469,8 @@ EOF
         $I->seeInShellOutput('When i am in current directory');
         $I->seeInShellOutput('Then there is a file "scenario.suite.yml"');
         $I->seeInShellOutput('And there are keywords in "scenario.suite.yml"');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
    | actor   | ScenarioGuy |
    | enabled | Filesystem  |
 EOF

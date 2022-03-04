@@ -1,4 +1,5 @@
 <?php
+
 use Codeception\Example;
 
 class ExamplesCest
@@ -47,5 +48,4 @@ class ExamplesCest
             $I->seeFileFound($example['file']);
         }
     }
-
 }

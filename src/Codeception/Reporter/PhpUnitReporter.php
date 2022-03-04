@@ -9,8 +9,8 @@ use ReflectionClass;
 
 class PhpUnitReporter extends JUnitReporter
 {
-    const SUITE_LEVEL = 1;
-    const FILE_LEVEL  = 2;
+    public const SUITE_LEVEL = 1;
+    public const FILE_LEVEL  = 2;
 
     protected string $reportFileParam = 'phpunit-xml';
     protected string $reportName = 'PHPUNIT XML';

@@ -15,14 +15,13 @@ if (!defined('PHPUNIT_TESTSUITE')) {
  */
 class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
 {
-
     protected SuiteManager $suiteman;
 
     protected EventDispatcher $dispatcher;
 
     public function _setUp()
     {
-        $this->dispatcher = new EventDispatcher;
+        $this->dispatcher = new EventDispatcher();
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
         $settings['actor'] = 'CodeGuy';
         $this->suiteman = new SuiteManager($this->dispatcher, 'suite', $settings);
@@ -41,7 +40,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->dispatcher->addListener('suite.after', $eventListener);
 
         $this->suiteman->run(
-            new \PHPUnit\Framework\TestResult,
+            new \PHPUnit\Framework\TestResult(),
             ['colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
         );
         $this->assertSame($events, ['suite.before', 'suite.after']);
@@ -109,7 +108,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->dispatcher->addListener('test.after.admin', $eventListener);
 
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
-        $result = new \PHPUnit\Framework\TestResult;
+        $result = new \PHPUnit\Framework\TestResult();
         $this->suiteman->run(
             $result,
             ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]

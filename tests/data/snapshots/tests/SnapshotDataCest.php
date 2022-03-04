@@ -18,7 +18,7 @@ class SnapshotDataCest
         ]);
 
         $snapshot->shouldRefreshSnapshot(false);
-        $I->expectThrowable(\PHPUnit\Framework\AssertionFailedError::class, function() use ($snapshot) {
+        $I->expectThrowable(\PHPUnit\Framework\AssertionFailedError::class, function () use ($snapshot) {
             $snapshot->assert();
         });
     }
@@ -34,5 +34,4 @@ class SnapshotDataCest
         $snapshot->shouldRefreshSnapshot(true);
         $snapshot->assert();
     }
-
 }

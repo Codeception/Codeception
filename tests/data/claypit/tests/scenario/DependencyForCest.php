@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Demo\Depends;
 
 class DependencyForCest

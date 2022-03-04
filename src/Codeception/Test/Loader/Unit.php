@@ -60,7 +60,7 @@ class Unit implements LoaderInterface
         if (!\PHPUnit\Util\Test::isTestMethod($method)) {
             return null;
         }
-        $test = (new TestBuilder)->build($class, $method->name);
+        $test = (new TestBuilder())->build($class, $method->name);
 
         if ($test instanceof DataProviderTestSuite) {
             foreach ($test->tests() as $t) {

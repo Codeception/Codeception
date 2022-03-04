@@ -1,7 +1,8 @@
 <?php
+
 namespace Codeception\Module;
 
-// here you can define custom functions for CodeGuy 
+// here you can define custom functions for CodeGuy
 
 class EmulateModuleHelper extends \Codeception\Module
 {
@@ -13,7 +14,7 @@ class EmulateModuleHelper extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertEquals($expected, $actual);
         ++$this->assertions;
     }
-    
+
     public function seeFeaturesEquals($expected)
     {
         \PHPUnit_Framework_Assert::assertEquals($expected, $this->feature);

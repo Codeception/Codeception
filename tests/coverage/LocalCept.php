@@ -1,4 +1,5 @@
 <?php
+
 $I = new CoverGuy($scenario);
 $I->wantTo('run local code coverage for cest and test');
 $I->amInPath('tests/data/sandbox');

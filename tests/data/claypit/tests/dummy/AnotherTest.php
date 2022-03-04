@@ -1,7 +1,9 @@
 <?php
+
 class AnotherTest extends \PHPUnit\Framework\TestCase
 {
-    public function testFirst() {
+    public function testFirst()
+    {
         $this->assertTrue(true);
     }
 
@@ -9,5 +11,4 @@ class AnotherTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertFalse(false);
     }
-    
 }

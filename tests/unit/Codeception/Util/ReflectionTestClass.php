@@ -17,7 +17,7 @@ class ReflectionTestClass
 
     protected ?Debug $obj = null;
 
-    static string $flavorOfTheWeek = '';
+    public static string $flavorOfTheWeek = '';
 
     public function setInt(int $i): self
     {
@@ -53,7 +53,7 @@ class ReflectionTestClass
         return $this;
     }
 
-    static public function setFlavor(string $flavor = self::FOO)
+    public static function setFlavor(string $flavor = self::FOO)
     {
         self::$flavorOfTheWeek = $flavor;
     }

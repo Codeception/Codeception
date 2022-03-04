@@ -20,7 +20,7 @@ class ExtendedGuy extends \Codeception\Actor
 {
     use _generated\ExtendedGuyActions;
 
-   /**
-    * Define custom actions here
-    */
+    /**
+     * Define custom actions here
+     */
 }

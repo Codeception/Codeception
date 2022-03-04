@@ -6,7 +6,6 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GenerateTestTest extends BaseCommandRunner
 {
-
     protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\GenerateTest::class);
@@ -54,7 +53,7 @@ class GenerateTestTest extends BaseCommandRunner
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->config['support_namespace'] = 'Gondor';
-        $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHill'));
+        $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
         $this->assertEquals($this->filename, 'tests/shire/HallUnderTheHillTest.php');
         $this->assertStringContainsString('namespace MiddleEarth\Unit;', $this->content);
         $this->assertStringContainsString('use \MiddleEarth\\Gondor\\HobbitGuy;', $this->content);

@@ -1,4 +1,5 @@
 <?php
+
 namespace Jazz;
 
 /**
@@ -20,7 +21,7 @@ class UnitGuy extends \Codeception\Actor
 {
     use _generated\UnitGuyActions;
 
-   /**
-    * Define custom actions here
-    */
+    /**
+     * Define custom actions here
+     */
 }
