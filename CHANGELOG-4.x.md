@@ -1,3 +1,9 @@
+#### 4.1.30
+
+* Fix handling of previous exception in ExtensionException
+* Improved parser fix for PHP keywords as named parameters
+* Add link to https://helpukrainewin.org
+
 #### 4.1.29
 
 * Fixed duplicate test runs when codeception.yml and codeception.dist.yml are present in multi-app setup by @calvinalkan

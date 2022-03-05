@@ -16,7 +16,7 @@ class ExtensionException extends Exception
      */
     public function __construct($extension, string $message, Exception $previous = null)
     {
-        parent::__construct($message, $previous);
+        parent::__construct($message, 0, $previous);
         if (is_object($extension)) {
             $extension = $extension::class;
         }

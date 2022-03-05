@@ -284,7 +284,8 @@ class Run extends Command
 
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . "\nPowered by " . PHPUnitVersion::getVersionString()
+                Codecept::versionString() . " https://helpukrainewin.org\nPowered by "
+                . PHPUnitVersion::getVersionString()
             );
 
             if ($this->options['seed']) {
