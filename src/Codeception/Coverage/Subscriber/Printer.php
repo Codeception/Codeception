@@ -18,6 +18,7 @@ use SebastianBergmann\CodeCoverage\Report\Clover as CloverReport;
 use SebastianBergmann\CodeCoverage\Report\Cobertura as CoberturaReport;
 use SebastianBergmann\CodeCoverage\Report\Crap4j as Crap4jReport;
 use SebastianBergmann\CodeCoverage\Report\Html\Facade as HtmlFacadeReport;
+use SebastianBergmann\CodeCoverage\Report\Html\Thresholds;
 use SebastianBergmann\CodeCoverage\Report\PHP as PhpReport;
 use SebastianBergmann\CodeCoverage\Report\Text as TextReport;
 use SebastianBergmann\CodeCoverage\Report\Xml\Facade as XmlFacadeReport;
@@ -125,12 +126,12 @@ class Printer implements EventSubscriberInterface
     protected function printHtml(): void
     {
         $writer = new HtmlFacadeReport(
-            $this->settings['low_limit'],
-            $this->settings['high_limit'],
             sprintf(
                 ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit %s</a>',
                 PHPUnitVersion::id()
-            )
+            ),
+            null,
+            Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']),
         );
 
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-html']));
