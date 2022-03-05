@@ -414,8 +414,8 @@ EOF
             <<<EOF
 Scenario Steps:
 
- 2. \$I->seeFileFound("games.zip") at tests/scenario/FailedCept.php:5
- 1. \$I->amInPath(".") at tests/scenario/FailedCept.php:4
+ 2. \$I->seeFileFound("games.zip") at tests/scenario/FailedCept.php:6
+ 1. \$I->amInPath(".") at tests/scenario/FailedCept.php:5
 
 EOF
         );
