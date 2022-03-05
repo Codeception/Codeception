@@ -28,6 +28,7 @@
 [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
 [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Codeception/Codeception/badges/quality-score.png?b=4.0)](https://scrutinizer-ci.com/g/Codeception/Codeception/?branch=4.0)
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 
 **Modern PHP Testing for everyone**
 
