@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Codeception\Lib;
 
 use Codeception\Exception\ConfigurationException;
-use Dotenv\Dotenv;
-use Dotenv\Repository\Adapter\EnvConstAdapter;
-use Dotenv\Repository\Adapter\ServerConstAdapter;
-use Dotenv\Repository\RepositoryBuilder;
+use Dotenv\Dotenv as PhpDotenv;
 use Exception;
 use SimpleXMLElement;
+use Symfony\Component\Dotenv\Dotenv as SymfonyDotenv;
 use Symfony\Component\Yaml\Yaml;
 
 class ParamsLoader
@@ -116,28 +114,19 @@ class ParamsLoader
 
     protected function loadDotEnvFile(): array
     {
-        if (class_exists(RepositoryBuilder::class)) {
-            if (method_exists(RepositoryBuilder::class, 'createWithNoAdapters')) {
-                //dotenv v5
-                $repository = RepositoryBuilder::createWithNoAdapters()
-                    ->addAdapter(EnvConstAdapter::class)
-                    ->addAdapter(ServerConstAdapter::class)
-                    ->make();
-            } else {
-                //dotenv v4
-                $repository = RepositoryBuilder::create()
-                    ->withReaders([new ServerConstAdapter()])
-                    ->immutable()
-                    ->make();
-            }
-            $dotEnv = Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
-            $dotEnv->load();
-            return $_SERVER;
+        // vlucas/phpdotenv
+        if (class_exists(PhpDotenv::class)) {
+            return PhpDotenv::parse(file_get_contents($this->paramsFile));
+        }
+
+        // symfony/dotenv
+        if (class_exists(SymfonyDotenv::class)) {
+            return (new SymfonyDotenv())->parse(file_get_contents($this->paramsFile), $this->paramsFile);
         }
 
         throw new ConfigurationException(
-            "`vlucas/phpdotenv` library is required to parse .env files.\n" .
-            "Please install it via composer: composer require vlucas/phpdotenv"
+            "`vlucas/phpdotenv` or `symfony/dotenv` library is required to parse .env files.\n" .
+            "Please install it via composer, e.g.: composer require vlucas/phpdotenv"
         );
     }
 
