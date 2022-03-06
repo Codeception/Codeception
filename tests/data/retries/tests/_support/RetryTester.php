@@ -21,7 +21,4 @@ class RetryTester extends \Codeception\Actor
 
     use \Codeception\Lib\Actor\Shared\Retry;
 
-    /**
-     * Define custom actions here
-     */
 }

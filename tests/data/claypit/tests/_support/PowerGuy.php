@@ -20,7 +20,4 @@ class PowerGuy extends \Codeception\Actor
 {
     use _generated\PowerGuyActions;
 
-    /**
-     * Define custom actions here
-     */
 }

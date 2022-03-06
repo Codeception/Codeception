@@ -20,7 +20,4 @@ class DataTester extends \Codeception\Actor
 {
     use _generated\DataTesterActions;
 
-    /**
-     * Define custom actions here
-     */
 }

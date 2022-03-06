@@ -20,7 +20,4 @@ class SkipGuy extends \Codeception\Actor
 {
     use _generated\SkipGuyActions;
 
-    /**
-     * Define custom actions here
-     */
 }

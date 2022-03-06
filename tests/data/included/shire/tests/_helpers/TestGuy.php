@@ -21,7 +21,4 @@ class TestGuy extends \Codeception\Actor
 {
     use _generated\TestGuyActions;
 
-    /**
-     * Define custom actions here
-     */
 }
