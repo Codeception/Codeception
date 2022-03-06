@@ -7,6 +7,26 @@ on:
 name: build
 
 jobs:
+  phpcs:
+    name: Code style
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          ini-values: memory_limit=-1, date.timezone='UTC'
+          tools: phpcs
+
+      - name: Check production code style
+        run: phpcs src/ ext/ *.php
+
+      - name: Check test code style
+        run: phpcs tests/ --standard=tests/phpcs.xml
+
   linux:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
 
