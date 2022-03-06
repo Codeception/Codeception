@@ -20,6 +20,7 @@ use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Test\Gherkin as GherkinFormat;
 use Codeception\Util\Annotation;
 use ReflectionClass;
+
 use function array_keys;
 use function array_map;
 use function array_merge;
@@ -96,8 +97,10 @@ class Gherkin implements LoaderInterface
             }
         }
 
-        if (isset($this->settings['gherkin']['contexts']['path']) &&
-            isset($this->settings['gherkin']['contexts']['namespace_prefix'])) {
+        if (
+            isset($this->settings['gherkin']['contexts']['path']) &&
+            isset($this->settings['gherkin']['contexts']['namespace_prefix'])
+        ) {
             $files = glob($this->settings['gherkin']['contexts']['path'] . '/*/*.php');
 
             // Strip off include path

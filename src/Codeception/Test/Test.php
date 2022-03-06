@@ -19,6 +19,7 @@ use RuntimeException;
 use SebastianBergmann\Timer\Timer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Throwable;
+
 use function array_reverse;
 use function method_exists;
 

@@ -1,6 +1,5 @@
 <?php
 
-
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Extension;

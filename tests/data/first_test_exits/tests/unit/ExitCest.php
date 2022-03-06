@@ -1,6 +1,5 @@
 <?php
 
-
 class ExitCest
 {
     public function exitNow(UnitTester $I)

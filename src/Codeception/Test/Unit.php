@@ -12,6 +12,7 @@ use Codeception\PHPUnit\TestCase;
 use Codeception\Scenario;
 use Codeception\Test\Feature\Stub;
 use Codeception\TestInterface;
+
 use function get_class;
 use function lcfirst;
 use function method_exists;

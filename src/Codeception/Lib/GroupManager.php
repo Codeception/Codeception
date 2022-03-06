@@ -171,8 +171,10 @@ class GroupManager
                 if (str_starts_with($filename . ':' . $testName, (string)$testPattern)) {
                     $groups[] = $group;
                 }
-                if ($test instanceof Gherkin
-                    && mb_strtolower($filename . ':' . $test->getMetadata()->getFeature()) === mb_strtolower($testPattern)) {
+                if (
+                    $test instanceof Gherkin
+                    && mb_strtolower($filename . ':' . $test->getMetadata()->getFeature()) === mb_strtolower($testPattern)
+                ) {
                     $groups[] = $group;
                 }
             }

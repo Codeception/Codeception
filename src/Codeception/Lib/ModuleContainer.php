@@ -183,7 +183,8 @@ class ModuleContainer
         // Do not include inherited actions if the static $includeInheritedActions property is set to false.
         // However, if an inherited action is also specified in the static $onlyActions property
         // it should be included as an action.
-        if (!$module::$includeInheritedActions &&
+        if (
+            !$module::$includeInheritedActions &&
             !in_array($method->name, $module::$onlyActions) &&
             $method->getDeclaringClass()->getName() != $module::class
         ) {

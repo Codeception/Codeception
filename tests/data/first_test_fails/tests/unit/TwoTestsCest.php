@@ -1,9 +1,7 @@
 <?php
 
-
-class twoTestsCest
+class TwoTestsCest
 {
-    // tests
     public function failing(UnitTester $I)
     {
         throw new \RuntimeException('error');

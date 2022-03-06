@@ -8,6 +8,7 @@ use Codeception\Configuration;
 use Codeception\Event\SuiteEvent;
 use Codeception\Util\FileSystem;
 use PharData;
+
 use function file_put_contents;
 use function is_dir;
 use function mkdir;

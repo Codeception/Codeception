@@ -1,9 +1,7 @@
 <?php
 
-
-class failingCest
+class FailingCest
 {
-    // tests
     public function failing(UnitTester $I)
     {
         throw new \RuntimeException('in cest');

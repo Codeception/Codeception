@@ -23,6 +23,7 @@ use SebastianBergmann\CodeCoverage\Report\PHP as PhpReport;
 use SebastianBergmann\CodeCoverage\Report\Text as TextReport;
 use SebastianBergmann\CodeCoverage\Report\Xml\Facade as XmlFacadeReport;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function array_merge;
 use function class_exists;
 use function file_put_contents;

@@ -95,8 +95,15 @@
     "autoload-dev": {
         "classmap": [
             "tests/cli/_steps",
+            "tests/data/app/data.php",
+            "tests/data/claypit/tests/_data",
+            "tests/data/fail_dependencies",
+            "tests/data/register_command/examples",
             "tests/data/DummyClass.php",
-            "tests/data/claypit/tests/_data"
+            "tests/data/DummyOverloadableClass.php",
+            "tests/unit/Codeception/Command/BaseCommandRunner.php",
+            "tests/unit/Codeception/Util/MockAutoload.php",
+            "tests/unit/Codeception/Util/ReflectionTestClass.php"
         ]
     },
     "bin":["codecept"]

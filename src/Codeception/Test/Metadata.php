@@ -6,6 +6,7 @@ namespace Codeception\Test;
 
 use Codeception\Exception\InjectionException;
 use Codeception\Util\Annotation;
+
 use function array_merge;
 use function array_merge_recursive;
 use function array_unique;

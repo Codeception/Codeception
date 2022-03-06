@@ -12,6 +12,7 @@ use Codeception\Events;
 use Codeception\Suite;
 use Codeception\TestInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function array_reverse;
 
 class Module implements EventSubscriberInterface

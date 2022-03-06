@@ -9,6 +9,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Generator\Actions;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function codecept_debug;
 use function fclose;
 use function fgets;

@@ -13,7 +13,7 @@ class DataProvidersTest extends \Codeception\Test\Unit
      */
     public function testIsTriangle(int $a, int $b, int $c)
     {
-        $this->assertTrue($a + $b > $c && $c+$b > $a && $a + $c > $b);
+        $this->assertTrue($a + $b > $c && $c + $b > $a && $a + $c > $b);
     }
 
     public function triangles(): array

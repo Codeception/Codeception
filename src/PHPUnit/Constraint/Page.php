@@ -6,6 +6,7 @@ namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Lib\Console\Message;
 use PHPUnit\Framework\Constraint\Constraint;
+
 use function codecept_output_dir;
 use function mb_stripos;
 use function mb_strlen;

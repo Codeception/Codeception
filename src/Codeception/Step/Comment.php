@@ -6,6 +6,7 @@ namespace Codeception\Step;
 
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step as CodeceptionStep;
+
 use function mb_strcut;
 
 class Comment extends CodeceptionStep

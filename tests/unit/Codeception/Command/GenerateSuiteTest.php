@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
-
 class GenerateSuiteTest extends BaseCommandRunner
 {
     /**
@@ -27,12 +25,12 @@ class GenerateSuiteTest extends BaseCommandRunner
 
         $configFile = $this->log[0];
 
-        $this->assertSame(\Codeception\Configuration::projectDir().'tests/Shire.suite.yml', $configFile['filename']);
+        $this->assertSame(\Codeception\Configuration::projectDir() . 'tests/Shire.suite.yml', $configFile['filename']);
         $conf = \Symfony\Component\Yaml\Yaml::parse($configFile['content']);
         $this->assertSame('Hobbit', $conf['actor']);
         $this->assertStringContainsString('Suite Shire generated', $this->output);
         $actor = $this->log[1];
-        $this->assertSame(\Codeception\Configuration::supportDir().'Hobbit.php', $actor['filename']);
+        $this->assertSame(\Codeception\Configuration::supportDir() . 'Hobbit.php', $actor['filename']);
         $this->assertStringContainsString('class Hobbit extends \Codeception\Actor', $actor['content']);
     }
 

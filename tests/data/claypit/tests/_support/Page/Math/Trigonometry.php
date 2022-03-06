@@ -22,7 +22,7 @@ class Trigonometry
      */
     public static function route($param): string
     {
-        return static::$URL.$param;
+        return static::$URL . $param;
     }
 
     public function __construct(protected MathTester $mathTester)
@@ -31,7 +31,7 @@ class Trigonometry
 
     public function tan($arg): float
     {
-        $this->mathTester->expect('i get tan of '.$arg);
+        $this->mathTester->expect('i get tan of ' . $arg);
         return tan($arg);
     }
 

@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestBuilder;
 use PHPUnit\Metadata\Api\Dependencies;
 use ReflectionClass;
 use ReflectionMethod;
+
 use function get_class;
 
 class Unit implements LoaderInterface

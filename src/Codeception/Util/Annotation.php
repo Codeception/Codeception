@@ -7,6 +7,7 @@ namespace Codeception\Util;
 use ReflectionClass;
 use ReflectionMethod;
 use Reflector;
+
 use function get_class;
 use function in_array;
 use function is_object;

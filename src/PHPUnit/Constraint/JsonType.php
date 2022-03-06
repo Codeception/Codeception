@@ -8,6 +8,7 @@ use Codeception\Util\JsonArray;
 use Codeception\Util\JsonType as JsonTypeUtil;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
+
 use function json_encode;
 
 class JsonType extends Constraint

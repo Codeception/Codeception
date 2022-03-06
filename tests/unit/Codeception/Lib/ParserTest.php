@@ -106,7 +106,7 @@ EOF;
 
     public function testSteps()
     {
-        $code = file_get_contents(\Codeception\Configuration::projectDir().'tests/cli/UnitCept.php');
+        $code = file_get_contents(\Codeception\Configuration::projectDir() . 'tests/cli/UnitCept.php');
         $this->assertStringContainsString('$I->seeInThisFile', $code);
         $this->parser->parseSteps($code);
         $text = $this->scenario->getText();

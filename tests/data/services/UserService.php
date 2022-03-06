@@ -10,7 +10,7 @@ class UserService
     {
         $this->user->setName($name);
         $this->user->set('role', 'user');
-        $this->user->set('email', $name.'@service.com');
+        $this->user->set('email', $name . '@service.com');
         $this->user->save();
         return true;
     }

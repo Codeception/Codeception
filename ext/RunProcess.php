@@ -8,6 +8,7 @@ use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Symfony\Component\Process\Process;
+
 use function array_reverse;
 use function class_exists;
 use function is_int;
@@ -95,7 +96,7 @@ class RunProcess extends Extension
             $process = Process::fromShellCommandline($command, $this->getRootDir(), null, null, null);
             $process->start();
             $this->processes[] = $process;
-            $this->output->debug('[RunProcess] Starting '.$command);
+            $this->output->debug('[RunProcess] Starting ' . $command);
         }
         sleep($this->config['sleep']);
     }

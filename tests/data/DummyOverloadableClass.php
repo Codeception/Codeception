@@ -11,7 +11,7 @@ class DummyOverloadableClass
 
     public function __construct($checkMe = 1)
     {
-        $this->checkMe = "constructed: ".$checkMe;
+        $this->checkMe = "constructed: " . $checkMe;
     }
 
     public function helloWorld(): string

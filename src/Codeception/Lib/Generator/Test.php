@@ -54,7 +54,7 @@ EOF;
         $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . ucfirst($this->settings['suite']) . '\\' . $this->name);
 
         if ($ns) {
-            $ns .= "\nuse ". $this->supportNamespace() . $actor.";";
+            $ns .= "\nuse " . $this->supportNamespace() . $actor . ";";
         }
 
 

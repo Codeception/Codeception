@@ -6,7 +6,6 @@ namespace Codeception\Lib\Console;
 
 class MessageTest extends \Codeception\Test\Unit
 {
-    // tests
     public function testCut()
     {
         $message = new Message('very long text');

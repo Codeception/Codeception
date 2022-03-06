@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__.'/../app/data.php';
-
 class UserModel
 {
     protected ?string $id = null;
@@ -17,7 +15,7 @@ class UserModel
 
     public function setName($name)
     {
-        $this->data['name'] = 'Mr. '.$name;
+        $this->data['name'] = 'Mr. ' . $name;
     }
 
     public function getId(): ?string

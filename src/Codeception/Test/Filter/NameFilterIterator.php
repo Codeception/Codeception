@@ -12,6 +12,7 @@ use PHPUnit\Framework\WarningTestCase;
 use PHPUnit\Util\RegularExpression;
 use RecursiveFilterIterator;
 use RecursiveIterator;
+
 use function end;
 use function is_null;
 use function preg_match;
@@ -60,10 +61,10 @@ class NameFilterIterator extends RecursiveFilterIterator
                         $matches[2]
                     );
                 }
-            } // Handles:
-            //  * :testDetermineJsonError@JSON_ERROR_NONE
-            //  * :testDetermineJsonError@JSON.*
-            elseif (preg_match('/^(.*?)@(.+)$/', $filter, $matches)) {
+            } elseif (preg_match('/^(.*?)@(.+)$/', $filter, $matches)) {
+                // Handles:
+                //  * :testDetermineJsonError@JSON_ERROR_NONE
+                //  * :testDetermineJsonError@JSON.*
                 $filter = sprintf(
                     '%s.*with data set "%s"$',
                     $matches[1],

@@ -114,16 +114,16 @@ class ReportPrinter implements ConsolePrinter
         $failedCount = $this->errorCount + $this->errorCount + $this->warningCount;
 
         if ($failedCount > 0) {
-            $counts []= sprintf("Failed: %s", $failedCount);
+            $counts [] = sprintf("Failed: %s", $failedCount);
         }
         if ($this->incompleteCount > 0) {
-            $counts []= sprintf("Incomplete: %s", $this->incompleteCount);
+            $counts [] = sprintf("Incomplete: %s", $this->incompleteCount);
         }
         if ($this->skippedCount > 0) {
-            $counts []= sprintf("Skipped: %s", $this->skippedCount);
+            $counts [] = sprintf("Skipped: %s", $this->skippedCount);
         }
         if ($this->uselessCount > 0) {
-            $counts []= sprintf("Useless: %s", $this->uselessCount);
+            $counts [] = sprintf("Useless: %s", $this->uselessCount);
         }
 
         $this->output->writeln("\nCodeception Results");

@@ -196,14 +196,16 @@ class Suite extends TestSuite
         $time = $timer->stop()->asSeconds();
         $test->addToAssertionCount(Assert::getCount());
 
-        if ($this->reportUselessTests &&
+        if (
+            $this->reportUselessTests &&
             !$incomplete &&
             !$skipped &&
             !$error &&
             !$failure &&
             !$warning &&
             !$test->doesNotPerformAssertions() &&
-            $test->numberOfAssertionsPerformed() === 0) {
+            $test->numberOfAssertionsPerformed() === 0
+        ) {
             $failure = true;
             $useless = true;
             $e = new RiskyBecauseNoAssertionsWerePerformedException();
@@ -274,9 +276,11 @@ class Suite extends TestSuite
             $e = $unintentionallyCoveredCodeError;
             $result->addFailure($test, $unintentionallyCoveredCodeError, $time);
             $eventType = Events::TEST_ERROR;
-        } elseif ($this->reportUselessTests &&
+        } elseif (
+            $this->reportUselessTests &&
             $test->doesNotPerformAssertions() &&
-            $test->numberOfAssertionsPerformed() > 0) {
+            $test->numberOfAssertionsPerformed() > 0
+        ) {
             $e = new RiskyDueToUnexpectedAssertionsException(
                 $test->numberOfAssertionsPerformed()
             );

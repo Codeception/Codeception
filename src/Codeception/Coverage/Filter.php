@@ -10,6 +10,7 @@ use Codeception\Exception\ModuleException;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
+
 use function array_pop;
 use function explode;
 use function implode;

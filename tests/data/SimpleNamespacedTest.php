@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Also test multiple namespaces/classes per single file.
  */

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 // @group core
 
 use Codeception\Scenario;

@@ -2,7 +2,7 @@
 
 class SomeErrorClass
 {
-    public function some_method()
+    public function someMethod()
     {
         $a = [];
 
@@ -13,10 +13,7 @@ class SomeErrorClass
 
 class ErrorTest extends \Codeception\Test\Unit
 {
-    /**
-     * @var \UnitTester|\CodeGuy
-     */
-    protected $tester;
+    protected UnitTester|CodeGuy $tester;
 
     /**
      * @group error
@@ -25,6 +22,6 @@ class ErrorTest extends \Codeception\Test\Unit
     {
         $test = new SomeErrorClass();
 
-        $test->some_method();
+        $test->someMethod();
     }
 }

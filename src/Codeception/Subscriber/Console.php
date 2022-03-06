@@ -38,6 +38,7 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function array_map;
 use function array_merge;
 use function array_reverse;
@@ -365,22 +366,22 @@ class Console implements EventSubscriberInterface
             sprintf("Assertions: %s", $this->assertionCount),
         ];
         if ($result->errorCount() > 0) {
-            $counts []= sprintf("Errors: %s", $result->errorCount());
+            $counts [] = sprintf("Errors: %s", $result->errorCount());
         }
         if ($result->failureCount() > 0) {
-            $counts []= sprintf("Failures: %s", $result->failureCount());
+            $counts [] = sprintf("Failures: %s", $result->failureCount());
         }
         if ($result->warningCount() > 0) {
-            $counts []= sprintf("Warnings: %s", $result->warningCount());
+            $counts [] = sprintf("Warnings: %s", $result->warningCount());
         }
         if ($result->skippedCount() > 0) {
-            $counts []= sprintf("Skipped: %s", $result->skippedCount());
+            $counts [] = sprintf("Skipped: %s", $result->skippedCount());
         }
         if ($result->notImplementedCount() > 0) {
-            $counts []= sprintf("Incomplete: %s", $result->notImplementedCount());
+            $counts [] = sprintf("Incomplete: %s", $result->notImplementedCount());
         }
         if ($result->riskyCount() > 0) {
-            $counts []= sprintf("Useless: %s", $result->riskyCount());
+            $counts [] = sprintf("Useless: %s", $result->riskyCount());
         }
 
         $this->message(implode(', ', $counts) . '.')->style($style)->writeln();
@@ -545,9 +546,11 @@ class Console implements EventSubscriberInterface
             $message = codecept_relative_path(Descriptor::getTestFullName($failedTest));
         }
         $testStyle = 'error';
-        if ($fail instanceof SkippedTest
+        if (
+            $fail instanceof SkippedTest
             || $fail instanceof IncompleteTestError
-            || $fail instanceof RiskyTest) {
+            || $fail instanceof RiskyTest
+        ) {
             $testStyle = 'warning';
         }
 
@@ -654,9 +657,11 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
 
-        if ($exception instanceof SkippedTest
+        if (
+            $exception instanceof SkippedTest
             || $exception instanceof IncompleteTestError
-            || $exception instanceof RiskyTest) {
+            || $exception instanceof RiskyTest
+        ) {
             return;
         }
 
@@ -758,7 +763,8 @@ class Console implements EventSubscriberInterface
     public function detectWidth(): int
     {
         $this->width = 60;
-        if (!$this->isWin()
+        if (
+            !$this->isWin()
             && (PHP_SAPI === "cli")
             && (getenv('TERM'))
             && (getenv('TERM') != 'unknown')

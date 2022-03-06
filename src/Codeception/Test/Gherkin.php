@@ -17,6 +17,7 @@ use Codeception\Step\Meta;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Exception;
+
 use function array_merge;
 use function array_pop;
 use function array_shift;

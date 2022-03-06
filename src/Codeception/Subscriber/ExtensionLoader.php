@@ -10,6 +10,7 @@ use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function class_exists;
 use function is_array;
 use function key;

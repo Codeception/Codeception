@@ -11,6 +11,7 @@ use Codeception\Test\Loader\LoaderInterface;
 use Codeception\Test\Loader\Unit as UnitLoader;
 use Exception;
 use Symfony\Component\Finder\Finder;
+
 use function array_merge;
 use function file_exists;
 use function getcwd;
@@ -85,7 +86,8 @@ class Loader
 
     protected function findPath(string $path): string
     {
-        if (!file_exists($path)
+        if (
+            !file_exists($path)
             && !str_ends_with($path, '.php')
             && file_exists($newPath = $path . '.php')
         ) {
@@ -99,7 +101,8 @@ class Loader
     {
         $path = $this->path . $this->relativeName($originalPath);
 
-        if (file_exists($newPath = $this->findPath($path))
+        if (
+            file_exists($newPath = $this->findPath($path))
             || file_exists($newPath = $this->findPath(getcwd() . "/{$originalPath}"))
         ) {
             $path = $newPath;

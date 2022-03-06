@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="Codeception">
+    <description>Codeception code standard</description>
+
+    <exclude-pattern>data/app</exclude-pattern>
+    <rule ref="PSR12">
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
+        <exclude name="PSR1.Classes.ClassDeclaration.MultipleClasses"/>
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+        <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+    </rule>
+</ruleset>

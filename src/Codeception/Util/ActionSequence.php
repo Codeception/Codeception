@@ -7,6 +7,7 @@ namespace Codeception\Util;
 use Closure;
 use Codeception\Step\Action;
 use Exception;
+
 use function call_user_func_array;
 use function codecept_debug;
 use function get_class;

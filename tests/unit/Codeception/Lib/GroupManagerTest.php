@@ -10,12 +10,8 @@ use Codeception\Test\Loader\Gherkin as GherkinLoader;
 
 class GroupManagerTest extends \Codeception\Test\Unit
 {
-    /**
-     * @var \Codeception\Lib\GroupManager
-     */
     protected GroupManager $manager;
 
-    // tests
     public function testGroupsFromArray()
     {
         $this->manager = new GroupManager(['important' => ['tests/data/group_manager_test/UserTest.php:testName', 'tests/data/group_manager_test/PostTest.php']]);

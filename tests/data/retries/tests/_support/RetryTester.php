@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -20,5 +19,4 @@ class RetryTester extends \Codeception\Actor
     use _generated\RetryTesterActions;
 
     use \Codeception\Lib\Actor\Shared\Retry;
-
 }

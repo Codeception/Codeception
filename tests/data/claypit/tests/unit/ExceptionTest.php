@@ -1,6 +1,5 @@
 <?php
 
-
 class ExceptionTest extends \PHPUnit\Framework\TestCase
 {
     /**

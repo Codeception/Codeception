@@ -10,6 +10,7 @@ use Codeception\Events;
 use Codeception\Util\ReflectionHelper;
 use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function function_exists;
 use function pcntl_async_signals;
 use function pcntl_signal;

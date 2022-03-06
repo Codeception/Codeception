@@ -6,6 +6,7 @@ namespace Codeception\Exception;
 
 use Codeception\Util\Locator;
 use PHPUnit\Framework\AssertionFailedError;
+
 use function is_string;
 
 class ElementNotFound extends AssertionFailedError
