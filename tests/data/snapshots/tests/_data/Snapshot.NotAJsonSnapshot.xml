@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"></xs:schema>
 <note>
-    <to>Son</to>
-    <from>Vader</from>
-    <heading>Disclaimer</heading>
-    <body>I'm your father!</body>
+    <to>Tove</to>
+    <from>Jani</from>
+    <heading>Reminder</heading>
+    <body>Don't forget me this weekend!</body>
 </note>
