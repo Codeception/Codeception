@@ -6,6 +6,7 @@ namespace Codeception\Lib\Console;
 
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Diff\Differ;
+use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
 class DiffFactory
 {
@@ -20,7 +21,7 @@ class DiffFactory
             return '';
         }
 
-        $differ = new Differ('');
+        $differ = new Differ(new UnifiedDiffOutputBuilder(''));
 
         return $differ->diff($expected, $actual);
     }
