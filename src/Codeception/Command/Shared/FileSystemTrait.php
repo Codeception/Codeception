@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Command\Shared;
 
 use Codeception\Util\Shared\Namespaces;
+
 use function file_exists;
 use function file_put_contents;
 use function mkdir;

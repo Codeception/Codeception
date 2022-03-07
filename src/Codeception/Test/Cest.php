@@ -15,6 +15,7 @@ use LogicException;
 use PHPUnit\Metadata\Annotation\Parser\Registry as AnnotationRegistry;
 use PHPUnit\Metadata\Api\CodeCoverage;
 use ReflectionMethod;
+
 use function array_slice;
 use function file;
 use function get_class;

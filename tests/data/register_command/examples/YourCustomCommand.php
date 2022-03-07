@@ -1,4 +1,5 @@
 <?php
+
 /**
  * An example for a custom command to add to the framework.
  *

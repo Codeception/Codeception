@@ -8,9 +8,9 @@
 
 <div id="notice">
     <?php
-        if (isset($_GET['data'])) {
-            echo $_GET['data'] ? 1 : 0;
-        }
+    if (isset($_GET['data'])) {
+        echo $_GET['data'] ? 1 : 0;
+    }
     ?>
 </div>
 </body>

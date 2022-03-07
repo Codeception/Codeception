@@ -1,4 +1,5 @@
 <?php
+
 /**
  * An example for a custom command to add to the framework.
  *
@@ -8,6 +9,8 @@
 
 namespace Project\Command;
 
+use Codeception\Command\Shared\ConfigTrait;
+use Codeception\Command\Shared\FileSystemTrait;
 use Symfony\Component\Console\Command\Command;
 use Codeception\CustomCommandInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -19,8 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class MyCustomCommand extends Command implements CustomCommandInterface
 {
-    use \Codeception\Command\Shared\FileSystemTrait;
-    use \Codeception\Command\Shared\ConfigTrait;
+    use FileSystemTrait;
+    use ConfigTrait;
 
     /**
      * returns the name of the command

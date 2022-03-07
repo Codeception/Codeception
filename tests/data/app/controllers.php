@@ -4,12 +4,12 @@ class index
 {
     public function GET($matches)
     {
-        include __DIR__.'/view/index.php';
+        include __DIR__ . '/view/index.php';
     }
 
     public function POST($matches)
     {
-        include __DIR__.'/view/index.php';
+        include __DIR__ . '/view/index.php';
     }
 }
 
@@ -22,7 +22,7 @@ class info
         }
 
         data::set('params', $_GET);
-        include __DIR__.'/view/info.php';
+        include __DIR__ . '/view/info.php';
     }
 }
 
@@ -54,7 +54,7 @@ class redirect2
 {
     public function GET()
     {
-        include __DIR__.'/view/redirect2.php';
+        include __DIR__ . '/view/redirect2.php';
     }
 }
 
@@ -78,7 +78,7 @@ class redirect_params
 {
     public function GET()
     {
-        include __DIR__.'/view/redirect_params.php';
+        include __DIR__ . '/view/redirect_params.php';
     }
 }
 
@@ -86,7 +86,7 @@ class redirect_interval
 {
     public function GET()
     {
-        include __DIR__.'/view/redirect_interval.php';
+        include __DIR__ . '/view/redirect_interval.php';
     }
 }
 
@@ -94,7 +94,7 @@ class redirect_meta_refresh
 {
     public function GET()
     {
-        include __DIR__.'/view/redirect_meta_refresh.php';
+        include __DIR__ . '/view/redirect_meta_refresh.php';
     }
 }
 
@@ -102,7 +102,7 @@ class redirect_header_interval
 {
     public function GET()
     {
-        include __DIR__.'/view/index.php';
+        include __DIR__ . '/view/index.php';
         header('Refresh:1800;url=/info');
     }
 }
@@ -144,13 +144,13 @@ class login
 {
     public function GET($matches)
     {
-        include __DIR__.'/view/login.php';
+        include __DIR__ . '/view/login.php';
     }
 
     public function POST()
     {
         data::set('form', $_POST);
-        include __DIR__.'/view/login.php';
+        include __DIR__ . '/view/login.php';
     }
 }
 
@@ -163,7 +163,7 @@ class cookies
                 header('Location: /info');
             }
         } else {
-            include __DIR__.'/view/cookies.php';
+            include __DIR__ . '/view/cookies.php';
         }
     }
 
@@ -173,7 +173,7 @@ class cookies
         setcookie('foo', 'bar1', ['expires' => time() + 60, 'path' => null, 'domain' => 'sub.localhost', 'secure' => false, 'httponly' => true]);
         setcookie('baz', 'bar2', ['expires' => time() + 60, 'path' => null, 'domain' => 'sub.localhost', 'secure' => false, 'httponly' => true]);
         data::set('form', $_POST);
-        include __DIR__.'/view/cookies.php';
+        include __DIR__ . '/view/cookies.php';
     }
 }
 
@@ -183,7 +183,7 @@ class cookiesHeader
     {
         header("Set-Cookie: a=b;Path=/;");
         header("Set-Cookie: c=d;Path=/;", false);
-        include __DIR__.'/view/index.php';
+        include __DIR__ . '/view/index.php';
     }
 }
 
@@ -191,7 +191,7 @@ class iframe
 {
     public function GET()
     {
-        include __DIR__.'/view/iframe.php';
+        include __DIR__ . '/view/iframe.php';
     }
 }
 
@@ -205,7 +205,7 @@ class form
             $url = 'index';
         }
 
-        include __DIR__.'/view/form/'.$url.'.php';
+        include __DIR__ . '/view/form/' . $url . '.php';
     }
 
     public function POST()
@@ -218,7 +218,7 @@ class form
         }
 
         $notice = 'Thank you!';
-        include __DIR__.'/view/index.php';
+        include __DIR__ . '/view/index.php';
     }
 }
 
@@ -243,7 +243,7 @@ class search
         }
 
         data::set('params', $_GET);
-        include __DIR__.'/view/search.php';
+        include __DIR__ . '/view/search.php';
     }
 }
 
@@ -271,7 +271,7 @@ class register
 {
     public function GET()
     {
-        include __DIR__.'/view/register.php';
+        include __DIR__ . '/view/register.php';
     }
 
     public function POST()
@@ -285,7 +285,7 @@ class contentType1
     public function GET()
     {
         header('Content-Type:', true);
-        include __DIR__.'/view/content_type.php';
+        include __DIR__ . '/view/content_type.php';
     }
 }
 
@@ -294,7 +294,7 @@ class contentType2
     public function GET()
     {
         header('Content-Type:', true);
-        include __DIR__.'/view/content_type2.php';
+        include __DIR__ . '/view/content_type2.php';
     }
 }
 
@@ -310,7 +310,7 @@ class basehref
 {
     public function GET()
     {
-        include __DIR__.'/view/basehref.php';
+        include __DIR__ . '/view/basehref.php';
     }
 }
 
@@ -318,7 +318,7 @@ class jserroronload
 {
     public function GET()
     {
-        include __DIR__.'/view/jserroronload.php';
+        include __DIR__ . '/view/jserroronload.php';
     }
 }
 
@@ -334,6 +334,6 @@ class minimal
 {
     public function GET()
     {
-        include __DIR__.'/view/minimal.php';
+        include __DIR__ . '/view/minimal.php';
     }
 }

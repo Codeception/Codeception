@@ -11,6 +11,7 @@ use Facebook\WebDriver\WebDriverBy;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use Symfony\Component\DomCrawler\Crawler as SymfonyDomCrawler;
+
 use function strpos;
 
 class Crawler extends Page

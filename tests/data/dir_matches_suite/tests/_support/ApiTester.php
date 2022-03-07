@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -18,5 +17,4 @@
 class ApiTester extends \Codeception\Actor
 {
     use _generated\ApiTesterActions;
-
 }

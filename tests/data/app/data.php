@@ -31,7 +31,7 @@ class data
 
     protected static function load(): array
     {
-        $data = file_get_contents(__DIR__.self::$filename);
+        $data = file_get_contents(__DIR__ . self::$filename);
         $data = $data ? unserialize($data) : $data = [];
         if (!is_array($data)) {
             $data = [];
@@ -42,6 +42,6 @@ class data
 
     protected static function save($data)
     {
-        file_put_contents(__DIR__.self::$filename, serialize($data));
+        file_put_contents(__DIR__ . self::$filename, serialize($data));
     }
 }

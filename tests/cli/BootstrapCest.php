@@ -6,7 +6,7 @@ final class BootstrapCest
 {
     public function _before(CliGuy $I)
     {
-        $bootstrapPath = 'tests/data/sandbox/boot'.uniqid();
+        $bootstrapPath = 'tests/data/sandbox/boot' . uniqid();
         @mkdir($bootstrapPath, 0777, true);
         $I->amInPath($bootstrapPath);
     }

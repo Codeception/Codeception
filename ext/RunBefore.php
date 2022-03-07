@@ -8,6 +8,7 @@ use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Symfony\Component\Process\Process;
+
 use function array_shift;
 use function class_exists;
 use function count;

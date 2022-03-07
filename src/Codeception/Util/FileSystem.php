@@ -6,6 +6,7 @@ namespace Codeception\Util;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+
 use function basename;
 use function rmdir;
 use function unlink;

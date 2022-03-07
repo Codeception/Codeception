@@ -9,6 +9,7 @@ use Codeception\Lib\Console\Message;
 use Codeception\Lib\Parser;
 use Exception;
 use ParseError;
+
 use function basename;
 use function file_get_contents;
 

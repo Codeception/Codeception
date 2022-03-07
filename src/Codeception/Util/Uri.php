@@ -6,6 +6,7 @@ namespace Codeception\Util;
 
 use GuzzleHttp\Psr7\Uri as Psr7Uri;
 use InvalidArgumentException;
+
 use function dirname;
 use function ltrim;
 use function parse_url;

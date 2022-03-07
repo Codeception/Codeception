@@ -1,6 +1,5 @@
 <?php
 
-
 class Dependent2Cest
 {
     /**

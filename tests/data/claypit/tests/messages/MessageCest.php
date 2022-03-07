@@ -17,7 +17,7 @@ class MessageCest
 
     protected function showMessage(MessageGuy $I, $num)
     {
-        $I->expect('message'.$num.': ' . $I->getMessage('message'.$num));
+        $I->expect('message' . $num . ': ' . $I->getMessage('message' . $num));
     }
 
     /**

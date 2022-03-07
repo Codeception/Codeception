@@ -6,7 +6,6 @@ namespace Codeception\Util;
 
 class UriTest extends \Codeception\Test\Unit
 {
-    // tests
     public function testUrlMerge()
     {
         $this->assertSame(

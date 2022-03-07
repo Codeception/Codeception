@@ -14,7 +14,7 @@
 
 <div class="notice"><?php if (isset($notice)) {
     echo $notice;
-} ?></div>
+                    } ?></div>
 
 <h3>Don't do that at home!</h3>
 

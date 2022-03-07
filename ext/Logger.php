@@ -15,6 +15,7 @@ use Codeception\Extension;
 use Codeception\Test\Descriptor;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
+
 use function class_exists;
 use function function_exists;
 use function str_replace;
@@ -144,13 +145,4 @@ class Logger extends Extension
     {
         self::$logger->info((string) $event->getStep());
     }
-}
-
-if (!function_exists('codecept_log')) {
-    function codecept_log(): \Monolog\Logger
-    {
-        return Logger::getLogger();
-    }
-} else {
-    throw new ExtensionException(Logger::class, "function 'codecept_log' already defined");
 }

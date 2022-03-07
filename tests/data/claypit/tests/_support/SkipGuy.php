@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -19,5 +18,4 @@
 class SkipGuy extends \Codeception\Actor
 {
     use _generated\SkipGuyActions;
-
 }

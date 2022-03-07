@@ -23,6 +23,7 @@ use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Throwable;
+
 use function method_exists;
 use function sprintf;
 use function str_replace;

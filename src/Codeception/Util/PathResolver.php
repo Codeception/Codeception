@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Util;
 
 use Codeception\Exception\ConfigurationException;
+
 use function array_fill;
 use function array_filter;
 use function array_merge;
@@ -41,7 +42,8 @@ class PathResolver
             // thing, we can't make a relative path.
 
             // if we're relative to the same device ...
-            if (strlen($pathAbsPrefix['devicePrefix']) &&
+            if (
+                strlen($pathAbsPrefix['devicePrefix']) &&
                 (self::fsCaseStrCmp($pathAbsPrefix['devicePrefix'], $projDirAbsPrefix['devicePrefix'], $dirSep) == 0)
             ) {
                 // ... shave that off
@@ -56,7 +58,8 @@ class PathResolver
         $relProjDirParts = array_filter(explode($dirSep, substr($projDir, strlen($projDirAbsPrefix['wholePrefix']))), 'strlen');
         // While there are any, peel off any common parent directories
         // from the beginning of the $projDir and $path
-        while (($relPathParts !== []) && ($relProjDirParts !== []) &&
+        while (
+            ($relPathParts !== []) && ($relProjDirParts !== []) &&
             (self::fsCaseStrCmp($relPathParts[0], $relProjDirParts[0], $dirSep) == 0)
         ) {
             array_shift($relPathParts);

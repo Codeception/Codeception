@@ -62,11 +62,11 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         // to autoload dependencies
         Codeception\Util\Autoload::addNamespace(
             'Math',
-            codecept_data_dir().'claypit/tests/_support/Math'
+            codecept_data_dir() . 'claypit/tests/_support/Math'
         );
-        Codeception\Util\Autoload::addNamespace(\Codeception\Module::class, codecept_data_dir().'claypit/tests/_support');
+        Codeception\Util\Autoload::addNamespace(\Codeception\Module::class, codecept_data_dir() . 'claypit/tests/_support');
 
-        $this->testLoader = new \Codeception\Test\Loader(['path' => codecept_data_dir().'claypit/tests']);
+        $this->testLoader = new \Codeception\Test\Loader(['path' => codecept_data_dir() . 'claypit/tests']);
         $this->testLoader->loadTests();
 
         $testNames = $this->getTestNames($this->testLoader->getTests());

@@ -11,6 +11,7 @@ use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+
 use function codecept_relative_path;
 use function get_class;
 use function json_encode;
@@ -47,13 +48,15 @@ class Descriptor
         $env     = '';
         $example = '';
 
-        if (method_exists($testCase, 'getScenario')
+        if (
+            method_exists($testCase, 'getScenario')
             && !empty($testCase->getScenario()->current('env'))
         ) {
             $env = ':' . $testCase->getScenario()->current('env');
         }
 
-        if (method_exists($testCase, 'getMetaData')
+        if (
+            method_exists($testCase, 'getMetaData')
             && !empty($testCase->getMetadata()->getCurrent('example'))
         ) {
             $currentExample = json_encode($testCase->getMetadata()->getCurrent('example'), JSON_THROW_ON_ERROR);

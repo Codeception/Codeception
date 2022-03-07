@@ -10,6 +10,7 @@ use Codeception\Lib\Notification;
 use PHPUnit\Framework\Exception as PHPUnitException;
 use Symfony\Bridge\PhpUnit\DeprecationErrorHandler as SymfonyDeprecationErrorHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function call_user_func;
 use function class_exists;
 use function count;
@@ -120,9 +121,11 @@ class ErrorHandler implements EventSubscriberInterface
         $this->stopped = true;
         $error = error_get_last();
 
-        if (!$this->suiteFinished && (
+        if (
+            !$this->suiteFinished && (
             $error === null || !in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR])
-        )) {
+            )
+        ) {
             echo "\n\n\nCOMMAND DID NOT FINISH PROPERLY.\n";
             exit(125);
         }
@@ -150,7 +153,8 @@ class ErrorHandler implements EventSubscriberInterface
             $old = set_error_handler('var_dump');
             restore_error_handler();
 
-            if ($old
+            if (
+                $old
                 && is_array($old)
                 && count($old) > 0
                 && $old[0] instanceof \Symfony\Component\Debug\ErrorHandler

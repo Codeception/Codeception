@@ -17,6 +17,7 @@ use Codeception\Module\WebDriver as WebDriverModule;
 use Facebook\WebDriver\Exception\NoSuchAlertException;
 use RuntimeException;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
+
 use function array_filter;
 use function array_key_exists;
 use function array_replace_recursive;

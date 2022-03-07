@@ -19,6 +19,7 @@ use DateTime;
 use DirectoryIterator;
 use Exception;
 use Symfony\Contracts\EventDispatcher\Event;
+
 use function array_diff;
 use function array_key_exists;
 use function array_keys;
@@ -601,7 +602,8 @@ EOF;
                 return true;
             }
 
-            if ($event->getStep()->getMetaStep() !== null &&
+            if (
+                $event->getStep()->getMetaStep() !== null &&
                 preg_match($stepRegexp, $event->getStep()->getMetaStep()->getAction())
             ) {
                 return true;

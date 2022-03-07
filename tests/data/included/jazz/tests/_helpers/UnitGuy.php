@@ -20,5 +20,4 @@ namespace Jazz;
 class UnitGuy extends \Codeception\Actor
 {
     use _generated\UnitGuyActions;
-
 }

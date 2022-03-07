@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
-
 class GenerateEnvironmentTest extends BaseCommandRunner
 {
     protected function _setUp()

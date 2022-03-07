@@ -11,6 +11,7 @@ use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
+
 use function count;
 use function htmlspecialchars_decode;
 use function strpos;

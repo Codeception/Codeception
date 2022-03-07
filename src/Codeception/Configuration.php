@@ -16,6 +16,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
+
 use function array_unique;
 
 class Configuration
@@ -76,7 +77,7 @@ class Configuration
     public static bool $lock = false;
 
     public static array $defaultConfig = [
-        'actor_suffix'=> 'Tester',
+        'actor_suffix' => 'Tester',
         'support_namespace' => null,
         'namespace'  => '',
 

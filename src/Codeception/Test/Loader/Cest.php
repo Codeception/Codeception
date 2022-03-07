@@ -12,6 +12,7 @@ use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\DataProviderTestSuite;
 use ReflectionClass;
 use ReflectionException;
+
 use function array_map;
 use function get_class_methods;
 

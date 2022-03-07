@@ -27,7 +27,7 @@ class SuiteExtension extends Extension
 
     public function afterSuite(SuiteEvent $e)
     {
-        $this->writeln('Suite teardown for '. $e->getSuite()->getName());
+        $this->writeln('Suite teardown for ' . $e->getSuite()->getName());
     }
 
     public function beforeTest(TestEvent $event)

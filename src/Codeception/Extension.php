@@ -9,6 +9,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function array_keys;
 use function array_merge;
 use function is_array;

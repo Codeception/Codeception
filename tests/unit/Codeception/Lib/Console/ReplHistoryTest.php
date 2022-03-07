@@ -9,9 +9,6 @@ use Codeception\Test\Unit;
 
 class ReplHistoryTest extends Unit
 {
-    /**
-     * @var ReplHistory
-     */
     protected ReplHistory $replHistory;
 
     protected function _setUp()
@@ -24,7 +21,6 @@ class ReplHistoryTest extends Unit
         $this->replHistory->clear();
     }
 
-    // tests
     public function testAdd()
     {
         $this->replHistory->add('$I->click(".something")');

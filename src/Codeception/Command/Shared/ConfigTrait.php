@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
+
 use function array_merge_recursive;
 use function array_pop;
 use function array_shift;

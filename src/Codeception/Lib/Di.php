@@ -50,7 +50,7 @@ class Di
      */
     public function instantiate(
         string $className,
-        array  $constructorArgs = null,
+        array $constructorArgs = null,
         string $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME
     ): ?object {
         // normalize namespace

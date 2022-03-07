@@ -55,12 +55,12 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
             $this->markTestSkipped("Temporary disabled for windows php version 8.1 and greater.");
         }
 
-        $file = \Codeception\Configuration::dataDir().'SimpleCest.php';
+        $file = \Codeception\Configuration::dataDir() . 'SimpleCest.php';
 
         $this->suiteman->loadTests($file);
         $this->assertSame(2, $this->suiteman->getSuite()->count());
 
-        $file = \Codeception\Configuration::dataDir().'SimpleWithNoClassCest.php';
+        $file = \Codeception\Configuration::dataDir() . 'SimpleWithNoClassCest.php';
         $this->suiteman->loadTests($file);
         $this->assertSame(3, $this->suiteman->getSuite()->count());
     }
@@ -78,7 +78,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
             $this->markTestSkipped("Temporary disabled for windows php version 8.1 and greater.");
         }
 
-        $file = \Codeception\Configuration::dataDir().'SimpleNamespacedTest.php';
+        $file = \Codeception\Configuration::dataDir() . 'SimpleNamespacedTest.php';
         $this->suiteman->loadTests($file);
         $this->assertSame(3, $this->suiteman->getSuite()->count());
         $newSuiteMan = new SuiteManager(
@@ -92,7 +92,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
 
     public function testDependencyResolution()
     {
-        $this->suiteman->loadTests(codecept_data_dir().'SimpleWithDependencyInjectionCest.php');
+        $this->suiteman->loadTests(codecept_data_dir() . 'SimpleWithDependencyInjectionCest.php');
         $this->assertSame(3, $this->suiteman->getSuite()->count());
     }
 
@@ -107,7 +107,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->dispatcher->addListener('test.after', $eventListener);
         $this->dispatcher->addListener('test.after.admin', $eventListener);
 
-        $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
+        $this->suiteman->loadTests(codecept_data_dir() . 'SimpleAdminGroupCest.php');
         $result = new \PHPUnit\Framework\TestResult();
         $this->suiteman->run(
             $result,

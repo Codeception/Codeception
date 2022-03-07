@@ -30,7 +30,7 @@ class CliHelper extends \Codeception\Module
 
     public function executeFailCommand($command)
     {
-        $this->getModule('Cli')->runShellCommand('php '.\Codeception\Configuration::projectDir().'codecept '.$command.' -n', false);
+        $this->getModule('Cli')->runShellCommand('php ' . \Codeception\Configuration::projectDir() . 'codecept ' . $command . ' -n', false);
     }
 
     /**

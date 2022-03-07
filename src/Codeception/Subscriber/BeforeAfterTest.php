@@ -8,6 +8,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use PHPUnit\Metadata\Api\HookMethods;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function call_user_func;
 use function is_callable;
 

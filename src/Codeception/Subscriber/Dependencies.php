@@ -11,6 +11,7 @@ use Codeception\Test\Interfaces\Dependent;
 use Codeception\TestInterface;
 use PHPUnit\Framework\SelfDescribing;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function in_array;
 
 class Dependencies implements EventSubscriberInterface

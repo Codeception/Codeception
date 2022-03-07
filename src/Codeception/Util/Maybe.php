@@ -7,6 +7,7 @@ namespace Codeception\Util;
 use ArrayAccess;
 use Iterator;
 use JsonSerializable;
+
 use function array_keys;
 use function call_user_func_array;
 use function count;

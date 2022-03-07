@@ -6,6 +6,7 @@ namespace Codeception\Step;
 
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step as CodeceptionStep;
+
 use function array_pop;
 use function end;
 use function is_string;

@@ -194,7 +194,7 @@ class SuiteManager
         $property->setAccessible(true);
 
         $filters = $property->getValue($filterFactory);
-        $filters []= [
+        $filters [] = [
             $filterReflectionClass,
             $filterParameter,
         ];

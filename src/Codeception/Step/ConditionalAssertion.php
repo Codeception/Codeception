@@ -8,6 +8,7 @@ use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Template;
 use PHPUnit\Framework\AssertionFailedError;
+
 use function preg_replace;
 use function str_replace;
 use function ucfirst;

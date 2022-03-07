@@ -11,6 +11,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ArrayComparator;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
+
 use function is_array;
 
 class JsonContains extends Constraint

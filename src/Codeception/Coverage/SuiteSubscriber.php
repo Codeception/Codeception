@@ -13,6 +13,7 @@ use Exception;
 use PHPUnit\Framework\CodeCoverageException;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function array_keys;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface

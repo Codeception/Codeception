@@ -6,9 +6,6 @@ namespace Codeception\Util;
 
 class ArrayContainsComparatorTest extends \Codeception\Test\Unit
 {
-    /**
-     * @var ArrayContainsComparator
-     */
     protected ArrayContainsComparator $ary;
 
     protected function _before()
@@ -24,7 +21,6 @@ class ArrayContainsComparatorTest extends \Codeception\Test\Unit
         );
     }
 
-    // tests
     public function testInclusion()
     {
         $this->assertTrue($this->ary->containsArray(['name' => 'Davert']));

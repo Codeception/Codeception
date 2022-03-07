@@ -8,6 +8,7 @@ use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
 use Codeception\Extension;
 use Codeception\Test\Descriptor;
+
 use function array_key_exists;
 use function file_put_contents;
 use function implode;

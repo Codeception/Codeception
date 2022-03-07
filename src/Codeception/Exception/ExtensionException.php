@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Exception;
 
 use Exception;
+
 use function is_object;
 
 class ExtensionException extends Exception
