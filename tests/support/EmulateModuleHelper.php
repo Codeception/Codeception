@@ -2,6 +2,8 @@
 
 namespace Codeception\Module;
 
+use PHPUnit\Framework\Assert;
+
 class EmulateModuleHelper extends \Codeception\Module
 {
     public string $feature;
@@ -9,13 +11,13 @@ class EmulateModuleHelper extends \Codeception\Module
 
     public function seeEquals($expected, $actual)
     {
-        \PHPUnit_Framework_Assert::assertEquals($expected, $actual);
+        Assert::assertEquals($expected, $actual);
         ++$this->assertions;
     }
 
     public function seeFeaturesEquals($expected)
     {
-        \PHPUnit_Framework_Assert::assertEquals($expected, $this->feature);
+        Assert::assertEquals($expected, $this->feature);
     }
 
     public function _before(\Codeception\TestInterface $test)

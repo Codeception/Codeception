@@ -84,6 +84,7 @@ abstract class Step implements Stringable
         if ($this->file) {
             return codecept_relative_path($this->file);
         }
+        return null;
     }
 
     public function getLineNumber(): ?int
@@ -91,6 +92,7 @@ abstract class Step implements Stringable
         if ($this->line) {
             return $this->line;
         }
+        return null;
     }
 
     public function hasFailed(): bool

@@ -16,6 +16,7 @@ use Exception;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionType;
 use ReflectionUnionType;
 
@@ -242,15 +243,18 @@ EOF;
         if ($type instanceof ReflectionUnionType) {
             $types = $type->getTypes();
             return implode('|', $types);
+        } elseif ($type instanceof ReflectionNamedType) {
+            $returnTypeString = $type->getName();
+
+            return sprintf(
+                '%s%s%s',
+                ($type->allowsNull() && $returnTypeString !== 'mixed') ? '?' : '',
+                $type->isBuiltin() ? '' : '\\',
+                $returnTypeString
+            );
+        } else {
+            // TODO: support ReflectionIntersectionType
+            throw new \InvalidArgumentException($type::class . ' is not supported');
         }
-
-        $returnTypeString = $type->getName();
-
-        return sprintf(
-            '%s%s%s',
-            ($type->allowsNull() && $returnTypeString !== 'mixed') ? '?' : '',
-            $type->isBuiltin() ? '' : '\\',
-            $returnTypeString
-        );
     }
 }

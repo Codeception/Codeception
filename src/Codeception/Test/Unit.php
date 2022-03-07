@@ -12,6 +12,7 @@ use Codeception\PHPUnit\TestCase;
 use Codeception\Scenario;
 use Codeception\Test\Feature\Stub;
 use Codeception\TestInterface;
+use PHPUnit\Framework\TestResult;
 
 use function get_class;
 use function lcfirst;
@@ -129,7 +130,7 @@ class Unit extends TestCase implements
         if (empty($dependencies)) {
             return true;
         }
-        $passed = $this->getTestResultObject()->passed();
+        $passed = $this->result()?->passed() ?? [];
         $dependencyInput = [];
 
         foreach ($dependencies as $dependency) {
@@ -141,5 +142,10 @@ class Unit extends TestCase implements
         }
         $this->setDependencyInput($dependencyInput);
         return true;
+    }
+
+    public function getTestResultObject(): TestResult
+    {
+        return parent::result();
     }
 }

@@ -2,10 +2,12 @@
 
 namespace Shire;
 
+use PHPUnit\Framework\Assert;
+
 class TestHelper extends \Codeception\Module
 {
     public function seeEquals($expected, $actual): void
     {
-        \PHPUnit_Framework_Assert::assertEquals($expected, $actual);
+        Assert::assertEquals($expected, $actual);
     }
 }

@@ -53,5 +53,6 @@ class WebDriverNot extends WebDriver
         if ($this->string) {
             return 'that contains text "' . $this->string . '"';
         }
+        return '';
     }
 }

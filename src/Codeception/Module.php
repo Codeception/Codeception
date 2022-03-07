@@ -271,7 +271,7 @@ abstract class Module
      */
     protected function getModules(): array
     {
-        return $this->moduleContainer->getModules();
+        return $this->moduleContainer->all();
     }
 
     /**

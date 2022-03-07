@@ -14,6 +14,7 @@ use PHPUnit\Runner\Version as PHPUnitVersion;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException as SymfonyConsoleInvalidArgumentException;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -254,7 +255,6 @@ class Run extends Command
     /**
      * Executes Run
      *
-     * @return int|null|void
      * @throws ConfigurationException|ParseException
      */
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -619,7 +619,7 @@ class Run extends Command
     /**
      * @return string[]
      */
-    protected function passedOptionKeys(InputInterface $input): array
+    protected function passedOptionKeys(ArgvInput $input): array
     {
         $options = [];
         $request = (string)$input;
@@ -648,7 +648,7 @@ class Run extends Command
     /**
      * @return array<string, bool>
      */
-    protected function booleanOptions(InputInterface $input, array $options = []): array
+    protected function booleanOptions(ArgvInput $input, array $options = []): array
     {
         $values = [];
         $request = (string)$input;

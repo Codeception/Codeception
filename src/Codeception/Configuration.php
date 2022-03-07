@@ -174,7 +174,7 @@ class Configuration
         $tempConfig = self::$defaultConfig;
 
         $distConfigContents = '';
-        if (file_exists($configDistFile)) {
+        if (isset($configDistFile) && file_exists($configDistFile)) {
             $distConfigContents = file_get_contents($configDistFile);
             $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($distConfigContents, $configDistFile));
         }
@@ -188,7 +188,7 @@ class Configuration
 
         // load config using params
         $config = self::$defaultConfig;
-        if (file_exists($configDistFile)) {
+        if (isset($configDistFile) && file_exists($configDistFile)) {
             $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromContents($distConfigContents, $configDistFile));
         }
         if (file_exists($configFile)) {

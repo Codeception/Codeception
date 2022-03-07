@@ -66,6 +66,9 @@ class ModuleContainer
         'ZF2' => 'codeception/module-zf2',
     ];
 
+    /**
+     * @var array<string,Module>
+     */
     private array $modules = [];
 
     private array $active = [];
@@ -277,7 +280,7 @@ class ModuleContainer
     /**
      * Get the module for an action.
      *
-     * @var Module|null
+     * @return Module|null
      */
     public function moduleForAction(string $action)
     {
@@ -340,7 +343,7 @@ class ModuleContainer
      *
      * @throws ModuleException|ModuleRequireException
      */
-    private function checkForMissingDependencies(string $moduleName, DependsOnModule $module): void
+    private function checkForMissingDependencies(string $moduleName, $module): void
     {
         $dependencies = $this->getModuleDependencies($module);
         $configuredDependenciesCount = count($this->getConfiguredDependencies($moduleName));
@@ -396,7 +399,7 @@ class ModuleContainer
     /**
      * Get the error message for a module dependency that is missing.
      */
-    private function getErrorMessageForDependency(Module $module, string $missingDependency): string
+    private function getErrorMessageForDependency(DependsOnModule $module, string $missingDependency): string
     {
         $depends = $module->_depends();
 

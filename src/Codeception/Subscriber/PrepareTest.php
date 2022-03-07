@@ -33,12 +33,12 @@ class PrepareTest implements EventSubscriberInterface
             return;
         }
 
-        /** @var Di $di */
         $prepareMethods = $test->getMetadata()->getParam('prepare');
 
         if (!$prepareMethods) {
             return;
         }
+        /** @var Di $di */
         $di = $test->getMetadata()->getService('di');
 
         foreach ($prepareMethods as $method) {

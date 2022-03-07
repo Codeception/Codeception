@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestFailure;
 use PHPUnit\Util\Xml;
 use ReflectionClass;
@@ -226,10 +227,8 @@ class JUnitReporter implements EventSubscriberInterface
             return;
         }
 
-        $usesDataprovider = false;
-
-        if (method_exists($test, 'usesDataProvider')) {
-            $usesDataprovider = $test->usesDataProvider();
+        if (!$test instanceof TestCase) {
+            return;
         }
 
         $testCase = $this->document->createElement('testcase');

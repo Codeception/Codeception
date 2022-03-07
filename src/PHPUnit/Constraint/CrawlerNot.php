@@ -50,5 +50,6 @@ class CrawlerNot extends Crawler
         if ($this->string) {
             return 'that contains text "' . $this->string . '"';
         }
+        return '';
     }
 }

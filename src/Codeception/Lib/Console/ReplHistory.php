@@ -24,7 +24,7 @@ class ReplHistory
     public static function getInstance(): ReplHistory
     {
         if (static::$instance == null) {
-            static::$instance = new static();
+            static::$instance = new self();
         }
 
         return static::$instance;
