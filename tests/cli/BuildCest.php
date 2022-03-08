@@ -77,6 +77,27 @@ class BuildCest
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeInThisFile('public function grabFromOutput(array|string $param): string|int');
     }
+
+    public function generatedIntersectReturnTypeOnPhp81(CliGuy $I, Scenario $scenario)
+    {
+        if (PHP_VERSION_ID < 80100) {
+            $scenario->skip('Does not work in PHP < 8.1');
+        }
+
+        $I->wantToTest('generate action with intersect return type');
+
+        $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
+        $cliHelperContents = str_replace('public function grabFromOutput($regex)', 'public function grabFromOutput(CliHelper&\ArrayObject $param): CliHelper&\ArrayObject', $cliHelperContents);
+        file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
+
+        $I->runShellCommand('php codecept build');
+        $I->seeInShellOutput('generated successfully');
+        $I->seeInSupportDir('CliGuy.php');
+        $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
+        $I->seeInThisFile('use _generated\CliGuyActions');
+        $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
+        $I->seeInThisFile('public function grabFromOutput(\Codeception\Module\CliHelper&\ArrayObject $param): \Codeception\Module\CliHelper&\ArrayObject');
+    }
     
     public function noReturnForVoidType(CliGuy $I, Scenario $scenario)
     {
