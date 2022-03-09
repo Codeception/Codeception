@@ -27,7 +27,6 @@ final class DataProviderFailuresAndExceptionsCest
         $devNull = (DIRECTORY_SEPARATOR === '\\') ? 'NUL' : '/dev/null';
         $I->executeCommand('run -n -v unit DataProvidersFailureCest 2> ' . $devNull, false);
         // We should only see the version headers in stdout when there is this kind of failure.
-
         $I->canSeeShellOutputMatches('#^Codeception PHP Testing Framework v.+\nPowered by PHPUnit .+#');
         $I->seeResultCodeIs(1);
     }

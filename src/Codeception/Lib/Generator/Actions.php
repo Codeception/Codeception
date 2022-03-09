@@ -15,6 +15,7 @@ use Codeception\Util\Template;
 use Exception;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionIntersectionType;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionType;
@@ -240,21 +241,33 @@ EOF;
 
     private function stringifyType(ReflectionType $type): string
     {
-        if ($type instanceof ReflectionUnionType) {
-            $types = $type->getTypes();
-            return implode('|', $types);
-        } elseif ($type instanceof ReflectionNamedType) {
-            $returnTypeString = $type->getName();
-
+        if ($type instanceof ReflectionNamedType) {
             return sprintf(
-                '%s%s%s',
-                ($type->allowsNull() && $returnTypeString !== 'mixed') ? '?' : '',
-                $type->isBuiltin() ? '' : '\\',
-                $returnTypeString
+                '%s%s',
+                ($type->allowsNull() && $type->getName() !== 'mixed') ? '?' : '',
+                $this->stringifyNamedType($type)
             );
-        } else {
-            // TODO: support ReflectionIntersectionType
-            throw new \InvalidArgumentException($type::class . ' is not supported');
         }
+
+        if ($type instanceof ReflectionUnionType || $type instanceof ReflectionIntersectionType) {
+            return implode(
+                $type instanceof ReflectionUnionType ? '|' : '&',
+                array_map([
+                    $this,
+                    'stringifyNamedType'
+                ], $type->getTypes())
+            );
+        }
+
+        throw new \InvalidArgumentException($type::class . ' is not supported');
+    }
+
+    private function stringifyNamedType(\ReflectionNamedType $type): string
+    {
+        return sprintf(
+            '%s%s',
+            $type->isBuiltin() ? '' : '\\',
+            $type->getName()
+        );
     }
 }
