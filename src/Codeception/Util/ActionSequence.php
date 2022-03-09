@@ -106,10 +106,8 @@ class ActionSequence
 
     /**
      * Executes sequence of action as methods of passed object.
-     *
-     * @param $context
      */
-    public function run($context): void
+    public function run(object $context): void
     {
         foreach ($this->actions as $step) {
             codecept_debug("- {$step}");

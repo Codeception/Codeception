@@ -59,7 +59,7 @@ class Annotation
             static::$reflectedClasses[$class] = new ReflectionClass($class);
         }
 
-        return new static(static::$reflectedClasses[$class]);
+        return new self(static::$reflectedClasses[$class]);
     }
 
     public static function forMethod(object|string $class, string $method): self

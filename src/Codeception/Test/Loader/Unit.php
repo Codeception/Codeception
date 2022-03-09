@@ -12,6 +12,7 @@ use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\ErrorTestCase;
 use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestBuilder;
+use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\Dependencies;
 use ReflectionClass;
 use ReflectionMethod;
@@ -78,6 +79,9 @@ class Unit implements LoaderInterface
 
     protected function enhancePhpunitTest(PHPUnitTest $test): void
     {
+        if (!$test instanceof TestCase) {
+            return;
+        }
         $className = get_class($test);
         $methodName = $test->getName(false);
         $dependencies = Dependencies::dependencies($className, $methodName);

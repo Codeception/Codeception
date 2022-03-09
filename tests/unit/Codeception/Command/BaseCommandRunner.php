@@ -8,39 +8,20 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|null
-     */
     protected ?\PHPUnit\Framework\MockObject\MockObject $command = null;
 
-    /**
-     * @var string
-     */
     public string $filename = "";
 
-    /**
-     * @var string
-     */
     public string $content = "";
 
-    /**
-     * @var string
-     */
     public string $output = "";
 
-    /**
-     * @var array
-     */
     public array $config = [];
 
-    /**
-     * @var array
-     */
     public array $saved = [];
 
-    /**
-     * @var string
-     */
+    public array $log = [];
+
     protected string $commandName = 'do:stuff';
 
     protected function execute(array $args = [], $isSuite = true)

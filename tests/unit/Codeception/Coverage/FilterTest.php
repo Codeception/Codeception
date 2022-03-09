@@ -46,7 +46,7 @@ class FilterTest extends \Codeception\Test\Unit
         $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/support/CodeGuy.php')));
         $this->assertTrue(
             $fileFilter->$filterMethod(
-                codecept_root_dir('tests/unit.suite.yml', 'tests/unit.suite.yml appears in whitelist')
+                codecept_root_dir('tests/unit.suite.yml')
             ),
             'tests/unit.suite.yml appears in file list'
         );

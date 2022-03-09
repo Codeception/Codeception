@@ -120,7 +120,6 @@ class Loader
         $path = $this->makePath($path);
 
         foreach ($this->formats as $format) {
-            /** @var Loader $format */
             if (preg_match($format->getPattern(), $path)) {
                 $format->loadTests($path);
                 $this->tests = $format->getTests();

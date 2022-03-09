@@ -106,7 +106,7 @@ class Console implements EventSubscriberInterface
 
     protected ?int $width = null;
 
-    protected OutputInterface $output;
+    protected Output $output;
 
     /**
      * @var ConditionalAssertion[]

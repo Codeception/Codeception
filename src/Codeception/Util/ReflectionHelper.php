@@ -6,6 +6,7 @@ namespace Codeception\Util;
 
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionType;
@@ -97,7 +98,7 @@ class ReflectionHelper
     public static function getClassFromParameter(ReflectionParameter $parameter): ?string
     {
         $type = $parameter->getType();
-        if (!$type instanceof ReflectionType || $type->isBuiltin()) {
+        if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {
             return null;
         }
         $typeString = $type->getName();
@@ -137,7 +138,7 @@ class ReflectionHelper
 
         $type = $parameter->getType();
         // Default to 'null' if explicitly allowed or there is no specific type hint.
-        if (!$type || $type->allowsNull() || !$type->isBuiltin()) {
+        if (!$type || $type->allowsNull() || !$type instanceof ReflectionNamedType || !$type->isBuiltin()) {
             return 'null';
         }
 

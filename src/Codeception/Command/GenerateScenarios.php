@@ -8,6 +8,7 @@ use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 use Codeception\SuiteManager;
 use Codeception\Test\Cest;
+use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -85,7 +86,7 @@ class GenerateScenarios extends Command
         $scenarios = "";
 
         foreach ($tests as $test) {
-            if (!($test instanceof ScenarioDriven)) {
+            if (!$test instanceof ScenarioDriven || !$test instanceof Descriptive) {
                 continue;
             }
             $feature = $test->getScenarioText($format);
@@ -115,12 +116,10 @@ class GenerateScenarios extends Command
 
     protected function decorate(string $text, string $format): string
     {
-        switch ($format) {
-            case 'text':
-                return $text;
-            case 'html':
-                return "<html><body>{$text}</body></html>";
+        if ($format === 'html') {
+            return "<html><body>$text</body></html>";
         }
+        return $text;
     }
 
     protected function getTests($suiteManager)
@@ -131,12 +130,10 @@ class GenerateScenarios extends Command
 
     protected function formatExtension(string $format): string
     {
-        switch ($format) {
-            case 'text':
-                return '.txt';
-            case 'html':
-                return '.html';
+        if ($format === 'html') {
+            return '.html';
         }
+        return '.txt';
     }
 
     private function underscore(string $name): string
