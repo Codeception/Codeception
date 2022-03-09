@@ -240,7 +240,16 @@ EOF;
     {
         if ($type instanceof \ReflectionUnionType) {
             $types = $type->getTypes();
-            return implode('|', $types);
+            return implode(
+                '|',
+                array_map([$this, 'stringifyNamedType'], $types)
+            );
+        } elseif ($type instanceof \ReflectionIntersectionType) {
+            $types = $type->getTypes();
+            return implode(
+                '&',
+                array_map([$this, 'stringifyNamedType'], $types)
+            );
         }
 
         if (PHP_VERSION_ID < 70100) {
@@ -249,8 +258,26 @@ EOF;
             $returnTypeString = $type->getName();
         }
         return sprintf(
-            '%s%s%s',
+            '%s%s',
             (PHP_VERSION_ID >= 70100 && $type->allowsNull() && $returnTypeString !== 'mixed') ? '?' : '',
+            $this->stringifyNamedType($type)
+        );
+    }
+
+    /**
+     * @param \ReflectionNamedType|\ReflectionType $type
+     * @return string
+     * @todo param is only \ReflectionNamedType in Codeception 5
+     */
+    private function stringifyNamedType($type)
+    {
+        if (PHP_VERSION_ID < 70100) {
+            $returnTypeString = (string)$type;
+        } else {
+            $returnTypeString = $type->getName();
+        }
+        return sprintf(
+            '%s%s',
             $type->isBuiltin() ? '' : '\\',
             $returnTypeString
         );
