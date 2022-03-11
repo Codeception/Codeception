@@ -155,8 +155,10 @@ class Printer implements EventSubscriberInterface
     protected function printText(): void
     {
         $writer = new TextReport(
-            $this->settings['low_limit'],
-            $this->settings['high_limit'],
+            Thresholds::from(
+                $this->settings['low_limit'],
+                $this->settings['high_limit'],
+            ),
             $this->settings['show_uncovered'],
             $this->settings['show_only_summary']
         );
