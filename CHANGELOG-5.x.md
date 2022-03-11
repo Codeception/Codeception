@@ -33,3 +33,9 @@
 * Don't report local test coverage for remote suites (fixed bug introduced in alpha1)
 * Moved XmlBuilder class to module-soap
 
+#### 5.0.0-alpha3
+
+* Support intersection types in actions
+* Introduced PSR-12 code style
+* Extracted some code to modules and shared libs
+* Fixed new incompatibilities with PHPUnit 10
