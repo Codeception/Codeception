@@ -21,7 +21,6 @@
         "ext-mbstring": "*",
         "phpunit/phpunit": "dev-master as 9.5.99",
         "codeception/lib-asserts": "2.0.*@dev",
-        "guzzlehttp/psr7": "^1.7 | ^2.0",
         "symfony/finder": ">=4.4.24 <7.0",
         "symfony/console": ">=4.4.24 <7.0",
         "symfony/event-dispatcher": ">=4.4.24 <7.0",
