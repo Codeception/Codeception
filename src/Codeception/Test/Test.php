@@ -7,6 +7,7 @@ namespace Codeception\Test;
 use Codeception\Event\FailEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\PHPUnit\Wrapper\Test as TestWrapper;
 use Codeception\TestInterface;
 use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\Assert;
@@ -14,7 +15,10 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
+use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Runner\Version;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use RuntimeException;
 use SebastianBergmann\Timer\Timer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -22,6 +26,14 @@ use Throwable;
 
 use function array_reverse;
 use function method_exists;
+
+// phpcs:disable
+if (Version::series() < 10) {
+    require_once __DIR__ . '/../../PHPUnit/Wrapper/PhpUnit9/Test.php';
+} else {
+    require_once __DIR__ . '/../../PHPUnit/Wrapper/PhpUnit10/Test.php';
+}
+// phpcs:enable
 
 /**
  * The most simple testcase (with only one test in it) which can be executed by PHPUnit/Codeception.
@@ -33,7 +45,7 @@ use function method_exists;
  *
  * Inherited class must implement `test` method.
  */
-abstract class Test implements TestInterface, Interfaces\Descriptive
+abstract class Test extends TestWrapper implements TestInterface, Interfaces\Descriptive
 {
     use Feature\AssertionCounter;
     use Feature\CodeCoverage;
@@ -110,7 +122,7 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
      * Runs a test and collects its result in a TestResult instance.
      * Executes before/after hooks coming from traits.
      */
-    final public function run(TestResult $result): void
+    final public function realRun(TestResult $result): void
     {
         $this->testResult = $result;
 
@@ -166,7 +178,11 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
 
             if ($this->reportUselessTests && $this->assertionCount === 0 && $eventType === Events::TEST_SUCCESS) {
                 $eventType = Events::TEST_USELESS;
-                $e = new RiskyBecauseNoAssertionsWerePerformedException();
+                if (PHPUnitVersion::series() < 10) {
+                    $e = new RiskyTestError('This test did not perform any assertions');
+                } else {
+                    $e = new RiskyBecauseNoAssertionsWerePerformedException();
+                }
                 $result->addFailure($this, $e, $time);
             }
 

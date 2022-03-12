@@ -15,7 +15,6 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\PathResolver;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\Test;
 use SebastianBergmann\Template\Template;
 use SebastianBergmann\Timer\Timer;

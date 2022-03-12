@@ -14,6 +14,8 @@ use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestBuilder;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\Dependencies;
+use PHPUnit\Runner\Version as PHPUnitVersion;
+use PHPUnit\Util\Test;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -59,7 +61,7 @@ class Unit implements LoaderInterface
      */
     protected function createTestFromPhpUnitMethod(ReflectionClass $class, ReflectionMethod $method)
     {
-        if (!\PHPUnit\Util\Test::isTestMethod($method)) {
+        if (!Test::isTestMethod($method)) {
             return null;
         }
         $test = (new TestBuilder())->build($class, $method->name);
@@ -84,7 +86,13 @@ class Unit implements LoaderInterface
         }
         $className = get_class($test);
         $methodName = $test->getName(false);
-        $dependencies = Dependencies::dependencies($className, $methodName);
+
+        if (PHPUnitVersion::series() < 10) {
+            $dependencies = Test::getDependencies($className, $methodName);
+        } else {
+            $dependencies = Dependencies::dependencies($className, $methodName);
+        }
+
         $test->setDependencies($dependencies);
         if ($test instanceof UnitFormat) {
             $annotations = Annotation::forMethod($test, $methodName)->raw();

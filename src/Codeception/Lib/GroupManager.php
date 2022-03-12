@@ -14,6 +14,8 @@ use Codeception\Util\PathResolver;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\Groups;
+use PHPUnit\Runner\Version as PHPUnitVersion;
+use PHPUnit\Util\Test as TestUtil;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -192,6 +194,10 @@ class GroupManager
             return [];
         }
 
-        return (new Groups())->groups($className, $methodName);
+        if (PHPUnitVersion::series() < 10) {
+            return TestUtil::getGroups($className, $methodName);
+        } else {
+            return (new Groups())->groups($className, $methodName);
+        }
     }
 }

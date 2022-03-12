@@ -12,7 +12,9 @@ use Codeception\Step\Comment;
 use Codeception\Step\Meta;
 use Codeception\Test\Metadata;
 use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 
 class Scenario
 {
@@ -128,6 +130,10 @@ class Scenario
 
     public function skip(string $message = ''): void
     {
+        if (PHPUnitVersion::series() < 10) {
+            throw new SkippedTestError($message);
+        }
+
         throw new SkippedWithMessageException($message);
     }
 
