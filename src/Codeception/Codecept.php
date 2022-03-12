@@ -102,13 +102,17 @@ class Codecept
 
     private function initializeTestResult(): TestResult
     {
-        /*
-         * Configuration must be registered, but TestResult only cares about stopOnError,
-         * stopOnFailure and other stopOn settings that we don't set
-         */
-        $cliConfiguration = (new \PHPUnit\TextUI\CliArguments\Builder())->fromParameters([], []);
-        $xmlConfiguration = \PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration::create();
-        Registry::init($cliConfiguration, $xmlConfiguration);
+        if (class_exists(Registry::class)) {
+            // PHPUnit 10
+            /*
+             * Configuration must be registered, but TestResult only cares about stopOnError,
+             * stopOnFailure and other stopOn settings that we don't set
+             */
+            $cliConfiguration = (new \PHPUnit\TextUI\CliArguments\Builder())->fromParameters([], []);
+            $xmlConfiguration = \PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration::create();
+            Registry::init($cliConfiguration, $xmlConfiguration);
+        }
+
         return new TestResult();
     }
 

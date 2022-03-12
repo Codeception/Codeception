@@ -118,7 +118,7 @@ class Descriptor
     public static function getTestDataSetIndex(SelfDescribing $testCase): string
     {
         if ($testCase instanceof TestCase) {
-            $index = $testCase->getDataSetAsString();
+            $index = $testCase->getDataSetAsString(false);
             if ($index !== '') {
                 return $index;
             }

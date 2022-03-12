@@ -11,8 +11,13 @@ use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\Remote;
+use Codeception\Stub;
 use Exception;
 use PHPUnit\Runner\CodeCoverage as PHPUnitCodeCoverage;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
+
+use function class_exists;
 
 /**
  * Collects code coverage from unit and functional tests.
@@ -48,9 +53,22 @@ class Local extends SuiteSubscriber
 
         $event->getSuite()->collectCodeCoverage(true);
 
+        $result = $event->getResult();
+
+        if (!class_exists(PHPUnitCodeCoverage::class)) {
+            // PHPUnit 9
+            $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
+            $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
+        }
+
         Filter::setup($this->coverage)
             ->whiteList($this->filters)
             ->blackList($this->filters);
+
+        if (!class_exists(PHPUnitCodeCoverage::class)) {
+            // PHPUnit 9
+            $result->setCodeCoverage($this->coverage);
+        }
     }
 
     public function afterSuite(SuiteEvent $event): void
@@ -59,8 +77,14 @@ class Local extends SuiteSubscriber
             return;
         }
 
-        $codeCoverage = PHPUnitCodeCoverage::instance();
-        PHPUnitCodeCoverage::deactivate();
+        if (class_exists(PHPUnitCodeCoverage::class)) {
+            // PHPUnit 10+
+            $codeCoverage = PHPUnitCodeCoverage::instance();
+            PHPUnitCodeCoverage::deactivate();
+        } else {
+            // PHPUnit 9
+            $codeCoverage = $event->getResult()->getCodeCoverage();
+        }
 
         $this->mergeToPrint($codeCoverage);
     }

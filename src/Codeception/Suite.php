@@ -9,6 +9,7 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Lib\Notification;
+use Codeception\PHPUnit\Wrapper\TestSuite;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\Dependent;
 use Codeception\Test\Test;
@@ -23,22 +24,35 @@ use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
 use PHPUnit\Framework\RiskyDueToUnexpectedAssertionsException;
 use PHPUnit\Framework\RiskyDueToUnintentionallyCoveredCodeException;
 use PHPUnit\Framework\RiskyTest;
+use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTest;
+use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
 use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestResult;
-use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\UnintentionallyCoveredCodeError;
 use PHPUnit\Framework\Warning;
 use PHPUnit\Framework\WarningTestCase;
 use PHPUnit\Metadata\Api\CodeCoverage as CodeCoverageMetadataApi;
 use PHPUnit\Runner\CodeCoverage;
+use PHPUnit\Runner\Version;
+use PHPUnit\Util\Test as TestUtil;
+use SebastianBergmann\CodeCoverage\CodeCoverage as PHPUnitCodeCoverage;
 use SebastianBergmann\CodeCoverage\Exception as OriginalCodeCoverageException;
 use SebastianBergmann\CodeCoverage\UnintentionallyCoveredCodeException;
 use SebastianBergmann\Timer\Timer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Throwable;
+
+// phpcs:disable
+if (Version::series() < 10) {
+    require_once __DIR__ . '/../PHPUnit/Wrapper/PhpUnit9/TestSuite.php';
+} else {
+    require_once __DIR__ . '/../PHPUnit/Wrapper/PhpUnit10/TestSuite.php';
+}
+// phpcs:enable
 
 class Suite extends TestSuite
 {
@@ -68,7 +82,7 @@ class Suite extends TestSuite
         $this->collectCodeCoverage = $enabled;
     }
 
-    public function run(TestResult $result): void
+    public function realRun(TestResult $result): void
     {
         if (count($this) === 0) {
             return;
@@ -89,7 +103,11 @@ class Suite extends TestSuite
 
                     $skip = $test->getMetadata()->getSkip();
                     if ($skip !== null) {
-                        $exception = new SkippedWithMessageException($skip);
+                        if (class_exists(SkippedWithMessageException::class)) {
+                            $exception = new SkippedWithMessageException($skip);
+                        } else {
+                            $exception = new SkippedTestError($skip);
+                        }
                         $result->addFailure($test, $exception, 0);
                         $this->dispatcher->dispatch(new FailEvent($test, 0, $exception), Events::TEST_SKIPPED);
                     }
@@ -122,10 +140,21 @@ class Suite extends TestSuite
     {
         Assert::resetCount();
 
-        $shouldCodeCoverageBeCollected = (new CodeCoverageMetadataApi())->shouldCodeCoverageBeCollectedFor(
-            $test::class,
-            $test->getName(false)
-        );
+        $isPhpUnit9 = false;
+        $codeCoverage = null;
+        if (method_exists($result, 'getCodeCoverage')) {
+            $codeCoverage = $result->getCodeCoverage();
+            $isPhpUnit9 = true;
+        }
+
+        if ($isPhpUnit9) {
+            $shouldCodeCoverageBeCollected = TestUtil::requiresCodeCoverageDataCollection($test);
+        } else {
+            $shouldCodeCoverageBeCollected = (new CodeCoverageMetadataApi())->shouldCodeCoverageBeCollectedFor(
+                $test::class,
+                $test->getName(false)
+            );
+        }
 
         $error      = false;
         $failure    = false;
@@ -145,13 +174,17 @@ class Suite extends TestSuite
             return;
         }
 
-        $collectCodeCoverage = CodeCoverage::isActive() &&
+        $collectCodeCoverage = $this->collectCodeCoverage &&
             !$test instanceof ErrorTestCase &&
             !$test instanceof WarningTestCase &&
             $shouldCodeCoverageBeCollected;
 
         if ($collectCodeCoverage) {
-            CodeCoverage::start($test);
+            if ($isPhpUnit9) {
+                $codeCoverage->start($test);
+            } else {
+                CodeCoverage::start($test);
+            }
         }
 
         $timer = new Timer();
@@ -162,7 +195,7 @@ class Suite extends TestSuite
         } catch (AssertionFailedError $e) {
             $failure = true;
 
-            if ($e instanceof RiskyTest) {
+            if ($e instanceof RiskyTest || $e instanceof RiskyTestError) {
                 $useless = true;
             } elseif ($e instanceof IncompleteTestError) {
                 $incomplete = true;
@@ -196,6 +229,12 @@ class Suite extends TestSuite
         $time = $timer->stop()->asSeconds();
         $test->addToAssertionCount(Assert::getCount());
 
+        if ($isPhpUnit9) {
+            $numberOfAssertionsPerformed = $test->getNumAssertions();
+        } else {
+            $numberOfAssertionsPerformed = $test->numberOfAssertionsPerformed();
+        }
+
         if (
             $this->reportUselessTests &&
             !$incomplete &&
@@ -204,11 +243,15 @@ class Suite extends TestSuite
             !$failure &&
             !$warning &&
             !$test->doesNotPerformAssertions() &&
-            $test->numberOfAssertionsPerformed() === 0
+            $numberOfAssertionsPerformed === 0
         ) {
             $failure = true;
             $useless = true;
-            $e = new RiskyBecauseNoAssertionsWerePerformedException();
+            if ($isPhpUnit9) {
+                $e = new RiskyTestError('This test did not perform any assertions');
+            } else {
+                $e = new RiskyBecauseNoAssertionsWerePerformedException();
+            }
         }
 
         if ($collectCodeCoverage) {
@@ -218,15 +261,27 @@ class Suite extends TestSuite
 
             if ($append) {
                 try {
-                    $linesToBeCovered = (new CodeCoverageMetadataApi())->linesToBeCovered(
-                        $test::class,
-                        $test->getName(false)
-                    );
+                    if ($isPhpUnit9) {
+                        $linesToBeCovered = TestUtil::getLinesToBeCovered(
+                            get_class($test),
+                            $test->getName(false)
+                        );
 
-                    $linesToBeUsed = (new CodeCoverageMetadataApi())->linesToBeUsed(
-                        $test::class,
-                        $test->getName(false)
-                    );
+                        $linesToBeUsed = TestUtil::getLinesToBeUsed(
+                            get_class($test),
+                            $test->getName(false)
+                        );
+                    } else {
+                        $linesToBeCovered = (new CodeCoverageMetadataApi())->linesToBeCovered(
+                            $test::class,
+                            $test->getName(false)
+                        );
+
+                        $linesToBeUsed = (new CodeCoverageMetadataApi())->linesToBeUsed(
+                            $test::class,
+                            $test->getName(false)
+                        );
+                    }
                 } catch (InvalidCoversTargetException $cce) {
                     $result->addWarning(
                         $test,
@@ -239,16 +294,27 @@ class Suite extends TestSuite
             }
 
             try {
-                CodeCoverage::stop(
-                    $append,
-                    $linesToBeCovered,
-                    $linesToBeUsed
-                );
+                if ($isPhpUnit9) {
+                    $codeCoverage->stop(
+                        $append,
+                        $linesToBeCovered,
+                        $linesToBeUsed
+                    );
+                } else {
+                    CodeCoverage::stop(
+                        $append,
+                        $linesToBeCovered,
+                        $linesToBeUsed
+                    );
+                }
             } catch (UnintentionallyCoveredCodeException $cce) {
-                $unintentionallyCoveredCodeError = new RiskyDueToUnintentionallyCoveredCodeException(
-                    'This test executed code that is not listed as code to be covered or used:' .
-                    PHP_EOL . $cce->getMessage()
-                );
+                $message = 'This test executed code that is not listed as code to be covered or used:' .
+                    PHP_EOL . $cce->getMessage();
+                if ($isPhpUnit9) {
+                    $unintentionallyCoveredCodeError = new UnintentionallyCoveredCodeError($message);
+                } else {
+                    $unintentionallyCoveredCodeError = new RiskyDueToUnintentionallyCoveredCodeException($message);
+                }
             } catch (OriginalCodeCoverageException $cce) {
                 $error = true;
                 $e ??= $cce;
@@ -279,11 +345,20 @@ class Suite extends TestSuite
         } elseif (
             $this->reportUselessTests &&
             $test->doesNotPerformAssertions() &&
-            $test->numberOfAssertionsPerformed() > 0
+            $numberOfAssertionsPerformed > 0
         ) {
-            $e = new RiskyDueToUnexpectedAssertionsException(
-                $test->numberOfAssertionsPerformed()
-            );
+            if ($isPhpUnit9) {
+                $e = new RiskyTestError(
+                    sprintf(
+                        'This test is annotated with "@doesNotPerformAssertions" but performed %d assertions',
+                        $test->getNumAssertions()
+                    )
+                );
+            } else {
+                $e = new RiskyDueToUnexpectedAssertionsException(
+                    $numberOfAssertionsPerformed
+                );
+            }
             $result->addFailure($test, $e, $time);
             $eventType = Events::TEST_USELESS;
         } else {

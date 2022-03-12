@@ -12,6 +12,7 @@ use Codeception\Step\Comment;
 use Codeception\Step\Meta;
 use Codeception\Test\Metadata;
 use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
 
 class Scenario
@@ -128,7 +129,13 @@ class Scenario
 
     public function skip(string $message = ''): void
     {
-        throw new SkippedWithMessageException($message);
+        if (\class_exists(SkippedWithMessageException::class)) {
+            // PHPUnit 10+
+            throw new SkippedWithMessageException($message);
+        }
+
+        //PHPUnit 9
+        throw new SkippedTestError($message);
     }
 
     public function incomplete(string $message = ''): void

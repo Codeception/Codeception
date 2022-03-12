@@ -29,6 +29,7 @@ use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\RiskyTest;
+use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTest;
 use SebastianBergmann\Timer\Duration;
@@ -254,7 +255,11 @@ class Console implements EventSubscriberInterface
         $test = $event->getTest();
 
         if (method_exists($test, 'numberOfAssertionsPerformed')) {
+            //PHPUnit 10+
             $this->assertionCount += $test->numberOfAssertionsPerformed();
+        } elseif (method_exists($test, 'getNumAssertions')) {
+            // PHPUnit 9
+            $this->assertionCount += $test->getNumAssertions();
         }
     }
 
@@ -550,6 +555,7 @@ class Console implements EventSubscriberInterface
             $fail instanceof SkippedTest
             || $fail instanceof IncompleteTestError
             || $fail instanceof RiskyTest
+            || $fail instanceof RiskyTestError
         ) {
             $testStyle = 'warning';
         }
@@ -661,6 +667,7 @@ class Console implements EventSubscriberInterface
             $exception instanceof SkippedTest
             || $exception instanceof IncompleteTestError
             || $exception instanceof RiskyTest
+            || $exception instanceof RiskyTestError
         ) {
             return;
         }

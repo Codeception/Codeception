@@ -1,6 +1,7 @@
 <?php
 
 use Codeception\Configuration;
+use PHPUnit\Runner\CodeCoverage;
 
 class C3Test extends \Codeception\PHPUnit\TestCase
 {
@@ -34,7 +35,10 @@ class C3Test extends \Codeception\PHPUnit\TestCase
         unset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
         \Codeception\Util\FileSystem::deleteDir($this->c3_dir);
 
-        \PHPUnit\Runner\CodeCoverage::deactivate();
+        if (method_exists('CodeCoverage', 'deactivate')) {
+            // PHPUnit 10+
+            CodeCoverage::deactivate();
+        }
     }
 
     public function testC3CodeCoverageStarted()
