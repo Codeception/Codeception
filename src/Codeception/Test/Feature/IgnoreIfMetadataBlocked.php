@@ -9,6 +9,7 @@ use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 
 trait IgnoreIfMetadataBlocked
 {
@@ -28,12 +29,10 @@ trait IgnoreIfMetadataBlocked
 
         if ($this->getMetadata()->getSkip() !== null) {
             $skipMessage = (string)$this->getMetadata()->getSkip();
-            if (\class_exists(SkippedWithMessageException::class)) {
-                // PHPUnit 10+
-                $skippedTestError = new SkippedWithMessageException($skipMessage);
-            } else {
-                // PHPUnit 9
+            if (PHPUnitVersion::series() < 10) {
                 $skippedTestError = new SkippedTestError($skipMessage);
+            } else {
+                $skippedTestError = new SkippedWithMessageException($skipMessage);
             }
 
             $this->getTestResultObject()->addFailure($this, $skippedTestError, 0);

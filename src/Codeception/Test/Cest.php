@@ -14,11 +14,11 @@ use Exception;
 use LogicException;
 use PHPUnit\Metadata\Annotation\Parser\Registry as AnnotationRegistry;
 use PHPUnit\Metadata\Api\CodeCoverage;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
 use ReflectionMethod;
 
 use function array_slice;
-use function class_exists;
 use function file;
 use function get_class;
 use function implode;
@@ -120,19 +120,17 @@ class Cest extends Test implements
 
     protected function executeBeforeMethods(string $testMethod, $I): void
     {
-        if (class_exists(AnnotationRegistry::class)) {
-            // PHPUnit 10+
-            foreach (AnnotationRegistry::getInstance()->forMethod(get_class($this->testClassInstance), $testMethod)->symbolAnnotations() as $annotation => $values) {
-                if ($annotation === 'before') {
-                    $this->executeContextMethod(trim($values[0]), $I);
-                }
-            }
-        } else {
-            // PHPUnit 9
+        if (PHPUnitVersion::series() < 10) {
             $annotations = TestUtil::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
             if (!empty($annotations['method']['before'])) {
                 foreach ($annotations['method']['before'] as $m) {
                     $this->executeContextMethod(trim($m), $I);
+                }
+            }
+        } else {
+            foreach (AnnotationRegistry::getInstance()->forMethod(get_class($this->testClassInstance), $testMethod)->symbolAnnotations() as $annotation => $values) {
+                if ($annotation === 'before') {
+                    $this->executeContextMethod(trim($values[0]), $I);
                 }
             }
         }
@@ -140,19 +138,17 @@ class Cest extends Test implements
 
     protected function executeAfterMethods(string $testMethod, $I): void
     {
-        if (class_exists(AnnotationRegistry::class)) {
-            // PHPUnit 10+
-            foreach (AnnotationRegistry::getInstance()->forMethod(get_class($this->testClassInstance), $testMethod)->symbolAnnotations() as $annotation => $values) {
-                if ($annotation === 'after') {
-                    $this->executeContextMethod(trim($values[0]), $I);
-                }
-            }
-        } else {
-            // PHPUnit 9
+        if (PHPUnitVersion::series() < 10) {
             $annotations = TestUtil::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
             if (!empty($annotations['method']['after'])) {
                 foreach ($annotations['method']['after'] as $m) {
                     $this->executeContextMethod(trim($m), $I);
+                }
+            }
+        } else {
+            foreach (AnnotationRegistry::getInstance()->forMethod(get_class($this->testClassInstance), $testMethod)->symbolAnnotations() as $annotation => $values) {
+                if ($annotation === 'after') {
+                    $this->executeContextMethod(trim($values[0]), $I);
                 }
             }
         }
@@ -244,13 +240,10 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        if (class_exists(CodeCoverage::class)) {
-            // PHPUnit 10+
-            return (new CodeCoverage())->linesToBeCovered($class, $method);
-        } else {
-            // PHPUnit 9
+        if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeCovered($class, $method);
         }
+        return (new CodeCoverage())->linesToBeCovered($class, $method);
     }
 
     public function getLinesToBeUsed(): array
@@ -258,12 +251,9 @@ class Cest extends Test implements
         $class  = get_class($this->getTestClass());
         $method = $this->getTestMethod();
 
-        if (class_exists(CodeCoverage::class)) {
-            // PHPUnit 10+
-            return (new CodeCoverage())->linesToBeUsed($class, $method);
-        } else {
-            // PHPUnit 9
+        if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeUsed($class, $method);
         }
+        return (new CodeCoverage())->linesToBeUsed($class, $method);
     }
 }

@@ -115,21 +115,19 @@ class Printer implements EventSubscriberInterface
 
     protected function printConsole(): void
     {
-        if (class_exists(Thresholds::class)) {
-            // PHPUnit 10+
+        if (PHPUnitVersion::series() < 10) {
+            $writer = new TextReport(
+                $this->settings['low_limit'],
+                $this->settings['high_limit'],
+                $this->settings['show_uncovered'],
+                $this->settings['show_only_summary']
+            );
+        } else {
             $writer = new TextReport(
                 Thresholds::from(
                     $this->settings['low_limit'],
                     $this->settings['high_limit'],
                 ),
-                $this->settings['show_uncovered'],
-                $this->settings['show_only_summary']
-            );
-        } else {
-            // PHPUnit 9
-            $writer = new TextReport(
-                $this->settings['low_limit'],
-                $this->settings['high_limit'],
                 $this->settings['show_uncovered'],
                 $this->settings['show_only_summary']
             );
@@ -139,18 +137,7 @@ class Printer implements EventSubscriberInterface
 
     protected function printHtml(): void
     {
-        if (class_exists(Thresholds::class)) {
-            // PHPUnit 10+
-            $writer = new HtmlFacadeReport(
-                sprintf(
-                    ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit %s</a>',
-                    PHPUnitVersion::id()
-                ),
-                null,
-                Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']),
-            );
-        } else {
-            // PHPUnit 9
+        if (PHPUnitVersion::series() < 10) {
             $writer = new HtmlFacadeReport(
                 $this->settings['low_limit'],
                 $this->settings['high_limit'],
@@ -158,6 +145,15 @@ class Printer implements EventSubscriberInterface
                     ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit %s</a>',
                     PHPUnitVersion::id()
                 )
+            );
+        } else {
+            $writer = new HtmlFacadeReport(
+                sprintf(
+                    ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit %s</a>',
+                    PHPUnitVersion::id()
+                ),
+                null,
+                Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']),
             );
         }
 
@@ -178,21 +174,19 @@ class Printer implements EventSubscriberInterface
 
     protected function printText(): void
     {
-        if (class_exists(Thresholds::class)) {
-            // PHPUnit 10+
+        if (PHPUnitVersion::series() < 10) {
+            $writer = new TextReport(
+                $this->settings['low_limit'],
+                $this->settings['high_limit'],
+                $this->settings['show_uncovered'],
+                $this->settings['show_only_summary']
+            );
+        } else {
             $writer = new TextReport(
                 Thresholds::from(
                     $this->settings['low_limit'],
                     $this->settings['high_limit'],
                 ),
-                $this->settings['show_uncovered'],
-                $this->settings['show_only_summary']
-            );
-        } else {
-            // PHPUnit 9
-            $writer = new TextReport(
-                $this->settings['low_limit'],
-                $this->settings['high_limit'],
                 $this->settings['show_uncovered'],
                 $this->settings['show_only_summary']
             );

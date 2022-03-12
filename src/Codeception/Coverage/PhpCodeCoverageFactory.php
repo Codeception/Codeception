@@ -6,12 +6,10 @@ namespace Codeception\Coverage;
 
 use Codeception\Configuration;
 use PHPUnit\Runner\CodeCoverage as PHPUnitCodeCoverage;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Driver\Selector;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
-
-use function class_exists;
 
 class PhpCodeCoverageFactory
 {
@@ -20,15 +18,7 @@ class PhpCodeCoverageFactory
         $coverageConfiguration = Configuration::config()['coverage'];
         $pathCoverage = $coverageConfiguration['path_coverage'] ?? false;
 
-        if (class_exists(PHPUnitCodeCoverage::class)) {
-            // PHPUnit 10 (php-code-coverage 10)
-            $filter = new CodeCoverageFilter();
-            if (!PHPUnitCodeCoverage::isActive()) {
-                PHPUnitCodeCoverage::activate($filter, $pathCoverage);
-            }
-            return PHPUnitCodeCoverage::instance();
-        } else {
-            // PHPUnit 9 (php-code-coverage 9)
+        if (PHPUnitVersion::series() < 10) {
             $filter = new CodeCoverageFilter();
             if ($pathCoverage) {
                 $driver = (new Selector())->forLineAndPathCoverage($filter);
@@ -37,5 +27,11 @@ class PhpCodeCoverageFactory
             }
             return new CodeCoverage($driver, $filter);
         }
+
+        $filter = new CodeCoverageFilter();
+        if (!PHPUnitCodeCoverage::isActive()) {
+            PHPUnitCodeCoverage::activate($filter, $pathCoverage);
+        }
+        return PHPUnitCodeCoverage::instance();
     }
 }

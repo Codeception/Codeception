@@ -33,7 +33,6 @@ use function implode;
 use function preg_match;
 use function preg_quote;
 use function preg_replace;
-use function rtrim;
 use function sprintf;
 use function str_replace;
 

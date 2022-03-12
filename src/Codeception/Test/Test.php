@@ -18,6 +18,7 @@ use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Runner\Version;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use RuntimeException;
 use SebastianBergmann\Timer\Timer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -177,12 +178,10 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
             if ($this->reportUselessTests && $this->assertionCount === 0 && $eventType === Events::TEST_SUCCESS) {
                 $eventType = Events::TEST_USELESS;
-                if (class_exists(RiskyBecauseNoAssertionsWerePerformedException::class)) {
-                    // PHPUnit 10+
-                    $e = new RiskyBecauseNoAssertionsWerePerformedException();
-                } else {
-                    // PHPUnit 9
+                if (PHPUnitVersion::series() < 10) {
                     $e = new RiskyTestError('This test did not perform any assertions');
+                } else {
+                    $e = new RiskyBecauseNoAssertionsWerePerformedException();
                 }
                 $result->addFailure($this, $e, $time);
             }

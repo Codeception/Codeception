@@ -14,7 +14,6 @@ use RecursiveFilterIterator;
 use RecursiveIterator;
 
 use function end;
-use function is_null;
 use function preg_match;
 
 /**

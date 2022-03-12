@@ -9,7 +9,6 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
-use ReflectionType;
 
 use function array_filter;
 use function array_keys;

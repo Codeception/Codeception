@@ -9,9 +9,8 @@ use Codeception\Test\Interfaces\StrictCoverage;
 use Codeception\Test\Test as CodeceptTest;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Runner\CodeCoverage as PHPUnitCoverage;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
-
-use function class_exists;
 
 trait CodeCoverage
 {
@@ -19,18 +18,16 @@ trait CodeCoverage
 
     public function codeCoverageStart(): void
     {
-        if (class_exists(PHPUnitCoverage::class)) {
-            // PHPUnit 10+
-            if (!PHPUnitCoverage::isActive()) {
-                return;
-            }
-            $codeCoverage = PHPUnitCoverage::instance();
-        } else {
-            // PHPUnit 9
+        if (PHPUnitVersion::series() < 10) {
             $codeCoverage = $this->getTestResultObject()->getCodeCoverage();
             if (!$codeCoverage) {
                 return;
             }
+        } else {
+            if (!PHPUnitCoverage::isActive()) {
+                return;
+            }
+            $codeCoverage = PHPUnitCoverage::instance();
         }
 
         $codeCoverage->start(Descriptor::getTestSignature($this));
@@ -38,18 +35,16 @@ trait CodeCoverage
 
     public function codeCoverageEnd(string $status, float $time): void
     {
-        if (class_exists(PHPUnitCoverage::class)) {
-            // PHPUnit 10+
-            if (!PHPUnitCoverage::isActive()) {
-                return;
-            }
-            $codeCoverage = PHPUnitCoverage::instance();
-        } else {
-            // PHPUnit 9
+        if (PHPUnitVersion::series() < 10) {
             $codeCoverage = $this->getTestResultObject()->getCodeCoverage();
             if (!$codeCoverage) {
                 return;
             }
+        } else {
+            if (!PHPUnitCoverage::isActive()) {
+                return;
+            }
+            $codeCoverage = PHPUnitCoverage::instance();
         }
 
         if ($this instanceof StrictCoverage) {

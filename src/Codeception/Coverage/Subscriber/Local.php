@@ -14,10 +14,9 @@ use Codeception\Lib\Interfaces\Remote;
 use Codeception\Stub;
 use Exception;
 use PHPUnit\Runner\CodeCoverage as PHPUnitCodeCoverage;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
-
-use function class_exists;
 
 /**
  * Collects code coverage from unit and functional tests.
@@ -55,8 +54,7 @@ class Local extends SuiteSubscriber
 
         $result = $event->getResult();
 
-        if (!class_exists(PHPUnitCodeCoverage::class)) {
-            // PHPUnit 9
+        if (PHPUnitVersion::series() < 10) {
             $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
             $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
         }
@@ -65,8 +63,7 @@ class Local extends SuiteSubscriber
             ->whiteList($this->filters)
             ->blackList($this->filters);
 
-        if (!class_exists(PHPUnitCodeCoverage::class)) {
-            // PHPUnit 9
+        if (PHPUnitVersion::series() < 10) {
             $result->setCodeCoverage($this->coverage);
         }
     }
@@ -77,13 +74,11 @@ class Local extends SuiteSubscriber
             return;
         }
 
-        if (class_exists(PHPUnitCodeCoverage::class)) {
-            // PHPUnit 10+
+        if (PHPUnitVersion::series() < 10) {
+            $codeCoverage = $event->getResult()->getCodeCoverage();
+        } else {
             $codeCoverage = PHPUnitCodeCoverage::instance();
             PHPUnitCodeCoverage::deactivate();
-        } else {
-            // PHPUnit 9
-            $codeCoverage = $event->getResult()->getCodeCoverage();
         }
 
         $this->mergeToPrint($codeCoverage);

@@ -8,6 +8,7 @@ use Codeception\Lib\ModuleContainer;
 use Codeception\Step as CodeceptionStep;
 use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 
 class Skip extends CodeceptionStep
 {
@@ -15,13 +16,11 @@ class Skip extends CodeceptionStep
     {
         $skipMessage = $this->getAction();
 
-        if (\class_exists(SkippedWithMessageException::class)) {
-            // PHPUnit 10+
-            throw new SkippedWithMessageException($skipMessage);
+        if (PHPUnitVersion::series() < 10) {
+            throw new SkippedTestError($skipMessage);
         }
 
-        //PHPUnit 9
-        throw new SkippedTestError($skipMessage);
+        throw new SkippedWithMessageException($skipMessage);
     }
 
     public function __toString(): string

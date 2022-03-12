@@ -254,11 +254,10 @@ class Console implements EventSubscriberInterface
     {
         $test = $event->getTest();
 
+        //method_exists must be used here, because it is possible that some test format doesn't implement either method
         if (method_exists($test, 'numberOfAssertionsPerformed')) {
-            //PHPUnit 10+
             $this->assertionCount += $test->numberOfAssertionsPerformed();
         } elseif (method_exists($test, 'getNumAssertions')) {
-            // PHPUnit 9
             $this->assertionCount += $test->getNumAssertions();
         }
     }

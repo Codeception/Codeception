@@ -32,6 +32,7 @@ use Codeception\Subscriber\GracefulTermination;
 use Codeception\Subscriber\Module;
 use Codeception\Subscriber\PrepareTest;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\TextUI\Configuration\Registry;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -102,8 +103,7 @@ class Codecept
 
     private function initializeTestResult(): TestResult
     {
-        if (class_exists(Registry::class)) {
-            // PHPUnit 10
+        if (PHPUnitVersion::series() >= 10) {
             /*
              * Configuration must be registered, but TestResult only cares about stopOnError,
              * stopOnFailure and other stopOn settings that we don't set

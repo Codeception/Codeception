@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Codeception\Template;
 
-use Codeception\Configuration;
 use Codeception\Extension\RunFailed;
 use Codeception\InitTemplate;
 use Codeception\Module\Asserts;

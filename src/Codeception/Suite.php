@@ -39,7 +39,6 @@ use PHPUnit\Metadata\Api\CodeCoverage as CodeCoverageMetadataApi;
 use PHPUnit\Runner\CodeCoverage;
 use PHPUnit\Runner\Version;
 use PHPUnit\Util\Test as TestUtil;
-use SebastianBergmann\CodeCoverage\CodeCoverage as PHPUnitCodeCoverage;
 use SebastianBergmann\CodeCoverage\Exception as OriginalCodeCoverageException;
 use SebastianBergmann\CodeCoverage\UnintentionallyCoveredCodeException;
 use SebastianBergmann\Timer\Timer;
