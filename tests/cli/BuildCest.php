@@ -36,7 +36,7 @@ class BuildCest
         }
     }
 
-    public function usesTypehintsWherePossible(CliGuy $I, Scenario $scenario)
+    public function usesLiteralTypesOnPHP7(CliGuy $I, Scenario $scenario)
     {
         if (PHP_MAJOR_VERSION < 7) {
             $scenario->skip('Does not work in PHP < 7');
@@ -173,5 +173,41 @@ class BuildCest
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeInThisFile('public function seeDirFound(mixed $dir = NULL): mixed');
+    }
+
+    public function generateCorrectTypeWhenSelfTypeIsUsed(CliGuy $I, Scenario $scenario)
+    {
+        if (PHP_MAJOR_VERSION < 7) {
+            $scenario->skip('Does not work in PHP < 7');
+        }
+        $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
+        $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(self $dir): self', $cliHelperContents);
+        file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
+
+        $I->runShellCommand('php codecept build');
+        $I->seeInShellOutput('generated successfully');
+        $I->seeInSupportDir('CliGuy.php');
+        $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
+        $I->seeInThisFile('use _generated\CliGuyActions');
+        $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
+        $I->seeInThisFile('public function seeDirFound(\Codeception\Module\CliHelper $dir): \Codeception\Module\CliHelper');
+    }
+
+    public function generateCorrectTypeWhenParentTypeIsUsed(CliGuy $I, Scenario $scenario)
+    {
+        if (PHP_MAJOR_VERSION < 7) {
+            $scenario->skip('Does not work in PHP < 7');
+        }
+        $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
+        $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(parent $dir): parent', $cliHelperContents);
+        file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
+
+        $I->runShellCommand('php codecept build');
+        $I->seeInShellOutput('generated successfully');
+        $I->seeInSupportDir('CliGuy.php');
+        $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
+        $I->seeInThisFile('use _generated\CliGuyActions');
+        $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
+        $I->seeInThisFile('public function seeDirFound(\Codeception\Module $dir): \Codeception\Module');
     }
 }
