@@ -262,7 +262,7 @@ EOF;
     {
         $strings = [];
         foreach ($types as $type) {
-            $strings []= $this->stringifyNamedType($type, $moduleClass);
+            $strings [] = $this->stringifyNamedType($type, $moduleClass);
         }
 
         return implode($separator, $strings);
