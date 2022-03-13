@@ -8,7 +8,7 @@ namespace Codeception\Module;
  * It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
  * and LIBRARY_PATH set to './library'. If it's not then set the appropriate path in the Config.
  * 
- * [Tutorial](http://codeception.com/01-27-2012/bdd-with-zend-framework.html)
+ * [Tutorial](https://codeception.com/01-27-2012/bdd-with-zend-framework.html)
  *
  * ## Status
  *

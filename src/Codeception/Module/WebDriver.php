@@ -18,7 +18,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *
  * ## Installation
  *
- * Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
+ * Download [Selenium2 WebDriver](https://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
  * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
  * ## Migration Guide (Selenium2 -> WebDriver)
@@ -43,7 +43,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * * restart - set to false (default) to share selenium sesssion between tests, or set to true to create a new selenium session per test
  * * clear_cookies - set to false to keep cookies, or set to true (default) to delete all cookies between cases.
  * * wait - set the implicit wait (0 secs) by default.
- * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+ * * capabilities - sets Selenium2 [desired capabilities](https://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  *
  * ### Example (`acceptance.suite.yml`)
  *

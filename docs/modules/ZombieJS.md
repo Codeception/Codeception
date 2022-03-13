@@ -2,7 +2,7 @@
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZombieJS.php)**
 
 
-Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
+Uses Mink to manipulate Zombie.js headless browser (https://zombie.labnotes.org/)
 
 Note, all methods take CSS selectors to fetch elements.
 For links, buttons, fields you can use names/values/ids of elements.
@@ -18,15 +18,15 @@ This module is considered <strong>deprecated</strong> and will be replaced with 
 * Maintainer: **synchrone**
 * Stability: **stable**
 * Contact: https://github.com/synchrone
-* relies on [Mink](http://mink.behat.org)
+* relies on [Mink](https://mink.behat.org)
 
 
 ## Installation
 
 In order to talk with zombie.js server, you should install and configure zombie.js first:
 
-* Install node.js by following instructions from the official site: http://nodejs.org/.
-* Install npm (node package manager) by following instructions from the http://npmjs.org/.
+* Install node.js by following instructions from the official site: https://nodejs.org/.
+* Install npm (node package manager) by following instructions from the https://npmjs.org/.
 * Install zombie.js with npm:
 ``` $ npm install -g zombie@1```
 

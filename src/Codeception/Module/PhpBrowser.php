@@ -10,7 +10,7 @@ use Codeception\TestCase;
 use Symfony\Component\BrowserKit\Request;
 
 /**
- * Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
+ * Uses [Mink](https://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](https://guzzlephp.org/) to interact with your application over CURL.
  * Module works over CURL and requires **PHP CURL extension** to be enabled.
  *
  * Use to perform web acceptance tests with non-javascript browser.
@@ -22,7 +22,7 @@ use Symfony\Component\BrowserKit\Request;
  * * Maintainer: **davert**
  * * Stability: **stable**
  * * Contact: davert.codecept@mailican.com
- * * relies on [Mink](http://mink.behat.org) and [Guzzle](http://guzzlephp.org/)
+ * * relies on [Mink](https://mink.behat.org) and [Guzzle](https://guzzlephp.org/)
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*
  *
@@ -44,7 +44,7 @@ use Symfony\Component\BrowserKit\Request;
  * ## Public Properties
  *
  * * session - contains Mink Session
- * * guzzle - contains [Guzzle](http://guzzlephp.org/) client instance: `\Guzzle\Http\Client`
+ * * guzzle - contains [Guzzle](https://guzzlephp.org/) client instance: `\Guzzle\Http\Client`
  *
  * All SSL certification checks are disabled by default.
  * To configure CURL options use `curl` config parameter.
@@ -170,7 +170,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
     /**
      * Low-level API method.
-     * If Codeception commands are not enough, use [Guzzle HTTP Client](http://guzzlephp.org/) methods directly
+     * If Codeception commands are not enough, use [Guzzle HTTP Client](https://guzzlephp.org/) methods directly
      *
      * Example:
      *

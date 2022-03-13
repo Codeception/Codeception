@@ -7,7 +7,7 @@ title: Codeception - Documentation
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Yii2.php)**
 
 
-This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
+This module provides integration with [Yii framework](https://www.yiiframework.com/) (2.0).
 
 The following configurations are required for this module:
 <ul>

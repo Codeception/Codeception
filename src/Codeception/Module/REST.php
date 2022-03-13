@@ -308,7 +308,7 @@ class REST extends \Codeception\Module
      *
      * @param array $linkEntries (entry is array with keys "uri" and "link-param")
      *
-     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     * @link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
      *
      * @author samva.ua@gmail.com
      */
@@ -338,7 +338,7 @@ class REST extends \Codeception\Module
      * @param       $url
      * @param array $linkEntries (entry is array with keys "uri" and "link-param")
      *
-     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     * @link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
      *
      * @author samva.ua@gmail.com
      */
@@ -354,7 +354,7 @@ class REST extends \Codeception\Module
      * @param       $url
      * @param array $linkEntries (entry is array with keys "uri" and "link-param")
      *
-     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     * @link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
      *
      * @author samva.ua@gmail.com
      */
@@ -431,7 +431,7 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertEquals(
             0,
             $num = json_last_error(),
-            "json decoding error #$num, see http://php.net/manual/en/function.json-last-error.php"
+            "json decoding error #$num, see https://php.net/manual/en/function.json-last-error.php"
         );
     }
     /**
@@ -454,7 +454,7 @@ class REST extends \Codeception\Module
         libxml_use_internal_errors(false);
         \PHPUnit_Framework_Assert::assertNotSame(false,
             $doc ,
-            "xml decoding error #$num with message \"$title\", see http://www.xmlsoft.org/html/libxml-xmlerror.html"
+            "xml decoding error #$num with message \"$title\", see https://www.xmlsoft.org/html/libxml-xmlerror.html"
         );
     }
 
@@ -580,7 +580,7 @@ class REST extends \Codeception\Module
     /**
      * @author nleippe@integr8ted.com
      * @author tiger.seo@gmail.com
-     * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
+     * @link https://www.php.net/manual/en/function.array-intersect-assoc.php#39822
      *
      * @param mixed $arr1
      * @param mixed $arr2

@@ -21,7 +21,7 @@ Will save a screenshot of browser window to log directory on fail.
 
 ### Installation
 
-[Download Selenium RC Server](http://seleniumhq.org/download)
+[Download Selenium RC Server](https://seleniumhq.org/download)
 
 Execute it: `java -jar selenium-server-standalone-x.xx.xxx.jar`
 
@@ -34,7 +34,7 @@ Don't forget to turn on Db repopulation if you are using database.
 * Maintainer: **davert**
 * Stability: **stable**
 * Contact: codecept@davert.mail.ua
-* relies on [Mink](http://mink.behat.org)
+* relies on [Mink](https://mink.behat.org)
 
 ### Configuration
 

@@ -213,7 +213,7 @@ class Laravel4 extends \Codeception\Util\Framework implements \Codeception\Util\
 
     /**
      * Return an instance of a class from the IoC Container.
-     * (http://laravel.com/docs/ioc)
+     * (https://laravel.com/docs/ioc)
      *
      * Example
      * ``` php

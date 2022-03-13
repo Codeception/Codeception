@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 /**
- * This module provides integration with [Social Engine](http://www.socialengine.net/) v4.
+ * This module provides integration with [Social Engine](https://www.socialengine.net/) v4.
  *
  * Functional tests can be run inside Social Engine. All commands of this module are just the same as in other modules that share Framework interface.
  *
@@ -11,7 +11,7 @@ namespace Codeception\Module;
  * * Maintainer: **Artem Kovradin**
  * * Stability: **beta**
  * * Contact: https://github.com/horechek
- * * URL: http://tvorzasp.com
+     * * URL: http://tvorzasp.com
  *
  * ## Config
  *

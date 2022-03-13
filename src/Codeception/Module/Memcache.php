@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 /**
- * Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
+ * Connects to [memcached](https://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
  *
  * Performs a cleanup by flushing all values after each test run.
  *
