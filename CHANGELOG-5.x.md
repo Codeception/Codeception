@@ -5,6 +5,7 @@
 * Tests of all formats are reported as useless if they perform no assertions and `reports_useless_tests` setting is enabled
 * Added path_coverage setting to enable path and branch coverage #6158 by @s0lus
 * Added optional value to `fail-fast` option (#6275) by #Verest
+* Module after and failed hooks are executed in reverse order (#6062) by WillemHoman
 * Removed `JSON` and `TAP` loggers
 * Removed code coverage blacklist functionality
 * Removed deprecated class aliases
@@ -39,3 +40,7 @@
 * Introduced PSR-12 code style
 * Extracted some code to modules and shared libs
 * Fixed new incompatibilities with PHPUnit 10
+
+#### 5.0.0-RC1
+
+* Supports PHPUnit 9 only
