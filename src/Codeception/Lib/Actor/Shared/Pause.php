@@ -16,10 +16,13 @@ trait Pause
             return;
         }
 
+        $logFile = '.pause.log';
+        $relativeLogFilePath = codecept_relative_path(codecept_output_dir($logFile));
         $psyConf = new Configuration([
             'prompt' => '>> ',
-            'startupMessage' => '<warning>Execution PAUSED</warning> use $I-> to run commands'
+            'startupMessage' => "<warning>Execution PAUSED</warning> use \$I-> to run commands.\nAll commands will be saved to $relativeLogFilePath"
         ]);
+        $psyConf->setHistoryFile(codecept_output_dir($logFile));
         $psy = new Shell($psyConf);
         $psy->setScopeVariables(['I' => $this]);
 
