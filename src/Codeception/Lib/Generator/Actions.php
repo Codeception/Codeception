@@ -175,8 +175,9 @@ EOF;
             $type = '';
             $reflectionType = $param->getType();
             if ($reflectionType !== null) {
-                $type = $this->stringifyType($reflectionType) . ' ';
+                $type = $this->stringifyType($reflectionType, $refMethod->getDeclaringClass()) . ' ';
             }
+
             if ($param->isOptional()) {
                 $params[] = $type . '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
@@ -236,38 +237,52 @@ EOF;
         if (!$returnType instanceof ReflectionType) {
             return '';
         }
-        return ': ' . $this->stringifyType($returnType);
+        return ': ' . $this->stringifyType($returnType, $refMethod->getDeclaringClass());
     }
 
-    private function stringifyType(ReflectionType $type): string
+    private function stringifyType(ReflectionType $type, ReflectionClass $moduleClass): string
     {
-        if ($type instanceof ReflectionNamedType) {
-            return sprintf(
-                '%s%s',
-                ($type->allowsNull() && $type->getName() !== 'mixed') ? '?' : '',
-                $this->stringifyNamedType($type)
-            );
+        if ($type instanceof ReflectionUnionType) {
+            return $this->stringifyNamedTypes($type->getTypes(), $moduleClass, '|');
+        } elseif ($type instanceof ReflectionIntersectionType) {
+            return $this->stringifyNamedTypes($type->getTypes(), $moduleClass, '&');
         }
 
-        if ($type instanceof ReflectionUnionType || $type instanceof ReflectionIntersectionType) {
-            return implode(
-                $type instanceof ReflectionUnionType ? '|' : '&',
-                array_map([
-                    $this,
-                    'stringifyNamedType'
-                ], $type->getTypes())
-            );
-        }
-
-        throw new \InvalidArgumentException($type::class . ' is not supported');
+        return sprintf(
+            '%s%s',
+            ($type->allowsNull() && $type->getName() !== 'mixed') ? '?' : '',
+            $this->stringifyNamedType($type, $moduleClass)
+        );
     }
 
-    private function stringifyNamedType(\ReflectionNamedType $type): string
+    /**
+     * @param ReflectionNamedType[] $types
+     */
+    private function stringifyNamedTypes(array $types, ReflectionClass $moduleClass, string $separator): string
     {
+        $strings = [];
+        foreach ($types as $type) {
+            $strings []= $this->stringifyNamedType($type, $moduleClass);
+        }
+
+        return implode($separator, $strings);
+    }
+
+
+    private function stringifyNamedType(ReflectionNamedType $type, ReflectionClass $moduleClass): string
+    {
+        $typeName = $type->getName();
+
+        if ($typeName === 'self') {
+            $typeName = $moduleClass->getName();
+        } elseif ($typeName === 'parent') {
+            $typeName = $moduleClass->getParentClass()->getName();
+        }
+
         return sprintf(
             '%s%s',
             $type->isBuiltin() ? '' : '\\',
-            $type->getName()
+            $typeName
         );
     }
 }

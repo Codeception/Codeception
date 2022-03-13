@@ -1,3 +1,9 @@
+#### 4.1.31
+
+* RunBefore extension prints error output and stops execution if command failed
+* Action file generator: Fixed handling of intersection types
+* Action file generator: Fixed handling of self and parent types
+
 #### 4.1.30
 
 * Fix handling of previous exception in ExtensionException
