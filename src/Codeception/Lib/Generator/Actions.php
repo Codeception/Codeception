@@ -159,9 +159,10 @@ EOF;
             if (PHP_VERSION_ID >= 70000) {
                 $reflectionType = $param->getType();
                 if ($reflectionType !== null) {
-                    $type = $this->stringifyType($reflectionType) . ' ';
+                    $type = $this->stringifyType($reflectionType, $refMethod->getDeclaringClass()) . ' ';
                 }
             }
+
             if ($param->isOptional()) {
                 $params[] = $type . '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
@@ -229,27 +230,19 @@ EOF;
             return '';
         }
 
-        return ': ' . $this->stringifyType($returnType);
+        return ': ' . $this->stringifyType($returnType, $refMethod->getDeclaringClass());
     }
 
     /**
      * @param \ReflectionType $type
      * @return string
      */
-    private function stringifyType(\ReflectionType $type)
+    private function stringifyType(\ReflectionType $type, \ReflectionClass $moduleClass)
     {
         if ($type instanceof \ReflectionUnionType) {
-            $types = $type->getTypes();
-            return implode(
-                '|',
-                array_map([$this, 'stringifyNamedType'], $types)
-            );
+            return $this->stringifyNamedTypes($type->getTypes(), $moduleClass, '|');
         } elseif ($type instanceof \ReflectionIntersectionType) {
-            $types = $type->getTypes();
-            return implode(
-                '&',
-                array_map([$this, 'stringifyNamedType'], $types)
-            );
+            return $this->stringifyNamedTypes($type->getTypes(), $moduleClass, '&');
         }
 
         if (PHP_VERSION_ID < 70100) {
@@ -260,8 +253,24 @@ EOF;
         return sprintf(
             '%s%s',
             (PHP_VERSION_ID >= 70100 && $type->allowsNull() && $returnTypeString !== 'mixed') ? '?' : '',
-            $this->stringifyNamedType($type)
+            $this->stringifyNamedType($type, $moduleClass)
         );
+    }
+
+    /**
+     * @param array<\ReflectionNamedType|\ReflectionType> $types
+     * @param \ReflectionClass $moduleClass
+     * @param string $separator
+     * @return string
+     */
+    private function stringifyNamedTypes(array $types, \ReflectionClass $moduleClass, $separator)
+    {
+        $strings = [];
+        foreach ($types as $type) {
+            $strings []= $this->stringifyNamedType($type, $moduleClass);
+        }
+
+        return implode($separator, $strings);
     }
 
     /**
@@ -269,17 +278,24 @@ EOF;
      * @return string
      * @todo param is only \ReflectionNamedType in Codeception 5
      */
-    private function stringifyNamedType($type)
+    private function stringifyNamedType($type, \ReflectionClass $moduleClass)
     {
         if (PHP_VERSION_ID < 70100) {
-            $returnTypeString = (string)$type;
+            $typeName = (string)$type;
         } else {
-            $returnTypeString = $type->getName();
+            $typeName = $type->getName();
         }
+
+        if ($typeName === 'self') {
+            $typeName = $moduleClass->getName();
+        } elseif ($typeName === 'parent') {
+            $typeName = $moduleClass->getParentClass()->getName();
+        }
+
         return sprintf(
             '%s%s',
             $type->isBuiltin() ? '' : '\\',
-            $returnTypeString
+            $typeName
         );
     }
 }
