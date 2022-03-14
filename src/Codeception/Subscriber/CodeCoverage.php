@@ -159,7 +159,7 @@ class CodeCoverage implements EventSubscriberInterface
             true,
             $this->settings['low_limit'],
             $this->settings['high_limit'],
-            sprintf(', <a href="http://codeception.com">Codeception</a> and <a href="http://phpunit.de/">PHPUnit %s</a>', \PHPUnit_Runner_Version::id()
+            sprintf(', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit %s</a>', \PHPUnit_Runner_Version::id()
             )
         );
 

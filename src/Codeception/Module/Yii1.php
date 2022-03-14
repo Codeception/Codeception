@@ -6,7 +6,7 @@ use Codeception\Exception\ModuleConfig;
 use Yii;
 
 /**
- * This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
+ * This module provides integration with Yii framework (https://www.yiiframework.com/) (1.1.14dev).
  *
  * The following configurations are available for this module:
  * <ul>

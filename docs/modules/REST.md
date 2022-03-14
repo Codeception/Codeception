@@ -288,7 +288,7 @@ Sends LINK request to given uri.
  * param       $url
  * param array $linkEntries (entry is array with keys "uri" and "link-param")
 
- * link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+ * link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
 
  * author samva.ua@gmail.com
 
@@ -342,6 +342,6 @@ Sends UNLINK request to given uri.
  * param       $url
  * param array $linkEntries (entry is array with keys "uri" and "link-param")
 
- * link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+ * link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
 
  * author samva.ua@gmail.com

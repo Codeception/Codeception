@@ -7,7 +7,7 @@ title: Codeception - Documentation
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SocialEngine.php)**
 
 
-This module provides integration with [Social Engine](http://www.socialengine.net/) v4.
+This module provides integration with [Social Engine](https://www.socialengine.net/) v4.
 
 Functional tests can be run inside Social Engine. All commands of this module are just the same as in other modules that share Framework interface.
 

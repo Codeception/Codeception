@@ -14,7 +14,7 @@ One day this module will be replaced with WebDriver module.
 
 ## Installation
 
-Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
+Download [Selenium2 WebDriver](https://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
 Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 
 Don't forget to turn on Db repopulation if you are using database.
@@ -24,7 +24,7 @@ Don't forget to turn on Db repopulation if you are using database.
 * Maintainer: **davert**
 * Stability: **stable**
 * Contact: codecept@davert.mail.ua
-* relies on [Mink](http://mink.behat.org)
+* relies on [Mink](https://mink.behat.org)
 
 ## Configuration
 
@@ -33,7 +33,7 @@ Don't forget to turn on Db repopulation if you are using database.
 * host  - Selenium server host (localhost by default)
 * port - Selenium server port (4444 by default)
 * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
-* capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+* capabilities - sets Selenium2 [desired capabilities](https://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 
 ### Example (`acceptance.suite.yml`)
 

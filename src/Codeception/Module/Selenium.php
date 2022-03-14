@@ -23,7 +23,7 @@ namespace Codeception\Module;
  *
  * ## Installation
  *
- * [Download Selenium RC Server](http://seleniumhq.org/download)
+ * [Download Selenium RC Server](https://seleniumhq.org/download)
  *
  * Execute it: `java -jar selenium-server-standalone-x.xx.xxx.jar`
  *
@@ -36,7 +36,7 @@ namespace Codeception\Module;
  * * Maintainer: **davert**
  * * Stability: **stable**
  * * Contact: codecept@davert.mail.ua
- * * relies on [Mink](http://mink.behat.org)
+ * * relies on [Mink](https://mink.behat.org)
  *
  * ## Configuration
  *

@@ -7,7 +7,7 @@ use Codeception\Step;
 use Codeception\Util\Connector\PhalconMemorySession;
 
 /**
- * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
+ * This module provides integration with [Phalcon framework](https://www.phalconphp.com/) (1.x).
  *
  * ## Demo Project
  *

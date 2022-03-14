@@ -7,7 +7,7 @@ use Codeception\Util\Framework;
 use Codeception\Exception\ModuleConfig;
 
 /**
- * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
+ * This module provides integration with [Yii framework](https://www.yiiframework.com/) (2.0).
  *
  *
  * ## Config
