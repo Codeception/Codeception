@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Lib\Actor\Shared;
 
+use Codeception\Command\Console;
 use Codeception\Util\Debug;
 use Psy\Shell;
 use Psy\Configuration;
@@ -25,7 +26,11 @@ trait Pause
         $psyConf->setHistoryFile(codecept_output_dir($logFile));
         $psy = new Shell($psyConf);
         $psy->setScopeVariables(['I' => $this]);
-
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+        if (!$backtrace[1]['object'] instanceof Console) {
+            // set the scope of test class
+            $psy->setBoundObject($backtrace[1]['object']);
+        }
         $psy->run();
     }
 }
