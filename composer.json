@@ -8,8 +8,8 @@
     "authors":[
         {
             "name":"Michael Bodnarchuk",
-            "email":"davert@mail.ua",
-            "homepage":"http://codegyre.com"
+            "email":"davert.ua@gmail.com",
+            "homepage":"http://codeception.com"
         }
     ],
     "minimum-stability": "RC",
@@ -30,7 +30,8 @@
         "symfony/css-selector": ">=4.4.24 <7.0",
         "symfony/event-dispatcher": ">=4.4.24 <7.0",
         "symfony/finder": ">=4.4.24 <7.0",
-        "symfony/yaml": ">=4.4.24 <7.0"
+        "symfony/yaml": ">=4.4.24 <7.0",
+        "psy/psysh": "^0.11.2"
     },
     "require-dev": {
         "ext-simplexml": "*",
@@ -55,7 +56,6 @@
         "ext-simplexml": "For loading params from XML files",
         "vlucas/phpdotenv": "For loading params from .env files",
         "symfony/dotenv": "For loading params from .env files",
-        "hoa/console": "For interactive console functionality",
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
         "symfony/phpunit-bridge": "For phpunit-bridge support",

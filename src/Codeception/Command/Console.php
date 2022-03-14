@@ -99,8 +99,9 @@ class Console extends Command
         if (!$settings['actor']) {
             throw new ConfigurationException("Interactive shell can't be started without an actor");
         }
-        if (isset($config["namespace"])) {
-            $settings['actor'] = $config["namespace"] . '\\Support\\' . $settings['actor'];
+
+        if (isset($config['namespace']) && $config['namespace'] !== '') {
+            $settings['actor'] = $config['namespace'] . '\\Support\\' . $settings['actor'];
         }
         $actor = $settings['actor'];
         $I = new $actor($scenario);
@@ -115,7 +116,7 @@ class Console extends Command
         $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_PARSED);
         $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_BEFORE);
 
-        if (file_exists($settings['bootstrap'])) {
+        if (is_string($settings['bootstrap']) && file_exists($settings['bootstrap'])) {
             require $settings['bootstrap'];
         }
 
