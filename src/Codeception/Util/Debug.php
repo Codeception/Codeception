@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use Codeception\Command\Console;
 use Codeception\Lib\Console\Output;
 use Codeception\Lib\PauseShell;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -45,8 +46,19 @@ class Debug
             return;
         }
 
-        $psy = (new PauseShell())->getShell();
+        $pauseShell = new PauseShell();
+        $psy = $pauseShell->getShell();
         $psy->setScopeVariables($vars);
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3);
+        if (isset($backtrace[1]['object'])) {
+            // set the scope of test class
+            $pauseShell->addMessage('Use $this-> to access current object');
+            $psy->setBoundObject($backtrace[1]['object']);
+        } elseif (isset($backtrace[2]['object'])) {
+            // set the scope of test class
+            $pauseShell->addMessage('Use $this-> to access current object');
+            $psy->setBoundObject($backtrace[2]['object']);
+        }
         $psy->run();
     }
 

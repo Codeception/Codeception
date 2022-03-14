@@ -96,10 +96,10 @@ class Unit extends TestCase implements
     /**
      * Starts interactive pause in this test
      *
-     * @param array $vars
+     * @param array<string, mixed> $vars
      * @return void
      */
-    public function pause(array $vars = [])
+    public function pause(array $vars = []): void
     {
         $psy = (new PauseShell())->getShell();
         $psy->setBoundObject($this);

@@ -8,7 +8,13 @@ function codecept_debug($data)
     \Codeception\Util\Debug::debug($data);
 }
 
-function codecept_pause(array $vars = [])
+/**
+ * Executes interactive pause in ths place
+ *
+ * @param array $vars
+ * @return void
+ */
+function codecept_pause(array $vars = []): void
 {
     \Codeception\Util\Debug::pause($vars);
 }
