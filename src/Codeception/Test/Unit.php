@@ -7,6 +7,7 @@ namespace Codeception\Test;
 use Codeception\Configuration;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Di;
+use Codeception\Lib\PauseShell;
 use Codeception\Module;
 use Codeception\PHPUnit\TestCase;
 use Codeception\Scenario;
@@ -90,6 +91,20 @@ class Unit extends TestCase implements
             throw new ModuleException($module, "Module can't be accessed");
         }
         return $modules[$module];
+    }
+
+    /**
+     * Starts interactive pause in this test
+     *
+     * @param array $vars
+     * @return void
+     */
+    public function pause(array $vars = [])
+    {
+        $psy = (new PauseShell())->getShell();
+        $psy->setBoundObject($this);
+        $psy->setScopeVariables($vars);
+        $psy->run();
     }
 
     /**

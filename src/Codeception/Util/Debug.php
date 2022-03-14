@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Util;
 
 use Codeception\Lib\Console\Output;
+use Codeception\Lib\PauseShell;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -36,6 +37,17 @@ class Debug
     public static function isEnabled(): bool
     {
         return (bool)self::$output;
+    }
+
+    public static function pause(array $vars = []): void
+    {
+        if (!self::isEnabled()) {
+            return;
+        }
+
+        $psy = (new PauseShell())->getShell();
+        $psy->setScopeVariables($vars);
+        $psy->run();
     }
 
     public static function confirm($question)

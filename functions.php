@@ -8,6 +8,11 @@ function codecept_debug($data)
     \Codeception\Util\Debug::debug($data);
 }
 
+function codecept_pause(array $vars = [])
+{
+    \Codeception\Util\Debug::pause($vars);
+}
+
 function codecept_root_dir($appendPath = '')
 {
     return \Codeception\Configuration::projectDir() . $appendPath;
