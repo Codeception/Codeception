@@ -17,9 +17,9 @@ use Codeception\Lib\Driver\Iron;
  *
  * Supported and tested queue types are:
  *
- * * [Iron.io](http://iron.io/)
- * * [Beanstalkd](http://kr.github.io/beanstalkd/)
- * * [Amazon SQS](http://aws.amazon.com/sqs/)
+ * * [Iron.io](https://iron.io/)
+ * * [Beanstalkd](https://kr.github.io/beanstalkd/)
+ * * [Amazon SQS](https://aws.amazon.com/sqs/)
  *
  * The following dependencies are needed for the listed queue servers:
  *
@@ -66,7 +66,7 @@ use Codeception\Lib\Driver\Iron;
  *                  aws_secret_access_key = YOUR_AWS_SECRET_ACCESS_KEY
  *          - Note: Using IAM roles is the preferred technique for providing credentials
  *                  to applications running on Amazon EC2
- *                  http://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html?highlight=credentials
+ *                  https://docs.aws.amazon.com/aws-sdk-php/v3/guide/guide/credentials.html?highlight=credentials
  *
  * * region - A region parameter is also required for AWS, refer to the AWS documentation for possible values list.
  *

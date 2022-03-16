@@ -1131,7 +1131,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @see http://laravel.com/docs/5.1/testing#model-factories
+     * @see https://laravel.com/docs/5.1/testing#model-factories
      * @param string $model
      * @param array $attributes
      * @param string $name
@@ -1166,7 +1166,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      *
-     * @see http://laravel.com/docs/5.1/testing#model-factories
+     * @see https://laravel.com/docs/5.1/testing#model-factories
      * @param string $model
      * @param int $times
      * @param array $attributes

@@ -51,7 +51,7 @@ class SimpleReporter extends Extension
     public function after(TestEvent $e)
     {
         $seconds_input = $e->getTime();
-        // stack overflow: http://stackoverflow.com/questions/16825240/how-to-convert-microtime-to-hhmmssuu
+        // stack overflow: https://stackoverflow.com/questions/16825240/how-to-convert-microtime-to-hhmmssuu
         $seconds = (int)($milliseconds = (int)($seconds_input * 1000)) / 1000;
         $time = ($seconds % 60) . (($milliseconds === 0) ? '' : '.' . $milliseconds);
 

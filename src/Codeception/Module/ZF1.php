@@ -17,7 +17,7 @@ use Zend_Controller_Router_Route_Chain;
  * It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
  * and LIBRARY_PATH set to './library'. If it's not then set the appropriate path in the Config.
  *
- * [Tutorial](http://codeception.com/01-27-2012/bdd-with-zend-framework.html)
+ * [Tutorial](https://codeception.com/01-27-2012/bdd-with-zend-framework.html)
  *
  * ## Status
  *
@@ -42,7 +42,7 @@ use Zend_Controller_Router_Route_Chain;
  *
  * Unfortunately Zend_Db doesn't support nested transactions,
  * thus, for cleaning your database you should either use standard Db module or
- * [implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
+ * [implement nested transactions yourself](https://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
  *
  * If your database supports nested transactions (MySQL doesn't)
  * or you implemented them you can put all your code inside a transaction.
