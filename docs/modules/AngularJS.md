@@ -1,14 +1,14 @@
 # AngularJS
 
 
-Module for AngularJS testing, based on [WebDriver module](http://codeception.com/docs/modules/WebDriver) and [Protractor](http://angular.github.io/protractor/).
+Module for AngularJS testing, based on [WebDriver module](https://codeception.com/docs/modules/WebDriver) and [Protractor](https://angular.github.io/protractor/).
 
 Performs **synchronization to ensure that page content is fully rendered**.
 Uses Angular's and Protractor internals methods to synchronize with the page.
 
 ## Configuration
 
-The same as for [WebDriver](http://codeception.com/docs/modules/WebDriver#Configuration), but few new options added:
+The same as for [WebDriver](https://codeception.com/docs/modules/WebDriver#Configuration), but few new options added:
 
 * `el` - element where Angular application is defined (default: `body`)
 * `script_timeout` - for how long in seconds to wait for angular operations to finish (default: 5)
@@ -244,7 +244,7 @@ $this->getModule('AngularJS')->_saveScreenshot(codecept_output_dir().'screenshot
  
 Accepts the active JavaScript native popup window, as created by `window.alert`|`window.confirm`|`window.prompt`.
 Don't confuse popups with modal windows,
-as created by [various libraries](http://jster.net/category/windows-modals-popups).
+as created by [various libraries](https://jster.net/category/windows-modals-popups).
 
 
 ### amInsideAngularApp
