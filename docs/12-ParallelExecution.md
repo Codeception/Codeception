@@ -12,7 +12,7 @@ Codeception does not provide a command like `run-parallel`. There is no common s
 * Will they use different hosts?
 * How should I split my tests across parallel processes?
 
-There are two approaches to achieve parallelization. We can use [Docker](http://docker.com) and run each process inside isolated containers, and have those containers executed simultaneously.
+There are two approaches to achieve parallelization. We can use [Docker](https://docker.com) and run each process inside isolated containers, and have those containers executed simultaneously.
 
 Docker works really well for isolating testing environments.
 By the time of writing this chapter, we didn't have an awesome tool like it. This chapter demonstrates how to manage parallel execution manually. As you will see we spend too much effort trying to isolate tests which Docker does for free. Today we <strong>recommend using Docker</strong> for parallel testing.
@@ -117,11 +117,11 @@ Parallel Test Execution consists of 3 steps:
 * running tests in parallel
 * merging results
 
-We propose to perform those steps using a task runner. In this guide we will use [**Robo**](http://robo.li) task runner. It is a modern PHP task runner that is very easy to use. It uses [Symfony Process](http://symfony.com/doc/current/components/process.html) to spawn background and parallel processes. Just what we need for the step 2! What about steps 1 and 3? We have created robo [tasks](https://github.com/Codeception/robo-paracept) for splitting tests into groups and merging resulting JUnit XML reports.
+We propose to perform those steps using a task runner. In this guide we will use [**Robo**](https://robo.li) task runner. It is a modern PHP task runner that is very easy to use. It uses [Symfony Process](https://symfony.com/doc/current/components/process.html) to spawn background and parallel processes. Just what we need for the step 2! What about steps 1 and 3? We have created robo [tasks](https://github.com/Codeception/robo-paracept) for splitting tests into groups and merging resulting JUnit XML reports.
 
 To conclude, we need:
 
-* [Robo](http://robo.li), a task runner.
+* [Robo](https://robo.li), a task runner.
 * [robo-paracept](https://github.com/Codeception/robo-paracept) - Codeception tasks for parallel execution.
 
 ## Preparing Robo and Robo-paracept
@@ -212,7 +212,7 @@ Available commands:
 
 #### Step 1: Split Tests
 
-Codeception can organize tests into [groups](http://codeception.com/docs/07-AdvancedUsage#Groups). Starting from 2.0 it can load information about a group from a files. Sample text file with a list of file names can be treated as a dynamically configured group. Take a look into sample group file:
+Codeception can organize tests into [groups](https://codeception.com/docs/07-AdvancedUsage#Groups). Starting from 2.0 it can load information about a group from a files. Sample text file with a list of file names can be treated as a dynamically configured group. Take a look into sample group file:
 
 ```bash
 tests/functional/LoginCept.php
@@ -317,7 +317,7 @@ public function parallelRun()
 
 In case you don't use containers you can isolate processes by starting different web servers and databases per each test process.
 
-We can define different databases for different processes. This can be done using [Environments](http://codeception.com/docs/07-AdvancedUsage#Environments). Let's define 5 new environments in `acceptance.suite.yml`:
+We can define different databases for different processes. This can be done using [Environments](https://codeception.com/docs/07-AdvancedUsage#Environments). Let's define 5 new environments in `acceptance.suite.yml`:
 
 ```yaml
 actor: AcceptanceTester
@@ -417,4 +417,4 @@ To create one command to rule them all we can define new public method `parallel
 
 ## Conclusion
 
-Codeception does not provide tools for parallel test execution. This is a complex task and solutions may vary depending on a project. We use [Robo](http://robo.li) task runner as an external tool to perform all required steps. To prepare our tests to be executed in parallel we use Codeception features of dynamic groups and environments. To do even more we can create Extensions and Group classes to perform dynamic configuration depending on a test process.
+Codeception does not provide tools for parallel test execution. This is a complex task and solutions may vary depending on a project. We use [Robo](https://robo.li) task runner as an external tool to perform all required steps. To prepare our tests to be executed in parallel we use Codeception features of dynamic groups and environments. To do even more we can create Extensions and Group classes to perform dynamic configuration depending on a test process.

@@ -538,7 +538,7 @@ Codeception reorders tests so dependent tests will always be executed before the
 
 The interactive console was added to try Codeception commands before executing them inside a test.
 
-![console](http://codeception.com/images/console.png)
+![console](https://codeception.com/images/console.png)
 
 You can run the console with the following command:
 

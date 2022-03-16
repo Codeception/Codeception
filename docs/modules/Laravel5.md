@@ -934,7 +934,7 @@ $I->have('App\User', [], 'admin');
 ?>
 ```
 
-@see http://laravel.com/docs/5.1/testing#model-factories
+@see https://laravel.com/docs/5.1/testing#model-factories
  * `param string` $model
  * `param array` $attributes
  * `param string` $name
@@ -1050,7 +1050,7 @@ $I->haveMultiple('App\User', 10, [], 'admin');
 ?>
 ```
 
-@see http://laravel.com/docs/5.1/testing#model-factories
+@see https://laravel.com/docs/5.1/testing#model-factories
  * `param string` $model
  * `param int` $times
  * `param array` $attributes
