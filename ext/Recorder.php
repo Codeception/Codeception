@@ -15,7 +15,7 @@ use Codeception\Util\FileSystem;
 use Codeception\Util\Template;
 
 /**
- * Saves a screenshot of each step in acceptance tests and shows them as a slideshow on one HTML page (here's an [example](http://codeception.com/images/recorder.gif))
+ * Saves a screenshot of each step in acceptance tests and shows them as a slideshow on one HTML page (here's an [example](https://codeception.com/images/recorder.gif))
  * Activated only for suites with WebDriver module enabled.
  *
  * The screenshots are saved to `tests/_output/record_*` directories, open `index.html` to see them as a slideshow.

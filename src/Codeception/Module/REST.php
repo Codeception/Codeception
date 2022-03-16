@@ -410,7 +410,7 @@ EOF;
      *                     keys: name, type, error, size, tmp_name (pointing to the real file path). Each key works
      *                     as the "name" attribute of a file input field.
      *
-     * @see http://php.net/manual/en/features.file-upload.post-method.php
+     * @see https://php.net/manual/en/features.file-upload.post-method.php
      * @see codecept_data_dir()
      * @part json
      * @part xml
@@ -506,7 +506,7 @@ EOF;
      *
      * @param array $linkEntries (entry is array with keys "uri" and "link-param")
      *
-     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     * @link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
      *
      * @author samva.ua@gmail.com
      */
@@ -536,7 +536,7 @@ EOF;
      * @param       $url
      * @param array $linkEntries (entry is array with keys "uri" and "link-param")
      *
-     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     * @link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
      *
      * @author samva.ua@gmail.com
      * @part json
@@ -553,7 +553,7 @@ EOF;
      *
      * @param       $url
      * @param array $linkEntries (entry is array with keys "uri" and "link-param")
-     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     * @link https://tools.ietf.org/html/rfc2068#section-19.6.2.4
      * @author samva.ua@gmail.com
      * @part json
      * @part xml
@@ -819,9 +819,9 @@ EOF;
     }
 
     /**
-     * Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
+     * Returns data from the current JSON response using [JSONPath](https://goessner.net/articles/JsonPath/) as selector.
      * JsonPath is XPath equivalent for querying Json structures.
-     * Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+     * Try your JsonPath expressions [online](https://jsonpath.curiousconcept.com/).
      * Even for a single value an array is returned.
      *
      * This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
@@ -915,9 +915,9 @@ EOF;
     }
 
     /**
-     * Checks if json structure in response matches [JsonPath](http://goessner.net/articles/JsonPath/).
+     * Checks if json structure in response matches [JsonPath](https://goessner.net/articles/JsonPath/).
      * JsonPath is XPath equivalent for querying Json structures.
-     * Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+     * Try your JsonPath expressions [online](https://jsonpath.curiousconcept.com/).
      * This assertion allows you to check the structure of response json.
      *
      * This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
@@ -1052,7 +1052,7 @@ EOF;
      * * `integer:<{val}` - checks that integer is lower than {val} (works with float and string types too).
      * * `string:url` - checks that value is valid url.
      * * `string:date` - checks that value is date in JavaScript format: https://weblog.west-wind.com/posts/2014/Jan/06/JavaScript-JSON-Date-Parsing-and-real-Dates
-     * * `string:email` - checks that value is a valid email according to http://emailregex.com/
+     * * `string:email` - checks that value is a valid email according to https://emailregex.com/
      * * `string:regex({val})` - checks that string matches a regex provided with {val}
      *
      * This is how filters can be used:
@@ -1073,7 +1073,7 @@ EOF;
      * ```
      *
      * You can also add custom filters y accessing `JsonType::addCustomFilter` method.
-     * See [JsonType reference](http://codeception.com/docs/reference/JsonType).
+     * See [JsonType reference](https://codeception.com/docs/reference/JsonType).
      *
      * @part json
      * @version 2.1.3

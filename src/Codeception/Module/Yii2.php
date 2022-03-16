@@ -18,7 +18,7 @@ use yii\db\QueryInterface;
 use yii\db\Transaction;
 
 /**
- * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
+ * This module provides integration with [Yii framework](https://www.yiiframework.com/) (2.0).
  * It initializes Yii framework in test environment and provides actions for functional testing.
  * ## Application state during testing
  * This section details what you can expect when using this module.
@@ -106,7 +106,7 @@ use yii\db\Transaction;
  *
  * ## Fixtures
  *
- * This module allows to use [fixtures](http://www.yiiframework.com/doc-2.0/guide-test-fixtures.html) inside a test. There are two options for that.
+ * This module allows to use [fixtures](https://www.yiiframework.com/doc-2.0/guide-test-fixtures.html) inside a test. There are two options for that.
  * Fixtures can be loaded using [haveFixtures](#haveFixtures) method inside a test:
  *
  * ```php
