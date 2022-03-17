@@ -116,7 +116,13 @@ class ParamsLoader
     {
         // vlucas/phpdotenv
         if (class_exists(PhpDotenv::class)) {
-            return PhpDotenv::parse(file_get_contents($this->paramsFile));
+            $repository = \Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
+                ->addAdapter(\Dotenv\Repository\Adapter\EnvConstAdapter::class)
+                ->addAdapter(\Dotenv\Repository\Adapter\ServerConstAdapter::class)
+                ->make();
+            $dotenv = \Dotenv\Dotenv::create($repository, codecept_root_dir(), $this->paramStorage);
+
+            return $dotenv->load();
         }
 
         // symfony/dotenv
