@@ -168,13 +168,13 @@ codecept run unit tests/unit/Codeception/TestLoaderTest:testAddCept
 * [REST] sendXXX methods now encode objects implementing JsonSerializable interfaces. *2014-12-19*
 * [REST] added methods to validate JSON structure *2014-12-19*
 
-[seeResponseJsonMatchesJsonPath](http://codeception.com/docs/modules/REST#seeResponseJsonMatchesJsonPath) validates response JSON against [JsonPath](http://goessner.net/articles/JsonPath/).
+[seeResponseJsonMatchesJsonPath](https://codeception.com/docs/modules/REST#seeResponseJsonMatchesJsonPath) validates response JSON against [JsonPath](https://goessner.net/articles/JsonPath/).
 Usage of JsonPath requires library `flow/jsonpath` to be installed.
 
-[seeResponseJsonMatchesXpath](http://codeception.com/docs/modules/REST#seeResponseJsonMatchesXpath) validates response JSON against XPath.
+[seeResponseJsonMatchesXpath](https://codeception.com/docs/modules/REST#seeResponseJsonMatchesXpath) validates response JSON against XPath.
 It converts JSON structure into valid XML document and executes XPath for it.
 
-[grabDataFromResponseByJsonPath](http://codeception.com/docs/modules/REST#grabDataFromResponseByJsonPath) method was added as well to grab data JSONPath.
+[grabDataFromResponseByJsonPath](https://codeception.com/docs/modules/REST#grabDataFromResponseByJsonPath) method was added as well to grab data JSONPath.
 
 * [REST] `grabDataFromJsonResponse` deprecated in favor of `grabDataFromResponseByJsonPath` *2014-12-19*
 * [PhpBrowser][Frameworks] fixed `Unreachable field` error while filling [] fields in input and textarea fields. Issues #1585 #1602 *2014-12-18*
@@ -192,7 +192,7 @@ It converts JSON structure into valid XML document and executes XPath for it.
 * Cest tests support multiple `@before` and `@after` annotations. Thanks to @draculus and @zbateson. See #1517
 * [FTP] Stops test execution on failed connection by @yegortokmakov
 * [AMQP] Fix for purging queues on initialization stage. Check for open channel is not needed and it prevents from cleaning queue by @yegortokmakov
-* CodeCoverage remote context configuration added by @synchrone. See #1524 [Documentation updated](http://codeception.com/docs/11-Codecoverage#Remote-Context-Options)
+* CodeCoverage remote context configuration added by @synchrone. See #1524 [Documentation updated](https://codeception.com/docs/11-Codecoverage#Remote-Context-Options)
 * Implemented better descriptions for error exception. Fix #1503
 * Added `c3_url` option to code coverage settings. `c3_url` allows to explicitly set url for index file with c3 included. See #1024
 * [PhpBrowser][Frameworks] Fixed selecting checkbock in a group of checkboxes #1535

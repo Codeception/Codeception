@@ -47,11 +47,11 @@
                 {
                     "name": "Michael Bodnarchuk",
                     "email": "davert.php@codegyre.com",
-                    "homepage": "http://codegyre.com"
+                    "homepage": "https://codegyre.com"
                 }
             ],
             "description": "CodeCoverage collector for Codeception",
-            "homepage": "http://codeception.com/",
+            "homepage": "https://codeception.com/",
             "keywords": [
                 "code coverage",
                 "codecoverage"
