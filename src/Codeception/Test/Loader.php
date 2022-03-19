@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use Codeception\Exception\ConfigurationException;
 use Codeception\Test\Loader\Cept as CeptLoader;
 use Codeception\Test\Loader\Cest as CestLoader;
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
@@ -58,9 +59,13 @@ class Loader
 
     protected ?string $path = null;
 
+    private ?string $shard = null;
+
     public function __construct(array $suiteSettings)
     {
         $this->path = $suiteSettings['path'];
+        $this->shard = $suiteSettings['shard'] ?? null;
+
         $this->formats = [
             new CeptLoader(),
             new CestLoader(),
@@ -76,7 +81,28 @@ class Loader
 
     public function getTests(): array
     {
+        if ($this->shard) {
+            $this->shard = trim($this->shard);
+            if (!preg_match('~^\d+\/\d+$~', $this->shard)) {
+                throw new ConfigurationException("Shard must be set as --shard=CURRENT/TOTAL where CURRENT and TOTAL are number. For instance: --shard=1/3");
+            }
+
+            list($shard, $totalShards) = explode('/', $this->shard);
+
+            if ($totalShards < $shard) {
+                throw new ConfigurationException("Total shards are less than current shard.");
+            }
+            
+            $chunks = $this->splitTestsIntoChunks($totalShards);
+            if (!isset($chunks[$shard - 1])) return [];
+            return $chunks[$shard - 1];
+        }
         return $this->tests;
+    }
+
+    private function splitTestsIntoChunks($chunks)
+    {
+        return array_chunk($this->tests, intval(ceil(sizeof($this->tests) / $chunks)));
     }
 
     protected function relativeName(string $file): string

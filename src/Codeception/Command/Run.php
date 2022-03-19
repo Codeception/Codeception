@@ -14,6 +14,7 @@ use PHPUnit\Runner\Version as PHPUnitVersion;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException as SymfonyConsoleInvalidArgumentException;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -164,6 +165,9 @@ class Run extends Command
             new InputOption('silent', '', InputOption::VALUE_NONE, 'Only outputs suite names and final results'),
             new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
             new InputOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output'),
+            new InputOption('shard', '', InputOption::VALUE_REQUIRED, 'Execute subset of tests to run tests on different machine. To split tests on 3 machines to run with shards: 1/3, 2/3, 3/3'),
+            new InputOption('filter', '', InputOption::VALUE_REQUIRED, 'Filter tests by name'),
+            new InputOption('grep', '', InputOption::VALUE_REQUIRED, 'Filter tests by name (alias to --filter)'),
             new InputOption('bootstrap', '', InputOption::VALUE_OPTIONAL, 'Execute custom PHP script before running tests. Path can be absolute or relative to current working directory', false),
             new InputOption('no-redirect', '', InputOption::VALUE_NONE, 'Do not redirect to Composer-installed version in vendor/codeception'),
             new InputOption(
@@ -397,14 +401,31 @@ class Run extends Command
             }
         }
 
+        $filter = $input->getOption('filter') ?? $input->getOption('grep') ?? null;
         if ($test) {
             $userOptions['filter'] = $this->matchFilteredTestName($test);
         } elseif ($suite) {
             $userOptions['filter'] = $this->matchFilteredTestName($suite);
         }
-        if (!$this->options['silent'] && $config['settings']['shuffle']) {
+
+        if (isset($userOptions['filter']) && $filter) {
+            throw new InvalidOptionException("--filter and --grep can't be used with a test name");
+        } else {
+            $userOptions['filter'] = $filter;
+        }
+
+        if ($this->options['shard']) {
             $this->output->writeln(
-                "[Seed] <info>" . $userOptions['seed'] . "</info>"
+                "[SHARD ${userOptions['shard']}] <info>Running subset of tests</info>"
+            );
+            // disable shuffle for sharding
+            $config['settings']['shuffle'] = false;
+        }
+
+        if (!$this->options['silent'] && $config['settings']['shuffle']) {
+
+            $this->output->writeln(
+                "[SEED] <info>" . $userOptions['seed'] . "</info>"
             );
         }
 
@@ -434,7 +455,13 @@ class Run extends Command
 
         $this->codecept->printResult();
 
-        if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessfulIgnoringWarnings()) {
+        if ($this->options['shard']) {
+            $this->output->writeln(
+                "[SHARD ${userOptions['shard']}] <info>Merge this result with other shards to see the complete report</info>"
+            );
+        }
+
+            if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessfulIgnoringWarnings()) {
             exit(1);
         }
         return 0;
