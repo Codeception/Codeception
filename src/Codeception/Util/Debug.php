@@ -50,14 +50,21 @@ class Debug
         $psy = $pauseShell->getShell();
         $psy->setScopeVariables($vars);
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3);
-        if (isset($backtrace[1]['object'])) {
-            // set the scope of test class
+        foreach ($backtrace as $backtraceStep) {
+            $class = $backtraceStep['class'] ?? null;
+            $fn = $backtraceStep['class'] ?? null;
+            if ($class === Debug::class && $fn === 'pause') {
+                continue;
+            }
+            if ($fn === 'codecept_pause' && !$class) {
+                continue;
+            }
+            if (!isset($backtraceStep['object'])) {
+                continue;
+            }
             $pauseShell->addMessage('Use $this-> to access current object');
-            $psy->setBoundObject($backtrace[1]['object']);
-        } elseif (isset($backtrace[2]['object'])) {
-            // set the scope of test class
-            $pauseShell->addMessage('Use $this-> to access current object');
-            $psy->setBoundObject($backtrace[2]['object']);
+            $psy->setBoundObject($backtraceStep['object']);
+            break;
         }
         $psy->run();
     }

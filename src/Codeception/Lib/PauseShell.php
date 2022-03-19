@@ -2,13 +2,12 @@
 
 namespace Codeception\Lib;
 
-use Codeception\Command\Console;
 use Psy\Shell;
 use Psy\Configuration;
 
 class PauseShell
 {
-    const LOG_FILE = '.pause.log';
+    public const LOG_FILE = '.pause.log';
     private Configuration $psyConf;
 
     public function __construct()
@@ -30,7 +29,6 @@ class PauseShell
 
     public function getShell(): Shell
     {
-        $psy = new Shell($this->psyConf);
-        return $psy;
+        return new Shell($this->psyConf);
     }
 }
