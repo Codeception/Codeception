@@ -92,9 +92,11 @@ class Loader
             if ($totalShards < $shard) {
                 throw new ConfigurationException("Total shards are less than current shard.");
             }
-            
+
             $chunks = $this->splitTestsIntoChunks($totalShards);
-            if (!isset($chunks[$shard - 1])) return [];
+            if (!isset($chunks[$shard - 1])) {
+                return [];
+            }
             return $chunks[$shard - 1];
         }
         return $this->tests;

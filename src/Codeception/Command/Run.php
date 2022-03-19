@@ -423,7 +423,6 @@ class Run extends Command
         }
 
         if (!$this->options['silent'] && $config['settings']['shuffle']) {
-
             $this->output->writeln(
                 "[SEED] <info>" . $userOptions['seed'] . "</info>"
             );
@@ -461,9 +460,10 @@ class Run extends Command
             );
         }
 
-            if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessfulIgnoringWarnings()) {
+        if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessfulIgnoringWarnings()) {
             exit(1);
         }
+
         return 0;
     }
 
