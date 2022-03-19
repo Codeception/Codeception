@@ -1,8 +1,8 @@
 # Getting Started
 
-Let's take a look at Codeception's architecture. We'll assume that you have already [installed](http://codeception.com/install) it
+Let's take a look at Codeception's architecture. We'll assume that you have already [installed](https://codeception.com/install) it
 and bootstrapped your first test suites. Codeception has generated three of them: unit, functional, and acceptance.
-They are well described in the [previous chapter](http://codeception.com/docs/01-Introduction). Inside your __/tests__ folder you will have three `.yml` config files and three directories
+They are well described in the [previous chapter](https://codeception.com/docs/01-Introduction). Inside your __/tests__ folder you will have three `.yml` config files and three directories
 with names corresponding to these suites: `unit`, `functional`, `acceptance`. Suites are independent groups of tests with a common purpose.
 
 ## The Codeception Syntax
@@ -39,7 +39,7 @@ We have a UnitTester, who executes functions and tests the code. We also have a 
 who tests the application as a whole, with knowledge of its internals. Lastly we have an AcceptanceTester, a user who works with our application
 through an interface that we provide.
 
-**Methods of actor classes are generally taken from [Codeception Modules](http://codeception.com/docs/06-ModulesAndHelpers)**.
+**Methods of actor classes are generally taken from [Codeception Modules](https://codeception.com/docs/06-ModulesAndHelpers)**.
 Each module provides predefined actions for different testing purposes, and they can be combined to fit the testing environment.
 Codeception tries to solve 90% of possible testing issues in its modules, so you don't have to reinvent the wheel.
 We think that you can spend more time on writing tests and less on writing support code to make those tests run.
@@ -229,12 +229,12 @@ class TaskCrudCest
 }
 ```
 
-Learn more about the [Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes) in the Advanced Testing section.
+Learn more about the [Cest format](https://codeception.com/docs/07-AdvancedUsage#Cest-Classes) in the Advanced Testing section.
 
 ## BDD
 
 Codeception allows execution of user stories in Gherkin format in a similar manner as is done in Cucumber or Behat.
-Please refer to [the BDD chapter](http://codeception.com/docs/07-BDD) to learn more.
+Please refer to [the BDD chapter](https://codeception.com/docs/07-BDD) to learn more.
 
 ## Configuration
 
@@ -287,7 +287,7 @@ For example, this will execute all acceptance tests from the `backend` dir begin
 php vendor/bin/codecept run tests/acceptance/backend:^login
 ```
 
-To execute a group of tests that are not stored in the same directory, you can organize them in [groups](http://codeception.com/docs/07-AdvancedUsage#Groups).
+To execute a group of tests that are not stored in the same directory, you can organize them in [groups](https://codeception.com/docs/07-AdvancedUsage#Groups).
 
 ### Reports
 

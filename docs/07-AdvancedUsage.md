@@ -574,7 +574,7 @@ codecept run --seed 1872290562
 
 The interactive console was added to try Codeception commands before executing them inside a test.
 
-![console](http://codeception.com/images/console.png)
+![console](https://codeception.com/images/console.png)
 
 You can run the console with the following command:
 
