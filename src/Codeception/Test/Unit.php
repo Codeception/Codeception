@@ -13,6 +13,7 @@ use Codeception\PHPUnit\TestCase;
 use Codeception\Scenario;
 use Codeception\Test\Feature\Stub;
 use Codeception\TestInterface;
+use Codeception\Util\Debug;
 use PHPUnit\Framework\TestResult;
 
 use function get_class;
@@ -101,6 +102,9 @@ class Unit extends TestCase implements
      */
     public function pause(array $vars = []): void
     {
+        if (!Debug::isEnabled()) {
+            return;
+        }
         $psy = (new PauseShell())->getShell();
         $psy->setBoundObject($this);
         $psy->setScopeVariables($vars);
