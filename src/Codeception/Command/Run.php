@@ -410,7 +410,7 @@ class Run extends Command
 
         if (isset($userOptions['filter']) && $filter) {
             throw new InvalidOptionException("--filter and --grep can't be used with a test name");
-        } elseif($filter) {
+        } elseif ($filter) {
             $userOptions['filter'] = $filter;
         }
 
