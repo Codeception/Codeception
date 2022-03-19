@@ -67,6 +67,11 @@ class ParamsLoader
         return $this->paramStorage;
     }
 
+    public function overload(): void
+    {
+        // overload params
+    }
+
     protected function loadIniFile(): array|false
     {
         return parse_ini_file($this->paramsFile);

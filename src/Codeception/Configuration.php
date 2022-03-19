@@ -735,5 +735,11 @@ class Configuration
         foreach ($settings['params'] as $paramStorage) {
             static::$params = array_merge(self::$params, $paramsLoader->load($paramStorage));
         }
+
+        $shouldOverloadParams = (bool) ($settings['overloadParams'] ?? false);
+
+        if ($shouldOverloadParams) {
+            $paramsLoader->overload();
+        }
     }
 }
