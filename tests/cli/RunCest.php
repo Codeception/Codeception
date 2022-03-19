@@ -727,20 +727,20 @@ EOF
     {
         $I->executeCommand('run dummy --shard=1/3 --no-ansi');
         $I->seeInShellOutput('OK (2 tests');
-        $I->seeInShellOutput('[SHARD 1/3');
+        $I->seeInShellOutput('[Shard 1/3');
         preg_match_all('~\+\s(\w+:\s[\w\s]+)~', $I->grabShellOutput(), $matches);
         $tests1 = $matches[1];
 
         $I->executeCommand('run dummy --shard=2/3');
         $I->seeInShellOutput('OK (2 tests');
-        $I->seeInShellOutput('[SHARD 2/3');
+        $I->seeInShellOutput('[Shard 2/3');
 
         preg_match_all('~\+\s(\w+:\s[\w\s]+)~', $I->grabShellOutput(), $matches);
         $tests2 = $matches[1];
 
         $I->executeCommand('run dummy --shard=3/3');
         $I->seeInShellOutput('OK (2 tests');
-        $I->seeInShellOutput('[SHARD 3/3');
+        $I->seeInShellOutput('[Shard 3/3');
 
         preg_match_all('~\+\s(\w+:\s[\w\s]+)~', $I->grabShellOutput(), $matches);
         $tests3 = $matches[1];

@@ -410,13 +410,13 @@ class Run extends Command
 
         if (isset($userOptions['filter']) && $filter) {
             throw new InvalidOptionException("--filter and --grep can't be used with a test name");
-        } else {
+        } elseif($filter) {
             $userOptions['filter'] = $filter;
         }
 
         if ($this->options['shard']) {
             $this->output->writeln(
-                "[SHARD ${userOptions['shard']}] <info>Running subset of tests</info>"
+                "[Shard ${userOptions['shard']}] <info>Running subset of tests</info>"
             );
             // disable shuffle for sharding
             $config['settings']['shuffle'] = false;
@@ -424,7 +424,7 @@ class Run extends Command
 
         if (!$this->options['silent'] && $config['settings']['shuffle']) {
             $this->output->writeln(
-                "[SEED] <info>" . $userOptions['seed'] . "</info>"
+                "[Seed] <info>" . $userOptions['seed'] . "</info>"
             );
         }
 
@@ -456,7 +456,7 @@ class Run extends Command
 
         if ($this->options['shard']) {
             $this->output->writeln(
-                "[SHARD ${userOptions['shard']}] <info>Merge this result with other shards to see the complete report</info>"
+                "[Shard ${userOptions['shard']}] <info>Merge this result with other shards to see the complete report</info>"
             );
         }
 
