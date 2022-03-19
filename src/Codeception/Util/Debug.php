@@ -52,7 +52,7 @@ class Debug
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3);
         foreach ($backtrace as $backtraceStep) {
             $class = $backtraceStep['class'] ?? null;
-            $fn = $backtraceStep['class'] ?? null;
+            $fn = $backtraceStep['function'] ?? null;
             if ($class === Debug::class && $fn === 'pause') {
                 continue;
             }
