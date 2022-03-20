@@ -59,7 +59,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * To run Selenium Server you need [Java](https://www.java.com/) as well as Chrome or Firefox browser installed.
  *
- * 1. Download [Selenium Standalone Server](http://docs.seleniumhq.org/download/)
+ * 1. Download [Selenium Standalone Server](https://docs.seleniumhq.org/download/)
  * 2. To use Chrome, install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started). To use Firefox, install [GeckoDriver](https://github.com/mozilla/geckodriver).
  * 3. Launch the Selenium Server: `java -jar selenium-server-standalone-3.xx.xxx.jar`. To locate Chromedriver binary use `-Dwebdriver.chrome.driver=./chromedriver` option. For Geckodriver use `-Dwebdriver.gecko.driver=./geckodriver`.
  * 4. Configure this module (in `acceptance.suite.yml`) by setting `url` and `browser`:
@@ -107,7 +107,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * [the WebDriver protocol](https://code.google.com/p/selenium/wiki/JsonWireProtocol).
  * It allows you to run Selenium tests on a server without a GUI installed.
  *
- * 1. Download [PhantomJS](http://phantomjs.org/download.html)
+ * 1. Download [PhantomJS](https://phantomjs.org/download.html)
  * 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
  * 3. Configure this module (in `acceptance.suite.yml`) by setting url and `phantomjs` as browser:
  *
@@ -119,7 +119,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *              browser: phantomjs
  * ```
  *
- * Since PhantomJS doesn't give you any visual feedback, it's probably a good idea to install [Codeception\Extension\Recorder](http://codeception.com/extensions#CodeceptionExtensionRecorder) which gives you screenshots of how PhantomJS "sees" your pages.
+ * Since PhantomJS doesn't give you any visual feedback, it's probably a good idea to install [Codeception\Extension\Recorder](https://codeception.com/extensions#CodeceptionExtensionRecorder) which gives you screenshots of how PhantomJS "sees" your pages.
  *
  * ### Headless Selenium in Docker
  *
@@ -140,7 +140,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * ### SauceLabs
  *
- * 1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
+ * 1. Create an account at [SauceLabs.com](https://SauceLabs.com) to get your username and access key
  * 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
  * 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
  * 4. run a tunnel app if your site can't be accessed from Internet
@@ -1912,7 +1912,7 @@ class WebDriver extends CodeceptionModule implements
     /**
      * Accepts the active JavaScript native popup window, as created by `window.alert`|`window.confirm`|`window.prompt`.
      * Don't confuse popups with modal windows,
-     * as created by [various libraries](http://jster.net/category/windows-modals-popups).
+     * as created by [various libraries](https://jster.net/category/windows-modals-popups).
      */
     public function acceptPopup()
     {

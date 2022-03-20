@@ -10,7 +10,7 @@ use Codeception\Util\ReflectionHelper;
 use Yii;
 
 /**
- * This module provides integration with [Yii Framework 1.1](http://www.yiiframework.com/doc/guide/).
+ * This module provides integration with [Yii Framework 1.1](https://www.yiiframework.com/doc/guide/).
  *
  * The following configurations are available for this module:
  *
