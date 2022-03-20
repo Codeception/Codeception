@@ -20,7 +20,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Connector\Phalcon as PhalconConnector;
 
 /**
- * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (3.x).
+ * This module provides integration with [Phalcon framework](https://www.phalconphp.com/) (3.x).
  * Please try it and leave your feedback.
  *
  * ## Demo Project

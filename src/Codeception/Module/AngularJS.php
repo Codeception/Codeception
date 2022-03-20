@@ -6,14 +6,14 @@ use Codeception\TestInterface;
 use Facebook\WebDriver\WebDriverBy;
 
 /**
- * Module for AngularJS testing, based on [WebDriver module](http://codeception.com/docs/modules/WebDriver) and [Protractor](http://angular.github.io/protractor/).
+ * Module for AngularJS testing, based on [WebDriver module](https://codeception.com/docs/modules/WebDriver) and [Protractor](https://angular.github.io/protractor/).
  *
  * Performs **synchronization to ensure that page content is fully rendered**.
  * Uses Angular's and Protractor internals methods to synchronize with the page.
  *
  * ## Configuration
  *
- * The same as for [WebDriver](http://codeception.com/docs/modules/WebDriver#Configuration), but few new options added:
+ * The same as for [WebDriver](https://codeception.com/docs/modules/WebDriver#Configuration), but few new options added:
  *
  * * `el` - element where Angular application is defined (default: `body`)
  * * `script_timeout` - for how long in seconds to wait for angular operations to finish (default: 5)
@@ -61,7 +61,7 @@ class AngularJS extends WebDriver
       throw new Error('window.angular is undefined.  This could be either ' +
           'because this is a non-angular page or because your test involves ' +
           'client-side navigation, which can interfere with Protractor\'s ' +
-          'bootstrapping.  See http://git.io/v4gXM for details');
+          'bootstrapping.  See https://git.io/v4gXM for details');
     }
     if (angular.getTestability) {
     angular.getTestability(el).whenStable(callback);
