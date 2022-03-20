@@ -8,6 +8,17 @@ function codecept_debug($data)
     \Codeception\Util\Debug::debug($data);
 }
 
+/**
+ * Executes interactive pause in ths place
+ *
+ * @param array $vars
+ * @return void
+ */
+function codecept_pause(array $vars = []): void
+{
+    \Codeception\Util\Debug::pause($vars);
+}
+
 function codecept_root_dir($appendPath = '')
 {
     return \Codeception\Configuration::projectDir() . $appendPath;
