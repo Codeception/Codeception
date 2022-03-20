@@ -87,17 +87,19 @@ class Loader
                 throw new ConfigurationException("Shard must be set as --shard=CURRENT/TOTAL where CURRENT and TOTAL are number. For instance: --shard=1/3");
             }
 
-            list($shard, $totalShards) = explode('/', $this->shard);
+            [$shard, $totalShards] = explode('/', $this->shard);
+
+            if ($shard < 1) {
+                throw new ConfigurationException("Incorrect shard index. Use 1/$totalShards to start the first shard.");
+            }
 
             if ($totalShards < $shard) {
                 throw new ConfigurationException("Total shards are less than current shard.");
             }
 
             $chunks = $this->splitTestsIntoChunks($totalShards);
-            if (!isset($chunks[$shard - 1])) {
-                return [];
-            }
-            return $chunks[$shard - 1];
+
+            return $chunks[$shard - 1] ?? [];
         }
         return $this->tests;
     }
