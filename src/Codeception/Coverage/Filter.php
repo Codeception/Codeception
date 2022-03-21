@@ -67,7 +67,7 @@ class Filter
                 foreach ($finder as $file) {
                     if (method_exists($filter, 'addFileToWhitelist')) {
                         //php-code-coverage 8 or older
-                        $filter->addFileToWhitelist($file);
+                        $filter->addFileToWhitelist((string)$file);
                     } else {
                         //php-code-coverage 9+
                         $filter->includeFile((string)$file);
@@ -89,10 +89,10 @@ class Filter
                     foreach ($finder as $file) {
                         if (method_exists($filter, 'removeFileFromWhitelist')) {
                             //php-code-coverage 8 or older
-                            $filter->removeFileFromWhitelist($file);
+                            $filter->removeFileFromWhitelist((string)$file);
                         } else {
                             //php-code-coverage 9+
-                            $filter->excludeFile($file);
+                            $filter->excludeFile((string)$file);
                         }
                     }
                 } catch (DirectoryNotFoundException) {
