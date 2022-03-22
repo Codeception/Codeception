@@ -2,14 +2,14 @@
     "name":"codeception/codeception",
     "description":"BDD-style testing framework",
     "keywords":["BDD", "acceptance testing", "functional testing", "unit testing", "tdd"],
-    "homepage":"http://codeception.com/",
+    "homepage":"https://codeception.com/",
     "type":"library",
     "license":"MIT",
     "authors":[
         {
             "name":"Michael Bodnarchuk",
             "email":"davert@mail.ua",
-            "homepage":"http://codegyre.com"
+            "homepage":"https://codegyre.com"
         }
     ],
     "minimum-stability": "RC",

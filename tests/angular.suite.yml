@@ -3,6 +3,6 @@ bootstrap: false
 modules:
     enabled:
         - AngularJS:
-            url: http://davertmik.github.io/angular-demo-app
+            url: https://davertmik.github.io/angular-demo-app
             browser: firefox
         - \Helper\Angular

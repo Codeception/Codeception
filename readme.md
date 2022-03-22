@@ -10,9 +10,9 @@ Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides an absolutely new way of writing acceptance, functional and even unit tests.
 Powered by PHPUnit.
 
-| General |  Windows |  Webdriver  | HHVM |
-| ------- | -------- | -------- | -------- |
-| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.4)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.4) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/master/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) | [![wercker status](https://app.wercker.com/status/b4eecd0596bedb65333ff7ab7836bc7f/s/ "wercker status")](https://app.wercker.com/project/byKey/b4eecd0596bedb65333ff7ab7836bc7f) |
+| General                                                                                                                               |  Windows |  Webdriver  | HHVM |
+|---------------------------------------------------------------------------------------------------------------------------------------| -------- | -------- | -------- |
+| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.4)](https://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.4) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/master/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) | [![wercker status](https://app.wercker.com/status/b4eecd0596bedb65333ff7ab7836bc7f/s/ "wercker status")](https://app.wercker.com/project/byKey/b4eecd0596bedb65333ff7ab7836bc7f) |
 
 #### Contributions
 
@@ -51,14 +51,14 @@ php composer.phar require "codeception/codeception"
 
 ### Phar
 
-Download [codecept.phar](http://codeception.com/codecept.phar)
+Download [codecept.phar](https://codeception.com/codecept.phar)
 
 Copy it into your project.
 
 You can also make Codeception an executable and it put it into your `$PATH`, for instance:
 
 ```
-wget http://codeception.com/codecept.phar
+wget https://codeception.com/codecept.phar
 
 chmod +x codecept.phar
 
@@ -74,7 +74,7 @@ Run CLI utility:
 php codecept.phar
 ```
 
-See also [Installation](http://codeception.com/install) | **[QuickStart](http://codeception.com/quickstart)**
+See also [Installation](https://codeception.com/install) | **[QuickStart](https://codeception.com/quickstart)**
 
 ## Getting Started
 
@@ -88,12 +88,12 @@ This will create a default directory structure and default test suites.
 
 ## Documentation
 
-[Documentation](http://codeception.com/docs/01-Introduction)
+[Documentation](https://codeception.com/docs/01-Introduction)
 
 Documentation is included within the project. Look for it in the ['docs' directory](https://github.com/Codeception/Codeception/tree/master/docs).
 
 ## License
 MIT
 
-(c) [Codeception Team](http://codeception.com/credits)
+(c) [Codeception Team](https://codeception.com/credits)
 2011-2018
