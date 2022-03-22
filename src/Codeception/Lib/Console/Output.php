@@ -9,9 +9,6 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper as SymfonyFormatterHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\CliDumper;
-use Symfony\Component\VarDumper\VarDumper;
 
 class Output extends ConsoleOutput
 {
