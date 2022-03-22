@@ -65,13 +65,7 @@ class Filter
                     : $this->matchWildcardPattern($fileOrDir);
 
                 foreach ($finder as $file) {
-                    if (method_exists($filter, 'addFileToWhitelist')) {
-                        //php-code-coverage 8 or older
-                        $filter->addFileToWhitelist((string)$file);
-                    } else {
-                        //php-code-coverage 9+
-                        $filter->includeFile((string)$file);
-                    }
+                    $filter->includeFile((string)$file);
                 }
             }
         }
@@ -87,13 +81,7 @@ class Filter
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {
-                        if (method_exists($filter, 'removeFileFromWhitelist')) {
-                            //php-code-coverage 8 or older
-                            $filter->removeFileFromWhitelist((string)$file);
-                        } else {
-                            //php-code-coverage 9+
-                            $filter->excludeFile((string)$file);
-                        }
+                        $filter->excludeFile((string)$file);
                     }
                 } catch (DirectoryNotFoundException) {
                     continue;
