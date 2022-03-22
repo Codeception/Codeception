@@ -9,6 +9,9 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper as SymfonyFormatterHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Symfony\Component\VarDumper\Dumper\CliDumper;
+use Symfony\Component\VarDumper\VarDumper;
 
 class Output extends ConsoleOutput
 {
@@ -67,7 +70,11 @@ class Output extends ConsoleOutput
 
     public function debug(mixed $message): void
     {
-        $message = print_r($message, true);
+        if (!is_scalar($message)) {
+            $this->writeln("\n<debug>  DEBUG OUTPUT:</debug>");
+            dump($message);
+            return;
+        }
         $message = str_replace("\n", "\n  ", $message);
         $message = $this->clean($message);
         $message = OutputFormatter::escape($message);
