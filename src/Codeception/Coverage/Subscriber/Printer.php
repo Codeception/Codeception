@@ -206,9 +206,6 @@ class Printer implements EventSubscriberInterface
 
     protected function printCobertura(): void
     {
-        if (!class_exists(CoberturaReport::class)) {
-            throw new ConfigurationException("Cobertura report requires php-code-coverage >= 9.2");
-        }
         $writer = new CoberturaReport();
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-cobertura']));
     }
