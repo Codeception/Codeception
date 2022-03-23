@@ -69,6 +69,7 @@ class Codecept
         'groups'             => null,
         'excludeGroups'      => null,
         'filter'             => null,
+        'shard'              => null,
         'env'                => null,
         'fail-fast'          => 0,
         'ansi'               => true,
@@ -273,6 +274,7 @@ class Codecept
 
     public function runSuite(array $settings, string $suite, string $test = null): TestResult
     {
+        $settings['shard'] = $this->options['shard'];
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
         $suiteManager->initialize();
         srand($this->options['seed']);

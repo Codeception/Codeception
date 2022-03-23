@@ -706,6 +706,50 @@ EOF
         $I->seeInShellOutput("OK (");
     }
 
+    public function runTestsWithGrep(CliGuy $I)
+    {
+        $I->executeCommand('run dummy --grep Another --no-ansi');
+        $I->dontSeeInShellOutput('GroupEventsCest');
+        $I->seeInShellOutput('AnotherCest');
+
+        $I->executeCommand('run dummy --grep Optimistic --no-ansi');
+        $I->seeInShellOutput('OK (1 test');
+    }
+
+    public function runTestsWithFilter(CliGuy $I)
+    {
+        $I->executeCommand('run dummy --filter Another --no-ansi');
+        $I->dontSeeInShellOutput('GroupEventsCest');
+        $I->seeInShellOutput('AnotherCest');
+    }
+
+    public function runTestsByShards(CliGuy $I)
+    {
+        $I->executeCommand('run dummy --shard=1/3 --no-ansi');
+        $I->seeInShellOutput('OK (2 tests');
+        $I->seeInShellOutput('[Shard 1/3');
+        preg_match_all('~\+\s(\w+:\s[\w\s]+)~', $I->grabShellOutput(), $matches);
+        $tests1 = $matches[1];
+
+        $I->executeCommand('run dummy --shard=2/3');
+        $I->seeInShellOutput('OK (2 tests');
+        $I->seeInShellOutput('[Shard 2/3');
+
+        preg_match_all('~\+\s(\w+:\s[\w\s]+)~', $I->grabShellOutput(), $matches);
+        $tests2 = $matches[1];
+
+        $I->executeCommand('run dummy --shard=3/3');
+        $I->seeInShellOutput('OK (2 tests');
+        $I->seeInShellOutput('[Shard 3/3');
+
+        preg_match_all('~\+\s(\w+:\s[\w\s]+)~', $I->grabShellOutput(), $matches);
+        $tests3 = $matches[1];
+
+        $I->assertEmpty(array_intersect($tests1, $tests2), 'same tests in shards');
+        $I->assertEmpty(array_intersect($tests2, $tests3), 'same tests in shards');
+        $I->assertEmpty(array_intersect($tests1, $tests3), 'same tests in shards');
+    }
+
     /**
      * @group reports
      *
