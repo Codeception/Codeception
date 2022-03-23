@@ -97,14 +97,14 @@ class Loader
                 throw new ConfigurationException('Total shards are less than current shard');
             }
 
-            $chunks = $this->splitTestsIntoChunks($totalShards);
+            $chunks = $this->splitTestsIntoChunks((int)$totalShards);
 
             return $chunks[$shard - 1] ?? [];
         }
         return $this->tests;
     }
 
-    private function splitTestsIntoChunks(array $chunks): array
+    private function splitTestsIntoChunks(int $chunks): array
     {
         return array_chunk($this->tests, intval(ceil(sizeof($this->tests) / $chunks)));
     }
