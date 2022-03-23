@@ -121,7 +121,10 @@ class ParamsLoader
 
         // symfony/dotenv
         if (class_exists(SymfonyDotenv::class)) {
-            return (new SymfonyDotenv())->parse(file_get_contents($this->paramsFile), $this->paramsFile);
+            $symfonyDotEnv = new SymfonyDotenv();
+            $values = $symfonyDotEnv->parse(file_get_contents($this->paramsFile), $this->paramsFile);
+            $symfonyDotEnv->populate($values, true);
+            return $values;
         }
 
         throw new ConfigurationException(
