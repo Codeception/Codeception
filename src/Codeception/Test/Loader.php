@@ -104,7 +104,7 @@ class Loader
         return $this->tests;
     }
 
-    private function splitTestsIntoChunks($chunks)
+    private function splitTestsIntoChunks(array $chunks): array
     {
         return array_chunk($this->tests, intval(ceil(sizeof($this->tests) / $chunks)));
     }
