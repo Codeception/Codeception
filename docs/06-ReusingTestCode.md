@@ -102,7 +102,7 @@ $I->login('miles', '123456');
 ```
 
 However, implementing all actions for reuse in a single actor class may lead to
-breaking the [Single Responsibility Principle](http://en.wikipedia.org/wiki/Single_responsibility_principle).
+breaking the [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle).
 
 ### Session Snapshot
 
@@ -233,7 +233,7 @@ If you feel like adding too many actions into your Actor class
 
 For acceptance and functional testing, we will not only need to have common actions being reused across different tests,
 we should have buttons, links and form fields being reused as well. For those cases we need to implement
-the [PageObject pattern](http://docs.seleniumhq.org/docs/06_test_design_considerations.jsp#page-object-design-pattern),
+the [PageObject pattern](https://docs.seleniumhq.org/docs/06_test_design_considerations.jsp#page-object-design-pattern),
 which is widely used by test automation engineers. The PageObject pattern represents a web page as a class
 and the DOM elements on that page as its properties, and some basic interactions as its methods.
 PageObjects are very important when you are developing a flexible architecture of your tests.

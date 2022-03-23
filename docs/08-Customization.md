@@ -100,7 +100,7 @@ extensions:
 ```
 
 But what are extensions, anyway? Basically speaking, extensions are nothing more than event listeners
-based on the [Symfony Event Dispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) component.
+based on the [Symfony Event Dispatcher](https://symfony.com/doc/current/components/event_dispatcher/introduction.html) component.
 
 ### Events
 
@@ -350,7 +350,7 @@ Make your class accessible by autoloader and you can have your own step decorato
 ## Custom Reporters
 
 Alternative reporters can be implemented as extension.
-There are [DotReporter](http://codeception.com/extensions#DotReporter) and [SimpleReporter](http://codeception.com/extensions#SimpleReporter) extensions included.
+There are [DotReporter](https://codeception.com/extensions#DotReporter) and [SimpleReporter](https://codeception.com/extensions#SimpleReporter) extensions included.
 Use them to change output or use them as an example to build your own reporter. They can be easily enabled with `--ext` option
 
 ```bash
@@ -403,7 +403,7 @@ codecept init Acceptance --path acceptance_tests
 You will be asked several questions and then config files will be generated and all necessary directories will be created.
 Learn from the examples above to build a custom Installation Template. Here are the basic rules you should follow:
 
-* Templates should be inherited from [`Codeception\InitTemplate`](http://codeception.com/docs/reference/InitTemplate) class and implement `setup` method.
+* Templates should be inherited from [`Codeception\InitTemplate`](https://codeception.com/docs/reference/InitTemplate) class and implement `setup` method.
 * Template class should be placed in `Codeception\Template` namespace so Codeception could locate them by class name
 * Use methods like `say`, `saySuccess`, `sayWarning`, `sayError`, `ask`, to interact with a user.
 * Use `createDirectoryFor`, `createEmptyDirectory` methods to create directories

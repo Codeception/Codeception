@@ -192,7 +192,7 @@ Options:
 
 ## SelfUpdate
 
-Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
+Auto-updates phar archive from official site: 'https://codeception.com/codecept.phar' .
 
 * `php codecept.phar self-update`
 

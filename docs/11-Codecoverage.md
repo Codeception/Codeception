@@ -1,7 +1,7 @@
 # Code Coverage
 
 At some point you want to review which parts of your application are tested well and which are not.
-Just for this case the [CodeCoverage](http://en.wikipedia.org/wiki/Code_coverage) is used. When you execute your tests to collect coverage report,
+Just for this case the [CodeCoverage](https://en.wikipedia.org/wiki/Code_coverage) is used. When you execute your tests to collect coverage report,
 you will receive statistics of all classes, methods, and lines triggered by these tests.
 The ratio between all lines in script and all touched lines is a main coverage criterion. In the ideal world you should get 100% code coverage, but in reality 80% is really enough. Because even 100% code coverage rate doesn't save you from fatal errors and crashes.
 
@@ -13,7 +13,7 @@ The required information is provided by [SebastianBergmann\CodeCoverage](https:/
 | [phpdbg](https://www.php.net/manual/en/book.phpdbg.php) | Faster than `Xdebug` but inaccurate |
 | [pcov](https://github.com/krakjoe/pcov) | Fast and accurate, but no debug functionality &mdash; perfect for CI |
 
-![Code Coverage Example](http://codeception.com/images/coverage.png)
+![Code Coverage Example](https://codeception.com/images/coverage.png)
 
 Coverage data can be collected manually for both local and remote tests. Remote tests may be executed on different nodes,
 or locally but running through web server. It may look hard to collect code coverage for Selenium tests or PhpBrowser tests. But Codeception supports remote codecoverage as well as local.
@@ -180,7 +180,7 @@ coverage:
             verify_peer: false
 ```
 
-Context stream options are [well documented at php.net](http://php.net/manual/en/context.php)
+Context stream options are [well documented at php.net](https://php.net/manual/en/context.php)
 
 ## Conclusion
 
