@@ -2,5 +2,5 @@ actor: DummyTester
 modules:
     enabled:
         - \Helper\Dummy:
-            vars: ["%KEY1%", "%KEY2%"]
+            vars: [%KEY1%, %KEY2%]
             path: "%PATH%"

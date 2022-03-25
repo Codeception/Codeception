@@ -1,3 +1,8 @@
 parameters:
     KEY1: val1
     KEY2: val2
+    KEY3: 1
+    KEY4:
+        - foo
+        - bar
+        - baz

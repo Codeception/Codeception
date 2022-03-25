@@ -409,7 +409,15 @@ class Configuration
     {
         if (self::$params) {
             $template = new Template($contents, '%', '%');
-            $template->setVars(self::$params);
+            $vars = [];
+            foreach (self::$params as $key => $value) {
+                if (is_string($value)) {
+                    $vars[$key] = $value;
+                } else {
+                    $vars[$key] = json_encode($value, JSON_THROW_ON_ERROR);
+                }
+            }
+            $template->setVars($vars);
             $contents = $template->produce();
         }
 
