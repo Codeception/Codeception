@@ -71,7 +71,7 @@
 
 #### 2.1.6
 
-* Starting from 2.1.6 you can **download PHP 5.4 compatible phar build** at http://codeception.com/php54/codecept.phar by @Naktibalda. See [installation guide](http://codeception.com/install).
+* Starting from 2.1.6 you can **download PHP 5.4 compatible phar build** at https://codeception.com/php54/codecept.phar by @Naktibalda. See [installation guide](https://codeception.com/install).
 * [WebDriver] Fixed uploading files with **PhantomJS** #1823 by @DavertMik and @Naktibalda. Please specify your browser name as `phantom` in WebDriver config in order to use PhantomJS-specific hooks.
 * Fixed parsing PHP files with spaces in name on PHP<7 by @acuthbert. Fixes #2647
 * [WebDriver] Fixed proxy error when using with Chrome #2651 by @vaikla
@@ -180,7 +180,7 @@
 #### 2.1.2
 
 * **Updated to PHPUnit 4.8**
-* Enhancement: **Wildcard includes enabled when testing [multiple applications](http://codeception.com/docs/08-Customization#One-Runner-for-Multiple-Applications)**. See #2016 By @nzod
+* Enhancement: **Wildcard includes enabled when testing [multiple applications](https://codeception.com/docs/08-Customization#One-Runner-for-Multiple-Applications)**. See #2016 By @nzod
 * [Symfony2] fixed Doctrine2 integration: Doctrine transactions will start before each test and rollback afterwards. *2015-08-08*
 * [Doctrine2] establishing connection and starting transaction is moved to `_before`. *2015-08-08*
 * [PhpBrowser] Removed disabled and file fields from form values. By @Naktibalda *2015-08-08*

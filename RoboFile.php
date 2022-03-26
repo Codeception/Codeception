@@ -536,7 +536,7 @@ EOF;
 
         foreach ($releases as $release) {
             $releaseName = $release->getBasename();
-            $downloadUrl = "http://codeception.com/releases/$releaseName/codecept.phar";
+            $downloadUrl = "https://codeception.com/releases/$releaseName/codecept.phar";
 
             list($major, $minor) = explode('.', $releaseName);
             if ("$major.$minor" != $branch) {
@@ -554,7 +554,7 @@ EOF;
             $versionLine = "* [$releaseName]($downloadUrl)";
 
             if (file_exists("releases/$releaseName/php54/codecept.phar")) {
-                $downloadUrl = "http://codeception.com/releases/$releaseName/php54/codecept.phar";
+                $downloadUrl = "https://codeception.com/releases/$releaseName/php54/codecept.phar";
                 if (version_compare($releaseName, '2.4.0', '>=')) {
                     $versionLine .= ", [for PHP 5.6]($downloadUrl)";
                 } elseif (version_compare($releaseName, '2.3.0', '>=')) {
