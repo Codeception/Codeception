@@ -148,7 +148,7 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
         $this->expectException('PHPUnit\Framework\AssertionFailedError');
         $this->expectExceptionMessage("No links containing text 'Next' and URL 'http://codeception' were found in page /external_url");
         $this->module->amOnPage('/external_url');
-        $this->module->seeLink('Next', 'http://codeception');
+        $this->module->seeLink('Next', 'https://codeception');
     }
 
     public function testDontSeeLinkFailsIfTextMatches()

@@ -7,7 +7,7 @@ class JsonTypeTest extends \Codeception\Test\Unit
         'id' => 'integer:>10',
         'retweeted' => 'Boolean',
         'in_reply_to_screen_name' => 'null|string',
-        'name' => 'string|null', // http://codeception.com/docs/modules/REST#seeResponseMatchesJsonType
+        'name' => 'string|null', // https://codeception.com/docs/modules/REST#seeResponseMatchesJsonType
         'user' => [
             'url' => 'String:url'
         ]
@@ -17,7 +17,7 @@ class JsonTypeTest extends \Codeception\Test\Unit
         'retweeted' => false,
         'in_reply_to_screen_name' => null,
         'name' => null,
-        'user' => ['url' => 'http://davert.com']
+        'user' => ['url' => 'https://davert.com']
     ];
 
     public function _after()

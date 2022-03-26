@@ -10,7 +10,7 @@ There are 3 suites for testing
 
 ## Set up
 1. Clone the repository to your local machine
-1. Make sure you have the MongoDB extension enabled. It's not included in PHP by default, you can download it from http://pecl.php.net/package/mongodb
+1. Make sure you have the MongoDB extension enabled. It's not included in PHP by default, you can download it from https://pecl.php.net/package/mongodb
 1. Run `composer install` in the cloned project directory
 
 To run the web tests:

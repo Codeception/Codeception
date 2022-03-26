@@ -496,7 +496,7 @@ class PhpBrowserTest extends TestsForBrowsers
         $guzzleConnector = new \Codeception\Lib\Connector\Guzzle();
         $guzzleConnector->setClient($client);
         $guzzleConnector->getCookieJar()->set(new \Symfony\Component\BrowserKit\Cookie('hello', 'world'));
-        $guzzleConnector->request('GET', 'http://codeception.com/');
+        $guzzleConnector->request('GET', 'https://codeception.com/');
         $this->assertArrayHasKey('cookies', $this->history[0]['options']);
         /** @var $cookie GuzzleHttp\Cookie\SetCookie  **/
         $cookies = $this->history[0]['options']['cookies']->toArray();
