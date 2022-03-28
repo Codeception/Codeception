@@ -6,7 +6,7 @@ namespace Codeception\Command;
 
 // phpcs:ignoreFile PSR1.Files.SideEffects.FoundWithSymbols
 if (!class_exists(ConsoleCompletion::class)) {
-    echo "Please install `stecman/symfony-console-completion\n` to enable auto completion";
+    fwrite(STDERR, "Please install `stecman/symfony-console-completion\n` to enable auto completion");
     return;
 }
 
@@ -34,7 +34,7 @@ class Completion extends CompletionCommand
             'generate:cest',
             'generate:feature',
             'generate:phpunit',
-            'generate:scenarios',
+           'generate:scenarios',
             'generate:stepobject',
             'generate:test',
             'gherkin:snippets',
