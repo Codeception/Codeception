@@ -4,7 +4,7 @@
 Access a database.
 
 The most important function of this module is to clean a database before each test.
-This module also provides actions to perform checks in a database, e.g. [seeInDatabase()](http://codeception.com/docs/modules/Db#seeInDatabase)
+This module also provides actions to perform checks in a database, e.g. [seeInDatabase()](https://codeception.com/docs/modules/Db#seeInDatabase)
 
 In order to have your database populated with data you need a raw SQL dump.
 Simply put the dump in the `tests/_data` directory (by default) and specify the path in the config.
@@ -36,11 +36,11 @@ if you run into problems loading dumps and cleaning databases.
 * cleanup: false - whether the dump should be reloaded before each test
 * reconnect: false - whether the module should reconnect to the database before each test
 * waitlock: 0 - wait lock (in seconds) that the database session should use for DDL statements
-* ssl_key - path to the SSL key (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-key)
-* ssl_cert - path to the SSL certificate (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-cert)
-* ssl_ca - path to the SSL certificate authority (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-ca)
-* ssl_verify_server_cert - disables certificate CN verification (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php)
-* ssl_cipher - list of one or more permissible ciphers to use for SSL encryption (MySQL specific, @see http://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-cipher)
+* ssl_key - path to the SSL key (MySQL specific, @see https://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-key)
+* ssl_cert - path to the SSL certificate (MySQL specific, @see https://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-cert)
+* ssl_ca - path to the SSL certificate authority (MySQL specific, @see https://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-ssl-ca)
+* ssl_verify_server_cert - disables certificate CN verification (MySQL specific, @see https://php.net/manual/de/ref.pdo-mysql.php)
+* ssl_cipher - list of one or more permissible ciphers to use for SSL encryption (MySQL specific, @see https://php.net/manual/de/ref.pdo-mysql.php#pdo.constants.mysql-attr-cipher)
 * databases - include more database configs and switch between them in tests.
 * initial_queries - list of queries to be executed right after connection to the database has been initiated, i.e. creating the database if it does not exist or preparing the database collation
 

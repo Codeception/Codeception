@@ -1,7 +1,7 @@
 # Apc
 
 
-This module interacts with the [Alternative PHP Cache (APC)](http://php.net/manual/en/intro.apcu.php)
+This module interacts with the [Alternative PHP Cache (APC)](https://php.net/manual/en/intro.apcu.php)
 using either _APCu_ or _APC_ extension.
 
 Performs a cleanup by flushing all values after each test run.

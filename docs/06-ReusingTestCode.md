@@ -75,7 +75,7 @@ This trait was created by running `codecept build` and is regenerated each time 
 
 For acceptance and functional testing, we will not only need to have common actions being reused across different tests,
 we should have buttons, links and form fields being reused as well. For those cases we need to implement
-the [PageObject pattern](http://docs.seleniumhq.org/docs/06_test_design_considerations.jsp#page-object-design-pattern),
+the [PageObject pattern](https://docs.seleniumhq.org/docs/06_test_design_considerations.jsp#page-object-design-pattern),
 which is widely used by test automation engineers. The PageObject pattern represents a web page as a class
 and the DOM elements on that page as its properties, and some basic interactions as its methods.
 PageObjects are very important when you are developing a flexible architecture of your acceptance or functional tests.
