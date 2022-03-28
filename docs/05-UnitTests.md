@@ -117,7 +117,7 @@ $user = \Codeception\Stub::make('User', ['getName' => 'john']);
 $name = $user->getName(); // 'john'
 ```
 
-[See complete reference](http://codeception.com/docs/reference/Mock)
+[See complete reference](https://codeception.com/docs/reference/Mock)
 
 Inside unit tests (`Codeception\Test\Unit`) it is recommended to use alternative API:
 
@@ -146,7 +146,7 @@ $user->getName(); // => davert
 $user->setName('jane'); // => this method is empty
 ```
 
-[See complete reference](http://codeception.com/docs/reference/Mock)
+[See complete reference](https://codeception.com/docs/reference/Mock)
 
 Stubs can also be created using static methods from `Codeception\Stub` class.
 In this 
@@ -156,7 +156,7 @@ In this
 \Codeception\Stub::make(UserRepository::class, ['find' => new User]);
 ```
 
-See a reference for [static Stub API](http://codeception.com/docs/reference/Stub)  
+See a reference for [static Stub API](https://codeception.com/docs/reference/Stub)  
 
 #### Mocks
 
@@ -181,7 +181,7 @@ $userName = $user->getName();
 $this->assertEquals('Davert', $userName);
 ```
 
-[See complete reference](http://codeception.com/docs/reference/Mock)
+[See complete reference](https://codeception.com/docs/reference/Mock)
 
 ## Integration Tests
 
@@ -228,7 +228,7 @@ function testSavingUser()
 To enable the database functionality in unit tests, make sure the `Db` module is included
 in the `unit.suite.yml` configuration file.
 The database will be cleaned and populated after each test, the same way it happens for acceptance and functional tests.
-If that's not your required behavior, change the settings of the `Db` module for the current suite. See [Db Module](http://codeception.com/docs/modules/Db)
+If that's not your required behavior, change the settings of the `Db` module for the current suite. See [Db Module](https://codeception.com/docs/modules/Db)
 
 ### Interacting with the Framework
 
@@ -336,7 +336,7 @@ The same can be done for all public properties of an enabled module. Accessible 
 
 ### Scenario Driven Testing
 
-[Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes) can also be used for integration testing.
+[Cest format](https://codeception.com/docs/07-AdvancedUsage#Cest-Classes) can also be used for integration testing.
 In some cases it makes tests cleaner as it simplifies module access by using common `$I->` syntax:
 
 ```php
@@ -462,8 +462,8 @@ public function testSingleton()
 ```
 
 * [AspectMock on GitHub](https://github.com/Codeception/AspectMock)
-* [AspectMock in Action](http://codeception.com/07-31-2013/nothing-is-untestable-aspect-mock.html)
-* [How it Works](http://codeception.com/09-13-2013/understanding-aspectmock.html)
+* [AspectMock in Action](https://codeception.com/07-31-2013/nothing-is-untestable-aspect-mock.html)
+* [How it Works](https://codeception.com/09-13-2013/understanding-aspectmock.html)
 
 ## Conclusion
 

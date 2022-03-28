@@ -17,9 +17,9 @@ Supported and tested FTP types are:
 * SFTP
 
 Connection uses php build in FTP client for FTP,
-connection to SFTP uses [phpseclib](http://phpseclib.sourceforge.net/) pulled in using composer.
+connection to SFTP uses [phpseclib](https://phpseclib.sourceforge.net/) pulled in using composer.
 
-For SFTP, add [phpseclib](http://phpseclib.sourceforge.net/) to require list.
+For SFTP, add [phpseclib](https://phpseclib.sourceforge.net/) to require list.
 ```
 "require": {
  "phpseclib/phpseclib": "^2.0.14"

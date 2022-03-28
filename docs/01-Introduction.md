@@ -9,7 +9,7 @@ You can't predict all possible scenarios and exceptional situations for complex 
 but with tests you can cover the most important parts of your app and at least be sure they work as predicted.
 
 There are plenty of ways to test your application.
-The most popular paradigm is [Unit Testing](http://en.wikipedia.org/wiki/Unit_testing).
+The most popular paradigm is [Unit Testing](https://en.wikipedia.org/wiki/Unit_testing).
 For web applications, testing just the controller and/or the model doesn't prove that your application is working.
 To test the behavior of your application as a whole, you should write functional or acceptance tests.
 
@@ -84,7 +84,7 @@ Testing pieces of code before coupling them together is highly important as well
 you can be sure that some deeply hidden feature still works, even if it was not covered by functional or acceptance tests.
 This also shows care in producing stable and testable code.
 
-Codeception is created on top of [PHPUnit](http://www.phpunit.de/). If you have experience writing unit tests with PHPUnit
+Codeception is created on top of [PHPUnit](https://www.phpunit.de/). If you have experience writing unit tests with PHPUnit
 you can continue doing so. Codeception has no problem executing standard PHPUnit tests,
 but, additionally, Codeception provides some well-built tools to make your unit tests simpler and cleaner.
 

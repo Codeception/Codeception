@@ -6,11 +6,11 @@ There are many Continuous Integration Servers out there. We will try to list bas
 
 ## Jenkins
 
-![Jenkins](http://codeception.com/images/jenkins/Jenk1.png)
+![Jenkins](https://codeception.com/images/jenkins/Jenk1.png)
 
-[Jenkins](http://jenkins-ci.org/) is one of the most popular open-source solution on market. It is easy to setup and is easy to customize by applying various plugins.
+[Jenkins](https://jenkins-ci.org/) is one of the most popular open-source solution on market. It is easy to setup and is easy to customize by applying various plugins.
 
-![Create new job in Jenkins](http://codeception.com/images/jenkins/Jenk2.png)
+![Create new job in Jenkins](https://codeception.com/images/jenkins/Jenk2.png)
 
 ### Preparing Jenkins
 
@@ -22,7 +22,7 @@ It is recommended to have the next plugins installed:
 * **HTML Publisher Plugin** - to process Codeception HTML reports
 * **AnsiColor** - to show colorized console output.
 
-![Jenkins Plugins](http://codeception.com/images/jenkins/Jenk3.png)
+![Jenkins Plugins](https://codeception.com/images/jenkins/Jenk3.png)
 
 ### Basic Setup
 
@@ -34,11 +34,11 @@ We need to define build steps. The most simple setup may look like this:
 php vendor/bin/codecept run
 ```
 
-![Jenkins Codeception Build Step](http://codeception.com/images/jenkins/Jenk5.png)
+![Jenkins Codeception Build Step](https://codeception.com/images/jenkins/Jenk5.png)
 
 Then we can start the very first job and check the execution progress. If tests fail we will see that in console:
 
-![Jenkins Console Output](http://codeception.com/images/jenkins/Jenk6.png)
+![Jenkins Console Output](https://codeception.com/images/jenkins/Jenk6.png)
 
 ### XML Reports
 
@@ -52,11 +52,11 @@ php vendor/bin/codecept run --xml
 
 and ask Jenkins to collect resulted XML. This can be done as part of Post-build actions. Let's add *Publish xUnit test result report* action and configure it to use with PHPUnit reports.
 
-![Use PHPUnit xUnit builder for Jenkins](http://codeception.com/images/jenkins/Jenk7.png)
+![Use PHPUnit xUnit builder for Jenkins](https://codeception.com/images/jenkins/Jenk7.png)
 
 Now we should specify path to PHPUnit style XML reports. In case of standard Codeception setup we should specify `tests/_output/*.xml` as a pattern for matching resulted XMLs. Now we save the project and rebuild it.
 
-![Jenkins Result Trend](http://codeception.com/images/jenkins/Jenk8.png)
+![Jenkins Result Trend](https://codeception.com/images/jenkins/Jenk8.png)
 
 Now for all builds we will see results trend graph that shows us percentage of passing and failing tests. We also will see a **Latest Test Result** link which will lead to to the page where all executed tests and their stats listed in a table.
 
@@ -70,16 +70,16 @@ php vendor/bin/codecept run --html
 
 Now we need HTML Publisher plugin configured to display generated HTML files. It should be added as post-build action similar way we did it for XML reports.
 
-![Jenkins Codeception HTML Setup](http://codeception.com/images/jenkins/Jenk9.png)
+![Jenkins Codeception HTML Setup](https://codeception.com/images/jenkins/Jenk9.png)
 
 Jenkins should locate `report.html` at `tests/_output/`. Now Jenkins will display HTML reports for each build.
 
-![Jenkins HTML Report](http://codeception.com/images/jenkins/Jenki10.png)
-![Jenkins Codeception HTML Results](http://codeception.com/images/jenkins/Jenki11.png)
+![Jenkins HTML Report](https://codeception.com/images/jenkins/Jenki10.png)
+![Jenkins Codeception HTML Results](https://codeception.com/images/jenkins/Jenki11.png)
 
 ## TeamCity
 
-![TeamCity](http://codeception.com/images/teamcity/logo.jpg)
+![TeamCity](https://codeception.com/images/teamcity/logo.jpg)
 
 TeamCity is a hosted solution from JetBrains. The setup of it can be a bit tricky as TeamCity uses its own reporter format for parsing test results. PHPUnit since version 5.x has integrated support for this format, so does Codeception. What we need to do is to configure Codeception to use custom reporter. By default there is `--report` option which provides an alternative output. You can change the reporter class in `codeception.yml` configuration:
 
@@ -96,15 +96,15 @@ After you create build project you should define build step with Codeception whi
 php vendor/bin/codecept run --report
 ```
 
-![build step](http://codeception.com/images/teamcity/build.png)
+![build step](https://codeception.com/images/teamcity/build.png)
 
 Once you execute your first build you should see detailed report inside TeamCity interface:
 
-![report](http://codeception.com/images/teamcity/report2.png)
+![report](https://codeception.com/images/teamcity/report2.png)
 
 ## TravisCI
 
-![Travis CI](http://codeception.com/images/travis.png)
+![Travis CI](https://codeception.com/images/travis.png)
 
 Travis CI is popular service CI with good GitHub integration. Codeception is self-tested with Travis CI. There nothing special about configuration. Just add to the bottom line of travis configuration:
 
@@ -118,7 +118,7 @@ Travis doesn't provide visualization for XML or HTML reports so you can't view r
 
 ## GitLab
 
-![report](http://codeception.com/images/gitlab/logo.png)
+![report](https://codeception.com/images/gitlab/logo.png)
 
 If a file `.gitlab-ci.yml` exists in the root of the git repository, GitLab will run a pipeline each time you push to the gitlab server. The file configures the docker image that will be called. Below is a sample which loads a php7 docker image, clones your files, installs composer dependencies, runs the built-in php webserver and finally runs codeception:
 
@@ -147,7 +147,7 @@ test:
   - vendor/bin/codecept run
 ```
 
-![report](http://codeception.com/images/gitlab/build.png)
+![report](https://codeception.com/images/gitlab/build.png)
 
 For acceptance testing you can use `codeception/codeception` docker image as base.
 

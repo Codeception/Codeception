@@ -83,11 +83,11 @@ By default this module will search for AppKernel in the `app` directory.
 
 The module uses the Symfony Profiler to provide additional information and assertions.
 
-[See the full reference](http://codeception.com/docs/modules/Symfony)
+[See the full reference](https://codeception.com/docs/modules/Symfony)
 
 ### Laravel5
 
-The [Laravel5](http://codeception.com/docs/modules/Laravel5) module is included and requires no configuration:
+The [Laravel5](https://codeception.com/docs/modules/Laravel5) module is included and requires no configuration:
 
 ```yaml
 # functional.suite.yml
@@ -105,7 +105,7 @@ and [Advanced](https://github.com/yiisoft/yii2-app-advanced) application templat
 
 ### Zend Framework 2
 
-Use [the ZF2 module](http://codeception.com/docs/modules/ZF2) to run functional tests inside Zend Framework 2:
+Use [the ZF2 module](https://codeception.com/docs/modules/ZF2) to run functional tests inside Zend Framework 2:
 
 ```yaml
 # functional.suite.yml
@@ -118,7 +118,7 @@ modules:
 
 ### Zend Expressive
 
-[Zend Expressive](http://codeception.com/docs/modules/ZendExpressive) tests can be executed with enabling a corresponding module.
+[Zend Expressive](https://codeception.com/docs/modules/ZendExpressive) tests can be executed with enabling a corresponding module.
 
 ```yaml
 # functional.suite.yml
@@ -149,11 +149,11 @@ modules:
              savepoints: true
 ```
 
-[See the full reference](http://codeception.com/docs/modules/Phalcon)
+[See the full reference](https://codeception.com/docs/modules/Phalcon)
 
 ## Writing Functional Tests
 
-Functional tests are written in the same manner as [Acceptance Tests](http://codeception.com/docs/03-AcceptanceTests)
+Functional tests are written in the same manner as [Acceptance Tests](https://codeception.com/docs/03-AcceptanceTests)
 with the `PhpBrowser` module enabled. All framework modules and the `PhpBrowser` module share the same methods
 and the same engine.
 

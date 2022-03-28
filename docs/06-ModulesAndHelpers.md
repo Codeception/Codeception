@@ -268,7 +268,7 @@ or after the test is finished. This can be useful for bootstrap/cleanup actions.
 You can also define special behavior for when the test fails. This may help you in debugging the issue.
 For example, the PhpBrowser module saves the current webpage to the `tests/_output` directory when a test fails.
 
-All hooks are defined in [Codeception\Module](http://codeception.com/docs/reference/Commands) and are listed here. You are free to redefine them in your module.
+All hooks are defined in [Codeception\Module](https://codeception.com/docs/reference/Commands) and are listed here. You are free to redefine them in your module.
 
 ```php
 <?php
@@ -485,9 +485,9 @@ At the end of a test all configuration changes will be rolled back to the origin
 ### Runtime Configuration of a Test
 
 Sometimes it is needed to set custom configuration for a specific test only.
-For [Cest](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes) and [Test\Unit](http://codeception.com/docs/05-UnitTests)
+For [Cest](https://codeception.com/docs/07-AdvancedUsage#Cest-Classes) and [Test\Unit](https://codeception.com/docs/05-UnitTests)
 formats you can use `@prepare` annotation which can execute the code before other hooks are executed. This allows `@prepare`
-to change the module configuration in runtime. `@prepare` uses [dependency injection](http://codeception.com/docs/07-AdvancedUsage#Dependency-Injection)
+to change the module configuration in runtime. `@prepare` uses [dependency injection](https://codeception.com/docs/07-AdvancedUsage#Dependency-Injection)
 to automatically inject required modules into a method.
 
 To run a specific test only in Chrome browser, you can call `_reconfigure` from WebDriver module for a test itself using `@prepare`.
@@ -511,7 +511,7 @@ protected function useChrome(\Codeception\Module\WebDriver $webdriver)
 
 Prepare methods can invoke all methods of a module, as well as hidden API methods (starting with `_`). Use them to customize the module setup for a specific test.
 
-To change module configuration for a specific group of tests use [GroupObjects](http://codeception.com/docs/08-Customization#Group-Objects).
+To change module configuration for a specific group of tests use [GroupObjects](https://codeception.com/docs/08-Customization#Group-Objects).
 
 ## Conclusion
 
