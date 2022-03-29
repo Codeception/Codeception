@@ -461,7 +461,7 @@ EOF;
         $status = 'success';
 
         if (strcasecmp($this->dir, $dir) !== 0) {
-            $filename = str_pad(0, 3, '0', STR_PAD_LEFT) . '.png';
+            $filename = str_pad('0', 3, '0', STR_PAD_LEFT) . '.png';
 
             try {
                 !is_dir($dir) && !mkdir($dir) && !is_dir($dir);
@@ -563,7 +563,7 @@ EOF;
             return;
         }
 
-        $filename = str_pad($this->stepNum, 3, '0', STR_PAD_LEFT) . '.png';
+        $filename = str_pad((string)$this->stepNum, 3, '0', STR_PAD_LEFT) . '.png';
 
         try {
             if ($this->webDriverModule->webDriver === null) {
