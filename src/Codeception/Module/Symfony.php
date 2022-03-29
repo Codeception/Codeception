@@ -33,7 +33,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * * kernel_class: 'App\Kernel' - kernel class name
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * debug: true - turn on/off debug mode
- * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](https://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
  * * rebootable_client: 'true' - reboot client's kernel before each request
  *
  * #### Example (`functional.suite.yml`) - Symfony 4 Directory Structure
@@ -53,7 +53,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * * kernel_class: 'AppKernel' - kernel class name
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * debug: true - turn on/off debug mode
- * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](https://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
  * * rebootable_client: 'true' - reboot client's kernel before each request
  *
  * #### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
@@ -73,7 +73,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * * kernel_class: 'AppKernel' - kernel class name
  * * debug: true - turn on/off debug mode
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
- * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](https://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire)
  * * rebootable_client: 'true' - reboot client's kernel before each request
  *
  * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
