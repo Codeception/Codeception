@@ -408,9 +408,18 @@ class Configuration
     protected static function getConfFromContents(string $contents, string $filename = '(.yml)'): array
     {
         if (self::$params) {
-            $template = new Template($contents, '%', '%');
-            $template->setVars(self::$params);
-            $contents = $template->produce();
+            // replace '%var%' with encoded value
+            $singleQuoteTemplate = new Template($contents, "'%", "%'", 'json_encode');
+            $singleQuoteTemplate->setVars(self::$params);
+            $contents = $singleQuoteTemplate->produce();
+            // replace "%var%" with encoded value
+            $doubleQuoteTemplate = new Template($contents, '"%', '%"', 'json_encode');
+            $doubleQuoteTemplate->setVars(self::$params);
+            $contents = $doubleQuoteTemplate->produce();
+            // replace %var% with string value as is
+            $plainTemplate = new Template($contents, '%', '%');
+            $plainTemplate->setVars(self::$params);
+            $contents = $plainTemplate->produce();
         }
 
         try {

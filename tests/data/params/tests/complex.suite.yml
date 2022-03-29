@@ -1,0 +1,5 @@
+actor: ComplexTester
+modules:
+    enabled:
+        - \Helper\Dummy:
+              vars: ["%KEY3%", '%KEY4%', "%KEY4%", "%KEY4.1%"]
