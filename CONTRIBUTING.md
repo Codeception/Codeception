@@ -6,7 +6,7 @@ Please check the guide for sending your contributions with Github at
 https://github.com/Codeception/Codeception/wiki/Git-workflow-for-Codeception-contributors
 
 ## Coding Standards
-All contributions must follow [PSR-2](http://www.php-fig.org/psr/psr-2/) coding standard.
+All contributions must follow [PSR-2](https://www.php-fig.org/psr/psr-2/) coding standard.
 
 ## Code
 **Bugfixes should be sent to the current stable branch, which is the same as major version number.**
@@ -23,7 +23,7 @@ We also encourage to submit bug reports with a failing test or test environment 
 ## Documentation
 
 ### Guides
-If you want to contribute documentation to the guides you are asked to send your changes to the /docs/ folder: https://github.com/Codeception/Codeception/tree/2.2/docs. These files are the source for the codeception website guides: http://codeception.com/docs/01-Introduction. Remind to send your documentation improvements to the right "repository branch" depending on the Codeception version you are working with: 2.2, master,...
+If you want to contribute documentation to the guides you are asked to send your changes to the /docs/ folder: https://github.com/Codeception/Codeception/tree/2.2/docs. These files are the source for the codeception website guides: https://codeception.com/docs/01-Introduction. Remind to send your documentation improvements to the right "repository branch" depending on the Codeception version you are working with: 2.2, master,...
 
 ### Modules Documentation
 The documentation for each module is directly generated from the corresponding docblock which can be found in each module (src/Codeception/Module/*.php).
