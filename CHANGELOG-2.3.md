@@ -24,7 +24,7 @@ $I->fillField('password', new PasswordArgument('thisissecret'));
   * Use `Codeception\Stub` instead of `Codeception\Util\Stub`
   * Mocking methods `::once`, `::never`, etc moved to `Codeception\Stub\Expected` class
   * Calling mocking methods from `Codeception\Util\Stub` provides deprecation warning.
-  * Non-static API is [recommended to use for mocking](http://codeception.com/docs/05-UnitTests) 
+  * Non-static API is [recommended to use for mocking](https://codeception.com/docs/05-UnitTests) 
 * [WebDriver] Added `executeAsyncJS` action to run asynchronous scripts.
 * [WebDriver] Added second parameter to `executeJS` to pass additional arguments into JavaScript function. 
 * [Yii2] `setCookie` signs cookies when signing enabled. #4656 By @SamMousa
@@ -126,7 +126,7 @@ thanks to @carusogabriel for refactoring tests.
 
 #### 2.3.4
 
-* Added `@prepare` annotation to make realtime configuration for tests in Cest and Test classes. [See documentation](http://codeception.com/docs/06-ModulesAndHelpers#Runtime-Configuration-of-a-Test).
+* Added `@prepare` annotation to make realtime configuration for tests in Cest and Test classes. [See documentation](https://codeception.com/docs/06-ModulesAndHelpers#Runtime-Configuration-of-a-Test).
 
  Example: disabling Doctrine2 database transaction for a test
 
@@ -142,8 +142,8 @@ protected function disableTransactions(Doctrine2 $module)
    $module->_reconfigure(['cleanup' => false]);
 }
 ```
-* [WebDriver] **SmartWait**. Automatically waits for a few extra seconds for element to appear on a page before failing. Can reduce high usage of `wait*` methods. [See Documentation](http://codeception.com/docs/03-AcceptanceTests#SmartWait)
-* Added [RunProcess extension](http://codeception.com/extensions#RunProcess). Use it to start/stop Selenium (or other process) automatically for a test suite.
+* [WebDriver] **SmartWait**. Automatically waits for a few extra seconds for element to appear on a page before failing. Can reduce high usage of `wait*` methods. [See Documentation](https://codeception.com/docs/03-AcceptanceTests#SmartWait)
+* Added [RunProcess extension](https://codeception.com/extensions#RunProcess). Use it to start/stop Selenium (or other process) automatically for a test suite.
 * [WebDriver] Customization improvements:
     * added `start` option to disable autostart of a browser for tests. (can be useful for Cloud testing setups)
     * added `_capabilities` method for setting desired capabilities in runtime (can be combined with `@prepare` annotation)
