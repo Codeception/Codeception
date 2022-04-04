@@ -30,8 +30,8 @@ interface Remote
      *
      * ``` php
      * <?php
-     * $I->amOnUrl('http://codeception.com');
-     * $I->amOnPage('/quickstart'); // moves to http://codeception.com/quickstart
+     * $I->amOnUrl('https://codeception.com');
+     * $I->amOnPage('/quickstart'); // moves to https://codeception.com/quickstart
      * ?>
      * ```
      */

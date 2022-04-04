@@ -9,7 +9,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Codeception\Codecept;
 
 /**
- * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
+ * Auto-updates phar archive from official site: 'https://codeception.com/codecept.phar' .
  *
  * * `php codecept.phar self-update`
  *
@@ -22,8 +22,8 @@ class SelfUpdate extends Command
      */
     const NAME = 'Codeception';
     const GITHUB_REPO = 'Codeception/Codeception';
-    const PHAR_URL = 'http://codeception.com/';
-    const PHAR_URL_PHP56 = 'http://codeception.com/php56/';
+    const PHAR_URL = 'https://codeception.com/';
+    const PHAR_URL_PHP56 = 'https://codeception.com/php56/';
 
     /**
      * Holds the current script filename.
