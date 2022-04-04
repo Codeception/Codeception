@@ -155,7 +155,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Return the current element
-     * @link http://php.net/manual/en/iterator.current.php
+     * @link https://php.net/manual/en/iterator.current.php
      * @return mixed Can return any type.
      */
     public function current()
@@ -174,7 +174,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Move forward to next element
-     * @link http://php.net/manual/en/iterator.next.php
+     * @link https://php.net/manual/en/iterator.next.php
      * @return void Any returned value is ignored.
      */
     public function next()
@@ -185,7 +185,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Return the key of the current element
-     * @link http://php.net/manual/en/iterator.key.php
+     * @link https://php.net/manual/en/iterator.key.php
      * @return mixed scalar on success, or null on failure.
      */
     public function key()
@@ -201,7 +201,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Checks if current position is valid
-     * @link http://php.net/manual/en/iterator.valid.php
+     * @link https://php.net/manual/en/iterator.valid.php
      * @return boolean The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      */
@@ -221,7 +221,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Rewind the Iterator to the first element
-     * @link http://php.net/manual/en/iterator.rewind.php
+     * @link https://php.net/manual/en/iterator.rewind.php
      * @return void Any returned value is ignored.
      */
     public function rewind()
@@ -235,7 +235,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
     /**
      * (PHP 5 >= 5.4.0)
      * Serializes the object to a value that can be serialized natively by json_encode().
-     * @link http://docs.php.net/manual/en/jsonserializable.jsonserialize.php
+     * @link https://docs.php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed Returns data which can be serialized by json_encode(), which is a value of any type other than a resource.
      */
     public function jsonSerialize()
