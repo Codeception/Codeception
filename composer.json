@@ -31,6 +31,7 @@
         "symfony/event-dispatcher": ">=4.4.24 <7.0",
         "symfony/finder": ">=4.4.24 <7.0",
         "symfony/yaml": ">=4.4.24 <7.0",
+        "symfony/var-dumper": ">=4.4.24 < 7.0",
         "psy/psysh": "^0.11.2"
     },
     "require-dev": {
