@@ -41,7 +41,7 @@ class Codecept
     /**
      * @var string
      */
-    public const VERSION = '5.0.0-RC1';
+    public const VERSION = '5.0.0-RC2';
 
     protected TestResult $result;
 
