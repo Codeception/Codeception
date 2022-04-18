@@ -220,4 +220,78 @@ class IncludedCest
     }
     
     
+    
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function someSuitesForSomeIncludedApplicationCanBeRun(CliGuy $I)
+    {
+        $I->executeCommand('run jazz::functional');
+    
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Shire.functional');
+    
+        $I->executeCommand('run jazz::functional,jazz::unit');
+        
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('Jazz.unit Tests');
+        
+        $I->dontSeeInShellOutput('Shire.functional');
+    
+        $I->executeCommand('run jazz::unit,shire::functional');
+        
+        $I->seeInShellOutput('Shire.functional Tests');
+        $I->seeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+    
+        $I->executeCommand('run jazz/pianist::functional');
+    
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('Jazz\Pianist.functional');
+    }
+    
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function someSuitesCanBeRunForAllIncludedApplications(\CliGuy $I)
+    {
+        $I->executeCommand('run *::functional');
+    
+        // only functional tests are run
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('Jazz\Pianist.functional');
+        $I->seeInShellOutput('Shire.functional Tests');
+        // unit suites are not run
+        $I->dontSeeInShellOutput('Jazz.unit Tests');
+        
+        
+        $I->executeCommand('run *::unit');
+        // only unit tests are run
+        $I->seeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
+       
+        $I->executeCommand('run *::functional,*::unit');
+        // Both suites are run now
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('Jazz\Pianist.functional');
+        $I->seeInShellOutput('Shire.functional Tests');
+        $I->seeInShellOutput('Jazz.unit Tests');
+    }
+    
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function wildCardSuitesAndAppSpecificSuitesCantBeCombined(CliGuy $I)
+    {
+        $I->executeCommand('run jazz::unit,*::functional', false);
+        $I->seeResultCodeIs(2);
+        $I->seeInShellOutput('Wildcard options can not be combined with specific suites of included apps.');
+    }
+    
 }
