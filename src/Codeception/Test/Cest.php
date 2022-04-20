@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Test;
 
 use Codeception\Example;
+use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Parser;
 use Codeception\Step\Comment;
@@ -95,6 +96,13 @@ class Cest extends Test implements
     public function test(): void
     {
         $actorClass = $this->getMetadata()->getCurrent('actor');
+
+        if ($actorClass === null) {
+            throw new ConfigurationException(
+                'actor setting is missing in suite configuration. Replace `class_name` with `actor` in config to fix this'
+            );
+        }
+
         $I = new $actorClass($this->getScenario());
         try {
             $this->executeHook($I, 'before');
