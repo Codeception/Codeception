@@ -29,14 +29,14 @@ class ParamsLoader
      * @return array<mixed>
      * @throws ConfigurationException
      */
-    public function load(array|string $paramStorage): array
+    public static function load(array|string $paramStorage): array
     {
         if (is_array($paramStorage)) {
             return $paramStorage;
         }
 
         if ($paramStorage === 'env' || $paramStorage === 'environment') {
-            return $this->loadEnvironmentVars();
+            return self::loadEnvironmentVars();
         }
 
         $paramsFile = codecept_absolute_path($paramStorage);
@@ -46,23 +46,23 @@ class ParamsLoader
 
         try {
             if (preg_match('#\.ya?ml$#', $paramStorage)) {
-                return $this->loadYamlFile($paramsFile);
+                return self::loadYamlFile($paramsFile);
             }
 
             if (preg_match('#\.ini$#', $paramStorage)) {
-                return $this->loadIniFile($paramsFile);
+                return self::loadIniFile($paramsFile);
             }
 
             if (preg_match('#\.php$#', $paramStorage)) {
-                return $this->loadPhpFile($paramsFile);
+                return self::loadPhpFile($paramsFile);
             }
 
             if (preg_match('#(\.env(\.|$))#', $paramStorage)) {
-                return $this->loadDotEnvFile($paramsFile);
+                return self::loadDotEnvFile($paramsFile);
             }
 
             if (preg_match('#\.xml$#', $paramStorage)) {
-                return $this->loadXmlFile($paramsFile);
+                return self::loadXmlFile($paramsFile);
             }
         } catch (Exception $e) {
             throw new ConfigurationException("Failed loading params from {$paramStorage}\n" . $e->getMessage());
@@ -75,43 +75,43 @@ class ParamsLoader
      * @return array<mixed>
      * @throws ConfigurationException
      */
-    private function loadIniFile(string $file): array
+    private static function loadIniFile(string $file): array
     {
         $params = parse_ini_file($file);
-        return $this->validateParams($params, $file);
+        return self::validateParams($params, $file);
     }
 
     /**
      * @return array<mixed>
      * @throws ConfigurationException
      */
-    private function loadPhpFile(string $file): array
+    private static function loadPhpFile(string $file): array
     {
         $params = require $file;
-        return $this->validateParams($params, $file);
+        return self::validateParams($params, $file);
     }
 
     /**
      * @return array<mixed>
      * @throws ConfigurationException
      */
-    private function loadYamlFile(string $file): array
+    private static function loadYamlFile(string $file): array
     {
-        $params = Yaml::parse($this->getFileContents($file));
-        $params = $this->validateParams($params, $file);
+        $params = Yaml::parse(self::getFileContents($file));
+        $params = self::validateParams($params, $file);
 
         if (isset($params['parameters'])) { // Symfony style
-            $params = $this->validateParams($params['parameters'], $file);
+            $params = self::validateParams($params['parameters'], $file);
             ;
         }
-        return $this->validateParams($params, $file);
+        return self::validateParams($params, $file);
     }
 
     /**
      * @return array<mixed>
      * @throws ConfigurationException
      */
-    private function loadXmlFile(string $file): array
+    private static function loadXmlFile(string $file): array
     {
         if (!extension_loaded('simplexml')) {
             throw new ConfigurationException('`simplexml` extension is required to parse .xml files.');
@@ -139,14 +139,14 @@ class ParamsLoader
             throw new ConfigurationException("Params can't be loaded from `{$file}`.");
         }
         $params  = $paramsToArray($simpleXMLElement);
-        return $this->validateParams($params, $file);
+        return self::validateParams($params, $file);
     }
 
     /**
      * @return array<mixed>
      * @throws ConfigurationException
      */
-    private function loadDotEnvFile(string $file): array
+    private static function loadDotEnvFile(string $file): array
     {
         // vlucas/phpdotenv
         if (
@@ -163,7 +163,7 @@ class ParamsLoader
         // symfony/dotenv
         if (class_exists(SymfonyDotenv::class)) {
             $symfonyDotEnv = new SymfonyDotenv();
-            $values = $symfonyDotEnv->parse($this->getFileContents($file), $file);
+            $values = $symfonyDotEnv->parse(self::getFileContents($file), $file);
             $symfonyDotEnv->populate($values, true);
             return $values;
         }
@@ -177,7 +177,7 @@ class ParamsLoader
     /**
      * @return array<mixed>
      */
-    private function loadEnvironmentVars(): array
+    private static function loadEnvironmentVars(): array
     {
         return $_SERVER;
     }
@@ -185,7 +185,7 @@ class ParamsLoader
     /**
      * @throws ConfigurationException
      */
-    private function getFileContents(string $file): string
+    private static function getFileContents(string $file): string
     {
         $contents = file_get_contents($file);
         if ($contents === false) {
@@ -198,7 +198,7 @@ class ParamsLoader
      * @return array<mixed>
      * @throws ConfigurationException
      */
-    private function validateParams(mixed $params, string $file): array
+    private static function validateParams(mixed $params, string $file): array
     {
         if (!is_array($params)) {
             throw new ConfigurationException("Params can't be loaded from `{$file}`.");
