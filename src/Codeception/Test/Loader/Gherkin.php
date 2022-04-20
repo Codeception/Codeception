@@ -63,7 +63,11 @@ class Gherkin implements LoaderInterface
 
     protected array $steps = [];
 
-    public function __construct($settings = [])
+    /**
+     * @param array<string, mixed> $settings
+     * @throws TestParseException
+     */
+    public function __construct(array $settings = [])
     {
         $this->settings = Configuration::mergeConfigs(self::$defaultSettings, $settings);
         if (!class_exists(GherkinKeywords::class)) {

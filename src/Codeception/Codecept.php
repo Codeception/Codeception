@@ -254,7 +254,9 @@ class Codecept
                     }
 
                     // Merge configuration consecutively with already build configuration
-                    $suiteEnvConfig = Configuration::mergeConfigs($suiteEnvConfig, $config['env'][$currentEnv]);
+                    if (is_array($config['env'][$currentEnv])) {
+                        $suiteEnvConfig = Configuration::mergeConfigs($suiteEnvConfig, $config['env'][$currentEnv]);
+                    }
                     $envConfigs[]   = $currentEnv;
                 }
             }

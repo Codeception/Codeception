@@ -153,6 +153,9 @@ class Console implements EventSubscriberInterface
 
     private bool $firstDefectType = true;
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function __construct(array $options)
     {
         $this->timer = new Timer();

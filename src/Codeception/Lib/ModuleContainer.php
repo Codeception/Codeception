@@ -436,7 +436,11 @@ class ModuleContainer
 
             $enabledModuleName = key($enabledModuleConfig);
             if ($enabledModuleName === $moduleName) {
-                return Configuration::mergeConfigs(reset($enabledModuleConfig), $config);
+                $moduleConfig = reset($enabledModuleConfig);
+                if (!is_array($moduleConfig)) {
+                    return $config;
+                }
+                return Configuration::mergeConfigs($moduleConfig, $config);
             }
         }
 
