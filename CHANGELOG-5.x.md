@@ -31,7 +31,7 @@
 * Removed setting `paths.log` (it was replaced by `paths.output` in Codeception 2.3)
 * Removed suite setting `class_name` (replaced by `actor` in Codeception 2.3)
 * Removed global setting `actor` (replaced by `actor_prefix` in Codeception 2.3)
-* Removed `Configuration::logDir` method (replaced by `Configuration::logDir` in 2.0)
+* Removed `Configuration::logDir` method (replaced by `Configuration::outputDir` in 2.0)
 * ParamLoader throws exception if xml file is used but simplexml extension is missing (#6346) by @mdoelker
 * Updated codebase to use PHP 8.0 features by @TavoNiievez
 * Don't report test as useless if it failed (fixed bug introduced in alpha1)
