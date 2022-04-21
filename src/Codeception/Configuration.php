@@ -739,10 +739,9 @@ class Configuration
     private static function prepareParams(array $settings): void
     {
         self::$params = [];
-        $paramsLoader = new ParamsLoader();
 
         foreach ($settings['params'] as $paramStorage) {
-            static::$params = array_merge(self::$params, $paramsLoader->load($paramStorage));
+            static::$params = array_merge(self::$params, ParamsLoader::load($paramStorage));
         }
     }
 }
