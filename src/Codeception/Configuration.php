@@ -27,12 +27,12 @@ class Configuration
     protected static array $suites = [];
 
     /**
-     * @var array|null Current configuration
+     * @var array<string, mixed>|null Current configuration
      */
     protected static ?array $config = null;
 
     /**
-     * @var array environmental files configuration cache
+     * @var array<mixed> environmental files configuration cache
      */
     protected static array $envConfig = [];
 
@@ -76,6 +76,9 @@ class Configuration
 
     public static bool $lock = false;
 
+    /**
+     * @var array<string, mixed>
+     */
     public static array $defaultConfig = [
         'actor_suffix' => 'Tester',
         'support_namespace' => null,
@@ -108,6 +111,9 @@ class Configuration
         'gherkin'    => []
     ];
 
+    /**
+     * @var array<string, mixed>
+     */
     public static array $defaultSuiteSettings = [
         'actor'       => null,
         'modules'     => [
@@ -129,12 +135,16 @@ class Configuration
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     ];
 
+    /**
+     * @var array<string, mixed>|null
+     */
     protected static ?array $params = null;
 
     /**
      * Loads global config file which is `codeception.yml` by default.
      * When config is already loaded - returns it.
      *
+     * @return array<string, mixed>
      * @throws ConfigurationException
      */
     public static function config(string $configFile = null): array
@@ -159,15 +169,15 @@ class Configuration
         if ($dir !== false) {
             self::$dir = $dir;
             $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
+
+            // set the one default base directory for included setup
+            if (!self::$baseDir) {
+                self::$baseDir = $dir;
+            }
         }
 
         if (!file_exists($configFile) && (!isset($configDistFile) || !file_exists($configDistFile))) {
             throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.", 404);
-        }
-
-        // set the one default base directory for included setup
-        if (!self::$baseDir) {
-            self::$baseDir = $dir;
         }
 
         // Preload config to retrieve params such that they are applied to codeception config file below
@@ -176,22 +186,28 @@ class Configuration
         $distConfigContents = '';
         if (isset($configDistFile) && file_exists($configDistFile)) {
             $distConfigContents = file_get_contents($configDistFile);
+            if ($distConfigContents === false) {
+                throw new ConfigurationException("Failed to read {$configDistFile}");
+            }
             $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($distConfigContents, $configDistFile));
         }
 
         $configContents = '';
         if (file_exists($configFile)) {
             $configContents = file_get_contents($configFile);
+            if ($configContents === false) {
+                throw new ConfigurationException("Failed to read {$configFile}");
+            }
             $tempConfig = self::mergeConfigs($tempConfig, self::getConfFromContents($configContents, $configFile));
         }
         self::prepareParams($tempConfig);
 
         // load config using params
         $config = self::$defaultConfig;
-        if (isset($configDistFile) && file_exists($configDistFile)) {
+        if (isset($configDistFile) && $distConfigContents !== '') {
             $config = self::mergeConfigs(self::$defaultConfig, self::getConfFromContents($distConfigContents, $configDistFile));
         }
-        if (file_exists($configFile)) {
+        if ($configContents !== '') {
             $config = self::mergeConfigs($config, self::getConfFromContents($configContents, $configFile));
         }
 
@@ -306,6 +322,7 @@ class Configuration
     /**
      * Returns suite configuration. Requires suite name and global config used (Configuration::config)
      *
+     * @param array<mixed> $config
      * @return array<string, string>
      * @throws Exception
      */
@@ -358,7 +375,7 @@ class Configuration
      * Loads environments configuration from set directory
      *
      * @param string $path Path to the directory
-     * @return array<string, array>
+     * @return array<string, mixed>
      */
     protected static function loadEnvConfigs(string $path): array
     {
@@ -386,10 +403,7 @@ class Configuration
                 $envPath .= DIRECTORY_SEPARATOR . $envFile->getRelativePath();
             }
             foreach (['.dist.yml', '.yml'] as $suffix) {
-                $envConf = self::getConfFromFile($envPath . DIRECTORY_SEPARATOR . $env . $suffix, null);
-                if ($envConf === null) {
-                    continue;
-                }
+                $envConf = self::getConfFromFile($envPath . DIRECTORY_SEPARATOR . $env . $suffix, []);
                 $envConfig[$env] = self::mergeConfigs($envConfig[$env], $envConf);
             }
         }
@@ -403,6 +417,7 @@ class Configuration
      *
      * @param string $contents Yaml config file contents
      * @param string $filename which is supposed to be loaded
+     * @return array<string, mixed>
      * @throws ConfigurationException
      */
     protected static function getConfFromContents(string $contents, string $filename = '(.yml)'): array
@@ -436,19 +451,26 @@ class Configuration
         if ($conf === null) {
             throw new ConfigurationException("Configuration file {$filename} is empty.");
         }
+        if (!is_array($conf)) {
+            throw new ConfigurationException("Configuration file {$filename} is invalid.");
+        }
         return $conf;
     }
 
     /**
      * Loads configuration from Yaml file or returns given value if the file doesn't exist
      *
-     * @param array|null $nonExistentValue Value used if filename is not found
+     * @param array<string, mixed> $nonExistentValue Value used if filename is not found
+     * @return array<string, mixed>
      * @throws ConfigurationException
      */
-    protected static function getConfFromFile(string $filename, ?array $nonExistentValue = []): ?array
+    protected static function getConfFromFile(string $filename, array $nonExistentValue = []): array
     {
         if (file_exists($filename)) {
             $yaml = file_get_contents($filename);
+            if ($yaml === false) {
+                throw new ConfigurationException("Failed to read {$filename}");
+            }
             return self::getConfFromContents($yaml, $filename);
         }
         return $nonExistentValue;
@@ -465,7 +487,8 @@ class Configuration
     /**
      * Return list of enabled modules according suite config.
      *
-     * @param array $settings Suite settings
+     * @param array<string, mixed> $settings Suite settings
+     * @return string[]
      */
     public static function modules(array $settings): array
     {
@@ -593,10 +616,12 @@ class Configuration
 
     /**
      * Adds parameters to config
+     * @param array<string, mixed> $config
+     * @return array<string, mixed>
      */
     public static function append(array $config = []): array
     {
-        self::$config = self::mergeConfigs(self::$config, $config);
+        self::$config = self::mergeConfigs(self::$config ?? [], $config);
 
         if (isset(self::$config['paths']['output'])) {
             self::$outputDir = self::$config['paths']['output'];
@@ -614,24 +639,20 @@ class Configuration
         return self::$config;
     }
 
-    public static function mergeConfigs(bool|array|null $a1, bool|array|null $a2): array
+    /**
+     * @param array<mixed> $a1
+     * @param array<mixed> $a2
+     * @return array<mixed>
+     */
+    public static function mergeConfigs(array $a1, array $a2): array
     {
-        if (!is_array($a1)) {
-            return $a2;
-        }
-
-        if (!is_array($a2)) {
-            return $a1;
-        }
-
-        $res = [];
-
         // for sequential arrays
         if (isset($a1[0], $a2[0])) {
             return array_values(array_unique(array_merge_recursive($a2, $a1), SORT_REGULAR));
         }
 
         // for associative arrays
+        $res = [];
         foreach ($a2 as $k2 => $v2) {
             if (!isset($a1[$k2]) || !is_array($a1[$k2])) { // if no such key
                 $res[$k2] = $v2;
@@ -639,8 +660,10 @@ class Configuration
                 continue;
             }
 
-            $res[$k2] = self::mergeConfigs($a1[$k2], $v2);
-            unset($a1[$k2]);
+            if (is_array($v2)) {
+                $res[$k2] = self::mergeConfigs($a1[$k2], $v2);
+                unset($a1[$k2]);
+            }
         }
 
         foreach ($a1 as $k1 => $v1) { // only single elements here left
@@ -653,6 +676,8 @@ class Configuration
     /**
      * Loads config from *.dist.suite.yml and *.suite.yml
      *
+     * @param array<string ,mixed> $settings
+     * @return array<string ,mixed>
      * @throws ConfigurationException
      */
     protected static function loadSuiteConfig(string $suite, string $path, array $settings): array
@@ -664,8 +689,8 @@ class Configuration
 
         $suiteDir = self::$dir . DIRECTORY_SEPARATOR . $path;
 
-        $suiteDistConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "{$suite}.suite.dist.yml");
-        $suiteConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "{$suite}.suite.yml");
+        $suiteDistConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "{$suite}.suite.dist.yml", []);
+        $suiteConf = self::getConfFromFile($suiteDir . DIRECTORY_SEPARATOR . "{$suite}.suite.yml", []);
 
         // now we check the suite config file, if a extends key is defined
         if (isset($suiteConf['extends'])) {
@@ -679,7 +704,7 @@ class Configuration
                 );
             }
             if (file_exists($presetFilePath)) {
-                $settings = self::mergeConfigs(self::getConfFromFile($presetFilePath), $settings);
+                $settings = self::mergeConfigs(self::getConfFromFile($presetFilePath, []), $settings);
             }
         }
 
@@ -691,6 +716,8 @@ class Configuration
     /**
      * Replaces wildcarded items in include array with real paths.
      *
+     * @param string[] $includes
+     * @return string[]
      * @throws ConfigurationException
      */
     protected static function expandWildcardedIncludes(array $includes): array
@@ -736,6 +763,10 @@ class Configuration
         return array_unique($paths);
     }
 
+    /**
+     * @param array<string, mixed> $settings
+     * @throws ConfigurationException
+     */
     private static function prepareParams(array $settings): void
     {
         self::$params = [];

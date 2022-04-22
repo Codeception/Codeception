@@ -207,6 +207,7 @@ abstract class InitTemplate
     /**
      * Create an Actor class and generate actions for it.
      * Requires a suite config as array in 3rd parameter.
+     * @param array<string, mixed> $suiteConfig
      */
     protected function createActor(string $name, string $directory, array $suiteConfig): void
     {

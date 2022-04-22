@@ -24,6 +24,9 @@ class Deprecation implements EventSubscriberInterface
 
     private Output $output;
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function __construct(array $options)
     {
         $this->output = new Output($options);
