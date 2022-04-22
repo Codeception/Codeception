@@ -21,11 +21,8 @@ class CoverGuy extends \Codeception\Actor
 
     public function seeCoverageStatsNotEmpty()
     {
-        $this->seeInShellOutput(
-            <<<EOF
-info
-  Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  3/  3)
-EOF
+        $this->seeShellOutputMatches(
+            '#info\n\s+Methods:\s+\d+\.\d+% \( [01]/ 1\)\s+Lines:\s+\d+\.\d+% \(  [345]/  [345]\)#s'
         );
     }
 }
