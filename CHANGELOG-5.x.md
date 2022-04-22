@@ -1,3 +1,10 @@
+#### 5.0.0-RC3
+
+* Fix incorrect type declaration in InitTemplate by @ziadoz
+* Stricter check for phpdotenv v5 (older versions are not supported)
+* Throw exception if actor setting is missing in suite configuration
+* Use correct types in ParamsLoader and Configuration classes, avoid type errors
+
 #### 5.0.0-RC2
 
 * Added `--shard`, `--grep`, `--filter` options (#6399)
