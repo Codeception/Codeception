@@ -55,7 +55,6 @@ class DotReporter extends Extension
 
     public function _initialize(): void
     {
-        $this->options['silent'] = false; // turn on printing for this extension
         $this->_reconfigure(['settings' => ['silent' => true]]); // turn off printing for everything else
         $this->standardReporter = new CodeceptConsole($this->options);
         $this->width = $this->standardReporter->detectWidth();
@@ -78,7 +77,7 @@ class DotReporter extends Extension
 
     public function beforeSuite(): void
     {
-        $this->writeln('');
+        $this->output->writeln('');
     }
 
     public function success(): void
@@ -104,7 +103,7 @@ class DotReporter extends Extension
     protected function printChar(string $char): void
     {
         if ($this->currentPos >= $this->width) {
-            $this->writeln('');
+            $this->output->writeln('');
             $this->currentPos = 0;
         }
         $this->write($char);
@@ -118,6 +117,8 @@ class DotReporter extends Extension
 
     public function afterResult(PrintResultEvent $event): void
     {
+        $this->output->writeln('');
+        $this->output->writeln('');
         $this->standardReporter->afterResult($event);
     }
 }
