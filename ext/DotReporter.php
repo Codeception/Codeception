@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Extension;
 
 use Codeception\Event\FailEvent;
+use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
 use Codeception\Extension;
 use Codeception\Subscriber\Console as CodeceptConsole;
@@ -71,7 +72,8 @@ class DotReporter extends Extension
         Events::TEST_FAIL    => 'fail',
         Events::TEST_ERROR   => 'error',
         Events::TEST_SKIPPED => 'skipped',
-        Events::TEST_FAIL_PRINT => 'printFailed'
+        Events::TEST_FAIL_PRINT => 'printFailed',
+        Events::RESULT_PRINT_AFTER => 'afterResult',
     ];
 
     public function beforeSuite(): void
@@ -112,5 +114,10 @@ class DotReporter extends Extension
     public function printFailed(FailEvent $event): void
     {
         $this->standardReporter->printFail($event);
+    }
+
+    public function afterResult(PrintResultEvent $event): void
+    {
+        $this->standardReporter->afterResult($event);
     }
 }
