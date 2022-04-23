@@ -253,7 +253,7 @@ class Console implements EventSubscriberInterface
         $this->failedStep[] = $step;
     }
 
-    public function afterTest(TestEvent $event)
+    public function afterTest(TestEvent $event): void
     {
         $test = $event->getTest();
 

@@ -26,7 +26,7 @@ final class ExtensionsCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --ext DotReporter');
-        $I->seeShellOutputMatches('#\n\n......\n\nTime: 00:00\.\d+, Memory: \d+\.\d+ MB\n\nOK \(6 tests, 0 assertions\)#m');
+        $I->seeShellOutputMatches('#\n\n......\n\nTime: 00:00\.\d+, Memory: \d+\.\d+ MB\n\nOK \(6 tests, 3 assertions\)#m');
         $I->dontSeeInShellOutput('Optimistic');
         $I->dontSeeInShellOutput('AnotherCest');
     }
