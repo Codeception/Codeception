@@ -253,7 +253,7 @@ class Console implements EventSubscriberInterface
         $this->failedStep[] = $step;
     }
 
-    public function afterTest(TestEvent $event)
+    public function afterTest(TestEvent $event): void
     {
         $test = $event->getTest();
 
@@ -275,7 +275,6 @@ class Console implements EventSubscriberInterface
         $outputFormatter->setStyle('warning', new OutputFormatterStyle('black', 'yellow'));
         $outputFormatter->setStyle('success', new OutputFormatterStyle('black', 'green'));
         $this->printResourceUsage($duration);
-        $this->output->writeln('');
 
         $this->printDefects($result->errors(), 'error');
         $this->printDefects($result->failures(), 'failure');
