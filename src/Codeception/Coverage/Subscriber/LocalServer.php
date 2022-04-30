@@ -151,7 +151,7 @@ class LocalServer extends SuiteSubscriber
 
         $retries = 5;
         while (!file_exists($coverageFile) && --$retries >= 0) {
-            $seconds = (int)0.5 * 1_000_000; // 0.5 sec
+            $seconds = (int)(0.5 * 1_000_000); // 0.5 sec
             usleep($seconds);
         }
 
