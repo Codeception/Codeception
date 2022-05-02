@@ -110,6 +110,11 @@ class Annotation
 
     public function fetch(string $annotation): ?string
     {
+        $attr = $this->attribute($annotation);
+        if ($attr) {
+            $arguments = $attr->getArguments();
+            return reset($arguments);
+        }
         $docBlock = (string)$this->currentReflectedItem->getDocComment();
         if (preg_match(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
@@ -119,11 +124,30 @@ class Annotation
 
     public function fetchAll(string $annotation): array
     {
+        $attr = $this->attribute($annotation);
+        if ($attr) {
+            return $attr->getArguments();
+        }
         $docBlock = (string)$this->currentReflectedItem->getDocComment();
         if (preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
         }
         return [];
+    }
+
+    public function attributes(): array
+    {
+        return $this->currentReflectedItem->getAttributes();
+    }
+
+    public function attribute($name): ?\ReflectionAttribute
+    {
+        $attrs = $this->attributes();
+        $attrs = array_filter($attrs, fn($a) => $a->getName() === $name);
+        if (empty($attrs)) {
+            return null;
+        }
+        return reset($attrs);
     }
 
     public function raw(): string|false

@@ -97,6 +97,7 @@ class Unit implements LoaderInterface
         if ($test instanceof UnitFormat) {
             $annotations = Annotation::forMethod($test, $methodName)->raw();
             $test->getMetadata()->setParamsFromAnnotations($annotations);
+            $test->getMetadata()->setParamsFromAttributes(Annotation::forMethod($test, $methodName)->attributes());
             $test->getMetadata()->setFilename(Descriptor::getTestFileName($test));
         }
     }

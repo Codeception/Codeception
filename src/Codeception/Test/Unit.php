@@ -12,6 +12,7 @@ use Codeception\PHPUnit\TestCase;
 use Codeception\Scenario;
 use Codeception\Test\Feature\Stub;
 use Codeception\TestInterface;
+use Codeception\Util\Annotation;
 use PHPUnit\Framework\TestResult;
 
 use function get_class;
@@ -40,6 +41,7 @@ class Unit extends TestCase implements
 
     protected function _setUp()
     {
+        $this->getMetadata()->setParamsFromAttributes(Annotation::forMethod($this, $this->getName())->attributes());
         if ($this->getMetadata()->isBlocked()) {
             if ($this->getMetadata()->getSkip() !== null) {
                 $this->markTestSkipped($this->getMetadata()->getSkip());
