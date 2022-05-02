@@ -2,7 +2,7 @@
 
 namespace Attrs;
 
-use \AttrsTester;
+use AttrsTester;
 use Codeception\Attribute\After;
 use Codeception\Attribute\Before;
 use Codeception\Attribute\DataProvider;
@@ -60,7 +60,8 @@ class BasicScenarioCest
     }
 
 
-    private function _listItems() {
+    private function _listItems()
+    {
         return [
             [1,1],
             [2,2],
@@ -80,5 +81,4 @@ class BasicScenarioCest
     {
         $I->assertEquals(1, 2);
     }
-
 }

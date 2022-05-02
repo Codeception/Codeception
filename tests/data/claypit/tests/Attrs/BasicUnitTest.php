@@ -40,7 +40,8 @@ class BasicUnitTest extends Unit
         $this->assertEquals($e1, $e2);
     }
 
-    private function _listItems() {
+    private function _listItems()
+    {
         return [
             [1,1],
             [2,2],
