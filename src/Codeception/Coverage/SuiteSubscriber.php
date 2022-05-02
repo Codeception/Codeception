@@ -21,16 +21,19 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     use StaticEventsTrait;
 
     protected array $defaultSettings = [
-        'enabled'        => false,
-        'remote'         => false,
-        'local'          => false,
-        'xdebug_session' => 'codeception',
-        'remote_config'  => null,
-        'show_uncovered' => false,
-        'c3_url'         => null,
-        'work_dir'       => null,
-        'cookie_domain'  => null,
-        'path_coverage'  => false,
+        'enabled'                      => false,
+        'remote'                       => false,
+        'local'                        => false,
+        'xdebug_session'               => 'codeception',
+        'remote_config'                => null,
+        'show_uncovered'               => false,
+        'c3_url'                       => null,
+        'work_dir'                     => null,
+        'cookie_domain'                => null,
+        'path_coverage'                => false,
+        'strict_covers_annotation'     => false,
+        'ignore_deprecated_code'       => false,
+        'disable_code_coverage_ignore' => false,
     ];
 
     protected array $settings = [];
@@ -79,6 +82,22 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
             if (isset($settings['coverage'][$key])) {
                 $this->settings[$key] = $settings['coverage'][$key];
             }
+        }
+
+        if ($this->settings['strict_covers_annotation']) {
+            $this->coverage->enableCheckForUnintentionallyCoveredCode();
+        }
+
+        if ($this->settings['ignore_deprecated_code']) {
+            $this->coverage->ignoreDeprecatedCode();
+        } else {
+            $this->coverage->doNotIgnoreDeprecatedCode();
+        }
+
+        if ($this->settings['disable_code_coverage_ignore']) {
+            $this->coverage->disableAnnotationsForIgnoringCode();
+        } else {
+            $this->coverage->enableAnnotationsForIgnoringCode();
         }
 
         if ($this->settings['show_uncovered']) {

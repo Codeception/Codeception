@@ -153,6 +153,9 @@ class Console implements EventSubscriberInterface
 
     private bool $firstDefectType = true;
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function __construct(array $options)
     {
         $this->timer = new Timer();
@@ -250,7 +253,7 @@ class Console implements EventSubscriberInterface
         $this->failedStep[] = $step;
     }
 
-    public function afterTest(TestEvent $event)
+    public function afterTest(TestEvent $event): void
     {
         $test = $event->getTest();
 
@@ -272,7 +275,6 @@ class Console implements EventSubscriberInterface
         $outputFormatter->setStyle('warning', new OutputFormatterStyle('black', 'yellow'));
         $outputFormatter->setStyle('success', new OutputFormatterStyle('black', 'green'));
         $this->printResourceUsage($duration);
-        $this->output->writeln('');
 
         $this->printDefects($result->errors(), 'error');
         $this->printDefects($result->failures(), 'failure');

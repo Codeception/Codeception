@@ -28,12 +28,24 @@ class ExtensionLoader implements EventSubscriberInterface
         Events::SUITE_AFTER => 'stopSuiteExtensions'
     ];
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $config = [];
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $options = [];
 
+    /**
+     * @var array<class-string, EventSubscriberInterface>
+     */
     protected array $globalExtensions = [];
 
+    /**
+     * @var array<class-string, EventSubscriberInterface>
+     */
     protected array $suiteExtensions = [];
 
     public function __construct(protected EventDispatcher $dispatcher)
@@ -41,6 +53,10 @@ class ExtensionLoader implements EventSubscriberInterface
         $this->config = Configuration::config();
     }
 
+    /**
+     * @param array<string, mixed> $options
+     * @throws ConfigurationException
+     */
     public function bootGlobalExtensions(array $options): void
     {
         $this->options = $options;
@@ -79,6 +95,7 @@ class ExtensionLoader implements EventSubscriberInterface
     }
 
     /**
+     * @param array<string, mixed> $config
      * @return array<class-string, EventSubscriberInterface>
      * @throws ConfigurationException
      */
@@ -109,6 +126,10 @@ class ExtensionLoader implements EventSubscriberInterface
         return $extensions;
     }
 
+    /**
+     * @param array<string, mixed> $config
+     * @return array<string, mixed>
+     */
     private function getExtensionConfig(string $extension, array $config): array
     {
         $extensionConfig = $config['extensions']['config'][$extension] ?? [];
@@ -128,7 +149,11 @@ class ExtensionLoader implements EventSubscriberInterface
 
             $enabledExtension = key($enabledExtensionsConfig);
             if ($enabledExtension === $extension) {
-                return Configuration::mergeConfigs(reset($enabledExtensionsConfig), $extensionConfig);
+                $enabledExtensionConfig = reset($enabledExtensionsConfig);
+                if (!is_array($enabledExtensionConfig)) {
+                    return $extensionConfig;
+                }
+                return Configuration::mergeConfigs($enabledExtensionConfig, $extensionConfig);
             }
         }
 

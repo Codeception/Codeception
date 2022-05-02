@@ -22,4 +22,9 @@ class Dummy extends \Codeception\Module
         $this->assertContains('val1', $vars);
         $this->assertContains('val2', $vars);
     }
+
+    public function seeVarEquals(int $position, $value)
+    {
+        $this->assertSame($value, $this->config['vars'][$position]);
+    }
 }

@@ -97,7 +97,7 @@ abstract class InitTemplate
      *
      * @return mixed|string
      */
-    protected function ask(string $question, bool|array $answer = null): mixed
+    protected function ask(string $question, string|bool|array $answer = null): mixed
     {
         $question = "? {$question}";
         $dialog = new QuestionHelper();
@@ -109,7 +109,7 @@ abstract class InitTemplate
             $question .= " (y/n) ";
             return $dialog->ask($this->input, $this->output, new ConfirmationQuestion($question, $answer));
         }
-        if ($answer) {
+        if (is_string($answer)) {
             $question .= " <info>({$answer})</info>";
         }
         return $dialog->ask($this->input, $this->output, new Question("{$question} ", $answer));
@@ -207,6 +207,7 @@ abstract class InitTemplate
     /**
      * Create an Actor class and generate actions for it.
      * Requires a suite config as array in 3rd parameter.
+     * @param array<string, mixed> $suiteConfig
      */
     protected function createActor(string $name, string $directory, array $suiteConfig): void
     {

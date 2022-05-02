@@ -1,3 +1,23 @@
+#### 5.0.0-RC3
+
+* Fix incorrect type declaration in InitTemplate by @ziadoz
+* Stricter check for phpdotenv v5 (older versions are not supported)
+* Throw exception if actor setting is missing in suite configuration
+* Use correct types in ParamsLoader and Configuration classes, avoid type errors
+
+#### 5.0.0-RC2
+
+* Added `--shard`, `--grep`, `--filter` options (#6399)
+* Added new code coverage settings (#6423)
+* Dynamic configuration with parameters can use arrays and other non-string types (#6409)
+* Introduced `codecept_pause` function and `$this->pause()` in unit tests (#6387)
+* Interactive console is executed in the scope of paused test class.
+* Array of variables can be passed to all `pause` functions/methods
+* Replaced Hoa Console with PsySH in `codecept console`
+* Used Symfony VarDumper in `codecept_debug` (#6406)
+* Fixed type error in code coverage exclude filter by @W0rma
+* Fix type error in Recorder extension
+
 #### 5.0.0-RC1
 
 * Use PHPUnit 9 until PHPUnit 10 is released
@@ -18,7 +38,7 @@
 * Removed setting `paths.log` (it was replaced by `paths.output` in Codeception 2.3)
 * Removed suite setting `class_name` (replaced by `actor` in Codeception 2.3)
 * Removed global setting `actor` (replaced by `actor_prefix` in Codeception 2.3)
-* Removed `Configuration::logDir` method (replaced by `Configuration::logDir` in 2.0)
+* Removed `Configuration::logDir` method (replaced by `Configuration::outputDir` in 2.0)
 * ParamLoader throws exception if xml file is used but simplexml extension is missing (#6346) by @mdoelker
 * Updated codebase to use PHP 8.0 features by @TavoNiievez
 * Don't report test as useless if it failed (fixed bug introduced in alpha1)

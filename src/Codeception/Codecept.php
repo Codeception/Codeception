@@ -41,7 +41,7 @@ class Codecept
     /**
      * @var string
      */
-    public const VERSION = '5.0.0-RC1';
+    public const VERSION = '5.0.0-RC3';
 
     protected TestResult $result;
 
@@ -69,6 +69,7 @@ class Codecept
         'groups'             => null,
         'excludeGroups'      => null,
         'filter'             => null,
+        'shard'              => null,
         'env'                => null,
         'fail-fast'          => 0,
         'ansi'               => true,
@@ -253,7 +254,9 @@ class Codecept
                     }
 
                     // Merge configuration consecutively with already build configuration
-                    $suiteEnvConfig = Configuration::mergeConfigs($suiteEnvConfig, $config['env'][$currentEnv]);
+                    if (is_array($config['env'][$currentEnv])) {
+                        $suiteEnvConfig = Configuration::mergeConfigs($suiteEnvConfig, $config['env'][$currentEnv]);
+                    }
                     $envConfigs[]   = $currentEnv;
                 }
             }
@@ -273,6 +276,7 @@ class Codecept
 
     public function runSuite(array $settings, string $suite, string $test = null): TestResult
     {
+        $settings['shard'] = $this->options['shard'];
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
         $suiteManager->initialize();
         srand($this->options['seed']);

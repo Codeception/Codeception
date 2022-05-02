@@ -67,15 +67,18 @@ class Output extends ConsoleOutput
 
     public function debug(mixed $message): void
     {
-        $message = print_r($message, true);
-        $message = str_replace("\n", "\n  ", $message);
-        $message = $this->clean($message);
-        $message = OutputFormatter::escape($message);
-
         if ($this->waitForDebugOutput) {
             $this->writeln('');
             $this->waitForDebugOutput = false;
         }
+
+        if (!is_string($message)) {
+            dump($message);
+            return;
+        }
+
+        $message = $this->clean($message);
+        $message = OutputFormatter::escape($message);
         $this->writeln("<debug>  {$message}</debug>");
     }
 
