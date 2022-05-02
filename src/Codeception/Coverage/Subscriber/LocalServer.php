@@ -151,7 +151,7 @@ class LocalServer extends SuiteSubscriber
 
         $retries = 5;
         while (!file_exists($coverageFile) && --$retries >= 0) {
-            $seconds = (int)0.5 * 1_000_000; // 0.5 sec
+            $seconds = (int)(0.5 * 1_000_000); // 0.5 sec
             usleep($seconds);
         }
 
@@ -159,7 +159,8 @@ class LocalServer extends SuiteSubscriber
             if (file_exists(Configuration::outputDir() . 'c3tmp/error.txt')) {
                 throw new RuntimeException(file_get_contents(Configuration::outputDir() . 'c3tmp/error.txt'));
             }
-            return;
+
+            throw new RuntimeException('Code coverage file ' . $coverageFile . ' does not exist');
         }
 
         $contents = file_get_contents($coverageFile);
