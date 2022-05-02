@@ -137,13 +137,20 @@ class Annotation
 
     public function attributes(): array
     {
-        return $this->currentReflectedItem->getAttributes();
+        $attrs = $this->currentReflectedItem->getAttributes();
+        $attrs = array_filter($attrs);
+        $attrs = array_filter($attrs, fn (\ReflectionAttribute $a) => str_starts_with($a->getName(), 'Codeception\\Attribute\\'));
+        return $attrs;
     }
 
     public function attribute($name): ?\ReflectionAttribute
     {
         $attrs = $this->attributes();
-        $attrs = array_filter($attrs, fn($a) => $a->getName() === $name);
+        if ($name === 'example') {
+            $name = 'examples'; // we renamed this annotation
+        }
+        $name = ucfirst($name);
+        $attrs = array_filter($attrs, fn($a) => $a->getName() === "Codeception\\Attribute\\$name");
         if (empty($attrs)) {
             return null;
         }

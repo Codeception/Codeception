@@ -43,7 +43,6 @@ class Unit extends TestCase implements
 
     protected function _setUp()
     {
-        $this->getMetadata()->setParamsFromAttributes(Annotation::forMethod($this, $this->getName())->attributes());
         if ($this->getMetadata()->isBlocked()) {
             if ($this->getMetadata()->getSkip() !== null) {
                 $this->markTestSkipped($this->getMetadata()->getSkip());

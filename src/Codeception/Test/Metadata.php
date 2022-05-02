@@ -200,7 +200,8 @@ class Metadata
     {
         $params = [];
         foreach ($attributes as $attribute) {
-            $params[$attribute->getName()] = $attribute->getArguments();
+            $name = lcfirst(str_replace('Codeception\\Attribute\\', '', $attribute->getName()));
+            $params[$name] = $attribute->getArguments();
         }
         $this->params = array_merge_recursive($this->params, $params);
         // set singular value for some params
