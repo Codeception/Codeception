@@ -66,7 +66,7 @@ class Cest implements LoaderInterface
                             fn ($v): ?array => Annotation::arrayValue($v),
                             $rawExamples
                         );
-                    } elseif($rawExamples) {
+                    } elseif ($rawExamples) {
                         $examples = $rawExamples;
                     }
                 }

@@ -150,7 +150,7 @@ class Annotation
             $name = 'examples'; // we renamed this annotation
         }
         $name = ucfirst($name);
-        $attrs = array_filter($attrs, fn($a) => $a->getName() === "Codeception\\Attribute\\$name");
+        $attrs = array_filter($attrs, fn ($a) => $a->getName() === "Codeception\\Attribute\\$name");
         if (empty($attrs)) {
             return null;
         }
