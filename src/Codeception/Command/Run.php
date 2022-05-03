@@ -442,7 +442,7 @@ class Run extends Command
             
             if(!empty($wildcard_suites) && ! empty($app_specific_suites)) {
                 $this->output->writeLn('<error>Wildcard options can not be combined with specific suites of included apps.</error>');
-                return self::INVALID;
+                return 2;
             }
             
             if(!empty($config['include'])) {
