@@ -110,6 +110,11 @@ class Annotation
 
     public function fetch(string $annotation): ?string
     {
+        $attr = $this->attribute($annotation);
+        if ($attr) {
+            $arguments = $attr->getArguments();
+            return reset($arguments);
+        }
         $docBlock = (string)$this->currentReflectedItem->getDocComment();
         if (preg_match(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
@@ -119,11 +124,37 @@ class Annotation
 
     public function fetchAll(string $annotation): array
     {
+        $attr = $this->attribute($annotation);
+        if ($attr) {
+            return $attr->getArguments();
+        }
         $docBlock = (string)$this->currentReflectedItem->getDocComment();
         if (preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
             return $matched[1];
         }
         return [];
+    }
+
+    public function attributes(): array
+    {
+        $attrs = $this->currentReflectedItem->getAttributes();
+        $attrs = array_filter($attrs);
+        $attrs = array_filter($attrs, fn (\ReflectionAttribute $a) => str_starts_with($a->getName(), 'Codeception\\Attribute\\'));
+        return $attrs;
+    }
+
+    public function attribute($name): ?\ReflectionAttribute
+    {
+        $attrs = $this->attributes();
+        if ($name === 'example') {
+            $name = 'examples'; // we renamed this annotation
+        }
+        $name = ucfirst($name);
+        $attrs = array_filter($attrs, fn ($a) => $a->getName() === "Codeception\\Attribute\\$name");
+        if (empty($attrs)) {
+            return null;
+        }
+        return reset($attrs);
     }
 
     public function raw(): string|false

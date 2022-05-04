@@ -123,7 +123,7 @@ class ErrorHandler implements EventSubscriberInterface
 
         if (
             !$this->suiteFinished && (
-            $error === null || !in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR])
+                $error === null || !in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR])
             )
         ) {
             echo "\n\n\nCOMMAND DID NOT FINISH PROPERLY.\n";

@@ -60,10 +60,15 @@ class Cest implements LoaderInterface
                 // example Annotation
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
                 if ($rawExamples !== []) {
-                    $examples = array_map(
-                        fn ($v): ?array => Annotation::arrayValue($v),
-                        $rawExamples
-                    );
+                    $rawExample = reset($rawExamples);
+                    if (is_string($rawExample)) {
+                        $examples = array_map(
+                            fn ($v): ?array => Annotation::arrayValue($v),
+                            $rawExamples
+                        );
+                    } elseif ($rawExamples) {
+                        $examples = $rawExamples;
+                    }
                 }
 
                 // dataProvider Annotation

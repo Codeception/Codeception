@@ -196,6 +196,20 @@ class Metadata
         }
     }
 
+    public function setParamsFromAttributes($attributes): void
+    {
+        $params = [];
+        foreach ($attributes as $attribute) {
+            $name = lcfirst(str_replace('Codeception\\Attribute\\', '', $attribute->getName()));
+            $params[$name] = $attribute->getArguments();
+        }
+        $this->params = array_merge_recursive($this->params, $params);
+        // set singular value for some params
+        foreach (['skip', 'incomplete'] as $single) {
+            $this->params[$single] = empty($this->params[$single]) ? null : (string)$this->params[$single][0];
+        }
+    }
+
     public function setParams(array $params): void
     {
         $this->params = array_merge_recursive($this->params, $params);

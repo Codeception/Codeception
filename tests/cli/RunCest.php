@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Group;
 use Codeception\Scenario;
 
 final class RunCest
@@ -58,12 +60,7 @@ final class RunCest
         $I->seeInShellOutput('SuccessCest');
     }
 
-    /**
-     * @group reports
-     * @group core
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runHtml(CliGuy $I)
     {
         $I->wantTo('execute tests with html output');
@@ -72,11 +69,7 @@ final class RunCest
     }
 
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runXmlReport(CliGuy $I)
     {
         $I->wantTo('check xml reports');
@@ -88,10 +81,7 @@ final class RunCest
         $I->seeInThisFile('feature="');
     }
 
-    /**
-     * @group reports
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runXmlReportsInStrictMode(CliGuy $I)
     {
         $I->wantTo('check xml in strict mode');
@@ -103,11 +93,7 @@ final class RunCest
         $I->dontSeeInThisFile('feature="');
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runPhpUnitXmlReport(CliGuy $I)
     {
         $I->wantTo('check phpunit xml reports');
@@ -131,10 +117,7 @@ final class RunCest
         $I->seeInThisFile('feature="');
     }
 
-    /**
-     * @group reports
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runPhpUnitXmlReportsInStrictMode(CliGuy $I)
     {
         $I->wantTo('check phpunit xml in strict mode');
@@ -158,11 +141,7 @@ final class RunCest
         $I->dontSeeInThisFile('feature="');
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runCustomReport(CliGuy $I)
     {
         $I->executeCommand('run dummy --ext=MyReportPrinter -c codeception_custom_report.yml');
@@ -170,11 +149,7 @@ final class RunCest
         $I->dontSeeInShellOutput('Ok');
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runCompactReport(CliGuy $I)
     {
         $I->executeCommand('run dummy --report');
@@ -195,6 +170,61 @@ final class RunCest
         $I->seeInShellOutput('Skipped Tests (2)');
         $I->seeInShellOutput("SkipMeCept");
         $I->dontSeeInShellOutput("IncompleteMeCept");
+    }
+
+    #[Group('attrs')]
+    public function runOneGroupByAttr(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs -g g1');
+        $I->seeInShellOutput("Valid test");
+        $I->seeInShellOutput("OK (1 test");
+    }
+
+    #[Group('attrs')]
+    public function runWithBeforeAfter(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g g1');
+        $I->seeInShellOutput("open1");
+        $I->seeInShellOutput("open2");
+        $I->seeInShellOutput("close1");
+        $I->seeInShellOutput("OK (1 test");
+    }
+
+
+    #[Group('attrs')]
+    public function runWithExamples(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g e1');
+        $I->seeInShellOutput("OK (2 test");
+    }
+
+
+    #[Group('attrs')]
+    public function runWithDataprovider(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g d1');
+        $I->seeInShellOutput("OK (2 test");
+    }
+
+    #[Group('attrs')]
+    public function runWithDepends(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g dp');
+        $I->seeInShellOutput("This test depends on Attrs\BasicScenarioCest:validTest to pass");
+    }
+
+    #[Group('attrs')]
+    public function runWithUnitSkipped(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g uskip');
+        $I->seeInShellOutput("Skipped: 1");
+    }
+
+    #[Group('attrs')]
+    public function runWithUnitIncomplete(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g uincomplete');
+        $I->seeInShellOutput("Incomplete: 1");
     }
 
     public function skipGroupOfCest(CliGuy $I)
@@ -330,9 +360,7 @@ final class RunCest
         $I->seeInShellOutput('There were 3 failures');
     }
 
-    /**
-     * @group reports
-     */
+    #[Group('reports')]
     public function runWithCustomOutputPath(CliGuy $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
@@ -750,11 +778,7 @@ EOF
         $I->assertEmpty(array_intersect($tests1, $tests3), 'same tests in shards');
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runHtmlWithPhpBrowserCheckReport(CliGuy $I)
     {
         $I->wantTo('execute tests with PhpBrowser with html output and check html');
@@ -898,15 +922,8 @@ EOF
         ];
     }
 
-    /**
-     * @group reports
-     *
-     * @dataProvider htmlReportRegexCheckProvider
-     *
-     * @param CliGuy               $I
-     * @param \Codeception\Example $example
-     * @param Scenario             $scenario
-     */
+    #[Group('reports')]
+    #[DataProvider('htmlReportRegexCheckProvider')]
     public function runHtmlCheckReport(CliGuy $I, \Codeception\Example $example, Scenario $scenario)
     {
         /** @var TestHtmlReportRegexBuilder $testBuilder */

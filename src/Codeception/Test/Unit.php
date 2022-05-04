@@ -13,6 +13,7 @@ use Codeception\PHPUnit\TestCase;
 use Codeception\Scenario;
 use Codeception\Test\Feature\Stub;
 use Codeception\TestInterface;
+use Codeception\Util\Annotation;
 use Codeception\Util\Debug;
 use PHPUnit\Framework\TestResult;
 

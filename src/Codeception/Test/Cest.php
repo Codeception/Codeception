@@ -67,6 +67,7 @@ class Cest extends Test implements
         $code = $this->getSourceCode();
         $this->parser->parseFeature($code);
         $this->getMetadata()->setParamsFromAnnotations(Annotation::forMethod($this->testClassInstance, $this->testMethod)->raw());
+        $this->getMetadata()->setParamsFromAttributes(Annotation::forMethod($this->testClassInstance, $this->testMethod)->attributes());
         $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance);
 
         // add example params to feature
@@ -128,6 +129,13 @@ class Cest extends Test implements
 
     protected function executeBeforeMethods(string $testMethod, $I): void
     {
+        $attribute = Annotation::forMethod(get_class($this->testClassInstance), $testMethod)->attribute('before');
+        if ($attribute) {
+            foreach ($attribute->getArguments() as $m) {
+                $this->executeContextMethod(trim($m), $I);
+            }
+            return;
+        }
         if (PHPUnitVersion::series() < 10) {
             $annotations = TestUtil::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
             if (!empty($annotations['method']['before'])) {
@@ -146,6 +154,13 @@ class Cest extends Test implements
 
     protected function executeAfterMethods(string $testMethod, $I): void
     {
+        $attribute = Annotation::forMethod(get_class($this->testClassInstance), $testMethod)->attribute('after');
+        if ($attribute) {
+            foreach ($attribute->getArguments() as $m) {
+                $this->executeContextMethod(trim($m), $I);
+            }
+            return;
+        }
         if (PHPUnitVersion::series() < 10) {
             $annotations = TestUtil::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
             if (!empty($annotations['method']['after'])) {
