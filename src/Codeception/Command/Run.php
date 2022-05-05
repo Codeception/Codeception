@@ -328,7 +328,7 @@ class Run extends Command
 
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
-    
+
         if ($this->options['group']) {
             $this->output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $this->options['group'])));
         }
@@ -346,7 +346,6 @@ class Run extends Command
                 foreach ($config['include'] as $include) {
                     // Find if the suite begins with an include path
                     if (strpos($suite, $include) === 0) {
-                        
                         // Use include config
                         $config = Configuration::config($projectDir.$include);
     
@@ -388,7 +387,7 @@ class Run extends Command
                 }
             }
         }
-        
+
         if ($test) {
             $userOptions['filter'] = $this->matchFilteredTestName($test);
         } elseif (
@@ -412,10 +411,13 @@ class Run extends Command
 
         // Run all tests of given suite or all suites
         if (!$test) {
-            $rawSuites = $suite ? explode(',', $suite) : Configuration::suites();
             
-            /** @var string[] $mainAppSuite */
-            $mainAppSuite = [];
+            $didPassCliSuite = !empty($suite);
+            
+            $rawSuites = $didPassCliSuite ? explode(',', $suite) : Configuration::suites();
+            
+            /** @var string[] $mainAppSuites */
+            $mainAppSuites = [];
             
             /** @var array<string,string> $appSpecificSuites */
             $appSpecificSuites = [];
@@ -433,11 +435,11 @@ class Run extends Command
                     $appSpecificSuites[$appAndSuite[0]][] = $appAndSuite[1];
                     continue;
                 }
-                $mainAppSuite[] = $rawSuite;
+                $mainAppSuites[] = $rawSuite;
             }
             
-            if([] !== $mainAppSuite) {
-                $this->executed = $this->runSuites($mainAppSuite, $this->options['skip']);
+            if([] !== $mainAppSuites) {
+                $this->executed = $this->runSuites($mainAppSuites, $this->options['skip']);
             }
             
             if(!empty($wildcardSuites) && ! empty($appSpecificSuites)) {
@@ -445,7 +447,10 @@ class Run extends Command
                 return 2;
             }
             
-            if(!empty($config['include'])) {
+            if(
+                !empty($config['include'])
+                && (!$didPassCliSuite || !empty($wildcardSuites) || !empty($appSpecificSuites))
+            ) {
                 
                 $currentDir = Configuration::projectDir();
                 $includedApps = $config['include'];
@@ -546,10 +551,10 @@ class Run extends Command
         $absolutePath = \Codeception\Configuration::projectDir();
 
         foreach ($suites as $relativePath) {
-            $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$relativePath;
+            $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
             $config = Configuration::config($current_dir);
 
-            if (!empty($defaultConfig['groups'])) {
+            if ( !empty($defaultConfig['groups'])) {
                 $groups = array_map(function($g) use ($absolutePath) {
                     return $absolutePath . $g;
                 }, $defaultConfig['groups']);
@@ -558,11 +563,11 @@ class Run extends Command
 
             $suites = Configuration::suites();
             
-            if(!empty($filterSuitesByWildcard)){
+            if( !empty($filterSuitesByWildcard)){
                 $suites = array_intersect($suites, $filterSuitesByWildcard);
             }
             
-            if(isset($filterAppSuites[$relativePath])) {
+            if( isset($filterAppSuites[$relativePath])) {
                 $suites = array_intersect($suites, $filterAppSuites[$relativePath]);
             }
             
@@ -739,6 +744,15 @@ class Run extends Command
     private function isSuiteInMultiApplication($suite_name)
     {
         return false !== strpos($suite_name, '::');
+    }
+    
+    /**
+     * @param  string  $suite_name
+     *
+     * @return bool
+     */
+    private function isRootLevelSuite($suite_name) {
+        return !$this->isSuiteInMultiApplication($suite_name) && ! $this->isWildcardSuiteName($suite_name);
     }
     
 }

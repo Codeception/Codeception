@@ -219,8 +219,6 @@ class IncludedCest
         $I->seeInShellOutput('CustomReporter1');
     }
     
-    
-    
     /**
      * @before moveToIncluded
      * @param CliGuy $I
@@ -292,6 +290,73 @@ class IncludedCest
         $I->executeCommand('run jazz::unit,*::functional', false);
         $I->seeResultCodeIs(2);
         $I->seeInShellOutput('Wildcard options can not be combined with specific suites of included apps.');
+    }
+    
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function runningASuiteInTheRootApplicationDoesNotRunTheIncludedAppSuites(CliGuy $I)
+    {
+        $I->executeCommand('run unit');
+    
+        $I->seeInShellOutput('Unit Tests (1)');
+        $I->seeInShellOutput('RootApplicationUnitTest:');
+    
+        $I->dontSeeInShellOutput('Functional Tests (1)');
+        $I->dontSeeInShellOutput('RootApplicationFunctionalTest:');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz.unit Tests');
+    
+        $I->executeCommand('run functional');
+    
+        $I->seeInShellOutput('Functional Tests (1)');
+        $I->seeInShellOutput('RootApplicationFunctionalTest:');
+    
+        $I->dontSeeInShellOutput('Unit Tests (1)');
+        $I->dontSeeInShellOutput('RootApplicationUnitTest:');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz.unit Tests');
+    }
+    
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function rootSuitesCanBeRunInCombinationWithIncludedSuites(CliGuy $I)
+    {
+        $I->executeCommand('run unit,*::unit');
+    
+        // root level
+        $I->seeInShellOutput('Unit Tests (1)');
+        $I->seeInShellOutput('RootApplicationUnitTest:');
+        $I->dontSeeInShellOutput('Functional Tests (1)');
+        $I->dontSeeInShellOutput('RootApplicationFunctionalTest:');
+        
+        // included
+        $I->seeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
+        
+        // Ensure that root level suites are not run twice.
+        $I->seeInShellOutput('OK (3 tests, 3 assertions)');
+    
+    
+        $I->executeCommand('run unit,jazz::functional');
+    
+        // root level
+        $I->seeInShellOutput('Unit Tests (1)');
+        $I->seeInShellOutput('RootApplicationUnitTest:');
+        $I->dontSeeInShellOutput('Functional Tests (1)');
+        $I->dontSeeInShellOutput('RootApplicationFunctionalTest:');
+    
+        // included apps
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
+        
     }
     
 }
