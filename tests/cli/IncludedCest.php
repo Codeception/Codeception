@@ -205,4 +205,19 @@ class IncludedCest
         $I->seeInShellOutput('2 tests');
         $I->dontSeeInShellOutput('4 tests');
     }
+    
+    /**
+     * @param CliGuy $I
+     * @before moveToIncluded
+     */
+    public function overwrittenConfigurationIsAlsoAppliedWhenRunningAnIncludedAppFromTheRootApp(CliGuy $I)
+    {
+        if(PHP_VERSION_ID < 70100) {
+            $I->markTestSkipped('This test can only run on PHP >= 7.1 because of reporter type declarations.');
+        }
+        $I->executeCommand('run jazz/tests/functional --report -o "reporters: report: Jazz\CustomReporter1"');
+        $I->seeInShellOutput('CustomReporter1');
+    }
+    
+    
 }
