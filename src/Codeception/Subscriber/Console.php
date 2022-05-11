@@ -32,6 +32,7 @@ use PHPUnit\Framework\RiskyTest;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTest;
+use PHPUnit\Framework\TestResult;
 use SebastianBergmann\Timer\Duration;
 use SebastianBergmann\Timer\ResourceUsageFormatter;
 use SebastianBergmann\Timer\Timer;
@@ -267,14 +268,13 @@ class Console implements EventSubscriberInterface
 
     public function afterResult(PrintResultEvent $event): void
     {
-        $duration = $this->timer->stop();
         $result = $event->getResult();
+        $this->printHeader($result);
         $verbose = $this->options['verbosity'] >= OutputInterface::VERBOSITY_VERBOSE;
 
         $outputFormatter = $this->output->getFormatter();
         $outputFormatter->setStyle('warning', new OutputFormatterStyle('black', 'yellow'));
         $outputFormatter->setStyle('success', new OutputFormatterStyle('black', 'green'));
-        $this->printResourceUsage($duration);
 
         $this->printDefects($result->errors(), 'error');
         $this->printDefects($result->failures(), 'failure');
@@ -287,6 +287,13 @@ class Console implements EventSubscriberInterface
 
         if ($result->skippedCount() + $result->notImplementedCount() > 0 && !$verbose) {
             $this->output->writeln("run with `-v` to get more info about skipped or incomplete tests");
+        }
+    }
+
+    protected function printHeader(TestResult $result): void
+    {
+        if ($result->count() > 0) {
+            $this->printResourceUsage($this->timer->stop());
         }
     }
 
@@ -330,7 +337,7 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    private function printFooter(PrintResultEvent $event): void
+    protected function printFooter(PrintResultEvent $event): void
     {
         $result = $event->getResult();
         $testCount = $result->count();
@@ -391,15 +398,6 @@ class Console implements EventSubscriberInterface
         }
 
         $this->message(implode(', ', $counts) . '.')->style($style)->writeln();
-    }
-
-    private function absolutePath(string $path): string
-    {
-        if (str_starts_with($path, '/') || strpos($path, ':') === 1) { // absolute path
-            return $path;
-        }
-
-        return codecept_output_dir() . $path;
     }
 
     public function testSuccess(TestEvent $event): void
