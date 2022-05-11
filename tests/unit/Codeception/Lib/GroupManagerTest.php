@@ -7,6 +7,10 @@ namespace Codeception\Lib;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Stub;
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
+use Codeception\Test\Metadata;
+use Codeception\Test\Unit;
+use Codeception\Util\ReflectionHelper;
+use PHPUnit\Framework\TestCase;
 
 class GroupManagerTest extends \Codeception\Test\Unit
 {
@@ -150,19 +154,13 @@ class GroupManagerTest extends \Codeception\Test\Unit
         new GroupManager(['important' => 'tests/data/group_manager_test/missing_directory']);
     }
 
-
-    protected function makeTestCase($file, $name = '')
+    protected function makeTestCase(string $file, string $name = ''): Unit
     {
-        return Stub::make(
-            '\Codeception\Lib\DescriptiveTestCase',
-            [
-                'getReportFields' => ['file' => codecept_root_dir() . $file],
-                'getName' => $name
-            ]
-        );
+        $testcase = clone $this;
+        $metadata = new Metadata();
+        $metadata->setFilename(codecept_root_dir() . $file);
+        ReflectionHelper::setPrivateProperty($testcase, 'name', $name, TestCase::class);
+        ReflectionHelper::setPrivateProperty($testcase, 'metadata', $metadata, Unit::class);
+        return $testcase;
     }
-}
-
-class DescriptiveTestCase extends \Codeception\Test\Unit
-{
 }
