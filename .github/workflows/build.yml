@@ -87,6 +87,7 @@ jobs:
         run: |
           composer config minimum-stability dev
           composer require phpunit/phpunit:"10.0.x-dev" phpunit/php-code-coverage:"10.0.x-dev" phpunit/php-text-template:"3.0.x-dev" sebastian/diff:"5.0.x-dev" --no-update
+          composer require codeception/lib-innerbrowser:"dev-phpunit10" --dev --no-update
           composer update --prefer-source --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Test that failing test really fails
