@@ -29,7 +29,7 @@ trait Config
         foreach ($configOptions as $option) {
             $keys = explode(': ', $option);
             if (count($keys) < 2) {
-                throw new \InvalidArgumentException('--config-option should have config passed as "key:value"');
+                throw new \InvalidArgumentException('--override should have config passed as "key: value"');
             }
             $value = array_pop($keys);
             $yaml = '';
