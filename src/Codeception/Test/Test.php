@@ -14,8 +14,11 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
+use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
+use PHPUnit\Framework\RiskyTest;
 use PHPUnit\Framework\RiskyTestError;
+use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Runner\Version;
 use PHPUnit\Runner\Version as PHPUnitVersion;
@@ -86,6 +89,18 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
      * @var string
      */
     public const STATUS_PENDING = 'pending';
+    /**
+     * @var string
+     */
+    public const STATUS_USELESS = 'useless';
+    /**
+     * @var string
+     */
+    public const STATUS_INCOMPLETE = 'incomplete';
+    /**
+     * @var string
+     */
+    public const STATUS_SKIPPED = 'skipped';
 
     private bool $reportUselessTests = false;
 
@@ -158,6 +173,18 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $this->test();
                 $status = self::STATUS_OK;
                 $eventType = Events::TEST_SUCCESS;
+            } catch (RiskyTest | RiskyTestError $e) {
+                $result->addFailure($this, $e, $time);
+                $status = self::STATUS_USELESS;
+                $eventType = Events::TEST_USELESS;
+            } catch (IncompleteTestError $e) {
+                $result->addFailure($this, $e, $time);
+                $status = self::STATUS_INCOMPLETE;
+                $eventType = Events::TEST_INCOMPLETE;
+            } catch (SkippedTest $e) {
+                $result->addFailure($this, $e, $time);
+                $status = self::STATUS_SKIPPED;
+                $eventType = Events::TEST_SKIPPED;
             } catch (AssertionFailedError $e) {
                 $result->addFailure($this, $e, $time);
                 $status = self::STATUS_FAIL;
