@@ -4,7 +4,14 @@ namespace Codeception\Subscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Notification;
+use PHPUnit\Framework\Error\Error;
+use PHPUnit\Framework\Error\Notice;
+use PHPUnit\Framework\Error\Warning;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+use const E_USER_ERROR;
+use const E_USER_NOTICE;
+use const E_USER_WARNING;
 
 class ErrorHandler implements EventSubscriberInterface
 {
@@ -80,6 +87,14 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
+        if($errno === E_USER_NOTICE) {
+            throw new Notice($errstr, $errno,  $errfile, $errline);
+        }elseif ($errno === E_USER_WARNING) {
+            throw new Warning($errstr, $errno,  $errfile, $errline);
+        }elseif ($errno === E_USER_ERROR) {
+            throw new Error($errstr, $errno,  $errfile, $errline);
+        }
+        
         $relativePath = codecept_relative_path($errfile);
         throw new \PHPUnit\Framework\Exception("$errstr at $relativePath:$errline", $errno);
     }
