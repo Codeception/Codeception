@@ -18,7 +18,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * Whether a offset exists
+     * Whether an offset exists
      *
      * @link https://php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $offset <p>An offset to check for.</p>
@@ -84,8 +84,7 @@ class Example implements ArrayAccess, Countable, IteratorAggregate
      * Retrieve an external iterator
      *
      * @link https://php.net/manual/en/iteratoraggregate.getiterator.php
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     * <b>Traversable</b>
+     * @return Traversable An instance of an object implementing <b>Iterator</b> or <b>Traversable</b>
      */
     public function getIterator(): Traversable
     {

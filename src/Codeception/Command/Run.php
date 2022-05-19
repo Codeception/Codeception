@@ -366,6 +366,10 @@ class Run extends Command
                         // Use include config
                         $config = Configuration::config($projectDir . $include);
 
+                        if (!empty($this->options['override'])) {
+                            $config = $this->overrideConfig($this->options['override']);
+                        }
+
                         if (!isset($config['paths']['tests'])) {
                             throw new RuntimeException(
                                 sprintf("Included '%s' has no tests path configured", $include)

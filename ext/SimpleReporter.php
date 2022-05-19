@@ -58,7 +58,8 @@ class SimpleReporter extends Extension
     {
         $secondsInput = $event->getTime();
         // See https://stackoverflow.com/q/16825240
-        $seconds = ($milliseconds = (int)($secondsInput * 1000)) / 1000;
+        $milliseconds = (int)($secondsInput * 1000);
+        $seconds = (int)($milliseconds / 1000);
         $time = ($seconds % 60) . (($milliseconds === 0) ? '' : '.' . $milliseconds);
 
         $this->output->write(Descriptor::getTestSignature($event->getTest()));
