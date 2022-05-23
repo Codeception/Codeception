@@ -99,6 +99,14 @@ final class Events
      */
     const TEST_WARNING = 'test.warning';
 
+    /**
+     * The <b>TEST_USELESS</b> event occurs whenever test does not execute any assertions
+     * or when it calls expectNotToPerformAssertions and then performs some assertion.
+     *
+     * The event listener method receives a {@link \Codeception\Event\FailEvent} instance.
+     */
+    const TEST_USELESS = 'test.useless';
+
 
     /**
      * The event listener method receives a {@link Codeception\Event\TestEvent} instance.
