@@ -212,7 +212,7 @@ class IncludedCest
      */
     public function overwrittenConfigurationIsAlsoAppliedWhenRunningAnIncludedAppFromTheRootApp(CliGuy $I)
     {
-        if(PHP_VERSION_ID < 70100) {
+        if (version_compare(\PHPUnit\Runner\Version::id(), '7.0.0', '<')) {
             $I->markTestSkipped('This test can only run on PHP >= 7.1 because of reporter type declarations.');
         }
         $I->executeCommand('run jazz/tests/functional --report -o "reporters: report: Jazz\CustomReporter1"');

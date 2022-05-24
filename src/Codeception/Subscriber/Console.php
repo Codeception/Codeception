@@ -42,6 +42,7 @@ class Console implements EventSubscriberInterface
         Events::TEST_INCOMPLETE    => 'testIncomplete',
         Events::TEST_SKIPPED       => 'testSkipped',
         Events::TEST_WARNING       => 'testWarning',
+        Events::TEST_USELESS       => 'testUseless',
         Events::TEST_FAIL_PRINT    => 'printFail',
         Events::RESULT_PRINT_AFTER => 'afterResult',
     ];
@@ -290,6 +291,11 @@ class Console implements EventSubscriberInterface
             return;
         }
         $this->writelnFinishedTest($e, $this->message('I')->style('pending'));
+    }
+
+    public function testUseless(FailEvent $event)
+    {
+        $this->writelnFinishedTest($event, $this->message('U')->style('pending'));
     }
 
     protected function isDetailed($test)
