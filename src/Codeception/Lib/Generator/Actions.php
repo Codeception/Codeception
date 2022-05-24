@@ -116,7 +116,7 @@ EOF;
             ->place('module', $module)
             ->place('method', $refMethod->name)
             ->place('return_type', $returnType)
-            ->place('return', $returnType === ': void' ? '' : 'return ')
+            ->place('return', ($returnType === ': void' || $returnType === ': never') ? '' : 'return ')
             ->place('params', $params);
 
         if (0 === strpos($refMethod->name, 'see')) {
