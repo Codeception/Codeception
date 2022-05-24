@@ -107,6 +107,8 @@ final class BuildCest
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeInThisFile('public function seeDirFound($dir): void');
+        $I->seeInThisFile('$this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion(\'seeDirFound\', func_get_args()));');
+        $I->dontSeeInThisFile('return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion(\'seeDirFound\', func_get_args()));');
     }
 
     public function generateNullableParameters(CliGuy $I, Scenario $scenario): void
@@ -173,5 +175,28 @@ final class BuildCest
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeInThisFile('public function seeDirFound(\Codeception\Module $dir): \Codeception\Module');
+    }
+
+    public function noReturnForNeverType(CliGuy $I, Scenario $scenario)
+    {
+        if (PHP_VERSION_ID < 80100) {
+            $scenario->skip('Does not work in PHP < 8.1');
+        }
+
+        $I->wantToTest('no return keyword generated for never typehint');
+
+        $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
+        $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound($dir): never', $cliHelperContents);
+        file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
+
+        $I->runShellCommand('php codecept build');
+        $I->seeInShellOutput('generated successfully');
+        $I->seeInSupportDir('CliGuy.php');
+        $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
+        $I->seeInThisFile('use _generated\CliGuyActions');
+        $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
+        $I->seeInThisFile('public function seeDirFound($dir): never');
+        $I->seeInThisFile('$this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion(\'seeDirFound\', func_get_args()));');
+        $I->dontSeeInThisFile('return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion(\'seeDirFound\', func_get_args()));');
     }
 }
