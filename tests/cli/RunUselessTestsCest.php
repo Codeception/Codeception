@@ -5,7 +5,7 @@ class RunUselessTestsCest
     public function checkOutput(CliGuy $I)
     {
         $I->amInPath('tests/data/useless');
-        $I->executeCommand('run');
+        $I->executeCommand('run -v');
         // $I->seeInShellOutput('U UselessCept: Make no assertions');
         // $I->seeInShellOutput('U UselessCest: Make no assertions');
         $I->seeInShellOutput('U UselessTest: Make no assertions');
@@ -107,9 +107,16 @@ This test is annotated with "@doesNotPerformAssertions" but performed 1 assertio
         $I->seeInShellOutput('UselessTest: Make no assertions............................................Useless');
 
         $I->seeFileFound('report.xml', 'tests/_output');
-        $I->seeInThisFile(
-            "<testsuite name=\"unit\" tests=\"4\" assertions=\"$assertions\" errors=\"$useless\" failures=\"0\" skipped=\"$skipped\" time=\""
-        );
+
+        if (version_compare(\PHPUnit\Runner\Version::id(), '6.0.0', '>=')) {
+            $I->seeInThisFile(
+                "<testsuite name=\"unit\" tests=\"4\" assertions=\"$assertions\" errors=\"$useless\" failures=\"0\" skipped=\"$skipped\" time=\""
+            );
+        } else {
+            $I->seeInThisFile(
+                "<testsuite name=\"unit\" tests=\"4\" assertions=\"$assertions\" failures=\"0\" errors=\"2\" time=\""
+            );
+        }
         // $I->seeInThisFile('<testcase name="Useless"');
         // $I->seeInThisFile('<testcase name="makeNoAssertions" class="UselessCest"');
         $I->seeInThisFile('<testcase name="testMakeNoAssertions" class="UselessTest" file="');
@@ -117,9 +124,16 @@ This test is annotated with "@doesNotPerformAssertions" but performed 1 assertio
         $I->seeInThisFile('Risky Test');
 
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
-        $I->seeInThisFile(
-            "<testsuite name=\"unit\" tests=\"4\" assertions=\"$assertions\" errors=\"$useless\" failures=\"0\" skipped=\"$skipped\" time=\""
-        );
+
+        if (version_compare(\PHPUnit\Runner\Version::id(), '6.0.0', '>=')) {
+            $I->seeInThisFile(
+                "<testsuite name=\"unit\" tests=\"4\" assertions=\"$assertions\" errors=\"$useless\" failures=\"0\" skipped=\"$skipped\" time=\""
+            );
+        } else {
+            $I->seeInThisFile(
+                "<testsuite name=\"unit\" tests=\"4\" assertions=\"$assertions\" failures=\"0\" errors=\"2\" time=\""
+            );
+        }
         // $I->seeInThisFile('<testcase name="Useless"');
         // $I->seeInThisFile('<testcase name="makeNoAssertions" class="UselessCest"');
         $I->seeInThisFile('<testcase name="testMakeNoAssertions" class="UselessTest" file="');
