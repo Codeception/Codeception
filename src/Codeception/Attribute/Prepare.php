@@ -8,5 +8,4 @@ use Attribute;
 
 final class Prepare
 {
-
 }
