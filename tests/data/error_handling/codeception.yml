@@ -11,3 +11,5 @@ suites:
         modules:
             enabled:
                 - Asserts
+settings:
+    convert_deprecations_to_exceptions: true

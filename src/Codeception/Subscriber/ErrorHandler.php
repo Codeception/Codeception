@@ -4,14 +4,11 @@ namespace Codeception\Subscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Notification;
+use PHPUnit\Framework\Error\Deprecated;
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\Error\Notice;
 use PHPUnit\Framework\Error\Warning;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-use const E_USER_ERROR;
-use const E_USER_NOTICE;
-use const E_USER_WARNING;
 
 class ErrorHandler implements EventSubscriberInterface
 {
@@ -42,6 +39,8 @@ class ErrorHandler implements EventSubscriberInterface
      */
     private $errorLevel;
 
+    private $convertDeprecationsToExceptions = false;
+
     public function __construct()
     {
         $this->errorLevel = E_ALL & ~E_STRICT & ~E_DEPRECATED;
@@ -60,6 +59,10 @@ class ErrorHandler implements EventSubscriberInterface
         }
         error_reporting($this->errorLevel);
 
+        if ($settings['convert_deprecations_to_exceptions']) {
+            $this->convertDeprecationsToExceptions = true;
+        }
+
         if ($this->initialized) {
             return;
         }
@@ -73,7 +76,7 @@ class ErrorHandler implements EventSubscriberInterface
 
     public function errorHandler($errno, $errstr, $errfile, $errline, $context = array())
     {
-        if (E_USER_DEPRECATED === $errno) {
+        if ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && !$this->convertDeprecationsToExceptions) {
             $this->handleDeprecationError($errno, $errstr, $errfile, $errline, $context);
             return;
         }
@@ -87,12 +90,23 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
-        if($errno === E_USER_NOTICE) {
-            throw new Notice($errstr, $errno,  $errfile, $errline);
-        }elseif ($errno === E_USER_WARNING) {
-            throw new Warning($errstr, $errno,  $errfile, $errline);
-        }elseif ($errno === E_USER_ERROR) {
-            throw new Error($errstr, $errno,  $errfile, $errline);
+        if (version_compare(\PHPUnit\Runner\Version::id(), '8.4.0', '>=')) {
+            switch ($errno) {
+                case E_DEPRECATED:
+                case E_USER_DEPRECATED:
+                    // Renamed to Deprecation in PHPUnit 10
+                    throw new Deprecated($errstr, $errno, $errfile, $errline);
+                case E_NOTICE:
+                case E_STRICT:
+                case E_USER_NOTICE:
+                    throw new Notice($errstr, $errno, $errfile, $errline);
+                case E_WARNING:
+                case E_USER_WARNING:
+                    throw new Warning($errstr, $errno, $errfile, $errline);
+                case E_USER_ERROR:
+                default:
+                    throw new Error($errstr, $errno, $errfile, $errline);
+            }
         }
         
         $relativePath = codecept_relative_path($errfile);

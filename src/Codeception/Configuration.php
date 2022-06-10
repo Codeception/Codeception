@@ -133,6 +133,7 @@ class Configuration
             'config' => [],
         ],
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
+        'convert_deprecations_to_exceptions' => false
     ];
 
     protected static $params;
