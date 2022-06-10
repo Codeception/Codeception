@@ -3,10 +3,15 @@ include:
   - jazz/pianist
   - shire
 
+
+
 groups:
   group: group.txt
 
 paths:
+  tests: tests
+  data: tests/_data
+  support: tests/_support
   log: "_log"
 settings:
   colors: false
