@@ -5,6 +5,7 @@ namespace Codeception\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class Env
+
+final class Prepare
 {
 }

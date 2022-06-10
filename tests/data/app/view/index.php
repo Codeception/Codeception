@@ -6,7 +6,7 @@
 
 <div class="notice"><?php if (isset($notice)) {
     echo $notice;
-                    } ?></div>
+} ?></div>
 
 <p>
     <a href="/info" id="link">More info</a>

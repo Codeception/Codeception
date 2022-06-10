@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Attribute\Prepare;
+
 class PowerUpCest
 {
     public function iHaveNoPower(PowerGuy $I)
@@ -9,9 +11,8 @@ class PowerUpCest
         });
     }
 
-    /**
-     * @prepare drinkBluePotion
-     */
+
+    #[Prepare('drinkBluePotion')]
     public function iGotBluePotion(PowerGuy $I)
     {
         $I->gotThePower();
