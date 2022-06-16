@@ -38,13 +38,20 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
 
     public function testShowsLocationOfWarning()
     {
-        if (PHP_MAJOR_VERSION === 5) {
-            $this->expectException(\PHPUnit_Framework_Exception::class);
-        } else {
+        if (version_compare(\PHPUnit\Runner\Version::id(), '8.4.0', '>=')) {
+            $this->expectWarning();
+        } elseif (version_compare(\PHPUnit\Runner\Version::id(), '6.0.0', '>=')) {
             $this->expectException(\PHPUnit\Framework\Exception::class);
+        } else {
+            $this->expectException(\PHPUnit_Framework_Exception::class);
         }
-        $SEP = DIRECTORY_SEPARATOR;
-        $this->expectExceptionMessage("Undefined variable: file at tests{$SEP}unit{$SEP}Codeception{$SEP}Subscriber{$SEP}ErrorHandlerTest.php:48");
+
+        if (version_compare(\PHPUnit\Runner\Version::id(), '8.4.0', '>=')) {
+            $this->expectWarningMessage('Undefined variable: file');
+        } else {
+            $SEP = DIRECTORY_SEPARATOR;
+            $this->expectExceptionMessage($expectedMessage = "Undefined variable: file at tests{$SEP}unit{$SEP}Codeception{$SEP}Subscriber{$SEP}ErrorHandlerTest.php:55");
+        }
         trigger_error('Undefined variable: file', E_USER_WARNING);
     }
 }
