@@ -1,4 +1,5 @@
 <?php
+
 class DryRunCest
 {
     public function _before(CliGuy $I)
@@ -23,5 +24,20 @@ class DryRunCest
         $I->seeInShellOutput('Given i have terminal opened');
         $I->seeInShellOutput('INCOMPLETE');
         $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found');
+    }
+
+    public function runTestsWithTypedHelper(CliGuy $I)
+    {
+        if (PHP_VERSION_ID < 80100) {
+            $I->markTestSkipped('Requires PHP 8.1');
+        }
+
+        $I->amInPath(\codecept_data_dir('typed_helper'));
+        $I->executeCommand('build');
+        $I->executeCommand('dry-run unit --no-ansi');
+        $I->seeInShellOutput('print comment');
+        $I->seeInShellOutput('I get int');
+        $I->seeInShellOutput('I get dom document');
+        $I->seeInShellOutput('I see something');
     }
 }

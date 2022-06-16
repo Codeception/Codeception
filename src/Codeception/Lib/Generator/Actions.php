@@ -253,7 +253,7 @@ EOF;
         return sprintf(
             '%s%s',
             (PHP_VERSION_ID >= 70100 && $type->allowsNull() && $returnTypeString !== 'mixed') ? '?' : '',
-            $this->stringifyNamedType($type, $moduleClass)
+            self::stringifyNamedType($type, $moduleClass)
         );
     }
 
@@ -267,7 +267,7 @@ EOF;
     {
         $strings = [];
         foreach ($types as $type) {
-            $strings []= $this->stringifyNamedType($type, $moduleClass);
+            $strings []= self::stringifyNamedType($type, $moduleClass);
         }
 
         return implode($separator, $strings);
@@ -278,7 +278,7 @@ EOF;
      * @return string
      * @todo param is only \ReflectionNamedType in Codeception 5
      */
-    private function stringifyNamedType($type, \ReflectionClass $moduleClass)
+    public static function stringifyNamedType($type, \ReflectionClass $moduleClass)
     {
         if (PHP_VERSION_ID < 70100) {
             $typeName = (string)$type;

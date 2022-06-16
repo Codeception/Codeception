@@ -6,16 +6,25 @@ use Codeception\Event\DispatcherWrapper;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Lib\Generator\Actions;
+use Codeception\Lib\ModuleContainer;
+use Codeception\Module;
+use Codeception\Step;
+use Codeception\Stub;
 use Codeception\Subscriber\Bootstrap as BootstrapLoader;
 use Codeception\Subscriber\Console as ConsolePrinter;
 use Codeception\SuiteManager;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Test;
 use Codeception\Util\Maybe;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionIntersectionType;
+use ReflectionMethod;
+use ReflectionType;
+use ReflectionUnionType;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -77,7 +86,7 @@ class DryRun extends Command
         $suiteManager = new SuiteManager($dispatcher, $suite, $settings);
         $moduleContainer = $suiteManager->getModuleContainer();
         foreach (Configuration::modules($settings) as $module) {
-            $moduleContainer->mock($module, new Maybe());
+            $this->mockModule($module, $moduleContainer);
         }
         $suiteManager->loadTests($test);
         $tests = $suiteManager->getSuite()->tests();
@@ -130,5 +139,112 @@ class DryRun extends Command
             }
         }
         $output->writeln('');
+    }
+
+    /**
+     * @return Module&MockObject
+     */
+    private function mockModule($moduleName, ModuleContainer $moduleContainer)
+    {
+        $module = $moduleContainer->getModule($moduleName);
+        $class = new \ReflectionClass($module);
+        $methodResults = [];
+        foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->isConstructor()) {
+                continue;
+            }
+            $methodResults[$method->getName()] = $this->getDefaultResultForMethod($class, $method);
+        }
+
+        $moduleContainer->mock($moduleName, Stub::makeEmpty($module, $methodResults));
+    }
+
+    private function getDefaultResultForMethod(\ReflectionClass $class, ReflectionMethod $method)
+    {
+        if (PHP_VERSION_ID < 70000) {
+            return new Maybe();
+        }
+
+        $returnType = $method->getReturnType();
+
+        if ($returnType === null || $returnType->allowsNull()) {
+            return null;
+        }
+
+        if ($returnType instanceof ReflectionUnionType) {
+            return $this->getDefaultValueOfUnionType($returnType);
+        }
+        if ($returnType instanceof ReflectionIntersectionType) {
+            return $this->returnDefaultValueForIntersectionType($returnType);
+        }
+
+        if (PHP_VERSION_ID >= 70100 && $returnType->isBuiltin()) {
+            return $this->getDefaultValueForBuiltinType($returnType);
+        }
+
+        $typeName = Actions::stringifyNamedType($returnType, $class);
+        return Stub::makeEmpty($typeName);
+    }
+
+
+
+    private function getDefaultValueForBuiltinType(ReflectionType $returnType)
+    {
+        switch ($returnType->getName()) {
+            case 'mixed':
+            case 'void':
+                return null;
+            case 'string':
+                return '';
+            case 'int':
+                return 0;
+            case 'float':
+                return 0.0;
+            case 'bool':
+                return false;
+            case 'array':
+                return [];
+            case 'resource':
+                return fopen('data://text/plain;base64,', 'r');
+            default:
+                throw new \Exception('Unsupported return type ' . $returnType->getName());
+        }
+    }
+
+    private function getDefaultValueOfUnionType($returnType)
+    {
+        $unionTypes = $returnType->getTypes();
+        foreach ($unionTypes as $type) {
+            if ($type->isBuiltin()) {
+                return $this->getDefaultValueForBuiltinType($type);
+            }
+        }
+
+        return Stub::makeEmpty($unionTypes[0]);
+    }
+
+    private function returnDefaultValueForIntersectionType(ReflectionIntersectionType $returnType)
+    {
+        $extends    = null;
+        $implements = [];
+        foreach ($returnType->getTypes() as $type) {
+            if (class_exists($type)) {
+                $extends = $type;
+            } else {
+                $implements [] = $type;
+            }
+        }
+        $className = uniqid('anonymous_class_');
+        $code      = "abstract class $className";
+        if ($extends !== null) {
+            $code .= " extends \\$extends";
+        }
+        if (count($implements) > 0) {
+            $code .= ' implements ' . implode(', ', $implements);
+        }
+        $code .= ' {}';
+        eval($code);
+
+        return Stub::makeEmpty($className);
     }
 }
