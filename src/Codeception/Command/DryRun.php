@@ -228,7 +228,7 @@ class DryRun extends Command
         $extends    = null;
         $implements = [];
         foreach ($returnType->getTypes() as $type) {
-            if (class_exists($type)) {
+            if (class_exists($type->getName())) {
                 $extends = $type;
             } else {
                 $implements [] = $type;
