@@ -279,6 +279,7 @@ abstract class Step implements Stringable
             $this->getMetaStep()?->setFailed(true);
             throw $e;
         }
+
         return $res;
     }
 

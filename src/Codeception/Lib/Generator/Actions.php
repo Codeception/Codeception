@@ -13,6 +13,7 @@ use Codeception\Step\GeneratedStep;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Template;
 use Exception;
+use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionIntersectionType;
@@ -20,6 +21,9 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionType;
 use ReflectionUnionType;
+
+use function implode;
+use function sprintf;
 
 class Actions
 {
@@ -246,13 +250,15 @@ EOF;
             return $this->stringifyNamedTypes($type->getTypes(), $moduleClass, '|');
         } elseif ($type instanceof ReflectionIntersectionType) {
             return $this->stringifyNamedTypes($type->getTypes(), $moduleClass, '&');
+        } elseif ($type instanceof ReflectionNamedType) {
+            return sprintf(
+                '%s%s',
+                ($type->allowsNull() && $type->getName() !== 'mixed') ? '?' : '',
+                self::stringifyNamedType($type, $moduleClass)
+            );
+        } else {
+            throw new InvalidArgumentException('Unsupported type class: ' . $type::class);
         }
-
-        return sprintf(
-            '%s%s',
-            ($type->allowsNull() && $type->getName() !== 'mixed') ? '?' : '',
-            $this->stringifyNamedType($type, $moduleClass)
-        );
     }
 
     /**
@@ -262,14 +268,13 @@ EOF;
     {
         $strings = [];
         foreach ($types as $type) {
-            $strings [] = $this->stringifyNamedType($type, $moduleClass);
+            $strings[] = self::stringifyNamedType($type, $moduleClass);
         }
 
         return implode($separator, $strings);
     }
 
-
-    private function stringifyNamedType(ReflectionNamedType $type, ReflectionClass $moduleClass): string
+    public static function stringifyNamedType(ReflectionNamedType $type, ReflectionClass $moduleClass): string
     {
         $typeName = $type->getName();
 

@@ -46,9 +46,8 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
 
     public function testShowsLocationOfWarning()
     {
-        $this->expectException(\PHPUnit\Framework\Exception::class);
-        $SEP = DIRECTORY_SEPARATOR;
-        $this->expectExceptionMessage("Undefined variable: file at tests{$SEP}unit{$SEP}Codeception{$SEP}Subscriber{$SEP}ErrorHandlerTest.php");
+        $this->expectWarning();
+        $this->expectWarningMessage('Undefined variable: file');
         trigger_error('Undefined variable: file', E_USER_WARNING);
     }
 }
