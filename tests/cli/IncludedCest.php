@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Codeception\Attribute\Before;
+use Codeception\Attribute\Group;
+
 final class IncludedCest
 {
     public function _before()
@@ -15,10 +18,7 @@ final class IncludedCest
         $I->amInPath('tests/data/included');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
     public function runSuitesFromIncludedConfigs(CliGuy $I)
     {
         $I->executeCommand('run');
@@ -33,10 +33,7 @@ final class IncludedCest
         $I->seeInShellOutput('Check that hobbits can add numbers');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
     public function runTestsFromIncludedConfigs(CliGuy $I)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -54,10 +51,7 @@ final class IncludedCest
         $I->dontSeeInShellOutput('PianistCept: Check that jazz pianists can add numbers');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
     public function runTestsFromIncludedConfigsNested(CliGuy $I)
     {
         $I->executeCommand('run jazz/pianist/tests/functional/PianistCept.php', false);
@@ -76,10 +70,7 @@ final class IncludedCest
         $I->dontSeeInShellOutput('Jazz.functional Tests');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
     public function runTestsFromIncludedConfigsSingleTest(CliGuy $I)
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -103,11 +94,8 @@ final class IncludedCest
         $I->dontSeeInShellOutput('PianistCept: Check that jazz pianists can add numbers');
     }
 
-    /**
-     * @before moveToIncluded
-     * @group reports
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
+    #[Group('reports')]
     public function runIncludedWithXmlOutput(CliGuy $I)
     {
         $I->executeCommand('run --xml');
@@ -121,11 +109,8 @@ final class IncludedCest
         $I->seeInThisFile('<testcase name="Pianist"');
     }
 
-    /**
-     * @before moveToIncluded
-     * @group reports
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
+    #[Group('reports')]
     public function runIncludedWithHtmlOutput(CliGuy $I)
     {
         $I->executeCommand('run --html');
@@ -139,11 +124,8 @@ final class IncludedCest
         $I->seeInThisFile('Shire.functional Tests');
     }
 
-    /**
-     * @before moveToIncluded
-     * @group coverage
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
+    #[Group('coverage')]
     public function runIncludedWithCoverage(CliGuy $I)
     {
         $I->executeCommand('run --coverage-xml');
@@ -155,10 +137,7 @@ final class IncludedCest
         $I->seeInThisFile('Hobbit" namespace="');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
     public function buildIncluded(CliGuy $I)
     {
         $I->executeCommand('build');
@@ -168,11 +147,8 @@ final class IncludedCest
         $I->seeInShellOutput('Shire\\TestGuy');
     }
 
-    /**
-      * @before moveToIncluded
-      * @param CliGuy $I
-      */
-    public function cleanIncluded(\CliGuy $I)
+    #[Before('moveToIncluded')]
+    public function cleanIncluded(CliGuy $I)
     {
         $ds = DIRECTORY_SEPARATOR;
 
@@ -184,20 +160,14 @@ final class IncludedCest
         $I->seeInShellOutput('Done');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
-    public function runIncludedGroup(\CliGuy $I)
+    #[Before('moveToIncluded')]
+    public function runIncludedGroup(CliGuy $I)
     {
         $I->executeCommand("run -g group", false);
         $I->dontSeeInShellOutput('No tests executed');
         $I->seeInShellOutput('2 tests');
     }
 
-    /**
-     * @param CliGuy $I
-     */
     public function includedSuitesAreNotRunTwice(CliGuy $I)
     {
         $I->amInPath('tests/data/included_two_config_files');
@@ -208,10 +178,7 @@ final class IncludedCest
         $I->dontSeeInShellOutput('4 tests');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
     public function someSuitesForSomeIncludedApplicationCanBeRun(CliGuy $I)
     {
         $I->executeCommand('run jazz::functional');
@@ -242,11 +209,8 @@ final class IncludedCest
         $I->seeInShellOutput('PianistCept: Check that jazz pianists can add numbers');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
-    public function someSuitesCanBeRunForAllIncludedApplications(\CliGuy $I)
+    #[Before('moveToIncluded')]
+    public function someSuitesCanBeRunForAllIncludedApplications(CliGuy $I)
     {
         $I->executeCommand('run *::functional');
 
@@ -272,10 +236,7 @@ final class IncludedCest
         $I->seeInShellOutput('Unit Tests');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
     public function wildCardSuitesAndAppSpecificSuitesCantBeCombined(CliGuy $I)
     {
         $I->executeCommand('run jazz::unit,*::functional', false);
@@ -283,10 +244,7 @@ final class IncludedCest
         $I->seeInShellOutput('Wildcard options can not be combined with specific suites of included apps.');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
     public function runningASuiteInTheRootApplicationDoesNotRunTheIncludedAppSuites(CliGuy $I)
     {
         $I->executeCommand('run unit');
@@ -310,10 +268,7 @@ final class IncludedCest
         $I->dontSeeInShellOutput('Jazz.unit Tests');
     }
 
-    /**
-     * @before moveToIncluded
-     * @param CliGuy $I
-     */
+    #[Before('moveToIncluded')]
     public function rootSuitesCanBeRunInCombinationWithIncludedSuites(CliGuy $I)
     {
         $I->executeCommand('run unit,*::unit');
