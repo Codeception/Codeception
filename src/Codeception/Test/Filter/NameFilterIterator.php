@@ -9,7 +9,6 @@ use Exception;
 use PHPUnit\Framework\ErrorTestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\WarningTestCase;
-use PHPUnit\Util\RegularExpression;
 use RecursiveFilterIterator;
 use RecursiveIterator;
 
@@ -40,7 +39,7 @@ class NameFilterIterator extends RecursiveFilterIterator
      */
     protected function setFilter(string $filter): void
     {
-        if (RegularExpression::safeMatch($filter, '') === false) {
+        if (@preg_match($filter, '') === false) {
             // Handles:
             //  * :testAssertEqualsSucceeds#4
             //  * "testAssertEqualsSucceeds#4-8

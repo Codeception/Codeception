@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestResult;
 use PHPUnit\Runner\Filter\ExcludeGroupFilterIterator;
 use PHPUnit\Runner\Filter\Factory;
 use PHPUnit\Runner\Filter\IncludeGroupFilterIterator;
+use PHPUnit\Runner\Version;
 use ReflectionClass;
 use ReflectionProperty;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -119,14 +120,17 @@ class SuiteManager
 
     protected function createSuite(string $name): Suite
     {
-        $suite = new Suite($this->dispatcher);
-        $suite->setBaseName(preg_replace('#\s.+$#', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
-            $name = $this->settings['namespace'] . ".{$name}";
+            $name = $this->settings['namespace'] . '.' . $name;
         }
-        $suite->setName($name);
-        if (isset($this->settings['backup_globals'])) {
+
+        $suite = new Suite($name, $this->dispatcher);
+        $suite->setBaseName(preg_replace('#\s.+$#', '', $name)); // replace everything after space (env name)
+
+        if (isset($this->settings['backup_globals']) && Version::series() < 10) {
             $suite->setBackupGlobals((bool)$this->settings['backup_globals']);
+        } else {
+            // TODO: use $test->setBackupGlobals instead
         }
 
         if (isset($this->settings['be_strict_about_changes_to_global_state']) && method_exists($suite, 'setbeStrictAboutChangesToGlobalState')) {

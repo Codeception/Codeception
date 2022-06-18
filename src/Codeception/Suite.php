@@ -66,9 +66,9 @@ class Suite extends TestSuite
 
     private bool $collectCodeCoverage = false;
 
-    public function __construct(private EventDispatcher $dispatcher)
+    public function __construct(string $name, private EventDispatcher $dispatcher)
     {
-        parent::__construct('', '');
+        $this->name = $name;
     }
 
     public function reportUselessTests(bool $enabled): void

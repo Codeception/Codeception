@@ -32,7 +32,7 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
 
         $eventDispatcher = $this->createMock(EventDispatcher::class);
 
-        $suiteEvent = new SuiteEvent(new Suite($eventDispatcher), null, ['error_level' => 'E_ERROR']);
+        $suiteEvent = new SuiteEvent(new Suite('unit', $eventDispatcher), null, ['error_level' => 'E_ERROR']);
         $errorHandler->handle($suiteEvent);
 
         //Satisfying The Premature Exit Handling
