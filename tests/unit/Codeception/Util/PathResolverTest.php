@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
-class PathResolverTest extends \Codeception\Test\Unit
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Group;
+use Codeception\Test\Unit;
+
+final class PathResolverTest extends Unit
 {
-    /**
-     * @dataProvider getRelativeDirTestData
-     * @group core
-     */
+    #[DataProvider('getRelativeDirTestData')]
+    #[Group('core')]
     public function testGetRelativeDir(string $path, string $projDir, string $dirSep, string $expectedOutput)
     {
         $relativeDir = PathResolver::getRelativeDir($path, $projDir, $dirSep);
@@ -17,8 +19,6 @@ class PathResolverTest extends \Codeception\Test\Unit
     }
 
     /**
-     * data provider for testGetRelativeDir
-     *
      * @return string[][]
      */
     public function getRelativeDirTestData(): array

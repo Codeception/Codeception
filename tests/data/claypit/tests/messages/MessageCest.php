@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Attribute\Env;
+
 class MessageCest
 {
     public function allMessages(MessageGuy $I)
@@ -20,11 +22,7 @@ class MessageCest
         $I->expect('message' . $num . ': ' . $I->getMessage('message' . $num));
     }
 
-    /**
-     *
-     * @env env2,env1
-     *
-     */
+    #[Env(['env2', 'env1'])]
     public function multipleEnvRequired(MessageGuy $I)
     {
         $I->expect('Multiple env given');

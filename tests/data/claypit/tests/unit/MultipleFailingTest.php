@@ -1,9 +1,10 @@
 <?php
 
-/**
- * @group multiple-fail
- */
-class MultipleFailingTest extends \PHPUnit\Framework\TestCase
+use Codeception\Attribute\Group;
+use PHPUnit\Framework\TestCase;
+
+#[Group('multiple-fail')]
+final class MultipleFailingTest extends TestCase
 {
     public function testMe()
     {

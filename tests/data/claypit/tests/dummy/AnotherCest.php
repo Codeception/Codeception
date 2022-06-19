@@ -1,10 +1,10 @@
 <?php
 
-class AnotherCest
+use Codeception\Attribute\Group;
+
+final class AnotherCest
 {
-    /**
-     * @group ok
-     */
+    #[Group('ok')]
     public function optimistic(DumbGuy $I)
     {
         $I->expect('everything is ok');

@@ -1,11 +1,12 @@
 <?php
 
+use Codeception\Attribute\After;
+use Codeception\Attribute\Before;
+
 class ReorderCest
 {
-    /**
-     * @before a0
-     * @after a2
-     */
+    #[Before('a0')]
+    #[After('a2')]
     protected function a1(OrderGuy $I)
     {
         $I->appendToFile('1');
@@ -21,19 +22,15 @@ class ReorderCest
         $I->appendToFile('2');
     }
 
-    /**
-     * @before a1
-     * @after a5
-     */
+    #[Before('a1')]
+    #[After('a5')]
     public function useVariousWrappersForOrder(OrderGuy $I)
     {
         $I->appendToFile('3');
     }
 
-    /**
-     * @before a4
-     * @after a6
-     */
+    #[Before('a4')]
+    #[After('a6')]
     protected function a5(OrderGuy $I)
     {
         $I->appendToFile('5');

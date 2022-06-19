@@ -1,5 +1,8 @@
 <?php
 
+use Codeception\Attribute\After;
+use Codeception\Attribute\Before;
+
 class FailedCest
 {
     protected function a($I)
@@ -7,16 +10,13 @@ class FailedCest
         $I->appendToFile('a');
     }
 
-
     protected function b($I)
     {
         $I->appendToFile('b');
     }
 
-    /**
-     * @before a
-     * @after b
-     */
+    #[Before('a')]
+    #[After('b')]
     public function useVariousWrappersForOrder(OrderGuy $I)
     {
         $I->appendToFile('%');

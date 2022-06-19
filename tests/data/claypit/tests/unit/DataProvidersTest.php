@@ -1,16 +1,15 @@
 <?php
 
-class DataProvidersTest extends \Codeception\Test\Unit
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Group;
+use Codeception\Test\Unit;
+
+final class DataProvidersTest extends Unit
 {
-    /**
-     * @var \CodeGuy
-     */
     protected CodeGuy $codeGuy;
 
-    /**
-     * @group data-providers
-     * @dataProvider triangles
-     */
+    #[Group('data-providers')]
+    #[DataProvider('triangles')]
     public function testIsTriangle(int $a, int $b, int $c)
     {
         $this->assertTrue($a + $b > $c && $c + $b > $a && $a + $c > $b);

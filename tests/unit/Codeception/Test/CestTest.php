@@ -2,34 +2,34 @@
 
 declare(strict_types=1);
 
-/**
- * Class CestTest
- */
-class CestTest extends \Codeception\Test\Unit
+use Codeception\Attribute\Group;
+use Codeception\Test\Cest;
+use Codeception\Test\Descriptor;
+use Codeception\Test\Unit;
+
+final class CestTest extends Unit
 {
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testCestNamings()
     {
         $klass = new stdClass();
-        $cest = new \Codeception\Test\Cest($klass, 'user', 'tests/cli/BootstrapCest.php');
+        $cest = new Cest($klass, 'user', 'tests/cli/BootstrapCest.php');
 
         $path = 'tests' . DIRECTORY_SEPARATOR . 'cli' . DIRECTORY_SEPARATOR;
 
         $this->assertSame(
             $path . 'BootstrapCest.php',
-            \Codeception\Test\Descriptor::getTestFileName($cest)
+            Descriptor::getTestFileName($cest)
         );
 
         $this->assertSame(
             $path . 'BootstrapCest.php:user',
-            \Codeception\Test\Descriptor::getTestFullName($cest)
+            Descriptor::getTestFullName($cest)
         );
 
         $this->assertSame(
             'stdClass:user',
-            \Codeception\Test\Descriptor::getTestSignature($cest)
+            Descriptor::getTestSignature($cest)
         );
     }
 }

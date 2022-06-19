@@ -37,7 +37,7 @@ use function trim;
 /**
  * Executes tests delivered in Cest format.
  *
- * Handles loading of Cest cases, executing specific methods, following the order from `@before` and `@after` annotations.
+ * Handles loading of Cest cases, executing specific methods, following the order from `#Before` and `#After` attributes.
  */
 class Cest extends Test implements
     Interfaces\ScenarioDriven,

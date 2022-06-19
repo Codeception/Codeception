@@ -2,25 +2,20 @@
 
 declare(strict_types=1);
 
-/**
- * Class TestLoaderTest
- * @group load
- */
-class TestLoaderTest extends \Codeception\PHPUnit\TestCase
+use Codeception\Attribute\Group;
+use Codeception\Test\Loader as TestLoader;
+
+#[Group('load')]
+final class TestLoaderTest extends \Codeception\PHPUnit\TestCase
 {
-    /**
-     * @var \Codeception\Test\Loader
-     */
-    protected \Codeception\Test\Loader $testLoader;
+    protected TestLoader $testLoader;
 
     protected function _setUp()
     {
-        $this->testLoader = new \Codeception\Test\Loader(['path' => \Codeception\Configuration::dataDir()]);
+        $this->testLoader = new TestLoader(['path' => \Codeception\Configuration::dataDir()]);
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testAddCept()
     {
         $this->testLoader->loadTest('SimpleCept.php');
@@ -45,18 +40,14 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         $this->assertCount(1, $this->testLoader->getTests());
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testLoadFileWithFewCases()
     {
         $this->testLoader->loadTest('SimpleNamespacedTest.php');
         $this->assertCount(3, $this->testLoader->getTests());
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testLoadAllTests()
     {
         // to autoload dependencies
@@ -66,7 +57,7 @@ class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         );
         Codeception\Util\Autoload::addNamespace(\Codeception\Module::class, codecept_data_dir() . 'claypit/tests/_support');
 
-        $this->testLoader = new \Codeception\Test\Loader(['path' => codecept_data_dir() . 'claypit/tests']);
+        $this->testLoader = new TestLoader(['path' => codecept_data_dir() . 'claypit/tests']);
         $this->testLoader->loadTests();
 
         $testNames = $this->getTestNames($this->testLoader->getTests());

@@ -4,7 +4,7 @@ namespace Codeception\Attribute;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_METHOD)]
 class Examples
 {
 }
