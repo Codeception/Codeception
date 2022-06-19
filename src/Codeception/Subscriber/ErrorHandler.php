@@ -7,7 +7,10 @@ namespace Codeception\Subscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Notification;
-use PHPUnit\Framework\Exception as PHPUnitException;
+use PHPUnit\Framework\Error\Deprecated;
+use PHPUnit\Framework\Error\Error;
+use PHPUnit\Framework\Error\Notice;
+use PHPUnit\Framework\Error\Warning;
 use Symfony\Bridge\PhpUnit\DeprecationErrorHandler as SymfonyDeprecationErrorHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -60,6 +63,8 @@ class ErrorHandler implements EventSubscriberInterface
      */
     private int $errorLevel;
 
+    private bool $convertDeprecationsToExceptions = false;
+
     public function __construct()
     {
         $this->errorLevel = E_ALL & ~E_STRICT & ~E_DEPRECATED;
@@ -78,6 +83,10 @@ class ErrorHandler implements EventSubscriberInterface
         }
         error_reporting($this->errorLevel);
 
+        if ($settings['convert_deprecations_to_exceptions']) {
+            $this->convertDeprecationsToExceptions = true;
+        }
+
         if ($this->initialized) {
             return;
         }
@@ -91,7 +100,7 @@ class ErrorHandler implements EventSubscriberInterface
 
     public function errorHandler(int $errNum, string $errMsg, string $errFile, int $errLine, array $context = []): bool
     {
-        if (E_USER_DEPRECATED === $errNum) {
+        if ((E_USER_DEPRECATED === $errNum || E_DEPRECATED === $errNum) && !$this->convertDeprecationsToExceptions) {
             $this->handleDeprecationError($errNum, $errMsg, $errFile, $errLine, $context);
             return true;
         }
@@ -105,8 +114,12 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
-        $relativePath = codecept_relative_path($errFile);
-        throw new PHPUnitException("{$errMsg} at {$relativePath}:{$errLine}", $errNum);
+        throw match ($errNum) {
+            E_DEPRECATED, E_USER_DEPRECATED => new Deprecated($errMsg, $errNum, $errFile, $errLine),
+            E_NOTICE, E_STRICT, E_USER_NOTICE => new Notice($errMsg, $errNum, $errFile, $errLine),
+            E_WARNING, E_USER_WARNING => new Warning($errMsg, $errNum, $errFile, $errLine),
+            default => new Error($errMsg, $errNum, $errFile, $errLine),
+        };
     }
 
     public function shutdownHandler(): void
