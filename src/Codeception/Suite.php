@@ -9,10 +9,10 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Lib\Notification;
-use Codeception\PHPUnit\Wrapper\TestSuite;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\Dependent;
 use Codeception\Test\Test;
+use Codeception\Test\Unit;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ErrorTestCase;
@@ -31,13 +31,13 @@ use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
 use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\UnintentionallyCoveredCodeError;
 use PHPUnit\Framework\Warning;
 use PHPUnit\Framework\WarningTestCase;
 use PHPUnit\Metadata\Api\CodeCoverage as CodeCoverageMetadataApi;
 use PHPUnit\Runner\CodeCoverage;
 use PHPUnit\Runner\Version;
+use PHPUnit\TextUI\Configuration\Registry;
 use PHPUnit\Util\Test as TestUtil;
 use SebastianBergmann\CodeCoverage\Exception as OriginalCodeCoverageException;
 use SebastianBergmann\CodeCoverage\UnintentionallyCoveredCodeException;
@@ -45,15 +45,9 @@ use SebastianBergmann\Timer\Timer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Throwable;
 
-// phpcs:disable
-if (Version::series() < 10) {
-    require_once __DIR__ . '/../PHPUnit/Wrapper/PhpUnit9/TestSuite.php';
-} else {
-    require_once __DIR__ . '/../PHPUnit/Wrapper/PhpUnit10/TestSuite.php';
-}
-// phpcs:enable
+use function count;
 
-class Suite extends TestSuite
+class Suite
 {
     /**
      * @var Array<string, Module>
@@ -63,12 +57,23 @@ class Suite extends TestSuite
     protected ?string $baseName = null;
 
     private bool $reportUselessTests = false;
-
+    private bool $backupGlobals = false;
+    private bool $beStrictAboutChangesToGlobalState = false;
+    private bool $disallowTestOutput = false;
     private bool $collectCodeCoverage = false;
 
-    public function __construct(string $name, private EventDispatcher $dispatcher)
+    /**
+     * @var array<TestInterface|PHPUnitTest>
+     */
+    private array $tests = [];
+
+    public function __construct(private EventDispatcher $dispatcher, private string $name = '')
     {
-        $this->name = $name;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     public function reportUselessTests(bool $enabled): void
@@ -76,21 +81,35 @@ class Suite extends TestSuite
         $this->reportUselessTests = $enabled;
     }
 
+    public function backupGlobals(bool $enabled): void
+    {
+        $this->backupGlobals = $enabled;
+    }
+
+    public function beStrictAboutChangesToGlobalState(bool $enabled): void
+    {
+        $this->beStrictAboutChangesToGlobalState = $enabled;
+    }
+
+    public function disallowTestOutput(bool $enabled): void
+    {
+        $this->disallowTestOutput = $enabled;
+    }
+
     public function collectCodeCoverage(bool $enabled): void
     {
         $this->collectCodeCoverage = $enabled;
     }
 
-    public function realRun(TestResult $result): void
+    public function run(ResultAggregator $result): void
     {
-        if (count($this) === 0) {
+        if (count($this->tests) === 0) {
             return;
         }
 
-        $result->startTestSuite($this);
         $this->dispatcher->dispatch(new SuiteEvent($this), 'suite.start');
 
-        foreach ($this as $test) {
+        foreach ($this->tests as $test) {
             if ($result->shouldStop()) {
                 break;
             }
@@ -107,14 +126,16 @@ class Suite extends TestSuite
                         } else {
                             $exception = new SkippedTestError($skip);
                         }
-                        $result->addFailure($test, $exception, 0);
-                        $this->dispatcher->dispatch(new FailEvent($test, 0, $exception), Events::TEST_SKIPPED);
+                        $failEvent = new FailEvent($test, $exception, 0);
+                        $result->addSkipped($failEvent);
+                        $this->dispatcher->dispatch($failEvent, Events::TEST_SKIPPED);
                     }
                     $incomplete = $test->getMetadata()->getIncomplete();
                     if ($incomplete !== null) {
                         $exception = new IncompleteTestError($incomplete);
-                        $result->addFailure($test, $exception, 0);
-                        $this->dispatcher->dispatch(new FailEvent($test, 0, $exception), Events::TEST_INCOMPLETE);
+                        $failEvent = new FailEvent($test, $exception, 0);
+                        $result->addIncomplete($failEvent);
+                        $this->dispatcher->dispatch($failEvent, Events::TEST_INCOMPLETE);
                     }
 
                     $this->endTest($test, $result, 0);
@@ -123,30 +144,31 @@ class Suite extends TestSuite
             }
 
             if ($test instanceof TestCase) {
+                if (Version::series() < 10) {
+                    $test->setBeStrictAboutChangesToGlobalState($this->beStrictAboutChangesToGlobalState);
+                    $test->setBackupGlobals($this->backupGlobals);
+                }
+                if ($test instanceof Unit) {
+                    $test->setResultAggregator($result);
+                }
                 $this->runPhpUnitTest($test, $result);
             } elseif ($test instanceof Test) {
                 $test->setEventDispatcher($this->dispatcher);
                 $test->reportUselessTests($this->reportUselessTests);
                 $test->collectCodeCoverage($this->collectCodeCoverage);
-                $test->run($result);
+                $test->realRun($result);
             }
         }
-
-        $result->endTestSuite($this);
     }
 
-    private function runPhpUnitTest(TestCase $test, TestResult $result): void
+    private function runPhpUnitTest(TestCase $test, ResultAggregator $result): void
     {
         Assert::resetCount();
 
-        $isPhpUnit9 = false;
+        $isPhpUnit9 = Version::series() < 10;
         $codeCoverage = null;
-        if (method_exists($result, 'getCodeCoverage')) {
-            $codeCoverage = $result->getCodeCoverage();
-            $isPhpUnit9 = true;
-        }
-
         if ($isPhpUnit9) {
+            $codeCoverage = $result->getCodeCoverage();
             $shouldCodeCoverageBeCollected = TestUtil::requiresCodeCoverageDataCollection($test);
         } else {
             $shouldCodeCoverageBeCollected = (new CodeCoverageMetadataApi())->shouldCodeCoverageBeCollectedFor(
@@ -166,8 +188,9 @@ class Suite extends TestSuite
         try {
             $this->fire(Events::TEST_BEFORE, new TestEvent($test));
         } catch (\Exception $e) {
-            $result->addError($test, $e, 0);
-            $this->fire(Events::TEST_ERROR, new FailEvent($this, 0, $e));
+            $failEvent = new FailEvent($test, $e, 0);
+            $result->addError($failEvent);
+            $this->fire(Events::TEST_ERROR, $failEvent);
             $this->fire(Events::TEST_AFTER, new TestEvent($test, 0));
             $this->endTest($test, $result, 0);
             return;
@@ -283,11 +306,11 @@ class Suite extends TestSuite
                     }
                 } catch (InvalidCoversTargetException $cce) {
                     $result->addWarning(
-                        $test,
-                        new Warning(
-                            $cce->getMessage()
+                        new FailEvent(
+                            $test,
+                            new Warning($cce->getMessage()),
+                            $time,
                         ),
-                        $time
                     );
                 }
             }
@@ -321,25 +344,29 @@ class Suite extends TestSuite
         }
 
         if ($error && isset($e)) {
-            $result->addError($test, $e, $time);
+            $result->addError(new FailEvent($test, $e, $time));
             $eventType = Events::TEST_ERROR;
         } elseif ($failure && isset($e)) {
-            $result->addFailure($test, $e, $time);
+            $failEvent = new FailEvent($test, $e, $time);
             if ($skipped) {
+                $result->addSkipped($failEvent);
                 $eventType = Events::TEST_SKIPPED;
             } elseif ($incomplete) {
+                $result->addIncomplete($failEvent);
                 $eventType = Events::TEST_INCOMPLETE;
             } elseif ($useless) {
+                $result->addUseless($failEvent);
                 $eventType = Events::TEST_USELESS;
             } else {
+                $result->addFailure($failEvent);
                 $eventType = Events::TEST_FAIL;
             }
         } elseif ($warning && isset($e)) {
-            $result->addWarning($test, $e, $time);
+            $result->addWarning(new FailEvent($test, $e, $time));
             $eventType = Events::TEST_WARNING;
         } elseif (isset($unintentionallyCoveredCodeError)) {
             $e = $unintentionallyCoveredCodeError;
-            $result->addFailure($test, $unintentionallyCoveredCodeError, $time);
+            $result->addFailure(new FailEvent($test, $unintentionallyCoveredCodeError, $time));
             $eventType = Events::TEST_ERROR;
         } elseif (
             $this->reportUselessTests &&
@@ -358,7 +385,7 @@ class Suite extends TestSuite
                     $numberOfAssertionsPerformed
                 );
             }
-            $result->addFailure($test, $e, $time);
+            $result->addUseless(new FailEvent($test, $e, $time));
             $eventType = Events::TEST_USELESS;
         } else {
             $eventType = Events::TEST_SUCCESS;
@@ -367,7 +394,7 @@ class Suite extends TestSuite
         if ($eventType === Events::TEST_SUCCESS) {
             $this->fire($eventType, new TestEvent($test, $time));
         } else {
-            $this->fire($eventType, new FailEvent($test, $time, $e));
+            $this->fire($eventType, new FailEvent($test, $e, $time));
         }
 
         $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
@@ -377,7 +404,7 @@ class Suite extends TestSuite
     public function reorderDependencies(): void
     {
         $tests = [];
-        foreach (parent::tests() as $test) {
+        foreach ($this->tests as $test) {
             $tests = array_merge($tests, $this->getDependencies($test));
         }
 
@@ -390,7 +417,7 @@ class Suite extends TestSuite
             $hashes[] = spl_object_hash($test);
             $queue[] = $test;
         }
-        $this->setTests($queue);
+        $this->tests = $queue;
     }
 
     protected function getDependencies(Dependent|SelfDescribing $test): array
@@ -413,7 +440,7 @@ class Suite extends TestSuite
     protected function findMatchedTest(string $testSignature): ?SelfDescribing
     {
         /** @var SelfDescribing $test */
-        foreach (parent::tests() as $test) {
+        foreach ($this->tests as $test) {
             $signature = Descriptor::getTestSignature($test);
             if ($signature === $testSignature) {
                 return $test;
@@ -460,9 +487,45 @@ class Suite extends TestSuite
         $this->dispatcher->dispatch($event, $eventType);
     }
 
-    private function endTest(PHPUnitTest $test, TestResult $result, float $time): void
+    private function endTest(PHPUnitTest $test, ResultAggregator $result, float $time): void
     {
         $this->dispatcher->dispatch(new TestEvent($test, $time), Events::TEST_END);
-        $result->endTest($test, $time);
+        $result->endTest($test);
+    }
+
+    public function addTest(TestInterface|PHPUnitTest $test): void
+    {
+        $this->tests [] = $test;
+    }
+
+    /**
+     * @return PHPUnitTest[]
+     */
+    public function getTests(): array
+    {
+        return $this->tests;
+    }
+
+    public function getTestCount(): int
+    {
+        return count($this->tests);
+    }
+
+    public function initPHPUnitConfiguration(): void
+    {
+        $cliParameters = [];
+        if ($this->backupGlobals) {
+            $cliParameters [] = '--globals-backup';
+        }
+        if ($this->beStrictAboutChangesToGlobalState) {
+            $cliParameters [] = '--strict-global-state';
+        }
+        if ($this->disallowTestOutput) {
+            $cliParameters [] = '--disallow-test-output';
+        }
+
+        $cliConfiguration = (new \PHPUnit\TextUI\CliArguments\Builder())->fromParameters($cliParameters, []);
+        $xmlConfiguration = \PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration::create();
+        Registry::init($cliConfiguration, $xmlConfiguration);
     }
 }

@@ -8,8 +8,8 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\PHPUnit\Wrapper\Test as TestWrapper;
+use Codeception\ResultAggregator;
 use Codeception\TestInterface;
-use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
@@ -19,8 +19,7 @@ use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
 use PHPUnit\Framework\RiskyTest;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SkippedTest;
-use PHPUnit\Framework\TestResult;
-use PHPUnit\Runner\Version;
+use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use RuntimeException;
 use SebastianBergmann\Timer\Timer;
@@ -31,7 +30,7 @@ use function array_reverse;
 use function method_exists;
 
 // phpcs:disable
-if (Version::series() < 10) {
+if (PHPUnitVersion::series() < 10) {
     require_once __DIR__ . '/../../PHPUnit/Wrapper/PhpUnit9/Test.php';
 } else {
     require_once __DIR__ . '/../../PHPUnit/Wrapper/PhpUnit10/Test.php';
@@ -55,7 +54,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
     use Feature\MetadataCollector;
     use Feature\IgnoreIfMetadataBlocked;
 
-    private ?TestResult $testResult = null;
+    private ?ResultAggregator $resultAggregator = null;
 
     private bool $ignored = false;
 
@@ -137,9 +136,9 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
      * Runs a test and collects its result in a TestResult instance.
      * Executes before/after hooks coming from traits.
      */
-    final public function realRun(TestResult $result): void
+    final public function realRun(ResultAggregator $result): void
     {
-        $this->testResult = $result;
+        $this->resultAggregator = $result;
 
         $status = self::STATUS_PENDING;
         $time = 0;
@@ -159,11 +158,11 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                     $this->{$hook . 'Start'}();
                 }
             }
-            $failedToStart = ReflectionHelper::readPrivateProperty($result, 'lastTestFailed');
+            $failedToStart = false;
         } catch (\Exception $e) {
             $failedToStart = true;
-            $result->addError($this, $e, $time);
-            $this->fire(Events::TEST_ERROR, new FailEvent($this, $time, $e));
+            $result->addError(new FailEvent($this, $e, $time));
+            $this->fire(Events::TEST_ERROR, new FailEvent($this, $e, $time));
         }
 
         if (!$this->ignored && !$failedToStart) {
@@ -174,27 +173,27 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $status = self::STATUS_OK;
                 $eventType = Events::TEST_SUCCESS;
             } catch (RiskyTest | RiskyTestError $e) {
-                $result->addFailure($this, $e, $time);
+                $result->addUseless(new FailEvent($this, $e, $time));
                 $status = self::STATUS_USELESS;
                 $eventType = Events::TEST_USELESS;
             } catch (IncompleteTestError $e) {
-                $result->addFailure($this, $e, $time);
+                $result->addIncomplete(new FailEvent($this, $e, $time));
                 $status = self::STATUS_INCOMPLETE;
                 $eventType = Events::TEST_INCOMPLETE;
-            } catch (SkippedTest $e) {
-                $result->addFailure($this, $e, $time);
+            } catch (SkippedTest | SkippedTestError $e) {
+                $result->addSkipped(new FailEvent($this, $e, $time));
                 $status = self::STATUS_SKIPPED;
                 $eventType = Events::TEST_SKIPPED;
             } catch (AssertionFailedError $e) {
-                $result->addFailure($this, $e, $time);
+                $result->addFailure(new FailEvent($this, $e, $time));
                 $status = self::STATUS_FAIL;
                 $eventType = Events::TEST_FAIL;
             } catch (Exception $e) {
-                $result->addError($this, $e, $time);
+                $result->addError(new FailEvent($this, $e, $time));
                 $status = self::STATUS_ERROR;
                 $eventType = Events::TEST_ERROR;
             } catch (Throwable $e) {
-                $result->addError($this, $e, $time);
+                $result->addError(new FailEvent($this, $e, $time));
                 $e = new ExceptionWrapper($e);
                 $status = self::STATUS_ERROR;
                 $eventType = Events::TEST_ERROR;
@@ -210,13 +209,13 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 } else {
                     $e = new RiskyBecauseNoAssertionsWerePerformedException();
                 }
-                $result->addFailure($this, $e, $time);
+                $result->addUseless(new FailEvent($this, $e, $time));
             }
 
             if ($eventType === Events::TEST_SUCCESS) {
                 $this->fire($eventType, new TestEvent($this, $time));
             } else {
-                $this->fire($eventType, new FailEvent($this, $time, $e));
+                $this->fire($eventType, new FailEvent($this, $e, $time));
             }
         }
 
@@ -234,9 +233,9 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
         $result->endTest($this, $time);
     }
 
-    public function getTestResultObject(): TestResult
+    public function getResultAggregator(): ResultAggregator
     {
-        return $this->testResult;
+        return $this->resultAggregator;
     }
 
     /**

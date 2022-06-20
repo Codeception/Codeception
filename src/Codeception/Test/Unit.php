@@ -10,12 +10,11 @@ use Codeception\Lib\Di;
 use Codeception\Lib\PauseShell;
 use Codeception\Module;
 use Codeception\PHPUnit\TestCase;
+use Codeception\ResultAggregator;
 use Codeception\Scenario;
 use Codeception\Test\Feature\Stub;
 use Codeception\TestInterface;
-use Codeception\Util\Annotation;
 use Codeception\Util\Debug;
-use PHPUnit\Framework\TestResult;
 
 use function get_class;
 use function lcfirst;
@@ -33,12 +32,27 @@ class Unit extends TestCase implements
 
     private ?Metadata $metadata = null;
 
+    private ?ResultAggregator $resultAggregator = null;
+
     public function getMetadata(): Metadata
     {
         if (!$this->metadata) {
             $this->metadata = new Metadata();
         }
         return $this->metadata;
+    }
+
+    public function getResultAggregator(): ResultAggregator
+    {
+        if ($this->resultAggregator === null) {
+            throw new \LogicException('ResultAggregator is not set');
+        }
+        return $this->resultAggregator;
+    }
+
+    public function setResultAggregator(?ResultAggregator $resultAggregator): void
+    {
+        $this->resultAggregator = $resultAggregator;
     }
 
     protected function _setUp()
@@ -139,33 +153,5 @@ class Unit extends TestCase implements
             $names[] = $required;
         }
         return $names;
-    }
-
-    /**
-     * Reset PHPUnit's dependencies
-     */
-    public function handleDependencies(): bool
-    {
-        $dependencies = $this->fetchDependencies();
-        if (empty($dependencies)) {
-            return true;
-        }
-        $passed = $this->result()?->passed() ?? [];
-        $dependencyInput = [];
-
-        foreach ($dependencies as $dependency) {
-            $dependency = str_replace(':', '::', $dependency); // Codeception => PHPUnit format
-            if (!str_contains($dependency, '::')) {         // check it is method of same class
-                $dependency = get_class($this) . '::' . $dependency;
-            }
-            $dependencyInput[] = isset($passed[$dependency]) ? $passed[$dependency]['result'] : null;
-        }
-        $this->setDependencyInput($dependencyInput);
-        return true;
-    }
-
-    public function getTestResultObject(): TestResult
-    {
-        return parent::result();
     }
 }

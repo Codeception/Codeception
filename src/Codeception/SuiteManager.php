@@ -9,18 +9,12 @@ use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
 use Codeception\Test\Descriptor;
-use Codeception\Test\Filter\NameFilterIterator;
+use Codeception\Test\Filter;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
 use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\Test as PHPUnitTest;
-use PHPUnit\Framework\TestResult;
-use PHPUnit\Runner\Filter\ExcludeGroupFilterIterator;
-use PHPUnit\Runner\Filter\Factory;
-use PHPUnit\Runner\Filter\IncludeGroupFilterIterator;
-use PHPUnit\Runner\Version;
-use ReflectionClass;
-use ReflectionProperty;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
@@ -39,7 +33,9 @@ class SuiteManager
 
     protected array $settings = [];
 
-    public function __construct(EventDispatcher $dispatcher, string $name, array $settings)
+    private Filter $testFilter;
+
+    public function __construct(EventDispatcher $dispatcher, string $name, array $settings, array $options)
     {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
@@ -55,6 +51,13 @@ class SuiteManager
         if (isset($settings['current_environment'])) {
             $this->env = $settings['current_environment'];
         }
+
+        $this->testFilter = new Filter(
+            $options['groups'] ?? null,
+            $options['excludeGroups'] ?? null,
+            $options['filter'] ?? null,
+        );
+
         $this->suite = $this->createSuite($name);
     }
 
@@ -91,10 +94,6 @@ class SuiteManager
 
     protected function addToSuite(PHPUnitTest $test): void
     {
-        if ($test instanceof TestInterface) {
-            $this->configureTest($test);
-        }
-
         if ($test instanceof DataProviderTestSuite) {
             foreach ($test->tests() as $t) {
                 $this->addToSuite($t);
@@ -102,7 +101,13 @@ class SuiteManager
             return;
         }
 
+        if (!$this->testFilter->isNameAccepted($test)) {
+            return;
+        }
+
         if ($test instanceof TestInterface) {
+            $this->configureTest($test);
+
             $this->checkEnvironmentExists($test);
             if (!$this->isExecutedInCurrentEnvironment($test)) {
                 return; // skip tests from other environments
@@ -111,7 +116,11 @@ class SuiteManager
 
         $groups = $this->groupManager->groupsForTest($test);
 
-        $this->suite->addTest($test, $groups);
+        if (!$this->testFilter->isGroupAccepted($test, $groups)) {
+            return;
+        }
+
+        $this->suite->addTest($test);
 
         if (!empty($groups) && $test instanceof TestInterface) {
             $test->getMetadata()->setGroups($groups);
@@ -124,88 +133,31 @@ class SuiteManager
             $name = $this->settings['namespace'] . '.' . $name;
         }
 
-        $suite = new Suite($name, $this->dispatcher);
+        $suite = new Suite($this->dispatcher, $name);
         $suite->setBaseName(preg_replace('#\s.+$#', '', $name)); // replace everything after space (env name)
-
-        if (isset($this->settings['backup_globals']) && Version::series() < 10) {
-            $suite->setBackupGlobals((bool)$this->settings['backup_globals']);
-        } else {
-            // TODO: use $test->setBackupGlobals instead
-        }
-
-        if (isset($this->settings['be_strict_about_changes_to_global_state']) && method_exists($suite, 'setbeStrictAboutChangesToGlobalState')) {
-            $suite->setbeStrictAboutChangesToGlobalState((bool)$this->settings['be_strict_about_changes_to_global_state']);
-        }
         $suite->setModules($this->moduleContainer->all());
+
+        $suite->reportUselessTests((bool)($this->settings['report_useless_tests'] ?? false));
+        $suite->backupGlobals((bool)($this->settings['backup_globals'] ?? false));
+        $suite->beStrictAboutChangesToGlobalState((bool)($this->settings['be_strict_about_changes_to_global_state'] ?? false));
+        $suite->disallowTestOutput((bool)($this->settings['disallow_test_output'] ?? false));
+
+        if (PHPUnitVersion::series() >= 10) {
+            $suite->initPHPUnitConfiguration();
+        }
         return $suite;
     }
 
-    public function run(TestResult $result, array $options): void
+    public function run(ResultAggregator $resultAggregator): void
     {
-        $this->prepareSuite($this->suite, $options);
-        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_BEFORE);
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $resultAggregator, $this->settings), Events::SUITE_BEFORE);
         try {
             unset($GLOBALS['app']); // hook for not to serialize globals
-            $this->suite->run($result);
+            $this->suite->run($resultAggregator);
         } finally {
-            $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_AFTER);
+            $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $resultAggregator, $this->settings), Events::SUITE_AFTER);
         }
     }
-
-    public function prepareSuite(Suite $suite, array $options): void
-    {
-        $suite->reportUselessTests((bool)($this->settings['report_useless_tests'] ?? false));
-        $filterAdded = false;
-
-        $filterFactory = new Factory();
-        if (!empty($options['groups'])) {
-            $filterAdded = true;
-            $this->addFilterToFactory(
-                $filterFactory,
-                IncludeGroupFilterIterator::class,
-                $options['groups']
-            );
-        }
-
-        if (!empty($options['excludeGroups'])) {
-            $filterAdded = true;
-            $this->addFilterToFactory(
-                $filterFactory,
-                ExcludeGroupFilterIterator::class,
-                $options['excludeGroups']
-            );
-        }
-
-        if (!empty($options['filter'])) {
-            $filterAdded = true;
-            $this->addFilterToFactory(
-                $filterFactory,
-                NameFilterIterator::class,
-                $options['filter']
-            );
-        }
-
-        if ($filterAdded) {
-            $suite->injectFilter($filterFactory);
-        }
-    }
-
-    private function addFilterToFactory(Factory $filterFactory, string $filterClass, $filterParameter)
-    {
-        $filterReflectionClass = new ReflectionClass($filterClass);
-
-        $property = new ReflectionProperty(get_class($filterFactory), 'filters');
-        $property->setAccessible(true);
-
-        $filters = $property->getValue($filterFactory);
-        $filters [] = [
-            $filterReflectionClass,
-            $filterParameter,
-        ];
-        $property->setValue($filterFactory, $filters);
-        $property->setAccessible(false);
-    }
-
     public function getSuite(): Suite
     {
         return $this->suite;

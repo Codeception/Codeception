@@ -2,50 +2,39 @@
 
 declare(strict_types=1);
 
-namespace Codeception\Test\Filter;
+namespace Codeception\Test;
 
-use Codeception\Test\Descriptor;
-use Exception;
 use PHPUnit\Framework\ErrorTestCase;
-use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\WarningTestCase;
-use RecursiveFilterIterator;
-use RecursiveIterator;
 
-use function end;
-use function preg_match;
-
-/**
- * Filter tests by name
- */
-class NameFilterIterator extends RecursiveFilterIterator
+class Filter
 {
-    private ?string $filter = null;
+    private ?string $namePattern = null;
     private ?int $filterMin = null;
     private ?int $filterMax = null;
 
     /**
-     * @throws Exception
+     * @param string[] $includeGroups
+     * @param string[] $excludeGroups
+     * @param string $namePattern
      */
-    public function __construct(RecursiveIterator $iterator, string $filter)
-    {
-        parent::__construct($iterator);
+    public function __construct(
+        private ?array $includeGroups,
+        private ?array $excludeGroups,
+        ?string $namePattern
+    ) {
+        if ($namePattern === null) {
+            return;
+        }
 
-        $this->setFilter($filter);
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function setFilter(string $filter): void
-    {
-        if (@preg_match($filter, '') === false) {
+        if (@preg_match($namePattern, '') === false) {
             // Handles:
             //  * :testAssertEqualsSucceeds#4
             //  * "testAssertEqualsSucceeds#4-8
-            if (preg_match('/^(.*?)#(\d+)(?:-(\d+))?$/', $filter, $matches)) {
+            if (preg_match('/^(.*?)#(\d+)(?:-(\d+))?$/', $namePattern, $matches)) {
                 if (isset($matches[3]) && $matches[2] < $matches[3]) {
-                    $filter = sprintf(
+                    $namePattern = sprintf(
                         '%s.*with data set #(\d+)$',
                         $matches[1]
                     );
@@ -53,17 +42,17 @@ class NameFilterIterator extends RecursiveFilterIterator
                     $this->filterMin = (int)$matches[2];
                     $this->filterMax = (int)$matches[3];
                 } else {
-                    $filter = sprintf(
+                    $namePattern = sprintf(
                         '%s.*with data set #%s$',
                         $matches[1],
                         $matches[2]
                     );
                 }
-            } elseif (preg_match('/^(.*?)@(.+)$/', $filter, $matches)) {
+            } elseif (preg_match('/^(.*?)@(.+)$/', $namePattern, $matches)) {
                 // Handles:
                 //  * :testDetermineJsonError@JSON_ERROR_NONE
                 //  * :testDetermineJsonError@JSON.*
-                $filter = sprintf(
+                $namePattern = sprintf(
                     '%s.*with data set "%s"$',
                     $matches[1],
                     $matches[2]
@@ -72,41 +61,49 @@ class NameFilterIterator extends RecursiveFilterIterator
 
             // Escape delimiters in regular expression. Do NOT use preg_quote,
             // to keep magic characters.
-            $filter = sprintf(
+            $namePattern = sprintf(
                 '/%s/i',
                 str_replace(
                     '/',
                     '\\/',
-                    $filter
+                    $namePattern
                 )
             );
         }
 
-        $this->filter = $filter;
+        $this->namePattern = $namePattern;
     }
 
-    public function accept(): bool
+    public function isNameAccepted(PHPUnitTest $test): bool
     {
-        $test = $this->getInnerIterator()->current();
-
-        if ($test instanceof TestSuite) {
+        if ($this->namePattern === null) {
             return true;
         }
 
-        // This fix the issue when an invalid DataProvider method generates error or warning
-        // See https://github.com/Codeception/Codeception/issues/4888
         if ($test instanceof ErrorTestCase || $test instanceof WarningTestCase) {
             $name = $test->getMessage();
         } else {
             $name = Descriptor::getTestSignature($test) . Descriptor::getTestDataSetIndex($test);
         }
 
-        $accepted = preg_match($this->filter, $name, $matches);
+        $accepted = preg_match($this->namePattern, $name, $matches);
 
         if ($accepted && $this->filterMax !== null) {
             $set = end($matches);
             $accepted = $set >= $this->filterMin && $set <= $this->filterMax;
         }
         return (bool)$accepted;
+    }
+
+    public function isGroupAccepted(PHPUnitTest $test, array $groups): bool
+    {
+        if ($this->includeGroups !== null && count(\array_intersect($groups, $this->includeGroups)) === 0) {
+            return false;
+        }
+        if ($this->excludeGroups !== null && count(\array_intersect($groups, $this->excludeGroups)) > 0) {
+            return false;
+        }
+
+        return true;
     }
 }

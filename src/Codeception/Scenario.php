@@ -74,9 +74,10 @@ class Scenario
         try {
             $result = $step->run($this->metadata->getService('modules'));
         } catch (ConditionalAssertionFailed $f) {
-            $testResult = $this->test->getTestResultObject();
-            $testResult->addFailure(clone($this->test), $f, $testResult->time());
-            $dispatcher->dispatch(new FailEvent($this->test, $testResult->time(), $f), Events::TEST_FAIL);
+            $testResult = $this->test->getResultAggregator();
+            $failEvent = new FailEvent(clone($this->test), $f, 0);
+            $testResult->addFailure($failEvent);
+            $dispatcher->dispatch($failEvent, Events::TEST_FAIL);
         } finally {
             $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
         }

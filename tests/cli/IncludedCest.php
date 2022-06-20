@@ -23,14 +23,11 @@ final class IncludedCest
     {
         $I->executeCommand('run');
         $I->seeInShellOutput('[Jazz]');
-        $I->seeInShellOutput('Functional Tests');
-        $I->seeInShellOutput('DemoCept: Check that jazz musicians can add numbers');
+        $I->seeInShellOutput('Jazz.functional Tests');
         $I->seeInShellOutput('[Jazz\Pianist]');
-        $I->dontSeeInShellOutput('Jazz\Pianist.functional Tests');
-        $I->seeInShellOutput('PianistCept: Check that jazz pianists can add numbers');
+        $I->seeInShellOutput('Jazz\Pianist.functional Tests');
         $I->seeInShellOutput('[Shire]');
-        $I->dontSeeInShellOutput('Shire.functional Tests');
-        $I->seeInShellOutput('Check that hobbits can add numbers');
+        $I->seeInShellOutput('Shire.functional Tests');
     }
 
     #[Before('moveToIncluded')]
@@ -43,12 +40,14 @@ final class IncludedCest
         $I->dontSeeInShellOutput('[Jazz]');
 
         // DemoCept tests are run
+        $I->seeInShellOutput('Jazz.functional Tests');
         $I->seeInShellOutput('DemoCept');
+
         // Other include tests are not run
         $I->dontSeeInShellOutput('[Shire]');
         $I->dontSeeInShellOutput('Shire.functional Tests');
         $I->dontSeeInShellOutput('[Jazz\Pianist]');
-        $I->dontSeeInShellOutput('PianistCept: Check that jazz pianists can add numbers');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional Tests');
     }
 
     #[Before('moveToIncluded')]
@@ -60,12 +59,12 @@ final class IncludedCest
         $I->dontSeeInShellOutput('[Jazz\Pianist]');
 
         // DemoCept tests are run
-        $I->seeInShellOutput('Functional Tests');
+        $I->seeInShellOutput('Jazz\Pianist.functional Tests');
         $I->seeInShellOutput('PianistCept');
 
         // Other include tests are not run
         $I->dontSeeInShellOutput('[Shire]');
-        $I->dontSeeInShellOutput('Check that hobbits can add numbers');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
         $I->dontSeeInShellOutput('[Jazz]');
         $I->dontSeeInShellOutput('Jazz.functional Tests');
     }
@@ -80,7 +79,7 @@ final class IncludedCest
         $I->dontSeeInShellOutput('[Jazz]');
 
         // SimpleTest:testSimple is run
-        $I->seeInShellOutput('Unit Tests');
+        $I->seeInShellOutput('Jazz.unit Tests');
         $I->dontSeeInShellOutput('Jazz.functional Tests');
         $I->seeInShellOutput('SimpleTest');
 
@@ -89,9 +88,9 @@ final class IncludedCest
 
         // Other include tests are not run
         $I->dontSeeInShellOutput('[Shire]');
-        $I->dontSeeInShellOutput('Check that hobbits can add numbers');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
         $I->dontSeeInShellOutput('[Jazz\Pianist]');
-        $I->dontSeeInShellOutput('PianistCept: Check that jazz pianists can add numbers');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional Tests');
     }
 
     #[Before('moveToIncluded')]
@@ -183,30 +182,27 @@ final class IncludedCest
     {
         $I->executeCommand('run jazz::functional');
 
-        $I->seeInShellOutput('[Jazz]');
-        $I->seeInShellOutput('Functional Tests');
-        $I->dontSeeInShellOutput('Unit Tests');
-        $I->dontSeeInShellOutput('[Shire]');
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Shire.functional');
 
         $I->executeCommand('run jazz::functional,jazz::unit');
 
-        $I->seeInShellOutput('[Jazz]');
-        $I->seeInShellOutput('Functional Tests');
-        $I->seeInShellOutput('Unit Tests');
-        $I->dontSeeInShellOutput('[Jazz\Pianist]');
-        $I->dontSeeInShellOutput('[Shire]');
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('Jazz.unit Tests');
+
+        $I->dontSeeInShellOutput('Shire.functional');
 
         $I->executeCommand('run jazz::unit,shire::functional');
 
-        $I->seeInShellOutput('SimpleTest: Simple');
-        $I->seeInShellOutput('HobbitCept: Check that hobbits can add numbers');
-        $I->dontSeeInShellOutput('DemoCept: Check that jazz musicians can add numbers');
+        $I->seeInShellOutput('Shire.functional Tests');
+        $I->seeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
 
         $I->executeCommand('run jazz/pianist::functional');
 
-        $I->dontSeeInShellOutput('HobbitCept: Check that hobbits can add numbers');
-        $I->dontSeeInShellOutput('DemoCept: Check that jazz musicians can add numbers');
-        $I->seeInShellOutput('PianistCept: Check that jazz pianists can add numbers');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('Jazz\Pianist.functional');
     }
 
     #[Before('moveToIncluded')]
@@ -215,25 +211,26 @@ final class IncludedCest
         $I->executeCommand('run *::functional');
 
         // only functional tests are run
-        $I->seeInShellOutput('[Jazz]');
-        $I->seeInShellOutput('Functional Tests');
-        $I->seeInShellOutput('[Jazz\Pianist]');
-        $I->seeInShellOutput('[Shire]');
-        $I->dontSeeInShellOutput('Unit Tests');
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('Jazz\Pianist.functional');
+        $I->seeInShellOutput('Shire.functional Tests');
+        // unit suites are not run
+        $I->dontSeeInShellOutput('Jazz.unit Tests');
+
 
         $I->executeCommand('run *::unit');
         // only unit tests are run
-        $I->seeInShellOutput('[Jazz]');
-        $I->seeInShellOutput('Unit Tests');
-        $I->dontSeeInShellOutput('Functional Tests');
+        $I->seeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
 
         $I->executeCommand('run *::functional,*::unit');
         // Both suites are run now
-        $I->seeInShellOutput('[Jazz]');
-        $I->seeInShellOutput('Functional Tests');
-        $I->seeInShellOutput('[Jazz\Pianist]');
-        $I->seeInShellOutput('[Shire]');
-        $I->seeInShellOutput('Unit Tests');
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->seeInShellOutput('Jazz\Pianist.functional');
+        $I->seeInShellOutput('Shire.functional Tests');
+        $I->seeInShellOutput('Jazz.unit Tests');
     }
 
     #[Before('moveToIncluded')]
@@ -280,9 +277,10 @@ final class IncludedCest
         $I->dontSeeInShellOutput('RootApplicationFunctionalTest:');
 
         // included
-        $I->seeInShellOutput('[Jazz]');
-        $I->seeInShellOutput('Unit Tests');
-        $I->dontSeeInShellOutput('Functional Tests');
+        $I->seeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
 
         // Ensure that root level suites are not run twice.
         $I->seeInShellOutput('OK (3 tests, 3 assertions)');
@@ -292,12 +290,14 @@ final class IncludedCest
 
         // root level
         $I->seeInShellOutput('Unit Tests (1)');
-        $I->seeInShellOutput('RootApplicationUnitTest: Foo equals foo');
-        $I->seeInShellOutput('Functional Tests (1)');
-        $I->seeInShellOutput('DemoCept: Check that jazz musicians can add number');
-        $I->dontSeeInShellOutput('RootApplicationFunctionalTest');
-        $I->dontSeeInShellOutput('SimpleTest: Simple');
-        $I->dontSeeInShellOutput('HobbitCept: Check that hobbits can add numbers');
-        $I->dontSeeInShellOutput('PianistCept: Check that jazz pianists can add numbers');
+        $I->seeInShellOutput('RootApplicationUnitTest:');
+        $I->dontSeeInShellOutput('Functional Tests (1)');
+        $I->dontSeeInShellOutput('RootApplicationFunctionalTest:');
+
+        // included apps
+        $I->seeInShellOutput('Jazz.functional Tests');
+        $I->dontSeeInShellOutput('Jazz.unit Tests');
+        $I->dontSeeInShellOutput('Jazz\Pianist.functional');
+        $I->dontSeeInShellOutput('Shire.functional Tests');
     }
 }

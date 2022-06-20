@@ -76,7 +76,7 @@ class GenerateScenarios extends Command
             @mkdir($path);
         }
 
-        $suiteManager = new SuiteManager(new EventDispatcher(), $suite, $suiteConf);
+        $suiteManager = new SuiteManager(new EventDispatcher(), $suite, $suiteConf, []);
 
         if ($suiteConf['bootstrap'] && file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
             require_once $suiteConf['path'] . $suiteConf['bootstrap'];
@@ -125,7 +125,7 @@ class GenerateScenarios extends Command
     protected function getTests($suiteManager)
     {
         $suiteManager->loadTests();
-        return $suiteManager->getSuite()->tests();
+        return $suiteManager->getSuite()->getTests();
     }
 
     protected function formatExtension(string $format): string

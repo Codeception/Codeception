@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Codeception\Event;
 
+use Codeception\ResultAggregator;
 use Codeception\Suite;
-use PHPUnit\Framework\TestResult;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class SuiteEvent extends Event
 {
-    public function __construct(protected ?Suite $suite = null, protected ?TestResult $result = null, protected array $settings = [])
+    public function __construct(protected ?Suite $suite = null, protected ?ResultAggregator $result = null, protected array $settings = [])
     {
     }
 
@@ -19,7 +19,7 @@ class SuiteEvent extends Event
         return $this->suite;
     }
 
-    public function getResult(): ?TestResult
+    public function getResult(): ?ResultAggregator
     {
         return $this->result;
     }

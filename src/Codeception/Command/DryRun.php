@@ -86,13 +86,13 @@ class DryRun extends Command
         ]));
         $eventDispatcher->addSubscriber(new BootstrapLoader());
 
-        $suiteManager = new SuiteManager($eventDispatcher, $suite, $settings);
+        $suiteManager = new SuiteManager($eventDispatcher, $suite, $settings, []);
         $moduleContainer = $suiteManager->getModuleContainer();
         foreach (Configuration::modules($settings) as $module) {
             $this->mockModule($module, $moduleContainer);
         }
         $suiteManager->loadTests($test);
-        $tests = $suiteManager->getSuite()->tests();
+        $tests = $suiteManager->getSuite()->getTests();
 
         $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_INIT);
         $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_BEFORE);

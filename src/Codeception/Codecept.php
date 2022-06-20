@@ -14,11 +14,9 @@ use Codeception\Lib\Console\Output;
 use Codeception\Lib\Interfaces\ConsolePrinter;
 use Codeception\Lib\Notification;
 use Codeception\Reporter\HtmlReporter;
-use Codeception\Reporter\JsonReporter;
 use Codeception\Reporter\JUnitReporter;
 use Codeception\Reporter\PhpUnitReporter;
 use Codeception\Reporter\ReportPrinter;
-use Codeception\Reporter\TapReporter;
 use Codeception\Subscriber\AutoRebuild;
 use Codeception\Subscriber\BeforeAfterTest;
 use Codeception\Subscriber\Bootstrap;
@@ -31,9 +29,6 @@ use Codeception\Subscriber\FailFast;
 use Codeception\Subscriber\GracefulTermination;
 use Codeception\Subscriber\Module;
 use Codeception\Subscriber\PrepareTest;
-use PHPUnit\Framework\TestResult;
-use PHPUnit\Runner\Version as PHPUnitVersion;
-use PHPUnit\TextUI\Configuration\Registry;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
@@ -43,7 +38,7 @@ class Codecept
      */
     public const VERSION = '5.0.0-RC3';
 
-    protected TestResult $result;
+    protected ResultAggregator $resultAggregator;
 
     protected EventDispatcher $dispatcher;
 
@@ -87,7 +82,7 @@ class Codecept
 
     public function __construct(array $options = [])
     {
-        $this->result = $this->initializeTestResult();
+        $this->resultAggregator = new ResultAggregator();
         $this->dispatcher = new EventDispatcher();
         $this->extensionLoader = new ExtensionLoader($this->dispatcher);
 
@@ -100,21 +95,6 @@ class Codecept
         $this->output = new Output($this->options);
 
         $this->registerSubscribers();
-    }
-
-    private function initializeTestResult(): TestResult
-    {
-        if (PHPUnitVersion::series() >= 10) {
-            /*
-             * Configuration must be registered, but TestResult only cares about stopOnError,
-             * stopOnFailure and other stopOn settings that we don't set
-             */
-            $cliConfiguration = (new \PHPUnit\TextUI\CliArguments\Builder())->fromParameters([], []);
-            $xmlConfiguration = \PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration::create();
-            Registry::init($cliConfiguration, $xmlConfiguration);
-        }
-
-        return new TestResult();
     }
 
     /**
@@ -269,16 +249,16 @@ class Codecept
         }
     }
 
-    public function runSuite(array $settings, string $suite, string $test = null): TestResult
+    public function runSuite(array $settings, string $suite, string $test = null): ResultAggregator
     {
         $settings['shard'] = $this->options['shard'];
-        $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
+        $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings, $this->options);
         $suiteManager->initialize();
         srand($this->options['seed']);
         $suiteManager->loadTests($test);
         srand();
-        $suiteManager->run($this->result, $this->options);
-        return $this->result;
+        $suiteManager->run($this->resultAggregator);
+        return $this->resultAggregator;
     }
 
     public static function versionString(): string
@@ -288,13 +268,13 @@ class Codecept
 
     public function printResult(): void
     {
-        $result = $this->getResult();
+        $result = $this->getResultAggregator();
         $this->dispatcher->dispatch(new PrintResultEvent($result), Events::RESULT_PRINT_AFTER);
     }
 
-    public function getResult(): TestResult
+    public function getResultAggregator(): ResultAggregator
     {
-        return $this->result;
+        return $this->resultAggregator;
     }
 
     public function getOptions(): array
