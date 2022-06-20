@@ -46,6 +46,7 @@ class ResultAggregator
     private array $incomplete = [];
     private int $count = 0;
     private int $successful = 0;
+    private int $assertions = 0;
 
     public function stop(): void
     {
@@ -97,6 +98,11 @@ class ResultAggregator
         $this->useless[] = $failEvent;
     }
 
+    public function addToAssertionCount(int $count): void
+    {
+        $this->assertions += $count;
+    }
+
     /**
      * @return FailEvent[]
      */
@@ -137,21 +143,6 @@ class ResultAggregator
         return $this->skipped;
     }
 
-    public function testCount(): int
-    {
-        return $this->count;
-    }
-
-    public function skippedCount(): int
-    {
-        return count($this->skipped);
-    }
-
-    public function incompleteCount(): int
-    {
-        return count($this->incomplete);
-    }
-
     public function wasSuccessful(): bool
     {
         return (
@@ -172,9 +163,29 @@ class ResultAggregator
             && ($this->uselessCount() + $this->skippedCount() + $this->incompleteCount()) === 0;
     }
 
+    public function testCount(): int
+    {
+        return $this->count;
+    }
+
     public function successfulCount(): int
     {
         return $this->successful;
+    }
+
+    public function assertionCount(): int
+    {
+        return $this->assertions;
+    }
+
+    public function skippedCount(): int
+    {
+        return count($this->skipped);
+    }
+
+    public function incompleteCount(): int
+    {
+        return count($this->incomplete);
     }
 
     public function errorCount(): int

@@ -72,7 +72,6 @@ class DotReporter extends Extension
         Events::TEST_FAIL    => 'fail',
         Events::TEST_ERROR   => 'error',
         Events::TEST_SKIPPED => 'skipped',
-        Events::TEST_AFTER   => 'afterTest',
         Events::TEST_FAIL_PRINT => 'printFailed',
         Events::RESULT_PRINT_AFTER => 'afterResult',
     ];
@@ -122,11 +121,5 @@ class DotReporter extends Extension
         $this->output->writeln('');
         $this->output->writeln('');
         $this->standardReporter->afterResult($event);
-    }
-
-    public function afterTest(TestEvent $event): void
-    {
-        // count assertions
-        $this->standardReporter->afterTest($event);
     }
 }

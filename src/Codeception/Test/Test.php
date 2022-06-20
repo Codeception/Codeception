@@ -201,6 +201,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
             $time = $timer->stop()->asSeconds();
             $this->assertionCount = Assert::getCount();
+            $result->addToAssertionCount($this->assertionCount);
 
             if ($this->reportUselessTests && $this->assertionCount === 0 && $eventType === Events::TEST_SUCCESS) {
                 $eventType = Events::TEST_USELESS;

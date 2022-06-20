@@ -246,13 +246,9 @@ class Suite
         }
 
         $time = $timer->stop()->asSeconds();
-        $test->addToAssertionCount(Assert::getCount());
-
-        if ($isPhpUnit9) {
-            $numberOfAssertionsPerformed = $test->getNumAssertions();
-        } else {
-            $numberOfAssertionsPerformed = $test->numberOfAssertionsPerformed();
-        }
+        $numberOfAssertionsPerformed = Assert::getCount();
+        $test->addToAssertionCount($numberOfAssertionsPerformed);
+        $result->addToAssertionCount($numberOfAssertionsPerformed);
 
         if (
             $this->reportUselessTests &&

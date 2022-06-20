@@ -72,7 +72,6 @@ class Console implements EventSubscriberInterface
         Events::SUITE_AFTER        => 'afterSuite',
         Events::TEST_START         => 'startTest',
         Events::TEST_END           => 'endTest',
-        Events::TEST_AFTER         => 'afterTest',
         Events::STEP_BEFORE        => 'beforeStep',
         Events::STEP_AFTER         => 'afterStep',
         Events::TEST_SUCCESS       => 'testSuccess',
@@ -147,8 +146,6 @@ class Console implements EventSubscriberInterface
     protected MessageFactory $messageFactory;
 
     private Timer $timer;
-
-    private int $assertionCount = 0;
 
     private bool $firstDefectType = true;
 
@@ -252,18 +249,6 @@ class Console implements EventSubscriberInterface
         $this->failedStep[] = $step;
     }
 
-    public function afterTest(TestEvent $event): void
-    {
-        $test = $event->getTest();
-
-        //method_exists must be used here, because it is possible that some test format doesn't implement either method
-        if (method_exists($test, 'numberOfAssertionsPerformed')) {
-            $this->assertionCount += $test->numberOfAssertionsPerformed();
-        } elseif (method_exists($test, 'getNumAssertions')) {
-            $this->assertionCount += $test->getNumAssertions();
-        }
-    }
-
     public function afterResult(PrintResultEvent $event): void
     {
         $result = $event->getResult();
@@ -342,6 +327,7 @@ class Console implements EventSubscriberInterface
     {
         $result = $event->getResult();
         $testCount = $result->testCount();
+        $assertionCount = $result->assertionCount();
 
         $this->message('')->writeln();
 
@@ -355,8 +341,8 @@ class Console implements EventSubscriberInterface
                 'OK (%d test%s, %d assertion%s)',
                 $testCount,
                 $testCount === 1 ? '' : 's',
-                $this->assertionCount,
-                $this->assertionCount === 1 ? '' : 's'
+                $assertionCount,
+                $assertionCount === 1 ? '' : 's'
             );
             $this->message($message)->style('success')->writeln();
             return;
@@ -377,7 +363,7 @@ class Console implements EventSubscriberInterface
 
         $counts = [
             sprintf("Tests: %s", $testCount),
-            sprintf("Assertions: %s", $this->assertionCount),
+            sprintf("Assertions: %s", $assertionCount),
         ];
         if ($result->errorCount() > 0) {
             $counts [] = sprintf("Errors: %s", $result->errorCount());
