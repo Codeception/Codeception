@@ -10,18 +10,13 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SuiteEvent extends Event
 {
-    public function __construct(protected ?Suite $suite = null, protected ?ResultAggregator $result = null, protected array $settings = [])
+    public function __construct(protected ?Suite $suite = null, protected array $settings = [])
     {
     }
 
     public function getSuite(): ?Suite
     {
         return $this->suite;
-    }
-
-    public function getResult(): ?ResultAggregator
-    {
-        return $this->result;
     }
 
     public function getSettings(): array

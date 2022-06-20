@@ -94,8 +94,8 @@ class DryRun extends Command
         $suiteManager->loadTests($test);
         $tests = $suiteManager->getSuite()->getTests();
 
-        $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_INIT);
-        $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), null, $settings), Events::SUITE_BEFORE);
+        $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), $settings), Events::SUITE_INIT);
+        $eventDispatcher->dispatch(new SuiteEvent($suiteManager->getSuite(), $settings), Events::SUITE_BEFORE);
 
         foreach ($tests as $test) {
             if ($test instanceof Test && $test instanceof ScenarioDriven) {

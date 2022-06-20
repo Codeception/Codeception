@@ -63,7 +63,7 @@ class SuiteManager
 
     public function initialize(): void
     {
-        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::MODULE_INIT);
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $this->settings), Events::MODULE_INIT);
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
@@ -73,7 +73,7 @@ class SuiteManager
                 . " class doesn't exist in suite folder.\nRun the 'build' command to generate it"
             );
         }
-        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::SUITE_INIT);
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $this->settings), Events::SUITE_INIT);
         ini_set('xdebug.show_exception_trace', '0'); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
@@ -150,12 +150,12 @@ class SuiteManager
 
     public function run(ResultAggregator $resultAggregator): void
     {
-        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $resultAggregator, $this->settings), Events::SUITE_BEFORE);
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $this->settings), Events::SUITE_BEFORE);
         try {
             unset($GLOBALS['app']); // hook for not to serialize globals
             $this->suite->run($resultAggregator);
         } finally {
-            $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $resultAggregator, $this->settings), Events::SUITE_AFTER);
+            $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $this->settings), Events::SUITE_AFTER);
         }
     }
     public function getSuite(): Suite

@@ -111,7 +111,7 @@ class Console extends Command
         $output->writeln("<info>Interactive console started for suite {$suiteName}</info>");
         $output->writeln("<info>Try Codeception commands without writing a test</info>");
 
-        $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResultAggregator(), $settings);
+        $suiteEvent = new SuiteEvent($this->suite, $settings);
         $eventDispatcher->dispatch($suiteEvent, Events::SUITE_INIT);
         $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_PARSED);
         $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_BEFORE);

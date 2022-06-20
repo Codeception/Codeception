@@ -112,7 +112,7 @@ class Codecept
     public function registerSubscribers(): void
     {
         // required
-        $this->dispatcher->addSubscriber(new GracefulTermination());
+        $this->dispatcher->addSubscriber(new GracefulTermination($this->resultAggregator));
         $this->dispatcher->addSubscriber(new ErrorHandler());
         $this->dispatcher->addSubscriber(new Dependencies());
         $this->dispatcher->addSubscriber(new Bootstrap());
@@ -126,7 +126,7 @@ class Codecept
         }
 
         if ($this->options['fail-fast'] > 0) {
-            $this->dispatcher->addSubscriber(new FailFast($this->options['fail-fast']));
+            $this->dispatcher->addSubscriber(new FailFast($this->options['fail-fast'], $this->resultAggregator));
         }
 
         if ($this->options['coverage']) {
@@ -249,7 +249,7 @@ class Codecept
         }
     }
 
-    public function runSuite(array $settings, string $suite, string $test = null): ResultAggregator
+    public function runSuite(array $settings, string $suite, string $test = null): void
     {
         $settings['shard'] = $this->options['shard'];
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings, $this->options);
@@ -258,7 +258,6 @@ class Codecept
         $suiteManager->loadTests($test);
         srand();
         $suiteManager->run($this->resultAggregator);
-        return $this->resultAggregator;
     }
 
     public static function versionString(): string
@@ -268,8 +267,7 @@ class Codecept
 
     public function printResult(): void
     {
-        $result = $this->getResultAggregator();
-        $this->dispatcher->dispatch(new PrintResultEvent($result), Events::RESULT_PRINT_AFTER);
+        $this->dispatcher->dispatch(new PrintResultEvent($this->resultAggregator), Events::RESULT_PRINT_AFTER);
     }
 
     public function getResultAggregator(): ResultAggregator
