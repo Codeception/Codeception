@@ -166,18 +166,7 @@ class Suite
     {
         Assert::resetCount();
 
-        $codeCoverage = PhpCodeCoverageFactory::build();
         $isPhpUnit9 = Version::series() < 10;
-
-        if ($isPhpUnit9) {
-            $shouldCodeCoverageBeCollected = TestUtil::requiresCodeCoverageDataCollection($test);
-        } else {
-            $shouldCodeCoverageBeCollected = (new CodeCoverageMetadataApi())->shouldCodeCoverageBeCollectedFor(
-                $test::class,
-                $test->getName(false)
-            );
-        }
-
         $error      = false;
         $failure    = false;
         $warning    = false;
@@ -197,13 +186,23 @@ class Suite
             return;
         }
 
-        $collectCodeCoverage = $this->collectCodeCoverage &&
-            !$test instanceof ErrorTestCase &&
-            !$test instanceof WarningTestCase &&
-            $shouldCodeCoverageBeCollected;
+        $shouldCodeCoverageBeCollected = false;
 
-        if ($collectCodeCoverage) {
-            $codeCoverage->start($test);
+        if ($this->collectCodeCoverage && !$test instanceof ErrorTestCase && !$test instanceof WarningTestCase) {
+            $codeCoverage = PhpCodeCoverageFactory::build();
+
+            if ($isPhpUnit9) {
+                $shouldCodeCoverageBeCollected = TestUtil::requiresCodeCoverageDataCollection($test);
+            } else {
+                $shouldCodeCoverageBeCollected = (new CodeCoverageMetadataApi())->shouldCodeCoverageBeCollectedFor(
+                    $test::class,
+                    $test->getName(false)
+                );
+            }
+
+            if ($shouldCodeCoverageBeCollected) {
+                $codeCoverage->start($test);
+            }
         }
 
         $timer = new Timer();
@@ -269,7 +268,7 @@ class Suite
             }
         }
 
-        if ($collectCodeCoverage) {
+        if ($shouldCodeCoverageBeCollected) {
             $append           = !$useless && !$incomplete && !$skipped;
             $linesToBeCovered = [];
             $linesToBeUsed    = [];
