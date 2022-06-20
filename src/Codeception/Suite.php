@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception;
 
 use AssertionError;
+use Codeception\Coverage\PhpCodeCoverageFactory;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
@@ -165,10 +166,10 @@ class Suite
     {
         Assert::resetCount();
 
+        $codeCoverage = PhpCodeCoverageFactory::build();
         $isPhpUnit9 = Version::series() < 10;
-        $codeCoverage = null;
+
         if ($isPhpUnit9) {
-            $codeCoverage = $result->getCodeCoverage();
             $shouldCodeCoverageBeCollected = TestUtil::requiresCodeCoverageDataCollection($test);
         } else {
             $shouldCodeCoverageBeCollected = (new CodeCoverageMetadataApi())->shouldCodeCoverageBeCollectedFor(
@@ -202,11 +203,7 @@ class Suite
             $shouldCodeCoverageBeCollected;
 
         if ($collectCodeCoverage) {
-            if ($isPhpUnit9) {
-                $codeCoverage->start($test);
-            } else {
-                CodeCoverage::start($test);
-            }
+            $codeCoverage->start($test);
         }
 
         $timer = new Timer();
@@ -316,19 +313,11 @@ class Suite
             }
 
             try {
-                if ($isPhpUnit9) {
-                    $codeCoverage->stop(
-                        $append,
-                        $linesToBeCovered,
-                        $linesToBeUsed
-                    );
-                } else {
-                    CodeCoverage::stop(
-                        $append,
-                        $linesToBeCovered,
-                        $linesToBeUsed
-                    );
-                }
+                $codeCoverage->stop(
+                    $append,
+                    $linesToBeCovered,
+                    $linesToBeUsed
+                );
             } catch (UnintentionallyCoveredCodeException $cce) {
                 $message = 'This test executed code that is not listed as code to be covered or used:' .
                     PHP_EOL . $cce->getMessage();

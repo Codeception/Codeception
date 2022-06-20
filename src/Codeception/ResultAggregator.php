@@ -46,7 +46,6 @@ class ResultAggregator
     private array $incomplete = [];
     private int $count = 0;
     private int $successful = 0;
-    private CodeCoverage $codeCoverage;
 
     public function stop(): void
     {
@@ -196,15 +195,5 @@ class ResultAggregator
     public function uselessCount(): int
     {
         return count($this->useless);
-    }
-
-    public function setCodeCoverage(CodeCoverage $codeCoverage): void
-    {
-        $this->codeCoverage = $codeCoverage;
-    }
-
-    public function getCodeCoverage(): CodeCoverage
-    {
-        return $this->codeCoverage;
     }
 }

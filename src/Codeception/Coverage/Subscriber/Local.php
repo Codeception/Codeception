@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Coverage\Subscriber;
 
 use Codeception\Coverage\Filter;
+use Codeception\Coverage\PhpCodeCoverageFactory;
 use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
@@ -52,20 +53,9 @@ class Local extends SuiteSubscriber
 
         $event->getSuite()->collectCodeCoverage(true);
 
-        $result = $event->getResult();
-
-        if (PHPUnitVersion::series() < 10) {
-            $driver = Stub::makeEmpty('SebastianBergmann\CodeCoverage\Driver\Driver');
-            $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
-        }
-
         Filter::setup($this->coverage)
             ->whiteList($this->filters)
             ->blackList($this->filters);
-
-        if (PHPUnitVersion::series() < 10) {
-            $result->setCodeCoverage($this->coverage);
-        }
     }
 
     public function afterSuite(SuiteEvent $event): void
@@ -74,12 +64,8 @@ class Local extends SuiteSubscriber
             return;
         }
 
-        if (PHPUnitVersion::series() < 10) {
-            $codeCoverage = $event->getResult()->getCodeCoverage();
-        } else {
-            $codeCoverage = PHPUnitCodeCoverage::instance();
-            PHPUnitCodeCoverage::deactivate();
-        }
+        $codeCoverage = PhpCodeCoverageFactory::build();
+        PhpCodeCoverageFactory::clear();
 
         $this->mergeToPrint($codeCoverage);
     }
