@@ -985,14 +985,6 @@ class TestHtmlReportRegexBuilder
         return $this->testCase;
     }
 
-    /**
-     * Allows for nice output in @dataProvider usage.
-     */
-    public function __toString(): string
-    {
-        return $this->getTestClass() . ':' . $this->getTestCase();
-    }
-
     public function addStep(string $step, ?string $arg = null): self
     {
         $this->stepsRegex .=  '.*?' . 'stepName ' . '.*?' . $step;
