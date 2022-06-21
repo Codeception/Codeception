@@ -245,27 +245,22 @@ class Codecept
             // contains a list of the environments used in this suite configuration env set.
             $envConfigs = [];
             foreach ($envSet as $currentEnv) {
-                if (isset($config['env'])) {
-                    // The $settings['env'] actually contains all parsed configuration files as a
-                    // filename => filecontents key-value array. If there is no configuration file for the
-                    // $currentEnv the merge will be skipped.
-                    if (!array_key_exists($currentEnv, $config['env'])) {
-                        return;
-                    }
-
-                    // Merge configuration consecutively with already build configuration
-                    if (is_array($config['env'][$currentEnv])) {
-                        $suiteEnvConfig = Configuration::mergeConfigs($suiteEnvConfig, $config['env'][$currentEnv]);
-                    }
-                    $envConfigs[]   = $currentEnv;
+                // The $settings['env'] actually contains all parsed configuration files as a
+                // filename => filecontents key-value array. If there is no configuration file for the
+                // $currentEnv the merge will be skipped.
+                if (!array_key_exists($currentEnv, $config['env'])) {
+                    return;
                 }
+
+                // Merge configuration consecutively with already build configuration
+                if (is_array($config['env'][$currentEnv])) {
+                    $suiteEnvConfig = Configuration::mergeConfigs($suiteEnvConfig, $config['env'][$currentEnv]);
+                }
+                $envConfigs[]   = $currentEnv;
             }
 
             $suiteEnvConfig['current_environment'] = implode(',', $envConfigs);
 
-            if (empty($suiteEnvConfig)) {
-                continue;
-            }
             $suiteToRun = $suite;
             if (!empty($envList)) {
                 $suiteToRun .= ' (' . implode(', ', $envSet) . ')';
