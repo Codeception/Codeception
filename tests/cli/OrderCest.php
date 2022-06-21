@@ -114,4 +114,15 @@ class OrderCest
         $I->seeFileFound('order.txt', 'tests/_output');
         $I->seeInThisFile('BIBP(T)');
     }
+
+    public function checkAfterBeforeHooksAreExecutedOnlyOnce(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run math,order,scenario,skipped :BeforeAfterClassTest');
+        $I->seeFileFound('order.txt', 'tests/_output');
+        // Codeception 4 executes beforeClass hooks of all classes in TestSuite
+        // Codeception 5 - only matching
+        $I->seeInThisFile('BIBP({{{{[1][2]}}}})');
+        // $I->seeInThisFile('BIB({[1][2]})'); // Codeception 5 behaviour
+    }
 }
