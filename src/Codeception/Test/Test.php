@@ -145,7 +145,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
         $e = null;
         $timer = new Timer();
 
-        $result->startTest($this);
+        $result->addTest($this);
 
         try {
             $this->fire(Events::TEST_BEFORE, new TestEvent($this));
@@ -231,7 +231,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
         $this->fire(Events::TEST_AFTER, new TestEvent($this, $time));
         $this->eventDispatcher->dispatch(new TestEvent($this, $time), Events::TEST_END);
-        $result->endTest($this, $time);
+        $result->addSuccessful($this, $time);
     }
 
     public function getResultAggregator(): ResultAggregator

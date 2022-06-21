@@ -118,7 +118,7 @@ class Suite
 
             if ($test instanceof TestInterface) {
                 if ($test->getMetadata()->isBlocked()) {
-                    $result->startTest($test);
+                    $result->addTest($test);
 
                     $skip = $test->getMetadata()->getSkip();
                     if ($skip !== null) {
@@ -174,7 +174,7 @@ class Suite
         $useless    = false;
         $skipped    = false;
 
-        $result->startTest($test);
+        $result->addTest($test);
         try {
             $this->fire(Events::TEST_BEFORE, new TestEvent($test));
         } catch (\Exception $e) {
@@ -474,7 +474,7 @@ class Suite
     private function endTest(PHPUnitTest $test, ResultAggregator $result, float $time): void
     {
         $this->dispatcher->dispatch(new TestEvent($test, $time), Events::TEST_END);
-        $result->endTest($test);
+        $result->addSuccessful($test);
     }
 
     public function addTest(TestInterface|PHPUnitTest $test): void

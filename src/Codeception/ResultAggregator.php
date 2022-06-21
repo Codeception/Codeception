@@ -58,12 +58,12 @@ class ResultAggregator
         return $this->stop;
     }
 
-    public function startTest(Test $test): void
+    public function addTest(Test $test): void
     {
         $this->count++;
     }
 
-    public function endTest(Test $test): void
+    public function addSuccessful(Test $test): void
     {
         $this->successful++;
     }
