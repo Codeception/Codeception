@@ -20,6 +20,8 @@ class BeforeAfterTest implements EventSubscriberInterface
 
     public function beforeClass(SuiteEvent $e)
     {
+        $this->hooks = [];
+
         foreach ($e->getSuite()->tests() as $test) {
             /** @var $test \PHPUnit\Framework\Test  * */
             $testClass = get_class($test);
