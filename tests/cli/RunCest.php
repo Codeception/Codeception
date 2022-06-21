@@ -917,16 +917,6 @@ class TestHtmlReportRegexBuilder
   }
 
   /**
-   * Allows for nice output in @dataProvider usage.
-   *
-   * @return string
-   */
-  public function __toString()
-  {
-    return $this->getTestClass() . ':' . $this->getTestCase();
-  }
-
-  /**
    * @param $step string
    * @param $arg string
    * @return TestHtmlReportRegexBuilder
