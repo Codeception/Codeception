@@ -7,10 +7,15 @@ namespace Codeception\Subscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Notification;
-use PHPUnit\Framework\Error\Deprecated;
-use PHPUnit\Framework\Error\Error;
-use PHPUnit\Framework\Error\Notice;
-use PHPUnit\Framework\Error\Warning;
+use PHPUnit\Framework\Error\Deprecated as PHPUnit9Deprecation;
+use PHPUnit\Framework\Error\Error as PHPUnit9Error;
+use PHPUnit\Framework\Error\Notice as PHPUnit9Notice;
+use PHPUnit\Framework\Error\Warning as PHPUnit9Warning;
+use PHPUnit\Runner\Version as PHPUnitVersion;
+use PHPUnit\Util\Error\Deprecation as PHPUnit10Deprecation;
+use PHPUnit\Util\Error\Error as PHPUnit10Error;
+use PHPUnit\Util\Error\Notice as PHPUnit10Notice;
+use PHPUnit\Util\Error\Warning as PHPUnit10Warning;
 use Symfony\Bridge\PhpUnit\DeprecationErrorHandler as SymfonyDeprecationErrorHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -114,12 +119,21 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
-        throw match ($errNum) {
-            E_DEPRECATED, E_USER_DEPRECATED => new Deprecated($errMsg, $errNum, $errFile, $errLine),
-            E_NOTICE, E_STRICT, E_USER_NOTICE => new Notice($errMsg, $errNum, $errFile, $errLine),
-            E_WARNING, E_USER_WARNING => new Warning($errMsg, $errNum, $errFile, $errLine),
-            default => new Error($errMsg, $errNum, $errFile, $errLine),
-        };
+        if (PHPUnitVersion::series() < 10) {
+            throw match ($errNum) {
+                E_DEPRECATED, E_USER_DEPRECATED => new PHPUnit9Deprecation($errMsg, $errNum, $errFile, $errLine),
+                E_NOTICE, E_STRICT, E_USER_NOTICE => new PHPUnit9Notice($errMsg, $errNum, $errFile, $errLine),
+                E_WARNING, E_USER_WARNING => new PHPUnit9Warning($errMsg, $errNum, $errFile, $errLine),
+                default => new PHPUnit9Error($errMsg, $errNum, $errFile, $errLine),
+            };
+        } else {
+            throw match ($errNum) {
+                E_DEPRECATED, E_USER_DEPRECATED => new PHPUnit10Deprecation($errMsg, $errNum, $errFile, $errLine),
+                E_NOTICE, E_STRICT, E_USER_NOTICE => new PHPUnit10Notice($errMsg, $errNum, $errFile, $errLine),
+                E_WARNING, E_USER_WARNING => new PHPUnit10Warning($errMsg, $errNum, $errFile, $errLine),
+                default => new PHPUnit10Error($errMsg, $errNum, $errFile, $errLine),
+            };
+        }
     }
 
     public function shutdownHandler(): void

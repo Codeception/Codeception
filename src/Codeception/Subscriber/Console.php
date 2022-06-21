@@ -13,6 +13,7 @@ use Codeception\Events;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\MessageFactory;
 use Codeception\Lib\Console\Output;
+use Codeception\ResultAggregator;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Step\ConditionalAssertion;
@@ -32,7 +33,6 @@ use PHPUnit\Framework\RiskyTest;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTest;
-use PHPUnit\Framework\TestResult;
 use SebastianBergmann\Timer\Duration;
 use SebastianBergmann\Timer\ResourceUsageFormatter;
 use SebastianBergmann\Timer\Timer;
@@ -45,7 +45,6 @@ use function array_map;
 use function array_merge;
 use function array_reverse;
 use function array_shift;
-use function codecept_output_dir;
 use function codecept_relative_path;
 use function count;
 use function exec;
@@ -57,7 +56,6 @@ use function preg_replace;
 use function round;
 use function sprintf;
 use function strlen;
-use function strpos;
 use function strtoupper;
 use function substr;
 use function ucfirst;
@@ -74,7 +72,6 @@ class Console implements EventSubscriberInterface
         Events::SUITE_AFTER        => 'afterSuite',
         Events::TEST_START         => 'startTest',
         Events::TEST_END           => 'endTest',
-        Events::TEST_AFTER         => 'afterTest',
         Events::STEP_BEFORE        => 'beforeStep',
         Events::STEP_AFTER         => 'afterStep',
         Events::TEST_SUCCESS       => 'testSuccess',
@@ -150,8 +147,6 @@ class Console implements EventSubscriberInterface
 
     private Timer $timer;
 
-    private int $assertionCount = 0;
-
     private bool $firstDefectType = true;
 
     /**
@@ -184,7 +179,7 @@ class Console implements EventSubscriberInterface
             $this->namespace = $settings['namespace'];
         }
         $this->message("%s Tests (%d) ")
-            ->with(ucfirst($event->getSuite()->getBaseName()), $event->getSuite()->count())
+            ->with(ucfirst($event->getSuite()->getBaseName()), $event->getSuite()->getTestCount())
             ->style('bold')
             ->width($this->width, '-')
             ->prepend("\n")
@@ -254,18 +249,6 @@ class Console implements EventSubscriberInterface
         $this->failedStep[] = $step;
     }
 
-    public function afterTest(TestEvent $event): void
-    {
-        $test = $event->getTest();
-
-        //method_exists must be used here, because it is possible that some test format doesn't implement either method
-        if (method_exists($test, 'numberOfAssertionsPerformed')) {
-            $this->assertionCount += $test->numberOfAssertionsPerformed();
-        } elseif (method_exists($test, 'getNumAssertions')) {
-            $this->assertionCount += $test->getNumAssertions();
-        }
-    }
-
     public function afterResult(PrintResultEvent $event): void
     {
         $result = $event->getResult();
@@ -278,21 +261,21 @@ class Console implements EventSubscriberInterface
 
         $this->printDefects($result->errors(), 'error');
         $this->printDefects($result->failures(), 'failure');
-        $this->printDefects($result->risky(), 'useless test');
+        $this->printDefects($result->useless(), 'useless test');
         if ($verbose) {
-            $this->printDefects($result->notImplemented(), 'incomplete test');
+            $this->printDefects($result->incomplete(), 'incomplete test');
             $this->printDefects($result->skipped(), 'skipped test');
         }
         $this->printFooter($event);
 
-        if ($result->skippedCount() + $result->notImplementedCount() > 0 && !$verbose) {
+        if ($result->skippedCount() + $result->incompleteCount() > 0 && !$verbose) {
             $this->output->writeln("run with `-v` to get more info about skipped or incomplete tests");
         }
     }
 
-    protected function printHeader(TestResult $result): void
+    protected function printHeader(ResultAggregator $result): void
     {
-        if ($result->count() > 0) {
+        if ($result->testCount() > 0) {
             $this->printResourceUsage($this->timer->stop());
         }
     }
@@ -303,6 +286,10 @@ class Console implements EventSubscriberInterface
         $this->message($formatter->resourceUsage($duration))->writeln();
     }
 
+    /**
+     * @param FailEvent[] $defects
+     * @param string $type
+     */
     private function printDefects(array $defects, string $type): void
     {
         $count = count($defects);
@@ -332,15 +319,15 @@ class Console implements EventSubscriberInterface
         $i = 1;
 
         foreach ($defects as $defect) {
-            $event = new FailEvent($defect->failedTest(), null, $defect->thrownException(), $i++);
-            $this->printFail($event);
+            $this->printFail($defect, $i++);
         }
     }
 
     protected function printFooter(PrintResultEvent $event): void
     {
         $result = $event->getResult();
-        $testCount = $result->count();
+        $testCount = $result->testCount();
+        $assertionCount = $result->assertionCount();
 
         $this->message('')->writeln();
 
@@ -354,8 +341,8 @@ class Console implements EventSubscriberInterface
                 'OK (%d test%s, %d assertion%s)',
                 $testCount,
                 $testCount === 1 ? '' : 's',
-                $this->assertionCount,
-                $this->assertionCount === 1 ? '' : 's'
+                $assertionCount,
+                $assertionCount === 1 ? '' : 's'
             );
             $this->message($message)->style('success')->writeln();
             return;
@@ -376,7 +363,7 @@ class Console implements EventSubscriberInterface
 
         $counts = [
             sprintf("Tests: %s", $testCount),
-            sprintf("Assertions: %s", $this->assertionCount),
+            sprintf("Assertions: %s", $assertionCount),
         ];
         if ($result->errorCount() > 0) {
             $counts [] = sprintf("Errors: %s", $result->errorCount());
@@ -390,11 +377,11 @@ class Console implements EventSubscriberInterface
         if ($result->skippedCount() > 0) {
             $counts [] = sprintf("Skipped: %s", $result->skippedCount());
         }
-        if ($result->notImplementedCount() > 0) {
-            $counts [] = sprintf("Incomplete: %s", $result->notImplementedCount());
+        if ($result->incompleteCount() > 0) {
+            $counts [] = sprintf("Incomplete: %s", $result->incompleteCount());
         }
-        if ($result->riskyCount() > 0) {
-            $counts [] = sprintf("Useless: %s", $result->riskyCount());
+        if ($result->uselessCount() > 0) {
+            $counts [] = sprintf("Useless: %s", $result->uselessCount());
         }
 
         $this->message(implode(', ', $counts) . '.')->style($style)->writeln();
@@ -526,13 +513,13 @@ class Console implements EventSubscriberInterface
         $this->message()->width($this->width, '-')->writeln();
     }
 
-    public function printFail(FailEvent $event): void
+    public function printFail(FailEvent $event, int $eventNumber): void
     {
         /** @var SelfDescribing|TestInterface $failedTest */
         $failedTest = $event->getTest();
         $fail = $event->getFail();
 
-        $this->output->write($event->getCount() . ") ");
+        $this->output->write($eventNumber . ") ");
         $this->writeCurrentTest($failedTest, false);
         $this->output->writeln('');
 

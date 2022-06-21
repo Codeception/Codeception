@@ -7,7 +7,7 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
-use Codeception\Util\ReflectionHelper;
+use Codeception\ResultAggregator;
 use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -26,7 +26,9 @@ class GracefulTermination implements EventSubscriberInterface
      */
     public const ASYNC_SIGNAL_HANDLING_FUNC = 'pcntl_async_signals';
 
-    protected ?SuiteEvent $suiteEvent = null;
+    public function __construct(private ResultAggregator $resultAggregator)
+    {
+    }
 
     public function handleSuite(SuiteEvent $event): void
     {
@@ -41,15 +43,11 @@ class GracefulTermination implements EventSubscriberInterface
                 $this->terminate();
             });
         }
-
-        $this->suiteEvent = $event;
     }
 
     public function terminate(): void
     {
-        if ($this->suiteEvent) {
-            ReflectionHelper::setPrivateProperty($this->suiteEvent->getResult(), 'stop', true);
-        }
+        $this->resultAggregator->stop();
         throw new RuntimeException(
             "\n\n---------------------------\nTESTS EXECUTION TERMINATED\n---------------------------\n"
         );

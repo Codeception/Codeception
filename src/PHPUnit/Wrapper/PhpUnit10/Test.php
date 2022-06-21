@@ -9,8 +9,6 @@ abstract class Test implements PHPUnitTest
 {
     public function run(TestResult $result): void
     {
-        $this->realRun($result);
+        // does nothing
     }
-
-    abstract protected function realRun(TestResult $result): void;
 }

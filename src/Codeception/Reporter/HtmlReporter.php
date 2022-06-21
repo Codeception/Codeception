@@ -266,11 +266,11 @@ class HtmlReporter implements EventSubscriberInterface
             [
                 'header'              => $header,
                 'scenarios'           => $this->scenarios,
-                'successfulScenarios' => count($result->passed()),
+                'successfulScenarios' => $result->successfulCount(),
                 'failedScenarios'     => $result->failureCount(),
                 'skippedScenarios'    => $result->skippedCount(),
-                'incompleteScenarios' => $result->notImplementedCount(),
-                'uselessScenarios'    => $result->riskyCount(),
+                'incompleteScenarios' => $result->incompleteCount(),
+                'uselessScenarios'    => $result->uselessCount(),
             ]
         );
 

@@ -515,7 +515,7 @@ class Run extends Command
             );
         }
 
-        if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessfulIgnoringWarnings()) {
+        if (!$input->getOption('no-exit') && !$this->codecept->getResultAggregator()->wasSuccessfulIgnoringWarnings()) {
             exit(1);
         }
 
