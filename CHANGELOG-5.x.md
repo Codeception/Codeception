@@ -1,3 +1,22 @@
+#### 5.0.0-RC4
+
+* Implemented basic attribute support (#6449) by @DavertMik
+* Significantly reduced dependencies on PHPUnit
+* Replaced PHPUnit\Framework\TestResult with ResultAggregator
+* Added assertionCount method to ResultAggregator 
+* DotReporter prints standard result summary (#6441) by @Orchestrator404
+* Fixed DotReporter output format
+* Fixed fetching remote code coverage data (#6448)
+* Loading .env file must not override existing environment variables (#6477)
+* All changes from 4.2.0 and 4.2.1:
+  * Improved multi-application experience, allow filtering suites by name (#6435) by @calvinalkan
+  * Configuration override is passed to included suites (#5978) by @calvinalkan
+  * Made dry-run command work with module methods having return types (#6470)
+  * Support for expectError/Warning/Notice/Deprecation methods in unit tests (Requires PHPUnit 8.4+)
+  * Implemented new setting `convert_deprecations_to_exceptions` (#6469)
+  * Action file generator: Do not return when return type is never (#6462)
+  * Execute setupBeforeClass/tearDownAfterClass only once (#6481)
+
 #### 5.0.0-RC3
 
 * Fix incorrect type declaration in InitTemplate by @ziadoz
