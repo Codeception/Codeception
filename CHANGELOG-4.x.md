@@ -1,3 +1,8 @@
+#### 4.2.1
+
+* Execute setupBeforeClass/tearDownAfterClass only once (#6481)
+* Handle action with intersection return type correctly in dry-run command
+
 #### 4.2.0
 
 * Improved multi-application experience, allow filtering suites by name (#6435) by @calvinalkan
