@@ -116,4 +116,12 @@ final class OrderCest
         $I->seeFileFound('order.txt', 'tests/_output');
         $I->seeInThisFile('BIBP(T)');
     }
+
+    public function checkAfterBeforeHooksAreExecutedOnlyOnce(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run math,order,scenario,skipped :BeforeAfterClassTest');
+        $I->seeFileFound('order.txt', 'tests/_output');
+        $I->seeInThisFile('BIBP({[1][2]})');
+    }
 }
