@@ -177,7 +177,7 @@ abstract class Step implements Stringable
                 $argument = $this->getClassName($argument);
             }
         }
-        $arg_str = json_encode($argument, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $arg_str = json_encode($argument, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE);
         return str_replace('\"', '"', $arg_str);
     }
 
