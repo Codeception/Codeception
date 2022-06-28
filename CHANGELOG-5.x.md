@@ -1,3 +1,7 @@
+#### 5.0.0-RC5
+
+* Substitute invalid UTF-8 characters in debug and step output by @SamoylenkoSU (#6483)
+
 #### 5.0.0-RC4
 
 * Implemented basic attribute support (#6449) by @DavertMik
