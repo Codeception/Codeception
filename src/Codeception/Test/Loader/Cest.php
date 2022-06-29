@@ -10,6 +10,7 @@ use Codeception\Test\Cest as CestFormat;
 use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\DataProviderTestSuite;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use ReflectionClass;
 use ReflectionException;
 
@@ -66,7 +67,7 @@ class Cest implements LoaderInterface
                             fn ($v): ?array => Annotation::arrayValue($v),
                             $rawExamples
                         );
-                    } elseif ($rawExamples) {
+                    } else {
                         $examples = $rawExamples;
                     }
                 }
@@ -94,7 +95,11 @@ class Cest implements LoaderInterface
                 }
 
                 if (!empty($examples)) {
-                    $dataProvider = new DataProviderTestSuite();
+                    if (PHPUnitVersion::series() < 10) {
+                        $dataProvider = new DataProviderTestSuite();
+                    } else {
+                        $dataProvider = DataProviderTestSuite::empty();
+                    }
                     $index = 0;
                     foreach ($examples as $k => $example) {
                         if ($example === null) {

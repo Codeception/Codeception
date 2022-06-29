@@ -203,12 +203,27 @@ class Metadata
             $name = lcfirst(str_replace('Codeception\\Attribute\\', '', $attribute->getName()));
             if ($attribute->isRepeated()) {
                 $params[$name] ??= [];
-                $params[$name][] = $attribute->getArguments()[0] ?? null;
+                $params[$name][] = $attribute->getArguments();
                 continue;
             }
             $params[$name] = $attribute->getArguments();
         }
         $this->params = array_merge_recursive($this->params, $params);
+
+        // flatten arrays for some attributes
+        foreach (['group', 'env', 'before', 'after', 'prepare'] as $single) {
+            if (!isset($this->params[$single])) {
+                continue;
+            };
+            if (!is_array($this->params[$single])) {
+                continue;
+            };
+
+            $this->params[$single] = array_map(fn($a) => is_array($a) ? $a : [$a], $this->params[$single]);
+            $this->params[$single] = array_merge(...$this->params[$single]);;
+        }
+
+
         // set singular value for some params
         foreach (['skip', 'incomplete'] as $single) {
             $this->params[$single] = empty($this->params[$single]) ? null : (string)$this->params[$single][0];

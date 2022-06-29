@@ -9,12 +9,6 @@ abstract class Test implements PHPUnitTest
 {
     public function run(?TestResult $result = null): TestResult
     {
-        if ($result === null) {
-            $result = new TestResult();
-        }
-        $this->realRun($result);
-        return $result;
+        // does nothing
     }
-
-    abstract protected function realRun(TestResult $result): void;
 }

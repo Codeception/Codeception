@@ -32,7 +32,7 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
 
         $eventDispatcher = $this->createMock(EventDispatcher::class);
 
-        $suiteEvent = new SuiteEvent(new Suite($eventDispatcher), null, ['error_level' => 'E_ERROR']);
+        $suiteEvent = new SuiteEvent(new Suite($eventDispatcher), ['error_level' => 'E_ERROR']);
         $errorHandler->handle($suiteEvent);
 
         //Satisfying The Premature Exit Handling
@@ -46,9 +46,8 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
 
     public function testShowsLocationOfWarning()
     {
-        $this->expectException(\PHPUnit\Framework\Exception::class);
-        $SEP = DIRECTORY_SEPARATOR;
-        $this->expectExceptionMessage("Undefined variable: file at tests{$SEP}unit{$SEP}Codeception{$SEP}Subscriber{$SEP}ErrorHandlerTest.php");
+        $this->expectWarning();
+        $this->expectWarningMessage('Undefined variable: file');
         trigger_error('Undefined variable: file', E_USER_WARNING);
     }
 }

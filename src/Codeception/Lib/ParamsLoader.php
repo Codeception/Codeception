@@ -164,7 +164,7 @@ class ParamsLoader
         if (class_exists(SymfonyDotenv::class)) {
             $symfonyDotEnv = new SymfonyDotenv();
             $values = $symfonyDotEnv->parse(self::getFileContents($file), $file);
-            $symfonyDotEnv->populate($values, true);
+            $symfonyDotEnv->populate($values);
             return $values;
         }
 

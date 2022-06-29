@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Codeception\ResultAggregator;
 use Codeception\SuiteManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -24,7 +25,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->dispatcher = new EventDispatcher();
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
         $settings['actor'] = 'CodeGuy';
-        $this->suiteman = new SuiteManager($this->dispatcher, 'suite', $settings);
+        $this->suiteman = new SuiteManager($this->dispatcher, 'suite', $settings, []);
     }
 
     /**
@@ -39,10 +40,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->dispatcher->addListener('suite.before', $eventListener);
         $this->dispatcher->addListener('suite.after', $eventListener);
 
-        $this->suiteman->run(
-            new \PHPUnit\Framework\TestResult(),
-            ['colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
-        );
+        $this->suiteman->run(new ResultAggregator());
         $this->assertSame($events, ['suite.before', 'suite.after']);
     }
 
@@ -58,11 +56,11 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $file = \Codeception\Configuration::dataDir() . 'SimpleCest.php';
 
         $this->suiteman->loadTests($file);
-        $this->assertSame(2, $this->suiteman->getSuite()->count());
+        $this->assertSame(2, $this->suiteman->getSuite()->getTestCount());
 
         $file = \Codeception\Configuration::dataDir() . 'SimpleWithNoClassCest.php';
         $this->suiteman->loadTests($file);
-        $this->assertSame(3, $this->suiteman->getSuite()->count());
+        $this->assertSame(3, $this->suiteman->getSuite()->getTestCount());
     }
 
     /**
@@ -80,20 +78,21 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
 
         $file = \Codeception\Configuration::dataDir() . 'SimpleNamespacedTest.php';
         $this->suiteman->loadTests($file);
-        $this->assertSame(3, $this->suiteman->getSuite()->count());
+        $this->assertSame(3, $this->suiteman->getSuite()->getTestCount());
         $newSuiteMan = new SuiteManager(
             $this->dispatcher,
             'suite',
-            \Codeception\Configuration::$defaultSuiteSettings
+            \Codeception\Configuration::$defaultSuiteSettings,
+            [],
         );
         $newSuiteMan->loadTests($file);
-        $this->assertSame(3, $newSuiteMan->getSuite()->count());
+        $this->assertSame(3, $newSuiteMan->getSuite()->getTestCount());
     }
 
     public function testDependencyResolution()
     {
         $this->suiteman->loadTests(codecept_data_dir() . 'SimpleWithDependencyInjectionCest.php');
-        $this->assertSame(3, $this->suiteman->getSuite()->count());
+        $this->assertSame(3, $this->suiteman->getSuite()->getTestCount());
     }
 
     public function testGroupEventsAreFired()
@@ -108,11 +107,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->dispatcher->addListener('test.after.admin', $eventListener);
 
         $this->suiteman->loadTests(codecept_data_dir() . 'SimpleAdminGroupCest.php');
-        $result = new \PHPUnit\Framework\TestResult();
-        $this->suiteman->run(
-            $result,
-            ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false, 'report_useless_tests' => false, 'disallow_test_output' => false]
-        );
+        $this->suiteman->run(new ResultAggregator());
         $this->assertContains('test.before', $events);
         $this->assertContains('test.before.admin', $events);
         $this->assertContains('test.after', $events);

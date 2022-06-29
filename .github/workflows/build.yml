@@ -6,6 +6,9 @@ on:
 
 name: build
 
+permissions:
+  contents: read
+
 jobs:
   phpcs:
     name: Code style

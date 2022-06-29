@@ -245,7 +245,7 @@ abstract class Module
     protected function debugSection(string $title, mixed $message): void
     {
         if (is_array($message) || is_object($message)) {
-            $message = stripslashes(json_encode($message, JSON_THROW_ON_ERROR));
+            $message = stripslashes(json_encode($message, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE));
         }
         $this->debug("[{$title}] {$message}");
     }

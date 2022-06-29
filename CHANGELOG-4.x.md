@@ -1,3 +1,18 @@
+#### 4.2.1
+
+* Execute setupBeforeClass/tearDownAfterClass only once (#6481)
+* Handle action with intersection return type correctly in dry-run command
+
+#### 4.2.0
+
+* Improved multi-application experience, allow filtering suites by name (#6435) by @calvinalkan
+* Configuration override is passed to included suites (#5978) by @calvinalkan
+* Made dry-run command work with module methods having return types (#6470)
+* Support for expectError/Warning/Notice/Deprecation methods in unit tests (Requires PHPUnit 8.4+)
+* Implemented new setting `convert_deprecations_to_exceptions` (#6469)
+* Action file generator: Do not return when return type is never (#6462)
+* Backported test.useless event from Codeception 5.0 (#6459)
+
 #### 4.1.31
 
 * RunBefore extension prints error output and stops execution if command failed

@@ -11,8 +11,7 @@ class MageGuildCest
         $I->castFireball();
     }
 
-    #[Env('magic')]
-    #[Env('white')]
+    #[Env('magic', 'white')]
     public function whitePower(PowerGuy $I)
     {
         $I->castFireball();

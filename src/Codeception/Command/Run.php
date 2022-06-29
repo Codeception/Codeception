@@ -34,7 +34,9 @@ use function preg_match;
 use function preg_replace;
 use function rtrim;
 use function sprintf;
+use function str_contains;
 use function str_replace;
+use function str_starts_with;
 use function strpos;
 use function strtolower;
 use function substr;
@@ -408,7 +410,11 @@ class Run extends Command
         $filter = $input->getOption('filter') ?? $input->getOption('grep') ?? null;
         if ($test) {
             $userOptions['filter'] = $this->matchFilteredTestName($test);
-        } elseif ($suite) {
+        } elseif (
+            $suite
+            && !$this->isWildcardSuiteName($suite)
+            && !$this->isSuiteInMultiApplication($suite)
+        ) {
             $userOptions['filter'] = $this->matchFilteredTestName($suite);
         }
 
@@ -440,18 +446,63 @@ class Run extends Command
 
         // Run all tests of given suite or all suites
         if (!$test) {
-            $suites = $suite ? explode(',', $suite) : Configuration::suites();
-            $this->executed = $this->runSuites($suites, $this->options['skip']);
+            $didPassCliSuite = !empty($suite);
 
-            if (!empty($config['include']) && !$suite) {
+            $rawSuites = $didPassCliSuite ? explode(',', $suite) : Configuration::suites();
+
+            /** @var string[] $mainAppSuites */
+            $mainAppSuites = [];
+
+            /** @var array<string,string> $appSpecificSuites */
+            $appSpecificSuites = [];
+
+            /** @var string[] $wildcardSuites */
+            $wildcardSuites = [];
+
+            foreach ($rawSuites as $rawSuite) {
+                if ($this->isWildcardSuiteName($rawSuite)) {
+                    $wildcardSuites[] = explode('*::', $rawSuite)[1];
+                    continue;
+                }
+                if ($this->isSuiteInMultiApplication($rawSuite)) {
+                    $appAndSuite = explode('::', $rawSuite);
+                    $appSpecificSuites[$appAndSuite[0]][] = $appAndSuite[1];
+                    continue;
+                }
+                $mainAppSuites[] = $rawSuite;
+            }
+
+            if ([] !== $mainAppSuites) {
+                $this->executed = $this->runSuites($mainAppSuites, $this->options['skip']);
+            }
+
+            if (!empty($wildcardSuites) && ! empty($appSpecificSuites)) {
+                $this->output->writeLn('<error>Wildcard options can not be combined with specific suites of included apps.</error>');
+                return 2;
+            }
+
+            if (
+                !empty($config['include'])
+                && (!$didPassCliSuite || !empty($wildcardSuites) || !empty($appSpecificSuites))
+            ) {
                 $currentDir = Configuration::projectDir();
-                $suites += $config['include'];
-                $this->runIncludedSuites($config['include'], $currentDir);
+                $includedApps = $config['include'];
+
+                if (!empty($appSpecificSuites)) {
+                    $includedApps = array_intersect($includedApps, array_keys($appSpecificSuites));
+                }
+
+                $this->runIncludedSuites(
+                    $includedApps,
+                    $currentDir,
+                    $appSpecificSuites,
+                    $wildcardSuites
+                );
             }
 
             if ($this->executed === 0) {
                 throw new RuntimeException(
-                    sprintf("Suite '%s' could not be found", implode(', ', $suites))
+                    sprintf("Suite '%s' could not be found", implode(', ', $rawSuites))
                 );
             }
         }
@@ -464,7 +515,7 @@ class Run extends Command
             );
         }
 
-        if (!$input->getOption('no-exit') && !$this->codecept->getResult()->wasSuccessfulIgnoringWarnings()) {
+        if (!$input->getOption('no-exit') && !$this->codecept->getResultAggregator()->wasSuccessfulIgnoringWarnings()) {
             exit(1);
         }
 
@@ -528,10 +579,17 @@ class Run extends Command
     /**
      * Runs included suites recursively
      *
+     * @param string[] $suites
+     * @param array<string,string[]> $filterAppSuites An array keyed by included app name where values are suite names to run.
+     * @param string[] $filterSuitesByWildcard A list of suite names (applies to all included apps)
      * @throws ConfigurationException
      */
-    protected function runIncludedSuites(array $suites, string $parentDir): void
-    {
+    protected function runIncludedSuites(
+        array $suites,
+        string $parentDir,
+        array $filterAppSuites = [],
+        array $filterSuitesByWildcard = [],
+    ) {
         $defaultConfig = Configuration::config();
         $absolutePath = Configuration::projectDir();
 
@@ -546,6 +604,14 @@ class Run extends Command
 
             $suites = Configuration::suites();
 
+            if (!empty($filterSuitesByWildcard)) {
+                $suites = array_intersect($suites, $filterSuitesByWildcard);
+            }
+
+            if (isset($filterAppSuites[$relativePath])) {
+                $suites = array_intersect($suites, $filterAppSuites[$relativePath]);
+            }
+
             $namespace = $this->currentNamespace();
             $this->output->writeln(
                 "\n<fg=white;bg=magenta>\n[{$namespace}]: tests from {$currentDir}\n</fg=white;bg=magenta>"
@@ -558,7 +624,7 @@ class Run extends Command
         }
     }
 
-    protected function currentNamespace()
+    protected function currentNamespace(): string
     {
         $config = Configuration::config();
         if (!$config['namespace']) {
@@ -571,6 +637,11 @@ class Run extends Command
         return $config['namespace'];
     }
 
+    /**
+     * @param string[] $suites
+     * @param string[] $skippedSuites
+     * @return int Number of executed test suites
+     */
     protected function runSuites(array $suites, array $skippedSuites = []): int
     {
         $executed = 0;
@@ -707,5 +778,20 @@ class Run extends Command
                 . "Please make sure that your PHP you run from console has \"{$ext}\" enabled."
             );
         }
+    }
+
+    private function isWildcardSuiteName(string $suiteName): bool
+    {
+        return str_starts_with($suiteName, '*::');
+    }
+
+    private function isSuiteInMultiApplication(string $suiteName): bool
+    {
+        return str_contains($suiteName, '::');
+    }
+
+    private function isRootLevelSuite(string $suiteName): bool
+    {
+        return !$this->isSuiteInMultiApplication($suiteName) && !$this->isWildcardSuiteName($suiteName);
     }
 }
