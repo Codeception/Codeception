@@ -208,9 +208,7 @@ class Metadata
             }
             $params[$name] = $attribute->getArguments();
         }
-        codecept_debug($params);
         $this->params = array_merge_recursive($this->params, $params);
-        codecept_debug($this->params);
         // set singular value for some params
         foreach (['skip', 'incomplete'] as $single) {
             $this->params[$single] = empty($this->params[$single]) ? null : (string)$this->params[$single][0];
