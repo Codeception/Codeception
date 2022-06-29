@@ -140,6 +140,7 @@ class Gherkin implements LoaderInterface
                 $annotation = Annotation::forMethod($context, $method);
                 foreach (['Given', 'When', 'Then'] as $type) {
                     $patterns = $annotation->fetchAll($type);
+                    codecept_debug($patterns);
                     foreach ($patterns as $pattern) {
                         if (!$pattern) {
                             continue;
