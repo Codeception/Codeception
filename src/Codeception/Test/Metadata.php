@@ -201,9 +201,16 @@ class Metadata
         $params = [];
         foreach ($attributes as $attribute) {
             $name = lcfirst(str_replace('Codeception\\Attribute\\', '', $attribute->getName()));
+            if ($attribute->isRepeated()) {
+                $params[$name] ??= [];
+                $params[$name][] = $attribute->getArguments()[0] ?? null;
+                continue;
+            }
             $params[$name] = $attribute->getArguments();
         }
+        codecept_debug($params);
         $this->params = array_merge_recursive($this->params, $params);
+        codecept_debug($this->params);
         // set singular value for some params
         foreach (['skip', 'incomplete'] as $single) {
             $this->params[$single] = empty($this->params[$single]) ? null : (string)$this->params[$single][0];
