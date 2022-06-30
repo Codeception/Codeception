@@ -1,21 +1,21 @@
 <?php
 
-class DependsTest extends \Codeception\Test\Unit
+use Codeception\Attribute\Depends;
+use Codeception\Attribute\Group;
+use Codeception\Test\Unit;
+
+final class DependsTest extends Unit
 {
-    /**
-     * @group depends
-     * @depends testOne
-     */
+    #[Group('depends')]
+    #[Depends('testOne')]
     public function testTwo($res)
     {
         $this->assertTrue(true);
         $this->assertSame(1, $res);
     }
 
-    /**
-     * @group depends
-     * @depends testFour
-     */
+    #[Group('depends')]
+    #[Depends('testFour')]
     public function testThree()
     {
         $this->assertTrue(true);
@@ -26,10 +26,7 @@ class DependsTest extends \Codeception\Test\Unit
         $this->assertTrue(true);
     }
 
-
-    /**
-     * @group depends
-     */
+    #[Group('depends')]
     public function testOne(): int
     {
         $this->assertTrue(false);

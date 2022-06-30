@@ -1,10 +1,11 @@
 <?php
 
-class SkipByGroupTest extends \Codeception\Test\Unit
+use Codeception\Attribute\Group;
+use Codeception\Test\Unit;
+
+final class SkipByGroupTest extends Unit
 {
-    /**
-     * @group abc
-     */
+    #[Group('abc')]
     public function testSkip()
     {
         $this->assertTrue(true);

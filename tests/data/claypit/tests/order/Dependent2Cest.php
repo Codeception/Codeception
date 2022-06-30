@@ -1,10 +1,10 @@
 <?php
 
+use Codeception\Attribute\Depends;
+
 class Dependent2Cest
 {
-    /**
-     * @depends DependentCest:firstOne
-     */
+    #[Depends(DependentCest::class . ':firstOne')]
     public function thirdOne(OrderGuy $I)
     {
     }

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Codeception\Attribute\Before;
+
 final class DataProviderFailuresAndExceptionsCest
 {
     private function moveToPath(CliGuy $I)
@@ -13,10 +15,8 @@ final class DataProviderFailuresAndExceptionsCest
      * This looks at only the contents of stdout when there is a failure in parsing a dataProvider annotation.
      * When there is a failure all the useful information should go to stderr, so stdout is left with
      * only the version headers.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersFailureStdout(CliGuy $I)
     {
         /**
@@ -34,10 +34,8 @@ final class DataProviderFailuresAndExceptionsCest
     /**
      * This redirects stderr to stdout so that we can test the contents of stderr. Stderr is where all the interesting
      * information should be when there is a failure.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersFailureStderr(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersFailureCest 2>&1', false);
@@ -57,13 +55,10 @@ final class DataProviderFailuresAndExceptionsCest
         $I->seeResultCodeIs(1);
     }
 
-
     /**
      * This adds the -v to the stderr test which should just add the Exception Trace to the output.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersFailureStderrVerbose(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersFailureCest -v 2>&1', false);
@@ -88,10 +83,8 @@ final class DataProviderFailuresAndExceptionsCest
      * This looks at only the contents of stdout when there is an exception thrown when executing a dataProvider
      * function.
      * When exception thrown all the useful information should go to stderr, so stdout is left with nothing.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersExceptionStdout(CliGuy $I)
     {
         /**
@@ -109,10 +102,8 @@ final class DataProviderFailuresAndExceptionsCest
     /**
      * This redirects stderr to stdout so that we can test the contents of stderr. Stderr is where all the interesting
      * information should be when there is a failure.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersExceptionStderr(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersExceptionCest 2>&1', false);
@@ -137,10 +128,8 @@ final class DataProviderFailuresAndExceptionsCest
 
     /**
      * This adds the -v to the stderr test which should just add the Exception Trace to the output of stderr.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersExceptionStderrVerbose(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersExceptionCest -v 2>&1', false);

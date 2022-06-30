@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-class ConfigurationTest extends \Codeception\PHPUnit\TestCase
+use Codeception\Attribute\Group;
+use Codeception\Module\UniversalFramework as UniversalFrameworkModule;
+use Codeception\PHPUnit\TestCase;
+
+class ConfigurationTest extends TestCase
 {
-    /**
-     * @var array
-     */
     public array $config = [];
 
     public function _setUp()
@@ -16,14 +17,12 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
 
     protected function _tearDown()
     {
-        \Codeception\Module\UniversalFramework::$includeInheritedActions = true;
-        \Codeception\Module\UniversalFramework::$onlyActions = [];
-        \Codeception\Module\UniversalFramework::$excludeActions = [];
+        UniversalFrameworkModule::$includeInheritedActions = true;
+        UniversalFrameworkModule::$onlyActions = [];
+        UniversalFrameworkModule::$excludeActions = [];
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testSuites()
     {
         $suites = \Codeception\Configuration::suites();
@@ -31,9 +30,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
         $this->assertContains('cli', $suites);
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testFunctionForStrippingClassNames()
     {
         $matches = [];
@@ -43,9 +40,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
         $this->assertSame('UserHelper', $matches[1]);
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testModules()
     {
         $settings = ['modules' => ['enabled' => ['EmulateModuleHelper']]];
@@ -59,9 +54,7 @@ class ConfigurationTest extends \Codeception\PHPUnit\TestCase
         $this->assertNotContains('EmulateModuleHelper', $modules);
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testDefaultCustomCommandConfig()
     {
         $defaultConfig = \Codeception\Configuration::$defaultConfig;

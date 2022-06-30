@@ -1,13 +1,12 @@
 <?php
 
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Examples;
+
 class SimpleWithDataProviderYieldGeneratorCest
 {
-    /**
-     * @dataProvider getTestData
-     *
-     * @example ["fizz", "buzz"]
-     * @example [null, "test"]
-     */
+    #[DataProvider('getTestData')]
+    #[Examples(['fizz', 'buzz']), Examples([null, 'test'])]
     public function helloWorld(\CodeGuy $I, \Codeception\Example $example)
     {
         $I->execute(function ($example) {
