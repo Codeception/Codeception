@@ -1,10 +1,10 @@
 <?php
 
-class SimpleAdminGroupCest
+use Codeception\Attribute\Group;
+
+final class SimpleAdminGroupCest
 {
-    /**
-     * @group admin
-     */
+    #[Group('admin')]
     public function testAdminGroup()
     {
     }

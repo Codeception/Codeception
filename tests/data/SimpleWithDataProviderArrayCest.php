@@ -1,14 +1,17 @@
 <?php
 
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Examples;
+use Codeception\Example;
+
 class SimpleWithDataProviderArrayCest
 {
+    #[DataProvider('getTestData')]
     /**
-     * @dataProvider getTestData
-     *
      * @example ["fizz", "buzz"]
      * @example [null, "test"]
      */
-    public function helloWorld(\CodeGuy $I, \Codeception\Example $example)
+    public function helloWorld(CodeGuy $I, Example $example)
     {
         $I->execute(function ($example) {
             if (!is_array($example)) {

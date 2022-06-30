@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-// @group core
-
+use Codeception\Attribute\Group;
 use Codeception\Scenario;
 
+#[Group('core')]
 final class BuildCest
 {
     /** @var string */

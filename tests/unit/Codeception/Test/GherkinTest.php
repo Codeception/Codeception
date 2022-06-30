@@ -2,24 +2,28 @@
 
 declare(strict_types=1);
 
-/**
- * Class GherkinTest
- * @group gherkin
- */
-class GherkinTest extends \Codeception\Test\Unit
+use Codeception\Attribute\Depends;
+use Codeception\Attribute\Group;
+use Codeception\Exception\ParseException;
+use Codeception\Lib\Di;
+use Codeception\Lib\ModuleContainer;
+use Codeception\Stub;
+use Codeception\Test\Loader\Gherkin as GherkinLoader;
+use Codeception\Test\Unit;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
+#[Group('gherkin')]
+final class GherkinTest extends Unit
 {
     protected $feature;
 
     public static string $calls = '';
 
-    /**
-     * @var \Codeception\Test\Loader\Gherkin
-     */
-    protected \Codeception\Test\Loader\Gherkin $loader;
+    protected GherkinLoader $loader;
 
     protected function _before()
     {
-        $this->loader = new \Codeception\Test\Loader\Gherkin(
+        $this->loader = new GherkinLoader(
             [
                 'gherkin' => [
                     'contexts' => [
@@ -35,9 +39,9 @@ class GherkinTest extends \Codeception\Test\Unit
     protected function getServices(): array
     {
         return [
-            'di'         => new \Codeception\Lib\Di(),
-            'dispatcher' => \Codeception\Stub::makeEmpty(\Symfony\Component\EventDispatcher\EventDispatcher::class),
-            'modules'    => \Codeception\Stub::makeEmpty(\Codeception\Lib\ModuleContainer::class)
+            'di'         => new Di(),
+            'dispatcher' => Stub::makeEmpty(EventDispatcher::class),
+            'modules'    => Stub::makeEmpty(ModuleContainer::class)
         ];
     }
 
@@ -61,9 +65,7 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->assertSame('Jeff returns a faulty microwave', $test->getScenarioTitle());
     }
 
-    /**
-     * @depends testLoadGherkin
-     */
+    #[Depends('testLoadGherkin')]
     public function testLoadWithContexts()
     {
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
@@ -75,9 +77,9 @@ class GherkinTest extends \Codeception\Test\Unit
 
     public function testBadRegex()
     {
-        $this->expectException(\Codeception\Exception\ParseException::class);
+        $this->expectException(ParseException::class);
 
-        $this->loader = new \Codeception\Test\Loader\Gherkin(
+        $this->loader = new GherkinLoader(
             [
                 'gherkin' => [
                     'contexts' => [
@@ -95,7 +97,7 @@ class GherkinTest extends \Codeception\Test\Unit
 
     public function testTags()
     {
-        $this->loader = new \Codeception\Test\Loader\Gherkin(
+        $this->loader = new GherkinLoader(
             [
                 'gherkin' => [
                     'contexts' => [
@@ -117,7 +119,7 @@ class GherkinTest extends \Codeception\Test\Unit
 
     public function testRoles()
     {
-        $this->loader = new \Codeception\Test\Loader\Gherkin(
+        $this->loader = new GherkinLoader(
             [
                 'gherkin' => [
                     'contexts' => [

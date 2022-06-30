@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Codeception\Step;
 
-class ExecutorTest extends \PHPUnit\Framework\TestCase
+use Codeception\Attribute\DataProvider;
+use PHPUnit\Framework\TestCase;
+
+final class ExecutorTest extends TestCase
 {
     /**
      * @dataProvider valuesProvider
@@ -13,7 +16,7 @@ class ExecutorTest extends \PHPUnit\Framework\TestCase
     {
         $expected = $returnValue;
 
-        $executor = new \Codeception\Step\Executor(fn (): bool => $returnValue);
+        $executor = new Executor(fn (): bool => $returnValue);
         $actual = $executor->run();
 
         $this->assertSame($expected, $actual);

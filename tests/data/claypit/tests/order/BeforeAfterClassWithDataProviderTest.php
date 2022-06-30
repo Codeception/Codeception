@@ -1,26 +1,25 @@
 <?php
 
-/**
- * @group App
- * @group New
- */
-class BeforeAfterClassWithDataProviderTest extends \Codeception\Test\Unit
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Group;
+use Codeception\Module\OrderHelper as OrderHelperModule;
+use Codeception\Test\Unit;
+
+#[Group('App'), Group('New')]
+final class BeforeAfterClassWithDataProviderTest extends Unit
 {
     /**
      * @beforeClass
      */
     public static function setUpSomeSharedFixtures()
     {
-        \Codeception\Module\OrderHelper::appendToFile('{');
+        OrderHelperModule::appendToFile('{');
     }
 
-    /**
-     * @dataProvider getAbc
-     *
-     */
+    #[DataProvider('getAbc')]
     public function testAbc(string $letter)
     {
-        \Codeception\Module\OrderHelper::appendToFile($letter);
+        OrderHelperModule::appendToFile($letter);
     }
 
     public static function getAbc(): array
@@ -33,6 +32,6 @@ class BeforeAfterClassWithDataProviderTest extends \Codeception\Test\Unit
      */
     public static function tearDownSomeSharedFixtures()
     {
-        \Codeception\Module\OrderHelper::appendToFile('}');
+        OrderHelperModule::appendToFile('}');
     }
 }

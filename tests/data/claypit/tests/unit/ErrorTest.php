@@ -1,8 +1,11 @@
 <?php
 
+use Codeception\Attribute\Group;
+use Codeception\Test\Unit;
+
 class SomeErrorClass
 {
-    public function someMethod()
+    public function someMethod(): void
     {
         $a = [];
 
@@ -10,14 +13,11 @@ class SomeErrorClass
     }
 }
 
-
-class ErrorTest extends \Codeception\Test\Unit
+final class ErrorTest extends Unit
 {
     protected UnitTester|CodeGuy $tester;
 
-    /**
-     * @group error
-     */
+    #[Group('error')]
     public function testGetError()
     {
         $test = new SomeErrorClass();

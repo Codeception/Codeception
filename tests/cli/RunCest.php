@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Attribute\After;
 use Codeception\Attribute\DataProvider;
 use Codeception\Attribute\Group;
 use Codeception\Scenario;
@@ -535,28 +536,19 @@ EOF
         $I->seeInShellOutput('OK (3 tests');
     }
 
-    /**
-     * @param CliGuy $I
-     * @after checkExampleFiles
-     */
+    #[After('checkExampleFiles')]
     public function runTestWithAnnotationExamples(CliGuy $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsAnnotation --steps');
     }
 
-    /**
-     * @param CliGuy $I
-     * @after checkExampleFiles
-     */
+    #[After('checkExampleFiles')]
     public function runTestWithJsonExamples(CliGuy $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsByJson --steps');
     }
 
-    /**
-     * @param CliGuy $I
-     * @after checkExampleFiles
-     */
+    #[After('checkExampleFiles')]
     public function runTestWithArrayExamples(CliGuy $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsByArray --steps');
@@ -653,10 +645,7 @@ EOF
         $I->seeInShellOutput('Errors: 1.');
     }
 
-    /**
-     * @group shuffle
-     * @param CliGuy $I
-     */
+    #[Group('shuffle')]
     public function showSeedNumberOnShuffle(CliGuy $I)
     {
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
@@ -665,11 +654,7 @@ EOF
         $I->dontSeeInShellOutput('Seed');
     }
 
-    /**
-     * @group shuffle
-     * @param CliGuy $I
-     * @param Scenario $scenario
-     */
+    #[Group('shuffle')]
     public function showSameOrderOfFilesOnSeed(CliGuy $I, Scenario $scenario)
     {
         if (DIRECTORY_SEPARATOR === '\\') {

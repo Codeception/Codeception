@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-/**
- * @group gherkin
- */
+use Codeception\Attribute\Group;
+
+#[Group('gherkin')]
 final class GherkinCest
 {
     public function _before(CliGuy $I)

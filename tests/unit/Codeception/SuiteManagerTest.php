@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Codeception\Attribute\Group;
+use Codeception\PHPUnit\TestCase;
 use Codeception\ResultAggregator;
 use Codeception\SuiteManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -10,11 +12,8 @@ if (!defined('PHPUNIT_TESTSUITE')) {
     define('PHPUNIT_TESTSUITE', true);
 }
 
-/**
- * @group core
- * Class SuiteManagerTest
- */
-class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
+#[Group('core')]
+final class SuiteManagerTest extends TestCase
 {
     protected SuiteManager $suiteman;
 
@@ -28,9 +27,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->suiteman = new SuiteManager($this->dispatcher, 'suite', $settings, []);
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testRun()
     {
         $events = [];
@@ -44,9 +41,7 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
         $this->assertSame($events, ['suite.before', 'suite.after']);
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testFewTests()
     {
         if (version_compare(phpversion(), '8.1', '>=') && PHP_OS_FAMILY === 'Windows') {
@@ -67,9 +62,8 @@ class SuiteManagerTest extends \Codeception\PHPUnit\TestCase
      * When running multiple environments, getClassesFromFile() method in SuiteManager is called once for each env.
      * See \Codeception\Codecept::runSuite() - for each env new SuiteManager is created and tests loaded.
      * Make sure that calling getClassesFromFile() multiple times will always return the same classes.
-     *
-     * @group core
      */
+    #[Group('core')]
     public function testAddCestWithEnv()
     {
         if (version_compare(phpversion(), '8.1', '>=') && PHP_OS_FAMILY === 'Windows') {

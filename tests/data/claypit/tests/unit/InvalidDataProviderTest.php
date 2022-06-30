@@ -1,10 +1,11 @@
 <?php
 
-class InvalidDataProviderTest extends \Codeception\Test\Unit
+use Codeception\Attribute\DataProvider;
+use Codeception\Test\Unit;
+
+final class InvalidDataProviderTest extends Unit
 {
-    /**
-     * @dataProvider dependentProvider
-     */
+    #[DataProvider('dependentProvider')]
     public function testInvalidDataProvider($a)
     {
         $this->assertTrue(true);

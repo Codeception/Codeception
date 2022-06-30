@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-class GenerateCestTest extends BaseCommandRunner
+use Codeception\Attribute\Group;
+
+final class GenerateCestTest extends BaseCommandRunner
 {
     protected function _setUp()
     {
@@ -13,9 +15,7 @@ class GenerateCestTest extends BaseCommandRunner
         ];
     }
 
-    /**
-     * @group command
-     */
+    #[Group('command')]
     public function testBasic()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
@@ -27,9 +27,7 @@ class GenerateCestTest extends BaseCommandRunner
         $this->assertStringContainsString('Test was created in tests/shire/HallUnderTheHillCest.php', $this->output);
     }
 
-    /**
-     * @group command
-     */
+    #[Group('command')]
     public function testNamespaced()
     {
         $this->config['namespace'] = 'Shire';
@@ -39,18 +37,14 @@ class GenerateCestTest extends BaseCommandRunner
         $this->assertStringContainsString('class HallUnderTheHillCest', $this->content);
     }
 
-    /**
-     * @group command
-     */
+    #[Group('command')]
     public function testGenerateWithFullName()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest.php']);
         $this->assertSame('tests/shire/HomeCanInclude12DwarfsCest.php', $this->filename);
     }
 
-    /**
-     * @group command
-     */
+    #[Group('command')]
     public function testGenerateWithSuffix()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest']);
