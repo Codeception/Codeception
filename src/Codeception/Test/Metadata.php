@@ -220,7 +220,7 @@ class Metadata
             };
 
             $this->params[$single] = array_map(fn($a) => is_array($a) ? $a : [$a], $this->params[$single]);
-            $this->params[$single] = array_merge(...$this->params[$single]);;
+            $this->params[$single] = array_merge(...$this->params[$single]);
         }
 
 
