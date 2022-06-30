@@ -5,6 +5,6 @@ namespace Codeception\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class DataProvider
+final class DataProvider
 {
 }

@@ -126,7 +126,13 @@ class Annotation
     {
         $attr = $this->attribute($annotation);
         if ($attr) {
-            return $attr->getArguments();
+            if (!$attr->isRepeated()) {
+                return $attr->getArguments();
+            }
+            $attrs = $this->attributes();
+            $name = ucfirst($annotation);
+            $attrs = array_filter($attrs, fn ($a) => $a->getName() === "Codeception\\Attribute\\$name");
+            return array_merge(...array_map(fn (\ReflectionAttribute $a) => $a->getArguments(), $attrs));
         }
         $docBlock = (string)$this->currentReflectedItem->getDocComment();
         if (preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched)) {

@@ -11,7 +11,6 @@ class PowerUpCest
         });
     }
 
-
     #[Prepare('drinkBluePotion')]
     public function iGotBluePotion(PowerGuy $I)
     {

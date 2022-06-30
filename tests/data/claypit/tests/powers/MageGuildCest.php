@@ -4,7 +4,8 @@ use Codeception\Attribute\Env;
 
 class MageGuildCest
 {
-    #[Env('magic', 'dark')]
+    #[Env('magic')]
+    #[Env('dark')]
     public function darkPower(PowerGuy $I)
     {
         $I->castFireball();
@@ -16,19 +17,22 @@ class MageGuildCest
         $I->castFireball();
     }
 
-    #[Env('magic', 'green')]
+    #[Env('magic')]
+    #[Env('green')]
     public function greenPower(PowerGuy $I)
     {
         $I->castFireball();
     }
 
-    #[Env('whisky', 'red')]
+    #[Env('whisky')]
+    #[Env('red')]
     public function redLabel(PowerGuy $I)
     {
         $I->castFireball();
     }
 
-    #[Env('dark', 'whisky')]
+    #[Env('dark')]
+    #[Env('whisky')]
     public function blackLabel(PowerGuy $I)
     {
         $I->castFireball();
