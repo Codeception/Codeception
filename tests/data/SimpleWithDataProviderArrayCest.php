@@ -7,7 +7,10 @@ use Codeception\Example;
 class SimpleWithDataProviderArrayCest
 {
     #[DataProvider('getTestData')]
-    #[Examples(['fizz', 'buzz']), Examples([null, 'test'])]
+    /**
+     * @example ["fizz", "buzz"]
+     * @example [null, "test"]
+     */
     public function helloWorld(CodeGuy $I, Example $example)
     {
         $I->execute(function ($example) {

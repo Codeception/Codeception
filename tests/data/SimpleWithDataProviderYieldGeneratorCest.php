@@ -6,7 +6,10 @@ use Codeception\Attribute\Examples;
 class SimpleWithDataProviderYieldGeneratorCest
 {
     #[DataProvider('getTestData')]
-    #[Examples(['fizz', 'buzz']), Examples([null, 'test'])]
+    /**
+     * @example ["fizz", "buzz"]
+     * @example [null, "test"]
+     */
     public function helloWorld(\CodeGuy $I, \Codeception\Example $example)
     {
         $I->execute(function ($example) {
