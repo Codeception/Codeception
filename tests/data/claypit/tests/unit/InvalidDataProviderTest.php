@@ -5,7 +5,10 @@ use Codeception\Test\Unit;
 
 final class InvalidDataProviderTest extends Unit
 {
-    #[DataProvider('dependentProvider')]
+
+    /**
+     * @dataProvider dependentProvider
+     */
     public function testInvalidDataProvider($a)
     {
         $this->assertTrue(true);

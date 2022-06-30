@@ -52,6 +52,7 @@ class DataProviderCest
         return true;
     }
 
+    #[Group('dataprovider')]
     #[DataProvider('__exampleDataSource')]
     public function singleLineAnnotationDataProvider(ScenarioGuy $I, Example $example)
     {

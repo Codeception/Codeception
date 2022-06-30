@@ -16,7 +16,9 @@ final class BeforeAfterClassWithDataProviderTest extends Unit
         OrderHelperModule::appendToFile('{');
     }
 
-    #[DataProvider('getAbc')]
+    /**
+     * @dataProvider getAbc
+     */
     public function testAbc(string $letter)
     {
         OrderHelperModule::appendToFile($letter);

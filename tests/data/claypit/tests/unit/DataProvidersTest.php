@@ -9,7 +9,9 @@ final class DataProvidersTest extends Unit
     protected CodeGuy $codeGuy;
 
     #[Group('data-providers')]
-    #[DataProvider('triangles')]
+    /**
+     * @dataProvider triangles
+     */
     public function testIsTriangle(int $a, int $b, int $c)
     {
         $this->assertTrue($a + $b > $c && $c + $b > $a && $a + $c > $b);
