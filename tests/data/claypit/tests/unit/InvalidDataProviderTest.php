@@ -5,7 +5,6 @@ use Codeception\Test\Unit;
 
 final class InvalidDataProviderTest extends Unit
 {
-
     /**
      * @dataProvider dependentProvider
      */
