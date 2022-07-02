@@ -17,5 +17,4 @@ class SimpleWithExamplesCest
             return count($example);
         })->seeResultEquals(2);
     }
-
 }

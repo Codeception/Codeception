@@ -116,5 +116,4 @@ final class TestLoaderTest extends \Codeception\PHPUnit\TestCase
 
         $this->assertSame(3, $firstTest->count());
     }
-
 }
