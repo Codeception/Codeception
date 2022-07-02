@@ -22,7 +22,7 @@ class MessageCest
         $I->expect('message' . $num . ': ' . $I->getMessage('message' . $num));
     }
 
-    #[Env(['env2', 'env1'])]
+    #[Env('env2,env1')]
     public function multipleEnvRequired(MessageGuy $I)
     {
         $I->expect('Multiple env given');
