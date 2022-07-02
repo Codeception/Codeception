@@ -5,19 +5,21 @@ declare(strict_types=1);
 namespace Codeception\Test\Loader;
 
 use Codeception\Lib\Parser;
+use Codeception\Test\DataProvider;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Unit as UnitFormat;
 use Codeception\Util\Annotation;
-use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\ErrorTestCase;
+use PHPUnit\Framework\IncompleteTestCase;
+use PHPUnit\Framework\SkippedTestCase;
 use PHPUnit\Framework\Test as PHPUnitTest;
-use PHPUnit\Framework\TestBuilder;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\Dependencies;
 use PHPUnit\Runner\Version as PHPUnitVersion;
-use PHPUnit\Util\Test;
+use PHPUnit\Util\Test as TestUtil;
 use ReflectionClass;
 use ReflectionMethod;
+use Throwable;
 
 use function get_class;
 
@@ -42,11 +44,12 @@ class Unit implements LoaderInterface
             }
 
             foreach ($reflected->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-                $test = $this->createTestFromPhpUnitMethod($reflected, $method);
-                if (!$test) {
-                    continue;
+                $tests = $this->createTestsFromPhpUnitMethod($reflected, $method);
+
+                foreach ($tests as $test) {
+                    $this->enhancePhpunitTest($test);
+                    $this->tests[] = $test;
                 }
-                $this->tests[] = $test;
             }
         }
     }
@@ -57,38 +60,69 @@ class Unit implements LoaderInterface
     }
 
     /**
-     * @return DataProviderTestSuite|PHPUnitTest|null
+     * @return PHPUnitTest[]
      */
-    protected function createTestFromPhpUnitMethod(ReflectionClass $class, ReflectionMethod $method)
+    protected function createTestsFromPhpUnitMethod(ReflectionClass $class, ReflectionMethod $method): array
     {
-        if (!Test::isTestMethod($method)) {
-            return null;
+        if (!TestUtil::isTestMethod($method)) {
+            return [];
         }
-        $test = (new TestBuilder())->build($class, $method->name);
+        $className = $class->getName();
+        $methodName = $method->getName();
 
-        if ($test instanceof DataProviderTestSuite) {
-            foreach ($test->tests() as $t) {
-                if (!$t instanceof ErrorTestCase) {
-                    $this->enhancePhpunitTest($t);
-                }
+        try {
+            $data = DataProvider::getDataForMethod($method);
+        } catch (Throwable $t) {
+            $message = sprintf(
+                "The data provider specified for %s::%s is invalid.\n%s",
+                $className,
+                $methodName,
+                $t->getMessage(),
+            );
+
+            if (PHPUnitVersion::series() < 10) {
+                $data = new ErrorTestCase($message);
+            } else {
+                $data = new ErrorTestCase($className, $methodName, $message);
             }
-            return $test;
         }
 
-        $this->enhancePhpunitTest($test);
-        return $test;
+        if (!isset($data)) {
+            return [ new $className($methodName) ];
+        }
+
+        if (
+            $data instanceof ErrorTestCase ||
+            $data instanceof SkippedTestCase ||
+            $data instanceof IncompleteTestCase
+        ) {
+            return [ $data ];
+        }
+
+        $result = [];
+        foreach ($data as $key => $item) {
+            if (PHPUnitVersion::series() < 10) {
+                $testInstance = new $className($methodName, $item, $key);
+            } else {
+                $testInstance = new $className($methodName);
+                $testInstance->setData($key, $item);
+            }
+            $result [] = $testInstance;
+        }
+
+        return $result;
     }
 
     protected function enhancePhpunitTest(PHPUnitTest $test): void
     {
-        if (!$test instanceof TestCase) {
+        if (!$test instanceof TestCase || $test instanceof ErrorTestCase) {
             return;
         }
         $className = get_class($test);
         $methodName = $test->getName(false);
 
         if (PHPUnitVersion::series() < 10) {
-            $dependencies = Test::getDependencies($className, $methodName);
+            $dependencies = TestUtil::getDependencies($className, $methodName);
         } else {
             $dependencies = Dependencies::dependencies($className, $methodName);
         }
