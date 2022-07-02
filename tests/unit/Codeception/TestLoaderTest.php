@@ -94,7 +94,7 @@ final class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         /** @var \PHPUnit\Framework\DataProviderTestSuite $firstTest */
         $firstTest = $tests[0];
 
-        $this->assertSame(5, $firstTest->count());
+        $this->assertSame(3, $firstTest->count());
     }
 
     public function testDataProviderReturningGenerator()
@@ -104,6 +104,16 @@ final class TestLoaderTest extends \Codeception\PHPUnit\TestCase
         /** @var \PHPUnit\Framework\DataProviderTestSuite $firstTest */
         $firstTest = $tests[0];
 
-        $this->assertSame(5, $firstTest->count());
+        $this->assertSame(3, $firstTest->count());
+    }
+
+    public function testLoadTestWithExamples()
+    {
+        $this->testLoader->loadTest('SimpleWithExamplesCest.php');
+        $tests = $this->testLoader->getTests();
+        /** @var \PHPUnit\Framework\DataProviderTestSuite $firstTest */
+        $firstTest = $tests[0];
+
+        $this->assertSame(3, $firstTest->count());
     }
 }

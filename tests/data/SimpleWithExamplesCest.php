@@ -1,11 +1,12 @@
 <?php
 
-use Codeception\Attribute\DataProvider;
 use Codeception\Attribute\Examples;
 
-class SimpleWithDataProviderYieldGeneratorCest
+class SimpleWithExamplesCest
 {
-    #[DataProvider('getTestData')]
+    #[Examples('foo', 'bar')]
+    #[Examples(1, 2)]
+    #[Examples(true, false)]
     public function helloWorld(\CodeGuy $I, \Codeception\Example $example)
     {
         $I->execute(function ($example) {
@@ -15,12 +16,5 @@ class SimpleWithDataProviderYieldGeneratorCest
 
             return count($example);
         })->seeResultEquals(2);
-    }
-
-    protected function getTestData(): Iterator
-    {
-        yield ['foo', 'bar'];
-        yield [1, 2];
-        yield [true, false];
     }
 }

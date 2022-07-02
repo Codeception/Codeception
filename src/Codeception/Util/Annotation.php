@@ -130,8 +130,14 @@ class Annotation
                 return $attr->getArguments();
             }
             $attrs = $this->attributes();
+            if ($annotation === 'example') {
+                $annotation = 'examples'; // we renamed this annotation
+            }
             $name = ucfirst($annotation);
             $attrs = array_filter($attrs, fn ($a) => $a->getName() === "Codeception\\Attribute\\$name");
+            if ($annotation === 'examples') {
+                return array_map(fn (\ReflectionAttribute $a) => $a->getArguments(), $attrs);
+            }
             return array_merge(...array_map(fn (\ReflectionAttribute $a) => $a->getArguments(), $attrs));
         }
         $docBlock = (string)$this->currentReflectedItem->getDocComment();
