@@ -12,7 +12,6 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Filter;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
-use PHPUnit\Framework\DataProviderTestSuite;
 use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -94,13 +93,6 @@ class SuiteManager
 
     protected function addToSuite(PHPUnitTest $test): void
     {
-        if ($test instanceof DataProviderTestSuite) {
-            foreach ($test->tests() as $t) {
-                $this->addToSuite($t);
-            }
-            return;
-        }
-
         if (!$this->testFilter->isNameAccepted($test)) {
             return;
         }

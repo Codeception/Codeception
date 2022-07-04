@@ -41,7 +41,7 @@ final class DataProviderFailuresAndExceptionsCest
         $I->executeCommand('run -n unit DataProvidersFailureCest 2>&1', false);
         $I->seeInShellOutput("Couldn't parse test");
         $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle");
-        $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
+        $I->seeInShellOutput('Make sure that the data provider exist within the test class.');
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
         $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->dontSeeInShellOutput('The data provider specified for DataProvidersFailureCest::testIsTriangle');
@@ -64,7 +64,7 @@ final class DataProviderFailuresAndExceptionsCest
         $I->executeCommand('run -n unit DataProvidersFailureCest -v 2>&1', false);
         $I->seeInShellOutput("Couldn't parse test");
         $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle");
-        $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
+        $I->seeInShellOutput('Make sure that the data provider exist within the test class.');
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
         $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->dontSeeInShellOutput('The data provider specified for DataProvidersFailureCest::testIsTriangle');
