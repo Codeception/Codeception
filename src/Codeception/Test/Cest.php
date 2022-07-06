@@ -6,6 +6,7 @@ namespace Codeception\Test;
 
 use Codeception\Example;
 use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\UselessTestException;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Parser;
 use Codeception\Step\Comment;
@@ -120,7 +121,7 @@ class Cest extends Test implements
             $this->executeTestMethod($I);
             $this->executeAfterMethods($this->testMethod, $I);
             $this->executeHook($I, 'passed');
-        } catch (RiskyTest | RiskyTestError | IncompleteTestError | SkippedTest $exception) {
+        } catch (RiskyTest | RiskyTestError | IncompleteTestError | SkippedTest | UselessTestException $exception) {
             // don't call failed hook
             throw $exception;
         } catch (Exception $exception) {

@@ -10,6 +10,7 @@ use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\UselessTestException;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\MessageFactory;
 use Codeception\Lib\Console\Output;
@@ -540,6 +541,7 @@ class Console implements EventSubscriberInterface
             || $fail instanceof IncompleteTestError
             || $fail instanceof RiskyTest
             || $fail instanceof RiskyTestError
+            || $fail instanceof UselessTestException
         ) {
             $testStyle = 'warning';
         }

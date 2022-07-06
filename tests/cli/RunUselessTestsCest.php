@@ -39,7 +39,7 @@ This test did not perform any assertions'
                 '
 4) UselessTest: Make unexpected assertion
  Test  tests/unit/UselessTest.php:testMakeUnexpectedAssertion
-This test is annotated with "@doesNotPerformAssertions" but performed 1 assertions'
+This test is should not perform any assertions, but performed 1 assertions'
             );
 
             return;
@@ -70,7 +70,7 @@ This test did not perform any assertions'
             '
 4) UselessTest: Make unexpected assertion
  Test  tests\unit\UselessTest.php:testMakeUnexpectedAssertion
-This test is annotated with "@doesNotPerformAssertions" but performed 1 assertions'
+This test is should not perform any assertions, but performed 1 assertions'
         );
     }
 

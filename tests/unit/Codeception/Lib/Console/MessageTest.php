@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Codeception\Lib\Console;
 
+use Codeception\Attribute\DoesNotPerformAssertions;
+
 class MessageTest extends \Codeception\Test\Unit
 {
     public function testCut()
@@ -17,6 +19,7 @@ class MessageTest extends \Codeception\Test\Unit
 
     //test message cutting
     // @codingStandardsIgnoreStart
+    #[DoesNotPerformAssertions]
     public function testVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestName()
     {
         $this->expectNotToPerformAssertions();

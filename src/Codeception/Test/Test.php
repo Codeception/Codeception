@@ -7,6 +7,7 @@ namespace Codeception\Test;
 use Codeception\Event\FailEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\UselessTestException;
 use Codeception\PHPUnit\Wrapper\Test as TestWrapper;
 use Codeception\ResultAggregator;
 use Codeception\TestInterface;
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
+use PHPUnit\Framework\RiskyDueToUnexpectedAssertionsException;
 use PHPUnit\Framework\RiskyTest;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SkippedTest;
@@ -173,7 +175,17 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $status = self::STATUS_OK;
                 $eventType = Events::TEST_SUCCESS;
             } catch (RiskyTest | RiskyTestError $e) {
-                $result->addUseless(new FailEvent($this, $e, $time));
+                $result->addUseless(
+                    new FailEvent(
+                        $this,
+                        new UselessTestException(
+                            $e->getMessage(),
+                            $e->getCode(),
+                            $e,
+                        ),
+                        $time
+                    )
+                );
                 $status = self::STATUS_USELESS;
                 $eventType = Events::TEST_USELESS;
             } catch (IncompleteTestError $e) {
@@ -203,14 +215,21 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             $this->assertionCount = Assert::getCount();
             $result->addToAssertionCount($this->assertionCount);
 
-            if ($this->reportUselessTests && $this->assertionCount === 0 && $eventType === Events::TEST_SUCCESS) {
-                $eventType = Events::TEST_USELESS;
-                if (PHPUnitVersion::series() < 10) {
-                    $e = new RiskyTestError('This test did not perform any assertions');
-                } else {
-                    $e = new RiskyBecauseNoAssertionsWerePerformedException();
+            if ($this->reportUselessTests && $eventType === Events::TEST_SUCCESS) {
+                if ($this->assertionCount === 0 && !$this->doesNotPerformAssertions()) {
+                    $eventType = Events::TEST_USELESS;
+                    $e = new UselessTestException('This test did not perform any assertions');
+                    $result->addUseless(new FailEvent($this, $e, $time));
+                } elseif ($this->assertionCount > 0 && $this->doesNotPerformAssertions()) {
+                    $eventType = Events::TEST_USELESS;
+                    $e = new UselessTestException(
+                        sprintf(
+                            'This test is should not perform any assertions, but performed %d assertions',
+                            $this->assertionCount
+                        )
+                    );
+                    $result->addUseless(new FailEvent($this, $e, $time));
                 }
-                $result->addUseless(new FailEvent($this, $e, $time));
             }
 
             if ($eventType === Events::TEST_SUCCESS) {
@@ -273,5 +292,10 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             }
         }
         $this->eventDispatcher->dispatch($event, $eventType);
+    }
+
+    protected function doesNotPerformAssertions(): bool
+    {
+        return $this->getMetadata()->doesNotPerformAssertions();
     }
 }

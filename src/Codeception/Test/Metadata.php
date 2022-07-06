@@ -274,4 +274,9 @@ class Metadata
     {
         return $this->afterClassMethods;
     }
+
+    public function doesNotPerformAssertions(): bool
+    {
+        return isset($this->params['doesNotPerformAssertions']);
+    }
 }

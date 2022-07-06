@@ -12,10 +12,7 @@ use Codeception\Test\Interfaces\StrictCoverage;
 use Codeception\TestInterface;
 use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ErrorTestCase;
-use PHPUnit\Framework\RiskyDueToUnexpectedAssertionsException;
-use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
@@ -141,26 +138,6 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
     public function test(): void
     {
         $this->testCase->runBare();
-
-        $numberOfAssertionsPerformed = Assert::getCount();
-        if (
-            $this->reportUselessTests &&
-            $numberOfAssertionsPerformed > 0 &&
-            $this->testCase->doesNotPerformAssertions()
-        ) {
-            if (PHPUnitVersion::series() < 10) {
-                throw new RiskyTestError(
-                    sprintf(
-                        'This test is annotated with "@doesNotPerformAssertions" but performed %d assertions',
-                        $numberOfAssertionsPerformed
-                    )
-                );
-            } else {
-                throw new RiskyDueToUnexpectedAssertionsException(
-                    $numberOfAssertionsPerformed
-                );
-            }
-        }
     }
 
     public function toString(): string
@@ -177,5 +154,10 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
     public function getSignature(): string
     {
         return $this->testCase::class . ':' . $this->metadata->getName();
+    }
+
+    protected function doesNotPerformAssertions(): bool
+    {
+        return $this->testCase->doesNotPerformAssertions() || parent::doesNotPerformAssertions();
     }
 }
