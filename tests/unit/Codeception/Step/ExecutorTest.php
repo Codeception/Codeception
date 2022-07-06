@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ExecutorTest extends TestCase
 {
-    /**
-     * @dataProvider valuesProvider
-     */
+    #[DataProvider('valuesProvider')]
     public function testRun(bool $returnValue)
     {
         $expected = $returnValue;

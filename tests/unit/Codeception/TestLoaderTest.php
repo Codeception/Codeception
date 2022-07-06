@@ -91,29 +91,20 @@ final class TestLoaderTest extends \Codeception\PHPUnit\TestCase
     {
         $this->testLoader->loadTest('SimpleWithDataProviderArrayCest.php');
         $tests = $this->testLoader->getTests();
-        /** @var \PHPUnit\Framework\DataProviderTestSuite $firstTest */
-        $firstTest = $tests[0];
-
-        $this->assertSame(3, $firstTest->count());
+        $this->assertCount(3, $tests);
     }
 
     public function testDataProviderReturningGenerator()
     {
         $this->testLoader->loadTest('SimpleWithDataProviderYieldGeneratorCest.php');
         $tests = $this->testLoader->getTests();
-        /** @var \PHPUnit\Framework\DataProviderTestSuite $firstTest */
-        $firstTest = $tests[0];
-
-        $this->assertSame(3, $firstTest->count());
+        $this->assertCount(3, $tests);
     }
 
     public function testLoadTestWithExamples()
     {
         $this->testLoader->loadTest('SimpleWithExamplesCest.php');
         $tests = $this->testLoader->getTests();
-        /** @var \PHPUnit\Framework\DataProviderTestSuite $firstTest */
-        $firstTest = $tests[0];
-
-        $this->assertSame(3, $firstTest->count());
+        $this->assertCount(3, $tests);
     }
 }
