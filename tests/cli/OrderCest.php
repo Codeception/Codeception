@@ -114,7 +114,8 @@ final class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order ParsedLoadedTest.php');
         $I->seeFileFound('order.txt', 'tests/_output');
-        $I->seeInThisFile('BIBP(T)');
+        # Module before and after hooks are executed for unit tests now
+        $I->seeInThisFile('BIBP([T])');
     }
 
     public function checkAfterBeforeHooksAreExecutedOnlyOnce(CliGuy $I)

@@ -8,6 +8,7 @@ use Codeception\Exception\ConfigurationException;
 use Codeception\Stub;
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
 use Codeception\Test\Metadata;
+use Codeception\Test\TestCaseWrapper;
 use Codeception\Test\Unit;
 use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\TestCase;
@@ -154,13 +155,14 @@ class GroupManagerTest extends \Codeception\Test\Unit
         new GroupManager(['important' => 'tests/data/group_manager_test/missing_directory']);
     }
 
-    protected function makeTestCase(string $file, string $name = ''): Unit
+    protected function makeTestCase(string $file, string $name = ''): TestCaseWrapper
     {
-        $testcase = clone $this;
-        $metadata = new Metadata();
+        $testcase = new TestCaseWrapper(clone $this);
+
+        $metadata = $testcase->getMetadata();
+        $metadata->setName($name);
         $metadata->setFilename(codecept_root_dir() . $file);
-        ReflectionHelper::setPrivateProperty($testcase, 'name', $name, TestCase::class);
-        ReflectionHelper::setPrivateProperty($testcase, 'metadata', $metadata, Unit::class);
+
         return $testcase;
     }
 }

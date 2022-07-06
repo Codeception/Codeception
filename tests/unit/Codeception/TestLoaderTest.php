@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Codeception\Attribute\Group;
+use Codeception\Test\Descriptor;
 use Codeception\Test\Loader as TestLoader;
 
 #[Group('load')]
@@ -76,7 +77,7 @@ final class TestLoaderTest extends \Codeception\PHPUnit\TestCase
     {
         $testNames = [];
         foreach ($tests as $test) {
-            $testNames[] = \Codeception\Test\Descriptor::getTestSignature($test);
+            $testNames[] = Descriptor::getTestSignature($test);
         }
 
         return $testNames;

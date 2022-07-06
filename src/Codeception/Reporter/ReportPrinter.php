@@ -11,7 +11,7 @@ use Codeception\Lib\Console\Output;
 use Codeception\Lib\Interfaces\ConsolePrinter;
 use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Codeception\Test\Descriptor;
-use PHPUnit\Framework\Test;
+use Codeception\Test\Test;
 
 class ReportPrinter implements ConsolePrinter
 {

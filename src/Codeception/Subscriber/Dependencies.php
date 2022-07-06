@@ -49,11 +49,7 @@ class Dependencies implements EventSubscriberInterface
 
     public function testSuccess(TestEvent $event): void
     {
-        /** @var SelfDescribing $test */
         $test = $event->getTest();
-        if (!$test instanceof TestInterface) {
-            return;
-        }
         $this->successfulTests[] = Descriptor::getTestSignature($test);
     }
 }

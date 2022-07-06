@@ -101,7 +101,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
      */
     public const STATUS_SKIPPED = 'skipped';
 
-    private bool $reportUselessTests = false;
+    protected bool $reportUselessTests = false;
 
     private bool $collectCodeCoverage = false;
 

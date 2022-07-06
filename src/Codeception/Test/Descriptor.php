@@ -7,13 +7,9 @@ namespace Codeception\Test;
 use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\Plain;
 use Codeception\TestInterface;
-use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\SelfDescribing;
-use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 
 use function codecept_relative_path;
-use function get_class;
 use function json_encode;
 use function method_exists;
 use function preg_replace;
@@ -29,15 +25,9 @@ class Descriptor
     /**
      * Provides a test name which can be located by
      */
-    public static function getTestSignature(SelfDescribing $testCase): string
+    public static function getTestSignature(Descriptive $test): string
     {
-        if ($testCase instanceof Descriptive) {
-            return $testCase->getSignature();
-        }
-        if ($testCase instanceof TestCase) {
-            return get_class($testCase) . ':' . $testCase->getName(false);
-        }
-        return $testCase->toString();
+        return $test->getSignature();
     }
 
     /**
@@ -68,11 +58,6 @@ class Descriptor
 
     public static function getTestAsString(SelfDescribing $testCase): string
     {
-        if ($testCase instanceof TestCase) {
-            $text = self::getTestCaseNameAsString($testCase->getName());
-            return ReflectionHelper::getClassShortName($testCase) . ': ' . $text;
-        }
-
         return $testCase->toString();
     }
 
@@ -89,27 +74,19 @@ class Descriptor
     /**
      * Provides a test file name relative to Codeception root
      */
-    public static function getTestFileName(SelfDescribing $testCase): string
+    public static function getTestFileName(Descriptive $test): string
     {
-        if ($testCase instanceof Descriptive) {
-            return codecept_relative_path(realpath($testCase->getFileName()));
-        }
-        return (new ReflectionClass($testCase))->getFileName();
+        return codecept_relative_path(realpath($test->getFileName()));
     }
 
-    public static function getTestFullName(SelfDescribing $testCase): string
+    public static function getTestFullName(Plain|Descriptive $test): string
     {
-        if ($testCase instanceof Plain) {
-            return self::getTestFileName($testCase);
+        if ($test instanceof Plain) {
+            return self::getTestFileName($test);
         }
-        if ($testCase instanceof Descriptive) {
-            $signature = $testCase->getSignature(); // cut everything before ":" from signature
-            return self::getTestFileName($testCase) . ':' . preg_replace('#^(.*?):#', '', $signature);
-        }
-        if ($testCase instanceof TestCase) {
-            return self::getTestFileName($testCase) . ':' . $testCase->getName(false);
-        }
-        return self::getTestFileName($testCase) . ':' . $testCase->toString();
+
+        $signature = $test->getSignature(); // cut everything before ":" from signature
+        return self::getTestFileName($test) . ':' . preg_replace('#^(.*?):#', '', $signature);
     }
 
     /**
@@ -117,18 +94,15 @@ class Descriptor
      */
     public static function getTestDataSetIndex(SelfDescribing $testCase): string
     {
-        if ($testCase instanceof TestCase) {
-            $index = $testCase->getDataSetAsString(false);
-            if ($index !== '') {
-                return $index;
-            }
-        }
         if ($testCase instanceof TestInterface) {
             $index = $testCase->getMetadata()->getIndex();
             if ($index === null) {
                 return '';
             }
-            return " with data set #{$index}";
+            if (is_int($index)) {
+                return ' with data set #' . $index;
+            }
+            return ' with data set "' . $index . '"';
         }
         return '';
     }

@@ -208,7 +208,6 @@ class Console implements EventSubscriberInterface
     public function startTest(TestEvent $event): void
     {
         $this->conditionalFails = [];
-        /** @var SelfDescribing $test */
         $test = $event->getTest();
         $this->printedTest = $test;
         $this->message = null;
@@ -515,7 +514,6 @@ class Console implements EventSubscriberInterface
 
     public function printFail(FailEvent $event, int $eventNumber): void
     {
-        /** @var SelfDescribing|TestInterface $failedTest */
         $failedTest = $event->getTest();
         $fail = $event->getFail();
 
@@ -525,7 +523,7 @@ class Console implements EventSubscriberInterface
 
         // Clickable `editor_url`:
         if (isset($this->options['editor_url']) && is_string($this->options['editor_url'])) {
-            $filePath = codecept_absolute_path(Descriptor::getTestFileName($failedTest));
+            $filePath = $failedTest->getFilename();
             $line = 1;
             foreach ($fail->getTrace() as $trace) {
                 if (isset($trace['file']) && $filePath === $trace['file'] && isset($trace['line'])) {
@@ -534,7 +532,7 @@ class Console implements EventSubscriberInterface
             }
             $message = str_replace(['%%file%%', '%%line%%'], [$filePath, $line], $this->options['editor_url']);
         } else {
-            $message = codecept_relative_path(Descriptor::getTestFullName($failedTest));
+            $message = Descriptor::getTestFullName($failedTest);
         }
         $testStyle = 'error';
         if (

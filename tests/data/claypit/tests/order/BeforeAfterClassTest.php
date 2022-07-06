@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Attribute\AfterClass;
+use Codeception\Attribute\BeforeClass;
 use Codeception\Attribute\Group;
 use Codeception\Module\OrderHelper as OrderHelperModule;
 use Codeception\Test\Unit;
@@ -7,9 +9,7 @@ use Codeception\Test\Unit;
 #[Group('App'), Group('New')]
 final class BeforeAfterClassTest extends Unit
 {
-    /**
-     * @beforeClass
-     */
+    #[BeforeClass]
     public static function setUpSomeSharedFixtures()
     {
         OrderHelperModule::appendToFile('{');
@@ -25,9 +25,7 @@ final class BeforeAfterClassTest extends Unit
         OrderHelperModule::appendToFile('2');
     }
 
-    /**
-     * @afterClass
-     */
+    #[AfterClass]
     public static function tearDownSomeSharedFixtures()
     {
         OrderHelperModule::appendToFile('}');

@@ -6,22 +6,17 @@ namespace Codeception\Test\Loader;
 
 use Codeception\Lib\Parser;
 use Codeception\Test\DataProvider;
-use Codeception\Test\Descriptor;
-use Codeception\Test\Unit as UnitFormat;
+use Codeception\Test\TestCaseWrapper;
 use Codeception\Util\Annotation;
 use PHPUnit\Framework\ErrorTestCase;
 use PHPUnit\Framework\IncompleteTestCase;
 use PHPUnit\Framework\SkippedTestCase;
-use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Metadata\Api\Dependencies;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
 use ReflectionClass;
 use ReflectionMethod;
 use Throwable;
-
-use function get_class;
 
 class Unit implements LoaderInterface
 {
@@ -43,12 +38,32 @@ class Unit implements LoaderInterface
                 continue;
             }
 
+            // find hook methods
+            $beforeClassMethods = ['setUpBeforeClass'];
+            $afterClassMethods = ['tearDownAfterClass'];
+
+            foreach ($reflected->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+                $methodName = $method->getName();
+                $methodAnnotations = Annotation::forMethod($testClass, $methodName);
+
+                $beforeClassAnnotation = $methodAnnotations->fetch('beforeClass');
+                if ($beforeClassAnnotation !== null) {
+                    $beforeClassMethods [] = $methodName;
+                }
+
+                $afterClassAnnotation = $methodAnnotations->fetch('afterClass');
+                if ($afterClassAnnotation !== null) {
+                    $afterClassMethods [] = $methodName;
+                }
+            }
+
             foreach ($reflected->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
                 $tests = $this->createTestsFromPhpUnitMethod($reflected, $method);
 
                 foreach ($tests as $test) {
-                    $this->enhancePhpunitTest($test);
-                    $this->tests[] = $test;
+                    $this->tests[] = $this->enhancePhpunitTest($test, $beforeClassMethods, $afterClassMethods);
+                    // only the first instance gets before/after class methods
+                    $beforeClassMethods = $afterClassMethods = [];
                 }
             }
         }
@@ -60,7 +75,7 @@ class Unit implements LoaderInterface
     }
 
     /**
-     * @return PHPUnitTest[]
+     * @return TestCase[]
      */
     protected function createTestsFromPhpUnitMethod(ReflectionClass $class, ReflectionMethod $method): array
     {
@@ -113,26 +128,37 @@ class Unit implements LoaderInterface
         return $result;
     }
 
-    protected function enhancePhpunitTest(PHPUnitTest $test): void
-    {
-        if (!$test instanceof TestCase || $test instanceof ErrorTestCase) {
-            return;
-        }
-        $className = get_class($test);
-        $methodName = $test->getName(false);
+    /**
+     * @param string[] $beforeClassMethods
+     * @param string[] $afterClassMethods
+     */
+    protected function enhancePhpunitTest(
+        TestCase $testCase,
+        array $beforeClassMethods,
+        array $afterClassMethods,
+    ): TestCaseWrapper {
 
-        if (PHPUnitVersion::series() < 10) {
-            $dependencies = TestUtil::getDependencies($className, $methodName);
-        } else {
-            $dependencies = Dependencies::dependencies($className, $methodName);
+        $test = new TestCaseWrapper($testCase);
+
+        $methodName = $testCase->getName(false);
+        $metadata = $test->getMetadata();
+        $metadata->setName($methodName);
+        $metadata->setFilename((new ReflectionClass($testCase))->getFileName());
+
+        if ($testCase->dataName() !== '') {
+            $metadata->setIndex($testCase->dataName());
         }
 
-        $test->setDependencies($dependencies);
-        if ($test instanceof UnitFormat) {
-            $annotations = Annotation::forMethod($test, $methodName)->raw();
-            $test->getMetadata()->setParamsFromAnnotations($annotations);
-            $test->getMetadata()->setParamsFromAttributes(Annotation::forMethod($test, $methodName)->attributes());
-            $test->getMetadata()->setFilename(Descriptor::getTestFileName($test));
+        if ($testCase instanceof ErrorTestCase) {
+            return $test;
         }
+
+        $methodAnnotations = Annotation::forMethod($testCase, $methodName);
+        $metadata->setParamsFromAnnotations($methodAnnotations->raw());
+        $metadata->setParamsFromAttributes($methodAnnotations->attributes());
+        $metadata->setBeforeClassMethods($beforeClassMethods);
+        $metadata->setAfterClassMethods($afterClassMethods);
+
+        return $test;
     }
 }

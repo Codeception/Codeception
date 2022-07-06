@@ -113,7 +113,10 @@ class Annotation
         $attr = $this->attribute($annotation);
         if ($attr) {
             $arguments = $attr->getArguments();
-            return reset($arguments);
+            if (count($arguments) === 0) {
+                return '';
+            }
+            return $arguments[0];
         }
         $docBlock = (string)$this->currentReflectedItem->getDocComment();
         if (preg_match(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
