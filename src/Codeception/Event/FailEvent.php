@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Event;
 
-use PHPUnit\Framework\Test;
+use Codeception\Test\Test;
 use Throwable;
 
 class FailEvent extends TestEvent

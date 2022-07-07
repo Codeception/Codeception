@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Codeception;
 
 use Codeception\Event\FailEvent;
-use PHPUnit\Framework\Test;
-use SebastianBergmann\CodeCoverage\CodeCoverage;
+use Codeception\Test\Test;
 
 class ResultAggregator
 {

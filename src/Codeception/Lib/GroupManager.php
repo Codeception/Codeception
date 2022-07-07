@@ -6,18 +6,13 @@ namespace Codeception\Lib;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
-use Codeception\Test\Descriptor;
 use Codeception\Test\Gherkin;
-use Codeception\Test\Interfaces\Reported;
-use Codeception\TestInterface;
+use Codeception\Test\Test;
 use Codeception\Util\PathResolver;
-use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Metadata\Api\Groups;
-use PHPUnit\Runner\Version as PHPUnitVersion;
-use PHPUnit\Util\Test as TestUtil;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+
+use function realpath;
 
 /**
  * Loads information for groups from external sources (config, filesystem)
@@ -91,6 +86,7 @@ class GroupManager
             if (!codecept_is_path_absolute($tests)) {
                 $path = $this->rootDir . $tests;
             }
+
             if (is_file($path)) {
                 $handle = @fopen($path, "r");
                 if ($handle) {
@@ -148,28 +144,16 @@ class GroupManager
 
     public function groupsForTest(Test $test): array
     {
-        $groups = [];
-        $filename = Descriptor::getTestFileName($test);
-        if ($test instanceof TestInterface) {
-            $groups = $test->getMetadata()->getGroups();
-        }
-        if ($test instanceof Reported) {
-            $info = $test->getReportFields();
-            if (isset($info['class'])) {
-                $groups = array_merge($groups, $this->getGroupsForMethod($info['class'], $info['name']));
-            }
-            $filename = str_replace(['\\\\', '//', '/./'], ['\\', '/', '/'], $info['file']);
-        }
-        if ($test instanceof TestCase) {
-            $groups = array_merge($groups, $this->getGroupsForMethod($test::class, $test->getName(false)));
-        }
+        $filename = realpath($test->getFileName());
+        $testName = $test->getName();
+        $groups = $test->getMetadata()->getGroups();
 
         foreach ($this->testsInGroups as $group => $tests) {
             foreach ($tests as $testPattern) {
                 if ($filename == $testPattern) {
                     $groups[] = $group;
                 }
-                $testName = $test->getName();
+
                 if (str_starts_with($filename . ':' . $testName, (string)$testPattern)) {
                     $groups[] = $group;
                 }
@@ -182,22 +166,5 @@ class GroupManager
             }
         }
         return array_unique($groups);
-    }
-
-    private function getGroupsForMethod(string $className, string $methodName): array
-    {
-        if (str_contains($methodName, ' ')) {
-            // strip ' with data set #0' from method name when data provide is used
-            $methodName = substr($methodName, 0, strpos($methodName, ' '));
-        }
-        if (!method_exists($className, $methodName)) {
-            return [];
-        }
-
-        if (PHPUnitVersion::series() < 10) {
-            return TestUtil::getGroups($className, $methodName);
-        } else {
-            return (new Groups())->groups($className, $methodName);
-        }
     }
 }

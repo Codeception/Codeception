@@ -5,7 +5,7 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Lib\Interfaces\ConsolePrinter;
 use Codeception\Test\Descriptor;
-use PHPUnit\Framework\Test;
+use Codeception\Test\Test;
 
 class MyReportPrinter extends \Codeception\Extension implements ConsolePrinter
 {

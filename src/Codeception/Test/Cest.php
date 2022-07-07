@@ -135,6 +135,7 @@ class Cest extends Test implements
 
     protected function executeBeforeMethods(string $testMethod, $I): void
     {
+        // TODO: read from metadata
         $attribute = Annotation::forMethod(get_class($this->testClassInstance), $testMethod)->attribute('before');
         if ($attribute) {
             foreach ($attribute->getArguments() as $m) {

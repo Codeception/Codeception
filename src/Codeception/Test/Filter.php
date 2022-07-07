@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Codeception\Test;
 
 use PHPUnit\Framework\ErrorTestCase;
-use PHPUnit\Framework\Test as PHPUnitTest;
 use PHPUnit\Framework\WarningTestCase;
 
 class Filter
@@ -74,7 +73,7 @@ class Filter
         $this->namePattern = $namePattern;
     }
 
-    public function isNameAccepted(PHPUnitTest $test): bool
+    public function isNameAccepted(Test $test): bool
     {
         if ($this->namePattern === null) {
             return true;
@@ -95,7 +94,7 @@ class Filter
         return (bool)$accepted;
     }
 
-    public function isGroupAccepted(PHPUnitTest $test, array $groups): bool
+    public function isGroupAccepted(Test $test, array $groups): bool
     {
         if ($this->includeGroups !== null && count(\array_intersect($groups, $this->includeGroups)) === 0) {
             return false;

@@ -12,7 +12,9 @@ use Codeception\Test\Descriptor;
 use Codeception\Test\Filter;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
-use PHPUnit\Framework\Test as PHPUnitTest;
+use Codeception\Test\Test;
+use Codeception\Test\TestCaseWrapper;
+use Codeception\Test\Unit;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -91,19 +93,17 @@ class SuiteManager
         $this->suite->reorderDependencies();
     }
 
-    protected function addToSuite(PHPUnitTest $test): void
+    protected function addToSuite(Test $test): void
     {
         if (!$this->testFilter->isNameAccepted($test)) {
             return;
         }
 
-        if ($test instanceof TestInterface) {
-            $this->configureTest($test);
+        $this->configureTest($test);
 
-            $this->checkEnvironmentExists($test);
-            if (!$this->isExecutedInCurrentEnvironment($test)) {
-                return; // skip tests from other environments
-            }
+        $this->checkEnvironmentExists($test);
+        if (!$this->isExecutedInCurrentEnvironment($test)) {
+            return; // skip tests from other environments
         }
 
         $groups = $this->groupManager->groupsForTest($test);
@@ -226,6 +226,12 @@ class SuiteManager
             'env' => $this->env,
             'modules' => $this->moduleContainer->all()
         ]);
+        if ($test instanceof TestCaseWrapper) {
+            $testCase = $test->getTestCase();
+            if ($testCase instanceof Unit) {
+                $this->configureTest($testCase);
+            }
+        }
         if ($test instanceof ScenarioDriven) {
             $test->preload();
         }
