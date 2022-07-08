@@ -10,14 +10,17 @@ use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Interfaces\StrictCoverage;
 use Codeception\TestInterface;
+use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ErrorTestCase;
 use PHPUnit\Framework\RiskyDueToUnexpectedAssertionsException;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
+use ReflectionClass;
 
 /**
  * Wrapper for TestCase tests behaving like native Codeception test format
@@ -28,9 +31,41 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
 
     private ?ResultAggregator $resultAggregator = null;
 
-    public function __construct(private TestCase $testCase)
-    {
+    /**
+     * @param string[] $beforeClassMethods
+     * @param string[] $afterClassMethods
+     */
+    public function __construct(
+        private TestCase $testCase,
+        array $beforeClassMethods = [],
+        array $afterClassMethods = [],
+    ) {
         $this->metadata = new Metadata();
+        $metadata = $this->metadata;
+
+        $methodName = $testCase->getName(false);
+        $metadata->setName($methodName);
+        $metadata->setFilename((new ReflectionClass($testCase))->getFileName());
+
+        if ($testCase->dataName() !== '') {
+            $metadata->setIndex($testCase->dataName());
+        }
+
+        $methodName = $testCase->getName(false);
+
+        if ($testCase instanceof ErrorTestCase) {
+            return;
+        }
+        $classAnnotations = Annotation::forClass($testCase);
+        $metadata->setParamsFromAnnotations($classAnnotations->raw());
+        $metadata->setParamsFromAttributes($classAnnotations->attributes());
+
+        $methodAnnotations = Annotation::forMethod($testCase, $methodName);
+        $metadata->setParamsFromAnnotations($methodAnnotations->raw());
+        $metadata->setParamsFromAttributes($methodAnnotations->attributes());
+
+        $metadata->setBeforeClassMethods($beforeClassMethods);
+        $metadata->setAfterClassMethods($afterClassMethods);
     }
 
     public function getTestCase(): TestCase
