@@ -17,7 +17,6 @@ use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\RiskyTest;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SkippedTest;
-use PHPUnit\Metadata\Annotation\Parser\Registry as AnnotationRegistry;
 use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
@@ -141,52 +140,17 @@ class Cest extends Test implements
 
     protected function executeBeforeMethods(string $testMethod, $I): void
     {
-        // TODO: read from metadata
-        $attribute = Annotation::forMethod($this->testClass, $testMethod)->attribute('before');
-        if ($attribute) {
-            foreach ($attribute->getArguments() as $m) {
-                $this->executeContextMethod(trim($m), $I);
-            }
-            return;
-        }
-        if (PHPUnitVersion::series() < 10) {
-            $annotations = TestUtil::parseTestMethodAnnotations($this->testClass, $testMethod);
-            if (!empty($annotations['method']['before'])) {
-                foreach ($annotations['method']['before'] as $m) {
-                    $this->executeContextMethod(trim($m), $I);
-                }
-            }
-        } else {
-            foreach (AnnotationRegistry::getInstance()->forMethod($this->testClass, $testMethod)->symbolAnnotations() as $annotation => $values) {
-                if ($annotation === 'before') {
-                    $this->executeContextMethod(trim($values[0]), $I);
-                }
-            }
+        $methods = Annotation::forMethod($this->testClass, $testMethod)->fetchAll('before');
+        foreach ($methods as $method) {
+            $this->executeContextMethod(trim($method), $I);
         }
     }
 
     protected function executeAfterMethods(string $testMethod, $I): void
     {
-        $attribute = Annotation::forMethod($this->testClass, $testMethod)->attribute('after');
-        if ($attribute) {
-            foreach ($attribute->getArguments() as $m) {
-                $this->executeContextMethod(trim($m), $I);
-            }
-            return;
-        }
-        if (PHPUnitVersion::series() < 10) {
-            $annotations = TestUtil::parseTestMethodAnnotations($this->testClass, $testMethod);
-            if (!empty($annotations['method']['after'])) {
-                foreach ($annotations['method']['after'] as $m) {
-                    $this->executeContextMethod(trim($m), $I);
-                }
-            }
-        } else {
-            foreach (AnnotationRegistry::getInstance()->forMethod($this->testClass, $testMethod)->symbolAnnotations() as $annotation => $values) {
-                if ($annotation === 'after') {
-                    $this->executeContextMethod(trim($values[0]), $I);
-                }
-            }
+        $methods = Annotation::forMethod($this->testClass, $testMethod)->fetchAll('after');
+        foreach ($methods as $method) {
+            $this->executeContextMethod(trim($method), $I);
         }
     }
 
