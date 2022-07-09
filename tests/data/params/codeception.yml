@@ -1,8 +1,8 @@
 actor: Tester
 paths:
     tests: tests
-    output: .
-    data: .
+    output: tests/_output
+    data: tests/_data
     support: tests/_support
 params:
     - environment

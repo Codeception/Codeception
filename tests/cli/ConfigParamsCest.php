@@ -2,21 +2,31 @@
 
 declare(strict_types=1);
 
+use Codeception\Attribute\AfterClass;
 use Codeception\Attribute\Before;
+use Codeception\Attribute\BeforeClass;
 
 final class ConfigParamsCest
 {
+    #[BeforeClass]
+    public function _beforeClass(CliGuy $I)
+    {
+        $I->amInPath(codecept_root_dir('tests/data/params'));
+        $I->executeCommand('build');
+        $I->amInPath(codecept_root_dir());
+    }
+
+    #[AfterClass]
+    public function _afterClass(CliGuy $I)
+    {
+        $I->amInPath(codecept_root_dir('tests/data/params'));
+        $I->executeCommand('clean');
+        $I->amInPath(codecept_root_dir());
+    }
+
     private function moveToTestDir(CliGuy $I): void
     {
-        static $prepared = false;
-
         $I->amInPath('tests/data/params');
-
-        if ($prepared) {
-            return;
-        }
-        $I->executeCommand('build');
-        $prepared = true;
     }
 
     #[Before('moveToTestDir')]

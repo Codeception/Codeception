@@ -20,7 +20,7 @@ class CliHelper extends \Codeception\Module
     {
         codecept_debug('deleting dirs');
         $this->getModule('Filesystem')->deleteDir(codecept_data_dir() . 'sandbox');
-        chdir(\Codeception\Configuration::projectDir());
+        $this->getModule('Filesystem')->amInPath(codecept_root_dir());
     }
 
     public function executeCommand($command, bool $fail = true, $phpOptions = '')
