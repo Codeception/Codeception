@@ -12,8 +12,10 @@ final class CestTest extends Unit
     #[Group('core')]
     public function testCestNamings()
     {
-        $klass = new stdClass();
-        $cest = new Cest($klass, 'user', 'tests/cli/BootstrapCest.php');
+        require_once codecept_root_dir('tests/cli/BootstrapCest.php');
+
+        $instance = new BootstrapCest();
+        $cest = new Cest($instance, 'bootstrapWithNamespace', 'tests/cli/BootstrapCest.php');
 
         $path = 'tests' . DIRECTORY_SEPARATOR . 'cli' . DIRECTORY_SEPARATOR;
 
@@ -23,13 +25,15 @@ final class CestTest extends Unit
         );
 
         $this->assertSame(
-            $path . 'BootstrapCest.php:user',
+            $path . 'BootstrapCest.php:bootstrapWithNamespace',
             Descriptor::getTestFullName($cest)
         );
 
         $this->assertSame(
-            'stdClass:user',
+            'BootstrapCest:bootstrapWithNamespace',
             Descriptor::getTestSignature($cest)
         );
+
+        $this->assertSame(['bootstrap'], $cest->getMetadata()->getGroups());
     }
 }

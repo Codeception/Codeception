@@ -61,7 +61,7 @@ class Unit implements LoaderInterface
                 $tests = $this->createTestsFromPhpUnitMethod($reflected, $method);
 
                 foreach ($tests as $test) {
-                    $this->tests[] = $this->enhancePhpunitTest($test, $beforeClassMethods, $afterClassMethods);
+                    $this->tests[] = new TestCaseWrapper($test, $beforeClassMethods, $afterClassMethods);
                     // only the first instance gets before/after class methods
                     $beforeClassMethods = $afterClassMethods = [];
                 }
@@ -138,26 +138,7 @@ class Unit implements LoaderInterface
         array $afterClassMethods,
     ): TestCaseWrapper {
 
-        $test = new TestCaseWrapper($testCase);
-
-        $methodName = $testCase->getName(false);
-        $metadata = $test->getMetadata();
-        $metadata->setName($methodName);
-        $metadata->setFilename((new ReflectionClass($testCase))->getFileName());
-
-        if ($testCase->dataName() !== '') {
-            $metadata->setIndex($testCase->dataName());
-        }
-
-        if ($testCase instanceof ErrorTestCase) {
-            return $test;
-        }
-
-        $methodAnnotations = Annotation::forMethod($testCase, $methodName);
-        $metadata->setParamsFromAnnotations($methodAnnotations->raw());
-        $metadata->setParamsFromAttributes($methodAnnotations->attributes());
-        $metadata->setBeforeClassMethods($beforeClassMethods);
-        $metadata->setAfterClassMethods($afterClassMethods);
+        $test = new TestCaseWrapper($testCase, $beforeClassMethods, $afterClassMethods);
 
         return $test;
     }

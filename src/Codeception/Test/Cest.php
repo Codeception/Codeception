@@ -17,7 +17,6 @@ use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\RiskyTest;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SkippedTest;
-use PHPUnit\Metadata\Annotation\Parser\Registry as AnnotationRegistry;
 use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
@@ -25,7 +24,6 @@ use ReflectionMethod;
 
 use function array_slice;
 use function file;
-use function get_class;
 use function implode;
 use function is_callable;
 use function method_exists;
@@ -49,17 +47,26 @@ class Cest extends Test implements
 
     protected Parser $parser;
 
-    protected string|object $testClassInstance;
+    protected object $testInstance;
+
+    protected string $testClass;
 
     protected string $testMethod;
 
-    public function __construct(object|string $testClass, string $methodName, string $fileName)
+    public function __construct(object $testInstance, string $methodName, string $fileName)
     {
         $metadata = new Metadata();
         $metadata->setName($methodName);
         $metadata->setFilename($fileName);
+        $classAnnotations = Annotation::forClass($testInstance);
+        $metadata->setParamsFromAnnotations($classAnnotations->raw());
+        $metadata->setParamsFromAttributes($classAnnotations->attributes());
+        $methodAnnotations = Annotation::forMethod($testInstance, $methodName);
+        $metadata->setParamsFromAnnotations($methodAnnotations->raw());
+        $metadata->setParamsFromAttributes($methodAnnotations->attributes());
         $this->setMetadata($metadata);
-        $this->testClassInstance = $testClass;
+        $this->testInstance = $testInstance;
+        $this->testClass = $testInstance::class;
         $this->testMethod = $methodName;
         $this->createScenario();
         $this->parser = new Parser($this->getScenario(), $this->getMetadata());
@@ -70,9 +77,7 @@ class Cest extends Test implements
         $this->scenario->setFeature($this->getSpecFromMethod());
         $code = $this->getSourceCode();
         $this->parser->parseFeature($code);
-        $this->getMetadata()->setParamsFromAnnotations(Annotation::forMethod($this->testClassInstance, $this->testMethod)->raw());
-        $this->getMetadata()->setParamsFromAttributes(Annotation::forMethod($this->testClassInstance, $this->testMethod)->attributes());
-        $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance);
+        $this->getMetadata()->getService('di')->injectDependencies($this->testInstance);
 
         // add example params to feature
         if ($this->getMetadata()->getCurrent('example')) {
@@ -83,7 +88,7 @@ class Cest extends Test implements
 
     public function getSourceCode(): string
     {
-        $method = new ReflectionMethod($this->testClassInstance, $this->testMethod);
+        $method = new ReflectionMethod($this->testInstance, $this->testMethod);
         $startLine = $method->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
         $endLine = $method->getEndLine();
         $source = file($method->getFileName());
@@ -128,72 +133,37 @@ class Cest extends Test implements
 
     protected function executeHook($I, string $hook): void
     {
-        if (is_callable([$this->testClassInstance, "_{$hook}"])) {
+        if (is_callable([$this->testInstance, "_{$hook}"])) {
             $this->invoke("_{$hook}", [$I, $this->scenario]);
         }
     }
 
     protected function executeBeforeMethods(string $testMethod, $I): void
     {
-        // TODO: read from metadata
-        $attribute = Annotation::forMethod(get_class($this->testClassInstance), $testMethod)->attribute('before');
-        if ($attribute) {
-            foreach ($attribute->getArguments() as $m) {
-                $this->executeContextMethod(trim($m), $I);
-            }
-            return;
-        }
-        if (PHPUnitVersion::series() < 10) {
-            $annotations = TestUtil::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
-            if (!empty($annotations['method']['before'])) {
-                foreach ($annotations['method']['before'] as $m) {
-                    $this->executeContextMethod(trim($m), $I);
-                }
-            }
-        } else {
-            foreach (AnnotationRegistry::getInstance()->forMethod(get_class($this->testClassInstance), $testMethod)->symbolAnnotations() as $annotation => $values) {
-                if ($annotation === 'before') {
-                    $this->executeContextMethod(trim($values[0]), $I);
-                }
-            }
+        $methods = Annotation::forMethod($this->testClass, $testMethod)->fetchAll('before');
+        foreach ($methods as $method) {
+            $this->executeContextMethod(trim($method), $I);
         }
     }
 
     protected function executeAfterMethods(string $testMethod, $I): void
     {
-        $attribute = Annotation::forMethod(get_class($this->testClassInstance), $testMethod)->attribute('after');
-        if ($attribute) {
-            foreach ($attribute->getArguments() as $m) {
-                $this->executeContextMethod(trim($m), $I);
-            }
-            return;
-        }
-        if (PHPUnitVersion::series() < 10) {
-            $annotations = TestUtil::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
-            if (!empty($annotations['method']['after'])) {
-                foreach ($annotations['method']['after'] as $m) {
-                    $this->executeContextMethod(trim($m), $I);
-                }
-            }
-        } else {
-            foreach (AnnotationRegistry::getInstance()->forMethod(get_class($this->testClassInstance), $testMethod)->symbolAnnotations() as $annotation => $values) {
-                if ($annotation === 'after') {
-                    $this->executeContextMethod(trim($values[0]), $I);
-                }
-            }
+        $methods = Annotation::forMethod($this->testClass, $testMethod)->fetchAll('after');
+        foreach ($methods as $method) {
+            $this->executeContextMethod(trim($method), $I);
         }
     }
 
     protected function executeContextMethod(string $context, $I): void
     {
-        if (method_exists($this->testClassInstance, $context)) {
+        if (method_exists($this->testInstance, $context)) {
             $this->executeBeforeMethods($context, $I);
             $this->invoke($context, [$I, $this->scenario]);
             $this->executeAfterMethods($context, $I);
             return;
         }
         throw new LogicException(
-            "Method {$context} defined in annotation but does not exist in " . get_class($this->testClassInstance)
+            "Method {$context} defined in annotation but does not exist in " . $this->testClass
         );
     }
 
@@ -202,17 +172,20 @@ class Cest extends Test implements
         foreach ($context as $class) {
             $this->getMetadata()->getService('di')->set($class);
         }
-        $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance, $methodName, $context);
+        $this->getMetadata()->getService('di')->injectDependencies($this->testInstance, $methodName, $context);
     }
 
     protected function executeTestMethod($I): void
     {
-        if (!method_exists($this->testClassInstance, $this->testMethod)) {
+        if (!method_exists($this->testInstance, $this->testMethod)) {
             throw new Exception("Method {$this->testMethod} can't be found in tested class");
         }
 
         if ($this->getMetadata()->getCurrent('example')) {
-            $this->invoke($this->testMethod, [$I, $this->scenario, new Example($this->getMetadata()->getCurrent('example'))]);
+            $this->invoke(
+                $this->testMethod,
+                [$I, $this->scenario, new Example($this->getMetadata()->getCurrent('example'))]
+            );
             return;
         }
         $this->invoke($this->testMethod, [$I, $this->scenario]);
@@ -220,17 +193,21 @@ class Cest extends Test implements
 
     public function toString(): string
     {
-        return sprintf('%s: %s', ReflectionHelper::getClassShortName($this->getTestClass()), Message::ucfirst($this->getFeature()));
+        return sprintf(
+            '%s: %s',
+            ReflectionHelper::getClassShortName($this->getTestInstance()),
+            Message::ucfirst($this->getFeature()),
+        );
     }
 
     public function getSignature(): string
     {
-        return get_class($this->getTestClass()) . ":" . $this->getTestMethod();
+        return $this->testClass . ":" . $this->testMethod;
     }
 
-    public function getTestClass(): object|string
+    public function getTestInstance(): object
     {
-        return $this->testClassInstance;
+        return $this->testInstance;
     }
 
     public function getTestMethod(): string
@@ -241,8 +218,8 @@ class Cest extends Test implements
     public function getReportFields(): array
     {
         return [
-            'name'    => $this->getTestMethod(),
-            'class'   => get_class($this->getTestClass()),
+            'name'    => $this->testMethod,
+            'class'   => $this->testClass,
             'file'    => $this->getFileName(),
             'feature' => $this->getFeature(),
         ];
@@ -257,8 +234,8 @@ class Cest extends Test implements
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
-            if (!str_contains($required, ':') && method_exists($this->getTestClass(), $required)) {
-                $required = get_class($this->getTestClass()) . ":{$required}";
+            if (!str_contains($required, ':') && method_exists($this->getTestInstance(), $required)) {
+                $required = $this->testClass . ":{$required}";
             }
             $names[] = $required;
         }
@@ -267,23 +244,17 @@ class Cest extends Test implements
 
     public function getLinesToBeCovered(): array
     {
-        $class  = get_class($this->getTestClass());
-        $method = $this->getTestMethod();
-
         if (PHPUnitVersion::series() < 10) {
-            return TestUtil::getLinesToBeCovered($class, $method);
+            return TestUtil::getLinesToBeCovered($this->testClass, $this->testMethod);
         }
-        return (new CodeCoverage())->linesToBeCovered($class, $method);
+        return (new CodeCoverage())->linesToBeCovered($this->testClass, $this->testMethod);
     }
 
     public function getLinesToBeUsed(): array
     {
-        $class  = get_class($this->getTestClass());
-        $method = $this->getTestMethod();
-
         if (PHPUnitVersion::series() < 10) {
-            return TestUtil::getLinesToBeUsed($class, $method);
+            return TestUtil::getLinesToBeUsed($this->testClass, $this->testMethod);
         }
-        return (new CodeCoverage())->linesToBeUsed($class, $method);
+        return (new CodeCoverage())->linesToBeUsed($this->testClass, $this->testMethod);
     }
 }

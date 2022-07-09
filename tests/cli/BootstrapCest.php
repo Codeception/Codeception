@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+#[\Codeception\Attribute\Group('bootstrap')]
 final class BootstrapCest
 {
     public function _before(CliGuy $I)
