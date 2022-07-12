@@ -1,3 +1,10 @@
+#### 5.0.0-RC6
+
+* Added new attributes (Prepare, Env, BeforeClass,AfterClass, Given, When, Then)
+* Class level attributes are applied to all methods
+* Codeception attributes are supported in unit tests
+* Cest format can use data providers from other classes
+
 #### 5.0.0-RC5
 
 * Substitute invalid UTF-8 characters in debug and step output by @SamoylenkoSU (#6483)
