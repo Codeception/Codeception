@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 /**
- * This module provides integration with [Kohana](http://kohanaframework.org/) v3.
+ * This module provides integration with [Kohana](https://kohanaframework.org/) v3.
  * Functional tests can be run inside Kohana. All commands of this module are just the same as in other modules that share Framework interface.
  *
  * ## Status

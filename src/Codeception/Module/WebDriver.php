@@ -1029,7 +1029,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * ``` php
      * $I->executeInSelenium(function(\WebDriver $webdriver) {
-     *   $webdriver->get('http://google.com');
+     *   $webdriver->get('https://google.com');
      * });
      * ```
      *

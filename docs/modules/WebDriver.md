@@ -57,7 +57,7 @@ Class WebDriver
 
 
 Accepts JavaScript native popup window created by `window.alert`|`window.confirm`|`window.prompt`.
-Don't confuse it with modal windows, created by [various libraries](http://jster.net/category/windows-modals-popups).
+Don't confuse it with modal windows, created by [various libraries](https://jster.net/category/windows-modals-popups).
 
 
 

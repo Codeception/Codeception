@@ -2,7 +2,7 @@
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Phalcon1.php)**
 
 
-This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
+This module provides integration with [Phalcon framework](https://www.phalconphp.com/) (1.x).
 
 ## Demo Project
 
