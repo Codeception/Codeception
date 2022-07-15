@@ -7,6 +7,7 @@ namespace Codeception\Test;
 use Codeception\Example;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\Console\Message;
+use Codeception\Lib\Di;
 use Codeception\Lib\Parser;
 use Codeception\Step\Comment;
 use Codeception\Util\Annotation;
@@ -113,7 +114,11 @@ class Cest extends Test implements
             );
         }
 
-        $I = new $actorClass($this->getScenario());
+        /** @var Di $di */
+        $di = $this->getMetadata()->getService('di');
+        $di->set($this->getScenario());
+        $I = $di->instantiate($actorClass);
+
         try {
             $this->executeHook($I, 'before');
             $this->executeBeforeMethods($this->testMethod, $I);
