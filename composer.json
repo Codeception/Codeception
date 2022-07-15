@@ -68,7 +68,12 @@
     "replace": {
         "codeception/phpunit-wrapper": "*"
     },
-
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:ciaranmcnulty/Gherkin-1.git"
+        }
+    ],
     "autoload": {
         "classmap": [
             "src/PHPUnit/TestCase.php"
