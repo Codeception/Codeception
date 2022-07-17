@@ -22,7 +22,7 @@ class SoapTest extends \PHPUnit\Framework\TestCase
         $this->module = new \Codeception\Module\SOAP(make_container());
         $this->module->_setConfig(array(
             'schema' => 'http://www.w3.org/2001/xml.xsd',
-            'endpoint' => 'http://codeception.com/api/wsdl'
+            'endpoint' => 'https://codeception.com/api/wsdl'
         ));
         $this->layout = \Codeception\Configuration::dataDir().'/xml/layout.xml';
         $this->module->isFunctional = true;

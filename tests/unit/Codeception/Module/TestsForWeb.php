@@ -115,7 +115,7 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     {
         $this->module->amOnPage('/external_url');
         $this->module->seeLink('Next');
-        $this->module->seeLink('Next', 'http://codeception.com/');
+        $this->module->seeLink('Next', 'https://codeception.com/');
     }
 
     public function testDontSeeLink()
@@ -159,10 +159,10 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     {
         $this->setExpectedException(
             'PHPUnit\Framework\AssertionFailedError',
-            "Link containing text 'Next' and URL 'http://codeception.com/' was found in page /external_url"
+            "Link containing text 'Next' and URL 'https://codeception.com/' was found in page /external_url"
         );
         $this->module->amOnPage('/external_url');
-        $this->module->dontSeeLink('Next', 'http://codeception.com/');
+        $this->module->dontSeeLink('Next', 'https://codeception.com/');
     }
 
     public function testSeeLinkMatchesRelativeLink()
