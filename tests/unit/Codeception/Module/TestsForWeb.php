@@ -115,9 +115,9 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     {
         $this->module->amOnPage('/external_url');
         $this->module->seeLink('Next');
-        $this->module->seeLink('Next', 'http://codeception.com/');
+        $this->module->seeLink('Next', 'https://codeception.com/');
         // Without TLD and trailing slash
-        $this->module->dontSeeLink('Next', 'http://codeception');
+        $this->module->dontSeeLink('Next', 'https://codeception');
     }
 
     public function testDontSeeLink()
@@ -146,7 +146,7 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     public function testSeeLinkFailsIfHrefDoesNotMatchExactly()
     {
         $this->expectException('PHPUnit\Framework\AssertionFailedError');
-        $this->expectExceptionMessage("No links containing text 'Next' and URL 'http://codeception' were found in page /external_url");
+        $this->expectExceptionMessage("No links containing text 'Next' and URL 'https://codeception' were found in page /external_url");
         $this->module->amOnPage('/external_url');
         $this->module->seeLink('Next', 'https://codeception');
     }
@@ -162,9 +162,9 @@ abstract class TestsForWeb extends \Codeception\Test\Unit
     public function testDontSeeLinkFailsIfTextAndUrlMatches()
     {
         $this->expectException('PHPUnit\Framework\AssertionFailedError');
-        $this->expectExceptionMessage("Link containing text 'Next' and URL 'http://codeception.com/' was found in page /external_url");
+        $this->expectExceptionMessage("Link containing text 'Next' and URL 'https://codeception.com/' was found in page /external_url");
         $this->module->amOnPage('/external_url');
-        $this->module->dontSeeLink('Next', 'http://codeception.com/');
+        $this->module->dontSeeLink('Next', 'https://codeception.com/');
     }
 
     public function testSeeLinkMatchesRelativeLink()
