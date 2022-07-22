@@ -137,6 +137,9 @@ class Di
         foreach ($parameters as $k => $parameter) {
             $dependency = ReflectionHelper::getClassFromParameter($parameter);
             if (is_null($dependency)) {
+                if ($parameter->isVariadic()) {
+                    continue;
+                }
                 if (!$parameter->isOptional()) {
                     if (!isset($defaults[$k])) {
                         throw new InjectionException("Parameter '{$parameter->name}' must have default value.");
