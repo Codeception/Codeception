@@ -191,7 +191,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
 
         $actorClass = $this->getMetadata()->getCurrent('actor');
         if ($actorClass) {
-            $di->set(new $actorClass($this->getScenario()));
+            $di->instantiate($actorClass);
         }
 
         foreach ($this->steps as $pattern => $step) {
