@@ -141,10 +141,13 @@ class Di
                     continue;
                 }
                 if (!$parameter->isOptional()) {
-                    if (!isset($defaults[$k])) {
+                    if (
+                        (!isset($defaults[$k])) &&
+                        (!isset($defaults[$parameter->name]))
+                    ) {
                         throw new InjectionException("Parameter '{$parameter->name}' must have default value.");
                     }
-                    $args[] = $defaults[$k];
+                    $args[] = $defaults[$k] ?? $defaults[$parameter->name];
                     continue;
                 }
                 $args[] = $parameter->getDefaultValue();
