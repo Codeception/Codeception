@@ -1,3 +1,8 @@
+#### 5.0.0-RC7
+
+* Fixed injecting dependencies to actor in Cest and Gherkin formats #6506
+* Variadic parameters can be skipped in dependency injection #6505
+
 #### 5.0.0-RC6
 
 * Added new attributes (Prepare, Env, BeforeClass,AfterClass, Given, When, Then)
