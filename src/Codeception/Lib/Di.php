@@ -148,6 +148,9 @@ class Di
             } else {
                 $arg = $this->instantiate($dependency);
                 if (is_null($arg)) {
+                    if ($parameter->isVariadic()) {
+                        continue;
+                    }
                     throw new InjectionException("Failed to resolve dependency '{$dependency}'.");
                 }
                 $args[] = $arg;
