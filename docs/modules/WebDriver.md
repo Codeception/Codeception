@@ -486,8 +486,8 @@ Open web page at the given absolute URL and sets its hostname as the base host.
 
 ``` php
 <?php
-$I->amOnUrl('http://codeception.com');
-$I->amOnPage('/quickstart'); // moves to http://codeception.com/quickstart
+$I->amOnUrl('https://codeception.com');
+$I->amOnPage('/quickstart'); // moves to https://codeception.com/quickstart
 ?>
 ```
 
@@ -964,7 +964,7 @@ If Codeception commands are not enough, this allows you to use Selenium WebDrive
 
 ``` php
 $I->executeInSelenium(function(\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
-  $webdriver->get('http://google.com');
+  $webdriver->get('https://google.com');
 });
 ```
 

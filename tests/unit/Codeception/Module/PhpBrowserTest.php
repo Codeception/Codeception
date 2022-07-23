@@ -365,7 +365,7 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testCurlOptions()
     {
-        $this->module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
+        $this->module->_setConfig(array('url' => 'https://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
         $this->module->_initialize();
         if (method_exists($this->module->guzzle, 'getConfig')) {
             $config = $this->module->guzzle->getConfig();
@@ -492,11 +492,11 @@ class PhpBrowserTest extends TestsForBrowsers
         ]);
         $handler = \GuzzleHttp\HandlerStack::create($mock);
         $handler->push(\GuzzleHttp\Middleware::history($this->history));
-        $client = new \GuzzleHttp\Client(['handler' => $handler, 'base_uri' => 'http://codeception.com']);
+        $client = new \GuzzleHttp\Client(['handler' => $handler, 'base_uri' => 'https://codeception.com']);
         $guzzleConnector = new \Codeception\Lib\Connector\Guzzle();
         $guzzleConnector->setClient($client);
         $guzzleConnector->getCookieJar()->set(new \Symfony\Component\BrowserKit\Cookie('hello', 'world'));
-        $guzzleConnector->request('GET', 'http://codeception.com/');
+        $guzzleConnector->request('GET', 'https://codeception.com/');
         $this->assertArrayHasKey('cookies', $this->history[0]['options']);
         /** @var $cookie GuzzleHttp\Cookie\SetCookie  **/
         $cookies = $this->history[0]['options']['cookies']->toArray();
