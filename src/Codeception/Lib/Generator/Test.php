@@ -32,6 +32,7 @@ class {{name}}Test extends \Codeception\Test\Unit
 
     }
 }
+
 EOF;
 
     protected string $testerTemplate = <<<EOF

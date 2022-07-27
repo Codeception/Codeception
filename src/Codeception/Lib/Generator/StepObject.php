@@ -25,6 +25,7 @@ class {{name}} extends {{actorClass}}
 {
 {{actions}}
 }
+
 EOF;
 
     protected string $actionTemplate = <<<EOF

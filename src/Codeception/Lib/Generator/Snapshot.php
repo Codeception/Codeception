@@ -30,6 +30,7 @@ class {{name}} extends \\Codeception\\Snapshot
         // TODO: return a value which will be used for snapshot 
     }
 }
+
 EOF;
 
     protected string $actionsTemplate = <<<EOF
