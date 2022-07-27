@@ -41,7 +41,7 @@ trait Namespaces
         if (!$str) {
             return "";
         }
-        return "namespace {$str};\n";
+        return "\nnamespace {$str};\n";
     }
 
     protected function getNamespaces(string $class): array

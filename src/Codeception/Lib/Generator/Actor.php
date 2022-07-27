@@ -70,7 +70,7 @@ EOF;
         $namespace = trim($this->supportNamespace(), '\\');
 
         return (new Template($this->template))
-            ->place('hasNamespace', $namespace !== '' ? "namespace {$namespace};" : '')
+            ->place('hasNamespace', $namespace !== '' ? "\nnamespace {$namespace};" : '')
             ->place('actor', $this->settings['actor'])
             ->place('inheritedMethods', $this->prependAbstractActorDocBlocks())
             ->produce();

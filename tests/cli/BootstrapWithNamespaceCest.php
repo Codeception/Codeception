@@ -24,15 +24,15 @@ final class BootstrapWithNamespaceCest
         $I->seeInThisFile('namespace: Tests');
 
         $I->openFile('tests/Support/Helper/Api.php');
-        $I->seeInThisFile('namespace Tests\\Support\\Helper');
+        $I->seeInThisFile("declare(strict_types=1);\n\nnamespace Tests\\Support\\Helper");
         $I->seeInThisFile('class Api');
 
         $I->openFile('tests/Support/AcceptanceTester.php');
-        $I->seeInThisFile('namespace Tests\\Support');
+        $I->seeInThisFile("declare(strict_types=1);\n\nnamespace Tests\\Support");
         $I->seeInThisFile('use _generated\AcceptanceTesterActions');
 
         $I->openFile('tests/Support/FunctionalTester.php');
-        $I->seeInThisFile('namespace Tests\\Support');
+        $I->seeInThisFile("declare(strict_types=1);\n\nnamespace Tests\\Support");
 
         $I->openFile('tests/Api/ResourceCest.php');
         $I->seeInThisFile('namespace Tests\\Api;');
