@@ -36,12 +36,12 @@ final class BootstrapWithNamespaceCest
 
         $I->openFile('tests/Api/ResourceCest.php');
         $I->seeInThisFile('namespace Tests\\Api;');
-        $I->seeInThisFile('use \Tests\Support\ApiTester;');
+        $I->seeInThisFile('use Tests\Support\ApiTester;');
         $I->seeInThisFile('public function tryToTest(ApiTester $I)');
 
         $I->openFile('tests/Api/ResourceTest.php');
         $I->seeInThisFile('namespace Tests\\Api;');
-        $I->seeInThisFile('use \Tests\Support\ApiTester;');
+        $I->seeInThisFile('use Tests\Support\ApiTester;');
         $I->seeInThisFile('protected ApiTester $tester;');
     }
 
@@ -72,12 +72,12 @@ final class BootstrapWithNamespaceCest
 
         $I->openFile('tests/Api/ResourceCest.php');
         $I->seeInThisFile('namespace Codecept5\\Api;');
-        $I->seeInThisFile('use \Codecept5\Support\ApiTester;');
+        $I->seeInThisFile('use Codecept5\Support\ApiTester;');
         $I->seeInThisFile('public function tryToTest(ApiTester $I)');
 
         $I->openFile('tests/Api/ResourceTest.php');
         $I->seeInThisFile('namespace Codecept5\\Api;');
-        $I->seeInThisFile('use \Codecept5\Support\ApiTester;');
+        $I->seeInThisFile('use Codecept5\Support\ApiTester;');
         $I->seeInThisFile('protected ApiTester $tester;');
     }
 }

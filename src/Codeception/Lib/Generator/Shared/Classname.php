@@ -27,6 +27,6 @@ trait Classname
         if (isset($this->settings['support_namespace'])) {
             $namespace .= '\\' . $this->settings['support_namespace'];
         }
-        return rtrim($namespace, '\\') . '\\';
+        return trim($namespace, '\\') . '\\';
     }
 }
