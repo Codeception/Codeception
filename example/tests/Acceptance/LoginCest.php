@@ -14,5 +14,6 @@ class LoginCest
     // tests
     public function tryToTest(AcceptanceTester $I)
     {
+        $I->amOnPage('/');
     }
 }

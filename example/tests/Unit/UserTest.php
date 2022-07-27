@@ -17,6 +17,6 @@ class UserTest extends \Codeception\Test\Unit
     // tests
     public function testSomeFeature()
     {
-
+        $this->assertTrue(true);
     }
 }
