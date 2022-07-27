@@ -33,7 +33,8 @@ EOF;
             enabled:
                 # add more modules here
                 - Asserts
-        step_decorators: ~ 
+        step_decorators: ~
+
 EOF;
 
     public function setup(): void
