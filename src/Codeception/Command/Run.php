@@ -10,7 +10,6 @@ use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ParseException;
 use Exception;
 use InvalidArgumentException;
-use PHPUnit\Runner\Version as PHPUnitVersion;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException as SymfonyConsoleInvalidArgumentException;
@@ -291,8 +290,7 @@ class Run extends Command
 
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . " https://helpukrainewin.org\nPowered by "
-                . PHPUnitVersion::getVersionString()
+                Codecept::versionString() . ' https://helpukrainewin.org'
             );
 
             if ($this->options['seed']) {
