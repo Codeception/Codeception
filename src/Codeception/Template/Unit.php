@@ -51,8 +51,11 @@ EOF;
         $this->say("Like accessing frameworks, ORM, Database.");
         $haveTester = $this->ask("Do you wish to enable them?", false);
 
-        $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
-        $this->createEmptyDirectory($supportDir = $dir . DIRECTORY_SEPARATOR . '_support');
+        $this->createDirectoryFor($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
+        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . '_support');
+        $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
+        $this->gitIgnore($outputDir);
+        $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
 
         $configFile = (new Template($this->configTemplate))
             ->place('dir', $dir)

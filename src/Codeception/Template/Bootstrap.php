@@ -77,7 +77,7 @@ class Bootstrap extends InitTemplate
     protected function createDirs(): void
     {
         $this->createDirectoryFor('tests');
-        $this->createEmptyDirectory($this->outputDir);
+        $this->createDirectoryFor($this->outputDir);
         $this->createEmptyDirectory($this->dataDir);
         $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . "Helper");
