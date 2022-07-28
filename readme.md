@@ -4,21 +4,17 @@
 
 [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
 [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Codeception/Codeception/badges/quality-score.png?b=4.0)](https://scrutinizer-ci.com/g/Codeception/Codeception/?branch=4.0)
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+[![Build status](https://github.com/Codeception/Codeception/workflows/build/badge.svg)](https://github.com/Codeception/Codeception/actions?query=workflow%3Abuild)
 
 **Modern PHP Testing for everyone**
 
 Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides an absolutely new way of writing acceptance, functional and even unit tests.
 
-| Build | Webdriver  |
-| ----- | -------- |
-| [![Build status](https://github.com/Codeception/Codeception/workflows/build/badge.svg)](https://github.com/Codeception/Codeception/actions?query=workflow%3Abuild) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/3-0/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) |
-
 #### Contributions
 
-At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/4.0/CONTRIBUTING.md).
+At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/5.0/CONTRIBUTING.md).
 
 ### At a Glance
 
@@ -94,7 +90,7 @@ This will create a default directory structure and default test suites.
 
 ## Documentation
 
-[View Documentation](https://codeception.com/docs/01-Introduction)
+[View Documentation](https://codeception.com/docs/Introduction)
 
 The documentation source files can be found at https://github.com/Codeception/codeception.github.com/tree/master/docs/.
 
