@@ -24,24 +24,24 @@ final class BootstrapWithNamespaceCest
         $I->seeInThisFile('namespace: Tests');
 
         $I->openFile('tests/Support/Helper/Api.php');
-        $I->seeInThisFile('namespace Tests\\Support\\Helper');
+        $I->seeInThisFile("declare(strict_types=1);\n\nnamespace Tests\\Support\\Helper");
         $I->seeInThisFile('class Api');
 
         $I->openFile('tests/Support/AcceptanceTester.php');
-        $I->seeInThisFile('namespace Tests\\Support');
+        $I->seeInThisFile("declare(strict_types=1);\n\nnamespace Tests\\Support");
         $I->seeInThisFile('use _generated\AcceptanceTesterActions');
 
         $I->openFile('tests/Support/FunctionalTester.php');
-        $I->seeInThisFile('namespace Tests\\Support');
+        $I->seeInThisFile("declare(strict_types=1);\n\nnamespace Tests\\Support");
 
         $I->openFile('tests/Api/ResourceCest.php');
         $I->seeInThisFile('namespace Tests\\Api;');
-        $I->seeInThisFile('use \Tests\Support\ApiTester;');
+        $I->seeInThisFile('use Tests\Support\ApiTester;');
         $I->seeInThisFile('public function tryToTest(ApiTester $I)');
 
         $I->openFile('tests/Api/ResourceTest.php');
         $I->seeInThisFile('namespace Tests\\Api;');
-        $I->seeInThisFile('use \Tests\Support\ApiTester;');
+        $I->seeInThisFile('use Tests\Support\ApiTester;');
         $I->seeInThisFile('protected ApiTester $tester;');
     }
 
@@ -72,12 +72,12 @@ final class BootstrapWithNamespaceCest
 
         $I->openFile('tests/Api/ResourceCest.php');
         $I->seeInThisFile('namespace Codecept5\\Api;');
-        $I->seeInThisFile('use \Codecept5\Support\ApiTester;');
+        $I->seeInThisFile('use Codecept5\Support\ApiTester;');
         $I->seeInThisFile('public function tryToTest(ApiTester $I)');
 
         $I->openFile('tests/Api/ResourceTest.php');
         $I->seeInThisFile('namespace Codecept5\\Api;');
-        $I->seeInThisFile('use \Codecept5\Support\ApiTester;');
+        $I->seeInThisFile('use Codecept5\Support\ApiTester;');
         $I->seeInThisFile('protected ApiTester $tester;');
     }
 }

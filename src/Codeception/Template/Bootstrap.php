@@ -77,7 +77,7 @@ class Bootstrap extends InitTemplate
     protected function createDirs(): void
     {
         $this->createDirectoryFor('tests');
-        $this->createEmptyDirectory($this->outputDir);
+        $this->createDirectoryFor($this->outputDir);
         $this->createEmptyDirectory($this->dataDir);
         $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->createDirectoryFor($this->supportDir . DIRECTORY_SEPARATOR . "Helper");
@@ -92,14 +92,15 @@ class Bootstrap extends InitTemplate
 #
 # Suite for functional tests
 # Emulate web requests and make application process them
-# Include one of framework modules (Symfony, Yii2, Laravel, Phalcon4) to use it
+# Include one of framework modules (Symfony, Yii2, Laravel, Phalcon5) to use it
 # Remove this suite if you don't use frameworks
 
 actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         # add a framework module here
-    step_decorators: ~        
+    step_decorators: ~
+
 EOF;
         $this->createSuite('Functional', $actor, $suiteConfig);
         $this->say("tests/Functional created           <- functional tests");
@@ -120,7 +121,8 @@ modules:
     enabled:
         - PhpBrowser:
             url: http://localhost/myapp
-step_decorators: ~        
+step_decorators: ~
+
 EOF;
         $this->createSuite('Acceptance', $actor, $suiteConfig);
         $this->say("tests/Acceptance created           <- acceptance tests");
@@ -138,7 +140,8 @@ actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         - Asserts
-    step_decorators: ~        
+    step_decorators: ~
+
 EOF;
         $this->createSuite('Unit', $actor, $suiteConfig);
         $this->say("tests/Unit created                 <- unit tests");

@@ -16,6 +16,11 @@ final class BootstrapCest
     {
         $I->executeCommand('bootstrap');
         $I->seeFileFound('codeception.yml');
+        $I->seeFileFound('tests/Support/_generated/.gitignore');
+        $I->seeInThisFile("*\n!.gitignore\n");
+        $I->seeFileFound('tests/_output/.gitignore');
+        $I->seeInThisFile("*\n!.gitignore\n");
+        $I->dontSeeFileFound('tests/_output/.gitkeep');
         $this->checkFilesCreated($I);
     }
 

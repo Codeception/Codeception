@@ -33,7 +33,7 @@ final class GenerateCestTest extends BaseCommandRunner
         $this->config['namespace'] = 'Shire';
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
         $this->assertStringContainsString('namespace Shire\Unit;', $this->content);
-        $this->assertStringContainsString('use \Shire\HobbitGuy;', $this->content);
+        $this->assertStringContainsString('use Shire\HobbitGuy;', $this->content);
         $this->assertStringContainsString('class HallUnderTheHillCest', $this->content);
     }
 
@@ -58,7 +58,7 @@ final class GenerateCestTest extends BaseCommandRunner
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillCest']);
         $this->assertSame($this->filename, 'tests/shire/HallUnderTheHillCest.php');
         $this->assertStringContainsString('namespace MiddleEarth\Unit;', $this->content);
-        $this->assertStringContainsString('use \MiddleEarth\\HobbitGuy;', $this->content);
+        $this->assertStringContainsString('use MiddleEarth\\HobbitGuy;', $this->content);
         $this->assertStringContainsString('public function tryToTest(HobbitGuy $I)', $this->content);
         $this->assertIsValidPhp($this->content);
     }
@@ -79,7 +79,7 @@ final class GenerateCestTest extends BaseCommandRunner
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillCest']);
         $this->assertSame($this->filename, 'tests/shire/HallUnderTheHillCest.php');
         $this->assertStringContainsString('namespace MiddleEarth\Unit;', $this->content);
-        $this->assertStringContainsString('use \MiddleEarth\\Gondor\\HobbitGuy;', $this->content);
+        $this->assertStringContainsString('use MiddleEarth\\Gondor\\HobbitGuy;', $this->content);
         $this->assertStringContainsString('public function tryToTest(HobbitGuy $I)', $this->content);
         $this->assertIsValidPhp($this->content);
     }

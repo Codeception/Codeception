@@ -192,9 +192,7 @@ abstract class InitTemplate
 
     protected function gitIgnore(string $path): void
     {
-        if (file_exists(self::GIT_IGNORE)) {
-            file_put_contents($path . DIRECTORY_SEPARATOR . self::GIT_IGNORE, "*\n!" . self::GIT_IGNORE);
-        }
+        file_put_contents($path . DIRECTORY_SEPARATOR . self::GIT_IGNORE, "*\n!" . self::GIT_IGNORE . "\n");
     }
 
     protected function checkInstalled(string $dir = '.'): void

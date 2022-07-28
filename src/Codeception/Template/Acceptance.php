@@ -94,7 +94,7 @@ EOF;
         }
         $url = $this->ask("Start url for tests", "http://localhost");
 
-        $this->createEmptyDirectory($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
+        $this->createDirectoryFor($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
         $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . 'Support');
         $this->createEmptyDirectory($supportDir . DIRECTORY_SEPARATOR . 'Data');
         $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
