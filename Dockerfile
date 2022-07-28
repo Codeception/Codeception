@@ -1,4 +1,4 @@
-FROM php:7.4-cli
+FROM php:8.1-cli
 
 LABEL maintainer="Tobias Munk <tobias@diemeisterei.de>"
 
@@ -32,7 +32,7 @@ RUN pecl install \
         memcached \
         mongodb \
         soap \
-        xdebug-3.0.4 && \
+        xdebug && \
     docker-php-ext-enable \
         apcu.so \
         memcached.so \
