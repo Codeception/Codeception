@@ -35,6 +35,7 @@
 *.phar  binary
 
 # Exclude files that don't need to be present in packages (so they're not downloaded by Composer)
+/example         export-ignore
 /tests           export-ignore
 /.gitattributes  export-ignore
 /.gitignore      export-ignore
