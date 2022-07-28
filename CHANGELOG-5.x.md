@@ -1,3 +1,9 @@
+#### 5.0.0-RC8
+
+* Deprecate untyped method arguments in Cest format #6521
+* Improved code style of generated files #6522
+* Removed "Powered by PHPUnit" message #6520
+
 #### 5.0.0-RC7
 
 * Fixed injecting dependencies to actor in Cest and Gherkin formats #6506
