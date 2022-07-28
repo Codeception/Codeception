@@ -1,6 +1,66 @@
+#### 5.0.0
+
+Summary of all differences from Codeception 4
+
+##### Added
+
+* Basic attribute support
+* `--shard`, `--grep`, `--filter` options
+* Test can be filtered by data provider case number or name
+* Tests of all formats are reported as useless if they perform no assertions and `reports_useless_tests` setting is enabled
+* Array of variables can be passed to all `pause` functions/methods
+* Dynamic configuration with parameters can use arrays and other non-string types (#6409)
+* `codecept_pause` function and `$this->pause()` in unit tests (#6387)
+* Interactive console is executed in the scope of paused test class.
+* New code coverage settings:
+  - `path_coverage` - enables path and branch coverage
+  - `strict_covers_annotation` - marks test as risky if it has `@covers` annotation but executes some other code
+  - `ignore_deprecated_code` - doesn't collect code coverage for code having `@deprecated` annotation
+  - `disable_code_coverage_ignore` - ignores `@codeCoverageIgnore`, `@codeCoverageIgnoreStart` and `@codeCoverageIgnoreEnd` annotations
+* Optional value to `fail-fast` option
+* Dynamic configuration with parameters can use arrays and other non-string types
+
+##### Changed
+
+* PHPUnit is no longer the engine of Codeception, but TestCase format is still supported and assertions are still used
+* Generators create namespaced test suites by default
+* Replaced Hoa Console with PsySH in `codecept console`
+* Used Symfony VarDumper in `codecept_debug`
+* Fixed DotReporter output format
+* Module `after` and `failed` hooks are executed in reverse order
+* Introduced strict typing and other features of PHP 7 and 8.
+* Cest format can use data providers from other classes
+* Fixed injecting dependencies to actor in Cest and Gherkin formats #6506
+* Variadic parameters can be skipped in dependency injection #6505
+* Deprecated untyped method arguments in Cest format #6521
+
+##### Removed
+
+* `JSON` and `TAP` report formats
+* Code coverage blacklist functionality
+* `generate:cept` command (`Cept` format itself is deprecated)
+* Deprecated class aliases:
+  - Codeception\TestCase\Test
+  - Codeception\Platform\Group
+  - Codeception\Platform\Group
+  - Codeception\TestCase
+* Settings
+  - `log_incomplete_skipped`
+  - `paths.log` (replaced by `paths.output`)
+  - Suite setting `class_name` (replaced by `actor`)
+  - Global setting `actor` (replaced by `actor_prefix`)
+* `Configuration::logDir` method (replaced by `Configuration::outputDir` in 2.0)
+* Custom reporters implementing TestListener are no longer supported and must be converted to Extensions
+
+##### Supported versions
+
+* PHP 8
+* PHPUnit 9 (prepared for upcoming PHPUnit 10)
+* Symfony 4.4 - 6.x
+
 #### 5.0.0-RC8
 
-* Deprecate untyped method arguments in Cest format #6521
+* Deprecated untyped method arguments in Cest format #6521
 * Improved code style of generated files #6522
 * Removed "Powered by PHPUnit" message #6520
 
