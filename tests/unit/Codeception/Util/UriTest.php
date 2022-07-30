@@ -32,7 +32,7 @@ class UriTest extends \Codeception\Test\Unit
     {
         $this->assertEquals(
             'https://google.com/account/',
-            Uri::mergeUrls('http://google.com/', 'https://google.com/account/')
+            Uri::mergeUrls('https://google.com/', 'https://google.com/account/')
         );
         $this->assertEquals('https://facebook.com/', Uri::mergeUrls('https://google.com/test/', '//facebook.com/'));
         $this->assertEquals(

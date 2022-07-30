@@ -115,7 +115,7 @@ It is also possible to skip recording of steps for specified tests by using the 
 public function testLogin(AcceptanceTester $I)
 {
     $I->login();
-    $I->amOnUrl('http://codeception.com');
+    $I->amOnUrl('https://codeception.com');
 }
 ```
 

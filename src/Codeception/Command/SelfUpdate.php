@@ -22,8 +22,8 @@ class SelfUpdate extends Command
      */
     const NAME = 'Codeception';
     const GITHUB_REPO = 'Codeception/Codeception';
-    const PHAR_URL = 'http://codeception.com/';
-    const PHAR_URL_PHP56 = 'http://codeception.com/php56/';
+    const PHAR_URL = 'https://codeception.com/';
+    const PHAR_URL_PHP56 = 'https://codeception.com/php56/';
 
     /**
      * Holds the current script filename.
