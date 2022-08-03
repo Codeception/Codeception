@@ -783,11 +783,6 @@ class Run extends Command
     {
         return str_contains($suiteName, '::');
     }
-
-    private function isRootLevelSuite(string $suiteName): bool
-    {
-        return !$this->isSuiteInMultiApplication($suiteName) && !$this->isWildcardSuiteName($suiteName);
-    }
     
     private function addRuntimeOptionsToCurrentConfig(array $config) :array
     {
