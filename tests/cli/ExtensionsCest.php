@@ -88,4 +88,40 @@ final class ExtensionsCest
         $I->seeInShellOutput('Config1: black_value');
         $I->seeInShellOutput('Config2: value2');
     }
+
+    public function runtimeExtensionsWorkWithIncludedSuitesPresentInTheConfigAndRunningARootSuite(CliGuy $I)
+    {
+        $I->amInPath('tests/data/included_mix');
+        // unit is a root suite.
+        $I->executeCommand('run unit --ext DotReporter');
+        $I->seeInShellOutput('.');
+        $I->dontSeeInShellOutput('SimpleTest:');
+    }
+
+    public function runtimeExtensionsWorkWhenRunningWildCardSuites(CliGuy $I)
+    {
+        $I->amInPath('tests/data/included_mix');
+        $I->executeCommand('run *::unit --ext DotReporter');
+        $I->seeInShellOutput('.');
+        $I->dontSeeInShellOutput('BasicTest:');
+    }
+
+    public function runtimeExtensionsWorkWhenRunningWildCardSuitesAndRoot(CliGuy $I)
+    {
+        $I->amInPath('tests/data/included_mix');
+        $I->executeCommand('run unit,*::unit --ext DotReporter');
+        $I->seeInShellOutput('.');
+        $I->dontSeeInShellOutput('SimpleTest:');
+        $I->dontSeeInShellOutput('BasicTest:');
+    }
+
+    public function runtimeExtensionsWorkWhenRunningTestsFromAnIncludedConfig(CliGuy $I)
+    {
+        $I->amInPath('tests/data/included');
+
+        $ds = DIRECTORY_SEPARATOR;
+        $I->executeCommand("run jazz{$ds}tests{$ds}functional{$ds}DemoCept.php --ext DotReporter", false);
+        $I->seeInShellOutput('.');
+        $I->dontSeeInShellOutput('DemoCept:');
+    }
 }

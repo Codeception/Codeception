@@ -275,14 +275,7 @@ class Run extends Command
 
         // load config
         $config = $this->getGlobalConfig();
-
-        // update config from options
-        if (!empty($this->options['override'])) {
-            $config = $this->overrideConfig($this->options['override']);
-        }
-        if ($this->options['ext']) {
-            $config = $this->enableExtensions($this->options['ext']);
-        }
+        $config = $this->addRuntimeOptionsToCurrentConfig($config);
 
         if (!$this->options['colors']) {
             $this->options['colors'] = $config['settings']['colors'];
@@ -365,6 +358,7 @@ class Run extends Command
                     if (str_starts_with($suite, (string)$include)) {
                         // Use include config
                         $config = Configuration::config($projectDir . $include);
+                        $config = $this->addRuntimeOptionsToCurrentConfig($config);
 
                         if (!empty($this->options['override'])) {
                             $config = $this->overrideConfig($this->options['override']);
@@ -395,7 +389,9 @@ class Run extends Command
 
                 // Restore main config
                 if (!$isIncludeTest) {
-                    $config = Configuration::config($projectDir);
+                    $config = $this->addRuntimeOptionsToCurrentConfig(
+                        Configuration::config($projectDir)
+                    );
                 }
             } elseif (!empty($suite)) {
                 $result = $this->matchSingleTest($suite, $config);
@@ -788,8 +784,17 @@ class Run extends Command
         return str_contains($suiteName, '::');
     }
 
-    private function isRootLevelSuite(string $suiteName): bool
+    private function addRuntimeOptionsToCurrentConfig(array $config): array
     {
-        return !$this->isSuiteInMultiApplication($suiteName) && !$this->isWildcardSuiteName($suiteName);
+        // update config from options
+        if (count($this->options['override'])) {
+            $config = $this->overrideConfig($this->options['override']);
+        }
+        // enable extensions
+        if ($this->options['ext']) {
+            $config = $this->enableExtensions($this->options['ext']);
+        }
+
+        return $config;
     }
 }
