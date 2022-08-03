@@ -739,15 +739,6 @@ class Run extends Command
     }
     
     /**
-     * @param  string  $suite_name
-     *
-     * @return bool
-     */
-    private function isRootLevelSuite($suite_name) {
-        return !$this->isSuiteInMultiApplication($suite_name) && ! $this->isWildcardSuiteName($suite_name);
-    }
-    
-    /**
      * @return array
      */
     private function addRuntimeOptionsToCurrentConfig(array $config)
