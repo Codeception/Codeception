@@ -87,6 +87,54 @@ class ExtensionsCest
         $I->seeInShellOutput('Config1: black_value');
         $I->seeInShellOutput('Config2: value2');
     }
-
-
+    
+    /**
+     * @param CliGuy $I
+     */
+    public function runtimeExtensionsWorkWithIncludedSuitesPresentInTheConfigAndRunningARootSuite(CliGuy $I)
+    {
+        $I->amInPath('tests/data/included');
+        // unit is a root suite.
+        $I->executeCommand('run unit --ext DotReporter');
+        $I->seeInShellOutput('.');
+        $I->dontSeeInShellOutput('RootApplicationUnitTest:');
+    }
+    
+    /**
+     * @param CliGuy $I
+     */
+    public function runtimeExtensionsWorkWhenRunningWildCardSuites(CliGuy $I)
+    {
+        $I->amInPath('tests/data/included');
+        $I->executeCommand('run *::unit --ext DotReporter');
+        $I->seeInShellOutput('..');
+        $I->dontSeeInShellOutput('SimpleTest: Simple:');
+    }
+    
+    /**
+     * @param CliGuy $I
+     */
+    public function runtimeExtensionsWorkWhenRunningWildCardSuitesAndRoot(CliGuy $I)
+    {
+        $I->amInPath('tests/data/included');
+        $I->executeCommand('run unit,*::unit --ext DotReporter');
+        $I->seeInShellOutput('..');
+        $I->dontSeeInShellOutput('SimpleTest: Simple:');
+        $I->dontSeeInShellOutput('RootApplicationUnitTest:');
+    }
+    
+    
+      /**
+     * @param CliGuy $I
+     */
+    public function runtimeExtensionsWorkWhenRunningTestsFromAnIncludedConfig(CliGuy $I)
+    {
+        $I->amInPath('tests/data/included');
+        
+        $ds = DIRECTORY_SEPARATOR;
+        $I->executeCommand("run jazz{$ds}tests{$ds}functional{$ds}DemoCept.php --ext DotReporter", false);
+        $I->seeInShellOutput('.');
+        $I->dontSeeInShellOutput('DemoCept:');
+    }
+    
 }
