@@ -1,0 +1,9 @@
+include:
+  - jazz
+  - shine
+paths:
+  log: "_log"
+settings:
+  colors: false
+groups:
+  para*: para*
