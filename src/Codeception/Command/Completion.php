@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace Codeception\Command;
 
-// phpcs:ignoreFile PSR1.Files.SideEffects.FoundWithSymbols
-if (!class_exists(ConsoleCompletion::class)) {
-    echo "Please install `stecman/symfony-console-completion\n` to enable auto completion";
-    return;
-}
-
 use Codeception\Configuration;
 use Stecman\Component\Symfony\Console\BashCompletion\Completion as ConsoleCompletion;
 use Stecman\Component\Symfony\Console\BashCompletion\Completion\CompletionInterface as ConsoleCompletionInterface;
@@ -20,6 +14,12 @@ use Symfony\Component\Console\Input\InputDefinition as SymfonyInputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+
+// phpcs:ignoreFile PSR1.Files.SideEffects.FoundWithSymbols
+if (!class_exists(ConsoleCompletion::class)) {
+    echo "Please install `stecman/symfony-console-completion\n` to enable auto completion";
+    return;
+}
 
 class Completion extends CompletionCommand
 {
