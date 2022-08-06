@@ -51,7 +51,7 @@
         "vlucas/phpdotenv": "^5.1"
     },
     "conflict": {
-        "codeception/lib-innerbrowser": "<3.0",
+        "codeception/lib-innerbrowser": "<3.1",
         "codeception/module-phpbrowser": "<2.5",
         "codeception/module-filesystem": "<3.0"
     },
