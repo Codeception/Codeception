@@ -63,7 +63,7 @@ use Codeception\Util\Template;
  * public function testLogin(AcceptanceTester $I)
  * {
  *     $I->login();
- *     $I->amOnUrl('http://codeception.com');
+ *     $I->amOnUrl('https://codeception.com');
  * }
  * ```
  *
