@@ -248,8 +248,8 @@ abstract class InitTemplate
                     continue;
                 }
                 $package = $packages[$module];
-                $this->say(sprintf('"%s": "%s"', $package, "^1.0.0"));
-                $composer[$section][$package] = "^1.0.0";
+                $this->say(sprintf('"%s": "%s"', $package, "^3.0.0"));
+                $composer[$section][$package] = "^3.0.0";
             }
             $this->say('');
             return null;
@@ -279,7 +279,7 @@ abstract class InitTemplate
                 continue;
             }
             $this->sayInfo("Adding {$package} for {$module} to composer.json");
-            $composer[$section][$package] = "^1.0.0";
+            $composer[$section][$package] = "^3.0.0";
             ++$packageCounter;
         }
 
