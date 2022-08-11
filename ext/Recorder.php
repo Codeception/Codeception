@@ -96,7 +96,7 @@ use function uniqid;
  * public function testLogin(AcceptanceTester $I)
  * {
  *     $I->login();
- *     $I->amOnUrl('https://codeception.com');
+ *     $I->amOnUrl('http://codeception.com');
  * }
  * ```
  *
