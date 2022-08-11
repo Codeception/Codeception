@@ -7,6 +7,7 @@ namespace Codeception\Test;
 use Codeception\Event\FailEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\UselessTestException;
 use Codeception\PHPUnit\Wrapper\Test as TestWrapper;
 use Codeception\ResultAggregator;
 use Codeception\TestInterface;
@@ -15,9 +16,6 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\IncompleteTestError;
-use PHPUnit\Framework\RiskyBecauseNoAssertionsWerePerformedException;
-use PHPUnit\Framework\RiskyTest;
-use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Runner\Version as PHPUnitVersion;
@@ -172,7 +170,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $this->test();
                 $status = self::STATUS_OK;
                 $eventType = Events::TEST_SUCCESS;
-            } catch (RiskyTest | RiskyTestError $e) {
+            } catch (UselessTestException $e) {
                 $result->addUseless(new FailEvent($this, $e, $time));
                 $status = self::STATUS_USELESS;
                 $eventType = Events::TEST_USELESS;
@@ -205,11 +203,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
             if ($this->reportUselessTests && $this->assertionCount === 0 && $eventType === Events::TEST_SUCCESS) {
                 $eventType = Events::TEST_USELESS;
-                if (PHPUnitVersion::series() < 10) {
-                    $e = new RiskyTestError('This test did not perform any assertions');
-                } else {
-                    $e = new RiskyBecauseNoAssertionsWerePerformedException();
-                }
+                $e = new UselessTestException('This test did not perform any assertions');
                 $result->addUseless(new FailEvent($this, $e, $time));
             }
 

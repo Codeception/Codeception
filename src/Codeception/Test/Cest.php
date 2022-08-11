@@ -6,6 +6,7 @@ namespace Codeception\Test;
 
 use Codeception\Example;
 use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\UselessTestException;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Di;
 use Codeception\Lib\Parser;
@@ -15,8 +16,6 @@ use Codeception\Util\ReflectionHelper;
 use Exception;
 use LogicException;
 use PHPUnit\Framework\IncompleteTestError;
-use PHPUnit\Framework\RiskyTest;
-use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
@@ -125,7 +124,7 @@ class Cest extends Test implements
             $this->executeTestMethod($I);
             $this->executeAfterMethods($this->testMethod, $I);
             $this->executeHook($I, 'passed');
-        } catch (RiskyTest | RiskyTestError | IncompleteTestError | SkippedTest $exception) {
+        } catch (IncompleteTestError | SkippedTest | UselessTestException $exception) {
             // don't call failed hook
             throw $exception;
         } catch (Exception $exception) {

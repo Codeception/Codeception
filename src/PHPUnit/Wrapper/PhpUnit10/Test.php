@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestResult;
 
 abstract class Test implements PHPUnitTest
 {
-    public function run(TestResult $result): void
+    public function run(): void
     {
         // does nothing
     }

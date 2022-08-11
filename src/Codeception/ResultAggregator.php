@@ -156,7 +156,15 @@ class ResultAggregator
         return ($this->errorCount() + $this->failureCount()) === 0;
     }
 
+    /**
+     * @deprecated replaced by wasSuccessfulAndNoTestIsUselessOrSkippedOrIncomplete
+     */
     public function wasSuccessfulAndNoTestIsRiskyOrSkippedOrIncomplete(): bool
+    {
+        return $this->wasSuccessfulAndNoTestIsUselessOrSkippedOrIncomplete();
+    }
+
+    public function wasSuccessfulAndNoTestIsUselessOrSkippedOrIncomplete(): bool
     {
         return $this->wasSuccessful()
             && ($this->uselessCount() + $this->skippedCount() + $this->incompleteCount()) === 0;
