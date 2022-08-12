@@ -10,6 +10,7 @@ use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\UselessTestException;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\MessageFactory;
 use Codeception\Lib\Console\Output;
@@ -29,8 +30,6 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTestError;
-use PHPUnit\Framework\RiskyTest;
-use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTest;
 use SebastianBergmann\Timer\Duration;
@@ -335,7 +334,7 @@ class Console implements EventSubscriberInterface
             return;
         }
 
-        if ($result->wasSuccessfulAndNoTestIsRiskyOrSkippedOrIncomplete()) {
+        if ($result->wasSuccessfulAndNoTestIsUselessOrSkippedOrIncomplete()) {
             $message = sprintf(
                 'OK (%d test%s, %d assertion%s)',
                 $testCount,
@@ -538,8 +537,7 @@ class Console implements EventSubscriberInterface
         if (
             $fail instanceof SkippedTest
             || $fail instanceof IncompleteTestError
-            || $fail instanceof RiskyTest
-            || $fail instanceof RiskyTestError
+            || $fail instanceof UselessTestException
         ) {
             $testStyle = 'warning';
         }
@@ -650,8 +648,7 @@ class Console implements EventSubscriberInterface
         if (
             $exception instanceof SkippedTest
             || $exception instanceof IncompleteTestError
-            || $exception instanceof RiskyTest
-            || $exception instanceof RiskyTestError
+            || $exception instanceof UselessTestException
         ) {
             return;
         }

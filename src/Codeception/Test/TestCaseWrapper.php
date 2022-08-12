@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use Codeception\Exception\UselessTestException;
 use Codeception\ResultAggregator;
 use Codeception\Test\Interfaces\Dependent;
 use Codeception\Test\Interfaces\Descriptive;
@@ -14,8 +15,6 @@ use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ErrorTestCase;
-use PHPUnit\Framework\RiskyDueToUnexpectedAssertionsException;
-use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
@@ -148,18 +147,12 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
             $numberOfAssertionsPerformed > 0 &&
             $this->testCase->doesNotPerformAssertions()
         ) {
-            if (PHPUnitVersion::series() < 10) {
-                throw new RiskyTestError(
-                    sprintf(
-                        'This test is annotated with "@doesNotPerformAssertions" but performed %d assertions',
-                        $numberOfAssertionsPerformed
-                    )
-                );
-            } else {
-                throw new RiskyDueToUnexpectedAssertionsException(
+            throw new UselessTestException(
+                sprintf(
+                    'This test is annotated with "@doesNotPerformAssertions" but performed %d assertions',
                     $numberOfAssertionsPerformed
-                );
-            }
+                )
+            );
         }
     }
 
