@@ -14,7 +14,7 @@ class Api extends InitTemplate
     protected string $configTemplate = <<<EOF
 # suite config
 suites:
-    Api:
+    api:
         actor: ApiTester
         path: .
         modules:
