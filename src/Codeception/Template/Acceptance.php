@@ -28,7 +28,6 @@ suites:
             - Codeception\Step\TryTo
             - Codeception\Step\Retry
 
-support_namespace: Support
 extensions:
     enabled: [Codeception\Extension\RunFailed]
 
