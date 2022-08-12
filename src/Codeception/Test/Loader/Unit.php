@@ -86,7 +86,7 @@ class Unit implements LoaderInterface
         $methodName = $method->getName();
 
         try {
-            $data = DataProvider::getDataForMethod($method);
+            $data = DataProvider::getDataForMethod($method, $class);
         } catch (Throwable $t) {
             $message = sprintf(
                 "The data provider specified for %s::%s is invalid.\n%s",
