@@ -50,4 +50,15 @@ class BuildTest extends BaseCommandRunner
         $this->assertStringContainsString('use _generated\HobbitGuyActions;', $this->content);
         $this->assertIsValidPhp($this->content);
     }
+
+    public function testBuildNamespacedActorInSupportNamespace()
+    {
+        $this->config['namespace'] = 'Shire';
+        $this->config['support_namespace'] = 'Support';
+        $this->execute();
+        $this->assertStringContainsString('namespace Shire\Support;', $this->content);
+        $this->assertStringContainsString('class HobbitGuy extends \Codeception\Actor', $this->content);
+        $this->assertStringContainsString('use _generated\HobbitGuyActions;', $this->content);
+        $this->assertIsValidPhp($this->content);
+    }
 }
