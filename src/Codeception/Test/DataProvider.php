@@ -7,17 +7,17 @@ namespace Codeception\Test;
 use Codeception\Exception\TestParseException;
 use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
+use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 
-use function array_merge;
 use function sprintf;
 
 class DataProvider
 {
-    public static function getDataForMethod(ReflectionMethod $method): ?iterable
+    public static function getDataForMethod(ReflectionMethod $method, ?ReflectionClass $class = null): ?iterable
     {
-        $testClass = $method->getDeclaringClass();
+        $testClass = self::getTestClass($method, $class);
         $testClassName = $testClass->getName();
         $methodName = $method->getName();
 
@@ -30,7 +30,7 @@ class DataProvider
             $rawExample = reset($rawExamples);
             if (is_string($rawExample)) {
                 $result = array_map(
-                    fn ($v): ?array => Annotation::arrayValue($v),
+                    static fn ($v): ?array => Annotation::arrayValue($v),
                     $rawExamples
                 );
             } else {
@@ -41,7 +41,6 @@ class DataProvider
         }
 
         // dataProvider annotation
-
         $dataProviderAnnotations = Annotation::forMethod($testClassName, $methodName)->fetchAll('dataProvider');
         // lowercase for back compatible
         if (empty($dataProviderAnnotations)) {
@@ -128,5 +127,18 @@ class DataProvider
             $testClassName,
             $annotation,
         ];
+    }
+
+    /**
+     * Retrieves actual test class for dataProvider.
+     */
+    private static function getTestClass(ReflectionMethod $dataProviderMethod, ?ReflectionClass $testClass): ReflectionClass
+    {
+        $dataProviderDeclaringClass = $dataProviderMethod->getDeclaringClass();
+        // data provider in abstract class?
+        if ($dataProviderDeclaringClass->isAbstract() && null !== $testClass && $dataProviderDeclaringClass->name !== $testClass->name) {
+            $dataProviderDeclaringClass = $testClass;
+        }
+        return $dataProviderDeclaringClass;
     }
 }

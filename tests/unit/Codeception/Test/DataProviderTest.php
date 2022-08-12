@@ -193,4 +193,17 @@ class DataProviderTest extends Unit
 
         self::assertSame($expectedResult, $result);
     }
+
+    public function testExecutesPublicDataProviderInAnotherAbstractClass(): void
+    {
+        require_once codecept_data_dir('data_provider/AbstractDataProviderTest.php');
+        $method = new ReflectionMethod(AbstractDataProviderTest::class, 'testDataProvider');
+        $result = DataProvider::getDataForMethod($method, new ReflectionClass(AbstractDataProviderTest::class));
+
+        $expectedResult = [
+            'foo' => ['foo'],
+        ];
+
+        self::assertSame($expectedResult, $result);
+    }
 }
