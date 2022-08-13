@@ -1,3 +1,10 @@
+#### 5.0.1
+
+* Propagate --ext and --override parameters to included test suites by @calvinalkan (#6536)
+* Fixed false negative message about stecman/symfony-console-completion package by @geega (#6541)
+* Fixed a number of issues in template functionality (#6552)
+* Fixed DataProvider, to properly load dataProviders from abstract classes by @Basster (#6549)
+
 #### 5.0.0
 
 Summary of all differences from Codeception 4
