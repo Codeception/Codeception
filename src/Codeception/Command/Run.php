@@ -3,6 +3,7 @@ namespace Codeception\Command;
 
 use Codeception\Codecept;
 use Codeception\Configuration;
+use Codeception\Exception\ParseException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -249,18 +250,10 @@ class Run extends Command
         if ($this->options['bootstrap']) {
             Configuration::loadBootstrap($this->options['bootstrap'], getcwd());
         }
-
-        // load config
+        
         $config = $this->getGlobalConfig();
-
-        // update config from options
-        if (count($this->options['override'])) {
-            $config = $this->overrideConfig($this->options['override']);
-        }
-        if ($this->options['ext']) {
-            $config = $this->enableExtensions($this->options['ext']);
-        }
-
+        $config = $this->addRuntimeOptionsToCurrentConfig($config);
+        
         if (!$this->options['colors']) {
             $this->options['colors'] = $config['settings']['colors'];
         }
@@ -348,10 +341,7 @@ class Run extends Command
                     if (strpos($suite, $include) === 0) {
                         // Use include config
                         $config = Configuration::config($projectDir.$include);
-    
-                        if (!empty($this->options['override'])) {
-                            $config = $this->overrideConfig($this->options['override']);
-                        }
+                        $config = $this->addRuntimeOptionsToCurrentConfig($config);
                         
                         if (!isset($config['paths']['tests'])) {
                             throw new \RuntimeException(
@@ -378,7 +368,9 @@ class Run extends Command
 
                 // Restore main config
                 if (!$isIncludeTest) {
-                    $config = Configuration::config($projectDir);
+                    $config = $this->addRuntimeOptionsToCurrentConfig(
+                        Configuration::config($projectDir)
+                    );
                 }
             } elseif (!empty($suite)) {
                 $result = $this->matchSingleTest($suite, $config);
@@ -747,12 +739,20 @@ class Run extends Command
     }
     
     /**
-     * @param  string  $suite_name
-     *
-     * @return bool
+     * @return array
      */
-    private function isRootLevelSuite($suite_name) {
-        return !$this->isSuiteInMultiApplication($suite_name) && ! $this->isWildcardSuiteName($suite_name);
+    private function addRuntimeOptionsToCurrentConfig(array $config)
+    {
+        // update config from options
+        if (count($this->options['override'])) {
+            $config = $this->overrideConfig($this->options['override']);
+        }
+        // enable extensions
+        if ($this->options['ext']) {
+            $config = $this->enableExtensions($this->options['ext']);
+        }
+        
+        return $config;
     }
     
 }
