@@ -14,7 +14,7 @@ class Api extends InitTemplate
     protected string $configTemplate = <<<EOF
 # suite config
 suites:
-    Api:
+    api:
         actor: ApiTester
         path: .
         modules:
@@ -40,7 +40,7 @@ EOF;
 <?php
 namespace {{namespace}};
 
-use {{support_namespace}}\ApiTester;
+use {{namespace}}\{{support_namespace}}\ApiTester;
 
 class ApiCest 
 {    
@@ -84,7 +84,9 @@ EOF;
         $configFile = "namespace: $namespace\nsupport_namespace: {$this->supportNamespace}\n" . $configFile;
 
         $this->createFile('codeception.yml', $configFile);
-        $this->createActor('ApiTester', $supportDir, Yaml::parse($configFile)['suites']['api']);
+        $settings = Yaml::parse($configFile)['suites']['api'];
+        $settings['support_namespace'] = $this->supportNamespace;
+        $this->createActor('ApiTester', $supportDir, $settings);
 
         $this->sayInfo("Created global config codeception.yml inside the root directory");
 

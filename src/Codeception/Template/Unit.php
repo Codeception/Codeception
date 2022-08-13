@@ -73,7 +73,9 @@ EOF;
         }
 
         if ($haveTester) {
-            $this->createActor('UnitTester', $supportDir, Yaml::parse($configFile)['suites']['unit']);
+            $settings = Yaml::parse($configFile)['suites']['unit'];
+            $settings['support_namespace'] = $this->supportNamespace;
+            $this->createActor('UnitTester', $supportDir, $settings);
         }
 
         $this->gitIgnore($outputDir);

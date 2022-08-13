@@ -28,7 +28,6 @@ suites:
             - Codeception\Step\TryTo
             - Codeception\Step\Retry
 
-support_namespace: Support
 extensions:
     enabled: [Codeception\Extension\RunFailed]
 
@@ -55,7 +54,7 @@ EOF;
 
 namespace {{namespace}};
 
-use {{support_namespace}}\AcceptanceTester;
+use {{namespace}}\{{support_namespace}}\AcceptanceTester;
 
 class LoginCest 
 {    
@@ -117,7 +116,10 @@ EOF;
         $configFile = "namespace: $namespace\nsupport_namespace: {$this->supportNamespace}\n" . $configFile;
 
         $this->createFile('codeception.yml', $configFile);
-        $this->createActor('AcceptanceTester', $supportDir, Yaml::parse($configFile)['suites']['acceptance']);
+
+        $settings = Yaml::parse($configFile)['suites']['acceptance'];
+        $settings['support_namespace'] = $this->supportNamespace;
+        $this->createActor('AcceptanceTester', $supportDir, $settings);
 
         $this->sayInfo("Created global config codeception.yml inside the root directory");
         $this->createFile(
