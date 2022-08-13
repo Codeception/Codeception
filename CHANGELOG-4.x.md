@@ -1,3 +1,8 @@
+#### 4.2.2
+
+* Propagate --ext and --override parameters to included test suites (#6536)
+* Fixed false negative message about stecman/symfony-console-completion package (#6541)
+
 #### 4.2.1
 
 * Execute setupBeforeClass/tearDownAfterClass only once (#6481)
