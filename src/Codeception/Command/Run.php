@@ -273,7 +273,6 @@ class Run extends Command
             Configuration::loadBootstrap($this->options['bootstrap'], getcwd());
         }
 
-        // load config
         $config = $this->getGlobalConfig();
         $config = $this->addRuntimeOptionsToCurrentConfig($config);
 
