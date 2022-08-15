@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use Codeception\Event\SuiteEvent;
+use Codeception\Exception\Warning;
 use Codeception\Lib\Notification;
 use Codeception\Subscriber\ErrorHandler;
 use Codeception\Suite;
+use PHPUnit\Runner\Version;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
@@ -46,8 +48,13 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
 
     public function testShowsLocationOfWarning()
     {
-        $this->expectWarning();
-        $this->expectWarningMessage('Undefined variable: file');
+        if (Version::series() < 10) {
+            $this->expectWarning();
+            $this->expectWarningMessage('Undefined variable: file');
+        } else {
+            $this->expectException(Warning::class);
+            $this->expectExceptionMessageMatches('/Undefined variable: file at ' . preg_quote(__FILE__, '/') . ':58/');
+        }
         trigger_error('Undefined variable: file', E_USER_WARNING);
     }
 }
