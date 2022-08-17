@@ -331,7 +331,7 @@ class Configuration
     {
         // cut namespace name from suite name
         if ($suite != $config['namespace'] && str_starts_with($suite, $config['namespace'])) {
-            $suite = substr($suite, strlen($config['namespace']));
+            $suite = ltrim(substr($suite, strlen($config['namespace'])), '.');
         }
 
         if (!in_array($suite, self::$suites)) {
