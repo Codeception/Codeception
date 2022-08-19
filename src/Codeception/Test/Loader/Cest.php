@@ -51,7 +51,10 @@ class Cest implements LoaderInterface
                     continue;
                 }
 
-                $examples = DataProvider::getDataForMethod(new \ReflectionMethod($testClass, $method));
+                $examples = DataProvider::getDataForMethod(
+                    new \ReflectionMethod($testClass, $method),
+                    new \ReflectionClass($testClass)
+                );
 
                 if ($examples === null) {
                     $this->tests[] = new CestFormat($unit, $method, $filename);
