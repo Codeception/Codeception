@@ -1,3 +1,9 @@
+#### 5.0.2
+
+* Fixed remote code coverage for namespaced suites (#6533)
+* Fixed data provider in abstract Cest class @p-golovin (#6560)
+* Fixed issue when include groups and test groups empty @geega (#6557)
+
 #### 5.0.1
 
 * Propagate --ext and --override parameters to included test suites by @calvinalkan (#6536)
