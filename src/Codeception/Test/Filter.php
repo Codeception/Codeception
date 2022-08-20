@@ -96,10 +96,10 @@ class Filter
 
     public function isGroupAccepted(Test $test, array $groups): bool
     {
-        if ($this->includeGroups !== null && count(\array_intersect($groups, $this->includeGroups)) === 0) {
+        if ($this->includeGroups !== null && $this->includeGroups !== [] && count(\array_intersect($groups, $this->includeGroups)) === 0) {
             return false;
         }
-        if ($this->excludeGroups !== null && count(\array_intersect($groups, $this->excludeGroups)) > 0) {
+        if ($this->excludeGroups !== null && $this->excludeGroups !== [] && count(\array_intersect($groups, $this->excludeGroups)) > 0) {
             return false;
         }
 
