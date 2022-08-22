@@ -19,8 +19,9 @@ trait Pause
         }
 
         $psy = (new PauseShell())
-            ->addMessage(' $I-> to launch commands')
-            ->addMessage(' $this-> to access current test')
+            ->addMessage('$I-> to launch commands')
+            ->addMessage('$this-> to access current test')
+            ->addMessage('exit to exit')
             ->getShell();
 
         $vars['I'] = $this;
