@@ -17,6 +17,8 @@ use DOMElement;
 use InvalidArgumentException;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\TestFailure;
+use PHPUnit\Runner\Version as PHPUnitVersion;
+use PHPUnit\Util\ThrowableToStringMapper;
 use PHPUnit\Util\Xml;
 use ReflectionException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -340,8 +342,13 @@ class JUnitReporter implements EventSubscriberInterface
             $buffer = '';
         }
 
-        $buffer .= TestFailure::exceptionToString($t) . "\n" .
-            StackTraceFilter::getFilteredStacktrace($t);
+        if (PHPUnitVersion::series() < 10) {
+            $exceptionString = TestFailure::exceptionToString($t);
+        } else {
+            $exceptionString = ThrowableToStringMapper::map($t);
+        }
+
+        $buffer .= $exceptionString . "\n" . StackTraceFilter::getFilteredStacktrace($t);
 
         $fault = $this->document->createElement(
             $type,
