@@ -15,7 +15,6 @@ use Codeception\Util\StackTraceFilter;
 use DOMDocument;
 use DOMElement;
 use InvalidArgumentException;
-use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\TestFailure;
 use PHPUnit\Util\Xml;
@@ -349,11 +348,7 @@ class JUnitReporter implements EventSubscriberInterface
             Xml::prepareString($buffer)
         );
 
-        if ($t instanceof ExceptionWrapper) {
-            $fault->setAttribute('type', $t->getClassName());
-        } else {
-            $fault->setAttribute('type', $t::class);
-        }
+        $fault->setAttribute('type', $t::class);
 
         $this->currentTestCase->appendChild($fault);
     }

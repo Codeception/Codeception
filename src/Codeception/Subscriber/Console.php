@@ -27,7 +27,6 @@ use Codeception\TestInterface;
 use Codeception\Util\Debug;
 use Codeception\Util\StackTraceFilter;
 use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SelfDescribing;
@@ -583,9 +582,7 @@ class Console implements EventSubscriberInterface
             return;
         }
 
-        $class = $exception instanceof ExceptionWrapper
-            ? $exception->getClassname()
-            : $exception::class;
+        $class = $exception::class;
 
         if (str_starts_with($class, 'Codeception\Exception')) {
             $class = substr($class, strlen('Codeception\Exception\\'));
