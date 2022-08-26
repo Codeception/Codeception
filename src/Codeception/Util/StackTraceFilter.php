@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
-use PHPUnit\Framework\ExceptionWrapper as PHPUnitExceptionWrapper;
 use Throwable;
 
 class StackTraceFilter
@@ -20,9 +19,6 @@ class StackTraceFilter
         $stackTrace = $asString ? '' : [];
 
         $trace = $e->getPrevious() ? $e->getPrevious()->getTrace() : $e->getTrace();
-        if ($e instanceof PHPUnitExceptionWrapper) {
-            $trace = $e->getSerializableTrace();
-        }
 
         $eFile = $e->getFile();
         $eLine = $e->getLine();

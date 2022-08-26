@@ -42,15 +42,17 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         $this->metadata = new Metadata();
         $metadata = $this->metadata;
 
-        $methodName = $testCase->getName(false);
+        if (PHPUnitVersion::series() < 10) {
+            $methodName = $testCase->getName(false);
+        } else {
+            $methodName = $testCase->name();
+        }
         $metadata->setName($methodName);
         $metadata->setFilename((new ReflectionClass($testCase))->getFileName());
 
         if ($testCase->dataName() !== '') {
             $metadata->setIndex($testCase->dataName());
         }
-
-        $methodName = $testCase->getName(false);
 
         if ($testCase instanceof ErrorTestCase) {
             return;
@@ -109,7 +111,7 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
     public function getReportFields(): array
     {
         return [
-            'name'    => $this->testCase->getName(true),
+            'name'    => $this->getNameWithDataSet(),
             'class'   => $this->testCase::class,
             'file'    => $this->metadata->getFilename()
         ];
@@ -158,7 +160,7 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
 
     public function toString(): string
     {
-        $text = Descriptor::getTestCaseNameAsString($this->testCase->getName(true));
+        $text = Descriptor::getTestCaseNameAsString($this->getNameWithDataSet());
         return ReflectionHelper::getClassShortName($this->testCase) . ': ' . $text;
     }
 
@@ -170,5 +172,14 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
     public function getSignature(): string
     {
         return $this->testCase::class . ':' . $this->metadata->getName();
+    }
+
+    private function getNameWithDataSet(): string
+    {
+        if (PHPUnitVersion::series() < 10) {
+            return $this->testCase->getName(true);
+        }
+
+        return $this->testCase->nameWithDataSet();
     }
 }

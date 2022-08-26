@@ -14,7 +14,6 @@ use Codeception\TestInterface;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\ExceptionWrapper;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\SkippedTestError;
@@ -192,7 +191,6 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $eventType = Events::TEST_ERROR;
             } catch (Throwable $e) {
                 $result->addError(new FailEvent($this, $e, $time));
-                $e = new ExceptionWrapper($e);
                 $status = self::STATUS_ERROR;
                 $eventType = Events::TEST_ERROR;
             }

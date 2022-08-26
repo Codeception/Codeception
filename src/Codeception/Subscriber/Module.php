@@ -9,6 +9,7 @@ use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\ThrowableWrapper;
 use Codeception\Suite;
 use Codeception\TestInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -87,7 +88,14 @@ class Module implements EventSubscriberInterface
             return;
         }
         foreach (array_reverse($this->modules) as $module) {
-            $module->_failed($event->getTest(), $event->getFail());
+            $exception = $event->getFail();
+            if (!$exception instanceof \Exception) {
+                /**
+                 * @TODO Change _failed parameter to \Throwable in the next major version
+                 */
+                $exception = new ThrowableWrapper($exception);
+            }
+            $module->_failed($event->getTest(), $exception);
         }
     }
 
