@@ -34,7 +34,7 @@ class SelfUpdate extends Command
     /**
      * @var string
      */
-    public const PHAR_URL = 'https://codeception.com/php73/';
+    public const PHAR_URL = 'https://codeception.com/php80/';
 
     /**
      * Holds the current script filename.
