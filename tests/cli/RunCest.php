@@ -636,15 +636,6 @@ EOF
         $I->seeInShellOutput('Failures: 2.');
     }
 
-    public function runInvalidDataProvider(CliGuy $I)
-    {
-        $I->executeCommand('run unit InvalidDataProviderTest.php', false);
-        $I->seeInShellOutput('There was 1 error');
-        $I->seeInShellOutput('[PHPUnit\Framework\Error] The data provider specified for InvalidDataProviderTest::testInvalidDataProvider is invalid');
-        $I->seeInShellOutput('Tests: 1,');
-        $I->seeInShellOutput('Errors: 1.');
-    }
-
     #[Group('shuffle')]
     public function showSeedNumberOnShuffle(CliGuy $I)
     {

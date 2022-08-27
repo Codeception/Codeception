@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
-use PHPUnit\Framework\ErrorTestCase;
-use PHPUnit\Framework\WarningTestCase;
-
 class Filter
 {
     private ?string $namePattern = null;
@@ -79,11 +76,7 @@ class Filter
             return true;
         }
 
-        if ($test instanceof ErrorTestCase || $test instanceof WarningTestCase) {
-            $name = $test->getMessage();
-        } else {
-            $name = Descriptor::getTestSignature($test) . Descriptor::getTestDataSetIndex($test);
-        }
+        $name = Descriptor::getTestSignature($test) . Descriptor::getTestDataSetIndex($test);
 
         $accepted = preg_match($this->namePattern, $name, $matches);
 

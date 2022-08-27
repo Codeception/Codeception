@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use Codeception\Exception\InvalidTestException;
 use Codeception\Exception\TestParseException;
 use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
@@ -83,15 +84,12 @@ class DataProvider
                     }
                 }
             } catch (ReflectionException) {
-                throw new TestParseException(
-                    $testClass->getFileName(),
-                    sprintf(
-                        "DataProvider '%s' for %s->%s is invalid or not callable.\nMake sure that the data provider exist within the test class.",
-                        $dataProviderAnnotation,
-                        $testClassName,
-                        $methodName
-                    ),
-                );
+                throw new InvalidTestException(sprintf(
+                    "DataProvider '%s' for %s::%s is invalid or not callable",
+                    $dataProviderAnnotation,
+                    $testClassName,
+                    $methodName
+                ));
             }
         }
 
@@ -109,7 +107,7 @@ class DataProvider
     ): array {
         $parts = explode('::', $annotation);
         if (count($parts) > 2) {
-            throw new TestParseException(
+            throw new InvalidTestException(
                 sprintf(
                     'Data provider "%s" specified for %s::%s is invalid',
                     $annotation,

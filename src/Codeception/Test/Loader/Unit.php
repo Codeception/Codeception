@@ -8,15 +8,11 @@ use Codeception\Lib\Parser;
 use Codeception\Test\DataProvider;
 use Codeception\Test\TestCaseWrapper;
 use Codeception\Util\Annotation;
-use PHPUnit\Framework\ErrorTestCase;
-use PHPUnit\Framework\IncompleteTestCase;
-use PHPUnit\Framework\SkippedTestCase;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
 use ReflectionClass;
 use ReflectionMethod;
-use Throwable;
 
 class Unit implements LoaderInterface
 {
@@ -85,33 +81,10 @@ class Unit implements LoaderInterface
         $className = $class->getName();
         $methodName = $method->getName();
 
-        try {
-            $data = DataProvider::getDataForMethod($method, $class);
-        } catch (Throwable $t) {
-            $message = sprintf(
-                "The data provider specified for %s::%s is invalid.\n%s",
-                $className,
-                $methodName,
-                $t->getMessage(),
-            );
-
-            if (PHPUnitVersion::series() < 10) {
-                $data = new ErrorTestCase($message);
-            } else {
-                $data = new ErrorTestCase($className, $methodName, $message);
-            }
-        }
+        $data = DataProvider::getDataForMethod($method, $class);
 
         if (!isset($data)) {
             return [ new $className($methodName) ];
-        }
-
-        if (
-            $data instanceof ErrorTestCase ||
-            $data instanceof SkippedTestCase ||
-            $data instanceof IncompleteTestCase
-        ) {
-            return [ $data ];
         }
 
         $result = [];

@@ -14,7 +14,6 @@ use Codeception\TestInterface;
 use Codeception\Util\Annotation;
 use Codeception\Util\ReflectionHelper;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\ErrorTestCase;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
@@ -54,9 +53,6 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
             $metadata->setIndex($testCase->dataName());
         }
 
-        if ($testCase instanceof ErrorTestCase) {
-            return;
-        }
         $classAnnotations = Annotation::forClass($testCase);
         $metadata->setParamsFromAnnotations($classAnnotations->raw());
         $metadata->setParamsFromAttributes($classAnnotations->attributes());

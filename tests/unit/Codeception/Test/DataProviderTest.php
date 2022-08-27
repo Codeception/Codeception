@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Codeception\Exception\TestParseException;
+use Codeception\Exception\InvalidTestException;
 use Codeception\Test\DataProvider;
 use Codeception\Test\Unit;
 
@@ -28,7 +28,7 @@ class DataProviderTest extends Unit
 
     public function testParseAnnotationThrowsExceptionIfAnnotationContainsTooManyDoubleColons(): void
     {
-        $this->expectException(TestParseException::class);
+        $this->expectException(InvalidTestException::class);
         $this->expectExceptionMessage('Data provider "AnotherClass::bug::getData" specified for UnitTest::testMethod is invalid');
         $result = DataProvider::parseDataProviderAnnotation('AnotherClass::bug::getData', 'UnitTest', 'testMethod');
     }

@@ -15,6 +15,6 @@ final class InvalidDataProviderTest extends Unit
 
     public function dependentProvider()
     {
-        throw new Exception();
+        throw new Exception('Data provider failed');
     }
 }
