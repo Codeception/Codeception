@@ -37,6 +37,7 @@ jobs:
       extensions: curl, mbstring, openssl, pdo, pdo_sqlite
       SYMFONY_DEPRECATIONS_HELPER: weak
       COMPOSER_ROOT_VERSION: 5.0.99
+      COLUMNS: 120
 
     runs-on: ${{ matrix.os }}
 
