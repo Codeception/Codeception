@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace Codeception\Subscriber;
 
+use Codeception\Exception\Deprecation;
+use Codeception\Exception\Error;
+use Codeception\Exception\Notice;
+use Codeception\Exception\Warning;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Notification;
-use PHPUnit\Framework\Exception as PHPUnitException;
+use PHPUnit\Framework\Error\Deprecated as PHPUnit9Deprecation;
+use PHPUnit\Framework\Error\Error as PHPUnit9Error;
+use PHPUnit\Framework\Error\Notice as PHPUnit9Notice;
+use PHPUnit\Framework\Error\Warning as PHPUnit9Warning;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use Symfony\Bridge\PhpUnit\DeprecationErrorHandler as SymfonyDeprecationErrorHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function call_user_func;
 use function class_exists;
 use function count;
@@ -18,12 +27,10 @@ use function error_reporting;
 use function getenv;
 use function in_array;
 use function is_array;
-use function is_object;
 use function register_shutdown_function;
 use function restore_error_handler;
 use function set_error_handler;
 use function sprintf;
-use function strpos;
 
 class ErrorHandler implements EventSubscriberInterface
 {
@@ -32,7 +39,7 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_BEFORE => 'handle',
         Events::SUITE_AFTER  => 'onFinish'
     ];
@@ -40,32 +47,28 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var bool $stopped to keep shutdownHandler from possible looping.
      */
-    private $stopped = false;
+    private bool $stopped = false;
 
     /**
      * @var bool $initialized to avoid double error handler substitution
      */
-    private $initialized = false;
+    private bool $initialized = false;
 
-    /**
-     * @var bool
-     */
-    private $deprecationsInstalled = false;
+    private bool $deprecationsInstalled = false;
 
     /**
      * @var callable|null
      */
     private $oldHandler;
 
-    /**
-     * @var bool
-     */
-    private $suiteFinished = false;
+    private bool $suiteFinished = false;
 
     /**
-     * @var int stores bitmask for errors
+     * @var int Stores bitmask for errors
      */
-    private $errorLevel;
+    private int $errorLevel;
+
+    private bool $convertDeprecationsToExceptions = false;
 
     public function __construct()
     {
@@ -85,6 +88,10 @@ class ErrorHandler implements EventSubscriberInterface
         }
         error_reporting($this->errorLevel);
 
+        if ($settings['convert_deprecations_to_exceptions']) {
+            $this->convertDeprecationsToExceptions = true;
+        }
+
         if ($this->initialized) {
             return;
         }
@@ -96,9 +103,9 @@ class ErrorHandler implements EventSubscriberInterface
         $this->initialized = true;
     }
 
-    public function errorHandler(int $errNum, string $errMsg, string $errFile, string $errLine, array $context = []): bool
+    public function errorHandler(int $errNum, string $errMsg, string $errFile, int $errLine, array $context = []): bool
     {
-        if (E_USER_DEPRECATED === $errNum) {
+        if ((E_USER_DEPRECATED === $errNum || E_DEPRECATED === $errNum) && !$this->convertDeprecationsToExceptions) {
             $this->handleDeprecationError($errNum, $errMsg, $errFile, $errLine, $context);
             return true;
         }
@@ -108,12 +115,26 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
-        if (strpos($errMsg, 'Cannot modify header information') !== false) {
+        if (str_contains($errMsg, 'Cannot modify header information')) {
             return false;
         }
 
-        $relativePath = codecept_relative_path($errFile);
-        throw new PHPUnitException("{$errMsg} at {$relativePath}:{$errLine}", $errNum);
+        if (PHPUnitVersion::series() < 10) {
+            throw match ($errNum) {
+                E_DEPRECATED, E_USER_DEPRECATED => new PHPUnit9Deprecation($errMsg, $errNum, $errFile, $errLine),
+                E_NOTICE, E_STRICT, E_USER_NOTICE => new PHPUnit9Notice($errMsg, $errNum, $errFile, $errLine),
+                E_WARNING, E_USER_WARNING => new PHPUnit9Warning($errMsg, $errNum, $errFile, $errLine),
+                default => new PHPUnit9Error($errMsg, $errNum, $errFile, $errLine),
+            };
+        } else {
+            $errMsg .= ' at ' . $errFile . ':' . $errLine;
+            throw match ($errNum) {
+                E_DEPRECATED, E_USER_DEPRECATED => new Deprecation($errMsg, $errNum, $errFile, $errLine),
+                E_NOTICE, E_STRICT, E_USER_NOTICE => new Notice($errMsg, $errNum, $errFile, $errLine),
+                E_WARNING, E_USER_WARNING => new Warning($errMsg, $errNum, $errFile, $errLine),
+                default => new Error($errMsg, $errNum, $errFile, $errLine),
+            };
+        }
     }
 
     public function shutdownHandler(): void
@@ -128,11 +149,13 @@ class ErrorHandler implements EventSubscriberInterface
         $this->stopped = true;
         $error = error_get_last();
 
-        if (!$this->suiteFinished && (
-            $error === null || !in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR])
-        )) {
+        if (
+            !$this->suiteFinished && (
+                $error === null || !in_array($error['type'], [E_ERROR, E_COMPILE_ERROR, E_CORE_ERROR])
+            )
+        ) {
             echo "\n\n\nCOMMAND DID NOT FINISH PROPERLY.\n";
-            exit(255);
+            exit(125);
         }
         if (!is_array($error)) {
             return;
@@ -158,10 +181,10 @@ class ErrorHandler implements EventSubscriberInterface
             $old = set_error_handler('var_dump');
             restore_error_handler();
 
-            if ($old
+            if (
+                $old
                 && is_array($old)
                 && count($old) > 0
-                && is_object($old[0])
                 && $old[0] instanceof \Symfony\Component\Debug\ErrorHandler
             ) {
                 restore_error_handler();
@@ -172,7 +195,7 @@ class ErrorHandler implements EventSubscriberInterface
         }
     }
 
-    private function handleDeprecationError(int $type, string $message, string $file, string $line, array $context): void
+    private function handleDeprecationError(int $type, string $message, string $file, int $line, array $context): void
     {
         if (($this->errorLevel & $type) === 0) {
             return;

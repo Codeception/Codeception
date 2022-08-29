@@ -15,26 +15,17 @@ class Output extends ConsoleOutput
     /**
      * @var array<string, int|bool>
      */
-    protected $config = [
+    protected array $config = [
         'colors'      => true,
         'verbosity'   => self::VERBOSITY_NORMAL,
         'interactive' => true
     ];
 
-    /**
-     * @var SymfonyFormatterHelper
-     */
-    public $formatHelper;
+    public SymfonyFormatterHelper $formatHelper;
 
-    /**
-     * @var bool
-     */
-    public $waitForDebugOutput = true;
+    public bool $waitForDebugOutput = true;
 
-    /**
-     * @var bool
-     */
-    protected $isInteractive = false;
+    protected bool $isInteractive = false;
 
     public function __construct(array $config)
     {
@@ -60,7 +51,6 @@ class Output extends ConsoleOutput
 
         $this->formatHelper = new SymfonyFormatterHelper();
 
-
         parent::__construct($this->config['verbosity'], $this->config['colors'], $formatter);
     }
 
@@ -72,21 +62,23 @@ class Output extends ConsoleOutput
     protected function clean(string $message): string
     {
         // clear json serialization
-        $message = str_replace('\/', '/', $message);
-        return $message;
+        return str_replace('\/', '/', $message);
     }
 
-    public function debug($message): void
+    public function debug(mixed $message): void
     {
-        $message = print_r($message, true);
-        $message = str_replace("\n", "\n  ", $message);
-        $message = $this->clean($message);
-        $message = OutputFormatter::escape($message);
-
         if ($this->waitForDebugOutput) {
             $this->writeln('');
             $this->waitForDebugOutput = false;
         }
+
+        if (!is_string($message)) {
+            dump($message);
+            return;
+        }
+
+        $message = $this->clean($message);
+        $message = OutputFormatter::escape($message);
         $this->writeln("<debug>  {$message}</debug>");
     }
 
@@ -98,7 +90,7 @@ class Output extends ConsoleOutput
 
     public function exception(Exception $exception): void
     {
-        $class = get_class($exception);
+        $class = $exception::class;
 
         $this->writeln("");
         $this->writeln(sprintf('(![ %s ]!)', $class));

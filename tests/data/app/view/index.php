@@ -4,7 +4,9 @@
 
 <h1>Welcome to test app!</h1>
 
-<div class="notice"><?php if (isset($notice)) echo $notice; ?></div>
+<div class="notice"><?php if (isset($notice)) {
+    echo $notice;
+                    } ?></div>
 
 <p>
     <a href="/info" id="link">More info</a>

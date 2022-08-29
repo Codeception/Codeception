@@ -1,36 +1,27 @@
 <?php
-class SomeErrorClass {
 
+use Codeception\Attribute\Group;
+use Codeception\Test\Unit;
 
-    public function some_method()
+class SomeErrorClass
+{
+    public function someMethod(): void
     {
         $a = [];
 
         $a .= 'test';
-
     }
-
 }
 
-
-class ErrorTest extends \Codeception\Test\Unit
+final class ErrorTest extends Unit
 {
+    protected UnitTester|CodeGuy $tester;
 
-    /**
-     * @var \UnitTester
-     */
-    protected $tester;
-
-    /**
-     * @group error
-     */
-    function testGetError()
+    #[Group('error')]
+    public function testGetError()
     {
+        $test = new SomeErrorClass();
 
-        $test = new SomeErrorClass;
-
-        $test->some_method();
-
+        $test->someMethod();
     }
-
 }

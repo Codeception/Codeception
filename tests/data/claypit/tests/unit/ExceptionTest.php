@@ -1,13 +1,13 @@
-<?php 
+<?php
 
-class ExceptionTest extends \PHPUnit\Framework\TestCase
+use Codeception\Attribute\Group;
+use PHPUnit\Framework\TestCase;
+
+final class ExceptionTest extends TestCase
 {
-
-    /**
-     * @group error
-     */
+    #[Group('error')]
     public function testError()
     {
-        throw new \RuntimeException('Helllo!');
+        throw new RuntimeException('Hello!');
     }
-} 
+}

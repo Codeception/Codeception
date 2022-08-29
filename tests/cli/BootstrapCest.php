@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
+#[\Codeception\Attribute\Group('bootstrap')]
 final class BootstrapCest
 {
     public function _before(CliGuy $I)
     {
-        $bootstrapPath = 'tests/data/sandbox/boot'.uniqid();
+        $bootstrapPath = 'tests/data/sandbox/boot' . uniqid();
         @mkdir($bootstrapPath, 0777, true);
         $I->amInPath($bootstrapPath);
     }
@@ -15,6 +16,11 @@ final class BootstrapCest
     {
         $I->executeCommand('bootstrap');
         $I->seeFileFound('codeception.yml');
+        $I->seeFileFound('tests/Support/_generated/.gitignore');
+        $I->seeInThisFile("*\n!.gitignore\n");
+        $I->seeFileFound('tests/_output/.gitignore');
+        $I->seeInThisFile("*\n!.gitignore\n");
+        $I->dontSeeFileFound('tests/_output/.gitkeep');
         $this->checkFilesCreated($I);
     }
 
@@ -27,11 +33,8 @@ final class BootstrapCest
         $I->dontSeeInThisFile('namespace Generated\\');
         $this->checkFilesCreated($I);
 
-        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
-        $I->seeInThisFile('namespace Generated\Helper;');
-
-        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
-        $I->seeInThisFile('namespace Generated;');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/Support');
+        $I->seeInThisFile('namespace Generated\\Support;');
     }
 
     public function bootstrapWithNamespaceShortcut(CliGuy $I)
@@ -43,17 +46,14 @@ final class BootstrapCest
         $I->dontSeeInThisFile('namespace Generated\\');
         $this->checkFilesCreated($I);
 
-        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
-        $I->seeInThisFile('namespace Generated\Helper;');
-
-        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
-        $I->seeInThisFile('namespace Generated;');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/Support');
+        $I->seeInThisFile('namespace Generated\\Support;');
     }
 
     public function bootstrapWithActor(CliGuy $I)
     {
         $I->executeCommand('bootstrap --actor Ninja');
-        $I->seeFileFound('AcceptanceNinja.php', 'tests/_support/');
+        $I->seeFileFound('AcceptanceNinja.php', 'tests/Support/');
     }
 
     public function bootstrapEmpty(CliGuy $I)
@@ -77,20 +77,16 @@ final class BootstrapCest
 
     private function checkFilesCreated(CliGuy $I)
     {
-        $I->seeDirFound('tests/_support');
-        $I->seeDirFound('tests/_data');
+        $I->seeDirFound('tests/Support');
+        $I->seeDirFound('tests/Support/Data');
         $I->seeDirFound('tests/_output');
 
-        $I->seeFileFound('functional.suite.yml', 'tests');
-        $I->seeFileFound('acceptance.suite.yml', 'tests');
-        $I->seeFileFound('unit.suite.yml', 'tests');
+        $I->seeFileFound('Functional.suite.yml', 'tests');
+        $I->seeFileFound('Acceptance.suite.yml', 'tests');
+        $I->seeFileFound('Unit.suite.yml', 'tests');
 
-        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
-        $I->seeFileFound('FunctionalTester.php', 'tests/_support');
-        $I->seeFileFound('UnitTester.php', 'tests/_support');
-
-        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
-        $I->seeFileFound('Functional.php', 'tests/_support/Helper');
-        $I->seeFileFound('Unit.php', 'tests/_support/Helper');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/Support');
+        $I->seeFileFound('FunctionalTester.php', 'tests/Support');
+        $I->seeFileFound('UnitTester.php', 'tests/Support');
     }
 }

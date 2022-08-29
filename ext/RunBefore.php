@@ -8,6 +8,7 @@ use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Symfony\Component\Process\Process;
+
 use function array_shift;
 use function class_exists;
 use function count;
@@ -42,20 +43,16 @@ use function sleep;
  */
 class RunBefore extends Extension
 {
-    /**
-     * @var array
-     */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_BEFORE => 'runBefore'
     ];
 
-    /** @var array[] */
-    private $processes = [];
+    private array $processes = [];
 
     public function _initialize(): void
     {
@@ -123,8 +120,19 @@ class RunBefore extends Extension
     private function checkProcesses(): void
     {
         foreach ($this->processes as $index => $process) {
-            if (!$this->isRunning($process['instance'])) {
-                $this->output->debug('[RunBefore] Completing ' . $process['instance']->getCommandLine());
+            /**
+             * @var Process $processInstance
+             */
+            $processInstance = $process['instance'];
+
+            if (!$this->isRunning($processInstance)) {
+                if (!$processInstance->isSuccessful()) {
+                    $this->output->debug('[RunBefore] Failed ' . $processInstance->getCommandLine());
+                    $this->output->writeln('<error>' . $processInstance->getErrorOutput() . '</error>');
+                    exit(1);
+                }
+
+                $this->output->debug('[RunBefore] Completed ' . $processInstance->getCommandLine());
                 $this->runFollowingCommand($process['following']);
                 $this->removeProcessFromMonitoring($index);
             }

@@ -1,13 +1,12 @@
 <?php
 
-class AnotherCest
-{
+use Codeception\Attribute\Group;
 
-    /**
-     * @group ok
-     * @param DumbGuy $I
-     */
-    public function optimistic(DumbGuy $I) {
+final class AnotherCest
+{
+    #[Group('ok')]
+    public function optimistic(DumbGuy $I)
+    {
         $I->expect('everything is ok');
     }
 
@@ -15,5 +14,4 @@ class AnotherCest
     {
         $I->expect('everything is bad');
     }
-
 }

@@ -1,4 +1,4 @@
-class_name: CliGuy
+actor: CliGuy
 modules:
     enabled:
         - Filesystem

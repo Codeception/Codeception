@@ -1,7 +1,8 @@
 <?php
+
 namespace Group;
 
-use \Codeception\Event\TestEvent;
+use Codeception\Event\TestEvent;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.
@@ -14,19 +15,22 @@ use \Codeception\Event\TestEvent;
  */
 class CountEvents extends \Codeception\GroupObject
 {
+    /** @var string */
     public static $group = 'countevents';
-    public static $beforeCount = 0;
-    public static $afterCount = 0;
+
+    public static int $beforeCount = 0;
+
+    public static int $afterCount = 0;
 
     public function _before(TestEvent $event)
     {
-        $this::$beforeCount++;
+        ++$this::$beforeCount;
         $this->writeln("Group Before Events: " . $this::$beforeCount);
     }
 
     public function _after(TestEvent $event)
     {
-        $this::$afterCount++;
+        ++$this::$afterCount;
         $this->writeln("Group After Events: " . $this::$afterCount);
     }
 }

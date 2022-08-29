@@ -12,7 +12,7 @@ class RetryTest extends \PHPUnit\Framework\TestCase
     /**
      * @var bool
      */
-    protected $shouldFail = true;
+    protected bool $shouldFail = true;
 
     public function testRetryStepShouldNotFailStep()
     {
@@ -32,8 +32,8 @@ class RetryTest extends \PHPUnit\Framework\TestCase
         if (!$this->shouldFail) {
             return;
         }
+
         $this->shouldFail = false;
         throw new \Exception('Error');
     }
-
 }

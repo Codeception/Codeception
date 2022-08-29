@@ -233,7 +233,7 @@ $I->fillField('password', new PasswordArgument('thisissecret'));
   * Use `Codeception\Stub` instead of `Codeception\Util\Stub`
   * Mocking methods `::once`, `::never`, etc moved to `Codeception\Stub\Expected` class
   * Calling mocking methods from `Codeception\Util\Stub` provides deprecation warning.
-  * Non-static API is [recommended to use for mocking](http://codeception.com/docs/05-UnitTests)
+  * Non-static API is [recommended to use for mocking](https://codeception.com/docs/05-UnitTests)
 * [WebDriver] Added `executeAsyncJS` action to run asynchronous scripts.
 * [WebDriver] Added second parameter to `executeJS` to pass additional arguments into JavaScript function.
 * [Yii2] `setCookie` signs cookies when signing enabled. #4656 By @SamMousa
@@ -335,7 +335,7 @@ thanks to @carusogabriel for refactoring tests.
 
 #### 2.3.4
 
-* Added `@prepare` annotation to make realtime configuration for tests in Cest and Test classes. [See documentation](http://codeception.com/docs/06-ModulesAndHelpers#Runtime-Configuration-of-a-Test).
+* Added `@prepare` annotation to make realtime configuration for tests in Cest and Test classes. [See documentation](https://codeception.com/docs/06-ModulesAndHelpers#Runtime-Configuration-of-a-Test).
 
 Example: disabling Doctrine2 database transaction for a test
 
@@ -351,8 +351,8 @@ protected function disableTransactions(Doctrine2 $module)
    $module->_reconfigure(['cleanup' => false]);
 }
 ```
-* [WebDriver] **SmartWait**. Automatically waits for a few extra seconds for element to appear on a page before failing. Can reduce high usage of `wait*` methods. [See Documentation](http://codeception.com/docs/03-AcceptanceTests#SmartWait)
-* Added [RunProcess extension](http://codeception.com/extensions#RunProcess). Use it to start/stop Selenium (or other process) automatically for a test suite.
+* [WebDriver] **SmartWait**. Automatically waits for a few extra seconds for element to appear on a page before failing. Can reduce high usage of `wait*` methods. [See Documentation](https://codeception.com/docs/03-AcceptanceTests#SmartWait)
+* Added [RunProcess extension](https://codeception.com/extensions#RunProcess). Use it to start/stop Selenium (or other process) automatically for a test suite.
 * [WebDriver] Customization improvements:
   * added `start` option to disable autostart of a browser for tests. (can be useful for Cloud testing setups)
   * added `_capabilities` method for setting desired capabilities in runtime (can be combined with `@prepare` annotation)
@@ -436,7 +436,7 @@ codecept run --ext DotReporter
 * Fixed `$scenario->current('name')` #4154 by @Naktibalda
 * [AMQP] Documented parameters of `declareQueue`, `declareExchange` by @Naktibalda
 * [Doctrine2] Safe prefix aliases for `buildAssociationQuery` by @jfxninja. See #4195
-* Fixed output of failed step by @Naktibalda #4135 http://phptest.club/t/seeelement-wierd-fail-message/1470
+* Fixed output of failed step by @Naktibalda #4135 https://phptest.club/t/seeelement-wierd-fail-message/1470
 * [WebDriver] fixed `friend->leave` method. Clearing base element on closing session. Fixes #4098
 * [Symfony] Make symfony bootstrap.php.cache optional for php version > 7 by @patrickjahns
 * Gherkin: Command `gherkin:snippets` to generate stub function name for non-english features. By @kuntashov
@@ -457,7 +457,7 @@ codecept run --ext DotReporter
 #### 2.2.10
 
 * Prefer local composer installation if available. Solves issues with incompatibility between locally and globally installed or packaged in phar file Codeception dependencies. Fix by @Naktibalda See #3997
-* Added console completion by @gdscei. See [documentation](http://codeception.com/docs/07-AdvancedUsage#Shell-autocompletion)
+* Added console completion by @gdscei. See [documentation](https://codeception.com/docs/07-AdvancedUsage#Shell-autocompletion)
 * [WebDriver] Fixed compatibility with `facebook/webdriver` 1.4.0 by @Naktibalda. See #4076 Fixes #4073
 * Run a suite by its path #4079
 
@@ -504,7 +504,7 @@ public function _inject(UnitTester $unit)
 #### 2.2.9
 
 * [Laravel5] **Laravel 5.4 support** by @janhenkgerritsen
-* [WebDriver] Added `performOn` to wait for element, and run actions inside it. See [complete reference](http://codeception.com/docs/modules/WebDriver#performOn). #3986
+* [WebDriver] Added `performOn` to wait for element, and run actions inside it. See [complete reference](https://codeception.com/docs/modules/WebDriver#performOn). #3986
 * [WebDriver] Improved error messages for `wait*` methods by @disc. See #3983
 * [REST] Binary responses support by @spikyjt #3993 #3985
   * `seeBinaryResponseEquals` assert that binary response matches a hash
@@ -600,7 +600,7 @@ extensions:
           delete_successful: false
 ```
 
-* **Added dataprovider to Cest** format by @endo. See [updated documentation](http://codeception.com/docs/07-AdvancedUsage#Examples).
+* **Added dataprovider to Cest** format by @endo. See [updated documentation](https://codeception.com/docs/07-AdvancedUsage#Examples).
 * Params loader refactored. Using `vlucas/phpdotenv` to parse .env files. Please install it if you don't have it yet.
 * Improved `generate:suite` command to generate actor file for suite.
 * HTML reporter: snapshot and screenshots paths made relative to make them accessible on CI. Fixes #3702
@@ -667,7 +667,7 @@ extensions:
 * [Memcache] Fixed `Memcache::dontSeeInMemcached`. By @sergeyklay
 * [ZF2] Zend Framework 3 Support. Made `init_autoloader` optional, because ZF3 uses composer for autoloading #3525. By @Naktibalda
 * [ZF2] Fixed accessing Doctrine Entity Manager when client is not initialized. By @chris1312. See #3524
-* [Yii2] Allow to load fixtures from `_fixtures` method of a testcase. [See reference](http://codeception.com/docs/modules/Yii2#Fixtures). Fixes usage of nested transactions #3520. By @kalyabin and @davertmik
+* [Yii2] Allow to load fixtures from `_fixtures` method of a testcase. [See reference](https://codeception.com/docs/modules/Yii2#Fixtures). Fixes usage of nested transactions #3520. By @kalyabin and @davertmik
 * [Yii1] Fix private property accessible; allows to change urlManager class to subclass of CUrlManager. See @3287. By @amashigeseiji
 * Escaped tags in debug output by @Naktibalda. See #3507. Fixes #3495
 * Fixed #3410: Wrong subSteps rendering in HTML ResultPrinter by @niclopez
@@ -772,11 +772,11 @@ extensions:
   * *Breaking* `Codeception\TestCase` replaced with `Codeception\TestInterface` in code and in module signatures.
   * *Breaking* Cept/Cest classes are no longer extending `PHPUnit_Framework_TestCase`, so they don't have `expectException`, `getMock`, etc.
   * Reduced stack trace for scenario-driven test formats. Codeception tests implement `PHPUnit_Framework_Test` instead of extending heavy `PHPUnit_Framework_TestCase` class.
-* *Breaking* **Conflicts API implemented** Frameworks + PhpBrowser + WebDriver can't be used together unless only non-conflicting part is used. [Announcement](http://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#conflicts)
-* **Examples** as an alternative to Data Providers. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#examples)
-* **Params** loading from yml, env files or environment. [Announcement](http://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#params)
-* **Test dependencies** with `@depends` annotation. [Announcement](http://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#test-dependencies)
-* **Custom Commands** inject your own commands as as simple as extension. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#custom-commands)
+* *Breaking* **Conflicts API implemented** Frameworks + PhpBrowser + WebDriver can't be used together unless only non-conflicting part is used. [Announcement](https://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#conflicts)
+* **Examples** as an alternative to Data Providers. [Announcement](https://codeception.com/03-10-2016/even-more-features-of-codeception.html#examples)
+* **Params** loading from yml, env files or environment. [Announcement](https://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#params)
+* **Test dependencies** with `@depends` annotation. [Announcement](https://codeception.com/03-05-2016/codeception-2.2.-upcoming-features.html#test-dependencies)
+* **Custom Commands** inject your own commands as as simple as extension. [Announcement](https://codeception.com/03-10-2016/even-more-features-of-codeception.html#custom-commands)
 * `codecept dry-run` command added to show scenario steps without executing them.
 * *Breaking* [Dbh] module removed
 * *Breaking* [Laravel4] module removed. See #2866
@@ -788,9 +788,9 @@ extensions:
 * *Breaking* [Asserts] removed deprecated `assertLessThen` and `assertGreaterThen`
 * *Breaking* mocks created with `Codeception\Util\Stub` are not verified in Cests. See #3005
 * *Breaking* [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
-* [WebDriver] allows getting current browser and capabilities in test. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#Getting-current-browser-and-capabilities-in-tests)
-* [AngularJS] module added. Extends WebDriver module for AngularJS testing. [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#angularjs)
-* [DataFactory] module added. Performs data generation using FactoryMuffin library [Announcement](http://codeception.com/03-10-2016/even-more-features-of-codeception.html#datafactory)
+* [WebDriver] allows getting current browser and capabilities in test. [Announcement](https://codeception.com/03-10-2016/even-more-features-of-codeception.html#Getting-current-browser-and-capabilities-in-tests)
+* [AngularJS] module added. Extends WebDriver module for AngularJS testing. [Announcement](https://codeception.com/03-10-2016/even-more-features-of-codeception.html#angularjs)
+* [DataFactory] module added. Performs data generation using FactoryMuffin library [Announcement](https://codeception.com/03-10-2016/even-more-features-of-codeception.html#datafactory)
 * [Redis] Module rewritten using Predis library as driver by @marcverney
 * [Laravel5] Added a `haveMultiple` method to create more than one model per call. See #2866
 * [Laravel5] [Lumen] The `haveRecord`, `seeRecord`, `dontSeeRecord` and `grabRecord` methods now also accept Eloquent model class names instead of only database table names. See #2866
@@ -877,7 +877,7 @@ extensions:
 
 #### 2.1.6
 
-* Starting from 2.1.6 you can **download PHP 5.4 compatible phar build** at http://codeception.com/php54/codecept.phar by @Naktibalda. See [installation guide](http://codeception.com/install).
+* Starting from 2.1.6 you can **download PHP 5.4 compatible phar build** at https://codeception.com/php54/codecept.phar by @Naktibalda. See [installation guide](https://codeception.com/install).
 * [WebDriver] Fixed uploading files with **PhantomJS** #1823 by @DavertMik and @Naktibalda. Please specify your browser name as `phantom` in WebDriver config in order to use PhantomJS-specific hooks.
 * Fixed parsing PHP files with spaces in name on PHP<7 by @acuthbert. Fixes #2647
 * [WebDriver] Fixed proxy error when using with Chrome #2651 by @vaikla
@@ -986,7 +986,7 @@ extensions:
 #### 2.1.2
 
 * **Updated to PHPUnit 4.8**
-* Enhancement: **Wildcard includes enabled when testing [multiple applications](http://codeception.com/docs/08-Customization#One-Runner-for-Multiple-Applications)**. See #2016 By @nzod
+* Enhancement: **Wildcard includes enabled when testing [multiple applications](https://codeception.com/docs/08-Customization#One-Runner-for-Multiple-Applications)**. See #2016 By @nzod
 * [Symfony2] fixed Doctrine2 integration: Doctrine transactions will start before each test and rollback afterwards. *2015-08-08*
 * [Doctrine2] establishing connection and starting transaction is moved to `_before`. *2015-08-08*
 * [PhpBrowser] Removed disabled and file fields from form values. By @Naktibalda *2015-08-08*
@@ -1231,13 +1231,13 @@ codecept run unit tests/unit/Codeception/TestLoaderTest:testAddCept
 * [REST] sendXXX methods now encode objects implementing JsonSerializable interfaces. *2014-12-19*
 * [REST] added methods to validate JSON structure *2014-12-19*
 
-[seeResponseJsonMatchesJsonPath](http://codeception.com/docs/modules/REST#seeResponseJsonMatchesJsonPath) validates response JSON against [JsonPath](http://goessner.net/articles/JsonPath/).
+[seeResponseJsonMatchesJsonPath](https://codeception.com/docs/modules/REST#seeResponseJsonMatchesJsonPath) validates response JSON against [JsonPath](https://goessner.net/articles/JsonPath/).
 Usage of JsonPath requires library `flow/jsonpath` to be installed.
 
-[seeResponseJsonMatchesXpath](http://codeception.com/docs/modules/REST#seeResponseJsonMatchesXpath) validates response JSON against XPath.
+[seeResponseJsonMatchesXpath](https://codeception.com/docs/modules/REST#seeResponseJsonMatchesXpath) validates response JSON against XPath.
 It converts JSON structure into valid XML document and executes XPath for it.
 
-[grabDataFromResponseByJsonPath](http://codeception.com/docs/modules/REST#grabDataFromResponseByJsonPath) method was added as well to grab data JSONPath.
+[grabDataFromResponseByJsonPath](https://codeception.com/docs/modules/REST#grabDataFromResponseByJsonPath) method was added as well to grab data JSONPath.
 
 * [REST] `grabDataFromJsonResponse` deprecated in favor of `grabDataFromResponseByJsonPath` *2014-12-19*
 * [PhpBrowser][Frameworks] fixed `Unreachable field` error while filling [] fields in input and textarea fields. Issues #1585 #1602 *2014-12-18*
@@ -1255,7 +1255,7 @@ It converts JSON structure into valid XML document and executes XPath for it.
 * Cest tests support multiple `@before` and `@after` annotations. Thanks to @draculus and @zbateson. See #1517
 * [FTP] Stops test execution on failed connection by @yegortokmakov
 * [AMQP] Fix for purging queues on initialization stage. Check for open channel is not needed and it prevents from cleaning queue by @yegortokmakov
-* CodeCoverage remote context configuration added by @synchrone. See #1524 [Documentation updated](http://codeception.com/docs/11-Codecoverage#Remote-Context-Options)
+* CodeCoverage remote context configuration added by @synchrone. See #1524 [Documentation updated](https://codeception.com/docs/11-Codecoverage#Remote-Context-Options)
 * Implemented better descriptions for error exception. Fix #1503
 * Added `c3_url` option to code coverage settings. `c3_url` allows to explicitly set url for index file with c3 included. See #1024
 * [PhpBrowser][Frameworks] Fixed selecting checkbock in a group of checkboxes #1535

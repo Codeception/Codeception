@@ -1,7 +1,6 @@
 <?php
-namespace Codeception\Module;
 
-// here you can define custom functions for SkipGuy 
+namespace Codeception\Module;
 
 class SkipHelper extends \Codeception\Module
 {

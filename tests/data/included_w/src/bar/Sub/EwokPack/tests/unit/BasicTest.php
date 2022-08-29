@@ -1,9 +1,10 @@
 <?php
+
 namespace EwokPack\Test;
 
 class BasicTest extends \Codeception\Test\Unit
 {
-    function testAssert()
+    public function testAssert()
     {
         $this->assertTrue(true);
     }

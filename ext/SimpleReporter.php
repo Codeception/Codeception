@@ -17,7 +17,6 @@ class SimpleReporter extends Extension
 {
     public function _initialize(): void
     {
-        $this->options['silent'] = false; // turn on printing for this extension
         $this->_reconfigure(['settings' => ['silent' => true]]); // turn off printing for everything else
     }
 
@@ -26,7 +25,7 @@ class SimpleReporter extends Extension
      *
      * @var array<string, string>
      */
-    public static $events = [
+    public static array $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_END     => 'after',
         Events::TEST_SUCCESS => 'success',
@@ -36,22 +35,22 @@ class SimpleReporter extends Extension
 
     public function beforeSuite(): void
     {
-        $this->writeln('');
+        $this->output->writeln('');
     }
 
     public function success(): void
     {
-        $this->write('[+] ');
+        $this->output->write('[+] ');
     }
 
     public function fail(): void
     {
-        $this->write('[-] ');
+        $this->output->write('[-] ');
     }
 
     public function error(): void
     {
-        $this->write('[E] ');
+        $this->output->write('[E] ');
     }
 
     // we are printing test status and time taken
@@ -59,10 +58,11 @@ class SimpleReporter extends Extension
     {
         $secondsInput = $event->getTime();
         // See https://stackoverflow.com/q/16825240
-        $seconds = ($milliseconds = (int)($secondsInput * 1000)) / 1000;
+        $milliseconds = (int)($secondsInput * 1000);
+        $seconds = (int)($milliseconds / 1000);
         $time = ($seconds % 60) . (($milliseconds === 0) ? '' : '.' . $milliseconds);
 
-        $this->write(Descriptor::getTestSignature($event->getTest()));
-        $this->writeln(' (' . $time . 's)');
+        $this->output->write(Descriptor::getTestSignature($event->getTest()));
+        $this->output->writeln(' (' . $time . 's)');
     }
 }

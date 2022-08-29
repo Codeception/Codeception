@@ -9,9 +9,11 @@ use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\ThrowableWrapper;
 use Codeception\Suite;
 use Codeception\TestInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function array_reverse;
 
 class Module implements EventSubscriberInterface
@@ -21,7 +23,7 @@ class Module implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::TEST_BEFORE  => 'before',
         Events::TEST_AFTER   => 'after',
         Events::STEP_BEFORE  => 'beforeStep',
@@ -32,15 +34,11 @@ class Module implements EventSubscriberInterface
         Events::SUITE_AFTER  => 'afterSuite'
     ];
 
-    /** @var \Codeception\Module[] */
-    protected $modules = [];
-
     /**
      * @param \Codeception\Module[] $modules
      */
-    public function __construct(array $modules = [])
+    public function __construct(protected array $modules = [])
     {
-        $this->modules = $modules;
     }
 
     public function beforeSuite(SuiteEvent $event): void
@@ -90,7 +88,14 @@ class Module implements EventSubscriberInterface
             return;
         }
         foreach (array_reverse($this->modules) as $module) {
-            $module->_failed($event->getTest(), $event->getFail());
+            $exception = $event->getFail();
+            if (!$exception instanceof \Exception) {
+                /**
+                 * @TODO Change _failed parameter to \Throwable in the next major version
+                 */
+                $exception = new ThrowableWrapper($exception);
+            }
+            $module->_failed($event->getTest(), $exception);
         }
     }
 

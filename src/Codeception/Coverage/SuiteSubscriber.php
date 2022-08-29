@@ -7,66 +7,46 @@ namespace Codeception\Coverage;
 use Codeception\Configuration;
 use Codeception\Coverage\Subscriber\Printer;
 use Codeception\Exception\ConfigurationException;
-use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
-use Codeception\Stub;
 use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Exception;
 use PHPUnit\Framework\CodeCoverageException;
-use PHPUnit\Framework\TestResult;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Driver\Driver as CodeCoverageDriver;
-use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function array_keys;
-use function method_exists;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface
 {
     use StaticEventsTrait;
 
-    /**
-     * @var array
-     */
-    protected $defaultSettings = [
-        'enabled'        => false,
-        'remote'         => false,
-        'local'          => false,
-        'xdebug_session' => 'codeception',
-        'remote_config'  => null,
-        'show_uncovered' => false,
-        'c3_url'         => null,
-        'work_dir'       => null,
-        'cookie_domain'  => null,
+    protected array $defaultSettings = [
+        'enabled'                      => false,
+        'remote'                       => false,
+        'local'                        => false,
+        'xdebug_session'               => 'codeception',
+        'remote_config'                => null,
+        'show_uncovered'               => false,
+        'c3_url'                       => null,
+        'work_dir'                     => null,
+        'cookie_domain'                => null,
+        'path_coverage'                => false,
+        'strict_covers_annotation'     => false,
+        'ignore_deprecated_code'       => false,
+        'disable_code_coverage_ignore' => false,
     ];
-    /**
-     * @var array
-     */
-    protected $settings = [];
-    /**
-     * @var array
-     */
-    protected $filters = [];
-    /**
-     * @var array
-     */
-    protected $modules = [];
-    /**
-     * @var CodeCoverage|null
-     */
-    protected $coverage;
-    /**
-     * @var string
-     */
-    protected $logDir;
-    /**
-     * @var array
-     */
-    protected $options = [];
-    /**
-     * @var array
-     */
-    public static $events = [];
+
+    protected array $settings = [];
+
+    protected array $filters = [];
+
+    protected array $modules = [];
+
+    protected ?CodeCoverage $coverage = null;
+
+    protected string $logDir;
+
+    public static array $events = [];
 
     abstract protected function isEnabled();
 
@@ -75,9 +55,8 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
      *
      * @throws ConfigurationException
      */
-    public function __construct(array $options = [])
+    public function __construct(protected array $options = [])
     {
-        $this->options = $options;
         $this->logDir = Configuration::outputDir();
     }
 
@@ -104,16 +83,27 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }
-        if (method_exists($this->coverage, 'setProcessUncoveredFilesFromWhitelist')) {
-            //php-code-coverage 8 or older
-            $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
+
+        if ($this->settings['strict_covers_annotation']) {
+            $this->coverage->enableCheckForUnintentionallyCoveredCode();
+        }
+
+        if ($this->settings['ignore_deprecated_code']) {
+            $this->coverage->ignoreDeprecatedCode();
         } else {
-            //php-code-coverage 9+
-            if ($this->settings['show_uncovered']) {
-                $this->coverage->processUncoveredFiles();
-            } else {
-                $this->coverage->doNotProcessUncoveredFiles();
-            }
+            $this->coverage->doNotIgnoreDeprecatedCode();
+        }
+
+        if ($this->settings['disable_code_coverage_ignore']) {
+            $this->coverage->disableAnnotationsForIgnoringCode();
+        } else {
+            $this->coverage->enableAnnotationsForIgnoringCode();
+        }
+
+        if ($this->settings['show_uncovered']) {
+            $this->coverage->includeUncoveredFiles();
+        } else {
+            $this->coverage->excludeUncoveredFiles();
         }
     }
 
@@ -125,21 +115,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
             }
         }
         return null;
-    }
-
-    /**
-     * @throws ConfigurationException|ModuleException|Exception
-     */
-    public function applyFilter(TestResult $result): void
-    {
-        $driver = Stub::makeEmpty(CodeCoverageDriver::class);
-        $result->setCodeCoverage(new CodeCoverage($driver, new CodeCoverageFilter()));
-
-        Filter::setup($this->coverage)
-            ->whiteList($this->filters)
-            ->blackList($this->filters);
-
-        $result->setCodeCoverage($this->coverage);
     }
 
     protected function mergeToPrint(CodeCoverage $coverage): void

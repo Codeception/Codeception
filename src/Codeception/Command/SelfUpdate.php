@@ -11,6 +11,7 @@ use Phar;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
 use function sprintf;
 
 /**
@@ -25,30 +26,29 @@ class SelfUpdate extends Command
     /**
      * @var string
      */
-    const NAME = 'Codeception';
+    public const NAME = 'Codeception';
     /**
      * @var string
      */
-    const GITHUB_REPO = 'Codeception/Codeception';
+    public const GITHUB_REPO = 'Codeception/Codeception';
     /**
      * @var string
      */
-    const PHAR_URL = 'https://codeception.com/php73/';
+    public const PHAR_URL = 'https://codeception.com/php80/';
 
     /**
      * Holds the current script filename.
-     * @var string
      */
-    protected $filename;
+    protected string $filename;
 
     /**
      * {@inheritdoc}
      */
     protected function configure(): void
     {
-        $this->filename = isset($_SERVER['argv'][0]) ? $_SERVER['argv'][0] : Phar::running(false);
+        $this->filename = $_SERVER['argv'][0] ?? Phar::running(false);
         $this
-            ->setAliases(array('selfupdate'))
+            ->setAliases(['selfupdate'])
             ->setDescription(
                 sprintf(
                     'Upgrade <comment>%s</comment> to the latest version',

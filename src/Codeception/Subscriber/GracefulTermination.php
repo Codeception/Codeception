@@ -7,8 +7,10 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
+use Codeception\ResultAggregator;
 use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function function_exists;
 use function pcntl_async_signals;
 use function pcntl_signal;
@@ -18,16 +20,15 @@ class GracefulTermination implements EventSubscriberInterface
     /**
      * @var string
      */
-    const SIGNAL_FUNC = 'pcntl_signal';
+    public const SIGNAL_FUNC = 'pcntl_signal';
     /**
      * @var string
      */
-    const ASYNC_SIGNAL_HANDLING_FUNC = 'pcntl_async_signals';
+    public const ASYNC_SIGNAL_HANDLING_FUNC = 'pcntl_async_signals';
 
-    /**
-     * @var SuiteEvent
-     */
-    protected $suiteEvent;
+    public function __construct(private ResultAggregator $resultAggregator)
+    {
+    }
 
     public function handleSuite(SuiteEvent $event): void
     {
@@ -35,23 +36,18 @@ class GracefulTermination implements EventSubscriberInterface
             pcntl_async_signals(true);
         }
         if (function_exists(self::SIGNAL_FUNC)) {
-            pcntl_signal(SIGTERM, function () {
+            pcntl_signal(SIGTERM, function (): void {
                 $this->terminate();
             });
-            pcntl_signal(SIGINT, function () {
+            pcntl_signal(SIGINT, function (): void {
                 $this->terminate();
             });
         }
-
-        $this->suiteEvent = $event;
     }
 
     public function terminate(): void
     {
-        if ($this->suiteEvent) {
-            $this->suiteEvent->getResult()->stopOnError(true);
-            $this->suiteEvent->getResult()->stopOnFailure(true);
-        }
+        $this->resultAggregator->stop();
         throw new RuntimeException(
             "\n\n---------------------------\nTESTS EXECUTION TERMINATED\n---------------------------\n"
         );

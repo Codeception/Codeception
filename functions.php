@@ -1,9 +1,22 @@
 <?php
 
 // function not autoloaded in PHP, thus its a good place for them
+use Codeception\Extension\Logger;
+
 function codecept_debug($data)
 {
     \Codeception\Util\Debug::debug($data);
+}
+
+/**
+ * Executes interactive pause in ths place
+ *
+ * @param array $vars
+ * @return void
+ */
+function codecept_pause(array $vars = []): void
+{
+    \Codeception\Util\Debug::pause($vars);
 }
 
 function codecept_root_dir($appendPath = '')
@@ -59,4 +72,9 @@ function codecept_absolute_path($path)
 function codecept_is_path_absolute($path)
 {
     return \Codeception\Util\PathResolver::isPathAbsolute($path);
+}
+
+function codecept_log(): \Monolog\Logger
+{
+    return Logger::getLogger();
 }

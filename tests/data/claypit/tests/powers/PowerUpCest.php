@@ -1,18 +1,17 @@
 <?php
 
+use Codeception\Attribute\Prepare;
+
 class PowerUpCest
 {
     public function iHaveNoPower(PowerGuy $I)
     {
-        $I->expectThrowable('Exception', function() use ($I) {
+        $I->expectThrowable('Exception', function () use ($I) {
             $I->gotThePower();
         });
     }
 
-    /**
-     * @prepare drinkBluePotion
-     * @param PowerGuy $I
-     */
+    #[Prepare('drinkBluePotion')]
     public function iGotBluePotion(PowerGuy $I)
     {
         $I->gotThePower();

@@ -28,17 +28,17 @@ class ModuleContainer
     /**
      * @var string
      */
-    const MODULE_NAMESPACE = '\\Codeception\\Module\\';
+    public const MODULE_NAMESPACE = '\\Codeception\\Module\\';
 
     /**
-     * @var integer
+     * @var int
      */
-    const MAXIMUM_LEVENSHTEIN_DISTANCE = 5;
+    public const MAXIMUM_LEVENSHTEIN_DISTANCE = 5;
 
     /**
      * @var array<string, string>
      */
-    public static $packages = [
+    public static array $packages = [
         'AMQP' => 'codeception/module-amqp',
         'Apc' => 'codeception/module-apc',
         'Asserts' => 'codeception/module-asserts',
@@ -67,37 +67,17 @@ class ModuleContainer
     ];
 
     /**
-     * @var array
+     * @var array<string,Module>
      */
-    private $config = [];
+    private array $modules = [];
 
-    /**
-     * @var Di
-     */
-    private $di;
+    private array $active = [];
 
-    /**
-     * @var array
-     */
-    private $modules = [];
+    private array $actions = [];
 
-    /**
-     * @var array
-     */
-    private $active = [];
-
-    /**
-     * @var array
-     */
-    private $actions = [];
-
-
-    public function __construct(Di $di, array $config)
+    public function __construct(private Di $di, private array $config)
     {
-        $this->di = $di;
         $this->di->set($this);
-
-        $this->config = $config;
     }
 
     /**
@@ -130,7 +110,7 @@ class ModuleContainer
             // Explicitly setting $config to null skips this validation.
             $config = null;
         }
-        $this->modules[$moduleName] = $this->di->instantiate($moduleClass, [$this, $config], (string)false);
+        $this->modules[$moduleName] = $this->di->instantiate($moduleClass, [$this, $config], 'false');
 
         $module = $this->modules[$moduleName];
 
@@ -157,7 +137,7 @@ class ModuleContainer
             return false;
         }
 
-        return (bool) $module->_depends();
+        return (bool)$module->_depends();
     }
 
     /**
@@ -191,7 +171,7 @@ class ModuleContainer
     /**
      * Should a method be included as an action?
      */
-    private function includeMethodAsAction(Module $module, ReflectionMethod $method, ?array $configuredParts = null): bool
+    private function includeMethodAsAction(Module $module, ReflectionMethod $method, array $configuredParts = null): bool
     {
         // Filter out excluded actions
         if ($module::$excludeActions && in_array($method->name, $module::$excludeActions)) {
@@ -206,17 +186,18 @@ class ModuleContainer
         // Do not include inherited actions if the static $includeInheritedActions property is set to false.
         // However, if an inherited action is also specified in the static $onlyActions property
         // it should be included as an action.
-        if (!$module::$includeInheritedActions &&
+        if (
+            !$module::$includeInheritedActions &&
             !in_array($method->name, $module::$onlyActions) &&
-            $method->getDeclaringClass()->getName() != get_class($module)
+            $method->getDeclaringClass()->getName() != $module::class
         ) {
             return false;
         }
 
         // Do not include hidden methods, methods with a name starting with an underscore
-        if (strpos($method->name, '_') === 0) {
+        if (str_starts_with($method->name, '_')) {
             return false;
-        };
+        }
 
         // If a part is configured for the module, only include actions from that part
         if ($configuredParts) {
@@ -234,7 +215,7 @@ class ModuleContainer
      */
     private function isHelper(string $moduleName): bool
     {
-        return strpos($moduleName, '\\') !== false;
+        return str_contains($moduleName, '\\');
     }
 
     /**
@@ -352,9 +333,7 @@ class ModuleContainer
             throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
         }
 
-        $dependencies = array_map(function ($dependency) {
-            return $this->create($dependency, false);
-        }, $this->getConfiguredDependencies($moduleName));
+        $dependencies = array_map(fn ($dependency): ?object => $this->create($dependency, false), $this->getConfiguredDependencies($moduleName));
 
         call_user_func_array([$module, '_inject'], $dependencies);
     }
@@ -364,7 +343,7 @@ class ModuleContainer
      *
      * @throws ModuleException|ModuleRequireException
      */
-    private function checkForMissingDependencies(string $moduleName, DependsOnModule $module): void
+    private function checkForMissingDependencies(string $moduleName, $module): void
     {
         $dependencies = $this->getModuleDependencies($module);
         $configuredDependenciesCount = count($this->getConfiguredDependencies($moduleName));
@@ -396,7 +375,7 @@ class ModuleContainer
         }
 
         if (!is_array($depends)) {
-            $message = sprintf("Method _depends of module '%s' must return an array", get_class($module));
+            $message = sprintf("Method _depends of module '%s' must return an array", $module::class);
             throw new ModuleException($module, $message);
         }
 
@@ -420,7 +399,7 @@ class ModuleContainer
     /**
      * Get the error message for a module dependency that is missing.
      */
-    private function getErrorMessageForDependency(Module $module, string $missingDependency): string
+    private function getErrorMessageForDependency(DependsOnModule $module, string $missingDependency): string
     {
         $depends = $module->_depends();
 
@@ -440,9 +419,7 @@ class ModuleContainer
      */
     private function getModuleConfig(string $moduleName): array
     {
-        $config = isset($this->config['modules']['config'][$moduleName])
-            ? $this->config['modules']['config'][$moduleName]
-            : [];
+        $config = $this->config['modules']['config'][$moduleName] ?? [];
 
         if (!isset($this->config['modules']['enabled'])) {
             return $config;
@@ -459,7 +436,11 @@ class ModuleContainer
 
             $enabledModuleName = key($enabledModuleConfig);
             if ($enabledModuleName === $moduleName) {
-                return Configuration::mergeConfigs(reset($enabledModuleConfig), $config);
+                $moduleConfig = reset($enabledModuleConfig);
+                if (!is_array($moduleConfig)) {
+                    return $config;
+                }
+                return Configuration::mergeConfigs($moduleConfig, $config);
             }
         }
 

@@ -7,15 +7,18 @@ namespace Codeception\Test;
 use Codeception\Configuration;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Di;
+use Codeception\Lib\PauseShell;
 use Codeception\Module;
 use Codeception\PHPUnit\TestCase;
+use Codeception\ResultAggregator;
 use Codeception\Scenario;
 use Codeception\Test\Feature\Stub;
 use Codeception\TestInterface;
+use Codeception\Util\Debug;
+
 use function get_class;
 use function lcfirst;
 use function method_exists;
-use function strpos;
 
 /**
  * Represents tests from PHPUnit compatible format.
@@ -27,10 +30,9 @@ class Unit extends TestCase implements
 {
     use Stub;
 
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    private ?Metadata $metadata = null;
+
+    private ?ResultAggregator $resultAggregator = null;
 
     public function getMetadata(): Metadata
     {
@@ -38,6 +40,19 @@ class Unit extends TestCase implements
             $this->metadata = new Metadata();
         }
         return $this->metadata;
+    }
+
+    public function getResultAggregator(): ResultAggregator
+    {
+        if ($this->resultAggregator === null) {
+            throw new \LogicException('ResultAggregator is not set');
+        }
+        return $this->resultAggregator;
+    }
+
+    public function setResultAggregator(?ResultAggregator $resultAggregator): void
+    {
+        $this->resultAggregator = $resultAggregator;
     }
 
     protected function _setUp()
@@ -52,7 +67,7 @@ class Unit extends TestCase implements
             return;
         }
 
-        /** @var Di $di **/
+        /** @var Di $di */
         $di = $this->getMetadata()->getService('di');
         $di->set(new Scenario($this));
 
@@ -95,11 +110,26 @@ class Unit extends TestCase implements
     }
 
     /**
-     * Returns current values
+     * Starts interactive pause in this test
      *
-     * @return mixed
+     * @param array<string, mixed> $vars
+     * @return void
      */
-    public function getCurrent(?string $current)
+    public function pause(array $vars = []): void
+    {
+        if (!Debug::isEnabled()) {
+            return;
+        }
+        $psy = (new PauseShell())->getShell();
+        $psy->setBoundObject($this);
+        $psy->setScopeVariables($vars);
+        $psy->run();
+    }
+
+    /**
+     * Returns current values
+     */
+    public function getCurrent(?string $current): mixed
     {
         return $this->getMetadata()->getCurrent($current);
     }
@@ -107,7 +137,7 @@ class Unit extends TestCase implements
     public function getReportFields(): array
     {
         return [
-            'name'    => $this->getName(),
+            'name'    => $this->getName(false),
             'class'   => get_class($this),
             'file'    => $this->getMetadata()->getFilename()
         ];
@@ -117,7 +147,7 @@ class Unit extends TestCase implements
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
-            if (strpos($required, ':') === false && method_exists($this, $required)) {
+            if (!str_contains($required, ':') && method_exists($this, $required)) {
                 $required = get_class($this) . ":{$required}";
             }
             $names[] = $required;
@@ -125,30 +155,13 @@ class Unit extends TestCase implements
         return $names;
     }
 
-    /**
-     * Reset PHPUnit's dependencies
-     */
-    public function handleDependencies(): bool
+    public function getFileName(): string
     {
-        $dependencies = $this->fetchDependencies();
-        if (empty($dependencies)) {
-            return true;
-        }
-        $passed = $this->getTestResultObject()->passed();
-        $dependencyInput = [];
+        return $this->getMetadata()->getFilename();
+    }
 
-        foreach ($dependencies as $dependency) {
-            $dependency = str_replace(':', '::', $dependency); // Codeception => PHPUnit format
-            if (strpos($dependency, '::') === false) {         // check it is method of same class
-                $dependency = get_class($this) . '::' . $dependency;
-            }
-            if (isset($passed[$dependency])) {
-                $dependencyInput[] = $passed[$dependency]['result'];
-            } else {
-                $dependencyInput[] = null;
-            }
-        }
-        $this->setDependencyInput($dependencyInput);
-        return true;
+    public function getSignature(): string
+    {
+        return $this->getName(false);
     }
 }

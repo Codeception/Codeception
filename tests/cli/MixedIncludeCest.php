@@ -2,22 +2,18 @@
 
 declare(strict_types=1);
 
+use Codeception\Attribute\After;
+
 final class MixedIncludeCest
 {
-    /**
-     * @after checkAllSuitesExecuted
-     * @param CliGuy $I
-     */
+    #[After('checkAllSuitesExecuted')]
     public function runIncludedSuites(CliGuy $I)
     {
         $I->amInPath('tests/data/included_mix');
         $I->executeCommand('run');
     }
 
-    /**
-     * @after checkAllSuitesExecuted
-     * @param CliGuy $I
-     */
+    #[After('checkAllSuitesExecuted')]
     public function runIncludedSuiteFromCurrentDir(CliGuy $I)
     {
         $I->executeCommand('run -c tests/data/included_mix');
@@ -25,7 +21,9 @@ final class MixedIncludeCest
 
     private function checkAllSuitesExecuted(CliGuy $I)
     {
-        $I->seeInShellOutput('AcmePack.unit Tests (1)');
         $I->seeInShellOutput('Unit Tests (1)');
+        $I->seeInShellOutput('SimpleTest: Something');
+        $I->seeInShellOutput('[AcmePack]: tests from');
+        $I->seeInShellOutput('BasicTest: Assert');
     }
 }

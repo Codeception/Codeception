@@ -1,12 +1,9 @@
 <?php
+
 class BasicTest extends \Codeception\Test\Unit
 {
-    /**
-     * @var \UnitTester
-     */
-    protected $tester;
+    protected UnitTester $tester;
 
-    // tests
     public function testMe()
     {
         $this->tester->assertTrue(true);

@@ -1,11 +1,13 @@
 <?php
+
 namespace Shire;
 
-// here you can define custom functions for TestGuy 
+use PHPUnit\Framework\Assert;
 
 class TestHelper extends \Codeception\Module
 {
-    public function seeEquals($expected, $actual) {
-        \PHPUnit_Framework_Assert::assertEquals($expected, $actual);
+    public function seeEquals($expected, $actual): void
+    {
+        Assert::assertEquals($expected, $actual);
     }
 }

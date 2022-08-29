@@ -1,12 +1,13 @@
 <?php
+
 namespace Codeception\Demo\Depends;
+
+use Codeception\Attribute\Group;
 
 class DependencyForCest
 {
-    /**
-     * @group dataprovider
-     */
-    public function forTestPurpose()
+    #[Group('dataprovider')]
+    public function forTestPurpose(): int
     {
         return 1;
     }

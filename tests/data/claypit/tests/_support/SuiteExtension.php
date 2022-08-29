@@ -7,6 +7,7 @@ use Codeception\Extension;
 
 class SuiteExtension extends Extension
 {
+    /** @var array */
     public static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::SUITE_AFTER => 'afterSuite',
@@ -14,9 +15,10 @@ class SuiteExtension extends Extension
         Events::TEST_AFTER => 'afterTest',
     ];
 
-    protected $config = ['config1' => 'novalue', 'config2' => 'novalue'];
+    /** @var array */
+    protected array $config = ['config1' => 'novalue', 'config2' => 'novalue'];
 
-    public function beforeSuite(SuiteEvent $e )
+    public function beforeSuite(SuiteEvent $e)
     {
         $this->writeln('Config1: ' . $this->config['config1']);
         $this->writeln('Config2: ' . $this->config['config2']);
@@ -25,7 +27,7 @@ class SuiteExtension extends Extension
 
     public function afterSuite(SuiteEvent $e)
     {
-        $this->writeln('Suite teardown for '. $e->getSuite()->getName());
+        $this->writeln('Suite teardown for ' . $e->getSuite()->getName());
     }
 
     public function beforeTest(TestEvent $event)

@@ -19,5 +19,4 @@ class PartialFailedCest
         $I->amInPath('.');
         $I->seeFileFound('testcasethree.txt');
     }
-
 }

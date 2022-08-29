@@ -15,14 +15,8 @@ abstract class Actor
     use Comment;
     use Pause;
 
-    /**
-     * @var Scenario
-     */
-    protected $scenario;
-
-    public function __construct(Scenario $scenario)
+    public function __construct(protected Scenario $scenario)
     {
-        $this->scenario = $scenario;
     }
 
     protected function getScenario(): Scenario
@@ -42,14 +36,14 @@ abstract class Actor
 
     public function __call(string $method, array $arguments)
     {
-        $class = get_class($this);
+        $class = $this::class;
         throw new RuntimeException("Call to undefined method {$class}::{$method}");
     }
 
     /**
      * Lazy-execution given anonymous function
      */
-    public function execute(Closure $callable): Actor
+    public function execute(Closure $callable): self
     {
         $this->scenario->addStep(new Executor($callable, []));
         $callable();

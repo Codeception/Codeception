@@ -2,32 +2,25 @@
 
 declare(strict_types=1);
 
+use Codeception\Attribute\Group;
 use Codeception\Lib\Parser;
+use Codeception\Scenario;
+use Codeception\Test\Cept;
+use Codeception\Test\Metadata;
+use Codeception\Test\Unit;
 
-/**
- * @group core
- * Class ParserTest
- */
-class ParserTest extends \Codeception\Test\Unit
+#[Group('core')]
+final class ParserTest extends Unit
 {
-    /**
-     * @var Parser
-     */
-    protected $parser;
+    protected Parser $parser;
 
-    /**
-     * @var \Codeception\Scenario
-     */
-    protected $scenario;
+    protected Scenario $scenario;
 
-    /**
-     * @var \Codeception\Test\Metadata
-     */
-    protected $testMetadata;
+    protected Metadata $testMetadata;
 
     protected function _before()
     {
-        $cept = new \Codeception\Test\Cept('demo', 'DemoCept.php');
+        $cept = new Cept('demo', 'DemoCept.php');
 
         $this->testMetadata = $cept->getMetadata();
         $this->scenario = new Codeception\Scenario($cept);
@@ -106,7 +99,7 @@ EOF;
 
     public function testSteps()
     {
-        $code = file_get_contents(\Codeception\Configuration::projectDir().'tests/cli/UnitCept.php');
+        $code = file_get_contents(\Codeception\Configuration::projectDir() . 'tests/cli/UnitCept.php');
         $this->assertStringContainsString('$I->seeInThisFile', $code);
         $this->parser->parseSteps($code);
         $text = $this->scenario->getText();
@@ -141,9 +134,9 @@ EOF;
         $classes = Parser::getClassesFromFile(codecept_data_dir('php70Test'));
         $this->assertSame(['php70Test'], $classes);
     }
-    
-    /*
-     * https://github.com/Codeception/Codeception/issues/1779
+
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/1779
      */
     public function testParseFileWhichUnsetsFileVariable()
     {
@@ -151,25 +144,27 @@ EOF;
         $this->assertSame([], $classes);
     }
 
-    /**
-     * @group core
-     * @throws \Codeception\Exception\TestParseException
-     */
+    #[Group('core')]
     public function testModernValidation()
     {
-        $this->expectException('Codeception\Exception\TestParseException');
+        $this->expectException(\Codeception\Exception\TestParseException::class);
         Parser::load(codecept_data_dir('Invalid.php'));
     }
 
-    /**
-     * @group core
-     */
+    #[Group('core')]
     public function testClassesFromFile()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('DummyClass.php'));
-        $this->assertContains('DummyClass', $classes);
+        $this->assertContains(\DummyClass::class, $classes);
         $classes = Parser::getClassesFromFile(codecept_data_dir('SimpleWithDependencyInjectionCest.php'));
         $this->assertContains('simpleDI\\LoadedTestWithDependencyInjectionCest', $classes);
         $this->assertContains('simpleDI\\AnotherCest', $classes);
+    }
+
+    #[Group('core')]
+    public function testNamedParameterNamedClassIsNotClass()
+    {
+        $classes = Parser::getClassesFromFile(codecept_data_dir('namedParameter.php'));
+        $this->assertEquals([], $classes);
     }
 }

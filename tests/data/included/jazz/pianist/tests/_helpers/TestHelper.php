@@ -1,11 +1,11 @@
 <?php
-namespace Jazz\Pianist;
 
-// here you can define custom functions for TestGuy 
+namespace Jazz\Pianist;
 
 class TestHelper extends \Codeception\Module
 {
-    public function seeEquals($expected, $actual) {
+    public function seeEquals($expected, $actual)
+    {
         $this->assertEquals($expected, $actual);
     }
 }

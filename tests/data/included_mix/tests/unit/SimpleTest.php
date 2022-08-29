@@ -6,5 +6,4 @@ class SimpleTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertTrue(true);
     }
-
 }

@@ -8,6 +8,7 @@ use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 use Codeception\SuiteManager;
 use Codeception\Test\Cest;
+use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+
 use function basename;
 use function file_exists;
 use function is_writable;
@@ -22,7 +24,7 @@ use function mkdir;
 use function preg_replace;
 
 /**
- * Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
+ * Generates user-friendly text scenarios from scenario-driven tests (Cest).
  *
  * * `codecept g:scenarios acceptance` - for all acceptance tests
  * * `codecept g:scenarios acceptance --format html` - in html format
@@ -74,7 +76,7 @@ class GenerateScenarios extends Command
             @mkdir($path);
         }
 
-        $suiteManager = new SuiteManager(new EventDispatcher(), $suite, $suiteConf);
+        $suiteManager = new SuiteManager(new EventDispatcher(), $suite, $suiteConf, []);
 
         if ($suiteConf['bootstrap'] && file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
             require_once $suiteConf['path'] . $suiteConf['bootstrap'];
@@ -84,7 +86,7 @@ class GenerateScenarios extends Command
         $scenarios = "";
 
         foreach ($tests as $test) {
-            if (!($test instanceof ScenarioDriven)) {
+            if (!$test instanceof ScenarioDriven || !$test instanceof Descriptive) {
                 continue;
             }
             $feature = $test->getScenarioText($format);
@@ -114,28 +116,24 @@ class GenerateScenarios extends Command
 
     protected function decorate(string $text, string $format): string
     {
-        switch ($format) {
-            case 'text':
-                return $text;
-            case 'html':
-                return "<html><body>{$text}</body></html>";
+        if ($format === 'html') {
+            return "<html><body>$text</body></html>";
         }
+        return $text;
     }
 
     protected function getTests($suiteManager)
     {
         $suiteManager->loadTests();
-        return $suiteManager->getSuite()->tests();
+        return $suiteManager->getSuite()->getTests();
     }
 
     protected function formatExtension(string $format): string
     {
-        switch ($format) {
-            case 'text':
-                return '.txt';
-            case 'html':
-                return '.html';
+        if ($format === 'html') {
+            return '.html';
         }
+        return '.txt';
     }
 
     private function underscore(string $name): string

@@ -1,4 +1,6 @@
-<?php use Jazz\TestGuy;
+<?php
+
+use Jazz\TestGuy;
 
 $I = new TestGuy($scenario);
 $I->wantTo('check that jazz musicians can add numbers');

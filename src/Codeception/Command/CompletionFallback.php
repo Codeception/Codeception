@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Codeception\Command;
 
-use Stecman\Component\Symfony\Console\BashCompletion\Completion\ShellPathCompletion;
-use Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand;
-use Stecman\Component\Symfony\Console\BashCompletion\CompletionHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,6 +27,7 @@ To enable BASH completion, install optional stecman/symfony-console-completion f
 
 END);
     }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("Install optional <comment>stecman/symfony-console-completion</comment>");

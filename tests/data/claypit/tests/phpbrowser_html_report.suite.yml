@@ -1,4 +1,4 @@
-class_name: AcceptanceTester
+actor: AcceptanceTester
 modules:
     enabled: [PhpBrowser]
     config:

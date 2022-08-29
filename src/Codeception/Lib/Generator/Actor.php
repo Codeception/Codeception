@@ -7,6 +7,7 @@ namespace Codeception\Lib\Generator;
 use Codeception\Configuration;
 use Codeception\Lib\Di;
 use Codeception\Lib\Friend;
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Template;
@@ -15,20 +16,13 @@ use ReflectionMethod;
 
 class Actor
 {
-    /**
-     * @var Di
-     */
-    public $di;
+    use Classname;
 
-    /**
-     * @var ModuleContainer
-     */
-    public $moduleContainer;
+    public Di $di;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    public ModuleContainer $moduleContainer;
+
+    protected string $template = <<<EOF
 <?php
 
 declare(strict_types=1);
@@ -51,29 +45,14 @@ class {{actor}} extends \Codeception\Actor
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $inheritedMethodTemplate = ' * @method {{return}} {{method}}({{params}})';
+    protected string $inheritedMethodTemplate = ' * @method {{return}} {{method}}({{params}})';
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $modules = [];
 
-    /**
-     * @var array
-     */
-    protected $modules = [];
+    protected array $actions = [];
 
-    /**
-     * @var array
-     */
-    protected $actions = [];
-
-    public function __construct(array $settings)
+    public function __construct(protected array $settings)
     {
-        $this->settings = $settings;
         $this->di = new Di();
         $this->moduleContainer = new ModuleContainer($this->di, $settings);
 
@@ -88,14 +67,10 @@ EOF;
 
     public function produce(): string
     {
-        $namespace = rtrim($this->settings['namespace'], '\\');
-
-        if (!isset($this->settings['actor']) && isset($this->settings['class_name'])) {
-            $this->settings['actor'] = $this->settings['class_name'];
-        }
+        $namespace = trim($this->supportNamespace(), '\\');
 
         return (new Template($this->template))
-            ->place('hasNamespace', $namespace !== '' ? "namespace {$namespace};" : '')
+            ->place('hasNamespace', $namespace !== '' ? "\nnamespace {$namespace};" : '')
             ->place('actor', $this->settings['actor'])
             ->place('inheritedMethods', $this->prependAbstractActorDocBlocks())
             ->produce();
@@ -138,7 +113,7 @@ EOF;
                 $params[] = '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
                 $params[] = '$' . $param->name;
-            };
+            }
         }
         return implode(', ', $params);
     }

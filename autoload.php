@@ -1,7 +1,7 @@
 <?php
 
 $autoloadFile = './vendor/codeception/codeception/autoload.php';
-if (( !isset($argv) || (isset($argv) && !in_array('--no-redirect', $argv)) ) && file_exists('./vendor/autoload.php') && file_exists($autoloadFile) && __FILE__ != realpath($autoloadFile)) {
+if ((!isset($argv) || (isset($argv) && !in_array('--no-redirect', $argv))) && file_exists('./vendor/autoload.php') && file_exists($autoloadFile) && __FILE__ != realpath($autoloadFile)) {
     //for global installation or phar file
     fwrite(
         STDERR,

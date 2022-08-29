@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
-
 class GenerateTestTest extends BaseCommandRunner
 {
-
     protected function _setUp()
     {
         $this->makeCommand(\Codeception\Command\GenerateTest::class);
@@ -23,7 +20,6 @@ class GenerateTestTest extends BaseCommandRunner
         $this->assertStringContainsString('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
         $this->assertStringContainsString('Test was created in tests/shire/HallUnderTheHillTest.php', $this->output);
         $this->assertStringContainsString('protected function _before()', $this->content);
-        $this->assertStringContainsString('protected function _after()', $this->content);
     }
 
     public function testCreateWithSuffix()
@@ -37,7 +33,7 @@ class GenerateTestTest extends BaseCommandRunner
     {
         $this->execute(['suite' => 'shire', 'class' => 'MiddleEarth\HallUnderTheHillTest']);
         $this->assertSame('tests/shire/MiddleEarth/HallUnderTheHillTest.php', $this->filename);
-        $this->assertStringContainsString('namespace MiddleEarth;', $this->content);
+        $this->assertStringContainsString('namespace Unit\MiddleEarth;', $this->content);
         $this->assertStringContainsString('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
         $this->assertStringContainsString('Test was created in tests/shire/MiddleEarth/HallUnderTheHillTest.php', $this->output);
     }
@@ -47,9 +43,19 @@ class GenerateTestTest extends BaseCommandRunner
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillTest.php']);
         $this->assertSame('tests/shire/HallUnderTheHillTest.php', $this->filename);
         $this->assertStringContainsString('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
-        $this->assertStringContainsString('protected $tester;', $this->content);
-        $this->assertStringContainsString('@var \HobbitGuy', $this->content);
+        $this->assertStringContainsString('protected HobbitGuy $tester;', $this->content);
         $this->assertStringContainsString('Test was created in tests/shire/HallUnderTheHillTest.php', $this->output);
+    }
+
+    public function testGenerateWithSupportNamespaced()
+    {
+        $this->config['namespace'] = 'MiddleEarth';
+        $this->config['support_namespace'] = 'Gondor';
+        $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
+        $this->assertEquals($this->filename, 'tests/shire/HallUnderTheHillTest.php');
+        $this->assertStringContainsString('namespace MiddleEarth\Unit;', $this->content);
+        $this->assertStringContainsString('use MiddleEarth\\Gondor\\HobbitGuy;', $this->content);
+        $this->assertIsValidPhp($this->content);
     }
 
     public function testValidPHP()

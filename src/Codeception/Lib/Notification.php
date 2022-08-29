@@ -9,7 +9,7 @@ class Notification
     /**
      * @var string[]
      */
-    protected static $messages = [];
+    protected static array $messages = [];
 
     public static function warning(string $message, string $location): void
     {
@@ -29,6 +29,9 @@ class Notification
         return $message;
     }
 
+    /**
+     * @return string[]
+     */
     public static function all(): array
     {
         $messages = self::$messages;

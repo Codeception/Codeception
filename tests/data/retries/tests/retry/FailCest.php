@@ -1,47 +1,34 @@
-<?php 
+<?php
+
+use Codeception\Attribute\Group;
 
 class FailCest
 {
-    /**
-     * @group pass
-     * @group pass1
-     * @param RetryTester $I
-     */
+    #[Group('pass'), Group('pass1')]
     public function passNum(RetryTester $I)
     {
         $I->retry(3);
         $I->retryFailAt(3);
     }
 
-    /**
-     * @group fail1
-     * @param RetryTester $I
-     */
+    #[Group('fail1')]
     public function failNum(RetryTester $I)
     {
         $I->retry(2);
         $I->retryFailAt(3);
     }
 
-    /**
-     * @group pass2
-     * @group pass
-     */
+    #[Group('pass2'), Group('pass')]
     public function passTime1(RetryTester $I)
     {
         $I->retry(3, 200);
         $I->retryFailFor(0.6);
     }
 
-
-    /**
-     * @group fail2
-     * @param RetryTester $I
-     */
+    #[Group('fail2')]
     public function failNum2(RetryTester $I)
     {
         $I->retry(3, 100);
         $I->retryFailFor(1);
     }
-
 }

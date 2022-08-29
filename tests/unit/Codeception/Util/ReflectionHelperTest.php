@@ -7,8 +7,6 @@ namespace Codeception\Util;
 use ReflectionException;
 use ReflectionParameter;
 
-require_once __DIR__ . '/ReflectionTestClass.php';
-
 class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
 {
     public function testReadPrivateProperty()

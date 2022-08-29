@@ -1,23 +1,21 @@
 <?php
 
-class DataProvidersFailureCest
-{
+use Codeception\Attribute\DataProvider;
 
-    /**
-     * @dataProvider rectangle
-     */
+final class DataProvidersFailureCest
+{
+    #[DataProvider('rectangle')]
     public function testIsTriangle(UnitTester $I)
     {
         $I->amGoingTo("Fail before I get here.");
     }
 
-    public function triangles()
+    public function triangles(): array
     {
-        return array(
-            'real triangle' => array(3,4,5),
-            array(10,12,5),
-            array(7,10,15)
-        );
+        return [
+            'real triangle' => [3,4,5],
+            [10,12,5],
+            [7,10,15]
+        ];
     }
-
 }

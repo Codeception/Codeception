@@ -8,6 +8,7 @@ use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
 use Codeception\Extension;
 use Codeception\Test\Descriptor;
+
 use function array_key_exists;
 use function file_put_contents;
 use function implode;
@@ -47,12 +48,12 @@ class RunFailed extends Extension
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    public static array $events = [
         Events::RESULT_PRINT_AFTER => 'saveFailed'
     ];
 
     /** @var string filename/groupname for failed tests */
-    protected $group = 'failed';
+    protected string $group = 'failed';
 
     public function _initialize(): void
     {
@@ -75,10 +76,10 @@ class RunFailed extends Extension
         }
         $output = [];
         foreach ($result->failures() as $fail) {
-            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->failedTest()));
+            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->getTest()));
         }
         foreach ($result->errors() as $fail) {
-            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->failedTest()));
+            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->getTest()));
         }
 
         file_put_contents($file, implode("\n", $output));

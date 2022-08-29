@@ -2,7 +2,14 @@ include:
   - jazz
   - jazz/pianist
   - shire
+
+groups:
+  group: group.txt
+
 paths:
-  log: "_log"
+  tests: tests
+  data: tests/_data
+  support: tests/_support
+  output: "_log"
 settings:
   colors: false

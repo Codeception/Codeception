@@ -73,9 +73,7 @@ trait PhpSuperGlobalsConverter
                      * to ['tmp_name' => ['a' => '/tmp/test.txt'] ]
                      */
                     $innerInfo = array_map(
-                        function ($v) use ($innerName) {
-                            return [$innerName => $v];
-                        },
+                        fn ($v) => [$innerName => $v],
                         $innerInfo
                     );
 
@@ -102,7 +100,7 @@ trait PhpSuperGlobalsConverter
      */
     private function replaceSpaces(array $parameters): array
     {
-        $qs = http_build_query($parameters, '', '&');
+        $qs = http_build_query($parameters);
         parse_str($qs, $output);
 
         return $output;

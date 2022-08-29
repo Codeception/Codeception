@@ -9,6 +9,7 @@ use Codeception\Lib\Console\Message;
 use Codeception\Lib\Parser;
 use Exception;
 use ParseError;
+
 use function basename;
 use function file_get_contents;
 
@@ -20,12 +21,9 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
 {
     use Feature\ScenarioLoader;
 
-    /**
-     * @var Parser
-     */
-    protected $parser;
+    protected Parser $parser;
 
-    public function __construct($name, $file)
+    public function __construct(string $name, string $file)
     {
         $metadata = new Metadata();
         $metadata->setName($name);
@@ -70,6 +68,9 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         return $sourceCode;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getReportFields(): array
     {
         return [

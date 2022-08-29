@@ -1,4 +1,5 @@
 <?php
+
 $I = new CoverGuy($scenario);
 $I->wantTo('try generate local codecoverage with work directory');
 $I->amInPath('tests/data/sandbox');

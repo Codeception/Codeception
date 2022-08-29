@@ -1,16 +1,15 @@
 <?php
-class Depends2Test extends \Codeception\Test\Unit {
 
-    /**
-     * @group depends
-     * @depends DependsTest:testTwo
-     */
+use Codeception\Attribute\Depends;
+use Codeception\Attribute\Group;
+use Codeception\Test\Unit;
+
+final class Depends2Test extends Unit
+{
+    #[Group('depends')]
+    #[Depends(DependsTest::class . ':testTwo')]
     public function testThree()
     {
         $this->assertTrue(true);
     }
-
-
-
-
 }

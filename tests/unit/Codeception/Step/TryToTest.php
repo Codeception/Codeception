@@ -12,7 +12,7 @@ class TryToTest extends \PHPUnit\Framework\TestCase
     /**
      * @var bool
      */
-    protected $shouldFail = true;
+    protected bool $shouldFail = true;
 
     public function testTryToShouldReturnSuccess()
     {
@@ -43,5 +43,4 @@ class TryToTest extends \PHPUnit\Framework\TestCase
     {
         throw new \Exception('Error');
     }
-
 }

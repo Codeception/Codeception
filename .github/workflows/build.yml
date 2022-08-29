@@ -6,13 +6,37 @@ on:
 
 name: build
 
+permissions:
+  contents: read
+
 jobs:
+  phpcs:
+    name: Code style
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          ini-values: memory_limit=-1, date.timezone='UTC'
+          tools: phpcs
+
+      - name: Check production code style
+        run: phpcs src/ ext/ *.php
+
+      - name: Check test code style
+        run: phpcs tests/ --standard=tests/phpcs.xml
+
   linux:
-    name: PHP ${{ matrix.php }}-${{ matrix.os }}
+    name: PHP ${{ matrix.php }}-${{ matrix.os }}-${{ matrix.mode }}
 
     env:
       extensions: curl, mbstring, openssl, pdo, pdo_sqlite
       SYMFONY_DEPRECATIONS_HELPER: weak
+      COMPOSER_ROOT_VERSION: 5.0.99
 
     runs-on: ${{ matrix.os }}
 
@@ -20,7 +44,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ["7.3", "7.4", "8.0"]
+        php: ['8.0', '8.1']
+        mode: ['stable', 'experimental']
 
     steps:
       - name: Checkout
@@ -42,9 +67,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.COMPOSER_CACHE_DIR }}
-          key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          key: php${{ matrix.php }}-${{ matrix.mode }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: |
-            php${{ matrix.php }}-composer-
+            php${{ matrix.php }}-${{ matrix.mode }}-composer-
 
       - name: Update composer
         run: composer self-update
@@ -52,21 +77,33 @@ jobs:
       - name: Validate composer.json
         run: composer validate
 
-      - name: Composer install
-        run: composer install --no-interaction --no-progress --optimize-autoloader --ansi
+      - name: Install latest versions of dependencies in stable mode
+        if: matrix.mode == 'stable'
+        run: composer update --prefer-source --no-interaction --no-progress --optimize-autoloader --ansi
+
+      - name: Composer install lowest versions of dependencies on PHP 8.0 in experimental mode
+        if: matrix.php == '8.0' && matrix.mode == 'experimental'
+        run: composer update --prefer-source --prefer-lowest --no-interaction --no-progress --optimize-autoloader --ansi
+
+      - name: Composer install PHPUnit 10 on PHP 8.1 in experimental mode
+        if: matrix.php == '8.1' && matrix.mode == 'experimental'
+        run: |
+          composer config minimum-stability dev
+          composer require phpunit/phpunit:"10.0.x-dev" phpunit/php-code-coverage:"10.0.x-dev" phpunit/php-text-template:"3.0.x-dev" phpunit/php-timer:"6.0.x-dev" sebastian/comparator:"5.0.x-dev" sebastian/diff:"5.0.x-dev" --no-update
+          composer require codeception/lib-innerbrowser:"dev-phpunit10" --dev --no-update
+          composer update --prefer-source --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Test that failing test really fails
         run: if php codecept run -c tests/data/claypit/ scenario FailedCept -vvv; then echo "Test hasn't failed"; false; fi;
 
-      - name: Run tests without code coverage on PHP 7.3, 7.4
-        if: matrix.php == '7.3' || matrix.php == '7.4'
-        run: |
-          php -S 127.0.0.1:8008 -t tests/data/app >/dev/null 2>&1 &
-          php codecept build
-          php codecept run cli,unit
+#      - name: Run tests without code coverage on PHP 8.0
+#        if: matrix.php == '8.0'
+#        run: |
+#          php -S 127.0.0.1:8008 -t tests/data/app >/dev/null 2>&1 &
+#          php codecept build
+#          php codecept run cli,unit
 
-      - name: Run tests with code coverage on PHP 7.2, 8.0
-        if: matrix.php == '7.2' || matrix.php == '8.0'
+      - name: Run tests
         run: |
           php -S 127.0.0.1:8008 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
           php codecept build
@@ -94,6 +131,7 @@ jobs:
     env:
       extensions: curl, mbstring, openssl, pdo, pdo_sqlite
       SYMFONY_DEPRECATIONS_HELPER: weak
+      COMPOSER_ROOT_VERSION: 5.0.99
 
     runs-on: ${{ matrix.os }}
 
@@ -101,7 +139,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        php: ["7.3", "7.4", "8.0"]
+        php: ['8.0', '8.1']
 
     steps:
       - name: Checkout
@@ -136,7 +174,8 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Run tests cli
+        if: matrix.php != '8.1'
         run: php codecept run cli --skip-group coverage
-        
+
       - name: Run tests unit
         run: php codecept run unit -g core -g appveyor

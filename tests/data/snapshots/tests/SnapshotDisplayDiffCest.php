@@ -24,7 +24,7 @@ class SnapshotDisplayDiffCest
         } catch (\PHPUnit\Framework\ExpectationFailedException $t) {
             $I->assertSame($expected, $t->getComparisonFailure()->getExpected());
             $I->assertSame($actual, $t->getComparisonFailure()->getActual());
-        } catch (Throwable $t) {
+        } catch (Throwable) {
             $I->fail('Snapshot assert must throw "\PHPUnit\Framework\ExpectationFailedException"');
         }
     }

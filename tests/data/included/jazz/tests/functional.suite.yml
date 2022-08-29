@@ -6,6 +6,6 @@
 
 # RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
 
-class_name: TestGuy
+actor: TestGuy
 modules:
     enabled: [Filesystem, \Jazz\TestHelper]

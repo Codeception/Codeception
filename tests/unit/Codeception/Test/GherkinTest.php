@@ -2,24 +2,28 @@
 
 declare(strict_types=1);
 
-/**
- * Class GherkinTest
- * @group gherkin
- */
-class GherkinTest extends \Codeception\Test\Unit
+use Codeception\Attribute\Depends;
+use Codeception\Attribute\Group;
+use Codeception\Exception\ParseException;
+use Codeception\Lib\Di;
+use Codeception\Lib\ModuleContainer;
+use Codeception\Stub;
+use Codeception\Test\Loader\Gherkin as GherkinLoader;
+use Codeception\Test\Unit;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
+#[Group('gherkin')]
+final class GherkinTest extends Unit
 {
-
     protected $feature;
-    public static $calls = '';
 
-    /**
-     * @var \Codeception\Test\Loader\Gherkin
-     */
-    protected $loader;
+    public static string $calls = '';
+
+    protected GherkinLoader $loader;
 
     protected function _before()
     {
-        $this->loader = new \Codeception\Test\Loader\Gherkin(
+        $this->loader = new GherkinLoader(
             [
                 'gherkin' => [
                     'contexts' => [
@@ -35,9 +39,9 @@ class GherkinTest extends \Codeception\Test\Unit
     protected function getServices(): array
     {
         return [
-            'di'         => new \Codeception\Lib\Di(),
-            'dispatcher' => \Codeception\Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher'),
-            'modules'    => \Codeception\Stub::makeEmpty('Codeception\Lib\ModuleContainer')
+            'di'         => new Di(),
+            'dispatcher' => Stub::makeEmpty(EventDispatcher::class),
+            'modules'    => Stub::makeEmpty(ModuleContainer::class)
         ];
     }
 
@@ -47,7 +51,7 @@ class GherkinTest extends \Codeception\Test\Unit
         $tests = $this->loader->getTests();
         $this->assertCount(1, $tests);
         $test = $tests[0];
-        $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
+        $this->assertInstanceOf(\Codeception\Test\Gherkin::class, $test);
         $this->assertSame('Refund item', $test->getFeature());
     }
 
@@ -57,13 +61,11 @@ class GherkinTest extends \Codeception\Test\Unit
         $tests = $this->loader->getTests();
         $this->assertCount(1, $tests);
         $test = $tests[0];
-        $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
+        $this->assertInstanceOf(\Codeception\Test\Gherkin::class, $test);
         $this->assertSame('Jeff returns a faulty microwave', $test->getScenarioTitle());
     }
 
-    /**
-     * @depends testLoadGherkin
-     */
+    #[Depends('testLoadGherkin')]
     public function testLoadWithContexts()
     {
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
@@ -75,9 +77,9 @@ class GherkinTest extends \Codeception\Test\Unit
 
     public function testBadRegex()
     {
-        $this->expectException(\Codeception\Exception\ParseException::class);
+        $this->expectException(ParseException::class);
 
-        $this->loader = new \Codeception\Test\Loader\Gherkin(
+        $this->loader = new GherkinLoader(
             [
                 'gherkin' => [
                     'contexts' => [
@@ -87,6 +89,7 @@ class GherkinTest extends \Codeception\Test\Unit
             ]
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
+
         $test = $this->loader->getTests()[0];
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
@@ -94,7 +97,7 @@ class GherkinTest extends \Codeception\Test\Unit
 
     public function testTags()
     {
-        $this->loader = new \Codeception\Test\Loader\Gherkin(
+        $this->loader = new GherkinLoader(
             [
                 'gherkin' => [
                     'contexts' => [
@@ -107,6 +110,7 @@ class GherkinTest extends \Codeception\Test\Unit
             ]
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
+
         $test = $this->loader->getTests()[0];
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
@@ -115,7 +119,7 @@ class GherkinTest extends \Codeception\Test\Unit
 
     public function testRoles()
     {
-        $this->loader = new \Codeception\Test\Loader\Gherkin(
+        $this->loader = new GherkinLoader(
             [
                 'gherkin' => [
                     'contexts' => [
@@ -128,6 +132,7 @@ class GherkinTest extends \Codeception\Test\Unit
             ]
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
+
         $test = $this->loader->getTests()[0];
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
@@ -139,49 +144,47 @@ class GherkinTest extends \Codeception\Test\Unit
     {
         $pattern = 'hello :name, are you from :place?';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertRegExp($regex, 'hello "davert", are you from "kiev"?');
-        $this->assertNotRegExp($regex, 'hello davert, are you from "kiev"?');
+        $this->assertMatchesRegularExpression($regex, 'hello "davert", are you from "kiev"?');
+        $this->assertDoesNotMatchRegularExpression($regex, 'hello davert, are you from "kiev"?');
 
         $pattern = 'hello ":name", how are you';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertRegExp($regex, 'hello "davert", how are you');
-        $this->assertNotRegExp($regex, 'hello "davert", are you from "kiev"?');
+        $this->assertMatchesRegularExpression($regex, 'hello "davert", how are you');
+        $this->assertDoesNotMatchRegularExpression($regex, 'hello "davert", are you from "kiev"?');
 
         $pattern = 'there should be :num cow(s)';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertRegExp($regex, 'there should be "1" cow');
-        $this->assertRegExp($regex, 'there should be "5" cows');
-        $this->assertRegExp($regex, 'there should be 1000 cows');
+        $this->assertMatchesRegularExpression($regex, 'there should be "1" cow');
+        $this->assertMatchesRegularExpression($regex, 'there should be "5" cows');
+        $this->assertMatchesRegularExpression($regex, 'there should be 1000 cows');
     }
 
     public function testGherkinCurrencySymbols()
     {
         $pattern = 'I have :money in my pocket';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertRegExp($regex, 'I have 3.5$ in my pocket');
-        $this->assertRegExp($regex, 'I have 3.5€ in my pocket');
-        $this->assertRegExp($regex, 'I have $3.5 in my pocket');
-        $this->assertRegExp($regex, 'I have £3.5 in my pocket');
-        $this->assertRegExp($regex, 'I have "35.10" in my pocket');
-        $this->assertRegExp($regex, 'I have 5 in my pocket');
-        $this->assertRegExp($regex, 'I have 5.1 in my pocket');
+        $this->assertMatchesRegularExpression($regex, 'I have 3.5$ in my pocket');
+        $this->assertMatchesRegularExpression($regex, 'I have 3.5€ in my pocket');
+        $this->assertMatchesRegularExpression($regex, 'I have $3.5 in my pocket');
+        $this->assertMatchesRegularExpression($regex, 'I have £3.5 in my pocket');
+        $this->assertMatchesRegularExpression($regex, 'I have "35.10" in my pocket');
+        $this->assertMatchesRegularExpression($regex, 'I have 5 in my pocket');
+        $this->assertMatchesRegularExpression($regex, 'I have 5.1 in my pocket');
 
-        $this->assertNotRegExp($regex, 'I have 3.5 $ in my pocket');
-        $this->assertNotRegExp($regex, 'I have 3.5euro in my pocket');
+        $this->assertDoesNotMatchRegularExpression($regex, 'I have 3.5 $ in my pocket');
+        $this->assertDoesNotMatchRegularExpression($regex, 'I have 3.5euro in my pocket');
 
         // Issue #3156
         $pattern = "there is a :arg1 product witch costs :arg2 €";
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertRegExp($regex, 'there is a "football ball" product witch costs "1,5" €');
-
-
+        $this->assertMatchesRegularExpression($regex, 'there is a "football ball" product witch costs "1,5" €');
     }
 
     public function testMatchingEscapedPatterns()
     {
         $pattern = 'use password ":pass"';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertRegExp($regex, 'use password "fref\"fr"');
+        $this->assertMatchesRegularExpression($regex, 'use password "fref\"fr"');
     }
 
     /**
@@ -191,8 +194,8 @@ class GherkinTest extends \Codeception\Test\Unit
     {
         $pattern = 'there is a User called :arg1';
         $regex = $this->loader->makePlaceholderPattern($pattern);
-        $this->assertRegExp($regex, 'there is a User called "John"');
-        $this->assertNotRegExp($regex, 'there is a User called "John" and surname "Smith"');
+        $this->assertMatchesRegularExpression($regex, 'there is a User called "John"');
+        $this->assertDoesNotMatchRegularExpression($regex, 'there is a User called "John" and surname "Smith"');
     }
 
     public function testMultipleSteps()
@@ -205,7 +208,6 @@ class GherkinTest extends \Codeception\Test\Unit
 
 class GherkinTestContext
 {
-
     /**
      * @Given Jeff has bought a microwave for :param
      */
@@ -234,8 +236,6 @@ class GherkinTestContext
 
 class TagGherkinContext
 {
-
-
     /**
      * @When he returns the microwave
      */
@@ -247,7 +247,6 @@ class TagGherkinContext
 
 class GherkinInvalidContext
 {
-
     /**
      * @Given /I (?:use:am connected to) the database (?db:.+)/i
      */

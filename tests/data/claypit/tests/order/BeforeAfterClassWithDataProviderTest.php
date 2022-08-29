@@ -1,39 +1,39 @@
 <?php
-/**
- * @group App
- * @group New
- */
-class BeforeAfterClassWithDataProviderTest extends \Codeception\Test\Unit
+
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Group;
+use Codeception\Module\OrderHelper as OrderHelperModule;
+use Codeception\Test\Unit;
+
+#[Group('App'), Group('New')]
+final class BeforeAfterClassWithDataProviderTest extends Unit
 {
-	/**
-	 * @beforeClass
-	 */
-	public static function setUpSomeSharedFixtures()
-	{
-		\Codeception\Module\OrderHelper::appendToFile('{');
-	}
+    /**
+     * @beforeClass
+     */
+    public static function setUpSomeSharedFixtures()
+    {
+        OrderHelperModule::appendToFile('{');
+    }
 
-	/**
-	 * @dataProvider getAbc
-	 *
-	 * @param string $letter
-	 */
-	public function testAbc($letter)
-	{
-		\Codeception\Module\OrderHelper::appendToFile($letter);
-	}
+    /**
+     * @dataProvider getAbc
+     */
+    public function testAbc(string $letter)
+    {
+        OrderHelperModule::appendToFile($letter);
+    }
 
-	public static function getAbc()
-	{
-		return [['A'], ['B'], ['C']];
-	}
+    public static function getAbc(): array
+    {
+        return [['A'], ['B'], ['C']];
+    }
 
-	/**
-	 * @afterClass
-	 */
-	public static function tearDownSomeSharedFixtures()
-	{
-		\Codeception\Module\OrderHelper::appendToFile('}');
-	}
-
+    /**
+     * @afterClass
+     */
+    public static function tearDownSomeSharedFixtures()
+    {
+        OrderHelperModule::appendToFile('}');
+    }
 }

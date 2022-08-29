@@ -4,42 +4,32 @@ declare(strict_types=1);
 
 namespace Codeception;
 
+use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Exception\InjectionException;
 use Codeception\Step\Comment;
 use Codeception\Step\Meta;
 use Codeception\Test\Metadata;
-use Exception;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Framework\SkippedWithMessageException;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 
 class Scenario
 {
-    /**
-     * @var TestInterface
-     */
-    protected $test;
+    protected TestInterface $test;
+
+    protected Metadata $metadata;
 
     /**
-     * @var Metadata
+     * @var Step[]
      */
-    protected $metadata;
+    protected array $steps = [];
 
-    /**
-     * @var array
-     */
-    protected $steps = [];
+    protected string $feature;
 
-    /**
-     * @var string
-     */
-    protected $feature;
-
-    /**
-     * @var Meta|null
-     */
-    protected $metaStep;
+    protected ?Meta $metaStep = null;
 
     public function __construct(TestInterface $test)
     {
@@ -68,10 +58,9 @@ class Scenario
     }
 
     /**
-     * @return mixed
      * @throws InjectionException
      */
-    public function runStep(Step $step)
+    public function runStep(Step $step): mixed
     {
         $step->saveTrace();
         if ($this->metaStep instanceof Meta) {
@@ -84,19 +73,14 @@ class Scenario
         $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_BEFORE);
         try {
             $result = $step->run($this->metadata->getService('modules'));
-        } catch (ConditionalAssertionFailed $failed) {
-            $result = $this->test->getTestResultObject();
-            if (is_null($result)) {
-                $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
-                throw $failed;
-            } else {
-                $result->addFailure(clone($this->test), $failed, $result->time());
-            }
-        } catch (Exception $exception) {
+        } catch (ConditionalAssertionFailed $f) {
+            $testResult = $this->test->getResultAggregator();
+            $failEvent = new FailEvent(clone($this->test), $f, 0);
+            $testResult->addFailure($failEvent);
+            $dispatcher->dispatch($failEvent, Events::TEST_FAIL);
+        } finally {
             $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
-            throw $exception;
         }
-        $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
         $step->executed = true;
         return $result;
     }
@@ -108,6 +92,8 @@ class Scenario
 
     /**
      * Returns the steps of this scenario.
+     *
+     * @return Step[]
      */
     public function getSteps(): array
     {
@@ -118,7 +104,6 @@ class Scenario
     {
         $text = '';
         foreach ($this->getSteps() as $step) {
-            /** @var Step $step */
             if ($step->getName() !== 'Comment') {
                 $text .= $step->getHtml() . '<br/>';
             } else {
@@ -146,18 +131,16 @@ class Scenario
 
     public function skip(string $message = ''): void
     {
-        throw new SkippedTestError($message);
+        if (PHPUnitVersion::series() < 10) {
+            throw new SkippedTestError($message);
+        }
+
+        throw new SkippedWithMessageException($message);
     }
 
     public function incomplete(string $message = ''): void
     {
         throw new IncompleteTestError($message);
-    }
-
-    public function __call(string $method, array $args)
-    {
-        // all methods were deprecated and removed from here
-        trigger_error(sprintf('Codeception: $scenario->%s() has been deprecated and removed. Use annotations to pass scenario params', $method), E_USER_DEPRECATED);
     }
 
     public function setMetaStep(?Meta $metaStep): void

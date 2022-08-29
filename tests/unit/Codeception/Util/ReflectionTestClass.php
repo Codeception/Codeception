@@ -11,11 +11,13 @@ class ReflectionTestClass
     /**
      * @var string
      */
-    const FOO = 'bar';
+    public const FOO = 'bar';
 
-    private $value = 'test';
-    protected $obj = null;
-    static $flavorOfTheWeek = '';
+    private string $value = 'test';
+
+    protected ?Debug $obj = null;
+
+    public static string $flavorOfTheWeek = '';
 
     public function setInt(int $i): self
     {
@@ -43,7 +45,7 @@ class ReflectionTestClass
         return $this->value;
     }
 
-    public function setDebug(Debug $obj, $flavor = self::FOO): self
+    public function setDebug(Debug $obj, string $flavor = self::FOO): self
     {
         $this->obj = $obj;
         self::$flavorOfTheWeek = $flavor;
@@ -51,7 +53,7 @@ class ReflectionTestClass
         return $this;
     }
 
-    static public function setFlavor(string $flavor = self::FOO)
+    public static function setFlavor(string $flavor = self::FOO)
     {
         self::$flavorOfTheWeek = $flavor;
     }

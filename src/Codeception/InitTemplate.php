@@ -45,36 +45,20 @@ abstract class InitTemplate
     /**
      * @var string
      */
-    const GIT_IGNORE = '.gitignore';
+    public const GIT_IGNORE = '.gitignore';
 
-    /**
-     * @var string
-     */
-    protected $namespace = '';
+    protected string $namespace = 'Tests';
 
-    /**
-     * @var string
-     */
-    protected $actorSuffix = 'Tester';
+    protected string $actorSuffix = 'Tester';
 
-    /**
-     * @var string
-     */
-    protected $workDir = '.';
+    protected string $supportNamespace = 'Support';
 
-    /**
-     * @var InputInterface
-     */
-    protected $input;
+    protected string $workDir = '.';
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    protected OutputInterface $output;
 
-    public function __construct(InputInterface $input, OutputInterface $output)
+    public function __construct(protected InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
         $this->addStyles($output);
         $this->output = $output;
     }
@@ -111,10 +95,9 @@ abstract class InitTemplate
      * $this->ask('do you want to proceed (y/n)', true);
      * ```
      *
-     * @param array|bool|null $answer
      * @return mixed|string
      */
-    protected function ask(string $question, $answer = null)
+    protected function ask(string $question, string|bool|array $answer = null): mixed
     {
         $question = "? {$question}";
         $dialog = new QuestionHelper();
@@ -126,7 +109,7 @@ abstract class InitTemplate
             $question .= " (y/n) ";
             return $dialog->ask($this->input, $this->output, new ConfirmationQuestion($question, $answer));
         }
-        if ($answer) {
+        if (is_string($answer)) {
             $question .= " <info>({$answer})</info>";
         }
         return $dialog->ask($this->input, $this->output, new Question("{$question} ", $answer));
@@ -180,14 +163,15 @@ abstract class InitTemplate
     /**
      * Create a helper class inside a directory
      */
-    protected function createHelper(string $name, string $directory): void
+    protected function createHelper(string $name, string $directory, array $settings = []): void
     {
         $file = $this->createDirectoryFor(
             $dir = $directory . DIRECTORY_SEPARATOR . "Helper",
             "{$name}.php"
         ) . "{$name}.php";
 
-        $gen = new Helper($name, $this->namespace);
+        $gen = new Helper($settings, $name);
+
         // generate helper
         $this->createFile(
             $file,
@@ -208,9 +192,7 @@ abstract class InitTemplate
 
     protected function gitIgnore(string $path): void
     {
-        if (file_exists(self::GIT_IGNORE)) {
-            file_put_contents($path . DIRECTORY_SEPARATOR . self::GIT_IGNORE, "*\n!" . self::GIT_IGNORE);
-        }
+        file_put_contents($path . DIRECTORY_SEPARATOR . self::GIT_IGNORE, "*\n!" . self::GIT_IGNORE . "\n");
     }
 
     protected function checkInstalled(string $dir = '.'): void
@@ -223,6 +205,7 @@ abstract class InitTemplate
     /**
      * Create an Actor class and generate actions for it.
      * Requires a suite config as array in 3rd parameter.
+     * @param array<string, mixed> $suiteConfig
      */
     protected function createActor(string $name, string $directory, array $suiteConfig): void
     {
@@ -251,7 +234,7 @@ abstract class InitTemplate
         $this->sayInfo("Actions have been loaded");
     }
 
-    protected function addModulesToComposer(array $modules)
+    protected function addModulesToComposer(array $modules): ?int
     {
         $packages = ModuleContainer::$packages;
         $section = null;
@@ -265,11 +248,11 @@ abstract class InitTemplate
                     continue;
                 }
                 $package = $packages[$module];
-                $this->say(sprintf('"%s": "%s"', $package, "^1.0.0"));
-                $composer[$section][$package] = "^1.0.0";
+                $this->say(sprintf('"%s": "%s"', $package, "*"));
+                $composer[$section][$package] = "*";
             }
             $this->say('');
-            return;
+            return null;
         }
         $composer = json_decode(file_get_contents('composer.json'), true, 512, JSON_THROW_ON_ERROR);
         if ($composer === null) {
@@ -296,7 +279,7 @@ abstract class InitTemplate
                 continue;
             }
             $this->sayInfo("Adding {$package} for {$module} to composer.json");
-            $composer[$section][$package] = "^1.0.0";
+            $composer[$section][$package] = "*";
             ++$packageCounter;
         }
 
@@ -311,7 +294,7 @@ abstract class InitTemplate
             exec('composer update', $output, $status);
             if ($status !== 0) {
                 $this->sayInfo('Composer installation failed. Please check composer.json and try to run "composer update" manually');
-                return;
+                return null;
             }
             if (!empty($composer['config']['vendor_dir'])) {
                 $this->updateComposerClassMap($composer['config']['vendor_dir']);

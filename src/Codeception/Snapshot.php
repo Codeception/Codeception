@@ -13,50 +13,31 @@ abstract class Snapshot
 {
     use Asserts;
 
-    /**
-     * @var string|null
-     */
-    protected $fileName;
+    protected ?string $fileName = null;
 
     /**
-     * @var null
+     * @var string|false
      */
     protected $dataSet;
 
-    /**
-     * @var bool|null
-     */
-    protected $refresh;
+    protected ?bool $refresh = null;
 
-    /**
-     * @var bool
-     */
-    protected $showDiff = false;
+    protected bool $showDiff = false;
 
-    /**
-     * @var bool
-     */
-    protected $saveAsJson = true;
+    protected bool $saveAsJson = true;
 
-    /**
-     * @var string
-     */
-    protected $extension = 'json';
+    protected string $extension = 'json';
 
     /**
      * Should return data from current test run
-     *
-     * @return string|false
      */
-    abstract protected function fetchData();
+    abstract protected function fetchData(): array|string|false;
 
     /**
      * Performs assertion on saved data set against current dataset.
      * Can be overridden to implement custom assertion
-     *
-     * @param mixed $data
      */
-    protected function assertData($data): void
+    protected function assertData(mixed $data): void
     {
         $this->assertSame($this->dataSet, $data, "Snapshot doesn't match real data");
     }
@@ -97,7 +78,7 @@ abstract class Snapshot
     protected function getFileName(): string
     {
         if (!$this->fileName) {
-            $this->fileName = preg_replace('#\W#', '.', get_class($this)) . '.' . $this->extension;
+            $this->fileName = preg_replace('#\W#', '.', $this::class) . '.' . $this->extension;
         }
         return codecept_data_dir() . $this->fileName;
     }
@@ -187,6 +168,6 @@ abstract class Snapshot
 
     private function printDebug(string $message): void
     {
-        Debug::debug(get_class($this) . ': ' . $message);
+        Debug::debug($this::class . ': ' . $message);
     }
 }

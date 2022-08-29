@@ -1,90 +1,80 @@
 <?php
+
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Depends;
+use Codeception\Attribute\Group;
+use Codeception\Demo\Depends\DependencyForCest;
 use Codeception\Example;
 
-/**
-* @group dataprovider
-*/
+#[Group('dataprovider')]
 class DataProviderCest
 {
-     /**
-      * @group dataprovider
-      * @dataProvider __exampleDataSource
-      */
-      public function withDataProvider(ScenarioGuy $I, Example $example)
-      {
-          $I->amInPath($example['path']);
-          $I->seeFileFound($example['file']);
-      }
+    #[Group('dataprovider')]
+    #[DataProvider('__exampleDataSource')]
+    public function withDataProvider(ScenarioGuy $I, Example $example)
+    {
+        $I->amInPath($example['path']);
+        $I->seeFileFound($example['file']);
+    }
 
-      /**
-       * @group dataprovider
-       * @dataprovider protectedDataSource
-       */
-       public function withProtectedDataProvider(ScenarioGuy $I, Example $example)
-       {
-           $I->amInPath($example['path']);
-           $I->seeFileFound($example['file']);
-       }
+    #[Group('dataprovider')]
+    #[DataProvider('protectedDataSource')]
+    public function withProtectedDataProvider(ScenarioGuy $I, Example $example)
+    {
+        $I->amInPath($example['path']);
+        $I->seeFileFound($example['file']);
+    }
 
-      /**
-       * @group dataprovider
-       * @dataProvider __exampleDataSource
-       * @example(path=".", file="skipped.suite.yml")
-       */
-       public function withDataProviderAndExample(ScenarioGuy $I, Example $example)
-       {
-           $I->amInPath($example['path']);
-           $I->seeFileFound($example['file']);
-       }
+    /**
+     * @example(path=".", file="skipped.suite.yml")
+     */
+    #[Group('dataprovider')]
+    #[DataProvider('__exampleDataSource')]
+    public function withDataProviderAndExample(ScenarioGuy $I, Example $example)
+    {
+        $I->amInPath($example['path']);
+        $I->seeFileFound($example['file']);
+    }
 
-       /**
-        * @group dataprovider
-        * @depends Codeception\Demo\Depends\DependencyForCest:forTestPurpose
-        * @dataprovider protectedDataSource
-        */
-       public function testDependsWithDataProvider(ScenarioGuy $I, Example $example)
-       {
-           $I->amInPath($example['path']);
-           $I->seeFileFound($example['file']);
-       }
+    #[Group('dataprovider')]
+    #[Depends(DependencyForCest::class . ':forTestPurpose')]
+    #[DataProvider('protectedDataSource')]
+    public function testDependsWithDataProvider(ScenarioGuy $I, Example $example)
+    {
+        $I->amInPath($example['path']);
+        $I->seeFileFound($example['file']);
+    }
 
-       /**
-        * @group dataprovider
-        * @depends DataProviderCest:testDependsWithDataProvider
-        */
-       public function testDependsOnTestWithDataProvider()
-       {
-           return true;
-       }
+    #[Group('dataprovider')]
+    #[Depends(DataProviderCest::class . ':testDependsWithDataProvider')]
+    public function testDependsOnTestWithDataProvider(): bool
+    {
+        return true;
+    }
 
-     /** @dataProvider __exampleDataSource */
-      public function singleLineAnnotationDataProvider(ScenarioGuy $I, Example $example)
-      {
-          $I->amInPath($example['path']);
-          $I->seeFileFound($example['file']);
-      }
+    #[Group('dataprovider')]
+    #[DataProvider('__exampleDataSource')]
+    public function singleLineAnnotationDataProvider(ScenarioGuy $I, Example $example)
+    {
+        $I->amInPath($example['path']);
+        $I->seeFileFound($example['file']);
+    }
 
-      /**
-       * @return array
-       */
-      public function __exampleDataSource()
-      {
-          return[
+    public function __exampleDataSource(): array
+    {
+        return[
               ['path' => ".", 'file' => "scenario.suite.yml"],
               ['path' => ".",  'file' => "dummy.suite.yml"],
               ['path' => ".",  'file' => "unit.suite.yml"]
           ];
-      }
+    }
 
-      /**
-       * @return array
-       */
-      protected function protectedDataSource()
-      {
-          return[
+    protected function protectedDataSource(): array
+    {
+        return[
               ['path' => ".", 'file' => "scenario.suite.yml"],
               ['path' => ".",  'file' => "dummy.suite.yml"],
               ['path' => ".",  'file' => "unit.suite.yml"]
           ];
-      }
+    }
 }

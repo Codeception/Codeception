@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-/**
- * @depends ConfigBundledSuitesCest:runBundledSuite
- */
+use Codeception\Attribute\Depends;
+
+#[Depends(ConfigBundledSuitesCest::class . ':runBundledSuite')]
 final class ConfigNoActorCest
 {
-    /**
-     * @depends ConfigBundledSuitesCest:runBundledSuite
-     * @param CliGuy $I
-     */
+    #[Depends(ConfigBundledSuitesCest::class . ':runBundledSuite')]
     public function runSuitesWithoutActor(CliGuy $I)
     {
         $I->amInPath('tests/data/no_actor_suites');
@@ -28,8 +25,6 @@ final class ConfigNoActorCest
     public function suitesWithoutActorGenerators(CliGuy $I)
     {
         $I->amInPath('tests/data/no_actor_suites');
-        $I->executeFailCommand('generate:cept unit Some');
-        $I->seeResultCodeIsNot(0);
         $I->executeFailCommand('generate:cest unit Some');
         $I->seeResultCodeIsNot(0);
         $I->executeFailCommand('generate:test unit Some');
@@ -39,5 +34,4 @@ final class ConfigNoActorCest
         $I->dontSeeInThisFile('$tester');
         $I->deleteFile('tests/SomeTest.php');
     }
-
 }

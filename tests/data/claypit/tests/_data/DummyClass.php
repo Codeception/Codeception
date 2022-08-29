@@ -2,41 +2,49 @@
 
 class DummyClass
 {
+    /**
+     * @var int|string
+     */
     protected $checkMe = 1;
 
-    function __construct($checkMe = 1)
+    public function __construct($checkMe = 1)
     {
-        $this->checkMe = "constructed: ".$checkMe;
+        $this->checkMe = "constructed: " . $checkMe;
     }
-    
-    public function helloWorld() {
+
+    public function helloWorld(): string
+    {
         return "hello";
     }
-    
-    public function goodByeWorld() {
+
+    public function goodByeWorld(): string
+    {
         return "good bye";
     }
 
-    protected function notYourBusinessWorld()
+    protected function notYourBusinessWorld(): string
     {
         return "goAway";
     }
 
-    public function getCheckMe() {
+    public function getCheckMe()
+    {
         return $this->checkMe;
     }
-    
-    public function call() {
+
+    public function call(): bool
+    {
         $this->targetMethod();
         return true;
     }
-    
-    public function targetMethod() {
+
+    public function targetMethod(): bool
+    {
         return true;
     }
 
-    public function exceptionalMethod() {
+    public function exceptionalMethod()
+    {
         throw new Exception('Catch it!');
     }
-
 }

@@ -16,28 +16,14 @@ use function str_replace;
  */
 class Template
 {
-    /**
-     * @var string
-     */
-    protected $template;
-    /**
-     * @var array
-     */
-    protected $vars = [];
-    /**
-     * @var string
-     */
-    protected $placeholderStart;
-    /**
-     * @var string
-     */
-    protected $placeholderEnd;
+    private array $vars = [];
 
-    public function __construct(string $template, string $placeholderStart = '{{', string $placeholderEnd = '}}')
-    {
-        $this->template         = $template;
-        $this->placeholderStart = $placeholderStart;
-        $this->placeholderEnd   = $placeholderEnd;
+    public function __construct(
+        private string $template,
+        private string $placeholderStart = '{{',
+        private string $placeholderEnd = '}}',
+        private ?string $encoderFunction = null,
+    ) {
     }
 
     /**
@@ -51,7 +37,6 @@ class Template
 
     /**
      * Sets all template vars
-     *
      */
     public function setVars(array $vars): void
     {
@@ -82,12 +67,19 @@ class Template
         foreach ($matches as $match) { // fill in placeholders
             $placeholder = $match[1];
             $value = $this->vars;
-            foreach (explode('.', $placeholder) as $segment) {
+
+            foreach (explode('.', trim($placeholder, '\'"')) as $segment) {
                 if (is_array($value) && array_key_exists($segment, $value)) {
                     $value = $value[$segment];
                 } else {
                     continue 2;
                 }
+            }
+
+            if ($this->encoderFunction !== null) {
+                $value = ($this->encoderFunction)($value);
+            } elseif (!is_string($value)) {
+                $value = (string)$value;
             }
 
             $result = str_replace($this->placeholderStart . $placeholder . $this->placeholderEnd, $value, $result);

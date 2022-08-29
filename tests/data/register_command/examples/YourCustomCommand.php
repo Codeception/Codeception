@@ -1,21 +1,22 @@
 <?php
+
 /**
  * An example for a custom command to add to the framework.
  *
  * @author    Tobias Matthaiou <tm@solutionDrive.de>
  * @date      27.01.16
  */
+
 namespace Project\Command;
 
-use \Symfony\Component\Console\Command\Command;
-use \Codeception\CustomCommandInterface;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
+use Codeception\CustomCommandInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class YourCustomCommand extends Command implements CustomCommandInterface
 {
-
     use \Codeception\Command\Shared\FileSystemTrait;
     use \Codeception\Command\Shared\ConfigTrait;
 
@@ -32,9 +33,9 @@ class YourCustomCommand extends Command implements CustomCommandInterface
      */
     protected function configure()
     {
-        $this->setDefinition(array(
+        $this->setDefinition([
             new InputOption('something', 's', InputOption::VALUE_NONE, 'The Message will show you something more'),
-        ));
+        ]);
 
         parent::configure();
     }
@@ -44,7 +45,7 @@ class YourCustomCommand extends Command implements CustomCommandInterface
      *
      * @return string The description for the command
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return "This is your command make something";
     }

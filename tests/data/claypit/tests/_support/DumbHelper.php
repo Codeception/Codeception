@@ -1,7 +1,6 @@
 <?php
-namespace Codeception\Module;
 
-// here you can define custom functions for DumbGuy 
+namespace Codeception\Module;
 
 class DumbHelper extends \Codeception\Module
 {

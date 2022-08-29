@@ -21,6 +21,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+
 use function array_keys;
 use function file_exists;
 use function function_exists;
@@ -33,26 +34,18 @@ use function pcntl_signal;
  */
 class Console extends Command
 {
-    /**
-     * @var Cept|null
-     */
-    protected $test;
-    /**
-     * @var Codecept|null
-     */
-    protected $codecept;
-    /**
-     * @var Suite|null
-     */
-    protected $suite;
-    /**
-     * @var OutputInterface|null
-     */
-    protected $output;
+    protected ?Cept $test = null;
+
+    protected ?Codecept $codecept = null;
+
+    protected ?Suite $suite = null;
+
+    protected ?OutputInterface $output = null;
+
     /**
      * @var string[]
      */
-    protected $actions = [];
+    protected array $actions = [];
 
     protected function configure(): void
     {
@@ -88,7 +81,7 @@ class Console extends Command
         $this->codecept = new Codecept($options);
         $eventDispatcher = $this->codecept->getDispatcher();
 
-        $suiteManager = new SuiteManager($eventDispatcher, $suiteName, $settings);
+        $suiteManager = new SuiteManager($eventDispatcher, $suiteName, $settings, []);
         $suiteManager->initialize();
 
         $this->suite = $suiteManager->getSuite();
@@ -96,18 +89,19 @@ class Console extends Command
 
         $this->actions = array_keys($moduleContainer->getActions());
 
-        $this->test = new Cept(null, null);
+        $this->test = new Cept('', '');
         $this->test->getMetadata()->setServices([
-           'dispatcher' => $eventDispatcher,
-           'modules' =>  $moduleContainer
+            'dispatcher' => $eventDispatcher,
+            'modules' => $moduleContainer
         ]);
 
         $scenario = new Scenario($this->test);
         if (!$settings['actor']) {
             throw new ConfigurationException("Interactive shell can't be started without an actor");
         }
-        if (isset($config["namespace"])) {
-            $settings['actor'] = $config["namespace"] .'\\' . $settings['actor'];
+
+        if (isset($config['namespace']) && $config['namespace'] !== '') {
+            $settings['actor'] = $config['namespace'] . '\\Support\\' . $settings['actor'];
         }
         $actor = $settings['actor'];
         $I = new $actor($scenario);
@@ -117,12 +111,12 @@ class Console extends Command
         $output->writeln("<info>Interactive console started for suite {$suiteName}</info>");
         $output->writeln("<info>Try Codeception commands without writing a test</info>");
 
-        $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResult(), $settings);
+        $suiteEvent = new SuiteEvent($this->suite, $settings);
         $eventDispatcher->dispatch($suiteEvent, Events::SUITE_INIT);
         $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_PARSED);
         $eventDispatcher->dispatch(new TestEvent($this->test), Events::TEST_BEFORE);
 
-        if (file_exists($settings['bootstrap'])) {
+        if (is_string($settings['bootstrap']) && file_exists($settings['bootstrap'])) {
             require $settings['bootstrap'];
         }
 
@@ -138,7 +132,7 @@ class Console extends Command
     protected function listenToSignals(): void
     {
         if (function_exists('pcntl_signal')) {
-            declare (ticks = 1);
+            declare(ticks=1);
             pcntl_signal(SIGINT, SIG_IGN);
             pcntl_signal(SIGTERM, SIG_IGN);
         }

@@ -7,17 +7,14 @@ namespace Codeception\Step;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Template;
 use Exception;
+
 use function codecept_debug;
-use function strpos;
 use function ucfirst;
 use function usleep;
 
 class Retry extends Assertion implements GeneratedStep
 {
-    /**
-     * @var string
-     */
-    protected static $methodTemplate = <<<EOF
+    protected static string $methodTemplate = <<<EOF
 
     /**
      * [!] Method is generated.
@@ -35,21 +32,10 @@ class Retry extends Assertion implements GeneratedStep
     }
 EOF;
 
-    /**
-     * @var int
-     */
-    private $retryNum;
-    /**
-     * @var int
-     */
-    private $retryInterval;
-
-    public function __construct($action, array $arguments, int $retryNum, int $retryInterval)
+    public function __construct($action, array $arguments, private int $retryNum, private int $retryInterval)
     {
         $this->action = $action;
         $this->arguments = $arguments;
-        $this->retryNum = $retryNum;
-        $this->retryInterval = $retryInterval;
     }
 
     public function run(ModuleContainer $container = null)
@@ -76,11 +62,11 @@ EOF;
     {
         $action = $template->getVar('action');
 
-        if ((strpos($action, 'have') === 0) || (strpos($action, 'am') === 0)) {
+        if ((str_starts_with($action, 'have')) || (str_starts_with($action, 'am'))) {
             return null; // dont retry conditions
         }
 
-        if (strpos($action, 'wait') === 0) {
+        if (str_starts_with($action, 'wait')) {
             return null; // dont retry waiters
         }
 
@@ -91,6 +77,6 @@ EOF;
             ->place('module', $template->getVar('module'))
             ->place('params', $template->getVar('params'))
             ->place('doc', $doc)
-            ->place('action', 'retry'. ucfirst($action));
+            ->place('action', 'retry' . ucfirst($action));
     }
 }

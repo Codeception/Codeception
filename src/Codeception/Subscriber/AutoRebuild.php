@@ -9,6 +9,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Generator\Actions;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function codecept_debug;
 use function fclose;
 use function fgets;
@@ -26,7 +27,7 @@ class AutoRebuild implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::SUITE_INIT => 'updateActor'
     ];
 
@@ -53,7 +54,7 @@ class AutoRebuild implements EventSubscriberInterface
         $handle = @fopen($actorActionsFile, "r");
         if ($handle && is_writable($actorActionsFile)) {
             $line = @fgets($handle);
-            if (preg_match('#\[STAMP\] ([a-f0-9]*)#', $line, $matches)) {
+            if (preg_match('#\[STAMP] ([a-f0-9]*)#', $line, $matches)) {
                 $hash = $matches[1];
                 $currentHash = Actions::genHash($modules, $settings);
 

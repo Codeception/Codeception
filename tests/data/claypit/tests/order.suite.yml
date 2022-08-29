@@ -1,4 +1,4 @@
-class_name: OrderGuy
+actor: OrderGuy
 modules:
     enabled: [OrderHelper]
 steps:

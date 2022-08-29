@@ -25,68 +25,40 @@ abstract class Module
     use Asserts;
 
     /**
-     * @var ModuleContainer
-     */
-    protected $moduleContainer;
-
-    /**
      * By setting it to false module wan't inherit methods of parent class.
-     *
-     * @var bool
      */
-    public static $includeInheritedActions = true;
+    public static bool $includeInheritedActions = true;
 
     /**
      * Allows to explicitly set what methods have this class.
-     *
-     * @var array
      */
-    public static $onlyActions = [];
+    public static array $onlyActions = [];
 
     /**
      * Allows to explicitly exclude actions from module.
-     *
-     * @var array
      */
-    public static $excludeActions = [];
+    public static array $excludeActions = [];
 
     /**
      * Allows to rename actions
-     *
-     * @var array
      */
-    public static $aliases = [];
+    public static array $aliases = [];
 
-    /**
-     * @var array
-     */
-    protected $storage = [];
+    protected array $storage = [];
 
-    /**
-     * @var array
-     */
-    protected $config = [];
+    protected array $config = [];
 
-    /**
-     * @var array
-     */
-    protected $backupConfig = [];
+    protected array $backupConfig = [];
 
-    /**
-     * @var array
-     */
-    protected $requiredFields = [];
+    protected array $requiredFields = [];
 
     /**
      * Module constructor.
      *
      * Requires module container (to provide access between modules of suite) and config.
-     *
      */
-    public function __construct(ModuleContainer $moduleContainer, ?array $config = null)
+    public function __construct(protected ModuleContainer $moduleContainer, ?array $config = null)
     {
-        $this->moduleContainer = $moduleContainer;
-
         $this->backupConfig = $this->config;
         if (is_array($config)) {
             $this->_setConfig($config);
@@ -162,7 +134,7 @@ abstract class Module
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) !== $this->requiredFields) {
             throw new ModuleConfigException(
-                get_class($this),
+                $this::class,
                 "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
                 "Please, update the configuration and set all the required fields\n\n"
             );
@@ -186,9 +158,9 @@ abstract class Module
      */
     public function _getName(): string
     {
-        $moduleName = '\\' . get_class($this);
+        $moduleName = '\\' . $this::class;
 
-        if (strpos($moduleName, ModuleContainer::MODULE_NAMESPACE) === 0) {
+        if (str_starts_with($moduleName, ModuleContainer::MODULE_NAMESPACE)) {
             return substr($moduleName, strlen(ModuleContainer::MODULE_NAMESPACE));
         }
 
@@ -212,10 +184,8 @@ abstract class Module
 
     /**
      * **HOOK** executed before suite
-     *
-     * @param array $settings
      */
-    public function _beforeSuite($settings = [])
+    public function _beforeSuite(array $settings = [])
     {
     }
 
@@ -257,29 +227,25 @@ abstract class Module
     /**
      * **HOOK** executed when test fails but before `_after`
      */
-    public function _failed(TestInterface $test, \Exception $fail)
+    public function _failed(TestInterface $test, Exception $fail)
     {
     }
 
     /**
      * Print debug message to the screen.
-     *
-     * @param mixed $message
      */
-    protected function debug($message): void
+    protected function debug(mixed $message): void
     {
         codecept_debug($message);
     }
 
     /**
      * Print debug message with a title
-     *
-     * @param mixed $message
      */
-    protected function debugSection(string $title, $message): void
+    protected function debugSection(string $title, mixed $message): void
     {
         if (is_array($message) || is_object($message)) {
-            $message = stripslashes(json_encode($message, JSON_THROW_ON_ERROR));
+            $message = stripslashes(json_encode($message, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE));
         }
         $this->debug("[{$title}] {$message}");
     }
@@ -305,7 +271,7 @@ abstract class Module
      */
     protected function getModules(): array
     {
-        return $this->moduleContainer->getModules();
+        return $this->moduleContainer->all();
     }
 
     /**
@@ -332,7 +298,7 @@ abstract class Module
      * @param string|null $key
      * @return mixed the config item's value or null if it doesn't exist
      */
-    public function _getConfig(string $key = null)
+    public function _getConfig(string $key = null): mixed
     {
         if (!$key) {
             return $this->config;

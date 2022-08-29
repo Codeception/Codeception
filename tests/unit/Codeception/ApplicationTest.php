@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Codeception;
 
+use Symfony\Component\Console\Command\Command;
+
 class ApplicationTest extends \Codeception\PHPUnit\TestCase
 {
-
-    public static function _setUpBeforeClass()
-    {
-        require_once \Codeception\Configuration::dataDir() . 'register_command/examples/MyCustomCommand.php';
-    }
-
     public function testRegisterCustomCommand()
     {
         \Codeception\Configuration::append(['extensions' => [
@@ -22,9 +18,10 @@ class ApplicationTest extends \Codeception\PHPUnit\TestCase
         $application->registerCustomCommands();
 
         try {
-            $application->find('myProject:myCommand');
-        } catch (\Exception $e) {
-            $this->fail($e->getMessage());
+            $command = $application->find('myProject:myCommand');
+            $this->assertInstanceOf(Command::class, $command);
+        } catch (\Exception $exception) {
+            $this->fail($exception->getMessage());
         }
     }
 }

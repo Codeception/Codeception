@@ -4,34 +4,16 @@ declare(strict_types=1);
 
 namespace Codeception\Event;
 
-use PHPUnit\Framework\TestResult;
-use PHPUnit\Util\Printer;
+use Codeception\ResultAggregator;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class PrintResultEvent extends Event
 {
-    /**
-     * @var TestResult
-     */
-    protected $result;
-
-    /**
-     * @var Printer
-     */
-    protected $printer;
-
-    public function __construct(TestResult $testResult, Printer $printer)
+    public function __construct(protected ResultAggregator $result)
     {
-        $this->result = $testResult;
-        $this->printer = $printer;
     }
 
-    public function getPrinter(): Printer
-    {
-        return $this->printer;
-    }
-
-    public function getResult(): TestResult
+    public function getResult(): ResultAggregator
     {
         return $this->result;
     }

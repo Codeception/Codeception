@@ -13,10 +13,7 @@ class Group
     use Namespaces;
     use Classname;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 <?php
 
 declare(strict_types=1);
@@ -49,26 +46,13 @@ class {{class}} extends \Codeception\Platform\Group
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $namespace;
 
-    /**
-     * @var string
-     */
-    protected $namespace;
-
-    /**
-     * @var array
-     */
-    protected $settings = [];
-
-    public function __construct(array $settings, string $name)
+    public function __construct(protected array $settings, protected string $name)
     {
         $this->settings = $settings;
         $this->name = $name;
-        $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Group\\' . $name);
+        $this->namespace = $this->getNamespaceString($this->supportNamespace() . '\\Group\\' . $name);
     }
 
     public function produce(): string

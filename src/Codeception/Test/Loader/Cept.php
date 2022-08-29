@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Test\Loader;
 
 use Codeception\Test\Cept as CeptFormat;
+
 use function basename;
 
 class Cept implements LoaderInterface
@@ -12,7 +13,7 @@ class Cept implements LoaderInterface
     /**
      * @var CeptFormat[]
      */
-    protected $tests = [];
+    protected array $tests = [];
 
     public function getPattern(): string
     {

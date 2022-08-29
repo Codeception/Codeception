@@ -1,15 +1,15 @@
 <?php
 
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Examples;
+use Codeception\Example;
+
 class SimpleWithDataProviderArrayCest
 {
-    /**
-     * @dataProvider getTestData
-     *
-     * @example ["fizz", "buzz"]
-     * @example [null, "test"]
-     */
-    public function helloWorld(\CodeGuy $I, \Codeception\Example $example) {
-        $I->execute(function($example) {
+    #[DataProvider('getTestData')]
+    public function helloWorld(CodeGuy $I, Example $example)
+    {
+        $I->execute(function ($example) {
             if (!is_array($example)) {
                 return false;
             }
@@ -18,7 +18,7 @@ class SimpleWithDataProviderArrayCest
         })->seeResultEquals(2);
     }
 
-    protected function getTestData()
+    protected function getTestData(): array
     {
         return [
             ['foo', 'bar'],

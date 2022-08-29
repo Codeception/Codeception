@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
+use Codeception\Attribute\Group;
 
-class GenerateCestTest extends BaseCommandRunner
+final class GenerateCestTest extends BaseCommandRunner
 {
     protected function _setUp()
     {
@@ -15,9 +15,7 @@ class GenerateCestTest extends BaseCommandRunner
         ];
     }
 
-    /**
-     * @group command
-     */
+    #[Group('command')]
     public function testBasic()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
@@ -29,30 +27,24 @@ class GenerateCestTest extends BaseCommandRunner
         $this->assertStringContainsString('Test was created in tests/shire/HallUnderTheHillCest.php', $this->output);
     }
 
-    /**
-     * @group command
-     */
+    #[Group('command')]
     public function testNamespaced()
     {
         $this->config['namespace'] = 'Shire';
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHill']);
-        $this->assertStringContainsString('namespace Shire;', $this->content);
+        $this->assertStringContainsString('namespace Shire\Unit;', $this->content);
         $this->assertStringContainsString('use Shire\HobbitGuy;', $this->content);
         $this->assertStringContainsString('class HallUnderTheHillCest', $this->content);
     }
 
-    /**
-     * @group command
-     */
+    #[Group('command')]
     public function testGenerateWithFullName()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest.php']);
         $this->assertSame('tests/shire/HomeCanInclude12DwarfsCest.php', $this->filename);
     }
 
-    /**
-     * @group command
-     */
+    #[Group('command')]
     public function testGenerateWithSuffix()
     {
         $this->execute(['suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest']);
@@ -60,12 +52,12 @@ class GenerateCestTest extends BaseCommandRunner
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testGenerateWithGuyNamespaced()
+    public function testGenerateWithActorNamespaced()
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillCest']);
         $this->assertSame($this->filename, 'tests/shire/HallUnderTheHillCest.php');
-        $this->assertStringContainsString('namespace MiddleEarth;', $this->content);
+        $this->assertStringContainsString('namespace MiddleEarth\Unit;', $this->content);
         $this->assertStringContainsString('use MiddleEarth\\HobbitGuy;', $this->content);
         $this->assertStringContainsString('public function tryToTest(HobbitGuy $I)', $this->content);
         $this->assertIsValidPhp($this->content);
@@ -75,21 +67,20 @@ class GenerateCestTest extends BaseCommandRunner
     {
         $this->execute(['suite' => 'shire', 'class' => 'MiddleEarth\HallUnderTheHillCest']);
         $this->assertSame('tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->filename);
-        $this->assertStringContainsString('namespace MiddleEarth;', $this->content);
+        $this->assertStringContainsString('namespace Unit\MiddleEarth;', $this->content);
         $this->assertStringContainsString('class HallUnderTheHillCest', $this->content);
         $this->assertStringContainsString('Test was created in tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->output);
     }
 
-    public function testGenerateWithSuiteNamespace()
-	{
-        $this->config['suite_namespace'] = 'MiddleEarth\\Bosses\\';
+    public function testGenerateWithSupportNamespaced()
+    {
         $this->config['namespace'] = 'MiddleEarth';
-        $this->config['actor'] = 'HobbitGuy';
+        $this->config['support_namespace'] = 'Gondor';
         $this->execute(['suite' => 'shire', 'class' => 'HallUnderTheHillCest']);
         $this->assertSame($this->filename, 'tests/shire/HallUnderTheHillCest.php');
-        $this->assertStringContainsString('namespace MiddleEarth\\Bosses;', $this->content);
-        $this->assertStringContainsString('use MiddleEarth\\HobbitGuy', $this->content);
+        $this->assertStringContainsString('namespace MiddleEarth\Unit;', $this->content);
+        $this->assertStringContainsString('use MiddleEarth\\Gondor\\HobbitGuy;', $this->content);
         $this->assertStringContainsString('public function tryToTest(HobbitGuy $I)', $this->content);
         $this->assertIsValidPhp($this->content);
-	}
+    }
 }

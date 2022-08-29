@@ -12,70 +12,36 @@ use Codeception\Util\Locator;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
+use Stringable;
 
-abstract class Step
+abstract class Step implements Stringable
 {
     /**
      * @var int
      */
-    const DEFAULT_MAX_LENGTH = 200;
+    public const DEFAULT_MAX_LENGTH = 200;
 
     /**
      * @var int
      */
-    const STACK_POSITION = 3;
+    public const STACK_POSITION = 3;
 
-    /**
-     * @var string
-     */
-    protected $action;
+    public bool $executed = false;
 
-    /**
-     * @var array
-     */
-    protected $arguments = [];
+    protected string|int|null $line = null;
 
-    protected $debugOutput;
+    protected ?string $file = null;
 
-    /**
-     * @var bool
-     */
-    public $executed = false;
+    protected string $prefix = 'I';
 
-    /**
-     * @var string|int|null
-     */
-    protected $line = null;
+    protected ?MetaStep $metaStep = null;
 
-    /**
-     * @var string|null
-     */
-    protected $file = null;
+    protected bool $failed = false;
 
-    /**
-     * @var string
-     */
-    protected $prefix = 'I';
+    protected bool $isTry = false;
 
-    /**
-     * @var MetaStep|null
-     */
-    protected $metaStep = null;
-
-    /**
-     * @var bool
-     */
-    protected $failed = false;
-
-    /**
-     * @var bool
-     */
-    protected $isTry = false;
-
-    public function __construct(string $action, array $arguments = [])
+    public function __construct(protected string $action, protected array $arguments = [])
     {
-        $this->action = $action;
-        $this->arguments = $arguments;
     }
 
     public function saveTrace(): void
@@ -99,7 +65,7 @@ abstract class Step
 
     private function isTestFile(string $file)
     {
-        return preg_match('#[^\\'.DIRECTORY_SEPARATOR.'](Cest|Cept|Test).php$#', $file);
+        return preg_match('#[^\\' . DIRECTORY_SEPARATOR . '](Cest|Cept|Test).php$#', $file);
     }
 
     public function getName(): string
@@ -113,11 +79,20 @@ abstract class Step
         return $this->action;
     }
 
-    public function getLine(): string
+    public function getFilePath(): ?string
     {
-        if ($this->line && $this->file) {
-            return codecept_relative_path($this->file) . ':' . $this->line;
+        if ($this->file) {
+            return codecept_relative_path($this->file);
         }
+        return null;
+    }
+
+    public function getLineNumber(): ?int
+    {
+        if ($this->line) {
+            return $this->line;
+        }
+        return null;
     }
 
     public function hasFailed(): bool
@@ -145,7 +120,7 @@ abstract class Step
 
         if ($totalLength > $maxLength && $maxLength > 0) {
             //sort arguments from shortest to longest
-            uasort($arguments, function ($arg1, $arg2) {
+            uasort($arguments, function ($arg1, $arg2): int {
                 $length1 = mb_strlen($arg1, 'utf-8');
                 $length2 = mb_strlen($arg2, 'utf-8');
                 if ($length1 === $length2) {
@@ -161,10 +136,10 @@ abstract class Step
             foreach ($arguments as $key => $argument) {
                 --$argumentsRemaining;
                 if (mb_strlen($argument, 'utf-8') > $allowedLength) {
-                    $arguments[$key] = mb_substr($argument, 0, (int) $allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
+                    $arguments[$key] = mb_substr($argument, 0, (int)$allowedLength - 4, 'utf-8') . '...' . mb_substr($argument, -1, 1, 'utf-8');
                     $lengthRemaining -= ($allowedLength + 1);
                 } else {
-                    $lengthRemaining -= (mb_strlen($arguments[$key], 'utf-8') + 1);
+                    $lengthRemaining -= (mb_strlen($argument, 'utf-8') + 1);
                     //recalculate allowed length because this argument was short
                     if ($argumentsRemaining > 0) {
                         $allowedLength = floor(($lengthRemaining - $argumentsRemaining + 1) / $argumentsRemaining);
@@ -179,10 +154,7 @@ abstract class Step
         return implode(',', $arguments);
     }
 
-    /**
-     * @param mixed $argument
-     */
-    protected function stringifyArgument($argument): string
+    protected function stringifyArgument(mixed $argument): string
     {
         if (is_string($argument)) {
             return '"' . strtr($argument, ["\n" => '\n', "\r" => '\r', "\t" => ' ']) . '"';
@@ -199,25 +171,25 @@ abstract class Step
                 $argument = $argument->getOutput();
             } elseif (method_exists($argument, '__toString')) {
                 $argument = (string)$argument;
-            } elseif (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
+            } elseif ($argument::class == 'Facebook\WebDriver\WebDriverBy') {
                 $argument = Locator::humanReadableString($argument);
             } else {
                 $argument = $this->getClassName($argument);
             }
         }
-        $arg_str = json_encode($argument, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $arg_str = json_encode($argument, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE);
         return str_replace('\"', '"', $arg_str);
     }
 
     protected function getClassName(object $argument): string
     {
         if ($argument instanceof Closure) {
-            return \Closure::class;
+            return Closure::class;
         } elseif ($argument instanceof MockObject && (property_exists($argument, '__mocked') && $argument->__mocked !== null)) {
             return $this->formatClassName($argument->__mocked);
         }
 
-        return $this->formatClassName(get_class($argument));
+        return $this->formatClassName($argument::class);
     }
 
     protected function formatClassName(string $classname): string
@@ -229,7 +201,7 @@ abstract class Step
     {
         $result = "\${$this->prefix}->" . $this->getAction() . '(';
         $maxLength = $maxLength - mb_strlen($result, 'utf-8') - 1;
-        return $result . ($this->getHumanizedArguments($maxLength) .')');
+        return $result . ($this->getHumanizedArguments($maxLength) . ')');
     }
 
     public function getMetaStep(): ?MetaStep
@@ -256,7 +228,7 @@ abstract class Step
             return sprintf('%s %s', ucfirst($this->prefix), $this->humanize($this->getAction()));
         }
 
-        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->prefix), htmlspecialchars($this->humanize($this->getAction())), $highlightColor, htmlspecialchars($this->getHumanizedArguments(0)));
+        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->prefix), htmlspecialchars($this->humanize($this->getAction()), ENT_QUOTES | ENT_SUBSTITUTE), $highlightColor, htmlspecialchars($this->getHumanizedArguments(0), ENT_QUOTES | ENT_SUBSTITUTE));
     }
 
     public function getHumanizedActionWithoutArguments(): string
@@ -283,7 +255,6 @@ abstract class Step
     }
 
     /**
-     * @param ModuleContainer|null $container
      * @return mixed
      */
     public function run(ModuleContainer $container = null)
@@ -305,11 +276,10 @@ abstract class Step
                 throw $e;
             }
             $this->failed = true;
-            if ($this->getMetaStep() !== null) {
-                $this->getMetaStep()->setFailed(true);
-            }
+            $this->getMetaStep()?->setFailed(true);
             throw $e;
         }
+
         return $res;
     }
 
@@ -319,7 +289,7 @@ abstract class Step
      */
     protected function addMetaStep(array $step, array $stack): void
     {
-        if (($this->isTestFile($this->file)) || ($step['class'] == \Codeception\Scenario::class)) {
+        if (($this->isTestFile($this->file)) || ($step['class'] == Scenario::class)) {
             return;
         }
 
@@ -338,15 +308,13 @@ abstract class Step
             }
 
             // in case arguments were passed by reference, copy args array to ensure dereference.  array_values() does not dereference values
-            $this->metaStep = new Step\Meta($step['function'], array_map(function ($i) {
-                return $i;
-            }, array_values($step['args'])));
+            $this->metaStep = new Step\Meta($step['function'], array_map(fn ($i) => $i, array_values($step['args'])));
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // page objects or other classes should not be included with "I"
-            if (!in_array(\Codeception\Actor::class, class_parents($step['class']))) {
+            if (!in_array(Actor::class, class_parents($step['class']))) {
                 if (isset($step['object'])) {
-                    $this->metaStep->setPrefix(get_class($step['object']) . ':');
+                    $this->metaStep->setPrefix($step['object']::class . ':');
                     return;
                 }
 

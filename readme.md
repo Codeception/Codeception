@@ -1,22 +1,20 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct.svg)](https://stand-with-ukraine.pp.ua)
+
 # Codeception
 
 [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
 [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Codeception/Codeception/badges/quality-score.png?b=4.0)](https://scrutinizer-ci.com/g/Codeception/Codeception/?branch=4.0)
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+[![Build status](https://github.com/Codeception/Codeception/workflows/build/badge.svg)](https://github.com/Codeception/Codeception/actions?query=workflow%3Abuild)
 
 **Modern PHP Testing for everyone**
 
 Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides an absolutely new way of writing acceptance, functional and even unit tests.
-Powered by PHPUnit.
-
-| Build | Webdriver  |
-| ----- | -------- |
-| [![Build status](https://github.com/Codeception/Codeception/workflows/build/badge.svg)](https://github.com/Codeception/Codeception/actions?query=workflow%3Abuild) | [![Build Status](https://semaphoreci.com/api/v1/codeception/codeception/branches/3-0/shields_badge.svg)](https://semaphoreci.com/codeception/codeception) |
 
 #### Contributions
 
-At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/4.0/CONTRIBUTING.md).
+At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/5.0/CONTRIBUTING.md).
 
 ### At a Glance
 
@@ -55,14 +53,14 @@ php composer.phar require "codeception/module-phpbrowser"
 
 ### Phar
 
-Download [codecept.phar](http://codeception.com/codecept.phar)
+Download [codecept.phar](https://codeception.com/codecept.phar)
 
 Copy it into your project.
 
 You can also make Codeception an executable and it put it into your `$PATH`, for instance:
 
 ```
-wget http://codeception.com/codecept.phar
+wget https://codeception.com/codecept.phar
 
 chmod +x codecept.phar
 
@@ -78,7 +76,7 @@ Run CLI utility:
 php codecept.phar
 ```
 
-See also [Installation](http://codeception.com/install) | **[QuickStart](http://codeception.com/quickstart)**
+See also [Installation](https://codeception.com/install) | **[QuickStart](https://codeception.com/quickstart)**
 
 ## Getting Started
 
@@ -92,12 +90,9 @@ This will create a default directory structure and default test suites.
 
 ## Documentation
 
-[View Documentation](http://codeception.com/docs/01-Introduction)
+[View Documentation](https://codeception.com/docs/Introduction)
 
 The documentation source files can be found at https://github.com/Codeception/codeception.github.com/tree/master/docs/.
 
 ## License
-MIT
-
-(c) [Codeception Team](http://codeception.com/credits)
-2011-2020
+[MIT](https://github.com/Codeception/Codeception/blob/master/LICENSE)

@@ -1,0 +1,4 @@
+include:
+  - packages/*
+paths:
+  output: _output

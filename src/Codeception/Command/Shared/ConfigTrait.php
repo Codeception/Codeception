@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
+
 use function array_merge_recursive;
 use function array_pop;
 use function array_shift;
@@ -20,16 +21,19 @@ use function ucfirst;
 
 trait ConfigTrait
 {
-    protected function getSuiteConfig($suite): array
+    protected function getSuiteConfig(string $suite): array
     {
         return Configuration::suiteSettings($suite, $this->getGlobalConfig());
     }
 
-    protected function getGlobalConfig($conf = null): array
+    protected function getGlobalConfig(string $conf = null): array
     {
         return Configuration::config($conf);
     }
 
+    /**
+     * @return string[]
+     */
     protected function getSuites($conf = null): array
     {
         return Configuration::suites();
@@ -41,7 +45,7 @@ trait ConfigTrait
         foreach ($configOptions as $option) {
             $keys = explode(': ', $option);
             if (count($keys) < 2) {
-                throw new InvalidArgumentException('--config-option should have config passed as "key:value"');
+                throw new InvalidArgumentException('--override should have config passed as "key: value"');
             }
             $value = array_pop($keys);
             $yaml = '';

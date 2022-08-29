@@ -1,34 +1,33 @@
 <?php
-/**
- * @group App
- * @group New
- */
-class BeforeAfterClassTest extends \Codeception\Test\Unit
+
+use Codeception\Attribute\AfterClass;
+use Codeception\Attribute\BeforeClass;
+use Codeception\Attribute\Group;
+use Codeception\Module\OrderHelper as OrderHelperModule;
+use Codeception\Test\Unit;
+
+#[Group('App'), Group('New')]
+final class BeforeAfterClassTest extends Unit
 {
-    /**
-     * @beforeClass
-     */
+    #[BeforeClass]
     public static function setUpSomeSharedFixtures()
     {
-        \Codeception\Module\OrderHelper::appendToFile('{');
+        OrderHelperModule::appendToFile('{');
     }
 
     public function testOne()
     {
-        \Codeception\Module\OrderHelper::appendToFile('1');
+        OrderHelperModule::appendToFile('1');
     }
 
     public function testTwo()
     {
-        \Codeception\Module\OrderHelper::appendToFile('2');
+        OrderHelperModule::appendToFile('2');
     }
 
-    /**
-     * @afterClass
-     */
+    #[AfterClass]
     public static function tearDownSomeSharedFixtures()
     {
-        \Codeception\Module\OrderHelper::appendToFile('}');
+        OrderHelperModule::appendToFile('}');
     }
-
 }

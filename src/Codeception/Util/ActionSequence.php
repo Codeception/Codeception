@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use Closure;
 use Codeception\Step\Action;
 use Exception;
+
 use function call_user_func_array;
 use function codecept_debug;
 use function get_class;
@@ -28,7 +30,7 @@ use function str_replace;
  * @method $this dontSeeElement($selector, $attributes = [])
  * @method $this click($link, $context = null)
  * @method $this wait($timeout)
- * @method $this waitForElementChange($element, \Closure $callback, $timeout = 30)
+ * @method $this waitForElementChange($element, Closure $callback, $timeout = 30)
  * @method $this waitForElement($element, $timeout = 10)
  * @method $this waitForElementVisible($element, $timeout = 10)
  * @method $this waitForElementNotVisible($element, $timeout = 10)
@@ -56,14 +58,14 @@ class ActionSequence
     /**
      * @var Action[]
      */
-    protected $actions = [];
+    protected array $actions = [];
 
     /**
      * Creates an instance
      */
     public static function build(): self
     {
-        return new self;
+        return new self();
     }
 
     public function __call(string $action, array $arguments): self
@@ -104,10 +106,8 @@ class ActionSequence
 
     /**
      * Executes sequence of action as methods of passed object.
-     *
-     * @param $context
      */
-    public function run($context): void
+    public function run(object $context): void
     {
         foreach ($this->actions as $step) {
             codecept_debug("- {$step}");

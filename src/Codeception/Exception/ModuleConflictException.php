@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Exception;
 
 use Exception;
-use function get_class;
+
 use function is_object;
 use function ltrim;
 use function str_replace;
@@ -21,10 +21,10 @@ class ModuleConflictException extends Exception
     public function __construct($module, $conflicted, string $additional = '')
     {
         if (is_object($module)) {
-            $module = get_class($module);
+            $module = $module::class;
         }
         if (is_object($conflicted)) {
-            $conflicted = get_class($conflicted);
+            $conflicted = $conflicted::class;
         }
         $module = ltrim(str_replace('Codeception\Module\\', '', $module), '\\');
         $conflicted = ltrim(str_replace('Codeception\Module\\', '', $conflicted), '\\');

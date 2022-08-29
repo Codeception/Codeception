@@ -1,32 +1,28 @@
 <?php
-class FailedCest {
 
+use Codeception\Attribute\After;
+use Codeception\Attribute\Before;
 
+class FailedCest
+{
     protected function a($I)
     {
         $I->appendToFile('a');
     }
-
 
     protected function b($I)
     {
         $I->appendToFile('b');
     }
 
-    /**
-     * @before a
-     * @after b
-     * @param OrderGuy $I
-     */
+    #[Before('a')]
+    #[After('b')]
     public function useVariousWrappersForOrder(OrderGuy $I)
     {
         $I->appendToFile('%');
         throw new Exception('Ups');
     }
 
-    /**
-     * @param OrderGuy $I
-     */
     protected function _failed(OrderGuy $I)
     {
         $I->appendToFile('F');
@@ -36,5 +32,4 @@ class FailedCest {
     {
         $I->appendToFile('S');
     }
-
 }

@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/MockAutoload.php';
-
+use Codeception\PHPUnit\TestCase;
 use Codeception\Util\MockAutoload as Autoload;
 
-class AutoloadTest extends \Codeception\PHPUnit\TestCase
+class AutoloadTest extends TestCase
 {
-
     protected function _setUp()
     {
         Autoload::setFiles([

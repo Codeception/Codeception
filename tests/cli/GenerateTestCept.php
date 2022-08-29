@@ -6,5 +6,6 @@ $I->amInPath('tests/data/sandbox');
 $I->executeCommand('generate:test dummy Sommy');
 $I->seeFileWithGeneratedClass('SommyTest');
 $I->seeInThisFile('class SommyTest extends \Codeception\Test\Unit');
-$I->seeInThisFile('protected $tester');
+$I->seeInThisFile('protected DumbGuy $tester');
 $I->seeInThisFile("function _before(");
+$I->seeInThisFile("}\n}\n");

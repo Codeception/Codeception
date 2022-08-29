@@ -17,6 +17,7 @@ use Codeception\Step\Meta;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Exception;
+
 use function array_merge;
 use function array_pop;
 use function array_shift;
@@ -32,25 +33,13 @@ use function var_export;
 
 class Gherkin extends Test implements ScenarioDriven, Reported
 {
-    /**
-     * @var array
-     */
-    protected $steps = [];
+    protected array $steps = [];
 
-    /**
-     * @var FeatureNode
-     */
-    protected $featureNode;
+    protected FeatureNode $featureNode;
 
-    /**
-     * @var ScenarioNode
-     */
-    protected $scenarioNode;
+    protected ScenarioInterface $scenarioNode;
 
-    /**
-     * @var Scenario
-     */
-    protected $scenario;
+    protected Scenario $scenario;
 
     public function __construct(FeatureNode $featureNode, ScenarioInterface $scenarioNode, array $steps = [])
     {
@@ -60,7 +49,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         $this->setMetadata(new Metadata());
         $this->scenario = new Scenario($this);
         $this->getMetadata()->setName($scenarioNode->getTitle());
-        $this->getMetadata()->setFeature((string) $featureNode->getTitle());
+        $this->getMetadata()->setFeature((string)$featureNode->getTitle());
         $this->getMetadata()->setFilename($featureNode->getFile());
     }
 
@@ -196,13 +185,13 @@ class Gherkin extends Test implements ScenarioDriven, Reported
 
     protected function makeContexts(): void
     {
-        /** @var Di $di **/
+        /** @var Di $di */
         $di = $this->getMetadata()->getService('di');
         $di->set($this->getScenario());
 
         $actorClass = $this->getMetadata()->getCurrent('actor');
         if ($actorClass) {
-            $di->set(new $actorClass($this->getScenario()));
+            $di->instantiate($actorClass);
         }
 
         foreach ($this->steps as $pattern => $step) {
@@ -256,14 +245,16 @@ class Gherkin extends Test implements ScenarioDriven, Reported
     }
 
     /**
-     * Field values for XML/JSON/TAP reports
+     * Field values for XML reports
+     *
+     * @return array<string, string>
      */
     public function getReportFields(): array
     {
         return [
-            'file'    => $this->getFileName(),
-            'name'    => $this->toString(),
-            'feature' => $this->getFeature()
+            'name' => $this->toString(),
+            'feature' => $this->getFeature(),
+            'file' => $this->getFileName(),
         ];
     }
 }

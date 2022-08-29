@@ -11,7 +11,6 @@ call_user_func(static function () {
     $app->add(new Codeception\Command\Init('init'));
     $app->add(new Codeception\Command\Console('console'));
     $app->add(new Codeception\Command\Bootstrap('bootstrap'));
-    $app->add(new Codeception\Command\GenerateCept('generate:cept'));
     $app->add(new Codeception\Command\GenerateCest('generate:cest'));
     $app->add(new Codeception\Command\GenerateTest('generate:test'));
     $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
@@ -29,7 +28,7 @@ call_user_func(static function () {
     $app->add(new Codeception\Command\DryRun('dry-run'));
     $app->add(new Codeception\Command\ConfigValidate('config:validate'));
 
-    // Suggests package	
+    // Suggests package
     if (class_exists('Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand')) {
         $app->add(new Codeception\Command\Completion());
     } else {

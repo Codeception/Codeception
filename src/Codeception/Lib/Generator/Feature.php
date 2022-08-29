@@ -8,10 +8,7 @@ use Codeception\Util\Template;
 
 class Feature
 {
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
 Feature: {{name}}
   In order to ...
   As a ...
@@ -21,14 +18,8 @@ Feature: {{name}}
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $name;
-
-    public function __construct(string $name)
+    public function __construct(protected string $name)
     {
-        $this->name = $name;
     }
 
     public function produce(): string

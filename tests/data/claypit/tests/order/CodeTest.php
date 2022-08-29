@@ -1,4 +1,5 @@
 <?php
+
 use Codeception\Module\OrderHelper;
 
 class CodeTest extends \Codeception\Test\Unit

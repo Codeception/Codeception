@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+
 use function codecept_data_dir;
 use function codecept_output_dir;
 use function codecept_root_dir;
@@ -102,7 +103,6 @@ class ConfigValidate extends Command
             $output->writeln('Ok');
         }
 
-
         $output->writeln("Execute <info>codecept config:validate [<suite>]</info> to see config for a suite");
         return 0;
     }
@@ -110,6 +110,6 @@ class ConfigValidate extends Command
     protected function formatOutput($config): ?string
     {
         $output = print_r($config, true);
-        return preg_replace('#\[(.*?)\] =>#', "<fg=yellow>$1</fg=yellow> =>", $output);
+        return preg_replace('#\[(.*?)] =>#', "<fg=yellow>$1</fg=yellow> =>", $output);
     }
 }

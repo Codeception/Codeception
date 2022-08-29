@@ -1,6 +1,6 @@
 paths:
     tests: tests
-    log: tests/_output
+    output: tests/_output
     data: tests/_data
     helpers: tests/_support
     envs: tests/_envs
@@ -10,7 +10,7 @@ settings:
     colors: false
     memory_limit: 1024M
     lint: false
-    log: true
+    output: true
 groups:
     failed: tests/_log/failed
     groupFileTest1: tests/_data/groupFileTest1

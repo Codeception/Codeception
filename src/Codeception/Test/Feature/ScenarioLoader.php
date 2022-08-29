@@ -10,10 +10,7 @@ use Codeception\Test\Metadata;
 
 trait ScenarioLoader
 {
-    /**
-     * @var Scenario
-     */
-    private $scenario;
+    private Scenario $scenario;
 
     abstract public function getMetadata(): Metadata;
 
@@ -44,5 +41,6 @@ trait ScenarioLoader
     }
 
     abstract protected function getParser(): Parser;
+
     abstract public function getSourceCode(): string;
 }

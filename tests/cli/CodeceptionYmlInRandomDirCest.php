@@ -10,7 +10,7 @@ final class CodeceptionYmlInRandomDirCest
         $I->executeCommand('run -c random/subdir/codeception.yml tests/unit/ExampleCest.php');
 
         $I->seeResultCodeIs(0);
-        $I->dontSeeInShellOutput('RuntimeException');
+        $I->dontSeeInShellOutput(\RuntimeException::class);
         $I->dontSeeInShellOutput('could not be found');
     }
 }

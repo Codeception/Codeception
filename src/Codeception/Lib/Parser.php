@@ -14,23 +14,10 @@ use ParseError;
 
 class Parser
 {
-    /**
-     * @var Scenario
-     */
-    protected $scenario;
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
-    /**
-     * @var string
-     */
-    protected $code;
+    protected string $code;
 
-    public function __construct(Scenario $scenario, Metadata $metadata)
+    public function __construct(protected Scenario $scenario, protected Metadata $metadata)
     {
-        $this->scenario = $scenario;
-        $this->metadata = $metadata;
     }
 
     public function prepareToRun(string $code): void
@@ -51,7 +38,6 @@ class Parser
         $res = preg_match("#\\\$I->wantToTest\\(['\"](.*?)['\"]\\);#", $code, $matches);
         if ($res) {
             $this->scenario->setFeature("test " . $matches[1]);
-            return;
         }
     }
 
@@ -88,7 +74,7 @@ class Parser
             }
 
             // friend's section ends
-            if ($isFriend && strpos($line, '}') !== false) {
+            if ($isFriend && str_contains($line, '}')) {
                 $this->addCommentStep("-------- back to me\n");
                 $isFriend = false;
             }
@@ -114,8 +100,8 @@ class Parser
         try {
             self::includeFile($file);
         } catch (ParseError $e) {
-            throw new TestParseException($file, $e->getMessage(), (string)$e->getLine());
-        } catch (Exception $e) {
+            throw new TestParseException($file, $e->getMessage(), $e->getLine());
+        } catch (Exception) {
             // file is valid otherwise
         }
     }
@@ -126,8 +112,12 @@ class Parser
     public static function getClassesFromFile(string $file): array
     {
         $sourceCode = file_get_contents($file);
-        $classes = [];
-        $tokens = token_get_all($sourceCode);
+        $classes    = [];
+        if (PHP_MAJOR_VERSION > 5) {
+            $tokens = token_get_all($sourceCode, TOKEN_PARSE);
+        } else {
+            $tokens = token_get_all($sourceCode);
+        }
         $tokenCount = count($tokens);
         $namespace = '';
 
@@ -138,7 +128,7 @@ class Parser
                     if ($tokens[$j] === '{' || $tokens[$j] === ';') {
                         break;
                     }
-                    if ($tokens[$j][0] === T_STRING || (PHP_MAJOR_VERSION >= 8 && $tokens[$j][0] === T_NAME_QUALIFIED)) {
+                    if ($tokens[$j][0] === T_STRING || $tokens[$j][0] === T_NAME_QUALIFIED) {
                         $namespace .= $tokens[$j][1] . '\\';
                     }
                 }
@@ -162,6 +152,9 @@ class Parser
             }
         }
 
+        $tokens = null;
+        gc_mem_caches();
+
         return $classes;
     }
 
@@ -175,24 +168,23 @@ class Parser
 
     protected function stripComments(string $code): string
     {
-        $code = preg_replace('#\/\/.*?$#m', '', $code); // remove inline comments
-        $code = preg_replace('#\/*\*.*?\*\/#ms', '', $code);
-        return $code; // remove block comment
+        $code = preg_replace('#//.*?$#m', '', $code); // remove inline comments
+        return preg_replace('#/*\*.*?\*/#ms', '', $code); // remove block comment
     }
 
     protected function matchComments(string $code): string
     {
         $matches = [];
         $comments = '';
-        $hasLineComment = preg_match_all('#\/\/(.*?)$#m', $code, $matches);
+        $hasLineComment = preg_match_all('#//(.*?)$#m', $code, $matches);
         if ($hasLineComment) {
             foreach ($matches[1] as $line) {
-                $comments .= $line."\n";
+                $comments .= $line . "\n";
             }
         }
-        $hasBlockComment = preg_match('#\/*\*(.*?)\*\/#ms', $code, $matches);
+        $hasBlockComment = preg_match('#/*\*(.*?)\*/#ms', $code, $matches);
         if ($hasBlockComment) {
-            $comments .= $matches[1]."\n";
+            $comments .= $matches[1] . "\n";
         }
         return $comments;
     }

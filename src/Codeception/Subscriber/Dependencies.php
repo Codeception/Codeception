@@ -11,6 +11,7 @@ use Codeception\Test\Interfaces\Dependent;
 use Codeception\TestInterface;
 use PHPUnit\Framework\SelfDescribing;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function in_array;
 
 class Dependencies implements EventSubscriberInterface
@@ -20,7 +21,7 @@ class Dependencies implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
+    protected static array $events = [
         Events::TEST_START => 'testStart',
         Events::TEST_SUCCESS => 'testSuccess'
     ];
@@ -28,7 +29,7 @@ class Dependencies implements EventSubscriberInterface
     /**
      * @var string[]
      */
-    protected $successfulTests = [];
+    protected array $successfulTests = [];
 
     public function testStart(TestEvent $event): void
     {
@@ -39,7 +40,7 @@ class Dependencies implements EventSubscriberInterface
 
         $testSignatures = $test->fetchDependencies();
         foreach ($testSignatures as $signature) {
-            if (!in_array($signature, $this->successfulTests)) {
+            if (!in_array($signature, $this->successfulTests) && $test instanceof TestInterface) {
                 $test->getMetadata()->setSkip("This test depends on {$signature} to pass");
                 return;
             }
@@ -48,11 +49,7 @@ class Dependencies implements EventSubscriberInterface
 
     public function testSuccess(TestEvent $event): void
     {
-        /** @var SelfDescribing $test */
         $test = $event->getTest();
-        if (!$test instanceof TestInterface) {
-            return;
-        }
         $this->successfulTests[] = Descriptor::getTestSignature($test);
     }
 }

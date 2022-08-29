@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Codeception\Attribute\Before;
+use Codeception\Attribute\Group;
+
 final class SnapshotCest
 {
     public function _openSnapshotSuite(CliGuy $I)
@@ -9,10 +12,7 @@ final class SnapshotCest
         $I->amInPath('tests/data/snapshots');
     }
 
-    /**
-     * @before _openSnapshotSuite
-     * @param CliGuy $I
-     */
+    #[Before('_openSnapshotSuite')]
     public function runAllSnapshotTests(CliGuy $I)
     {
         $I->executeCommand('run tests/SnapshotDataCest.php');
@@ -21,10 +21,8 @@ final class SnapshotCest
         $I->seeInShellOutput('Load snapshot and refresh');
     }
 
-    /**
-     * @before _openSnapshotSuite
-     * @param CliGuy $I
-     */
+    #[Group('user')]
+    #[Before('_openSnapshotSuite')]
     public function runSnapshotRefresh(CliGuy $I)
     {
         $I->executeCommand('run tests/SnapshotDataCest.php:loadSnapshotAndRefresh --debug --no-colors');
@@ -34,10 +32,7 @@ final class SnapshotCest
         $I->seeInShellOutput('Snapshot data updated');
     }
 
-    /**
-     * @before _openSnapshotSuite
-     * @param CliGuy $I
-     */
+    #[Before('_openSnapshotSuite')]
     public function runSnapshotRefreshFail(CliGuy $I)
     {
         $I->executeCommand('run tests/SnapshotDataCest.php:loadSnapshotAndSkipRefresh --debug  --no-colors');
@@ -47,20 +42,14 @@ final class SnapshotCest
         $I->dontSeeInShellOutput('Snapshot data updated');
     }
 
-    /**
-     * @before _openSnapshotSuite
-     * @param CliGuy $I
-     */
+    #[Before('_openSnapshotSuite')]
     public function runSnapshotDiffDisplay(CliGuy $I)
     {
         $I->executeCommand('run tests/SnapshotDisplayDiffCest.php');
         $I->seeInShellOutput('OK (1 test');
     }
 
-    /**
-     * @before _openSnapshotSuite
-     * @param CliGuy $I
-     */
+    #[Before('_openSnapshotSuite')]
     public function loadSnapshotInDebugAndFailOnProd(CliGuy $I)
     {
         $I->executeCommand('run tests/SnapshotFailCest.php --debug');
@@ -97,10 +86,7 @@ final class SnapshotCest
         $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
     }
 
-    /**
-     * @before _openSnapshotSuite
-     * @param CliGuy $I
-     */
+    #[Before('_openSnapshotSuite')]
     public function runNonJsonContentSnapshotTests(CliGuy $I)
     {
         $I->executeCommand('run tests/SnapshotNonJsonDataCest.php');

@@ -7,15 +7,16 @@ namespace Codeception\Lib;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Stub;
 use Codeception\Test\Loader\Gherkin as GherkinLoader;
+use Codeception\Test\Metadata;
+use Codeception\Test\TestCaseWrapper;
+use Codeception\Test\Unit;
+use Codeception\Util\ReflectionHelper;
+use PHPUnit\Framework\TestCase;
 
 class GroupManagerTest extends \Codeception\Test\Unit
 {
-    /**
-     * @var \Codeception\Lib\GroupManager
-     */
-    protected $manager;
+    protected GroupManager $manager;
 
-    // tests
     public function testGroupsFromArray()
     {
         $this->manager = new GroupManager(['important' => ['tests/data/group_manager_test/UserTest.php:testName', 'tests/data/group_manager_test/PostTest.php']]);
@@ -79,11 +80,23 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->assertContains('group_2', $this->manager->groupsForTest($test2));
     }
 
+
+    public function testGroupsByPatternWithMultipleDigits()
+    {
+        $this->manager = new GroupManager(['group_chunk_*' => 'tests/data/group_manager_test/group_chunk_*']);
+        $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php');
+        $test2 = $this->makeTestCase('tests/data/group_manager_test/PostTest.php');
+
+        $this->assertContains('group_chunk_1_1', $this->manager->groupsForTest($test1));
+        $this->assertContains('group_chunk_1_2', $this->manager->groupsForTest($test2));
+    }
+
     public function testGroupsByDifferentPattern()
     {
         $this->manager = new GroupManager(['g_*' => 'tests/data/group_manager_test/group_*']);
         $test1 = $this->makeTestCase('tests/data/group_manager_test/UserTest.php');
         $test2 = $this->makeTestCase('tests/data/group_manager_test/PostTest.php');
+
         $this->assertContains('g_1', $this->manager->groupsForTest($test1));
         $this->assertContains('g_2', $this->manager->groupsForTest($test2));
     }
@@ -103,6 +116,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->manager = new GroupManager(['gherkinGroup1' => 'tests/data/group_manager_test/gherkinGroup1']);
         $loader = new GherkinLoader();
         $loader->loadTests(codecept_absolute_path('tests/data/refund.feature'));
+
         $test = $loader->getTests()[0];
         $this->assertContains('gherkinGroup1', $this->manager->groupsForTest($test));
     }
@@ -112,6 +126,7 @@ class GroupManagerTest extends \Codeception\Test\Unit
         $this->manager = new GroupManager(['gherkinGroup2' => 'tests/data/group_manager_test/gherkinGroup2']);
         $loader = new GherkinLoader();
         $loader->loadTests(codecept_absolute_path('tests/data/refund2.feature'));
+
         $test = $loader->getTests()[0];
         $this->assertContains('gherkinGroup2', $this->manager->groupsForTest($test));
     }
@@ -140,20 +155,14 @@ class GroupManagerTest extends \Codeception\Test\Unit
         new GroupManager(['important' => 'tests/data/group_manager_test/missing_directory']);
     }
 
-
-    protected function makeTestCase($file, $name = '')
+    protected function makeTestCase(string $file, string $name = ''): TestCaseWrapper
     {
-        return Stub::make(
-            '\Codeception\Lib\DescriptiveTestCase',
-            [
-                'getReportFields' => ['file' => codecept_root_dir() . $file],
-                'getName' => $name
-            ]
-        );
+        $testcase = new TestCaseWrapper(clone $this);
+
+        $metadata = $testcase->getMetadata();
+        $metadata->setName($name);
+        $metadata->setFilename(codecept_root_dir() . $file);
+
+        return $testcase;
     }
-}
-
-class DescriptiveTestCase extends \Codeception\Test\Unit
-{
-
 }

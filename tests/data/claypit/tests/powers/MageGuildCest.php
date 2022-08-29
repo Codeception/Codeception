@@ -1,52 +1,38 @@
 <?php
+
+use Codeception\Attribute\Env;
+
 class MageGuildCest
 {
-
-    /**
-     * @env magic
-     * @env dark
-     * @param PowerGuy $I
-     */
+    #[Env('magic')]
+    #[Env('dark')]
     public function darkPower(PowerGuy $I)
     {
         $I->castFireball();
     }
 
-    /**
-     * @env magic
-     * @env white
-     * @param PowerGuy $I
-     */
+    #[Env('magic', 'white')]
     public function whitePower(PowerGuy $I)
     {
         $I->castFireball();
     }
 
-    /**
-     * @env magic
-     * @env green
-     * @param PowerGuy $I
-     */
+    #[Env('magic')]
+    #[Env('green')]
     public function greenPower(PowerGuy $I)
     {
         $I->castFireball();
     }
 
-    /**
-     * @env whisky
-     * @env red
-     * @param PowerGuy $I
-     */
+    #[Env('whisky')]
+    #[Env('red')]
     public function redLabel(PowerGuy $I)
     {
         $I->castFireball();
     }
 
-    /**
-     * @env dark
-     * @env whisky
-     * @param PowerGuy $I
-     */
+    #[Env('dark')]
+    #[Env('whisky')]
     public function blackLabel(PowerGuy $I)
     {
         $I->castFireball();
@@ -56,5 +42,4 @@ class MageGuildCest
     {
         $I->castFireball();
     }
-
 }

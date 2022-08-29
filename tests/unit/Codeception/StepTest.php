@@ -12,7 +12,10 @@ class StepTest extends TestCase
 {
     protected function getStep(array $args): Step
     {
-        return $this->getMockBuilder(Step::class)->setConstructorArgs($args)->setMethods()->getMock();
+        return $this->getMockBuilder('\Codeception\Step')
+            ->setConstructorArgs($args)
+            ->onlyMethods([])
+            ->getMock();
     }
 
     public function testGetArguments()
@@ -38,9 +41,9 @@ class StepTest extends TestCase
         $step = $this->getStep(['', [[Stub::make($this, []), 'testGetArguments']]]);
         $this->assertSame('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
 
-        $mock = $this->createMock(get_class($this));
+        $mock = $this->createMock($this::class);
         $step = $this->getStep(['', [[$mock, 'testGetArguments']]]);
-        $className = get_class($mock);
+        $className = $mock::class;
         $this->assertSame('["' . $className . '","testGetArguments"]', $step->getArgumentsAsString());
     }
 
@@ -119,7 +122,6 @@ class StepTest extends TestCase
         $this->assertSame('accept popup ', $output);
         $output = $step->toString(-5);
         $this->assertSame('accept popup ', $output);
-
     }
 
     public function testSeeMultiLineStringInSingleLine()

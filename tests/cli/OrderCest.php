@@ -51,7 +51,7 @@ final class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
         $I->seeFileFound('order.txt', 'tests/_output');
-        $I->seeFileContentsEqual("BIBP({{{{[ST][STFFT][STF][ST]}}}})");
+        $I->seeFileContentsEqual("BIBP([ST][STFFT][STF][ST])");
     }
 
     public function checkCestOrder(CliGuy $I)
@@ -114,6 +114,15 @@ final class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order ParsedLoadedTest.php');
         $I->seeFileFound('order.txt', 'tests/_output');
-        $I->seeInThisFile('BIBP(T)');
+        # Module before and after hooks are executed for unit tests now
+        $I->seeInThisFile('BIBP([T])');
+    }
+
+    public function checkAfterBeforeHooksAreExecutedOnlyOnce(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run math,order,scenario,skipped :BeforeAfterClassTest');
+        $I->seeFileFound('order.txt', 'tests/_output');
+        $I->seeInThisFile('BIBP({[1][2]})');
     }
 }

@@ -11,10 +11,7 @@ use Symfony\Component\Finder\Finder;
 
 class GherkinSnippets
 {
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    protected string $template = <<<EOF
     /**
      * @{{type}} {{text}}
      */
@@ -28,15 +25,17 @@ EOF;
     /**
      * @var string[]
      */
-    protected $snippets = [];
+    protected array $snippets = [];
+
     /**
      * @var string[]
      */
-    protected $processed = [];
+    protected array $processed = [];
+
     /**
      * @var string[]
      */
-    protected $features = [];
+    protected array $features = [];
 
     public function __construct(array $settings, $test = null)
     {
@@ -44,7 +43,7 @@ EOF;
         $pattern = $loader->getPattern();
         $path = $settings['path'];
         if (!empty($test)) {
-            $path = $settings['path'].'/'.$test;
+            $path = $settings['path'] . '/' . $test;
             if (preg_match($pattern, $test)) {
                 $path = dirname($path);
                 $pattern = basename($test);
@@ -102,7 +101,7 @@ EOF;
         $pattern = $step->getText();
 
         // match numbers (not in quotes)
-        if (preg_match_all('#([\d\.])(?=([^"]*"[^"]*")*[^"]*$)#', $pattern, $matches)) {
+        if (preg_match_all('#([\d.])(?=([^"]*"[^"]*")*[^"]*$)#', $pattern, $matches)) {
             foreach ($matches[1] as $num => $param) {
                 ++$num;
                 $args[] = '$num' . $num;
@@ -115,7 +114,7 @@ EOF;
             foreach ($matches[1] as $num => $param) {
                 ++$num;
                 $args[] = '$arg' . $num;
-                $pattern = str_replace('"'.$param.'"', ":arg{$num}", $pattern);
+                $pattern = str_replace('"' . $param . '"', ":arg{$num}", $pattern);
             }
         }
         // Has multiline argument at the end of step?

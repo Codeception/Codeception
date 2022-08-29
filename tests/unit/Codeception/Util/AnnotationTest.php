@@ -13,7 +13,6 @@ use Codeception\Util\Annotation;
  */
 class AnnotationTest extends \PHPUnit\Framework\TestCase
 {
-
     public function testClassAnnotation()
     {
         $this->assertSame('davert', Annotation::forClass(__CLASS__)->fetch('author'));
@@ -72,7 +71,6 @@ EOF;
             'user' => ['davert'],
             'param' => ['key1', 'key2']
         ], Annotation::fetchAllAnnotationsFromDocblock($docblock));
-
     }
 
     public function testValueToSupportJson()

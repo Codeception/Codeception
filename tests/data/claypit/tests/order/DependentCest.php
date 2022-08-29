@@ -1,14 +1,12 @@
 <?php
 
+use Codeception\Attribute\Depends;
 
-class DependentCest {
-
-    /**
-     * @depends firstOne
-     */
+class DependentCest
+{
+    #[Depends('firstOne')]
     public function secondOne(OrderGuy $I)
     {
-
     }
 
     public function firstOne(OrderGuy $I)

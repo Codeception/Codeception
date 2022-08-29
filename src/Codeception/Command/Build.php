@@ -9,7 +9,8 @@ use Codeception\Lib\Generator\Actions as ActionsGenerator;
 use Codeception\Lib\Generator\Actor as ActorGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\OutputInterface as SymfonyOutputInterface;
+
 use function implode;
 
 /**
@@ -25,23 +26,16 @@ class Build extends Command
     use Shared\ConfigTrait;
     use Shared\FileSystemTrait;
 
-    /**
-     * @var string
-     */
-    protected $inheritedMethodTemplate = ' * @method void %s(%s)';
+    protected string $inheritedMethodTemplate = ' * @method void %s(%s)';
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    protected ?SymfonyOutputInterface $output = null;
 
     public function getDescription(): string
     {
         return 'Generates base classes for all suites';
     }
 
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, SymfonyOutputInterface $output): int
     {
         $this->output = $output;
         $this->buildActorsForConfig();
@@ -74,7 +68,6 @@ class Build extends Command
             " -> {$settings['actor']}Actions.php generated successfully. "
             . $actionsGenerator->getNumMethods() . " methods added"
         );
-
 
         $file = $this->createDirectoryFor(Configuration::supportDir() . '_generated', $settings['actor']);
         $file .= $this->getShortClassName($settings['actor']) . 'Actions.php';

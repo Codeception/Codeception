@@ -7,31 +7,33 @@ namespace Codeception\Lib\Generator;
 use Codeception\Codecept;
 use Codeception\Configuration;
 use Codeception\Lib\Di;
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Lib\ModuleContainer;
+use Codeception\Step\GeneratedStep;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Template;
 use Exception;
+use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionIntersectionType;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionType;
+use ReflectionUnionType;
+
+use function implode;
+use function sprintf;
 
 class Actions
 {
-    /**
-     * @var Di
-     */
-    public $di;
+    use Classname;
 
-    /**
-     * @var ModuleContainer
-     */
-    public $moduleContainer;
+    public Di $di;
 
-    /**
-     * @var string
-     */
-    protected $template = <<<EOF
+    public ModuleContainer $moduleContainer;
+
+    protected string $template = <<<EOF
 <?php  //[STAMP] {{hash}}
 namespace {{namespace}}_generated;
 
@@ -51,10 +53,7 @@ trait {{name}}Actions
 
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $methodTemplate = <<<EOF
+    protected string $methodTemplate = <<<EOF
 
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -67,35 +66,20 @@ EOF;
     }
 EOF;
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
+
+    protected array $settings = [];
+
+    protected array $modules = [];
+
+    protected array $actions = [];
+
+    protected int $numMethods = 0;
 
     /**
-     * @var array
+     * @var GeneratedStep[]
      */
-    protected $settings = [];
-
-    /**
-     * @var array
-     */
-    protected $modules = [];
-
-    /**
-     * @var array
-     */
-    protected $actions = [];
-
-    /**
-     * @var int
-     */
-    protected $numMethods = 0;
-
-    /**
-     * @var array GeneratedStep[]
-     */
-    protected $generatedSteps = [];
+    protected array $generatedSteps = [];
 
     public function __construct(array $settings)
     {
@@ -110,13 +94,12 @@ EOF;
         $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
 
-        $this->generatedSteps = (array) $settings['step_decorators'];
+        $this->generatedSteps = (array)$settings['step_decorators'];
     }
-
 
     public function produce(): string
     {
-        $namespace = rtrim($this->settings['namespace'], '\\');
+        $namespace = trim($this->supportNamespace(), '\\');
 
         $methods = [];
         $code = [];
@@ -158,12 +141,12 @@ EOF;
             ->place('module', $module)
             ->place('method', $refMethod->name)
             ->place('return_type', $returnType)
-            ->place('return', $returnType === ': void' ? '' : 'return ')
+            ->place('return', ($returnType === ': void' || $returnType === ': never') ? '' : 'return ')
             ->place('params', $params);
 
-        if (0 === strpos($refMethod->name, 'see')) {
+        if (str_starts_with($refMethod->name, 'see')) {
             $type = 'Assertion';
-        } elseif (0 === strpos($refMethod->name, 'am')) {
+        } elseif (str_starts_with($refMethod->name, 'am')) {
             $type = 'Condition';
         } else {
             $type = 'Action';
@@ -196,8 +179,9 @@ EOF;
             $type = '';
             $reflectionType = $param->getType();
             if ($reflectionType !== null) {
-                $type = $this->stringifyType($reflectionType) . ' ';
+                $type = $this->stringifyType($reflectionType, $refMethod->getDeclaringClass()) . ' ';
             }
+
             if ($param->isOptional()) {
                 $params[] = $type . '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
@@ -208,10 +192,9 @@ EOF;
     }
 
     /**
-     * @return string|false
      * @throws ReflectionException
      */
-    protected function addDoc(ReflectionClass $class, ReflectionMethod $refMethod)
+    protected function addDoc(ReflectionClass $class, ReflectionMethod $refMethod): string|false
     {
         $doc = $refMethod->getDocComment();
 
@@ -240,10 +223,10 @@ EOF;
     {
         $actions = [];
         foreach ($modules as $moduleName => $module) {
-            $actions[$moduleName] = get_class_methods(get_class($module));
+            $actions[$moduleName] = get_class_methods($module::class);
         }
 
-        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']) . implode(',', (array) $settings['step_decorators']));
+        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']) . implode(',', (array)$settings['step_decorators']));
     }
 
     public function getNumMethods(): int
@@ -258,23 +241,53 @@ EOF;
         if (!$returnType instanceof ReflectionType) {
             return '';
         }
-        return ': ' . $this->stringifyType($returnType);
+        return ': ' . $this->stringifyType($returnType, $refMethod->getDeclaringClass());
     }
 
-    private function stringifyType(\ReflectionType $type): string
+    private function stringifyType(ReflectionType $type, ReflectionClass $moduleClass): string
     {
-        if ($type instanceof \ReflectionUnionType) {
-            $types = $type->getTypes();
-            return implode('|', $types);
+        if ($type instanceof ReflectionUnionType) {
+            return $this->stringifyNamedTypes($type->getTypes(), $moduleClass, '|');
+        } elseif ($type instanceof ReflectionIntersectionType) {
+            return $this->stringifyNamedTypes($type->getTypes(), $moduleClass, '&');
+        } elseif ($type instanceof ReflectionNamedType) {
+            return sprintf(
+                '%s%s',
+                ($type->allowsNull() && $type->getName() !== 'mixed') ? '?' : '',
+                self::stringifyNamedType($type, $moduleClass)
+            );
+        } else {
+            throw new InvalidArgumentException('Unsupported type class: ' . $type::class);
+        }
+    }
+
+    /**
+     * @param ReflectionNamedType[] $types
+     */
+    private function stringifyNamedTypes(array $types, ReflectionClass $moduleClass, string $separator): string
+    {
+        $strings = [];
+        foreach ($types as $type) {
+            $strings[] = self::stringifyNamedType($type, $moduleClass);
         }
 
-        $returnTypeString = $type->getName();
+        return implode($separator, $strings);
+    }
+
+    public static function stringifyNamedType(ReflectionNamedType $type, ReflectionClass $moduleClass): string
+    {
+        $typeName = $type->getName();
+
+        if ($typeName === 'self') {
+            $typeName = $moduleClass->getName();
+        } elseif ($typeName === 'parent') {
+            $typeName = $moduleClass->getParentClass()->getName();
+        }
 
         return sprintf(
-            '%s%s%s',
-            $type->allowsNull() ? '?' : '',
+            '%s%s',
             $type->isBuiltin() ? '' : '\\',
-            $returnTypeString
+            $typeName
         );
     }
 }

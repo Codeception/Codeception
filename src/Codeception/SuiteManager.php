@@ -9,52 +9,34 @@ use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
 use Codeception\Test\Descriptor;
+use Codeception\Test\Filter;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
-use PHPUnit\Framework\DataProviderTestSuite;
-use PHPUnit\Framework\Test as PHPUnitTest;
-use PHPUnit\Framework\TestResult;
-use PHPUnit\Framework\TestSuite;
+use Codeception\Test\Test;
+use Codeception\Test\TestCaseWrapper;
+use Codeception\Test\Unit;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
 {
-    /**
-     * @var TestSuite
-     */
-    protected $suite = null;
+    protected ?Suite $suite = null;
 
-    /**
-     * @var EventDispatcher|null
-     */
-    protected $dispatcher = null;
+    protected ?EventDispatcher $dispatcher = null;
 
-    /**
-     * @var GroupManager
-     */
-    protected $groupManager;
+    protected GroupManager $groupManager;
 
-    /**
-     * @var ModuleContainer
-     */
-    protected $moduleContainer;
+    protected ModuleContainer $moduleContainer;
 
-    /**
-     * @var Di
-     */
-    protected $di;
+    protected Di $di;
 
-    /**
-     * @var string
-     */
-    protected $env = '';
+    protected string $env = '';
 
-    /**
-     * @var array
-     */
-    protected $settings = [];
+    protected array $settings = [];
 
-    public function __construct(EventDispatcher $dispatcher, string $name, array $settings)
+    private Filter $testFilter;
+
+    public function __construct(EventDispatcher $dispatcher, string $name, array $settings, array $options)
     {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
@@ -70,12 +52,19 @@ class SuiteManager
         if (isset($settings['current_environment'])) {
             $this->env = $settings['current_environment'];
         }
+
+        $this->testFilter = new Filter(
+            $options['groups'] ?? null,
+            $options['excludeGroups'] ?? null,
+            $options['filter'] ?? null,
+        );
+
         $this->suite = $this->createSuite($name);
     }
 
     public function initialize(): void
     {
-        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::MODULE_INIT);
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $this->settings), Events::MODULE_INIT);
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
@@ -85,7 +74,7 @@ class SuiteManager
                 . " class doesn't exist in suite folder.\nRun the 'build' command to generate it"
             );
         }
-        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::SUITE_INIT);
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $this->settings), Events::SUITE_INIT);
         ini_set('xdebug.show_exception_trace', '0'); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
@@ -104,29 +93,26 @@ class SuiteManager
         $this->suite->reorderDependencies();
     }
 
-    protected function addToSuite(PHPUnitTest $test): void
+    protected function addToSuite(Test $test): void
     {
-        if ($test instanceof TestInterface) {
-            $this->configureTest($test);
-        }
-
-        if ($test instanceof DataProviderTestSuite) {
-            foreach ($test->tests() as $t) {
-                $this->addToSuite($t);
-            }
+        if (!$this->testFilter->isNameAccepted($test)) {
             return;
         }
 
-        if ($test instanceof TestInterface) {
-            $this->checkEnvironmentExists($test);
-            if (!$this->isExecutedInCurrentEnvironment($test)) {
-                return; // skip tests from other environments
-            }
+        $this->configureTest($test);
+
+        $this->checkEnvironmentExists($test);
+        if (!$this->isExecutedInCurrentEnvironment($test)) {
+            return; // skip tests from other environments
         }
 
         $groups = $this->groupManager->groupsForTest($test);
 
-        $this->suite->addTest($test, $groups);
+        if (!$this->testFilter->isGroupAccepted($test, $groups)) {
+            return;
+        }
+
+        $this->suite->addTest($test);
 
         if (!empty($groups) && $test instanceof TestInterface) {
             $test->getMetadata()->setGroups($groups);
@@ -135,35 +121,35 @@ class SuiteManager
 
     protected function createSuite(string $name): Suite
     {
-        $suite = new Suite();
-        $suite->setBaseName(preg_replace('#\s.+$#', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
-            $name = $this->settings['namespace'] . ".{$name}";
-        }
-        $suite->setName($name);
-        if (isset($this->settings['backup_globals'])) {
-            $suite->setBackupGlobals((bool) $this->settings['backup_globals']);
+            $name = $this->settings['namespace'] . '.' . $name;
         }
 
-        if (isset($this->settings['be_strict_about_changes_to_global_state']) && method_exists($suite, 'setbeStrictAboutChangesToGlobalState')) {
-            $suite->setbeStrictAboutChangesToGlobalState((bool)$this->settings['be_strict_about_changes_to_global_state']);
-        }
+        $suite = new Suite($this->dispatcher, $name);
+        $suite->setBaseName(preg_replace('#\s.+$#', '', $name)); // replace everything after space (env name)
         $suite->setModules($this->moduleContainer->all());
+
+        $suite->reportUselessTests((bool)($this->settings['report_useless_tests'] ?? false));
+        $suite->backupGlobals((bool)($this->settings['backup_globals'] ?? false));
+        $suite->beStrictAboutChangesToGlobalState((bool)($this->settings['be_strict_about_changes_to_global_state'] ?? false));
+        $suite->disallowTestOutput((bool)($this->settings['disallow_test_output'] ?? false));
+
+        if (PHPUnitVersion::series() >= 10) {
+            $suite->initPHPUnitConfiguration();
+        }
         return $suite;
     }
 
-
-    public function run(PHPUnit\Runner $runner, TestResult $result, array $options): void
+    public function run(ResultAggregator $resultAggregator): void
     {
-        $runner->prepareSuite($this->suite, $options);
-        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_BEFORE);
+        $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $this->settings), Events::SUITE_BEFORE);
         try {
-            $runner->doEnhancedRun($this->suite, $result, $options);
+            unset($GLOBALS['app']); // hook for not to serialize globals
+            $this->suite->run($resultAggregator);
         } finally {
-            $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_AFTER);
+            $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $this->settings), Events::SUITE_AFTER);
         }
     }
-
     public function getSuite(): Suite
     {
         return $this->suite;
@@ -179,9 +165,19 @@ class SuiteManager
         if (!$this->settings['actor']) {
             return null;
         }
-        return $this->settings['namespace']
-            ? rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['actor']
-            : $this->settings['actor'];
+
+        $namespace = "";
+
+        if ($this->settings['namespace']) {
+            $namespace .= '\\' . $this->settings['namespace'];
+        }
+
+        if (isset($this->settings['support_namespace'])) {
+            $namespace .= '\\' . $this->settings['support_namespace'];
+        }
+        $namespace = rtrim($namespace, '\\') . '\\';
+
+        return $namespace . $this->settings['actor'];
     }
 
     protected function checkEnvironmentExists(TestInterface $test): void
@@ -230,6 +226,12 @@ class SuiteManager
             'env' => $this->env,
             'modules' => $this->moduleContainer->all()
         ]);
+        if ($test instanceof TestCaseWrapper) {
+            $testCase = $test->getTestCase();
+            if ($testCase instanceof Unit) {
+                $this->configureTest($testCase);
+            }
+        }
         if ($test instanceof ScenarioDriven) {
             $test->preload();
         }

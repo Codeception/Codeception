@@ -14,8 +14,10 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\RemoteException;
 use Codeception\Lib\Interfaces\Web as WebInterface;
 use Codeception\Module\WebDriver as WebDriverModule;
+use Facebook\WebDriver\Exception\NoSuchAlertException;
 use RuntimeException;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
+
 use function array_filter;
 use function array_key_exists;
 use function array_replace_recursive;
@@ -29,7 +31,6 @@ use function preg_match;
 use function rtrim;
 use function str_replace;
 use function stream_context_create;
-use function strpos;
 use function unserialize;
 use function usleep;
 
@@ -48,51 +49,46 @@ class LocalServer extends SuiteSubscriber
     /**
      * @var string
      */
-    const COVERAGE_HEADER = 'X-Codeception-CodeCoverage';
+    public const COVERAGE_HEADER = 'X-Codeception-CodeCoverage';
     /**
      * @var string
      */
-    const COVERAGE_HEADER_ERROR = 'X-Codeception-CodeCoverage-Error';
+    public const COVERAGE_HEADER_ERROR = 'X-Codeception-CodeCoverage-Error';
     /**
      * @var string
      */
-    const COVERAGE_HEADER_CONFIG = 'X-Codeception-CodeCoverage-Config';
+    public const COVERAGE_HEADER_CONFIG = 'X-Codeception-CodeCoverage-Config';
     /**
      * @var string
      */
-    const COVERAGE_HEADER_SUITE = 'X-Codeception-CodeCoverage-Suite';
+    public const COVERAGE_HEADER_SUITE = 'X-Codeception-CodeCoverage-Suite';
 
     // cookie names
 
     /**
      * @var string
      */
-    const COVERAGE_COOKIE = 'CODECEPTION_CODECOVERAGE';
+    public const COVERAGE_COOKIE = 'CODECEPTION_CODECOVERAGE';
     /**
      * @var string
      */
-    const COVERAGE_COOKIE_ERROR = 'CODECEPTION_CODECOVERAGE_ERROR';
+    public const COVERAGE_COOKIE_ERROR = 'CODECEPTION_CODECOVERAGE_ERROR';
 
-    protected $suiteName;
-    /**
-     * @var array
-     */
-    protected $c3Access = [
+    protected string $suiteName = '';
+
+    protected array $c3Access = [
         'http' => [
             'method' => "GET",
             'header' => ''
         ]
     ];
 
-    /**
-     * @var WebInterface
-     */
-    protected $module;
+    protected ?WebInterface $module = null;
 
     /**
      * @var array<string, string>
      */
-    public static $events = [
+    public static array $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_BEFORE  => 'beforeTest',
         Events::STEP_AFTER   => 'afterStep',
@@ -155,7 +151,7 @@ class LocalServer extends SuiteSubscriber
 
         $retries = 5;
         while (!file_exists($coverageFile) && --$retries >= 0) {
-            $seconds = (int) 0.5 * 1000000; // 0.5 sec
+            $seconds = (int)(0.5 * 1_000_000); // 0.5 sec
             usleep($seconds);
         }
 
@@ -163,7 +159,8 @@ class LocalServer extends SuiteSubscriber
             if (file_exists(Configuration::outputDir() . 'c3tmp/error.txt')) {
                 throw new RuntimeException(file_get_contents(Configuration::outputDir() . 'c3tmp/error.txt'));
             }
-            return;
+
+            throw new RuntimeException('Code coverage file ' . $coverageFile . ' does not exist');
         }
 
         $contents = file_get_contents($coverageFile);
@@ -173,7 +170,7 @@ class LocalServer extends SuiteSubscriber
         }
 
         $this->preProcessCoverage($coverage)
-             ->mergeToPrint($coverage);
+            ->mergeToPrint($coverage);
     }
 
     /**
@@ -186,9 +183,9 @@ class LocalServer extends SuiteSubscriber
             return $this;
         }
 
-        $workDir    = rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
+        $workDir = rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
         $projectDir = Configuration::projectDir();
-        $coverageData       = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
+        $coverageData = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
 
         codecept_debug("Replacing all instances of {$workDir} with {$projectDir}");
 
@@ -205,18 +202,16 @@ class LocalServer extends SuiteSubscriber
         return $this;
     }
 
-    protected function c3Request(string $action)
+    protected function c3Request(string $action): string|false
     {
         $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
         $context = stream_context_create($this->c3Access);
-        $c3Url = $this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl();
+        $c3Url = $this->settings['c3_url'] ?: $this->module->_getUrl();
         $contents = file_get_contents($c3Url . '/c3/report/' . $action, false, $context);
 
         $okHeaders = array_filter(
             $http_response_header,
-            function ($h) {
-                return preg_match('#^HTTP(.*?)\s200#', $h);
-            }
+            fn ($h) => preg_match('#^HTTP(.*?)\s200#', $h)
         );
         if (empty($okHeaders)) {
             throw new RemoteException("Request was not successful. See response header: " . $http_response_header[0]);
@@ -240,16 +235,21 @@ class LocalServer extends SuiteSubscriber
             $this->module->amOnPage('/');
         }
 
-        $cookieDomain = isset($this->settings['cookie_domain']) ? $this->settings['cookie_domain'] : null;
+        $cookieDomain = $this->settings['cookie_domain'] ?? null;
 
         if (!$cookieDomain) {
-            $c3Url = parse_url($this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl());
+            $c3Url = parse_url($this->settings['c3_url'] ?: $this->module->_getUrl());
 
             // we need to separate coverage cookies by host; we can't separate cookies by port.
-            $cookieDomain = isset($c3Url['host']) ? $c3Url['host'] : 'localhost';
+            $cookieDomain = $c3Url['host'] ?? 'localhost';
         }
 
-        $this->module->setCookie(self::COVERAGE_COOKIE, $value, ['domain' => $cookieDomain]);
+        $cookieParams = [];
+        if ($cookieDomain !== 'localhost') {
+            $cookieParams['domain'] = $cookieDomain;
+        }
+
+        $this->module->setCookie(self::COVERAGE_COOKIE, $value, $cookieParams);
 
         // putting in configuration ensures the cookie is used for all sessions of a MultiSession test
 
@@ -284,9 +284,22 @@ class LocalServer extends SuiteSubscriber
 
     protected function fetchErrors(): void
     {
+        // Calling grabCookie() while an alert is present dismisses the alert
+        // @see https://github.com/Codeception/Codeception/issues/1485
+        if ($this->module instanceof WebDriverModule) {
+            try {
+                $alert = $this->module->webDriver->switchTo()->alert();
+                $alert->getText();
+                // If this succeeds an alert is present, abort
+                return;
+            } catch (NoSuchAlertException) {
+                // No alert present, continue
+            }
+        }
+
         try {
             $error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR);
-        } catch (ModuleException $e) {
+        } catch (ModuleException) {
             // when a new session is started we can't get cookies because there is no
             // current page, but there can be no code coverage error either
             $error = null;
@@ -300,7 +313,7 @@ class LocalServer extends SuiteSubscriber
     protected function getRemoteError(array $headers): void
     {
         foreach ($headers as $header) {
-            if (strpos($header, self::COVERAGE_HEADER_ERROR) === 0) {
+            if (str_starts_with($header, self::COVERAGE_HEADER_ERROR)) {
                 throw new RemoteException($header);
             }
         }
@@ -309,7 +322,7 @@ class LocalServer extends SuiteSubscriber
     protected function addC3AccessHeader(string $header, string $value): void
     {
         $headerString = "{$header}: {$value}\r\n";
-        if (strpos($this->c3Access['http']['header'], $headerString) === false) {
+        if (!str_contains($this->c3Access['http']['header'], $headerString)) {
             $this->c3Access['http']['header'] .= $headerString;
         }
     }

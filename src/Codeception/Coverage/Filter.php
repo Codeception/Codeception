@@ -10,35 +10,22 @@ use Codeception\Exception\ModuleException;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
+
 use function array_pop;
-use function count;
 use function explode;
 use function implode;
 use function is_array;
 use function method_exists;
 use function str_replace;
-use function strpos;
 
 class Filter
 {
-    /**
-     * @var CodeCoverage|null
-     */
-    protected $phpCodeCoverage = null;
+    protected static ?Filter $c3 = null;
 
-    /**
-     * @var Filter
-     */
-    protected static $c3;
+    protected ?\SebastianBergmann\CodeCoverage\Filter $filter = null;
 
-    /**
-     * @var \SebastianBergmann\CodeCoverage\Filter|null
-     */
-    protected $filter = null;
-
-    public function __construct(CodeCoverage $phpCoverage)
+    public function __construct(protected ?CodeCoverage $phpCodeCoverage)
     {
-        $this->phpCodeCoverage = $phpCoverage;
         $this->filter = $this->phpCodeCoverage->filter();
     }
 
@@ -46,11 +33,6 @@ class Filter
     {
         self::$c3 = new self($phpCoverage);
         return self::$c3;
-    }
-
-    public function getPhpCodeCoverage(): ?CodeCoverage
-    {
-        return $this->phpCodeCoverage;
     }
 
     /**
@@ -78,18 +60,12 @@ class Filter
                 throw new ConfigurationException('Error parsing yaml. Config `whitelist: include:` should be an array');
             }
             foreach ($coverage['whitelist']['include'] as $fileOrDir) {
-                $finder = strpos($fileOrDir, '*') === false
+                $finder = !str_contains($fileOrDir, '*')
                     ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                     : $this->matchWildcardPattern($fileOrDir);
 
                 foreach ($finder as $file) {
-                    if (method_exists($filter, 'addFileToWhitelist')) {
-                        //php-code-coverage 8 or older
-                        $filter->addFileToWhitelist($file);
-                    } else {
-                        //php-code-coverage 9+
-                        $filter->includeFile((string) $file);
-                    }
+                    $filter->includeFile((string)$file);
                 }
             }
         }
@@ -100,20 +76,14 @@ class Filter
             }
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 try {
-                    $finder = strpos($fileOrDir, '*') === false
+                    $finder = !str_contains($fileOrDir, '*')
                         ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
                         : $this->matchWildcardPattern($fileOrDir);
 
                     foreach ($finder as $file) {
-                        if (method_exists($filter, 'removeFileFromWhitelist')) {
-                            //php-code-coverage 8 or older
-                            $filter->removeFileFromWhitelist($file);
-                        } else {
-                            //php-code-coverage 9+
-                            $filter->excludeFile($file);
-                        }
+                        $filter->excludeFile((string)$file);
                     }
-                } catch (DirectoryNotFoundException $e) {
+                } catch (DirectoryNotFoundException) {
                     continue;
                 }
             }
@@ -128,7 +98,7 @@ class Filter
     {
         if (isset($config['coverage']['blacklist'])) {
             throw new ModuleException($this, 'The blacklist functionality has been removed from PHPUnit 5,'
-            . ' please remove blacklist section from configuration.');
+                . ' please remove blacklist section from configuration.');
         }
         return $this;
     }
@@ -139,6 +109,9 @@ class Filter
         $fileOrDir = str_replace('\\', '/', $pattern);
         $parts = explode('/', $fileOrDir);
         $file = array_pop($parts);
+        if ($file === '*') {
+            $file = '*.php';
+        }
         $finder->name($file);
         if ($parts !== []) {
             $lastPath = array_pop($parts);

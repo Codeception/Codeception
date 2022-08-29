@@ -9,10 +9,7 @@ use Codeception\Test\Unit;
 
 class ReplHistoryTest extends Unit
 {
-    /**
-     * @var ReplHistory
-     */
-    protected $replHistory;
+    protected ReplHistory $replHistory;
 
     protected function _setUp()
     {
@@ -24,7 +21,6 @@ class ReplHistoryTest extends Unit
         $this->replHistory->clear();
     }
 
-    // tests
     public function testAdd()
     {
         $this->replHistory->add('$I->click(".something")');
@@ -58,7 +54,9 @@ class ReplHistoryTest extends Unit
 
         $history = Configuration::outputDir() . 'stashed-commands';
         $this->assertFileExists($history);
-        $this->assertStringEqualsFile($history, <<<CONTENTS
+        $this->assertStringEqualsFile(
+            $history,
+            <<<CONTENTS
 \$I->click(".command-1");
 \$I->click(".command-2");
 \$I->click(".command-3");

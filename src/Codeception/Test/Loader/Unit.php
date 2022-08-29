@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace Codeception\Test\Loader;
 
 use Codeception\Lib\Parser;
-use Codeception\Test\Descriptor;
-use Codeception\Test\Unit as UnitFormat;
+use Codeception\Test\DataProvider;
+use Codeception\Test\TestCaseWrapper;
 use Codeception\Util\Annotation;
-use PHPUnit\Framework\DataProviderTestSuite;
-use PHPUnit\Framework\Test as PHPUnitTest;
-use PHPUnit\Framework\TestBuilder;
+use PHPUnit\Framework\ErrorTestCase;
+use PHPUnit\Framework\IncompleteTestCase;
+use PHPUnit\Framework\SkippedTestCase;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Runner\Version as PHPUnitVersion;
+use PHPUnit\Util\Test as TestUtil;
 use ReflectionClass;
 use ReflectionMethod;
-use function get_class;
+use Throwable;
 
 class Unit implements LoaderInterface
 {
-    /**
-     * @var array
-     */
-    protected $tests = [];
+    protected array $tests = [];
 
     public function getPattern(): string
     {
@@ -38,12 +38,33 @@ class Unit implements LoaderInterface
                 continue;
             }
 
+            // find hook methods
+            $beforeClassMethods = ['setUpBeforeClass'];
+            $afterClassMethods = ['tearDownAfterClass'];
+
             foreach ($reflected->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-                $test = $this->createTestFromPhpUnitMethod($reflected, $method);
-                if (!$test) {
-                    continue;
+                $methodName = $method->getName();
+                $methodAnnotations = Annotation::forMethod($testClass, $methodName);
+
+                $beforeClassAnnotation = $methodAnnotations->fetch('beforeClass');
+                if ($beforeClassAnnotation !== null) {
+                    $beforeClassMethods [] = $methodName;
                 }
-                $this->tests[] = $test;
+
+                $afterClassAnnotation = $methodAnnotations->fetch('afterClass');
+                if ($afterClassAnnotation !== null) {
+                    $afterClassMethods [] = $methodName;
+                }
+            }
+
+            foreach ($reflected->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+                $tests = $this->createTestsFromPhpUnitMethod($reflected, $method);
+
+                foreach ($tests as $test) {
+                    $this->tests[] = new TestCaseWrapper($test, $beforeClassMethods, $afterClassMethods);
+                    // only the first instance gets before/after class methods
+                    $beforeClassMethods = $afterClassMethods = [];
+                }
             }
         }
     }
@@ -53,34 +74,72 @@ class Unit implements LoaderInterface
         return $this->tests;
     }
 
-    protected function createTestFromPhpUnitMethod(ReflectionClass $class, ReflectionMethod $method)
+    /**
+     * @return TestCase[]
+     */
+    protected function createTestsFromPhpUnitMethod(ReflectionClass $class, ReflectionMethod $method): array
     {
-        if (!\PHPUnit\Util\Test::isTestMethod($method)) {
-            return null;
+        if (!TestUtil::isTestMethod($method)) {
+            return [];
         }
-        $test = (new TestBuilder)->build($class, $method->name);
+        $className = $class->getName();
+        $methodName = $method->getName();
 
-        if ($test instanceof DataProviderTestSuite) {
-            foreach ($test->tests() as $t) {
-                $this->enhancePhpunitTest($t);
+        try {
+            $data = DataProvider::getDataForMethod($method, $class);
+        } catch (Throwable $t) {
+            $message = sprintf(
+                "The data provider specified for %s::%s is invalid.\n%s",
+                $className,
+                $methodName,
+                $t->getMessage(),
+            );
+
+            if (PHPUnitVersion::series() < 10) {
+                $data = new ErrorTestCase($message);
+            } else {
+                $data = new ErrorTestCase($className, $methodName, $message);
             }
-            return $test;
         }
 
-        $this->enhancePhpunitTest($test);
-        return $test;
+        if (!isset($data)) {
+            return [ new $className($methodName) ];
+        }
+
+        if (
+            $data instanceof ErrorTestCase ||
+            $data instanceof SkippedTestCase ||
+            $data instanceof IncompleteTestCase
+        ) {
+            return [ $data ];
+        }
+
+        $result = [];
+        foreach ($data as $key => $item) {
+            if (PHPUnitVersion::series() < 10) {
+                $testInstance = new $className($methodName, $item, $key);
+            } else {
+                $testInstance = new $className($methodName);
+                $testInstance->setData($key, $item);
+            }
+            $result [] = $testInstance;
+        }
+
+        return $result;
     }
 
-    protected function enhancePhpunitTest(PHPUnitTest $test): void
-    {
-        $className = get_class($test);
-        $methodName = $test->getName(false);
-        $dependencies = \PHPUnit\Util\Test::getDependencies($className, $methodName);
-        $test->setDependencies($dependencies);
-        if ($test instanceof UnitFormat) {
-            $annotations = Annotation::forMethod($test, $methodName)->raw();
-            $test->getMetadata()->setParamsFromAnnotations($annotations);
-            $test->getMetadata()->setFilename(Descriptor::getTestFileName($test));
-        }
+    /**
+     * @param string[] $beforeClassMethods
+     * @param string[] $afterClassMethods
+     */
+    protected function enhancePhpunitTest(
+        TestCase $testCase,
+        array $beforeClassMethods,
+        array $afterClassMethods,
+    ): TestCaseWrapper {
+
+        $test = new TestCaseWrapper($testCase, $beforeClassMethods, $afterClassMethods);
+
+        return $test;
     }
 }

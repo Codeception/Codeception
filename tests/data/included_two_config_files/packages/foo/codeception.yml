@@ -1,0 +1,3 @@
+# this config changes something from .dist.yml
+settings:
+  colors: false

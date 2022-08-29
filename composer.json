@@ -2,79 +2,97 @@
     "name":"codeception/codeception",
     "description":"BDD-style testing framework",
     "keywords":["BDD", "acceptance testing", "functional testing", "unit testing", "tdd"],
-    "homepage":"http://codeception.com/",
+    "homepage":"https://codeception.com/",
     "type":"library",
     "license":"MIT",
     "authors":[
         {
             "name":"Michael Bodnarchuk",
-            "email":"davert@mail.ua",
-            "homepage":"http://codegyre.com"
+            "email":"davert.ua@gmail.com",
+            "homepage":"https://codeception.com"
         }
     ],
     "minimum-stability": "RC",
 
     "require": {
-        "php": ">=7.3.0 <9.0",
+        "php": "^8.0",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "phpunit/phpunit": "^9.5",
-        "codeception/lib-asserts": "^1.13",
-        "guzzlehttp/psr7": "^1.7",
-        "symfony/finder": ">=4.4 <6.0",
-        "symfony/console": ">=4.4 <6.0",
-        "symfony/event-dispatcher": ">=4.4 <6.0",
-        "symfony/yaml": ">=4.4 <6.0",
-        "symfony/css-selector": ">=4.4 <6.0",
         "behat/gherkin": "^4.6.2",
-        "codeception/stub": "^3.7",
-        "nunomaduro/collision": "^5.1"
+        "codeception/lib-asserts": "2.0.*@dev",
+        "codeception/stub": "^3.7 | ^4.0",
+        "phpunit/phpunit": "^9.5",
+        "phpunit/php-code-coverage": "^9.2",
+        "phpunit/php-text-template": "^2.0",
+        "phpunit/php-timer": "^5.0.3",
+        "sebastian/comparator": "^4.0.5",
+        "sebastian/diff": "^4.0.3",
+        "symfony/console": ">=6.0 <7.0",
+        "symfony/css-selector": ">=6.0 <7.0",
+        "symfony/event-dispatcher": ">=6.0 <7.0",
+        "symfony/finder": ">=6.0 <7.0",
+        "symfony/yaml": ">=6.0 <7.0",
+        "symfony/var-dumper": ">=6.0 < 7.0",
+        "psy/psysh": "^0.11.2"
     },
     "require-dev": {
-        "vlucas/phpdotenv": "^4.0 | ^5.0",
-        "symfony/process": ">=4.4 <6.0",
+        "ext-simplexml": "*",
+        "codeception/lib-innerbrowser": "*@dev",
+        "codeception/lib-web": "^1.0",
         "codeception/module-asserts": "*@dev",
         "codeception/module-cli": "*@dev",
         "codeception/module-db": "*@dev",
         "codeception/module-filesystem": "*@dev",
         "codeception/module-phpbrowser": "*@dev",
-        "codeception/util-universalframework": "*@dev"
+        "codeception/util-universalframework": "*@dev",
+        "symfony/process": ">=4.4.24 <7.0",
+        "symfony/dotenv": ">=4.4.24 <7.0",
+        "vlucas/phpdotenv": "^5.1"
+    },
+    "conflict": {
+        "codeception/lib-innerbrowser": "<3.1",
+        "codeception/module-phpbrowser": "<2.5",
+        "codeception/module-filesystem": "<3.0"
     },
     "suggest": {
-        "hoa/console": "For interactive console functionality",
+        "ext-simplexml": "For loading params from XML files",
+        "vlucas/phpdotenv": "For loading params from .env files",
+        "symfony/dotenv": "For loading params from .env files",
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
         "symfony/phpunit-bridge": "For phpunit-bridge support",
         "stecman/symfony-console-completion": "For BASH autocompletion"
     },
     "replace": {
-      "codeception/phpunit-wrapper": "*"
+        "codeception/phpunit-wrapper": "*"
     },
 
     "autoload": {
+        "classmap": [
+            "src/PHPUnit/TestCase.php"
+        ],
         "files": [
             "functions.php"
         ],
         "psr-4": {
             "Codeception\\": "src/Codeception",
-            "Codeception\\PHPUnit\\": "src/PHPUnit",
             "Codeception\\Extension\\": "ext"
         }
     },
     "autoload-dev": {
         "classmap": [
             "tests/cli/_steps",
+            "tests/data/app/data.php",
+            "tests/data/claypit/tests/_data",
+            "tests/data/fail_dependencies",
+            "tests/data/register_command/examples",
             "tests/data/DummyClass.php",
-            "tests/data/claypit/tests/_data"
+            "tests/data/DummyOverloadableClass.php",
+            "tests/unit/Codeception/Command/BaseCommandRunner.php",
+            "tests/unit/Codeception/Util/MockAutoload.php",
+            "tests/unit/Codeception/Util/ReflectionTestClass.php"
         ]
     },
-    "extra": {
-        "branch-alias": {
-        }
-    },
-    "bin":["codecept"],
-    "config": {
-        "platform": {}
-    }
+    "bin":["codecept"]
 }

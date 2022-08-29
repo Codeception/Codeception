@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
-
 class BuildTest extends BaseCommandRunner
 {
-
     /**
      * @var array
      */
-    public $log = [];
+    public array $log = [];
 
     protected function _setUp()
     {
@@ -33,9 +30,9 @@ class BuildTest extends BaseCommandRunner
 
         $this->content = $this->log[0]['content'];
         // methods from Filesystem module
-        $this->assertStringContainsString('public function amInPath($path)', $this->content);
-        $this->assertStringContainsString('public function copyDir($src, $dst)', $this->content);
-        $this->assertStringContainsString('public function seeInThisFile($text)', $this->content);
+        $this->assertStringContainsString('public function amInPath(string $path): void', $this->content);
+        $this->assertStringContainsString('public function copyDir(string $src, string $dst): void', $this->content);
+        $this->assertStringContainsString('public function seeInThisFile(string $text): void', $this->content);
 
         // methods from EmulateHelper
         $this->assertStringContainsString('public function seeEquals($expected, $actual)', $this->content);
@@ -49,6 +46,17 @@ class BuildTest extends BaseCommandRunner
         $this->config['namespace'] = 'Shire';
         $this->execute();
         $this->assertStringContainsString('namespace Shire;', $this->content);
+        $this->assertStringContainsString('class HobbitGuy extends \Codeception\Actor', $this->content);
+        $this->assertStringContainsString('use _generated\HobbitGuyActions;', $this->content);
+        $this->assertIsValidPhp($this->content);
+    }
+
+    public function testBuildNamespacedActorInSupportNamespace()
+    {
+        $this->config['namespace'] = 'Shire';
+        $this->config['support_namespace'] = 'Support';
+        $this->execute();
+        $this->assertStringContainsString('namespace Shire\Support;', $this->content);
         $this->assertStringContainsString('class HobbitGuy extends \Codeception\Actor', $this->content);
         $this->assertStringContainsString('use _generated\HobbitGuyActions;', $this->content);
         $this->assertIsValidPhp($this->content);

@@ -10,31 +10,13 @@ use Codeception\Lib\Interfaces\MultiSession;
 
 class Friend
 {
-    /**
-     * @var string
-     */
-    protected $name;
-    /**
-     * @var Actor
-     */
-    protected $actor;
-    /**
-     * @var array
-     */
-    protected $data = [];
-    /**
-     * @var array|null
-     */
-    protected $multiSessionModules = [];
+    protected array $data = [];
 
-    public function __construct(string $name, Actor $actor, array $modules = [])
+    protected array $multiSessionModules = [];
+
+    public function __construct(protected string $name, protected Actor $actor, array $modules = [])
     {
-        $this->name = $name;
-        $this->actor = $actor;
-
-        $this->multiSessionModules = array_filter($modules, function ($m) {
-            return $m instanceof MultiSession;
-        });
+        $this->multiSessionModules = array_filter($modules, fn ($m): bool => $m instanceof MultiSession);
 
         if (empty($this->multiSessionModules)) {
             throw new TestRuntimeException("No multisession modules used. Can't instantiate friend");
@@ -54,7 +36,7 @@ class Friend
                 continue;
             }
             $module->_loadSession($this->data[$name]);
-        };
+        }
 
         $this->actor->comment(strtoupper("{$this->name} does ---"));
         $ret = $closure($this->actor);
@@ -64,7 +46,7 @@ class Friend
             $name = $module->_getName();
             $this->data[$name] = $module->_backupSession();
             $module->_loadSession($currentUserData[$name]);
-        };
+        }
         return $ret;
     }
 

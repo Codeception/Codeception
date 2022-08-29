@@ -4,16 +4,35 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use Codeception\Event\FailEvent;
+use Codeception\Event\TestEvent;
+use Codeception\Events;
+use Codeception\Exception\UselessTestException;
+use Codeception\PHPUnit\Wrapper\Test as TestWrapper;
+use Codeception\ResultAggregator;
 use Codeception\TestInterface;
-use Codeception\Util\ReflectionHelper;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\ExceptionWrapper;
-use PHPUnit\Framework\TestResult;
+use PHPUnit\Framework\IncompleteTestError;
+use PHPUnit\Framework\SkippedTest;
+use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Runner\Version as PHPUnitVersion;
+use RuntimeException;
 use SebastianBergmann\Timer\Timer;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Throwable;
+
 use function array_reverse;
 use function method_exists;
+
+// phpcs:disable
+if (PHPUnitVersion::series() < 10) {
+    require_once __DIR__ . '/../../PHPUnit/Wrapper/PhpUnit9/Test.php';
+} else {
+    require_once __DIR__ . '/../../PHPUnit/Wrapper/PhpUnit10/Test.php';
+}
+// phpcs:enable
 
 /**
  * The most simple testcase (with only one test in it) which can be executed by PHPUnit/Codeception.
@@ -25,51 +44,63 @@ use function method_exists;
  *
  * Inherited class must implement `test` method.
  */
-abstract class Test implements TestInterface, Interfaces\Descriptive
+abstract class Test extends TestWrapper implements TestInterface, Interfaces\Descriptive
 {
     use Feature\AssertionCounter;
     use Feature\CodeCoverage;
-    use Feature\ErrorLogger;
     use Feature\MetadataCollector;
     use Feature\IgnoreIfMetadataBlocked;
 
-    /**
-     * @var TestResult|null
-     */
-    private $testResult;
-    /**
-     * @var bool
-     */
-    private $ignored = false;
+    private ?ResultAggregator $resultAggregator = null;
+
+    private bool $ignored = false;
+
+    private int $assertionCount = 0;
+
+    private ?EventDispatcher $eventDispatcher = null;
 
     /**
      * Enabled traits with methods to be called before and after the test.
-     *
-     * @var array
      */
-    protected $hooks = [
-      'ignoreIfMetadataBlocked',
-      'codeCoverage',
-      'assertionCounter',
-      'errorLogger'
+    protected array $hooks = [
+        'ignoreIfMetadataBlocked',
+        'codeCoverage',
+        'assertionCounter',
+        'errorLogger'
     ];
 
     /**
      * @var string
      */
-    const STATUS_FAIL = 'fail';
+    public const STATUS_FAIL = 'fail';
     /**
      * @var string
      */
-    const STATUS_ERROR = 'error';
+    public const STATUS_ERROR = 'error';
     /**
      * @var string
      */
-    const STATUS_OK = 'ok';
+    public const STATUS_OK = 'ok';
     /**
      * @var string
      */
-    const STATUS_PENDING = 'pending';
+    public const STATUS_PENDING = 'pending';
+    /**
+     * @var string
+     */
+    public const STATUS_USELESS = 'useless';
+    /**
+     * @var string
+     */
+    public const STATUS_INCOMPLETE = 'incomplete';
+    /**
+     * @var string
+     */
+    public const STATUS_SKIPPED = 'skipped';
+
+    protected bool $reportUselessTests = false;
+
+    private bool $collectCodeCoverage = false;
 
     /**
      * Everything inside this method is treated as a test.
@@ -80,65 +111,124 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
 
     /**
      * Test representation
-     *
-     * @return mixed
      */
     abstract public function toString(): string;
+
+    public function collectCodeCoverage(bool $enabled): void
+    {
+        $this->collectCodeCoverage = $enabled;
+    }
+
+    public function reportUselessTests(bool $enabled): void
+    {
+        $this->reportUselessTests = $enabled;
+    }
+
+    public function setEventDispatcher(EventDispatcher $eventDispatcher): void
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
 
     /**
      * Runs a test and collects its result in a TestResult instance.
      * Executes before/after hooks coming from traits.
      */
-    final public function run(TestResult $result = null): TestResult
+    final public function realRun(ResultAggregator $result): void
     {
-        $this->testResult = $result;
+        $this->resultAggregator = $result;
 
         $status = self::STATUS_PENDING;
         $time = 0;
         $e = null;
         $timer = new Timer();
 
-        $result->startTest($this);
+        $result->addTest($this);
 
-        foreach ($this->hooks as $hook) {
-            if (method_exists($this, $hook.'Start')) {
-                $this->{$hook.'Start'}();
+        try {
+            $this->fire(Events::TEST_BEFORE, new TestEvent($this));
+
+            foreach ($this->hooks as $hook) {
+                if ($hook === 'codeCoverage' && !$this->collectCodeCoverage) {
+                    continue;
+                }
+                if (method_exists($this, $hook . 'Start')) {
+                    $this->{$hook . 'Start'}();
+                }
             }
+            $failedToStart = false;
+        } catch (\Exception $e) {
+            $failedToStart = true;
+            $result->addError(new FailEvent($this, $e, $time));
+            $this->fire(Events::TEST_ERROR, new FailEvent($this, $e, $time));
         }
 
-        $failedToStart = ReflectionHelper::readPrivateProperty($result, 'lastTestFailed');
-
         if (!$this->ignored && !$failedToStart) {
+            Assert::resetCount();
             $timer->start();
-
             try {
                 $this->test();
                 $status = self::STATUS_OK;
+                $eventType = Events::TEST_SUCCESS;
+            } catch (UselessTestException $e) {
+                $result->addUseless(new FailEvent($this, $e, $time));
+                $status = self::STATUS_USELESS;
+                $eventType = Events::TEST_USELESS;
+            } catch (IncompleteTestError $e) {
+                $result->addIncomplete(new FailEvent($this, $e, $time));
+                $status = self::STATUS_INCOMPLETE;
+                $eventType = Events::TEST_INCOMPLETE;
+            } catch (SkippedTest | SkippedTestError $e) {
+                $result->addSkipped(new FailEvent($this, $e, $time));
+                $status = self::STATUS_SKIPPED;
+                $eventType = Events::TEST_SKIPPED;
             } catch (AssertionFailedError $e) {
+                $result->addFailure(new FailEvent($this, $e, $time));
                 $status = self::STATUS_FAIL;
+                $eventType = Events::TEST_FAIL;
             } catch (Exception $e) {
+                $result->addError(new FailEvent($this, $e, $time));
                 $status = self::STATUS_ERROR;
+                $eventType = Events::TEST_ERROR;
             } catch (Throwable $e) {
-                $e = new ExceptionWrapper($e);
+                $result->addError(new FailEvent($this, $e, $time));
                 $status = self::STATUS_ERROR;
+                $eventType = Events::TEST_ERROR;
             }
 
             $time = $timer->stop()->asSeconds();
-        }
+            $this->assertionCount = Assert::getCount();
+            $result->addToAssertionCount($this->assertionCount);
 
-        foreach (array_reverse($this->hooks) as $hook) {
-            if (method_exists($this, $hook.'End')) {
-                $this->{$hook.'End'}($status, $time, $e);
+            if ($this->reportUselessTests && $this->assertionCount === 0 && $eventType === Events::TEST_SUCCESS) {
+                $eventType = Events::TEST_USELESS;
+                $e = new UselessTestException('This test did not perform any assertions');
+                $result->addUseless(new FailEvent($this, $e, $time));
+            }
+
+            if ($eventType === Events::TEST_SUCCESS) {
+                $this->fire($eventType, new TestEvent($this, $time));
+            } else {
+                $this->fire($eventType, new FailEvent($this, $e, $time));
             }
         }
 
-        $result->endTest($this, $time);
-        return $result;
+        foreach (array_reverse($this->hooks) as $hook) {
+            if ($hook === 'codeCoverage' && !$this->collectCodeCoverage) {
+                continue;
+            }
+            if (method_exists($this, $hook . 'End')) {
+                $this->{$hook . 'End'}($status, $time, $e);
+            }
+        }
+
+        $this->fire(Events::TEST_AFTER, new TestEvent($this, $time));
+        $this->eventDispatcher->dispatch(new TestEvent($this, $time), Events::TEST_END);
+        $result->addSuccessful($this, $time);
     }
 
-    public function getTestResultObject(): TestResult
+    public function getResultAggregator(): ResultAggregator
     {
-        return $this->testResult;
+        return $this->resultAggregator;
     }
 
     /**
@@ -155,5 +245,25 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     protected function ignore(bool $ignored): void
     {
         $this->ignored = $ignored;
+    }
+
+    public function numberOfAssertionsPerformed(): int
+    {
+        return $this->assertionCount;
+    }
+
+
+    protected function fire(string $eventType, TestEvent $event): void
+    {
+        if ($this->eventDispatcher === null) {
+            throw new RuntimeException('EventDispatcher must be injected before running test');
+        }
+        $test = $event->getTest();
+        if ($test instanceof TestInterface) {
+            foreach ($test->getMetadata()->getGroups() as $group) {
+                $this->eventDispatcher->dispatch($event, $eventType . '.' . $group);
+            }
+        }
+        $this->eventDispatcher->dispatch($event, $eventType);
     }
 }

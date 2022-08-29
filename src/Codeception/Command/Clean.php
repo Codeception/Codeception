@@ -33,10 +33,10 @@ class Clean extends Command
         return 0;
     }
 
-    private function cleanProjectsRecursively(OutputInterface $output, $projectDir): void
+    private function cleanProjectsRecursively(OutputInterface $output, string $projectDir): void
     {
         $config = Configuration::config($projectDir);
-        $logDir = Configuration::logDir();
+        $logDir = Configuration::outputDir();
         $output->writeln("<info>Cleaning up output " . $logDir . "...</info>");
         FileSystem::doEmptyDir($logDir);
 

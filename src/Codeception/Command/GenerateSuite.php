@@ -6,7 +6,6 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Lib\Generator\Actor as ActorGenerator;
-use Codeception\Lib\Generator\Helper as HelperGenerator;
 use Codeception\Util\Template;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -14,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
+
 use function file_exists;
 use function preg_match;
 use function ucfirst;
@@ -49,7 +49,7 @@ class GenerateSuite extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
-        $suite = (string)$input->getArgument('suite');
+        $suite = ucfirst((string)$input->getArgument('suite'));
         $actor = $input->getArgument('actor');
 
         if ($this->containsInvalidCharacters($suite)) {
@@ -59,7 +59,7 @@ class GenerateSuite extends Command
 
         $config = $this->getGlobalConfig();
         if (!$actor) {
-            $actor = ucfirst($suite) . $config['actor_suffix'];
+            $actor = $suite . $config['actor_suffix'];
         }
 
         $dir = Configuration::testsDir();
@@ -78,34 +78,19 @@ class GenerateSuite extends Command
             );
         }
 
-        $helperName = ucfirst($suite);
-
-        $file = $this->createDirectoryFor(
-            Configuration::supportDir() . "Helper",
-            "{$helperName}.php"
-        ) . "{$helperName}.php";
-
-        $helper = new HelperGenerator($helperName, $config['namespace']);
-        // generate helper
-        $this->createFile(
-            $file,
-            $helper->produce()
-        );
-
-        $output->writeln("Helper <info>" . $helper->getHelperName() . "</info> was created in {$file}");
-
         $yamlSuiteConfigTemplate = <<<EOF
 actor: {{actor}}
+suite_namespace: {{suite_namespace}}
 modules:
-    enabled:
-        - {{helper}}
+    # enable helpers as array
+    enabled: []
 EOF;
 
         $this->createFile(
             $dir . $suite . '.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
                 ->place('actor', $actor)
-                ->place('helper', $helper->getHelperName())
+                ->place('suite_namespace', $config['namespace'] . '\\' . $suite)
                 ->produce()
         );
 
@@ -137,6 +122,6 @@ EOF;
 
     private function containsInvalidCharacters(string $suite): bool
     {
-        return (bool) preg_match('#[^A-Za-z0-9_]#', $suite);
+        return (bool)preg_match('#[^A-Za-z0-9_]#', $suite);
     }
 }

@@ -1,7 +1,6 @@
 <?php
-namespace Codeception\Module;
 
-// here you can define custom functions for CodeGuy 
+namespace Codeception\Module;
 
 class CodeHelper extends \Codeception\Module
 {

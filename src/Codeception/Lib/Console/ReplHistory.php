@@ -6,17 +6,11 @@ namespace Codeception\Lib\Console;
 
 class ReplHistory
 {
-    protected $outputFile;
+    protected string $outputFile;
 
-    /**
-     * @var array
-     */
-    protected $stashedCommands = [];
+    protected array $stashedCommands = [];
 
-    /**
-     * @var ReplHistory
-     */
-    protected static $instance;
+    protected static ?self $instance = null;
 
     private function __construct()
     {
@@ -30,7 +24,7 @@ class ReplHistory
     public static function getInstance(): ReplHistory
     {
         if (static::$instance == null) {
-            static::$instance = new static();
+            static::$instance = new self();
         }
 
         return static::$instance;

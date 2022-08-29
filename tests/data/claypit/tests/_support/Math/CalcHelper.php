@@ -1,24 +1,23 @@
 <?php
+
 namespace Math;
 
 class CalcHelper extends \Codeception\Module
 {
-    /**
-     * @var Adder
-     */
-    protected $adder;
+    protected Adder $adder;
 
-    /**
-     * @var Subtractor
-     */
-    protected $subtractor;
+    protected Subtractor $subtractor;
 
-    protected $pi = 3;
+    protected Divider $divider;
 
-    protected function _inject(Adder $adder, Subtractor $subtractor)
+    protected int $pi = 3;
+
+
+    protected function _inject(Adder $adder, Subtractor $subtractor, Divider $divider)
     {
         $this->adder = $adder;
         $this->subtractor = $subtractor;
+        $this->divider = $divider;
     }
 
     public function add($a, $b)
@@ -31,8 +30,13 @@ class CalcHelper extends \Codeception\Module
         return $this->subtractor->perform($a, $b);
     }
 
+    public function divide($a, $b)
+    {
+        return $this->divider->perfom($a, $b);
+    }
+
     public function squareOfCircle($radius)
     {
-        return $this->pi * pow($radius, 2);
+        return $this->pi * $radius ** 2;
     }
 }

@@ -10,6 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
 use function ucfirst;
 
 /**
@@ -44,7 +45,7 @@ class GenerateHelper extends Command
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Helper', $name);
         $filename = $path . $this->getShortClassName($name) . '.php';
 
-        $res = $this->createFile($filename, (new Helper($name, $config['namespace']))->produce());
+        $res = $this->createFile($filename, (new Helper($config, $name))->produce());
         if ($res) {
             $output->writeln("<info>Helper {$filename} created</info>");
             return 0;

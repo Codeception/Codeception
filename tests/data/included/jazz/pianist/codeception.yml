@@ -1,15 +1,15 @@
 namespace: Jazz\Pianist
 paths:
     tests: tests
-    log: tests/_log
+    output: tests/_log
     data: tests/_data
     helpers: tests/_helpers
+bootstrap: functional/_bootstrap.php
 settings:
-    bootstrap: _bootstrap.php
     suite_class: \PHPUnit_Framework_TestSuite
     colors: true
     memory_limit: 1024M
-    log: true
+    output: true
 modules:
     config:
         Db:

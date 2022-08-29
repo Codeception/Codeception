@@ -9,6 +9,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 use function array_keys;
 use function array_merge;
 use function is_array;
@@ -25,30 +26,22 @@ use function is_array;
 abstract class Extension implements EventSubscriberInterface
 {
     /**
-     * @var array
+     * @var array<int|string, mixed>
      */
-    protected $config = [];
-    /**
-     * @var array
-     */
-    protected $options = [];
-    /**
-     * @var Output
-     */
-    protected $output;
-    /**
-     * @var array
-     */
-    protected $globalConfig = [];
-    /**
-     * @var array
-     */
-    private $modules = [];
+    protected array $config = [];
 
-    public function __construct(array $config, array $options)
+    protected Output $output;
+
+    protected array $globalConfig = [];
+
+    /**
+     * @var array<string, Module>
+     */
+    private array $modules = [];
+
+    public function __construct(array $config, protected array $options)
     {
         $this->config = array_merge($this->config, $config);
-        $this->options = $options;
         $this->output = new Output($options);
         $this->_initialize();
     }
@@ -92,19 +85,22 @@ abstract class Extension implements EventSubscriberInterface
     }
 
     /**
-     * @param string|iterable $message
+     * @param string|iterable $messages The message as an iterable of strings or a single string
      */
-    protected function write($message): void
+    protected function write(iterable|string $messages): void
     {
-        if (!$this->options['silent']) {
-            $this->output->write($message);
+        if (!$this->options['silent'] && $messages) {
+            $this->output->write($messages);
         }
     }
 
-    protected function writeln(string $message): void
+    /**
+     * @param string|iterable $messages The message as an iterable of strings or a single string
+     */
+    protected function writeln(iterable|string $messages): void
     {
-        if (!$this->options['silent']) {
-            $this->output->writeln($message);
+        if (!$this->options['silent'] && $messages) {
+            $this->output->writeln($messages);
         }
     }
 

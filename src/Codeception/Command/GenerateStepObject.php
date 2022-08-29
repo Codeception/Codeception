@@ -7,11 +7,13 @@ namespace Codeception\Command;
 use Codeception\Configuration;
 use Codeception\Lib\Generator\StepObject as StepObjectGenerator;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+
 use function ucfirst;
 
 /**
@@ -50,6 +52,9 @@ class GenerateStepObject extends Command
 
         $path = $this->createDirectoryFor(Configuration::supportDir() . 'Step' . DIRECTORY_SEPARATOR . ucfirst($suite), $step);
 
+        /**
+         * @var QuestionHelper
+         */
         $dialog = $this->getHelperSet()->get('question');
         $filename = $path . $class . '.php';
 

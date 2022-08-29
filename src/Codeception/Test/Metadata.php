@@ -6,30 +6,22 @@ namespace Codeception\Test;
 
 use Codeception\Exception\InjectionException;
 use Codeception\Util\Annotation;
+
 use function array_merge;
 use function array_merge_recursive;
 use function array_unique;
 
 class Metadata
 {
-    /**
-     * @var string
-     */
-    protected $name;
-    /**
-     * @var string
-     */
-    protected $filename;
-    /**
-     * @var string
-     */
-    protected $feature = '';
-    protected $index;
+    protected ?string $name = null;
 
-    /**
-     * @var array
-     */
-    protected $params = [
+    protected ?string $filename = null;
+
+    protected string $feature = '';
+
+    protected null|int|string $index = null;
+
+    protected array $params = [
         'env' => [],
         'group' => [],
         'depends' => [],
@@ -37,18 +29,19 @@ class Metadata
         'incomplete' => null
     ];
 
+    protected array $current = [];
+
+    protected array $services = [];
+
+    protected array $reports = [];
     /**
-     * @var array
+     * @var string[]
      */
-    protected $current = [];
+    private array $beforeClassMethods = [];
     /**
-     * @var array
+     * @var string[]
      */
-    protected $services = [];
-    /**
-     * @var array
-     */
-    protected $reports = [];
+    private array $afterClassMethods = [];
 
     public function getEnv(): array
     {
@@ -88,10 +81,7 @@ class Metadata
         $this->params['incomplete'] = $incomplete;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCurrent(?string $key = null)
+    public function getCurrent(?string $key = null): mixed
     {
         if ($key) {
             if (isset($this->current[$key])) {
@@ -126,12 +116,12 @@ class Metadata
         return $this->filename;
     }
 
-    public function setIndex($index): void
+    public function setIndex(int|string $index): void
     {
         $this->index = $index;
     }
 
-    public function getIndex()
+    public function getIndex(): null|int|string
     {
         return $this->index;
     }
@@ -188,13 +178,10 @@ class Metadata
     }
 
     /**
-     * Returns test params like: env, group, skip, incomplete, etc
+     * Returns test params like: env, group, skip, incomplete, etc.
      * Can return by annotation or return all if no key passed
-     *
-     * @param string|null $key
-     * @return mixed
      */
-    public function getParam(string $key = null)
+    public function getParam(string $key = null): mixed
     {
         if ($key) {
             if (isset($this->params[$key])) {
@@ -213,12 +200,78 @@ class Metadata
 
         // set singular value for some params
         foreach (['skip', 'incomplete'] as $single) {
-            $this->params[$single] = empty($this->params[$single]) ? null : (string) $this->params[$single][0];
+            $this->params[$single] = empty($this->params[$single]) ? null : (string)$this->params[$single][0];
+        }
+    }
+
+    public function setParamsFromAttributes($attributes): void
+    {
+        $params = [];
+        foreach ($attributes as $attribute) {
+            $name = lcfirst(str_replace('Codeception\\Attribute\\', '', $attribute->getName()));
+            if ($attribute->isRepeated()) {
+                $params[$name] ??= [];
+                $params[$name][] = $attribute->getArguments();
+                continue;
+            }
+            $params[$name] = $attribute->getArguments();
+        }
+        $this->params = array_merge_recursive($this->params, $params);
+
+        // flatten arrays for some attributes
+        foreach (['group', 'env', 'before', 'after', 'prepare'] as $single) {
+            if (!isset($this->params[$single])) {
+                continue;
+            };
+            if (!is_array($this->params[$single])) {
+                continue;
+            };
+
+            $this->params[$single] = array_map(fn($a) => is_array($a) ? $a : [$a], $this->params[$single]);
+            $this->params[$single] = array_merge(...$this->params[$single]);
+        }
+
+
+        // set singular value for some params
+        foreach (['skip', 'incomplete'] as $single) {
+            $this->params[$single] = empty($this->params[$single]) ? null : (string)$this->params[$single][0];
         }
     }
 
     public function setParams(array $params): void
     {
         $this->params = array_merge_recursive($this->params, $params);
+    }
+
+    /**
+     * @param string[] $beforeClassMethods
+     */
+    public function setBeforeClassMethods(array $beforeClassMethods): void
+    {
+        $this->beforeClassMethods = $beforeClassMethods;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBeforeClassMethods(): array
+    {
+        return $this->beforeClassMethods;
+    }
+
+    /**
+     * @param string[] $afterClassMethods
+     */
+    public function setAfterClassMethods(array $afterClassMethods): void
+    {
+        $this->afterClassMethods = $afterClassMethods;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAfterClassMethods(): array
+    {
+        return $this->afterClassMethods;
     }
 }

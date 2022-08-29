@@ -13,7 +13,7 @@ class FilterTest extends \Codeception\Test\Unit
     /**
      * @var Filter
      */
-    protected $filter;
+    protected Filter $filter;
 
     protected function _before()
     {
@@ -32,7 +32,7 @@ class FilterTest extends \Codeception\Test\Unit
                         'src/Codeception/Codecept.php'
                     ],
                     'exclude' => [
-                        'tests/unit/CodeGuy.php'
+                        'tests/support/CodeGuy.php'
                     ]
                 ]
             ]
@@ -43,20 +43,26 @@ class FilterTest extends \Codeception\Test\Unit
         $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('tests/unit/C3Test.php')));
         $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('src/Codeception/Codecept.php')));
         $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
-        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/unit/CodeGuy.php')));
+        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/support/CodeGuy.php')));
+        $this->assertTrue(
+            $fileFilter->$filterMethod(
+                codecept_root_dir('tests/unit.suite.yml')
+            ),
+            'tests/unit.suite.yml appears in file list'
+        );
     }
 
     public function testShortcutFilter()
     {
         $config = ['coverage' => [
             'include' => ['tests/*'],
-            'exclude' => ['tests/unit/CodeGuy.php']
+            'exclude' => ['tests/support/CodeGuy.php']
         ]];
         $this->filter->whiteList($config);
         $fileFilter = $this->filter->getFilter();
         $filterMethod = $this->getFilterMethod();
         $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('tests/unit/C3Test.php')));
-        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/unit/CodeGuy.php')));
+        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/support/CodeGuy.php')));
     }
 
     private function getFilterMethod(): string
@@ -66,6 +72,7 @@ class FilterTest extends \Codeception\Test\Unit
             //php-code-coverage 9+
             $filterMethod = 'isExcluded';
         }
+
         return $filterMethod;
     }
 }

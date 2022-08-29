@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Codeception\Subscriber;
 
-use Codeception\Event\SuiteEvent;
+use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\ResultAggregator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FailFast implements EventSubscriberInterface
@@ -15,13 +16,23 @@ class FailFast implements EventSubscriberInterface
     /**
      * @var array<string, string>
      */
-    protected static $events = [
-        Events::SUITE_BEFORE => 'stopOnFail',
+    protected static array $events = [
+        Events::TEST_FAIL => 'stopOnFail',
+        Events::TEST_ERROR => 'stopOnFail',
     ];
 
-    public function stopOnFail(SuiteEvent $event): void
+    private int $failureCount = 0;
+
+    public function __construct(private int $stopFailureCount, private ResultAggregator $resultAggregator)
     {
-        $event->getResult()->stopOnError(true);
-        $event->getResult()->stopOnFailure(true);
+    }
+
+    public function stopOnFail(TestEvent $e): void
+    {
+        $this->failureCount++;
+
+        if ($this->failureCount >= $this->stopFailureCount) {
+            $this->resultAggregator->stop();
+        }
     }
 }

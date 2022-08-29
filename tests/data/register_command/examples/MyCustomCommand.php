@@ -1,23 +1,29 @@
 <?php
+
 /**
  * An example for a custom command to add to the framework.
  *
  * @author    Tobias Matthaiou <tm@solutionDrive.de>
  * @date      27.01.16
  */
+
 namespace Project\Command;
 
-use \Symfony\Component\Console\Command\Command;
-use \Codeception\CustomCommandInterface;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
+use Codeception\Command\Shared\ConfigTrait;
+use Codeception\Command\Shared\FileSystemTrait;
+use Symfony\Component\Console\Command\Command;
+use Codeception\CustomCommandInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @see \Project\Command\MyCustomCommandTest
+ */
 class MyCustomCommand extends Command implements CustomCommandInterface
 {
-
-    use \Codeception\Command\Shared\FileSystemTrait;
-    use \Codeception\Command\Shared\ConfigTrait;
+    use FileSystemTrait;
+    use ConfigTrait;
 
     /**
      * returns the name of the command
@@ -32,9 +38,9 @@ class MyCustomCommand extends Command implements CustomCommandInterface
      */
     protected function configure()
     {
-        $this->setDefinition(array(
+        $this->setDefinition([
             new InputOption('friendly', 'f', InputOption::VALUE_NONE, 'The Message will be friendly'),
-        ));
+        ]);
 
         parent::configure();
     }
@@ -44,7 +50,7 @@ class MyCustomCommand extends Command implements CustomCommandInterface
      *
      * @return string The description for the command
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return "This is my command to say hello";
     }
@@ -66,7 +72,7 @@ class MyCustomCommand extends Command implements CustomCommandInterface
      *
      * @see setCode()
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $messageEnd = "!" . PHP_EOL;
 

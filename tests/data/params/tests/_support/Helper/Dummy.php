@@ -1,8 +1,6 @@
 <?php
-namespace Helper;
 
-// here you can define custom actions
-// all public methods declared in helper class will be available in $I
+namespace Helper;
 
 use Codeception\TestInterface;
 
@@ -23,5 +21,10 @@ class Dummy extends \Codeception\Module
         $vars = $this->config['vars'];
         $this->assertContains('val1', $vars);
         $this->assertContains('val2', $vars);
+    }
+
+    public function seeVarEquals(int $position, $value)
+    {
+        $this->assertSame($value, $this->config['vars'][$position]);
     }
 }

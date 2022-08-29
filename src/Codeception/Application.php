@@ -16,10 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
-    /**
-     * @var SymfonyArgvInput|null
-     */
-    protected $coreArguments = null;
+    protected ?SymfonyArgvInput $coreArguments = null;
 
     /**
      * Register commands from config file
@@ -46,7 +43,7 @@ class Application extends BaseApplication
 
     public function renderExceptionWrapper(Exception $exception, OutputInterface $output): void
     {
-        if (method_exists(\Symfony\Component\Console\Application::class, 'renderException')) {
+        if (method_exists(BaseApplication::class, 'renderException')) {
             //Symfony 5
             parent::renderException($exception, $output);
         } else {
@@ -91,7 +88,7 @@ class Application extends BaseApplication
 
         if (!in_array(CustomCommandInterface::class, $interfaces)) {
             throw new ConfigurationException("Extension: Command {$commandClass} must implement " .
-                                             "the interface `Codeception\\CustomCommandInterface`");
+                "the interface `Codeception\\CustomCommandInterface`");
         }
 
         return $commandClass::getCommandName();

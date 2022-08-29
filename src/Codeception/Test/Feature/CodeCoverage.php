@@ -4,31 +4,27 @@ declare(strict_types=1);
 
 namespace Codeception\Test\Feature;
 
+use Codeception\Coverage\PhpCodeCoverageFactory;
+use Codeception\Event\FailEvent;
+use Codeception\ResultAggregator;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\StrictCoverage;
 use Codeception\Test\Test as CodeceptTest;
-use PHP_CodeCoverage_Exception;
-use PHPUnit\Framework\TestResult;
+use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
 
 trait CodeCoverage
 {
-    abstract public function getTestResultObject(): TestResult;
+    abstract public function getResultAggregator(): ResultAggregator;
 
     public function codeCoverageStart(): void
     {
-        $codeCoverage = $this->getTestResultObject()->getCodeCoverage();
-        if (!$codeCoverage) {
-            return;
-        }
+        $codeCoverage = PhpCodeCoverageFactory::build();
         $codeCoverage->start(Descriptor::getTestSignature($this));
     }
 
     public function codeCoverageEnd(string $status, float $time): void
     {
-        $codeCoverage = $this->getTestResultObject()->getCodeCoverage();
-        if (!$codeCoverage) {
-            return;
-        }
+        $codeCoverage = PhpCodeCoverageFactory::build();
 
         if ($this instanceof StrictCoverage) {
             $linesToBeCovered = $this->getLinesToBeCovered();
@@ -40,9 +36,9 @@ trait CodeCoverage
 
         try {
             $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
-        } catch (PHP_CodeCoverage_Exception $exception) {
+        } catch (CodeCoverageException $exception) {
             if ($status === CodeceptTest::STATUS_OK) {
-                $this->getTestResultObject()->addError($this, $exception, $time);
+                $this->getResultAggregator()->addError(new FailEvent($this, $exception, $time));
             }
         }
     }

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Codeception\Attribute\Before;
+
 final class DataProviderFailuresAndExceptionsCest
 {
     private function moveToPath(CliGuy $I)
@@ -13,10 +15,8 @@ final class DataProviderFailuresAndExceptionsCest
      * This looks at only the contents of stdout when there is a failure in parsing a dataProvider annotation.
      * When there is a failure all the useful information should go to stderr, so stdout is left with
      * only the version headers.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersFailureStdout(CliGuy $I)
     {
         /**
@@ -24,26 +24,24 @@ final class DataProviderFailuresAndExceptionsCest
          * As some systems have php_uname and co disabled, we use the DIRECTORY_SEPARATOR constant to
          * figure out if we are running on windows or not.
          */
-        $devNull = (DIRECTORY_SEPARATOR === '\\')?'NUL':'/dev/null';
-        $I->executeCommand('run -n -v unit DataProvidersFailureCest 2> '.$devNull,false);
+        $devNull = (DIRECTORY_SEPARATOR === '\\') ? 'NUL' : '/dev/null';
+        $I->executeCommand('run -n -v unit DataProvidersFailureCest 2> ' . $devNull, false);
         // We should only see the version headers in stdout when there is this kind of failure.
-        $I->canSeeShellOutputMatches('#^Codeception PHP Testing Framework v[0-9\.]+\nPowered by PHPUnit .+ by Sebastian Bergmann and contributors\.#');
+        $I->canSeeShellOutputMatches('#^Codeception PHP Testing Framework v.+#');
         $I->seeResultCodeIs(1);
     }
 
     /**
      * This redirects stderr to stdout so that we can test the contents of stderr. Stderr is where all the interesting
      * information should be when there is a failure.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersFailureStderr(CliGuy $I)
     {
-        $I->executeCommand('run -n unit DataProvidersFailureCest 2>&1',false);
+        $I->executeCommand('run -n unit DataProvidersFailureCest 2>&1', false);
         $I->seeInShellOutput("Couldn't parse test");
         $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle");
-        $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
+        $I->seeInShellOutput('Make sure that the data provider exist within the test class.');
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
         $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->dontSeeInShellOutput('The data provider specified for DataProvidersFailureCest::testIsTriangle');
@@ -57,19 +55,16 @@ final class DataProviderFailuresAndExceptionsCest
         $I->seeResultCodeIs(1);
     }
 
-
     /**
      * This adds the -v to the stderr test which should just add the Exception Trace to the output.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersFailureStderrVerbose(CliGuy $I)
     {
-        $I->executeCommand('run -n unit DataProvidersFailureCest -v 2>&1',false);
+        $I->executeCommand('run -n unit DataProvidersFailureCest -v 2>&1', false);
         $I->seeInShellOutput("Couldn't parse test");
         $I->seeInShellOutput("DataProvider 'rectangle' for DataProvidersFailureCest->testIsTriangle");
-        $I->seeInShellOutput('Make sure that the dataprovider exist within the test class.');
+        $I->seeInShellOutput('Make sure that the data provider exist within the test class.');
         // For Unit tests PHPUnit throws the errors, this confirms that we haven't ended up running PHPUnit test Loader
         $I->dontSeeInShellOutput('PHPUnit_Framework_Warning');
         $I->dontSeeInShellOutput('The data provider specified for DataProvidersFailureCest::testIsTriangle');
@@ -88,10 +83,8 @@ final class DataProviderFailuresAndExceptionsCest
      * This looks at only the contents of stdout when there is an exception thrown when executing a dataProvider
      * function.
      * When exception thrown all the useful information should go to stderr, so stdout is left with nothing.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersExceptionStdout(CliGuy $I)
     {
         /**
@@ -99,20 +92,18 @@ final class DataProviderFailuresAndExceptionsCest
          * As some systems have php_uname and co disabled, we use the DIRECTORY_SEPARATOR constant to
          * figure out if we are running on windows or not.
          */
-        $devNull = (DIRECTORY_SEPARATOR === '\\')?'NUL':'/dev/null';
-        $I->executeCommand('run -n unit DataProvidersExceptionCest -v 2> '.$devNull, false);
+        $devNull = (DIRECTORY_SEPARATOR === '\\') ? 'NUL' : '/dev/null';
+        $I->executeCommand('run -n unit DataProvidersExceptionCest -v 2> ' . $devNull, false);
         // Depending on the test environment, we either see nothing or just the headers here.
-        $I->canSeeShellOutputMatches('/^Codeception PHP Testing Framework v[0-9\.]+\nPowered by PHPUnit .+ by Sebastian Bergmann and contributors\./');
+        $I->canSeeShellOutputMatches('#^Codeception PHP Testing Framework v.+#');
         $I->seeResultCodeIs(1);
     }
 
     /**
      * This redirects stderr to stdout so that we can test the contents of stderr. Stderr is where all the interesting
      * information should be when there is a failure.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersExceptionStderr(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersExceptionCest 2>&1', false);
@@ -137,10 +128,8 @@ final class DataProviderFailuresAndExceptionsCest
 
     /**
      * This adds the -v to the stderr test which should just add the Exception Trace to the output of stderr.
-     *
-     * @param CliGuy $I
-     * @before moveToPath
      */
+    #[Before('moveToPath')]
     public function runTestWithDataProvidersExceptionStderrVerbose(CliGuy $I)
     {
         $I->executeCommand('run -n unit DataProvidersExceptionCest -v 2>&1', false);

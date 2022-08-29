@@ -8,23 +8,12 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 
 class MessageFactory
 {
-    /**
-     * @var DiffFactory
-     */
-    protected $diffFactory;
-    /**
-     * @var Output
-     */
-    private $output;
+    protected DiffFactory $diffFactory;
 
-    /**
-     * @var Colorizer
-     */
-    protected $colorizer;
+    protected Colorizer $colorizer;
 
-    public function __construct(Output $output)
+    public function __construct(private Output $output)
     {
-        $this->output = $output;
         $this->diffFactory = new DiffFactory();
         $this->colorizer = new Colorizer();
     }
@@ -37,7 +26,7 @@ class MessageFactory
     public function prepareComparisonFailureMessage(ComparisonFailure $failure): string
     {
         $diff = $this->diffFactory->createDiff($failure);
-        if ($diff !== '') {
+        if ($diff === '') {
             return '';
         }
         $diff = $this->colorizer->colorize($diff);

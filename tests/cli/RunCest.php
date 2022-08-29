@@ -1,5 +1,8 @@
 <?php
 
+use Codeception\Attribute\After;
+use Codeception\Attribute\DataProvider;
+use Codeception\Attribute\Group;
 use Codeception\Scenario;
 
 final class RunCest
@@ -58,12 +61,7 @@ final class RunCest
         $I->seeInShellOutput('SuccessCest');
     }
 
-    /**
-     * @group reports
-     * @group core
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runHtml(CliGuy $I)
     {
         $I->wantTo('execute tests with html output');
@@ -71,38 +69,8 @@ final class RunCest
         $I->seeFileFound('report.html', 'tests/_output');
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
-    public function runJsonReport(CliGuy $I)
-    {
-        $I->wantTo('check json reports');
-        $I->executeCommand('run dummy --json');
-        $I->seeFileFound('report.json', 'tests/_output');
-        $I->seeInThisFile('"suite":');
-        $I->seeInThisFile('"dummy"');
-        $I->assertNotNull(json_decode(file_get_contents('tests/_output/report.json')));
-    }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
-    public function runTapReport(CliGuy $I)
-    {
-        $I->wantTo('check tap reports');
-        $I->executeCommand('run dummy --tap');
-        $I->seeFileFound('report.tap.log', 'tests/_output');
-    }
-
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runXmlReport(CliGuy $I)
     {
         $I->wantTo('check xml reports');
@@ -114,10 +82,7 @@ final class RunCest
         $I->seeInThisFile('feature="');
     }
 
-    /**
-     * @group reports
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runXmlReportsInStrictMode(CliGuy $I)
     {
         $I->wantTo('check xml in strict mode');
@@ -129,66 +94,63 @@ final class RunCest
         $I->dontSeeInThisFile('feature="');
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runPhpUnitXmlReport(CliGuy $I)
     {
         $I->wantTo('check phpunit xml reports');
         $I->executeCommand('run dummy --phpunit-xml');
-        $I->seeInShellOutput('PHPUNIT-XML report generated in');
+        $I->seeInShellOutput('PHPUNIT XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
-        $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        $I->seeInThisFile(
+            '<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" useless="0"'
+            . ' time='
+        );
         $I->seeThisFileMatches('/<testsuite name="AnotherCest" file=".*?AnotherCest.php"/');
         $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php"/');
-        $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        $I->seeThisFileMatches(
+            '/<testsuite name="AnotherTest" file=".*?AnotherTest.php" tests="2" assertions="2" errors="0"'
+            . ' failures="0" skipped="0" useless="0" time=/'
+        );
         //FileExistsCept file
         $I->seeInThisFile('<testsuite name="FileExists"');
         $I->seeInThisFile('<testcase name="FileExists"');
         $I->seeInThisFile('feature="');
     }
 
-    /**
-     * @group reports
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runPhpUnitXmlReportsInStrictMode(CliGuy $I)
     {
         $I->wantTo('check phpunit xml in strict mode');
         $I->executeCommand('run dummy --phpunit-xml -c codeception_strict_xml.yml');
-        $I->seeInShellOutput('PHPUNIT-XML report generated in');
+        $I->seeInShellOutput('PHPUNIT XML report generated in');
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
-        $I->seeInThisFile('<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0" time=');
+        $I->seeInThisFile(
+            '<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0"'
+            . ' useless="0" time='
+        );
         $I->seeThisFileMatches('/<testsuite name="AnotherCest" file=".*?AnotherCest.php"/');
         $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php"/');
-        $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time=/');
+        $I->seeThisFileMatches(
+            '/<testsuite name="AnotherTest" file=".*?AnotherTest.php" tests="2" assertions="2" errors="0"'
+            . ' failures="0" skipped="0" useless="0" time=/'
+        );
         //FileExistsCept file
         $I->seeInThisFile('<testsuite name="FileExists"');
         $I->seeInThisFile('<testcase name="FileExists"');
         $I->dontSeeInThisFile('feature="');
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runCustomReport(CliGuy $I)
     {
-        $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
+        $I->executeCommand('run dummy --ext=MyReportPrinter -c codeception_custom_report.yml');
         $I->seeInShellOutput('FileExistsCept: Check config exists');
         $I->dontSeeInShellOutput('Ok');
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    #[Group('reports')]
     public function runCompactReport(CliGuy $I)
     {
         $I->executeCommand('run dummy --report');
@@ -209,6 +171,61 @@ final class RunCest
         $I->seeInShellOutput('Skipped Tests (2)');
         $I->seeInShellOutput("SkipMeCept");
         $I->dontSeeInShellOutput("IncompleteMeCept");
+    }
+
+    #[Group('attrs')]
+    public function runOneGroupByAttr(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs -g g1');
+        $I->seeInShellOutput("Valid test");
+        $I->seeInShellOutput("OK (1 test");
+    }
+
+    #[Group('attrs')]
+    public function runWithBeforeAfter(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g g1');
+        $I->seeInShellOutput("open1");
+        $I->seeInShellOutput("open2");
+        $I->seeInShellOutput("close1");
+        $I->seeInShellOutput("OK (1 test");
+    }
+
+
+    #[Group('attrs')]
+    public function runWithExamples(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g e1');
+        $I->seeInShellOutput("OK (2 test");
+    }
+
+
+    #[Group('attrs')]
+    public function runWithDataprovider(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g d1');
+        $I->seeInShellOutput("OK (2 test");
+    }
+
+    #[Group('attrs')]
+    public function runWithDepends(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g dp');
+        $I->seeInShellOutput("This test depends on Attrs\BasicScenarioCest:validTest to pass");
+    }
+
+    #[Group('attrs')]
+    public function runWithUnitSkipped(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g uskip');
+        $I->seeInShellOutput("Skipped: 1");
+    }
+
+    #[Group('attrs')]
+    public function runWithUnitIncomplete(CliGuy $I)
+    {
+        $I->executeCommand('run Attrs --steps -g uincomplete');
+        $I->seeInShellOutput("Incomplete: 1");
     }
 
     public function skipGroupOfCest(CliGuy $I)
@@ -267,6 +284,55 @@ final class RunCest
         $I->seeInShellOutput("OK");
     }
 
+    public function filterTestsByDataProviderCaseNumber(CliGuy $I)
+    {
+        $I->executeCommand('run tests/unit/DataProvidersTest.php:#1');
+        $I->seeInShellOutput('Is triangle | #1');
+        $I->dontSeeInShellOutput('Is triangle | "real triangle"');
+        $I->dontSeeInShellOutput('Is triangle | #0');
+        $I->seeInShellOutput('DataProvidersTest');
+        $I->seeInShellOutput("OK (1 test, 1 assertion)");
+    }
+
+    public function filterTestsByDataProviderCaseNumberRange(CliGuy $I)
+    {
+        $I->executeCommand('run tests/unit/DataProvidersTest.php:#0-1');
+        $I->seeInShellOutput('Is triangle | #0');
+        $I->seeInShellOutput('Is triangle | #1');
+        $I->dontSeeInShellOutput('Is triangle | "real triangle"');
+        $I->seeInShellOutput('DataProvidersTest');
+        $I->seeInShellOutput("OK (2 tests, 2 assertions)");
+    }
+
+    public function filterTestsByDataProviderCaseName(CliGuy $I)
+    {
+        $I->executeCommand('run tests/unit/DataProvidersTest.php:@"real.*"');
+        $I->seeInShellOutput('Is triangle | "real triangle"');
+        $I->dontSeeInShellOutput('Is triangle | #0');
+        $I->dontSeeInShellOutput('Is triangle | #1');
+        $I->seeInShellOutput('DataProvidersTest');
+        $I->seeInShellOutput("OK (1 test, 1 assertion)");
+    }
+
+    public function filterCestsByDataProviderNumber(CliGuy $I)
+    {
+        $I->executeCommand('run tests/scenario/DataProviderCest.php:withProtectedDataProvider#1');
+        $I->seeInShellOutput('dummy.suite.yml');
+        $I->dontSeeInShellOutput('unit.suite.yml');
+        $I->dontSeeInShellOutput('summary.suite.yml');
+        $I->seeInShellOutput("OK (1 test, 1 assertion)");
+    }
+
+    public function filterCestsByExampleNumber(CliGuy $I)
+    {
+        $I->executeCommand('run tests/scenario/DataProviderCest.php:withDataProviderAndExample#0');
+        $I->seeInShellOutput('skipped.suite.yml');
+        $I->dontSeeInShellOutput('dummy.suite.yml');
+        $I->dontSeeInShellOutput('unit.suite.yml');
+        $I->dontSeeInShellOutput('summary.suite.yml');
+        $I->seeInShellOutput("OK (1 test, 1 assertion)");
+    }
+
     public function runOneGroupWithDataProviders(CliGuy $I)
     {
         $I->executeCommand('run unit -g data-providers');
@@ -277,16 +343,25 @@ final class RunCest
         $I->seeInShellOutput("OK");
     }
 
-    public function runTestWithFailFast(CliGuy $I)
+    public function runTestWithFailFastDefault(CliGuy $I)
     {
-        $I->executeCommand('run unit --skip-group error --no-exit');
+        $I->executeCommand('run unit --skip-group error --skip-group multiple-fail --no-exit');
         $I->seeInShellOutput('FailingTest: Me');
         $I->seeInShellOutput("PassingTest: Me");
-        $I->executeCommand('run unit --fail-fast --skip-group error --no-exit');
+        $I->executeCommand('run unit --fail-fast --skip-group error --skip-group multiple-fail --no-exit');
         $I->seeInShellOutput('There was 1 failure');
         $I->dontSeeInShellOutput("PassingTest: Me");
     }
 
+    public function runTestWithFailFastCustom(CliGuy $I)
+    {
+        $I->executeCommand('run unit MultipleFailingTest.php --fail-fast=2 --no-exit');
+        $I->seeInShellOutput('There were 2 failures');
+        $I->executeCommand('run unit MultipleFailingTest.php --no-exit');
+        $I->seeInShellOutput('There were 3 failures');
+    }
+
+    #[Group('reports')]
     public function runWithCustomOutputPath(CliGuy $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
@@ -323,16 +398,17 @@ final class RunCest
     {
         $I->executeCommand('run unit ExceptionTest --no-exit -v');
         $I->seeInShellOutput('There was 1 error');
-        $I->seeInShellOutput('Helllo!');
+        $I->seeInShellOutput('Hello!');
         $I->expect('Exceptions are not wrapped into ExceptionWrapper');
         $I->dontSeeInShellOutput('PHPUnit_Framework_ExceptionWrapper');
-        $I->seeInShellOutput('RuntimeException');
+        $I->seeInShellOutput(\RuntimeException::class);
     }
 
     public function runTestsWithSteps(CliGuy $I)
     {
         $I->executeCommand('run scenario SuccessCept --steps');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
 Scenario --
  I am in path "."
  I see file found "scenario.suite.yml"
@@ -349,8 +425,10 @@ EOF
         if (!extension_loaded('xdebug')) {
             $scenario->skip("Xdebug not loaded");
         }
+
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
 FailedCept: Fail when file is not found
 Signature: FailedCept
 Test: tests/scenario/FailedCept.php
@@ -361,11 +439,12 @@ Scenario --
 EOF
         );
         $I->expect('to see scenario trace');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
 Scenario Steps:
 
- 2. \$I->seeFileFound("games.zip") at tests/scenario/FailedCept.php:5
- 1. \$I->amInPath(".") at tests/scenario/FailedCept.php:4
+ 2. \$I->seeFileFound("games.zip") at tests/scenario/FailedCept.php:6
+ 1. \$I->amInPath(".") at tests/scenario/FailedCept.php:5
 
 EOF
         );
@@ -379,13 +458,14 @@ EOF
 
         $file = "codeception" . DIRECTORY_SEPARATOR . "c3";
         $I->executeCommand('run scenario SubStepsCept --steps');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
 Scenario --
  I am in path "."
  I see code coverage files are present
    I see file found "c3.php"
    I see file found "composer.json"
-   I see in this file "$file"
+   I see in this file "{$file}"
 EOF
         );
     }
@@ -401,13 +481,14 @@ EOF
         $I->executeCommand('run unit DependsTest --no-exit');
         $I->seeInShellOutput('Skipped: 1');
         $I->executeCommand('run unit --no-exit');
-        $I->seeInShellOutput('Skipped: 1');
+        $I->seeInShellOutput('Skipped: 2');
     }
 
     public function runGherkinTest(CliGuy $I)
     {
         $I->executeCommand('run scenario File.feature --steps');
-        $I->seeInShellOutput(<<<EOF
+        $I->seeInShellOutput(
+            <<<EOF
  In order to test a feature
  As a user
  I need to be able to see output
@@ -417,9 +498,10 @@ EOF
         $I->seeInShellOutput('When i am in current directory');
         $I->seeInShellOutput('Then there is a file "scenario.suite.yml"');
         $I->seeInShellOutput('And there are keywords in "scenario.suite.yml"');
-        $I->seeInShellOutput(<<<EOF
-   | class_name | ScenarioGuy |
-   | enabled    | Filesystem  |
+        $I->seeInShellOutput(
+            <<<EOF
+   | actor   | ScenarioGuy |
+   | enabled | Filesystem  |
 EOF
         );
         $I->seeInShellOutput('PASSED');
@@ -429,7 +511,7 @@ EOF
     {
         $I->executeCommand('run scenario File.feature -v');
         $I->seeInShellOutput('OK, but incomplete');
-        $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
+        $I->seeInShellOutput("Step definition for `I have only idea of what's going on here` not found in contexts");
     }
 
     public function runFailingGherkinTest(CliGuy $I)
@@ -454,28 +536,19 @@ EOF
         $I->seeInShellOutput('OK (3 tests');
     }
 
-    /**
-     * @param CliGuy $I
-     * @after checkExampleFiles
-     */
+    #[After('checkExampleFiles')]
     public function runTestWithAnnotationExamples(CliGuy $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsAnnotation --steps');
     }
 
-    /**
-     * @param CliGuy $I
-     * @after checkExampleFiles
-     */
+    #[After('checkExampleFiles')]
     public function runTestWithJsonExamples(CliGuy $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsByJson --steps');
     }
 
-    /**
-     * @param CliGuy $I
-     * @after checkExampleFiles
-     */
+    #[After('checkExampleFiles')]
     public function runTestWithArrayExamples(CliGuy $I)
     {
         $I->executeCommand('run scenario ExamplesCest:filesExistsByArray --steps');
@@ -499,14 +572,14 @@ EOF
         $I->seeInShellOutput('I see file found "unit.suite.yml"');
     }
 
-    public function overrideConfigOptionsToChangeReporter(CliGuy $I)
+    public function reportersConfigurationSectionIsNotSupported(CliGuy $I)
     {
-        if (!class_exists('PHPUnit_Util_Log_TeamCity')) {
-            throw new \PHPUnit\Framework\SkippedTestError('Reporter does not exist for this PHPUnit version');
-        }
         $I->executeCommand('run scenario --report -o "reporters: report: PHPUnit_Util_Log_TeamCity" --no-exit');
-        $I->seeInShellOutput('##teamcity[testStarted');
-        $I->dontSeeInShellOutput('............Ok');
+        $I->seeInShellOutput(
+            "WARNING: 'reporters' option is not supported! Custom reporters must be reimplemented as extensions."
+        );
+        $I->seeInShellOutput('............Ok');
+        $I->dontSeeInShellOutput('##teamcity[testStarted');
     }
 
     public function overrideModuleOptions(CliGuy $I)
@@ -563,10 +636,16 @@ EOF
         $I->seeInShellOutput('Failures: 2.');
     }
 
-    /**
-     * @group shuffle
-     * @param CliGuy $I
-     */
+    public function runInvalidDataProvider(CliGuy $I)
+    {
+        $I->executeCommand('run unit InvalidDataProviderTest.php', false);
+        $I->seeInShellOutput('There was 1 error');
+        $I->seeInShellOutput('[PHPUnit\Framework\Error] The data provider specified for InvalidDataProviderTest::testInvalidDataProvider is invalid');
+        $I->seeInShellOutput('Tests: 1,');
+        $I->seeInShellOutput('Errors: 1.');
+    }
+
+    #[Group('shuffle')]
     public function showSeedNumberOnShuffle(CliGuy $I)
     {
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
@@ -575,31 +654,31 @@ EOF
         $I->dontSeeInShellOutput('Seed');
     }
 
-    /**
-     * @group shuffle
-     * @param CliGuy $I
-     * @param Scenario $scenario
-     */
+    #[Group('shuffle')]
     public function showSameOrderOfFilesOnSeed(CliGuy $I, Scenario $scenario)
     {
         if (DIRECTORY_SEPARATOR === '\\') {
             $scenario->skip('Failing on Windows. Need to investigate');
         }
+
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
         $I->seeInShellOutput('Seed');
+
         $output = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
-        $output = preg_replace('~\(\d\.\d+s\)~m', '', $output);
+        $output = preg_replace('#\(\d\.\d+s\)#m', '', $output);
+
         $seed = $I->grabFromOutput('~\[Seed\] (.*)~');
 
         $I->executeCommand('run unit -o "settings: shuffle: true" --seed ' . $seed, false);
         $newOutput = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
-        $newOutput = preg_replace('~\(\d\.\d+s\)~m', '', $newOutput);
+        $newOutput = preg_replace('#\(\d\.\d+s\)#m', '', $newOutput);
 
         $I->assertSame($output, $newOutput, 'order of tests is the same');
 
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
+
         $newOutput = $I->grabFromOutput('/---\n((.|\n)*?)---/m');
-        $newOutput = preg_replace('~\(\d\.\d+s\)~m', '', $newOutput);
+        $newOutput = preg_replace('#\(\d\.\d+s\)#m', '', $newOutput);
 
         $I->assertNotSame($output, $newOutput, 'order of tests is the same');
     }
@@ -640,19 +719,60 @@ EOF
         $I->seeInShellOutput("OK (");
     }
 
-    /**
-     * @group reports
-     *
-     * @param CliGuy $I
-     */
+    public function runTestsWithGrep(CliGuy $I)
+    {
+        $I->executeCommand('run dummy --grep Another --no-ansi');
+        $I->dontSeeInShellOutput('GroupEventsCest');
+        $I->seeInShellOutput('AnotherCest');
+
+        $I->executeCommand('run dummy --grep Optimistic --no-ansi');
+        $I->seeInShellOutput('OK (1 test');
+    }
+
+    public function runTestsWithFilter(CliGuy $I)
+    {
+        $I->executeCommand('run dummy --filter Another --no-ansi');
+        $I->dontSeeInShellOutput('GroupEventsCest');
+        $I->seeInShellOutput('AnotherCest');
+    }
+
+    public function runTestsByShards(CliGuy $I)
+    {
+        $I->executeCommand('run dummy --shard=1/3 --no-ansi');
+        $I->seeInShellOutput('OK (2 tests');
+        $I->seeInShellOutput('[Shard 1/3');
+        preg_match_all('~\+\s(\w+:\s[\w\s]+)~', $I->grabShellOutput(), $matches);
+        $tests1 = $matches[1];
+
+        $I->executeCommand('run dummy --shard=2/3');
+        $I->seeInShellOutput('OK (2 tests');
+        $I->seeInShellOutput('[Shard 2/3');
+
+        preg_match_all('~\+\s(\w+:\s[\w\s]+)~', $I->grabShellOutput(), $matches);
+        $tests2 = $matches[1];
+
+        $I->executeCommand('run dummy --shard=3/3');
+        $I->seeInShellOutput('OK (2 tests');
+        $I->seeInShellOutput('[Shard 3/3');
+
+        preg_match_all('~\+\s(\w+:\s[\w\s]+)~', $I->grabShellOutput(), $matches);
+        $tests3 = $matches[1];
+
+        $I->assertEmpty(array_intersect($tests1, $tests2), 'same tests in shards');
+        $I->assertEmpty(array_intersect($tests2, $tests3), 'same tests in shards');
+        $I->assertEmpty(array_intersect($tests1, $tests3), 'same tests in shards');
+    }
+
+    #[Group('reports')]
     public function runHtmlWithPhpBrowserCheckReport(CliGuy $I)
     {
         $I->wantTo('execute tests with PhpBrowser with html output and check html');
         $I->executeFailCommand('run phpbrowser_html_report --html');
         $I->seeResultCodeIsNot(0);
+
         $expectedRelReportPath     = 'tests/_output';
         $expectedReportFilename    = 'CodeceptionIssue5568Cest.failureShouldCreateHtmlSnapshot.fail.html';
-        $expectedReportAbsFilename = join(DIRECTORY_SEPARATOR, [
+        $expectedReportAbsFilename = implode(DIRECTORY_SEPARATOR, [
             getcwd(),
             $expectedRelReportPath,
             $expectedReportFilename
@@ -680,122 +800,115 @@ EOF
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoCommentStepsWithOneSubStepInBetween'))
                     ->addStep('no metaStep')
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addStep('no metaStep')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'commentStepsWithDifferentSubStepsInBetweenAndAfter'))
                     ->addStep('no metaStep')
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addStep('no metaStep')
                     ->addMetaStep('Page\DemoPageObject: demo action2')
-                    ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAgainDoesNotExist')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'differentSubSteps'))
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addMetaStep('Page\DemoPageObject: demo action2')
-                    ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAgainDoesNotExist')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'commentStepsWithDifferentSubStepsOnceNestedInBetweenAndAfter'))
                     ->addStep('no metaStep')
                     ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addStep('no metaStep inside a method')
                     ->addStep('no metaStep')
                     ->addMetaStep('Page\DemoPageObject: demo action2')
-                    ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAgainDoesNotExist')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'commentStepsWithDifferentSubStepsOnceNestedInBetweenAndAfter2'))
                     ->addStep('no metaStep')
                     ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep2')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addStep('no metaStep inside a private internal method')
                     ->addStep('no metaStep')
                     ->addMetaStep('Page\DemoPageObject: demo action2')
-                    ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAgainDoesNotExist')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'nestedSubStepFollowedByOtherSubStep'))
                     ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addStep('no metaStep inside a method')
                     ->addMetaStep('Page\DemoPageObject: demo action2')
-                    ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAgainDoesNotExist')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'nestedSubStepFollowedByOtherSubStep2'))
                     ->addMetaStep('Page\DemoPageObject: demo action1 with nested no metastep2')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addStep('no metaStep inside a private internal method')
                     ->addMetaStep('Page\DemoPageObject: demo action2')
-                    ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAgainDoesNotExist')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoIdentialSubStepsInARow'))
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoIdentialSubStepsInARowFollowedByAnotherSubStep'))
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addMetaStep('Page\DemoPageObject: demo action2')
-                    ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAgainDoesNotExist')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'twoIdentialSubStepsWithAnotherSubStepInBetween'))
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addMetaStep('Page\DemoPageObject: demo action2')
-                    ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAgainDoesNotExist')
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
             ],
             [
                 'testHtmlReportRegexBuilder' => (new TestHtmlReportRegexBuilder('CodeceptionIssue4413Cest', 'subStepFollowedByTwoIdentialSubSteps'))
                     ->addMetaStep('Page\DemoPageObject: demo action2')
-                    ->addStep("I don't see file found", 'thisFileAgainDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAgainDoesNotExist')
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
                     ->addMetaStep('Page\DemoPageObject: demo action1')
-                    ->addStep("I don't see file found", 'thisFileDoesNotExist')
-                    ->addStep("I don't see file found", 'thisFileAlsoDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileDoesNotExist')
+                    ->addStep("I don&#039;t see file found", 'thisFileAlsoDoesNotExist')
             ]
         ];
     }
 
-    /**
-     * @group reports
-     *
-     * @dataProvider htmlReportRegexCheckProvider
-     *
-     * @param CliGuy               $I
-     * @param \Codeception\Example $example
-     * @param Scenario             $scenario
-     */
+    #[Group('reports')]
+    #[DataProvider('htmlReportRegexCheckProvider')]
     public function runHtmlCheckReport(CliGuy $I, \Codeception\Example $example, Scenario $scenario)
     {
         /** @var TestHtmlReportRegexBuilder $testBuilder */
@@ -812,7 +925,6 @@ EOF
         $builder = (new HtmlReportRegexBuilder())->addTest($testBuilder);
         $I->seeThisFileMatches($builder->build());
     }
-
 }
 
 
@@ -827,7 +939,7 @@ class HtmlReportRegexBuilder
         return '/' . $this->regex . '/s';
     }
 
-    public function addTest(TestHtmlReportRegexBuilder $testBuilder): HtmlReportRegexBuilder
+    public function addTest(TestHtmlReportRegexBuilder $testBuilder): self
     {
         $this->regex .= $testBuilder->build();
         return $this;
@@ -836,8 +948,10 @@ class HtmlReportRegexBuilder
 
 class TestHtmlReportRegexBuilder
 {
-    private $testClass;
-    private $testCase;
+    private string $testClass;
+
+    private string $testCase;
+
     private $stepsRegex;
 
     public function __construct(string $testClass, string $testCase)
@@ -856,24 +970,17 @@ class TestHtmlReportRegexBuilder
         return $this->testCase;
     }
 
-    /**
-     * Allows for nice output in @dataProvider usage.
-     */
-    public function __toString(): string
-    {
-        return $this->getTestClass() . ':' . $this->getTestCase();
-    }
-
-    public function addStep(string $step, ?string $arg = null): TestHtmlReportRegexBuilder
+    public function addStep(string $step, ?string $arg = null): self
     {
         $this->stepsRegex .=  '.*?' . 'stepName ' . '.*?' . $step;
         if ($arg) {
             $this->stepsRegex .= '.*?' . '>&quot;' . $arg . '&quot;';
         }
+
         return $this;
     }
 
-    public function addMetaStep(string $step): TestHtmlReportRegexBuilder
+    public function addMetaStep(string $step): self
     {
         $this->addStep(preg_quote($step));
         $this->stepsRegex .=  '.*?substeps ';
@@ -888,6 +995,7 @@ class TestHtmlReportRegexBuilder
         } else {
             $regex .= '.*?';
         }
+
         return $regex;
     }
 }

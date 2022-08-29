@@ -4,23 +4,13 @@ declare(strict_types=1);
 
 namespace Codeception\Lib\Console;
 
+use Stringable;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Message
+class Message implements Stringable
 {
-    /**
-     * @var Output|null
-     */
-    protected $output;
-    /**
-     * @var string
-     */
-    protected $message;
-
-    public function __construct(string $message, Output $output = null)
+    public function __construct(protected string $message, protected ?Output $output = null)
     {
-        $this->message = $message;
-        $this->output = $output;
     }
 
     public function with($param): self
@@ -68,10 +58,7 @@ class Message
         $this->output->writeln($this->message);
     }
 
-    /**
-     * @param Message|string $string
-     */
-    public function prepend($string): self
+    public function prepend(Message|string $string): self
     {
         if ($string instanceof Message) {
             $string = $string->getMessage();
@@ -80,10 +67,7 @@ class Message
         return $this;
     }
 
-    /**
-     * @param Message|string $string
-     */
-    public function append($string): self
+    public function append(Message|string $string): self
     {
         if ($string instanceof Message) {
             $string = $string->getMessage();

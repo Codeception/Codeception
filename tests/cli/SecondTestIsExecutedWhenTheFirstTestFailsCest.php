@@ -10,18 +10,18 @@ final class SecondTestIsExecutedWhenTheFirstTestFailsCest
         $I->amInPath('tests/data/first_test_fails');
         $I->executeFailCommand('run --xml --no-ansi');
         $I->seeInShellOutput('Tests: 2, Assertions: 1, Errors: 1');
-        $I->seeInShellOutput('E twoTestsCest: Failing');
-        $I->seeInShellOutput('+ twoTestsCest: Successful');
+        $I->seeInShellOutput('E TwoTestsCest: Failing');
+        $I->seeInShellOutput('+ TwoTestsCest: Successful');
     }
 
     public function endTestEventIsEmitted(CliGuy $I)
     {
         $I->wantTo('see that all start and end events are emitted');
         $I->amInPath('tests/data/first_test_fails');
-        $I->executeFailCommand('run --xml --no-ansi --report -o "reporters: report: CustomReporter"');
-        $I->seeInShellOutput('STARTED: twoTestsCest: Failing');
-        $I->seeInShellOutput('ENDED: twoTestsCest: Failing');
-        $I->seeInShellOutput('STARTED: twoTestsCest: Successful');
-        $I->seeInShellOutput('ENDED: twoTestsCest: Successful');
+        $I->executeFailCommand('run --xml --no-ansi --ext CustomReporter');
+        $I->seeInShellOutput('STARTED: TwoTestsCest: Failing');
+        $I->seeInShellOutput('ENDED: TwoTestsCest: Failing');
+        $I->seeInShellOutput('STARTED: TwoTestsCest: Successful');
+        $I->seeInShellOutput('ENDED: TwoTestsCest: Successful');
     }
 }
