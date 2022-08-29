@@ -38,7 +38,9 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use NunoMaduro\Collision\Writer;
 
+use Whoops\Exception\Inspector;
 use function array_map;
 use function array_merge;
 use function array_reverse;

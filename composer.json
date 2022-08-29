@@ -34,7 +34,8 @@
         "symfony/finder": ">=6.0 <7.0",
         "symfony/yaml": ">=6.0 <7.0",
         "symfony/var-dumper": ">=6.0 < 7.0",
-        "psy/psysh": "^0.11.2"
+        "psy/psysh": "^0.11.2",
+        "nunomaduro/collision": "^6.3"
     },
     "require-dev": {
         "ext-simplexml": "*",
