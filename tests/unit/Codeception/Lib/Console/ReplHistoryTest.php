@@ -1,4 +1,8 @@
-<?php namespace Codeception\Lib\Console;
+<?php
+
+declare(strict_types=1);
+
+namespace Codeception\Lib\Console;
 
 use Codeception\Configuration;
 use Codeception\Test\Unit;
@@ -28,8 +32,8 @@ class ReplHistoryTest extends Unit
 
         $commands = $this->replHistory->getAll();
         $this->assertCount(2, $commands);
-        $this->assertEquals('$I->click(".something")', $commands[0]);
-        $this->assertEquals('$I->anotherCommand()', $commands[1]);
+        $this->assertSame('$I->click(".something")', $commands[0]);
+        $this->assertSame('$I->anotherCommand()', $commands[1]);
     }
 
     public function testClear()

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Extension;
 
 use Codeception\Event\FailEvent;
@@ -43,14 +46,24 @@ class DotReporter extends Extension
      * @var Console
      */
     protected $standardReporter;
-
+    /**
+     * @var array
+     */
     protected $errors = [];
+    /**
+     * @var array
+     */
     protected $failures = [];
-
+    /**
+     * @var int
+     */
     protected $width = 10;
+    /**
+     * @var int
+     */
     protected $currentPos = 0;
 
-    public function _initialize()
+    public function _initialize(): void
     {
         $this->options['silent'] = false; // turn on printing for this extension
         $this->_reconfigure(['settings' => ['silent' => true]]); // turn off printing for everything else
@@ -58,7 +71,11 @@ class DotReporter extends Extension
         $this->width = $this->standardReporter->detectWidth();
     }
 
-    // we are listening for events
+    /**
+     * We are listening for events
+     *
+     * @var array<string, string>
+     */
     public static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_SUCCESS => 'success',
@@ -68,42 +85,42 @@ class DotReporter extends Extension
         Events::TEST_FAIL_PRINT => 'printFailed'
     ];
 
-    public function beforeSuite()
+    public function beforeSuite(): void
     {
-        $this->writeln("");
+        $this->writeln('');
     }
 
-    public function success()
+    public function success(): void
     {
         $this->printChar('.');
     }
 
-    public function fail(FailEvent $e)
+    public function fail(FailEvent $event): void
     {
-        $this->printChar("<error>F</error>");
+        $this->printChar('<error>F</error>');
     }
 
-    public function error(FailEvent $e)
+    public function error(FailEvent $event): void
     {
         $this->printChar('<error>E</error>');
     }
 
-    public function skipped()
+    public function skipped(): void
     {
         $this->printChar('S');
     }
-    
-    protected function printChar($char)
+
+    protected function printChar(string $char): void
     {
         if ($this->currentPos >= $this->width) {
             $this->writeln('');
             $this->currentPos = 0;
         }
         $this->write($char);
-        $this->currentPos++;
+        ++$this->currentPos;
     }
 
-    public function printFailed(FailEvent $event)
+    public function printFailed(FailEvent $event): void
     {
         $this->standardReporter->printFail($event);
     }

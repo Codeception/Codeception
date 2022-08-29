@@ -1,9 +1,11 @@
 <?php
+
+declare(strict_types=1);
 // @group core
 
 use Codeception\Scenario;
 
-class BuildCest
+final class BuildCest
 {
     /** @var string */
     private $originalCliHelperContents;
@@ -29,19 +31,15 @@ class BuildCest
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeInThisFile('seeFileFound(');
-        $I->seeInThisFile('public function assertEquals($expected, $actual, $message = "") {');
+        $I->seeInThisFile('public function assertSame($expected, $actual, $message = "") {');
     }
 
     public function usesTypehintsWherePossible(CliGuy $I, Scenario $scenario)
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $scenario->skip('Does not work in PHP < 7');
-        }
-
         $I->wantToTest('generate typehints with generated actions');
 
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
-        $cliHelperContents = str_replace('public function grabFromOutput($regex)', 'public function grabFromOutput($regex): int', $cliHelperContents);
+        $cliHelperContents = str_replace('public function grabFromOutput($regex)', 'public function grabFromOutput(string $regex): int', $cliHelperContents);
         file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
 
         $I->runShellCommand('php codecept build');
@@ -50,17 +48,32 @@ class BuildCest
         $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
-        $I->openFile(codecept_root_dir('tests/support/CliHelper.php'));
-        $I->seeInThisFile('public function grabFromOutput($regex): int');
-        $I->seeInThisFile('return $match[1]');
+        $I->seeInThisFile('public function grabFromOutput(string $regex): int');
     }
-    
-    public function noReturnForVoidType(CliGuy $I, Scenario $scenario)
+
+    public function generatedUnionReturnTypeOnPhp8(CliGuy $I, Scenario $scenario)
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $scenario->skip('Does not work in PHP < 7');
+        if (PHP_MAJOR_VERSION < 8) {
+            $scenario->skip('Does not work in PHP < 8');
         }
 
+        $I->wantToTest('generate action with union return type');
+
+        $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
+        $cliHelperContents = str_replace('public function grabFromOutput($regex)', 'public function grabFromOutput(array|string $param): int|string', $cliHelperContents);
+        file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
+
+        $I->runShellCommand('php codecept build');
+        $I->seeInShellOutput('generated successfully');
+        $I->seeInSupportDir('CliGuy.php');
+        $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
+        $I->seeInThisFile('use _generated\CliGuyActions');
+        $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
+        $I->seeInThisFile('public function grabFromOutput(array|string $param): string|int');
+    }
+
+    public function noReturnForVoidType(CliGuy $I, Scenario $scenario)
+    {
         $I->wantToTest('no return keyword generated for void typehint');
 
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
@@ -73,9 +86,6 @@ class BuildCest
         $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
-        $I->openFile(codecept_root_dir('tests/support/CliHelper.php'));
         $I->seeInThisFile('public function seeDirFound($dir): void');
-        $I->dontSeeInThisFile('return $this->assertTrue(is_dir(');
-        $I->seeInThisFile('$this->assertTrue(is_dir(');
     }
 }

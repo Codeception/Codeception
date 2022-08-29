@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception;
 
 class ApplicationTest extends \Codeception\PHPUnit\TestCase
@@ -12,9 +14,9 @@ class ApplicationTest extends \Codeception\PHPUnit\TestCase
 
     public function testRegisterCustomCommand()
     {
-        \Codeception\Configuration::append(array('extensions' => array(
-            'commands' => array(
-                'Project\Command\MyCustomCommand'))));
+        \Codeception\Configuration::append(['extensions' => [
+            'commands' => [
+                'Project\Command\MyCustomCommand']]]);
 
         $application = new Application();
         $application->registerCustomCommands();

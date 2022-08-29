@@ -1,16 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\PHPUnit\Constraint;
 
-use SebastianBergmann\Comparator\ComparisonFailure;
-use SebastianBergmann\Comparator\ArrayComparator;
-use SebastianBergmann\Comparator\Factory;
 use Codeception\Util\JsonArray;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\ExpectationFailedException;
+use SebastianBergmann\Comparator\ArrayComparator;
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Comparator\Factory;
+use function is_array;
 
-class JsonContains extends \PHPUnit\Framework\Constraint\Constraint
+class JsonContains extends Constraint
 {
     /**
-     * @var
+     * @var array
      */
     protected $expected;
 
@@ -24,26 +30,25 @@ class JsonContains extends \PHPUnit\Framework\Constraint\Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $other Value or object to evaluate.
-     *
-     * @return bool
      */
-    protected function matches($other) : bool
+    protected function matches($other): bool
     {
         $jsonResponseArray = new JsonArray($other);
         if (!is_array($jsonResponseArray->toArray())) {
-            throw new \PHPUnit\Framework\AssertionFailedError('JSON response is not an array: ' . $other);
+            throw new AssertionFailedError('JSON response is not an array: ' . $other);
         }
+        $jsonArrayContainsArray = $jsonResponseArray->containsArray($this->expected);
 
-        if ($jsonResponseArray->containsArray($this->expected)) {
+        if ($jsonArrayContainsArray) {
             return true;
         }
 
         $comparator = new ArrayComparator();
         $comparator->setFactory(new Factory);
         try {
-            $comparator->assertEquals($this->expected, $jsonResponseArray->toArray());
+            $comparator->assertSame($this->expected, $jsonResponseArray->toArray());
         } catch (ComparisonFailure $failure) {
-            throw new \PHPUnit\Framework\ExpectationFailedException(
+            throw new ExpectationFailedException(
                 "Response JSON does not contain the provided JSON\n",
                 $failure
             );
@@ -54,16 +59,14 @@ class JsonContains extends \PHPUnit\Framework\Constraint\Constraint
 
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
-    public function toString() : string
+    public function toString(): string
     {
         //unused
         return '';
     }
 
-    protected function failureDescription($other) : string
+    protected function failureDescription($other): string
     {
         //unused
         return '';

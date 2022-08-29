@@ -1,6 +1,8 @@
 <?php
 
-require_once 'MockAutoload.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/MockAutoload.php';
 
 use Codeception\Util\MockAutoload as Autoload;
 

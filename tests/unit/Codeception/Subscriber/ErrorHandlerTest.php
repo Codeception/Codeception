@@ -1,12 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Notification;
 use Codeception\Subscriber\ErrorHandler;
 use Codeception\Suite;
 
-class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
+class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
 {
+    /**
+     * @var int|null
+     */
+    private $originalErrorLevel;
+
+    public function _setUp()
+    {
+        $this->originalErrorLevel = error_reporting();
+    }
+
+    public function _tearDown()
+    {
+        // Deprecation message test changes error_level
+        error_reporting($this->originalErrorLevel);
+    }
 
     public function testDeprecationMessagesRespectErrorLevelSetting()
     {
@@ -19,8 +36,16 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $errorHandler->onFinish($suiteEvent);
 
         Notification::all(); //clear the messages
-        $errorHandler->errorHandler(E_USER_DEPRECATED, 'deprecated message', __FILE__, __LINE__, []);
+        $errorHandler->errorHandler(E_USER_DEPRECATED, 'deprecated message', __FILE__, (string)__LINE__, []);
 
-        $this->assertEquals([], Notification::all(), 'Deprecation message was added to notifications');
+        $this->assertSame([], Notification::all(), 'Deprecation message was added to notifications');
+    }
+
+    public function testShowsLocationOfWarning()
+    {
+        $this->expectException(\PHPUnit\Framework\Exception::class);
+        $SEP = DIRECTORY_SEPARATOR;
+        $this->expectExceptionMessage("Undefined variable: file at tests{$SEP}unit{$SEP}Codeception{$SEP}Subscriber{$SEP}ErrorHandlerTest.php");
+        trigger_error('Undefined variable: file', E_USER_WARNING);
     }
 }

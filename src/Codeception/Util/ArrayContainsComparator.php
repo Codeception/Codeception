@@ -1,5 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
+
+use function array_intersect;
+use function array_keys;
+use function count;
+use function is_array;
+use function is_numeric;
+use function min;
+use function range;
 
 class ArrayContainsComparator
 {
@@ -8,20 +19,17 @@ class ArrayContainsComparator
      */
     protected $haystack = [];
 
-    public function __construct($haystack)
+    public function __construct(array $haystack)
     {
         $this->haystack = $haystack;
     }
 
-    /**
-     * @return array
-     */
-    public function getHaystack()
+    public function getHaystack(): array
     {
         return $this->haystack;
     }
 
-    public function containsArray(array $needle)
+    public function containsArray(array $needle): bool
     {
         return $needle == $this->arrayIntersectRecursive($needle, $this->haystack);
     }
@@ -50,22 +58,13 @@ class ArrayContainsComparator
 
     /**
      * This array has sequential keys?
-     *
-     * @param array $array
-     *
-     * @return bool
      */
-    private function arrayIsSequential(array $array)
+    private function arrayIsSequential(array $array): bool
     {
         return array_keys($array) === range(0, count($array) - 1);
     }
 
-    /**
-     * @param array $arr1
-     * @param array $arr2
-     * @return array
-     */
-    private function sequentialArrayIntersect(array $arr1, array $arr2)
+    private function sequentialArrayIntersect(array $arr1, array $arr2): array
     {
         $ret = [];
 
@@ -96,9 +95,6 @@ class ArrayContainsComparator
     }
 
     /**
-     * @param array $arr1
-     * @param array $arr2
-     *
      * @return array|bool|null
      */
     private function associativeArrayIntersect(array $arr1, array $arr2)
@@ -133,7 +129,7 @@ class ArrayContainsComparator
         return $ret;
     }
 
-    private function isEqualValue($val1, $val2)
+    private function isEqualValue($val1, $val2): bool
     {
         if (is_numeric($val1)) {
             $val1 = (string) $val1;

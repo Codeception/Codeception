@@ -1,19 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class BuildTest extends BaseCommandRunner
 {
 
+    /**
+     * @var array
+     */
+    public $log = [];
+
     protected function _setUp()
     {
-        $this->makeCommand('\Codeception\Command\Build');
-        $this->config = array(
+        $this->makeCommand(\Codeception\Command\Build::class);
+        $this->config = [
             'actor' => 'HobbitGuy',
             'path' => 'tests/shire/',
-            'modules' => array('enabled' => array('Filesystem', 'EmulateModuleHelper')),
+            'modules' => ['enabled' => ['Filesystem', 'EmulateModuleHelper']],
             'include' => []
-        );
+        ];
     }
 
     public function testBuild()

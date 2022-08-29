@@ -1,18 +1,17 @@
 <?php
-class IncludedCest
+
+declare(strict_types=1);
+
+final class IncludedCest
 {
 
     public function _before()
     {
         $logDir = codecept_root_dir('tests/data/included/_log');
         \Codeception\Util\FileSystem::doEmptyDir($logDir);
-        file_put_contents($logDir . '/.gitkeep', '');
     }
 
-    /**
-     * @param CliGuy $I
-     */
-    protected function moveToIncluded(\CliGuy $I)
+    private function moveToIncluded(CliGuy $I)
     {
         $I->amInPath('tests/data/included');
     }
@@ -21,7 +20,7 @@ class IncludedCest
      * @before moveToIncluded
      * @param CliGuy $I
      */
-    public function runSuitesFromIncludedConfigs(\CliGuy $I)
+    public function runSuitesFromIncludedConfigs(CliGuy $I)
     {
         $I->executeCommand('run');
         $I->seeInShellOutput('[Jazz]');
@@ -36,7 +35,7 @@ class IncludedCest
      * @before moveToIncluded
      * @param CliGuy $I
      */
-    public function runTestsFromIncludedConfigs(\CliGuy $I)
+    public function runTestsFromIncludedConfigs(CliGuy $I)
     {
         $ds = DIRECTORY_SEPARATOR;
         $I->executeCommand("run jazz{$ds}tests{$ds}functional{$ds}DemoCept.php", false);
@@ -59,7 +58,7 @@ class IncludedCest
      * @before moveToIncluded
      * @param CliGuy $I
      */
-    public function runTestsFromIncludedConfigsNested(\CliGuy $I)
+    public function runTestsFromIncludedConfigsNested(CliGuy $I)
     {
         $I->executeCommand('run jazz/pianist/tests/functional/PianistCept.php', false);
 
@@ -81,7 +80,7 @@ class IncludedCest
      * @before moveToIncluded
      * @param CliGuy $I
      */
-    public function runTestsFromIncludedConfigsSingleTest(\CliGuy $I)
+    public function runTestsFromIncludedConfigsSingleTest(CliGuy $I)
     {
         $ds = DIRECTORY_SEPARATOR;
         $I->executeCommand("run jazz{$ds}tests{$ds}unit{$ds}SimpleTest.php:testSimple", false);
@@ -108,7 +107,7 @@ class IncludedCest
      * @before moveToIncluded
      * @param CliGuy $I
      */
-    public function runIncludedWithXmlOutput(\CliGuy $I)
+    public function runIncludedWithXmlOutput(CliGuy $I)
     {
         $I->executeCommand('run --xml');
         $I->amInPath('_log');
@@ -125,7 +124,7 @@ class IncludedCest
      * @before moveToIncluded
      * @param CliGuy $I
      */
-    public function runIncludedWithHtmlOutput(\CliGuy $I)
+    public function runIncludedWithHtmlOutput(CliGuy $I)
     {
         $I->executeCommand('run --html');
         $I->amInPath('_log');
@@ -143,7 +142,7 @@ class IncludedCest
      * @group coverage
      * @param CliGuy $I
      */
-    public function runIncludedWithCoverage(\CliGuy $I)
+    public function runIncludedWithCoverage(CliGuy $I)
     {
         $I->executeCommand('run --coverage-xml');
         $I->amInPath('_log');
@@ -158,7 +157,7 @@ class IncludedCest
      * @before moveToIncluded
      * @param CliGuy $I
      */
-    public function buildIncluded(\CliGuy $I)
+    public function buildIncluded(CliGuy $I)
     {
         $I->executeCommand('build');
         $I->seeInShellOutput('generated successfully');
@@ -166,4 +165,21 @@ class IncludedCest
         $I->seeInShellOutput('Jazz\\Pianist\\TestGuy');
         $I->seeInShellOutput('Shire\\TestGuy');
     }
+
+	/**
+      * @before moveToIncluded
+      * @param CliGuy $I
+      */
+    public function cleanIncluded(\CliGuy $I)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        $I->executeCommand('clean');
+        $I->seeInShellOutput("included{$ds}_log");
+        $I->seeInShellOutput("included{$ds}jazz{$ds}tests/_log");
+        $I->seeInShellOutput("included{$ds}jazz{$ds}pianist{$ds}tests/_log");
+        $I->seeInShellOutput("included{$ds}shire{$ds}tests/_log");
+        $I->seeInShellOutput('Done');
+    }
+
 }

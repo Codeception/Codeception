@@ -31,7 +31,7 @@ class SnapshotNonJsonDataCest
         $snapshot->shouldRefreshSnapshot(true);
         $snapshot->assert();
 
-        $I->assertEquals(
+        $I->assertSame(
             file_get_contents(codecept_data_dir($snapshot->sourceFile)),
             file_get_contents(codecept_data_dir('Snapshot.NotAJsonSnapshot.xml')),
             'Snapshot stored data must be identical to source.'

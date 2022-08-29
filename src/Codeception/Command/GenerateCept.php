@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Cept;
@@ -6,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use function rtrim;
 
 /**
  * Generates Cept (scenario-driven test) file:
@@ -17,10 +21,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GenerateCept extends Command
 {
-    use Shared\FileSystem;
-    use Shared\Config;
+    use Shared\FileSystemTrait;
+    use Shared\ConfigTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
@@ -28,12 +32,12 @@ class GenerateCept extends Command
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty Cept file in suite';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
         $filename = $input->getArgument('test');
@@ -42,15 +46,15 @@ class GenerateCept extends Command
         $this->createDirectoryFor($config['path'], $filename);
 
         $filename = $this->completeSuffix($filename, 'Cept');
-        $gen = new Cept($config);
+        $cept = new Cept($config);
 
-        $full_path = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
-        $res = $this->createFile($full_path, $gen->produce());
+        $fullPath = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
+        $res = $this->createFile($fullPath, $cept->produce());
         if (!$res) {
-            $output->writeln("<error>Test $filename already exists</error>");
+            $output->writeln("<error>Test {$filename} already exists</error>");
             return 1;
         }
-        $output->writeln("<info>Test was created in $full_path</info>");
+        $output->writeln("<info>Test was created in {$fullPath}</info>");
         return 0;
     }
 }

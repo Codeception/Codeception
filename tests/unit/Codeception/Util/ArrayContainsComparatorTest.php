@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 class ArrayContainsComparatorTest extends \Codeception\Test\Unit

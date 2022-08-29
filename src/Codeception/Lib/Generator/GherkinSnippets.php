@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
 use Behat\Gherkin\Node\StepNode;
@@ -8,6 +11,9 @@ use Symfony\Component\Finder\Finder;
 
 class GherkinSnippets
 {
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
     /**
      * @{{type}} {{text}}
@@ -19,11 +25,20 @@ class GherkinSnippets
 
 EOF;
 
+    /**
+     * @var string[]
+     */
     protected $snippets = [];
+    /**
+     * @var string[]
+     */
     protected $processed = [];
+    /**
+     * @var string[]
+     */
     protected $features = [];
 
-    public function __construct($settings, $test = null)
+    public function __construct(array $settings, $test = null)
     {
         $loader = new Gherkin($settings);
         $pattern = $loader->getPattern();
@@ -53,7 +68,6 @@ EOF;
             $allSteps = array_merge($allSteps, $stepGroup);
         }
         foreach ($loader->getTests() as $test) {
-            /** @var $test \Codeception\Test\Gherkin  **/
             $steps = $test->getScenarioNode()->getSteps();
             if ($test->getFeatureNode()->hasBackground()) {
                 $steps = array_merge($steps, $test->getFeatureNode()->getBackground()->getSteps());
@@ -82,39 +96,39 @@ EOF;
         }
     }
 
-    public function addSnippet(StepNode $step)
+    public function addSnippet(StepNode $step): void
     {
         $args = [];
         $pattern = $step->getText();
 
         // match numbers (not in quotes)
-        if (preg_match_all('~([\d\.])(?=([^"]*"[^"]*")*[^"]*$)~', $pattern, $matches)) {
+        if (preg_match_all('#([\d\.])(?=([^"]*"[^"]*")*[^"]*$)#', $pattern, $matches)) {
             foreach ($matches[1] as $num => $param) {
-                $num++;
+                ++$num;
                 $args[] = '$num' . $num;
-                $pattern = str_replace($param, ":num$num", $pattern);
+                $pattern = str_replace($param, ":num{$num}", $pattern);
             }
         }
 
         // match quoted string
-        if (preg_match_all('~"(.*?)"~', $pattern, $matches)) {
+        if (preg_match_all('#"(.*?)"#', $pattern, $matches)) {
             foreach ($matches[1] as $num => $param) {
-                $num++;
+                ++$num;
                 $args[] = '$arg' . $num;
-                $pattern = str_replace('"'.$param.'"', ":arg$num", $pattern);
+                $pattern = str_replace('"'.$param.'"', ":arg{$num}", $pattern);
             }
         }
         // Has multiline argument at the end of step?
         if (self::stepHasPyStringArgument($step)) {
             $num = count($args) + 1;
-            $pattern .= " :arg$num";
+            $pattern .= " :arg{$num}";
             $args[] = '$arg' . $num;
         }
         if (in_array($pattern, $this->processed)) {
             return;
         }
 
-        $methodName = preg_replace('~(\s+?|\'|\"|\W)~', '', ucwords(preg_replace('~"(.*?)"|\d+~', '', $step->getText())));
+        $methodName = preg_replace('#(\s+?|\'|\"|\W)#', '', ucwords(preg_replace('#"(.*?)"|\d+#', '', $step->getText())));
         if (empty($methodName)) {
             $methodName = 'step_' . substr(sha1($pattern), 0, 9);
         }
@@ -129,17 +143,23 @@ EOF;
         $this->processed[] = $pattern;
     }
 
-    public function getSnippets()
+    /**
+     * @return string[]
+     */
+    public function getSnippets(): array
     {
         return $this->snippets;
     }
 
-    public function getFeatures()
+    /**
+     * @return string[]
+     */
+    public function getFeatures(): array
     {
         return $this->features;
     }
 
-    public static function stepHasPyStringArgument(StepNode $step)
+    public static function stepHasPyStringArgument(StepNode $step): bool
     {
         if ($step->hasArguments()) {
             $stepArgs = $step->getArguments();

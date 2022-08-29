@@ -1,6 +1,8 @@
 <?php
 
-class ConfigBundledSuitesCest
+declare(strict_types=1);
+
+final class ConfigBundledSuitesCest
 {
     public function runBundledSuite(CliGuy $I)
     {

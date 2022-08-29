@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception;
 
 use Codeception\Test\Metadata;
+use PHPUnit\Framework\Test;
 
-interface TestInterface extends \PHPUnit\Framework\Test
+interface TestInterface extends Test
 {
-    /**
-     * @return Metadata
-     */
-    public function getMetadata();
+    public function getMetadata(): Metadata;
 }

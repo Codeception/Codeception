@@ -1,22 +1,40 @@
 <?php
-use Codeception\Stub;
+
+declare(strict_types=1);
+
 use Codeception\Application;
+use Codeception\Stub;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
 {
-
     /**
-     * @var \Codeception\Command\Base
+     * @var \PHPUnit\Framework\MockObject\MockObject|null
      */
     protected $command;
-
+    /**
+     * @var string
+     */
     public $filename = "";
+    /**
+     * @var string
+     */
     public $content = "";
+    /**
+     * @var string
+     */
     public $output = "";
+    /**
+     * @var array
+     */
     public $config = [];
+    /**
+     * @var array
+     */
     public $saved = [];
-
+    /**
+     * @var string
+     */
     protected $commandName = 'do:stuff';
 
     protected function execute($args = [], $isSuite = true)
@@ -87,11 +105,11 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
 
     protected function assertIsValidPhp($php)
     {
-        $temp_file = tempnam(sys_get_temp_dir(), 'CodeceptionUnitTest');
-        file_put_contents($temp_file, $php);
-        exec('php -l ' . $temp_file, $output, $code);
-        unlink($temp_file);
+        $tempFile = tempnam(sys_get_temp_dir(), 'CodeceptionUnitTest');
+        file_put_contents($tempFile, $php);
+        exec('php -l ' . $tempFile, $output, $code);
+        unlink($tempFile);
 
-        $this->assertEquals(0, $code, $php);
+        $this->assertSame(0, $code, $php);
     }
 }

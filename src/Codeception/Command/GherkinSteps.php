@@ -1,13 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
-use Codeception\Test\Loader\Gherkin;
+use Codeception\Test\Loader\Gherkin as GherkinLoader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function count;
 
 /**
  * Prints all steps from all Gherkin contexts for a specific suite
@@ -19,10 +23,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GherkinSteps extends Command
 {
-    use Shared\Config;
-    use Shared\Style;
+    use Shared\ConfigTrait;
+    use Shared\StyleTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition(
             [
@@ -33,26 +37,25 @@ class GherkinSteps extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Prints all defined feature steps';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
         $suite = $input->getArgument('suite');
         $config = $this->getSuiteConfig($suite);
         $config['describe_steps'] = true;
 
-        $loader = new Gherkin($config);
+        $loader = new GherkinLoader($config);
         $steps = $loader->getSteps();
 
         foreach ($steps as $name => $context) {
-            /** @var $table Table  **/
             $table = new Table($output);
             $table->setHeaders(['Step', 'Implementation']);
-            $output->writeln("Steps from <bold>$name</bold> context:");
+            $output->writeln("Steps from <bold>{$name}</bold> context:");
 
             foreach ($context as $step => $callable) {
                 if (count($callable) < 2) {

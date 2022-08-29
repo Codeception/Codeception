@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 use Codeception\Lib\Parser;
 
 /**
@@ -16,7 +19,10 @@ class ParserTest extends \Codeception\Test\Unit
      * @var \Codeception\Scenario
      */
     protected $scenario;
-    
+
+    /**
+     * @var \Codeception\Test\Metadata
+     */
     protected $testMetadata;
 
     protected function _before()
@@ -32,18 +38,18 @@ class ParserTest extends \Codeception\Test\Unit
     {
         $code = "<?php\n \\\$I->wantTo('run this test'); ";
         $this->parser->parseFeature($code);
-        $this->assertEquals('run this test', $this->scenario->getFeature());
+        $this->assertSame('run this test', $this->scenario->getFeature());
 
         $code = "<?php\n \\\$I->wantToTest('this run'); ";
         $this->parser->parseFeature($code);
-        $this->assertEquals('test this run', $this->scenario->getFeature());
+        $this->assertSame('test this run', $this->scenario->getFeature());
     }
 
     public function testParsingWithWhitespace()
     {
         $code = "<?php\n \\\$I->wantTo( 'run this test' ); ";
         $this->parser->parseFeature($code);
-        $this->assertEquals('run this test', $this->scenario->getFeature());
+        $this->assertSame('run this test', $this->scenario->getFeature());
     }
 
     public function testScenarioOptions()
@@ -77,11 +83,11 @@ EOF;
     {
         $code = "<?php\n //\\\$I->wantTo('run this test'); ";
         $this->parser->parseFeature($code);
-        $this->assertNull($this->scenario->getFeature());
+        $this->assertEmpty($this->scenario->getFeature());
 
         $code = "<?php\n /*\n \\\$I->wantTo('run this test'); \n */";
         $this->parser->parseFeature($code);
-        $this->assertNull($this->scenario->getFeature());
+        $this->assertEmpty($this->scenario->getFeature());
     }
 
     public function testScenarioSkipOptionsHandled()
@@ -121,22 +127,19 @@ EOF;
     public function testParseFile()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('SimpleTest.php'));
-        $this->assertEquals(['SampleTest'], $classes);
+        $this->assertSame(['SampleTest'], $classes);
     }
 
     public function testParseFileWithClass()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('php55Test'));
-        $this->assertEquals(['php55Test'], $classes);
+        $this->assertSame(['php55Test'], $classes);
     }
 
     public function testParseFileWithAnonymousClass()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $this->markTestSkipped('only for php 7');
-        }
         $classes = Parser::getClassesFromFile(codecept_data_dir('php70Test'));
-        $this->assertEquals(['php70Test'], $classes);
+        $this->assertSame(['php70Test'], $classes);
     }
     
     /*
@@ -145,7 +148,7 @@ EOF;
     public function testParseFileWhichUnsetsFileVariable()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('unsetFile.php'));
-        $this->assertEquals([], $classes);
+        $this->assertSame([], $classes);
     }
 
     /**
@@ -154,9 +157,6 @@ EOF;
      */
     public function testModernValidation()
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $this->markTestSkipped();
-        }
         $this->expectException('Codeception\Exception\TestParseException');
         Parser::load(codecept_data_dir('Invalid.php'));
     }

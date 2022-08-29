@@ -1,45 +1,53 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
+use PHPUnit\Util\Test as TestUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use function call_user_func;
+use function get_class;
+use function is_callable;
 
 class BeforeAfterTest implements EventSubscriberInterface
 {
-    use Shared\StaticEvents;
+    use Shared\StaticEventsTrait;
 
-    public static $events = [
+    /**
+     * @var array<string, string|int[]|string[]>
+     */
+    protected static $events = [
         Events::SUITE_BEFORE => 'beforeClass',
         Events::SUITE_AFTER  => ['afterClass', 100]
     ];
 
+    /**
+     * @var array
+     */
     protected $hooks = [];
+    /**
+     * @var array
+     */
     protected $startedTests = [];
-    protected $unsuccessfulTests = [];
 
-    public function beforeClass(SuiteEvent $e)
+    public function beforeClass(SuiteEvent $event): void
     {
-        foreach ($e->getSuite()->tests() as $test) {
-            /** @var $test \PHPUnit\Framework\Test  * */
-            if ($test instanceof \PHPUnit\Framework\TestSuite\DataProvider) {
-                $potentialTestClass = strstr($test->getName(), '::', true);
-                $this->hooks[$potentialTestClass] = \PHPUnit\Util\Test::getHookMethods($potentialTestClass);
-            }
-
+        foreach ($event->getSuite()->tests() as $test) {
             $testClass = get_class($test);
-            $this->hooks[$testClass] = \PHPUnit\Util\Test::getHookMethods($testClass);
+            $this->hooks[$testClass] = TestUtil::getHookMethods($testClass);
         }
         $this->runHooks('beforeClass');
     }
 
-
-    public function afterClass(SuiteEvent $e)
+    public function afterClass(SuiteEvent $event): void
     {
         $this->runHooks('afterClass');
     }
 
-    protected function runHooks($hookName)
+    protected function runHooks(string $hookName): void
     {
         foreach ($this->hooks as $className => $hook) {
             foreach ($hook[$hookName] as $method) {

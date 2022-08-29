@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 use Codeception\Lib\Console\Output;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * This class is used only when Codeception is executed in `--debug` mode.
@@ -18,7 +20,7 @@ class Debug
      */
     protected static $output = null;
 
-    public static function setOutput(Output $output)
+    public static function setOutput(Output $output): void
     {
         self::$output = $output;
     }
@@ -28,7 +30,7 @@ class Debug
      *
      * @param $message
      */
-    public static function debug($message)
+    public static function debug($message): void
     {
         if (!self::$output) {
             return;
@@ -36,7 +38,7 @@ class Debug
         self::$output->debug($message);
     }
 
-    public static function isEnabled()
+    public static function isEnabled(): bool
     {
         return (bool) self::$output;
     }

@@ -1,17 +1,25 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
 use Codeception\Configuration;
+use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class Test
 {
     use Namespaces;
-    use Shared\Classname;
+    use Classname;
 
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
-<?php {{namespace}}
+<?php
+{{namespace}}
 class {{name}}Test extends \Codeception\Test\Unit
 {
 {{tester}}
@@ -31,6 +39,9 @@ class {{name}}Test extends \Codeception\Test\Unit
 }
 EOF;
 
+    /**
+     * @var string
+     */
     protected $testerTemplate = <<<EOF
     /**
      * @var \{{actorClass}}
@@ -39,17 +50,23 @@ EOF;
     
 EOF;
 
+    /**
+     * @var array
+     */
+    protected $settings = [];
 
-    protected $settings;
+    /**
+     * @var string
+     */
     protected $name;
 
-    public function __construct($settings, $name)
+    public function __construct(array $settings, string $name)
     {
         $this->settings = $settings;
         $this->name = $this->removeSuffix($name, 'Test');
     }
 
-    public function produce()
+    public function produce(): string
     {
         $actor = $this->settings['actor'];
         if ($this->settings['namespace']) {

@@ -1,4 +1,5 @@
 <?php
+
 $testsPath = __DIR__ . '/../';
 
 $I = new CliGuy($scenario);

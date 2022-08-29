@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 class MockAutoload extends Autoload
 {
+    /**
+     * @var array
+     */
     protected static $files = [];
 
     public static function setFiles(array $files)
@@ -11,7 +16,7 @@ class MockAutoload extends Autoload
         self::$files = $files;
     }
 
-    protected static function requireFile($file)
+    protected static function requireFile($file): bool
     {
         return in_array($file, self::$files);
     }

@@ -1,17 +1,29 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Exception\ElementNotFound;
 use Codeception\Lib\Console\Message;
 use Codeception\Util\Locator;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverElement;
+use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
+use function count;
+use function htmlspecialchars_decode;
+use function strpos;
 
 class WebDriver extends Page
 {
-
-    protected function matches($nodes) : bool
+    /**
+     * @param WebDriverElement[] $nodes
+     * @return bool
+     */
+    protected function matches($nodes): bool
     {
-        if (!count($nodes)) {
+        if (count($nodes) === 0) {
             return false;
         }
         if ($this->string === '') {
@@ -19,7 +31,6 @@ class WebDriver extends Page
         }
 
         foreach ($nodes as $node) {
-            /** @var $node \WebDriverElement  * */
             if (!$node->isDisplayed()) {
                 continue;
             }
@@ -30,9 +41,14 @@ class WebDriver extends Page
         return false;
     }
 
-    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null) : void
+    /**
+     * @param WebDriverElement[] $nodes
+     * @param string|array|WebDriverBy $selector
+     * @param ComparisonFailure|null $comparisonFailure
+     */
+    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null): void
     {
-        if (!count($nodes)) {
+        if (count($nodes) === 0) {
             throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
         }
 
@@ -48,13 +64,17 @@ class WebDriver extends Page
         }
         $output .= "\ncontains text '" . $this->string . "'";
 
-        throw new \PHPUnit\Framework\ExpectationFailedException(
+        throw new ExpectationFailedException(
             $output,
             $comparisonFailure
         );
     }
 
-    protected function failureDescription($nodes) : string
+    /**
+     * @param WebDriverElement[] $nodes
+     * @return string
+     */
+    protected function failureDescription($nodes): string
     {
         $desc = '';
         foreach ($nodes as $node) {
@@ -63,14 +83,18 @@ class WebDriver extends Page
         return $desc;
     }
 
-    protected function nodesList($nodes, $contains = null)
+    /**
+     * @param WebDriverElement[] $nodes
+     * @param string|null $contains
+     * @return string
+     */
+    protected function nodesList(array $nodes, string $contains = null): string
     {
         $output = "";
         foreach ($nodes as $node) {
             if ($contains && strpos($node->getText(), $contains) === false) {
                 continue;
             }
-            /** @var $node \WebDriverElement  * */
             $message = new Message("\n+ <%s> %s");
             $output .= $message->with($node->getTagName(), $node->getText());
         }

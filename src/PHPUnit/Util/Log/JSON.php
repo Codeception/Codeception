@@ -1,27 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\PHPUnit\Util\Log;
+
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Test as PHPUnitTest;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestFailure;
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\Warning;
+use PHPUnit\Util\Filter;
+use PHPUnit\Util\Printer;
+use Throwable;
+use function array_walk_recursive;
+use function count;
+use function is_string;
+use function json_encode;
+use function mb_convert_encoding;
+use function method_exists;
 
 /**
  * A TestListener that generates JSON messages.
  */
-class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListener
+class JSON extends Printer implements TestListener
 {
     /**
      * @var string
      */
     protected $currentTestSuiteName = '';
-
     /**
      * @var string
      */
     protected $currentTestName = '';
-
     /**
      * @var bool
      */
     protected $currentTestPass = true;
-
     /**
      * @var array
      */
@@ -29,18 +45,14 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
 
     /**
      * An error occurred.
-     *
-     * @param \PHPUnit\Framework\Test $test
-     * @param \Throwable $e
-     * @param float $time
      */
-    public function addError(\PHPUnit\Framework\Test $test, \Throwable $e, float $time): void
+    public function addError(PHPUnitTest $test, Throwable $t, float $time): void
     {
         $this->writeCase(
             'error',
             $time,
-            \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
-            \PHPUnit\Framework\TestFailure::exceptionToString($e),
+            Filter::getFilteredStacktrace($t, false),
+            TestFailure::exceptionToString($t),
             $test
         );
 
@@ -49,18 +61,14 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
 
     /**
      * A warning occurred.
-     *
-     * @param \PHPUnit\Framework\Test $test
-     * @param \PHPUnit\Framework\Warning $e
-     * @param float $time
      */
-    public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, float $time): void
+    public function addWarning(PHPUnitTest $test, Warning $e, float $time): void
     {
         $this->writeCase(
             'warning',
             $time,
-            \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
-            \PHPUnit\Framework\TestFailure::exceptionToString($e),
+            Filter::getFilteredStacktrace($e, false),
+            TestFailure::exceptionToString($e),
             $test
         );
 
@@ -69,22 +77,14 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
 
     /**
      * A failure occurred.
-     *
-     * @param \PHPUnit\Framework\Test $test
-     * @param \PHPUnit\Framework\AssertionFailedError $e
-     * @param float $time
      */
-    public function addFailure(
-        \PHPUnit\Framework\Test $test,
-        \PHPUnit\Framework\AssertionFailedError $e,
-        float $time
-    ): void
+    public function addFailure(PHPUnitTest $test, AssertionFailedError $e, float $time): void
     {
         $this->writeCase(
             'fail',
             $time,
-            \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
-            \PHPUnit\Framework\TestFailure::exceptionToString($e),
+            Filter::getFilteredStacktrace($e, false),
+            TestFailure::exceptionToString($e),
             $test
         );
 
@@ -93,18 +93,14 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
 
     /**
      * Incomplete test.
-     *
-     * @param \PHPUnit\Framework\Test $test
-     * @param Throwable $e
-     * @param float $time
      */
-    public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time): void
+    public function addIncompleteTest(PHPUnitTest $test, Throwable $t, float $time): void
     {
         $this->writeCase(
             'error',
             $time,
-            \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
-            'Incomplete Test: ' . $e->getMessage(),
+            Filter::getFilteredStacktrace($t, false),
+            'Incomplete Test: ' . $t->getMessage(),
             $test
         );
 
@@ -113,18 +109,14 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
 
     /**
      * Risky test.
-     *
-     * @param \PHPUnit\Framework\Test $test
-     * @param Throwable $e
-     * @param float $time
      */
-    public function addRiskyTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time): void
+    public function addRiskyTest(PHPUnitTest $test, Throwable $t, float $time): void
     {
         $this->writeCase(
             'error',
             $time,
-            \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
-            'Risky Test: ' . $e->getMessage(),
+            Filter::getFilteredStacktrace($t, false),
+            'Risky Test: ' . $t->getMessage(),
             $test
         );
 
@@ -133,18 +125,14 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
 
     /**
      * Skipped test.
-     *
-     * @param \PHPUnit\Framework\Test $test
-     * @param Throwable $e
-     * @param float $time
      */
-    public function addSkippedTest(\PHPUnit\Framework\Test $test, \Throwable $e, float $time): void
+    public function addSkippedTest(PHPUnitTest $test, Throwable $t, float $time): void
     {
         $this->writeCase(
             'error',
             $time,
-            \PHPUnit\Util\Filter::getFilteredStacktrace($e, false),
-            'Skipped Test: ' . $e->getMessage(),
+            Filter::getFilteredStacktrace($t, false),
+            'Skipped Test: ' . $t->getMessage(),
             $test
         );
 
@@ -153,10 +141,8 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
 
     /**
      * A testsuite started.
-     *
-     * @param \PHPUnit\Framework\TestSuite $suite
      */
-    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
+    public function startTestSuite(TestSuite $suite): void
     {
         $this->currentTestSuiteName = $suite->getName();
         $this->currentTestName      = '';
@@ -172,23 +158,18 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
 
     /**
      * A testsuite ended.
-     *
-     * @param \PHPUnit\Framework\TestSuite $suite
      */
-    public function endTestSuite(\PHPUnit\Framework\TestSuite $suite): void
+    public function endTestSuite(TestSuite $suite): void
     {
         $this->currentTestSuiteName = '';
         $this->currentTestName      = '';
-
         $this->writeArray($this->logEvents);
     }
 
     /**
      * A test started.
-     *
-     * @param \PHPUnit\Framework\Test $test
      */
-    public function startTest(\PHPUnit\Framework\Test $test): void
+    public function startTest(PHPUnitTest $test): void
     {
         $this->currentTestName = \PHPUnit\Util\Test::describe($test);
         $this->currentTestPass = true;
@@ -204,29 +185,19 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
 
     /**
      * A test ended.
-     *
-     * @param \PHPUnit\Framework\Test $test
-     * @param float $time
      */
-    public function endTest(\PHPUnit\Framework\Test $test, float $time): void
+    public function endTest(PHPUnitTest $test, float $time): void
     {
         if ($this->currentTestPass) {
             $this->writeCase('pass', $time, [], '', $test);
         }
     }
 
-    /**
-     * @param string $status
-     * @param float $time
-     * @param array $trace
-     * @param string $message
-     * @param \PHPUnit\Framework\TestCase|null $test
-     */
-    protected function writeCase($status, float $time, array $trace = [], $message = '', $test = null): void
+    protected function writeCase(string $status, float $time, array $trace = [], string $message = '', ?PHPUnitTest $test = null): void
     {
         $output = '';
-        // take care of TestSuite producing error (e.g. by running into exception) as TestSuite doesn't have hasOutput
-        if ($test !== null && method_exists($test, 'hasOutput') && $test->hasOutput()) {
+        // take care of TestSuite producing error (e.g. by running into exception)
+        if ($test instanceof TestCase && $test->hasOutput()) {
             $output = $test->getActualOutput();
         }
         $this->addLogEvent(
@@ -243,20 +214,14 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
         );
     }
 
-    /**
-     * @param array $event_data
-     */
-    protected function addLogEvent($event_data = []): void
+    protected function addLogEvent(array $eventData = []): void
     {
-        if (count($event_data)) {
-            array_push($this->logEvents, $event_data);
+        if (count($eventData) > 0) {
+            $this->logEvents[] = $eventData;
         }
     }
 
-    /**
-     * @param array $buffer
-     */
-    public function writeArray($buffer)
+    public function writeArray(array $buffer): void
     {
         array_walk_recursive(
             $buffer, function (&$input) {
@@ -269,7 +234,7 @@ class JSON extends \PHPUnit\Util\Printer implements \PHPUnit\Framework\TestListe
         $this->write(json_encode($buffer, JSON_PRETTY_PRINT));
     }
 
-    private function convertToUtf8($string)
+    private function convertToUtf8(string $string): string
     {
         return mb_convert_encoding($string, 'UTF-8');
     }

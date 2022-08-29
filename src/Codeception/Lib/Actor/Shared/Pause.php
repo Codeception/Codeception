@@ -1,19 +1,24 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Actor\Shared;
 
 use Codeception\Lib\Console\ReplHistory;
+use Codeception\Util\Debug;
+use Exception;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 trait Pause
 {
-    public function pause()
+    public function pause(): void
     {
-        if (!\Codeception\Util\Debug::isEnabled()) {
+        if (!Debug::isEnabled()) {
             return;
         }
 
         if (!class_exists('Hoa\Console\Readline\Readline')) {
-            throw new \Exception('Hoa Console is not installed. Please add `hoa/console` to composer.json');
+            throw new Exception('Hoa Console is not installed. Please add `hoa/console` to composer.json');
         }
 
         $autoStash = false;
@@ -112,7 +117,7 @@ trait Pause
                 return;
             }
             try {
-                $value = eval("return \$I->$command;");
+                $value = eval("return \$I->{$command};");
                 if ($value) {
                     $result = $value;
                     if (!is_object($result)) {

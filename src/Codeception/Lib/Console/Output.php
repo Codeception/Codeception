@@ -1,13 +1,20 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Console;
 
+use Exception;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Helper\FormatterHelper as SymfonyFormatterHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 class Output extends ConsoleOutput
 {
+    /**
+     * @var array<string, int|bool>
+     */
     protected $config = [
         'colors'      => true,
         'verbosity'   => self::VERBOSITY_NORMAL,
@@ -15,22 +22,28 @@ class Output extends ConsoleOutput
     ];
 
     /**
-     * @var \Symfony\Component\Console\Helper\FormatterHelper
+     * @var SymfonyFormatterHelper
      */
     public $formatHelper;
 
+    /**
+     * @var bool
+     */
     public $waitForDebugOutput = true;
 
+    /**
+     * @var bool
+     */
     protected $isInteractive = false;
 
-    public function __construct($config)
+    public function __construct(array $config)
     {
         $this->config = array_merge($this->config, $config);
 
         // enable interactive output mode for CLI
         $this->isInteractive = $this->config['interactive']
             && isset($_SERVER['TERM'])
-            && php_sapi_name() == 'cli'
+            && PHP_SAPI == 'cli'
             && $_SERVER['TERM'] != 'linux';
 
         $formatter = new OutputFormatter($this->config['colors']);
@@ -45,25 +58,25 @@ class Output extends ConsoleOutput
         $formatter->setStyle('comment', new OutputFormatterStyle('yellow'));
         $formatter->setStyle('info', new OutputFormatterStyle('green'));
 
-        $this->formatHelper = new FormatterHelper();
+        $this->formatHelper = new SymfonyFormatterHelper();
 
 
         parent::__construct($this->config['verbosity'], $this->config['colors'], $formatter);
     }
 
-    public function isInteractive()
+    public function isInteractive(): bool
     {
         return $this->isInteractive;
     }
 
-    protected function clean($message)
+    protected function clean(string $message): string
     {
         // clear json serialization
         $message = str_replace('\/', '/', $message);
         return $message;
     }
 
-    public function debug($message)
+    public function debug($message): void
     {
         $message = print_r($message, true);
         $message = str_replace("\n", "\n  ", $message);
@@ -74,27 +87,27 @@ class Output extends ConsoleOutput
             $this->writeln('');
             $this->waitForDebugOutput = false;
         }
-        $this->writeln("<debug>  $message</debug>");
+        $this->writeln("<debug>  {$message}</debug>");
     }
 
-    public function message($message)
+    public function message($message): Message
     {
-        $message = call_user_func_array('sprintf', func_get_args());
+        $message = sprintf(...func_get_args());
         return new Message($message, $this);
     }
 
-    public function exception(\Exception $e)
+    public function exception(Exception $exception): void
     {
-        $class = get_class($e);
+        $class = get_class($exception);
 
         $this->writeln("");
-        $this->writeln("(![ $class ]!)");
-        $this->writeln($e->getMessage());
+        $this->writeln(sprintf('(![ %s ]!)', $class));
+        $this->writeln($exception->getMessage());
         $this->writeln("");
     }
 
-    public function notification($message)
+    public function notification(string $message): void
     {
-        $this->writeln("<comment>$message</comment>");
+        $this->writeln("<comment>{$message}</comment>");
     }
 }

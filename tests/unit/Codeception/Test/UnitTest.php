@@ -1,14 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 class TestTest extends \Codeception\Test\Unit
 {
-
     public function testReportedInterface()
     {
-        $this->assertInstanceOf('\\Codeception\\Test\\Interfaces\\Reported', $this);
-        $this->assertEquals(array(
-            'file' => __FILE__,
+        $this->assertInstanceOf(\Codeception\Test\Interfaces\Reported::class, $this);
+        $this->assertSame([
             'name' => 'testReportedInterface',
-            'class' => 'TestTest'
-        ), $this->getReportFields());
+            'class' => 'TestTest',
+            'file' => __FILE__
+        ], $this->getReportFields());
     }
 }

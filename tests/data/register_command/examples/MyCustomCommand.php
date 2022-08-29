@@ -16,15 +16,13 @@ use \Symfony\Component\Console\Output\OutputInterface;
 class MyCustomCommand extends Command implements CustomCommandInterface
 {
 
-    use \Codeception\Command\Shared\FileSystem;
-    use \Codeception\Command\Shared\Config;
+    use \Codeception\Command\Shared\FileSystemTrait;
+    use \Codeception\Command\Shared\ConfigTrait;
 
     /**
      * returns the name of the command
-     *
-     * @return string
      */
-    public static function getCommandName()
+    public static function getCommandName(): string
     {
         return "myProject:myCommand";
     }

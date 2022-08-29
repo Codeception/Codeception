@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
@@ -7,6 +10,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function codecept_data_dir;
+use function codecept_output_dir;
+use function codecept_root_dir;
+use function implode;
+use function preg_replace;
+use function print_r;
 
 /**
  * Validates and prints Codeception config.
@@ -31,10 +40,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ConfigValidate extends Command
 {
-    use Shared\Config;
-    use Shared\Style;
+    use Shared\ConfigTrait;
+    use Shared\StyleTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition(
             [
@@ -46,22 +55,21 @@ class ConfigValidate extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Validates and prints config to screen';
     }
 
-
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
 
         if ($suite = $input->getArgument('suite')) {
-            $output->write("Validating <bold>$suite</bold> config... ");
+            $output->write("Validating <bold>{$suite}</bold> config... ");
             $config = $this->getSuiteConfig($suite);
             $output->writeln("Ok");
             $output->writeln("------------------------------\n");
-            $output->writeln("<info>$suite Suite Config</info>:\n");
+            $output->writeln("<info>{$suite} Suite Config</info>:\n");
             $output->writeln($this->formatOutput($config));
 
             return 0;
@@ -70,7 +78,7 @@ class ConfigValidate extends Command
         $output->write("Validating global config... ");
         $config = $this->getGlobalConfig();
         $output->writeln($input->getOption('override'));
-        if (count($input->getOption('override'))) {
+        if (!empty($input->getOption('override'))) {
             $config = $this->overrideConfig($input->getOption('override'));
         }
         $suites = Configuration::suites();
@@ -89,7 +97,7 @@ class ConfigValidate extends Command
         $output->writeln("<info>Available suites</info>: " . implode(', ', $suites));
 
         foreach ($suites as $suite) {
-            $output->write("Validating suite <bold>$suite</bold>... ");
+            $output->write("Validating suite <bold>{$suite}</bold>... ");
             $this->getSuiteConfig($suite);
             $output->writeln('Ok');
         }
@@ -99,9 +107,9 @@ class ConfigValidate extends Command
         return 0;
     }
 
-    protected function formatOutput($config)
+    protected function formatOutput($config): ?string
     {
         $output = print_r($config, true);
-        return preg_replace('~\[(.*?)\] =>~', "<fg=yellow>$1</fg=yellow> =>", $output);
+        return preg_replace('#\[(.*?)\] =>#', "<fg=yellow>$1</fg=yellow> =>", $output);
     }
 }

@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib;
 
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
-use Codeception\Test\Unit;
 use Codeception\Stub;
+use Codeception\Test\Unit;
 
 // @codingStandardsIgnoreFile
 class ModuleContainerTest extends Unit
@@ -55,7 +58,7 @@ class ModuleContainerTest extends Unit
         $this->moduleContainer->create('EmulateModuleHelper');
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayHasKey('seeEquals', $actions);
-        $this->assertEquals('EmulateModuleHelper', $actions['seeEquals']);
+        $this->assertSame('EmulateModuleHelper', $actions['seeEquals']);
     }
 
     /**
@@ -138,8 +141,8 @@ class ModuleContainerTest extends Unit
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $module = $this->moduleContainer->create('Codeception\Lib\StubModule');
 
-        $this->assertEquals('firstValue', $module->_getFirstField());
-        $this->assertEquals('secondValue', $module->_getSecondField());
+        $this->assertSame('firstValue', $module->_getFirstField());
+        $this->assertSame('secondValue', $module->_getSecondField());
     }
 
     /**
@@ -160,11 +163,11 @@ class ModuleContainerTest extends Unit
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $module = $this->moduleContainer->create('Codeception\Lib\StubModule');
         $module->_reconfigure(['firstField' => '1st', 'secondField' => '2nd']);
-        $this->assertEquals('1st', $module->_getFirstField());
-        $this->assertEquals('2nd', $module->_getSecondField());
+        $this->assertSame('1st', $module->_getFirstField());
+        $this->assertSame('2nd', $module->_getSecondField());
         $module->_resetConfig();
-        $this->assertEquals('firstValue', $module->_getFirstField());
-        $this->assertEquals('secondValue', $module->_getSecondField());
+        $this->assertSame('firstValue', $module->_getFirstField());
+        $this->assertSame('secondValue', $module->_getSecondField());
     }
 
     public function testConflictsByModuleName()
@@ -351,8 +354,8 @@ class ModuleContainerTest extends Unit
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $module = $this->moduleContainer->create('Codeception\Lib\StubModule');
 
-        $this->assertEquals('firstValue', $module->_getFirstField());
-        $this->assertEquals('secondValue', $module->_getSecondField());
+        $this->assertSame('firstValue', $module->_getFirstField());
+        $this->assertSame('secondValue', $module->_getSecondField());
     }
 
     public function testShortConfigDependencies()
@@ -375,6 +378,23 @@ class ModuleContainerTest extends Unit
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('Codeception\Lib\HelperModule');
         $this->moduleContainer->hasModule('Codeception\Lib\HelperModule');
+    }
+
+    public function testSuggestMissingModule()
+    {
+        $correctModule = 'Codeception\Lib\HelperModule';
+        $wrongModule = 'Codeception\Lib\Helpamodule';
+
+        $config = ['modules' => [
+            'enabled' => [$correctModule],
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('Codeception\Lib\HelperModule');
+
+        $message = "Codeception\Lib\ModuleContainer: Module $wrongModule couldn't be connected (did you mean '$correctModule'?)";
+        $this->expectException('\Codeception\Exception\ModuleException');
+        $this->expectExceptionMessage($message);
+        $this->moduleContainer->getModule($wrongModule);
     }
 }
 
@@ -409,7 +429,7 @@ class HelperModule extends \Codeception\Module
 
 class ConflictedModule extends \Codeception\Module implements ConflictsWithModule
 {
-    public function _conflicts()
+    public function _conflicts(): string
     {
         return 'Cli';
     }
@@ -417,7 +437,7 @@ class ConflictedModule extends \Codeception\Module implements ConflictsWithModul
 
 class ConflictedModule2 extends \Codeception\Module implements ConflictsWithModule
 {
-    public function _conflicts()
+    public function _conflicts(): string
     {
         return '\Codeception\Module\Cli';
     }
@@ -425,7 +445,7 @@ class ConflictedModule2 extends \Codeception\Module implements ConflictsWithModu
 
 class ConflictedModule3 extends \Codeception\Module implements ConflictsWithModule
 {
-    public function _conflicts()
+    public function _conflicts(): string
     {
         return 'Codeception\Lib\Interfaces\Web';
     }
@@ -433,7 +453,7 @@ class ConflictedModule3 extends \Codeception\Module implements ConflictsWithModu
 
 class DependencyModule extends \Codeception\Module implements DependsOnModule
 {
-    public function _depends()
+    public function _depends(): array
     {
         return ['Codeception\Lib\ConflictedModule' => 'Error message'];
     }
@@ -445,7 +465,7 @@ class DependencyModule extends \Codeception\Module implements DependsOnModule
 
 class PartedModule extends \Codeception\Module implements \Codeception\Lib\Interfaces\PartedModule
 {
-    public function _parts()
+    public function _parts(): array
     {
         return ['one'];
     }

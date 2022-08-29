@@ -55,6 +55,9 @@ jobs:
       - name: Composer install
         run: composer install --no-interaction --no-progress --optimize-autoloader --ansi
 
+      - name: Test that failing test really fails
+        run: if php codecept run -c tests/data/claypit/ scenario FailedCept -vvv; then echo "Test hasn't failed"; false; fi;
+
       - name: Run tests without code coverage on PHP 7.3, 7.4
         if: matrix.php == '7.3' || matrix.php == '7.4'
         run: |

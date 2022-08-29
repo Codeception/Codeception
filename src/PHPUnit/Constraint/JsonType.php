@@ -1,16 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\PHPUnit\Constraint;
 
-use Codeception\Util\JsonType as JsonTypeUtil;
 use Codeception\Util\JsonArray;
+use Codeception\Util\JsonType as JsonTypeUtil;
+use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\ExpectationFailedException;
+use function json_encode;
 
-class JsonType extends \PHPUnit\Framework\Constraint\Constraint
+class JsonType extends Constraint
 {
+    /**
+     * @var array
+     */
     protected $jsonType;
+    /**
+     * @var bool
+     */
     private $match;
 
-    public function __construct(array $jsonType, $match = true)
+    public function __construct(array $jsonType, bool $match = true)
     {
         $this->jsonType = $jsonType;
         $this->match = $match;
@@ -21,10 +32,8 @@ class JsonType extends \PHPUnit\Framework\Constraint\Constraint
      * constraint is met, false otherwise.
      *
      * @param mixed $jsonArray Value or object to evaluate.
-     *
-     * @return bool
      */
-    protected function matches($jsonArray) : bool
+    protected function matches($jsonArray): bool
     {
         if ($jsonArray instanceof JsonArray) {
             $jsonArray = $jsonArray->toArray();
@@ -34,28 +43,25 @@ class JsonType extends \PHPUnit\Framework\Constraint\Constraint
 
         if ($this->match) {
             if ($matched !== true) {
-                throw new \PHPUnit\Framework\ExpectationFailedException($matched);
+                throw new ExpectationFailedException($matched);
             }
-        } else {
-            if ($matched === true) {
-                throw new \PHPUnit\Framework\ExpectationFailedException('Unexpectedly response matched: ' . json_encode($jsonArray));
-            }
+        } elseif ($matched === true) {
+            $jsonArray = json_encode($jsonArray, JSON_THROW_ON_ERROR);
+            throw new ExpectationFailedException('Unexpectedly response matched: ' . $jsonArray);
         }
         return true;
     }
 
     /**
      * Returns a string representation of the constraint.
-     *
-     * @return string
      */
-    public function toString() : string
+    public function toString(): string
     {
         //unused
         return '';
     }
 
-    protected function failureDescription($other) : string
+    protected function failureDescription($other): string
     {
         //unused
         return '';

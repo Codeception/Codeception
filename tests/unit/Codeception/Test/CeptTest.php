@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 class CeptTest extends \Codeception\Test\Unit
 {
 
@@ -11,15 +14,15 @@ class CeptTest extends \Codeception\Test\Unit
 
         $path = 'tests' . DIRECTORY_SEPARATOR . 'cli' . DIRECTORY_SEPARATOR;
 
-        $this->assertEquals(
+        $this->assertSame(
             $path . 'AutoRebuildCept.php',
             \Codeception\Test\Descriptor::getTestFileName($cept)
         );
-        $this->assertEquals(
+        $this->assertSame(
             $path . 'AutoRebuildCept.php',
             \Codeception\Test\Descriptor::getTestFullName($cept)
         );
-        $this->assertEquals(
+        $this->assertSame(
             'AutoRebuildCept',
             \Codeception\Test\Descriptor::getTestSignature($cept)
         );

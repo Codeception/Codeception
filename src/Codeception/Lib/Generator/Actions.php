@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Generator;
 
 use Codeception\Codecept;
@@ -7,10 +10,27 @@ use Codeception\Lib\Di;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Template;
+use Exception;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionType;
 
 class Actions
 {
+    /**
+     * @var Di
+     */
+    public $di;
 
+    /**
+     * @var ModuleContainer
+     */
+    public $moduleContainer;
+
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
 <?php  //[STAMP] {{hash}}
 namespace {{namespace}}_generated;
@@ -31,6 +51,9 @@ trait {{name}}Actions
 
 EOF;
 
+    /**
+     * @var string
+     */
     protected $methodTemplate = <<<EOF
 
     /**
@@ -44,10 +67,29 @@ EOF;
     }
 EOF;
 
+    /**
+     * @var string
+     */
     protected $name;
-    protected $settings;
+
+    /**
+     * @var array
+     */
+    protected $settings = [];
+
+    /**
+     * @var array
+     */
     protected $modules = [];
-    protected $actions;
+
+    /**
+     * @var array
+     */
+    protected $actions = [];
+
+    /**
+     * @var int
+     */
     protected $numMethods = 0;
 
     /**
@@ -55,7 +97,7 @@ EOF;
      */
     protected $generatedSteps = [];
 
-    public function __construct($settings)
+    public function __construct(array $settings)
     {
         $this->name = $settings['actor'];
         $this->settings = $settings;
@@ -72,7 +114,7 @@ EOF;
     }
 
 
-    public function produce()
+    public function produce(): string
     {
         $namespace = rtrim($this->settings['namespace'], '\\');
 
@@ -82,22 +124,22 @@ EOF;
             if (in_array($action, $methods)) {
                 continue;
             }
-            $class = new \ReflectionClass($this->modules[$moduleName]);
+            $class = new ReflectionClass($this->modules[$moduleName]);
             $method = $class->getMethod($action);
             $code[] = $this->addMethod($method);
             $methods[] = $action;
-            $this->numMethods++;
+            ++$this->numMethods;
         }
 
         return (new Template($this->template))
-            ->place('namespace', $namespace ? $namespace . '\\' : '')
+            ->place('namespace', $namespace !== '' ? $namespace . '\\' : '')
             ->place('hash', self::genHash($this->modules, $this->settings))
             ->place('name', $this->name)
             ->place('methods', implode("\n\n ", $code))
             ->produce();
     }
 
-    protected function addMethod(\ReflectionMethod $refMethod)
+    protected function addMethod(ReflectionMethod $refMethod): string
     {
         $class = $refMethod->getDeclaringClass();
         $params = $this->getParamsString($refMethod);
@@ -105,9 +147,9 @@ EOF;
 
         $body = '';
         $doc = $this->addDoc($class, $refMethod);
-        $doc = str_replace('/**', '', $doc);
+        $doc = str_replace('/**', '', (string)$doc);
         $doc = trim(str_replace('*/', '', $doc));
-        if (!$doc) {
+        if ($doc === '') {
             $doc = "*";
         }
         $returnType = $this->createReturnTypeHint($refMethod);
@@ -136,7 +178,7 @@ EOF;
         // add auto generated steps
         foreach (array_unique($this->generatedSteps) as $generator) {
             if (!is_callable([$generator, 'getTemplate'])) {
-                throw new \Exception("Wrong configuration for generated steps. $generator doesn't implement \Codeception\Step\GeneratedStep interface");
+                throw new Exception("Wrong configuration for generated steps. {$generator} doesn't implement \Codeception\Step\GeneratedStep interface");
             }
             $template = call_user_func([$generator, 'getTemplate'], clone $methodTemplate);
             if ($template) {
@@ -147,36 +189,36 @@ EOF;
         return $body;
     }
 
-    /**
-     * @param \ReflectionMethod $refMethod
-     * @return array
-     */
-    protected function getParamsString(\ReflectionMethod $refMethod)
+    protected function getParamsString(ReflectionMethod $refMethod): string
     {
         $params = [];
         foreach ($refMethod->getParameters() as $param) {
+            $type = '';
+            $reflectionType = $param->getType();
+            if ($reflectionType !== null) {
+                $type = $this->stringifyType($reflectionType) . ' ';
+            }
             if ($param->isOptional()) {
-                $params[] = '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
+                $params[] = $type . '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
-                $params[] = '$' . $param->name;
-            };
+                $params[] = $type . '$' . $param->name;
+            }
         }
         return implode(', ', $params);
     }
 
     /**
-     * @param \ReflectionClass $class
-     * @param \ReflectionMethod $refMethod
-     * @return string
+     * @return string|false
+     * @throws ReflectionException
      */
-    protected function addDoc(\ReflectionClass $class, \ReflectionMethod $refMethod)
+    protected function addDoc(ReflectionClass $class, ReflectionMethod $refMethod)
     {
         $doc = $refMethod->getDocComment();
 
         if (!$doc) {
             $interfaces = $class->getInterfaces();
             foreach ($interfaces as $interface) {
-                $i = new \ReflectionClass($interface->name);
+                $i = new ReflectionClass($interface->name);
                 if ($i->hasMethod($refMethod->name)) {
                     $doc = $i->getMethod($refMethod->name)->getDocComment();
                     break;
@@ -184,18 +226,17 @@ EOF;
             }
         }
 
-        if (!$doc and $class->getParentClass()) {
-            $parent = new \ReflectionClass($class->getParentClass()->name);
+        if (!$doc && $class->getParentClass()) {
+            $parent = new ReflectionClass($class->getParentClass()->name);
             if ($parent->hasMethod($refMethod->name)) {
-                $doc = $parent->getMethod($refMethod->name)->getDocComment();
-                return $doc;
+                return $parent->getMethod($refMethod->name)->getDocComment();
             }
             return $doc;
         }
         return $doc;
     }
 
-    public static function genHash($modules, $settings)
+    public static function genHash(array $modules, array $settings): string
     {
         $actions = [];
         foreach ($modules as $moduleName => $module) {
@@ -205,32 +246,34 @@ EOF;
         return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']) . implode(',', (array) $settings['step_decorators']));
     }
 
-    public function getNumMethods()
+    public function getNumMethods(): int
     {
         return $this->numMethods;
     }
 
-    private function createReturnTypeHint(\ReflectionMethod $refMethod)
+    private function createReturnTypeHint(ReflectionMethod $refMethod): string
     {
-        if (PHP_VERSION_ID < 70000) {
-            return '';
-        }
-
         $returnType = $refMethod->getReturnType();
 
-        if ($returnType === null) {
+        if (!$returnType instanceof ReflectionType) {
             return '';
         }
+        return ': ' . $this->stringifyType($returnType);
+    }
 
-        if (PHP_VERSION_ID < 70100) {
-            $returnTypeString = (string)$returnType;
-        } else {
-            $returnTypeString = $returnType->getName();
+    private function stringifyType(\ReflectionType $type): string
+    {
+        if ($type instanceof \ReflectionUnionType) {
+            $types = $type->getTypes();
+            return implode('|', $types);
         }
+
+        $returnTypeString = $type->getName();
+
         return sprintf(
-            ': %s%s%s',
-            $returnType->allowsNull() ? '?' : '',
-            $returnType->isBuiltin() ? '' : '\\',
+            '%s%s%s',
+            $type->allowsNull() ? '?' : '',
+            $type->isBuiltin() ? '' : '\\',
             $returnTypeString
         );
     }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Coverage;
 
 use Codeception\Configuration;
@@ -7,11 +10,19 @@ use Codeception\Exception\ModuleException;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
+use function array_pop;
+use function count;
+use function explode;
+use function implode;
+use function is_array;
+use function method_exists;
+use function str_replace;
+use function strpos;
 
 class Filter
 {
     /**
-     * @var CodeCoverage
+     * @var CodeCoverage|null
      */
     protected $phpCodeCoverage = null;
 
@@ -21,7 +32,7 @@ class Filter
     protected static $c3;
 
     /**
-     * @var \SebastianBergmann\CodeCoverage\Filter
+     * @var \SebastianBergmann\CodeCoverage\Filter|null
      */
     protected $filter = null;
 
@@ -31,29 +42,21 @@ class Filter
         $this->filter = $this->phpCodeCoverage->filter();
     }
 
-    /**
-     * @param CodeCoverage $phpCoverage
-     * @return Filter
-     */
-    public static function setup(CodeCoverage $phpCoverage)
+    public static function setup(CodeCoverage $phpCoverage): self
     {
         self::$c3 = new self($phpCoverage);
         return self::$c3;
     }
 
-    /**
-     * @return null|CodeCoverage
-     */
-    public function getPhpCodeCoverage()
+    public function getPhpCodeCoverage(): ?CodeCoverage
     {
         return $this->phpCodeCoverage;
     }
 
     /**
-     * @param $config
-     * @return Filter
+     * @throws ConfigurationException
      */
-    public function whiteList($config)
+    public function whiteList(array $config): self
     {
         $filter = $this->filter;
         if (!isset($config['coverage'])) {
@@ -85,7 +88,7 @@ class Filter
                         $filter->addFileToWhitelist($file);
                     } else {
                         //php-code-coverage 9+
-                        $filter->includeFile($file);
+                        $filter->includeFile((string) $file);
                     }
                 }
             }
@@ -119,10 +122,9 @@ class Filter
     }
 
     /**
-     * @param $config
-     * @return Filter
+     * @throws ModuleException
      */
-    public function blackList($config)
+    public function blackList(array $config): self
     {
         if (isset($config['coverage']['blacklist'])) {
             throw new ModuleException($this, 'The blacklist functionality has been removed from PHPUnit 5,'
@@ -131,29 +133,26 @@ class Filter
         return $this;
     }
 
-    protected function matchWildcardPattern($pattern)
+    protected function matchWildcardPattern(string $pattern): Finder
     {
         $finder = Finder::create();
         $fileOrDir = str_replace('\\', '/', $pattern);
         $parts = explode('/', $fileOrDir);
         $file = array_pop($parts);
         $finder->name($file);
-        if (count($parts)) {
-            $last_path = array_pop($parts);
-            if ($last_path === '*') {
+        if ($parts !== []) {
+            $lastPath = array_pop($parts);
+            if ($lastPath === '*') {
                 $finder->in(Configuration::projectDir() . implode('/', $parts));
             } else {
-                $finder->in(Configuration::projectDir() . implode('/', $parts) . '/' . $last_path);
+                $finder->in(Configuration::projectDir() . implode('/', $parts) . '/' . $lastPath);
             }
         }
         $finder->ignoreVCS(true)->files();
         return $finder;
     }
 
-    /**
-     * @return \SebastianBergmann\CodeCoverage\Filter
-     */
-    public function getFilter()
+    public function getFilter(): \SebastianBergmann\CodeCoverage\Filter
     {
         return $this->filter;
     }

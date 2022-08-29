@@ -1,9 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Test;
 
 use Behat\Gherkin\Node\FeatureNode;
-use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Node\ScenarioInterface;
+use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
 use Codeception\Lib\Di;
@@ -13,9 +16,25 @@ use Codeception\Step\Comment;
 use Codeception\Step\Meta;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Interfaces\ScenarioDriven;
+use Exception;
+use function array_merge;
+use function array_pop;
+use function array_shift;
+use function basename;
+use function call_user_func_array;
+use function count;
+use function explode;
+use function file_get_contents;
+use function is_array;
+use function is_string;
+use function preg_match;
+use function var_export;
 
 class Gherkin extends Test implements ScenarioDriven, Reported
 {
+    /**
+     * @var array
+     */
     protected $steps = [];
 
     /**
@@ -33,7 +52,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
      */
     protected $scenario;
 
-    public function __construct(FeatureNode $featureNode, ScenarioInterface $scenarioNode, $steps = [])
+    public function __construct(FeatureNode $featureNode, ScenarioInterface $scenarioNode, array $steps = [])
     {
         $this->featureNode = $featureNode;
         $this->scenarioNode = $scenarioNode;
@@ -41,17 +60,17 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         $this->setMetadata(new Metadata());
         $this->scenario = new Scenario($this);
         $this->getMetadata()->setName($scenarioNode->getTitle());
-        $this->getMetadata()->setFeature($featureNode->getTitle());
+        $this->getMetadata()->setFeature((string) $featureNode->getTitle());
         $this->getMetadata()->setFilename($featureNode->getFile());
     }
 
-    public function preload()
+    public function preload(): void
     {
         $this->getMetadata()->setGroups($this->featureNode->getTags());
         $this->getMetadata()->setGroups($this->scenarioNode->getTags());
         $this->scenario->setMetaStep(null);
 
-        if ($background = $this->featureNode->getBackground()) {
+        if (($background = $this->featureNode->getBackground()) !== null) {
             foreach ($background->getSteps() as $step) {
                 $this->validateStep($step);
             }
@@ -65,20 +84,20 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         }
     }
 
-    public function getSignature()
+    public function getSignature(): string
     {
         return basename($this->getFileName(), '.feature') . ':' . $this->getScenarioTitle();
     }
 
-    public function test()
+    public function test(): void
     {
         $this->makeContexts();
-        $description = explode("\n", $this->featureNode->getDescription());
+        $description = explode("\n", (string)$this->featureNode->getDescription());
         foreach ($description as $line) {
             $this->getScenario()->runStep(new Comment($line));
         }
 
-        if ($background = $this->featureNode->getBackground()) {
+        if (($background = $this->featureNode->getBackground()) !== null) {
             foreach ($background->getSteps() as $step) {
                 $this->runStep($step);
             }
@@ -89,7 +108,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         }
     }
 
-    protected function validateStep(StepNode $stepNode)
+    protected function validateStep(StepNode $stepNode): void
     {
         $stepText = $stepNode->getText();
         if (GherkinSnippets::stepHasPyStringArgument($stepNode)) {
@@ -103,10 +122,10 @@ class Gherkin extends Test implements ScenarioDriven, Reported
             }
             $matches[$pattern] = $context;
         }
-        if (count($matches) === 0) {
+        if ($matches === []) {
             // There were no matches, meaning that the user should first add a step definition for this step
             $incomplete = $this->getMetadata()->getIncomplete();
-            $this->getMetadata()->setIncomplete("$incomplete\nStep definition for `$stepText` not found in contexts");
+            $this->getMetadata()->setIncomplete("{$incomplete}\nStep definition for `{$stepText}` not found in contexts");
         }
         if (count($matches) > 1) {
             // There were more than one match, meaning that we don't know which step definition to execute for this step
@@ -116,16 +135,16 @@ class Gherkin extends Test implements ScenarioDriven, Reported
                 $matchingDefinitions[] = '- ' . $pattern . ' (' . self::contextAsString($context) . ')';
             }
             $this->getMetadata()->setIncomplete(
-                "$incomplete\nAmbiguous step: `$stepText` matches multiple definitions:\n"
+                "{$incomplete}\nAmbiguous step: `{$stepText}` matches multiple definitions:\n"
                 . implode("\n", $matchingDefinitions)
             );
         }
     }
 
-    private function contextAsString($context)
+    private function contextAsString($context): string
     {
         if (is_array($context) && count($context) === 2) {
-            list($class, $method) = $context;
+            [$class, $method] = $context;
 
             if (is_string($class) && is_string($method)) {
                 return $class . ':' . $method;
@@ -135,7 +154,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         return var_export($context, true);
     }
 
-    protected function runStep(StepNode $stepNode)
+    protected function runStep(StepNode $stepNode): void
     {
         $params = [];
         if ($stepNode->hasArguments()) {
@@ -147,6 +166,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         }
         $meta = new Meta($stepNode->getText(), $params);
         $meta->setPrefix($stepNode->getKeyword());
+
         $this->scenario->setMetaStep($meta); // enable metastep
         $stepText = $stepNode->getText();
         $hasPyStringArg = GherkinSnippets::stepHasPyStringArgument($stepNode);
@@ -154,7 +174,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
             // pretend it is inline argument
             $stepText .= ' ""';
         }
-        $this->getScenario()->comment(null); // make metastep to be printed even if no steps in it
+        $this->getScenario()->comment(''); // make metastep to be printed even if no steps in it
         foreach ($this->steps as $pattern => $context) {
             $matches = [];
             if (!preg_match($pattern, $stepText, $matches)) {
@@ -174,9 +194,9 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         $this->scenario->setMetaStep(null); // disable metastep
     }
 
-    protected function makeContexts()
+    protected function makeContexts(): void
     {
-        /** @var $di Di  **/
+        /** @var Di $di **/
         $di = $this->getMetadata()->getService('di');
         $di->set($this->getScenario());
 
@@ -196,55 +216,49 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         return $this->getFeature() . ': ' . $this->getScenarioTitle();
     }
 
-    public function getFeature()
+    public function getFeature(): string
     {
         return $this->getMetadata()->getFeature();
     }
 
-    public function getScenarioTitle()
+    public function getScenarioTitle(): string
     {
         return $this->getMetadata()->getName();
     }
 
-    /**
-     * @return \Codeception\Scenario
-     */
-    public function getScenario()
+    public function getScenario(): Scenario
     {
         return $this->scenario;
     }
 
-    public function getScenarioText($format = 'text')
+    public function getScenarioText(string $format = 'text'): string
     {
-        return file_get_contents($this->getFileName());
+        $fileName = $this->getFileName();
+        if (!$scenarioText = file_get_contents($fileName)) {
+            throw new Exception("Could not get scenario {$fileName}, please check its permissions.");
+        }
+        return $scenarioText;
     }
 
-    public function getSourceCode()
+    public function getSourceCode(): string
     {
+        return '';
     }
 
-    /**
-     * @return ScenarioNode
-     */
-    public function getScenarioNode()
+    public function getScenarioNode(): ScenarioNode
     {
         return $this->scenarioNode;
     }
 
-    /**
-     * @return FeatureNode
-     */
-    public function getFeatureNode()
+    public function getFeatureNode(): FeatureNode
     {
         return $this->featureNode;
     }
 
     /**
      * Field values for XML/JSON/TAP reports
-     *
-     * @return array
      */
-    public function getReportFields()
+    public function getReportFields(): array
     {
         return [
             'file'    => $this->getFileName(),

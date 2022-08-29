@@ -8,7 +8,7 @@ class DependsTest extends \Codeception\Test\Unit {
     public function testTwo($res)
     {
         $this->assertTrue(true);
-        $this->assertEquals(1, $res);
+        $this->assertSame(1, $res);
     }
     
     /**

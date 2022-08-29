@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Util;
 
 class TemplateTest extends \PHPUnit\Framework\TestCase
@@ -7,26 +10,26 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     {
         $template = new Template("hello, {{name}}");
         $template->place('name', 'davert');
-        $this->assertEquals('hello, davert', $template->produce());
+        $this->assertSame('hello, davert', $template->produce());
     }
 
     public function testTemplateCanHaveOtherPlaceholder()
     {
         $template = new Template("hello, %name%", '%', '%');
         $template->place('name', 'davert');
-        $this->assertEquals('hello, davert', $template->produce());
+        $this->assertSame('hello, davert', $template->produce());
     }
 
     public function testTemplateSupportsDotNotationForArrays()
     {
         $template = new Template("hello, {{user.data.name}}");
         $template->place('user', ['data' => ['name' => 'davert']]);
-        $this->assertEquals('hello, davert', $template->produce());
+        $this->assertSame('hello, davert', $template->produce());
     }
 
     public function testShouldSkipUnmatchedPlaceholder()
     {
         $template = new Template("hello, {{name}}");
-        $this->assertEquals('hello, {{name}}', $template->produce());
+        $this->assertSame('hello, {{name}}', $template->produce());
     }
 }

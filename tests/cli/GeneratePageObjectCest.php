@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @guy CliGuy\GeneratorSteps
  */
-class GeneratePageObjectCest
+final class GeneratePageObjectCest
 {
     public function generateGlobalPageObject(CliGuy\GeneratorSteps $I)
     {

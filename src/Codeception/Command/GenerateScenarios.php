@@ -1,8 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
+use Codeception\SuiteManager;
 use Codeception\Test\Cest;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Command\Command;
@@ -11,6 +15,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use function basename;
+use function file_exists;
+use function is_writable;
+use function mkdir;
+use function preg_replace;
 
 /**
  * Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
@@ -21,10 +30,10 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class GenerateScenarios extends Command
 {
-    use Shared\FileSystem;
-    use Shared\Config;
+    use Shared\FileSystemTrait;
+    use Shared\ConfigTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite from which texts should be generated'),
@@ -35,12 +44,12 @@ class GenerateScenarios extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates text representation for all scenarios';
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
 
@@ -56,7 +65,7 @@ class GenerateScenarios extends Command
 
         if (!is_writable($path)) {
             throw new ConfigurationException(
-                "Path $path is not writable. Please, set valid permissions for folder to store scenarios."
+                "Path {$path} is not writable. Please, set valid permissions for folder to store scenarios."
             );
         }
 
@@ -65,12 +74,10 @@ class GenerateScenarios extends Command
             @mkdir($path);
         }
 
-        $suiteManager = new \Codeception\SuiteManager(new EventDispatcher(), $suite, $suiteConf);
+        $suiteManager = new SuiteManager(new EventDispatcher(), $suite, $suiteConf);
 
-        if ($suiteConf['bootstrap']) {
-            if (file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
-                require_once $suiteConf['path'] . $suiteConf['bootstrap'];
-            }
+        if ($suiteConf['bootstrap'] && file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
+            require_once $suiteConf['path'] . $suiteConf['bootstrap'];
         }
 
         $tests = $this->getTests($suiteManager);
@@ -91,11 +98,11 @@ class GenerateScenarios extends Command
 
             if ($input->getOption('single-file')) {
                 $scenarios .= $feature;
-                $output->writeln("* $name rendered");
+                $output->writeln("* {$name} rendered");
             } else {
                 $feature = $this->decorate($feature, $format);
                 $this->createFile($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
-                $output->writeln("* $name generated");
+                $output->writeln("* {$name} generated");
             }
         }
 
@@ -105,13 +112,13 @@ class GenerateScenarios extends Command
         return 0;
     }
 
-    protected function decorate($text, $format)
+    protected function decorate(string $text, string $format): string
     {
         switch ($format) {
             case 'text':
                 return $text;
             case 'html':
-                return "<html><body>$text</body></html>";
+                return "<html><body>{$text}</body></html>";
         }
     }
 
@@ -121,7 +128,7 @@ class GenerateScenarios extends Command
         return $suiteManager->getSuite()->tests();
     }
 
-    protected function formatExtension($format)
+    protected function formatExtension(string $format): string
     {
         switch ($format) {
             case 'text':
@@ -131,13 +138,12 @@ class GenerateScenarios extends Command
         }
     }
 
-    private function underscore($name)
+    private function underscore(string $name): string
     {
-        $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1_\\2', $name);
-        $name = preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $name);
+        $name = preg_replace('#([A-Z]+)([A-Z][a-z])#', '\\1_\\2', $name);
+        $name = preg_replace('#([a-z\d])([A-Z])#', '\\1_\\2', $name);
         $name = str_replace(['/', '\\'], ['.', '.'], $name);
-        $name = preg_replace('/_Cept$/', '', $name);
-        $name = preg_replace('/_Cest$/', '', $name);
-        return $name;
+        $name = preg_replace('#_Cept$#', '', $name);
+        return preg_replace('#_Cest$#', '', $name);
     }
 }

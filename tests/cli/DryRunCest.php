@@ -1,5 +1,8 @@
 <?php
-class DryRunCest
+
+declare(strict_types=1);
+
+final class DryRunCest
 {
     public function _before(CliGuy $I)
     {
@@ -10,6 +13,8 @@ class DryRunCest
     {
         $I->executeCommand('dry-run scenario ExamplesCest --no-ansi');
         $I->seeInShellOutput('ExamplesCest: Files exists annotation');
+        $I->seeInShellOutput('I see file found "scenario.suite.yml"');
+        $I->seeInShellOutput('I see file found "dummy.suite.yml"');
     }
 
     public function runFeature(CliGuy $I)
@@ -20,6 +25,6 @@ class DryRunCest
         $I->seeInShellOutput('As a user');
         $I->seeInShellOutput('Given i have terminal opened');
         $I->seeInShellOutput('INCOMPLETE');
-        $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found');
+        $I->seeInShellOutput("Step definition for `I have only idea of what's going on here` not found");
     }
 }

@@ -18,13 +18,13 @@ class CountEvents extends \Codeception\GroupObject
     public static $beforeCount = 0;
     public static $afterCount = 0;
 
-    public function _before(TestEvent $e)
+    public function _before(TestEvent $event)
     {
         $this::$beforeCount++;
         $this->writeln("Group Before Events: " . $this::$beforeCount);
     }
 
-    public function _after(TestEvent $e)
+    public function _after(TestEvent $event)
     {
         $this::$afterCount++;
         $this->writeln("Group After Events: " . $this::$afterCount);

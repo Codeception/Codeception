@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Subscriber;
 
 use Codeception\Event\TestEvent;
@@ -11,15 +13,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PrepareTest implements EventSubscriberInterface
 {
-    use Shared\StaticEvents;
+    use Shared\StaticEventsTrait;
 
-    public static $events = [
+    /**
+     * @var array<string, string>
+     */
+    protected static $events = [
         Events::TEST_BEFORE => 'prepare',
     ];
 
+    /**
+     * @var array
+     */
     protected $modules = [];
 
-    public function prepare(TestEvent $event)
+    public function prepare(TestEvent $event): void
     {
         $test = $event->getTest();
         /** @var $di Di  **/
@@ -32,7 +40,6 @@ class PrepareTest implements EventSubscriberInterface
 
         foreach ($prepareMethods as $method) {
 
-            /** @var $module \Codeception\Module  **/
             if ($test instanceof Cest) {
                 $di->injectDependencies($test->getTestClass(), $method);
             }

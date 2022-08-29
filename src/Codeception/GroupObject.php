@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception;
 
 use Codeception\Event\TestEvent;
@@ -7,15 +10,15 @@ abstract class GroupObject extends Extension
 {
     public static $group;
 
-    public function _before(TestEvent $e)
+    public function _before(TestEvent $event)
     {
     }
 
-    public function _after(TestEvent $e)
+    public function _after(TestEvent $event)
     {
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         $inheritedEvents = parent::getSubscribedEvents();
         $events = [];

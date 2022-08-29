@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
@@ -7,13 +9,24 @@ use Symfony\Component\Yaml\Yaml;
 
 class Bootstrap extends InitTemplate
 {
-    // defaults
+    /**
+     * @var string
+     */
     protected $supportDir = 'tests/_support';
+    /**
+     * @var string
+     */
     protected $outputDir = 'tests/_output';
+    /**
+     * @var string
+     */
     protected $dataDir = 'tests/_data';
+    /**
+     * @var string
+     */
     protected $envsDir = 'tests/_envs';
 
-    public function setup()
+    public function setup(): void
     {
         $this->checkInstalled($this->workDir);
 
@@ -39,7 +52,7 @@ class Bootstrap extends InitTemplate
             return;
         }
 
-        if (!class_exists('\\Codeception\\Module\\Asserts') || !class_exists('\\Codeception\\Module\\PhpBrowser')) {
+        if (!class_exists(\Codeception\Module\Asserts::class) || !class_exists(\Codeception\Module\PhpBrowser::class)) {
             $this->addModulesToComposer(['PhpBrowser', 'Asserts']);
         }
 
@@ -60,7 +73,7 @@ class Bootstrap extends InitTemplate
         $this->say("5. Run tests using: <comment>codecept run</comment>");
     }
 
-    protected function createDirs()
+    protected function createDirs(): void
     {
          $this->createDirectoryFor('tests');
          $this->createEmptyDirectory($this->outputDir);
@@ -71,7 +84,7 @@ class Bootstrap extends InitTemplate
          $this->gitIgnore('tests/_support/_generated');
     }
 
-    protected function createFunctionalSuite($actor = 'Functional')
+    protected function createFunctionalSuite(string $actor = 'Functional'): void
     {
         $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
@@ -81,7 +94,7 @@ class Bootstrap extends InitTemplate
 # Include one of framework modules (Symfony, Yii2, Laravel, Phalcon4) to use it
 # Remove this suite if you don't use frameworks
 
-actor: $actor{$this->actorSuffix}
+actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         # add a framework module here
@@ -93,7 +106,7 @@ EOF;
         $this->say("tests/functional.suite.yml written <- functional tests suite configuration");
     }
 
-    protected function createAcceptanceSuite($actor = 'Acceptance')
+    protected function createAcceptanceSuite(string $actor = 'Acceptance'): void
     {
         $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
@@ -102,7 +115,7 @@ EOF;
 # Perform tests in browser using the WebDriver or PhpBrowser.
 # If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
-actor: $actor{$this->actorSuffix}
+actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         - PhpBrowser:
@@ -115,14 +128,14 @@ EOF;
         $this->say("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
     }
 
-    protected function createUnitSuite($actor = 'Unit')
+    protected function createUnitSuite(string $actor = 'Unit'): void
     {
         $suiteConfig = <<<EOF
 # Codeception Test Suite Configuration
 #
 # Suite for unit or integration tests.
 
-actor: $actor{$this->actorSuffix}
+actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         - Asserts
@@ -134,7 +147,7 @@ EOF;
         $this->say("tests/unit.suite.yml written       <- unit tests suite configuration");
     }
 
-    public function createGlobalConfig()
+    public function createGlobalConfig(): void
     {
         $basicConfig = [
             'paths'    => [
@@ -146,24 +159,23 @@ EOF;
             ],
             'actor_suffix' => 'Tester',
             'extensions' => [
-                'enabled' => ['Codeception\Extension\RunFailed']
+                'enabled' => [\Codeception\Extension\RunFailed::class]
             ]
         ];
 
         $str = Yaml::dump($basicConfig, 4);
-        if ($this->namespace) {
+        if ($this->namespace !== '') {
             $namespace = rtrim($this->namespace, '\\');
-            $str = "namespace: $namespace\n" . $str;
+            $str = "namespace: {$namespace}\n" . $str;
         }
         $this->createFile('codeception.yml', $str);
     }
 
-
-    protected function createSuite($suite, $actor, $config)
+    protected function createSuite(string $suite, string $actor, string $config): void
     {
-        $this->createDirectoryFor("tests/$suite", "$suite.suite.yml");
+        $this->createDirectoryFor("tests/{$suite}", "{$suite}.suite.yml");
         $this->createHelper($actor, $this->supportDir);
         $this->createActor($actor . $this->actorSuffix, $this->supportDir, Yaml::parse($config));
-        $this->createFile('tests' . DIRECTORY_SEPARATOR . "$suite.suite.yml", $config);
+        $this->createFile('tests' . DIRECTORY_SEPARATOR . "{$suite}.suite.yml", $config);
     }
 }

@@ -1,5 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib;
+
+use Codeception\Exception\InjectionException;
 
 class DiTest extends \Codeception\Test\Unit
 {
@@ -7,16 +12,16 @@ class DiTest extends \Codeception\Test\Unit
      * @var Di
      */
     protected $di;
-    
+
     protected function _setUp()
     {
         $this->di = new Di();
     }
 
-    protected function injectionShouldFail($msg = '')
+    protected function injectionShouldFail(string $msg = '')
     {
-        $this->expectException('Codeception\Exception\InjectionException');
-        if ($msg) {
+        $this->expectException(InjectionException::class);
+        if ($msg !== '') {
             $this->expectExceptionMessage($msg);
         }
     }
@@ -32,14 +37,14 @@ class DiTest extends \Codeception\Test\Unit
 
     public function testFailDependenciesInChain()
     {
-        require_once codecept_data_dir().'FailDependenciesInChain.php';
+        require_once codecept_data_dir() . 'FailDependenciesInChain.php';
         $this->injectionShouldFail('Failed to resolve dependency \'FailDependenciesInChain\AnotherClass\'');
         $this->di->instantiate('FailDependenciesInChain\IncorrectDependenciesClass');
     }
 
     public function testFailDependenciesNonExistent()
     {
-        require_once codecept_data_dir().'FailDependenciesNonExistent.php';
+        require_once codecept_data_dir() . 'FailDependenciesNonExistent.php';
         if (PHP_MAJOR_VERSION < 8) {
             $expectedExceptionMessage = 'Class FailDependenciesNonExistent\NonExistentClass does not exist';
         } else {
@@ -51,8 +56,8 @@ class DiTest extends \Codeception\Test\Unit
 
     public function testFailDependenciesPrimitiveParam()
     {
-        require_once codecept_data_dir().'FailDependenciesPrimitiveParam.php';
-        $this->injectionShouldFail('Parameter \'required\' must have default value');
+        require_once codecept_data_dir() . 'FailDependenciesPrimitiveParam.php';
+        $this->injectionShouldFail("Parameter 'required' must have default value");
         $this->di->instantiate('FailDependenciesPrimitiveParam\IncorrectDependenciesClass');
     }
 }

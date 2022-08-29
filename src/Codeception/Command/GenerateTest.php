@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Test as TestGenerator;
@@ -15,10 +18,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GenerateTest extends Command
 {
-    use Shared\FileSystem;
-    use Shared\Config;
+    use Shared\FileSystemTrait;
+    use Shared\ConfigTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition(
             [
@@ -29,12 +32,12 @@ class GenerateTest extends Command
         parent::configure();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Generates empty unit test file in suite';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
@@ -47,15 +50,15 @@ class GenerateTest extends Command
         $filename = $this->completeSuffix($className, 'Test');
         $filename = $path . $filename;
 
-        $gen = new TestGenerator($config, $class);
+        $test = new TestGenerator($config, $class);
 
-        $res = $this->createFile($filename, $gen->produce());
+        $res = $this->createFile($filename, $test->produce());
 
         if (!$res) {
-            $output->writeln("<error>Test $filename already exists</error>");
+            $output->writeln("<error>Test {$filename} already exists</error>");
             return 1;
         }
-        $output->writeln("<info>Test was created in $filename</info>");
+        $output->writeln("<info>Test was created in {$filename}</info>");
         return 0;
     }
 }

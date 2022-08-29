@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Class GherkinTest
  * @group gherkin
@@ -30,7 +32,7 @@ class GherkinTest extends \Codeception\Test\Unit
         self::$calls = '';
     }
 
-    protected function getServices()
+    protected function getServices(): array
     {
         return [
             'di'         => new \Codeception\Lib\Di(),
@@ -44,10 +46,9 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $tests = $this->loader->getTests();
         $this->assertCount(1, $tests);
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test = $tests[0];
         $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
-        $this->assertEquals('Refund item', $test->getFeature());
+        $this->assertSame('Refund item', $test->getFeature());
     }
 
     public function testGherkinScenario()
@@ -55,10 +56,9 @@ class GherkinTest extends \Codeception\Test\Unit
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $tests = $this->loader->getTests();
         $this->assertCount(1, $tests);
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test = $tests[0];
         $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
-        $this->assertEquals('Jeff returns a faulty microwave', $test->getScenarioTitle());
+        $this->assertSame('Jeff returns a faulty microwave', $test->getScenarioTitle());
     }
 
     /**
@@ -68,10 +68,9 @@ class GherkinTest extends \Codeception\Test\Unit
     {
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
-        $this->assertEquals('abc', self::$calls);
+        $this->assertSame('abc', self::$calls);
     }
 
     public function testBadRegex()
@@ -89,7 +88,6 @@ class GherkinTest extends \Codeception\Test\Unit
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
     }
@@ -110,10 +108,9 @@ class GherkinTest extends \Codeception\Test\Unit
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
-        $this->assertEquals('aXc', self::$calls);
+        $this->assertSame('aXc', self::$calls);
     }
 
     public function testRoles()
@@ -132,10 +129,9 @@ class GherkinTest extends \Codeception\Test\Unit
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
-        $this->assertEquals('aXc', self::$calls);
+        $this->assertSame('aXc', self::$calls);
     }
 
 
@@ -202,8 +198,8 @@ class GherkinTest extends \Codeception\Test\Unit
     public function testMultipleSteps()
     {
         $patterns = array_keys($this->loader->getSteps()['default']);
-        $this->assertContains('/^he returns the microwave$/u', $patterns);
-        $this->assertContains('/^microwave is brought back$/u', $patterns);
+        $this->assertContains('#^he returns the microwave$#u', $patterns);
+        $this->assertContains('#^microwave is brought back$#u', $patterns);
     }
 }
 

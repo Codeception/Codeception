@@ -1,6 +1,8 @@
 <?php
 
-class ConfigParamsCest
+declare(strict_types=1);
+
+final class ConfigParamsCest
 {
     public function checkYamlParamsPassed(CliGuy $I)
     {

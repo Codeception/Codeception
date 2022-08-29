@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @depends ConfigBundledSuitesCest:runBundledSuite
  */
-class ConfigNoActorCest
+final class ConfigNoActorCest
 {
     /**
      * @depends ConfigBundledSuitesCest:runBundledSuite

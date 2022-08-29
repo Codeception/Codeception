@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Step;
 
 class ExecutorTest extends \PHPUnit\Framework\TestCase
@@ -6,7 +9,7 @@ class ExecutorTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider valuesProvider
      */
-    public function testRun($returnValue)
+    public function testRun(bool $returnValue)
     {
         $expected = $returnValue;
 
@@ -15,17 +18,17 @@ class ExecutorTest extends \PHPUnit\Framework\TestCase
         });
         $actual = $executor->run();
 
-        $this->assertEquals($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     /**
-     * @return array
+     * @return bool[][]
      */
-    public function valuesProvider()
+    public function valuesProvider(): array
     {
-        return array(
-            array(true),
-            array(false),
-        );
+        return [
+            [true],
+            [false],
+        ];
     }
 }

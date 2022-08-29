@@ -1,6 +1,8 @@
 <?php
 
-class OrderCest
+declare(strict_types=1);
+
+final class OrderCest
 {
     public function checkOneFile(CliGuy $I)
     {

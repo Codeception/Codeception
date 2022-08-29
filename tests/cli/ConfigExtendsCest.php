@@ -1,11 +1,10 @@
 <?php
 
-class ConfigExtendsCest
+declare(strict_types=1);
+
+final class ConfigExtendsCest
 {
-    /**
-     * @param CliGuy $I
-     */
-    public function runIncludedSuites(\CliGuy $I)
+    public function runIncludedSuites(CliGuy $I)
     {
         $I->amInPath('tests/data/config_extends');
         $I->executeCommand('run');

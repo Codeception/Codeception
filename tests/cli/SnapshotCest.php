@@ -1,8 +1,9 @@
 <?php
 
-class SnapshotCest
-{
+declare(strict_types=1);
 
+final class SnapshotCest
+{
     public function _openSnapshotSuite(CliGuy $I)
     {
         $I->amInPath('tests/data/snapshots');

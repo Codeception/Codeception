@@ -1,47 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
+use Codeception\Step;
+use Codeception\Step\Argument\FormattedOutput;
 use Codeception\Stub;
 use Facebook\WebDriver\WebDriverBy;
-use Codeception\Step;
+use PHPUnit\Framework\TestCase;
 
-class StepTest extends \PHPUnit\Framework\TestCase
+class StepTest extends TestCase
 {
-    /**
-     * @param $args
-     * @return Codeception\Step
-     */
-    protected function getStep($args)
+    protected function getStep(array $args): Step
     {
-        return $this->getMockBuilder('\Codeception\Step')->setConstructorArgs($args)->setMethods(null)->getMock();
+        return $this->getMockBuilder(Step::class)->setConstructorArgs($args)->setMethods()->getMock();
     }
 
     public function testGetArguments()
     {
         //facebook/php-webdriver is no longer a dependency of core so this behaviour can't be tested anymore
         //$by = WebDriverBy::cssSelector('.something');
-        //$step = $this->getStep([null, [$by]]);
-        //$this->assertEquals('"' . Locator::humanReadableString($by) . '"', $step->getArgumentsAsString());
+        //$step = $this->getStep(['', [$by]]);
+        //$this->assertSame('"' . Locator::humanReadableString($by) . '"', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [['just', 'array']]]);
-        $this->assertEquals('["just","array"]', $step->getArgumentsAsString());
+        $step = $this->getStep(['', [['just', 'array']]]);
+        $this->assertSame('["just","array"]', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [function () {
+        $step = $this->getStep(['', [function () {
         }]]);
-        $this->assertEquals('"Closure"', $step->getArgumentsAsString());
+        $this->assertSame('"Closure"', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [[$this, 'testGetArguments']]]);
-        $this->assertEquals('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
+        $step = $this->getStep(['', [[$this, 'testGetArguments']]]);
+        $this->assertSame('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [['PDO', 'getAvailableDrivers']]]);
-        $this->assertEquals('["PDO","getAvailableDrivers"]', $step->getArgumentsAsString());
+        $step = $this->getStep(['', [[PDO::class, 'getAvailableDrivers']]]);
+        $this->assertSame('["PDO","getAvailableDrivers"]', $step->getArgumentsAsString());
 
-        $step = $this->getStep([null, [[Stub::make($this, []), 'testGetArguments']]]);
-        $this->assertEquals('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
+        $step = $this->getStep(['', [[Stub::make($this, []), 'testGetArguments']]]);
+        $this->assertSame('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
 
         $mock = $this->createMock(get_class($this));
-        $step = $this->getStep([null, [[$mock, 'testGetArguments']]]);
+        $step = $this->getStep(['', [[$mock, 'testGetArguments']]]);
         $className = get_class($mock);
-        $this->assertEquals('["' . $className . '","testGetArguments"]', $step->getArgumentsAsString());
+        $this->assertSame('["' . $className . '","testGetArguments"]', $step->getArgumentsAsString());
     }
 
     public function testGetHtml()
@@ -65,60 +65,60 @@ class StepTest extends \PHPUnit\Framework\TestCase
 
         $step = $this->getStep(['have in database', [str_repeat('a', 100), str_repeat('b', 100)]]);
         $output = $step->toString(50);
-        $this->assertEquals(50, strlen($output), 'Incorrect length of output: ' . $output);
-        $this->assertEquals('have in database "aaaaaaaaaaa...","bbbbbbbbbbb..."', $output);
+        $this->assertSame(50, strlen($output), 'Incorrect length of output: ' . $output);
+        $this->assertSame('have in database "aaaaaaaaaaa...","bbbbbbbbbbb..."', $output);
 
         $step = $this->getStep(['have in database', [1, str_repeat('b', 100)]]);
         $output = $step->toString(50);
-        $this->assertEquals('have in database 1,"bbbbbbbbbbbbbbbbbbbbbbbbbb..."', $output);
+        $this->assertSame('have in database 1,"bbbbbbbbbbbbbbbbbbbbbbbbbb..."', $output);
 
         $step = $this->getStep(['have in database', [str_repeat('b', 100), 1]]);
         $output = $step->toString(50);
-        $this->assertEquals('have in database "bbbbbbbbbbbbbbbbbbbbbbbbbb...",1', $output);
+        $this->assertSame('have in database "bbbbbbbbbbbbbbbbbbbbbbbbbb...",1', $output);
     }
 
     public function testArrayAsArgument()
     {
         $step = $this->getStep(['see array', [[1,2,3], 'two']]);
         $output = $step->toString(200);
-        $this->assertEquals('see array [1,2,3],"two"', $output);
+        $this->assertSame('see array [1,2,3],"two"', $output);
     }
 
     public function testSingleQuotedStringAsArgument()
     {
         $step = $this->getStep(['see array', [[1,2,3], "'two'"]]);
         $output = $step->toString(200);
-        $this->assertEquals('see array [1,2,3],"\'two\'"', $output);
+        $this->assertSame('see array [1,2,3],"\'two\'"', $output);
     }
 
     public function testSeeUppercaseText()
     {
         $step = $this->getStep(['see', ['UPPER CASE']]);
         $output = $step->toString(200);
-        $this->assertEquals('see "UPPER CASE"', $output);
+        $this->assertSame('see "UPPER CASE"', $output);
     }
 
     public function testMultiByteTextLengthIsMeasuredCorrectly()
     {
         $step = $this->getStep(['see', ['ŽŽŽŽŽŽŽŽŽŽ', 'AAAAAAAAAAA']]);
         $output = $step->toString(30);
-        $this->assertEquals('see "ŽŽŽŽŽŽŽŽŽŽ","AAAAAAAAAAA"', $output);
+        $this->assertSame('see "ŽŽŽŽŽŽŽŽŽŽ","AAAAAAAAAAA"', $output);
     }
 
     public function testAmOnUrl()
     {
         $step = $this->getStep(['amOnUrl', ['http://www.example.org/test']]);
         $output = $step->toString(200);
-        $this->assertEquals('am on url "http://www.example.org/test"', $output);
+        $this->assertSame('am on url "http://www.example.org/test"', $output);
     }
 
     public function testNoArgs()
     {
         $step = $this->getStep(['acceptPopup', []]);
         $output = $step->toString(200);
-        $this->assertEquals('accept popup ', $output);
+        $this->assertSame('accept popup ', $output);
         $output = $step->toString(-5);
-        $this->assertEquals('accept popup ', $output);
+        $this->assertSame('accept popup ', $output);
 
     }
 
@@ -126,16 +126,16 @@ class StepTest extends \PHPUnit\Framework\TestCase
     {
         $step = $this->getStep(['see', ["aaaa\nbbbb\nc"]]);
         $output = $step->toString(200);
-        $this->assertEquals('see "aaaa\nbbbb\nc"', $output);
+        $this->assertSame('see "aaaa\nbbbb\nc"', $output);
     }
 
     public function testFormattedOutput()
     {
-        $argument = Stub::makeEmpty('\Codeception\Step\Argument\FormattedOutput');
+        $argument = Stub::makeEmpty(FormattedOutput::class);
         $argument->method('getOutput')->willReturn('some formatted output');
 
         $step = $this->getStep(['argument', [$argument]]);
         $output = $step->toString(200);
-        $this->assertEquals('argument "some formatted output"', $output);
+        $this->assertSame('argument "some formatted output"', $output);
     }
 }

@@ -1,27 +1,31 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception;
 
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
+use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Loader;
-use Codeception\Test\Descriptor;
+use PHPUnit\Framework\DataProviderTestSuite;
+use PHPUnit\Framework\Test as PHPUnitTest;
+use PHPUnit\Framework\TestResult;
+use PHPUnit\Framework\TestSuite;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
 {
-    public static $environment;
-    public static $name;
-
     /**
-     * @var \PHPUnit\Framework\TestSuite
+     * @var TestSuite
      */
     protected $suite = null;
 
     /**
-     * @var null|\Symfony\Component\EventDispatcher\EventDispatcher
+     * @var EventDispatcher|null
      */
     protected $dispatcher = null;
 
@@ -29,11 +33,6 @@ class SuiteManager
      * @var GroupManager
      */
     protected $groupManager;
-
-    /**
-     * @var Loader
-     */
-    protected $testLoader;
 
     /**
      * @var ModuleContainer
@@ -45,20 +44,21 @@ class SuiteManager
      */
     protected $di;
 
-    protected $tests = [];
-    protected $debug = false;
-    protected $path = '';
-    protected $printer = null;
+    /**
+     * @var string
+     */
+    protected $env = '';
 
-    protected $env = null;
-    protected $settings;
+    /**
+     * @var array
+     */
+    protected $settings = [];
 
-    public function __construct(EventDispatcher $dispatcher, $name, array $settings)
+    public function __construct(EventDispatcher $dispatcher, string $name, array $settings)
     {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
         $this->di = new Di();
-        $this->path = $settings['path'];
         $this->groupManager = new GroupManager($settings['groups']);
         $this->moduleContainer = new ModuleContainer($this->di, $settings);
 
@@ -73,7 +73,7 @@ class SuiteManager
         $this->suite = $this->createSuite($name);
     }
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::MODULE_INIT);
         foreach ($this->moduleContainer->all() as $module) {
@@ -86,10 +86,10 @@ class SuiteManager
             );
         }
         $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, null, $this->settings), Events::SUITE_INIT);
-        ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
+        ini_set('xdebug.show_exception_trace', '0'); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
-    public function loadTests($path = null)
+    public function loadTests(string $path = null): void
     {
         $testLoader = new Loader($this->settings);
         $testLoader->loadTests($path);
@@ -104,16 +104,19 @@ class SuiteManager
         $this->suite->reorderDependencies();
     }
 
-    protected function addToSuite($test)
+    protected function addToSuite(PHPUnitTest $test): void
     {
-        $this->configureTest($test);
+        if ($test instanceof TestInterface) {
+            $this->configureTest($test);
+        }
 
-        if ($test instanceof \PHPUnit\Framework\DataProviderTestSuite) {
+        if ($test instanceof DataProviderTestSuite) {
             foreach ($test->tests() as $t) {
                 $this->addToSuite($t);
             }
             return;
         }
+
         if ($test instanceof TestInterface) {
             $this->checkEnvironmentExists($test);
             if (!$this->isExecutedInCurrentEnvironment($test)) {
@@ -130,12 +133,12 @@ class SuiteManager
         }
     }
 
-    protected function createSuite($name)
+    protected function createSuite(string $name): Suite
     {
         $suite = new Suite();
-        $suite->setBaseName(preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
+        $suite->setBaseName(preg_replace('#\s.+$#', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
-            $name = $this->settings['namespace'] . ".$name";
+            $name = $this->settings['namespace'] . ".{$name}";
         }
         $suite->setName($name);
         if (isset($this->settings['backup_globals'])) {
@@ -150,7 +153,7 @@ class SuiteManager
     }
 
 
-    public function run(PHPUnit\Runner $runner, \PHPUnit\Framework\TestResult $result, $options)
+    public function run(PHPUnit\Runner $runner, TestResult $result, array $options): void
     {
         $runner->prepareSuite($this->suite, $options);
         $this->dispatcher->dispatch(new Event\SuiteEvent($this->suite, $result, $this->settings), Events::SUITE_BEFORE);
@@ -161,23 +164,17 @@ class SuiteManager
         }
     }
 
-    /**
-     * @return \Codeception\Suite
-     */
-    public function getSuite()
+    public function getSuite(): Suite
     {
         return $this->suite;
     }
 
-    /**
-     * @return ModuleContainer
-     */
-    public function getModuleContainer()
+    public function getModuleContainer(): ModuleContainer
     {
         return $this->moduleContainer;
     }
 
-    protected function getActor()
+    protected function getActor(): ?string
     {
         if (!$this->settings['actor']) {
             return null;
@@ -187,7 +184,7 @@ class SuiteManager
             : $this->settings['actor'];
     }
 
-    protected function checkEnvironmentExists(TestInterface $test)
+    protected function checkEnvironmentExists(TestInterface $test): void
     {
         $envs = $test->getMetadata()->getEnv();
         if (empty($envs)) {
@@ -197,16 +194,15 @@ class SuiteManager
             Notification::warning("Environments are not configured", Descriptor::getTestFullName($test));
             return;
         }
-        $availableEnvironments = array_keys($this->settings['env']);
         $listedEnvironments = explode(',', implode(',', $envs));
         foreach ($listedEnvironments as $env) {
-            if (!in_array($env, $availableEnvironments)) {
-                Notification::warning("Environment $env was not configured but used in test", Descriptor::getTestFullName($test));
+            if (!array_key_exists($env, $this->settings['env'])) {
+                Notification::warning("Environment {$env} was not configured but used in test", Descriptor::getTestFullName($test));
             }
         }
     }
 
-    protected function isExecutedInCurrentEnvironment(TestInterface $test)
+    protected function isExecutedInCurrentEnvironment(TestInterface $test): bool
     {
         $envs = $test->getMetadata()->getEnv();
         if (empty($envs)) {
@@ -222,27 +218,20 @@ class SuiteManager
         return false;
     }
 
-    /**
-     * @param $t
-     * @throws Exception\InjectionException
-     */
-    protected function configureTest($t)
+    protected function configureTest(TestInterface $test): void
     {
-        if (!$t instanceof TestInterface) {
-            return;
-        }
-        $t->getMetadata()->setServices([
+        $test->getMetadata()->setServices([
             'di' => clone($this->di),
             'dispatcher' => $this->dispatcher,
             'modules' => $this->moduleContainer
         ]);
-        $t->getMetadata()->setCurrent([
+        $test->getMetadata()->setCurrent([
             'actor' => $this->getActor(),
             'env' => $this->env,
             'modules' => $this->moduleContainer->all()
         ]);
-        if ($t instanceof ScenarioDriven) {
-            $t->preload();
+        if ($test instanceof ScenarioDriven) {
+            $test->preload();
         }
     }
 }

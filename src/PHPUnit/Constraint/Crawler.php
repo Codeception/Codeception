@@ -1,16 +1,26 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Exception\ElementNotFound;
 use Codeception\Lib\Console\Message;
-use Symfony\Component\DomCrawler\Crawler as DomCrawler;
+use DOMElement;
+use Facebook\WebDriver\WebDriverBy;
+use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
+use Symfony\Component\DomCrawler\Crawler as SymfonyDomCrawler;
+use function strpos;
 
 class Crawler extends Page
 {
-    protected function matches($nodes) : bool
+    /**
+     * @param SymfonyDomCrawler $nodes
+     * @return bool
+     */
+    protected function matches($nodes): bool
     {
-        /** @var $nodes DomCrawler  * */
         if (!$nodes->count()) {
             return false;
         }
@@ -26,14 +36,18 @@ class Crawler extends Page
         return false;
     }
 
-    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null):void
+    /**
+     * @param SymfonyDomCrawler $nodes
+     * @param string $selector
+     * @param ComparisonFailure|null $comparisonFailure
+     */
+    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null): void
     {
-        /** @var $nodes DomCrawler  * */
         if (!$nodes->count()) {
             throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
         }
 
-        $output = "Failed asserting that any element by '$selector'";
+        $output = "Failed asserting that any element by '{$selector}'";
         $output .= $this->uriMessage('on page');
         $output .= " ";
 
@@ -45,25 +59,29 @@ class Crawler extends Page
         }
         $output .= "\ncontains text '{$this->string}'";
 
-        throw new \PHPUnit\Framework\ExpectationFailedException(
+        throw new ExpectationFailedException(
             $output,
             $comparisonFailure
         );
     }
 
-    protected function failureDescription($other) : string
+    /**
+     * @param DOMElement[] $other
+     * @return string
+     */
+    protected function failureDescription($other): string
     {
-        $desc = '';
+        $description = '';
         foreach ($other as $o) {
-            $desc .= parent::failureDescription($o->textContent);
+            $description .= parent::failureDescription($o->textContent);
         }
-        return $desc;
+        return $description;
     }
 
-    protected function nodesList(DomCrawler $nodes, $contains = null)
+    protected function nodesList(SymfonyDomCrawler $domCrawler, string $contains = null): string
     {
-        $output = "";
-        foreach ($nodes as $node) {
+        $output = '';
+        foreach ($domCrawler as $node) {
             if ($contains && strpos($node->nodeValue, $contains) === false) {
                 continue;
             }

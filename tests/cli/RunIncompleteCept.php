@@ -1,4 +1,5 @@
 <?php
+
 $I = new CliGuy($scenario);
 $I->wantTo('execute incomplete test');
 $I->amInPath('tests/data/sandbox');

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Coverage\Subscriber;
 
 use Codeception\Configuration;
@@ -9,6 +12,26 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\RemoteException;
+use Codeception\Lib\Interfaces\Web as WebInterface;
+use Codeception\Module\WebDriver as WebDriverModule;
+use RuntimeException;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+use function array_filter;
+use function array_key_exists;
+use function array_replace_recursive;
+use function codecept_debug;
+use function file_exists;
+use function file_get_contents;
+use function is_array;
+use function json_encode;
+use function parse_url;
+use function preg_match;
+use function rtrim;
+use function str_replace;
+use function stream_context_create;
+use function strpos;
+use function unserialize;
+use function usleep;
 
 /**
  * When collecting code coverage data from local server HTTP requests are sent to c3.php file.
@@ -21,16 +44,39 @@ use Codeception\Exception\RemoteException;
 class LocalServer extends SuiteSubscriber
 {
     // headers
+
+    /**
+     * @var string
+     */
     const COVERAGE_HEADER = 'X-Codeception-CodeCoverage';
+    /**
+     * @var string
+     */
     const COVERAGE_HEADER_ERROR = 'X-Codeception-CodeCoverage-Error';
+    /**
+     * @var string
+     */
     const COVERAGE_HEADER_CONFIG = 'X-Codeception-CodeCoverage-Config';
+    /**
+     * @var string
+     */
     const COVERAGE_HEADER_SUITE = 'X-Codeception-CodeCoverage-Suite';
 
     // cookie names
+
+    /**
+     * @var string
+     */
     const COVERAGE_COOKIE = 'CODECEPTION_CODECOVERAGE';
+    /**
+     * @var string
+     */
     const COVERAGE_COOKIE_ERROR = 'CODECEPTION_CODECOVERAGE_ERROR';
 
     protected $suiteName;
+    /**
+     * @var array
+     */
     protected $c3Access = [
         'http' => [
             'method' => "GET",
@@ -39,10 +85,13 @@ class LocalServer extends SuiteSubscriber
     ];
 
     /**
-     * @var \Codeception\Lib\Interfaces\Web
+     * @var WebInterface
      */
     protected $module;
 
+    /**
+     * @var array<string, string>
+     */
     public static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_BEFORE  => 'beforeTest',
@@ -50,20 +99,20 @@ class LocalServer extends SuiteSubscriber
         Events::SUITE_AFTER  => 'afterSuite',
     ];
 
-    protected function isEnabled()
+    protected function isEnabled(): bool
     {
         return $this->module && !$this->settings['remote'] && $this->settings['enabled'];
     }
 
-    public function beforeSuite(SuiteEvent $e)
+    public function beforeSuite(SuiteEvent $event): void
     {
-        $this->module = $this->getServerConnectionModule($e->getSuite()->getModules());
-        $this->applySettings($e->getSettings());
+        $this->module = $this->getServerConnectionModule($event->getSuite()->getModules());
+        $this->applySettings($event->getSettings());
         if (!$this->isEnabled()) {
             return;
         }
 
-        $this->suiteName = $e->getSuite()->getBaseName();
+        $this->suiteName = $event->getSuite()->getBaseName();
 
         if ($this->settings['remote_config']) {
             $this->addC3AccessHeader(self::COVERAGE_HEADER_CONFIG, $this->settings['remote_config']);
@@ -81,15 +130,15 @@ class LocalServer extends SuiteSubscriber
         }
     }
 
-    public function beforeTest(TestEvent $e)
+    public function beforeTest(TestEvent $event): void
     {
         if (!$this->isEnabled()) {
             return;
         }
-        $this->startCoverageCollection($e->getTest()->getName());
+        $this->startCoverageCollection($event->getTest()->getName());
     }
 
-    public function afterStep(StepEvent $e)
+    public function afterStep(StepEvent $event): void
     {
         if (!$this->isEnabled()) {
             return;
@@ -97,7 +146,7 @@ class LocalServer extends SuiteSubscriber
         $this->fetchErrors();
     }
 
-    public function afterSuite(SuiteEvent $e)
+    public function afterSuite(SuiteEvent $event): void
     {
         if (!$this->isEnabled()) {
             return;
@@ -106,12 +155,13 @@ class LocalServer extends SuiteSubscriber
 
         $retries = 5;
         while (!file_exists($coverageFile) && --$retries >= 0) {
-            usleep(0.5 * 1000000); // 0.5 sec
+            $seconds = (int) 0.5 * 1000000; // 0.5 sec
+            usleep($seconds);
         }
 
         if (!file_exists($coverageFile)) {
             if (file_exists(Configuration::outputDir() . 'c3tmp/error.txt')) {
-                throw new \RuntimeException(file_get_contents(Configuration::outputDir() . 'c3tmp/error.txt'));
+                throw new RuntimeException(file_get_contents(Configuration::outputDir() . 'c3tmp/error.txt'));
             }
             return;
         }
@@ -128,11 +178,8 @@ class LocalServer extends SuiteSubscriber
 
     /**
      * Allows Translating Remote Paths To Local (IE: When Using Docker)
-     *
-     * @param \SebastianBergmann\CodeCoverage\CodeCoverage $coverage
-     * @return $this
      */
-    protected function preProcessCoverage($coverage)
+    protected function preProcessCoverage(CodeCoverage $coverage): self
     {
         //Only Process If Work Directory Set
         if ($this->settings['work_dir'] === null) {
@@ -141,24 +188,24 @@ class LocalServer extends SuiteSubscriber
 
         $workDir    = rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
         $projectDir = Configuration::projectDir();
-        $data       = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
+        $coverageData       = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
 
         codecept_debug("Replacing all instances of {$workDir} with {$projectDir}");
 
-        foreach ($data as $path => $datum) {
-            unset($data[$path]);
+        foreach ($coverageData as $path => $datum) {
+            unset($coverageData[$path]);
 
             $path = str_replace($workDir, $projectDir, $path);
 
-            $data[$path] = $datum;
+            $coverageData[$path] = $datum;
         }
 
-        $coverage->setData($data);
+        $coverage->setData($coverageData);
 
         return $this;
     }
 
-    protected function c3Request($action)
+    protected function c3Request(string $action)
     {
         $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
         $context = stream_context_create($this->c3Access);
@@ -168,7 +215,7 @@ class LocalServer extends SuiteSubscriber
         $okHeaders = array_filter(
             $http_response_header,
             function ($h) {
-                return preg_match('~^HTTP(.*?)\s200~', $h);
+                return preg_match('#^HTTP(.*?)\s200#', $h);
             }
         );
         if (empty($okHeaders)) {
@@ -180,16 +227,16 @@ class LocalServer extends SuiteSubscriber
         return $contents;
     }
 
-    protected function startCoverageCollection($testName)
+    protected function startCoverageCollection($testName): void
     {
         $value = [
             'CodeCoverage'        => $testName,
             'CodeCoverage_Suite'  => $this->suiteName,
             'CodeCoverage_Config' => $this->settings['remote_config']
         ];
-        $value = json_encode($value);
+        $value = json_encode($value, JSON_THROW_ON_ERROR);
 
-        if ($this->module instanceof \Codeception\Module\WebDriver) {
+        if ($this->module instanceof WebDriverModule) {
             $this->module->amOnPage('/');
         }
 
@@ -235,7 +282,7 @@ class LocalServer extends SuiteSubscriber
         $this->module->_setConfig(['cookies' => $cookies]);
     }
 
-    protected function fetchErrors()
+    protected function fetchErrors(): void
     {
         try {
             $error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR);
@@ -250,7 +297,7 @@ class LocalServer extends SuiteSubscriber
         }
     }
 
-    protected function getRemoteError($headers)
+    protected function getRemoteError(array $headers): void
     {
         foreach ($headers as $header) {
             if (strpos($header, self::COVERAGE_HEADER_ERROR) === 0) {
@@ -259,15 +306,15 @@ class LocalServer extends SuiteSubscriber
         }
     }
 
-    protected function addC3AccessHeader($header, $value)
+    protected function addC3AccessHeader(string $header, string $value): void
     {
-        $headerString = "$header: $value\r\n";
+        $headerString = "{$header}: {$value}\r\n";
         if (strpos($this->c3Access['http']['header'], $headerString) === false) {
             $this->c3Access['http']['header'] .= $headerString;
         }
     }
 
-    protected function applySettings($settings)
+    protected function applySettings(array $settings): void
     {
         parent::applySettings($settings);
         if (isset($settings['coverage']['remote_context_options'])) {

@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Extension;
 
 use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Symfony\Component\Process\Process;
+use function array_shift;
+use function class_exists;
+use function count;
+use function is_array;
+use function sleep;
 
 /**
  * Extension for execution of some processes before running tests.
@@ -35,8 +42,14 @@ use Symfony\Component\Process\Process;
  */
 class RunBefore extends Extension
 {
+    /**
+     * @var array
+     */
     protected $config = [];
 
+    /**
+     * @var array<string, string>
+     */
     protected static $events = [
         Events::SUITE_BEFORE => 'runBefore'
     ];
@@ -44,20 +57,20 @@ class RunBefore extends Extension
     /** @var array[] */
     private $processes = [];
 
-    public function _initialize()
+    public function _initialize(): void
     {
-        if (!class_exists('Symfony\Component\Process\Process')) {
+        if (!class_exists(Process::class)) {
             throw new ExtensionException($this, 'symfony/process package is required');
         }
     }
 
-    public function runBefore()
+    public function runBefore(): void
     {
         $this->runProcesses();
         $this->processMonitoring();
     }
 
-    private function runProcesses()
+    private function runProcesses(): void
     {
         foreach ($this->config as $item) {
             if (is_array($item)) {
@@ -73,20 +86,11 @@ class RunBefore extends Extension
         }
     }
 
-    /**
-     * @param string $command
-     * @return Process
-     */
-    private function runProcess($command)
+    private function runProcess(string $command): Process
     {
         $this->output->debug('[RunBefore] Starting ' . $command);
 
-        if (method_exists(Process::class, 'fromShellCommandline')) {
-            //Symfony 4.2+
-            $process = Process::fromShellCommandline($command, $this->getRootDir());
-        } else {
-            $process = new Process($command, $this->getRootDir());
-        }
+        $process = Process::fromShellCommandline($command, $this->getRootDir());
         $process->start();
 
         return $process;
@@ -95,7 +99,7 @@ class RunBefore extends Extension
     /**
      * @param string[] $followingCommands
      */
-    private function addProcessToMonitoring(Process $process, array $followingCommands)
+    private function addProcessToMonitoring(Process $process, array $followingCommands): void
     {
         $this->processes[] = [
             'instance' => $process,
@@ -103,15 +107,12 @@ class RunBefore extends Extension
         ];
     }
 
-    /**
-     * @param int $index
-     */
-    private function removeProcessFromMonitoring($index)
+    private function removeProcessFromMonitoring(int $index): void
     {
         unset($this->processes[$index]);
     }
 
-    private function processMonitoring()
+    private function processMonitoring(): void
     {
         while (count($this->processes) !== 0) {
             $this->checkProcesses();
@@ -119,7 +120,7 @@ class RunBefore extends Extension
         }
     }
 
-    private function checkProcesses()
+    private function checkProcesses(): void
     {
         foreach ($this->processes as $index => $process) {
             if (!$this->isRunning($process['instance'])) {
@@ -133,19 +134,16 @@ class RunBefore extends Extension
     /**
      * @param string[] $followingCommands
      */
-    private function runFollowingCommand(array $followingCommands)
+    private function runFollowingCommand(array $followingCommands): void
     {
-        if (count($followingCommands) > 0) {
+        if ($followingCommands !== []) {
             $process = $this->runProcess(array_shift($followingCommands));
             $this->addProcessToMonitoring($process, $followingCommands);
         }
     }
 
-    private function isRunning(Process $process)
+    private function isRunning(Process $process): bool
     {
-        if ($process->isRunning()) {
-            return true;
-        }
-        return false;
+        return $process->isRunning();
     }
 }

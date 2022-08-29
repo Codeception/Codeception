@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
@@ -8,6 +10,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class Api extends InitTemplate
 {
+    /**
+     * @var string
+     */
     protected $configTemplate = <<<EOF
 # suite config
 suites:
@@ -31,6 +36,9 @@ settings:
     lint: true
 EOF;
 
+    /**
+     * @var string
+     */
     protected $firstTest = <<<EOF
 <?php
 class ApiCest 
@@ -45,7 +53,7 @@ class ApiCest
 EOF;
 
 
-    public function setup()
+    public function setup(): void
     {
         $this->checkInstalled();
         $this->say("Let's prepare Codeception for REST API testing");
@@ -55,7 +63,7 @@ EOF;
 
         $url = $this->ask("Start url for tests", "http://localhost/api");
 
-        if (!class_exists('\\Codeception\\Module\\REST') || !class_exists('\\Codeception\\Module\\PhpBrowser')) {
+        if (!class_exists('\\Codeception\\Module\\REST') || !class_exists(\Codeception\Module\PhpBrowser::class)) {
             $this->addModulesToComposer(['REST', 'PhpBrowser']);
         }
 
@@ -65,16 +73,16 @@ EOF;
         $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->gitIgnore($outputDir);
         $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
-        $this->sayInfo("Created test directories inside at $dir");
+        $this->sayInfo("Created test directories inside at {$dir}");
 
         $configFile = (new Template($this->configTemplate))
             ->place('url', $url)
             ->place('baseDir', $dir)
             ->produce();
 
-        if ($this->namespace) {
+        if ($this->namespace !== '') {
             $namespace = rtrim($this->namespace, '\\');
-            $configFile = "namespace: $namespace\n" . $configFile;
+            $configFile = "namespace: {$namespace}\n" . $configFile;
         }
 
         $this->createFile('codeception.yml', $configFile);
@@ -92,7 +100,7 @@ EOF;
 
         $this->say();
         $this->say("<bold>Next steps:</bold>");
-        $this->say("1. Edit <bold>$dir/ApiCest.php</bold> to write first API tests");
+        $this->say("1. Edit <bold>{$dir}/ApiCest.php</bold> to write first API tests");
         $this->say("2. Run tests using: <comment>codecept run</comment>");
         $this->say();
         $this->say("<bold>Happy testing!</bold>");

@@ -1,6 +1,8 @@
 <?php
 
-class GlobalCommandOptionCest
+declare(strict_types=1);
+
+final class GlobalCommandOptionCest
 {
     public function configOption(CliGuy $I)
     {

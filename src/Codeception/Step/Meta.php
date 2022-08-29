@@ -1,27 +1,35 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Step;
 
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step as CodeceptionStep;
+use function array_pop;
+use function end;
+use function is_string;
+use function str_replace;
+use function strpos;
 
 class Meta extends CodeceptionStep
 {
-    public function run(ModuleContainer $container = null)
+    public function run(ModuleContainer $container = null): void
     {
     }
 
-    public function setTraceInfo($file, $line)
+    public function setTraceInfo(string $file, int $line): void
     {
         $this->file = $file;
         $this->line = $line;
     }
 
-    public function setPrefix($actor)
+    public function setPrefix(string $actor): void
     {
         $this->prefix = $actor;
     }
 
-    public function getArgumentsAsString($maxLength = 200)
+    public function getArgumentsAsString(int $maxLength = self::DEFAULT_MAX_LENGTH): string
     {
         $argumentBackup = $this->arguments;
         $lastArgAsString = '';
@@ -35,7 +43,7 @@ class Meta extends CodeceptionStep
         return $result;
     }
 
-    public function setFailed($failed)
+    public function setFailed(bool $failed): void
     {
         $this->failed = $failed;
     }

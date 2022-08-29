@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Event;
 
 use Codeception\Step;
@@ -23,15 +26,12 @@ class StepEvent extends Event
         $this->step = $step;
     }
 
-    public function getStep()
+    public function getStep(): Step
     {
         return $this->step;
     }
 
-    /**
-     * @return TestInterface
-     */
-    public function getTest()
+    public function getTest(): TestInterface
     {
         return $this->test;
     }

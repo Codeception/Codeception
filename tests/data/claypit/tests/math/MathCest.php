@@ -16,20 +16,20 @@ class MathCest
 
     public function testAddition(MathTester $I)
     {
-        $I->assertEquals(3, $this->calc->add(1, 2));
-        $I->assertEquals(0, $this->calc->add(10, -10));
+        $I->assertSame(3, $this->calc->add(1, 2));
+        $I->assertSame(0, $this->calc->add(10, -10));
     }
 
     public function testSubtraction(MathTester $I)
     {
-        $I->assertEquals(1, $this->calc->subtract(3, 2));
-        $I->assertEquals(0, $this->calc->subtract(5, 5));
+        $I->assertSame(1, $this->calc->subtract(3, 2));
+        $I->assertSame(0, $this->calc->subtract(5, 5));
     }
 
     public function testSquare(MathTester $I)
     {
-        $I->assertEquals(3, $this->calc->squareOfCircle(1));
-        $I->assertEquals(12, $this->calc->squareOfCircle(2));
+        $I->assertSame(3, $this->calc->squareOfCircle(1));
+        $I->assertSame(12, $this->calc->squareOfCircle(2));
     }
 
     public function testTrigonometry(MathTester $I, \Page\Math\Trigonometry $t)

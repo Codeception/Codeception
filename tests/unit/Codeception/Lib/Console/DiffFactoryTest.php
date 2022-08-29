@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Lib\Console;
 
 use SebastianBergmann\Comparator\ComparisonFailure;
@@ -24,13 +27,10 @@ class DiffFactoryTest extends \Codeception\Test\Unit
         $failure = $this->createFailure();
         $message = $this->diffFactory->createDiff($failure);
 
-        $this->assertEquals($expectedDiff, (string) $message, 'The diff should be generated.');
+        $this->assertSame($expectedDiff, $message, 'The diff should be generated.');
     }
 
-    /**
-     * @return ComparisonFailure
-     */
-    protected function createFailure()
+    protected function createFailure(): \SebastianBergmann\Comparator\ComparisonFailure
     {
         $expected = "a\nb";
         $actual = "a\nc";
@@ -38,10 +38,7 @@ class DiffFactoryTest extends \Codeception\Test\Unit
         return new ComparisonFailure($expected, $actual, $expected, $actual);
     }
 
-    /**
-     * @return string
-     */
-    protected function getExpectedDiff()
+    protected function getExpectedDiff(): string
     {
         $expectedDiff = <<<TXT
 @@ @@

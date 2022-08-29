@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Codeception\Coverage\Subscriber;
 
 use Codeception\Configuration;
@@ -7,31 +10,63 @@ use Codeception\Coverage\PhpCodeCoverageFactory;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
-use Codeception\Subscriber\Shared\StaticEvents;
+use Codeception\Subscriber\Shared\StaticEventsTrait;
+use PHPUnit\Runner\Version as PHPUnitVersion;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Report\Clover as CloverReport;
+use SebastianBergmann\CodeCoverage\Report\Cobertura as CoberturaReport;
+use SebastianBergmann\CodeCoverage\Report\Crap4j as Crap4jReport;
+use SebastianBergmann\CodeCoverage\Report\Html\Facade as HtmlFacadeReport;
+use SebastianBergmann\CodeCoverage\Report\PHP as PhpReport;
+use SebastianBergmann\CodeCoverage\Report\Text as TextReport;
+use SebastianBergmann\CodeCoverage\Report\Xml\Facade as XmlFacadeReport;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use function array_merge;
+use function class_exists;
+use function file_put_contents;
+use function sprintf;
+use function strpos;
 
 class Printer implements EventSubscriberInterface
 {
-    use StaticEvents;
+    use StaticEventsTrait;
 
+    /**
+     * @var array<string, string>
+     */
     public static $events = [
         Events::RESULT_PRINT_AFTER => 'printResult'
     ];
 
+    /**
+     * @var array
+     */
     protected $settings = [
         'enabled'           => true,
-        'low_limit'         => '35',
-        'high_limit'        => '70',
+        'low_limit'         => 35,
+        'high_limit'        => 70,
         'show_uncovered'    => false,
         'show_only_summary' => false
     ];
 
+    /**
+     * @var CodeCoverage
+     */
     public static $coverage;
-    protected $options;
+    /**
+     * @var array
+     */
+    protected $options = [];
+    /**
+     * @var string
+     */
     protected $logDir;
+    /**
+     * @var array
+     */
     protected $destination = [];
 
-    public function __construct($options)
+    public function __construct(array $options)
     {
         $this->options = $options;
         $this->logDir = Configuration::outputDir();
@@ -41,12 +76,11 @@ class Printer implements EventSubscriberInterface
 
         // Apply filter
         $filter = new Filter(self::$coverage);
-        $filter
-            ->whiteList(Configuration::config())
-            ->blackList(Configuration::config());
+        $filter->whiteList(Configuration::config());
+        $filter->blackList(Configuration::config());
     }
 
-    protected function absolutePath($path)
+    protected function absolutePath(string $path): string
     {
         if ((strpos($path, '/') === 0) || (strpos($path, ':') === 1)) { // absolute path
             return $path;
@@ -54,9 +88,9 @@ class Printer implements EventSubscriberInterface
         return $this->logDir . $path;
     }
 
-    public function printResult(PrintResultEvent $e)
+    public function printResult(PrintResultEvent $event): void
     {
-        $printer = $e->getPrinter();
+        $printer = $event->getPrinter();
         if (!$this->settings['enabled']) {
             $printer->write("\nCodeCoverage is disabled in `codeception.yml` config\n");
             return;
@@ -94,9 +128,9 @@ class Printer implements EventSubscriberInterface
         }
     }
 
-    protected function printConsole(\PHPUnit\Util\Printer $printer)
+    protected function printConsole(\PHPUnit\Util\Printer $printer): void
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Text(
+        $writer = new TextReport(
             $this->settings['low_limit'],
             $this->settings['high_limit'],
             $this->settings['show_uncovered'],
@@ -105,35 +139,35 @@ class Printer implements EventSubscriberInterface
         $printer->write($writer->process(self::$coverage, $this->options['colors']));
     }
 
-    protected function printHtml()
+    protected function printHtml(): void
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade(
+        $writer = new HtmlFacadeReport(
             $this->settings['low_limit'],
             $this->settings['high_limit'],
             sprintf(
                 ', <a href="http://codeception.com">Codeception</a> and <a href="http://phpunit.de/">PHPUnit %s</a>',
-                \PHPUnit\Runner\Version::id()
+                PHPUnitVersion::id()
             )
         );
 
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-html']));
     }
 
-    protected function printXml()
+    protected function printXml(): void
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Clover();
+        $writer = new CloverReport();
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-xml']));
     }
 
-    protected function printPHP()
+    protected function printPHP(): void
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\PHP;
+        $writer = new PhpReport();
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage']));
     }
 
-    protected function printText()
+    protected function printText(): void
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Text(
+        $writer = new TextReport(
             $this->settings['low_limit'],
             $this->settings['high_limit'],
             $this->settings['show_uncovered'],
@@ -145,24 +179,24 @@ class Printer implements EventSubscriberInterface
         );
     }
 
-    protected function printCrap4j()
+    protected function printCrap4j(): void
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Crap4j;
+        $writer = new Crap4jReport();
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-crap4j']));
     }
 
-    protected function printCobertura()
+    protected function printCobertura(): void
     {
-        if (!class_exists(\SebastianBergmann\CodeCoverage\Report\Cobertura::class)) {
+        if (!class_exists(CoberturaReport::class)) {
             throw new ConfigurationException("Cobertura report requires php-code-coverage >= 9.2");
         }
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Cobertura;
+        $writer = new CoberturaReport();
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-cobertura']));
     }
 
-    protected function printPHPUnit()
+    protected function printPHPUnit(): void
     {
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Xml\Facade(\PHPUnit\Runner\Version::id());
+        $writer = new XmlFacadeReport(PHPUnitVersion::id());
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-phpunit']));
     }
 }

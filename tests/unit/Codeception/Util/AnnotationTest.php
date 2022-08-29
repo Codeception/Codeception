@@ -1,5 +1,8 @@
 <?php
-use \Codeception\Util\Annotation;
+
+declare(strict_types=1);
+
+use Codeception\Util\Annotation;
 
 /**
  * Class AnnotationTest
@@ -13,8 +16,8 @@ class AnnotationTest extends \PHPUnit\Framework\TestCase
 
     public function testClassAnnotation()
     {
-        $this->assertEquals('davert', Annotation::forClass(__CLASS__)->fetch('author'));
-        $this->assertEquals('codeception', Annotation::forClass(__CLASS__)->fetch('tag'));
+        $this->assertSame('davert', Annotation::forClass(__CLASS__)->fetch('author'));
+        $this->assertSame('codeception', Annotation::forClass(__CLASS__)->fetch('tag'));
     }
 
     /**
@@ -24,20 +27,20 @@ class AnnotationTest extends \PHPUnit\Framework\TestCase
      */
     public function testMethodAnnotation()
     {
-        $this->assertEquals('null', Annotation::forClass(__CLASS__)
+        $this->assertSame('null', Annotation::forClass(__CLASS__)
                 ->method('testMethodAnnotation')
                 ->fetch('return'));
     }
 
     public function testMultipleClassAnnotations()
     {
-        $this->assertEquals(array('codeception', 'tdd'), Annotation::forClass(__CLASS__)->fetchAll('tag'));
+        $this->assertSame(['codeception', 'tdd'], Annotation::forClass(__CLASS__)->fetchAll('tag'));
     }
 
     public function testMultipleMethodAnnotations()
     {
-        $this->assertEquals(
-            array('$var1', '$var2'),
+        $this->assertSame(
+            ['$var1', '$var2'],
             Annotation::forClass(__CLASS__)->method('testMethodAnnotation')->fetchAll('param')
         );
     }
@@ -50,8 +53,8 @@ class AnnotationTest extends \PHPUnit\Framework\TestCase
 @param key2
 EOF;
 
-        $this->assertEquals(['davert'], Annotation::fetchAnnotationsFromDocblock('user', $docblock));
-        $this->assertEquals(['key1', 'key2'], Annotation::fetchAnnotationsFromDocblock('param', $docblock));
+        $this->assertSame(['davert'], Annotation::fetchAnnotationsFromDocblock('user', $docblock));
+        $this->assertSame(['key1', 'key2'], Annotation::fetchAnnotationsFromDocblock('param', $docblock));
     }
 
 
@@ -65,7 +68,7 @@ EOF;
 
         $all = Annotation::fetchAllAnnotationsFromDocblock($docblock);
         codecept_debug($all);
-        $this->assertEquals([
+        $this->assertSame([
             'user' => ['davert'],
             'param' => ['key1', 'key2']
         ], Annotation::fetchAllAnnotationsFromDocblock($docblock));
@@ -75,19 +78,19 @@ EOF;
     public function testValueToSupportJson()
     {
         $values = Annotation::arrayValue('{ "code": "200", "user": "davert", "email": "davert@gmail.com" }');
-        $this->assertEquals(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
+        $this->assertSame(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
     }
 
     public function testValueToSupportAnnotationStyle()
     {
         $values = Annotation::arrayValue('( code="200", user="davert", email = "davert@gmail.com")');
-        $this->assertEquals(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
+        $this->assertSame(['code' => '200', 'user' => 'davert', 'email' => 'davert@gmail.com'], $values);
     }
 
     /** @value foobar */
     public function testSingleLineAnnotation()
     {
-        $this->assertEquals('foobar', Annotation::forClass(__CLASS__)
+        $this->assertSame('foobar', Annotation::forClass(__CLASS__)
                 ->method('testSingleLineAnnotation')
                 ->fetch('value'));
     }
