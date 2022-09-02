@@ -125,6 +125,10 @@ class Console implements EventSubscriberInterface
     // triggered for scenario based tests: cept, cest
     public function beforeSuite(SuiteEvent $e)
     {
+        if (!$e->getSuite()->count()) {
+            return; // skip for empty suites
+        }
+
         $this->namespace = "";
         $settings = $e->getSettings();
         if (isset($settings['namespace'])) {
@@ -344,6 +348,10 @@ class Console implements EventSubscriberInterface
 
     public function afterSuite(SuiteEvent $e)
     {
+        if (!$e->getSuite()->count()) {
+            return; // skip for empty suites
+        }
+
         $this->message()->width($this->width, '-')->writeln();
         $messages = Notification::all();
         foreach (array_count_values($messages) as $message => $count) {

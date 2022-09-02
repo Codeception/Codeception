@@ -3,6 +3,7 @@
 namespace Codeception\Extension;
 
 use Codeception\Event\StepEvent;
+use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ExtensionException;
@@ -295,13 +296,20 @@ EOF;
     /** @var string */
     private $dateFormat;
 
-    public function beforeSuite()
+    private $isDisabled = false;
+
+    public function beforeSuite(SuiteEvent $e)
     {
         $this->webDriverModule = null;
         if (!$this->hasModule($this->config['module'])) {
+            $this->isDisabled = true;
             $this->writeln('Recorder is disabled, no available modules');
-
             return;
+        }
+
+        if (!$e->getSuite()->count()) {
+            $this->isDisabled = true;
+            return; // skip for empty suites
         }
 
         $this->seed = uniqid();
@@ -331,9 +339,10 @@ EOF;
 
     public function afterSuite()
     {
-        if (!$this->webDriverModule) {
+        if ($this->isDisabled) {
             return;
         }
+        
         $links = '';
 
         if (count($this->slides)) {
@@ -380,7 +389,7 @@ EOF;
      */
     public function before(TestEvent $e)
     {
-        if (!$this->webDriverModule) {
+        if ($this->isDisabled) {
             return;
         }
         $this->dir = null;
@@ -407,6 +416,10 @@ EOF;
      */
     public function cleanup(TestEvent $e)
     {
+        if ($this->isDisabled) {
+            return;
+        }
+
         if ($this->config['delete_orphaned']) {
             $recordingDirectories = [];
             $directories = new \DirectoryIterator(codecept_output_dir());
@@ -445,9 +458,10 @@ EOF;
      */
     public function persist(TestEvent $e)
     {
-        if (!$this->webDriverModule) {
+        if ($this->isDisabled) {
             return;
         }
+
         $indicatorHtml = '';
         $slideHtml = '';
         $testName = $this->getTestName($e);
@@ -548,7 +562,11 @@ EOF;
      */
     public function afterStep(StepEvent $e)
     {
-        if ($this->webDriverModule === null || $this->dir === null) {
+        if ($this->isDisabled) {
+            return;
+        }
+
+        if ($this->dir === null) {
             return;
         }
 
