@@ -301,15 +301,16 @@ EOF;
     public function beforeSuite(SuiteEvent $e)
     {
         $this->webDriverModule = null;
-        if (!$this->hasModule($this->config['module'])) {
-            $this->isDisabled = true;
-            $this->writeln('Recorder is disabled, no available modules');
-            return;
-        }
 
         if (!$e->getSuite()->count()) {
             $this->isDisabled = true;
             return; // skip for empty suites
+        }
+
+        if (!$this->hasModule($this->config['module'])) {
+            $this->isDisabled = true;
+            $this->writeln('Recorder is disabled, no available modules');
+            return;
         }
 
         $this->seed = uniqid();
@@ -342,7 +343,7 @@ EOF;
         if ($this->isDisabled) {
             return;
         }
-        
+
         $links = '';
 
         if (count($this->slides)) {
