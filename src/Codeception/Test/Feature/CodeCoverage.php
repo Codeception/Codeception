@@ -9,8 +9,11 @@ use Codeception\Event\FailEvent;
 use Codeception\ResultAggregator;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\StrictCoverage;
+use Codeception\Test\Test;
 use Codeception\Test\Test as CodeceptTest;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
+use SebastianBergmann\CodeCoverage\Test\TestStatus\TestStatus;
 
 trait CodeCoverage
 {
@@ -35,7 +38,16 @@ trait CodeCoverage
         }
 
         try {
-            $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
+            if (PHPUnitVersion::series() < 10) {
+                $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
+            } else {
+                $status = match ($status) {
+                    Test::STATUS_OK => TestStatus::success(),
+                    Test::STATUS_FAIL, Test::STATUS_ERROR => TestStatus::failure(),
+                    default => TestStatus::unknown(),
+                };
+                $codeCoverage->stop(true, $status, $linesToBeCovered, $linesToBeUsed);
+            }
         } catch (CodeCoverageException $exception) {
             if ($status === CodeceptTest::STATUS_OK) {
                 $this->getResultAggregator()->addError(new FailEvent($this, $exception, $time));
