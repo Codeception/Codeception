@@ -33,6 +33,10 @@ class Module implements EventSubscriberInterface
         if (!$suite instanceof Suite) {
             return;
         }
+        if (!$e->getSuite()->count()) {
+            $this->modules = [];
+            return true; // do not launch on empty suite
+        }
         $this->modules = $suite->getModules();
         foreach ($this->modules as $module) {
             $module->_beforeSuite($e->getSettings());
