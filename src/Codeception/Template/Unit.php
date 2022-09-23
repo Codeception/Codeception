@@ -20,10 +20,10 @@ settings:
     shuffle: true
     lint: true
 paths:
-    tests: {{dir}}
-    output: {{dir}}/_output
-    support: {{dir}}/Support
-    data: {{dir}}
+    tests: {{baseDir}}
+    output: {{baseDir}}/_output
+    support: {{baseDir}}/Support
+    data: {{baseDir}}/Support/Data
      
 EOF;
 
@@ -53,13 +53,14 @@ EOF;
         $haveTester = $this->ask("Do you wish to enable them?", false);
 
         $this->createDirectoryFor($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
-        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . '_support');
+        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . 'Support');
+        $this->createEmptyDirectory($supportDir . DIRECTORY_SEPARATOR . 'Data');
         $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
         $this->gitIgnore($outputDir);
         $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
 
         $configFile = (new Template($this->configTemplate))
-            ->place('dir', $dir)
+            ->place('baseDir', $dir)
             ->place('tester', $haveTester ? $this->testerAndModules : '')
             ->produce();
 
