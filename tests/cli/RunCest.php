@@ -484,6 +484,13 @@ EOF
         $I->seeInShellOutput('Skipped: 2');
     }
 
+    public function resultIsPassedToDependentTest(CliGuy $I)
+    {
+        $I->executeCommand('run unit ResultIsPassedToDependentTest --no-exit');
+        $I->dontSeeInShellOutput('Skipped:');
+        $I->seeInShellOutput('OK (3 tests, 4 assertions)');
+    }
+
     public function runGherkinTest(CliGuy $I)
     {
         $I->executeCommand('run scenario File.feature --steps');

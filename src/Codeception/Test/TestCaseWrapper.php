@@ -30,6 +30,11 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
     private ?ResultAggregator $resultAggregator = null;
 
     /**
+     * @var array<string, mixed>
+     */
+    private static array $testResults = [];
+
+    /**
      * @param string[] $beforeClassMethods
      * @param string[] $afterClassMethods
      */
@@ -137,7 +142,18 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
 
     public function test(): void
     {
+        $dependencyInput = [];
+        foreach ($this->fetchDependencies() as $dependency) {
+            $dependencyInput[] = self::$testResults[$dependency] ?? null;
+        }
+        $this->testCase->setDependencyInput($dependencyInput);
         $this->testCase->runBare();
+
+        if (PHPUnitVersion::series() < 10) {
+            self::$testResults[$this->getSignature()] = $this->testCase->getResult();
+        } else {
+            self::$testResults[$this->getSignature()] = $this->testCase->result();
+        }
 
         $numberOfAssertionsPerformed = Assert::getCount();
         if (
