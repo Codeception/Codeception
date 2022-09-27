@@ -246,7 +246,7 @@ class Cest extends Test implements
         return $names;
     }
 
-    public function getLinesToBeCovered(): array
+    public function getLinesToBeCovered(): array|bool
     {
         if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeCovered($this->testClass, $this->testMethod);

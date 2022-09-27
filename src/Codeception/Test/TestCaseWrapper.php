@@ -113,7 +113,7 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         ];
     }
 
-    public function getLinesToBeCovered(): array
+    public function getLinesToBeCovered(): array|bool
     {
         $class = $this->testCase::class;
         $method = $this->metadata->getName();
