@@ -26,4 +26,12 @@ class MathTest extends \Codeception\Test\Unit
         $this->assertSame(5, $this->calc->divide(10, 2));
         $this->assertSame(75, $this->calc->squareOfCircle(5));
     }
+
+    /**
+     * @coversNothing
+     */
+    public function testWithoutCoversAnnotation()
+    {
+        $this->assertSame(3, $this->calc->add(1, 2));
+    }
 }
