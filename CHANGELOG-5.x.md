@@ -1,3 +1,12 @@
+#### 5.0.3
+
+* Fixed passing test result to dependent tests in unit tests (#6580)
+* Fixed `TypeError` when @coversNothing annotation is used by Slamdunk (#6582)
+* `codecept init unit` creates `tests/Support` directory (#6578)
+* Fixed phar file url in `self-update` command by @voku (#6563)
+* Added message how to exit Codeception console by @ThomasLandauer (#6561)
+* Improved compatibility with PHPUnit 10
+
 #### 5.0.2
 
 * Fixed remote code coverage for namespaced suites (#6533)
