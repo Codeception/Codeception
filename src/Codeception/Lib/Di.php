@@ -144,10 +144,6 @@ class Di
                     if (!isset($defaults[$k])) {
                         throw new InjectionException("Parameter '{$parameter->name}' must have default value.");
                     }
-                    Notification::deprecate(
-                        'Untyped method arguments in Cest format are deprecated since Codeception 5.0.0 and will be removed in 6.0.0',
-                        $method->getFileName() . ':' . $method->getStartLine(),
-                    );
                     $args[] = $defaults[$k];
                     continue;
                 }
