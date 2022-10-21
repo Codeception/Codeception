@@ -14,11 +14,11 @@ class FailFast implements EventSubscriberInterface
     use Shared\StaticEventsTrait;
 
     /**
-     * @var array<string, string>
+     * @var array<string, array<string|int>>
      */
     protected static array $events = [
-        Events::TEST_FAIL => 'stopOnFail',
-        Events::TEST_ERROR => 'stopOnFail',
+        Events::TEST_FAIL => ['stopOnFail', 128],
+        Events::TEST_ERROR => ['stopOnFail', 128],
     ];
 
     private int $failureCount = 0;
