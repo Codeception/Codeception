@@ -48,7 +48,8 @@
         "codeception/util-universalframework": "*@dev",
         "symfony/process": ">=4.4.24 <7.0",
         "symfony/dotenv": ">=4.4.24 <7.0",
-        "vlucas/phpdotenv": "^5.1"
+        "vlucas/phpdotenv": "^5.1",
+        "jetbrains/phpstorm-attributes": "^1.0"
     },
     "conflict": {
         "codeception/lib-innerbrowser": "<3.1",
