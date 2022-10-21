@@ -228,6 +228,9 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
     public function getResultAggregator(): ResultAggregator
     {
+        if ($this->resultAggregator === null) {
+            throw new \LogicException('ResultAggregator is not set');
+        }
         return $this->resultAggregator;
     }
 
