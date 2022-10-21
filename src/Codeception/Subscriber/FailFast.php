@@ -14,7 +14,7 @@ class FailFast implements EventSubscriberInterface
     use Shared\StaticEventsTrait;
 
     /**
-     * @var array<string, array<string, int>>
+     * @var array<string, array<string|int>>
      */
     protected static array $events = [
         Events::TEST_FAIL => ['stopOnFail', 128],
