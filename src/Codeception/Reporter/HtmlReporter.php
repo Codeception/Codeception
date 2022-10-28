@@ -20,6 +20,8 @@ use SebastianBergmann\Template\Template;
 use SebastianBergmann\Timer\Timer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use function trigger_error;
+
 class HtmlReporter implements EventSubscriberInterface
 {
     use StaticEventsTrait;
@@ -44,8 +46,6 @@ class HtmlReporter implements EventSubscriberInterface
     protected string $scenarios = '';
 
     protected string $templatePath;
-
-    protected array $failures = [];
 
     private string $reportFile;
 
@@ -88,41 +88,130 @@ class HtmlReporter implements EventSubscriberInterface
 
     public function testSuccess(TestEvent $event): void
     {
-        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioSuccess');
+        $this->printTestEvent($event, 'scenarioSuccess');
     }
 
     public function testError(FailEvent $event): void
     {
-        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioFailed');
+        $this->printTestEvent($event, 'scenarioFailed');
     }
 
     public function testFailure(FailEvent $event): void
     {
-        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioFailed');
+        $this->printTestEvent($event, 'scenarioFailed');
     }
 
     public function testWarning(FailEvent $event): void
     {
-        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioSuccess');
+        $this->printTestEvent($event, 'scenarioSuccess');
     }
 
     public function testSkipped(FailEvent $event): void
     {
-        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioSkipped');
+        $this->printTestEvent($event, 'scenarioSkipped');
     }
 
     public function testIncomplete(FailEvent $event): void
     {
-        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioIncomplete');
+        $this->printTestEvent($event, 'scenarioIncomplete');
     }
 
     public function testUseless(FailEvent $event): void
     {
-        $this->printTestResult($event->getTest(), $event->getTime(), 'scenarioUseless');
+        $this->printTestEvent($event, 'scenarioUseless');
+    }
+
+    public function printTestEvent(TestEvent $event, string $scenarioStatus): void
+    {
+        $failure = '';
+
+        $test = $event->getTest();
+        if ($event instanceof FailEvent) {
+            $failTemplate = new Template(
+                $this->templatePath . 'fail.html'
+            );
+            $failTemplate->setVar(['fail' => nl2br($event->getFail()->getMessage())]);
+            $failure = $failTemplate->render() . PHP_EOL;
+        }
+
+        $steps = [];
+
+        if ($test instanceof ScenarioDriven) {
+            $steps = $test->getScenario()->getSteps();
+        }
+
+        $stepsBuffer = '';
+        $subStepsRendered = [];
+
+        foreach ($steps as $step) {
+            $metaStep = $step->getMetaStep();
+            if ($metaStep) {
+                $key                      = $this->getMetaStepKey($metaStep);
+                $subStepsRendered[$key][] = $this->renderStep($step);
+            }
+        }
+
+        foreach ($steps as $step) {
+            $metaStep = $step->getMetaStep();
+            if ($metaStep) {
+                $key = $this->getMetaStepKey($metaStep);
+                if (! empty($subStepsRendered[$key])) {
+                    $subStepsBuffer = implode('', $subStepsRendered[$key]);
+                    unset($subStepsRendered[$key]);
+                    $stepsBuffer .= $this->renderSubsteps($step->getMetaStep(), $subStepsBuffer);
+                }
+            } else {
+                $stepsBuffer .= $this->renderStep($step);
+            }
+        }
+
+        $png = '';
+        $html = '';
+        if ($test instanceof TestInterface) {
+            $reports = $test->getMetadata()->getReports();
+            if (isset($reports['png'])) {
+                $localPath = PathResolver::getRelativeDir($reports['png'], codecept_output_dir());
+                $png = "<tr><td class='error'><div class='screenshot'><img src='$localPath' alt='failure screenshot'></div></td></tr>";
+            }
+            if (isset($reports['html'])) {
+                $localPath = PathResolver::getRelativeDir($reports['html'], codecept_output_dir());
+                $html = "<tr><td class='error'>See <a href='$localPath' target='_blank'>HTML snapshot</a> of a failed page</td></tr>";
+            }
+        }
+
+        $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';
+
+        $testString = htmlspecialchars(ucfirst(Descriptor::getTestAsString($test)), ENT_QUOTES | ENT_SUBSTITUTE);
+        $testString = preg_replace('~^([\s\w\\\]+):\s~', '<span class="quiet">$1 &raquo;</span> ', $testString);
+
+        $scenarioTemplate = new Template(
+            $this->templatePath . 'scenario.html'
+        );
+        $scenarioTemplate->setVar(
+            [
+                'id'             => ++$this->id,
+                'name'           => $testString,
+                'scenarioStatus' => $scenarioStatus,
+                'steps'          => $stepsBuffer,
+                'toggle'         => $toggle,
+                'failure'        => $failure,
+                'png'            => $png,
+                'html'           => $html,
+                'time'           => round($event->getTime(), 2),
+            ]
+        );
+
+        $this->scenarios .= $scenarioTemplate->render();
     }
 
     public function printTestResult(Test $test, float $time, string $scenarioStatus): void
     {
+        //keep this method for backwards compatibility, remove in Codeception 6.0
+        trigger_error(
+            __METHOD__ .  ' is deprecated, please use printTestEvent instead',
+            E_USER_DEPRECATED,
+        );
+
         $steps = [];
 
         if ($test instanceof ScenarioDriven) {
@@ -158,19 +247,6 @@ class HtmlReporter implements EventSubscriberInterface
             $this->templatePath . 'scenario.html'
         );
 
-        $failures = '';
-        $name = Descriptor::getTestSignatureUnique($test);
-        if (isset($this->failures[$name])) {
-            $failTemplate = new Template(
-                $this->templatePath . 'fail.html'
-            );
-            foreach ($this->failures[$name] as $failure) {
-                $failTemplate->setVar(['fail' => nl2br($failure)]);
-                $failures .= $failTemplate->render() . PHP_EOL;
-            }
-            $this->failures[$name] = [];
-        }
-
         $png = '';
         $html = '';
         if ($test instanceof TestInterface) {
@@ -197,7 +273,7 @@ class HtmlReporter implements EventSubscriberInterface
                 'scenarioStatus' => $scenarioStatus,
                 'steps'          => $stepsBuffer,
                 'toggle'         => $toggle,
-                'failure'        => $failures,
+                'failure'        => '',
                 'png'            => $png,
                 'html'           => $html,
                 'time'           => round($time, 2)

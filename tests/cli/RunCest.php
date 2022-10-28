@@ -779,6 +779,7 @@ EOF
         $I->seeInShellOutput('Response: ' . $expectedReportAbsFilename);
         $I->seeFileFound('report.html', $expectedRelReportPath);
         $I->seeInThisFile("See <a href='" . $expectedReportFilename . "' target='_blank'>HTML snapshot</a> of a failed page");
+        $I->seeInThisFile('Failed asserting that on page /');
     }
 
     private function htmlReportRegexCheckProvider(): array
