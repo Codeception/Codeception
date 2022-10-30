@@ -206,6 +206,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             }
 
             if ($eventType === Events::TEST_SUCCESS) {
+                $result->addSuccessful($this);
                 $this->fire($eventType, new TestEvent($this, $time));
             } else {
                 $this->fire($eventType, new FailEvent($this, $e, $time));
@@ -223,7 +224,6 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
         $this->fire(Events::TEST_AFTER, new TestEvent($this, $time));
         $this->eventDispatcher->dispatch(new TestEvent($this, $time), Events::TEST_END);
-        $result->addSuccessful($this, $time);
     }
 
     public function getResultAggregator(): ResultAggregator
