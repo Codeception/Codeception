@@ -111,7 +111,7 @@ class Suite
                         $this->dispatcher->dispatch($failEvent, Events::TEST_INCOMPLETE);
                     }
 
-                    $this->endTest($test, $result, 0);
+                    $this->dispatcher->dispatch(new TestEvent($test, 0), Events::TEST_END);
                     continue;
                 }
             }
@@ -214,12 +214,6 @@ class Suite
             }
         }
         $this->dispatcher->dispatch($event, $eventType);
-    }
-
-    private function endTest(Test $test, ResultAggregator $result, float $time): void
-    {
-        $this->dispatcher->dispatch(new TestEvent($test, $time), Events::TEST_END);
-        $result->addSuccessful($test);
     }
 
     public function addTest(Test $test): void
