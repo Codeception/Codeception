@@ -1,3 +1,12 @@
+#### 5.0.4
+
+* Execute FailFast subscriber before module _failed hooks #6586 by @yesdevnull
+* Fixed parsing of @skip annotation #6596
+* Undeprecated untyped method arguments in Cest format #6591
+* Removed unnecessary overrides of $resultAggregator property in Unit format and TestCaseWrapper #6590
+* Print failure/error/warning/skipped/incomplete messages in HTML reports #6595
+* Fixed counting of successful tests #6595
+
 #### 5.0.3
 
 * Fixed passing test result to dependent tests in unit tests (#6580)
