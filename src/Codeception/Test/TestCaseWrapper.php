@@ -146,11 +146,19 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         ) {
             throw new UselessTestException(
                 sprintf(
-                    'This test is annotated with "@doesNotPerformAssertions" but performed %d assertions',
+                    'This test indicates it does not perform assertions but %d assertions were performed',
                     $numberOfAssertionsPerformed
                 )
             );
         }
+    }
+
+    /**
+     * Is the test expected to not perform assertions with `expectNotToPerformAssertions`?
+     */
+    protected function doesNotPerformAssertions(): bool
+    {
+         return $this->testCase->doesNotPerformAssertions();
     }
 
     public function toString(): string
