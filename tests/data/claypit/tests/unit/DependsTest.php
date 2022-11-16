@@ -26,6 +26,12 @@ final class DependsTest extends Unit
         $this->assertTrue(true);
     }
 
+    #[Depends('testThree', 'testFour')]
+    public function testFive()
+    {
+        $this->assertTrue(true);
+    }
+
     #[Group('depends')]
     public function testOne(): int
     {
