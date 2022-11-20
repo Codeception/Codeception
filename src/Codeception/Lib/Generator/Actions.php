@@ -14,6 +14,7 @@ use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Template;
 use Exception;
 use InvalidArgumentException;
+use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionIntersectionType;
@@ -60,7 +61,7 @@ EOF;
      *
      {{doc}}
      * @see \{{module}}::{{method}}()
-     */
+     */{{attributes}}
     public function {{action}}({{params}}){{return_type}} {
         {{return}}\$this->getScenario()->runStep(new \Codeception\Step\{{step}}('{{method}}', func_get_args()));
     }
@@ -137,9 +138,14 @@ EOF;
         }
         $returnType = $this->createReturnTypeHint($refMethod);
 
+        if (count($refMethod->getAttributes()) > 0) {
+            $attributes = "\n    " . $this->getAttributesString($refMethod);
+        }
+
         $methodTemplate = (new Template($this->methodTemplate))
             ->place('module', $module)
             ->place('method', $refMethod->name)
+            ->place('attributes', $attributes ?? '')
             ->place('return_type', $returnType)
             ->place('return', ($returnType === ': void' || $returnType === ': never') ? '' : 'return ')
             ->place('params', $params);
@@ -172,6 +178,15 @@ EOF;
         return $body;
     }
 
+    protected function getAttributesString(ReflectionMethod $refMethod): string
+    {
+        $attributes = [];
+        foreach ($refMethod->getAttributes() as $attribute) {
+            $attributes[] = $this->stringifyAttribute($attribute);
+        }
+        return implode("\n    ", $attributes);
+    }
+
     protected function getParamsString(ReflectionMethod $refMethod): string
     {
         $params = [];
@@ -181,11 +196,18 @@ EOF;
             if ($reflectionType !== null) {
                 $type = $this->stringifyType($reflectionType, $refMethod->getDeclaringClass()) . ' ';
             }
+            $attributes = '';
+            foreach ($param->getAttributes() as $attribute) {
+                $attributes .= $this->stringifyAttribute($attribute);
+            }
+            if ($attributes !== '') {
+                $attributes .= ' ';
+            }
 
             if ($param->isOptional()) {
-                $params[] = $type . '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
+                $params[] = $attributes . $type . '$' . $param->name . ' = ' . ReflectionHelper::getDefaultValue($param);
             } else {
-                $params[] = $type . '$' . $param->name;
+                $params[] = $attributes . $type . '$' . $param->name;
             }
         }
         return implode(', ', $params);
@@ -289,5 +311,21 @@ EOF;
             $type->isBuiltin() ? '' : '\\',
             $typeName
         );
+    }
+
+    private function stringifyAttribute(ReflectionAttribute $attribute): string
+    {
+        try {
+            $refClass = new ReflectionClass($attribute->getName());
+            $name = sprintf('%s%s', $refClass->isUserDefined() ? '\\' : '', $attribute->getName());
+        } catch (ReflectionException) {
+            // If we can't get the class then just return what we've been given.
+            $name = $attribute->getName();
+        }
+        $arguments = $attribute->getArguments();
+        // Strip the wrapping array brackets so parameters aren't converted to arrays.
+        $args = substr(ReflectionHelper::phpEncodeValue($arguments), 1, -1);
+
+        return '#[' . $name . '(' . $args . ')]';
     }
 }
