@@ -1,0 +1,146 @@
+$id: 'https://codeception.com/1/suite.schema.yml'
+$schema: 'https://json-schema.org/draft/2020-12/schema'
+title: 'suite.dist.yml'
+description: 'Schema definition for Codeception suite configuration YAML files.'
+
+type: object
+additionalProperties: true
+properties:
+    actor:
+        oneOf:
+            -
+                type: 'null'
+            -
+                type: string
+
+    modules:
+        type: object
+        additionalProperties: true
+        properties:
+            enabled:
+                type: array
+                items:
+                    oneOf:
+                        -
+                            type: string
+                        -
+                            type: object
+                            additionalProperties: true
+                            maxProperties: 1
+                            minProperties: 1
+            config:
+                type: object
+                additionalProperties: true
+            depends:
+                # @todo
+                type: array
+                items:
+                    type: string
+
+    step_decorators:
+        # @todo
+        type: array
+        items:
+            type: string
+
+    path:
+        # @todo
+        oneOf:
+            -
+                type: 'null'
+            -
+                type: string
+
+    extends:
+        # @todo
+        oneOf:
+            -
+                type: 'null'
+            -
+                type: string
+
+    namespace:
+        oneOf:
+            -
+                type: 'null'
+            -
+                type: 'string'
+
+    groups:
+        # @todo
+        type: array
+        default: [ ]
+
+    formats:
+        # @todo
+        type: array
+        default: [ ]
+
+    extensions:
+        type: object
+        additionalProperties: true
+        properties:
+            enabled:
+                type: array
+                items:
+                    type: string
+            config:
+                type: object
+                additionalProperties: true
+
+    error_level:
+        type: string
+        default: 'E_ALL & ~E_STRICT & ~E_DEPRECATED'
+
+    colors:
+        type: boolean
+        default: true
+
+    strict_xml:
+        type: boolean
+        default: false
+
+    lint:
+        type: boolean
+        default: true
+
+    backup_globals:
+        type: boolean
+        default: true
+
+    log_incomplete_skipped:
+        type: boolean
+        default: false
+
+    report_useless_tests:
+        type: boolean
+        default: false
+
+    disallow_test_output:
+        type: boolean
+        default: false
+
+    be_strict_about_changes_to_global_state:
+        type: boolean
+        default: false
+
+    shuffle:
+        type: boolean
+        default: false
+
+    suite_class:
+        type: string
+
+    memory_limit:
+        type: string
+
+    log:
+        type: boolean
+
+    class_name:
+        type: string
+
+    steps:
+        type: array
+        items:
+            type: string
