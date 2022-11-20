@@ -94,5 +94,13 @@
             "tests/unit/Codeception/Util/ReflectionTestClass.php"
         ]
     },
-    "bin":["codecept"]
+    "bin":["codecept"],
+    "scripts": {
+        "cs-prod": "phpcs src/ ext/ *.php",
+        "cs-tests": "phpcs tests/ --standard=tests/phpcs.xml"
+    },
+    "scripts-descriptions": {
+        "cs-prod": "Check production code style",
+        "cs-tests": "Check test code style"
+    }
 }
