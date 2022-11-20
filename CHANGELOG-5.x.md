@@ -1,3 +1,10 @@
+#### 5.0.5
+
+* Don't disable test shuffling when --shard option is used (#6605)
+* Provided typed signatures for attributes (#6600) by @mdoelker
+* Support for Attributes in generated Actions files (#6593) by @yesdevnull
+* Fixed expectNotToPerformAssertions in unit tests (#6602) by @yesdevnull
+
 #### 5.0.4
 
 * Execute FailFast subscriber before module _failed hooks #6586 by @yesdevnull
