@@ -421,8 +421,6 @@ class Run extends Command
             $this->output->writeln(
                 "[Shard ${userOptions['shard']}] <info>Running subset of tests</info>"
             );
-            // disable shuffle for sharding
-            $config['settings']['shuffle'] = false;
         }
 
         if (!$this->options['silent'] && $config['settings']['shuffle']) {
