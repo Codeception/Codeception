@@ -199,7 +199,12 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             $this->assertionCount = Assert::getCount();
             $result->addToAssertionCount($this->assertionCount);
 
-            if ($this->reportUselessTests && $this->assertionCount === 0 && $eventType === Events::TEST_SUCCESS) {
+            if (
+                $this->reportUselessTests &&
+                $this->assertionCount === 0 &&
+                !$this->doesNotPerformAssertions() &&
+                $eventType === Events::TEST_SUCCESS
+            ) {
                 $eventType = Events::TEST_USELESS;
                 $e = new UselessTestException('This test did not perform any assertions');
                 $result->addUseless(new FailEvent($this, $e, $time));
@@ -224,6 +229,15 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
         $this->fire(Events::TEST_AFTER, new TestEvent($this, $time));
         $this->eventDispatcher->dispatch(new TestEvent($this, $time), Events::TEST_END);
+    }
+
+    /**
+     * Return false by default, the Unit-specific TestCaseWrapper implements this properly as it supports the PHPUnit
+     * test override `->expectNotToPerformAssertions()`.
+     */
+    protected function doesNotPerformAssertions(): bool
+    {
+        return false;
     }
 
     public function getResultAggregator(): ResultAggregator

@@ -11,6 +11,11 @@ class UselessTest extends \Codeception\Test\Unit
     {
     }
 
+    public function testExpectsNotToPerformAssertions(): void
+    {
+        $this->expectNotToPerformAssertions();
+    }
+
     public function testMakeUnexpectedAssertion(): void
     {
         $this->expectNotToPerformAssertions();
