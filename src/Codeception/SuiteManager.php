@@ -216,8 +216,9 @@ class SuiteManager
 
     protected function configureTest(TestInterface $test): void
     {
+        $di = clone($this->di);
         $test->getMetadata()->setServices([
-            'di' => clone($this->di),
+            'di' => $di,
             'dispatcher' => $this->dispatcher,
             'modules' => $this->moduleContainer
         ]);
@@ -227,9 +228,11 @@ class SuiteManager
             'modules' => $this->moduleContainer->all()
         ]);
         if ($test instanceof TestCaseWrapper) {
+            $di->set(new Scenario($test));
+
             $testCase = $test->getTestCase();
             if ($testCase instanceof Unit) {
-                $this->configureTest($testCase);
+                $testCase->setMetadata($test->getMetadata());
             }
         }
         if ($test instanceof ScenarioDriven) {

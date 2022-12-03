@@ -46,6 +46,18 @@ final class OrderCest
         $I->seeFileContentsEqual("BIB([TFT][TFT])");
     }
 
+    public function checkForCanCantFailsInTest(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run order CanCantFailTest.php --no-exit');
+        $I->seeFileFound('order.txt', 'tests/_output');
+        $I->expect(
+            'global bootstrap, initialization, beforeSuite, before, bootstrap, test,'
+            . ' fail, fail, test, test, fail, fail, test, after, afterSuite'
+        );
+        $I->seeFileContentsEqual("BIB([TFT][TFT])");
+    }
+
     public function checkSimpleFiles(CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
