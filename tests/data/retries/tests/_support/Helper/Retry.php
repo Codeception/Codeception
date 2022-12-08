@@ -16,7 +16,7 @@ class Retry extends \Codeception\Module
         $this->time = microtime(true);
     }
 
-    public function failAt($amount = 3)
+    public function failAt($amount = 3): void
     {
         if ($this->fails < $amount) {
             ++$this->fails;
