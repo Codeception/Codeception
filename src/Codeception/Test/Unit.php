@@ -40,6 +40,11 @@ class Unit extends TestCase implements
         return $this->metadata;
     }
 
+    public function setMetadata(?Metadata $metadata): void
+    {
+        $this->metadata = $metadata;
+    }
+
     public function getResultAggregator(): ResultAggregator
     {
         throw new \LogicException('This method should not be called, TestCaseWrapper class must be used instead');
@@ -59,8 +64,6 @@ class Unit extends TestCase implements
 
         /** @var Di $di */
         $di = $this->getMetadata()->getService('di');
-        $di->set(new Scenario($this));
-
         // auto-inject $tester property
         if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor_suffix']))) {
             $this->$property = $di->instantiate($this->getMetadata()->getCurrent('actor'));
