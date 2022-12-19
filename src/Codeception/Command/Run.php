@@ -419,7 +419,7 @@ class Run extends Command
 
         if ($this->options['shard']) {
             $this->output->writeln(
-                "[Shard ${userOptions['shard']}] <info>Running subset of tests</info>"
+                "[Shard {$userOptions['shard']}] <info>Running subset of tests</info>"
             );
         }
 
@@ -502,7 +502,7 @@ class Run extends Command
 
         if ($this->options['shard']) {
             $this->output->writeln(
-                "[Shard ${userOptions['shard']}] <info>Merge this result with other shards to see the complete report</info>"
+                "[Shard {$userOptions['shard']}] <info>Merge this result with other shards to see the complete report</info>"
             );
         }
 
