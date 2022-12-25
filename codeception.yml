@@ -14,16 +14,6 @@ settings:
     be_strict_about_changes_to_global_state: false
     report_useless_tests: true
 
-modules:
-    config:
-        AMQP:
-            host: 'localhost'
-            port: '5672'
-            username: 'guest'
-            password: 'guest'
-            vhost: '/'
-            queues: [queue1, queue2]
-
 extensions:
     enabled: [Codeception\Extension\RunFailed]
     config:
@@ -34,5 +24,3 @@ coverage:
     enabled: true
     include:
         - src/Codeception/Command/*
-        - src/Codeception/Module/Symfony.php
-        - src/Codeception/Module/Doctrine2.php
