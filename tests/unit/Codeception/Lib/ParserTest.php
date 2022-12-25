@@ -12,6 +12,8 @@ use Codeception\Test\Unit;
 #[Group('core')]
 final class ParserTest extends Unit
 {
+    protected \CodeGuy $tester;
+
     protected Parser $parser;
 
     protected Scenario $scenario;

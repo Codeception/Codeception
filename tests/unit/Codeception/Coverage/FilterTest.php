@@ -10,9 +10,8 @@ use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
 class FilterTest extends \Codeception\Test\Unit
 {
-    /**
-     * @var Filter
-     */
+    protected \CodeGuy $tester;
+
     protected Filter $filter;
 
     protected function _before()

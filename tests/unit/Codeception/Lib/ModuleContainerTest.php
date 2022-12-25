@@ -15,6 +15,8 @@ use Codeception\Test\Unit;
 // @codingStandardsIgnoreFile
 class ModuleContainerTest extends Unit
 {
+    protected \CodeGuy $tester;
+
     protected ModuleContainer $moduleContainer;
 
     protected function _setUp()

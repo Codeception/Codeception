@@ -15,6 +15,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 #[Group('gherkin')]
 final class GherkinTest extends Unit
 {
+    protected \CodeGuy $tester;
+
     protected $feature;
 
     public static string $calls = '';

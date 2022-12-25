@@ -10,6 +10,8 @@ use Codeception\Test\Descriptor;
 #[Group('testCaseWrapper')]
 final class TestCaseWrapperTest extends Unit
 {
+    protected \CodeGuy $tester;
+
     #[Group('core')]
     public function testNamings()
     {

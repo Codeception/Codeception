@@ -8,6 +8,8 @@ use Codeception\Test\Unit;
 
 class DataProviderTest extends Unit
 {
+    protected \CodeGuy $tester;
+
     public function testParsesAnnotationContainingMethodNameOnly(): void
     {
         $result = DataProvider::parseDataProviderAnnotation('getData', 'UnitTest', 'testMethod');

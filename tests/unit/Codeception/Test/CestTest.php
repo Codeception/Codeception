@@ -9,6 +9,8 @@ use Codeception\Test\Unit;
 
 final class CestTest extends Unit
 {
+    protected \CodeGuy $tester;
+
     #[Group('core')]
     public function testCestNamings()
     {

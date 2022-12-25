@@ -15,6 +15,8 @@ use PHPUnit\Framework\TestCase;
 
 class GroupManagerTest extends \Codeception\Test\Unit
 {
+    protected \CodeGuy $tester;
+
     protected GroupManager $manager;
 
     public function testGroupsFromArray()

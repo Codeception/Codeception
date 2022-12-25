@@ -6,19 +6,12 @@ namespace Codeception\Lib\Console;
 
 use Codeception\Test\Unit;
 
-/**
- * ColorizerTest
- **/
 class ColorizerTest extends Unit
 {
-    /**
-     * @var Colorizer
-     */
+    protected \CodeGuy $tester;
+
     protected Colorizer $colorizer;
 
-    /**
-     *
-     */
     protected function _setUp()
     {
         parent::_setUp();

@@ -10,10 +10,10 @@ use Codeception\Test\Unit;
 
 final class PathResolverTest extends Unit
 {
+    protected \CodeGuy $tester;
+
     #[Group('core')]
-    /**
-     * @dataProvider getRelativeDirTestData
-     */
+    #[DataProvider('getRelativeDirTestData')]
     public function testGetRelativeDir(string $path, string $projDir, string $dirSep, string $expectedOutput)
     {
         $relativeDir = PathResolver::getRelativeDir($path, $projDir, $dirSep);
