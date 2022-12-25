@@ -198,12 +198,14 @@ class Metadata
         $params = Annotation::fetchAllAnnotationsFromDocblock((string)$annotations);
         $this->params = array_merge_recursive($this->params, $params);
 
-        // set singular value for some params
+        $this->setSingularValueForSomeParams();
+    }
+
+    private function setSingularValueForSomeParams(): void
+    {
         foreach (['skip', 'incomplete'] as $single) {
-            if (empty($this->params[$single])) {
-                $this->params[$single] = null;
-            } else {
-                $this->params[$single] = (string)($this->params[$single][0] ?? $this->params[$single][1]);
+            if (is_array($this->params[$single])) {
+                $this->params[$single] = $this->params[$single][0] ?? $this->params[$single][1] ?? '';
             }
         }
     }
@@ -235,13 +237,12 @@ class Metadata
             $this->params[$single] = array_merge(...$this->params[$single]);
         }
 
-
-        // set singular value for some params
-        foreach (['skip', 'incomplete'] as $single) {
-            $this->params[$single] = empty($this->params[$single]) ? null : (string)$this->params[$single][0];
-        }
+        $this->setSingularValueForSomeParams();
     }
 
+    /**
+     * @deprecated
+     */
     public function setParams(array $params): void
     {
         $this->params = array_merge_recursive($this->params, $params);
