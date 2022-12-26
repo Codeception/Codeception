@@ -38,7 +38,9 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use NunoMaduro\Collision\Writer;
 
+use Whoops\Exception\Inspector;
 use function array_map;
 use function array_merge;
 use function array_reverse;
@@ -649,6 +651,21 @@ class Console implements EventSubscriberInterface
         ) {
             return;
         }
+
+        $writer = (new Writer())->setOutput($this->output);
+        $inspector = new Inspector($exception);
+
+        $writer->ignoreFilesIn([
+            '/vendor\/codeception/',
+            '/vendor\/phpunit\/phpunit\/src/',
+            '/vendor\/mockery\/mockery/',
+            '/vendor\/laravel\/framework\/src\/Illuminate\/Testing/',
+            '/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Testing/',
+        ]);
+
+        $writer->showTrace(false);
+        $writer->showTitle(false);
+        $writer->write($inspector);
 
         if ($this->rawStackTrace) {
             $this->message(OutputFormatter::escape(StackTraceFilter::getFilteredStacktrace($exception, true, false)))->writeln();
