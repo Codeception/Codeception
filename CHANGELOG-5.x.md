@@ -1,3 +1,11 @@
+#### 5.0.6
+
+* Fixed `canSee` assertions in Unit format #6610
+* `tryTo` methods must return boolean result #6614
+* Fixed various issues with handling of `@skip` and `@incomplete` annotations and attributes in Cest format #6617
+* Stopped adding `__mocked` field to mocks created by Stub library #6620
+* Fixed deprecated string syntax in Run command #6618 by @shtiher-pp
+
 #### 5.0.5
 
 * Don't disable test shuffling when --shard option is used (#6605)
