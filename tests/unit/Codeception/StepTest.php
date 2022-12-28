@@ -43,8 +43,7 @@ class StepTest extends TestCase
 
         $mock = $this->createMock($this::class);
         $step = $this->getStep(['', [[$mock, 'testGetArguments']]]);
-        $className = $mock::class;
-        $this->assertSame('["' . $className . '","testGetArguments"]', $step->getArgumentsAsString());
+        $this->assertSame('["StepTest","testGetArguments"]', $step->getArgumentsAsString());
     }
 
     public function testGetHtml()

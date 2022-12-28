@@ -185,8 +185,24 @@ abstract class Step implements Stringable
     {
         if ($argument instanceof Closure) {
             return Closure::class;
-        } elseif ($argument instanceof MockObject && (property_exists($argument, '__mocked') && $argument->__mocked !== null)) {
-            return $this->formatClassName($argument->__mocked);
+        } elseif ($argument instanceof MockObject) {
+            $parentClass = get_parent_class($argument);
+            $reflection = new \ReflectionClass($argument);
+
+            if ($parentClass !== false) {
+                return $this->formatClassName($parentClass);
+            }
+
+            $interfaces = $reflection->getInterfaceNames();
+            foreach ($interfaces as $interface) {
+                if (str_starts_with($interface, 'PHPUnit\\')) {
+                    continue;
+                }
+                if (str_starts_with($interface, 'Codeception\\')) {
+                    continue;
+                }
+                return $this->formatClassName($interface);
+            }
         }
 
         return $this->formatClassName($argument::class);
