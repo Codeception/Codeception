@@ -18,11 +18,9 @@ class MessageTest extends \Codeception\Test\Unit
     }
 
     //test message cutting
-    // @codingStandardsIgnoreStart
     public function testVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestNameVeryLongTestName()
     {
         $this->expectNotToPerformAssertions();
-        // @codingStandardsIgnoreEnd
     }
 
     // test multibyte message width
