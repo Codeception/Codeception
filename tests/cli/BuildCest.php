@@ -31,6 +31,7 @@ final class BuildCest
         $I->seeInThisFile('class CliGuy extends \Codeception\Actor');
         $I->seeInThisFile('use _generated\CliGuyActions');
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
+        $I->seeThisFileMatches("!^<\?php .*\n// phpcs:ignoreFile!");
         $I->seeInThisFile('seeFileFound(');
         $I->seeInThisFile('public function assertSame($expected, $actual, string $message = "") {');
     }
