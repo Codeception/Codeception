@@ -16,32 +16,40 @@ class WantToCest
         $I->seeInShellOutput('+ WantToCest: Check if I->wantTo works');
     }
 
-    public function testerWantToSetsFeatureInCestFormat(CliGuy $I): void
+    /**
+     * Tests https://github.com/Codeception/Codeception/issues/4123
+     */
+    public function testerWantDoesntSetFeatureInCestFormat(CliGuy $I): void
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCest.php:^TesterWantTo');
-        $I->seeInShellOutput('+ WantToCest: Check if tester->wantTo works');
+        $I->seeInShellOutput('+ WantToCest: Tester want to');
     }
 
-    public function variablePassedToIWantToIsEvaluated(CliGuy $I): void
+    public function iWantToWithVariableIsIgnored(CliGuy $I): void
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCest.php:Variable');
-        $I->seeInShellOutput('+ WantToCest: Check if variable wantTo is evaluated');
+        $I->seeInShellOutput('+ WantToCest: Variable argument of want to');
     }
 
-    public function iWantToIncorrectlyOverridesDataproviderData(CliGuy $I): void
+    /**
+     * Tests https://github.com/Codeception/Codeception/issues/4124
+     */
+    public function iWantToDoesntOverrideDataproviderData(CliGuy $I): void
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCest.php:DataProviderIWantTo');
-        $I->seeInShellOutput('+ WantToCest: Check if I->wantTo doesn\'t override data provider data');
+        $I->seeInShellOutput('+ WantToCest: Check if I->wantTo doesn\\\'t override data provider data | "aaa"');
+        $I->seeInShellOutput('+ WantToCest: Check if I->wantTo doesn\\\'t override data provider data | "bbb"');
     }
 
-    public function testerWantToIncorrectlyOverridesDataproviderData(CliGuy $I): void
+    public function testerWantToDoesntOverrideDataproviderData(CliGuy $I): void
     {
         $I->amInPath('tests/data/want_to');
         $I->executeCommand('run --no-ansi unit WantToCest.php:DataProviderTesterWantTo');
-        $I->seeInShellOutput('+ WantToCest: Check if tester->wantTo doesn\'t override data provider data');
+        $I->seeInShellOutput('+ WantToCest: Data provider tester want to | "aaa"');
+        $I->seeInShellOutput('+ WantToCest: Data provider tester want to | "bbb"');
     }
 
     public function wantToTextIsUsedInXmlReport(CliGuy $I): void

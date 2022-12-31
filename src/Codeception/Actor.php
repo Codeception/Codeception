@@ -24,14 +24,20 @@ abstract class Actor
         return $this->scenario;
     }
 
-    public function wantToTest(string $text): void
-    {
-        $this->wantTo('test ' . $text);
-    }
-
+    /**
+     * This method is used by Cept format to add description to test output
+     *
+     * It can be used by Cest format too.
+     * It doesn't do anything when called, but it is parsed by Parser before execution
+     *
+     * @see \Codeception\Lib\Parser::parseFeature
+     */
     public function wantTo(string $text): void
     {
-        $this->scenario->setFeature($text);
+    }
+
+    public function wantToTest(string $text): void
+    {
     }
 
     public function __call(string $method, array $arguments)
