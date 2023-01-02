@@ -111,11 +111,6 @@ class Console implements EventSubscriberInterface
     protected array $conditionalFails = [];
 
     /**
-     * @var Step[]
-     */
-    protected array $failedStep = [];
-
-    /**
      * @var string[]
      */
     protected array $reports = [];
@@ -236,14 +231,9 @@ class Console implements EventSubscriberInterface
     public function afterStep(StepEvent $event): void
     {
         $step = $event->getStep();
-        if (!$step->hasFailed()) {
-            return;
-        }
-        if ($step instanceof ConditionalAssertion) {
+        if ($step->hasFailed() && $step instanceof ConditionalAssertion) {
             $this->conditionalFails[] = $step;
-            return;
         }
-        $this->failedStep[] = $step;
     }
 
     public function afterResult(PrintResultEvent $event): void
@@ -386,6 +376,9 @@ class Console implements EventSubscriberInterface
 
     public function testSuccess(TestEvent $event): void
     {
+        if ($this->conditionalFails !== []) {
+            return;
+        }
         if ($this->isDetailed($event->getTest())) {
             $this->message('PASSED')->center(' ')->style('ok')->append("\n")->writeln();
 
@@ -616,12 +609,13 @@ class Console implements EventSubscriberInterface
 
     public function printScenarioFail(ScenarioDriven $failedTest, $fail): void
     {
-        if ($this->conditionalFails) {
-            $failedStep = (string)array_shift($this->conditionalFails);
-        } else {
-            $failedStep = (string)$failedTest->getScenario()->getMetaStep();
-            if ($failedStep === '') {
-                $failedStep = (string)array_shift($this->failedStep);
+        $failedStep = (string)$failedTest->getScenario()->getMetaStep();
+        if ($failedStep === '') {
+            foreach (array_reverse($failedTest->getScenario()->getSteps()) as $step) {
+                if ($step->hasFailed()) {
+                    $failedStep = (string)$step;
+                    break;
+                }
             }
         }
 
@@ -811,8 +805,10 @@ class Console implements EventSubscriberInterface
         } elseif ($numFails !== 0) {
             $conditionalFailsMessage = "{$numFails}x[F]";
         }
-        $conditionalFailsMessage = "<error>{$conditionalFailsMessage}</error> ";
-        $this->message($conditionalFailsMessage)->write();
+        if ($conditionalFailsMessage !== '') {
+            $conditionalFailsMessage = " <error>{$conditionalFailsMessage}</error> ";
+            $this->message($conditionalFailsMessage)->write();
+        }
         $this->writeTimeInformation($event);
         $this->output->writeln('');
     }

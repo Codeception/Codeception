@@ -214,4 +214,9 @@ class ResultAggregator
     {
         return count($this->useless);
     }
+
+    public function popLastFailure(): ?FailEvent
+    {
+        return array_pop($this->failures);
+    }
 }

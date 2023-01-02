@@ -643,6 +643,31 @@ EOF
         $I->seeInShellOutput('Failures: 2.');
     }
 
+    public function failedTestFollowedByExceptionReportsCorrectStep(CliGuy $I)
+    {
+        $I->executeCommand('run scenario FailureAndExceptionCest', false);
+        $I->seeInShellOutput('1. $I->throwException("test exception")');
+        $I->seeInShellOutput('Step  Assert same 1,2');
+        $I->seeInShellOutput('Failed asserting that 2 is identical to 1.');
+    }
+
+    public function displaysAllFailedConditionalStepsInOneCest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario MultipleConditionalFailsCest --no-ansi', false);
+        $I->seeInShellOutput('x MultipleConditionalFailsCest: Multiple fails 3x[F]');
+        $I->dontSeeInShellOutput('MultipleConditionalFailsCest: Multiple fails 2x[F]');
+        $I->dontSeeInShellOutput('MultipleConditionalFailsCest: Multiple fails [F]');
+        $I->dontSeeInShellOutput('MultipleConditionalFailsCest: Multiple fails[F]');
+        $I->seeInShellOutput('There were 3 failures:');
+        $I->seeInShellOutput('Step  Can see file found "not-a-file"');
+        $I->seeInShellOutput('Step  Can see file found "not-a-dir"');
+        $I->seeInShellOutput('Step  Can see file found "nothing"');
+        $filename = implode(DIRECTORY_SEPARATOR, ['tests', 'scenario','MultipleConditionalFailsCest.php']);
+        $I->seeInShellOutput(' 1. $I->canSeeFileFound("not-a-file") at ' . $filename . ':7');
+        $I->seeInShellOutput(' 7. $I->canSeeFileFound("not-a-dir") at ' . $filename . ':13');
+        $I->seeInShellOutput(' 13. $I->canSeeFileFound("nothing") at ' . $filename . ':19');
+    }
+
     #[Group('shuffle')]
     public function showSeedNumberOnShuffle(CliGuy $I)
     {

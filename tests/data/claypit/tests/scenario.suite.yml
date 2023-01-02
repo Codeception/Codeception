@@ -1,6 +1,9 @@
 actor: ScenarioGuy
 modules:
-    enabled: [Filesystem, \Helper\Scenario]
+    enabled:
+        - Asserts
+        - Filesystem
+        - \Helper\Scenario
 gherkin:
     contexts:
         default: [ScenarioGuy]

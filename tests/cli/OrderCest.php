@@ -29,31 +29,39 @@ final class OrderCest
         $I->seeFileFound('order.txt', 'tests/_output');
         $I->expect(
             'global bootstrap, initialization, beforeSuite, before, bootstrap, test,'
-            . ' fail, fail, test, after, afterSuite'
+            . ' test, fail, after, afterSuite'
         );
-        $I->seeFileContentsEqual("BIB([STFFT])");
+        $I->seeFileContentsEqual("BIB([STTF])");
     }
 
     public function checkForCanCantFailsInCest(CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run order CanCantFailCest.php --no-exit');
+        $I->executeCommand('run order CanCantFailCest.php --no-ansi --no-exit');
+        $I->seeInShellOutput('x CanCantFailCest: Test one [F]');
+        $I->seeInShellOutput('x CanCantFailCest: Test two [F]');
+        $I->dontSeeInShellOutput('+ CanCantFailCest: One');
+        $I->dontSeeInShellOutput('+ CanCantFailCest: Two');
         $I->seeFileFound('order.txt', 'tests/_output');
         $I->expect(
             'global bootstrap, initialization, beforeSuite, before, bootstrap, test,'
-            . ' fail, fail, test, test, fail, fail, test, after, afterSuite'
+            . ' test, fail, test, test, fail, after, afterSuite'
         );
-        $I->seeFileContentsEqual("BIB([TFT][TFT])");
+        $I->seeFileContentsEqual("BIB([TTF][TTF])");
     }
 
     public function checkForCanCantFailsInTest(CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run order CanCantFailTest.php --no-exit');
+        $I->executeCommand('run order CanCantFailTest.php --no-ansi --no-exit');
+        $I->seeInShellOutput('x CanCantFailTest: One');
+        $I->seeInShellOutput('x CanCantFailTest: Two');
+        $I->dontSeeInShellOutput('+ CanCantFailTest: One');
+        $I->dontSeeInShellOutput('+ CanCantFailTest: Two');
         $I->seeFileFound('order.txt', 'tests/_output');
         $I->expect(
             'global bootstrap, initialization, beforeSuite, before, bootstrap, test,'
-            . ' fail, fail, test, test, fail, fail, test, after, afterSuite'
+            . ' fail, test, test, fail, test, after, afterSuite'
         );
         $I->seeFileContentsEqual("BIB([TFT][TFT])");
     }
@@ -63,7 +71,7 @@ final class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
         $I->seeFileFound('order.txt', 'tests/_output');
-        $I->seeFileContentsEqual("BIBP([ST][STFFT][STF][ST])");
+        $I->seeFileContentsEqual("BIBP([ST][STTF][STF][ST])");
     }
 
     public function checkCestOrder(CliGuy $I)

@@ -10,6 +10,7 @@ use Codeception\Events;
 use Codeception\Exception\UselessTestException;
 use Codeception\PHPUnit\Wrapper\Test as TestWrapper;
 use Codeception\ResultAggregator;
+use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
@@ -169,6 +170,17 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $this->test();
                 $status = self::STATUS_OK;
                 $eventType = Events::TEST_SUCCESS;
+
+                if ($this instanceof ScenarioDriven) {
+                    foreach ($this->getScenario()->getSteps() as $step) {
+                        if ($step->hasFailed()) {
+                            $lastFailure = $result->popLastFailure();
+                            if ($lastFailure !== null) {
+                                throw $lastFailure->getFail();
+                            }
+                        }
+                    }
+                }
             } catch (UselessTestException $e) {
                 $result->addUseless(new FailEvent($this, $e, $time));
                 $status = self::STATUS_USELESS;
