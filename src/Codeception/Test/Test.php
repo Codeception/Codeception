@@ -171,8 +171,8 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $status = self::STATUS_OK;
                 $eventType = Events::TEST_SUCCESS;
 
-                if ($this instanceof ScenarioDriven) {
-                    foreach ($this->getScenario()->getSteps() as $step) {
+                if (method_exists($this, 'getScenario')) {
+                    foreach ($this->getScenario()?->getSteps() ?? [] as $step) {
                         if ($step->hasFailed()) {
                             $lastFailure = $result->popLastFailure();
                             if ($lastFailure !== null) {

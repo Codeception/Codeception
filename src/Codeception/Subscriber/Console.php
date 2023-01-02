@@ -71,7 +71,6 @@ class Console implements EventSubscriberInterface
         Events::TEST_START         => 'startTest',
         Events::TEST_END           => 'endTest',
         Events::STEP_BEFORE        => 'beforeStep',
-        Events::STEP_AFTER         => 'afterStep',
         Events::TEST_SUCCESS       => 'testSuccess',
         Events::TEST_FAIL          => 'testFail',
         Events::TEST_ERROR         => 'testError',
@@ -104,16 +103,6 @@ class Console implements EventSubscriberInterface
     protected ?int $width = null;
 
     protected Output $output;
-
-    /**
-     * @var ConditionalAssertion[]
-     */
-    protected array $conditionalFails = [];
-
-    /**
-     * @var string[]
-     */
-    protected array $reports = [];
 
     protected string $namespace = '';
 
@@ -200,7 +189,6 @@ class Console implements EventSubscriberInterface
     // triggered for all tests
     public function startTest(TestEvent $event): void
     {
-        $this->conditionalFails = [];
         $test = $event->getTest();
         $this->printedTest = $test;
         $this->message = null;
@@ -225,14 +213,6 @@ class Console implements EventSubscriberInterface
                 $this->message('Scenario --')->style('comment')->writeln();
                 $this->output->waitForDebugOutput = false;
             }
-        }
-    }
-
-    public function afterStep(StepEvent $event): void
-    {
-        $step = $event->getStep();
-        if ($step->hasFailed() && $step instanceof ConditionalAssertion) {
-            $this->conditionalFails[] = $step;
         }
     }
 
@@ -376,9 +356,6 @@ class Console implements EventSubscriberInterface
 
     public function testSuccess(TestEvent $event): void
     {
-        if ($this->conditionalFails !== []) {
-            return;
-        }
         if ($this->isDetailed($event->getTest())) {
             $this->message('PASSED')->center(' ')->style('ok')->append("\n")->writeln();
 
@@ -798,16 +775,26 @@ class Console implements EventSubscriberInterface
         $result->append(' ')->write();
         $this->writeCurrentTest($test, false);
 
-        $conditionalFailsMessage = "";
-        $numFails = count($this->conditionalFails);
-        if ($numFails == 1) {
-            $conditionalFailsMessage = "[F]";
-        } elseif ($numFails !== 0) {
-            $conditionalFailsMessage = "{$numFails}x[F]";
-        }
-        if ($conditionalFailsMessage !== '') {
-            $conditionalFailsMessage = " <error>{$conditionalFailsMessage}</error> ";
-            $this->message($conditionalFailsMessage)->write();
+        if (method_exists($test, 'getScenario')) {
+            $numFails = count(
+                array_filter(
+                    $test->getScenario()?->getSteps() ?? [],
+                    function (Step $step) {
+                        return $step->hasFailed() && $step instanceof ConditionalAssertion;
+                    }
+                )
+            );
+
+            $conditionalFailsMessage = "";
+            if ($numFails == 1) {
+                $conditionalFailsMessage = "[F]";
+            } elseif ($numFails !== 0) {
+                $conditionalFailsMessage = "{$numFails}x[F]";
+            }
+            if ($conditionalFailsMessage !== '') {
+                $conditionalFailsMessage = " <error>{$conditionalFailsMessage}</error> ";
+                $this->message($conditionalFailsMessage)->write();
+            }
         }
         $this->writeTimeInformation($event);
         $this->output->writeln('');

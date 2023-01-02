@@ -61,9 +61,9 @@ final class OrderCest
         $I->seeFileFound('order.txt', 'tests/_output');
         $I->expect(
             'global bootstrap, initialization, beforeSuite, before, bootstrap, test,'
-            . ' fail, test, test, fail, test, after, afterSuite'
+            . ' test, fail, test, test, fail, after, afterSuite'
         );
-        $I->seeFileContentsEqual("BIB([TFT][TFT])");
+        $I->seeFileContentsEqual("BIB([TTF][TTF])");
     }
 
     public function checkSimpleFiles(CliGuy $I)

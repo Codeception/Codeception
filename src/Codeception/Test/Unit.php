@@ -32,12 +32,26 @@ class Unit extends TestCase implements
 
     private ?Metadata $metadata = null;
 
+    private ?Scenario $scenario = null;
+
+    public function __clone(): void
+    {
+        if ($this->scenario !== null) {
+            $this->scenario = clone $this->scenario;
+        }
+    }
+
     public function getMetadata(): Metadata
     {
         if (!$this->metadata) {
             $this->metadata = new Metadata();
         }
         return $this->metadata;
+    }
+
+    public function getScenario(): ?Scenario
+    {
+        return $this->scenario;
     }
 
     public function setMetadata(?Metadata $metadata): void
@@ -68,6 +82,8 @@ class Unit extends TestCase implements
         if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor_suffix']))) {
             $this->$property = $di->instantiate($this->getMetadata()->getCurrent('actor'));
         }
+
+        $this->scenario = $di->get(Scenario::class);
 
         // Auto inject into the _inject method
         $di->injectDependencies($this); // injecting dependencies

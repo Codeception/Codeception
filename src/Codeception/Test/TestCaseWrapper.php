@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Test;
 
 use Codeception\Exception\UselessTestException;
+use Codeception\Scenario;
 use Codeception\Test\Interfaces\Dependent;
 use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\Reported;
@@ -67,6 +68,11 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         $metadata->setAfterClassMethods($afterClassMethods);
     }
 
+    public function __clone(): void
+    {
+        $this->testCase = clone $this->testCase;
+    }
+
     public function getTestCase(): TestCase
     {
         return $this->testCase;
@@ -75,6 +81,15 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
     public function getMetadata(): Metadata
     {
         return $this->metadata;
+    }
+
+    public function getScenario(): ?Scenario
+    {
+        if ($this->testCase instanceof Unit) {
+            return $this->testCase->getScenario();
+        }
+
+        return null;
     }
 
     public function fetchDependencies(): array

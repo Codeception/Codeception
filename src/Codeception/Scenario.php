@@ -78,10 +78,6 @@ class Scenario
             $testResult = $this->test->getResultAggregator();
             $failEvent = new FailEvent(clone($this->test), $f, 0);
             $testResult->addFailure($failEvent);
-            if (!$this->test instanceof ScenarioDriven) {
-                // step failure can't  be checked later in non-scenario driven formats
-                $dispatcher->dispatch($failEvent, Events::TEST_FAIL);
-            }
         } finally {
             $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
         }
