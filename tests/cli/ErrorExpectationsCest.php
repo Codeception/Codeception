@@ -4,7 +4,7 @@ class ErrorExpectationsCest
 {
     public function _before(\CliGuy $I, \Codeception\Scenario $scenario)
     {
-        if (\PHPUnit\Runner\Version::series() > 9) {
+        if (\PHPUnit\Runner\Version::series() >= 10) {
             $scenario->skip('Error expectations are not supported on PHPUnit 10');
         }
         $I->amInPath('tests/data/error_handling');
