@@ -99,7 +99,7 @@ actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         # add a framework module here
-    step_decorators: ~
+step_decorators: ~
 
 EOF;
         $this->createSuite('Functional', $actor, $suiteConfig);
@@ -121,7 +121,11 @@ modules:
     enabled:
         - PhpBrowser:
             url: http://localhost/myapp
-step_decorators: ~
+# add Codeception\Step\Retry trait to AcceptanceTester to enable retries
+step_decorators:
+    - Codeception\Step\ConditionalAssertion
+    - Codeception\Step\TryTo
+    - Codeception\Step\Retry
 
 EOF;
         $this->createSuite('Acceptance', $actor, $suiteConfig);
@@ -140,7 +144,7 @@ actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         - Asserts
-    step_decorators: ~
+step_decorators: ~
 
 EOF;
         $this->createSuite('Unit', $actor, $suiteConfig);
