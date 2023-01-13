@@ -16,6 +16,8 @@ use function file_get_contents;
 /**
  * Executes tests delivered in Cept format.
  * Prepares metadata, parses test body on preload, and executes a test in `test` method.
+ *
+ * Note: If the time came to delete Cept format, please delete Actor::wantTo method too
  */
 class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, Interfaces\Reported, Interfaces\Dependent
 {
