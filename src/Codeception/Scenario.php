@@ -10,6 +10,7 @@ use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Exception\InjectionException;
 use Codeception\Step\Comment;
 use Codeception\Step\Meta;
+use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Metadata;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
@@ -77,7 +78,6 @@ class Scenario
             $testResult = $this->test->getResultAggregator();
             $failEvent = new FailEvent(clone($this->test), $f, 0);
             $testResult->addFailure($failEvent);
-            $dispatcher->dispatch($failEvent, Events::TEST_FAIL);
         } finally {
             $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
         }

@@ -22,7 +22,7 @@
         "behat/gherkin": "^4.6.2",
         "codeception/lib-asserts": "2.0.*@dev",
         "codeception/stub": "^4.1",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^9.5.20",
         "phpunit/php-code-coverage": "^9.2",
         "phpunit/php-text-template": "^2.0",
         "phpunit/php-timer": "^5.0.3",

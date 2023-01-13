@@ -72,6 +72,11 @@ class Cest extends Test implements
         $this->parser = new Parser($this->getScenario(), $this->getMetadata());
     }
 
+    public function __clone(): void
+    {
+        $this->scenario = clone $this->scenario;
+    }
+
     public function preload(): void
     {
         $this->scenario->setFeature($this->getSpecFromMethod());

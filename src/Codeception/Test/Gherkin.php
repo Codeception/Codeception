@@ -53,6 +53,11 @@ class Gherkin extends Test implements ScenarioDriven, Reported
         $this->getMetadata()->setFilename($featureNode->getFile());
     }
 
+    public function __clone(): void
+    {
+        $this->scenario = clone $this->scenario;
+    }
+
     public function preload(): void
     {
         $this->getMetadata()->setGroups($this->featureNode->getTags());

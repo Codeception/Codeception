@@ -35,6 +35,11 @@ class Cept extends Test implements Interfaces\Plain, Interfaces\ScenarioDriven, 
         $this->parser = new Parser($this->getScenario(), $this->getMetadata());
     }
 
+    public function __clone(): void
+    {
+        $this->scenario = clone $this->scenario;
+    }
+
     public function preload(): void
     {
         $this->getParser()->prepareToRun($this->getSourceCode());

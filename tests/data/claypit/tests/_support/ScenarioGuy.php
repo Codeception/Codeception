@@ -60,7 +60,7 @@ class ScenarioGuy extends \Codeception\Actor
     {
         $this->seeFileFound($file);
         foreach ($node->getRows() as $row) {
-            $this->seeThisFileMatches('~' . implode('.*?', $row) . '~');
+            $this->seeThisFileMatches('~' . implode('.*?', $row) . '~s');
         }
     }
 
