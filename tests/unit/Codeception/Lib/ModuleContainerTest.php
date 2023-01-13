@@ -12,7 +12,6 @@ use Codeception\Module\UniversalFramework as UniversalFrameworkModule;
 use Codeception\Stub;
 use Codeception\Test\Unit;
 
-// @codingStandardsIgnoreFile
 class ModuleContainerTest extends Unit
 {
     protected \CodeGuy $tester;
@@ -232,12 +231,13 @@ class ModuleContainerTest extends Unit
         $config = [
             'modules' => [
                 'enabled' => [
-                        ['\Codeception\Lib\PartedModule' => [
-                            'part' => 'one'
-                        ]
-                    ]
+                        [
+                            '\Codeception\Lib\PartedModule' => [
+                                'part' => 'one'
+                            ],
+                        ],
                 ],
-            ]
+            ],
         ];
         $this->moduleContainer = new ModuleContainer(Stub::make(\Codeception\Lib\Di::class), $config);
         $this->moduleContainer->create('\Codeception\Lib\PartedModule');

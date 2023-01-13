@@ -1,6 +1,5 @@
 <?php
-
-// @codingStandardsIgnoreFile
+// phpcs:ignoreFile
 // @codeCoverageIgnoreStart
 
 /**
