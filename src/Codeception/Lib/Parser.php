@@ -113,11 +113,8 @@ class Parser
     {
         $sourceCode = file_get_contents($file);
         $classes    = [];
-        if (PHP_MAJOR_VERSION > 5) {
-            $tokens = token_get_all($sourceCode, TOKEN_PARSE);
-        } else {
-            $tokens = token_get_all($sourceCode);
-        }
+        $tokens = token_get_all($sourceCode, TOKEN_PARSE);
+
         $tokenCount = count($tokens);
         $namespace = '';
 
@@ -135,17 +132,29 @@ class Parser
             }
 
             if ($tokens[$i][0] === T_CLASS) {
+                // class at the beginning of file
                 if (!isset($tokens[$i - 2])) {
                     $classes[] = $namespace . $tokens[$i + 2][1];
                     continue;
                 }
+                // new class
                 if ($tokens[$i - 2][0] === T_NEW) {
                     continue;
                 }
+                // :: class
                 if ($tokens[$i - 1][0] === T_WHITESPACE && $tokens[$i - 2][0] === T_DOUBLE_COLON) {
                     continue;
                 }
+                // ::class
                 if ($tokens[$i - 1][0] === T_DOUBLE_COLON) {
+                    continue;
+                }
+                // class{
+                if (isset($tokens[$i + 1]) && ($tokens[$i + 1] === '{')) {
+                    continue;
+                }
+                // class {
+                if (isset($tokens[$i + 2]) && $tokens[$i + 1][0] === T_WHITESPACE && $tokens[$i + 2] === '{') {
                     continue;
                 }
                 $classes[] = $namespace . $tokens[$i + 2][1];
