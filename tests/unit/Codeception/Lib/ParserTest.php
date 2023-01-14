@@ -169,4 +169,11 @@ EOF;
         $classes = Parser::getClassesFromFile(codecept_data_dir('namedParameter.php'));
         $this->assertEquals([], $classes);
     }
+
+    #[Group('core')]
+    public function testParseTestContainingAnnonymousClassWithAttribute()
+    {
+        $classes = Parser::getClassesFromFile(codecept_data_dir('AnonymousClassWithAttributeCest.php'));
+        $this->assertEquals(['Tests\Unit\AnonymousClassWithAttributeCest'], $classes);
+    }
 }
