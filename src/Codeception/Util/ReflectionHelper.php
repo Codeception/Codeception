@@ -71,7 +71,7 @@ class ReflectionHelper
      *
      * @throws ReflectionException
      */
-    public static function invokePrivateMethod(object $object, string $method, array $args = [], string $class = null): mixed
+    public static function invokePrivateMethod(?object $object, string $method, array $args = [], string $class = null): mixed
     {
         if (is_null($class)) {
             $class = $object;

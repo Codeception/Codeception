@@ -10,17 +10,18 @@
 
 // $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 1;
 
+use Codeception\Util\ReflectionHelper;
 use PHPUnit\Runner\CodeCoverage as CodeCoverageRunner;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
 if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
-    $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true, 512, JSON_THROW_ON_ERROR);
+    $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true);
 
     // fix for improperly encoded JSON in Code Coverage cookie with WebDriver.
     // @see https://github.com/Codeception/Codeception/issues/874
     if (!is_array($cookie)) {
-        $cookie = json_decode($cookie, true, 512, JSON_THROW_ON_ERROR);
+        $cookie = json_decode($cookie, true);
     }
 
     if ($cookie) {
@@ -49,8 +50,8 @@ if (!function_exists('__c3_error')) {
         }
         if (!headers_sent()) {
             header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
+            setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
         }
-        setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
     }
 }
 
@@ -126,7 +127,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
     define('C3_CODECOVERAGE_PROJECT_ROOT', Codeception\Configuration::projectDir());
     define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
 
-    function __c3_build_html_report(PHP_CodeCoverage $codeCoverage, $path): string
+    function __c3_build_html_report(PHP_CodeCoverage $codeCoverage, $path)
     {
         $writer = new PHP_CodeCoverage_Report_HTML();
         $writer->process($codeCoverage, $path . 'html');
@@ -157,7 +158,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.tar';
     }
 
-    function __c3_build_clover_report(PHP_CodeCoverage $codeCoverage, $path): string
+    function __c3_build_clover_report(PHP_CodeCoverage $codeCoverage, $path)
     {
         $writer = new PHP_CodeCoverage_Report_Clover();
         $writer->process($codeCoverage, $path . '.clover.xml');
@@ -165,7 +166,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.clover.xml';
     }
 
-    function __c3_build_crap4j_report(PHP_CodeCoverage $codeCoverage, $path): string
+    function __c3_build_crap4j_report(PHP_CodeCoverage $codeCoverage, $path)
     {
         $writer = new PHP_CodeCoverage_Report_Crap4j();
         $writer->process($codeCoverage, $path . '.crap4j.xml');
@@ -173,7 +174,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.crap4j.xml';
     }
 
-    function __c3_build_cobertura_report(PHP_CodeCoverage $codeCoverage, $path): string
+    function __c3_build_cobertura_report(PHP_CodeCoverage $codeCoverage, $path)
     {
         if (!class_exists(\SebastianBergmann\CodeCoverage\Report\Cobertura::class)) {
             throw new Exception("Cobertura report requires php-code-coverage >= 9.2");
@@ -184,7 +185,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.cobertura.xml';
     }
 
-    function __c3_build_phpunit_report(PHP_CodeCoverage $codeCoverage, $path): string
+    function __c3_build_phpunit_report(PHP_CodeCoverage $codeCoverage, $path)
     {
         $writer = new PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
         $writer->process($codeCoverage, $path . 'phpunit');
@@ -229,9 +230,8 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
      * @param bool $lock Lock the file for writing?
      * @return [null|PHP_CodeCoverage|\SebastianBergmann\CodeCoverage\CodeCoverage, resource]
      */
-    function __c3_factory($filename, bool $lock = false): array
+    function __c3_factory($filename, $lock = false)
     {
-        $settings = null;
         $file = null;
         if ($filename !== null && is_readable($filename)) {
             if ($lock) {
@@ -248,16 +248,35 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             return [$phpCoverage, $file];
         }
 
+        if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'])) {
+            $suite = $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'];
+            try {
+                $settings = \Codeception\Configuration::suiteSettings($suite, \Codeception\Configuration::config());
+            } catch (Exception $e) {
+                __c3_error($e->getMessage());
+                $settings = [];
+            }
+        } else {
+            $settings = \Codeception\Configuration::config();
+        }
+
         $pathCoverage = false;
-        if (isset($coverageConfiguration['path_coverage'])) {
-            $pathCoverage = (bool)$coverageConfiguration['path_coverage'];
+        if (isset($settings['coverage']['path_coverage'])) {
+            $pathCoverage = (bool)$settings['coverage']['path_coverage'];
         }
 
         if (class_exists(CodeCoverageRunner::class)) {
             //PHPUnit 10+
             if (!CodeCoverageRunner::isActive()) {
-                $filter = new CodeCoverageFilter();
-                CodeCoverageRunner::activate($filter, $pathCoverage);
+                ReflectionHelper::invokePrivateMethod(
+                    null,
+                    'activate',
+                    [
+                        new CodeCoverageFilter(),
+                        $pathCoverage
+                    ],
+                    CodeCoverageRunner::class
+                );
             }
             $phpCoverage = CodeCoverageRunner::instance();
         } elseif (method_exists(Driver::class, 'forLineCoverage')) {
@@ -272,17 +291,6 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         } else {
             //php-code-coverage 8 or older
             $phpCoverage = new PHP_CodeCoverage();
-        }
-
-        if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'])) {
-            $suite = $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'];
-            try {
-                $settings = \Codeception\Configuration::suiteSettings($suite, \Codeception\Configuration::config());
-            } catch (Exception $e) {
-                __c3_error($e->getMessage());
-            }
-        } else {
-            $settings = \Codeception\Configuration::config();
         }
 
         try {
@@ -332,7 +340,7 @@ if ($requestedC3Report) {
         return __c3_exit();
     }
 
-    [$codeCoverage, ] = __c3_factory($completeReport);
+    list($codeCoverage, ) = __c3_factory($completeReport);
 
     switch ($route) {
         case 'html':
@@ -379,7 +387,7 @@ if ($requestedC3Report) {
             return __c3_exit();
     }
 } else {
-    [$codeCoverage, ] = __c3_factory(null);
+    list($codeCoverage, ) = __c3_factory(null);
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
     if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG', $_SERVER)) {
         register_shutdown_function(
@@ -404,7 +412,7 @@ if ($requestedC3Report) {
                 // read/write to the file at the same time as this request (leading to a corrupt file). flock() is a
                 // blocking call, so it waits until an exclusive lock can be acquired before continuing.
 
-                [$existingCodeCoverage, $file] = __c3_factory($currentReport, true);
+                list($existingCodeCoverage, $file) = __c3_factory($currentReport, true);
                 $existingCodeCoverage->merge($codeCoverage);
 
                 if ($file === null) {
