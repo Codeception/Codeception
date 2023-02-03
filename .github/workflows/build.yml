@@ -47,6 +47,11 @@ jobs:
         os: [ubuntu-latest]
         php: ['8.0', '8.1', '8.2']
         mode: ['stable', 'experimental']
+        exclude:
+          - php: '8.1'
+            mode: 'experimental'
+          - php: '8.2'
+            mode: 'experimental'
 
     steps:
       - name: Checkout
@@ -85,14 +90,6 @@ jobs:
       - name: Composer install lowest versions of dependencies on PHP 8.0 in experimental mode
         if: matrix.php == '8.0' && matrix.mode == 'experimental'
         run: composer update --prefer-source --prefer-lowest --no-interaction --no-progress --optimize-autoloader --ansi
-
-      - name: Composer install PHPUnit 10 on PHP 8.1 and 8.2 in experimental mode
-        if: matrix.php != '8.0' && matrix.mode == 'experimental'
-        run: |
-          composer config minimum-stability dev
-          composer require phpunit/phpunit:"10.0.x-dev" phpunit/php-code-coverage:"10.0.x-dev" phpunit/php-text-template:"3.0.x-dev" phpunit/php-timer:"6.0.x-dev" sebastian/comparator:"5.0.x-dev" sebastian/diff:"5.0.x-dev" --no-update
-          composer require codeception/lib-innerbrowser:"dev-phpunit10" --dev --no-update
-          composer update --prefer-source --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Test that failing test really fails
         run: if php codecept run -c tests/data/claypit/ scenario FailedCept -vvv; then echo "Test hasn't failed"; false; fi;
