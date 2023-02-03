@@ -1,11 +1,13 @@
 <?php
 
+use PHPUnit\Runner\Version;
+
 class ErrorExpectationsCest
 {
     public function _before(\CliGuy $I, \Codeception\Scenario $scenario)
     {
-        if (\PHPUnit\Runner\Version::series() >= 10) {
-            $scenario->skip('Error expectations are not supported on PHPUnit 10');
+        if (version_compare(Version::id(), '9.6', '>=')) {
+            $scenario->skip('Error expectations are not supported on PHPUnit 10 and deprecated in 9.6');
         }
         $I->amInPath('tests/data/error_handling');
     }

@@ -48,12 +48,14 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
 
     public function testShowsLocationOfWarning()
     {
-        if (Version::series() < 10) {
+        if (version_compare(Version::id(), '9.5', '<')) {
             $this->expectWarning();
             $this->expectWarningMessage('Undefined variable: file');
-        } else {
+        } elseif (version_compare(Version::id(), '10.0', '>=')) {
             $this->expectException(Warning::class);
-            $this->expectExceptionMessageMatches('/Undefined variable: file at ' . preg_quote(__FILE__, '/') . ':58/');
+            $this->expectExceptionMessageMatches('/Undefined variable: file at ' . preg_quote(__FILE__, '/') . ':60/');
+        } else {
+            $this->markTestSkipped('This test is not executed on PHPUnit 9.6');
         }
         trigger_error('Undefined variable: file', E_USER_WARNING);
     }
