@@ -40,7 +40,7 @@ class Descriptor
 
         if (
             method_exists($testCase, 'getScenario')
-            && !empty($testCase->getScenario()->current('env'))
+            && !empty($testCase->getScenario()?->current('env'))
         ) {
             $env = ':' . $testCase->getScenario()->current('env');
         }
