@@ -1,3 +1,7 @@
+#### 5.0.8
+
+* Support for PHPUnit 10
+
 #### 5.0.7
 
 * Disabled phpcs checks in generated action files #6621
