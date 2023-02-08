@@ -128,7 +128,7 @@ final class RunCest
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile(
             '<testsuite name="dummy" tests="6" assertions="3" errors="0" failures="0" skipped="0"'
-            . ' useless="0" time='
+            . ' time='
         );
         $I->seeThisFileMatches('/<testsuite name="AnotherCest" file=".*?AnotherCest.php"/');
         $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php"/');
