@@ -186,17 +186,17 @@ class JUnitReporter implements EventSubscriberInterface
             (string)$this->testSuiteSkipped[$this->testSuiteLevel]
         );
 
-        $this->testSuites[$this->testSuiteLevel]->setAttribute(
-            'time',
-            sprintf('%F', $this->testSuiteTimes[$this->testSuiteLevel])
-        );
-
         if (!$this->isStrict) {
             $this->testSuites[$this->testSuiteLevel]->setAttribute(
                 'useless',
                 (string)$this->testSuiteUseless[$this->testSuiteLevel]
             );
         }
+
+        $this->testSuites[$this->testSuiteLevel]->setAttribute(
+            'time',
+            sprintf('%F', $this->testSuiteTimes[$this->testSuiteLevel])
+        );
 
         if ($this->testSuiteLevel > 1) {
             $this->testSuiteTests[$this->testSuiteLevel - 1] += $this->testSuiteTests[$this->testSuiteLevel];
