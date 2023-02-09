@@ -10,10 +10,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CompletionFallback extends Command
 {
-    /**
-     * @var string
-     */
-    protected static $defaultName = '_completion';
+    public function __construct()
+    {
+        parent::__construct('_completion');
+    }
 
     protected function configure(): void
     {
