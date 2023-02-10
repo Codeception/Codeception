@@ -20,7 +20,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "behat/gherkin": "^4.6.2",
-        "codeception/lib-asserts": "2.0.*@dev",
+        "codeception/lib-asserts": "^2.0",
         "codeception/stub": "^4.1",
         "phpunit/phpunit": "^9.5.20 || ^10.0",
         "phpunit/php-code-coverage": "^9.2 || ^10.0",
