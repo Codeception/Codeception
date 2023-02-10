@@ -134,7 +134,7 @@ final class RunCest
         $I->seeThisFileMatches('/<testsuite name="AnotherTest" file=".*?AnotherTest.php"/');
         $I->seeThisFileMatches(
             '/<testsuite name="AnotherTest" file=".*?AnotherTest.php" tests="2" assertions="2" errors="0"'
-            . ' failures="0" skipped="0" useless="0" time=/'
+            . ' failures="0" skipped="0" time=/'
         );
         //FileExistsCept file
         $I->seeInThisFile('<testsuite name="FileExists"');
