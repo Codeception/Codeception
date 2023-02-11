@@ -1,3 +1,9 @@
+#### 5.0.9
+
+* JUnitReporter: Do not set 'useless' testsuite attribute in strict mode #6635 by @gileri
+* Fixed static $defaultName deprecated in _completion command #6633 by @dmitryuk
+* Replaced object property assertions removed from PHPUnit 10
+
 #### 5.0.8
 
 * Support for PHPUnit 10
