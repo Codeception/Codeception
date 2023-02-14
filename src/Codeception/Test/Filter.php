@@ -25,7 +25,8 @@ class Filter
         }
 
         // Validates regexp without E_WARNING
-        set_error_handler(function () {}, E_WARNING);
+        set_error_handler(function () {
+        }, E_WARNING);
         $isRegularExpression = preg_match($namePattern, '') !== false;
         restore_error_handler();
 
