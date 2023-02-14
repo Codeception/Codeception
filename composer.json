@@ -103,5 +103,14 @@
     "scripts-descriptions": {
         "cs-prod": "Check production code style",
         "cs-tests": "Check test code style"
+    },
+    "config": {
+        "preferred-install": {
+            "codeception/module-asserts": "source",
+            "codeception/module-db": "source",
+            "codeception/module-filesystem": "source",
+            "codeception/module-phpbrowser": "source",
+            "*": "dist"
+        }
     }
 }
