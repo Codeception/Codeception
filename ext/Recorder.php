@@ -460,7 +460,7 @@ EOF;
         $dir = codecept_output_dir() . "record_{$this->seed}_$testName";
         $status = 'success';
 
-        if (strcasecmp($this->dir, $dir) !== 0) {
+        if (strcasecmp($this->dir ?? '', $dir) !== 0) {
             $filename = str_pad('0', 3, '0', STR_PAD_LEFT) . '.png';
 
             try {
