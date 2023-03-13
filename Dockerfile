@@ -24,6 +24,7 @@ RUN set -eux; \
     echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini;
 
 ENV COMPOSER_ALLOW_SUPERUSER '1'
+ENV XDEBUG_MODE 'coverage'
 
 WORKDIR /codecept
 
@@ -45,7 +46,9 @@ RUN set -eux; \
         codeception/module-sequence \
         codeception/module-soap \
         codeception/module-webdriver; \
-    composer update --no-dev --prefer-dist --no-interaction --optimize-autoloader --apcu-autoloader; \
+    composer require --dev \
+        codeception/util-universalframework; \
+    composer update --prefer-dist --no-interaction --optimize-autoloader --apcu-autoloader; \
     ln -s /codecept/vendor/bin/codecept /usr/local/bin/codecept; \
     mkdir /project;
 
