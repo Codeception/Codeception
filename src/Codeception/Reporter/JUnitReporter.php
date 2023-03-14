@@ -247,12 +247,12 @@ class JUnitReporter implements EventSubscriberInterface
 
         if ($test instanceof TestCaseWrapper) {
             $testCase = $test->getTestCase();
-            if ($testCase->hasOutput()) {
+            if (!$testCase->hasExpectationOnOutput()) {
                 $testOutput = $testCase->getActualOutputForAssertion();
             }
         }
 
-        if (!empty($testOutput)) {
+        if ($testOutput !== '') {
             $systemOut = $this->document->createElement(
                 'system-out',
                 Xml::prepareString($testOutput)
