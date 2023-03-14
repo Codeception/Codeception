@@ -1,3 +1,9 @@
+#### 5.0.10
+
+* JUnitReporter: Fixed compatibility with PHPUnit 10.0.16 #6656
+* Recorder extension: Fixed type error #6643 by @thomashohn
+* Validate test filter pattern without warning #6641 by @dmitryuk
+
 #### 5.0.9
 
 * JUnitReporter: Do not set 'useless' testsuite attribute in strict mode #6635 by @gileri
