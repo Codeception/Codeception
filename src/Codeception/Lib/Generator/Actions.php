@@ -119,7 +119,7 @@ EOF;
             ->place('namespace', $namespace !== '' ? $namespace . '\\' : '')
             ->place('hash', self::genHash($this->modules, $this->settings))
             ->place('name', $this->name)
-            ->place('methods', implode("\n\n ", $code))
+            ->place('methods', implode("\n", $code))
             ->produce();
     }
 
