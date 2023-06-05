@@ -56,8 +56,6 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
     private bool $ignored = false;
 
-    private int $assertionCount = 0;
-
     private ?EventDispatcher $eventDispatcher = null;
 
     /**
@@ -208,12 +206,16 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             }
 
             $time = $timer->stop()->asSeconds();
-            $this->assertionCount = Assert::getCount();
-            $result->addToAssertionCount($this->assertionCount);
+
+            $this->callTestEndHooks($status, $time, $e);
+
+            // We need to get the number of performed assertions _after_ calling the test end hooks because the
+            // AssertionCounter needs to set the number of performed assertions first.
+            $result->addToAssertionCount($this->numberOfAssertionsPerformed());
 
             if (
                 $this->reportUselessTests &&
-                $this->assertionCount === 0 &&
+                $this->numberOfAssertionsPerformed() === 0 &&
                 !$this->doesNotPerformAssertions() &&
                 $eventType === Events::TEST_SUCCESS
             ) {
@@ -228,15 +230,8 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             } else {
                 $this->fire($eventType, new FailEvent($this, $e, $time));
             }
-        }
-
-        foreach (array_reverse($this->hooks) as $hook) {
-            if ($hook === 'codeCoverage' && !$this->collectCodeCoverage) {
-                continue;
-            }
-            if (method_exists($this, $hook . 'End')) {
-                $this->{$hook . 'End'}($status, $time, $e);
-            }
+        } else {
+            $this->callTestEndHooks($status, $time, $e);
         }
 
         $this->fire(Events::TEST_AFTER, new TestEvent($this, $time));
@@ -278,7 +273,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
     public function numberOfAssertionsPerformed(): int
     {
-        return $this->assertionCount;
+        return $this->getNumAssertions();
     }
 
 
@@ -294,5 +289,17 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             }
         }
         $this->eventDispatcher->dispatch($event, $eventType);
+    }
+
+    private function callTestEndHooks(string $status, float $time, ?Throwable $e): void
+    {
+        foreach (array_reverse($this->hooks) as $hook) {
+            if ($hook === 'codeCoverage' && !$this->collectCodeCoverage) {
+                continue;
+            }
+            if (method_exists($this, $hook . 'End')) {
+                $this->{$hook . 'End'}($status, $time, $e);
+            }
+        }
     }
 }
