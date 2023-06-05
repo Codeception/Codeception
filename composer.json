@@ -90,6 +90,8 @@
             "tests/data/register_command/examples",
             "tests/data/DummyClass.php",
             "tests/data/DummyOverloadableClass.php",
+            "tests/data/services/UserModel.php",
+            "tests/data/services/UserService.php",
             "tests/unit/Codeception/Command/BaseCommandRunner.php",
             "tests/unit/Codeception/Util/MockAutoload.php",
             "tests/unit/Codeception/Util/ReflectionTestClass.php"
