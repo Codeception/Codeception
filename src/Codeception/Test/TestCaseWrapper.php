@@ -147,13 +147,15 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         $this->testCase->setDependencyInput($dependencyInput);
         $this->testCase->runBare();
 
+        $this->testCase->addToAssertionCount(Assert::getCount());
+
         if (PHPUnitVersion::series() < 10) {
             self::$testResults[$this->getSignature()] = $this->testCase->getResult();
         } else {
             self::$testResults[$this->getSignature()] = $this->testCase->result();
         }
 
-        $numberOfAssertionsPerformed = Assert::getCount();
+        $numberOfAssertionsPerformed = $this->getNumAssertions();
         if (
             $this->reportUselessTests &&
             $numberOfAssertionsPerformed > 0 &&
@@ -199,5 +201,21 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         }
 
         return $this->testCase->nameWithDataSet();
+    }
+
+    /**
+     * Override this method from the {@see \Codeception\Test\Feature\AssertionCounter} so that we use PHPUnit's
+     * assertion count instead of our own.
+     * This is needed because PHPUnit's {@see TestCase} has a {@see TestCase::addToAssertionCount()} method which is
+     * both internally and externally used to increase the assertion count. Externally it is called from tearDown
+     * methods, for example when using Mockery.
+     */
+    public function getNumAssertions(): int
+    {
+        if (PHPUnitVersion::series() < 10) {
+            return $this->testCase->getNumAssertions();
+        } else {
+            return $this->testCase->numberOfAssertionsPerformed();
+        }
     }
 }

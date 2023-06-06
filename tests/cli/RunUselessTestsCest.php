@@ -92,30 +92,33 @@ This test indicates it does not perform assertions but 1 assertions were perform
         $I->seeInShellOutput('UselessTest: Make no assertions............................................Useless');
         $I->seeInShellOutput('UselessTest: Expects not to perform assertions.............................Ok');
         $I->seeInShellOutput('UselessTest: Make unexpected assertion.....................................Useless');
+        $I->seeInShellOutput('UselessTest: Mock expectations.............................................Ok');
 
         $I->seeInShellOutput('JUNIT XML report generated in');
         $I->seeInShellOutput('PHPUNIT XML report generated in');
         $I->seeInShellOutput('HTML report generated in');
         $I->seeFileFound('report.xml', 'tests/_output');
         $I->seeInThisFile(
-            '<testsuite name="unit" tests="5" assertions="1" errors="0" failures="0" skipped="0" useless="4" time="'
+            '<testsuite name="unit" tests="6" assertions="2" errors="0" failures="0" skipped="0" useless="4" time="'
         );
         $I->seeInThisFile('<testcase name="Useless"');
         $I->seeInThisFile('<testcase name="makeNoAssertions" class="UselessCest"');
         $I->seeInThisFile('<testcase name="testMakeNoAssertions" class="UselessTest" file="');
         $I->seeInThisFile('<testcase name="testExpectsNotToPerformAssertions" class="UselessTest" file="');
         $I->seeInThisFile('<testcase name="testMakeUnexpectedAssertion" class="UselessTest" file="');
+        $I->seeInThisFile('<testcase name="testMockExpectations" class="UselessTest" file="');
         $I->seeInThisFile('<error>Useless Test</error>');
 
         $I->seeFileFound('phpunit-report.xml', 'tests/_output');
         $I->seeInThisFile(
-            '<testsuite name="unit" tests="5" assertions="1" errors="0" failures="0" skipped="0" useless="4" time="'
+            '<testsuite name="unit" tests="6" assertions="2" errors="0" failures="0" skipped="0" useless="4" time="'
         );
         $I->seeInThisFile('<testcase name="Useless"');
         $I->seeInThisFile('<testcase name="makeNoAssertions" class="UselessCest"');
         $I->seeInThisFile('<testcase name="testMakeNoAssertions" class="UselessTest" file="');
         $I->seeInThisFile('<testcase name="testExpectsNotToPerformAssertions" class="UselessTest" file="');
         $I->seeInThisFile('<testcase name="testMakeUnexpectedAssertion" class="UselessTest" file="');
+        $I->seeInThisFile('<testcase name="testMockExpectations" class="UselessTest" file="');
         $I->seeInThisFile('<error>Useless Test</error>');
 
         $I->seeFileFound('report.html', 'tests/_output');
