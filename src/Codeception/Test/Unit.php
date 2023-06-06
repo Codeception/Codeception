@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use AllowDynamicProperties;
 use Codeception\Configuration;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Di;
@@ -23,6 +24,7 @@ use function method_exists;
 /**
  * Represents tests from PHPUnit compatible format.
  */
+#[AllowDynamicProperties]
 class Unit extends TestCase implements
     Interfaces\Reported,
     Interfaces\Dependent,
