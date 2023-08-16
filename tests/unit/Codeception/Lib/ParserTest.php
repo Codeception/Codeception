@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Codeception\Attribute\Group;
+use Codeception\Exception\TestParseException;
 use Codeception\Lib\Parser;
 use Codeception\Scenario;
 use Codeception\Test\Cept;
@@ -147,10 +148,83 @@ EOF;
     }
 
     #[Group('core')]
+    public function testParseExceptionWithFileNameOnly()
+    {
+        $this->expectException(TestParseException::class);
+        $this->expectExceptionMessage("Couldn't parse test 'test.file'");
+        throw new TestParseException('test.file');
+    }
+
+    #[Group('core')]
+    public function testParseExceptionWithErrors()
+    {
+        $this->expectException(TestParseException::class);
+        $this->expectExceptionMessage("Couldn't parse test 'test.file':" . PHP_EOL . "Funny error");
+        throw new TestParseException('test.file', 'Funny error');
+    }
+
+    #[Group('core')]
+    public function testParseExceptionWithLineNumber()
+    {
+        $this->expectException(TestParseException::class);
+        $this->expectExceptionMessage("Couldn't parse test 'test.file' on line 27:" . PHP_EOL . "Funny error");
+        throw new TestParseException('test.file', 'Funny error', 27);
+    }
+
+    #[Group('core')]
+    public function testParseExceptionWithTestFile()
+    {
+        $this->expectException(TestParseException::class);
+        $this->expectExceptionMessage("Couldn't parse test 'test.file' on line 27:" . PHP_EOL . "Funny error" . PHP_EOL . "(Error occurred while parsing Test 'test.file')");
+        throw new TestParseException('test.file', 'Funny error', 27, 'test.file');
+    }
+
+    #[Group('core')]
+    public function testParseExceptionWithDifferentTestFile()
+    {
+        $this->expectException(TestParseException::class);
+        $this->expectExceptionMessage(sprintf(
+            "Couldn't parse test '%s' on line %d:" . PHP_EOL . "%s" . PHP_EOL . "(Error occurred while parsing Test '%s')",
+            'parent.file',
+            27,
+            'Funny error',
+            'test.file'
+        ));
+        throw new TestParseException('parent.file', 'Funny error', 27, 'test.file');
+    }
+
+    #[Group('core')]
     public function testModernValidation()
     {
-        $this->expectException(\Codeception\Exception\TestParseException::class);
+        $this->expectException(TestParseException::class);
         Parser::load(codecept_data_dir('Invalid.php'));
+    }
+
+    #[Group('core')]
+    public function testModernClassValidation()
+    {
+        $this->expectException(TestParseException::class);
+        $this->expectExceptionMessage(sprintf(
+            "Couldn't parse test '%s' on line %d:" . PHP_EOL . "%s",
+            TestParseException::normalizePathSeparators(codecept_data_dir('InvalidClass.php')),
+            5,
+            'syntax error, unexpected identifier "foo", expecting "function" or "const"'
+        ));
+        Parser::load(codecept_data_dir('InvalidClass.php'));
+    }
+
+    #[Group('core')]
+    public function testModernChildClassValidation()
+    {
+        $this->expectException(TestParseException::class);
+        $this->expectExceptionMessage(sprintf(
+            "Couldn't parse test '%s' on line %d:" . PHP_EOL . "%s" . PHP_EOL . "(Error occurred while parsing Test '%s')",
+            TestParseException::normalizePathSeparators(codecept_data_dir('InvalidClass.php')),
+            5,
+            'syntax error, unexpected identifier "foo", expecting "function" or "const"',
+            TestParseException::normalizePathSeparators(codecept_data_dir('InvalidChildClass.php'))
+        ));
+        Parser::load(codecept_data_dir('InvalidChildClass.php'));
     }
 
     #[Group('core')]
