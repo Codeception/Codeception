@@ -242,11 +242,13 @@ class Cest extends Test implements
     public function fetchDependencies(): array
     {
         $names = [];
-        foreach ($this->getMetadata()->getDependencies() as $required) {
-            if (!str_contains($required, ':') && method_exists($this->getTestInstance(), $required)) {
-                $required = $this->testClass . ":{$required}";
+        foreach ($this->getMetadata()->getDependencies() as $dependency) {
+            foreach ((array)$dependency as $required) {
+                if (!str_contains($required, ':') && method_exists($this->getTestInstance(), $required)) {
+                    $required = $this->testClass . ":{$required}";
+                }
+                $names[] = $required;
             }
-            $names[] = $required;
         }
         return $names;
     }
