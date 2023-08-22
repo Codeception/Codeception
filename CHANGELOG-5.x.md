@@ -1,3 +1,11 @@
+#### 5.0.11
+
+* Fix sharding for empty tests file by @SamMousa in #6667
+* Add AllowDynamicProperties attribute to Unit by @erickskrauch in #6666
+* Include mock expectations in assertion count by @rene-bos in #6672
+* Allow multiple test dependencies by @mbrodala in #6676
+* JUnitReporter: Fixed compatibility with PHPUnit 10.3 by @Naktibalda in #6685
+
 #### 5.0.10
 
 * JUnitReporter: Fixed compatibility with PHPUnit 10.0.16 #6656
