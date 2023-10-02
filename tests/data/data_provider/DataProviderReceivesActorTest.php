@@ -14,7 +14,6 @@ class DataProviderReceivesActorTest extends TestCase
     #[DataProvider('getData')]
     public function testDataProvider(): void
     {
-
     }
 
     public function getData(CodeGuy $I): array
