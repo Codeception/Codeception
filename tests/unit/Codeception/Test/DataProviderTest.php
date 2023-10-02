@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Codeception\Exception\InvalidTestException;
 use Codeception\Test\DataProvider;
 use Codeception\Test\Unit;
+use data\data_provider\DataProviderReceivesActorTest;
 
 class DataProviderTest extends Unit
 {
@@ -204,6 +205,19 @@ class DataProviderTest extends Unit
 
         $expectedResult = [
             'foo' => ['foo'],
+        ];
+
+        self::assertSame($expectedResult, $result);
+    }
+
+    public function testDataProviderReceivesActor(): void
+    {
+        require_once codecept_data_dir('data_provider/DataProviderReceivesActorTest.php');
+        $method = new ReflectionMethod(DataProviderReceivesActorTest::class, 'testDataProvider');
+        $result = DataProvider::getDataForMethod($method, I: $this->tester);
+
+        $expectedResult = [
+            'codeGuyMethod() exists'
         ];
 
         self::assertSame($expectedResult, $result);

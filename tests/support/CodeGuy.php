@@ -18,4 +18,9 @@
 class CodeGuy extends \Codeception\Actor
 {
     use _generated\CodeGuyActions;
+
+    public function codeGuyMethod(): string
+    {
+        return 'codeGuyMethod() exists';
+    }
 }

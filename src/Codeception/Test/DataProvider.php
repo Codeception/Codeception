@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use Codeception\Actor;
 use Codeception\Exception\InvalidTestException;
 use Codeception\Exception\TestParseException;
 use Codeception\Util\Annotation;
@@ -16,7 +17,7 @@ use function sprintf;
 
 class DataProvider
 {
-    public static function getDataForMethod(ReflectionMethod $method, ?ReflectionClass $class = null): ?iterable
+    public static function getDataForMethod(ReflectionMethod $method, ?ReflectionClass $class = null, ?Actor $I = null): ?iterable
     {
         $testClass = self::getTestClass($method, $class);
         $testClassName = $testClass->getName();
@@ -62,16 +63,17 @@ class DataProvider
             try {
                 $dataProviderMethod = new ReflectionMethod($dataProviderClassName, $dataProviderMethodName);
                 if ($dataProviderMethod->isStatic()) {
-                    $dataProviderResult = call_user_func([$dataProviderClassName, $dataProviderMethodName]);
+                    $dataProviderResult = call_user_func([$dataProviderClassName, $dataProviderMethodName], $I);
                 } else {
                     $testInstance = new $dataProviderClassName($dataProviderMethodName);
 
                     if ($dataProviderMethod->isPublic()) {
-                        $dataProviderResult = $testInstance->$dataProviderMethodName();
+                        $dataProviderResult = $testInstance->$dataProviderMethodName($I);
                     } else {
                         $dataProviderResult = ReflectionHelper::invokePrivateMethod(
                             $testInstance,
                             $dataProviderMethodName,
+                            [$I]
                         );
                     }
                 }
