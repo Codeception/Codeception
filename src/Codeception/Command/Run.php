@@ -282,7 +282,7 @@ class Run extends Command
 
         if (!$this->options['silent']) {
             $this->output->writeln(
-                Codecept::versionString() . ' https://helpukrainewin.org'
+                Codecept::versionString() . ' https://stand-with-ukraine.pp.ua'
             );
 
             if ($this->options['seed']) {
