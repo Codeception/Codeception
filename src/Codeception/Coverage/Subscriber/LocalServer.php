@@ -151,7 +151,7 @@ class LocalServer extends SuiteSubscriber
         // wait for all running tests to finish
         $blockfilename = Configuration::outputDir() . 'c3tmp/block_report';
         if (file_exists($blockfilename) && filesize($blockfilename) !== 0) {
-            while(file_get_contents($blockfilename) !== '0') {
+            while (file_get_contents($blockfilename) !== '0') {
                 usleep(250_000); // 0.25 sec
             }
         }
