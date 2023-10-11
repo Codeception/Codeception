@@ -206,7 +206,7 @@ class SuiteManager
             'modules' => $this->moduleContainer
         ]);
         $test->getMetadata()->setCurrent([
-            'actor' => $this->getActor(),
+            'actor' => $this->getActorClassName(),
             'env' => $this->env,
             'modules' => $this->moduleContainer->all()
         ]);

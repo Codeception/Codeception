@@ -63,8 +63,7 @@ class Cest implements LoaderInterface
                 }
 
                 $test = new CestFormat($unit, $method, $filename);
-                $actorClass = $this->getActor();
-                $I = $actorClass ? new $actorClass(new Scenario($test)) : null;
+                $I = $this->getActor($test);
 
                 $examples = DataProvider::getDataForMethod(
                     new \ReflectionMethod($testClass, $method),
