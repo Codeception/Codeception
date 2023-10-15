@@ -1,3 +1,8 @@
+#### 5.0.12
+
+* Wait for all tests to finish before accessing the serialized test results by @MarcelBolten in #6702
+* Updated Support Ukraine link in version string
+
 #### 5.0.11
 
 * Fix sharding for empty tests file by @SamMousa in #6667
