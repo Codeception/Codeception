@@ -147,8 +147,16 @@ class LocalServer extends SuiteSubscriber
         if (!$this->isEnabled()) {
             return;
         }
-        $coverageFile = Configuration::outputDir() . 'c3tmp/codecoverage.serialized';
 
+        // wait for all running tests to finish
+        $blockfilename = Configuration::outputDir() . 'c3tmp/block_report';
+        if (file_exists($blockfilename) && filesize($blockfilename) !== 0) {
+            while (file_get_contents($blockfilename) !== '0') {
+                usleep(250_000); // 0.25 sec
+            }
+        }
+
+        $coverageFile = Configuration::outputDir() . 'c3tmp/codecoverage.serialized';
         $retries = 5;
         while (!file_exists($coverageFile) && --$retries >= 0) {
             $seconds = (int)(0.5 * 1_000_000); // 0.5 sec
