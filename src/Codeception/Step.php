@@ -10,6 +10,7 @@ use Codeception\Step\Argument\FormattedOutput;
 use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
 use Exception;
+use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
 use Stringable;
@@ -171,8 +172,10 @@ abstract class Step implements Stringable
                 $argument = $argument->getOutput();
             } elseif (method_exists($argument, '__toString')) {
                 $argument = (string)$argument;
-            } elseif ($argument::class == 'Facebook\WebDriver\WebDriverBy') {
+            } elseif ($argument::class === 'Facebook\WebDriver\WebDriverBy') {
                 $argument = Locator::humanReadableString($argument);
+            } elseif ($argument instanceof Constraint) {
+                $argument = $argument->toString();
             } else {
                 $argument = $this->getClassName($argument);
             }
