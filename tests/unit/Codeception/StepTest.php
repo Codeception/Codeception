@@ -6,6 +6,7 @@ use Codeception\Step;
 use Codeception\Step\Argument\FormattedOutput;
 use Codeception\Stub;
 use Facebook\WebDriver\WebDriverBy;
+use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\TestCase;
 
 class StepTest extends TestCase
@@ -138,5 +139,15 @@ class StepTest extends TestCase
         $step = $this->getStep(['argument', [$argument]]);
         $output = $step->toString(200);
         $this->assertSame('argument "some formatted output"', $output);
+    }
+
+    public function testConstraintOutput(): void
+    {
+        $argument = Stub::makeEmpty(Constraint::class);
+        $argument->method('toString')->willReturn('is a constraint');
+
+        $step = $this->getStep(['this', [$argument]]);
+        $output = $step->toString(200);
+        $this->assertSame('this "is a constraint"', $output);
     }
 }
