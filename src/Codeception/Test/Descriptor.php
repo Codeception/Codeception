@@ -49,7 +49,7 @@ class Descriptor
             method_exists($testCase, 'getMetaData')
             && !empty($testCase->getMetadata()->getCurrent('example'))
         ) {
-            $currentExample = json_encode($testCase->getMetadata()->getCurrent('example'), JSON_THROW_ON_ERROR);
+            $currentExample = json_encode($testCase->getMetadata()->getCurrent('example'), JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
             $example = ':' . substr(sha1($currentExample), 0, 7);
         }
 
