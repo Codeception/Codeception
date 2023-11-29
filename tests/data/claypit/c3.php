@@ -225,6 +225,26 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return __c3_exit();
     }
 
+     /**
+     * Keep track of the number of running tests
+     * @param bool $decrease default false. Whether to increase or decrease the counter
+     */
+    function __c3_testcounter($decrease = false)
+    {
+        $blockfilename = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'block_report';
+        $file = fopen($blockfilename, 'c+');
+        if (flock($file, LOCK_EX)){
+            // 24 bytes is enough to hold largest integer supported in 64 bit systems
+            $testcounter = intval(fread($file, 24)) + ($decrease ? -1 : 1);
+            ftruncate($file, 0);
+            rewind($file);
+            fwrite($file, $testcounter);
+        } else {
+            __c3_error("Failed to acquire write-lock for $blockfilename");
+        }
+        fclose($file);
+    }
+
     /**
      * @param $filename
      * @param bool $lock Lock the file for writing?
@@ -242,6 +262,13 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
                     __c3_error("Failed to acquire write-lock for $filename");
                 }
             } else {
+                // wait until serialized coverage data of all tests is written to file
+                $blockfilename = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'block_report';
+                if (file_exists($blockfilename) && filesize($blockfilename) !== 0) {
+                    while(file_get_contents($blockfilename) !== '0') {
+                        usleep(250000); // 0.25 sec
+                    }
+                }
                 $phpCoverage = unserialize(file_get_contents($filename));
             }
 
@@ -383,6 +410,7 @@ if ($requestedC3Report) {
     }
 } else {
     list($codeCoverage, ) = __c3_factory(null);
+    __c3_testcounter();
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
     if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG', $_SERVER)) {
         register_shutdown_function(
@@ -419,6 +447,7 @@ if ($requestedC3Report) {
                     flock($file, LOCK_UN);
                     fclose($file);
                 }
+                __c3_testcounter(true);
             }
         );
     }
