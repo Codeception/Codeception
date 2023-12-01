@@ -13,6 +13,7 @@ use Codeception\Events;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\RemoteException;
 use Codeception\Lib\Interfaces\Web as WebInterface;
+use Codeception\Lib\Notification;
 use Codeception\Module\WebDriver as WebDriverModule;
 use Facebook\WebDriver\Exception\NoSuchAlertException;
 use RuntimeException;
@@ -151,8 +152,15 @@ class LocalServer extends SuiteSubscriber
         // wait for all running tests to finish
         $blockfilename = Configuration::outputDir() . 'c3tmp/block_report';
         if (file_exists($blockfilename) && filesize($blockfilename) !== 0) {
-            while (file_get_contents($blockfilename) !== '0') {
+            $retries = 120; // 30 sec total
+            while (file_get_contents($blockfilename) !== '0' && --$retries >= 0) {
                 usleep(250_000); // 0.25 sec
+            }
+            if (file_get_contents($blockfilename) !== '0' && $retries === -1) {
+                Notification::warning(
+                    'Timeout: Some coverage data is not included in the coverage report.',
+                    '',
+                );
             }
         }
 
