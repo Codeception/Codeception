@@ -36,7 +36,7 @@ class MyCustomCommand extends Command implements CustomCommandInterface
     /**
      * Configures the current command.
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputOption('friendly', 'f', InputOption::VALUE_NONE, 'The Message will be friendly'),
