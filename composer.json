@@ -34,7 +34,7 @@
         "symfony/finder": ">=4.4.24 <8.0",
         "symfony/yaml": ">=4.4.24 <8.0",
         "symfony/var-dumper": ">=4.4.24 <8.0",
-        "psy/psysh": "^0.11.2"
+        "psy/psysh": "^0.11.2 || ^0.12"
     },
     "require-dev": {
         "ext-simplexml": "*",
