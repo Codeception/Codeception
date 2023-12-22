@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception;
 
+use Codeception\Command\Shared\ActorTrait;
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
@@ -20,6 +21,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
 {
+    use ActorTrait;
+
     protected ?Suite $suite = null;
 
     protected ?EventDispatcher $dispatcher = null;
@@ -160,26 +163,6 @@ class SuiteManager
         return $this->moduleContainer;
     }
 
-    protected function getActor(): ?string
-    {
-        if (!$this->settings['actor']) {
-            return null;
-        }
-
-        $namespace = "";
-
-        if ($this->settings['namespace']) {
-            $namespace .= '\\' . $this->settings['namespace'];
-        }
-
-        if (isset($this->settings['support_namespace'])) {
-            $namespace .= '\\' . $this->settings['support_namespace'];
-        }
-        $namespace = rtrim($namespace, '\\') . '\\';
-
-        return $namespace . $this->settings['actor'];
-    }
-
     protected function checkEnvironmentExists(TestInterface $test): void
     {
         $envs = $test->getMetadata()->getEnv();
@@ -223,7 +206,7 @@ class SuiteManager
             'modules' => $this->moduleContainer
         ]);
         $test->getMetadata()->setCurrent([
-            'actor' => $this->getActor(),
+            'actor' => $this->getActorClassName(),
             'env' => $this->env,
             'modules' => $this->moduleContainer->all()
         ]);

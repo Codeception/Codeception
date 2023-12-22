@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Codeception\Test\Loader;
 
+use Codeception\Command\Shared\ActorTrait;
 use Codeception\Lib\Parser;
+use Codeception\Scenario;
 use Codeception\Test\Cest as CestFormat;
 use Codeception\Test\DataProvider;
 use ReflectionClass;
@@ -13,10 +15,19 @@ use function get_class_methods;
 
 class Cest implements LoaderInterface
 {
+    use ActorTrait;
+
     /**
      * @var CestFormat[]
      */
     protected array $tests = [];
+
+    protected array $settings = [];
+
+    public function __construct(array $settings = [])
+    {
+        $this->settings = $settings;
+    }
 
     /**
      * @return CestFormat[]
@@ -51,9 +62,13 @@ class Cest implements LoaderInterface
                     continue;
                 }
 
+                $test = new CestFormat($unit, $method, $filename);
+                $I = $this->getActor($test);
+
                 $examples = DataProvider::getDataForMethod(
                     new \ReflectionMethod($testClass, $method),
-                    new \ReflectionClass($testClass)
+                    new \ReflectionClass($testClass),
+                    $I,
                 );
 
                 if ($examples === null) {

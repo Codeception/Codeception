@@ -68,7 +68,7 @@ class Loader
 
         $this->formats = [
             new CeptLoader(),
-            new CestLoader(),
+            new CestLoader($suiteSettings),
             new UnitLoader(),
             new GherkinLoader($suiteSettings)
         ];
