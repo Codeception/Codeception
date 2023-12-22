@@ -31,7 +31,7 @@ class YourCustomCommand extends Command implements CustomCommandInterface
     /**
      * Configures the current command.
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDefinition([
             new InputOption('something', 's', InputOption::VALUE_NONE, 'The Message will show you something more'),
@@ -67,7 +67,7 @@ class YourCustomCommand extends Command implements CustomCommandInterface
      *
      * @see setCode()
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $messageEnd = "!" . PHP_EOL;
 
