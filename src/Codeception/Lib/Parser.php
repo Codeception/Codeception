@@ -100,7 +100,7 @@ class Parser
         try {
             self::includeFile($file);
         } catch (ParseError $e) {
-            throw new TestParseException($file, $e->getMessage(), $e->getLine());
+            throw new TestParseException($e->getFile(), $e->getMessage(), $e->getLine(), $file);
         } catch (Exception) {
             // file is valid otherwise
         }
