@@ -7,6 +7,8 @@ namespace Codeception\Test\Loader;
 use Behat\Gherkin\Filter\RoleFilter;
 use Behat\Gherkin\Keywords\ArrayKeywords as GherkinKeywords;
 use Behat\Gherkin\Lexer as GherkinLexer;
+use Behat\Gherkin\Loader\CucumberGherkinLoader;
+use Behat\Gherkin\Loader\GherkinFileLoader;
 use Behat\Gherkin\Node\ExampleNode;
 use Behat\Gherkin\Node\FeatureNode;
 use Behat\Gherkin\Node\OutlineNode;
@@ -57,7 +59,7 @@ class Gherkin implements LoaderInterface
      */
     protected array $tests = [];
 
-    protected GherkinParser $parser;
+    protected GherkinFileLoader|CucumberGherkinLoader $gherkinFileLoader;
 
     protected array $settings = [];
 
@@ -73,12 +75,21 @@ class Gherkin implements LoaderInterface
         if (!class_exists(GherkinKeywords::class)) {
             throw new TestParseException('Feature file can only be parsed with Behat\Gherkin library. Please install `behat/gherkin` with Composer');
         }
-        $gherkin = new ReflectionClass(\Behat\Gherkin\Gherkin::class);
-        $gherkinClassPath = dirname($gherkin->getFileName());
-        $i18n = require $gherkinClassPath . '/../../../i18n.php';
-        $keywords = new GherkinKeywords($i18n);
-        $lexer = new GherkinLexer($keywords);
-        $this->parser = new GherkinParser($lexer);
+
+        if (
+            class_exists(CucumberGherkinLoader::class) // if supporting older behat/gherkin
+            && CucumberGherkinLoader::isAvailable()
+        ) {
+            $this->gherkinFileLoader = new CucumberGherkinLoader();
+        } else {
+            $gherkin = new ReflectionClass(\Behat\Gherkin\Gherkin::class);
+            $gherkinClassPath = dirname($gherkin->getFileName());
+            $i18n = require $gherkinClassPath . '/../../../i18n.php';
+            $keywords = new GherkinKeywords($i18n);
+            $lexer = new GherkinLexer($keywords);
+            $parser  = new GherkinParser($lexer);
+            $this->gherkinFileLoader = new GherkinFileLoader($parser);
+        }
         $this->fetchGherkinSteps();
     }
 
@@ -190,11 +201,13 @@ class Gherkin implements LoaderInterface
 
     public function loadTests(string $filename): void
     {
-        $featureNode = $this->parser->parse(file_get_contents($filename), $filename);
+        $featureNodes = $this->gherkinFileLoader->load($filename);
 
-        if (!$featureNode instanceof FeatureNode) {
+        if ($featureNodes === [] || !$featureNodes[0] instanceof FeatureNode) {
             return;
         }
+
+        $featureNode = $featureNodes[0];
 
         foreach ($featureNode->getScenarios() as $scenarioNode) {
             /** @var ScenarioInterface $scenarioNode */
