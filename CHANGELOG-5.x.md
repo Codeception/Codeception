@@ -1,3 +1,12 @@
+#### 5.0.13
+
+* Add actor to Cest tests dataProviders by @weeg in #6696
+* Support symfony 7 by @W0rma in #6723
+* Avoid infinite loop while waiting for all running tests to finish by @MarcelBolten in #6710
+* Add missing "Attribute::IS_REPEATABLE" to DataProvider attribute by @Fahl-Design in #6715
+* Support binary data intest examples by @pongee in #6708
+* Improve rendering of $I->assertThat step by @jtheuerkauf in #6719
+
 #### 5.0.12
 
 * Wait for all tests to finish before accessing the serialized test results by @MarcelBolten in #6702
