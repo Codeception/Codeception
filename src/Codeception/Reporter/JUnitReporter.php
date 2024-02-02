@@ -247,7 +247,12 @@ class JUnitReporter implements EventSubscriberInterface
 
         if ($test instanceof TestCaseWrapper) {
             $testCase = $test->getTestCase();
-            if (version_compare(PHPUnitVersion::series(), '10.3', '>=')) {
+            $phpunitVersion = PHPUnitVersion::series();
+            if (version_compare($phpunitVersion, '11.0', '>=')) {
+                if (!$testCase->expectsOutput()) {
+                    $testOutput = $testCase->output();
+                }
+            } elseif (version_compare($phpunitVersion, '10.3', '>=')) {
                 if (!$testCase->expectsOutput()) {
                     $testOutput = $testCase->getActualOutputForAssertion();
                 }
