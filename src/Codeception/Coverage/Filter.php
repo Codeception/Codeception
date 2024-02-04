@@ -7,6 +7,7 @@ namespace Codeception\Coverage;
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
+use Codeception\Lib\Notification;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
@@ -74,18 +75,22 @@ class Filter
             if (!is_array($coverage['whitelist']['exclude'])) {
                 throw new ConfigurationException('Error parsing yaml. Config `whitelist: exclude:` should be an array');
             }
-            foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
-                try {
-                    $finder = !str_contains($fileOrDir, '*')
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
-                        : $this->matchWildcardPattern($fileOrDir);
+            if (method_exists($filter, 'excludeFile')) {
+                foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
+                    try {
+                        $finder = !str_contains($fileOrDir, '*')
+                            ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
+                            : $this->matchWildcardPattern($fileOrDir);
 
-                    foreach ($finder as $file) {
-                        $filter->excludeFile((string)$file);
+                        foreach ($finder as $file) {
+                            $filter->excludeFile((string)$file);
+                        }
+                    } catch (DirectoryNotFoundException) {
+                        continue;
                     }
-                } catch (DirectoryNotFoundException) {
-                    continue;
                 }
+            } else {
+                Notification::warning('`coverage: whitelist: exclude` option has no effect since PHPUnit 11.0', '');
             }
         }
         return $this;
