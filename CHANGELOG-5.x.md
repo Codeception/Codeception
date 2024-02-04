@@ -1,3 +1,8 @@
+#### 5.1.0
+
+* Support PHPUnit 11
+* Note: PHPUnit 11 does not support excluding files from code coverage report
+
 #### 5.0.13
 
 * Add actor to Cest tests dataProviders by @weeg in #6696
