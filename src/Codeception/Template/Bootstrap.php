@@ -110,18 +110,17 @@ EOF;
     protected function createAcceptanceSuite(string $actor = 'Acceptance'): void
     {
         $suiteConfig = <<<EOF
-# Codeception Test Suite Configuration
+# Codeception Acceptance Test Suite Configuration
 #
-# Suite for acceptance tests.
-# Perform tests in browser using the WebDriver or PhpBrowser.
-# If you need both WebDriver and PHPBrowser tests - create a separate suite.
+# Perform tests in a browser by either emulating one using PhpBrowser, or in a real browser using WebDriver.
+# If you need both WebDriver and PhpBrowser tests, create a separate suite for each.
 
 actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         - PhpBrowser:
             url: http://localhost/myapp
-# add Codeception\Step\Retry trait to AcceptanceTester to enable retries
+# Add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
     - Codeception\Step\ConditionalAssertion
     - Codeception\Step\TryTo
