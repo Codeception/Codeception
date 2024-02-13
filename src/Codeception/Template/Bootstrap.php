@@ -103,8 +103,8 @@ step_decorators: ~
 
 EOF;
         $this->createSuite('Functional', $actor, $suiteConfig);
-        $this->say("tests/Functional created           <- functional tests");
-        $this->say("tests/Functional.suite.yml written <- functional tests suite configuration");
+        $this->say("tests/Functional/ created          <- functional tests");
+        $this->say("tests/Functional.suite.yml written <- functional test suite configuration");
     }
 
     protected function createAcceptanceSuite(string $actor = 'Acceptance'): void
@@ -128,8 +128,8 @@ step_decorators:
 
 EOF;
         $this->createSuite('Acceptance', $actor, $suiteConfig);
-        $this->say("tests/Acceptance created           <- acceptance tests");
-        $this->say("tests/Acceptance.suite.yml written <- acceptance tests suite configuration");
+        $this->say("tests/Acceptance/ created          <- acceptance tests");
+        $this->say("tests/Acceptance.suite.yml written <- acceptance test suite configuration");
     }
 
     protected function createUnitSuite(string $actor = 'Unit'): void
@@ -147,8 +147,8 @@ step_decorators: ~
 
 EOF;
         $this->createSuite('Unit', $actor, $suiteConfig);
-        $this->say("tests/Unit created                 <- unit tests");
-        $this->say("tests/Unit.suite.yml written       <- unit tests suite configuration");
+        $this->say("tests/Unit/ created                <- unit tests");
+        $this->say("tests/Unit.suite.yml written       <- unit test suite configuration");
     }
 
     public function createGlobalConfig(): void
