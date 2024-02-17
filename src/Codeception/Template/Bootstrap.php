@@ -103,25 +103,24 @@ step_decorators: ~
 
 EOF;
         $this->createSuite('Functional', $actor, $suiteConfig);
-        $this->say("tests/Functional created           <- functional tests");
-        $this->say("tests/Functional.suite.yml written <- functional tests suite configuration");
+        $this->say("tests/Functional/ created          <- functional tests");
+        $this->say("tests/Functional.suite.yml written <- functional test suite configuration");
     }
 
     protected function createAcceptanceSuite(string $actor = 'Acceptance'): void
     {
         $suiteConfig = <<<EOF
-# Codeception Test Suite Configuration
+# Codeception Acceptance Test Suite Configuration
 #
-# Suite for acceptance tests.
-# Perform tests in browser using the WebDriver or PhpBrowser.
-# If you need both WebDriver and PHPBrowser tests - create a separate suite.
+# Perform tests in a browser by either emulating one using PhpBrowser, or in a real browser using WebDriver.
+# If you need both WebDriver and PhpBrowser tests, create a separate suite for each.
 
 actor: {$actor}{$this->actorSuffix}
 modules:
     enabled:
         - PhpBrowser:
             url: http://localhost/myapp
-# add Codeception\Step\Retry trait to AcceptanceTester to enable retries
+# Add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
     - Codeception\Step\ConditionalAssertion
     - Codeception\Step\TryTo
@@ -129,8 +128,8 @@ step_decorators:
 
 EOF;
         $this->createSuite('Acceptance', $actor, $suiteConfig);
-        $this->say("tests/Acceptance created           <- acceptance tests");
-        $this->say("tests/Acceptance.suite.yml written <- acceptance tests suite configuration");
+        $this->say("tests/Acceptance/ created          <- acceptance tests");
+        $this->say("tests/Acceptance.suite.yml written <- acceptance test suite configuration");
     }
 
     protected function createUnitSuite(string $actor = 'Unit'): void
@@ -148,8 +147,8 @@ step_decorators: ~
 
 EOF;
         $this->createSuite('Unit', $actor, $suiteConfig);
-        $this->say("tests/Unit created                 <- unit tests");
-        $this->say("tests/Unit.suite.yml written       <- unit tests suite configuration");
+        $this->say("tests/Unit/ created                <- unit tests");
+        $this->say("tests/Unit.suite.yml written       <- unit test suite configuration");
     }
 
     public function createGlobalConfig(): void
