@@ -16,17 +16,18 @@ class Cest
 
     protected string $template = <<<EOF
 <?php
-
+declare(strict_types=1);
 {{namespace}}
 
 class {{name}}Cest
 {
-    public function _before({{actor}} \$I)
+    public function _before({{actor}} \$I): void
     {
     }
 
-    // tests
-    public function tryToTest({{actor}} \$I)
+    // Your tests:
+
+    public function tryToTest({{actor}} \$I): void
     {
     }
 }
