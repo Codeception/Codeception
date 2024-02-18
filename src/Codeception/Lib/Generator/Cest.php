@@ -52,7 +52,7 @@ EOF;
 
         if ($namespaceHeader) {
             $namespaceHeader .= "\nuse " . $this->supportNamespace() . $actor . ";";
-            $namespaceHeader .= "\nCodeception\Scenario;";
+            $namespaceHeader .= "\nuse Codeception\\Scenario;";
         }
 
         return (new Template($this->template))
