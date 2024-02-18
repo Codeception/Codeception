@@ -27,7 +27,7 @@ final class {{name}}Cest
 
     // Your tests:
 
-    public function tryToTest({{actor}} \$I): void
+    public function tryToTest({{actor}} \$I, Scenario \$scenario): void
     {
     }
 }
@@ -52,6 +52,7 @@ EOF;
 
         if ($namespaceHeader) {
             $namespaceHeader .= "\nuse " . $this->supportNamespace() . $actor . ";";
+            $namespaceHeader .= "\nCodeception\Scenario;";
         }
 
         return (new Template($this->template))
