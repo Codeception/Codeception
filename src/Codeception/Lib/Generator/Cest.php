@@ -19,7 +19,7 @@ class Cest
 declare(strict_types=1);
 {{namespace}}
 
-class {{name}}Cest
+final class {{name}}Cest
 {
     public function _before({{actor}} \$I): void
     {
