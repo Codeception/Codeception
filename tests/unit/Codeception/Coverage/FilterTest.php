@@ -23,9 +23,6 @@ class FilterTest extends \Codeception\Test\Unit
 
     public function testWhitelistFilterApplied()
     {
-        if (version_compare(VersionAlias::id(), '11.0', '>=')) {
-            $this->markTestSkipped('Whitelist exclude option has no effect since PHPUnit 11.0');
-        }
         $config = [
             'coverage' => [
                 'whitelist' => [
@@ -57,10 +54,6 @@ class FilterTest extends \Codeception\Test\Unit
 
     public function testShortcutFilter()
     {
-        if (version_compare(VersionAlias::id(), '11.0', '>=')) {
-            $this->markTestSkipped('Whitelist exclude option has no effect since PHPUnit 11.0');
-        }
-
         $config = ['coverage' => [
             'include' => ['tests/*'],
             'exclude' => ['tests/support/CodeGuy.php']
