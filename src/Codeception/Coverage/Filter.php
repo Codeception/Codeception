@@ -165,7 +165,7 @@ class Filter
 
     private function matchFileOrDirectory(string $fileOrDir): Finder
     {
-        $fullPath = Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir;
+        $fullPath = Configuration::projectDir() . $fileOrDir;
         $finder = Finder::create();
         if (is_dir($fullPath)) {
             $finder->in($fullPath);
@@ -193,7 +193,7 @@ class Filter
             if ($lastPath === '*') {
                 $finder->in(Configuration::projectDir() . implode('/', $parts));
             } else {
-                $finder->in(Configuration::projectDir() . implode('/', $parts) . '/' . $lastPath);
+                $finder->in(Configuration::projectDir() . implode('/', [...$parts, $lastPath]));
             }
         }
         $finder->ignoreVCS(true)->files();
