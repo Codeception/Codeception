@@ -45,7 +45,7 @@ class ModuleContainer
         'Cli' => 'codeception/module-cli',
         'DataFactory' => 'codeception/module-datafactory',
         'Db' => 'codeception/module-db',
-        'Doctrine2' => "codeception/module-doctrine2",
+        'Doctrine' => "codeception/module-doctrine",
         'Filesystem' => 'codeception/module-filesystem',
         'FTP' => 'codeception/module-ftp',
         'Laravel5' => 'codeception/module-laravel5',
