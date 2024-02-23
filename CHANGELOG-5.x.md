@@ -1,3 +1,8 @@
+#### 5.1.1
+
+* Reimplement coverage:exclude option for PHPUnit 11 in #6739
+* Improved output of Bootstrap command  by @ThomasLandauer in #6735
+
 #### 5.1.0
 
 * Support PHPUnit 11
