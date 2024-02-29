@@ -172,8 +172,9 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 if (method_exists($this, 'getScenario')) {
                     foreach ($this->getScenario()?->getSteps() ?? [] as $step) {
                         if ($step->hasFailed()) {
-                            $lastFailure = $result->popLastFailure();
-                            if ($lastFailure !== null) {
+                            $lastFailure = $result->getLastFailure();
+                            if ($lastFailure?->getTest() === $this) {
+                                $result->popLastFailure();
                                 throw $lastFailure->getFail();
                             }
                         }
