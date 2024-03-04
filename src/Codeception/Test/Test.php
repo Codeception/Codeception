@@ -170,7 +170,6 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $eventType = Events::TEST_SUCCESS;
 
                 $this->checkConditionalAsserts($result);
-
             } catch (UselessTestException $e) {
                 $result->addUseless(new FailEvent($this, $e, $time));
                 $status = self::STATUS_USELESS;
@@ -297,7 +296,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
     private function checkConditionalAsserts(ResultAggregator $result): void
     {
-        if ( ! method_exists($this, 'getScenario')) {
+        if (!method_exists($this, 'getScenario')) {
             return;
         }
 
