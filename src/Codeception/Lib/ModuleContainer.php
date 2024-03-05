@@ -48,7 +48,7 @@ class ModuleContainer
         'Doctrine' => "codeception/module-doctrine",
         'Filesystem' => 'codeception/module-filesystem',
         'FTP' => 'codeception/module-ftp',
-        'Laravel5' => 'codeception/module-laravel5',
+        'Laravel' => 'codeception/module-laravel',
         'Lumen' => 'codeception/module-lumen',
         'Memcache' => 'codeception/module-memcache',
         'MongoDb' => 'codeception/module-mongodb',
