@@ -169,16 +169,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $status = self::STATUS_OK;
                 $eventType = Events::TEST_SUCCESS;
 
-                if (method_exists($this, 'getScenario')) {
-                    foreach ($this->getScenario()?->getSteps() ?? [] as $step) {
-                        if ($step->hasFailed()) {
-                            $lastFailure = $result->popLastFailure();
-                            if ($lastFailure !== null) {
-                                throw $lastFailure->getFail();
-                            }
-                        }
-                    }
-                }
+                $this->checkConditionalAsserts($result);
             } catch (UselessTestException $e) {
                 $result->addUseless(new FailEvent($this, $e, $time));
                 $status = self::STATUS_USELESS;
@@ -299,6 +290,29 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             }
             if (method_exists($this, $hook . 'End')) {
                 $this->{$hook . 'End'}($status, $time, $e);
+            }
+        }
+    }
+
+    private function checkConditionalAsserts(ResultAggregator $result): void
+    {
+        if (!method_exists($this, 'getScenario')) {
+            return;
+        }
+
+        $lastFailure = $result->getLastFailure();
+        if ($lastFailure === null) {
+            return;
+        }
+
+        if (Descriptor::getTestSignatureUnique($lastFailure->getTest()) !== Descriptor::getTestSignatureUnique($this)) {
+            return;
+        }
+
+        foreach ($this->getScenario()?->getSteps() ?? [] as $step) {
+            if ($step->hasFailed()) {
+                $result->popLastFailure();
+                throw $lastFailure->getFail();
             }
         }
     }
