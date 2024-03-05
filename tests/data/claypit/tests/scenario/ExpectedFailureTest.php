@@ -5,7 +5,6 @@ use PHPUnit\Framework\AssertionFailedError;
 
 class ExpectedFailureTest extends Unit
 {
-
     protected ScenarioGuy $tester;
 
     public function testExpectedFailure()
@@ -18,5 +17,4 @@ class ExpectedFailureTest extends Unit
         $this->expectException(AssertionFailedError::class);
         $this->tester->assertFalse(true);
     }
-
 }
