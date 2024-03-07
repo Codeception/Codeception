@@ -1,6 +1,11 @@
+#### 5.1.2
+
+* Prevent unrelated error from being displayed if a scenario step has failed by @craig-mcmahon in #6743
+* Replace Laravel5 with Laravel module in module installation suggestion by @W0rma in #6742
+
 #### 5.1.1
 
-* Reimplement coverage:exclude option for PHPUnit 11 in #6739
+* Reimplemented coverage:exclude option for PHPUnit 11 in #6739
 * Improved output of Bootstrap command  by @ThomasLandauer in #6735
 
 #### 5.1.0
