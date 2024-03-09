@@ -811,7 +811,7 @@ class Console implements EventSubscriberInterface
         if ($time !== 0.0) {
             $this
                 ->message(number_format(round($time, 2), 2))
-                ->prepend('(')
+                ->prepend(' (')
                 ->append('s)')
                 ->style('info')
                 ->write();
