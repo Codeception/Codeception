@@ -98,7 +98,7 @@ class ErrorHandler implements EventSubscriberInterface
         // and silence DeprecationErrorHandler yelling about 'THE ERROR HANDLER HAS CHANGED!'
         register_shutdown_function([$this, 'shutdownHandler']);
         $this->registerDeprecationErrorHandler();
-        $this->oldHandler = set_error_handler([$this, 'errorHandler']);
+        $this->oldHandler = set_error_handler($this->errorHandler(...));
         $this->initialized = true;
     }
 

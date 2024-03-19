@@ -118,7 +118,7 @@ class ReflectionHelper
     {
         if ($parameter->isDefaultValueAvailable()) {
             if (method_exists($parameter, 'isDefaultValueConstant') && $parameter->isDefaultValueConstant()) {
-                $constName = $parameter->getDefaultValueConstantName();
+                $constName = (string)$parameter->getDefaultValueConstantName();
                 if (str_contains($constName, '::')) {
                     [$class, $const] = explode('::', $constName);
                     if (in_array($class, ['self', 'static'])) {

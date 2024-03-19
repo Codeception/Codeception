@@ -25,7 +25,7 @@ use ReflectionClass;
  */
 class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverage, TestInterface, Descriptive
 {
-    private Metadata $metadata;
+    private readonly Metadata $metadata;
 
     /**
      * @var array<string, mixed>

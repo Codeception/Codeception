@@ -131,6 +131,7 @@ class Metadata
         $this->filename = $filename;
     }
 
+    /** @return string[] */
     public function getDependencies(): array
     {
         return $this->params['depends'];
@@ -217,7 +218,7 @@ class Metadata
     {
         $params = [];
         foreach ($attributes as $attribute) {
-            $name = lcfirst(str_replace('Codeception\\Attribute\\', '', $attribute->getName()));
+            $name = lcfirst(str_replace('Codeception\\Attribute\\', '', (string) $attribute->getName()));
             if ($attribute->isRepeated()) {
                 $params[$name] ??= [];
                 $params[$name][] = $attribute->getArguments();

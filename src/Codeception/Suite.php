@@ -42,7 +42,7 @@ class Suite
      */
     private array $tests = [];
 
-    public function __construct(private EventDispatcher $dispatcher, private string $name = '')
+    public function __construct(private readonly EventDispatcher $dispatcher, private readonly string $name = '')
     {
     }
 

@@ -199,7 +199,7 @@ class LocalServer extends SuiteSubscriber
             return $this;
         }
 
-        $workDir = rtrim($this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
+        $workDir = rtrim((string) $this->settings['work_dir'], '/\\') . DIRECTORY_SEPARATOR;
         $projectDir = Configuration::projectDir();
         $coverageData = $coverage->getData(true); //We only want covered files, not all whitelisted ones.
 
@@ -208,7 +208,7 @@ class LocalServer extends SuiteSubscriber
         foreach ($coverageData as $path => $datum) {
             unset($coverageData[$path]);
 
-            $path = str_replace($workDir, $projectDir, $path);
+            $path = str_replace($workDir, $projectDir, (string) $path);
 
             $coverageData[$path] = $datum;
         }
@@ -254,7 +254,7 @@ class LocalServer extends SuiteSubscriber
         $cookieDomain = $this->settings['cookie_domain'] ?? null;
 
         if (!$cookieDomain) {
-            $c3Url = parse_url($this->settings['c3_url'] ?: $this->module->_getUrl());
+            $c3Url = parse_url((string) ($this->settings['c3_url'] ?: $this->module->_getUrl()));
 
             // we need to separate coverage cookies by host; we can't separate cookies by port.
             $cookieDomain = $c3Url['host'] ?? 'localhost';
@@ -326,6 +326,7 @@ class LocalServer extends SuiteSubscriber
         }
     }
 
+    /** @param string[] $headers */
     protected function getRemoteError(array $headers): void
     {
         foreach ($headers as $header) {
@@ -338,7 +339,7 @@ class LocalServer extends SuiteSubscriber
     protected function addC3AccessHeader(string $header, string $value): void
     {
         $headerString = "{$header}: {$value}\r\n";
-        if (!str_contains($this->c3Access['http']['header'], $headerString)) {
+        if (!str_contains((string) $this->c3Access['http']['header'], $headerString)) {
             $this->c3Access['http']['header'] .= $headerString;
         }
     }

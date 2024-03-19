@@ -441,7 +441,7 @@ class Console implements EventSubscriberInterface
         }
         $metaStep = $event->getStep()->getMetaStep();
 
-        if ($metaStep && $this->metaStep != $metaStep) {
+        if ($metaStep instanceof Meta && $this->metaStep != $metaStep) {
             $this->message(' ' . $metaStep->getPrefix())
                 ->style('bold')
                 ->append($metaStep->__toString())

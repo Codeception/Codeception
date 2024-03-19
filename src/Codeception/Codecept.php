@@ -78,7 +78,7 @@ class Codecept
 
     protected array $extensions = [];
 
-    private Output $output;
+    private readonly Output $output;
 
     public function __construct(array $options = [])
     {
@@ -211,7 +211,7 @@ class Codecept
 
         // Iterate over all unique environment sets and runs the given suite with each of the merged configurations.
         foreach (array_unique($selectedEnvironments) as $envList) {
-            $envSet         = explode(',', $envList);
+            $envSet         = explode(',', (string) $envList);
             $suiteEnvConfig = $config;
 
             // contains a list of the environments used in this suite configuration env set.

@@ -67,7 +67,7 @@ class Di
         }
 
         // get class from parent container
-        if ($this->fallback && ($class = $this->fallback->get($className))) {
+        if ($this->fallback instanceof Di && ($class = $this->fallback->get($className))) {
             return $class;
         }
 

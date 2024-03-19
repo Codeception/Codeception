@@ -33,7 +33,7 @@ class Bootstrap extends InitTemplate
 
         $input = $this->input;
         if ($input->getOption('namespace')) {
-            $this->namespace = trim($input->getOption('namespace'), '\\');
+            $this->namespace = trim((string) $input->getOption('namespace'), '\\');
         }
 
         if ($input->hasOption('actor') && $input->getOption('actor')) {

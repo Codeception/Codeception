@@ -20,9 +20,9 @@ class Template
 
     public function __construct(
         private string $template,
-        private string $placeholderStart = '{{',
-        private string $placeholderEnd = '}}',
-        private ?string $encoderFunction = null,
+        private readonly string $placeholderStart = '{{',
+        private readonly string $placeholderEnd = '}}',
+        private readonly ?string $encoderFunction = null,
     ) {
     }
 

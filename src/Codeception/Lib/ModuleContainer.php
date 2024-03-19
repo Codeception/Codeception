@@ -75,7 +75,7 @@ class ModuleContainer
 
     private array $actions = [];
 
-    public function __construct(private Di $di, private array $config)
+    public function __construct(private readonly Di $di, private array $config)
     {
         $this->di->set($this);
     }

@@ -60,13 +60,14 @@ class StackTraceFilter
         $className = $step['class'];
 
         foreach (self::$filteredClassesPattern as $filteredClassName) {
-            if (str_starts_with($className, $filteredClassName)) {
+            if (str_starts_with((string) $className, (string) $filteredClassName)) {
                 return true;
             }
         }
         return false;
     }
 
+    /** @param string[] $step */
     protected static function fileIsFiltered(array $step): bool
     {
         if (!isset($step['file'])) {

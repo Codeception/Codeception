@@ -81,7 +81,7 @@ class Unit extends TestCase implements
         /** @var Di $di */
         $di = $this->getMetadata()->getService('di');
         // auto-inject $tester property
-        if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor_suffix']))) {
+        if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst((string) Configuration::config()['actor_suffix']))) {
             $this->$property = $di->instantiate($this->getMetadata()->getCurrent('actor'));
         }
 
@@ -157,7 +157,7 @@ class Unit extends TestCase implements
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
-            if (!str_contains($required, ':') && method_exists($this, $required)) {
+            if (!str_contains((string) $required, ':') && method_exists($this, $required)) {
                 $required = static::class . ":{$required}";
             }
             $names[] = $required;

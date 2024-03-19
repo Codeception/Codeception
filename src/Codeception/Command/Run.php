@@ -335,7 +335,7 @@ class Run extends Command
             $userOptions['fail-fast'] = (int)$this->options['fail-fast'] ?: 1;
         }
 
-        $suite = $input->getArgument('suite');
+        $suite = (string)$input->getArgument('suite');
         $test = $input->getArgument('test');
 
         if ($this->options['group']) {
@@ -513,7 +513,7 @@ class Run extends Command
         return 0;
     }
 
-    protected function matchSingleTest($suite, array $config): ?array
+    protected function matchSingleTest(string $suite, array $config): ?array
     {
         // Workaround when codeception.yml is inside tests directory and tests path is set to "."
         // @see https://github.com/Codeception/Codeception/issues/4432

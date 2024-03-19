@@ -65,7 +65,7 @@ class DryRun extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
-        $suite = $input->getArgument('suite');
+        $suite = (string)$input->getArgument('suite');
         $test = $input->getArgument('test');
 
         $config = $this->getGlobalConfig();

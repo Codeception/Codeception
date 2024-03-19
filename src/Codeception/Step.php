@@ -41,6 +41,7 @@ abstract class Step implements Stringable
 
     protected bool $isTry = false;
 
+    /** @param string[] $arguments */
     public function __construct(protected string $action, protected array $arguments = [])
     {
     }

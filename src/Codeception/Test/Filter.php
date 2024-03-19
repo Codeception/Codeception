@@ -15,11 +15,11 @@ class Filter
     /**
      * @param string[] $includeGroups
      * @param string[] $excludeGroups
-     * @param string $namePattern
+     * @param string|null $namePattern
      */
     public function __construct(
-        private ?array $includeGroups,
-        private ?array $excludeGroups,
+        private readonly ?array $includeGroups,
+        private readonly ?array $excludeGroups,
         ?string $namePattern
     ) {
         if ($namePattern === null) {

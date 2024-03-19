@@ -157,7 +157,7 @@ class Annotation
         return array_filter($attrs, fn (ReflectionAttribute $a): bool => str_starts_with($a->getName(), 'Codeception\\Attribute\\'));
     }
 
-    public function attribute($name): ?ReflectionAttribute
+    public function attribute(string $name): ?ReflectionAttribute
     {
         $attrs = $this->attributes();
         if ($name === 'example') {

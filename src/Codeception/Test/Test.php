@@ -186,11 +186,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
                 $result->addFailure(new FailEvent($this, $e, $time));
                 $status = self::STATUS_FAIL;
                 $eventType = Events::TEST_FAIL;
-            } catch (Exception $e) {
-                $result->addError(new FailEvent($this, $e, $time));
-                $status = self::STATUS_ERROR;
-                $eventType = Events::TEST_ERROR;
-            } catch (Throwable $e) {
+            } catch (Exception | Throwable $e) {
                 $result->addError(new FailEvent($this, $e, $time));
                 $status = self::STATUS_ERROR;
                 $eventType = Events::TEST_ERROR;
@@ -299,7 +295,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
         }
 
         $lastFailure = $result->getLastFailure();
-        if ($lastFailure === null) {
+        if (!$lastFailure instanceof FailEvent) {
             return;
         }
 
