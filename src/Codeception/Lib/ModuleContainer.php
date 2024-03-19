@@ -104,7 +104,7 @@ class ModuleContainer
 
         $config = $this->getModuleConfig($moduleName);
 
-        if (empty($config) && !$active) {
+        if ($config === [] && !$active) {
             // For modules that are a dependency of other modules we want to skip the validation of the config.
             // This config validation is performed in \Codeception\Module::__construct().
             // Explicitly setting $config to null skips this validation.
@@ -202,7 +202,7 @@ class ModuleContainer
         // If a part is configured for the module, only include actions from that part
         if ($configuredParts) {
             $moduleParts = Annotation::forMethod($module, $method->name)->fetchAll('part');
-            if (!array_uintersect($moduleParts, $configuredParts, 'strcasecmp')) {
+            if (array_uintersect($moduleParts, $configuredParts, 'strcasecmp') === []) {
                 return false;
             }
         }
@@ -246,7 +246,7 @@ class ModuleContainer
     public function getModule(string $moduleName): Module
     {
         if (!$this->hasModule($moduleName)) {
-            $this->throwMissingModuleExceptionWithSuggestion(__CLASS__, $moduleName);
+            $this->throwMissingModuleExceptionWithSuggestion(self::class, $moduleName);
         }
 
         return $this->modules[$moduleName];
@@ -343,7 +343,7 @@ class ModuleContainer
      *
      * @throws ModuleException|ModuleRequireException
      */
-    private function checkForMissingDependencies(string $moduleName, $module): void
+    private function checkForMissingDependencies(string $moduleName, DependsOnModule $module): void
     {
         $dependencies = $this->getModuleDependencies($module);
         $configuredDependenciesCount = count($this->getConfiguredDependencies($moduleName));
@@ -370,7 +370,7 @@ class ModuleContainer
     {
         $depends = $module->_depends();
 
-        if (!$depends) {
+        if ($depends === []) {
             return [];
         }
 
@@ -493,7 +493,7 @@ class ModuleContainer
      *
      * @return class-string|Module|string
      */
-    private function normalizeConflictSpecification(string $conflicts)
+    private function normalizeConflictSpecification(string $conflicts): string|Module
     {
         if (interface_exists($conflicts) || class_exists($conflicts)) {
             return $conflicts;

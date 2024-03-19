@@ -33,7 +33,7 @@ use function preg_match;
 use function str_replace;
 
 /**
- * Shows step by step execution process for scenario driven tests without actually running them.
+ * Shows step-by-step execution process for scenario driven tests without actually running them.
  *
  * * `codecept dry-run acceptance`
  * * `codecept dry-run acceptance MyCest`
@@ -219,7 +219,7 @@ class DryRun extends Command
         if ($extends !== null) {
             $code .= " extends \\$extends";
         }
-        if (count($implements) > 0) {
+        if ($implements !== []) {
             $code .= ' implements ' . implode(', ', $implements);
         }
         $code .= ' {}';

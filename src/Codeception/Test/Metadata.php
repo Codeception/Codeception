@@ -138,7 +138,10 @@ class Metadata
 
     public function isBlocked(): bool
     {
-        return $this->getSkip() !== null || $this->getIncomplete() !== null;
+        if ($this->getSkip() !== null) {
+            return true;
+        }
+        return $this->getIncomplete() !== null;
     }
 
     public function getFeature(): string
@@ -233,7 +236,7 @@ class Metadata
                 continue;
             };
 
-            $this->params[$single] = array_map(fn($a) => is_array($a) ? $a : [$a], $this->params[$single]);
+            $this->params[$single] = array_map(fn($a): array => is_array($a) ? $a : [$a], $this->params[$single]);
             $this->params[$single] = array_merge(...$this->params[$single]);
         }
 

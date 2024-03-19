@@ -45,7 +45,7 @@ class DataProvider
         // dataProvider annotation
         $dataProviderAnnotations = Annotation::forMethod($testClassName, $methodName)->fetchAll('dataProvider');
         // lowercase for back compatible
-        if (empty($dataProviderAnnotations)) {
+        if ($dataProviderAnnotations === []) {
             $dataProviderAnnotations = Annotation::forMethod($testClassName, $methodName)->fetchAll('dataprovider');
         }
 
@@ -136,8 +136,8 @@ class DataProvider
     {
         $dataProviderDeclaringClass = $dataProviderMethod->getDeclaringClass();
         // data provider in abstract class?
-        if ($dataProviderDeclaringClass->isAbstract() && null !== $testClass && $dataProviderDeclaringClass->name !== $testClass->name) {
-            $dataProviderDeclaringClass = $testClass;
+        if ($dataProviderDeclaringClass->isAbstract() && $testClass instanceof ReflectionClass && $dataProviderDeclaringClass->name !== $testClass->name) {
+            return $testClass;
         }
         return $dataProviderDeclaringClass;
     }

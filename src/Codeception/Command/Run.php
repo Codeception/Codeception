@@ -513,7 +513,7 @@ class Run extends Command
         return 0;
     }
 
-    protected function matchSingleTest($suite, $config): ?array
+    protected function matchSingleTest($suite, array $config): ?array
     {
         // Workaround when codeception.yml is inside tests directory and tests path is set to "."
         // @see https://github.com/Codeception/Codeception/issues/4432
@@ -589,13 +589,13 @@ class Run extends Command
             $config = Configuration::config($currentDir);
 
             if (!empty($defaultConfig['groups'])) {
-                $groups = array_map(fn ($g) => $absolutePath . $g, $defaultConfig['groups']);
+                $groups = array_map(fn ($g): string => $absolutePath . $g, $defaultConfig['groups']);
                 Configuration::append(['groups' => $groups]);
             }
 
             $suites = Configuration::suites();
 
-            if (!empty($filterSuitesByWildcard)) {
+            if ($filterSuitesByWildcard !== []) {
                 $suites = array_intersect($suites, $filterSuitesByWildcard);
             }
 
@@ -701,7 +701,7 @@ class Run extends Command
             // phpunit --filter matches against the fully qualified method name, so tests actually begin with :
             $caratPos = strpos($filter, '^');
             if ($caratPos !== false) {
-                $filter = substr_replace($filter, ':', $caratPos, 1);
+                return substr_replace($filter, ':', $caratPos, 1);
             }
             return $filter;
         }
@@ -789,7 +789,7 @@ class Run extends Command
         }
         // enable extensions
         if ($this->options['ext']) {
-            $config = $this->enableExtensions($this->options['ext']);
+            return $this->enableExtensions($this->options['ext']);
         }
 
         return $config;

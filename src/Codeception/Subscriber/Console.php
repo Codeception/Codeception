@@ -31,6 +31,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\SkippedTest;
+use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Timer\Duration;
 use SebastianBergmann\Timer\ResourceUsageFormatter;
 use SebastianBergmann\Timer\Timer;
@@ -42,7 +43,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use function array_map;
 use function array_merge;
 use function array_reverse;
-use function array_shift;
 use function codecept_relative_path;
 use function count;
 use function exec;
@@ -172,7 +172,7 @@ class Console implements EventSubscriberInterface
                 implode(
                     ', ',
                     array_map(
-                        fn ($module) => $module->_getName(),
+                        fn ($module): string => $module->_getName(),
                         $event->getSuite()->getModules()
                     )
                 )
@@ -255,7 +255,6 @@ class Console implements EventSubscriberInterface
 
     /**
      * @param FailEvent[] $defects
-     * @param string $type
      */
     private function printDefects(array $defects, string $type): void
     {
@@ -319,11 +318,11 @@ class Console implements EventSubscriberInterface
         if ($result->wasSuccessful()) {
             $style = 'warning';
             $this->message('OK, but incomplete, skipped, or useless tests!')->style($style)->writeln();
-        } elseif ($result->errorCount()) {
+        } elseif ($result->errorCount() !== 0) {
             $this->message('ERRORS!')->style($style)->writeln();
-        } elseif ($result->failureCount()) {
+        } elseif ($result->failureCount() !== 0) {
             $this->message('FAILURES!')->style($style)->writeln();
-        } elseif ($result->warningCount()) {
+        } elseif ($result->warningCount() !== 0) {
             $style = 'warning';
             $this->message('WARNINGS!')->style($style)->writeln();
         }
@@ -459,17 +458,17 @@ class Console implements EventSubscriberInterface
             return; // don't print empty comments
         }
         $msg = $this->message(' ');
-        if ($this->metaStep) {
+        if ($this->metaStep instanceof Meta) {
             $msg->append('  ');
         }
         $msg->append($step->getPrefix());
         $prefixLength = $msg->getLength();
-        if (!$this->metaStep) {
+        if (!$this->metaStep instanceof Meta) {
             $msg->style('bold');
         }
         $maxLength = $this->width - $prefixLength;
         $msg->append(OutputFormatter::escape($step->toString($maxLength)));
-        if ($this->metaStep) {
+        if ($this->metaStep instanceof Meta) {
             $msg->style('info');
         }
         $msg->writeln();
@@ -531,7 +530,7 @@ class Console implements EventSubscriberInterface
             return;
         }
         $reports = $failedTest->getMetadata()->getReports();
-        if (!empty($reports)) {
+        if ($reports !== []) {
             $this->output->writeln('<comment>Artifacts:</comment>');
             $this->output->writeln('');
         }
@@ -563,7 +562,7 @@ class Console implements EventSubscriberInterface
 
         if ($exception instanceof ExpectationFailedException) {
             $comparisonFailure = $exception->getComparisonFailure();
-            if ($comparisonFailure !== null) {
+            if ($comparisonFailure instanceof ComparisonFailure) {
                 $message->append($this->messageFactory->prepareComparisonFailureMessage($comparisonFailure));
             }
         }
@@ -779,9 +778,7 @@ class Console implements EventSubscriberInterface
             $numFails = count(
                 array_filter(
                     $test->getScenario()?->getSteps() ?? [],
-                    function (Step $step) {
-                        return $step->hasFailed() && $step instanceof ConditionalAssertion;
-                    }
+                    fn(Step $step): bool => $step->hasFailed() && $step instanceof ConditionalAssertion
                 )
             );
 

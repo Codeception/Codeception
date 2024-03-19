@@ -9,7 +9,6 @@ use Codeception\Events;
 use Codeception\Lib\Di;
 use Codeception\Test\Cest;
 use Codeception\Test\Unit;
-use Codeception\TestInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PrepareTest implements EventSubscriberInterface
@@ -28,10 +27,6 @@ class PrepareTest implements EventSubscriberInterface
     public function prepare(TestEvent $event): void
     {
         $test = $event->getTest();
-
-        if (!$test instanceof TestInterface) {
-            return;
-        }
 
         $prepareMethods = $test->getMetadata()->getParam('prepare');
 

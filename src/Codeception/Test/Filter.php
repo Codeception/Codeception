@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use function array_intersect;
+
 class Filter
 {
     private ?string $namePattern = null;
@@ -25,7 +27,7 @@ class Filter
         }
 
         // Validates regexp without E_WARNING
-        set_error_handler(function () {
+        set_error_handler(function (): void {
         }, E_WARNING);
         $isRegularExpression = preg_match($namePattern, '') !== false;
         restore_error_handler();
@@ -95,10 +97,10 @@ class Filter
 
     public function isGroupAccepted(Test $test, array $groups): bool
     {
-        if ($this->includeGroups !== null && $this->includeGroups !== [] && count(\array_intersect($groups, $this->includeGroups)) === 0) {
+        if ($this->includeGroups !== null && $this->includeGroups !== [] && array_intersect($groups, $this->includeGroups) === []) {
             return false;
         }
-        if ($this->excludeGroups !== null && $this->excludeGroups !== [] && count(\array_intersect($groups, $this->excludeGroups)) > 0) {
+        if ($this->excludeGroups !== null && $this->excludeGroups !== [] && count(array_intersect($groups, $this->excludeGroups)) > 0) {
             return false;
         }
 

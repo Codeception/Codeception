@@ -66,9 +66,9 @@ class Filter
                 throw new ConfigurationException('Error parsing yaml. Config `whitelist: include:` should be an array');
             }
             foreach ($coverage['whitelist']['include'] as $fileOrDir) {
-                $finder = !str_contains($fileOrDir, '*')
-                    ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
-                    : $this->matchWildcardPattern($fileOrDir);
+                $finder = str_contains($fileOrDir, '*')
+                    ? $this->matchWildcardPattern($fileOrDir)
+                    : [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir];
 
                 foreach ($finder as $file) {
                     $filter->includeFile((string)$file);
@@ -83,9 +83,9 @@ class Filter
 
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 try {
-                    $finder = !str_contains($fileOrDir, '*')
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
-                        : $this->matchWildcardPattern($fileOrDir);
+                    $finder = str_contains($fileOrDir, '*')
+                        ? $this->matchWildcardPattern($fileOrDir)
+                        : [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir];
 
                     foreach ($finder as $file) {
                         $filter->excludeFile((string)$file);

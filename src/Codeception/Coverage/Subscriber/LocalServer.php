@@ -229,7 +229,7 @@ class LocalServer extends SuiteSubscriber
             $http_response_header,
             fn ($h) => preg_match('#^HTTP(.*?)\s200#', $h)
         );
-        if (empty($okHeaders)) {
+        if ($okHeaders === []) {
             throw new RemoteException("Request was not successful. See response header: " . $http_response_header[0]);
         }
         if ($contents === false) {

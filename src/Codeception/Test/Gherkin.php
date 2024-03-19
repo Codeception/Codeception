@@ -33,24 +33,15 @@ use function var_export;
 
 class Gherkin extends Test implements ScenarioDriven, Reported
 {
-    protected array $steps = [];
-
-    protected FeatureNode $featureNode;
-
-    protected ScenarioInterface $scenarioNode;
-
     protected Scenario $scenario;
 
-    public function __construct(FeatureNode $featureNode, ScenarioInterface $scenarioNode, array $steps = [])
+    public function __construct(protected FeatureNode $featureNode, protected ScenarioInterface $scenarioNode, protected array $steps = [])
     {
-        $this->featureNode = $featureNode;
-        $this->scenarioNode = $scenarioNode;
-        $this->steps = $steps;
         $this->setMetadata(new Metadata());
         $this->scenario = new Scenario($this);
-        $this->getMetadata()->setName($scenarioNode->getTitle());
-        $this->getMetadata()->setFeature((string)$featureNode->getTitle());
-        $this->getMetadata()->setFilename($featureNode->getFile());
+        $this->getMetadata()->setName($this->scenarioNode->getTitle());
+        $this->getMetadata()->setFeature((string)$this->featureNode->getTitle());
+        $this->getMetadata()->setFilename($this->featureNode->getFile());
     }
 
     public function __clone(): void

@@ -10,7 +10,6 @@ use Codeception\Test\Gherkin;
 use Codeception\Test\Test;
 use Codeception\Util\PathResolver;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 use function realpath;
 
@@ -58,7 +57,6 @@ class GroupManager
                 ->in($path);
 
             foreach ($files as $file) {
-                /** @var SplFileInfo $file * */
                 $prefix = str_replace('*', '', $group);
                 $pathPrefix = str_replace('*', '', basename($pattern));
                 $groupName = $prefix . str_replace($pathPrefix, '', $file->getRelativePathname());

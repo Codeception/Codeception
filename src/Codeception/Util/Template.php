@@ -45,10 +45,7 @@ class Template
 
     public function getVar(string $name)
     {
-        if (isset($this->vars[$name])) {
-            return $this->vars[$name];
-        }
-        return null;
+        return $this->vars[$name] ?? null;
     }
 
     /**

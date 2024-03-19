@@ -7,10 +7,10 @@ namespace Codeception\Util;
 use Closure;
 use Codeception\Step\Action;
 use Exception;
+use Stringable;
 
 use function call_user_func_array;
 use function codecept_debug;
-use function get_class;
 use function implode;
 use function is_array;
 use function str_replace;
@@ -53,7 +53,7 @@ use function str_replace;
  * @method $this seeOptionIsSelected($selector, $optionText)
  * @method $this dontSeeOptionIsSelected($selector, $optionText)
  */
-class ActionSequence
+class ActionSequence implements Stringable
 {
     /**
      * @var Action[]
@@ -114,7 +114,7 @@ class ActionSequence
             try {
                 call_user_func_array([$context, $step->getAction()], $step->getArguments());
             } catch (Exception $exception) {
-                $class = get_class($exception); // rethrow exception for a specific action
+                $class = $exception::class; // rethrow exception for a specific action
                 throw new $class($exception->getMessage() . "\nat {$step}");
             }
         }
