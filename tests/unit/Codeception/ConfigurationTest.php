@@ -36,7 +36,7 @@ class ConfigurationTest extends TestCase
         $matches = [];
         $this->assertSame(1, preg_match('#\\\?(\w*?Helper)$#', '\\Codeception\\Module\\UserHelper', $matches));
         $this->assertSame('UserHelper', $matches[1]);
-        $this->assertSame(1, preg_match('#\\\?(\w*?Helper)$#', 'UserHelper', $matches));
+                                                        $this->assertSame(1, preg_match('#\\\?(\w*?Helper)$#', 'UserHelper', $matches));
         $this->assertSame('UserHelper', $matches[1]);
     }
 

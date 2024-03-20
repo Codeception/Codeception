@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 class GenerateSuiteTest extends BaseCommandRunner
 {
-    /**
-     * @var array
-     */
     public array $log = [];
 
     /**

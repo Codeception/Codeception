@@ -6,7 +6,7 @@ class ScenarioTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetHtml()
     {
-        $step1 = $this->getMockBuilder('\Codeception\Step')
+        $step1 = $this->getMockBuilder(\Codeception\Step::class)
             ->setConstructorArgs([
                 'Do some testing',
                 [
@@ -16,7 +16,7 @@ class ScenarioTest extends \PHPUnit\Framework\TestCase
             ])
             ->onlyMethods([])
             ->getMock();
-        $step2 = $this->getMockBuilder('\Codeception\Step')
+        $step2 = $this->getMockBuilder(\Codeception\Step::class)
             ->setConstructorArgs([
                 'Do even more testing without args',
                 []

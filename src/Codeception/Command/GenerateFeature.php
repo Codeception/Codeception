@@ -45,7 +45,7 @@ class GenerateFeature extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
-        $filename = $input->getArgument('feature');
+        $filename = (string)$input->getArgument('feature');
 
         $config = $this->getSuiteConfig($suite);
         $this->createDirectoryFor($config['path'], $filename);
@@ -54,7 +54,7 @@ class GenerateFeature extends Command
         if (!preg_match('#\.feature$#', $filename)) {
             $filename .= '.feature';
         }
-        $fullPath = rtrim($config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
+        $fullPath = rtrim((string) $config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
         $res = $this->createFile($fullPath, $feature->produce());
         if (!$res) {
             $output->writeln("<error>Feature {$filename} already exists</error>");

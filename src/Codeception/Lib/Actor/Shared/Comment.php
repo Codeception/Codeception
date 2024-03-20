@@ -29,7 +29,7 @@ trait Comment
     {
         $role = trim($role);
 
-        if (stripos('aeiou', (string)$role[0]) !== false) {
+        if (stripos('aeiou', $role[0]) !== false) {
             return $this->comment('As an ' . $role);
         }
 

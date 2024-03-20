@@ -11,6 +11,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionObject;
+use Throwable;
 
 class Di
 {
@@ -66,7 +67,7 @@ class Di
         }
 
         // get class from parent container
-        if ($this->fallback && ($class = $this->fallback->get($className))) {
+        if ($this->fallback instanceof Di && ($class = $this->fallback->get($className))) {
             return $class;
         }
 
@@ -116,7 +117,7 @@ class Di
             $args = $this->prepareArgs($reflectedMethod, $defaults);
         } catch (Exception $e) {
             $msg = $e->getMessage();
-            if ($e->getPrevious() !== null) { // injection failed because PHP code is invalid. See #3869
+            if ($e->getPrevious() instanceof Throwable) { // injection failed because PHP code is invalid. See #3869
                 $msg .= '; ' . $e->getPrevious();
             }
             throw new InjectionException(

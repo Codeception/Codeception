@@ -10,6 +10,7 @@ use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
+use Codeception\Module;
 use Codeception\Module\WebDriver;
 use Codeception\Step;
 use Codeception\Step\Comment as CommentStep;
@@ -283,7 +284,7 @@ EOF;
         Events::STEP_AFTER   => 'afterStep',
     ];
 
-    protected ?\Codeception\Module $webDriverModule = null;
+    protected ?Module $webDriverModule = null;
 
     protected ?string $dir = null;
 
@@ -345,12 +346,12 @@ EOF;
 
     public function afterSuite(): void
     {
-        if (!$this->webDriverModule) {
+        if (!$this->webDriverModule instanceof Module) {
             return;
         }
         $links = '';
 
-        if (!empty($this->slides)) {
+        if ($this->slides !== []) {
             foreach ($this->recordedTests as $suiteName => $suite) {
                 $links .= "<ul><li><b>{$suiteName}</b></li><ul>";
                 foreach ($suite as $fileName => $tests) {
@@ -391,7 +392,7 @@ EOF;
 
     public function before(TestEvent $event): void
     {
-        if (!$this->webDriverModule) {
+        if (!$this->webDriverModule instanceof Module) {
             return;
         }
         $this->dir = null;
@@ -435,7 +436,7 @@ EOF;
             }
         }
 
-        if (!$this->webDriverModule || !$this->dir) {
+        if (!$this->webDriverModule instanceof Module || !$this->dir) {
             return;
         }
         if (!$this->config['delete_successful']) {
@@ -450,7 +451,7 @@ EOF;
 
     public function persist(TestEvent $event): void
     {
-        if (!$this->webDriverModule) {
+        if (!$this->webDriverModule instanceof Module) {
             return;
         }
         $indicatorHtml = '';
@@ -466,7 +467,7 @@ EOF;
             try {
                 !is_dir($dir) && !mkdir($dir) && !is_dir($dir);
                 $this->dir = $dir;
-            } catch (Exception $exception) {
+            } catch (Exception) {
                 $this->skipRecording[] = $testPath;
                 $this->appendErrorMessage(
                     $testPath,
@@ -486,7 +487,7 @@ EOF;
                 }
 
                 $this->webDriverModule->webDriver->takeScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
-            } catch (Exception $exception) {
+            } catch (Exception) {
                 $this->appendErrorMessage(
                     $testPath,
                     "⏺ Unable to capture a screenshot for <info>{$testPath}/before</info>"
@@ -503,13 +504,13 @@ EOF;
 
                 $indicatorHtml .= (new Template($this->indicatorTemplate))
                     ->place('step', (int)$i)
-                    ->place('isActive', (int)$i ? '' : 'active')
+                    ->place('isActive', (int)$i !== 0 ? '' : 'active')
                     ->produce();
 
                 $slideHtml .= (new Template($this->slidesTemplate))
                     ->place('image', $i)
                     ->place('caption', $step->getHtml('#3498db'))
-                    ->place('isActive', (int)$i ? '' : 'active')
+                    ->place('isActive', (int)$i !== 0 ? '' : 'active')
                     ->place('isError', $status === 'success' ? '' : 'error')
                     ->place('timeStamp', $this->timeStamps[$i])
                     ->produce();
@@ -518,7 +519,7 @@ EOF;
             $html = (new Template($this->template))
                 ->place('indicators', $indicatorHtml)
                 ->place('slides', $slideHtml)
-                ->place('feature', ucfirst($event->getTest()->getFeature()))
+                ->place('feature', ucfirst((string) $event->getTest()->getFeature()))
                 ->place('test', Descriptor::getTestSignature($event->getTest()))
                 ->place('carousel_class', $this->config['animate_slides'] ? ' slide' : '')
                 ->produce();
@@ -550,7 +551,7 @@ EOF;
 
     public function afterStep(StepEvent $event): void
     {
-        if ($this->webDriverModule === null || $this->dir === null) {
+        if (!$this->webDriverModule instanceof Module || $this->dir === null) {
             return;
         }
 
@@ -571,7 +572,7 @@ EOF;
             }
 
             $this->webDriverModule->webDriver->takeScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             $testPath = codecept_relative_path(Descriptor::getTestFullName($event->getTest()));
             $this->appendErrorMessage(
                 $testPath,
@@ -589,6 +590,7 @@ EOF;
         $configIgnoredSteps = $this->config['ignore_steps'];
         $annotationIgnoredSteps = $event->getTest()->getMetadata()->getParam('skipRecording');
 
+        /** @var string[] $ignoredSteps */
         $ignoredSteps = array_unique(
             array_merge(
                 $configIgnoredSteps,

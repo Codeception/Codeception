@@ -57,9 +57,7 @@ class GenerateScenarios extends Command
 
         $suiteConf = $this->getSuiteConfig($suite);
 
-        $path = $input->getOption('path')
-            ? $input->getOption('path')
-            : Configuration::dataDir() . 'scenarios';
+        $path = $input->getOption('path') ?: Configuration::dataDir() . 'scenarios';
 
         $format = $input->getOption('format');
 

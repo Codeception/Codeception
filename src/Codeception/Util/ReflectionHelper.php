@@ -16,7 +16,6 @@ use function array_map;
 use function array_pop;
 use function count;
 use function explode;
-use function get_class;
 use function implode;
 use function in_array;
 use function is_array;
@@ -90,7 +89,7 @@ class ReflectionHelper
      */
     public static function getClassShortName(object $object): string
     {
-        $path = explode('\\', get_class($object));
+        $path = explode('\\', $object::class);
         return array_pop($path);
     }
 
@@ -119,7 +118,7 @@ class ReflectionHelper
     {
         if ($parameter->isDefaultValueAvailable()) {
             if (method_exists($parameter, 'isDefaultValueConstant') && $parameter->isDefaultValueConstant()) {
-                $constName = $parameter->getDefaultValueConstantName();
+                $constName = (string)$parameter->getDefaultValueConstantName();
                 if (str_contains($constName, '::')) {
                     [$class, $const] = explode('::', $constName);
                     if (in_array($class, ['self', 'static'])) {
@@ -176,7 +175,7 @@ class ReflectionHelper
             );
 
         if ($isPlainArray($array)) {
-            return '[' . implode(', ', array_map([self::class, 'phpEncodeValue'], $array)) . ']';
+            return '[' . implode(', ', array_map(fn($value): string => self::phpEncodeValue($value), $array)) . ']';
         }
 
         $values = array_map(

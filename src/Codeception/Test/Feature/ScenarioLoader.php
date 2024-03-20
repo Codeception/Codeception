@@ -34,7 +34,7 @@ trait ScenarioLoader
         $code = $this->getSourceCode();
         $this->getParser()->parseFeature($code);
         $this->getParser()->parseSteps($code);
-        if ($format == 'html') {
+        if ($format === 'html') {
             return $this->getScenario()->getHtml();
         }
         return $this->getScenario()->getText();

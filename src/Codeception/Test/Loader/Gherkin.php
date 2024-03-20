@@ -10,7 +10,6 @@ use Behat\Gherkin\Lexer as GherkinLexer;
 use Behat\Gherkin\Node\ExampleNode;
 use Behat\Gherkin\Node\FeatureNode;
 use Behat\Gherkin\Node\OutlineNode;
-use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Parser as GherkinParser;
 use Codeception\Configuration;
@@ -93,7 +92,7 @@ class Gherkin implements LoaderInterface
             $this->addSteps($roleContexts, "role:{$role}");
         }
 
-        if (empty($this->steps) && empty($contexts['default']) && $this->settings['actor']) { // if no context is set, actor to be a context
+        if ($this->steps === [] && empty($contexts['default']) && $this->settings['actor']) { // if no context is set, actor to be a context
             $actorContext = $this->supportNamespace() . $this->settings['actor'];
             if ($actorContext) {
                 $contexts['default'][] = $actorContext;
@@ -197,7 +196,6 @@ class Gherkin implements LoaderInterface
         }
 
         foreach ($featureNode->getScenarios() as $scenarioNode) {
-            /** @var ScenarioInterface $scenarioNode */
             $steps = $this->steps['default']; // load default context
 
             foreach (array_merge($scenarioNode->getTags(), $featureNode->getTags()) as $tag) { // load tag contexts

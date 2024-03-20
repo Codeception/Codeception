@@ -27,7 +27,7 @@ class Dependencies extends InitTemplate
         $config = Configuration::config();
         $modules = [];
         $suites = Configuration::suites();
-        if (empty($suites)) {
+        if ($suites === []) {
             $this->sayError("No suites found in current config.");
             $this->sayWarning('If you use sub-configs with `include` option, run this script on subconfigs:');
             $this->sayWarning('Example: php vendor/bin/codecept init dependencies -c backend/');

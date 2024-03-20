@@ -47,7 +47,7 @@ class ReplHistory
 
     public function save(): void
     {
-        if (empty($this->stashedCommands)) {
+        if ($this->stashedCommands === []) {
             return;
         }
 

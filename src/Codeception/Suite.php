@@ -15,7 +15,9 @@ use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
 use PHPUnit\Runner\Version;
+use PHPUnit\TextUI\CliArguments\Builder;
 use PHPUnit\TextUI\Configuration\Registry;
+use PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use function count;
@@ -40,7 +42,7 @@ class Suite
      */
     private array $tests = [];
 
-    public function __construct(private EventDispatcher $dispatcher, private string $name = '')
+    public function __construct(private readonly EventDispatcher $dispatcher, private readonly string $name = '')
     {
     }
 
@@ -76,7 +78,7 @@ class Suite
 
     public function run(ResultAggregator $result): void
     {
-        if (count($this->tests) === 0) {
+        if ($this->tests === []) {
             return;
         }
 
@@ -88,32 +90,28 @@ class Suite
             }
             $this->dispatcher->dispatch(new TestEvent($test), Events::TEST_START);
 
-            if ($test instanceof TestInterface) {
-                if ($test->getMetadata()->isBlocked()) {
-                    $result->addTest($test);
-
-                    $skip = $test->getMetadata()->getSkip();
-                    if ($skip !== null) {
-                        if (class_exists(SkippedWithMessageException::class)) {
-                            $exception = new SkippedWithMessageException($skip);
-                        } else {
-                            $exception = new SkippedTestError($skip);
-                        }
-                        $failEvent = new FailEvent($test, $exception, 0);
-                        $result->addSkipped($failEvent);
-                        $this->dispatcher->dispatch($failEvent, Events::TEST_SKIPPED);
+            if ($test instanceof TestInterface && $test->getMetadata()->isBlocked()) {
+                $result->addTest($test);
+                $skip = $test->getMetadata()->getSkip();
+                if ($skip !== null) {
+                    if (class_exists(SkippedWithMessageException::class)) {
+                        $exception = new SkippedWithMessageException($skip);
+                    } else {
+                        $exception = new SkippedTestError($skip);
                     }
-                    $incomplete = $test->getMetadata()->getIncomplete();
-                    if ($incomplete !== null) {
-                        $exception = new IncompleteTestError($incomplete);
-                        $failEvent = new FailEvent($test, $exception, 0);
-                        $result->addIncomplete($failEvent);
-                        $this->dispatcher->dispatch($failEvent, Events::TEST_INCOMPLETE);
-                    }
-
-                    $this->dispatcher->dispatch(new TestEvent($test, 0), Events::TEST_END);
-                    continue;
+                    $failEvent = new FailEvent($test, $exception, 0);
+                    $result->addSkipped($failEvent);
+                    $this->dispatcher->dispatch($failEvent, Events::TEST_SKIPPED);
                 }
+                $incomplete = $test->getMetadata()->getIncomplete();
+                if ($incomplete !== null) {
+                    $exception = new IncompleteTestError($incomplete);
+                    $failEvent = new FailEvent($test, $exception, 0);
+                    $result->addIncomplete($failEvent);
+                    $this->dispatcher->dispatch($failEvent, Events::TEST_INCOMPLETE);
+                }
+                $this->dispatcher->dispatch(new TestEvent($test, 0), Events::TEST_END);
+                continue;
             }
 
             if ($test instanceof TestCaseWrapper) {
@@ -158,7 +156,7 @@ class Suite
         $tests = [];
         foreach ($test->fetchDependencies() as $requiredTestName) {
             $required = $this->findMatchedTest($requiredTestName);
-            if ($required === null) {
+            if (!$required instanceof Test) {
                 continue;
             }
             $tests = array_merge($tests, $this->getDependencies($required));
@@ -208,10 +206,8 @@ class Suite
     protected function fire(string $eventType, TestEvent $event): void
     {
         $test = $event->getTest();
-        if ($test instanceof TestInterface) {
-            foreach ($test->getMetadata()->getGroups() as $group) {
-                $this->dispatcher->dispatch($event, $eventType . '.' . $group);
-            }
+        foreach ($test->getMetadata()->getGroups() as $group) {
+            $this->dispatcher->dispatch($event, $eventType . '.' . $group);
         }
         $this->dispatcher->dispatch($event, $eventType);
     }
@@ -247,8 +243,8 @@ class Suite
             $cliParameters [] = '--disallow-test-output';
         }
 
-        $cliConfiguration = (new \PHPUnit\TextUI\CliArguments\Builder())->fromParameters($cliParameters, []);
-        $xmlConfiguration = \PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration::create();
+        $cliConfiguration = (new Builder())->fromParameters($cliParameters);
+        $xmlConfiguration = DefaultConfiguration::create();
         Registry::init($cliConfiguration, $xmlConfiguration);
     }
 }

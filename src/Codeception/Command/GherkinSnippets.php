@@ -56,7 +56,7 @@ class GherkinSnippets extends Command
         $generator = new GherkinSnippetsGenerator($config, $test);
 
         $snippets = $generator->getSnippets();
-        if (empty($snippets)) {
+        if ($snippets === []) {
             $output->writeln("<notice> All Gherkin steps are defined. Exiting... </notice>");
             return 0;
         }

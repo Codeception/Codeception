@@ -6,9 +6,6 @@ namespace Codeception\Util;
 
 class MockAutoload extends Autoload
 {
-    /**
-     * @var array
-     */
     protected static array $files = [];
 
     /**

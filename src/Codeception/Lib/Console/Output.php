@@ -34,7 +34,7 @@ class Output extends ConsoleOutput
         // enable interactive output mode for CLI
         $this->isInteractive = $this->config['interactive']
             && isset($_SERVER['TERM'])
-            && PHP_SAPI == 'cli'
+            && PHP_SAPI === 'cli'
             && $_SERVER['TERM'] != 'linux';
 
         $formatter = new OutputFormatter($this->config['colors']);

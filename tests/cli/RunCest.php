@@ -417,9 +417,6 @@ EOF
         );
     }
 
-    /**
-     * @param CliGuy $I
-     */
     public function runTestWithFailedScenario(CliGuy $I, $scenario)
     {
         if (!extension_loaded('xdebug')) {
@@ -984,16 +981,10 @@ class HtmlReportRegexBuilder
 
 class TestHtmlReportRegexBuilder
 {
-    private string $testClass;
-
-    private string $testCase;
-
     private $stepsRegex;
 
-    public function __construct(string $testClass, string $testCase)
+    public function __construct(private readonly string $testClass, private readonly string $testCase)
     {
-        $this->testClass = $testClass;
-        $this->testCase = $testCase;
     }
 
     public function getTestClass(): string

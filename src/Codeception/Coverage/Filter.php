@@ -66,9 +66,9 @@ class Filter
                 throw new ConfigurationException('Error parsing yaml. Config `whitelist: include:` should be an array');
             }
             foreach ($coverage['whitelist']['include'] as $fileOrDir) {
-                $finder = !str_contains($fileOrDir, '*')
-                    ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
-                    : $this->matchWildcardPattern($fileOrDir);
+                $finder = str_contains((string) $fileOrDir, '*')
+                    ? $this->matchWildcardPattern($fileOrDir)
+                    : [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir];
 
                 foreach ($finder as $file) {
                     $filter->includeFile((string)$file);
@@ -83,9 +83,9 @@ class Filter
 
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 try {
-                    $finder = !str_contains($fileOrDir, '*')
-                        ? [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir]
-                        : $this->matchWildcardPattern($fileOrDir);
+                    $finder = str_contains((string) $fileOrDir, '*')
+                        ? $this->matchWildcardPattern($fileOrDir)
+                        : [Configuration::projectDir() . DIRECTORY_SEPARATOR . $fileOrDir];
 
                     foreach ($finder as $file) {
                         $filter->excludeFile((string)$file);
@@ -110,11 +110,11 @@ class Filter
             throw new ConfigurationException('Error parsing yaml. Config `whitelist: exclude:` should be an array');
         }
 
-        if (count($exclude) === 0 && count($include) === 0) {
+        if ($exclude === [] && $include === []) {
             return $this;
         }
 
-        if (count($include) === 0) {
+        if ($include === []) {
             $include = [
                 Configuration::projectDir() . DIRECTORY_SEPARATOR . '*'
             ];
@@ -122,9 +122,9 @@ class Filter
 
         $allIncludedFiles = [];
         foreach ($include as $fileOrDir) {
-            $finder = !str_contains($fileOrDir, '*')
-                ? $this->matchFileOrDirectory($fileOrDir)
-                : $this->matchWildcardPattern($fileOrDir);
+            $finder = str_contains((string) $fileOrDir, '*')
+                ? $this->matchWildcardPattern($fileOrDir)
+                : $this->matchFileOrDirectory($fileOrDir);
 
             $allIncludedFiles += iterator_to_array($finder->getIterator());
         }
@@ -132,9 +132,9 @@ class Filter
         $allExcludedFiles = [];
         foreach ($exclude as $fileOrDir) {
             try {
-                $finder = !str_contains($fileOrDir, '*')
-                    ? $this->matchFileOrDirectory($fileOrDir)
-                    : $this->matchWildcardPattern($fileOrDir);
+                $finder = str_contains((string) $fileOrDir, '*')
+                    ? $this->matchWildcardPattern($fileOrDir)
+                    : $this->matchFileOrDirectory($fileOrDir);
 
                 $allExcludedFiles += iterator_to_array($finder->getIterator());
             } catch (DirectoryNotFoundException) {

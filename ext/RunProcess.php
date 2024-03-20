@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Extension;
 
+use BadMethodCallException;
 use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
@@ -127,7 +128,7 @@ class RunProcess extends Extension
      */
     public function __sleep()
     {
-        throw new \BadMethodCallException('Cannot serialize ' . __CLASS__);
+        throw new BadMethodCallException('Cannot serialize ' . self::class);
     }
 
     /**
@@ -138,6 +139,6 @@ class RunProcess extends Extension
      */
     public function __wakeup()
     {
-        throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
+        throw new BadMethodCallException('Cannot unserialize ' . self::class);
     }
 }

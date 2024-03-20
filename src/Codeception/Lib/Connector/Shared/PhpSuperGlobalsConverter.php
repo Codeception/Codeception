@@ -73,7 +73,7 @@ trait PhpSuperGlobalsConverter
                      * to ['tmp_name' => ['a' => '/tmp/test.txt'] ]
                      */
                     $innerInfo = array_map(
-                        fn ($v) => [$innerName => $v],
+                        fn ($v): array => [$innerName => $v],
                         $innerInfo
                     );
 

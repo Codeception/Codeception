@@ -111,7 +111,7 @@ class RunBefore extends Extension
 
     private function processMonitoring(): void
     {
-        while (count($this->processes) !== 0) {
+        while ($this->processes !== []) {
             $this->checkProcesses();
             sleep(1);
         }

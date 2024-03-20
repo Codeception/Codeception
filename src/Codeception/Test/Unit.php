@@ -16,8 +16,8 @@ use Codeception\Scenario;
 use Codeception\Test\Feature\Stub;
 use Codeception\TestInterface;
 use Codeception\Util\Debug;
+use LogicException;
 
-use function get_class;
 use function lcfirst;
 use function method_exists;
 
@@ -38,14 +38,14 @@ class Unit extends TestCase implements
 
     public function __clone(): void
     {
-        if ($this->scenario !== null) {
+        if ($this->scenario instanceof Scenario) {
             $this->scenario = clone $this->scenario;
         }
     }
 
     public function getMetadata(): Metadata
     {
-        if (!$this->metadata) {
+        if (!$this->metadata instanceof Metadata) {
             $this->metadata = new Metadata();
         }
         return $this->metadata;
@@ -63,7 +63,7 @@ class Unit extends TestCase implements
 
     public function getResultAggregator(): ResultAggregator
     {
-        throw new \LogicException('This method should not be called, TestCaseWrapper class must be used instead');
+        throw new LogicException('This method should not be called, TestCaseWrapper class must be used instead');
     }
 
     protected function _setUp()
@@ -81,7 +81,7 @@ class Unit extends TestCase implements
         /** @var Di $di */
         $di = $this->getMetadata()->getService('di');
         // auto-inject $tester property
-        if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst(Configuration::config()['actor_suffix']))) {
+        if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst((string) Configuration::config()['actor_suffix']))) {
             $this->$property = $di->instantiate($this->getMetadata()->getCurrent('actor'));
         }
 
@@ -124,7 +124,6 @@ class Unit extends TestCase implements
      * Starts interactive pause in this test
      *
      * @param array<string, mixed> $vars
-     * @return void
      */
     public function pause(array $vars = []): void
     {
@@ -149,7 +148,7 @@ class Unit extends TestCase implements
     {
         return [
             'name'    => $this->getName(false),
-            'class'   => get_class($this),
+            'class'   => static::class,
             'file'    => $this->getMetadata()->getFilename()
         ];
     }
@@ -158,8 +157,8 @@ class Unit extends TestCase implements
     {
         $names = [];
         foreach ($this->getMetadata()->getDependencies() as $required) {
-            if (!str_contains($required, ':') && method_exists($this, $required)) {
-                $required = get_class($this) . ":{$required}";
+            if (!str_contains((string) $required, ':') && method_exists($this, $required)) {
+                $required = static::class . ":{$required}";
             }
             $names[] = $required;
         }
