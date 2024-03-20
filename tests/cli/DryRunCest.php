@@ -30,11 +30,7 @@ final class DryRunCest
 
     public function runTestsWithTypedHelper(CliGuy $I)
     {
-        if (PHP_VERSION_ID < 80100) {
-            $I->markTestSkipped('Requires PHP 8.1');
-        }
-
-        $I->amInPath(\codecept_data_dir('typed_helper'));
+        $I->amInPath(codecept_data_dir('typed_helper'));
         $I->executeCommand('build');
         $I->executeCommand('dry-run unit --no-ansi');
         $I->seeInShellOutput('print comment');

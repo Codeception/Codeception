@@ -95,12 +95,9 @@ class FilterTest extends \Codeception\Test\Unit
 
     private function getFilterMethod(): string
     {
-        $filterMethod = 'isFiltered';
         if (method_exists($this->filter->getFilter(), 'isExcluded')) {
-            //php-code-coverage 9+
-            $filterMethod = 'isExcluded';
+            return 'isExcluded';
         }
-
-        return $filterMethod;
+        return 'isFiltered';
     }
 }
