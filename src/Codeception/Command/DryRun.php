@@ -18,6 +18,7 @@ use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Test;
 use Exception;
 use InvalidArgumentException;
+use ReflectionClass;
 use ReflectionIntersectionType;
 use ReflectionMethod;
 use ReflectionNamedType;
@@ -62,7 +63,7 @@ class DryRun extends Command
         return 'Prints step-by-step scenario-driven test or a feature';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
         $suite = (string)$input->getArgument('suite');
@@ -106,7 +107,7 @@ class DryRun extends Command
         return 0;
     }
 
-    protected function matchTestFromFilename($filename, $testsPath)
+    protected function matchTestFromFilename($filename, $testsPath): array
     {
         $filename = str_replace(['//', '\/', '\\'], '/', $filename);
         $res = preg_match("#^{$testsPath}/(.*?)/(.*)$#", $filename, $matches);
@@ -143,7 +144,7 @@ class DryRun extends Command
     private function mockModule(string $moduleName, ModuleContainer $moduleContainer): void
     {
         $module = $moduleContainer->getModule($moduleName);
-        $class = new \ReflectionClass($module);
+        $class = new ReflectionClass($module);
         $methodResults = [];
         foreach ($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             if ($method->isConstructor()) {
@@ -155,7 +156,7 @@ class DryRun extends Command
         $moduleContainer->mock($moduleName, Stub::makeEmpty($module, $methodResults));
     }
 
-    private function getDefaultResultForMethod(\ReflectionClass $class, ReflectionMethod $method): mixed
+    private function getDefaultResultForMethod(ReflectionClass $class, ReflectionMethod $method): mixed
     {
         $returnType = $method->getReturnType();
 

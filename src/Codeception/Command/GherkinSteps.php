@@ -29,21 +29,12 @@ class GherkinSteps extends Command
 
     protected function configure(): void
     {
-        $this->setDefinition(
-            [
-                new InputArgument('suite', InputArgument::REQUIRED, 'suite to scan for feature files'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
-        parent::configure();
+        $this->setDescription('Prints all defined feature steps')
+            ->addArgument('suite', InputArgument::REQUIRED, 'suite to scan for feature files')
+            ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config');
     }
 
-    public function getDescription(): string
-    {
-        return 'Prints all defined feature steps';
-    }
-
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
         $suite = $input->getArgument('suite');
@@ -59,11 +50,10 @@ class GherkinSteps extends Command
             $output->writeln("Steps from <bold>{$name}</bold> context:");
 
             foreach ($context as $step => $callable) {
-                if (count($callable) < 2) {
-                    continue;
+                if (count($callable) >= 2) {
+                    $method = $callable[0] . '::' . $callable[1];
+                    $table->addRow([$step, $method]);
                 }
-                $method = $callable[0] . '::' . $callable[1];
-                $table->addRow([$step, $method]);
             }
             $table->render();
         }
@@ -71,6 +61,6 @@ class GherkinSteps extends Command
         if (!isset($table)) {
             $output->writeln("No steps are defined, start creating them by running <bold>gherkin:snippets</bold>");
         }
-        return 0;
+        return Command::SUCCESS;
     }
 }

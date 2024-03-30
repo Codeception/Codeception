@@ -39,7 +39,7 @@ class Build extends Command
     {
         $this->output = $output;
         $this->buildActorsForConfig();
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function buildActor(array $settings): bool
@@ -65,7 +65,7 @@ class Build extends Command
         $actionsGenerator = new ActionsGenerator($settings);
         $content = $actionsGenerator->produce();
         $this->output->writeln(
-            " -> {$settings['actor']}Actions.php generated successfully. "
+            sprintf(' -> %sActions.php generated successfully. ', $settings['actor'])
             . $actionsGenerator->getNumMethods() . " methods added"
         );
 
@@ -89,7 +89,7 @@ class Build extends Command
             $actorBuilt = $this->buildActor($settings);
 
             if ($actorBuilt) {
-                $this->output->writeln("{$settings['actor']}.php created.");
+                $this->output->writeln($settings['actor'] . '.php created.');
             }
         }
     }

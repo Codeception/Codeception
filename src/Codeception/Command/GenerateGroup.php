@@ -25,9 +25,7 @@ class GenerateGroup extends Command
 
     protected function configure(): void
     {
-        $this->setDefinition([
-            new InputArgument('group', InputArgument::REQUIRED, 'Group class name'),
-        ]);
+        $this->addArgument('group', InputArgument::REQUIRED, 'Group class name');
     }
 
     public function getDescription(): string
@@ -35,7 +33,7 @@ class GenerateGroup extends Command
         return 'Generates Group subscriber';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = $this->getGlobalConfig();
         $groupInputArgument = (string)$input->getArgument('group');
@@ -50,13 +48,13 @@ class GenerateGroup extends Command
 
         if (!$res) {
             $output->writeln("<error>Group {$filename} already exists</error>");
-            return 1;
+            return Command::FAILURE;
         }
 
         $output->writeln("<info>Group extension was created in {$filename}</info>");
         $output->writeln(
             'To use this group extension, include it to "extensions" option of global Codeception config.'
         );
-        return 0;
+        return Command::SUCCESS;
     }
 }
