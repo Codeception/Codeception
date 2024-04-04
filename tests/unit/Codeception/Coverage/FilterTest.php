@@ -39,13 +39,12 @@ class FilterTest extends \Codeception\Test\Unit
         ];
         $this->filter->whiteList($config);
         $fileFilter = $this->filter->getFilter();
-        $filterMethod = $this->getFilterMethod();
-        $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('tests/unit/C3Test.php')));
-        $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('src/Codeception/Codecept.php')));
-        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
-        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/support/CodeGuy.php')));
+        $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('tests/unit/C3Test.php')));
+        $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('src/Codeception/Codecept.php')));
+        $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
+        $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('tests/support/CodeGuy.php')));
         $this->assertTrue(
-            $fileFilter->$filterMethod(
+            $fileFilter->isExcluded(
                 codecept_root_dir('tests/unit.suite.yml')
             ),
             'tests/unit.suite.yml appears in file list'
@@ -60,9 +59,8 @@ class FilterTest extends \Codeception\Test\Unit
         ]];
         $this->filter->whiteList($config);
         $fileFilter = $this->filter->getFilter();
-        $filterMethod = $this->getFilterMethod();
-        $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('tests/unit/C3Test.php')));
-        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('tests/support/CodeGuy.php')));
+        $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('tests/unit/C3Test.php')));
+        $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('tests/support/CodeGuy.php')));
     }
 
     public function testWhitelistIncludeFilterApplied()
@@ -80,24 +78,15 @@ class FilterTest extends \Codeception\Test\Unit
         ];
         $this->filter->whiteList($config);
         $fileFilter = $this->filter->getFilter();
-        $filterMethod = $this->getFilterMethod();
-        $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('tests/unit/C3Test.php')));
-        $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('src/Codeception/Codecept.php')));
-        $this->assertFalse($fileFilter->$filterMethod(codecept_root_dir('tests/support/CodeGuy.php')));
-        $this->assertTrue($fileFilter->$filterMethod(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
+        $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('tests/unit/C3Test.php')));
+        $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('src/Codeception/Codecept.php')));
+        $this->assertFalse($fileFilter->isExcluded(codecept_root_dir('tests/support/CodeGuy.php')));
+        $this->assertTrue($fileFilter->isExcluded(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
         $this->assertTrue(
-            $fileFilter->$filterMethod(
+            $fileFilter->isExcluded(
                 codecept_root_dir('tests/unit.suite.yml')
             ),
             'tests/unit.suite.yml appears in file list'
         );
-    }
-
-    private function getFilterMethod(): string
-    {
-        if (method_exists($this->filter->getFilter(), 'isExcluded')) {
-            return 'isExcluded';
-        }
-        return 'isFiltered';
     }
 }
