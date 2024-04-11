@@ -97,7 +97,7 @@ class ModuleContainer
         if (!class_exists($moduleClass)) {
             if (isset(self::$packages[$moduleName])) {
                 $package = self::$packages[$moduleName];
-                throw new ConfigurationException("Module {$moduleName} is not installed.\nUse Composer to install corresponding package:\n\ncomposer require {$package} --dev");
+                throw new ConfigurationException("Codeception's module {$moduleName} not found. Install it with:\n\ncomposer require {$package} --dev");
             }
             throw new ConfigurationException("Module {$moduleName} could not be found and loaded");
         }
