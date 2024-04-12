@@ -130,6 +130,9 @@ class Annotation
         $attr = $this->attribute($annotation);
         if ($attr) {
             if (!$attr->isRepeated()) {
+                if ($annotation === 'example') {
+                    return [$attr->getArguments()];
+                }
                 return $attr->getArguments();
             }
             $attrs = $this->attributes();
