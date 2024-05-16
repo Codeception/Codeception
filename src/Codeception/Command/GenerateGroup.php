@@ -25,12 +25,8 @@ class GenerateGroup extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('group', InputArgument::REQUIRED, 'Group class name');
-    }
-
-    public function getDescription(): string
-    {
-        return 'Generates Group subscriber';
+        $this->setDescription('Generates Group subscriber')
+            ->addArgument('group', InputArgument::REQUIRED, 'Group class name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
