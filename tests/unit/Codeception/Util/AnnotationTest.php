@@ -100,36 +100,48 @@ EOF;
              * @example ["example 1/2"]
              * @example ["example 2/2"]
              */
-            public function multipleAnnotations() {}
+            public function multipleAnnotations()
+            {
+            }
 
             /**
              * @example ["example 1/1"]
              */
-            public function singleAnnotation() {}
+            public function singleAnnotation()
+            {
+            }
 
             #[\Codeception\Attribute\Examples('example 1/2')]
             #[\Codeception\Attribute\Examples('example 2/2')]
-            public function multipleAttributes() {}
+            public function multipleAttributes()
+            {
+            }
 
             #[\Codeception\Attribute\Examples('example 1/1')]
-            public function singleAttribute() {}
+            public function singleAttribute()
+            {
+            }
         };
 
         $this->assertSame(
             ['["example 1/2"]', '["example 2/2"]'],
-            Annotation::forMethod($class, 'multipleAnnotations')->fetchAll('example'));
+            Annotation::forMethod($class, 'multipleAnnotations')->fetchAll('example')
+        );
 
         $this->assertSame(
             ['["example 1/1"]'],
-            Annotation::forMethod($class, 'singleAnnotation')->fetchAll('example'));
+            Annotation::forMethod($class, 'singleAnnotation')->fetchAll('example')
+        );
 
         $this->assertSame(
             [['example 1/2'], ['example 2/2']],
-            Annotation::forMethod($class, 'multipleAttributes')->fetchAll('example'));
+            Annotation::forMethod($class, 'multipleAttributes')->fetchAll('example')
+        );
 
         $this->assertSame(
             [['example 1/1']],
-            Annotation::forMethod($class, 'singleAttribute')->fetchAll('example'));
+            Annotation::forMethod($class, 'singleAttribute')->fetchAll('example')
+        );
     }
 
     public function testFetchAllGiven()
@@ -137,18 +149,24 @@ EOF;
         $class = new class {
             #[\Codeception\Attribute\Given('given 1/2')]
             #[\Codeception\Attribute\Given('given 2/2')]
-            public function multipleAttributes() {}
+            public function multipleAttributes()
+            {
+            }
 
             #[\Codeception\Attribute\Given('given 1/1')]
-            public function singleAttribute() {}
+            public function singleAttribute()
+            {
+            }
         };
 
         $this->assertSame(
             ['given 1/2', 'given 2/2'],
-            Annotation::forMethod($class, 'multipleAttributes')->fetchAll('Given'));
+            Annotation::forMethod($class, 'multipleAttributes')->fetchAll('Given')
+        );
 
         $this->assertSame(
             ['given 1/1'],
-            Annotation::forMethod($class, 'singleAttribute')->fetchAll('Given'));
+            Annotation::forMethod($class, 'singleAttribute')->fetchAll('Given')
+        );
     }
 }
