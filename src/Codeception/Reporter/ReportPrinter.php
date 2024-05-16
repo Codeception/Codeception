@@ -64,7 +64,7 @@ class ReportPrinter implements ConsolePrinter
 
     public function testFailure(FailEvent $event): void
     {
-        $this->printTestResult($event->getTest(), "\033[41;37mFAIL\033[0m");
+        $this->printTestResult($event->getTest(), "FAIL");
         $this->failureCount++;
     }
 
