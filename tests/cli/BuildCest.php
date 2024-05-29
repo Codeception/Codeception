@@ -8,7 +8,6 @@ use Codeception\Scenario;
 #[Group('core')]
 final class BuildCest
 {
-    /** @var string */
     private string $originalCliHelperContents;
 
     public function _before()
@@ -21,7 +20,7 @@ final class BuildCest
         file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $this->originalCliHelperContents);
     }
 
-    public function buildsActionsForAClass(CliGuy $I): void
+    public function buildsActionsForAClass(CliGuy $I)
     {
         $I->wantToTest('build command');
         $I->runShellCommand('php codecept build');
@@ -36,7 +35,7 @@ final class BuildCest
         $I->seeInThisFile('public function assertSame($expected, $actual, string $message = "") {');
     }
 
-    public function usesLiteralTypes(CliGuy $I, Scenario $scenario): void
+    public function usesLiteralTypes(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('generate typehints with generated actions');
 
@@ -55,7 +54,7 @@ final class BuildCest
         $I->seeInThisFile('public function grabFromOutput(string $regex): string');
     }
 
-    public function generatedUnionReturnType(CliGuy $I, Scenario $scenario): void
+    public function generatedUnionReturnType(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('generate action with union return type');
 
@@ -72,12 +71,8 @@ final class BuildCest
         $I->seeInThisFile('public function grabFromOutput(array|string $param): string|int');
     }
 
-    public function generatedIntersectReturnTypeOnPhp81(CliGuy $I, Scenario $scenario): void
+    public function generatedIntersectReturnTypeOnPhp81(CliGuy $I, Scenario $scenario)
     {
-        if (PHP_VERSION_ID < 80100) {
-            $scenario->skip('Does not work in PHP < 8.1');
-        }
-
         $I->wantToTest('generate action with intersect return type');
 
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
@@ -93,7 +88,7 @@ final class BuildCest
         $I->seeInThisFile('public function grabFromOutput(\Codeception\Module\CliHelper&\ArrayObject $param): \Codeception\Module\CliHelper&\ArrayObject');
     }
 
-    public function noReturnForVoidType(CliGuy $I, Scenario $scenario): void
+    public function noReturnForVoidType(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('no return keyword generated for void typehint');
 
@@ -112,7 +107,7 @@ final class BuildCest
         $I->dontSeeInThisFile('return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion(\'seeDirFound\', func_get_args()));');
     }
 
-    public function generateNullableParameters(CliGuy $I, Scenario $scenario): void
+    public function generateNullableParameters(CliGuy $I, Scenario $scenario)
     {
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
         $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(\Directory $dir = null): ?bool', $cliHelperContents);
@@ -127,7 +122,7 @@ final class BuildCest
         $I->seeInThisFile('public function seeDirFound(?\Directory $dir = NULL): ?bool');
     }
 
-    public function generateMixedParameters(CliGuy $I, Scenario $scenario): void
+    public function generateMixedParameters(CliGuy $I, Scenario $scenario)
     {
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
         $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(mixed $dir = null): mixed', $cliHelperContents);
@@ -142,7 +137,7 @@ final class BuildCest
         $I->seeInThisFile('public function seeDirFound(mixed $dir = NULL): mixed');
     }
 
-    public function generateCorrectTypeWhenSelfTypeIsUsed(CliGuy $I, Scenario $scenario): void
+    public function generateCorrectTypeWhenSelfTypeIsUsed(CliGuy $I, Scenario $scenario)
     {
         if (PHP_MAJOR_VERSION < 7) {
             $scenario->skip('Does not work in PHP < 7');
@@ -160,7 +155,7 @@ final class BuildCest
         $I->seeInThisFile('public function seeDirFound(\Codeception\Module\CliHelper $dir): \Codeception\Module\CliHelper');
     }
 
-    public function generateCorrectTypeWhenParentTypeIsUsed(CliGuy $I, Scenario $scenario): void
+    public function generateCorrectTypeWhenParentTypeIsUsed(CliGuy $I, Scenario $scenario)
     {
         if (PHP_MAJOR_VERSION < 7) {
             $scenario->skip('Does not work in PHP < 7');
@@ -178,12 +173,8 @@ final class BuildCest
         $I->seeInThisFile('public function seeDirFound(\Codeception\Module $dir): \Codeception\Module');
     }
 
-    public function noReturnForNeverType(CliGuy $I, Scenario $scenario): void
+    public function noReturnForNeverType(CliGuy $I, Scenario $scenario)
     {
-        if (PHP_VERSION_ID < 80100) {
-            $scenario->skip('Does not work in PHP < 8.1');
-        }
-
         $I->wantToTest('no return keyword generated for never typehint');
 
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
@@ -201,7 +192,7 @@ final class BuildCest
         $I->dontSeeInThisFile('return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion(\'seeDirFound\', func_get_args()));');
     }
 
-    public function generateAttributeForMethodAttributeWithNoParametersAndNoBrackets(CliGuy $I, Scenario $scenario): void
+    public function generateAttributeForMethodAttributeWithNoParametersAndNoBrackets(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for method attribute with no parameters and no brackets');
 
@@ -219,7 +210,7 @@ final class BuildCest
         $I->seeInThisFile("*/\n    #[\Codeception\Attribute\Examples()]\n    public function canSeeDirFound(\$dir) {");
     }
 
-    public function generateAttributeForMethodAttributeWithNoParametersAndEmptyBrackets(CliGuy $I, Scenario $scenario): void
+    public function generateAttributeForMethodAttributeWithNoParametersAndEmptyBrackets(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for method attribute with no parameters and empty brackets');
 
@@ -237,7 +228,7 @@ final class BuildCest
         $I->seeInThisFile("*/\n    #[\Codeception\Attribute\Examples()]\n    public function canSeeDirFound(\$dir) {");
     }
 
-    public function generateAttributeForMethodAttributeWithASingleParameter(CliGuy $I, Scenario $scenario): void
+    public function generateAttributeForMethodAttributeWithASingleParameter(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for method attribute with a single parameter');
 
@@ -255,7 +246,7 @@ final class BuildCest
         $I->seeInThisFile("*/\n    #[\Codeception\Attribute\Examples(\"magic\")]\n    public function canSeeDirFound(\$dir) {");
     }
 
-    public function generateAttributeForMethodAttributeWithMultipleParameters(CliGuy $I, Scenario $scenario): void
+    public function generateAttributeForMethodAttributeWithMultipleParameters(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for method attribute with multiple parameters');
 
@@ -273,7 +264,7 @@ final class BuildCest
         $I->seeInThisFile("*/\n    #[\Codeception\Attribute\Examples(\"magic\", \"dark\")]\n    public function canSeeDirFound(\$dir) {");
     }
 
-    public function generateAttributeForMethodAttributeWithMultipleParametersOverMultipleLines(CliGuy $I, Scenario $scenario): void
+    public function generateAttributeForMethodAttributeWithMultipleParametersOverMultipleLines(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for method attribute with multiple parameters over multiple lines');
 
@@ -291,7 +282,7 @@ final class BuildCest
         $I->seeInThisFile("*/\n    #[\Codeception\Attribute\Examples(\"magic\", \"dark\")]\n    public function canSeeDirFound(\$dir) {");
     }
 
-    public function generateAttributesForMultipleMethodAttributeDeclarations(CliGuy $I, Scenario $scenario): void
+    public function generateAttributesForMultipleMethodAttributeDeclarations(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for multiple method attribute declarations');
 
@@ -309,7 +300,7 @@ final class BuildCest
         $I->seeInThisFile("*/\n    #[\Codeception\Attribute\Examples()]\n    #[\Codeception\Attribute\Before(\"doX\")]\n    public function canSeeDirFound(\$dir) {");
     }
 
-    public function generateAttributeForParameterAttributeWithNoParametersAndNoBrackets(CliGuy $I, Scenario $scenario): void
+    public function generateAttributeForParameterAttributeWithNoParametersAndNoBrackets(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for parameter attribute with no parameters and no brackets');
 
@@ -327,7 +318,7 @@ final class BuildCest
         $I->seeInThisFile("*/\n    public function canSeeDirFound(#[\JetBrains\PhpStorm\Deprecated()] \$dir) {");
     }
 
-    public function generateAttributeForParameterAttributeWithMultipleParameters(CliGuy $I, Scenario $scenario): void
+    public function generateAttributeForParameterAttributeWithMultipleParameters(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for parameter attribute with multiple parameters');
 
@@ -345,7 +336,7 @@ final class BuildCest
         $I->seeInThisFile("*/\n    public function canSeeDirFound(#[\JetBrains\PhpStorm\Deprecated(\"it's old\", \"see a better method\")] \$dir) {");
     }
 
-    public function generateAttributesForParameterAttributesWithMultipleAttributeDeclarations(CliGuy $I, Scenario $scenario): void
+    public function generateAttributesForParameterAttributesWithMultipleAttributeDeclarations(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for parameter attribute with multiple attribute declarations');
 
@@ -363,7 +354,7 @@ final class BuildCest
         $I->seeInThisFile("*/\n    public function canSeeDirFound(#[\JetBrains\PhpStorm\Deprecated(\"it's old\")]#[\JetBrains\PhpStorm\ExpectedValues([1, 2])] \$dir) {");
     }
 
-    public function generateAttributesForParameterAttributesWithMultipleAttributesInASingleDeclaration(CliGuy $I, Scenario $scenario): void
+    public function generateAttributesForParameterAttributesWithMultipleAttributesInASingleDeclaration(CliGuy $I, Scenario $scenario)
     {
         $I->wantToTest('attribute generation for parameter attribute with multiple attributes in a single declaration');
 

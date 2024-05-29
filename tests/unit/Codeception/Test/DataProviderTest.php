@@ -11,38 +11,38 @@ class DataProviderTest extends Unit
 {
     protected \CodeGuy $tester;
 
-    public function testParsesAnnotationContainingMethodNameOnly(): void
+    public function testParsesAnnotationContainingMethodNameOnly()
     {
         $result = DataProvider::parseDataProviderAnnotation('getData', 'UnitTest', 'testMethod');
-        self::assertSame(['UnitTest', 'getData'], $result);
+        $this->assertSame(['UnitTest', 'getData'], $result);
     }
 
-    public function testParsesAnnotationContainingClassNameAndMethodName(): void
+    public function testParsesAnnotationContainingClassNameAndMethodName()
     {
         $result = DataProvider::parseDataProviderAnnotation('AnotherClass::getData', 'UnitTest', 'testMethod');
-        self::assertSame(['AnotherClass', 'getData'], $result);
+        $this->assertSame(['AnotherClass', 'getData'], $result);
     }
 
-    public function testParsesAnnotationContainingNamespacedClassNameAndMethodName(): void
+    public function testParsesAnnotationContainingNamespacedClassNameAndMethodName()
     {
         $result = DataProvider::parseDataProviderAnnotation('Namespace\AnotherClass::getData', 'UnitTest', 'testMethod');
-        self::assertSame(['Namespace\AnotherClass', 'getData'], $result);
+        $this->assertSame(['Namespace\AnotherClass', 'getData'], $result);
     }
 
-    public function testParseAnnotationThrowsExceptionIfAnnotationContainsTooManyDoubleColons(): void
+    public function testParseAnnotationThrowsExceptionIfAnnotationContainsTooManyDoubleColons()
     {
         $this->expectException(InvalidTestException::class);
         $this->expectExceptionMessage('Data provider "AnotherClass::bug::getData" specified for UnitTest::testMethod is invalid');
-        $result = DataProvider::parseDataProviderAnnotation('AnotherClass::bug::getData', 'UnitTest', 'testMethod');
+        DataProvider::parseDataProviderAnnotation('AnotherClass::bug::getData', 'UnitTest', 'testMethod');
     }
 
-    public function testReturnsNullIfMethodHasNoDataProvider(): void
+    public function testReturnsNullIfMethodHasNoDataProvider()
     {
         $method = new ReflectionMethod($this, __FUNCTION__);
-        self::assertNull(DataProvider::getDataForMethod($method));
+        $this->assertNull(DataProvider::getDataForMethod($method));
     }
 
-    public function testExecutesPublicStaticDataProviderInTheSameClass(): void
+    public function testExecutesPublicStaticDataProviderInTheSameClass()
     {
         require_once codecept_data_dir('data_provider/PublicStaticDataProviderTest.php');
         $method = new ReflectionMethod(PublicStaticDataProviderTest::class, 'testDataProvider');
@@ -54,10 +54,10 @@ class DataProviderTest extends Unit
             'not baz' => ['baz', 5],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testExecutesPublicDataProviderInTheSameClass(): void
+    public function testExecutesPublicDataProviderInTheSameClass()
     {
         require_once codecept_data_dir('data_provider/PublicDataProviderTest.php');
         $method = new ReflectionMethod(PublicDataProviderTest::class, 'testDataProvider');
@@ -69,10 +69,10 @@ class DataProviderTest extends Unit
             'not baz' => ['baz', 7],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testExecutesPrivateDataProviderInTheSameClass(): void
+    public function testExecutesPrivateDataProviderInTheSameClass()
     {
         require_once codecept_data_dir('data_provider/PrivateDataProviderTest.php');
         $method = new ReflectionMethod(PrivateDataProviderTest::class, 'testDataProvider');
@@ -84,10 +84,10 @@ class DataProviderTest extends Unit
             ['baz', 7],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testExecutesDataProviderSpecifiedUsingAttribute(): void
+    public function testExecutesDataProviderSpecifiedUsingAttribute()
     {
         require_once codecept_data_dir('data_provider/AttributeDataProviderTest.php');
         $method = new ReflectionMethod(AttributeDataProviderTest::class, 'testDataProvider');
@@ -99,12 +99,12 @@ class DataProviderTest extends Unit
             'not baz' => ['baz', 7],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
 
 
-    public function testExecutesPrivateDataProviderInAnotherClass(): void
+    public function testExecutesPrivateDataProviderInAnotherClass()
     {
         require_once codecept_data_dir('data_provider/DataProviderInAnotherClassTest.php');
         $method = new ReflectionMethod(DataProviderInAnotherClassTest::class, 'testDataProvider');
@@ -116,10 +116,10 @@ class DataProviderTest extends Unit
             'not baz' => ['baz', 7],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testExecutesMultipleDataProviders(): void
+    public function testExecutesMultipleDataProviders()
     {
         require_once codecept_data_dir('data_provider/MultipleDataProviderTest.php');
         $method = new ReflectionMethod(MultipleDataProviderTest::class, 'testDataProvider');
@@ -133,10 +133,10 @@ class DataProviderTest extends Unit
             'def' => ['def', 9],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testSupportsExampleAnnotations(): void
+    public function testSupportsExampleAnnotations()
     {
         require_once codecept_data_dir('data_provider/ExampleAnnotationTest.php');
         $method = new ReflectionMethod(ExampleAnnotationTest::class, 'testExample');
@@ -147,10 +147,10 @@ class DataProviderTest extends Unit
             ['bar', 6],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testSupportsExamplesAttribute(): void
+    public function testSupportsExamplesAttribute()
     {
         require_once codecept_data_dir('data_provider/ExamplesAttributeTest.php');
         $method = new ReflectionMethod(ExamplesAttributeTest::class, 'testExample');
@@ -161,10 +161,10 @@ class DataProviderTest extends Unit
             ['bar', 8],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testCombinesExampleAndDataProviderAnnotations(): void
+    public function testCombinesExampleAndDataProviderAnnotations()
     {
         require_once codecept_data_dir('data_provider/CombinedAnnotationDataProviderTest.php');
         $method = new ReflectionMethod(CombinedAnnotationDataProviderTest::class, 'testCombined');
@@ -177,10 +177,10 @@ class DataProviderTest extends Unit
             'def' => ['def', 9],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testCombinesExampleAndDataProviderAttributes(): void
+    public function testCombinesExampleAndDataProviderAttributes()
     {
         require_once codecept_data_dir('data_provider/CombinedAttributeDataProviderTest.php');
         $method = new ReflectionMethod(CombinedAttributeDataProviderTest::class, 'testCombined');
@@ -194,10 +194,10 @@ class DataProviderTest extends Unit
             'not baz' => ['baz', 7],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testExecutesPublicDataProviderInAnotherAbstractClass(): void
+    public function testExecutesPublicDataProviderInAnotherAbstractClass()
     {
         require_once codecept_data_dir('data_provider/AbstractDataProviderTest.php');
         $method = new ReflectionMethod(AbstractDataProviderTest::class, 'testDataProvider');
@@ -207,10 +207,10 @@ class DataProviderTest extends Unit
             'foo' => ['foo'],
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testDataProviderReceivesActor(): void
+    public function testDataProviderReceivesActor()
     {
         require_once codecept_data_dir('data_provider/DataProviderReceivesActorTest.php');
         $method = new ReflectionMethod(DataProviderReceivesActorTest::class, 'testDataProvider');
@@ -220,6 +220,6 @@ class DataProviderTest extends Unit
             'codeGuyMethod() exists'
         ];
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 }

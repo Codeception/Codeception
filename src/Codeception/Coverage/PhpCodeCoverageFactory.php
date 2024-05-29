@@ -15,7 +15,7 @@ class PhpCodeCoverageFactory
 
     public static function build(): CodeCoverage
     {
-        if (self::$instance !== null) {
+        if (self::$instance instanceof CodeCoverage) {
             return self::$instance;
         }
 

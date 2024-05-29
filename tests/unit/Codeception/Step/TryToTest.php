@@ -9,9 +9,6 @@ use Codeception\Stub;
 
 class TryToTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var bool
-     */
     protected bool $shouldFail = true;
 
     public function testTryToShouldReturnSuccess()
@@ -39,7 +36,7 @@ class TryToTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($tryTo->hasFailed(), 'successful retry still marks test as failed');
     }
 
-    public function _executeFailedCode()
+    public function _executeFailedCode(): never
     {
         throw new \Exception('Error');
     }

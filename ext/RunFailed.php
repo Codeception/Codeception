@@ -88,7 +88,7 @@ class RunFailed extends Extension
     protected function localizePath(string $path): string
     {
         $root = realpath($this->getRootDir()) . DIRECTORY_SEPARATOR;
-        if (substr($path, 0, strlen($root)) === $root) {
+        if (str_starts_with($path, $root)) {
             return substr($path, strlen($root));
         }
         return $path;

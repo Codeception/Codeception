@@ -77,7 +77,7 @@ class Build extends Command
     private function buildSuiteActors(): void
     {
         $suites = $this->getSuites();
-        if (!empty($suites)) {
+        if ($suites !== []) {
             $this->output->writeln("<info>Building Actor classes for suites: " . implode(', ', $suites) . '</info>');
         }
         foreach ($suites as $suite) {
@@ -94,7 +94,7 @@ class Build extends Command
         }
     }
 
-    protected function buildActorsForConfig($configFile = null): void
+    protected function buildActorsForConfig(?string $configFile = null): void
     {
         $config = $this->getGlobalConfig($configFile);
 

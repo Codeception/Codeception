@@ -11,9 +11,6 @@ use SebastianBergmann\Comparator\ComparisonFailure;
  **/
 class DiffFactoryTest extends \Codeception\Test\Unit
 {
-    /**
-     * @var DiffFactory
-     */
     protected DiffFactory $diffFactory;
 
     protected function _setUp()

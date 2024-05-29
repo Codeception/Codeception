@@ -35,7 +35,7 @@ class Deprecation implements EventSubscriberInterface
     public function afterSuite(SuiteEvent $event): void
     {
         $messages = Notification::all();
-        if (count($messages) === 0) {
+        if ($messages === []) {
             return;
         }
 

@@ -141,9 +141,9 @@ final class IncludedCest
     {
         $I->executeCommand('build');
         $I->seeInShellOutput('generated successfully');
-        $I->seeInShellOutput('Jazz\\TestGuy');
-        $I->seeInShellOutput('Jazz\\Pianist\\TestGuy');
-        $I->seeInShellOutput('Shire\\TestGuy');
+        $I->seeInShellOutput(\Jazz\TestGuy::class);
+        $I->seeInShellOutput(\Jazz\Pianist\TestGuy::class);
+        $I->seeInShellOutput(\Shire\TestGuy::class);
     }
 
     #[Before('moveToIncluded')]

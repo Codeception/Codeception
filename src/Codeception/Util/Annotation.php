@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 use Reflector;
 
-use function get_class;
 use function in_array;
 use function is_object;
 use function json_decode;
@@ -52,7 +52,7 @@ class Annotation
     public static function forClass(object|string $class): self
     {
         if (is_object($class)) {
-            $class = get_class($class);
+            $class = $class::class;
         }
 
         if (!isset(static::$reflectedClasses[$class])) {
@@ -111,9 +111,9 @@ class Annotation
     public function fetch(string $annotation): ?string
     {
         $attr = $this->attribute($annotation);
-        if ($attr) {
+        if ($attr instanceof ReflectionAttribute) {
             $arguments = $attr->getArguments();
-            if (count($arguments) === 0) {
+            if ($arguments === []) {
                 return '';
             }
             return $arguments[0];
@@ -128,7 +128,7 @@ class Annotation
     public function fetchAll(string $annotation): array
     {
         $attr = $this->attribute($annotation);
-        if ($attr) {
+        if ($attr instanceof ReflectionAttribute) {
             if (!$attr->isRepeated()) {
                 return $attr->getArguments();
             }
@@ -137,11 +137,11 @@ class Annotation
                 $annotation = 'examples'; // we renamed this annotation
             }
             $name = ucfirst($annotation);
-            $attrs = array_filter($attrs, fn ($a) => $a->getName() === "Codeception\\Attribute\\$name");
+            $attrs = array_filter($attrs, fn ($a): bool => $a->getName() === "Codeception\\Attribute\\$name");
             if ($annotation === 'examples') {
-                return array_map(fn (\ReflectionAttribute $a) => $a->getArguments(), $attrs);
+                return array_map(fn (ReflectionAttribute $a): array => $a->getArguments(), $attrs);
             }
-            return array_merge(...array_map(fn (\ReflectionAttribute $a) => $a->getArguments(), $attrs));
+            return array_merge(...array_map(fn (ReflectionAttribute $a): array => $a->getArguments(), $attrs));
         }
         $docBlock = (string)$this->currentReflectedItem->getDocComment();
         if (preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
@@ -154,19 +154,18 @@ class Annotation
     {
         $attrs = $this->currentReflectedItem->getAttributes();
         $attrs = array_filter($attrs);
-        $attrs = array_filter($attrs, fn (\ReflectionAttribute $a) => str_starts_with($a->getName(), 'Codeception\\Attribute\\'));
-        return $attrs;
+        return array_filter($attrs, fn (ReflectionAttribute $a): bool => str_starts_with($a->getName(), 'Codeception\\Attribute\\'));
     }
 
-    public function attribute($name): ?\ReflectionAttribute
+    public function attribute(string $name): ?ReflectionAttribute
     {
         $attrs = $this->attributes();
         if ($name === 'example') {
             $name = 'examples'; // we renamed this annotation
         }
         $name = ucfirst($name);
-        $attrs = array_filter($attrs, fn ($a) => $a->getName() === "Codeception\\Attribute\\$name");
-        if (empty($attrs)) {
+        $attrs = array_filter($attrs, fn ($a): bool => $a->getName() === "Codeception\\Attribute\\$name");
+        if ($attrs === []) {
             return null;
         }
         return reset($attrs);
