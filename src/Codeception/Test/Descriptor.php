@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Codeception\Test;
 
+use BackedEnum;
 use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\Plain;
 use Codeception\TestInterface;
 use PHPUnit\Framework\SelfDescribing;
+use UnitEnum;
 
 use function codecept_relative_path;
 use function json_encode;
@@ -49,8 +51,20 @@ class Descriptor
             method_exists($testCase, 'getMetaData')
             && !empty($testCase->getMetadata()->getCurrent('example'))
         ) {
-            $currentExample = json_encode($testCase->getMetadata()->getCurrent('example'), JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
-            $example = ':' . substr(sha1($currentExample), 0, 7);
+            $isSerializable = true;
+            if(is_array($testCase->getMetadata()->getCurrent('example'))){
+                foreach ($testCase->getMetadata()->getCurrent('example') as $item) {
+                    if($item instanceof UnitEnum && !($item instanceof BackedEnum)){
+                        $isSerializable = false;
+                        break;
+                    }
+                }
+            }
+
+            if($isSerializable){
+                $currentExample = json_encode($testCase->getMetadata()->getCurrent('example'), JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
+                $example = ':' . substr(sha1($currentExample), 0, 7);
+            }
         }
 
         return self::getTestSignature($testCase) . $env . $example;
