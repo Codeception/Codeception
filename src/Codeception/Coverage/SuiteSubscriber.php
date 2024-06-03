@@ -84,6 +84,11 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
             }
         }
 
+        $this->configureCoverage();
+    }
+
+    protected function configureCoverage(): void
+    {
         if ($this->settings['strict_covers_annotation']) {
             $this->coverage->enableCheckForUnintentionallyCoveredCode();
         }
