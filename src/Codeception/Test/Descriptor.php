@@ -52,16 +52,16 @@ class Descriptor
             && !empty($testCase->getMetadata()->getCurrent('example'))
         ) {
             $isSerializable = true;
-            if(is_array($testCase->getMetadata()->getCurrent('example'))){
+            if (is_array($testCase->getMetadata()->getCurrent('example'))) {
                 foreach ($testCase->getMetadata()->getCurrent('example') as $item) {
-                    if($item instanceof UnitEnum && !($item instanceof BackedEnum)){
+                    if ($item instanceof UnitEnum && !($item instanceof BackedEnum)) {
                         $isSerializable = false;
                         break;
                     }
                 }
             }
 
-            if($isSerializable){
+            if ($isSerializable) {
                 $currentExample = json_encode($testCase->getMetadata()->getCurrent('example'), JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
                 $example = ':' . substr(sha1($currentExample), 0, 7);
             }
