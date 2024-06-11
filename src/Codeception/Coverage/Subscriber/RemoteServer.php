@@ -36,67 +36,37 @@ class RemoteServer extends LocalServer
         if (!$this->isEnabled()) {
             return;
         }
-
         $suite = strtr($event->getSuite()->getName(), ['\\' => '.']);
+
         if ($this->options['coverage-xml']) {
-            $this->retrieveAndPrintXml($suite);
+            $this->retrieveAndPrint('clover', $suite, '.remote.coverage.xml');
         }
         if ($this->options['coverage-html']) {
-            $this->retrieveAndPrintHtml($suite);
+            $this->retrieveToTempFileAndPrint('html', $suite, '.remote.coverage');
         }
         if ($this->options['coverage-crap4j']) {
-            $this->retrieveAndPrintCrap4j($suite);
+            $this->retrieveAndPrint('crap4j', $suite, '.remote.crap4j.xml');
         }
         if ($this->options['coverage-cobertura']) {
-            $this->retrieveAndPrintCobertura($suite);
+            $this->retrieveAndPrint('cobertura', $suite, '.remote.cobertura.xml');
         }
         if ($this->options['coverage-phpunit']) {
-            $this->retrieveAndPrintPHPUnit($suite);
+            $this->retrieveToTempFileAndPrint('phpunit', $suite, '.remote.coverage-phpunit');
         }
     }
 
-    protected function retrieveAndPrintHtml(string $suite): void
+    protected function retrieveAndPrint(string $type, string $suite, string $extension): void
+    {
+        $destFile = Configuration::outputDir() . $suite . $extension;
+        file_put_contents($destFile, $this->c3Request($type));
+    }
+
+    protected function retrieveToTempFileAndPrint(string $type, string $suite, string $extension): void
     {
         $tempFile = tempnam(sys_get_temp_dir(), 'C3') . '.tar';
-        file_put_contents($tempFile, $this->c3Request('html'));
+        file_put_contents($tempFile, $this->c3Request($type));
 
-        $destDir = Configuration::outputDir() . $suite . '.remote.coverage';
-        if (is_dir($destDir)) {
-            FileSystem::doEmptyDir($destDir);
-        } else {
-            mkdir($destDir, 0777, true);
-        }
-
-        $pharData = new PharData($tempFile);
-        $pharData->extractTo($destDir);
-
-        unlink($tempFile);
-    }
-
-    protected function retrieveAndPrintXml(string $suite): void
-    {
-        $destFile = Configuration::outputDir() . $suite . '.remote.coverage.xml';
-        file_put_contents($destFile, $this->c3Request('clover'));
-    }
-
-    protected function retrieveAndPrintCrap4j(string $suite): void
-    {
-        $destFile = Configuration::outputDir() . $suite . '.remote.crap4j.xml';
-        file_put_contents($destFile, $this->c3Request('crap4j'));
-    }
-
-    protected function retrieveAndPrintCobertura(string $suite): void
-    {
-        $destFile = Configuration::outputDir() . $suite . '.remote.cobertura.xml';
-        file_put_contents($destFile, $this->c3Request('cobertura'));
-    }
-
-    protected function retrieveAndPrintPHPUnit(string $suite): void
-    {
-        $tempFile = tempnam(sys_get_temp_dir(), 'C3') . '.tar';
-        file_put_contents($tempFile, $this->c3Request('phpunit'));
-
-        $destDir = Configuration::outputDir() . $suite . '.remote.coverage-phpunit';
+        $destDir = Configuration::outputDir() . $suite . $extension;
         if (is_dir($destDir)) {
             FileSystem::doEmptyDir($destDir);
         } else {

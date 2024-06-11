@@ -12,12 +12,7 @@ use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Interfaces\Remote;
-use Codeception\Stub;
 use Exception;
-use PHPUnit\Runner\CodeCoverage as PHPUnitCodeCoverage;
-use PHPUnit\Runner\Version as PHPUnitVersion;
-use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
 /**
  * Collects code coverage from unit and functional tests.
