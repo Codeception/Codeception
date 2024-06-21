@@ -93,7 +93,7 @@ class HtmlReporter implements EventSubscriberInterface
 
     public function testError(FailEvent $event): void
     {
-        $this->printTestEvent($event, 'scenarioFailed');
+        $this->printTestEvent($event, 'scenarioError');
     }
 
     public function testFailure(FailEvent $event): void
@@ -343,6 +343,7 @@ class HtmlReporter implements EventSubscriberInterface
                 'header'              => $header,
                 'scenarios'           => $this->scenarios,
                 'successfulScenarios' => $result->successfulCount(),
+                'errorScenarios'     => $result->errorCount(),
                 'failedScenarios'     => $result->failureCount(),
                 'skippedScenarios'    => $result->skippedCount(),
                 'incompleteScenarios' => $result->incompleteCount(),
