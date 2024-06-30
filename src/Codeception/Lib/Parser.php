@@ -28,16 +28,10 @@ class Parser
 
     public function parseFeature(string $code): void
     {
-        $matches = [];
         $code = $this->stripComments($code);
-        $res = preg_match("#\\\$I->wantTo\\(\\s*?['\"](.*?)['\"]\\s*?\\);#", $code, $matches);
-        if ($res) {
-            $this->scenario->setFeature($matches[1]);
-            return;
-        }
-        $res = preg_match("#\\\$I->wantToTest\\(['\"](.*?)['\"]\\);#", $code, $matches);
-        if ($res) {
-            $this->scenario->setFeature("test " . $matches[1]);
+        if (preg_match("#\\\$I->(wantTo|wantToTest)\\(\\s*?['\"](.*?)['\"]\\s*?\\);#", $code, $matches)) {
+            $feature = $matches[1] === 'wantToTest' ? "test {$matches[2]}" : $matches[2];
+            $this->scenario->setFeature($feature);
         }
     }
 
@@ -48,17 +42,15 @@ class Parser
 
     public function parseSteps(string $code): void
     {
-        // parse per line
         $friends = [];
         $lines = explode("\n", $code);
         $isFriend = false;
+
         foreach ($lines as $line) {
-            // friends
-            if (preg_match("#\\\$I->haveFriend\\((.*?)\\);#", $line, $matches)) {
+            if (preg_match("#\\\$I->haveFriend\\((.*?)\\);#", $line, $matches)) { // Friends
                 $friends[] = trim($matches[1], '\'"');
             }
-            // friend's section start
-            if (preg_match("#\\\$(.*?)->does\\(#", $line, $matches)) {
+            if (preg_match("#\\\$(.*?)->does\\(#", $line, $matches)) { // Friends section start
                 $friend = $matches[1];
                 if (!in_array($friend, $friends)) {
                     continue;
@@ -67,14 +59,10 @@ class Parser
                 $this->addCommentStep("\n----- {$friend} does -----");
                 continue;
             }
-
-            // actions
-            if (preg_match("#\\\$I->(.*)\\((.*?)\\);#", $line, $matches)) {
+            if (preg_match("#\\\$I->(.*)\\((.*?)\\);#", $line, $matches)) { // Actions
                 $this->addStep($matches);
             }
-
-            // friend's section ends
-            if ($isFriend && str_contains($line, '}')) {
+            if ($isFriend && str_contains($line, '}')) { // Friends section ends
                 $this->addCommentStep("-------- back to me\n");
                 $isFriend = false;
             }
@@ -84,10 +72,9 @@ class Parser
     protected function addStep(array $matches): void
     {
         [$m, $action, $params] = $matches;
-        if (in_array($action, ['wantTo', 'wantToTest'])) {
-            return;
+        if (!in_array($action, ['wantTo', 'wantToTest'])) {
+            $this->scenario->addStep(new Action($action, explode(',', $params)));
         }
-        $this->scenario->addStep(new Action($action, explode(',', $params)));
     }
 
     protected function addCommentStep(string $comment): void
@@ -111,60 +98,67 @@ class Parser
      */
     public static function getClassesFromFile(string $file): array
     {
-        $sourceCode = file_get_contents($file);
-        $classes    = [];
-        $tokens = token_get_all($sourceCode, TOKEN_PARSE);
-
-        $tokenCount = count($tokens);
+        $sourceCodeTokens = token_get_all(file_get_contents($file), TOKEN_PARSE);
+        $classes = [];
         $namespace = '';
 
-        for ($i = 0; $i < $tokenCount; ++$i) {
-            if ($tokens[$i][0] === T_NAMESPACE) {
-                $namespace = '';
-                for ($j = $i + 1; $j < $tokenCount; ++$j) {
-                    if ($tokens[$j] === '{' || $tokens[$j] === ';') {
-                        break;
-                    }
-                    if ($tokens[$j][0] === T_STRING || $tokens[$j][0] === T_NAME_QUALIFIED) {
-                        $namespace .= $tokens[$j][1] . '\\';
-                    }
-                }
+        foreach ($sourceCodeTokens as $i => $token) {
+            if ($token[0] === T_NAMESPACE) {
+                $namespace = self::extractNamespace($sourceCodeTokens, $i);
             }
-
-            if ($tokens[$i][0] === T_CLASS) {
-                // class at the beginning of file
-                if (!isset($tokens[$i - 2])) {
-                    $classes[] = $namespace . $tokens[$i + 2][1];
-                    continue;
+            if ($token[0] === T_CLASS) {
+                $class = self::extractClass($sourceCodeTokens, $i);
+                if ($class) {
+                    $classes[] = $namespace . $class;
                 }
-                // new class
-                if ($tokens[$i - 2][0] === T_NEW) {
-                    continue;
-                }
-                // :: class
-                if ($tokens[$i - 1][0] === T_WHITESPACE && $tokens[$i - 2][0] === T_DOUBLE_COLON) {
-                    continue;
-                }
-                // ::class
-                if ($tokens[$i - 1][0] === T_DOUBLE_COLON) {
-                    continue;
-                }
-                // class{
-                if (isset($tokens[$i + 1]) && ($tokens[$i + 1] === '{')) {
-                    continue;
-                }
-                // class {
-                if (isset($tokens[$i + 2]) && $tokens[$i + 1][0] === T_WHITESPACE && $tokens[$i + 2] === '{') {
-                    continue;
-                }
-                $classes[] = $namespace . $tokens[$i + 2][1];
             }
         }
 
-        $tokens = null;
         gc_mem_caches();
-
         return $classes;
+    }
+
+    private static function extractNamespace(array $tokens, int $index): string
+    {
+        $namespace = '';
+        for ($j = $index + 1; $j < count($tokens); ++$j) {
+            if ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                break;
+            }
+            if ($tokens[$j][0] === T_STRING || $tokens[$j][0] === T_NAME_QUALIFIED) {
+                $namespace .= $tokens[$j][1] . '\\';
+            }
+        }
+        return $namespace;
+    }
+
+    private static function extractClass(array $tokens, int $index): ?string
+    {
+        // class at the beginning of file
+        if (!isset($tokens[$index - 2])) {
+            return $tokens[$index + 2][1] ?? null;
+        }
+        // new class
+        if (isset($tokens[$index - 2]) && $tokens[$index - 2][0] === T_NEW) {
+            return null;
+        }
+        // :: class
+        if (isset($tokens[$index - 1]) && $tokens[$index - 1][0] === T_WHITESPACE && isset($tokens[$index - 2]) && $tokens[$index - 2][0] === T_DOUBLE_COLON) {
+            return null;
+        }
+        // ::class
+        if (isset($tokens[$index - 1]) && $tokens[$index - 1][0] === T_DOUBLE_COLON) {
+            return null;
+        }
+        // class{
+        if (isset($tokens[$index + 1]) && $tokens[$index + 1] === '{') {
+            return null;
+        }
+        // class {
+        if (isset($tokens[$index + 2]) && $tokens[$index + 1][0] === T_WHITESPACE && $tokens[$index + 2] === '{') {
+            return null;
+        }
+        return $tokens[$index + 2][1] ?? null;
     }
 
     /*
@@ -177,24 +171,16 @@ class Parser
 
     protected function stripComments(string $code): string
     {
-        $code = preg_replace('#//.*?$#m', '', $code); // remove inline comments
-        return preg_replace('#/*\*.*?\*/#ms', '', $code); // remove block comment
+        return preg_replace(['#//.*?$#m', '#/*\*.*?\*/#ms'], '', $code); // inline & block comments
     }
 
     protected function matchComments(string $code): string
     {
-        $matches = [];
-        $comments = '';
-        $hasLineComment = preg_match_all('#//(.*?)$#m', $code, $matches);
-        if ($hasLineComment) {
-            foreach ($matches[1] as $line) {
-                $comments .= $line . "\n";
-            }
-        }
-        $hasBlockComment = preg_match('#/*\*(.*?)\*/#ms', $code, $matches);
-        if ($hasBlockComment) {
-            $comments .= $matches[1] . "\n";
-        }
-        return $comments;
+        preg_match_all('#//(.*?)$#m', $code, $lineMatches);
+        preg_match('#/\*(.*?)\*/#ms', $code, $blockMatch);
+        $lineComments = implode("\n", $lineMatches[1] ?? []);
+        $blockComments = $blockMatch[1] ?? '';
+
+        return $lineComments . "\n" . $blockComments . "\n";
     }
 }
