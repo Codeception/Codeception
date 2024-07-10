@@ -16,7 +16,9 @@ class Cest
 
     protected string $template = <<<EOF
 <?php
+
 declare(strict_types=1);
+
 {{namespace}}
 
 final class {{name}}Cest
@@ -24,13 +26,11 @@ final class {{name}}Cest
     public function _before({{actor}} \$I): void
     {
         // Code here will be executed before each test.
-        // To execute code before just *some* tests, use the `#[Before]` attribute, see https://codeception.com/docs/AdvancedUsage#BeforeAfter-Attributes
     }
 
-    // Your tests. All `public` methods will be executed as tests:
-
-    public function tryToTest({{actor}} \$I, Scenario \$scenario): void
+    public function tryToTest({{actor}} \$I): void
     {
+        // Write your tests here. All `public` methods will be executed as tests.
     }
 }
 
@@ -54,7 +54,6 @@ EOF;
 
         if ($namespaceHeader) {
             $namespaceHeader .= "\nuse " . $this->supportNamespace() . $actor . ";";
-            $namespaceHeader .= "\nuse Codeception\\Scenario;";
         }
 
         return (new Template($this->template))
