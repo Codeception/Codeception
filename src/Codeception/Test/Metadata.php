@@ -215,7 +215,7 @@ class Metadata
         $params = [];
         foreach ($attributes as $attribute) {
             $name = lcfirst(str_replace('Codeception\\Attribute\\', '', $attribute->getName()));
-            if ($attribute->isRepeated()) {
+            if ($attribute->isRepeated() || $name === 'examples') {
                 $params[$name] ??= [];
                 $params[$name][] = $attribute->getArguments();
                 continue;
