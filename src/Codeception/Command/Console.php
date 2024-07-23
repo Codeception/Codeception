@@ -49,20 +49,12 @@ class Console extends Command
 
     protected function configure(): void
     {
-        $this->setDefinition([
-            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
-            new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
-        ]);
-
-        parent::configure();
+        $this->setDescription('Launches interactive test console')
+            ->addArgument('suite', InputArgument::REQUIRED, 'suite to be executed')
+            ->addOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output');
     }
 
-    public function getDescription(): string
-    {
-        return 'Launches interactive test console';
-    }
-
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $suiteName = $input->getArgument('suite');
         $this->output = $output;
@@ -103,6 +95,7 @@ class Console extends Command
         if (isset($config['namespace']) && $config['namespace'] !== '') {
             $settings['actor'] = $config['namespace'] . '\\Support\\' . $settings['actor'];
         }
+
         $actor = $settings['actor'];
         $I = new $actor($scenario);
 
@@ -126,7 +119,7 @@ class Console extends Command
         $eventDispatcher->dispatch(new SuiteEvent($this->suite), Events::SUITE_AFTER);
 
         $output->writeln("<info>Bye-bye!</info>");
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function listenToSignals(): void

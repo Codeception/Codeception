@@ -37,18 +37,11 @@ class GenerateScenarios extends Command
 
     protected function configure(): void
     {
-        $this->setDefinition([
-            new InputArgument('suite', InputArgument::REQUIRED, 'suite from which texts should be generated'),
-            new InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
-            new InputOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file'),
-            new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Specify output format: html or text (default)', 'text'),
-        ]);
-        parent::configure();
-    }
-
-    public function getDescription(): string
-    {
-        return 'Generates text representation for all scenarios';
+        $this->setDescription('Generates text representation for all scenarios')
+            ->addArgument('suite', InputArgument::REQUIRED, 'suite from which texts should be generated')
+            ->addOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default')
+            ->addOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file')
+            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'Specify output format: html or text (default)', 'text');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -61,7 +54,7 @@ class GenerateScenarios extends Command
 
         $format = $input->getOption('format');
 
-        @mkdir($path);
+        @mkdir($path, 0777, true);
 
         if (!is_writable($path)) {
             throw new ConfigurationException(
@@ -69,7 +62,7 @@ class GenerateScenarios extends Command
             );
         }
 
-        $path = $path . DIRECTORY_SEPARATOR . $suite;
+        $path .= DIRECTORY_SEPARATOR . $suite;
         if (!$input->getOption('single-file')) {
             @mkdir($path);
         }
@@ -81,7 +74,7 @@ class GenerateScenarios extends Command
         }
 
         $tests = $this->getTests($suiteManager);
-        $scenarios = "";
+        $scenarios = '';
 
         foreach ($tests as $test) {
             if (!$test instanceof ScenarioDriven || !$test instanceof Descriptive) {
@@ -109,13 +102,14 @@ class GenerateScenarios extends Command
         if ($input->getOption('single-file')) {
             $this->createFile($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
         }
-        return 0;
+
+        return Command::SUCCESS;
     }
 
     protected function decorate(string $text, string $format): string
     {
         if ($format === 'html') {
-            return "<html><body>$text</body></html>";
+            return "<html><body>{$text}</body></html>";
         }
         return $text;
     }
@@ -128,10 +122,7 @@ class GenerateScenarios extends Command
 
     protected function formatExtension(string $format): string
     {
-        if ($format === 'html') {
-            return '.html';
-        }
-        return '.txt';
+        return '.' . ($format === 'html' ? 'html' : 'txt');
     }
 
     private function underscore(string $name): string

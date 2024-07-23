@@ -46,22 +46,13 @@ class ConfigValidate extends Command
 
     protected function configure(): void
     {
-        $this->setDefinition(
-            [
-                new InputArgument('suite', InputArgument::OPTIONAL, 'to show suite configuration'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-                new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Override config values'),
-            ]
-        );
-        parent::configure();
+        $this->setDescription('Validates and prints config to screen')
+            ->addArgument('suite', InputArgument::OPTIONAL, 'To show suite configuration')
+            ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config')
+            ->addOption('override', 'o', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Override config values');
     }
 
-    public function getDescription(): string
-    {
-        return 'Validates and prints config to screen';
-    }
-
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->addStyles($output);
 
@@ -72,8 +63,7 @@ class ConfigValidate extends Command
             $output->writeln("------------------------------\n");
             $output->writeln("<info>{$suite} Suite Config</info>:\n");
             $output->writeln($this->formatOutput($config));
-
-            return 0;
+            return Command::SUCCESS;
         }
 
         $output->write("Validating global config... ");
@@ -82,8 +72,9 @@ class ConfigValidate extends Command
         if (!empty($input->getOption('override'))) {
             $config = $this->overrideConfig($input->getOption('override'));
         }
-        $suites = Configuration::suites();
+
         $output->writeln("Ok");
+        $suites = Configuration::suites();
 
         $output->writeln("------------------------------\n");
         $output->writeln("<info>Codeception Config</info>:\n");
@@ -104,7 +95,8 @@ class ConfigValidate extends Command
         }
 
         $output->writeln("Execute <info>codecept config:validate [<suite>]</info> to see config for a suite");
-        return 0;
+
+        return Command::SUCCESS;
     }
 
     protected function formatOutput($config): ?string
