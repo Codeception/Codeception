@@ -37,7 +37,7 @@ class ReflectionHelper
      *
      * @throws ReflectionException
      */
-    public static function readPrivateProperty(object $object, string $property, string $class = null): mixed
+    public static function readPrivateProperty(object $object, string $property, ?string $class = null): mixed
     {
         if (is_null($class)) {
             $class = $object;
@@ -54,7 +54,7 @@ class ReflectionHelper
      *
      * @throws ReflectionException
      */
-    public static function setPrivateProperty(object $object, string $property, $value, string $class = null): void
+    public static function setPrivateProperty(object $object, string $property, $value, ?string $class = null): void
     {
         if (is_null($class)) {
             $class = $object;
@@ -71,7 +71,7 @@ class ReflectionHelper
      *
      * @throws ReflectionException
      */
-    public static function invokePrivateMethod(?object $object, string $method, array $args = [], string $class = null): mixed
+    public static function invokePrivateMethod(?object $object, string $method, array $args = [], ?string $class = null): mixed
     {
         if (is_null($class)) {
             $class = $object;

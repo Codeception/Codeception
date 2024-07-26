@@ -14,7 +14,7 @@ use function str_replace;
 
 class Meta extends CodeceptionStep
 {
-    public function run(ModuleContainer $container = null): void
+    public function run(?ModuleContainer $container = null): void
     {
     }
 

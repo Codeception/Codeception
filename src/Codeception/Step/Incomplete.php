@@ -10,7 +10,7 @@ use PHPUnit\Framework\IncompleteTestError;
 
 class Incomplete extends CodeceptionStep
 {
-    public function run(ModuleContainer $container = null): void
+    public function run(?ModuleContainer $container = null): void
     {
         throw new IncompleteTestError($this->getAction());
     }

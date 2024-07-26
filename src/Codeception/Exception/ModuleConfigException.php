@@ -17,7 +17,7 @@ class ModuleConfigException extends Exception
      *
      * @param object|string $module
      */
-    public function __construct($module, string $message, Exception $previous = null)
+    public function __construct($module, string $message, ?Exception $previous = null)
     {
         if (is_object($module)) {
             $module = $module::class;
