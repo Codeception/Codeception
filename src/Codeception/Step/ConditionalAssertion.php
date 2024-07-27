@@ -15,7 +15,7 @@ use function ucfirst;
 
 class ConditionalAssertion extends Assertion implements GeneratedStep
 {
-    public function run(ModuleContainer $container = null): void
+    public function run(?ModuleContainer $container = null): void
     {
         try {
             parent::run($container);

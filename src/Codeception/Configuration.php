@@ -148,7 +148,7 @@ class Configuration
      * @return array<string, mixed>
      * @throws ConfigurationException
      */
-    public static function config(string $configFile = null): array
+    public static function config(?string $configFile = null): array
     {
         if (!$configFile && self::$config) {
             return self::$config;

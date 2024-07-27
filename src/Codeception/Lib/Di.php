@@ -27,7 +27,7 @@ class Di
 
     protected ?Di $fallback = null;
 
-    public function __construct(Di $fallback = null)
+    public function __construct(?Di $fallback = null)
     {
         $this->fallback = $fallback;
     }
@@ -51,7 +51,7 @@ class Di
      */
     public function instantiate(
         string $className,
-        array $constructorArgs = null,
+        ?array $constructorArgs = null,
         string $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME
     ): ?object {
         // normalize namespace

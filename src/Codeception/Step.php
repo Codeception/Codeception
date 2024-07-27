@@ -274,7 +274,7 @@ abstract class Step implements Stringable
     /**
      * @return mixed
      */
-    public function run(ModuleContainer $container = null)
+    public function run(?ModuleContainer $container = null)
     {
         $this->executed = true;
         if (!$container instanceof ModuleContainer) {

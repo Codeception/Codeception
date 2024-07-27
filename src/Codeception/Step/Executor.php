@@ -15,7 +15,7 @@ class Executor extends CodeceptionStep
         parent::__construct('execute callable function', []);
     }
 
-    public function run(ModuleContainer $container = null)
+    public function run(?ModuleContainer $container = null)
     {
         $callable = $this->callable;
 

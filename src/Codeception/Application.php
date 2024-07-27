@@ -99,7 +99,7 @@ class Application extends BaseApplication
      *
      * @inheritDoc
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null): int
+    public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
         if (!$input instanceof InputInterface) {
             $input = $this->getCoreArguments();

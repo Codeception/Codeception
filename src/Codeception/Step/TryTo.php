@@ -13,7 +13,7 @@ use function ucfirst;
 
 class TryTo extends Assertion implements GeneratedStep
 {
-    public function run(ModuleContainer $container = null): bool
+    public function run(?ModuleContainer $container = null): bool
     {
         $this->isTry = true;
         try {

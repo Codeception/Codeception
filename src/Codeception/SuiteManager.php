@@ -78,7 +78,7 @@ class SuiteManager
         ini_set('xdebug.show_exception_trace', '0'); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
-    public function loadTests(string $path = null): void
+    public function loadTests(?string $path = null): void
     {
         $testLoader = new Loader($this->settings);
         $testLoader->loadTests($path);

@@ -38,7 +38,7 @@ EOF;
         $this->arguments = $arguments;
     }
 
-    public function run(ModuleContainer $container = null)
+    public function run(?ModuleContainer $container = null)
     {
         $retry = 0;
         $interval = $this->retryInterval;

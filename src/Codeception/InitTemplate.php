@@ -97,7 +97,7 @@ abstract class InitTemplate
      *
      * @return mixed|string
      */
-    protected function ask(string $question, string|bool|array $answer = null): mixed
+    protected function ask(string $question, string|bool|array|null $answer = null): mixed
     {
         $question = "? {$question}";
         $dialog = new QuestionHelper();
