@@ -192,7 +192,7 @@ class Codecept
         }
     }
 
-    public function run(string $suite, string $test = null, array $config = null): void
+    public function run(string $suite, ?string $test = null, ?array $config = null): void
     {
         ini_set(
             'memory_limit',
@@ -241,7 +241,7 @@ class Codecept
         }
     }
 
-    public function runSuite(array $settings, string $suite, string $test = null): void
+    public function runSuite(array $settings, string $suite, ?string $test = null): void
     {
         $settings['shard'] = $this->options['shard'];
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings, $this->options);

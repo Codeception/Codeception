@@ -31,7 +31,7 @@ class Comment extends CodeceptionStep
         return '// ' . $this->getAction();
     }
 
-    public function run(ModuleContainer $container = null): void
+    public function run(?ModuleContainer $container = null): void
     {
         // don't do anything, let's rest
     }

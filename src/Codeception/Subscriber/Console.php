@@ -541,7 +541,7 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    public function printException($exception, string $cause = null): void
+    public function printException($exception, ?string $cause = null): void
     {
         if ($exception instanceof SkippedTest || $exception instanceof IncompleteTestError) {
             if ($exception->getMessage() !== '') {

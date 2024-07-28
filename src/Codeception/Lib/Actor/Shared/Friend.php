@@ -13,7 +13,7 @@ trait Friend
 
     abstract protected function getScenario(): Scenario;
 
-    public function haveFriend(string $name, string $actorClass = null): LibFriend
+    public function haveFriend(string $name, ?string $actorClass = null): LibFriend
     {
         if (!isset($this->friends[$name])) {
             $actor = $actorClass === null ? $this : new $actorClass($this->getScenario());

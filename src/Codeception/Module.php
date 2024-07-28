@@ -298,7 +298,7 @@ abstract class Module
      * @param string|null $key
      * @return mixed the config item's value or null if it doesn't exist
      */
-    public function _getConfig(string $key = null): mixed
+    public function _getConfig(?string $key = null): mixed
     {
         if (!$key) {
             return $this->config;
