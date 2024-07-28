@@ -181,7 +181,7 @@ class Metadata
      * Returns test params like: env, group, skip, incomplete, etc.
      * Can return by annotation or return all if no key passed
      */
-    public function getParam(string $key = null): mixed
+    public function getParam(?string $key = null): mixed
     {
         if ($key) {
             if (isset($this->params[$key])) {

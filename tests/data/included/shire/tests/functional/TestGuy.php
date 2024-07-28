@@ -291,7 +291,7 @@ class TestGuy extends \Codeception\Actor
      * Conditional Assertion: Test won't be stopped on fail
      * @see \Codeception\Module\Filesystem::seeFileFound()
      */
-    public function canSeeFileFound($filename, string $path = null)
+    public function canSeeFileFound($filename, ?string $path = null)
     {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
     }
@@ -312,7 +312,7 @@ class TestGuy extends \Codeception\Actor
      * @param string|null $path
      * @see \Codeception\Module\Filesystem::seeFileFound()
      */
-    public function seeFileFound($filename, string $path = null)
+    public function seeFileFound($filename, ?string $path = null)
     {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
     }
@@ -328,7 +328,7 @@ class TestGuy extends \Codeception\Actor
      * Conditional Assertion: Test won't be stopped on fail
      * @see \Codeception\Module\Filesystem::dontSeeFileFound()
      */
-    public function cantSeeFileFound($filename, string $path = null)
+    public function cantSeeFileFound($filename, ?string $path = null)
     {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeFileFound', func_get_args()));
     }
@@ -342,7 +342,7 @@ class TestGuy extends \Codeception\Actor
      * @param string|null $path
      * @see \Codeception\Module\Filesystem::dontSeeFileFound()
      */
-    public function dontSeeFileFound($filename, string $path = null)
+    public function dontSeeFileFound($filename, ?string $path = null)
     {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeFileFound', func_get_args()));
     }

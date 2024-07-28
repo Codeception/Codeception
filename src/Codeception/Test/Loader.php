@@ -170,7 +170,7 @@ class Loader
         throw new Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
     }
 
-    public function loadTests(string $fileName = null): void
+    public function loadTests(?string $fileName = null): void
     {
         if ($fileName) {
             $this->loadTest($fileName);

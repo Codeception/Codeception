@@ -171,7 +171,7 @@ class ModuleContainer
     /**
      * Should a method be included as an action?
      */
-    private function includeMethodAsAction(Module $module, ReflectionMethod $method, array $configuredParts = null): bool
+    private function includeMethodAsAction(Module $module, ReflectionMethod $method, ?array $configuredParts = null): bool
     {
         // Filter out excluded actions
         if ($module::$excludeActions && in_array($method->name, $module::$excludeActions)) {

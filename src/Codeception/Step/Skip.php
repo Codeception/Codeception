@@ -12,7 +12,7 @@ use PHPUnit\Runner\Version as PHPUnitVersion;
 
 class Skip extends CodeceptionStep
 {
-    public function run(ModuleContainer $container = null): void
+    public function run(?ModuleContainer $container = null): void
     {
         $skipMessage = $this->getAction();
 

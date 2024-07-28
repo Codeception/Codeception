@@ -26,7 +26,7 @@ trait ConfigTrait
         return Configuration::suiteSettings($suite, $this->getGlobalConfig());
     }
 
-    protected function getGlobalConfig(string $conf = null): array
+    protected function getGlobalConfig(?string $conf = null): array
     {
         return Configuration::config($conf);
     }
