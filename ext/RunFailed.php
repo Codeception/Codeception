@@ -76,10 +76,12 @@ class RunFailed extends Extension
         }
         $output = [];
         foreach ($result->failures() as $fail) {
-            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->getTest()));
+            $index = $fail->getTest()->getMetadata()->getIndex();
+            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->getTest())) . ($index ? "@$index" : '');
         }
         foreach ($result->errors() as $fail) {
-            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->getTest()));
+            $index = $fail->getTest()->getMetadata()->getIndex();
+            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->getTest())) . ($index ? "@$index" : '');
         }
 
         file_put_contents($file, implode("\n", $output));
