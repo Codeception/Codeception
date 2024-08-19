@@ -12,6 +12,7 @@ use Codeception\Subscriber\Shared\StaticEventsTrait;
 use Codeception\Test\Test;
 use Codeception\Test\TestCaseWrapper;
 use Codeception\Util\StackTraceFilter;
+use Codeception\Attribute;
 use DOMDocument;
 use DOMElement;
 use InvalidArgumentException;
@@ -20,6 +21,7 @@ use PHPUnit\Framework\TestFailure;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\ThrowableToStringMapper;
 use PHPUnit\Util\Xml;
+use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Throwable;
@@ -62,6 +64,8 @@ class JUnitReporter implements EventSubscriberInterface
     protected DOMDocument $document;
 
     protected DOMElement $root;
+
+    protected ?ReflectionClass $reflectionClass = null;
 
     /**
      * @var DOMElement[]
@@ -157,6 +161,7 @@ class JUnitReporter implements EventSubscriberInterface
         $this->testSuiteSkipped[$this->testSuiteLevel]    = 0;
         $this->testSuiteUseless[$this->testSuiteLevel]    = 0;
         $this->testSuiteTimes[$this->testSuiteLevel]      = 0;
+        $this->reflectionClass                            = null;
     }
 
     public function afterSuite(SuiteEvent $event): void
@@ -217,12 +222,51 @@ class JUnitReporter implements EventSubscriberInterface
 
         $this->currentTestCase = $this->document->createElement('testcase');
 
-        foreach ($test->getReportFields() as $attr => $value) {
+        $attrs = $test->getReportFields();
+        foreach ($attrs as $attr => $value) {
             if ($this->isStrict and !in_array($attr, $this->strictAttributes)) {
                 continue;
             }
+
             $this->currentTestCase->setAttribute($attr, $value);
         }
+
+        $this->updateTestName($attrs);
+    }
+
+    private function updateTestName(array $attrs)
+    {
+        $reflectionMethod = $this->getTestReflectionClass($attrs['class'])->getMethod(
+            $attrs['name']
+        );
+
+        $attributes = $reflectionMethod->getAttributes(Attribute\Identifier::class);
+
+        if (empty($attributes)) {
+            return;
+        }
+
+        if (count($attributes) > 1) {
+            throw new \RuntimeException(
+                sprintf(
+                    'There can be only one @Identifier attribute on a single test method. Please check "%s::%s"!',
+                    $attrs['class'],
+                    $attrs['name']
+                )
+            );
+        }
+
+        $instance = $attributes[0]->newInstance();
+        $this->currentTestCase->setAttribute('name', $instance->getId());
+    }
+
+    private function getTestReflectionClass(string $className): ReflectionClass
+    {
+        if (!$this->reflectionClass) {
+            $this->reflectionClass = new \ReflectionClass($className);
+        }
+
+        return $this->reflectionClass;
     }
 
     public function endTest(TestEvent $event): void
