@@ -240,7 +240,7 @@ class JUnitReporter implements EventSubscriberInterface
             $attrs['name']
         );
 
-        $attributes = $reflectionMethod->getAttributes(Attribute\Identifier::class);
+        $attributes = $reflectionMethod->getAttributes(Attribute\Key::class);
 
         if (empty($attributes)) {
             return;
@@ -257,7 +257,7 @@ class JUnitReporter implements EventSubscriberInterface
         }
 
         $instance = $attributes[0]->newInstance();
-        $this->currentTestCase->setAttribute('name', $instance->getId());
+        $this->currentTestCase->setAttribute('name', $instance->getKey());
     }
 
     private function getTestReflectionClass(string $className): ReflectionClass
