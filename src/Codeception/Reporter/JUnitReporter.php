@@ -249,7 +249,7 @@ class JUnitReporter implements EventSubscriberInterface
         if (count($attributes) > 1) {
             throw new \RuntimeException(
                 sprintf(
-                    'There can be only one @Identifier attribute on a single test method. Please check "%s::%s"!',
+                    'There can be only one @Key attribute on a single test method. Please check "%s::%s"!',
                     $attrs['class'],
                     $attrs['name']
                 )
