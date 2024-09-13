@@ -2,7 +2,7 @@
 
 class RunUselessTestsCest
 {
-    public function checkOutput(CliGuy $I): void
+    public function checkOutput(CliGuy $I)
     {
         $I->amInPath('tests/data/useless');
         $I->executeCommand('run');
@@ -82,7 +82,7 @@ This test indicates it does not perform assertions but 1 assertions were perform
         );
     }
 
-    public function checkReports(CliGuy $I): void
+    public function checkReports(CliGuy $I)
     {
         $I->amInPath('tests/data/useless');
         $I->executeCommand('run --report --xml --phpunit-xml --html');

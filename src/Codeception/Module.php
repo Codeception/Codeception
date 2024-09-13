@@ -134,7 +134,7 @@ abstract class Module
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) !== $this->requiredFields) {
             throw new ModuleConfigException(
-                $this::class,
+                static::class,
                 "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
                 "Please, update the configuration and set all the required fields\n\n"
             );
@@ -158,7 +158,7 @@ abstract class Module
      */
     public function _getName(): string
     {
-        $moduleName = '\\' . $this::class;
+        $moduleName = '\\' . static::class;
 
         if (str_starts_with($moduleName, ModuleContainer::MODULE_NAMESPACE)) {
             return substr($moduleName, strlen(ModuleContainer::MODULE_NAMESPACE));
@@ -172,7 +172,7 @@ abstract class Module
      */
     public function _hasRequiredFields(): bool
     {
-        return !empty($this->requiredFields);
+        return $this->requiredFields !== [];
     }
 
     /**
@@ -287,7 +287,7 @@ abstract class Module
     protected function getModule(string $name): Module
     {
         if (!$this->hasModule($name)) {
-            $this->moduleContainer->throwMissingModuleExceptionWithSuggestion(__CLASS__, $name);
+            $this->moduleContainer->throwMissingModuleExceptionWithSuggestion(self::class, $name);
         }
         return $this->moduleContainer->getModule($name);
     }
@@ -298,15 +298,12 @@ abstract class Module
      * @param string|null $key
      * @return mixed the config item's value or null if it doesn't exist
      */
-    public function _getConfig(string $key = null): mixed
+    public function _getConfig(?string $key = null): mixed
     {
         if (!$key) {
             return $this->config;
         }
-        if (isset($this->config[$key])) {
-            return $this->config[$key];
-        }
-        return null;
+        return $this->config[$key] ?? null;
     }
 
     protected function scalarizeArray(array $array): array

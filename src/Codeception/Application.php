@@ -99,9 +99,9 @@ class Application extends BaseApplication
      *
      * @inheritDoc
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null): int
+    public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
-        if ($input === null) {
+        if (!$input instanceof InputInterface) {
             $input = $this->getCoreArguments();
         }
 
@@ -135,7 +135,7 @@ class Application extends BaseApplication
      */
     protected function getCoreArguments(): SymfonyArgvInput
     {
-        if ($this->coreArguments !== null) {
+        if ($this->coreArguments instanceof SymfonyArgvInput) {
             return $this->coreArguments;
         }
 

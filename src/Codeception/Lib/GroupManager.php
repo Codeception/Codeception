@@ -10,7 +10,6 @@ use Codeception\Test\Gherkin;
 use Codeception\Test\Test;
 use Codeception\Util\PathResolver;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 use function realpath;
 
@@ -23,6 +22,7 @@ class GroupManager
 
     protected string $rootDir;
 
+    /** @param string[] $configuredGroups */
     public function __construct(protected array $configuredGroups)
     {
         $this->rootDir = Configuration::baseDir();
@@ -58,7 +58,6 @@ class GroupManager
                 ->in($path);
 
             foreach ($files as $file) {
-                /** @var SplFileInfo $file * */
                 $prefix = str_replace('*', '', $group);
                 $pathPrefix = str_replace('*', '', basename($pattern));
                 $groupName = $prefix . str_replace($pathPrefix, '', $file->getRelativePathname());
@@ -76,7 +75,7 @@ class GroupManager
             $this->testsInGroups[$group] = [];
             if (is_array($tests)) {
                 foreach ($tests as $test) {
-                    $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $test);
+                    $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], (string) $test);
                     $this->testsInGroups[$group][] = $this->normalizeFilePath($file, $group);
                 }
                 continue;
@@ -149,12 +148,13 @@ class GroupManager
         $groups = $test->getMetadata()->getGroups();
 
         foreach ($this->testsInGroups as $group => $tests) {
+            /** @var string[] $tests */
             foreach ($tests as $testPattern) {
                 if ($filename == $testPattern) {
                     $groups[] = $group;
                 }
 
-                if (str_starts_with($filename . ':' . $testName, (string)$testPattern)) {
+                if (str_starts_with($filename . ':' . $testName, $testPattern)) {
                     $groups[] = $group;
                 }
                 if (

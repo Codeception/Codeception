@@ -218,7 +218,7 @@ class JUnitReporter implements EventSubscriberInterface
         $this->currentTestCase = $this->document->createElement('testcase');
 
         foreach ($test->getReportFields() as $attr => $value) {
-            if ($this->isStrict and !in_array($attr, $this->strictAttributes)) {
+            if ($this->isStrict && !in_array($attr, $this->strictAttributes)) {
                 continue;
             }
             $this->currentTestCase->setAttribute($attr, $value);
@@ -313,7 +313,7 @@ class JUnitReporter implements EventSubscriberInterface
 
     public function testSkipped(FailEvent $event): void
     {
-        if ($this->currentTestCase === null) {
+        if (!$this->currentTestCase instanceof DOMElement) {
             return;
         }
 
@@ -325,7 +325,7 @@ class JUnitReporter implements EventSubscriberInterface
 
     public function testUseless(FailEvent $event): void
     {
-        if ($this->currentTestCase === null) {
+        if (!$this->currentTestCase instanceof DOMElement) {
             return;
         }
 
@@ -343,7 +343,7 @@ class JUnitReporter implements EventSubscriberInterface
      */
     private function doAddFault(Test $test, Throwable $t, string $type): void
     {
-        if ($this->currentTestCase === null) {
+        if (!$this->currentTestCase instanceof DOMElement) {
             return;
         }
 

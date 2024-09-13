@@ -2,7 +2,7 @@
 
 class RunSkippedCest
 {
-    public function classLevelSkipAnnotationWithMessage(CliGuy $I): void
+    public function classLevelSkipAnnotationWithMessage(CliGuy $I)
     {
         $I->amInPath('tests/data/skip');
         $I->executeCommand('run -v --no-ansi unit ClassLevelSkipAnnotationWithMessageCest.php');
@@ -12,7 +12,7 @@ class RunSkippedCest
         $I->seeInShellOutput('OK, but incomplete, skipped, or useless tests!');
     }
 
-    public function classLevelSkipAnnotationWithoutMessage(CliGuy $I): void
+    public function classLevelSkipAnnotationWithoutMessage(CliGuy $I)
     {
         $I->amInPath('tests/data/skip');
         $I->executeCommand('run -v --no-ansi unit ClassLevelSkipAnnotationWithoutMessageCest.php');
@@ -21,7 +21,7 @@ class RunSkippedCest
         $I->seeInShellOutput('OK, but incomplete, skipped, or useless tests!');
     }
 
-    public function classLevelSkipAttributeWithMessage(CliGuy $I): void
+    public function classLevelSkipAttributeWithMessage(CliGuy $I)
     {
         $I->amInPath('tests/data/skip');
         $I->executeCommand('run -v --no-ansi unit ClassLevelSkipAttributeWithMessageCest.php');
@@ -31,7 +31,7 @@ class RunSkippedCest
         $I->seeInShellOutput('OK, but incomplete, skipped, or useless tests!');
     }
 
-    public function classLevelSkipAttributeWithoutMessage(CliGuy $I): void
+    public function classLevelSkipAttributeWithoutMessage(CliGuy $I)
     {
         $I->amInPath('tests/data/skip');
         $I->executeCommand('run -v --no-ansi unit ClassLevelSkipAttributeWithoutMessageCest.php');
@@ -40,7 +40,7 @@ class RunSkippedCest
         $I->seeInShellOutput('OK, but incomplete, skipped, or useless tests!');
     }
 
-    public function methodLevelSkipAnnotationWithMessage(CliGuy $I): void
+    public function methodLevelSkipAnnotationWithMessage(CliGuy $I)
     {
         $I->amInPath('tests/data/skip');
         $I->executeCommand('run -v --no-ansi unit MethodLevelSkipAnnotationWithMessageCest.php');
@@ -50,7 +50,7 @@ class RunSkippedCest
         $I->seeInShellOutput('OK, but incomplete, skipped, or useless tests!');
     }
 
-    public function methodLevelSkipAnnotationWithoutMessage(CliGuy $I): void
+    public function methodLevelSkipAnnotationWithoutMessage(CliGuy $I)
     {
         $I->amInPath('tests/data/skip');
         $I->executeCommand('run -v --no-ansi unit MethodLevelSkipAnnotationWithoutMessageCest.php');
@@ -59,7 +59,7 @@ class RunSkippedCest
         $I->seeInShellOutput('OK, but incomplete, skipped, or useless tests!');
     }
 
-    public function methodLevelSkipAttributeWithMessage(CliGuy $I): void
+    public function methodLevelSkipAttributeWithMessage(CliGuy $I)
     {
         $I->amInPath('tests/data/skip');
         $I->executeCommand('run -v --no-ansi unit MethodLevelSkipAttributeWithMessageCest.php');
@@ -69,7 +69,7 @@ class RunSkippedCest
         $I->seeInShellOutput('OK, but incomplete, skipped, or useless tests!');
     }
 
-    public function methodLevelSkipAttributeWithoutMessage(CliGuy $I): void
+    public function methodLevelSkipAttributeWithoutMessage(CliGuy $I)
     {
         $I->amInPath('tests/data/skip');
         $I->executeCommand('run -v --no-ansi unit MethodLevelSkipAttributeWithoutMessageCest.php');

@@ -148,120 +148,42 @@ class Run extends Command
      */
     protected function configure(): void
     {
-        $this->setDefinition([
-            new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
-            new InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
-            new InputOption('override', 'o', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Override config values'),
-            new InputOption('ext', 'e', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run with extension enabled'),
-            new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
-            new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html'),
-            new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
-            new InputOption('phpunit-xml', '', InputOption::VALUE_OPTIONAL, 'Generate PhpUnit XML Log', 'phpunit-report.xml'),
-            new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
-            new InputOption(
-                'no-colors',
-                '',
-                InputOption::VALUE_NONE,
-                'Force no colors in output (useful to override config file)'
-            ),
-            new InputOption('silent', '', InputOption::VALUE_NONE, 'Only outputs suite names and final results'),
-            new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
-            new InputOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output'),
-            new InputOption('shard', '', InputOption::VALUE_REQUIRED, 'Execute subset of tests to run tests on different machine. To split tests on 3 machines to run with shards: 1/3, 2/3, 3/3'),
-            new InputOption('filter', '', InputOption::VALUE_REQUIRED, 'Filter tests by name'),
-            new InputOption('grep', '', InputOption::VALUE_REQUIRED, 'Filter tests by name (alias to --filter)'),
-            new InputOption('bootstrap', '', InputOption::VALUE_OPTIONAL, 'Execute custom PHP script before running tests. Path can be absolute or relative to current working directory', false),
-            new InputOption('no-redirect', '', InputOption::VALUE_NONE, 'Do not redirect to Composer-installed version in vendor/codeception'),
-            new InputOption(
-                'coverage',
-                '',
-                InputOption::VALUE_OPTIONAL,
-                'Run with code coverage'
-            ),
-            new InputOption(
-                'coverage-html',
-                '',
-                InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage HTML report in path'
-            ),
-            new InputOption(
-                'coverage-xml',
-                '',
-                InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage XML report in file'
-            ),
-            new InputOption(
-                'coverage-text',
-                '',
-                InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage text report in file'
-            ),
-            new InputOption(
-                'coverage-crap4j',
-                '',
-                InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage report in Crap4J XML format'
-            ),
-            new InputOption(
-                'coverage-cobertura',
-                '',
-                InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage report in Cobertura XML format'
-            ),
-            new InputOption(
-                'coverage-phpunit',
-                '',
-                InputOption::VALUE_OPTIONAL,
-                'Generate CodeCoverage PHPUnit report in path'
-            ),
-            new InputOption('no-exit', '', InputOption::VALUE_NONE, "Don't finish with exit code"),
-            new InputOption(
-                'group',
-                'g',
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-                'Groups of tests to be executed'
-            ),
-            new InputOption(
-                'skip',
-                's',
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-                'Skip selected suites'
-            ),
-            new InputOption(
-                'skip-group',
-                'x',
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-                'Skip selected groups'
-            ),
-            new InputOption(
-                'env',
-                '',
-                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-                'Run tests in selected environments.'
-            ),
-            new InputOption('fail-fast', 'f', InputOption::VALUE_OPTIONAL, 'Stop after nth failure'),
-            new InputOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start'),
-            new InputOption(
-                'seed',
-                '',
-                InputOption::VALUE_REQUIRED,
-                'Define random seed for shuffle setting'
-            ),
-            new InputOption('no-artifacts', '', InputOption::VALUE_NONE, "Don't report about artifacts"),
-            new InputOption(
-                'disable-coverage-php',
-                '',
-                InputOption::VALUE_NONE,
-                "Don't generate CodeCoverage report in raw PHP serialized format"
-            ),
-        ]);
-
-        parent::configure();
-    }
-
-    public function getDescription(): string
-    {
-        return 'Runs the test suites';
+        $this->setDescription('Runs the test suites')
+            ->addArgument('suite', InputArgument::OPTIONAL, 'suite to be tested')
+            ->addArgument('test', InputArgument::OPTIONAL, 'test to be run')
+            ->addOption('override', 'o', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Override config values')
+            ->addOption('ext', 'e', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run with extension enabled')
+            ->addOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style')
+            ->addOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html')
+            ->addOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml')
+            ->addOption('phpunit-xml', '', InputOption::VALUE_OPTIONAL, 'Generate PhpUnit XML Log', 'phpunit-report.xml')
+            ->addOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output')
+            ->addOption('no-colors', '', InputOption::VALUE_NONE, 'Force no colors in output (useful to override config file)')
+            ->addOption('silent', '', InputOption::VALUE_NONE, 'Only outputs suite names and final results')
+            ->addOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output')
+            ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output')
+            ->addOption('shard', '', InputOption::VALUE_REQUIRED, 'Execute subset of tests to run tests on different machine. To split tests on 3 machines to run with shards: 1/3, 2/3, 3/3')
+            ->addOption('filter', '', InputOption::VALUE_REQUIRED, 'Filter tests by name')
+            ->addOption('grep', '', InputOption::VALUE_REQUIRED, 'Filter tests by name (alias to --filter)')
+            ->addOption('bootstrap', '', InputOption::VALUE_OPTIONAL, 'Execute custom PHP script before running tests. Path can be absolute or relative to current working directory', false)
+            ->addOption('no-redirect', '', InputOption::VALUE_NONE, 'Do not redirect to Composer-installed version in vendor/codeception')
+            ->addOption('coverage', '', InputOption::VALUE_OPTIONAL, 'Run with code coverage')
+            ->addOption('coverage-html', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage HTML report in path')
+            ->addOption('coverage-xml', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage XML report in file')
+            ->addOption('coverage-text', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage text report in file')
+            ->addOption('coverage-crap4j', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage report in Crap4J XML format')
+            ->addOption('coverage-cobertura', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage report in Cobertura XML format')
+            ->addOption('coverage-phpunit', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage PHPUnit report in path')
+            ->addOption('disable-coverage-php', '', InputOption::VALUE_NONE, "Don't generate CodeCoverage report in raw PHP serialized format")
+            ->addOption('no-exit', '', InputOption::VALUE_NONE, "Don't finish with exit code")
+            ->addOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Groups of tests to be executed')
+            ->addOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites')
+            ->addOption('skip-group', 'x', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups')
+            ->addOption('env', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run tests in selected environments.')
+            ->addOption('fail-fast', 'f', InputOption::VALUE_OPTIONAL, 'Stop after nth failure')
+            ->addOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start')
+            ->addOption('seed', '', InputOption::VALUE_REQUIRED, 'Define random seed for shuffle setting')
+            ->addOption('no-artifacts', '', InputOption::VALUE_NONE, "Don't report about artifacts");
     }
 
     /**
@@ -269,7 +191,7 @@ class Run extends Command
      *
      * @throws ConfigurationException|ParseException
      */
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->ensurePhpExtIsAvailable('CURL');
         $this->ensurePhpExtIsAvailable('mbstring');
@@ -343,7 +265,7 @@ class Run extends Command
             $userOptions['fail-fast'] = (int)$this->options['fail-fast'] ?: 1;
         }
 
-        $suite = $input->getArgument('suite');
+        $suite = (string)$input->getArgument('suite');
         $test = $input->getArgument('test');
 
         if ($this->options['group']) {
@@ -477,7 +399,7 @@ class Run extends Command
 
             if (!empty($wildcardSuites) && ! empty($appSpecificSuites)) {
                 $this->output->writeLn('<error>Wildcard options can not be combined with specific suites of included apps.</error>');
-                return 2;
+                return Command::INVALID;
             }
 
             if (
@@ -518,10 +440,10 @@ class Run extends Command
             exit(1);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    protected function matchSingleTest($suite, $config): ?array
+    protected function matchSingleTest(string $suite, array $config): ?array
     {
         // Workaround when codeception.yml is inside tests directory and tests path is set to "."
         // @see https://github.com/Codeception/Codeception/issues/4432
@@ -588,7 +510,7 @@ class Run extends Command
         string $parentDir,
         array $filterAppSuites = [],
         array $filterSuitesByWildcard = [],
-    ) {
+    ): void {
         $defaultConfig = Configuration::config();
         $absolutePath = Configuration::projectDir();
 
@@ -597,13 +519,13 @@ class Run extends Command
             $config = Configuration::config($currentDir);
 
             if (!empty($defaultConfig['groups'])) {
-                $groups = array_map(fn ($g) => $absolutePath . $g, $defaultConfig['groups']);
+                $groups = array_map(fn ($g): string => $absolutePath . $g, $defaultConfig['groups']);
                 Configuration::append(['groups' => $groups]);
             }
 
             $suites = Configuration::suites();
 
-            if (!empty($filterSuitesByWildcard)) {
+            if ($filterSuitesByWildcard !== []) {
                 $suites = array_intersect($suites, $filterSuitesByWildcard);
             }
 
@@ -709,7 +631,7 @@ class Run extends Command
             // phpunit --filter matches against the fully qualified method name, so tests actually begin with :
             $caratPos = strpos($filter, '^');
             if ($caratPos !== false) {
-                $filter = substr_replace($filter, ':', $caratPos, 1);
+                return substr_replace($filter, ':', $caratPos, 1);
             }
             return $filter;
         }
@@ -797,7 +719,7 @@ class Run extends Command
         }
         // enable extensions
         if ($this->options['ext']) {
-            $config = $this->enableExtensions($this->options['ext']);
+            return $this->enableExtensions($this->options['ext']);
         }
 
         return $config;

@@ -79,19 +79,19 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
 
         $this->assertSame(
             \Codeception\Util\Debug::class,
-            ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 0))
+            ReflectionHelper::getClassFromParameter(new ReflectionParameter($object->setDebug(...), 0))
         );
 
         $this->assertNull(
-            ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 1))
+            ReflectionHelper::getClassFromParameter(new ReflectionParameter($object->setDebug(...), 1))
         );
 
         $this->assertNull(
-            ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setDebug'], 'flavor'))
+            ReflectionHelper::getClassFromParameter(new ReflectionParameter($object->setDebug(...), 'flavor'))
         );
 
         $this->assertNull(
-            ReflectionHelper::getClassFromParameter(new ReflectionParameter([$object, 'setInt'], 'i'))
+            ReflectionHelper::getClassFromParameter(new ReflectionParameter($object->setInt(...), 'i'))
         );
     }
 
@@ -102,37 +102,37 @@ class ReflectionHelperTest extends \Codeception\PHPUnit\TestCase
 
         $this->assertSame(
             'null',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setDebug'], 0))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter($object->setDebug(...), 0))
         );
 
         $this->assertSame(
             '\Codeception\Util\ReflectionTestClass::FOO',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setDebug'], 1))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter($object->setDebug(...), 1))
         );
 
         $this->assertSame(
             '\Codeception\Util\ReflectionTestClass::FOO',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setDebug'], 'flavor'))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter($object->setDebug(...), 'flavor'))
         );
 
         $this->assertSame(
             '\Codeception\Codecept::VERSION',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setFlavorImportedDefault'], 'flavor'))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter($object->setFlavorImportedDefault(...), 'flavor'))
         );
 
         $this->assertSame(
             "''",
-            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setValue'], 0))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter($object->setValue(...), 0))
         );
 
         $this->assertSame(
             '0',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setInt'], 0))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter($object->setInt(...), 0))
         );
 
         $this->assertSame(
             'null',
-            ReflectionHelper::getDefaultValue(new ReflectionParameter([$object, 'setMixed'], 0))
+            ReflectionHelper::getDefaultValue(new ReflectionParameter($object->setMixed(...), 0))
         );
     }
 

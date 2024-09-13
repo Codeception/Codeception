@@ -106,10 +106,10 @@ class Loader
 
     private function splitTestsIntoChunks(int $chunks): array
     {
-        if (empty($this->tests)) {
+        if ($this->tests === []) {
             return [];
         }
-        return array_chunk($this->tests, intval(ceil(sizeof($this->tests) / $chunks)));
+        return array_chunk($this->tests, (int) ceil(count($this->tests) / $chunks));
     }
 
     protected function relativeName(string $file): string
@@ -170,7 +170,7 @@ class Loader
         throw new Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
     }
 
-    public function loadTests(string $fileName = null): void
+    public function loadTests(?string $fileName = null): void
     {
         if ($fileName) {
             $this->loadTest($fileName);

@@ -10,16 +10,12 @@ use Codeception\Step as CodeceptionStep;
 
 class Executor extends CodeceptionStep
 {
-    protected Closure $callable;
-
-    public function __construct(Closure $callable, array $arguments = [])
+    public function __construct(protected Closure $callable, array $arguments = [])
     {
         parent::__construct('execute callable function', []);
-
-        $this->callable = $callable;
     }
 
-    public function run(ModuleContainer $container = null)
+    public function run(?ModuleContainer $container = null)
     {
         $callable = $this->callable;
 

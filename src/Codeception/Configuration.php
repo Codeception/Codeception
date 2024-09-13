@@ -148,7 +148,7 @@ class Configuration
      * @return array<string, mixed>
      * @throws ConfigurationException
      */
-    public static function config(string $configFile = null): array
+    public static function config(?string $configFile = null): array
     {
         if (!$configFile && self::$config) {
             return self::$config;
@@ -212,7 +212,7 @@ class Configuration
             $config = self::mergeConfigs($config, self::getConfFromContents($configContents, $configFile));
         }
 
-        if ($config == self::$defaultConfig) {
+        if ($config === self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
         }
 
@@ -361,7 +361,7 @@ class Configuration
             $settings['path'] = $suite;
         }
 
-        $config['paths']['tests'] = str_replace('/', DIRECTORY_SEPARATOR, $config['paths']['tests']);
+        $config['paths']['tests'] = str_replace('/', DIRECTORY_SEPARATOR, (string) $config['paths']['tests']);
 
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
             . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
@@ -495,7 +495,7 @@ class Configuration
     {
         return array_filter(
             array_map(
-                fn ($m) => is_array($m) ? key($m) : $m,
+                fn ($m): mixed => is_array($m) ? key($m) : $m,
                 $settings['modules']['enabled'],
                 array_keys($settings['modules']['enabled'])
             ),
@@ -723,7 +723,7 @@ class Configuration
      */
     protected static function expandWildcardedIncludes(array $includes): array
     {
-        if (empty($includes)) {
+        if ($includes === []) {
             return $includes;
         }
         $expandedIncludes = [];
