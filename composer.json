@@ -68,7 +68,11 @@
     "replace": {
         "codeception/phpunit-wrapper": "*"
     },
-
+    "extra": {
+        "branch-alias": {
+            "dev-main": "5.2.x-dev"
+        }
+    },
     "autoload": {
         "classmap": [
             "src/PHPUnit/TestCase.php"
@@ -112,6 +116,7 @@
             "codeception/module-db": "source",
             "codeception/module-filesystem": "source",
             "codeception/module-phpbrowser": "source",
+            "codeception/lib-innerbrowser": "source",
             "*": "dist"
         }
     }
