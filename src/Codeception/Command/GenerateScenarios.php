@@ -76,6 +76,8 @@ class GenerateScenarios extends Command
         $tests = $this->getTests($suiteManager);
         $scenarios = '';
 
+        $output->writeln('<comment>This command is deprecated and will be removed in the next major version of Codeception.</comment>');
+
         foreach ($tests as $test) {
             if (!$test instanceof ScenarioDriven || !$test instanceof Descriptive) {
                 continue;
