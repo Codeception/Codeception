@@ -51,19 +51,18 @@ EOF;
     public function produce(): string
     {
         $actor = $this->settings['actor'];
-
-        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . ucfirst((string) $this->settings['suite']) . '\\' . $this->name);
+        $namespacePath = $this->settings['namespace'] . '\\' . ucfirst((string)$this->settings['suite']) . '\\' . $this->name;
+        $ns = $this->getNamespaceHeader($namespacePath);
 
         if ($ns) {
             $ns .= "\nuse " . $this->supportNamespace() . $actor . ";";
         }
 
-
         $tester = '';
-        if ($this->settings['actor']) {
+        if ($actor) {
             $tester = (new Template($this->testerTemplate))
                 ->place('actorClass', $actor)
-                ->place('actor', lcfirst((string) Configuration::config()['actor_suffix']))
+                ->place('actor', lcfirst((string)Configuration::config()['actor_suffix']))
                 ->produce();
         }
 

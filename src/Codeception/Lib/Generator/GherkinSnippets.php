@@ -40,10 +40,10 @@ EOF;
     public function __construct(array $settings, $test = null)
     {
         $loader = new Gherkin($settings);
-        $pattern = $loader->getPattern();
         $path = $settings['path'];
-        if (!empty($test)) {
-            $path = $settings['path'] . '/' . $test;
+        $pattern = $loader->getPattern();
+        if ($test) {
+            $path = "$path/$test";
             if (preg_match($pattern, $test)) {
                 $path = dirname($path);
                 $pattern = basename($test);
@@ -58,8 +58,7 @@ EOF;
             ->name($pattern);
 
         foreach ($finder as $file) {
-            $pathname = str_replace("//", "/", $file->getPathname());
-            $loader->loadTests($pathname);
+            $loader->loadTests($file->getPathname());
         }
         $availableSteps = $loader->getSteps();
         $allSteps = [];
@@ -101,41 +100,34 @@ EOF;
         $pattern = $step->getText();
 
         // match numbers (not in quotes)
-        if (preg_match_all('#([\d.])(?=([^"]*"[^"]*")*[^"]*$)#', $pattern, $matches)) {
-            foreach ($matches[1] as $num => $param) {
-                ++$num;
-                $args[] = '$num' . $num;
-                $pattern = str_replace($param, ":num{$num}", $pattern);
-            }
+        $pattern = preg_replace_callback('#([\d.])(?=([^"]*"[^"]*")*[^"]*$)#', function () use (&$args) {
+            $args[] = '$num' . (count($args) + 1);
+            return ":num" . count($args);
+        }, $pattern);
+
+        // match quoted strings
+        $pattern = preg_replace_callback('#"(.*?)"#', function () use (&$args) {
+            $args[] = '$arg' . (count($args) + 1);
+            return ":arg" . count($args);
+        }, $pattern);
+
+        // add multiline argument if present
+        if (self::stepHasPyStringArgument($step)) {
+            $args[] = '$arg' . (count($args) + 1);
+            $pattern .= " :arg" . count($args);
         }
 
-        // match quoted string
-        if (preg_match_all('#"(.*?)"#', $pattern, $matches)) {
-            foreach ($matches[1] as $num => $param) {
-                ++$num;
-                $args[] = '$arg' . $num;
-                $pattern = str_replace('"' . $param . '"', ":arg{$num}", $pattern);
-            }
-        }
-        // Has multiline argument at the end of step?
-        if (self::stepHasPyStringArgument($step)) {
-            $num = count($args) + 1;
-            $pattern .= " :arg{$num}";
-            $args[] = '$arg' . $num;
-        }
         if (in_array($pattern, $this->processed)) {
             return;
         }
 
         $methodName = preg_replace('#(\s+?|\'|\"|\W)#', '', ucwords(preg_replace('#"(.*?)"|\d+#', '', $step->getText())));
-        if (empty($methodName)) {
-            $methodName = 'step_' . substr(sha1($pattern), 0, 9);
-        }
+        $methodName = empty($methodName) ? 'step_' . substr(sha1($pattern), 0, 9) : lcfirst($methodName);
 
         $this->snippets[] = (new Template($this->template))
             ->place('type', $step->getKeywordType())
             ->place('text', $pattern)
-            ->place('methodName', lcfirst($methodName))
+            ->place('methodName', $methodName)
             ->place('params', implode(', ', $args))
             ->produce();
 
@@ -162,9 +154,7 @@ EOF;
     {
         if ($step->hasArguments()) {
             $stepArgs = $step->getArguments();
-            if ($stepArgs[count($stepArgs) - 1]->getNodeType() == "PyString") {
-                return true;
-            }
+            return end($stepArgs)->getNodeType() === 'PyString';
         }
         return false;
     }

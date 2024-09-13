@@ -50,7 +50,7 @@ EOF;
             throw new ConfigurationException("Cest can't be created for suite without an actor. Add `actor: SomeTester` to suite config");
         }
 
-        $namespaceHeader = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . ucfirst((string) $this->settings['suite']) . '\\' . $this->name);
+        $namespaceHeader = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . ucfirst((string)$this->settings['suite']) . '\\' . $this->name);
 
         if ($namespaceHeader) {
             $namespaceHeader .= "\nuse " . $this->supportNamespace() . $actor . ";";
