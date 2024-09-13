@@ -145,6 +145,7 @@ class GroupManager
     {
         $filename = realpath($test->getFileName());
         $testName = $test->getName();
+        $indexName = $test->getMetadata()->getIndexTextSuffix();
         $groups = $test->getMetadata()->getGroups();
 
         foreach ($this->testsInGroups as $group => $tests) {
@@ -154,7 +155,7 @@ class GroupManager
                     $groups[] = $group;
                 }
 
-                if (str_starts_with($filename . ':' . $testName, $testPattern)) {
+                if (str_starts_with($filename . ':' . $testName . $indexName, $testPattern)) {
                     $groups[] = $group;
                 }
                 if (

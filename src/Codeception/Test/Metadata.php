@@ -126,6 +126,16 @@ class Metadata
         return $this->index;
     }
 
+    public function getIndexTextSuffix(): string
+    {
+        if (is_int($this->index)) {
+            return '#' . $this->index;
+        } elseif (is_string($this->index)) {
+            return '@' . $this->index;
+        }
+        return '';
+    }
+
     public function setFilename(string $filename): void
     {
         $this->filename = $filename;
@@ -237,7 +247,7 @@ class Metadata
                 continue;
             };
 
-            $this->params[$single] = array_map(fn($a): array => is_array($a) ? $a : [$a], $this->params[$single]);
+            $this->params[$single] = array_map(fn ($a): array => is_array($a) ? $a : [$a], $this->params[$single]);
             $this->params[$single] = array_merge(...$this->params[$single]);
         }
 
