@@ -52,7 +52,7 @@ EOF;
     {
         $actor = $this->settings['actor'];
 
-        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . ucfirst($this->settings['suite']) . '\\' . $this->name);
+        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . ucfirst((string) $this->settings['suite']) . '\\' . $this->name);
 
         if ($ns) {
             $ns .= "\nuse " . $this->supportNamespace() . $actor . ";";
@@ -63,7 +63,7 @@ EOF;
         if ($this->settings['actor']) {
             $tester = (new Template($this->testerTemplate))
                 ->place('actorClass', $actor)
-                ->place('actor', lcfirst(Configuration::config()['actor_suffix']))
+                ->place('actor', lcfirst((string) Configuration::config()['actor_suffix']))
                 ->produce();
         }
 

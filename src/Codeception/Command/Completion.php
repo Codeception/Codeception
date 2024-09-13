@@ -10,6 +10,7 @@ use Stecman\Component\Symfony\Console\BashCompletion\Completion\CompletionInterf
 use Stecman\Component\Symfony\Console\BashCompletion\Completion\ShellPathCompletion;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionHandler;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputDefinition as SymfonyInputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -72,7 +73,7 @@ class Completion extends CompletionCommand
         }
 
         parent::execute($input, $output);
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function createDefinition(): SymfonyInputDefinition

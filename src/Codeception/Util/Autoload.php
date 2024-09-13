@@ -53,7 +53,7 @@ class Autoload
     public static function addNamespace(string $prefix, string $baseDir, bool $prepend = false): void
     {
         if (!self::$registered) {
-            spl_autoload_register([__CLASS__, 'load']);
+            spl_autoload_register(fn(string $class): string|false => self::load($class));
             self::$registered = true;
         }
 
@@ -101,7 +101,7 @@ class Autoload
         }
 
         // fix for empty prefix
-        if (isset(self::$map['\\']) && ($class[0] != '\\')) {
+        if (isset(self::$map['\\']) && ($class[0] !== '\\')) {
             return self::load('\\' . $class);
         }
 

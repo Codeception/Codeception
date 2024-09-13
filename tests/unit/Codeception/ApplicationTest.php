@@ -12,7 +12,7 @@ class ApplicationTest extends \Codeception\PHPUnit\TestCase
     {
         \Codeception\Configuration::append(['extensions' => [
             'commands' => [
-                'Project\Command\MyCustomCommand']]]);
+                \Project\Command\MyCustomCommand::class]]]);
 
         $application = new Application();
         $application->registerCustomCommands();

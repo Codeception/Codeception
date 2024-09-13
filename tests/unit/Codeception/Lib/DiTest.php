@@ -8,9 +8,6 @@ use Codeception\Exception\InjectionException;
 
 class DiTest extends \Codeception\Test\Unit
 {
-    /**
-     * @var Di
-     */
     protected Di $di;
 
     protected function _setUp()
@@ -31,13 +28,13 @@ class DiTest extends \Codeception\Test\Unit
         $this->injectionShouldFail(
             'Failed to resolve cyclic dependencies for class \'FailDependenciesCyclic\IncorrectDependenciesClass\''
         );
-        $this->di->instantiate('FailDependenciesCyclic\IncorrectDependenciesClass');
+        $this->di->instantiate(\FailDependenciesCyclic\IncorrectDependenciesClass::class);
     }
 
     public function testFailDependenciesInChain()
     {
         $this->injectionShouldFail('Failed to resolve dependency \'FailDependenciesInChain\AnotherClass\'');
-        $this->di->instantiate('FailDependenciesInChain\IncorrectDependenciesClass');
+        $this->di->instantiate(\FailDependenciesInChain\IncorrectDependenciesClass::class);
     }
 
     public function testFailDependenciesNonExistent()
@@ -45,12 +42,12 @@ class DiTest extends \Codeception\Test\Unit
         $expectedExceptionMessage = 'Class "FailDependenciesNonExistent\NonExistentClass" does not exist';
 
         $this->injectionShouldFail($expectedExceptionMessage);
-        $this->di->instantiate('FailDependenciesNonExistent\IncorrectDependenciesClass');
+        $this->di->instantiate(\FailDependenciesNonExistent\IncorrectDependenciesClass::class);
     }
 
     public function testFailDependenciesPrimitiveParam()
     {
         $this->injectionShouldFail("Parameter 'required' must have default value");
-        $this->di->instantiate('FailDependenciesPrimitiveParam\IncorrectDependenciesClass');
+        $this->di->instantiate(\FailDependenciesPrimitiveParam\IncorrectDependenciesClass::class);
     }
 }

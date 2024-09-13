@@ -34,7 +34,7 @@ trait ConfigTrait
     /**
      * @return string[]
      */
-    protected function getSuites($conf = null): array
+    protected function getSuites(): array
     {
         return Configuration::suites();
     }

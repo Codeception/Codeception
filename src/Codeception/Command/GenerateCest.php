@@ -28,18 +28,12 @@ class GenerateCest extends Command
 
     protected function configure(): void
     {
-        $this->setDefinition([
-            new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
-            new InputArgument('class', InputArgument::REQUIRED, 'test name'),
-        ]);
+        $this->setDescription('Generates empty Cest file in suite')
+            ->addArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put')
+            ->addArgument('class', InputArgument::REQUIRED, 'test name');
     }
 
-    public function getDescription(): string
-    {
-        return 'Generates empty Cest file in suite';
-    }
-
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
@@ -53,16 +47,16 @@ class GenerateCest extends Command
 
         if (file_exists($filename)) {
             $output->writeln("<error>Test {$filename} already exists</error>");
-            return 1;
+            return Command::FAILURE;
         }
         $cest = new CestGenerator($class, $config);
         $res = $this->createFile($filename, $cest->produce());
         if (!$res) {
             $output->writeln("<error>Test {$filename} already exists</error>");
-            return 1;
+            return Command::FAILURE;
         }
 
         $output->writeln("<info>Test was created in {$filename}</info>");
-        return 0;
+        return Command::SUCCESS;
     }
 }

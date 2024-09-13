@@ -29,7 +29,7 @@ trait ActorTrait
         return $namespace . $this->settings['actor'];
     }
 
-    private function getActor($test)
+    private function getActor($test): ?object
     {
         $actorClass = $this->getActorClassName();
 

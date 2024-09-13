@@ -46,7 +46,7 @@ class BaseCommandRunner extends \Codeception\PHPUnit\TestCase
 
     protected function makeCommand($className, $saved = true, $extraMethods = [])
     {
-        if (!$this->config) {
+        if ($this->config === []) {
             $this->config = [];
         }
 

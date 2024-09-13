@@ -45,40 +45,41 @@ class Codecept
     protected ExtensionLoader $extensionLoader;
 
     protected array $options = [
-        'silent'             => false,
-        'debug'              => false,
-        'steps'              => false,
-        'html'               => false,
-        'xml'                => false,
-        'phpunit-xml'        => false,
-        'no-redirect'        => true,
-        'report'             => false,
-        'colors'             => false,
-        'coverage'           => false,
-        'coverage-xml'       => false,
-        'coverage-html'      => false,
-        'coverage-text'      => false,
-        'coverage-crap4j'    => false,
-        'coverage-cobertura' => false,
-        'coverage-phpunit'   => false,
-        'groups'             => null,
-        'excludeGroups'      => null,
-        'filter'             => null,
-        'shard'              => null,
-        'env'                => null,
-        'fail-fast'          => 0,
-        'ansi'               => true,
-        'verbosity'          => 1,
-        'interactive'        => true,
-        'no-rebuild'         => false,
-        'quiet'              => false,
+        'silent'               => false,
+        'debug'                => false,
+        'steps'                => false,
+        'html'                 => false,
+        'xml'                  => false,
+        'phpunit-xml'          => false,
+        'no-redirect'          => true,
+        'report'               => false,
+        'colors'               => false,
+        'coverage'             => false,
+        'coverage-xml'         => false,
+        'coverage-html'        => false,
+        'coverage-text'        => false,
+        'coverage-crap4j'      => false,
+        'coverage-cobertura'   => false,
+        'coverage-phpunit'     => false,
+        'disable-coverage-php' => false,
+        'groups'               => null,
+        'excludeGroups'        => null,
+        'filter'               => null,
+        'shard'                => null,
+        'env'                  => null,
+        'fail-fast'            => 0,
+        'ansi'                 => true,
+        'verbosity'            => 1,
+        'interactive'          => true,
+        'no-rebuild'           => false,
+        'quiet'                => false,
     ];
 
     protected array $config = [];
 
     protected array $extensions = [];
 
-    private Output $output;
+    private readonly Output $output;
 
     public function __construct(array $options = [])
     {
@@ -154,7 +155,7 @@ class Codecept
 
     private function isConsolePrinterSubscribed(): bool
     {
-        foreach ($this->dispatcher->getListeners() as $event => $listeners) {
+        foreach ($this->dispatcher->getListeners() as $listeners) {
             foreach ($listeners as $listener) {
                 if ($listener instanceof ConsolePrinter) {
                     return true;
@@ -192,14 +193,6 @@ class Codecept
         }
     }
 
-    private function absolutePath(string $path): string
-    {
-        if ((str_starts_with($path, '/')) or (strpos($path, ':') === 1)) { // absolute path
-            return $path;
-        }
-        return Configuration::outputDir() . $path;
-    }
-
     public function run(string $suite, ?string $test = null, ?array $config = null): void
     {
         ini_set(
@@ -219,7 +212,7 @@ class Codecept
 
         // Iterate over all unique environment sets and runs the given suite with each of the merged configurations.
         foreach (array_unique($selectedEnvironments) as $envList) {
-            $envSet         = explode(',', $envList);
+            $envSet         = explode(',', (string) $envList);
             $suiteEnvConfig = $config;
 
             // contains a list of the environments used in this suite configuration env set.
@@ -254,9 +247,9 @@ class Codecept
         $settings['shard'] = $this->options['shard'];
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings, $this->options);
         $suiteManager->initialize();
-        srand($this->options['seed']);
+        mt_srand($this->options['seed']);
         $suiteManager->loadTests($test);
-        srand();
+        mt_srand();
         $suiteManager->run($this->resultAggregator);
     }
 

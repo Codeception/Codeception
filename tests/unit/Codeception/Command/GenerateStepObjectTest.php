@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 class GenerateStepObjectTest extends BaseCommandRunner
 {
-    /**
-     * @var array
-     */
     public array $log = [];
 
     protected function _setUp()

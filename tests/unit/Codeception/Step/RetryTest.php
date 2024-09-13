@@ -9,9 +9,6 @@ use Codeception\Stub;
 
 class RetryTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var bool
-     */
     protected bool $shouldFail = true;
 
     public function testRetryStepShouldNotFailStep()

@@ -128,7 +128,7 @@ class PathResolver
      */
     private static function isWindows(string $dirSep = DIRECTORY_SEPARATOR): bool
     {
-        return ($dirSep == '\\');
+        return ($dirSep === '\\');
     }
 
     public static function isPathAbsolute(string $path): bool

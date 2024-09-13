@@ -15,7 +15,7 @@
     "minimum-stability": "RC",
 
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
@@ -28,12 +28,12 @@
         "phpunit/php-timer": "^5.0.3 || ^6.0 || ^7.0",
         "sebastian/comparator": "^4.0.5 || ^5.0 || ^6.0",
         "sebastian/diff": "^4.0.3 || ^5.0 || ^6.0",
-        "symfony/console": ">=4.4.24 <8.0",
-        "symfony/css-selector": ">=4.4.24 <8.0",
-        "symfony/event-dispatcher": ">=4.4.24 <8.0",
-        "symfony/finder": ">=4.4.24 <8.0",
-        "symfony/yaml": ">=4.4.24 <8.0",
-        "symfony/var-dumper": ">=4.4.24 <8.0",
+        "symfony/console": ">=5.4.24 <8.0",
+        "symfony/css-selector": ">=5.4.24 <8.0",
+        "symfony/event-dispatcher": ">=5.4.24 <8.0",
+        "symfony/finder": ">=5.4.24 <8.0",
+        "symfony/yaml": ">=5.4.24 <8.0",
+        "symfony/var-dumper": ">=5.4.24 <8.0",
         "psy/psysh": "^0.11.2 || ^0.12"
     },
     "require-dev": {
@@ -46,8 +46,8 @@
         "codeception/module-filesystem": "*@dev",
         "codeception/module-phpbrowser": "*@dev",
         "codeception/util-universalframework": "*@dev",
-        "symfony/process": ">=4.4.24 <8.0",
-        "symfony/dotenv": ">=4.4.24 <8.0",
+        "symfony/process": ">=5.4.24 <8.0",
+        "symfony/dotenv": ">=5.4.24 <8.0",
         "vlucas/phpdotenv": "^5.1",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
@@ -68,7 +68,11 @@
     "replace": {
         "codeception/phpunit-wrapper": "*"
     },
-
+    "extra": {
+        "branch-alias": {
+            "dev-main": "5.2.x-dev"
+        }
+    },
     "autoload": {
         "classmap": [
             "src/PHPUnit/TestCase.php"
@@ -112,6 +116,7 @@
             "codeception/module-db": "source",
             "codeception/module-filesystem": "source",
             "codeception/module-phpbrowser": "source",
+            "codeception/lib-innerbrowser": "source",
             "*": "dist"
         }
     }

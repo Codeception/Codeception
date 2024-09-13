@@ -13,7 +13,7 @@ class StepTest extends TestCase
 {
     protected function getStep(array $args): Step
     {
-        return $this->getMockBuilder('\Codeception\Step')
+        return $this->getMockBuilder(\Codeception\Step::class)
             ->setConstructorArgs($args)
             ->onlyMethods([])
             ->getMock();
@@ -141,7 +141,7 @@ class StepTest extends TestCase
         $this->assertSame('argument "some formatted output"', $output);
     }
 
-    public function testConstraintOutput(): void
+    public function testConstraintOutput()
     {
         $argument = Stub::makeEmpty(Constraint::class);
         $argument->method('toString')->willReturn('is a constraint');

@@ -2,7 +2,8 @@ on:
   pull_request:
     branches-ignore: gh-pages
   push:
-    branches-ignore: gh-pages
+    branches:
+      - main
 
 name: build
 
@@ -20,7 +21,7 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
           ini-values: memory_limit=-1, date.timezone='UTC'
           tools: phpcs
 
@@ -45,12 +46,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ['8.0', '8.1', '8.2']
+        php: ['8.1', '8.2', '8.3']
         mode: ['stable', 'experimental']
         exclude:
-          - php: '8.1'
-            mode: 'experimental'
           - php: '8.2'
+            mode: 'experimental'
+          - php: '8.3'
             mode: 'experimental'
 
     steps:
@@ -87,15 +88,15 @@ jobs:
         if: matrix.mode == 'stable'
         run: composer update --no-interaction --no-progress --optimize-autoloader --ansi
 
-      - name: Composer install lowest versions of dependencies on PHP 8.0 in experimental mode
-        if: matrix.php == '8.0' && matrix.mode == 'experimental'
+      - name: Composer install lowest versions of dependencies on PHP 8.1 in experimental mode
+        if: matrix.php == '8.1' && matrix.mode == 'experimental'
         run: composer update --prefer-lowest --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Test that failing test really fails
         run: if php codecept run -c tests/data/claypit/ scenario FailedCept -vvv; then echo "Test hasn't failed"; false; fi;
 
-#      - name: Run tests without code coverage on PHP 8.0
-#        if: matrix.php == '8.0'
+#      - name: Run tests without code coverage on PHP 8.1
+#        if: matrix.php == '8.1'
 #        run: |
 #          php -S 127.0.0.1:8008 -t tests/data/app >/dev/null 2>&1 &
 #          php codecept build
@@ -137,7 +138,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        php: ['8.0', '8.1', '8.2']
+        php: ['8.1', '8.2', '8.3']
 
     steps:
       - name: Checkout
@@ -172,7 +173,7 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Run tests cli
-        if: matrix.php != '8.1'
+        if: matrix.php != '8.2'
         run: php codecept run cli --skip-group coverage
 
       - name: Run tests unit

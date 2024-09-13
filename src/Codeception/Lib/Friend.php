@@ -18,7 +18,7 @@ class Friend
     {
         $this->multiSessionModules = array_filter($modules, fn ($m): bool => $m instanceof MultiSession);
 
-        if (empty($this->multiSessionModules)) {
+        if ($this->multiSessionModules === []) {
             throw new TestRuntimeException("No multisession modules used. Can't instantiate friend");
         }
     }

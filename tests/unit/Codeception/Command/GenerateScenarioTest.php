@@ -7,19 +7,10 @@ use Codeception\Stub;
 
 class GenerateScenarioTest extends BaseCommandRunner
 {
-    /**
-     * @var array
-     */
     public array $modules = [];
 
-    /**
-     * @var array
-     */
     public array $actions = [];
 
-    /**
-     * @var ModuleContainer
-     */
     protected ModuleContainer $moduleContainer;
 
     protected function _setUp()

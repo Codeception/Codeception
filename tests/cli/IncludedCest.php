@@ -125,10 +125,11 @@ final class IncludedCest
 
     #[Before('moveToIncluded')]
     #[Group('coverage')]
-    public function runIncludedWithCoverage(CliGuy $I)
+    public function runIncludedWithCoverage(CliGuy $I): void
     {
         $I->executeCommand('run --coverage-xml');
         $I->amInPath('_log');
+        $I->seeFileFound('coverage.serialized');
         $I->seeFileFound('coverage.xml');
         //these assertions shrank over the years to be compatible with many versions of php-code-coverage library
         $I->seeInThisFile('BillEvans" namespace="');
@@ -137,13 +138,23 @@ final class IncludedCest
     }
 
     #[Before('moveToIncluded')]
+    #[Group('coverage')]
+    public function runIncludedWithoutPhpReport(CliGuy $I): void
+    {
+        $I->executeCommand('run --coverage-text --disable-coverage-php');
+        $I->amInPath('_log');
+        $I->seeFileFound('coverage.txt');
+        $I->cantSeeFileFound('coverage.serialized');
+    }
+
+    #[Before('moveToIncluded')]
     public function buildIncluded(CliGuy $I)
     {
         $I->executeCommand('build');
         $I->seeInShellOutput('generated successfully');
-        $I->seeInShellOutput('Jazz\\TestGuy');
-        $I->seeInShellOutput('Jazz\\Pianist\\TestGuy');
-        $I->seeInShellOutput('Shire\\TestGuy');
+        $I->seeInShellOutput(\Jazz\TestGuy::class);
+        $I->seeInShellOutput(\Jazz\Pianist\TestGuy::class);
+        $I->seeInShellOutput(\Shire\TestGuy::class);
     }
 
     #[Before('moveToIncluded')]

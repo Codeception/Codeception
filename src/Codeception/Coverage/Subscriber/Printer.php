@@ -9,7 +9,6 @@ use Codeception\Coverage\Filter;
 use Codeception\Coverage\PhpCodeCoverageFactory;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
-use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\Console\Output;
 use Codeception\Subscriber\Shared\StaticEventsTrait;
 use PHPUnit\Runner\Version as PHPUnitVersion;
@@ -25,9 +24,8 @@ use SebastianBergmann\CodeCoverage\Report\Xml\Facade as XmlFacadeReport;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use function array_merge;
-use function class_exists;
 use function file_put_contents;
-use function sprintf;
+use function str_starts_with;
 use function strpos;
 
 class Printer implements EventSubscriberInterface
@@ -53,7 +51,7 @@ class Printer implements EventSubscriberInterface
 
     protected string $logDir;
 
-    public function __construct(protected array $options, private Output $output)
+    public function __construct(protected array $options, private readonly Output $output)
     {
         $this->logDir = Configuration::outputDir();
         $this->settings = array_merge($this->settings, Configuration::config()['coverage']);
@@ -68,7 +66,7 @@ class Printer implements EventSubscriberInterface
 
     protected function absolutePath(string $path): string
     {
-        if ((str_starts_with($path, '/')) || (strpos($path, ':') === 1)) { // absolute path
+        if (str_starts_with($path, '/') || strpos($path, ':') === 1) { // absolute path
             return $path;
         }
         return $this->logDir . $path;
@@ -85,78 +83,39 @@ class Printer implements EventSubscriberInterface
             $this->printConsole();
         }
         $this->output->write("Remote CodeCoverage reports are not printed to console\n");
-        $this->printPHP();
+        if ($this->options['disable-coverage-php'] === true) {
+            $this->output->write("PHP serialized report was skipped\n");
+        } else {
+            $this->printPHP();
+        }
         $this->output->write("\n");
-        if ($this->options['coverage-html']) {
-            $this->printHtml();
-            $this->output->write("HTML report generated in {$this->options['coverage-html']}\n");
-        }
-        if ($this->options['coverage-xml']) {
-            $this->printXml();
-            $this->output->write("XML report generated in {$this->options['coverage-xml']}\n");
-        }
-        if ($this->options['coverage-text']) {
-            $this->printText();
-            $this->output->write("Text report generated in {$this->options['coverage-text']}\n");
-        }
-        if ($this->options['coverage-crap4j']) {
-            $this->printCrap4j();
-            $this->output->write("Crap4j report generated in {$this->options['coverage-crap4j']}\n");
-        }
-        if ($this->options['coverage-cobertura']) {
-            $this->printCobertura();
-            $this->output->write("Cobertura report generated in {$this->options['coverage-cobertura']}\n");
-        }
-        if ($this->options['coverage-phpunit']) {
-            $this->printPHPUnit();
-            $this->output->write("PHPUnit report generated in {$this->options['coverage-phpunit']}\n");
+
+        $reports = [
+            'HTML'      => ['name' => 'coverage-html',      'method' => 'printHTML'],
+            'XML'       => ['name' => 'coverage-xml',       'method' => 'printXML'],
+            'Text'      => ['name' => 'coverage-text',      'method' => 'printText'],
+            'Crap4j'    => ['name' => 'coverage-crap4j',    'method' => 'printCrap4j'],
+            'Cobertura' => ['name' => 'coverage-cobertura', 'method' => 'printCobertura'],
+            'PHPUnit'   => ['name' => 'coverage-phpunit',   'method' => 'printPHPUnit'],
+        ];
+
+        foreach ($reports as $reportType => $reportData) {
+            if ($option = $this->options[$reportData['name']]) {
+                $this->{$reportData['method']}();
+                $this->output->write("{$reportType} report generated in {$option}\n");
+            }
         }
     }
 
     protected function printConsole(): void
     {
-        if (PHPUnitVersion::series() < 10) {
-            $writer = new TextReport(
-                $this->settings['low_limit'],
-                $this->settings['high_limit'],
-                $this->settings['show_uncovered'],
-                $this->settings['show_only_summary']
-            );
-        } else {
-            $writer = new TextReport(
-                Thresholds::from(
-                    $this->settings['low_limit'],
-                    $this->settings['high_limit'],
-                ),
-                $this->settings['show_uncovered'],
-                $this->settings['show_only_summary']
-            );
-        }
+        $writer = $this->createTextWriter();
         $this->output->write($writer->process(self::$coverage, $this->options['colors']));
     }
 
     protected function printHtml(): void
     {
-        if (PHPUnitVersion::series() < 10) {
-            $writer = new HtmlFacadeReport(
-                $this->settings['low_limit'],
-                $this->settings['high_limit'],
-                sprintf(
-                    ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit %s</a>',
-                    PHPUnitVersion::id()
-                )
-            );
-        } else {
-            $writer = new HtmlFacadeReport(
-                sprintf(
-                    ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit %s</a>',
-                    PHPUnitVersion::id()
-                ),
-                null,
-                Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']),
-            );
-        }
-
+        $writer = $this->createHtmlFacadeWriter();
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-html']));
     }
 
@@ -174,27 +133,10 @@ class Printer implements EventSubscriberInterface
 
     protected function printText(): void
     {
-        if (PHPUnitVersion::series() < 10) {
-            $writer = new TextReport(
-                $this->settings['low_limit'],
-                $this->settings['high_limit'],
-                $this->settings['show_uncovered'],
-                $this->settings['show_only_summary']
-            );
-        } else {
-            $writer = new TextReport(
-                Thresholds::from(
-                    $this->settings['low_limit'],
-                    $this->settings['high_limit'],
-                ),
-                $this->settings['show_uncovered'],
-                $this->settings['show_only_summary']
-            );
-        }
-
+        $writer = $this->createTextWriter();
         file_put_contents(
             $this->absolutePath($this->options['coverage-text']),
-            $writer->process(self::$coverage, false)
+            $writer->process(self::$coverage)
         );
     }
 
@@ -214,5 +156,20 @@ class Printer implements EventSubscriberInterface
     {
         $writer = new XmlFacadeReport(PHPUnitVersion::id());
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-phpunit']));
+    }
+
+    private function createHtmlFacadeWriter(): HtmlFacadeReport
+    {
+        $generator = ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit {PHPUnitVersion::id()}</a>';
+        return PHPUnitVersion::series() < 10 ?
+            new HtmlFacadeReport($this->settings['low_limit'], $this->settings['high_limit'], $generator) :
+            new HtmlFacadeReport($generator, null, Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']));
+    }
+
+    private function createTextWriter(): TextReport
+    {
+        return PHPUnitVersion::series() < 10 ?
+            new TextReport($this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered'], $this->settings['show_only_summary']) :
+            new TextReport(Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']), $this->settings['show_uncovered'], $this->settings['show_only_summary']);
     }
 }
