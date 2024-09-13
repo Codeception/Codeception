@@ -129,13 +129,13 @@ class Annotation
     {
         $attr = $this->attribute($annotation);
         if ($attr instanceof ReflectionAttribute) {
-            if (!$attr->isRepeated()) {
-                return $attr->getArguments();
-            }
-            $attrs = $this->attributes();
             if ($annotation === 'example') {
                 $annotation = 'examples'; // we renamed this annotation
             }
+            if (!$attr->isRepeated() && $annotation !== 'examples') {
+                return $attr->getArguments();
+            }
+            $attrs = $this->attributes();
             $name = ucfirst($annotation);
             $attrs = array_filter($attrs, fn ($a): bool => $a->getName() === "Codeception\\Attribute\\$name");
             if ($annotation === 'examples') {
