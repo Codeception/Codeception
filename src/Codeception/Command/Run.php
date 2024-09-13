@@ -89,39 +89,40 @@ use function substr_replace;
  *
  * Options:
  *  -o, --override=OVERRIDE Override config values (multiple values allowed)
- *  --config (-c)         Use custom path for config
- *  --report              Show output in compact style
- *  --html                Generate html with results (default: "report.html")
- *  --xml                 Generate JUnit XML Log (default: "report.xml")
- *  --phpunit-xml         Generate PhpUnit XML Log (default: "phpunit-report.xml")
- *  --no-redirect         Do not redirect to Composer-installed version in vendor/codeception
- *  --colors              Use colors in output
- *  --no-colors           Force no colors in output (useful to override config file)
- *  --silent              Only outputs suite names and final results. Almost the same as `--quiet`
- *  --steps               Show steps in output
- *  --debug (-d)          Alias for `-vv`
- *  --bootstrap           Execute bootstrap script before the test
- *  --coverage            Run with code coverage (default: "coverage.serialized")
- *  --coverage-html       Generate CodeCoverage HTML report in path (default: "coverage")
- *  --coverage-xml        Generate CodeCoverage XML report in file (default: "coverage.xml")
- *  --coverage-text       Generate CodeCoverage text report in file (default: "coverage.txt")
- *  --coverage-phpunit    Generate CodeCoverage PHPUnit report in file (default: "coverage-phpunit")
- *  --coverage-cobertura  Generate CodeCoverage Cobertura report in file (default: "coverage-cobertura")
- *  --no-exit             Don't finish with exit code
- *  --group (-g)          Groups of tests to be executed (multiple values allowed)
- *  --skip (-s)           Skip selected suites (multiple values allowed)
- *  --skip-group (-x)     Skip selected groups (multiple values allowed)
- *  --env                 Run tests in selected environments. (multiple values allowed, environments can be merged with ',')
- *  --fail-fast (-f)      Stop after nth failure (defaults to 1)
- *  --no-rebuild          Do not rebuild actor classes on start
- *  --help (-h)           Display this help message.
- *  --quiet (-q)          Do not output any message. Almost the same as `--silent`
- *  --verbose (-v|vv|vvv) Increase the verbosity of messages: `v` for normal output, `vv` for steps and debug, `vvv` for Codeception-internal debug
- *  --version (-V)        Display this application version.
- *  --ansi                Force ANSI output.
- *  --no-ansi             Disable ANSI output.
- *  --no-interaction (-n) Do not ask any interactive question.
- *  --seed                Use the given seed for shuffling tests
+ *  --config (-c)          Use custom path for config
+ *  --report               Show output in compact style
+ *  --html                 Generate html with results (default: "report.html")
+ *  --xml                  Generate JUnit XML Log (default: "report.xml")
+ *  --phpunit-xml          Generate PhpUnit XML Log (default: "phpunit-report.xml")
+ *  --no-redirect          Do not redirect to Composer-installed version in vendor/codeception
+ *  --colors               Use colors in output
+ *  --no-colors            Force no colors in output (useful to override config file)
+ *  --silent               Only outputs suite names and final results. Almost the same as `--quiet`
+ *  --steps                Show steps in output
+ *  --debug (-d)           Alias for `-vv`
+ *  --bootstrap            Execute bootstrap script before the test
+ *  --coverage             Run with code coverage (default: "coverage.serialized")
+ *  --disable-coverage-php Don't generate CodeCoverage report in raw PHP serialized format
+ *  --coverage-html        Generate CodeCoverage HTML report in path (default: "coverage")
+ *  --coverage-xml         Generate CodeCoverage XML report in file (default: "coverage.xml")
+ *  --coverage-text        Generate CodeCoverage text report in file (default: "coverage.txt")
+ *  --coverage-phpunit     Generate CodeCoverage PHPUnit report in file (default: "coverage-phpunit")
+ *  --coverage-cobertura   Generate CodeCoverage Cobertura report in file (default: "coverage-cobertura")
+ *  --no-exit              Don't finish with exit code
+ *  --group (-g)           Groups of tests to be executed (multiple values allowed)
+ *  --skip (-s)            Skip selected suites (multiple values allowed)
+ *  --skip-group (-x)      Skip selected groups (multiple values allowed)
+ *  --env                  Run tests in selected environments. (multiple values allowed, environments can be merged with ',')
+ *  --fail-fast (-f)       Stop after nth failure (defaults to 1)
+ *  --no-rebuild           Do not rebuild actor classes on start
+ *  --help (-h)            Display this help message.
+ *  --quiet (-q)           Do not output any message. Almost the same as `--silent`
+ *  --verbose (-v|vv|vvv)  Increase the verbosity of messages: `v` for normal output, `vv` for steps and debug, `vvv` for Codeception-internal debug
+ *  --version (-V)         Display this application version.
+ *  --ansi                 Force ANSI output.
+ *  --no-ansi              Disable ANSI output.
+ *  --no-interaction (-n)  Do not ask any interactive question.
+ *  --seed                 Use the given seed for shuffling tests
  * ```
  *
  */
@@ -173,6 +174,7 @@ class Run extends Command
             ->addOption('coverage-crap4j', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage report in Crap4J XML format')
             ->addOption('coverage-cobertura', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage report in Cobertura XML format')
             ->addOption('coverage-phpunit', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage PHPUnit report in path')
+            ->addOption('disable-coverage-php', '', InputOption::VALUE_NONE, "Don't generate CodeCoverage report in raw PHP serialized format")
             ->addOption('no-exit', '', InputOption::VALUE_NONE, "Don't finish with exit code")
             ->addOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Groups of tests to be executed')
             ->addOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites')
@@ -240,6 +242,7 @@ class Run extends Command
         $userOptions['verbosity'] = $this->output->getVerbosity();
         $userOptions['interactive'] = !$input->hasParameterOption(['--no-interaction', '-n']);
         $userOptions['ansi'] = (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi'));
+        $userOptions['disable-coverage-php'] = (bool) $this->options['disable-coverage-php'];
 
         $userOptions['seed'] = $this->options['seed'] ? (int)$this->options['seed'] : rand();
         if ($this->options['no-colors'] || !$userOptions['ansi']) {

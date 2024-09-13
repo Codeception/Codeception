@@ -83,7 +83,11 @@ class Printer implements EventSubscriberInterface
             $this->printConsole();
         }
         $this->output->write("Remote CodeCoverage reports are not printed to console\n");
-        $this->printPHP();
+        if ($this->options['disable-coverage-php'] === true) {
+            $this->output->write("PHP serialized report was skipped\n");
+        } else {
+            $this->printPHP();
+        }
         $this->output->write("\n");
 
         $reports = [
