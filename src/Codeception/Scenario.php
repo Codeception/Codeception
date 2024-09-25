@@ -53,7 +53,7 @@ class Scenario
         return $this->metadata->getGroups();
     }
 
-    public function current(?string $key)
+    public function current(?string $key = null)
     {
         return $this->metadata->getCurrent($key);
     }
