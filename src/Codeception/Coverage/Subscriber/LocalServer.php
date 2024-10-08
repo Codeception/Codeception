@@ -157,7 +157,7 @@ class LocalServer extends SuiteSubscriber
                 file_exists($errorFile) ? file_get_contents($errorFile) : "Code coverage file {$coverageFile} does not exist"
             );
         }
-
+        return;
         if ($coverage = @unserialize(file_get_contents($coverageFile))) {
             $this->preProcessCoverage($coverage)->mergeToPrint($coverage);
         }
