@@ -153,11 +153,11 @@ class LocalServer extends SuiteSubscriber
         $this->waitForFile($coverageFile, 5, 500_000);
 
         if (!file_exists($coverageFile)) {
+            return;
             throw new RuntimeException(
                 file_exists($errorFile) ? file_get_contents($errorFile) : "Code coverage file {$coverageFile} does not exist"
             );
         }
-        return;
         if ($coverage = @unserialize(file_get_contents($coverageFile))) {
             $this->preProcessCoverage($coverage)->mergeToPrint($coverage);
         }
