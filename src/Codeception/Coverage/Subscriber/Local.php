@@ -33,7 +33,6 @@ class Local extends SuiteSubscriber
     protected function isEnabled(): bool
     {
         return !$this->settings['remote'] && $this->settings['enabled'];
-        //return !$this->module instanceof Remote && $this->settings['enabled'];
     }
 
     /**
