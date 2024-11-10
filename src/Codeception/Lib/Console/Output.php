@@ -31,13 +31,20 @@ class Output extends ConsoleOutput
     {
         $this->config = array_merge($this->config, $config);
 
-        // enable interactive output mode for CLI
         $this->isInteractive = $this->config['interactive']
             && isset($_SERVER['TERM'])
             && PHP_SAPI === 'cli'
             && $_SERVER['TERM'] != 'linux';
 
         $formatter = new OutputFormatter($this->config['colors']);
+        $this->configureStyles($formatter);
+
+        $this->formatHelper = new SymfonyFormatterHelper();
+        parent::__construct($this->config['verbosity'], $this->config['colors'], $formatter);
+    }
+
+    protected function configureStyles(OutputFormatter $formatter): void
+    {
         $formatter->setStyle('default', new OutputFormatterStyle());
         $formatter->setStyle('bold', new OutputFormatterStyle(null, null, ['bold']));
         $formatter->setStyle('focus', new OutputFormatterStyle('magenta', null, ['bold']));
@@ -48,21 +55,16 @@ class Output extends ConsoleOutput
         $formatter->setStyle('debug', new OutputFormatterStyle('cyan'));
         $formatter->setStyle('comment', new OutputFormatterStyle('yellow'));
         $formatter->setStyle('info', new OutputFormatterStyle('green'));
+    }
 
-        $this->formatHelper = new SymfonyFormatterHelper();
-
-        parent::__construct($this->config['verbosity'], $this->config['colors'], $formatter);
+    protected function clean(string $message): string
+    {
+        return str_replace('\/', '/', $message);
     }
 
     public function isInteractive(): bool
     {
         return $this->isInteractive;
-    }
-
-    protected function clean(string $message): string
-    {
-        // clear json serialization
-        return str_replace('\/', '/', $message);
     }
 
     public function debug(mixed $message): void
@@ -91,7 +93,6 @@ class Output extends ConsoleOutput
     public function exception(Exception $exception): void
     {
         $class = $exception::class;
-
         $this->writeln("");
         $this->writeln(sprintf('(![ %s ]!)', $class));
         $this->writeln($exception->getMessage());

@@ -7,8 +7,6 @@ namespace Codeception\Lib\Actor\Shared;
 use Codeception\Command\Console;
 use Codeception\Lib\PauseShell;
 use Codeception\Util\Debug;
-use Psy\Shell;
-use Psy\Configuration;
 
 trait Pause
 {

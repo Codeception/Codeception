@@ -47,10 +47,8 @@ class GroupManager
             if (!str_contains($group, '*')) {
                 continue;
             }
-            $path = dirname($pattern);
-            if (!PathResolver::isPathAbsolute($pattern)) {
-                $path = $this->rootDir . $path;
-            }
+
+            $path = PathResolver::isPathAbsolute($pattern) ? dirname($pattern) : $this->rootDir . dirname($pattern);
 
             $files = Finder::create()->files()
                 ->name(basename($pattern))
@@ -61,7 +59,6 @@ class GroupManager
                 $prefix = str_replace('*', '', $group);
                 $pathPrefix = str_replace('*', '', basename($pattern));
                 $groupName = $prefix . str_replace($pathPrefix, '', $file->getRelativePathname());
-
                 $this->configuredGroups[$groupName] = dirname($pattern) . DIRECTORY_SEPARATOR . $file->getRelativePathname();
             }
 
@@ -73,49 +70,50 @@ class GroupManager
     {
         foreach ($this->configuredGroups as $group => $tests) {
             $this->testsInGroups[$group] = [];
-            if (is_array($tests)) {
-                foreach ($tests as $test) {
-                    $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], (string) $test);
-                    $this->testsInGroups[$group][] = $this->normalizeFilePath($file, $group);
-                }
-                continue;
-            }
+            $testsArray = is_array($tests) ? $tests : $this->getTestsFromFile($tests);
 
-            $path = $tests;
-            if (!codecept_is_path_absolute($tests)) {
-                $path = $this->rootDir . $tests;
-            }
-
-            if (is_file($path)) {
-                $handle = @fopen($path, "r");
-                if ($handle) {
-                    while (($test = fgets($handle, 4096)) !== false) {
-                        // if the current line is blank then we need to move to the next line
-                        // otherwise the current codeception directory becomes part of the group
-                        // which causes every single test to run
-                        if (trim($test) === '') {
-                            continue;
-                        }
-
-                        $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], trim($test));
-                        $this->testsInGroups[$group][] = $this->normalizeFilePath($file, $group);
-                    }
-                    fclose($handle);
-                }
+            foreach ($testsArray as $test) {
+                $file = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $test);
+                $this->testsInGroups[$group][] = $this->normalizeFilePath($file, $group);
             }
         }
+    }
+
+    private function getTestsFromFile(string $tests): array
+    {
+        $path = codecept_is_path_absolute($tests) ? $tests : $this->rootDir . $tests;
+        if (!is_file($path)) {
+            return [];
+        }
+
+        $testsArray = [];
+        $handle = fopen($path, 'r');
+        if ($handle) {
+            while (($test = fgets($handle, 4096)) !== false) {
+                // if the current line is blank then we need to move to the next line
+                // otherwise the current codeception directory becomes part of the group
+                // which causes every single test to run
+                if (trim($test) !== '') {
+                    $testsArray[] = trim($test);
+                }
+            }
+            fclose($handle);
+        }
+        return $testsArray;
     }
 
     private function normalizeFilePath(string $file, string $group): string
     {
         $pathParts = explode(':', $file);
-        if (codecept_is_path_absolute($file)) {
+        $isAbsolute = codecept_is_path_absolute($file);
+
+        if ($isAbsolute) {
             if ($file[0] === '/' && count($pathParts) > 1) {
-                //take segment before first :
+                // Take segment before first :
                 $this->checkIfFileExists($pathParts[0], $group);
                 return sprintf('%s:%s', realpath($pathParts[0]), $pathParts[1]);
             } elseif (count($pathParts) > 2) {
-                //on Windows take segment before second :
+                // On Windows take segment before second :
                 $fullPath = $pathParts[0] . ':' . $pathParts[1];
                 $this->checkIfFileExists($fullPath, $group);
                 return sprintf('%s:%s', realpath($fullPath), $pathParts[2]);
@@ -150,11 +148,7 @@ class GroupManager
         foreach ($this->testsInGroups as $group => $tests) {
             /** @var string[] $tests */
             foreach ($tests as $testPattern) {
-                if ($filename == $testPattern) {
-                    $groups[] = $group;
-                }
-
-                if (str_starts_with($filename . ':' . $testName, $testPattern)) {
+                if ($filename == $testPattern || str_starts_with($filename . ':' . $testName, $testPattern)) {
                     $groups[] = $group;
                 }
                 if (
@@ -165,6 +159,7 @@ class GroupManager
                 }
             }
         }
+
         return array_unique($groups);
     }
 }

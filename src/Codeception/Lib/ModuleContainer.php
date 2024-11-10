@@ -333,7 +333,7 @@ class ModuleContainer
             throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
         }
 
-        $dependencies = array_map(fn ($dependency): ?object => $this->create($dependency, false), $this->getConfiguredDependencies($moduleName));
+        $dependencies = array_map(fn($dependency): ?object => $this->create($dependency, false), $this->getConfiguredDependencies($moduleName));
 
         call_user_func_array([$module, '_inject'], $dependencies);
     }

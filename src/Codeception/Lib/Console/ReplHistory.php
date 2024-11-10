@@ -23,7 +23,7 @@ class ReplHistory
 
     public static function getInstance(): ReplHistory
     {
-        if (static::$instance == null) {
+        if (static::$instance === null) {
             static::$instance = new self();
         }
 
@@ -52,9 +52,7 @@ class ReplHistory
         }
 
         file_put_contents($this->outputFile, implode("\n", $this->stashedCommands) . "\n", FILE_APPEND);
-
         codecept_debug("Stashed commands have been saved to {$this->outputFile}");
-
         $this->clear();
     }
 }
