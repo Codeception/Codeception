@@ -100,7 +100,6 @@ use function uniqid;
  *     $I->amOnUrl('https://codeception.com');
  * }
  * ```
- *
  */
 class Recorder extends Extension
 {
