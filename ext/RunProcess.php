@@ -17,12 +17,12 @@ use function sleep;
 
 /**
  * Extension to start and stop processes per suite.
- * Can be used to start/stop selenium server, chromedriver, mailcatcher, etc.
+ * Can be used to start/stop selenium server, chromedriver, [MailCatcher](https://mailcatcher.me/), etc.
  *
- * Can be configured in suite config:
+ * Can be enabled in suite config:
  *
  * ```yaml
- * # acceptance.suite.yml
+ * # Acceptance.suite.yml
  * extensions:
  *     enabled:
  *         - Codeception\Extension\RunProcess:
@@ -32,8 +32,7 @@ use function sleep;
  * Multiple parameters can be passed as array:
  *
  * ```yaml
- * # acceptance.suite.yml
- *
+ * # Acceptance.suite.yml
  * extensions:
  *     enabled:
  *         - Codeception\Extension\RunProcess:
@@ -43,8 +42,7 @@ use function sleep;
  *
  * In the end of a suite all launched processes will be stopped.
  *
- * To wait for the process to be launched use `sleep` option.
- * In this case you need configuration to be specified as object:
+ * To wait for the process to be launched use `sleep` option. In this case you need configuration to be specified as object:
  *
  * ```yaml
  * extensions:
@@ -55,7 +53,7 @@ use function sleep;
  *             sleep: 5 # wait 5 seconds for processes to boot
  * ```
  *
- * HINT: you can use different configurations per environment.
+ * HINT: You can use different configurations per environment.
  */
 class RunProcess extends Extension
 {
