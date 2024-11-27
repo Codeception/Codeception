@@ -7,6 +7,7 @@ namespace Codeception\Test;
 use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\Plain;
 use Codeception\TestInterface;
+use JsonException;
 use PHPUnit\Framework\SelfDescribing;
 
 use function codecept_relative_path;
@@ -45,12 +46,16 @@ class Descriptor
             $env = ':' . $testCase->getScenario()->current('env');
         }
 
-        if (
-            method_exists($testCase, 'getMetaData')
-            && !empty($testCase->getMetadata()->getCurrent('example'))
-        ) {
-            $currentExample = json_encode($testCase->getMetadata()->getCurrent('example'), JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
-            $example = ':' . substr(sha1($currentExample), 0, 7);
+        try {
+            if (
+                method_exists($testCase, 'getMetaData')
+                && !empty($testCase->getMetadata()->getCurrent('example'))
+            ) {
+                $currentExample = json_encode($testCase->getMetadata()->getCurrent('example'), JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
+                $example = ':' . substr(sha1($currentExample), 0, 7);
+            }
+        } catch (JsonException $e) {
+            codecept_debug('Failed serializing example: ' . $e->getMessage());
         }
 
         return self::getTestSignature($testCase) . $env . $example;
