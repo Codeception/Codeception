@@ -18,6 +18,7 @@ use function sleep;
 /**
  * Extension to start and stop processes per suite.
  * Can be used to start/stop selenium server, chromedriver, [MailCatcher](https://mailcatcher.me/), etc.
+ * Each command is executed only once, at the beginning of the test suite. To execute a command before each test, see [Before/After Attributes](https://codeception.com/docs/AdvancedUsage#BeforeAfter-Attributes).
  *
  * Can be enabled in suite config:
  *
