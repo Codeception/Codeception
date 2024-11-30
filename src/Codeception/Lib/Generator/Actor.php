@@ -84,15 +84,17 @@ EOF;
         $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
-            if ($method->name == '__call') {
+            if ($method->name === '__call') {
                 continue;
             } // skipping magic
-            if ($method->name == '__construct') {
+            if ($method->name === '__construct') {
                 continue;
             } // skipping magic
             $returnType = 'void';
-            if ($method->name == 'haveFriend') {
+            if ($method->name === 'haveFriend') {
                 $returnType = Friend::class;
+            } elseif (in_array($method->name, ['execute', 'expectTo', 'expect', 'amGoingTo', 'am', 'lookForwardTo', 'comment'], true)) {
+                $returnType = 'self';
             }
             $params = $this->getParamsString($method);
             $inherited[] = (new Template($this->inheritedMethodTemplate))
