@@ -39,7 +39,8 @@ class BasicScenarioCest
     }
 
     #[Group('e1')]
-    #[Examples([1, 1], [2, 2])]
+    #[Examples(1, 1)]
+    #[Examples(2, 2)]
     public function exampleTest(AttrsTester $I, Example $e)
     {
         $I->assertEquals($e[1], $e[0]);
