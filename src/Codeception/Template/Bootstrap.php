@@ -67,10 +67,10 @@ class Bootstrap extends InitTemplate
         $this->say();
 
         $this->say("<bold>Next steps:</bold>");
-        $this->say('1. Edit <bold>tests/acceptance.suite.yml</bold> to set url of your application. Change PhpBrowser to WebDriver to enable browser testing');
-        $this->say("2. Edit <bold>tests/functional.suite.yml</bold> to enable a framework module. Remove this file if you don't use a framework");
-        $this->say("3. Create your first acceptance tests using <comment>codecept g:cest acceptance First</comment>");
-        $this->say("4. Write first test in <bold>tests/acceptance/FirstCest.php</bold>");
+        $this->say('1. Edit <bold>tests/Acceptance.suite.yml</bold> to set url of your application. Change PhpBrowser to WebDriver to enable browser testing');
+        $this->say("2. Edit <bold>tests/Functional.suite.yml</bold> to enable a framework module. Remove this file if you don't use a framework");
+        $this->say("3. Create your first acceptance tests using <comment>codecept g:cest Acceptance First</comment>");
+        $this->say("4. Write first test in <bold>tests/Acceptance/FirstCest.php</bold>");
         $this->say("5. Run tests using: <comment>codecept run</comment>");
     }
 
