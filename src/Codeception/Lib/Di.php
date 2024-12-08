@@ -120,7 +120,7 @@ class Di
         }
     }
 
-    protected function prepareArgs(ReflectionMethod $method = null, array $defaults = []): array
+    protected function prepareArgs(?ReflectionMethod $method = null, array $defaults = []): array
     {
         $args = [];
 
