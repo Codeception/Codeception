@@ -1,6 +1,7 @@
 ARG flavor=bullseye
+ARG PHP_VERSION=8.1
 
-FROM php:8.1-cli-${flavor}
+FROM php:${PHP_VERSION}-cli-${flavor}
 
 LABEL maintainer="Tobias Munk <tobias@diemeisterei.de>"
 
@@ -23,7 +24,7 @@ RUN set -eux; \
     # Configure php \
     echo "date.timezone = UTC" >> /usr/local/etc/php/php.ini;
 
-ENV COMPOSER_ALLOW_SUPERUSER '1'
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /codecept
 
