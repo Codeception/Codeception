@@ -94,6 +94,7 @@
 
 		 td.scenarioSuccess { color: green }
 		 td.scenarioFailed { color: red }
+		 td.scenarioError { color: darkred }
 		 .scenarioSkipped { color: teal; }
 		 .scenarioIncomplete { color: gray; }
 		 .scenarioUseless { color: orange; }
@@ -212,6 +213,7 @@
      <li> <a href="#" title="Show all" onClick="showAllScenarios()">◯</a></li>
      <li> <a href="#" title="Successful" onClick="toggleScenarios('scenarioSuccess', this.parentElement)"><strong>✔</strong> {successfulScenarios}</a></li>
      <li> <a href="#" title="Failed" onClick="toggleScenarios('scenarioFailed', this.parentElement)"><strong>✗</strong> {failedScenarios}</a></li>
+     <li> <a href="#" title="Errors" onClick="toggleScenarios('scenarioError', this.parentElement)"><strong>E</strong> {errorScenarios}</a></li>
      <li> <a href="#" title="Skipped" onClick="toggleScenarios('scenarioSkipped', this.parentElement)"><strong>S</strong> {skippedScenarios}</a></li>
      <li> <a href="#" title="Incomplete" onClick="toggleScenarios('scenarioIncomplete', this.parentElement)"><strong>I</strong> {incompleteScenarios}</a></li>
      <li> <a href="#" title="Useless" onClick="toggleScenarios('scenarioUseless', this.parentElement)"><strong>U</strong> {uselessScenarios}</a></li>
@@ -230,10 +232,13 @@
         <td width="250" class="scenarioSuccess">Successful scenarios:</td>
         <td class="scenarioSuccessValue"><strong>{successfulScenarios}</strong></td>
        </tr>
-       <tr>
         <td class="scenarioFailed">Failed scenarios:</td>
         <td class="scenarioFailedValue"><strong>{failedScenarios}</strong></td>
        </tr>
+       <tr>
+        <td class="scenarioError">Errors:</td>
+        <td class="scenarioErrorValue"><strong>{errorScenarios}</strong></td>
+       <tr>
        <tr>
         <td class="scenarioSkipped">Skipped scenarios:</td>
         <td class="scenarioSkippedValue"><strong>{skippedScenarios}</strong></td>
