@@ -19,6 +19,7 @@ use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
 use ReflectionClass;
+use SebastianBergmann\CodeCoverage\Version as CodeCoverageVersion;
 
 /**
  * Wrapper for TestCase tests behaving like native Codeception test format
@@ -120,6 +121,11 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeCovered($class, $method);
         }
+
+        if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
+            return (new CodeCoverage())->coversTargets($class, $method)->asArray();
+        }
+
         return (new CodeCoverage())->linesToBeCovered($class, $method);
     }
 
@@ -131,6 +137,11 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeUsed($class, $method);
         }
+
+        if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
+            return (new CodeCoverage())->usesTargets($class, $method)->asArray();
+        }
+
         return (new CodeCoverage())->linesToBeUsed($class, $method);
     }
 

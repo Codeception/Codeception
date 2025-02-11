@@ -21,6 +21,7 @@ use PHPUnit\Metadata\Api\CodeCoverage;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\Util\Test as TestUtil;
 use ReflectionMethod;
+use SebastianBergmann\CodeCoverage\Version as CodeCoverageVersion;
 
 use function array_slice;
 use function file;
@@ -258,6 +259,11 @@ class Cest extends Test implements
         if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeCovered($this->testClass, $this->testMethod);
         }
+
+        if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
+            return (new CodeCoverage())->coversTargets($this->testClass, $this->testMethod)->asArray();
+        }
+
         return (new CodeCoverage())->linesToBeCovered($this->testClass, $this->testMethod);
     }
 
@@ -266,6 +272,11 @@ class Cest extends Test implements
         if (PHPUnitVersion::series() < 10) {
             return TestUtil::getLinesToBeUsed($this->testClass, $this->testMethod);
         }
+
+        if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
+            return (new CodeCoverage())->usesTargets($this->testClass, $this->testMethod)->asArray();
+        }
+
         return (new CodeCoverage())->linesToBeUsed($this->testClass, $this->testMethod);
     }
 }
