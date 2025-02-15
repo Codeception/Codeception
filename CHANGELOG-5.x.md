@@ -1,3 +1,19 @@
+#### 5.2.0
+
+* Fix FAIL message color highlighting by @antonvolokha in #6754
+* Update the codebase to PHP 8.1 by @TavoNiievez in #6747
+* generate:cest: Adding `declare(strict_types=1);` and return type `void` to generated files by @ThomasLandauer in #6736
+* Declare nullable parameter types explicitly by @W0rma in #6774 , #6775
+* chore: Included githubactions in the dependabot config (#6471) by @SamMousa in #6783
+* Added new option --disable-coverage-php to skip coverage.serialized report by @adrenalinkin in #6761
+* chore: add branch alias for main to fix composer install with dev deps by @SamMousa in #6787
+* chore(ci): prevent test CI running twice on PR branches by @SamMousa in #6788
+* Simplify classes by @TavoNiievez in #6767 , #6750 , #6764
+* PHP 8.4: `E_STRICT` deprecation by @W0rma in #6802
+* Fix PHP 8.4 deprecation. by @kagg-design in #6811
+* Fix test suite names in bootstrap command by @W0rma in #6813
+* Docs (minor) by @ThomasLandauer in #6804 , #6805 , #6806 , 6807 , #6792 , #6810 , #6751 , #6744
+
 #### 5.1.2
 
 * Prevent unrelated error from being displayed if a scenario step has failed by @craig-mcmahon in #6743
