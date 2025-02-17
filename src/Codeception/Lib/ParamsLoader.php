@@ -51,14 +51,14 @@ class ParamsLoader
         foreach ($loaderMappings as $method => $pattern) {
             if (preg_match($pattern, $paramStorage)) {
                 try {
-                    return self::$method($paramStorage);
+                    return self::$method($paramsFile);
                 } catch (Exception $e) {
-                    throw new ConfigurationException("Failed loading params from {$paramStorage}\n" . $e->getMessage());
+                    throw new ConfigurationException("Failed loading params from {$paramsFile}\n" . $e->getMessage());
                 }
             }
         }
 
-        throw new ConfigurationException("Params can't be loaded from `{$paramStorage}`.");
+        throw new ConfigurationException("Params can't be loaded from `{$paramFile}`.");
     }
 
     /**
