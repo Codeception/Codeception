@@ -1,3 +1,8 @@
+#### 5.2.1
+
+* Support PHPUnit 12 by @W0rma in #6826
+* Fix missing absolute path resolving in ParamsLoader by @garvinhicking in #6828
+
 #### 5.2.0
 
 * Fix FAIL message color highlighting by @antonvolokha in #6754
