@@ -6,6 +6,7 @@
 [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 [![Build status](https://github.com/Codeception/Codeception/workflows/build/badge.svg)](https://github.com/Codeception/Codeception/actions?query=workflow%3Abuild)
+[![Gurubase](https://img.shields.io/badge/Gurubase-Ask%20Codeception%20Guru-006BFF)](https://gurubase.io/g/codeception)
 
 **Modern PHP Testing for everyone**
 
