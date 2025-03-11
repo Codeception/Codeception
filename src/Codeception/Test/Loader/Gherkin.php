@@ -18,13 +18,13 @@ use Codeception\Exception\TestParseException;
 use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Test\Gherkin as GherkinFormat;
 use Codeception\Util\Annotation;
+use Composer\InstalledVersions;
 use ReflectionClass;
 
 use function array_keys;
 use function array_map;
 use function array_merge;
 use function class_exists;
-use function dirname;
 use function file_get_contents;
 use function get_class_methods;
 use function glob;
@@ -72,9 +72,8 @@ class Gherkin implements LoaderInterface
         if (!class_exists(GherkinKeywords::class)) {
             throw new TestParseException('Feature file can only be parsed with Behat\Gherkin library. Please install `behat/gherkin` with Composer');
         }
-        $gherkin = new ReflectionClass(\Behat\Gherkin\Gherkin::class);
-        $gherkinClassPath = dirname($gherkin->getFileName());
-        $i18n = require $gherkinClassPath . '/../../../i18n.php';
+        $gherkinVendorPath = InstalledVersions::getInstallPath('behat/gherkin');
+        $i18n = require $gherkinVendorPath . '/i18n.php';
         $keywords = new GherkinKeywords($i18n);
         $lexer = new GherkinLexer($keywords);
         $this->parser = new GherkinParser($lexer);
