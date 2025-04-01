@@ -19,7 +19,7 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "behat/gherkin": "^4.6.2",
+        "behat/gherkin": "^4.12",
         "codeception/lib-asserts": "^2.0",
         "codeception/stub": "^4.1",
         "phpunit/phpunit": "^9.5.20 || ^10.0 || ^11.0 || ^12.0",
