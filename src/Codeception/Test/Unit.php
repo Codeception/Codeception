@@ -156,11 +156,13 @@ class Unit extends TestCase implements
     public function fetchDependencies(): array
     {
         $names = [];
-        foreach ($this->getMetadata()->getDependencies() as $required) {
-            if (!str_contains((string) $required, ':') && method_exists($this, $required)) {
-                $required = static::class . ":{$required}";
+        foreach ($this->getMetadata()->getDependencies() as $dependency) {
+            foreach ((array)$dependency as $required) {
+                if (!str_contains((string)$required, ':') && method_exists($this, $required)) {
+                    $required = static::class . ":{$required}";
+                }
+                $names[] = $required;
             }
-            $names[] = $required;
         }
         return $names;
     }
