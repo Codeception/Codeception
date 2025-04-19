@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
-use Codeception\Module\PhpBrowser;
+use Codeception\Template\Shared\TemplateHelpersTrait;
 use Codeception\Util\Template;
 use Symfony\Component\Yaml\Yaml;
 
 class Api extends InitTemplate
 {
+    use TemplateHelpersTrait;
+
     protected string $configTemplate = <<<EOF
 # suite config
 suites:
@@ -61,33 +63,9 @@ EOF;
         $this->say();
         $dir = $this->ask('Where tests will be stored?', 'tests');
         $url = $this->ask('Start URL for tests', 'http://localhost/api');
-
-        if (!class_exists('\\Codeception\\Module\\REST') || !class_exists(PhpBrowser::class)) {
-            $this->addModulesToComposer(['REST', 'PhpBrowser']);
-        }
-
-        $paths = [
-            '_output',
-            'Support',
-            'Support/Data',
-            'Support/_generated',
-        ];
-        foreach ($paths as $sub) {
-            $full = $dir . DIRECTORY_SEPARATOR . $sub;
-            if ($sub === 'Support/Data') {
-                $this->createEmptyDirectory($full);
-            } elseif (str_ends_with($sub, '_generated')) {
-                $this->createEmptyDirectory($full);
-                $this->gitIgnore($full);
-            } else {
-                $this->createDirectoryFor($full);
-                if ($sub === '_output') {
-                    $this->gitIgnore($full);
-                }
-            }
-        }
+        $this->createSuiteDirs($dir);
         $this->sayInfo("Created test directories at {$dir}");
-
+        $this->ensureModules(['REST', 'PhpBrowser']);
         $config = (new Template($this->configTemplate))
             ->place('url', $url)
             ->place('baseDir', $dir)
@@ -99,7 +77,7 @@ EOF;
 
         $settings = Yaml::parse($config)['suites']['api'];
         $settings['support_namespace'] = $this->supportNamespace;
-        $this->createActor('ApiTester', $dir . '/Support', $settings);
+        $this->createActor('ApiTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
 
         $this->sayInfo('Created global config codeception.yml inside the root directory');
 
@@ -107,7 +85,7 @@ EOF;
             ->place('namespace', $namespace)
             ->place('support_namespace', $this->supportNamespace)
             ->produce();
-        $this->createFile($dir . '/ApiCest.php', $firstTest);
+        $this->createFile($dir . DIRECTORY_SEPARATOR . 'ApiCest.php', $firstTest);
         $this->sayInfo('Created a demo test ApiCest.php');
 
         $this->say();

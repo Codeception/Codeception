@@ -165,9 +165,9 @@ EOF;
     {
         $settings = Yaml::parse($config);
         $settings['support_namespace'] = $this->supportNamespace;
-        $dir       = "tests" . DIRECTORY_SEPARATOR . "{$name}";
+        $dir      = 'tests' . DIRECTORY_SEPARATOR . $name;
         $this->createDirectoryFor($dir, "{$name}.suite.yml");
         $this->createActor($actor . $this->actorSuffix, $this->supportDir, $settings);
-        $this->createFile("{$dir}.suite.yml", $config);
+        $this->createFile('tests' . DIRECTORY_SEPARATOR . "{$name}.suite.yml", $config);
     }
 }

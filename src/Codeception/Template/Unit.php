@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
-use Codeception\Module\Asserts;
+use Codeception\Template\Shared\TemplateHelpersTrait;
 use Codeception\Util\Template;
 use Symfony\Component\Yaml\Yaml;
 
 class Unit extends InitTemplate
 {
+    use TemplateHelpersTrait;
+
     protected string $configTemplate = <<<EOF
 suites:
     unit:
@@ -51,27 +53,7 @@ EOF;
         $this->say('Codeception provides additional features for integration tests');
         $this->say('Like accessing frameworks, ORM, Database.');
         $haveTester = $this->ask('Do you wish to enable them?', false);
-
-        $paths = [
-            '_output',
-            'Support',
-            'Support/Data',
-            'Support/_generated',
-        ];
-        foreach ($paths as $sub) {
-            $full = $dir . DIRECTORY_SEPARATOR . $sub;
-            if ($sub === 'Support/Data') {
-                $this->createEmptyDirectory($full);
-            } elseif (str_ends_with($sub, '_generated')) {
-                $this->createEmptyDirectory($full);
-                $this->gitIgnore($full);
-            } else {
-                $this->createDirectoryFor($full);
-                if ($sub === '_output') {
-                    $this->gitIgnore($full);
-                }
-            }
-        }
+        $this->createSuiteDirs($dir);
         $this->sayInfo("Created test directory at {$dir}");
 
         $config = (new Template($this->configTemplate))
@@ -82,15 +64,11 @@ EOF;
         $namespace     = rtrim($this->namespace, '\\');
         $config = "namespace: {$namespace}\nsupport_namespace: {$this->supportNamespace}\n" . $config;
         $this->createFile('codeception.yml', $config);
-
-        if (!class_exists(Asserts::class)) {
-            $this->addModulesToComposer(['Asserts']);
-        }
-
+        $this->ensureModules(['Asserts']);
         if ($haveTester) {
             $settings = Yaml::parse($config)['suites']['unit'];
             $settings['support_namespace'] = $this->supportNamespace;
-            $this->createActor('UnitTester', $dir . '/Support', $settings);
+            $this->createActor('UnitTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
         }
 
         $this->saySuccess('INSTALLATION COMPLETE');

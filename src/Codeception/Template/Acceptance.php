@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Codeception\Template;
 
 use Codeception\InitTemplate;
+use Codeception\Template\Shared\TemplateHelpersTrait;
 use Codeception\Util\Template;
 use Symfony\Component\Yaml\Yaml;
 
 class Acceptance extends InitTemplate
 {
+    use TemplateHelpersTrait;
+
     protected string $configTemplate = <<<EOF
 # suite config
 suites:
@@ -90,33 +93,9 @@ EOF;
                 : 'Ensure Selenium Server and GeckoDriver are installed'
         );
         $url = $this->ask('Start URL for tests', 'http://localhost');
-
-        $paths = [
-            '_output',
-            'Support',
-            'Support/Data',
-            'Support/_generated',
-        ];
-        foreach ($paths as $sub) {
-            $full = $dir . DIRECTORY_SEPARATOR . $sub;
-            if ($sub === 'Support/Data') {
-                $this->createEmptyDirectory($full);
-            } elseif (str_ends_with($sub, '_generated')) {
-                $this->createEmptyDirectory($full);
-                $this->gitIgnore($full);
-            } else {
-                $this->createDirectoryFor($full);
-                if ($sub === '_output') {
-                    $this->gitIgnore($full);
-                }
-            }
-        }
+        $this->createSuiteDirs($dir);
         $this->sayInfo("Created test directories at {$dir}");
-
-        if (!class_exists('\\Codeception\\Module\\WebDriver')) {
-            $this->addModulesToComposer(['WebDriver']);
-        }
-
+        $this->ensureModules(['WebDriver']);
         $config = (new Template($this->configTemplate))
             ->place('url', $url)
             ->place('browser', $browser)
@@ -129,7 +108,7 @@ EOF;
 
         $settings = Yaml::parse($config)['suites']['acceptance'];
         $settings['support_namespace'] = $this->supportNamespace;
-        $this->createActor('AcceptanceTester', $dir . '/Support', $settings);
+        $this->createActor('AcceptanceTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
 
         $this->sayInfo('Created global config codeception.yml inside the root directory');
 
@@ -137,7 +116,7 @@ EOF;
             ->place('namespace', $namespace)
             ->place('support_namespace', $this->supportNamespace)
             ->produce();
-        $this->createFile($dir . '/LoginCest.php', $firstTest);
+        $this->createFile($dir . DIRECTORY_SEPARATOR . 'LoginCest.php', $firstTest);
         $this->sayInfo('Created a demo test LoginCest.php');
         $this->say();
         $this->saySuccess('INSTALLATION COMPLETE');
