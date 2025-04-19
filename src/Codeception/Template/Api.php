@@ -38,12 +38,13 @@ EOF;
 
     protected string $firstTest = <<<EOF
 <?php
+
 namespace {{namespace}};
 
 use {{namespace}}\{{support_namespace}}\ApiTester;
 
-class ApiCest 
-{    
+class ApiCest
+{
     public function tryApi(ApiTester \$I)
     {
         \$I->sendGet('/');
@@ -57,57 +58,65 @@ EOF;
     {
         $this->checkInstalled();
         $this->say("Let's prepare Codeception for REST API testing");
-        $this->say('');
-
-        $dir = $this->ask("Where tests will be stored?", 'tests');
-
-        $url = $this->ask("Start url for tests", "http://localhost/api");
+        $this->say();
+        $dir = $this->ask('Where tests will be stored?', 'tests');
+        $url = $this->ask('Start URL for tests', 'http://localhost/api');
 
         if (!class_exists('\\Codeception\\Module\\REST') || !class_exists(PhpBrowser::class)) {
             $this->addModulesToComposer(['REST', 'PhpBrowser']);
         }
 
-        $this->createDirectoryFor($outputDir = $dir . DIRECTORY_SEPARATOR . '_output');
-        $this->createDirectoryFor($supportDir = $dir . DIRECTORY_SEPARATOR . 'Support');
-        $this->createEmptyDirectory($supportDir . DIRECTORY_SEPARATOR . 'Data');
-        $this->createDirectoryFor($supportDir . DIRECTORY_SEPARATOR . '_generated');
-        $this->gitIgnore($outputDir);
-        $this->gitIgnore($supportDir . DIRECTORY_SEPARATOR . '_generated');
-        $this->sayInfo("Created test directories inside at {$dir}");
+        $paths = [
+            '_output',
+            'Support',
+            'Support/Data',
+            'Support/_generated',
+        ];
+        foreach ($paths as $sub) {
+            $full = $dir . DIRECTORY_SEPARATOR . $sub;
+            if ($sub === 'Support/Data') {
+                $this->createEmptyDirectory($full);
+            } elseif (str_ends_with($sub, '_generated')) {
+                $this->createEmptyDirectory($full);
+                $this->gitIgnore($full);
+            } else {
+                $this->createDirectoryFor($full);
+                if ($sub === '_output') {
+                    $this->gitIgnore($full);
+                }
+            }
+        }
+        $this->sayInfo("Created test directories at {$dir}");
 
-        $configFile = (new Template($this->configTemplate))
+        $config = (new Template($this->configTemplate))
             ->place('url', $url)
             ->place('baseDir', $dir)
             ->produce();
 
         $namespace = rtrim($this->namespace, '\\');
-        $configFile = "namespace: $namespace\nsupport_namespace: {$this->supportNamespace}\n" . $configFile;
+        $config = "namespace: $namespace\nsupport_namespace: {$this->supportNamespace}\n" . $config;
+        $this->createFile('codeception.yml', $config);
 
-        $this->createFile('codeception.yml', $configFile);
-        $settings = Yaml::parse($configFile)['suites']['api'];
+        $settings = Yaml::parse($config)['suites']['api'];
         $settings['support_namespace'] = $this->supportNamespace;
-        $this->createActor('ApiTester', $supportDir, $settings);
+        $this->createActor('ApiTester', $dir . '/Support', $settings);
 
-        $this->sayInfo("Created global config codeception.yml inside the root directory");
+        $this->sayInfo('Created global config codeception.yml inside the root directory');
 
-        $this->createFile(
-            $dir . DIRECTORY_SEPARATOR . 'ApiCest.php',
-            (new Template($this->firstTest))
-                ->place('namespace', $this->namespace)
-                ->place('support_namespace', $this->supportNamespace)
-                ->produce()
-        );
-
-        $this->sayInfo("Created a demo test ApiCest.php");
+        $firstTest = (new Template($this->firstTest))
+            ->place('namespace', $namespace)
+            ->place('support_namespace', $this->supportNamespace)
+            ->produce();
+        $this->createFile($dir . '/ApiCest.php', $firstTest);
+        $this->sayInfo('Created a demo test ApiCest.php');
 
         $this->say();
-        $this->saySuccess("INSTALLATION COMPLETE");
-
+        $this->saySuccess('INSTALLATION COMPLETE');
         $this->say();
-        $this->say("<bold>Next steps:</bold>");
+        $this->say('<bold>Next steps:</bold>');
         $this->say("1. Edit <bold>{$dir}/ApiCest.php</bold> to write first API tests");
         $this->say("2. Run tests using: <comment>codecept run</comment>");
         $this->say();
-        $this->say("<bold>Happy testing!</bold>");
+        $this->say('<bold>Happy testing!</bold>');
     }
 }
