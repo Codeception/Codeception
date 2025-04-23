@@ -14,34 +14,27 @@ use function array_unique;
 class Metadata
 {
     protected ?string $name = null;
-
     protected ?string $filename = null;
-
     protected string $feature = '';
-
-    protected null|int|string $index = null;
+    protected int|string|null $index = null;
 
     protected array $params = [
-        'env' => [],
-        'group' => [],
-        'depends' => [],
-        'skip' => null,
-        'incomplete' => null
+        'env'        => [],
+        'group'      => [],
+        'depends'    => [],
+        'skip'       => null,
+        'incomplete' => null,
     ];
 
-    protected array $current = [];
-
+    protected array $current  = [];
     protected array $services = [];
+    protected array $reports  = [];
 
-    protected array $reports = [];
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $beforeClassMethods = [];
-    /**
-     * @var string[]
-     */
-    private array $afterClassMethods = [];
+
+    /** @var string[] */
+    private array $afterClassMethods  = [];
 
     public function getEnv(): array
     {
@@ -53,9 +46,7 @@ class Metadata
         return array_unique($this->params['group']);
     }
 
-    /**
-     * @param string[] $groups
-     */
+    /** @param string[] $groups */
     public function setGroups(array $groups): void
     {
         $this->params['group'] = array_merge($this->params['group'], $groups);
@@ -83,17 +74,10 @@ class Metadata
 
     public function getCurrent(?string $key = null): mixed
     {
-        if ($key) {
-            if (isset($this->current[$key])) {
-                return $this->current[$key];
-            }
-            if ($key === 'name') {
-                return $this->getName();
-            }
-            return null;
+        if ($key === null) {
+            return $this->current;
         }
-
-        return $this->current;
+        return $this->current[$key] ?? ($key === 'name' ? $this->getName() : null);
     }
 
     public function setCurrent(array $currents): void
@@ -103,7 +87,7 @@ class Metadata
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     public function setName(string $name): void
@@ -113,7 +97,12 @@ class Metadata
 
     public function getFilename(): string
     {
-        return $this->filename;
+        return $this->filename ?: '';
+    }
+
+    public function setFilename(string $filename): void
+    {
+        $this->filename = $filename;
     }
 
     public function setIndex(int|string $index): void
@@ -121,14 +110,9 @@ class Metadata
         $this->index = $index;
     }
 
-    public function getIndex(): null|int|string
+    public function getIndex(): int|string|null
     {
         return $this->index;
-    }
-
-    public function setFilename(string $filename): void
-    {
-        $this->filename = $filename;
     }
 
     /** @return string[] */
@@ -139,10 +123,7 @@ class Metadata
 
     public function isBlocked(): bool
     {
-        if ($this->getSkip() !== null) {
-            return true;
-        }
-        return $this->getIncomplete() !== null;
+        return $this->getSkip() !== null || $this->getIncomplete() !== null;
     }
 
     public function getFeature(): string
@@ -168,9 +149,6 @@ class Metadata
         $this->services = $services;
     }
 
-    /**
-     * Returns all test reports
-     */
     public function getReports(): array
     {
         return $this->reports;
@@ -187,29 +165,24 @@ class Metadata
      */
     public function getParam(?string $key = null): mixed
     {
-        if ($key) {
-            if (isset($this->params[$key])) {
-                return $this->params[$key];
-            }
-            return null;
-        }
-
-        return $this->params;
+        return $key === null ? $this->params : ($this->params[$key] ?? null);
     }
 
     public function setParamsFromAnnotations($annotations): void
     {
-        $params = Annotation::fetchAllAnnotationsFromDocblock((string)$annotations);
-        $this->params = array_merge_recursive($this->params, $params);
-
+        $this->params = array_merge_recursive(
+            $this->params,
+            Annotation::fetchAllAnnotationsFromDocblock((string) $annotations)
+        );
         $this->setSingularValueForSomeParams();
     }
 
     private function setSingularValueForSomeParams(): void
     {
         foreach (['skip', 'incomplete'] as $single) {
-            if (is_array($this->params[$single])) {
-                $this->params[$single] = $this->params[$single][0] ?? $this->params[$single][1] ?? '';
+            $value = $this->params[$single] ?? null;
+            if (is_array($value)) {
+                $this->params[$single] = $value[1] ?? $value[0] ?? '';
             }
         }
     }
@@ -218,67 +191,54 @@ class Metadata
     {
         $params = [];
         foreach ($attributes as $attribute) {
-            $name = lcfirst(str_replace('Codeception\\Attribute\\', '', (string) $attribute->getName()));
+            $name      = lcfirst(str_replace('Codeception\\Attribute\\', '', (string) $attribute->getName()));
+            $arguments = $attribute->getArguments();
+
             if ($attribute->isRepeated()) {
-                $params[$name] ??= [];
-                $params[$name][] = $attribute->getArguments();
-                continue;
+                $params[$name][] = $arguments;
+            } else {
+                $params[$name] = $arguments;
             }
-            $params[$name] = $attribute->getArguments();
         }
+
         $this->params = array_merge_recursive($this->params, $params);
 
-        // flatten arrays for some attributes
         foreach (['group', 'env', 'before', 'after', 'prepare'] as $single) {
-            if (!isset($this->params[$single])) {
-                continue;
-            };
-            if (!is_array($this->params[$single])) {
-                continue;
-            };
-
-            $this->params[$single] = array_map(fn($a): array => is_array($a) ? $a : [$a], $this->params[$single]);
-            $this->params[$single] = array_merge(...$this->params[$single]);
+            if (isset($this->params[$single]) && is_array($this->params[$single])) {
+                $this->params[$single] = array_merge(
+                    ...array_map(static fn($a): array => (array) $a, $this->params[$single])
+                );
+            }
         }
 
         $this->setSingularValueForSomeParams();
     }
 
-    /**
-     * @deprecated
-     */
+    /** @deprecated */
     public function setParams(array $params): void
     {
         $this->params = array_merge_recursive($this->params, $params);
     }
 
-    /**
-     * @param string[] $beforeClassMethods
-     */
+    /** @param string[] $beforeClassMethods */
     public function setBeforeClassMethods(array $beforeClassMethods): void
     {
         $this->beforeClassMethods = $beforeClassMethods;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getBeforeClassMethods(): array
     {
         return $this->beforeClassMethods;
     }
 
-    /**
-     * @param string[] $afterClassMethods
-     */
+    /** @param string[] $afterClassMethods */
     public function setAfterClassMethods(array $afterClassMethods): void
     {
         $this->afterClassMethods = $afterClassMethods;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getAfterClassMethods(): array
     {
         return $this->afterClassMethods;

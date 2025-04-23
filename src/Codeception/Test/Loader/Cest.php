@@ -6,7 +6,6 @@ namespace Codeception\Test\Loader;
 
 use Codeception\Command\Shared\ActorTrait;
 use Codeception\Lib\Parser;
-use Codeception\Scenario;
 use Codeception\Test\Cest as CestFormat;
 use Codeception\Test\DataProvider;
 use ReflectionClass;
