@@ -17,7 +17,7 @@ class FailFast implements EventSubscriberInterface
      * @var array<string, array<string|int>>
      */
     protected static array $events = [
-        Events::TEST_FAIL => ['stopOnFail', 128],
+        Events::TEST_FAIL  => ['stopOnFail', 128],
         Events::TEST_ERROR => ['stopOnFail', 128],
     ];
 
@@ -29,9 +29,7 @@ class FailFast implements EventSubscriberInterface
 
     public function stopOnFail(TestEvent $e): void
     {
-        $this->failureCount++;
-
-        if ($this->failureCount >= $this->stopFailureCount) {
+        if (++$this->failureCount >= $this->stopFailureCount) {
             $this->resultAggregator->stop();
         }
     }
