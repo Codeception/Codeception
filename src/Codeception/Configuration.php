@@ -413,11 +413,11 @@ class Configuration
     {
         return array_filter(
             array_map(
-                fn($m) => is_array($m) ? key($m) : $m,
+                fn($m): mixed => is_array($m) ? key($m) : $m,
                 $settings['modules']['enabled'],
                 array_keys($settings['modules']['enabled'])
             ),
-            fn($m) => !isset($settings['modules']['disabled']) || !in_array($m, $settings['modules']['disabled'])
+            fn($m): bool => !isset($settings['modules']['disabled']) || !in_array($m, $settings['modules']['disabled'])
         );
     }
 

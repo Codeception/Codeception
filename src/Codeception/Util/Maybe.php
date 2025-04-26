@@ -7,6 +7,7 @@ namespace Codeception\Util;
 use ArrayAccess;
 use Iterator;
 use JsonSerializable;
+use Stringable;
 
 use function array_keys;
 use function call_user_func_array;
@@ -31,7 +32,7 @@ use function range;
  * $user->posts->comments->count();
  * ```
  */
-class Maybe implements ArrayAccess, Iterator, JsonSerializable
+class Maybe implements ArrayAccess, Iterator, JsonSerializable, Stringable
 {
     protected int $position = 0;
     protected mixed $val = null;
@@ -145,9 +146,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
             return $this->val;
         }
 
-        return array_map(function ($v) {
-            return $v instanceof self ? $v->value() : $v;
-        }, $this->val);
+        return array_map(fn($v) => $v instanceof self ? $v->value() : $v, $this->val);
     }
 
     /**
@@ -160,7 +159,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
         if (!is_array($this->val)) {
             return null;
         }
-        $key = $this->assocArray ? ($this->keys[$this->position] ?? null) : $this->position;
+        $key = $this->assocArray === true ? ($this->keys[$this->position] ?? null) : $this->position;
         return $this->val[$key] ?? null;
     }
 
@@ -181,7 +180,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
      */
     public function key(): mixed
     {
-        return $this->assocArray ? ($this->keys[$this->position] ?? null) : $this->position;
+        return $this->assocArray === true ? ($this->keys[$this->position] ?? null) : $this->position;
     }
 
     /**
@@ -195,7 +194,7 @@ class Maybe implements ArrayAccess, Iterator, JsonSerializable
         if (!is_array($this->val)) {
             return false;
         }
-        return $this->assocArray ? isset($this->keys[$this->position]) : isset($this->val[$this->position]);
+        return $this->assocArray === true ? isset($this->keys[$this->position]) : isset($this->val[$this->position]);
     }
 
     /**

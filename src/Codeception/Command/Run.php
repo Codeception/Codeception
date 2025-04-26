@@ -244,7 +244,7 @@ class Run extends Command
         $userOptions['ansi'] = (!$input->hasParameterOption('--no-ansi') xor $input->hasParameterOption('ansi'));
         $userOptions['disable-coverage-php'] = (bool) $this->options['disable-coverage-php'];
 
-        $userOptions['seed'] = $this->options['seed'] ? (int)$this->options['seed'] : rand();
+        $userOptions['seed'] = $this->options['seed'] ? (int)$this->options['seed'] : random_int(0, mt_getrandmax());
         if ($this->options['no-colors'] || !$userOptions['ansi']) {
             $userOptions['colors'] = false;
         }
@@ -714,7 +714,7 @@ class Run extends Command
     private function addRuntimeOptionsToCurrentConfig(array $config): array
     {
         // update config from options
-        if (count($this->options['override'])) {
+        if (count($this->options['override']) > 0) {
             $config = $this->overrideConfig($this->options['override']);
         }
         // enable extensions

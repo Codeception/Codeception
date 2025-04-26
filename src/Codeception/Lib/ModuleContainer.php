@@ -189,7 +189,7 @@ class ModuleContainer
         if (
             !$module::$includeInheritedActions &&
             !in_array($method->name, $module::$onlyActions) &&
-            $method->getDeclaringClass()->getName() != $module::class
+            $method->getDeclaringClass()->getName() !== $module::class
         ) {
             return false;
         }

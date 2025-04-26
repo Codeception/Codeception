@@ -39,7 +39,8 @@ trait ConfigTrait
         return Configuration::suites();
     }
 
-    protected function overrideConfig($configOptions): array
+    /** @param string[] $configOptions */
+    protected function overrideConfig(array $configOptions): array
     {
         $updatedConfig = [];
         foreach ($configOptions as $option) {
@@ -63,7 +64,8 @@ trait ConfigTrait
         return Configuration::append($updatedConfig);
     }
 
-    protected function enableExtensions($extensions): array
+    /** @param string[] $extensions */
+    protected function enableExtensions(array $extensions): array
     {
         $config = ['extensions' => ['enabled' => []]];
         foreach ($extensions as $name) {

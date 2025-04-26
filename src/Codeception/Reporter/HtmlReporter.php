@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Reporter;
 
 use Codeception\Event\FailEvent;
@@ -196,7 +198,7 @@ class HtmlReporter implements EventSubscriberInterface
             $metaStep = $step->getMetaStep();
             if ($metaStep) {
                 $key = $this->getMetaStepKey($metaStep);
-                if (!empty($subStepsRendered[$key])) {
+                if (isset($subStepsRendered[$key]) && $subStepsRendered[$key] !== []) {
                     $subStepsBuffer = implode('', $subStepsRendered[$key]);
                     unset($subStepsRendered[$key]);
                     $stepsBuffer .= $this->renderSubsteps($step->getMetaStep(), $subStepsBuffer);

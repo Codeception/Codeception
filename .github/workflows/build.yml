@@ -90,8 +90,8 @@ jobs:
         if: matrix.mode == 'stable'
         run: composer update --no-interaction --no-progress --optimize-autoloader --ansi
 
-      - name: Composer install lowest versions of dependencies on PHP 8.1 in experimental mode
-        if: matrix.php == '8.1' && matrix.mode == 'experimental'
+      - name: Composer install lowest versions of dependencies on PHP 8.2 in experimental mode
+        if: matrix.php == '8.2' && matrix.mode == 'experimental'
         run: composer update --prefer-lowest --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Test that failing test really fails

@@ -98,7 +98,7 @@ class Annotation
 
     public function fetch(string $annotation): ?string
     {
-        if ($attr = $this->attribute($annotation)) {
+        if (($attr = $this->attribute($annotation)) instanceof ReflectionAttribute) {
             return $attr->getArguments()[0] ?? '';
         }
 
@@ -108,7 +108,7 @@ class Annotation
 
     public function fetchAll(string $annotation): array
     {
-        if ($attr = $this->attribute($annotation)) {
+        if (($attr = $this->attribute($annotation)) instanceof ReflectionAttribute) {
             if (!$attr->isRepeated()) {
                 return $attr->getArguments();
             }
@@ -117,7 +117,7 @@ class Annotation
                 $annotation = 'examples';
             }
             $attrClass = "Codeception\\Attribute\\" . ucfirst($annotation);
-            $attrs = array_filter($this->attributes(), static fn($a) => $a->getName() === $attrClass);
+            $attrs = array_filter($this->attributes(), static fn($a): bool => $a->getName() === $attrClass);
 
             return $annotation === 'examples'
                 ? array_map(static fn($a) => $a->getArguments(), $attrs)
@@ -131,7 +131,7 @@ class Annotation
     {
         return array_filter(
             $this->currentReflectedItem->getAttributes(),
-            static fn(ReflectionAttribute $a) => str_starts_with($a->getName(), 'Codeception\\Attribute\\')
+            static fn(ReflectionAttribute $a): bool => str_starts_with($a->getName(), 'Codeception\\Attribute\\')
         );
     }
 

@@ -33,7 +33,7 @@ class Debug
 
     public static function isEnabled(): bool
     {
-        return self::$output !== null;
+        return self::$output instanceof Output;
     }
 
     public static function pause(array $vars = []): void
@@ -68,8 +68,8 @@ class Debug
 
     public static function confirm($question)
     {
-        if (!self::$output) {
-            return;
+        if (!self::$output instanceof Output) {
+            return null;
         }
 
         return (new QuestionHelper())

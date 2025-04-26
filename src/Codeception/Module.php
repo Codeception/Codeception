@@ -130,7 +130,7 @@ abstract class Module
      */
     protected function validateConfig(): void
     {
-        if ($missing = array_diff($this->requiredFields, array_keys($this->config))) {
+        if (($missing = array_diff($this->requiredFields, array_keys($this->config))) !== []) {
             throw new ModuleConfigException(
                 static::class,
                 sprintf(

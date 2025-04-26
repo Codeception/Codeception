@@ -37,7 +37,7 @@ trait TemplateHelpersTrait
                 $toInstall[] = $module;
             }
         }
-        if ($toInstall) {
+        if ($toInstall !== []) {
             $this->addModulesToComposer($toInstall);
         }
     }

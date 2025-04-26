@@ -25,7 +25,7 @@ class StackTraceFilter
         if ($filter) {
             $trace = array_values(array_filter(
                 $trace,
-                static fn(array $step): bool => !(self::classIsFiltered($step) || self::fileIsFiltered($step))
+                static fn(array $step): bool => !self::classIsFiltered($step) && !self::fileIsFiltered($step)
             ));
         }
 

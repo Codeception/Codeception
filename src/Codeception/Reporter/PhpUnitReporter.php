@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Reporter;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Test\Interfaces\Reported;
+use Codeception\Test\Test;
 use ReflectionClass;
 
 class PhpUnitReporter extends JUnitReporter
@@ -33,7 +36,7 @@ class PhpUnitReporter extends JUnitReporter
         parent::startTest($event);
     }
 
-    private function initializeFileLevelSuite(string $filename, $test): void
+    private function initializeFileLevelSuite(string $filename, Test $test): void
     {
         $this->testSuiteAssertions[self::FILE_LEVEL] = 0;
         $this->testSuiteTests[self::FILE_LEVEL]      = 0;

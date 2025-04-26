@@ -53,11 +53,11 @@ class Loader
     protected array $formats;
     protected array $tests = [];
     protected ?string $path;
-    private ?string $shard;
+    private readonly ?string $shard;
 
     public function __construct(array $suiteSettings)
     {
-        $this->path = !empty($suiteSettings['path']) ? rtrim($suiteSettings['path'], "/\\") . '/' : null;
+        $this->path = empty($suiteSettings['path']) ? null : rtrim((string) $suiteSettings['path'], "/\\") . '/';
         $this->shard = $suiteSettings['shard'] ?? null;
 
         $this->formats = [

@@ -26,7 +26,7 @@ class GracefulTermination implements EventSubscriberInterface
      */
     public const ASYNC_SIGNAL_HANDLING_FUNC = 'pcntl_async_signals';
 
-    public function __construct(private ResultAggregator $resultAggregator)
+    public function __construct(private readonly ResultAggregator $resultAggregator)
     {
     }
 

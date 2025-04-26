@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Reporter;
 
 use Codeception\Event\FailEvent;
@@ -53,43 +55,43 @@ class ReportPrinter implements ConsolePrinter
     public function testSuccess(TestEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'Ok');
-        $this->successfulCount++;
+        ++$this->successfulCount;
     }
 
     public function testError(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'ERROR');
-        $this->errorCount++;
+        ++$this->errorCount;
     }
 
     public function testFailure(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'FAIL');
-        $this->failureCount++;
+        ++$this->failureCount;
     }
 
     public function testWarning(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'WARNING');
-        $this->warningCount++;
+        ++$this->warningCount;
     }
 
     public function testSkipped(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'Skipped');
-        $this->skippedCount++;
+        ++$this->skippedCount;
     }
 
     public function testIncomplete(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'Incomplete');
-        $this->incompleteCount++;
+        ++$this->incompleteCount;
     }
 
     public function testUseless(FailEvent $event): void
     {
         $this->printTestResult($event->getTest(), 'Useless');
-        $this->uselessCount++;
+        ++$this->uselessCount;
     }
 
     private function printTestResult(Test $test, string $status): void

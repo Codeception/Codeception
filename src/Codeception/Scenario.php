@@ -18,8 +18,6 @@ use PHPUnit\Runner\Version as PHPUnitVersion;
 
 class Scenario
 {
-    protected TestInterface $test;
-
     protected Metadata $metadata;
 
     /** @var Step[] */
@@ -29,10 +27,9 @@ class Scenario
 
     protected ?Meta $metaStep = null;
 
-    public function __construct(TestInterface $test)
+    public function __construct(protected TestInterface $test)
     {
-        $this->test = $test;
-        $this->metadata = $test->getMetadata();
+        $this->metadata = $this->test->getMetadata();
     }
 
     public function setFeature(string $feature): void
