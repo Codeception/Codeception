@@ -15,7 +15,7 @@
     "minimum-stability": "RC",
 
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",

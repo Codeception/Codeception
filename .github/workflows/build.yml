@@ -13,7 +13,7 @@ permissions:
 jobs:
   phpcs:
     name: Code style
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -46,7 +46,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ['8.1', '8.2', '8.3', '8.4']
+        php: ['8.2', '8.3', '8.4']
         mode: ['stable', 'experimental']
         exclude:
           - php: '8.2'
@@ -97,8 +97,8 @@ jobs:
       - name: Test that failing test really fails
         run: if php codecept run -c tests/data/claypit/ scenario FailedCept -vvv; then echo "Test hasn't failed"; false; fi;
 
-#      - name: Run tests without code coverage on PHP 8.1
-#        if: matrix.php == '8.1'
+#      - name: Run tests without code coverage on PHP 8.2
+#        if: matrix.php == '8.2'
 #        run: |
 #          php -S 127.0.0.1:8008 -t tests/data/app >/dev/null 2>&1 &
 #          php codecept build
@@ -140,7 +140,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        php: ['8.1', '8.2', '8.3', '8.4']
+        php: ['8.2', '8.3', '8.4']
 
     steps:
       - name: Checkout
@@ -155,7 +155,7 @@ jobs:
           tools: composer:v2
 
       - name: Determine composer cache directory
-        run: echo "COMPOSER_CACHE_DIR=~\AppData\Local\Composer" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        run: echo "COMPOSER_CACHE_DIR=~\\AppData\\Local\\Composer" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Cache dependencies installed with composer
         uses: actions/cache@v3
@@ -171,12 +171,11 @@ jobs:
       - name: Validate composer.json
         run: composer validate
 
-      - name: Composer install
+      - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
-      - name: Run tests cli
-        if: matrix.php != '8.2'
+      - name: Run CLI tests
         run: php codecept run cli --skip-group coverage
 
-      - name: Run tests unit
+      - name: Run unit tests
         run: php codecept run unit -g core -g appveyor
