@@ -25,6 +25,9 @@ trait TemplateHelpersTrait
         }
     }
 
+    /**
+     * @param string[] $modules
+     */
     protected function ensureModules(array $modules): void
     {
         $toInstall = [];
