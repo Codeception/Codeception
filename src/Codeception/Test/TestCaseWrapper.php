@@ -40,29 +40,29 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
     public function __construct(
         private TestCase $testCase,
         array $beforeClassMethods = [],
-        array $afterClassMethods = [],
+        array $afterClassMethods = []
     ) {
         $this->metadata = new Metadata();
-        $metadata = $this->metadata;
-
-        $methodName = PHPUnitVersion::series() < 10 ? $testCase->getName(false) : $testCase->name();
-        $metadata->setName($methodName);
-        $metadata->setFilename((new ReflectionClass($testCase))->getFileName());
+        $methodName = PHPUnitVersion::series() < 10
+            ? $testCase->getName(false)
+            : $testCase->name();
+        $this->metadata->setName($methodName);
+        $this->metadata->setFilename((new ReflectionClass($testCase))->getFileName());
 
         if ($testCase->dataName() !== '') {
-            $metadata->setIndex($testCase->dataName());
+            $this->metadata->setIndex($testCase->dataName());
         }
 
         $classAnnotations = Annotation::forClass($testCase);
-        $metadata->setParamsFromAnnotations($classAnnotations->raw());
-        $metadata->setParamsFromAttributes($classAnnotations->attributes());
+        $this->metadata->setParamsFromAnnotations($classAnnotations->raw());
+        $this->metadata->setParamsFromAttributes($classAnnotations->attributes());
 
         $methodAnnotations = Annotation::forMethod($testCase, $methodName);
-        $metadata->setParamsFromAnnotations($methodAnnotations->raw());
-        $metadata->setParamsFromAttributes($methodAnnotations->attributes());
+        $this->metadata->setParamsFromAnnotations($methodAnnotations->raw());
+        $this->metadata->setParamsFromAttributes($methodAnnotations->attributes());
 
-        $metadata->setBeforeClassMethods($beforeClassMethods);
-        $metadata->setAfterClassMethods($afterClassMethods);
+        $this->metadata->setBeforeClassMethods($beforeClassMethods);
+        $this->metadata->setAfterClassMethods($afterClassMethods);
     }
 
     public function __clone(): void
@@ -82,96 +82,74 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
 
     public function getScenario(): ?Scenario
     {
-        if ($this->testCase instanceof Unit) {
-            return $this->testCase->getScenario();
-        }
-
-        return null;
+        return $this->testCase instanceof Unit
+            ? $this->testCase->getScenario()
+            : null;
     }
 
     public function fetchDependencies(): array
     {
-        $names = [];
-        foreach ($this->metadata->getDependencies() as $required) {
-            if (!str_contains($required, ':') && method_exists($this->testCase::class, $required)) {
-                $required = $this->testCase::class . ':' . $required;
-            }
-            $names[] = $required;
-        }
-        return $names;
+        $class = $this->testCase::class;
+        return array_map(
+            static fn(string $dep): string => str_contains($dep, ':') || !method_exists($class, $dep)
+                ? $dep
+                : "$class:$dep",
+            $this->metadata->getDependencies()
+        );
     }
 
-    /**
-     * @return array<string, string>
-     */
     public function getReportFields(): array
     {
         return [
-            'name'    => $this->getNameWithDataSet(),
-            'class'   => $this->testCase::class,
-            'file'    => $this->metadata->getFilename()
+            'name'  => $this->getNameWithDataSet(),
+            'class' => $this->testCase::class,
+            'file'  => $this->metadata->getFilename(),
         ];
     }
 
     public function getLinesToBeCovered(): array|bool
     {
-        $class = $this->testCase::class;
-        $method = $this->metadata->getName();
-
         if (PHPUnitVersion::series() < 10) {
-            return TestUtil::getLinesToBeCovered($class, $method);
+            return TestUtil::getLinesToBeCovered($this->testCase::class, $this->metadata->getName());
         }
-
-        if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
-            return (new CodeCoverage())->coversTargets($class, $method)->asArray();
-        }
-
-        return (new CodeCoverage())->linesToBeCovered($class, $method);
+        return $this->coverageTargets('coversTargets', 'linesToBeCovered');
     }
 
     public function getLinesToBeUsed(): array
     {
-        $class = $this->testCase::class;
-        $method = $this->metadata->getName();
-
         if (PHPUnitVersion::series() < 10) {
-            return TestUtil::getLinesToBeUsed($class, $method);
+            return TestUtil::getLinesToBeUsed($this->testCase::class, $this->metadata->getName());
         }
-
-        if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
-            return (new CodeCoverage())->usesTargets($class, $method)->asArray();
-        }
-
-        return (new CodeCoverage())->linesToBeUsed($class, $method);
+        return (array) $this->coverageTargets('usesTargets', 'linesToBeUsed');
     }
 
     public function test(): void
     {
-        $dependencyInput = [];
-        foreach ($this->fetchDependencies() as $dependency) {
-            $dependencyInput[] = self::$testResults[$dependency] ?? null;
-        }
-        $this->testCase->setDependencyInput($dependencyInput);
+        $inputs = array_map(
+            fn(string $dep) => self::$testResults[$dep] ?? null,
+            $this->fetchDependencies()
+        );
+        $this->testCase->setDependencyInput($inputs);
         $this->testCase->runBare();
-
         $this->testCase->addToAssertionCount(Assert::getCount());
 
-        if (PHPUnitVersion::series() < 10) {
-            self::$testResults[$this->getSignature()] = $this->testCase->getResult();
-        } else {
-            self::$testResults[$this->getSignature()] = $this->testCase->result();
-        }
+        self::$testResults[$this->getSignature()] = PHPUnitVersion::series() < 10
+            ? $this->testCase->getResult()
+            : $this->testCase->result();
 
-        $numberOfAssertionsPerformed = $this->getNumAssertions();
-        if (!$this->reportUselessTests || $numberOfAssertionsPerformed <= 0 || !$this->testCase->doesNotPerformAssertions()) {
-            return;
+        $assertions = $this->getNumAssertions();
+        if (
+            $this->reportUselessTests &&
+            $assertions > 0 &&
+            $this->doesNotPerformAssertions()
+        ) {
+            throw new UselessTestException(
+                sprintf(
+                    'This test indicates it does not perform assertions but %d assertions were performed',
+                    $assertions
+                )
+            );
         }
-        throw new UselessTestException(
-            sprintf(
-                'This test indicates it does not perform assertions but %d assertions were performed',
-                $numberOfAssertionsPerformed
-            )
-        );
     }
 
     /**
@@ -179,7 +157,7 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
      */
     protected function doesNotPerformAssertions(): bool
     {
-         return $this->testCase->doesNotPerformAssertions();
+        return $this->testCase->doesNotPerformAssertions();
     }
 
     public function toString(): string
@@ -200,11 +178,17 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
 
     private function getNameWithDataSet(): string
     {
-        if (PHPUnitVersion::series() < 10) {
-            return $this->testCase->getName(true);
-        }
+        return PHPUnitVersion::series() < 10
+            ? $this->testCase->getName(true)
+            : $this->testCase->nameWithDataSet();
+    }
 
-        return $this->testCase->nameWithDataSet();
+    private function coverageTargets(string $newMethod, string $legacyMethod): array|bool
+    {
+        $coverage = new CodeCoverage();
+        return version_compare(CodeCoverageVersion::id(), '12', '>=')
+            ? $coverage->$newMethod($this->testCase::class, $this->metadata->getName())->asArray()
+            : $coverage->$legacyMethod($this->testCase::class, $this->metadata->getName());
     }
 
     /**
@@ -216,10 +200,8 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
      */
     public function getNumAssertions(): int
     {
-        if (PHPUnitVersion::series() < 10) {
-            return $this->testCase->getNumAssertions();
-        } else {
-            return $this->testCase->numberOfAssertionsPerformed();
-        }
+        return PHPUnitVersion::series() < 10
+            ? $this->testCase->getNumAssertions()
+            : $this->testCase->numberOfAssertionsPerformed();
     }
 }

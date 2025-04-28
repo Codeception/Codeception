@@ -18,7 +18,6 @@ use Codeception\Exception\TestParseException;
 use Codeception\Lib\Generator\Shared\Classname;
 use Codeception\Test\Gherkin as GherkinFormat;
 use Codeception\Util\Annotation;
-use ReflectionClass;
 
 use function array_keys;
 use function array_map;
