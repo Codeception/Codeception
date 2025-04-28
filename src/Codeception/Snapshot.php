@@ -47,16 +47,18 @@ abstract class Snapshot
      */
     protected function load(): void
     {
-        if (!file_exists($this->getFileName())) {
+        $path = $this->getFileName();
+        if (!is_file($path)) {
             return;
         }
-        $fileContents = file_get_contents($this->getFileName());
-        if ($this->saveAsJson) {
-            $fileContents = json_decode($fileContents, false, 512, JSON_THROW_ON_ERROR);
-        }
-        $this->dataSet = $fileContents;
-        if (!$this->dataSet) {
-            throw new ContentNotFound("Loaded snapshot is empty");
+
+        $contents     = file_get_contents($path);
+        $this->dataSet = $this->saveAsJson
+            ? json_decode($contents, false, 512, JSON_THROW_ON_ERROR)
+            : $contents;
+
+        if ($this->dataSet === null || $this->dataSet === false) {
+            throw new ContentNotFound('Loaded snapshot is empty');
         }
     }
 
@@ -65,11 +67,11 @@ abstract class Snapshot
      */
     protected function save(): void
     {
-        $fileContents = $this->dataSet;
-        if ($this->saveAsJson) {
-            $fileContents = json_encode($fileContents, JSON_THROW_ON_ERROR);
-        }
-        file_put_contents($this->getFileName(), $fileContents);
+        $contents = $this->saveAsJson
+            ? json_encode($this->dataSet, JSON_THROW_ON_ERROR)
+            : $this->dataSet;
+
+        file_put_contents($this->getFileName(), $contents);
     }
 
     /**
@@ -77,10 +79,7 @@ abstract class Snapshot
      */
     protected function getFileName(): string
     {
-        if (!$this->fileName) {
-            $this->fileName = preg_replace('#\W#', '.', static::class) . '.' . $this->extension;
-        }
-        return codecept_data_dir() . $this->fileName;
+        return codecept_data_dir() . ($this->fileName ??= preg_replace('#\W#', '.', static::class) . '.' . $this->extension);
     }
 
     /**
@@ -88,10 +87,9 @@ abstract class Snapshot
      */
     public function assert(): void
     {
-        // fetch data
         $data = $this->fetchData();
         if (!$data) {
-            throw new ContentNotFound("Fetched snapshot is empty.");
+            throw new ContentNotFound('Fetched snapshot is empty.');
         }
 
         $this->load();
@@ -109,11 +107,9 @@ abstract class Snapshot
         } catch (AssertionFailedError $exception) {
             $this->printDebug('Snapshot assertion failed');
 
-            if (!is_bool($this->refresh)) {
-                $confirm = Debug::confirm('Should we update snapshot with fresh data? (Y/n) ');
-            } else {
-                $confirm = $this->refresh;
-            }
+            $confirm = is_bool($this->refresh)
+                ? $this->refresh
+                : Debug::confirm('Should we update snapshot with fresh data? (Y/n) ');
 
             if ($confirm) {
                 $this->dataSet = $data;

@@ -10,7 +10,6 @@ use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Exception\InjectionException;
 use Codeception\Step\Comment;
 use Codeception\Step\Meta;
-use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Metadata;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
@@ -23,9 +22,7 @@ class Scenario
 
     protected Metadata $metadata;
 
-    /**
-     * @var Step[]
-     */
+    /** @var Step[] */
     protected array $steps = [];
 
     protected string $feature;
@@ -34,8 +31,8 @@ class Scenario
 
     public function __construct(TestInterface $test)
     {
-        $this->metadata = $test->getMetadata();
         $this->test = $test;
+        $this->metadata = $test->getMetadata();
     }
 
     public function setFeature(string $feature): void
@@ -68,20 +65,21 @@ class Scenario
             $step->setMetaStep($this->metaStep);
         }
         $this->steps[] = $step;
-        $result = null;
-        $dispatcher = $this->metadata->getService('dispatcher');
 
+        $dispatcher = $this->metadata->getService('dispatcher');
         $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_BEFORE);
+
         try {
             $result = $step->run($this->metadata->getService('modules'));
-        } catch (ConditionalAssertionFailed $f) {
-            $testResult = $this->test->getResultAggregator();
-            $failEvent = new FailEvent(clone($this->test), $f, 0);
-            $testResult->addFailure($failEvent);
+        } catch (ConditionalAssertionFailed $failure) {
+            $this->test->getResultAggregator()
+                ->addFailure(new FailEvent(clone $this->test, $failure, 0));
+            $result = null;
         } finally {
             $dispatcher->dispatch(new StepEvent($this->test, $step), Events::STEP_AFTER);
+            $step->executed = true;
         }
-        $step->executed = true;
+
         return $result;
     }
 
@@ -90,11 +88,7 @@ class Scenario
         $this->steps[] = $step;
     }
 
-    /**
-     * Returns the steps of this scenario.
-     *
-     * @return Step[]
-     */
+    /** @return Step[] */
     public function getSteps(): array
     {
         return $this->steps;
@@ -103,21 +97,21 @@ class Scenario
     public function getHtml(): string
     {
         $text = '';
-        foreach ($this->getSteps() as $step) {
-            if ($step->getName() !== 'Comment') {
-                $text .= $step->getHtml() . '<br/>';
-            } else {
+        foreach ($this->steps as $step) {
+            if ($step->getName() === 'Comment') {
                 $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
+            } else {
+                $text .= $step->getHtml() . '<br/>';
             }
         }
         $text = str_replace(['"\'', '\'"'], ["'", "'"], $text);
-        return "<h3>" . mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . "</h3>" . $text;
+        return '<h3>' . mb_strtoupper('I want to ' . $this->getFeature(), 'utf-8') . '</h3>' . $text;
     }
 
     public function getText(): string
     {
         $text = '';
-        foreach ($this->getSteps() as $step) {
+        foreach ($this->steps as $step) {
             $text .= $step->getPrefix() . "{$step} \r\n";
         }
         $text = trim(str_replace(['"\'', '\'"'], ["'", "'"], $text));
@@ -134,7 +128,6 @@ class Scenario
         if (PHPUnitVersion::series() < 10) {
             throw new SkippedTestError($message);
         }
-
         throw new SkippedWithMessageException($message);
     }
 
