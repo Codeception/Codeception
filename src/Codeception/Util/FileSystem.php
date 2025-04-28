@@ -6,35 +6,13 @@ namespace Codeception\Util;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use FilesystemIterator;
 
-use function basename;
-use function rmdir;
-use function unlink;
-
-/**
- * Set of functions to work with Filesystem
- */
 class FileSystem
 {
     public static function doEmptyDir(string $path): void
     {
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($path),
-            RecursiveIteratorIterator::CHILD_FIRST
-        );
-
-        foreach ($iterator as $path) {
-            $basename = basename((string)$path);
-            if ($basename === '.' || $basename === '..' || $basename === '.gitignore' || $basename === '.gitkeep') {
-                continue;
-            }
-
-            if ($path->isDir()) {
-                rmdir((string)$path);
-            } else {
-                unlink((string)$path);
-            }
-        }
+        self::clearDir($path, ['.gitignore', '.gitkeep']);
     }
 
     public static function deleteDir(string $dir): bool
@@ -47,39 +25,55 @@ class FileSystem
             return @unlink($dir);
         }
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $dir = str_replace('/', '\\', $dir);
-            exec('rd /s /q "' . $dir . '"');
+        if (strncasecmp(PHP_OS, 'WIN', 3) === 0) {
+            $winPath = str_replace('/', '\\', $dir);
+            exec(sprintf('rd /s /q "%s"', $winPath));
             return true;
         }
 
-        foreach (scandir($dir) as $item) {
-            if ($item === '.' || $item === '..') {
-                continue;
-            }
-
-            if (!self::deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
-                chmod($dir . DIRECTORY_SEPARATOR . $item, 0777);
-                return false;
-            }
-        }
-
+        self::clearDir($dir);
         return @rmdir($dir);
     }
 
     public static function copyDir(string $src, string $dst): void
     {
-        $dir = opendir($src);
-        @mkdir($dst);
-        while (false !== ($file = readdir($dir))) {
-            if (($file !== '.') && ($file !== '..')) {
-                if (is_dir($src . DIRECTORY_SEPARATOR . $file)) {
-                    self::copyDir($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
-                } else {
-                    copy($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
-                }
+        if (!is_dir($src)) {
+            return;
+        }
+
+        $src     = rtrim($src, DIRECTORY_SEPARATOR);
+        @mkdir($dst, 0777, true);
+        $baseLen = strlen($src) + 1;
+
+        foreach (self::createIterator($src, RecursiveIteratorIterator::SELF_FIRST) as $item) {
+            $target = $dst . DIRECTORY_SEPARATOR . substr($item->getPathname(), $baseLen);
+            if ($item->isDir()) {
+                @mkdir($target, 0777, true);
+            } else {
+                copy($item->getPathname(), $target);
             }
         }
-        closedir($dir);
+    }
+
+    /**
+     * @param string[] $preserve
+     */
+    private static function clearDir(string $path, array $preserve = []): void
+    {
+        foreach (self::createIterator($path, RecursiveIteratorIterator::CHILD_FIRST) as $item) {
+            if (in_array($item->getFilename(), $preserve, true)) {
+                continue;
+            }
+
+            $item->isDir() ? @rmdir($item->getPathname()) : @unlink($item->getPathname());
+        }
+    }
+
+    private static function createIterator(string $path, int $mode): RecursiveIteratorIterator
+    {
+        return new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS),
+            $mode
+        );
     }
 }
