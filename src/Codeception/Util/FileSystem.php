@@ -55,6 +55,9 @@ class FileSystem
         }
     }
 
+    /**
+     * @param string[] $preserve
+     */
     private static function clearDir(string $path, array $preserve = []): void
     {
         foreach (self::createIterator($path, RecursiveIteratorIterator::CHILD_FIRST) as $item) {
