@@ -107,6 +107,9 @@ class Codecept
         return array_merge($this->options, Configuration::config()['settings'], $options);
     }
 
+    /**
+     * \Symfony\Component\EventDispatcher\EventSubscriberInterface[] $subscribers
+     */
     private function addSubscribers(array $subscribers): void
     {
         foreach ($subscribers as $subscriber) {
