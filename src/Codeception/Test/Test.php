@@ -212,7 +212,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
     public function getResultAggregator(): ResultAggregator
     {
-        if (!$this->resultAggregator) {
+        if (!$this->resultAggregator instanceof ResultAggregator) {
             throw new LogicException('ResultAggregator is not set');
         }
         return $this->resultAggregator;
@@ -241,7 +241,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
 
     protected function fire(string $eventType, TestEvent $event): void
     {
-        if (!$this->eventDispatcher) {
+        if (!$this->eventDispatcher instanceof EventDispatcher) {
             throw new RuntimeException('EventDispatcher must be injected before running test');
         }
         foreach ($event->getTest()->getMetadata()->getGroups() as $group) {

@@ -104,9 +104,7 @@ abstract class Step implements Stringable
         }
 
         if ($totalLength > $maxLength && $maxLength > 0) {
-            uasort($arguments, function ($a, $b): int {
-                return mb_strlen($a, 'utf-8') <=> mb_strlen($b, 'utf-8');
-            });
+            uasort($arguments, fn($a, $b): int => mb_strlen($a, 'utf-8') <=> mb_strlen($b, 'utf-8'));
 
             $allowedLength      = floor(($maxLength - $argumentCount + 1) / $argumentCount);
             $lengthRemaining    = $maxLength;

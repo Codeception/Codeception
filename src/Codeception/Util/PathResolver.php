@@ -48,7 +48,7 @@ class PathResolver
             array_shift($partsProj);
         }
 
-        if ($partsProj) {
+        if ($partsProj !== []) {
             $partsPath = array_merge(array_fill(0, count($partsProj), '..'), $partsPath);
         }
 

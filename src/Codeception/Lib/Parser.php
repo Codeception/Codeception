@@ -69,6 +69,7 @@ class Parser
         }
     }
 
+    /** @param string[] $matches */
     protected function addStep(array $matches): void
     {
         [$m, $action, $params] = $matches;
@@ -121,7 +122,8 @@ class Parser
     private static function extractNamespace(array $tokens, int $index): string
     {
         $namespace = '';
-        for ($j = $index + 1; $j < count($tokens); ++$j) {
+        $counter = count($tokens);
+        for ($j = $index + 1; $j < $counter; ++$j) {
             if ($tokens[$j] === '{' || $tokens[$j] === ';') {
                 break;
             }

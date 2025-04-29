@@ -118,11 +118,11 @@ class ReflectionHelper
         $isSequential = array_keys($array) === range(0, count($array) - 1);
 
         if ($isSequential) {
-            return '[' . implode(', ', array_map(static fn($v) => self::phpEncodeValue($v), $array)) . ']';
+            return '[' . implode(', ', array_map(static fn($v): string => self::phpEncodeValue($v), $array)) . ']';
         }
 
         $encoded = array_map(
-            static fn($k) => self::phpEncodeValue($k) . ' => ' . self::phpEncodeValue($array[$k]),
+            static fn($k): string => self::phpEncodeValue($k) . ' => ' . self::phpEncodeValue($array[$k]),
             array_keys($array)
         );
 

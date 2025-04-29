@@ -94,7 +94,7 @@ class Gherkin extends Test implements ScenarioDriven, Reported
             fn(string $pattern): bool => preg_match($pattern, $text) === 1
         );
 
-        if (empty($matchedPatterns)) {
+        if ($matchedPatterns === []) {
             $metadata->setIncomplete(
                 ($metadata->getIncomplete() ?? '')
                 . "\nStep definition for `{$text}` not found in contexts"

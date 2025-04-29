@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Codeception\Reporter;
 
 use Codeception\Event\FailEvent;
@@ -147,7 +149,7 @@ class JUnitReporter implements EventSubscriberInterface
             $this->root->appendChild($testSuite);
         }
 
-        $this->testSuiteLevel++;
+        ++$this->testSuiteLevel;
         $this->testSuites[$this->testSuiteLevel]          = $testSuite;
         $this->testSuiteTests[$this->testSuiteLevel]      = 0;
         $this->testSuiteAssertions[$this->testSuiteLevel] = 0;
@@ -166,7 +168,7 @@ class JUnitReporter implements EventSubscriberInterface
             $this->aggregateTestSuiteData($this->testSuiteLevel - 1, $this->testSuiteLevel);
         }
 
-        $this->testSuiteLevel--;
+        --$this->testSuiteLevel;
     }
 
     private function setTestSuiteAttributes(int $level): void
@@ -228,7 +230,7 @@ class JUnitReporter implements EventSubscriberInterface
         }
 
         $this->testSuites[$this->testSuiteLevel]->appendChild($this->currentTestCase);
-        $this->testSuiteTests[$this->testSuiteLevel]++;
+        ++$this->testSuiteTests[$this->testSuiteLevel];
         $this->testSuiteTimes[$this->testSuiteLevel] += $time;
         $this->currentTestCase = null;
     }
@@ -248,10 +250,8 @@ class JUnitReporter implements EventSubscriberInterface
                 if (!$testCase->expectsOutput()) {
                     $testOutput = $testCase->getActualOutputForAssertion();
                 }
-            } else {
-                if (!$testCase->hasExpectationOnOutput()) {
-                    $testOutput = $testCase->getActualOutputForAssertion();
-                }
+            } elseif (!$testCase->hasExpectationOnOutput()) {
+                $testOutput = $testCase->getActualOutputForAssertion();
             }
         }
 
@@ -261,19 +261,19 @@ class JUnitReporter implements EventSubscriberInterface
     public function testError(FailEvent $event): void
     {
         $this->addFault($event->getTest(), $event->getFail(), 'error');
-        $this->testSuiteErrors[$this->testSuiteLevel]++;
+        ++$this->testSuiteErrors[$this->testSuiteLevel];
     }
 
     public function testWarning(FailEvent $event): void
     {
         $this->addFault($event->getTest(), $event->getFail(), 'warning');
-        $this->testSuiteFailures[$this->testSuiteLevel]++;
+        ++$this->testSuiteFailures[$this->testSuiteLevel];
     }
 
     public function testFailure(FailEvent $event): void
     {
         $this->addFault($event->getTest(), $event->getFail(), 'failure');
-        $this->testSuiteFailures[$this->testSuiteLevel]++;
+        ++$this->testSuiteFailures[$this->testSuiteLevel];
     }
 
     public function testSkipped(FailEvent $event): void
@@ -284,7 +284,7 @@ class JUnitReporter implements EventSubscriberInterface
 
         $skipped = $this->document->createElement('skipped');
         $this->currentTestCase->appendChild($skipped);
-        $this->testSuiteSkipped[$this->testSuiteLevel]++;
+        ++$this->testSuiteSkipped[$this->testSuiteLevel];
     }
 
     public function testUseless(FailEvent $event): void
@@ -295,7 +295,7 @@ class JUnitReporter implements EventSubscriberInterface
 
         $error = $this->document->createElement('error', 'Useless Test');
         $this->currentTestCase->appendChild($error);
-        $this->testSuiteUseless[$this->testSuiteLevel]++;
+        ++$this->testSuiteUseless[$this->testSuiteLevel];
     }
 
     /**

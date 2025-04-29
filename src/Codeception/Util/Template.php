@@ -18,10 +18,10 @@ use function strval;
 class Template
 {
     private array $vars = [];
-    private string $regex;
+    private readonly string $regex;
 
     public function __construct(
-        private string $template,
+        private readonly string $template,
         private readonly string $placeholderStart = '{{',
         private readonly string $placeholderEnd = '}}',
         private readonly ?string $encoderFunction = null,
@@ -60,7 +60,7 @@ class Template
      */
     public function produce(): string
     {
-        return preg_replace_callback($this->regex, function (array $match) {
+        return preg_replace_callback($this->regex, function (array $match): string {
             $placeholder = $match[1];
             $value       = $this->vars;
 

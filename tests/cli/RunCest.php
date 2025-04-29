@@ -687,10 +687,6 @@ EOF
     #[Group('shuffle')]
     public function showSameOrderOfFilesOnSeed(CliGuy $I, Scenario $scenario)
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $scenario->skip('Failing on Windows. Need to investigate');
-        }
-
         $I->executeCommand('run unit -o "settings: shuffle: true"', false);
         $I->seeInShellOutput('Seed');
 

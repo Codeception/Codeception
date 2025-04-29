@@ -106,7 +106,7 @@ class SuiteManager
         }
 
         $this->suite->addTest($test);
-        if ($groups) {
+        if ($groups !== []) {
             $test->getMetadata()->setGroups($groups);
         }
     }

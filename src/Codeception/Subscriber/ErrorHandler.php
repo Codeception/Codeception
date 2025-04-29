@@ -31,6 +31,8 @@ use function restore_error_handler;
 use function set_error_handler;
 use function sprintf;
 
+use const PHP_VERSION_ID;
+
 class ErrorHandler implements EventSubscriberInterface
 {
     use Shared\StaticEventsTrait;
@@ -72,11 +74,7 @@ class ErrorHandler implements EventSubscriberInterface
     public function __construct()
     {
         // E_STRICT is deprecated in PHP 8.4
-        if (\PHP_VERSION_ID < 80400) {
-            $this->errorLevel = E_ALL & ~E_STRICT & ~E_DEPRECATED;
-        } else {
-            $this->errorLevel = E_ALL & ~E_DEPRECATED;
-        }
+        $this->errorLevel = PHP_VERSION_ID < 80400 ? E_ALL & ~E_STRICT & ~E_DEPRECATED : E_ALL & ~E_DEPRECATED;
     }
 
     public function onFinish(SuiteEvent $event): void

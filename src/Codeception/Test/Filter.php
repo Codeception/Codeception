@@ -83,13 +83,9 @@ class Filter
 
     public function isGroupAccepted(Test $test, array $groups): bool
     {
-        if ($this->includeGroups && !array_intersect($groups, $this->includeGroups)) {
+        if ($this->includeGroups && array_intersect($groups, $this->includeGroups) === []) {
             return false;
         }
-        if ($this->excludeGroups && array_intersect($groups, $this->excludeGroups)) {
-            return false;
-        }
-
-        return true;
+        return !($this->excludeGroups && array_intersect($groups, $this->excludeGroups));
     }
 }

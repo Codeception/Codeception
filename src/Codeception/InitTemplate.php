@@ -276,7 +276,7 @@ abstract class InitTemplate
             }
             $this->sayInfo("Adding {$pkg} for {$module} to composer.json");
             $composer[$section][$pkg] = '*';
-            $added++;
+            ++$added;
         }
 
         file_put_contents(
@@ -284,7 +284,7 @@ abstract class InitTemplate
             json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
         );
 
-        if ($added) {
+        if ($added !== 0) {
             $this->say("{$added} new packages added to {$section}");
             if ($this->ask('composer.json updated. Do you want to run "composer update"?', true)) {
                 $this->sayInfo('Running composer update');

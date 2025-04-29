@@ -12,7 +12,7 @@ class MessageFactory
 
     protected Colorizer $colorizer;
 
-    public function __construct(private Output $output)
+    public function __construct(private readonly Output $output)
     {
         $this->diffFactory = new DiffFactory();
         $this->colorizer = new Colorizer();

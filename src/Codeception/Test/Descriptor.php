@@ -30,16 +30,12 @@ class Descriptor
     public static function getTestSignatureUnique(SelfDescribing $testCase): string
     {
         $signature = self::getTestSignature($testCase);
-        if (method_exists($testCase, 'getScenario')) {
-            if ($env = $testCase->getScenario()?->current('env')) {
-                $signature .= ':' . $env;
-            }
+        if (method_exists($testCase, 'getScenario') && $env = $testCase->getScenario()?->current('env')) {
+            $signature .= ':' . $env;
         }
-        if (method_exists($testCase, 'getMetadata')) {
-            if ($example = $testCase->getMetadata()->getCurrent('example')) {
-                $encoded = json_encode($example, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
-                $signature .= ':' . substr(sha1($encoded), 0, 7);
-            }
+        if (method_exists($testCase, 'getMetadata') && $example = $testCase->getMetadata()->getCurrent('example')) {
+            $encoded = json_encode($example, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
+            $signature .= ':' . substr(sha1($encoded), 0, 7);
         }
 
         return $signature;

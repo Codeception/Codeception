@@ -145,7 +145,7 @@ class Unit extends TestCase implements
     {
         return [
             'name'  => $this->getName(false),
-            'class' => static::class,
+            'class' => self::class,
             'file'  => $this->getMetadata()->getFilename(),
         ];
     }
@@ -153,8 +153,8 @@ class Unit extends TestCase implements
     public function fetchDependencies(): array
     {
         return array_map(
-            fn($dep) => !str_contains((string)$dep, ':') && method_exists($this, $dep)
-                ? static::class . ":{$dep}"
+            fn($dep): string => !str_contains((string)$dep, ':') && method_exists($this, $dep)
+                ? self::class . ":{$dep}"
                 : $dep,
             $this->getMetadata()->getDependencies()
         );

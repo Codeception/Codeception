@@ -32,7 +32,7 @@ class Retry extends Assertion implements GeneratedStep
     }
 EOF;
 
-    public function __construct($action, array $arguments, private int $retryNum, private int $retryInterval)
+    public function __construct($action, array $arguments, private readonly int $retryNum, private readonly int $retryInterval)
     {
         $this->action = $action;
         $this->arguments = $arguments;
@@ -60,7 +60,7 @@ EOF;
 
     public static function getTemplate(Template $template): ?Template
     {
-        $action = $template->getVar('action');
+        $action = (string) $template->getVar('action');
 
         if (
             str_starts_with($action, 'have') ||
