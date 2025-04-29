@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Feature;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +24,10 @@ use function rtrim;
  * * `codecept g:feature suite login.feature -c path/to/project`
  *
  */
+#[AsCommand(
+    name: 'generate:feature',
+    description: 'Generates empty feature file in suite'
+)]
 class GenerateFeature extends Command
 {
     use Shared\FileSystemTrait;
@@ -30,7 +35,7 @@ class GenerateFeature extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Generates empty feature file in suite')
+        $this
             ->addArgument('suite', InputArgument::REQUIRED, 'suite to be tested')
             ->addArgument('feature', InputArgument::REQUIRED, 'feature to be generated')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config');

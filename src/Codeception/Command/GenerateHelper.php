@@ -6,6 +6,7 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Lib\Generator\Helper;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,8 +19,11 @@ use function ucfirst;
  *
  * * `codecept g:helper MyHelper`
  * * `codecept g:helper "My\Helper"`
- *
  */
+#[AsCommand(
+    name: 'generate:helper',
+    description: 'Generates a new helper'
+)]
 class GenerateHelper extends Command
 {
     use Shared\FileSystemTrait;
@@ -27,8 +31,7 @@ class GenerateHelper extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Generates a new helper')
-            ->addArgument('name', InputArgument::REQUIRED, 'Helper name');
+        $this->addArgument('name', InputArgument::REQUIRED, 'Helper name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
