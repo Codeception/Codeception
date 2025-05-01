@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\GherkinSnippets as GherkinSnippetsGenerator;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,6 +25,10 @@ use function count;
  * * `codecept gherkin:snippets acceptance user_account.feature` - snippets from a single feature file
  * * `codecept gherkin:snippets acceptance/feature/users/user_accout.feature` - snippets from feature file in a dir
  */
+#[AsCommand(
+    name: 'gherkin:snippets',
+    description: 'Fetches empty steps from feature files of suite and prints code snippets for them'
+)]
 class GherkinSnippets extends Command
 {
     use Shared\ConfigTrait;
@@ -31,7 +36,7 @@ class GherkinSnippets extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Fetches empty steps from feature files of suite and prints code snippets for them')
+        $this
             ->addArgument('suite', InputArgument::REQUIRED, 'Suite to scan for feature files')
             ->addArgument('test', InputArgument::OPTIONAL, 'Test to be scanned')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config');
