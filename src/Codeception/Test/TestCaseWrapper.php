@@ -109,7 +109,10 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
 
     public function getLinesToBeCovered(): array|bool
     {
-        if (PHPUnitVersion::series() < 10) {
+        if (
+            version_compare(PHPUnitVersion::series(), '10.0', '<')
+            && method_exists(TestUtil::class, 'getLinesToBeCovered')
+        ) {
             return TestUtil::getLinesToBeCovered($this->testCase::class, $this->metadata->getName());
         }
         return $this->coverageTargets('coversTargets', 'linesToBeCovered');
@@ -117,7 +120,10 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
 
     public function getLinesToBeUsed(): array
     {
-        if (PHPUnitVersion::series() < 10) {
+        if (
+            version_compare(PHPUnitVersion::series(), '10.0', '<')
+            && method_exists(TestUtil::class, 'getLinesToBeUsed')
+        ) {
             return TestUtil::getLinesToBeUsed($this->testCase::class, $this->metadata->getName());
         }
         return (array) $this->coverageTargets('usesTargets', 'linesToBeUsed');

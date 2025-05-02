@@ -58,7 +58,7 @@ class ParamsLoader
             }
         }
 
-        throw new ConfigurationException("Params can't be loaded from `{$paramFile}`.");
+        throw new ConfigurationException("Params can't be loaded from `{$paramsFile}`.");
     }
 
     /**

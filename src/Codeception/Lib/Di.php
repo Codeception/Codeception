@@ -81,7 +81,7 @@ class Di
         $constructorArgs ??= $this->prepareArgs($reflectedClass->getConstructor());
 
         try {
-            $object = $reflectedClass->newInstanceArgs($constructorArgs ?? []);
+            $object = $reflectedClass->newInstanceArgs($constructorArgs);
         } catch (ReflectionException $e) {
             throw new InjectionException("Failed to create instance of '{$className}'. " . $e->getMessage());
         }
