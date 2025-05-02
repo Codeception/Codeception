@@ -318,7 +318,10 @@ class JUnitReporter implements EventSubscriberInterface
             $buffer = '';
         }
 
-        if (PHPUnitVersion::series() < 10) {
+        if (
+            version_compare(PHPUnitVersion::series(), '10.0', '<')
+            && class_exists(TestFailure::class)
+        ) {
             $exceptionString = TestFailure::exceptionToString($t);
         } else {
             $exceptionString = ThrowableToStringMapper::map($t);

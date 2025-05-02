@@ -14,7 +14,7 @@ use Codeception\Test\TestCaseWrapper;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
-use PHPUnit\Runner\Version;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 use PHPUnit\TextUI\CliArguments\Builder;
 use PHPUnit\TextUI\Configuration\Registry;
 use PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration;
@@ -94,10 +94,13 @@ class Suite
                 $result->addTest($test);
                 $skip = $test->getMetadata()->getSkip();
                 if ($skip !== null) {
-                    if (class_exists(SkippedWithMessageException::class)) {
-                        $exception = new SkippedWithMessageException($skip);
-                    } else {
+                    if (
+                        version_compare(PHPUnitVersion::series(), '10.0', '<')
+                        && class_exists(SkippedTestError::class)
+                    ) {
                         $exception = new SkippedTestError($skip);
+                    } else {
+                        $exception = new SkippedWithMessageException($skip);
                     }
                     $failEvent = new FailEvent($test, $exception, 0);
                     $result->addSkipped($failEvent);
@@ -116,7 +119,7 @@ class Suite
 
             if ($test instanceof TestCaseWrapper) {
                 $testCase = $test->getTestCase();
-                if (Version::series() < 10) {
+                if (PHPUnitVersion::series() < 10) {
                     $testCase->setBeStrictAboutChangesToGlobalState($this->beStrictAboutChangesToGlobalState);
                     $testCase->setBackupGlobals($this->backupGlobals);
                 }

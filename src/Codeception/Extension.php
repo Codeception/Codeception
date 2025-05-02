@@ -6,12 +6,12 @@ namespace Codeception;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Exception\ModuleRequireException;
+use Codeception\Extension\SuiteInitSubscriberTrait;
 use Codeception\Lib\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use function array_keys;
 use function array_merge;
-use function is_array;
 
 /**
  * A base class for all Codeception Extensions and GroupObjects
@@ -23,6 +23,8 @@ use function is_array;
  */
 abstract class Extension implements EventSubscriberInterface
 {
+    use SuiteInitSubscriberTrait;
+
     /**
      * @var array<int|string, mixed>
      */
@@ -42,19 +44,6 @@ abstract class Extension implements EventSubscriberInterface
         $this->config = array_merge($this->config, $config);
         $this->output = new Output($options);
         $this->_initialize();
-    }
-
-    public static function getSubscribedEvents(): array
-    {
-        $events = property_exists(static::class, 'events') && is_array(static::$events)
-            ? static::$events
-            : [];
-
-        $suiteInit = (array) ($events[Events::SUITE_INIT] ?? []);
-        $suiteInit[] = 'receiveModuleContainer';
-        $events[Events::SUITE_INIT] = $suiteInit;
-
-        return $events;
     }
 
     public function receiveModuleContainer(SuiteEvent $event): void
