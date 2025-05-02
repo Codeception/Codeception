@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Codeception\Util;
 
+use Codeception\Test\ExampleFormat;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
@@ -12,14 +13,12 @@ use Reflector;
 use function in_array;
 use function is_object;
 use function json_decode;
-use function preg_match;
 use function preg_match_all;
 use function sprintf;
-use function substr;
 use function trim;
 
 /**
- * Simple annotation parser. Take only key-value annotations for methods or class.
+ * Simple annotation parser. Takes only key-value annotations for methods or class.
  */
 class Annotation
 {
@@ -102,7 +101,11 @@ class Annotation
             return $attr->getArguments()[0] ?? '';
         }
 
-        $matches = self::fetchAnnotationsFromDocblock($annotation, (string)$this->currentReflectedItem->getDocComment());
+        $matches = self::fetchAnnotationsFromDocblock(
+            $annotation,
+            (string) $this->currentReflectedItem->getDocComment()
+        );
+
         return $matches[0] ?? null;
     }
 
@@ -111,7 +114,8 @@ class Annotation
         if (($attr = $this->attribute($annotation)) instanceof ReflectionAttribute) {
             if (!$attr->isRepeated()) {
                 if ($annotation === 'example') {
-                    return [$attr->getArguments()];
+                    $args = $attr->getArguments();
+                    return ExampleFormat::$useModern ? [$args] : $args;
                 }
                 return $attr->getArguments();
             }
@@ -120,21 +124,28 @@ class Annotation
                 $annotation = 'examples';
             }
             $attrClass = "Codeception\\Attribute\\" . ucfirst($annotation);
-            $attrs = array_filter($this->attributes(), static fn($a): bool => $a->getName() === $attrClass);
+            $attrs = array_filter(
+                $this->attributes(),
+                static fn ($a): bool => $a->getName() === $attrClass
+            );
 
             return $annotation === 'examples'
-                ? array_map(static fn($a) => $a->getArguments(), $attrs)
-                : array_merge(...array_map(static fn($a) => $a->getArguments(), $attrs));
+                ? array_map(static fn ($a) => $a->getArguments(), $attrs) // Example[][]
+                : array_merge(...array_map(static fn ($a) => $a->getArguments(), $attrs));
         }
 
-        return self::fetchAnnotationsFromDocblock($annotation, (string)$this->currentReflectedItem->getDocComment());
+        return self::fetchAnnotationsFromDocblock(
+            $annotation,
+            (string) $this->currentReflectedItem->getDocComment()
+        );
     }
 
+    /** @return ReflectionAttribute[] */
     public function attributes(): array
     {
         return array_filter(
             $this->currentReflectedItem->getAttributes(),
-            static fn(ReflectionAttribute $a): bool => str_starts_with($a->getName(), 'Codeception\\Attribute\\')
+            static fn (ReflectionAttribute $a): bool => str_starts_with($a->getName(), 'Codeception\\Attribute\\')
         );
     }
 
