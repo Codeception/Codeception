@@ -78,12 +78,11 @@ class Unit extends TestCase implements
         $di = $metadata->getService('di');
 
         // Auto-inject $tester property
-        if ($actor = $metadata->getCurrent('actor')) {
-            $suffix   = (string) Configuration::config()['actor_suffix'];
-            $property = lcfirst($suffix);
-            if (property_exists($this, $property)) {
-                $this->{$property} = $di->instantiate($actor);
-            }
+        if (
+            ($actor = $this->getMetadata()->getCurrent('actor')) &&
+            ($property = lcfirst((string) Configuration::config()['actor_suffix']))
+        ) {
+            $this->{$property} = $di->instantiate($actor);
         }
 
         $this->scenario = $di->get(Scenario::class);
