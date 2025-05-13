@@ -1,3 +1,8 @@
+#### 5.3.1
+
+* Issue 6857: Update Actor::__call() to have return type 'mixed' by @troy-rudolph in #6858
+* Fix auto-injection of the tester property by @W0rma in #6856
+
 #### 5.3.0
 
 * Update readme.md by @rossaddison in #6834
