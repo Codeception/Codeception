@@ -40,7 +40,7 @@ abstract class Actor
     {
     }
 
-    public function __call(string $method, array $arguments): never
+    public function __call(string $method, array $arguments): mixed
     {
         throw new RuntimeException(sprintf('Call to undefined method %s::%s', static::class, $method));
     }
