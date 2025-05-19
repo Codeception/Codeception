@@ -7,6 +7,7 @@ namespace Codeception\Command;
 use Codeception\Configuration;
 use Codeception\Lib\Generator\Actions as ActionsGenerator;
 use Codeception\Lib\Generator\Actor as ActorGenerator;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as SymfonyOutputInterface;
@@ -21,6 +22,10 @@ use function implode;
  * * `codecept build path/to/project`
  *
  */
+#[AsCommand(
+    name: 'build',
+    description: 'Generates base classes for all suites'
+)]
 class Build extends Command
 {
     use Shared\ConfigTrait;
@@ -29,11 +34,6 @@ class Build extends Command
     protected string $inheritedMethodTemplate = ' * @method void %s(%s)';
 
     protected ?SymfonyOutputInterface $output = null;
-
-    public function getDescription(): string
-    {
-        return 'Generates base classes for all suites';
-    }
 
     protected function execute(InputInterface $input, SymfonyOutputInterface $output): int
     {

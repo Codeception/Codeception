@@ -108,9 +108,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
      */
     abstract public function test();
 
-    /**
-     * Test representation
-     */
+    /** Test representation */
     abstract public function toString(): string;
 
     public function collectCodeCoverage(bool $enabled): void
@@ -135,90 +133,68 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
     final public function realRun(ResultAggregator $result): void
     {
         $this->resultAggregator = $result;
-
-        $status = self::STATUS_PENDING;
-        $time = 0;
-        $e = null;
-        $timer = new Timer();
-
         $result->addTest($this);
+
+        $timer  = new Timer();
+        $status = self::STATUS_PENDING;
+        $time   = 0.0;
+        $e      = null;
 
         try {
             $this->fire(Events::TEST_BEFORE, new TestEvent($this));
-
-            foreach ($this->hooks as $hook) {
-                if ($hook === 'codeCoverage' && !$this->collectCodeCoverage) {
-                    continue;
-                }
-                if (method_exists($this, $hook . 'Start')) {
-                    $this->{$hook . 'Start'}();
-                }
-            }
+            $this->runHooks('Start');
             $failedToStart = false;
         } catch (\Exception $e) {
             $failedToStart = true;
-            $result->addError(new FailEvent($this, $e, $time));
-            $this->fire(Events::TEST_ERROR, new FailEvent($this, $e, $time));
+            $this->dispatchOutcome(Events::TEST_ERROR, $e, $time);
         }
 
         if (!$this->ignored && !$failedToStart) {
             Assert::resetCount();
             $timer->start();
+
             try {
                 $this->test();
-                $status = self::STATUS_OK;
+                $status    = self::STATUS_OK;
                 $eventType = Events::TEST_SUCCESS;
-
                 $this->checkConditionalAsserts($result);
             } catch (UselessTestException $e) {
-                $result->addUseless(new FailEvent($this, $e, $time));
-                $status = self::STATUS_USELESS;
+                $status    = self::STATUS_USELESS;
                 $eventType = Events::TEST_USELESS;
             } catch (IncompleteTestError $e) {
-                $result->addIncomplete(new FailEvent($this, $e, $time));
-                $status = self::STATUS_INCOMPLETE;
+                $status    = self::STATUS_INCOMPLETE;
                 $eventType = Events::TEST_INCOMPLETE;
             } catch (SkippedTest | SkippedTestError $e) {
-                $result->addSkipped(new FailEvent($this, $e, $time));
-                $status = self::STATUS_SKIPPED;
+                $status    = self::STATUS_SKIPPED;
                 $eventType = Events::TEST_SKIPPED;
             } catch (AssertionFailedError $e) {
-                $result->addFailure(new FailEvent($this, $e, $time));
-                $status = self::STATUS_FAIL;
+                $status    = self::STATUS_FAIL;
                 $eventType = Events::TEST_FAIL;
             } catch (Exception | Throwable $e) {
-                $result->addError(new FailEvent($this, $e, $time));
-                $status = self::STATUS_ERROR;
+                $status    = self::STATUS_ERROR;
                 $eventType = Events::TEST_ERROR;
             }
 
             $time = $timer->stop()->asSeconds();
-
-            $this->callTestEndHooks($status, $time, $e);
+            $this->runHooks('End', true, $status, $time, $e);
 
             // We need to get the number of performed assertions _after_ calling the test end hooks because the
             // AssertionCounter needs to set the number of performed assertions first.
             $result->addToAssertionCount($this->numberOfAssertionsPerformed());
 
             if (
-                $this->reportUselessTests &&
-                $this->numberOfAssertionsPerformed() === 0 &&
-                !$this->doesNotPerformAssertions() &&
-                $eventType === Events::TEST_SUCCESS
+                $this->reportUselessTests
+                && $this->numberOfAssertionsPerformed() === 0
+                && !$this->doesNotPerformAssertions()
+                && $eventType === Events::TEST_SUCCESS
             ) {
                 $eventType = Events::TEST_USELESS;
-                $e = new UselessTestException('This test did not perform any assertions');
-                $result->addUseless(new FailEvent($this, $e, $time));
+                $e         = new UselessTestException('This test did not perform any assertions');
             }
 
-            if ($eventType === Events::TEST_SUCCESS) {
-                $result->addSuccessful($this);
-                $this->fire($eventType, new TestEvent($this, $time));
-            } else {
-                $this->fire($eventType, new FailEvent($this, $e, $time));
-            }
+            $this->dispatchOutcome($eventType, $e, $time);
         } else {
-            $this->callTestEndHooks($status, $time, $e);
+            $this->runHooks('End', true, $status, $time, $e);
         }
 
         $this->fire(Events::TEST_AFTER, new TestEvent($this, $time));
@@ -263,29 +239,54 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
         return $this->getNumAssertions();
     }
 
-
     protected function fire(string $eventType, TestEvent $event): void
     {
         if (!$this->eventDispatcher instanceof EventDispatcher) {
             throw new RuntimeException('EventDispatcher must be injected before running test');
         }
-        $test = $event->getTest();
-        foreach ($test->getMetadata()->getGroups() as $group) {
-            $this->eventDispatcher->dispatch($event, $eventType . '.' . $group);
+        foreach ($event->getTest()->getMetadata()->getGroups() as $group) {
+            $this->eventDispatcher->dispatch($event, "$eventType.$group");
         }
         $this->eventDispatcher->dispatch($event, $eventType);
     }
 
-    private function callTestEndHooks(string $status, float $time, ?Throwable $e): void
+    private function runHooks(string $suffix, bool $reverse = false, mixed ...$args): void
     {
-        foreach (array_reverse($this->hooks) as $hook) {
+        $hooks = $reverse ? array_reverse($this->hooks) : $this->hooks;
+        foreach ($hooks as $hook) {
             if ($hook === 'codeCoverage' && !$this->collectCodeCoverage) {
                 continue;
             }
-            if (method_exists($this, $hook . 'End')) {
-                $this->{$hook . 'End'}($status, $time, $e);
+            $method = $hook . $suffix;
+            if (method_exists($this, $method)) {
+                $this->{$method}(...$args);
             }
         }
+    }
+
+    private function dispatchOutcome(string $eventType, ?Throwable $e, float $time): void
+    {
+        if ($eventType === Events::TEST_SUCCESS) {
+            $this->resultAggregator->addSuccessful($this);
+            $this->fire($eventType, new TestEvent($this, $time));
+            return;
+        }
+
+        $failEvent = new FailEvent($this, $e, $time);
+
+        $map = [
+            Events::TEST_FAIL       => 'addFailure',
+            Events::TEST_ERROR      => 'addError',
+            Events::TEST_USELESS    => 'addUseless',
+            Events::TEST_INCOMPLETE => 'addIncomplete',
+            Events::TEST_SKIPPED    => 'addSkipped',
+        ];
+
+        if (isset($map[$eventType])) {
+            $this->resultAggregator->{$map[$eventType]}($failEvent);
+        }
+
+        $this->fire($eventType, $failEvent);
     }
 
     private function checkConditionalAsserts(ResultAggregator $result): void
@@ -294,19 +295,18 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             return;
         }
 
-        $lastFailure = $result->getLastFailure();
-        if (!$lastFailure instanceof FailEvent) {
-            return;
-        }
-
-        if (Descriptor::getTestSignatureUnique($lastFailure->getTest()) !== Descriptor::getTestSignatureUnique($this)) {
+        $last = $result->getLastFailure();
+        if (
+            !$last instanceof FailEvent
+            || Descriptor::getTestSignatureUnique($last->getTest()) !== Descriptor::getTestSignatureUnique($this)
+        ) {
             return;
         }
 
         foreach ($this->getScenario()?->getSteps() ?? [] as $step) {
             if ($step->hasFailed()) {
                 $result->popLastFailure();
-                throw $lastFailure->getFail();
+                throw $last->getFail();
             }
         }
     }

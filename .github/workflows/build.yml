@@ -1,29 +1,43 @@
 on:
   pull_request:
-    branches-ignore: gh-pages
+    branches-ignore:
+      - gh-pages
   push:
     branches:
       - main
 
 name: build
 
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
+  actions: write
+
+env:
+  PHP_INI_VALUES: memory_limit=-1,date.timezone=UTC
+  COMPOSER_ROOT_VERSION: 5.0.99
+  SYMFONY_DEPRECATIONS_HELPER: weak
 
 jobs:
   phpcs:
-    name: Code style
-    runs-on: 'ubuntu-latest'
+    name: Code style & Static Analysis
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install PHP
+      - name: Install PHP & tools
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          ini-values: memory_limit=-1, date.timezone='UTC'
-          tools: phpcs
+          ini-values: ${{ env.PHP_INI_VALUES }}
+          tools: phpcs, composer:v2, phpstan
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --ansi
 
       - name: Check production code style
         run: composer cs-prod
@@ -31,26 +45,22 @@ jobs:
       - name: Check test code style
         run: composer cs-tests
 
+      - name: PHPStan
+        run: phpstan analyse src
+
   linux:
-    name: PHP ${{ matrix.php }}-${{ matrix.os }}-${{ matrix.mode }}
-
-    env:
-      extensions: curl, mbstring, openssl, pdo, pdo_sqlite
-      SYMFONY_DEPRECATIONS_HELPER: weak
-      COMPOSER_ROOT_VERSION: 5.0.99
-      COLUMNS: 120
-
+    name: PHP ${{ matrix.php }}–${{ matrix.os }}–${{ matrix.mode }}
     runs-on: ${{ matrix.os }}
-
+    env:
+      extensions: curl, mbstring, openssl, pdo, pdo_sqlite, zip
+      COLUMNS: 120
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ['8.1', '8.2', '8.3', '8.4']
+        php: ['8.2', '8.3', '8.4']
         mode: ['stable', 'experimental']
         exclude:
-          - php: '8.2'
-            mode: 'experimental'
           - php: '8.3'
             mode: 'experimental'
           - php: '8.4'
@@ -60,12 +70,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install PHP
+      - name: Install PHP & Composer
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
-          ini-values: memory_limit=-1, date.timezone='UTC'
+          ini-values: ${{ env.PHP_INI_VALUES }}
           coverage: xdebug
           tools: composer:v2
 
@@ -84,21 +94,25 @@ jobs:
         run: composer self-update
 
       - name: Validate composer.json
-        run: composer validate
+        run: composer validate --strict
 
-      - name: Install latest versions of dependencies in stable mode
-        if: matrix.mode == 'stable'
-        run: composer update --no-interaction --no-progress --optimize-autoloader --ansi
-
-      - name: Composer install lowest versions of dependencies on PHP 8.1 in experimental mode
-        if: matrix.php == '8.1' && matrix.mode == 'experimental'
-        run: composer update --prefer-lowest --no-interaction --no-progress --optimize-autoloader --ansi
+      - name: Install / Update Dependencies
+        run: |
+          if [ "${{ matrix.mode }}" = "stable" ]; then
+            composer update --no-interaction --no-progress --optimize-autoloader --ansi
+          else
+            composer update --prefer-lowest --no-interaction --no-progress --optimize-autoloader --ansi
+          fi
 
       - name: Test that failing test really fails
-        run: if php codecept run -c tests/data/claypit/ scenario FailedCept -vvv; then echo "Test hasn't failed"; false; fi;
+        run: |
+          if php codecept run -c tests/data/claypit/ scenario FailedCept -vvv; then
+            echo "Test hasn't failed"
+            false
+          fi
 
-#      - name: Run tests without code coverage on PHP 8.1
-#        if: matrix.php == '8.1'
+#      - name: Run tests without code coverage on PHP 8.2
+#        if: matrix.php == '8.2'
 #        run: |
 #          php -S 127.0.0.1:8008 -t tests/data/app >/dev/null 2>&1 &
 #          php codecept build
@@ -127,35 +141,33 @@ jobs:
           php ../../../codecept run tests/unit/Codeception/Module/PhpBrowserTest.php
 
   windows-latest:
-    name: PHP ${{ matrix.php }}-${{ matrix.os }}
-
+    name: PHP ${{ matrix.php }}–${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     env:
-      extensions: curl, mbstring, openssl, pdo, pdo_sqlite
+      extensions: curl, mbstring, openssl, pdo, pdo_sqlite, zip
       SYMFONY_DEPRECATIONS_HELPER: weak
       COMPOSER_ROOT_VERSION: 5.0.99
-
-    runs-on: ${{ matrix.os }}
-
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        php: ['8.1', '8.2', '8.3', '8.4']
+        php: ['8.2', '8.3', '8.4']
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install PHP
+      - name: Install PHP & Composer
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
-          ini-values: memory_limit=-1, date.timezone='UTC'
+          ini-values: ${{ env.PHP_INI_VALUES }}
           tools: composer:v2
 
       - name: Determine composer cache directory
-        run: echo "COMPOSER_CACHE_DIR=~\AppData\Local\Composer" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        run: |
+          echo "COMPOSER_CACHE_DIR=~\\AppData\\Local\\Composer" >> $GITHUB_ENV
 
       - name: Cache dependencies installed with composer
         uses: actions/cache@v3
@@ -169,14 +181,13 @@ jobs:
         run: composer self-update
 
       - name: Validate composer.json
-        run: composer validate
+        run: composer validate --strict
 
-      - name: Composer install
+      - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
-      - name: Run tests cli
-        if: matrix.php != '8.2'
+      - name: Run CLI tests
         run: php codecept run cli --skip-group coverage
 
-      - name: Run tests unit
+      - name: Run unit tests
         run: php codecept run unit -g core -g appveyor

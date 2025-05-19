@@ -10,7 +10,7 @@ use Psy\Shell;
 class PauseShell
 {
     public const LOG_FILE = '.pause.log';
-    private Configuration $psyConf;
+    private readonly Configuration $psyConf;
 
     public function __construct()
     {

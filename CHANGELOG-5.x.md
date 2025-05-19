@@ -1,3 +1,46 @@
+#### 5.3.1
+
+* Issue 6857: Update Actor::__call() to have return type 'mixed' by @troy-rudolph in #6858
+* Fix auto-injection of the tester property by @W0rma in #6856
+
+#### 5.3.0
+
+* Update readme.md by @rossaddison in #6834
+* Fix loading keywords in behat/gherkin v4.12 by @W0rma in #6839
+* Update Scenario.php: Adding default value to current() by @ThomasLandauer in #6798
+* Simplify Step classes by @TavoNiievez in #6842
+* Simplify reporter classes by @TavoNiievez in #6803
+* Simplify Subscriber classes by @TavoNiievez in #6843
+* Fix AssertsTest CI pipeline by @W0rma in #6847
+* Simplify Test classes by @TavoNiievez in #6845
+* Simplify Template classes by @TavoNiievez in #6844
+* Simplify Util classes by @TavoNiievez in #6846
+* Simplify src root classes by @TavoNiievez in #6849
+* Remove PHP 8.1 support by @TavoNiievez in #6848
+* Migrate commands to use AsCommand attribute by @TavoNiievez in #6850
+* Add PHPStan integration by @TavoNiievez in #6851
+
+#### 5.2.1
+
+* Support PHPUnit 12 by @W0rma in #6826
+* Fix missing absolute path resolving in ParamsLoader by @garvinhicking in #6828
+
+#### 5.2.0
+
+* Fix FAIL message color highlighting by @antonvolokha in #6754
+* Update the codebase to PHP 8.1 by @TavoNiievez in #6747
+* generate:cest: Adding `declare(strict_types=1);` and return type `void` to generated files by @ThomasLandauer in #6736
+* Declare nullable parameter types explicitly by @W0rma in #6774 , #6775
+* chore: Included githubactions in the dependabot config (#6471) by @SamMousa in #6783
+* Added new option --disable-coverage-php to skip coverage.serialized report by @adrenalinkin in #6761
+* chore: add branch alias for main to fix composer install with dev deps by @SamMousa in #6787
+* chore(ci): prevent test CI running twice on PR branches by @SamMousa in #6788
+* Simplify classes by @TavoNiievez in #6767 , #6750 , #6764
+* PHP 8.4: `E_STRICT` deprecation by @W0rma in #6802
+* Fix PHP 8.4 deprecation. by @kagg-design in #6811
+* Fix test suite names in bootstrap command by @W0rma in #6813
+* Docs (minor) by @ThomasLandauer in #6804 , #6805 , #6806 , 6807 , #6792 , #6810 , #6751 , #6744
+
 #### 5.1.2
 
 * Prevent unrelated error from being displayed if a scenario step has failed by @craig-mcmahon in #6743

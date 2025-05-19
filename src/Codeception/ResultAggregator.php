@@ -59,47 +59,47 @@ class ResultAggregator
 
     public function addTest(Test $test): void
     {
-        $this->count++;
+        ++$this->count;
     }
 
     public function addSuccessful(Test $test): void
     {
-        $this->successful++;
+        ++$this->successful;
     }
 
-    public function addFailure(FailEvent $failEvent): void
+    public function addFailure(FailEvent $e): void
     {
-        $this->failures[] = $failEvent;
+        $this->failures[] = $e;
     }
 
-    public function addError(FailEvent $failEvent): void
+    public function addError(FailEvent $e): void
     {
-        $this->errors[] = $failEvent;
+        $this->errors[] = $e;
     }
 
-    public function addWarning(FailEvent $failEvent): void
+    public function addWarning(FailEvent $e): void
     {
-        $this->warnings[] = $failEvent;
+        $this->warnings[] = $e;
     }
 
-    public function addSkipped(FailEvent $failEvent): void
+    public function addSkipped(FailEvent $e): void
     {
-        $this->skipped[] = $failEvent;
+        $this->skipped[] = $e;
     }
 
-    public function addIncomplete(FailEvent $failEvent): void
+    public function addIncomplete(FailEvent $e): void
     {
-        $this->incomplete[] = $failEvent;
+        $this->incomplete[] = $e;
     }
 
-    public function addUseless(FailEvent $failEvent): void
+    public function addUseless(FailEvent $e): void
     {
-        $this->useless[] = $failEvent;
+        $this->useless[] = $e;
     }
 
-    public function addToAssertionCount(int $count): void
+    public function addToAssertionCount(int $n): void
     {
-        $this->assertions += $count;
+        $this->assertions += $n;
     }
 
     /**
@@ -118,6 +118,7 @@ class ResultAggregator
         return $this->errors;
     }
 
+
     /**
      * @return FailEvent[]
      */
@@ -129,6 +130,7 @@ class ResultAggregator
     /**
      * @return FailEvent[]
      */
+
     public function incomplete(): array
     {
         return $this->incomplete;
@@ -144,16 +146,12 @@ class ResultAggregator
 
     public function wasSuccessful(): bool
     {
-        return (
-                $this->errorCount() +
-                $this->failureCount() +
-                $this->warningCount()
-            ) === 0;
+        return $this->errorCount() + $this->failureCount() + $this->warningCount() === 0;
     }
 
     public function wasSuccessfulIgnoringWarnings(): bool
     {
-        return ($this->errorCount() + $this->failureCount()) === 0;
+        return $this->errorCount() + $this->failureCount() === 0;
     }
 
     /**
@@ -167,7 +165,7 @@ class ResultAggregator
     public function wasSuccessfulAndNoTestIsUselessOrSkippedOrIncomplete(): bool
     {
         return $this->wasSuccessful()
-            && ($this->uselessCount() + $this->skippedCount() + $this->incompleteCount()) === 0;
+            && $this->uselessCount() + $this->skippedCount() + $this->incompleteCount() === 0;
     }
 
     public function testCount(): int

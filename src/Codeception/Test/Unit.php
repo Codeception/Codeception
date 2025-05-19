@@ -38,17 +38,12 @@ class Unit extends TestCase implements
 
     public function __clone(): void
     {
-        if ($this->scenario instanceof Scenario) {
-            $this->scenario = clone $this->scenario;
-        }
+        $this->scenario = $this->scenario instanceof Scenario ? clone $this->scenario : null;
     }
 
     public function getMetadata(): Metadata
     {
-        if (!$this->metadata instanceof Metadata) {
-            $this->metadata = new Metadata();
-        }
-        return $this->metadata;
+        return $this->metadata ??= new Metadata();
     }
 
     public function getScenario(): ?Scenario
@@ -63,32 +58,36 @@ class Unit extends TestCase implements
 
     public function getResultAggregator(): ResultAggregator
     {
-        throw new LogicException('This method should not be called, TestCaseWrapper class must be used instead');
+        throw new LogicException('This method should not be called; use TestCaseWrapper instead.');
     }
 
     protected function _setUp()
     {
-        if ($this->getMetadata()->isBlocked()) {
-            if ($this->getMetadata()->getSkip() !== null) {
-                $this->markTestSkipped($this->getMetadata()->getSkip());
+        $metadata = $this->getMetadata();
+        if ($metadata->isBlocked()) {
+            if ($skip = $metadata->getSkip()) {
+                $this->markTestSkipped($skip);
             }
-            if ($this->getMetadata()->getIncomplete() !== null) {
-                $this->markTestIncomplete($this->getMetadata()->getIncomplete());
+            if ($incomplete = $metadata->getIncomplete()) {
+                $this->markTestIncomplete($incomplete);
             }
             return;
         }
 
         /** @var Di $di */
-        $di = $this->getMetadata()->getService('di');
-        // auto-inject $tester property
-        if (($this->getMetadata()->getCurrent('actor')) && ($property = lcfirst((string) Configuration::config()['actor_suffix']))) {
-            $this->$property = $di->instantiate($this->getMetadata()->getCurrent('actor'));
+        $di = $metadata->getService('di');
+
+        // Auto-inject $tester property
+        if (
+            ($actor = $this->getMetadata()->getCurrent('actor')) &&
+            ($property = lcfirst((string) Configuration::config()['actor_suffix']))
+        ) {
+            $this->{$property} = $di->instantiate($actor);
         }
 
         $this->scenario = $di->get(Scenario::class);
-
-        // Auto inject into the _inject method
-        $di->injectDependencies($this); // injecting dependencies
+        // Auto-inject into the _inject method
+        $di->injectDependencies($this);
         $this->_before();
     }
 
@@ -136,9 +135,6 @@ class Unit extends TestCase implements
         $psy->run();
     }
 
-    /**
-     * Returns current values
-     */
     public function getCurrent(?string $current): mixed
     {
         return $this->getMetadata()->getCurrent($current);
@@ -147,22 +143,20 @@ class Unit extends TestCase implements
     public function getReportFields(): array
     {
         return [
-            'name'    => $this->getName(false),
-            'class'   => static::class,
-            'file'    => $this->getMetadata()->getFilename()
+            'name'  => $this->getName(false),
+            'class' => self::class,
+            'file'  => $this->getMetadata()->getFilename(),
         ];
     }
 
     public function fetchDependencies(): array
     {
-        $names = [];
-        foreach ($this->getMetadata()->getDependencies() as $required) {
-            if (!str_contains((string) $required, ':') && method_exists($this, $required)) {
-                $required = static::class . ":{$required}";
-            }
-            $names[] = $required;
-        }
-        return $names;
+        return array_map(
+            fn($dep): string => !str_contains((string)$dep, ':') && method_exists($this, $dep)
+                ? self::class . ":{$dep}"
+                : $dep,
+            $this->getMetadata()->getDependencies()
+        );
     }
 
     public function getFileName(): string

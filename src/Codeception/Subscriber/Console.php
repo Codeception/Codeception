@@ -454,7 +454,7 @@ class Console implements EventSubscriberInterface
 
     private function printStep(Step $step): void
     {
-        if ($step instanceof Comment && $step->__toString() == '') {
+        if ($step instanceof Comment && $step->__toString() === '') {
             return; // don't print empty comments
         }
         $msg = $this->message(' ');

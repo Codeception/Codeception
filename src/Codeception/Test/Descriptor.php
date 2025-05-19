@@ -22,38 +22,23 @@ use function ucfirst;
 
 class Descriptor
 {
-    /**
-     * Provides a test name which can be located by
-     */
     public static function getTestSignature(Descriptive $test): string
     {
         return $test->getSignature();
     }
 
-    /**
-     * Provides a test name which is unique for individual iterations of tests using examples
-     */
     public static function getTestSignatureUnique(SelfDescribing $testCase): string
     {
-        $env     = '';
-        $example = '';
-
-        if (
-            method_exists($testCase, 'getScenario')
-            && !empty($testCase->getScenario()?->current('env'))
-        ) {
-            $env = ':' . $testCase->getScenario()->current('env');
+        $signature = self::getTestSignature($testCase);
+        if (method_exists($testCase, 'getScenario') && $env = $testCase->getScenario()?->current('env')) {
+            $signature .= ':' . $env;
+        }
+        if (method_exists($testCase, 'getMetadata') && $example = $testCase->getMetadata()->getCurrent('example')) {
+            $encoded = json_encode($example, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
+            $signature .= ':' . substr(sha1($encoded), 0, 7);
         }
 
-        if (
-            method_exists($testCase, 'getMetaData')
-            && !empty($testCase->getMetadata()->getCurrent('example'))
-        ) {
-            $currentExample = json_encode($testCase->getMetadata()->getCurrent('example'), JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
-            $example = ':' . substr(sha1($currentExample), 0, 7);
-        }
-
-        return self::getTestSignature($testCase) . $env . $example;
+        return $signature;
     }
 
     public static function getTestAsString(SelfDescribing $testCase): string
@@ -66,14 +51,12 @@ class Descriptor
         $text = $testCaseName;
         $text = preg_replace('#([A-Z]+)([A-Z][a-z])#', '\\1 \\2', $text);
         $text = preg_replace('#([a-z\d])([A-Z])#', '\\1 \\2', $text);
-        $text = preg_replace('#^test #', '', $text);
+        $text = preg_replace('#^test #i', '', $text);
         $text = ucfirst(strtolower($text));
+
         return str_replace(['::', 'with data set'], [':', '|'], $text);
     }
 
-    /**
-     * Provides a test file name relative to Codeception root
-     */
     public static function getTestFileName(Descriptive $test): string
     {
         return codecept_relative_path(realpath($test->getFileName()));
@@ -85,25 +68,21 @@ class Descriptor
             return self::getTestFileName($test);
         }
 
-        $signature = $test->getSignature(); // cut everything before ":" from signature
-        return self::getTestFileName($test) . ':' . preg_replace('#^(.*?):#', '', $signature);
+        return self::getTestFileName($test) . ':' .
+            preg_replace('#^(.*?):#', '', $test->getSignature());
     }
 
-    /**
-     * Provides a test data set index
-     */
     public static function getTestDataSetIndex(SelfDescribing $testCase): string
     {
-        if ($testCase instanceof TestInterface) {
-            $index = $testCase->getMetadata()->getIndex();
-            if ($index === null) {
-                return '';
-            }
-            if (is_int($index)) {
-                return ' with data set #' . $index;
-            }
-            return ' with data set "' . $index . '"';
+        if (!$testCase instanceof TestInterface) {
+            return '';
         }
-        return '';
+        $index = $testCase->getMetadata()->getIndex();
+
+        return match (true) {
+            is_int($index)   => ' with data set #' . $index,
+            $index !== null  => ' with data set "' . $index . '"',
+            default          => '',
+        };
     }
 }

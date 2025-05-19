@@ -78,10 +78,10 @@ class Di
             return null;
         }
 
-        $constructorArgs = $constructorArgs ?? $this->prepareArgs($reflectedClass->getConstructor());
+        $constructorArgs ??= $this->prepareArgs($reflectedClass->getConstructor());
 
         try {
-            $object = $reflectedClass->newInstanceArgs($constructorArgs ?? []);
+            $object = $reflectedClass->newInstanceArgs($constructorArgs);
         } catch (ReflectionException $e) {
             throw new InjectionException("Failed to create instance of '{$className}'. " . $e->getMessage());
         }
@@ -124,7 +124,7 @@ class Di
     {
         $args = [];
 
-        if ($method !== null) {
+        if ($method instanceof ReflectionMethod) {
             foreach ($method->getParameters() as $k => $parameter) {
                 $dependency = ReflectionHelper::getClassFromParameter($parameter);
 

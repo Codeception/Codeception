@@ -27,27 +27,18 @@ class Application extends BaseApplication
      */
     public function registerCustomCommands(): void
     {
+        $output = new ConsoleOutput();
         try {
             $this->readCustomCommandsFromConfig();
         } catch (ConfigurationException $e) {
             if ($e->getCode() === 404) {
                 return;
             }
-            $this->renderExceptionWrapper($e, new ConsoleOutput());
+            parent::renderThrowable($e, $output);
             exit(1);
         } catch (Exception $e) {
-            $this->renderExceptionWrapper($e, new ConsoleOutput());
+            parent::renderThrowable($e, $output);
             exit(1);
-        }
-    }
-
-    public function renderExceptionWrapper(Exception $exception, OutputInterface $output): void
-    {
-        if (method_exists(BaseApplication::class, 'renderException')) {
-            //Symfony 5
-            parent::renderException($exception, $output);
-        } else {
-            parent::renderThrowable($exception, $output);
         }
     }
 
@@ -67,8 +58,7 @@ class Application extends BaseApplication
         }
 
         foreach ($config['extensions']['commands'] as $commandClass) {
-            $commandName = $this->getCustomCommandName($commandClass);
-            $this->add(new $commandClass($commandName));
+            $this->add(new $commandClass($this->getCustomCommandName($commandClass)));
         }
     }
 
@@ -84,11 +74,10 @@ class Application extends BaseApplication
             throw new ConfigurationException("Extension: Command class {$commandClass} not found");
         }
 
-        $interfaces = class_implements($commandClass);
-
-        if (!in_array(CustomCommandInterface::class, $interfaces)) {
-            throw new ConfigurationException("Extension: Command {$commandClass} must implement " .
-                "the interface `Codeception\\CustomCommandInterface`");
+        if (!is_subclass_of($commandClass, CustomCommandInterface::class)) {
+            throw new ConfigurationException(
+                "Extension: Command {$commandClass} must implement the interface `Codeception\\CustomCommandInterface`"
+            );
         }
 
         return $commandClass::getCommandName();
@@ -140,30 +129,31 @@ class Application extends BaseApplication
         }
 
         $argvWithoutConfig = [];
-        if (isset($_SERVER['argv'])) {
-            $argv = $_SERVER['argv'];
+        $argv = $_SERVER['argv'] ?? [];
 
-            for ($i = 0; $i < count($argv); ++$i) {
-                if (preg_match('#^(?:-([^c-]*)?c|--config(?:=|$))(.*)$#', $argv[$i], $match)) {
-                    if (!empty($match[2])) { //same index
-                        $this->preloadConfiguration($match[2]);
-                    } elseif (isset($argv[$i + 1])) { //next index
-                        $this->preloadConfiguration($argv[++$i]);
+        for ($i = 0, $count = count($argv); $i < $count; ++$i) {
+            if (preg_match('#^(?:-([^c-]*)?c|--config(?:=|$))(.*)$#', $argv[$i], $match)) {
+                $value = $match[2] !== '' ? $match[2] : ($argv[$i + 1] ?? '');
+                if ($value !== '') {
+                    $this->preloadConfiguration($value);
+                    if ($match[2] === '') {
+                        ++$i;
                     }
-                    if (!empty($match[1])) {
-                        $argvWithoutConfig[] = "-" . $match[1]; //rest commands
-                    }
-                    continue;
                 }
-                $argvWithoutConfig[] = $argv[$i];
+                if (!empty($match[1])) {
+                    $argvWithoutConfig[] = '-' . $match[1];
+                }
+                continue;
             }
+
+            $argvWithoutConfig[] = $argv[$i];
         }
 
         return $this->coreArguments = new SymfonyArgvInput($argvWithoutConfig);
     }
 
     /**
-     * Pre load Configuration, the config option is use.
+     * Preload Configuration, the config option is use.
      *
      * @param string $configFile Path to Configuration
      * @throws ConfigurationException
@@ -173,7 +163,7 @@ class Application extends BaseApplication
         try {
             Configuration::config($configFile);
         } catch (ConfigurationException $e) {
-            if ($e->getCode() == 404) {
+            if ($e->getCode() === 404) {
                 throw new ConfigurationException("Your configuration file `{$configFile}` could not be found.", 405);
             }
             throw $e;

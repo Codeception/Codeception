@@ -19,83 +19,69 @@ class DataProvider
 {
     public static function getDataForMethod(ReflectionMethod $method, ?ReflectionClass $class = null, ?Actor $I = null): ?iterable
     {
-        $testClass = self::getTestClass($method, $class);
+        $testClass     = self::getTestClass($method, $class);
         $testClassName = $testClass->getName();
-        $methodName = $method->getName();
+        $methodName    = $method->getName();
+        $annotation    = Annotation::forMethod($testClassName, $methodName);
 
-        // example annotation
-        $rawExamples = array_values(
-            Annotation::forMethod($testClassName, $methodName)->fetchAll('example'),
+        $data        = [];
+        $rawExamples = $annotation->fetchAll('example');
+        if ($rawExamples !== []) {
+            $convert = is_string(reset($rawExamples));
+            foreach ($rawExamples as $example) {
+                $data[] = $convert ? Annotation::arrayValue($example) : $example;
+            }
+        }
+
+        $providers = array_merge(
+            $annotation->fetchAll('dataProvider'),
+            $annotation->fetchAll('dataprovider')
         );
 
-        if ($rawExamples !== []) {
-            $rawExample = reset($rawExamples);
-            if (is_string($rawExample)) {
-                $result = array_map(
-                    static fn ($v): ?array => Annotation::arrayValue($v),
-                    $rawExamples
-                );
-            } else {
-                $result = $rawExamples;
-            }
-        } else {
-            $result = [];
-        }
-
-        // dataProvider annotation
-        $dataProviderAnnotations = Annotation::forMethod($testClassName, $methodName)->fetchAll('dataProvider');
-        // lowercase for back compatible
-        if ($dataProviderAnnotations === []) {
-            $dataProviderAnnotations = Annotation::forMethod($testClassName, $methodName)->fetchAll('dataprovider');
-        }
-
-        if ($result === [] && $dataProviderAnnotations === []) {
+        if ($data === [] && $providers === []) {
             return null;
         }
 
-        foreach ($dataProviderAnnotations as $dataProviderAnnotation) {
-            [$dataProviderClassName, $dataProviderMethodName] = self::parseDataProviderAnnotation(
-                $dataProviderAnnotation,
+        foreach ($providers as $provider) {
+            [$providerClass, $providerMethod] = self::parseDataProviderAnnotation(
+                $provider,
                 $testClassName,
-                $methodName,
+                $methodName
             );
 
             try {
-                $dataProviderMethod = new ReflectionMethod($dataProviderClassName, $dataProviderMethodName);
-                if ($dataProviderMethod->isStatic()) {
-                    $dataProviderResult = call_user_func([$dataProviderClassName, $dataProviderMethodName], $I);
+                $refMethod = new ReflectionMethod($providerClass, $providerMethod);
+
+                if ($refMethod->isStatic()) {
+                    $result = $providerClass::$providerMethod($I);
                 } else {
-                    $testInstance = new $dataProviderClassName($dataProviderMethodName);
-
-                    if ($dataProviderMethod->isPublic()) {
-                        $dataProviderResult = $testInstance->$dataProviderMethodName($I);
-                    } else {
-                        $dataProviderResult = ReflectionHelper::invokePrivateMethod(
-                            $testInstance,
-                            $dataProviderMethodName,
-                            [$I]
-                        );
-                    }
+                    $instance = new $providerClass($providerMethod);
+                    $result   = $refMethod->isPublic()
+                        ? $instance->$providerMethod($I)
+                        : ReflectionHelper::invokePrivateMethod($instance, $providerMethod, [$I]);
                 }
 
-                foreach ($dataProviderResult as $key => $value) {
-                    if (is_int($key)) {
-                        $result [] = $value;
-                    } else {
-                        $result[$key] = $value;
-                    }
+                if (!is_iterable($result)) {
+                    throw new InvalidTestException(
+                        "DataProvider '{$provider}' for {$testClassName}::{$methodName} " .
+                        'must return iterable data, got ' . gettype($result)
+                    );
                 }
-            } catch (ReflectionException) {
+
+                foreach ($result as $key => $value) {
+                    is_int($key) ? $data[] = $value : $data[$key] = $value;
+                }
+            } catch (ReflectionException $e) {
                 throw new InvalidTestException(sprintf(
                     "DataProvider '%s' for %s::%s is invalid or not callable",
-                    $dataProviderAnnotation,
+                    $provider,
                     $testClassName,
                     $methodName
-                ));
+                ), 0, $e);
             }
         }
 
-        return $result;
+        return $data ?: null;
     }
 
     /**
@@ -108,37 +94,30 @@ class DataProvider
         string $testMethodName,
     ): array {
         $parts = explode('::', $annotation);
-        if (count($parts) > 2) {
-            throw new InvalidTestException(
-                sprintf(
-                    'Data provider "%s" specified for %s::%s is invalid',
-                    $annotation,
-                    $testClassName,
-                    $testMethodName,
-                )
-            );
-        }
 
-        if (count($parts) === 2) {
+        if (count($parts) === 2 && $parts[0] !== '') {
             return $parts;
         }
+        if (count($parts) === 1 || $parts[0] === '') {
+            return [$testClassName, ltrim($parts[1] ?? $parts[0], ':')];
+        }
 
-        return [
-            $testClassName,
+        throw new InvalidTestException(sprintf(
+            'Data provider "%s" specified for %s::%s is invalid',
             $annotation,
-        ];
+            $testClassName,
+            $testMethodName
+        ));
     }
 
-    /**
-     * Retrieves actual test class for dataProvider.
-     */
-    private static function getTestClass(ReflectionMethod $dataProviderMethod, ?ReflectionClass $testClass): ReflectionClass
+    private static function getTestClass(ReflectionMethod $method, ?ReflectionClass $class): ReflectionClass
     {
-        $dataProviderDeclaringClass = $dataProviderMethod->getDeclaringClass();
-        // data provider in abstract class?
-        if ($dataProviderDeclaringClass->isAbstract() && $testClass instanceof ReflectionClass && $dataProviderDeclaringClass->name !== $testClass->name) {
-            return $testClass;
-        }
-        return $dataProviderDeclaringClass;
+        $declaringClass = $method->getDeclaringClass();
+
+        return $declaringClass->isAbstract()
+        && $class instanceof ReflectionClass
+        && $declaringClass->getName() !== $class->getName()
+            ? $class
+            : $declaringClass;
     }
 }

@@ -94,7 +94,7 @@ class LocalServer extends SuiteSubscriber
 
     protected function isEnabled(): bool
     {
-        return $this->module && !$this->settings['remote'] && $this->settings['enabled'];
+        return $this->module instanceof WebInterface && !$this->settings['remote'] && $this->settings['enabled'];
     }
 
     public function beforeSuite(SuiteEvent $event): void
@@ -318,7 +318,7 @@ class LocalServer extends SuiteSubscriber
         $retries = $maxRetries;
         while ($retries > 0 && (!file_exists($file) || file_get_contents($file) !== '0')) {
             usleep($sleepTime);
-            $retries--;
+            --$retries;
         }
 
         if (!file_exists($file) || file_get_contents($file) !== '0') {

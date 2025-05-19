@@ -1,6 +1,8 @@
 <?php
 
 use Codeception\Module\OrderHelper;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 
 class CodeTest extends \Codeception\Test\Unit
 {
@@ -22,6 +24,7 @@ class CodeTest extends \Codeception\Test\Unit
     /**
      * @before
      */
+    #[Before]
     public function before()
     {
         OrderHelper::appendToFile('<');
@@ -30,6 +33,7 @@ class CodeTest extends \Codeception\Test\Unit
     /**
      * @after
      */
+    #[After]
     public function after()
     {
         OrderHelper::appendToFile('>');

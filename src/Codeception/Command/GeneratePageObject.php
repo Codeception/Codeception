@@ -6,6 +6,7 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Lib\Generator\PageObject as PageObjectGenerator;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,6 +22,10 @@ use function ucfirst;
  * * `codecept g:page Registration`
  * * `codecept g:page acceptance Login`
  */
+#[AsCommand(
+    name: 'generate:pageobject',
+    description: 'Generates empty PageObject class'
+)]
 class GeneratePageObject extends Command
 {
     use Shared\FileSystemTrait;
@@ -28,7 +33,7 @@ class GeneratePageObject extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Generates empty PageObject class')
+        $this
             ->addArgument('suite', InputArgument::REQUIRED, 'Either suite name or page object name')
             ->addArgument('page', InputArgument::OPTIONAL, 'Page name of pageobject to represent');
     }

@@ -14,6 +14,7 @@ use Codeception\Test\Test as CodeceptTest;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
 use SebastianBergmann\CodeCoverage\Test\TestStatus\TestStatus;
+use SebastianBergmann\CodeCoverage\Version as CodeCoverageVersion;
 
 trait CodeCoverage
 {
@@ -31,10 +32,10 @@ trait CodeCoverage
 
         if ($this instanceof StrictCoverage) {
             $linesToBeCovered = $this->getLinesToBeCovered();
-            $linesToBeUsed = $this->getLinesToBeUsed();
+            $linesToBeUsed    = $this->getLinesToBeUsed();
         } else {
             $linesToBeCovered = [];
-            $linesToBeUsed = [];
+            $linesToBeUsed    = [];
         }
 
         try {
@@ -42,15 +43,26 @@ trait CodeCoverage
                 $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
             } else {
                 $status = match ($status) {
-                    Test::STATUS_OK => TestStatus::success(),
+                    Test::STATUS_OK                      => TestStatus::success(),
                     Test::STATUS_FAIL, Test::STATUS_ERROR => TestStatus::failure(),
-                    default => TestStatus::unknown(),
+                    default                              => TestStatus::unknown(),
                 };
+                if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
+                    $tcClass = 'SebastianBergmann\CodeCoverage\Test\Target\TargetCollection';
+                    if (
+                        class_exists($tcClass)
+                        && method_exists($tcClass, 'fromArray')
+                    ) {
+                        $linesToBeCovered = $tcClass::fromArray($linesToBeCovered);
+                        $linesToBeUsed    = $tcClass::fromArray($linesToBeUsed);
+                    }
+                }
                 $codeCoverage->stop(true, $status, $linesToBeCovered, $linesToBeUsed);
             }
         } catch (CodeCoverageException $exception) {
             if ($status === CodeceptTest::STATUS_OK) {
-                $this->getResultAggregator()->addError(new FailEvent($this, $exception, $time));
+                $this->getResultAggregator()
+                    ->addError(new FailEvent($this, $exception, $time));
             }
         }
     }
