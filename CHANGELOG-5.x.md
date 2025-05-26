@@ -1,3 +1,7 @@
+#### 5.3.2
+
+* Rollback getSubscribedEvents Extension refactor by @TavoNiievez in #6862
+
 #### 5.3.1
 
 * Issue 6857: Update Actor::__call() to have return type 'mixed' by @troy-rudolph in #6858
