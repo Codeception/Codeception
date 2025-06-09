@@ -81,7 +81,7 @@ class DataProvider
             }
         }
 
-        return $data ?: null;
+        return $data;
     }
 
     /**
