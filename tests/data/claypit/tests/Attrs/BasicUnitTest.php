@@ -2,6 +2,7 @@
 
 namespace Attrs;
 
+use Codeception\Attribute\DataProvider;
 use Codeception\Attribute\Examples as ExampleAttr;
 use Codeception\Attribute\Group;
 use Codeception\Attribute\Incomplete;

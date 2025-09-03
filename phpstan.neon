@@ -3,8 +3,13 @@ parameters:
 
     paths:
         - src
-
+        - tests
+    excludePaths:
+        - tests/data
     parallel:
         maximumNumberOfProcesses: 8
         minimumNumberOfJobsPerProcess: 2
         jobSize: 20
+    ignoreErrors:
+        - message: '#^Variable \$scenario might not be defined.#'
+          path: tests

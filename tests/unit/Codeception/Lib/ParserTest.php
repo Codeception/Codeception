@@ -174,6 +174,7 @@ EOF;
     public function testParseTestContainingAnnonymousClassWithAttribute()
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('AnonymousClassWithAttributeCest.php'));
+        /** @phpstan-ignore class.notFound*/
         $this->assertSame([\Tests\Unit\AnonymousClassWithAttributeCest::class], $classes);
     }
 }

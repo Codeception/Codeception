@@ -46,6 +46,7 @@ class DataProviderTest extends Unit
     public function testExecutesPublicStaticDataProviderInTheSameClass()
     {
         require_once codecept_data_dir('data_provider/PublicStaticDataProviderTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(PublicStaticDataProviderTest::class, 'testDataProvider');
         $result = DataProvider::getDataForMethod($method);
 
@@ -61,6 +62,7 @@ class DataProviderTest extends Unit
     public function testExecutesPublicDataProviderInTheSameClass()
     {
         require_once codecept_data_dir('data_provider/PublicDataProviderTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(PublicDataProviderTest::class, 'testDataProvider');
         $result = DataProvider::getDataForMethod($method);
 
@@ -76,6 +78,7 @@ class DataProviderTest extends Unit
     public function testExecutesPublicEmptyDataProviderInTheSameClass()
     {
         require_once codecept_data_dir('data_provider/PublicEmptyDataProviderTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(PublicEmptyDataProviderTest::class, 'testDataProvider');
         $result = DataProvider::getDataForMethod($method);
 
@@ -87,6 +90,7 @@ class DataProviderTest extends Unit
     public function testExecutesPrivateDataProviderInTheSameClass()
     {
         require_once codecept_data_dir('data_provider/PrivateDataProviderTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(PrivateDataProviderTest::class, 'testDataProvider');
         $result = DataProvider::getDataForMethod($method);
 
@@ -102,6 +106,7 @@ class DataProviderTest extends Unit
     public function testExecutesDataProviderSpecifiedUsingAttribute()
     {
         require_once codecept_data_dir('data_provider/AttributeDataProviderTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(AttributeDataProviderTest::class, 'testDataProvider');
         $result = DataProvider::getDataForMethod($method);
 
@@ -119,6 +124,7 @@ class DataProviderTest extends Unit
     public function testExecutesPrivateDataProviderInAnotherClass()
     {
         require_once codecept_data_dir('data_provider/DataProviderInAnotherClassTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(DataProviderInAnotherClassTest::class, 'testDataProvider');
         $result = DataProvider::getDataForMethod($method);
 
@@ -134,6 +140,7 @@ class DataProviderTest extends Unit
     public function testExecutesMultipleDataProviders()
     {
         require_once codecept_data_dir('data_provider/MultipleDataProviderTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(MultipleDataProviderTest::class, 'testDataProvider');
         $result = DataProvider::getDataForMethod($method);
 
@@ -151,6 +158,7 @@ class DataProviderTest extends Unit
     public function testSupportsExampleAnnotations()
     {
         require_once codecept_data_dir('data_provider/ExampleAnnotationTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(ExampleAnnotationTest::class, 'testExample');
         $result = DataProvider::getDataForMethod($method);
 
@@ -165,6 +173,7 @@ class DataProviderTest extends Unit
     public function testSupportsExamplesAttribute()
     {
         require_once codecept_data_dir('data_provider/ExamplesAttributeTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(ExamplesAttributeTest::class, 'testExample');
         $result = DataProvider::getDataForMethod($method);
 
@@ -179,6 +188,7 @@ class DataProviderTest extends Unit
     public function testCombinesExampleAndDataProviderAnnotations()
     {
         require_once codecept_data_dir('data_provider/CombinedAnnotationDataProviderTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(CombinedAnnotationDataProviderTest::class, 'testCombined');
         $result = DataProvider::getDataForMethod($method);
 
@@ -195,6 +205,7 @@ class DataProviderTest extends Unit
     public function testCombinesExampleAndDataProviderAttributes()
     {
         require_once codecept_data_dir('data_provider/CombinedAttributeDataProviderTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(CombinedAttributeDataProviderTest::class, 'testCombined');
         $result = DataProvider::getDataForMethod($method);
 
@@ -212,7 +223,9 @@ class DataProviderTest extends Unit
     public function testExecutesPublicDataProviderInAnotherAbstractClass()
     {
         require_once codecept_data_dir('data_provider/AbstractDataProviderTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(AbstractDataProviderTest::class, 'testDataProvider');
+        /** @phpstan-ignore class.notFound*/
         $result = DataProvider::getDataForMethod($method, new ReflectionClass(AbstractDataProviderTest::class));
 
         $expectedResult = [
@@ -225,6 +238,7 @@ class DataProviderTest extends Unit
     public function testDataProviderReceivesActor()
     {
         require_once codecept_data_dir('data_provider/DataProviderReceivesActorTest.php');
+        /** @phpstan-ignore class.notFound*/
         $method = new ReflectionMethod(DataProviderReceivesActorTest::class, 'testDataProvider');
         $result = DataProvider::getDataForMethod($method, I: $this->tester);
 
