@@ -4,6 +4,7 @@ use Codeception\Attribute\After;
 use Codeception\Attribute\DataProvider;
 use Codeception\Attribute\Group;
 use Codeception\Scenario;
+use PHPUnit\Runner\Version;
 
 final class RunCest
 {
@@ -307,7 +308,12 @@ final class RunCest
     public function filterTestsByDataProviderCaseName(CliGuy $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php:@"real.*"');
-        $I->seeInShellOutput('Is triangle | "real triangle"');
+        /** In phpunit 12 naming changed */
+        if (Version::majorVersionNumber() >= 12) {
+            $I->seeInShellOutput('Is triangle | "@real triangle"');
+        } else {
+            $I->seeInShellOutput('Is triangle | "real triangle"');
+        }
         $I->dontSeeInShellOutput('Is triangle | #0');
         $I->dontSeeInShellOutput('Is triangle | #1');
         $I->seeInShellOutput('DataProvidersTest');
