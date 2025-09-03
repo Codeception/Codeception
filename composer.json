@@ -25,7 +25,7 @@
         "phpunit/php-code-coverage": "^9.2 | ^10.0 | ^11.0 | ^12.0",
         "phpunit/php-text-template": "^2.0 | ^3.0 | ^4.0 | ^5.0",
         "phpunit/php-timer": "^5.0.3 | ^6.0 | ^7.0 | ^8.0",
-        "phpunit/phpunit": "^9.5.20 | ^10.0 | ^11.0 | ^12.0",
+        "phpunit/phpunit": "^10.0 | ^11.0 | ^12.0",
         "psy/psysh": "^0.11.2 | ^0.12",
         "sebastian/comparator": "^4.0.5 | ^5.0 | ^6.0 | ^7.0",
         "sebastian/diff": "^4.0.3 | ^5.0 | ^6.0 | ^7.0",
@@ -55,7 +55,8 @@
         "symfony/dotenv": ">=5.4.24 <8.0",
         "symfony/error-handler": ">=5.4.24 <8.0",
         "symfony/process": ">=5.4.24 <8.0",
-        "vlucas/phpdotenv": "^5.1"
+        "vlucas/phpdotenv": "^5.1",
+        "phpstan/phpstan": "^2.1"
     },
     "conflict": {
         "codeception/lib-innerbrowser": "<3.1.3",

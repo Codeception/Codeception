@@ -39,26 +39,22 @@ trait CodeCoverage
         }
 
         try {
-            if (PHPUnitVersion::series() < 10) {
-                $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
-            } else {
-                $status = match ($status) {
-                    Test::STATUS_OK                      => TestStatus::success(),
-                    Test::STATUS_FAIL, Test::STATUS_ERROR => TestStatus::failure(),
-                    default                              => TestStatus::unknown(),
-                };
-                if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
-                    $tcClass = 'SebastianBergmann\CodeCoverage\Test\Target\TargetCollection';
-                    if (
-                        class_exists($tcClass)
-                        && method_exists($tcClass, 'fromArray')
-                    ) {
-                        $linesToBeCovered = $tcClass::fromArray($linesToBeCovered);
-                        $linesToBeUsed    = $tcClass::fromArray($linesToBeUsed);
-                    }
+            $status = match ($status) {
+                Test::STATUS_OK                      => TestStatus::success(),
+                Test::STATUS_FAIL, Test::STATUS_ERROR => TestStatus::failure(),
+                default                              => TestStatus::unknown(),
+            };
+            if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
+                $tcClass = 'SebastianBergmann\CodeCoverage\Test\Target\TargetCollection';
+                if (
+                    class_exists($tcClass)
+                    && method_exists($tcClass, 'fromArray')
+                ) {
+                    $linesToBeCovered = $tcClass::fromArray($linesToBeCovered);
+                    $linesToBeUsed    = $tcClass::fromArray($linesToBeUsed);
                 }
-                $codeCoverage->stop(true, $status, $linesToBeCovered, $linesToBeUsed);
             }
+            $codeCoverage->stop(true, $status, $linesToBeCovered, $linesToBeUsed);
         } catch (CodeCoverageException $exception) {
             if ($status === CodeceptTest::STATUS_OK) {
                 $this->getResultAggregator()

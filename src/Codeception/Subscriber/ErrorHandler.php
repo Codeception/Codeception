@@ -117,22 +117,6 @@ class ErrorHandler implements EventSubscriberInterface
             return false;
         }
 
-        if (version_compare(PHPUnitVersion::series(), '10.0', '<')) {
-            $map = [
-                E_DEPRECATED        => 'PHPUnit\Framework\Error\Deprecated',
-                E_USER_DEPRECATED   => 'PHPUnit\Framework\Error\Deprecated',
-                E_NOTICE            => 'PHPUnit\Framework\Error\Notice',
-                E_USER_NOTICE       => 'PHPUnit\Framework\Error\Notice',
-                E_WARNING           => 'PHPUnit\Framework\Error\Warning',
-                E_USER_WARNING      => 'PHPUnit\Framework\Error\Warning',
-            ];
-            $className = $map[$errNum] ?? 'PHPUnit\Framework\Error\Error';
-
-            if (class_exists($className)) {
-                throw new $className($errMsg, $errNum, $errFile, $errLine);
-            }
-        }
-
         $errMsgWithLocation = $errMsg . ' at ' . $errFile . ':' . $errLine;
         throw match ($errNum) {
             E_DEPRECATED, E_USER_DEPRECATED  => new Deprecation($errMsgWithLocation, $errNum, $errFile, $errLine),

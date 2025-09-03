@@ -67,7 +67,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     {
         try {
             $this->coverage = PhpCodeCoverageFactory::build();
-        } catch (CodeCoverageException $e) {
+        } catch (\Exception $e) {
             throw new Exception(
                 'XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini',
                 $e->getCode(),

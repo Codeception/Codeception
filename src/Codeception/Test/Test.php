@@ -17,7 +17,6 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTest;
-use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Runner\Version as PHPUnitVersion;
 use RuntimeException;
 use SebastianBergmann\Timer\Timer;
@@ -28,11 +27,7 @@ use function array_reverse;
 use function method_exists;
 
 // phpcs:disable
-if (PHPUnitVersion::series() < 10) {
-    require_once __DIR__ . '/../../PHPUnit/Wrapper/PhpUnit9/Test.php';
-} else {
-    require_once __DIR__ . '/../../PHPUnit/Wrapper/PhpUnit10/Test.php';
-}
+require_once __DIR__ . '/../../PHPUnit/Wrapper/PhpUnit10/Test.php';
 // phpcs:enable
 
 /**
@@ -164,7 +159,7 @@ abstract class Test extends TestWrapper implements TestInterface, Interfaces\Des
             } catch (IncompleteTestError $e) {
                 $status    = self::STATUS_INCOMPLETE;
                 $eventType = Events::TEST_INCOMPLETE;
-            } catch (SkippedTest | SkippedTestError $e) {
+            } catch (SkippedTest $e) {
                 $status    = self::STATUS_SKIPPED;
                 $eventType = Events::TEST_SKIPPED;
             } catch (AssertionFailedError $e) {

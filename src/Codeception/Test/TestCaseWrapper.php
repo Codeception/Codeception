@@ -43,9 +43,7 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         array $afterClassMethods = []
     ) {
         $this->metadata = new Metadata();
-        $methodName = PHPUnitVersion::series() < 10
-            ? $testCase->getName(false)
-            : $testCase->name();
+        $methodName = $testCase->name();
         $this->metadata->setName($methodName);
         $this->metadata->setFilename((new ReflectionClass($testCase))->getFileName());
 
@@ -109,23 +107,11 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
 
     public function getLinesToBeCovered(): array|bool
     {
-        if (
-            version_compare(PHPUnitVersion::series(), '10.0', '<')
-            && method_exists(TestUtil::class, 'getLinesToBeCovered')
-        ) {
-            return TestUtil::getLinesToBeCovered($this->testCase::class, $this->metadata->getName());
-        }
         return $this->coverageTargets('coversTargets', 'linesToBeCovered');
     }
 
     public function getLinesToBeUsed(): array
     {
-        if (
-            version_compare(PHPUnitVersion::series(), '10.0', '<')
-            && method_exists(TestUtil::class, 'getLinesToBeUsed')
-        ) {
-            return TestUtil::getLinesToBeUsed($this->testCase::class, $this->metadata->getName());
-        }
         return (array) $this->coverageTargets('usesTargets', 'linesToBeUsed');
     }
 
@@ -139,9 +125,7 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
         $this->testCase->runBare();
         $this->testCase->addToAssertionCount(Assert::getCount());
 
-        self::$testResults[$this->getSignature()] = PHPUnitVersion::series() < 10
-            ? $this->testCase->getResult()
-            : $this->testCase->result();
+        self::$testResults[$this->getSignature()] = $this->testCase->result();
 
         $assertions = $this->getNumAssertions();
         if (
@@ -184,9 +168,7 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
 
     private function getNameWithDataSet(): string
     {
-        return PHPUnitVersion::series() < 10
-            ? $this->testCase->getName(true)
-            : $this->testCase->nameWithDataSet();
+        return $this->testCase->nameWithDataSet();
     }
 
     private function coverageTargets(string $newMethod, string $legacyMethod): array|bool
@@ -206,8 +188,6 @@ class TestCaseWrapper extends Test implements Reported, Dependent, StrictCoverag
      */
     public function getNumAssertions(): int
     {
-        return PHPUnitVersion::series() < 10
-            ? $this->testCase->getNumAssertions()
-            : $this->testCase->numberOfAssertionsPerformed();
+        return $this->testCase->numberOfAssertionsPerformed();
     }
 }

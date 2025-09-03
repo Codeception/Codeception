@@ -249,23 +249,14 @@ class Cest extends Test implements
 
     public function getLinesToBeCovered(): array|bool
     {
-        if (PHPUnitVersion::series() < 10) {
-            return TestUtil::getLinesToBeCovered($this->testClass, $this->testMethod);
-        }
-
         if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
             return (new CodeCoverage())->coversTargets($this->testClass, $this->testMethod)->asArray();
         }
-
         return (new CodeCoverage())->linesToBeCovered($this->testClass, $this->testMethod);
     }
 
     public function getLinesToBeUsed(): array
     {
-        if (PHPUnitVersion::series() < 10) {
-            return TestUtil::getLinesToBeUsed($this->testClass, $this->testMethod);
-        }
-
         if (version_compare(CodeCoverageVersion::id(), '12', '>=')) {
             return (new CodeCoverage())->usesTargets($this->testClass, $this->testMethod)->asArray();
         }

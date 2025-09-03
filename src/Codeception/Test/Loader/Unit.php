@@ -89,12 +89,8 @@ class Unit implements LoaderInterface
 
         $result = [];
         foreach ($data as $key => $item) {
-            if (PHPUnitVersion::series() < 10) {
-                $testInstance = new $className($methodName, $item, $key);
-            } else {
-                $testInstance = new $className($methodName);
-                $testInstance->setData($key, $item);
-            }
+            $testInstance = new $className($methodName);
+            $testInstance->setData($key, $item);
             $result [] = $testInstance;
         }
 

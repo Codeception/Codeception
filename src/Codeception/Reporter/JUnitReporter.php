@@ -250,8 +250,6 @@ class JUnitReporter implements EventSubscriberInterface
                 if (!$testCase->expectsOutput()) {
                     $testOutput = $testCase->getActualOutputForAssertion();
                 }
-            } elseif (!$testCase->hasExpectationOnOutput()) {
-                $testOutput = $testCase->getActualOutputForAssertion();
             }
         }
 
@@ -318,14 +316,7 @@ class JUnitReporter implements EventSubscriberInterface
             $buffer = '';
         }
 
-        if (
-            version_compare(PHPUnitVersion::series(), '10.0', '<')
-            && class_exists(TestFailure::class)
-        ) {
-            $exceptionString = TestFailure::exceptionToString($t);
-        } else {
-            $exceptionString = ThrowableToStringMapper::map($t);
-        }
+        $exceptionString = ThrowableToStringMapper::map($t);
 
         $buffer .= $exceptionString . "\n" . StackTraceFilter::getFilteredStacktrace($t);
 

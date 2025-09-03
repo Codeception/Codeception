@@ -4,14 +4,6 @@ parameters:
     paths:
         - src
 
-    excludePaths:
-        analyseAndScan:
-            - src/Codeception/Test/Cest.php
-            - src/Codeception/Test/Test.php
-            - src/Codeception/Test/Unit.php
-            - src/Codeception/Coverage/Subscriber/Printer.php
-            - src/PHPUnit/Wrapper/PhpUnit9/Test.php
-
     parallel:
         maximumNumberOfProcesses: 8
         minimumNumberOfJobsPerProcess: 2
