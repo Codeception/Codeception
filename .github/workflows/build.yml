@@ -44,7 +44,7 @@ jobs:
 
       - name: Check test code style
         run: composer cs-tests
-
+      - run: ./codecept build
       - name: PHPStan
         run: phpstan
 
