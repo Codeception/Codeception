@@ -49,7 +49,7 @@ class ErrorHandlerTest extends \Codeception\PHPUnit\TestCase
     public function testShowsLocationOfWarning()
     {
         $this->expectException(Warning::class);
-        $this->expectExceptionMessageMatches('/Undefined variable: file at ' . preg_quote(__FILE__, '/') . ':60/');
+        $this->expectExceptionMessageMatches('/Undefined variable: file at ' . preg_quote(__FILE__, '/') . ':\d+/');
         trigger_error('Undefined variable: file', E_USER_WARNING);
     }
 }

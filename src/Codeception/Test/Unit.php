@@ -18,7 +18,6 @@ use Codeception\TestInterface;
 use Codeception\Util\Debug;
 use LogicException;
 
-use PHPUnit\Runner\Version;
 use function lcfirst;
 use function method_exists;
 
