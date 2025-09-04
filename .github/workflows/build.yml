@@ -46,7 +46,7 @@ jobs:
         run: composer cs-tests
 
       - name: PHPStan
-        run: phpstan analyse src
+        run: phpstan
 
   linux:
     name: PHP ${{ matrix.php }}–${{ matrix.os }}–${{ matrix.mode }}
