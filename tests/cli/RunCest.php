@@ -4,6 +4,7 @@ use Codeception\Attribute\After;
 use Codeception\Attribute\DataProvider;
 use Codeception\Attribute\Group;
 use Codeception\Scenario;
+use PHPUnit\Runner\Version;
 
 final class RunCest
 {
@@ -277,7 +278,12 @@ final class RunCest
     public function runTestWithDataProviders(CliGuy $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
-        $I->seeInShellOutput('Is triangle | "real triangle"');
+        /** In phpunit 12 naming changed */
+        if (Version::majorVersionNumber() >= 12) {
+            $I->seeInShellOutput('Is triangle | "@real triangle"');
+        } else {
+            $I->seeInShellOutput('Is triangle | "real triangle"');
+        }
         $I->seeInShellOutput('Is triangle | #0');
         $I->seeInShellOutput('Is triangle | #1');
         $I->seeInShellOutput('DataProvidersTest');
@@ -288,7 +294,12 @@ final class RunCest
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php:#1');
         $I->seeInShellOutput('Is triangle | #1');
-        $I->dontSeeInShellOutput('Is triangle | "real triangle"');
+        /** In phpunit 12 naming changed */
+        if (Version::majorVersionNumber() >= 12) {
+            $I->dontSeeInShellOutput('Is triangle | "@real triangle"');
+        } else {
+            $I->dontSeeInShellOutput('Is triangle | "real triangle"');
+        }
         $I->dontSeeInShellOutput('Is triangle | #0');
         $I->seeInShellOutput('DataProvidersTest');
         $I->seeInShellOutput("OK (1 test, 1 assertion)");
@@ -299,7 +310,12 @@ final class RunCest
         $I->executeCommand('run tests/unit/DataProvidersTest.php:#0-1');
         $I->seeInShellOutput('Is triangle | #0');
         $I->seeInShellOutput('Is triangle | #1');
-        $I->dontSeeInShellOutput('Is triangle | "real triangle"');
+        /** In phpunit 12 naming changed */
+        if (Version::majorVersionNumber() >= 12) {
+            $I->dontSeeInShellOutput('Is triangle | "@real triangle"');
+        } else {
+            $I->dontSeeInShellOutput('Is triangle | "real triangle"');
+        }
         $I->seeInShellOutput('DataProvidersTest');
         $I->seeInShellOutput("OK (2 tests, 2 assertions)");
     }
@@ -307,7 +323,12 @@ final class RunCest
     public function filterTestsByDataProviderCaseName(CliGuy $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php:@"real.*"');
-        $I->seeInShellOutput('Is triangle | "real triangle"');
+        /** In phpunit 12 naming changed */
+        if (Version::majorVersionNumber() >= 12) {
+            $I->seeInShellOutput('Is triangle | "@real triangle"');
+        } else {
+            $I->seeInShellOutput('Is triangle | "real triangle"');
+        }
         $I->dontSeeInShellOutput('Is triangle | #0');
         $I->dontSeeInShellOutput('Is triangle | #1');
         $I->seeInShellOutput('DataProvidersTest');
@@ -336,7 +357,12 @@ final class RunCest
     public function runOneGroupWithDataProviders(CliGuy $I)
     {
         $I->executeCommand('run unit -g data-providers');
-        $I->seeInShellOutput('Is triangle | "real triangle"');
+        /** In phpunit 12 naming changed */
+        if (Version::majorVersionNumber() >= 12) {
+            $I->seeInShellOutput('Is triangle | "@real triangle"');
+        } else {
+            $I->seeInShellOutput('Is triangle | "real triangle"');
+        }
         $I->seeInShellOutput('Is triangle | #0');
         $I->seeInShellOutput('Is triangle | #1');
         $I->seeInShellOutput('DataProvidersTest');

@@ -143,7 +143,7 @@ class Unit extends TestCase implements
     public function getReportFields(): array
     {
         return [
-            'name'  => $this->getName(false),
+            'name'  => $this->name(),
             'class' => self::class,
             'file'  => $this->getMetadata()->getFilename(),
         ];
@@ -166,6 +166,6 @@ class Unit extends TestCase implements
 
     public function getSignature(): string
     {
-        return $this->getName(false);
+        return $this->name();
     }
 }

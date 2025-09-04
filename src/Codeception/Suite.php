@@ -94,14 +94,7 @@ class Suite
                 $result->addTest($test);
                 $skip = $test->getMetadata()->getSkip();
                 if ($skip !== null) {
-                    if (
-                        version_compare(PHPUnitVersion::series(), '10.0', '<')
-                        && class_exists(SkippedTestError::class)
-                    ) {
-                        $exception = new SkippedTestError($skip);
-                    } else {
-                        $exception = new SkippedWithMessageException($skip);
-                    }
+                    $exception = new SkippedWithMessageException($skip);
                     $failEvent = new FailEvent($test, $exception, 0);
                     $result->addSkipped($failEvent);
                     $this->dispatcher->dispatch($failEvent, Events::TEST_SKIPPED);
@@ -115,14 +108,6 @@ class Suite
                 }
                 $this->dispatcher->dispatch(new TestEvent($test, 0), Events::TEST_END);
                 continue;
-            }
-
-            if ($test instanceof TestCaseWrapper) {
-                $testCase = $test->getTestCase();
-                if (PHPUnitVersion::series() < 10) {
-                    $testCase->setBeStrictAboutChangesToGlobalState($this->beStrictAboutChangesToGlobalState);
-                    $testCase->setBackupGlobals($this->backupGlobals);
-                }
             }
 
             $test->setEventDispatcher($this->dispatcher);

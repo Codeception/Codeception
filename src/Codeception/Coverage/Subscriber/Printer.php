@@ -161,15 +161,11 @@ class Printer implements EventSubscriberInterface
     private function createHtmlFacadeWriter(): HtmlFacadeReport
     {
         $generator = ', <a href="https://codeception.com">Codeception</a> and <a href="https://phpunit.de/">PHPUnit {PHPUnitVersion::id()}</a>';
-        return PHPUnitVersion::series() < 10 ?
-            new HtmlFacadeReport($this->settings['low_limit'], $this->settings['high_limit'], $generator) :
-            new HtmlFacadeReport($generator, null, Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']));
+        return new HtmlFacadeReport($generator, null, Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']));
     }
 
     private function createTextWriter(): TextReport
     {
-        return PHPUnitVersion::series() < 10 ?
-            new TextReport($this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered'], $this->settings['show_only_summary']) :
-            new TextReport(Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']), $this->settings['show_uncovered'], $this->settings['show_only_summary']);
+        return new TextReport(Thresholds::from($this->settings['low_limit'], $this->settings['high_limit']), $this->settings['show_uncovered'], $this->settings['show_only_summary']);
     }
 }

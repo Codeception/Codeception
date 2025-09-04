@@ -126,9 +126,7 @@ class SuiteManager
         $suite->beStrictAboutChangesToGlobalState(!empty($this->settings['be_strict_about_changes_to_global_state']));
         $suite->disallowTestOutput(!empty($this->settings['disallow_test_output']));
 
-        if (PHPUnitVersion::series() >= 10) {
-            $suite->initPHPUnitConfiguration();
-        }
+        $suite->initPHPUnitConfiguration();
 
         return $suite;
     }

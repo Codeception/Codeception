@@ -44,9 +44,9 @@ jobs:
 
       - name: Check test code style
         run: composer cs-tests
-
+      - run: ./codecept build
       - name: PHPStan
-        run: phpstan analyse src
+        run: phpstan
 
   linux:
     name: PHP ${{ matrix.php }}–${{ matrix.os }}–${{ matrix.mode }}

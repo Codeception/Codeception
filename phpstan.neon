@@ -3,16 +3,13 @@ parameters:
 
     paths:
         - src
-
+        - tests
     excludePaths:
-        analyseAndScan:
-            - src/Codeception/Test/Cest.php
-            - src/Codeception/Test/Test.php
-            - src/Codeception/Test/Unit.php
-            - src/Codeception/Coverage/Subscriber/Printer.php
-            - src/PHPUnit/Wrapper/PhpUnit9/Test.php
-
+        - tests/data
     parallel:
         maximumNumberOfProcesses: 8
         minimumNumberOfJobsPerProcess: 2
         jobSize: 20
+    ignoreErrors:
+        - message: '#^Variable \$scenario might not be defined.#'
+          path: tests

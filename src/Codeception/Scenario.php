@@ -122,12 +122,6 @@ class Scenario
 
     public function skip(string $message = ''): void
     {
-        if (
-            version_compare(PHPUnitVersion::series(), '10.0', '<')
-            && class_exists(SkippedTestError::class)
-        ) {
-            throw new SkippedTestError($message);
-        }
         throw new SkippedWithMessageException($message);
     }
 

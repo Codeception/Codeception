@@ -152,8 +152,12 @@ final class IncludedCest
     {
         $I->executeCommand('build');
         $I->seeInShellOutput('generated successfully');
+
+        /** @phpstan-ignore class.notFound*/
         $I->seeInShellOutput(\Jazz\TestGuy::class);
+        /** @phpstan-ignore class.notFound*/
         $I->seeInShellOutput(\Jazz\Pianist\TestGuy::class);
+        /** @phpstan-ignore class.notFound*/
         $I->seeInShellOutput(\Shire\TestGuy::class);
     }
 
