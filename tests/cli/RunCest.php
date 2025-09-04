@@ -357,7 +357,12 @@ final class RunCest
     public function runOneGroupWithDataProviders(CliGuy $I)
     {
         $I->executeCommand('run unit -g data-providers');
-        $I->seeInShellOutput('Is triangle | "@real triangle"');
+        /** In phpunit 12 naming changed */
+        if (Version::majorVersionNumber() >= 12) {
+            $I->seeInShellOutput('Is triangle | "@real triangle"');
+        } else {
+            $I->seeInShellOutput('Is triangle | "real triangle"');
+        }
         $I->seeInShellOutput('Is triangle | #0');
         $I->seeInShellOutput('Is triangle | #1');
         $I->seeInShellOutput('DataProvidersTest');
