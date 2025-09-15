@@ -27,6 +27,16 @@ class Filesystem extends \Codeception\Module
         $this->path = \Codeception\Configuration::projectDir();
     }
 
+    protected function sanitizePath($path)
+    {
+        $projectDir = \Codeception\Configuration::projectDir();
+        $realPath = realpath($this->absolutizePath($path));
+        if ($realPath === false || strpos($realPath, $projectDir) !== 0) {
+            throw new \RuntimeException('Invalid file path');
+        }
+        return $realPath;
+    }
+
     /**
      * Enters a directory In local filesystem.
      * Project root directory is used by default
@@ -65,7 +75,8 @@ class Filesystem extends \Codeception\Module
      */
     public function openFile($filename)
     {
-        $this->file = file_get_contents($this->absolutizePath($filename));
+        $safePath = $this->sanitizePath($filename);
+        $this->file = file_get_contents($safePath);
     }
 
     /**
@@ -250,7 +261,7 @@ class Filesystem extends \Codeception\Module
      */
     public function cleanDir($dirname)
     {
-        $path = $this->absolutizePath($dirname);
+        $path = $this->sanitizePath($dirname);
         Util::doEmptyDir($path);
     }
 

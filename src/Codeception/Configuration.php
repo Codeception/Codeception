@@ -401,18 +401,25 @@ class Configuration
         if (!self::$logDir) {
             throw new ConfigurationException("Path for logs not specified. Please, set log path in global config");
         }
-        $dir = self::$dir . DIRECTORY_SEPARATOR . self::$logDir . DIRECTORY_SEPARATOR;
+        $baseDir = self::$dir . DIRECTORY_SEPARATOR;
+        $dir = $baseDir . self::$logDir . DIRECTORY_SEPARATOR;
 
-        if (!is_writable($dir)) {
-            @mkdir($dir);
-            @chmod($dir, 0777);
+        // Resolve real path and validate
+        $realDir = realpath($dir) ?: $dir;
+        if (strpos($realDir, $baseDir) !== 0) {
+            throw new ConfigurationException("Invalid log directory path detected.");
+        }
+        
+        if (!is_writable($realDir)) {
+            @mkdir($realDir, 0777, true);
+            @chmod($realDir, 0777);
         }
 
-        if (!is_writable($dir)) {
+        if (!is_writable($realDir)) {
             throw new ConfigurationException("Path for logs is not writable. Please, set appropriate access mode for log path.");
         }
 
-        return $dir;
+        return $realDir;
     }
 
     /**

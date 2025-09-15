@@ -14,26 +14,41 @@ class Sqlite extends Db
         $this->filename = \Codeception\Configuration::projectDir() . substr($this->dsn, 7);
         $this->dsn      = 'sqlite:' . $this->filename;
     }
-
+    
+    private function sanitizeFilename($filename)
+    {
+        $projectDir = \Codeception\Configuration::projectDir();
+        $base = basename($filename);
+        $realPath = realpath($projectDir . '/' . $base);
+        if ($realPath === false || strpos($realPath, $projectDir) !== 0) {
+            throw new \RuntimeException('Invalid database filename');
+        }
+        return $realPath;
+    }
+    
     public function cleanup()
     {
+        $safeFilename = $this->sanitizeFilename($this->filename);
         $this->dbh = null;
-        file_put_contents($this->filename, '');
+        file_put_contents($safeFilename, '');
         $this->dbh = self::connect($this->dsn, $this->user, $this->password);
     }
 
     public function load($sql)
     {
+        $safeFilename = $this->sanitizeFilename($this->filename);
+        $safeSnapshot = $safeFilename . '_snapshot';
+
         if ($this->hasSnapshot) {
             $this->dbh = null;
-            file_put_contents($this->filename, file_get_contents($this->filename . '_snapshot'));
+            file_put_contents($safeFilename, file_get_contents($safeSnapshot));
             $this->dbh = new \PDO($this->dsn, $this->user, $this->password);
         } else {
-            if (file_exists($this->filename . '_snapshot')) {
-                unlink($this->filename . '_snapshot');
+            if (file_exists($safeSnapshot)) {
+                unlink($safeSnapshot);
             }
             parent::load($sql);
-            copy($this->filename, $this->filename . '_snapshot');
+            copy($safeFilename, $safeSnapshot);
             $this->hasSnapshot = true;
         }
     }
