@@ -52,14 +52,25 @@ class GenerateScenarios extends Command
             : Configuration::dataDir() . 'scenarios';
 
         $format = $input->getOption('format');
+        // Define a safe base directory, e.g., the data directory
+        $baseDir = Configuration::dataDir();
+        $path = $input->getOption('path')
+            ? $input->getOption('path')
+            : $baseDir . 'scenarios';
 
-        @mkdir($path);
-
-        if (!is_writable($path)) {
-            throw new ConfigurationException("Path $path is not writable. Please, set valid permissions for folder to store scenarios.");
+        // Resolve and validate the path
+        $realPath = realpath($path) ?: $path;
+        if (strpos($realPath, $baseDir) !== 0) {
+            throw new ConfigurationException("Invalid path detected for scenarios output.");
         }
 
-        $path = $path . DIRECTORY_SEPARATOR . $suite;
+        @mkdir($realPath);
+
+        if (!is_writable($realPath)) {
+            throw new ConfigurationException("Path $realPath is not writable. Please, set valid permissions for folder to store scenarios.");
+        }
+
+        $path = $realPath . DIRECTORY_SEPARATOR . $suite;
         if (!$input->getOption('single-file')) @mkdir($path);
 
         $suiteManager = new \Codeception\SuiteManager(new EventDispatcher(), $suite, $suiteconf);
