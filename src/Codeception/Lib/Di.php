@@ -115,7 +115,6 @@ class Di
                 );
             }
 
-            $reflectedMethod->setAccessible(true);
             $reflectedMethod->invokeArgs($object, $args);
         }
     }
