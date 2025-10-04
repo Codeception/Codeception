@@ -2,10 +2,10 @@
 
 # Codeception
 
-[![Latest Stable Version](http://poser.pugx.org/codeception/codeception/v)](https://packagist.org/packages/codeception/codeception)
-[![Total Downloads](http://poser.pugx.org/codeception/codeception/downloads)](https://packagist.org/packages/codeception/codeception)
-[![Monthly Downloads](http://poser.pugx.org/codeception/codeception/d/monthly)](https://packagist.org/packages/codeception/codeception)
-[![Daily Downloads](http://poser.pugx.org/codeception/codeception/d/daily)](https://packagist.org/packages/codeception/codeception)
+[![Latest Stable Version](https://poser.pugx.org/codeception/codeception/v)](https://packagist.org/packages/codeception/codeception)
+[![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads)](https://packagist.org/packages/codeception/codeception)
+[![Monthly Downloads](https://poser.pugx.org/codeception/codeception/d/monthly)](https://packagist.org/packages/codeception/codeception)
+[![Daily Downloads](https://poser.pugx.org/codeception/codeception/d/daily)](https://packagist.org/packages/codeception/codeception)
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 [![Build status](https://github.com/Codeception/Codeception/workflows/build/badge.svg)](https://github.com/Codeception/Codeception/actions?query=workflow%3Abuild)
 
