@@ -16,7 +16,7 @@ Inspired by BDD, it provides an absolutely new way of writing acceptance, functi
 
 #### Contributions
 
-At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/5.0/CONTRIBUTING.md).
+At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/5.0.0/CONTRIBUTING.md).
 
 ### At a Glance
 
