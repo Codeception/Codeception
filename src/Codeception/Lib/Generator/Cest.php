@@ -18,7 +18,6 @@ class Cest
 <?php
 
 declare(strict_types=1);
-
 {{namespace}}
 
 final class {{name}}Cest
