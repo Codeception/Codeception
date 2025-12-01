@@ -1,7 +1,7 @@
 {
     "name":"codeception/codeception",
-    "description":"BDD-style testing framework",
-    "keywords":["BDD", "acceptance testing", "functional testing", "unit testing", "tdd"],
+    "description":"All-in-one PHP Testing Framework",
+    "keywords":["BDD", "acceptance testing", "functional testing", "unit testing", "TDD"],
     "homepage":"https://codeception.com/",
     "type":"library",
     "license":"MIT",
