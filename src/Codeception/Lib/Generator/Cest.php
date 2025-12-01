@@ -18,19 +18,19 @@ class Cest
 <?php
 
 declare(strict_types=1);
-
 {{namespace}}
 
 final class {{name}}Cest
 {
     public function _before({{actor}} \$I): void
     {
-        // Code here will be executed before each test.
+        // Code here will be executed before each test function.
     }
 
+    // All `public` methods will be executed as tests.
     public function tryToTest({{actor}} \$I): void
     {
-        // Write your tests here. All `public` methods will be executed as tests.
+        // Write your test content here.
     }
 }
 
