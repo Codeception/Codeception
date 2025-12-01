@@ -151,12 +151,15 @@ class Unit extends TestCase implements
 
     public function fetchDependencies(): array
     {
-        return array_map(
-            fn($dep): string => !str_contains((string)$dep, ':') && method_exists($this, $dep)
-                ? self::class . ":{$dep}"
-                : $dep,
-            $this->getMetadata()->getDependencies()
-        );
+        $names = [];
+        foreach ($this->getMetadata()->getDependencies() as $dependency) {
+            foreach ((array)$dependency as $required) {
+                $names[] = !str_contains((string)$required, ':') && method_exists($this, $required)
+                    ? self::class . ":{$required}"
+                    : $required;
+            }
+        }
+        return $names;
     }
 
     public function getFileName(): string
