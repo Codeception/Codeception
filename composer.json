@@ -29,12 +29,12 @@
         "psy/psysh": "^0.11.2 | ^0.12",
         "sebastian/comparator": "^4.0.5 | ^5.0 | ^6.0 | ^7.0",
         "sebastian/diff": "^4.0.3 | ^5.0 | ^6.0 | ^7.0",
-        "symfony/console": ">=5.4.24 <8.0",
-        "symfony/css-selector": ">=5.4.24 <8.0",
-        "symfony/event-dispatcher": ">=5.4.24 <8.0",
-        "symfony/finder": ">=5.4.24 <8.0",
-        "symfony/var-dumper": ">=5.4.24 <8.0",
-        "symfony/yaml": ">=5.4.24 <8.0"
+        "symfony/console": ">=5.4.24 <9.0",
+        "symfony/css-selector": ">=5.4.24 <9.0",
+        "symfony/event-dispatcher": ">=5.4.24 <9.0",
+        "symfony/finder": ">=5.4.24 <9.0",
+        "symfony/var-dumper": ">=5.4.24 <9.0",
+        "symfony/yaml": ">=5.4.24 <9.0"
     },
     "require-dev": {
         "ext-simplexml": "*",
@@ -51,10 +51,10 @@
         "jetbrains/phpstorm-attributes": "^1.0",
         "laravel-zero/phar-updater": "^1.4",
         "php-webdriver/webdriver": "^1.15",
-        "stecman/symfony-console-completion": "^0.14",
-        "symfony/dotenv": ">=5.4.24 <8.0",
-        "symfony/error-handler": ">=5.4.24 <8.0",
-        "symfony/process": ">=5.4.24 <8.0",
+        "stecman/symfony-console-completion": "^0.14 || ^0.15",
+        "symfony/dotenv": ">=5.4.24 <9.0",
+        "symfony/error-handler": ">=5.4.24 <9.0",
+        "symfony/process": ">=5.4.24 <9.0",
         "vlucas/phpdotenv": "^5.1"
     },
     "conflict": {
