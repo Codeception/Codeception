@@ -184,7 +184,7 @@ class DryRun extends Command
     private function getDefaultValueForBuiltinType(ReflectionNamedType $returnType): mixed
     {
         return match ($returnType->getName()) {
-            'mixed', 'void' => null,
+            'mixed', 'never', 'void' => null,
             'string' => '',
             'int' => 0,
             'float' => 0.0,
