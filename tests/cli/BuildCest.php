@@ -32,7 +32,8 @@ final class BuildCest
         $I->seeFileFound('CliGuyActions.php', 'tests/support/_generated');
         $I->seeThisFileMatches("!^<\?php .*\n// phpcs:ignoreFile!");
         $I->seeInThisFile('seeFileFound(');
-        $I->seeInThisFile('public function assertSame($expected, $actual, string $message = "") {');
+        // native mixed and void return type was added in codeception/lib-asserts:3
+        $I->seeThisFileMatches('!public function assertSame\((mixed )?\$expected, (mixed )?\$actual, string \$message = ""\)(: void)? \{!');
     }
 
     public function usesLiteralTypes(CliGuy $I, Scenario $scenario)
