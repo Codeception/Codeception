@@ -111,7 +111,7 @@ final class BuildCest
     public function generateNullableParameters(CliGuy $I, Scenario $scenario)
     {
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
-        $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(\Directory $dir = null): ?bool', $cliHelperContents);
+        $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(?\Directory $dir = null): ?bool', $cliHelperContents);
         file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
 
         $I->runShellCommand('php codecept build');
