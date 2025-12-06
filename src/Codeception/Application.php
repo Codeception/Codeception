@@ -58,7 +58,13 @@ class Application extends BaseApplication
         }
 
         foreach ($config['extensions']['commands'] as $commandClass) {
-            $this->add(new $commandClass($this->getCustomCommandName($commandClass)));
+            $command = new $commandClass($this->getCustomCommandName($commandClass));
+            // addCommand() is available since symfony 7.4
+            if (method_exists($this, 'addCommand')) {
+                $this->addCommand($command);
+            } else {
+                $this->add($command);
+            }
         }
     }
 
