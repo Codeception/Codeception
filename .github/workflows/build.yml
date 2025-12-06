@@ -18,6 +18,10 @@ permissions:
 
 env:
   PHP_INI_VALUES: memory_limit=-1,date.timezone=UTC
+  # register_argc_argv seems to be off by default in PHP 8.5
+  # see https://github.com/php/php-src/issues/20279
+  # enable it because codeception relies on it.
+  PHP_INI_VALUES_PHP_85: memory_limit=-1,date.timezone=UTC,register_argc_argv=1
   COMPOSER_ROOT_VERSION: 5.0.99
   SYMFONY_DEPRECATIONS_HELPER: weak
 
@@ -58,24 +62,37 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ['8.2', '8.3', '8.4']
+        php: ['8.2', '8.3', '8.4', '8.5']
         mode: ['stable', 'experimental']
         exclude:
           - php: '8.3'
             mode: 'experimental'
           - php: '8.4'
             mode: 'experimental'
+          - php: '8.5'
+            mode: 'experimental'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install PHP & Composer
+      - name: Install PHP != 8.5 & Composer
         uses: shivammathur/setup-php@v2
+        if: ${{ matrix.php != '8.5' }}
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.PHP_INI_VALUES }}
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Install PHP 8.5 & Composer
+        uses: shivammathur/setup-php@v2
+        if: ${{ matrix.php == '8.5' }}
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ env.extensions }}
+          ini-values: ${{ env.PHP_INI_VALUES_PHP_85 }}
           coverage: xdebug
           tools: composer:v2
 
@@ -151,18 +168,28 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        php: ['8.2', '8.3', '8.4']
+        php: ['8.2', '8.3', '8.4', '8.5']
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install PHP & Composer
+      - name: Install PHP != 8.5 & Composer
         uses: shivammathur/setup-php@v2
+        if: ${{ matrix.php != '8.5' }}
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.PHP_INI_VALUES }}
+          tools: composer:v2
+
+      - name: Install PHP 8.5 & Composer
+        uses: shivammathur/setup-php@v2
+        if: ${{ matrix.php == '8.5' }}
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ env.extensions }}
+          ini-values: ${{ env.PHP_INI_VALUES_PHP_85 }}
           tools: composer:v2
 
       - name: Determine composer cache directory
