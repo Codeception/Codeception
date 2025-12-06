@@ -101,7 +101,8 @@ jobs:
           if [ "${{ matrix.mode }}" = "stable" ]; then
             composer update --no-interaction --no-progress --optimize-autoloader --ansi
           else
-            composer update --prefer-lowest --no-interaction --no-progress --optimize-autoloader --ansi
+            composer update --prefer-lowest --no-interaction --no-progress --ansi
+            composer require --dev "codeception/module-phpbrowser:>=3.0.2" -W --prefer-lowest --no-interaction --no-progress --optimize-autoloader --ansi
           fi
 
       - name: Test that failing test really fails
