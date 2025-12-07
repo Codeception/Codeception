@@ -189,7 +189,7 @@ class DryRun extends Command
             'int' => 0,
             'float' => 0.0,
             'bool' => false,
-            'array' => [],
+            'array', 'iterable' => [],
             'resource' => fopen('data://text/plain;base64,', 'r'),
             default => throw new Exception('Unsupported return type ' . $returnType->getName()),
         };
