@@ -140,9 +140,6 @@ final class BuildCest
 
     public function generateCorrectTypeWhenSelfTypeIsUsed(CliGuy $I, Scenario $scenario)
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $scenario->skip('Does not work in PHP < 7');
-        }
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
         $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(self $dir): self', $cliHelperContents);
         file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
@@ -158,9 +155,6 @@ final class BuildCest
 
     public function generateCorrectTypeWhenParentTypeIsUsed(CliGuy $I, Scenario $scenario)
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $scenario->skip('Does not work in PHP < 7');
-        }
         $cliHelperContents = file_get_contents(codecept_root_dir('tests/support/CliHelper.php'));
         $cliHelperContents = str_replace('public function seeDirFound($dir)', 'public function seeDirFound(parent $dir): parent', $cliHelperContents);
         file_put_contents(codecept_root_dir('tests/support/CliHelper.php'), $cliHelperContents);
