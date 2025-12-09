@@ -16,7 +16,7 @@ class Api extends InitTemplate
     protected string $configTemplate = <<<EOF
 # suite config
 suites:
-    api:
+    'Api:
         actor: ApiTester
         path: .
         modules:
@@ -75,7 +75,7 @@ EOF;
         $config = "namespace: $namespace\nsupport_namespace: {$this->supportNamespace}\n" . $config;
         $this->createFile('codeception.yml', $config);
 
-        $settings = Yaml::parse($config)['suites']['api'];
+        $settings = Yaml::parse($config)['suites']['Api'];
         $settings['support_namespace'] = $this->supportNamespace;
         $this->createActor('ApiTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
 
