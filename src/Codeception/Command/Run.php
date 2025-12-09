@@ -47,16 +47,16 @@ use function substr_replace;
  *
  * Usage:
  *
- * * `codecept run acceptance`: run all acceptance tests
- * * `codecept run tests/acceptance/MyCest.php`: run only MyCest
- * * `codecept run acceptance MyCest`: same as above
- * * `codecept run acceptance MyCest:myTestInIt`: run one test from a Cest
- * * `codecept run acceptance MyCest:myTestInIt#1`: run one example or data provider item by number
- * * `codecept run acceptance MyCest:myTestInIt#1-3`: run a range of examples or data provider items
- * * `codecept run acceptance MyCest:myTestInIt@name.*`: run data provider items with matching names
- * * `codecept run acceptance checkout.feature`: run feature-file
- * * `codecept run acceptance -g slow`: run tests from *slow* group
- * * `codecept run unit,functional`: run only unit and functional suites
+ * * `codecept run Acceptance`: run all acceptance tests
+ * * `codecept run tests/Acceptance/MyCest.php`: run only MyCest
+ * * `codecept run Acceptance MyCest`: same as above
+ * * `codecept run Acceptance MyCest:myTestInIt`: run one test from a Cest
+ * * `codecept run Acceptance MyCest:myTestInIt#1`: run one example or data provider item by number
+ * * `codecept run Acceptance MyCest:myTestInIt#1-3`: run a range of examples or data provider items
+ * * `codecept run Acceptance MyCest:myTestInIt@name.*`: run data provider items with matching names
+ * * `codecept run Acceptance checkout.feature`: run feature-file
+ * * `codecept run Acceptance -g slow`: run tests from *slow* group
+ * * `codecept run Unit,Functional`: run only unit and functional suites
  *
  * Verbosity modes:
  *

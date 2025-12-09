@@ -31,7 +31,7 @@ use function pcntl_signal;
 /**
  * Try to execute test commands in run-time. You may try commands before writing the test.
  *
- * * `codecept console acceptance` - starts acceptance suite environment. If you use WebDriver you can manipulate browser with Codeception commands.
+ * * `codecept console Acceptance` - starts acceptance suite environment. If you use WebDriver you can manipulate browser with Codeception commands.
  */
 #[AsCommand(
     name: 'console',

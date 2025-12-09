@@ -20,8 +20,8 @@ use function ucfirst;
 /**
  * Generates StepObject class. You will be asked for steps you want to implement.
  *
- * * `codecept g:stepobject acceptance AdminSteps`
- * * `codecept g:stepobject acceptance UserSteps --silent` - skip action questions
+ * * `codecept g:stepobject Acceptance AdminSteps`
+ * * `codecept g:stepobject Acceptance UserSteps --silent` - skip action questions
  *
  */
 #[AsCommand(
