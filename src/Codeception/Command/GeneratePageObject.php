@@ -20,7 +20,7 @@ use function ucfirst;
  *
  * * `codecept g:page Login`
  * * `codecept g:page Registration`
- * * `codecept g:page acceptance Login`
+ * * `codecept g:page Acceptance Login`
  */
 #[AsCommand(
     name: 'generate:pageobject',

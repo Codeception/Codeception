@@ -37,10 +37,10 @@ use function str_replace;
 /**
  * Shows step-by-step execution process for scenario driven tests without actually running them.
  *
- * * `codecept dry-run acceptance`
- * * `codecept dry-run acceptance MyCest`
- * * `codecept dry-run acceptance checkout.feature`
- * * `codecept dry-run tests/acceptance/MyCest.php`
+ * * `codecept dry-run Acceptance`
+ * * `codecept dry-run Acceptance MyCest`
+ * * `codecept dry-run Acceptance checkout.feature`
+ * * `codecept dry-run tests/Acceptance/MyCest.php`
  *
  */
 #[AsCommand(

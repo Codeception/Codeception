@@ -16,7 +16,7 @@ class Acceptance extends InitTemplate
     protected string $configTemplate = <<<EOF
 # suite config
 suites:
-    acceptance:
+    Acceptance:
         actor: AcceptanceTester
         path: .
         modules:
@@ -106,7 +106,7 @@ EOF;
         $config = "namespace: {$namespace}\nsupport_namespace: {$this->supportNamespace}\n" . $config;
         $this->createFile('codeception.yml', $config);
 
-        $settings = Yaml::parse($config)['suites']['acceptance'];
+        $settings = Yaml::parse($config)['suites']['Acceptance'];
         $settings['support_namespace'] = $this->supportNamespace;
         $this->createActor('AcceptanceTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
 

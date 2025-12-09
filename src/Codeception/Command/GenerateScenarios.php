@@ -27,9 +27,9 @@ use function preg_replace;
 /**
  * Generates user-friendly text scenarios from scenario-driven tests (Cest).
  *
- * * `codecept g:scenarios acceptance` - for all acceptance tests
- * * `codecept g:scenarios acceptance --format html` - in html format
- * * `codecept g:scenarios acceptance --path doc` - generate scenarios to `doc` dir
+ * * `codecept g:scenarios Acceptance` - for all acceptance tests
+ * * `codecept g:scenarios Acceptance --format html` - in html format
+ * * `codecept g:scenarios Acceptance --path doc` - generate scenarios to `doc` dir
  */
 #[AsCommand(
     name: 'generate:scenarios',

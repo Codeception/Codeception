@@ -15,7 +15,7 @@ class Unit extends InitTemplate
 
     protected string $configTemplate = <<<EOF
 suites:
-    unit:
+    Unit:
         path: .
 {{tester}}
 settings:
@@ -66,7 +66,7 @@ EOF;
         $this->createFile('codeception.yml', $config);
         $this->ensureModules(['Asserts']);
         if ($haveTester) {
-            $settings = Yaml::parse($config)['suites']['unit'];
+            $settings = Yaml::parse($config)['suites']['Unit'];
             $settings['support_namespace'] = $this->supportNamespace;
             $this->createActor('UnitTester', $dir . DIRECTORY_SEPARATOR . 'Support', $settings);
         }

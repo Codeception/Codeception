@@ -21,7 +21,7 @@ use function ucfirst;
  *
  * * `codecept g:snapshot UserEmails`
  * * `codecept g:snapshot Products`
- * * `codecept g:snapshot acceptance UserEmails`
+ * * `codecept g:snapshot Acceptance UserEmails`
  */
 #[AsCommand(
     name: 'generate:snapshot',

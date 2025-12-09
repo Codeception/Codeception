@@ -24,7 +24,7 @@ use function str_replace;
  *
  * ``` php
  * <?php
- * $testLoader = new \Codeception\TestLoader('tests/unit');
+ * $testLoader = new \Codeception\TestLoader('tests/Unit');
  * $testLoader->loadTests();
  * $tests = $testLoader->getTests();
  * ```
@@ -32,7 +32,7 @@ use function str_replace;
  *
  * ``` php
  * <?php
- * $testLoader = new \Codeception\TestLoader('tests/unit');
+ * $testLoader = new \Codeception\TestLoader('tests/Unit');
  * $testLoader->loadTest('UserTest.php');
  * $testLoader->loadTest('PostTest.php');
  * $tests = $testLoader->getTests();
@@ -41,8 +41,8 @@ use function str_replace;
  *
  * ``` php
  * <?php
- * $testLoader = new \Codeception\TestLoader('tests/unit');
- * $testLoader->loadTest('models'); // all tests from tests/unit/models
+ * $testLoader = new \Codeception\TestLoader('tests/Unit');
+ * $testLoader->loadTest('models'); // all tests from tests/Unit/models
  * $tests = $testLoader->getTests();
  * ```
  *
