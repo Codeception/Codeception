@@ -82,6 +82,10 @@ use function substr_replace;
  * * `codecept run --ext DotReporter` run with DotReporter printer
  * * `codecept run --ext "My\Custom\Extension"` run with an extension loaded by class name
  *
+ * Re-Run failed tests
+ *
+ * * `codecept run -g failed`
+ *
  * Full reference:
  * ```
  * Arguments:
