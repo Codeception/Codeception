@@ -44,13 +44,8 @@ For unit testing you can stay on classic PHPUnit tests, as Codeception can run t
 
 ### Composer
 
-```
-php composer.phar require "codeception/codeception"
-```
-
-TODO: Document how to install the modules, e.g.
-```
-php composer.phar require "codeception/module-phpbrowser"
+```bash
+composer require "codeception/codeception" --dev
 ```
 
 ### Phar
